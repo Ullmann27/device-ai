@@ -4008,6 +4008,106 @@
    "proposalCommit": null,
    "proposalBranch": null,
    "pullRequest": null
+  },
+  {
+   "at": "2026-11-09T04:34:45.873Z",
+   "baseCommit": "26434973a66a2b7b447b5bce0712008a9164c6f4",
+   "chain": "android",
+   "diagnostic": "8c2b417702226f5d",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "48a1b951088253d3",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": ".github/continuum/code50-github-release-contract.test.mjs",
+     "oldText": "const checker = read('scripts/continuum-code51-junit-check.py');\nconst branch = 'copilot/code51-master-integrator-20261108';",
+     "newText": "const branch = 'chatgpt/code50-qa-staging-20261108';",
+     "line": 15
+    }
+   ],
+   "confidence": 0.44,
+   "syntaxReason": null,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-11-09T04:34:45.873Z",
+   "baseCommit": "26434973a66a2b7b447b5bce0712008a9164c6f4",
+   "chain": "android",
+   "diagnostic": "8c2b417702226f5d",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "a03aa730e6cb2f46",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": ".github/continuum/code50-github-signer-preflight.test.mjs",
+     "oldText": "const BRANCH = 'copilot/code51-master-integrator-20261108';",
+     "newText": "const BRANCH = 'chatgpt/code50-qa-staging-20261108';",
+     "line": 15
+    }
+   ],
+   "confidence": 0.44,
+   "syntaxReason": null,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-11-09T04:34:45.873Z",
+   "baseCommit": "26434973a66a2b7b447b5bce0712008a9164c6f4",
+   "chain": "android",
+   "diagnostic": "8c2b417702226f5d",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "0a9776e373f61a8c",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": ".github/continuum/code50-github-signer-preflight.test.mjs",
+     "oldText": "const BRANCH = 'copilot/code51-master-integrator-20261108';\nconst hasTools = ['bash', 'jq', 'base64', 'sha256sum', 'curl', 'stat'].every(t => spawnSync('sh', ['-c', `command -v ${t}`]).status === 0);\n\nconst good = () => ({\n  env: {\n    deployment_branch_policy: {custom_branch_policies: true, protected_branches: false},\n    protection_rules: [{type: 'required_reviewers', reviewers: [{type: 'User', reviewer: {login: 'Ullmann27'}}]}, {type: 'branch_policy'}]\n  },\n  policies: {branch_policies: [{name: BRANCH, type: 'branch'}]},\n  run: {head_sha: SHA, head_branch: BRANCH, event: 'workflow_dispatch', status: 'completed', conclusion: 'success', path: '.github/workflows/continuum-code50-github-qa.yml'},\n  jobs: {jobs: [{name: 'node-backend', conclusion: 'success'}, {name: 'android-host', conclusion: 'success'}]},\n  releaseExists: false,\n  latestTag: 'continuum-local-code50-473f79727e4b52509cc7d1af71e59b80ab9b6be5'\n});\n\nfunction runPreflight(mutate, {mode = 'preflight', overrides = {}} = {}) {\n  const fx = good();\n  mutate?.(fx);\n  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'code50-signer-'));\n  try {\n    fs.writeFileSync(path.join(dir, 'fx.json'), JSON.stringify(fx));\n    const fake = `#!/usr/bin/env node\nconst fs=require('fs');const fx=JSON.parse(fs.readFileSync(${JSON.stringify(path.join(dir, 'fx.json'))},'utf8'));\nconst a=process.argv.slice(2).join(' ');\nconst out=v=>{process.stdout.write(JSON.stringify(v));process.exit(0)};\nif(a.includes('release view')) process.exit(fx.releaseExists?0:1);\nif(a.includes('releases/latest')){ if(!fx.latestTag) process.exit(1); process.stdout.write(fx.latestTag+'\\\\n'); process.exit(0);}\nif(a.endsWith('/deployment-branch-policies')) out(fx.policies);\nif(/\\\\/environments\\\\/continuum-original-signing$/.test(a)) out(fx.env);\nif(/\\\\/actions\\\\/runs\\\\/\\\\d+\\\\/jobs/.test(a)) out(fx.jobs);\nif(/\\\\/actions\\\\/runs\\\\/\\\\d+$/.test(a)) out(fx.run);\nprocess.exit(7);\n`;\n    fs.mkdirSync(path.join(dir, 'bin'));\n    fs.writeFileSync(path.join(dir, 'bin/gh'), fake, {mode: 0o755});\n    const env = {\n      PATH: `${path.join(dir, 'bin')}:${process.env.PATH}`, HOME: dir, TMPDIR: dir,\n      GITHUB_REPOSITORY: 'Ullmann27/device-ai', GITHUB_REF: `refs/heads/${BRANCH}`, GITHUB_EVENT_NAME: 'workflow_dispatch',\n      GITHUB_SHA: SHA, SOURCE_SHA: SHA, QA_RUN_ID: RUN, OWNER_APPROVED_SHA: SHA, ...overrides\n    };\n    const r = spawnSync('bash', [script, mode], {env, encoding: 'utf8'});\n    return {status: r.status, out: `${r.stdout}${r.stderr}`};\n  } finally { fs.rmSync(dir, {recursive: true, force: true}); }\n}\n\nconst failsWith = (res, code) => { assert.equal(res.status, 69, res.out); assert.match(res.out, new RegExp(`CODE51_SIGN_${code}\\\\b`), res.out); };\n\ntest('Preflight besteht nur mit allen Gates', {skip: !hasTools}, () => {\n  const res = runPreflight();\n  assert.equal(res.status, 0, res.out);\n  assert.match(res.out, /CHECKPOINT=ENVIRONMENT_OWNER_REVIEWER_AND_EXACT_BRANCH_POLICY_VERIFIED/);\n  assert.match(res.out, /CHECKPOINT=EXACT_SOURCE_QA_RUN_GREEN/);\n  assert.match(res.out, /STATUS=PREFLIGHT_OK/);\n  assert.match(res.out, /INFO=lifecycle_jdk21_job=PASS_REQUIRED_IN_ANDROID_HOST/);\n});\n\ntest('Path-Suffix @ref des QA-Laufs wird akzeptiert, fremder Workflow nicht', {skip: !hasTools}, () => {\n  assert.equal(runPreflight(f => { f.run.path += `@refs/heads/${BRANCH}`; }).status, 0);\n  failsWith(runPreflight(f => { f.run.path = '.github/workflows/other.yml'; }), 'QA_IDENTITY_OR_RESULT_MISMATCH');\n});\n\ntest('Environment ohne Pflicht-Reviewer oder mit falscher Branch-Regel bricht VOR Geheimnissen ab', {skip: !hasTools}, () => {\n  failsWith(runPreflight(f => { f.env.protection_rules = [{type: 'branch_policy'}]; }), 'ENVIRONMENT_REQUIRED_OWNER_REVIEWER_MISSING');\n  failsWith(runPreflight(f => { f.env.protection_rules[0].reviewers = [{type: 'User', reviewer: {login: 'someone-else'}}]; }), 'ENVIRONMENT_REQUIRED_OWNER_REVIEWER_MISSING');\n  failsWith(runPreflight(f => { f.env.deployment_branch_policy = null; }), 'ENVIRONMENT_BRANCH_POLICY_NOT_CUSTOM');\n  failsWith(runPreflight(f => { f.policies.branch_policies = [{name: 'codex/continuum-code48-github-owner-20261107', type: 'branch'}]; }), 'ENVIRONMENT_BRANCH_POLICY_NOT_EXACT');\n  failsWith(runPreflight(f => { f.policies.branch_policies.push({name: '*', type: 'branch'}); }), 'ENVIRONMENT_BRANCH_POLICY_NOT_EXACT');\n});\n\ntest('QA-Lauf muss exakt, manuell, abgeschlossen und grün sein', {skip: !hasTools}, () => {\n  failsWith(runPreflight(f => { f.run.head_sha = 'b'.repeat(40); }), 'QA_IDENTITY_OR_RESULT_MISMATCH');\n  failsWith(runPreflight(f => { f.run.event = 'push'; }), 'QA_IDENTITY_OR_RESULT_MISMATCH');\n  failsWith(runPreflight(f => { f.run.conclusion = 'failure'; }), 'QA_IDENTITY_OR_RESULT_MISMATCH');\n  failsWith(runPreflight(f => { f.run.head_branch = 'main'; }), 'QA_IDENTITY_OR_RESULT_MISMATCH');\n  failsWith(runPreflight(f => { f.jobs.jobs[0].conclusion = 'failure'; }), 'NODE_BACKEND_NOT_GREEN');\n  failsWith(runPreflight(f => { f.jobs.jobs = f.jobs.jobs.filter(j => j.name !== 'android-host'); }), 'ANDROID_HOST_NOT_GREEN');\n});\n\ntest('Unreadable or different upgrade baseline cannot silently permit publication', {skip: !hasTools}, () => {\n  failsWith(runPreflight(f => { f.latestTag = null; }), 'LATEST_RELEASE_UNREADABLE');\n  failsWith(runPreflight(f => { f.latestTag = 'unrelated'; }), 'LATEST_RELEASE_IDENTITY_INVALID');\n  failsWith(runPreflight(f => { f.latestTag = 'continuum-local-code50-' + SHA; }), 'CODE50_BASELINE_CHANGED');\n});\n\ntest('Freigabe-SHA, Commit-Bindung, Branch, Event und Release-Zustand sind erzwungen', {skip: !hasTools}, () => {\n  failsWith(runPreflight(null, {overrides: {OWNER_APPROVED_SHA: 'b'.repeat(40)}}), 'APPROVED_SHA_DIFFERS_FROM_SOURCE');\n  failsWith(runPreflight(null, {overrides: {GITHUB_SHA: 'b'.repeat(40)}}), 'SOURCE_DIFFERS_FROM_RUN_COMMIT');\n  failsWith(runPreflight(null, {overrides: {SOURCE_SHA: 'xyz', OWNER_APPROVED_SHA: 'xyz'}}), 'SOURCE_SHA_FORMAT');\n  failsWith(runPreflight(null, {overrides: {GITHUB_REF: 'refs/heads/main'}}), 'WRONG_BRANCH');\n  failsWith(runPreflight(null, {overrides: {GITHUB_EVENT_NAME: 'push'}}), 'WRONG_EVENT');\n  failsWith(runPreflight(null, {overrides: {QA_RUN_ID: '12; rm -rf /'}}), 'QA_RUN_FORMAT');\n  failsWith(runPreflight(f => { f.releaseExists = true; }), 'RELEASE_ALREADY_EXISTS');\n  failsWith(runPreflight(f => { f.latestTag = 'continuum-local-code51-' + SHA; }), 'NOT_HIGHER_THAN_LATEST_RELEASE');",
+     "newText": "const BRANCH = 'chatgpt/code50-qa-staging-20261108';\nconst hasTools = ['bash', 'jq', 'base64', 'sha256sum', 'curl', 'stat'].every(t => spawnSync('sh', ['-c', `command -v ${t}`]).status === 0);\n\nconst good = () => ({\n  env: {\n    deployment_branch_policy: {custom_branch_policies: true, protected_branches: false},\n    protection_rules: [{type: 'required_reviewers', reviewers: [{type: 'User', reviewer: {login: 'Ullmann27'}}]}, {type: 'branch_policy'}]\n  },\n  policies: {branch_policies: [{name: BRANCH, type: 'branch'}]},\n  run: {head_sha: SHA, head_branch: BRANCH, event: 'workflow_dispatch', status: 'completed', conclusion: 'success', path: '.github/workflows/continuum-code50-github-qa.yml'},\n  jobs: {jobs: [{name: 'node-backend', conclusion: 'success'}, {name: 'android-host', conclusion: 'success'}, {name: 'android-lifecycle-jdk21', conclusion: 'success'}]},\n  releaseExists: false,\n  latestTag: 'continuum-local-code48-c9fffb7dda9c173b6c5ccd4104672b09fd94de15'\n});\n\nfunction runPreflight(mutate, {mode = 'preflight', overrides = {}} = {}) {\n  const fx = good();\n  mutate?.(fx);\n  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'code50-signer-'));\n  try {\n    fs.writeFileSync(path.join(dir, 'fx.json'), JSON.stringify(fx));\n    const fake = `#!/usr/bin/env node\nconst fs=require('fs');const fx=JSON.parse(fs.readFileSync(${JSON.stringify(path.join(dir, 'fx.json'))},'utf8'));\nconst a=process.argv.slice(2).join(' ');\nconst out=v=>{process.stdout.write(JSON.stringify(v));process.exit(0)};\nif(a.includes('release view')) process.exit(fx.releaseExists?0:1);\nif(a.includes('releases/latest')){ if(!fx.latestTag) process.exit(1); process.stdout.write(fx.latestTag+'\\\\n'); process.exit(0);}\nif(a.endsWith('/deployment-branch-policies')) out(fx.policies);\nif(/\\\\/environments\\\\/continuum-original-signing$/.test(a)) out(fx.env);\nif(/\\\\/actions\\\\/runs\\\\/\\\\d+\\\\/jobs/.test(a)) out(fx.jobs);\nif(/\\\\/actions\\\\/runs\\\\/\\\\d+$/.test(a)) out(fx.run);\nprocess.exit(7);\n`;\n    fs.mkdirSync(path.join(dir, 'bin'));\n    fs.writeFileSync(path.join(dir, 'bin/gh'), fake, {mode: 0o755});\n    const env = {\n      PATH: `${path.join(dir, 'bin')}:${process.env.PATH}`, HOME: dir, TMPDIR: dir,\n      GITHUB_REPOSITORY: 'Ullmann27/device-ai', GITHUB_REF: `refs/heads/${BRANCH}`, GITHUB_EVENT_NAME: 'workflow_dispatch',\n      GITHUB_SHA: SHA, SOURCE_SHA: SHA, QA_RUN_ID: RUN, OWNER_APPROVED_SHA: SHA, ...overrides\n    };\n    const r = spawnSync('bash', [script, mode], {env, encoding: 'utf8'});\n    return {status: r.status, out: `${r.stdout}${r.stderr}`};\n  } finally { fs.rmSync(dir, {recursive: true, force: true}); }\n}\n\nconst failsWith = (res, code) => { assert.equal(res.status, 69, res.out); assert.match(res.out, new RegExp(`CODE50_SIGN_${code}\\\\b`), res.out); };\n\ntest('Preflight besteht nur mit allen Gates', {skip: !hasTools}, () => {\n  const res = runPreflight();\n  assert.equal(res.status, 0, res.out);\n  assert.match(res.out, /CHECKPOINT=ENVIRONMENT_OWNER_REVIEWER_AND_EXACT_BRANCH_POLICY_VERIFIED/);\n  assert.match(res.out, /CHECKPOINT=EXACT_SOURCE_QA_RUN_GREEN/);\n  assert.match(res.out, /STATUS=PREFLIGHT_OK/);\n  assert.match(res.out, /INFO=lifecycle_jdk21_job=success/);\n});\n\ntest('Path-Suffix @ref des QA-Laufs wird akzeptiert, fremder Workflow nicht', {skip: !hasTools}, () => {\n  assert.equal(runPreflight(f => { f.run.path += `@refs/heads/${BRANCH}`; }).status, 0);\n  failsWith(runPreflight(f => { f.run.path = '.github/workflows/other.yml'; }), 'QA_IDENTITY_OR_RESULT_MISMATCH');\n});\n\ntest('Environment ohne Pflicht-Reviewer oder mit falscher Branch-Regel bricht VOR Geheimnissen ab', {skip: !hasTools}, () => {\n  failsWith(runPreflight(f => { f.env.protection_rules = [{type: 'branch_policy'}]; }), 'ENVIRONMENT_REQUIRED_OWNER_REVIEWER_MISSING');\n  failsWith(runPreflight(f => { f.env.protection_rules[0].reviewers = [{type: 'User', reviewer: {login: 'someone-else'}}]; }), 'ENVIRONMENT_REQUIRED_OWNER_REVIEWER_MISSING');\n  failsWith(runPreflight(f => { f.env.deployment_branch_policy = null; }), 'ENVIRONMENT_BRANCH_POLICY_NOT_CUSTOM');\n  failsWith(runPreflight(f => { f.policies.branch_policies = [{name: 'codex/continuum-code48-github-owner-20261107', type: 'branch'}]; }), 'ENVIRONMENT_BRANCH_POLICY_NOT_EXACT');\n  failsWith(runPreflight(f => { f.policies.branch_policies.push({name: '*', type: 'branch'}); }), 'ENVIRONMENT_BRANCH_POLICY_NOT_EXACT');\n});\n\ntest('QA-Lauf muss exakt, manuell, abgeschlossen und grün sein', {skip: !hasTools}, () => {\n  failsWith(runPreflight(f => { f.run.head_sha = 'b'.repeat(40); }), 'QA_IDENTITY_OR_RESULT_MISMATCH');\n  failsWith(runPreflight(f => { f.run.event = 'push'; }), 'QA_IDENTITY_OR_RESULT_MISMATCH');\n  failsWith(runPreflight(f => { f.run.conclusion = 'failure'; }), 'QA_IDENTITY_OR_RESULT_MISMATCH');\n  failsWith(runPreflight(f => { f.run.head_branch = 'main'; }), 'QA_IDENTITY_OR_RESULT_MISMATCH');\n  failsWith(runPreflight(f => { f.jobs.jobs[0].conclusion = 'failure'; }), 'NODE_BACKEND_NOT_GREEN');\n  failsWith(runPreflight(f => { f.jobs.jobs = f.jobs.jobs.filter(j => j.name !== 'android-host'); }), 'ANDROID_HOST_NOT_GREEN');\n});\n\ntest('Der fehlgeschlagene oder fehlende JDK-21-Job blockiert nicht, wird aber ausgewiesen', {skip: !hasTools}, () => {\n  const failed = runPreflight(f => { f.jobs.jobs[2].conclusion = 'failure'; });\n  assert.equal(failed.status, 0, failed.out);\n  assert.match(failed.out, /lifecycle_jdk21_job=failure/);\n  const missing = runPreflight(f => { f.jobs.jobs.pop(); });\n  assert.match(missing.out, /lifecycle_jdk21_job=NOT_RUN/);\n});\n\ntest('Freigabe-SHA, Commit-Bindung, Branch, Event und Release-Zustand sind erzwungen', {skip: !hasTools}, () => {\n  failsWith(runPreflight(null, {overrides: {OWNER_APPROVED_SHA: 'b'.repeat(40)}}), 'APPROVED_SHA_DIFFERS_FROM_SOURCE');\n  failsWith(runPreflight(null, {overrides: {GITHUB_SHA: 'b'.repeat(40)}}), 'SOURCE_DIFFERS_FROM_RUN_COMMIT');\n  failsWith(runPreflight(null, {overrides: {SOURCE_SHA: 'xyz', OWNER_APPROVED_SHA: 'xyz'}}), 'SOURCE_SHA_FORMAT');\n  failsWith(runPreflight(null, {overrides: {GITHUB_REF: 'refs/heads/main'}}), 'WRONG_BRANCH');\n  failsWith(runPreflight(null, {overrides: {GITHUB_EVENT_NAME: 'push'}}), 'WRONG_EVENT');\n  failsWith(runPreflight(null, {overrides: {QA_RUN_ID: '12; rm -rf /'}}), 'QA_RUN_FORMAT');\n  failsWith(runPreflight(f => { f.releaseExists = true; }), 'RELEASE_ALREADY_EXISTS');\n  failsWith(runPreflight(f => { f.latestTag = 'continuum-local-code50-' + SHA; }), 'NOT_HIGHER_THAN_LATEST_RELEASE');",
+     "line": 15
+    }
+   ],
+   "confidence": 0.4,
+   "syntaxReason": null,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-11-09T04:34:45.873Z",
+   "baseCommit": "26434973a66a2b7b447b5bce0712008a9164c6f4",
+   "chain": "android",
+   "diagnostic": "8c2b417702226f5d",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "75456b0b7441d38f",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": ".github/workflows/continuum-code50-sign-release.yml",
+     "oldText": "name: \"Continuum Code51 — Originalsignierung und GitHub-Release\"\n\n# Existing registered path; explicit owner Code51 channel approval (09.11.2026).\n# Nur manueller Start. Die Kanalwahl ersetzt NICHT die ausdrückliche SHA-Freigabe des Besitzers:\n# - owner_approved_sha muss exakt dem Quell-Commit entsprechen (bewusste Eingabe des Besitzers),\n# - das Environment continuum-original-signing muss Pflicht-Reviewer (Besitzer) und genau die Branch-Regel\n#   des Staging-Zweigs haben; sonst bricht der Preflight ab, bevor ein Geheimnis freigegeben wird.\n# Der Workflow liest, druckt und kopiert P12/Passwort nie.\non:\n  workflow_dispatch:\n    inputs:\n      source_sha:\n        description: \"Exakter 40-stelliger Quell-Commit (muss dem HEAD des Branches entsprechen)\"\n        required: true\n        type: string\n      qa_run_id:\n        description: \"ID des vollständig grünen Code51-QA-Laufs auf genau diesem Commit (historischer Workflow-Pfad code50)\"\n        required: true\n        type: string\n      owner_approved_sha:\n        description: \"Ausdrückliche Besitzerfreigabe: derselbe 40-stellige Commit-SHA zur Originalsignierung\"\n        required: true\n        type: string\n\npermissions:\n  contents: read\n\nconcurrency:\n  group: continuum-original-sign-only\n  cancel-in-progress: false\n\njobs:\n  preflight:\n    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/copilot/code51-master-integrator-20261108'\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    permissions:\n      contents: read\n      actions: read\n    steps:\n      - uses: actions/checkout@v4\n        with:\n          persist-credentials: false\n      - name: Preflight without secrets\n        shell: bash\n        env:\n          GH_TOKEN: ${{ github.token }}\n          SOURCE_SHA: ${{ inputs.source_sha }}\n          QA_RUN_ID: ${{ inputs.qa_run_id }}\n          OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}\n        run: |\n          set -euo pipefail\n          bash scripts/continuum-code50-github-signer.sh preflight\n\n  release-original-signed:\n    needs: preflight\n    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/copilot/code51-master-integrator-20261108'",
+     "newText": "name: \"Continuum Code50 — Originalsignierung und GitHub-Release\"\n\n# Besitzerentscheidung C (08.11.2026, nur Code 50): Signierung und Veröffentlichung über GitHub.\n# Nur manueller Start. Die Kanalwahl ersetzt NICHT die ausdrückliche SHA-Freigabe des Besitzers:\n# - owner_approved_sha muss exakt dem Quell-Commit entsprechen (bewusste Eingabe des Besitzers),\n# - das Environment continuum-original-signing muss Pflicht-Reviewer (Besitzer) und genau die Branch-Regel\n#   des Staging-Zweigs haben; sonst bricht der Preflight ab, bevor ein Geheimnis freigegeben wird.\n# Der Workflow liest, druckt und kopiert P12/Passwort nie.\non:\n  workflow_dispatch:\n    inputs:\n      source_sha:\n        description: \"Exakter 40-stelliger Quell-Commit (muss dem HEAD des Branches entsprechen)\"\n        required: true\n        type: string\n      qa_run_id:\n        description: \"ID des vollständig grünen continuum-code50-github-qa-Laufs auf genau diesem Commit\"\n        required: true\n        type: string\n      owner_approved_sha:\n        description: \"Ausdrückliche Besitzerfreigabe: derselbe 40-stellige Commit-SHA zur Originalsignierung\"\n        required: true\n        type: string\n\npermissions:\n  contents: read\n\nconcurrency:\n  group: continuum-code50-sign-only\n  cancel-in-progress: false\n\njobs:\n  preflight:\n    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    permissions:\n      contents: read\n      actions: read\n    steps:\n      - uses: actions/checkout@v4\n        with:\n          persist-credentials: false\n      - name: Preflight without secrets\n        shell: bash\n        env:\n          GH_TOKEN: ${{ github.token }}\n          SOURCE_SHA: ${{ inputs.source_sha }}\n          QA_RUN_ID: ${{ inputs.qa_run_id }}\n          OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}\n        run: |\n          set -euo pipefail\n          bash scripts/continuum-code50-github-signer.sh preflight\n\n  release-original-signed:\n    needs: preflight\n    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'",
+     "line": 1
+    }
+   ],
+   "confidence": 0.4,
+   "syntaxReason": null,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
   }
  ],
  "experiences": [
@@ -5365,6 +5465,17 @@
    "verifiedStrategy": null,
    "patchSha256": null,
    "trigger": "hourly"
+  },
+  {
+   "at": "2026-11-09T04:34:45.873Z",
+   "base": "26434973a66a2b7b447b5bce0712008a9164c6f4",
+   "chain": "android",
+   "outcome": "NO_VERIFIED_REPAIR",
+   "diagnostics": 1,
+   "attempts": 4,
+   "verifiedStrategy": null,
+   "patchSha256": null,
+   "trigger": "android-build-failure"
   }
  ]
 }
