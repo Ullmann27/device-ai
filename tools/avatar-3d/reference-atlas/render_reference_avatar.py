@@ -43,10 +43,23 @@ def main():
     parser.add_argument("--ortho-scale", type=float, default=.44)
     parser.add_argument("--target-y", type=float, default=.232)
     parser.add_argument("--quarter-yaw", type=float, default=-24)
+    parser.add_argument("--surface-gain", type=float, default=1.0,
+                        help="Diagnostic multiplier of the authored face emission only; no texture or asset edits")
     config = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
     config.output.mkdir(parents=True, exist_ok=True)
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=str(config.model.resolve()))
+    if not 1.0 <= config.surface_gain <= 1.6:
+        raise ValueError("Surface gain outside bounded diagnostic range")
+    material = bpy.data.materials.get("DeepIndigoSkin")
+    if material is None:
+        raise ValueError("Original face material missing")
+    shader = next(node for node in material.node_tree.nodes if node.type == "BSDF_PRINCIPLED")
+    authored_emission = shader.inputs["Emission Strength"].default_value
+    shader.inputs["Emission Strength"].default_value = authored_emission * config.surface_gain
+    for obj in bpy.data.objects:
+        if obj.name.startswith("Tooth"):
+            obj.hide_render = True
     scene = bpy.context.scene
     scene.render.engine = "CYCLES"
     scene.cycles.device = "CPU"
@@ -134,6 +147,8 @@ def main():
                            "targetCanonicalMetres": [0, config.target_y, .06], "quarterYawDegrees": config.quarter_yaw,
                            "distanceMetres": .95, "elevationVectorComponent": .018},
                 "glow": "Blender compositor Fog Glow, threshold .80; Android bloom must be tested independently",
+                "faceEmission": {"authored": authored_emission, "gain": config.surface_gain,
+                                 "material": "DeepIndigoSkin", "irisUnchanged": True},
                 "portraitBackdrop": False, "frames": records,
                 "limitations": ["Host render is not Android/Filament GPU output", "Not owner likeness acceptance"]}
     (config.output / "render-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")

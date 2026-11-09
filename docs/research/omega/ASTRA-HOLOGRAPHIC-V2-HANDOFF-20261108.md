@@ -277,6 +277,44 @@ aus einem fehlenden Test entfernt.
 
 ## Rueckfall / naechster Einstieg
 
+## Fokusfortsetzung 09.11.: Original-Avatar / Animation / Stimme
+
+Neuer Fokus ausschliesslich auf den Owner-Regieauftrag. Start/Remote geprueft:
+`34b2aa1f498f08779596b36331e6e786983b3e12`; #658 weiterhin `f153758df`.
+Master- und Fold7-offen-Referenz erneut tatsaechlich betrachtet.
+
+### A: selektive innere Strahlung des Originalkopfs
+
+Der GLB besitzt bereits die detaillierte Cyan-/Violett-Textur. Globale
+Neonfarbe oder neue Linien wuerden gerade diese Struktur zerstoeren.
+Die Loesung multipliziert daher nur die **authored Emission von DeepIndigoSkin**:
+1.10x in Ruhe, weich bis maximal 1.32x mit der vorhandenen echten Kernenergie.
+Die Basis wird aus dem GLB gelesen (derzeit RGB jeweils 1.35), nicht geraten;
+Filament1.56.0 AssetLoader.cpp bestaetigt `emissiveFactor * emissiveStrength`.
+Iris, Pupille, Mund, Masken, Geometrie, Morphs, Texturen und GLB-Bytes bleiben
+unveraendert. Kein zusaetzlicher Pass/Licht/Timer, bestehendes Bloom unverstaerkt.
+Unter Quality-Reduktion, Reduced Motion oder Film-Aus exakt authored Baseline.
+
+Blender4.0.2 und fehlendes Importer-NumPy nach nachgewiesenen Toolfehlern
+wiederhergestellt. **Original-GLB importiert**, keine Ersatzfigur. Drei identisch
+gerenderte CPU-Frames: Baseline, 1.32x und verworfener 1.60x-Probe. Gleiche
+Kamera/Beleuchtung/Seed/12 Samples, bestehender Fog-Glow-Hostpfad. Verglichen:
+staerkere Stirn-/Wangenkonturen, weiter erkennbare Pupillen, kein pauschal
+weiss gefaerbtes Gesicht. Die 1.60x-Probe verbreitert helle Cyanstellen zu stark.
+ROI 90,65..295,325: mittlere 8bit-Luma 47.63 -> 52.69 (+10.6%),
+weiss geclippte Pixel 0.053% -> 0.148%; 1.60x erreicht 0.238%.
+Einzelkanal-Clipping steigt von 9.90% auf 17.13% (1.60x: 21.21%):
+**Filament-Tonemapping/Belichtung muessen deshalb nativ nachgeprueft werden**.
+Kein Nachweis neuer geometrischer Detailaufloesung oder Android-Pixelgleichheit.
+
+Reproduktion:
+`blender -b -t 2 --python-exit-code 1 --python tools/avatar-3d/reference-atlas/render_reference_avatar.py -- app/src/main/assets/avatar3d/continuum-avatar.glb OUTPUT --views front --samples 12 --surface-gain 1.32`
+Analog Baseline 1.0 / Probe 1.6; dann
+`python tools/avatar-3d/measure_radiance.py BASE/front.png BOUNDED/front.png PROBE/front.png OUTPUT`.
+Evidenz: `docs/evidence/astra-avatar-focus-20261109/`.
+
+### Fortsetzungsstand
+
 Zentraler Praesentationsschalter: `JarvisCinematicSettings.KEY`,
 `continuum-cockpit-presentation/cinematic-work-windows` (Standard true).
 Aus bedeutet vorhandener einfacher Fenstereinflug ohne Film-Layer/Neigung und

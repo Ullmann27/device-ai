@@ -35,7 +35,9 @@ object AvatarGlbContract {
     data class FaceProfile(val bottom: Double, val step: Double, val left: List<Double>) {
         init { require(bottom.isFinite() && step.isFinite() && step > 0 && left.isNotEmpty() && left.all { it.isFinite() }) }
     }
-    data class Metadata(val targets: List<String>, val morphNodeNames: List<String>, val focus: Focus)
+    data class SurfaceEmission(val materialName: String, val red: Float, val green: Float, val blue: Float)
+    data class Metadata(val targets: List<String>, val morphNodeNames: List<String>, val focus: Focus,
+                        val surfaceEmission: SurfaceEmission? = null)
 
     fun validate(bytes: ByteArray): Metadata {
         require(bytes.size in 28..MAX_BYTES) { "GLB size" }
@@ -262,7 +264,25 @@ object AvatarGlbContract {
         val focus = Focus(centerX, (bottom + top) / 2, centerZ,
             (maxPortraitX - minPortraitX) / 2 + .010, (top - bottom) / 2, portraitAzimuth,
             fit.reachLeft, fit.reachRight, fit.face)
-        return Metadata(requireNotNull(targets) { "No morph mesh" }, morphNodes, focus)
+        val materials = root.optJSONArray("materials")
+        var emission: SurfaceEmission? = null
+        if (materials != null) for (i in 0 until materials.length()) {
+            val material = materials.getJSONObject(i)
+            if (material.optString("name") != "DeepIndigoSkin") continue
+            require(emission == null) { "Ambiguous face material" }
+            val factor = material.getJSONArray("emissiveFactor")
+            require(factor.length() == 3 && material.has("emissiveTexture")) { "Authored face emission missing" }
+            val strength = material.optJSONObject("extensions")?.optJSONObject("KHR_materials_emissive_strength")
+                ?.getDouble("emissiveStrength") ?: 1.0
+            require(strength.isFinite() && strength in 0.0..16.0) { "Face emission strength" }
+            val rgb = FloatArray(3) { channel ->
+                val value = factor.getDouble(channel)
+                require(value.isFinite() && value in 0.0..1.0) { "Face emission factor" }
+                (value * strength).toFloat()
+            }
+            emission = SurfaceEmission("DeepIndigoSkin", rgb[0], rgb[1], rgb[2])
+        }
+        return Metadata(requireNotNull(targets) { "No morph mesh" }, morphNodes, focus, emission)
     }
 
     /** Antialiasing and bloom fringe kept inside the viewport beyond the posed silhouette (metres). */

@@ -68,6 +68,17 @@ class Avatar3dContractTest {
         assertRejected(asset(nonFinite = true))
         assertRejected(asset { it.getJSONArray("nodes").getJSONObject(2).put("scale",JSONArray(listOf(1,-1,1))) })
     }
+    @Test fun optionalFaceEmissionPreservesUnstyledAssetsAndRejectsAmbiguousOrInvalidFactors() {
+        assertNull(AvatarGlbContract.validate(asset()).surfaceEmission)
+        fun face(strength: Double) = JSONObject("""{"name":"DeepIndigoSkin","emissiveFactor":[1,1,1],
+            "emissiveTexture":{"index":0},"extensions":{"KHR_materials_emissive_strength":{}}}""")
+            .apply { getJSONObject("extensions").getJSONObject("KHR_materials_emissive_strength").put("emissiveStrength", strength) }
+        assertRejected(asset { it.put("materials", JSONArray().put(face(-1.0))) })
+        assertRejected(asset { it.put("materials", JSONArray().put(face(1.35)).put(face(1.35))) })
+        assertRejected(asset { it.put("materials", JSONArray().put(face(1.35).apply {
+            put("emissiveFactor", JSONArray(listOf(1, 2, 1)))
+        })) })
+    }
     @Test fun malformedSkinIndicesMorphAliasingAndEmptyShapeAreRejected() {
         assertRejected(asset { it.getJSONArray("skins").getJSONObject(0).put("joints",JSONArray(listOf(1,99))) })
         assertRejected(asset { it.getJSONArray("meshes").getJSONObject(0).getJSONArray("primitives").getJSONObject(0)
