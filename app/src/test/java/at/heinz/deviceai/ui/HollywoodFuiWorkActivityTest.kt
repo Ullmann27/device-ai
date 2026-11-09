@@ -28,6 +28,21 @@ class HollywoodFuiWorkActivityTest {
         }
     }
 
+    @Test fun settledFramePreservesBrightRimWhileRasterProtectsText() {
+        val p = HollywoodFuiWorkActivity
+        val settled = HollywoodFuiConstruct.frame(1_500L)
+        assertEquals(1f, p.structuralOpacity(settled.grid, settled.closeFrame), 0f)
+        val idle = p.rasterOpacity(settled.grid, settled.data, false, true)
+        val working = p.rasterOpacity(settled.grid, settled.data, true, true)
+        assertEquals(0f, p.structuralOpacity(idle, settled.closeFrame), 0f)
+        assertEquals(.09f, p.structuralOpacity(working, settled.closeFrame), .00001f)
+        assertEquals(1f, p.structuralOpacity(settled.grid, settled.closeFrame), 0f)
+        val closing = HollywoodFuiConstruct.frame(1_500L, closingElapsedMs = 300L)
+        assertTrue(p.structuralOpacity(closing.grid, closing.closeFrame) in 0f..1f)
+        assertEquals(0f, p.structuralOpacity(Float.NaN, 1f), 0f)
+        assertEquals(0f, p.structuralOpacity(1f, Float.POSITIVE_INFINITY), 0f)
+    }
+
     @Test fun scanFadeAtWrapRespectsBothEdges() {
         val p = HollywoodFuiWorkActivity
         assertEquals(0f, p.scanEnvelope(0f), 0f)
