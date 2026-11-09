@@ -76,21 +76,19 @@ object ContinuumLandscapeCockpitLayout {
 
         // Top bar
         val ty = top.top + (top.height - TARGET) / 2f
-        val targetBottom = (ty + TARGET).let { bottom ->
-            if (bottom - ty < TARGET) Math.nextUp(bottom) else bottom
-        }
+        val touchBottom = Math.nextUp(ty + TARGET)
         val brandWidth = (top.width * .24f).coerceIn(150f, 240f)
-        boxes[Slot.BRAND] = Box(top.left, ty, top.left + brandWidth, targetBottom)
+        boxes[Slot.BRAND] = Box(top.left, ty, top.left + brandWidth, touchBottom)
         var x = top.right
         for (slot in listOf(Slot.PROFILE, Slot.NOTIFICATIONS, Slot.SEARCH)) {
             val l = x - TARGET
-            boxes[slot] = Box(l, ty, l + TARGET, targetBottom); x = l - 6f
+            boxes[slot] = Box(l, ty, l + TARGET, touchBottom); x = l - 6f
         }
         val tabsLeft = top.left + brandWidth + 8f
         val tabWidth = ((x - 2f - tabsLeft) - (topTabs.size - 1) * 4f) / topTabs.size
         topTabs.forEachIndexed { i, slot ->
             val l = tabsLeft + i * (tabWidth + 4f)
-            boxes[slot] = Box(l, ty, l + tabWidth, targetBottom)
+            boxes[slot] = Box(l, ty, l + tabWidth, touchBottom)
         }
 
         // Left column: brain 40 %, processes 30 %, dialog 30 %

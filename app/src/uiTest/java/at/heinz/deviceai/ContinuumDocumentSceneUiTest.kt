@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import at.heinz.deviceai.ui.ContinuumHomeView
+import at.heinz.deviceai.ui.JarvisActionScenes
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -174,7 +175,10 @@ class ContinuumDocumentSceneUiTest {
         assertEquals("the excerpt is the document's text", text, (descendants(window).single { it.tag == "jarvis-document-excerpt" } as TextView).text.toString())
         val clearedDeck = JarvisHomeTestRoutes.deck(root)
         assertEquals("The same deck yields its space", originalDeck.map { it.id }, clearedDeck.map { it.id })
-        assertTrue("The real diagnostic deck made room", clearedDeck.none { it.isShown })
+        val footprint = JarvisActionScenes.footprintFor(JarvisActionScenes.Kind.FILES)
+        assertTrue("The cards made room for the document", JarvisHomeTestRoutes.clearedBy(root, footprint).none { it.isShown })
+        assertTrue("The mission rows stay on the deck beside the medium document window",
+            JarvisHomeTestRoutes.keptBy(root, footprint).all { it.isShown })
         assertTrue("chat names the same facts", chatTexts(activity).any { it.startsWith("PDF gelesen: 3 Seiten") && it.contains("${text.length} Zeichen von Seite 1–3") })
     }
 

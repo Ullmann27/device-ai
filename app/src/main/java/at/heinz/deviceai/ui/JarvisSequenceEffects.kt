@@ -203,7 +203,10 @@ class JarvisSequenceEffects {
         if (!validId(id)) return false
         cards.firstOrNull { it.id == id && it.leavingAt < 0 }?.let { it.title = clip(title, 60); it.subtitle = subtitle?.let { s -> clip(s, 80) }; return true }
         val active = cards.filter { it.leavingAt < 0 }
-        if (active.size >= MAX_CARDS) active.first().leavingAt = nowMillis
+        if (active.size >= MAX_CARDS) {
+            // Keep the canonical turn scene while bounded details rotate out.
+            (active.firstOrNull { !it.id.endsWith(".main_scene") } ?: active.first()).leavingAt = nowMillis
+        }
         cards += Card(id, kind, clip(title, 60), subtitle?.let { clip(it, 80) }, nowMillis, serial++ % 2 == 1)
         lastNow = nowMillis
         return true

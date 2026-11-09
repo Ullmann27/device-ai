@@ -40,7 +40,9 @@ test('frustum probe and renderer use the same orthographic framing while live di
   assert.match(filament, /camera!!\.setProjection\(Camera\.Projection\.ORTHO, fitted\.left, fitted\.right,\s*-fitted\.halfHeight, fitted\.halfHeight, \.05, 10\.0\)/);
   assert.match(cameraFraming, /val rest = AvatarFraming\.window\(focus, aspect, anchorX, closeUp, keepOut\)/);
   assert.match(cameraFraming, /if \(progress == 0f \|\| !enabled\) return rest/);
-  assert.match(hologram, /cameraWindow = requireNotNull\(cameraFraming\)\.sample\(cameraMotion\.progress, cameraDirection\)/);
+  assert.match(hologram, /val targetWindow = requireNotNull\(cameraFraming\)\.sample\(cameraMotion\.progress, cameraDirection\)/);
+  assert.match(hologram, /cameraWindow = if \(fromWindow != null && cameraProfileBlendStartedAtMs >= 0L\)/);
+  assert.match(hologram, /AvatarCameraFraming\.blend\(fromWindow, targetWindow, smooth\)/);
   assert.match(hologram, /val window = requireNotNull\(cameraWindow\)\s*auraScale = window\.headScale\.toFloat\(\); auraAnchorEffective = window\.anchorX\.toFloat\(\)/);
   assert.match(hologram, /native3d!!\.render\([\s\S]{0,500}?framing = if \(cockpitHeadBounds != null\) cameraWindow else null,[\s\S]{0,240}?diagnosticBlink = proof\?\.blinkOverride,[\s\S]{0,160}?receipt = receipt/);
   assert.match(frustum, /val fitted = AvatarFraming\.window\(focus, widthPx\.toDouble\(\) \/ heightPx, anchorX, closeUp\)/);
@@ -59,7 +61,7 @@ test('animation success requires an actual supplied provider receipt', () => {
 });
 
 test('remaining source boundaries and the complete neck/head turn stay connected', () => {
-  assert.match(budget, /task\.length !in 1\.\.240/);
+  assert.match(budget, /if \(task\.isBlank\(\) \|\| task\.length > 240 \|\| hasMemories/);
   assert.match(hologram, /release3d\(clearAsset = false\)/);
   assert.match(activity, /removeView\(head\)/);
   assert.match(filament, /rotate\("Neck", mapper\.neckPitch, mapper\.neckYaw\)\s*rotate\("Head", mapper\.headPitch - mapper\.neckPitch, mapper\.headYaw - mapper\.neckYaw\)/);

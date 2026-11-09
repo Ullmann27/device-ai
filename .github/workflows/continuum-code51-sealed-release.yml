@@ -1,0 +1,74 @@
+name: "Continuum Code51 — originalsignierte APK ohne SHA-Eingabe"
+
+# One sealed owner-approved release. Exactly the source and manual QA below.
+# The old Code50 signing environment already permits this staging branch.
+on:
+  push:
+    branches:
+      - chatgpt/code50-qa-staging-20261108
+    paths:
+      - '.github/workflows/continuum-code51-sealed-release.yml'
+      - 'scripts/continuum-code51-sealed-github-signer.sh'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-code51-sealed-owner-release
+  cancel-in-progress: false
+
+env:
+  SOURCE_SHA: 6c23d295e2fca2d4e5950a866547733ec5ff22b0
+  QA_RUN_ID: "42584050241"
+  OWNER_APPROVED_SHA: 6c23d295e2fca2d4e5950a866547733ec5ff22b0
+
+jobs:
+  preflight:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify exact owner-approved Code51 source and QA, no secrets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          bash scripts/continuum-code51-sealed-github-signer.sh preflight
+
+  release-original-signed:
+    needs: preflight
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    environment: continuum-original-signing
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Prepare official signing tools
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"
+      - name: Sign and publish exact verified Code51 unsigned artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
+          ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}
+        run: |
+          set -euo pipefail
+          bash scripts/continuum-code51-sealed-github-signer.sh sign

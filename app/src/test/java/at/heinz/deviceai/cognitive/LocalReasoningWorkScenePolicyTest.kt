@@ -38,9 +38,13 @@ class LocalReasoningWorkScenePolicyTest {
 
     @Test fun complexityThresholdIsStrictAndKeepsShortPlanningInGrace() {
         val shortPlan = LocalReasoningWorkScenePolicy.decide(
-            "Vergleiche mehrere Bedingungen und entwickle eine ausführliche Strategie", false, false, false)
-        assertEquals(.30, shortPlan.assessment.complexity, 1e-9)
+            "Erstelle einen kurzen Plan", false, false, false)
+        assertEquals(.15, shortPlan.assessment.complexity, 1e-9)
         assertEquals(1_000L, shortPlan.delayMillis)
+        val complexPlan = LocalReasoningWorkScenePolicy.decide(
+            "Vergleiche mehrere Bedingungen und entwickle eine ausführliche Strategie", false, false, false)
+        assertEquals(.40, complexPlan.assessment.complexity, 1e-9)
+        assertEquals(0L, complexPlan.delayMillis)
         val boundary = LocalReasoningWorkScenePolicy.decide(
             "Wie funktioniert das?".padEnd(200, ' '), false, false, false)
         assertEquals(.35, boundary.assessment.complexity, 1e-9)
