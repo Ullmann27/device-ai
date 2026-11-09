@@ -36,3 +36,20 @@ Sampled existing constructor equations at 900, 3000, 5000, 12000 ms: previous se
 
 ## Rollback
 Revert only source commit `64535f994f8e1e420dd5187f928d361e1525f331`. The existing work window, native text, energy rim, eye tracking, original avatar and voice continue unchanged. No migration or owner-data rollback is necessary.
+
+## Milestone 2 — sentence-boundary gestures, source `2a41a826fea68012a869c92c3b5d39b81634000c`
+
+The Android TTS chunk correction in #664 and this isolated change solve different layers. `JarvisVoiceProfile` is unchanged; `AvatarDirector.sentenceEndAfter` no longer emits a premature `SentenceEnd` expression cue for a recognized title followed by a capitalized personal name (`Dr. Müller`, `Prof. Huber`, `Mag. Leitner`, `Ing. Weber`, `DI. ...`, and selected English equivalents), nor for `Art. 5`, `Abs. 3`, `Nr. 4` before numbers. The pronunciation, punctuation and existing TTS callback ordering are untouched. Actual ends such as `... antwortet.` remain sentence boundaries.
+
+Files:
+- `app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt`: one pure policy admission after existing punctuation and word-boundary checks.
+- `app/src/main/java/at/heinz/deviceai/avatar/AvatarSentenceAccentPolicy.kt`: bounded, clockless rule with no transcript retention.
+- `app/src/test/java/at/heinz/deviceai/avatar/AvatarSentenceAccentPolicyTest.kt`: four additional JUnit checks, including a Director→SentenceEnd contract.
+
+A separately compiled exact policy copy, JDK 21 / kotlinc 1.9.0, passed **2036 deterministic standalone checks** across common titles, legal references, real sentence ends and malformed indices. Full JUnit, Android TTS and actual audio remain separate verification gates. This is **a facial expression/gesture fix**, not improved synthetic speech generation, audio quality or voice selection.
+
+For integrator #663, treat the two changes as independently cherry-pickable:
+- `64535f994f8e1e420dd5187f928d361e1525f331`: work-alive holographic raster.
+- `2a41a826fea68012a869c92c3b5d39b81634000c`: Avatar sentence-boundary gesture correction (parent includes first commit and documentation).
+
+**Avoid merging the entire graphic branch blindly** into a release-frozen PR. The second commit also has the first as an ancestor; cherry-picking it alone adds its own three files only. For exact verification, run `AvatarSentenceAccentPolicyTest`, `AvatarSpeechBoundaryTest`, `AvatarSpeechOrderingRegressionTest`, `AvatarSentenceEndGestureTest` if present, then the full source-exact suite.
