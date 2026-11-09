@@ -244,6 +244,22 @@ class ContinuumBotTaskRoutingUiTest {
         assertTrue(store.loadConversation(profile.agentId, profile.agentId).turns.isEmpty())
     }
 
+    @Test fun kotlinLearningRequestOpensReviewedPlanWithoutNeedingOrTrainingModel() = withActivity { a, store ->
+        val profile = requireNotNull(store.get("bot-kora"))
+        assertEquals(true, call(a, "submitBotTask", ChiefBotTaskRequest(profile.agentId,
+            profile.profileVersion, "Lerne, Kotlin-Fehler zuverlässig zu reparieren.", ChiefBotTaskMode.PRIVATE_REPLY)))
+        flush(a)
+        val views = descendants(requireNotNull(ShadowAlertDialog.getLatestAlertDialog()).window!!.decorView)
+        val fields = views.filterIsInstance<EditText>()
+        assertEquals(at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum.KOTLIN_REPAIR_GOAL,
+            fields.single { it.hint == "Welche konkrete Änderung soll entstehen?" }.text.toString())
+        assertEquals("android", fields.single { it.hint == "node für JS oder android für Kotlin" }.text.toString())
+        assertFalse(views.filterIsInstance<Button>().single { it.text == "AUFTRAG AN TERMUX ÜBERGEBEN" }.isEnabled)
+        assertNull(get(a, "activeOrchestrator"))
+        assertNull(get(a, "localRuntime"))
+        assertTrue(store.get(profile.agentId)!!.verifiedCapabilities.isEmpty())
+    }
+
     @Test fun staleProfileRefusalKeepsTheWholeTaskTextAvailable() = withActivity { a, store ->
         val old = requireNotNull(store.get("bot-kora"))
         store.rename(old.agentId, "Kora Neu", old.profileVersion)

@@ -14,6 +14,11 @@ import at.heinz.deviceai.chief.ChiefBotPersonas
 import at.heinz.deviceai.chief.ChiefBotProfilePage
 import at.heinz.deviceai.chief.ChiefBotProfileStore
 import at.heinz.deviceai.chief.ChiefBotTaskRequest
+import at.heinz.deviceai.chief.ChiefBotTaskMode
+import at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum
+import at.heinz.deviceai.chief.ChiefBotTeam
+import at.heinz.deviceai.chief.ChiefTeamStatus
+import at.heinz.deviceai.chief.ChiefTeamTask
 import at.heinz.deviceai.ui.JarvisDesign
 import java.util.UUID
 import java.util.concurrent.Executor
@@ -29,7 +34,10 @@ class ContinuumBotRosterDialog(
     private val onSelect: ((ChiefBotProfile) -> Unit)? = null,
     private val runtimeStatus: ((ChiefBotProfile) -> String)? = null,
     private val onContextChanging: ((String) -> Unit)? = null,
-    private val onAssign: ((ChiefBotTaskRequest) -> Boolean)? = null
+    private val onAssign: ((ChiefBotTaskRequest) -> Boolean)? = null,
+    private val team: ChiefBotTeam? = null,
+    private val onTeamSubmit: ((String, String, Long) -> Boolean)? = null,
+    private val onTeamStop: ((String) -> Unit)? = null
 ) {
     private var dialog: AlertDialog? = null
     private var taskDialog: ContinuumBotTaskDialog? = null
@@ -37,6 +45,7 @@ class ContinuumBotRosterDialog(
     private val storagePending = AtomicBoolean()
     private val statusViews = mutableListOf<Pair<ChiefBotProfile, TextView>>()
     private var pendingRosterSearch: (() -> Unit)? = null
+    private var teamRefresh: (() -> Unit)? = null
     private val ui = ContinuumBotDialogStyle(activity)
 
     fun show() {
@@ -47,6 +56,7 @@ class ContinuumBotRosterDialog(
     fun close() {
         revision++
         pendingRosterSearch = null
+        teamRefresh = null
         taskDialog?.close()
         taskDialog = null
         dialog?.dismiss()
@@ -57,6 +67,7 @@ class ContinuumBotRosterDialog(
     /** Reuses the Activity's existing state/tick callbacks; no per-bot timers or render loops. */
     fun refreshRuntimeStatus() {
         taskDialog?.refreshRuntimeStatus()
+        teamRefresh?.invoke()
         val status = runtimeStatus ?: return
         if (activity.isFinishing || activity.isDestroyed || dialog?.isShowing != true) return
         statusViews.forEach { (profile, view) -> view.text = status(profile) }
@@ -76,6 +87,7 @@ class ContinuumBotRosterDialog(
         taskDialog?.close()
         taskDialog = null
         pendingRosterSearch = null
+        teamRefresh = null
         dialog?.dismiss()
         statusViews.clear()
         val token = ++revision
@@ -89,6 +101,7 @@ class ContinuumBotRosterDialog(
                         revision++
                         dialog = null
                         pendingRosterSearch = null
+                        teamRefresh = null
                         statusViews.clear()
                     }
                 }
@@ -162,9 +175,10 @@ class ContinuumBotRosterDialog(
     private fun showPage(afterId: String?, initialQuery: String = "") {
         val body = column()
         body.addView(label("Bot-Profile werden geladen …"))
-        val token = open("Team · Bots", body)
+        val token = open("Mein KI-Team", body)
         load(token, body, {
             store.seedDefaults(20)
+            team?.initialize()
             findPage(afterId, initialQuery)
         }) { page ->
             body.removeAllViews()
@@ -172,6 +186,14 @@ class ContinuumBotRosterDialog(
             body.addView(label("Wähle die passende Persönlichkeit.", 20f))
             body.addView(ui.label("Direkt sprechen, einen Auftrag vorbereiten oder eigene Arbeitsnotizen pflegen.",
                 14f, JarvisDesign.Colors.textSecondary))
+            team?.let { current ->
+                val selection = current.snapshot()
+                body.addView(label("Chefbot: " + (page.items.firstOrNull { it.agentId == selection.chiefId }?.displayName
+                    ?: selection.chiefId ?: "noch nicht bestimmt")))
+                body.addView(action("Teamaufträge und Ergebnisse") { if (live(token)) showTeam() })
+                body.addView(ui.label("Profile sind keine Kompetenzbelege. Zwei freigegebene Spezialisten arbeiten " +
+                    "nacheinander mit einem lokalen Modell.", 13f, JarvisDesign.Colors.textSecondary))
+            }
             val search = ui.editor().apply {
                 hint = "Name, Rolle oder Arbeitsstil suchen"
                 contentDescription = "Bots nach Name, Rolle oder Arbeitsstil suchen"
@@ -234,7 +256,7 @@ class ContinuumBotRosterDialog(
 
     private fun findPage(afterId: String?, query: String): ChiefBotProfilePage {
         val term = query.trim()
-        if (term.isEmpty()) return store.page(afterId, 8)
+        if (term.isEmpty()) return store.page(afterId, 20)
         val matches = ArrayList<ChiefBotProfile>(9)
         var cursor = afterId
         do {
@@ -258,6 +280,15 @@ class ContinuumBotRosterDialog(
         addView(ui.label("ARBEITSWEISE", 11f, ui.accent(profile)))
         addView(ui.label(persona.approach, 14f, JarvisDesign.Colors.textSecondary))
         addView(statusLabel(profile, "REGISTRIERT · Kein laufender Auftrag\nGeprüfte Fähigkeiten: noch keine"))
+        team?.let { currentTeam ->
+            val selection = currentTeam.snapshot()
+            addView(ui.label(when (profile.agentId) {
+                selection.chiefId -> "CHEFBOT · keine zusätzlichen Rechte"
+                selection.specialistIds.getOrNull(0) -> "TEAM · Analyse"
+                selection.specialistIds.getOrNull(1) -> "TEAM · Gegenprüfung"
+                else -> "Nicht für den Teamauftrag ausgewählt"
+            }, 12f, ui.accent(profile)))
+        }
         onSelect?.let { select -> addView(ui.action("Mit ${profile.displayName} sprechen", primary = true) {
             if (current()) { close(); select(profile) }
         }) }
@@ -277,8 +308,8 @@ class ContinuumBotRosterDialog(
         val token = open("Bot · Arbeitsbereich", body)
         load(token, body, {
             val profile = requireNotNull(store.get(agentId))
-            profile to store.workingContext(profile.agentId, profile.agentId).orEmpty()
-        }) { (profile, notes) ->
+            Triple(profile, store.workingContext(profile.agentId, profile.agentId).orEmpty(), team?.skillIndex().orEmpty())
+        }) { (profile, notes, skills) ->
             body.removeAllViews()
             body.addView(ui.identity(profile))
             val persona = ChiefBotPersonas.describe(profile)
@@ -296,6 +327,47 @@ class ContinuumBotRosterDialog(
                 if (live(token)) { close(); select(profile) }
             }) }
             onAssign?.let { body.addView(action("Auftrag geben") { if (live(token)) showTask(profile) }) }
+            onAssign?.let { assign ->
+                body.addView(action("Kotlin-Reparaturübung vorbereiten") {
+                    if (live(token) && assign(ChiefBotTaskRequest(profile.agentId, profile.profileVersion,
+                            ChiefEngineeringPracticeCurriculum.KOTLIN_REPAIR_GOAL, ChiefBotTaskMode.CODING_DRAFT))) close()
+                })
+                body.addView(ui.label("Öffnet den bestehenden CCC1-Entwurf: Quell-SHA, Dateien, feste Tests " +
+                    "und Freigabe müssen ergänzt werden. Keine Ausführung oder Gewichtsänderung.",
+                    13f, JarvisDesign.Colors.textSecondary))
+            }
+            team?.let { currentTeam ->
+                val selection = currentTeam.snapshot()
+                body.addView(action("Als Chefbot bestimmen") {
+                    if (live(token)) load(token, body, {
+                        currentTeam.configure(profile.agentId, selection.specialistIds.filterNot { it == profile.agentId },
+                            selection.revision)
+                    }) { showProfile(profile.agentId) }
+                })
+                if (selection.chiefId != null && selection.chiefId != profile.agentId) {
+                    val included = profile.agentId in selection.specialistIds
+                    body.addView(action(if (included) "Aus Team entfernen" else "Für Textprüfung ins Team aufnehmen") {
+                        if (live(token)) load(token, body, {
+                            val next = if (included) selection.specialistIds - profile.agentId
+                                else selection.specialistIds + profile.agentId
+                            currentTeam.configure(requireNotNull(selection.chiefId), next, selection.revision)
+                        }) { showProfile(profile.agentId) }
+                    }.apply { isEnabled = included || selection.specialistIds.size < 2 })
+                }
+                body.addView(label("Fachgebiet: ${profile.role}\n" +
+                    "Modellwissen: vom geladenen Modell abhängig, nicht geprüft.\n" +
+                    "Team-Werkzeuge: keine (nur übergebener Text).\n" +
+                    "Coding: vorhandener CCC1-Entwurf; Compiler/Arbeitsbereich separat prüfen.\n" +
+                    "Unabhängig bestätigte Coding-Kompetenz: noch kein angebundener Beleg."))
+                body.addView(label("Fachanleitungen (bestehende Skill-Bibliothek): " +
+                    if (skills.isEmpty()) "noch keine gespeichert." else skills.joinToString("\n", prefix = "\n") {
+                        "${it.name} · ${it.status} · ${it.whenToUse}"
+                    }))
+                body.addView(ui.label("Nur eine passende, freigegebene Anleitung wird bei Bedarf geladen. " +
+                    "Eine Anleitung ist keine Werkzeugfreigabe und kein Kompetenznachweis dieses Bots.",
+                    13f, JarvisDesign.Colors.textSecondary))
+                body.addView(action("Aufgaben und Ergebnisbelege ansehen") { if (live(token)) showTeam(profile.agentId) })
+            }
             body.addView(label("Arbeitsplatz: ${profile.workspaceId}\n" +
                 "Speicherort: private App-Daten auf diesem Gerät\n" +
                 "Ausführung: noch keine isolierte Umgebung verbunden.\n" +
@@ -328,6 +400,120 @@ class ContinuumBotRosterDialog(
     private fun edit(value: String, limit: Int, multiline: Boolean = false) = ui.editor(multiline).apply {
         setText(value)
         filters = arrayOf(InputFilter.LengthFilter(limit))
+    }
+
+    private fun showTeam(agentId: String? = null) {
+        val currentTeam = team ?: return
+        val body = column()
+        val token = open("Mein KI-Team · Aufträge", body)
+        var rendered: Any? = null
+        fun render() {
+            if (!live(token)) return
+            val state = currentTeam.snapshot()
+            val key = state to currentTeam.storageError
+            if (rendered == key) return
+            rendered = key
+            body.removeAllViews()
+            body.addView(label("Chefbot: ${state.chiefId ?: "nicht gewählt"}", 20f))
+            body.addView(label("Analyse: ${state.specialistIds.getOrNull(0) ?: "nicht gewählt"}\n" +
+                "Gegenprüfung: ${state.specialistIds.getOrNull(1) ?: "nicht gewählt"}"))
+            currentTeam.storageError?.let { body.addView(ui.label(
+                "Ergebnis konnte nicht sicher gespeichert werden: $it. Nicht erneut automatisch ausführen.",
+                14f, JarvisDesign.Colors.warn)) }
+            body.addView(label("Fester Ablauf: Analyse → kritische Gegenprüfung. Zwei Modellaufrufe, " +
+                "höchstens zwei Minuten, keine Werkzeuge. Modelltexte bleiben ungeprüft."))
+            body.addView(action("Chefbot einen Textprüfauftrag geben") { if (live(token)) showTeamDraft() }.apply {
+                isEnabled = state.chiefId != null && state.specialistIds.size == 2 && state.tasks.none { it.active }
+            })
+            val rows = state.tasks.asReversed().filter {
+                agentId == null || agentId in listOf(it.chiefId, it.analystId, it.reviewerId)
+            }
+            if (rows.isEmpty()) body.addView(label("Noch keine Teamaufträge gespeichert."))
+            rows.forEach { task ->
+                val card = column().apply { background = ui.surface() }
+                card.addView(label(task.request, 17f))
+                card.addView(label("${task.id}\n${teamStatus(task)}\n${task.diagnostic}"))
+                task.responses.forEach { response ->
+                    card.addView(ui.label("${response.agentId} · ${response.stage}", 14f, JarvisDesign.Colors.cyan))
+                    card.addView(label(response.text))
+                    card.addView(ui.label("Ausführung aufgezeichnet · Inhalt NICHT unabhängig geprüft\n" +
+                        "Modell SHA-256: ${task.modelSha256}\n" +
+                        "Eingabe SHA-256: ${response.promptSha256}\n" +
+                        "Ausgabe SHA-256: ${response.outputSha256}\nDauer: ${response.elapsedMillis} ms",
+                        12f, JarvisDesign.Colors.textSecondary))
+                }
+                listOf(task.analystId, task.reviewerId).forEach { id ->
+                    card.addView(action("Bot $id öffnen") { if (live(token)) showProfile(id) })
+                }
+                if (task.active) card.addView(action("Auftrag stoppen") {
+                    if (live(token)) onTeamStop?.invoke(task.id)
+                }) else card.addView(action("Als neuen Entwurf prüfen (keine automatische Wiederholung)") {
+                    if (live(token)) showTeamDraft(task.request)
+                })
+                body.addView(card)
+            }
+            if (state.tasks.isNotEmpty()) body.addView(action("Abgeschlossene Textprüfungen löschen") {
+                if (live(token)) AlertDialog.Builder(activity)
+                    .setTitle("Teamverlauf löschen?")
+                    .setMessage("Alle abgeschlossenen Textprüfungen und Antworten werden gelöscht. " +
+                        "Offene Entwürfe müssen neu freigegeben werden. Private Bot-Gespräche, Profile, " +
+                        "Arbeitsnotizen und CCC1-Belege bleiben erhalten.")
+                    .setNegativeButton("Behalten", null)
+                    .setPositiveButton("Löschen") { _, _ ->
+                        if (live(token)) load(token, body, { currentTeam.clearHistory(state.revision) }) { showTeam(agentId) }
+                    }.show()
+            }.apply { isEnabled = state.tasks.none { it.active } && !currentTeam.active() })
+            body.addView(action("Zur Teamübersicht") { if (live(token)) show() })
+        }
+        teamRefresh = ::render
+        render()
+    }
+
+    private fun showTeamDraft(initial: String = "") {
+        val currentTeam = team ?: return
+        val selection = currentTeam.snapshot()
+        val requestId = "team-" + UUID.randomUUID()
+        val body = column()
+        val token = open("Chefbot · Textprüfung freigeben", body)
+        body.addView(label("Dein Text geht ausschließlich an die zwei ausgewählten Spezialisten. " +
+            "Private Bot-Gespräche und Arbeitsnotizen werden nicht geteilt. " +
+            "Dies prüft Text; es kompiliert keinen Code und baut keine APK."))
+        val text = ui.editor(multiline = true).apply {
+            filters = arrayOf(InputFilter.LengthFilter(1_800))
+            setText(initial); hint = "Auftrag und zu prüfenden Text eingeben (max. 1800 Zeichen)"
+            contentDescription = "Teamauftrag"; tag = "bot-team-request"
+        }
+        body.addView(text)
+        val consent = android.widget.CheckBox(activity).apply {
+            this.text = "Diese Textprüfung mit zwei Spezialisten freigeben"
+            setTextColor(JarvisDesign.Colors.text); minHeight = dp(48); tag = "bot-team-consent"
+        }
+        body.addView(consent)
+        val feedback = label("")
+        val submit = action("An Chefbot übergeben") {}
+        submit.setOnClickListener {
+            if (!live(token)) return@setOnClickListener
+            if (!consent.isChecked || text.text.isBlank() || text.text.length > 1_800) {
+                feedback.text = "Bitte einen Text mit 1–1800 Zeichen eingeben und die Freigabe bestätigen."
+            } else {
+                submit.isEnabled = false
+                if (onTeamSubmit?.invoke(requestId, text.text.toString(), selection.revision) == true) showTeam()
+                else { submit.isEnabled = true; feedback.text = "Nicht angenommen. Ein anderer Modelllauf ist noch belegt." }
+            }
+        }
+        body.addView(feedback); body.addView(submit)
+        body.addView(action("Zurück zu den Aufträgen") { if (live(token)) showTeam() })
+    }
+
+    private fun teamStatus(task: ChiefTeamTask): String = when (task.status) {
+        ChiefTeamStatus.ACCEPTED -> "Angenommen"
+        ChiefTeamStatus.ANALYZING -> "Analyse beauftragt"
+        ChiefTeamStatus.REVIEWING -> "Gegenprüfung beauftragt"
+        ChiefTeamStatus.RESPONSES_RECORDED -> "Beide Antworten gespeichert · Inhalt ungeprüft"
+        ChiefTeamStatus.BLOCKED -> "Blockiert · Voraussetzung fehlt"
+        ChiefTeamStatus.FAILED -> "Fehlgeschlagen"
+        ChiefTeamStatus.CANCELLED -> "Abgebrochen · keine automatische Wiederholung"
+        ChiefTeamStatus.INTERRUPTED -> "Unterbrochen · vor neuem Auftrag prüfen"
     }
 
     private fun editProfile(profile: ChiefBotProfile) {

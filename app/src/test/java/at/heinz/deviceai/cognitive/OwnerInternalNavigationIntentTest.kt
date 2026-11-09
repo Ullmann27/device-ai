@@ -48,6 +48,8 @@ class OwnerInternalNavigationIntentTest {
     @Test fun everyRailAndCategoryDestinationIsReachableBySpeech() {
         val expected = mapOf(
             "öffne die Agenten" to "agents", "zeig mir die Assistenten" to "agents",
+            "öffne Mein KI-Team" to "agents", "Mein KI-Team" to "agents",
+            "öffne das KI-Team" to "agents", "öffne Bot Universe" to "agents",
             "öffne die Aufgaben" to "tasks", "öffne die Entwicklungsaufgaben" to "tasks",
             "öffne die Recherche" to "research", "öffne die Forschung" to "research",
             "öffne das Lernzentrum" to "learning", "öffne Lernen" to "learning",
@@ -93,6 +95,7 @@ class OwnerInternalNavigationIntentTest {
             "Öffne die Einstellungen",    // Android settings app, not the cockpit screen
             "Öffne Termux", "Öffne Chrome", "Öffne die Kamera", "Öffne Maps", "Öffne den Rechner",
             "Öffne Spotify", "Öffne Telegram", "Öffne die Galerie", "Öffne den Browser", "Öffne Netflix",
+            "Öffne TeamViewer", "Öffne nicht Mein KI-Team", "Öffne die Datei KI-Team.pdf",
             "Öffne den Planer", "Öffne Systemd", "Öffne Memo",
             "öffne", "Gedächt",
         )) assertNull(u, route(u))

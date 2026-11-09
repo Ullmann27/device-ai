@@ -2,6 +2,16 @@ package at.heinz.deviceai.chief
 
 /** Authored rule-application exercises. Scores are not general coding ability or repair receipts. */
 object ChiefEngineeringPracticeCurriculum {
+    const val KOTLIN_REPAIR_GOAL = "Kotlin-Reparaturübung: Einen reproduzierbaren Fehler in genau einem " +
+        "freigegebenen Quellpfad beheben. Erst unveränderten Test fehlschlagen lassen, dann Patch erstellen " +
+        "und dieselben Tests ausführen; unabhängige Gegenprüfung im getrennten Arbeitsbereich. " +
+        "Fehlende Modelle, Compiler, Isolation oder Freigaben als BLOCKED melden. " +
+        "Höchstens drei Modellversuche; kein Merge, keine Installation, kein Gewichtstraining."
+
+    fun requestsKotlinRepairPractice(request: String): Boolean =
+        Regex("(?iu)^\\s*lerne,?\\s+kotlin[-\\s]+fehler\\s+(zuverlässig\\s+)?zu\\s+reparieren[.!]?\\s*$")
+            .matches(request)
+
     fun exercises(agentId: String): List<ChiefBotPracticeExercise> = when (agentId) {
         "bot-kora" -> kora()
         "bot-link" -> link()
