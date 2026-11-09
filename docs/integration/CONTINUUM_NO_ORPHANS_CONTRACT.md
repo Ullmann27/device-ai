@@ -34,12 +34,13 @@ Das bereits paginierte Archiv enthält **627 PRs und 727 Branches**. Die 29 als 
 
 ## Sofortige Code-52-Pflichtkette
 
-`#671` ist weiterhin der gemeinsame Integrationsmaster. `#672` beseitigt isoliert irreführende Fremdprojekt-Spezialpfade; auf `#671` besteht weiterhin ein roter Projektisolations-Test, bis alle Referenzen und davon abhängigen Testannahmen nachweisbar bereinigt sind. `#673` adressiert Fold7 T23/T24 (negierte Appsuche und klare Rückmeldung) sowie die Akku-Neumessungs- und Vergleichsklausel aus dem aktuellen Code-Review. Selektive Übernahme in `#671` erst nach geprüfter Kompatibilität und Tests; T20 (Webfreigabe-Revision in einem lokalen Gespräch), volle Sprach-/Thermik- und sichere Android-Typisierfunktionen bleiben eigenständig **OFFEN**, nicht als erledigt etikettiert.
+`#671` ist weiterhin der gemeinsame Integrationsmaster. `#672` beseitigt isoliert irreführende Fremdprojekt-Spezialpfade; auf `#671` besteht weiterhin ein roter Projektisolations-Test, bis alle Referenzen und davon abhängigen Testannahmen nachweisbar bereinigt sind. `#673` adressiert Fold7 T23/T24 (negierte Appsuche und klare Rückmeldung), die Akku-Neumessungs- und Vergleichsklausel und einen gezielten T20-Quellfix: rein lokale Modellberechnung wird nicht mehr bei jeder Bereinigungs-Änderung des Web-Freigabezählers abgeworfen. Für tatsächliche Webtools bleiben Revisionskontrolle, gesperrter Dispatch und Session-Revalidierung aktiv. Selektive Übernahme in `#671` erst nach geprüfter Kompatibilität und Tests; T20 bleibt bis zum **echten Fold7-Gegentest** OFFEN; volle Sprach-/Thermik- und sichere Android-Typisierfunktionen bleiben ebenfalls **OFFEN**, nicht als erledigt etikettiert.
 
 ### Reproduktionsnachweise
 
 - `#673`, vorliegender isolierter Kotlin/JDK21-Test (Klassifizierungslogik-Spiegel): initial **14 PASS/1 FAIL** für `Prüfe nicht den Akku`, danach **15 PASS/0 FAIL** nach Negationskorrektur. Die Klassifizierung wurde quellentreu nachgebildet; **kein** vollständiger Repository-JUnit- oder APK-Test.
 - `#673`, neu gepushte Regressions-JUnit-Dateien: `OwnerAppLookupIntentTest.kt`, `OwnerAppActionFlowTest.kt`, `PreviousBatteryObservationTest.kt`, `BootstrapBrainTest.kt`. Lauf auf Gradle: **NOT_RUN**.
+- `#673`, T20-Epochenkontrolle: vier Kotlin/JDK21-Prüfungen für lokale Antwort gegenüber Web-Aufruf/Sitzung **4 PASS / 0 FAIL**; quellengebundene statische Prüfbedingungen für lokale Generation, Web-ToolGate und UI-Rückmeldung **11/11 erfüllt**. Das ist kein echter Gerätelauf.
 - `#672`, separat gepushte Projektgrenzen-Tests: Node / Android / Fold7 **NOT_RUN**.
 - `#670` bleibt Feldtest- und Fehlerregister für den Besitzer.
 
