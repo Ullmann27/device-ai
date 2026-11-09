@@ -33,11 +33,29 @@ its branch remains untouched. Relevant EXP-02/05/07/08/11/12.
   and only system binary/library read-only mounts exits zero.
 - Bubblewrap was missing. Restored distro bubblewrap0.9.0 after the missing
   dependency probe; real unprivileged `--unshare-all` startup exits zero.
-- Existing fixed-profile full isolation/Kotlin proof: PENDING at this checkpoint.
+- Existing fixed-profile full isolation/Kotlin proof: PASS at
+  `e5b8f365f311025414e019fb91cbf90038d97d59`. Four real Node containment
+  checks, real Kotlin compile/run, unchanged owner canary, timeout and confirmed
+  container removal. No containers remained. These are harness-authored safety
+  fixtures, NOT model-authored patches or canonical coding success.
+- Reproduction: build `scripts/continuum-isolation.Dockerfile --network=none`;
+  provide an external JSON with exact image hash, concrete Node/JDK/Kotlin tool
+  roots and limits; run `node scripts/continuum-isolation-proof.mjs CONFIG`
+  as a non-root controller with authorized local Docker access. This run used
+  UID65534/GID102, Node26.12.1, Temurin21.0.13, Kotlin2.2.21,
+  1024MiB/64PIDs/1CPU/60s. No global socket permission changes.
+  Raw output: `evidence/ASTRA-GENESIS-ISOLATION-20261109.json`,
+  SHA256 `8adb896860a70a90e40ed127abe88df3626c47527a4f0f283c5f4cc3b34bbdd5`.
+  Executor SHA256 `7dda3445ade45c8a484a312e3a30f5e6c5200f80f9333a96970c52eefcce3594`;
+  proof script SHA256 `d45af99e035c7763d4c2e532a6469b6c4ec93fc89e3527817c46f6df5c68135e`.
 - No local model weights in this task's persisted artifacts. Existing approved
   Qwen1.5B weights and exact CPU llama.cpp pin must be restored with provenance.
   Available GCC13 differs from the reviewed GCC14 binary recipe. Never change
   the reviewed tuple to admit an arbitrary replacement binary.
+  Official Debian trixie image retrieval succeeded as a possible reproducible
+  compiler route, but the approved Hugging Face model revision cannot resolve
+  here in either curl or the independent web-fetch tool. Native inference is
+  BLOCKED, not replaced with scripted output or an unapproved mirror.
 - Google Maven/Android build remains a separate known blockade; not used as
   an excuse to claim Android acceptance from Kotlin/JVM.
 
@@ -51,8 +69,8 @@ its branch remains untouched. Relevant EXP-02/05/07/08/11/12.
 4. Freeze at least ten independent tasks and A/B/C fixed-budget criteria before
    evaluation; no measurements, skill promotion or weights training claimed yet.
 
-Tests for this checkpoint: real minimal Docker and bubblewrap startup PASS;
-full execution/model/repair/evaluation NOT_RUN. This is provisioning evidence,
+Tests for this checkpoint: real Docker, bubblewrap, fixed Kotlin/Node isolation
+and timeout cleanup PASS; model/canonical repair/evaluation NOT_RUN. This is provisioning evidence,
 not intelligence. New code changes will have separate exact-SHA test results.
 
 Rollback: revert only this branch's isolated commits; stop only owned processes
