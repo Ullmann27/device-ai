@@ -88,4 +88,22 @@ class PreviousBatteryObservationTest {
         assertFalse(history.answer("new").contains("75 %"))
         assertTrue(history.answer("new").contains("keine neue Messung gestartet"))
     }
+    @Test fun freshComparisonMustMeasureExactlyOnceAndUseSessionEvidence() {
+        val request = "Miss den Akku nochmal und vergleiche mit der letzten Messung."
+        assertFalse(OwnerPreviousBatteryIntent.isPreviousReadingRequest(request))
+        assertTrue(OwnerPreviousBatteryIntent.isFreshComparisonRequest(request))
+        assertFalse(OwnerPreviousBatteryIntent.isFreshComparisonRequest(previousQuestion))
+        assertTrue(OwnerPreviousBatteryIntent.isPreviousReadingRequest("Akku bitte nicht erneut messen."))
+        val action = BootstrapBrain.decide(request, emptyList())
+        assertEquals(BootstrapKind.DEVICE_TOOL, action.kind)
+        assertEquals("get_battery_info", action.tool)
+        val observations = PreviousBatteryObservation()
+        assertTrue(observations.recordIfFresh("original", outcome("level: 75\nscale: 100\n")))
+        assertEquals(75, observations.lastPercent("original"))
+        assertNull(observations.lastPercent("new-session"))
+        assertTrue(observations.recordIfFresh("original", outcome("level: 74\nscale: 100\n")))
+        assertEquals(74, observations.lastPercent("original"))
+        assertFalse(OwnerPreviousBatteryIntent.isFreshComparisonRequest("Prüfe nicht den Akku; vergleiche nur die letzte Messung."))
+    }
+
 }
