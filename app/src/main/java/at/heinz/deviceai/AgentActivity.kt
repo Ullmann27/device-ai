@@ -4229,6 +4229,7 @@ class AgentActivity : Activity() {
             CenterAction("MEHR · ARBEITSBEREICHE") { showMoreWorkAreas() },
             CenterAction("SHIZUKU · VERBINDEN") { showShizukuConnectionDialog() },
             CenterAction("WHATSAPP · NACHRICHT ENTWERFEN") { showWhatsAppDraftDialog() },
+            CenterAction("HOLOGRAMM · CINEMA-2030-MODUS") { showCinemaDepthExperiment() },
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
             CenterAction("OPENROUTER · API-KEY EINGEBEN") { showOpenRouterApiKeyDialog() },
@@ -4249,6 +4250,28 @@ class AgentActivity : Activity() {
             CenterAction("HOLOGRAMM · LIVE-FRAMES PRÜFEN", accent = true) { showHologramMotionAudit() }
         )
     )
+
+    /** Reversible presentation experiment; this does not grant tools or permissions. */
+    private fun showCinemaDepthExperiment() {
+        val current = at.heinz.deviceai.ui.JarvisCinematicSettings.depthExperimentEnabled(this)
+        AlertDialog.Builder(this)
+            .setTitle("Hologramm · Cinema 2030")
+            .setMessage(
+                "Experimentelle räumliche Rauchglas-Kacheln und gestaffelte Flügel. " +
+                    "Nur bei aktiven Arbeitsfenstern; kein neuer Agent, keine App-Berechtigung. " +
+                    "Der Standardmodus bleibt verfügbar. Aktuell: " +
+                    if (current) "Cinema 2030 AN" else "Cinema 2030 AUS"
+            )
+            .setNegativeButton("Abbrechen", null)
+            .setPositiveButton(if (current) "Standardmodus" else "Cinema 2030 einschalten") { _, _ ->
+                at.heinz.deviceai.ui.JarvisCinematicSettings.preferences(this).edit()
+                    .putBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.DEPTH_EXPERIMENT_KEY, !current)
+                    .apply()
+                homeView?.jarvisShell?.invalidate()
+                addToolActivity(if (current) "HOLOGRAMM · Standardmodus" else "HOLOGRAMM · Cinema 2030 aktiviert")
+            }
+            .show()
+    }
 
     private fun showWhatsAppDraftDialog() {
         if (isFinishing || isDestroyed) return
