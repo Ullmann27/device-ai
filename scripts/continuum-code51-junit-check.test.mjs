@@ -15,6 +15,9 @@ with tempfile.TemporaryDirectory() as d:
         ET.SubElement(ET.SubElement(root, 'testcase', classname=klass, name=name), 'skipped')
     for klass in sorted(gate.REQUIRED):
         ET.SubElement(root, 'testcase', classname=klass, name='requiredFixture')
+    for identity in sorted(gate.REQUIRED_CASES):
+        klass, name = identity.split('#')
+        ET.SubElement(root, 'testcase', classname=klass, name=name)
     while len(root) < gate.EXPECTED_TESTS:
         ET.SubElement(root, 'testcase', classname='fixture.Padding', name='case'+str(len(root)))
     path = pathlib.Path(d) / 'TEST-fixture.xml'

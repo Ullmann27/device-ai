@@ -108,13 +108,28 @@ jobs:
       - name: Kotlin, all unit and widget tests, lifecycle and lint
         run: |
           set -euo pipefail
-          gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain \
-            -Dorg.gradle.jvmargs='-Xmx2500m -XX:MaxMetaspaceSize=768m' \
-            -Pkotlin.compiler.execution.strategy=in-process \
-            -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true \
-            -PcontinuumLocalStandaloneQa=true -PcontinuumOwnerArm64=true \
-            -PcontinuumStandaloneVersionCode=51 \
-            :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
+          accepted=0
+          for attempt in 1 2 3; do
+            if gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain \
+                -Dorg.gradle.jvmargs='-Xmx2500m -XX:MaxMetaspaceSize=768m' \
+                -Pkotlin.compiler.execution.strategy=in-process \
+                -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true \
+                -PcontinuumLocalStandaloneQa=true -PcontinuumOwnerArm64=true \
+                -PcontinuumStandaloneVersionCode=51 \
+                :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug \
+                2>&1 | tee "$RUNNER_TEMP/code51-android-gradle-$attempt.log"; then
+              accepted=1
+              break
+            fi
+            if ! grep -Eiq 'Received status code 50[234]|Gateway Time-out|Connection reset by peer|Read timed out' \
+                "$RUNNER_TEMP/code51-android-gradle-$attempt.log"; then
+              echo "::error::Non-network Android/Gradle failure; no retry."
+              exit 1
+            fi
+            echo "::warning::Transient artifact/server error; bounded retry $attempt/3"
+            if (( attempt < 3 )); then sleep 10; fi
+          done
+          test "$accepted" -eq 1
           python3 scripts/continuum-code51-junit-check.py \
             app/build/test-results/testDebugUnitTest "$RUNNER_TEMP/junit-totals.txt"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"

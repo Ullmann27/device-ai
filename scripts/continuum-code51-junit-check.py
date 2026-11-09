@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
-EXPECTED_TESTS = 4197
+EXPECTED_TESTS = 4199  # 4197 frozen + 2 explicit TTS-boundary regressions
 SKIPS = {
     "at.heinz.deviceai.learning.Cre1InferenceEncoderTest#trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
     "at.heinz.deviceai.learning.ContinuumContrastiveParityTest#actualNodeKotlinNodeTrainingParity",
@@ -39,6 +39,12 @@ REQUIRED = {
     "at.heinz.deviceai.cognitive.SituationReturnMorphologyTest",
     "at.heinz.deviceai.avatar3d.AvatarCoreLightingTest",
     "at.heinz.deviceai.ui.JarvisWindowGazeTest",
+}
+
+
+REQUIRED_CASES = {
+    "at.heinz.deviceai.cognitive.JarvisVoiceProfileTest#aTitleBeforeANameDoesNotBecomeAChunkEnding",
+    "at.heinz.deviceai.cognitive.JarvisVoiceProfileTest#aLongSentencePrefersAnExistingClausePauseToAnArbitraryWord",
 }
 
 
@@ -75,6 +81,8 @@ def verify(directory):
         raise ValueError(f"Skip inventory changed: {sorted(skipped ^ SKIPS)}")
     if not REQUIRED <= classes:
         raise ValueError(f"Required suites missing: {sorted(REQUIRED - classes)}")
+    if not REQUIRED_CASES <= seen:
+        raise ValueError(f"Required speech regressions missing: {sorted(REQUIRED_CASES - seen)}")
     return totals
 
 
