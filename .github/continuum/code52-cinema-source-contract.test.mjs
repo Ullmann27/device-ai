@@ -37,6 +37,14 @@ test('text-safe 0.09 raster never controls structural rim and scan',()=>{
   assert.match(host,/fui\.rimIsolationEnabled = JarvisCinematicSettings\.experimentEnabled/);
 });
 
+test('EXP01 slices glass and brackets into different Z planes, not native text',()=>{
+  assert.match(core,/fun layerShiftDp\(/);
+  assert.match(overlay,/layerShiftDp\(tilt, -24f, true\)/);
+  assert.match(overlay,/layerShiftDp\(tilt, 20f, true\)/);
+  assert.match(overlay,/canvas\.clipRect\(constructed\)/);
+  assert.match(host,/fui\.zSliceEnabled = JarvisCinematicSettings\.experimentEnabled/);
+});
+
 test('only an honest completed tool result may trigger a current-window pulse',()=>{
   assert.match(host,/fun verifiedStep\(callId: String\): Boolean/);
   assert.match(overlay,/fun verifiedStep\(key: String\): Boolean/);
