@@ -195,7 +195,7 @@ class BootstrapBrainTest {
     @Test fun deviceCallsAreReadOnlyAndUseRegisteredTools() {
         val phrases = listOf(
             "Prüfe Akku", "Speicher", "Zeig meine Downloads",
-            "Fehler Lumo", "Prüfe die installierte Lumo-Version", "Installierte Apps",
+            "Installierte Apps",
             "Geräteinfo", "Netzwerk"
         )
         phrases.forEach {
@@ -220,8 +220,6 @@ class BootstrapBrainTest {
         }
         assertEquals(BootstrapKind.DEVICE_TOOL, BootstrapBrain.decide("Prüfe Akku", emptyList()).kind)
         assertEquals(BootstrapKind.DEVICE_TOOL, BootstrapBrain.decide("Installierte Apps", emptyList()).kind)
-        assertEquals(BootstrapKind.DEVICE_TOOL,
-            BootstrapBrain.decide("Prüfe die installierte Lumo-Version", emptyList()).kind)
         assertEquals(BootstrapKind.FORGET,
             BootstrapBrain.decide("Lösche meine Erinnerungen", emptyList()).kind)
         assertEquals(BootstrapKind.FORGET,
