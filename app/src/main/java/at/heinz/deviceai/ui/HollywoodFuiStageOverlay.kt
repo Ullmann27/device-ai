@@ -32,6 +32,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     internal var workPulseEnabled = false
     private var lastPulseKey: String? = null
     private var pulseAtElapsedMs = -1L
+    private var pulsePending = false
     internal var requestFrame: () -> Unit = {}
     internal var cinematicEffectsEnabled = true
         set(value) {
@@ -85,6 +86,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         moteSeed = scene.fuiProfile.ordinal
         elapsedMs = 0L
         pulseAtElapsedMs = -1L
+        pulsePending = false
         lastPulseKey = null
         openness = 0f
         closingElapsedMs = -1L
@@ -132,9 +134,10 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     fun verifiedStep(key: String): Boolean {
         if (!workPulseEnabled || !cinematicEffectsEnabled || key.isBlank() ||
             lastPulseKey == key || closingElapsedMs >= 0L || !isShown) return false
-        if (pulseAtElapsedMs >= 0L && elapsedMs - pulseAtElapsedMs in 0L..249L) return false
+        if (pulsePending || (pulseAtElapsedMs >= 0L && elapsedMs - pulseAtElapsedMs in 0L..249L))
+            return false
         lastPulseKey = key
-        pulseAtElapsedMs = elapsedMs
+        pulsePending = true
         requestFrame()
         return true
     }
@@ -174,6 +177,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
 
     fun close(immediate: Boolean) {
         active = false
+        pulsePending = false
         pulseAtElapsedMs = -1L
         if (immediate) visibility = GONE
     }
@@ -181,6 +185,10 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     /** The native window supplies the only clock, including close and Android animator scale. */
     internal fun present(elapsed: Long, closing: Long, reduced: Boolean, open: Float): Boolean {
         elapsedMs = elapsed
+        if (pulsePending) {
+            pulseAtElapsedMs = if (workPulseEnabled && closing < 0L) elapsed else -1L
+            pulsePending = false
+        }
         closingElapsedMs = closing
         reducedMotion = reduced || !budget.animate
         openness = open
