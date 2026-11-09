@@ -9921,6 +9921,7 @@ class AgentActivity : Activity() {
         var submittedToolObservationCount = 0
         var modelWebCalls = 0
         val modelWebSessions = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cognitive.ApprovedWebResearchSession>()
+        val onlineResearchFrameUsed = java.util.concurrent.atomic.AtomicBoolean(false)
         val startedToolCalls = java.util.concurrent.ConcurrentHashMap<String, String>()
         val orchestrator = BoundedAgentOrchestrator(
             model = codingPlanning?.model(localRuntime,cancellation) ?: AgentModel { task, memories, reflection, rawObservations ->
@@ -9973,6 +9974,15 @@ class AgentActivity : Activity() {
                     at.heinz.deviceai.cognitive.TurnScopedInternetMode.effective(
                         internetModeAtTurnStart, internetConsent.mode,
                         internetConsent.revision() == internetRevisionAtTurnStart)
+                // A previous research digest is online-framed only while authorized.
+                // If that authorization changes, this answer must not be retained.
+                if (botTask == null && codingPlanning == null &&
+                    localConversationContext.hasResearch(localSessionId) &&
+                    (boundedInternetMode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON ||
+                        (boundedInternetMode == at.heinz.deviceai.cognitive.InternetAccessMode.ASK &&
+                            modelWebSessions.any { it.isAuthorized() }))) {
+                    onlineResearchFrameUsed.set(true)
+                }
                 // Optional read-only decision context; refresh after queued document writes.
                 // Never supply owner records to assigned bots or coding-only planning.
                 val decisionDigest = if (botTask == null && codingPlanning == null &&
@@ -10376,7 +10386,8 @@ class AgentActivity : Activity() {
                     }
                     if (at.heinz.deviceai.cognitive.TurnScopedInternetMode.discardAfterConsentChange(
                             internetConsent.revision() != internetRevisionAtTurnStart,
-                            modelWebCalls, modelWebSessions.isNotEmpty())) {
+                            modelWebCalls, modelWebSessions.isNotEmpty(),
+                            onlineResearchFrameUsed.get())) {
                         lastLocalReply = null // Revoked turn cannot leave an old apparent-answer anchor.
                         if (botTask == null && sessionId == localSessionId && !ephemeralScreenRun.get())
                             localConversationContext.recordUnanswered(localSessionId, text)
