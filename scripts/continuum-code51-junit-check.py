@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
-EXPECTED_TESTS = 4199  # 4197 frozen + 2 explicit TTS-boundary regressions
+EXPECTED_TESTS = 4200  # 4197 frozen + 2 TTS + 1 terminal-window regression
 SKIPS = {
     "at.heinz.deviceai.learning.Cre1InferenceEncoderTest#trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
     "at.heinz.deviceai.learning.ContinuumContrastiveParityTest#actualNodeKotlinNodeTrainingParity",
@@ -45,6 +45,7 @@ REQUIRED = {
 REQUIRED_CASES = {
     "at.heinz.deviceai.cognitive.JarvisVoiceProfileTest#aTitleBeforeANameDoesNotBecomeAChunkEnding",
     "at.heinz.deviceai.cognitive.JarvisVoiceProfileTest#aLongSentencePrefersAnExistingClausePauseToAnArbitraryWord",
+    "at.heinz.deviceai.avatar.AvatarIntentLifecycleTest#closeAfterGlanceExpiryClearsTheLastPoseWithoutReplayingOldWindows",
 }
 
 
