@@ -29,11 +29,13 @@ internal class SpatialPresenceAndLightBridge(context: Context, private val inval
         private set
 
     fun start() {
-        if (registered || sensor == null || manager == null) return
+        if (registered) return
+        val service = manager ?: return
+        val input = sensor ?: return
         neutralPitch = Float.NaN
         neutralRoll = Float.NaN
         registered = runCatching {
-            manager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME)
+            service.registerListener(this, input, SensorManager.SENSOR_DELAY_GAME)
         }.getOrDefault(false)
     }
 
