@@ -10,8 +10,8 @@ class LuxuryHoloButtonRendererTest {
         val closer = LuxuryHoloButtonRenderer.highlightProximity(box, 175f, 90f)
         val far = LuxuryHoloButtonRenderer.highlightProximity(box, 4_000f, 2_000f)
         assertTrue(closer > far)
-        assertTrue(closer in .12f...72f)
-        assertTrue(far in .12f...72f)
+        assertTrue(closer in 0.12f..0.72f)
+        assertTrue(far in 0.12f..0.72f)
         assertEquals(closer, LuxuryHoloButtonRenderer.highlightProximity(box, 175f, 90f), 0f)
     }
 
