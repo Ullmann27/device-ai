@@ -41,3 +41,14 @@ test('Cockpit shortcuts remain accessible on narrow phones and folding displays'
   assert.match(shortcuts,/LinearLayout\.LayoutParams\(0, dp\(45\), 1f\)/);
   assert.doesNotMatch(shortcuts,/HorizontalScrollView\(/);
 });
+
+test('New conversation is reachable and labelled in both composer layouts',()=>{
+  const startComposer=activity.indexOf('private fun buildComposer(): View');
+  const endComposer=activity.indexOf('private fun',startComposer+24);
+  const composer=activity.slice(startComposer,endComposer);
+  assert.ok(startComposer>=0&&endComposer>startComposer);
+  assert.match(composer,/contentDescription = "Neue Chat-Sitzung"/);
+  assert.match(composer,/setOnClickListener \{ newSession\(\) \}/);
+  assert.match(composer,/if \(!stackedComposer\) inputRow\.addView\(newChat,/);
+  assert.match(composer,/if \(stackedComposer\) \{\s*newChat\.text = "＋ Neue Sitzung"[\s\S]*?shell\.addView\(newChat, matchWidth\(top = 6\)\)/);
+});

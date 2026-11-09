@@ -5185,6 +5185,11 @@ class AgentActivity : Activity() {
         })
         refreshConversationCameraControls()
         shell.addView(inputRow, matchWidth())
+        if (stackedComposer) {
+            newChat.text = "＋ Neue Sitzung"
+            newChat.textSize = 14f
+            shell.addView(newChat, matchWidth(top = 6))
+        }
 
         val actions = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
