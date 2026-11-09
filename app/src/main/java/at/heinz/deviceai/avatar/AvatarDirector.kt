@@ -34,6 +34,8 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     private var legacyIntentSerial = 0L
     private var thinkingAtMillis = Long.MIN_VALUE
     private val retiredWindows = LinkedHashSet<String>()
+    // An expired glance still needs one terminal event if the physical window closes afterwards.
+    private val closedExpiredWindows = LinkedHashSet<String>()
     private val seenConfirmations = LinkedHashSet<String>()
 
     @Synchronized fun attach(newSink: AvatarSink) {
@@ -201,7 +203,16 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     @Synchronized fun windowClosed(windowId: String): Boolean {
         if (workIntent?.id == windowId) workIntent = null
-        if (windowIntent?.id != windowId) return false
+        if (windowIntent?.id != windowId) {
+            // A refit may expire the short opening glance before the real close callback.
+            // The reducer otherwise retains the old pose at its last event time. Refresh it
+            // exactly once, but never cancel a newer window's gaze or replay stale closes.
+            if (windowIntent == null && windowId in retiredWindows && windowId !in closedExpiredWindows) {
+                remember(closedExpiredWindows, windowId)
+                publishAnimationIntents(clock())
+            }
+            return false
+        }
         remember(retiredWindows, windowId)
         windowIntent = null
         publishAnimationIntents(clock())

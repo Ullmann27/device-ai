@@ -3,6 +3,7 @@ package at.heinz.deviceai.avatar
 import at.heinz.deviceai.avatar3d.AvatarGlbContract
 import at.heinz.deviceai.avatar3d.AvatarMorphMapper
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -39,6 +40,24 @@ class AvatarIntentLifecycleTest {
         assertEquals(-1f, reducer.pose(now).confirmationProgress, 0f)
         director.onRuntime(AvatarRuntimeSignals(listening = true))
         assertEquals("Refresh cannot replay a cleared nod", -1f, reducer.pose(now).confirmationProgress, 0f)
+    }
+
+    @Test fun closeAfterGlanceExpiryClearsTheLastPoseWithoutReplayingOldWindows() {
+        assertTrue(director.windowOpened("expired-window"))
+        assertTrue(reducer.pose(now).gazeDirected)
+        now += AvatarPoseReducer.WINDOW_GAZE_TTL_MS + 1L
+        assertFalse("Refit expires the short opening glance", director.windowMoved("expired-window", GazeTarget.WORK_WINDOW))
+        // Last-event pose would stay directed forever without a terminal event from close.
+        assertTrue("Reproduce the stale-pose case", reducer.pose().gazeDirected)
+        assertFalse("Already-expired intent cannot be closed as an active one", director.windowClosed("expired-window"))
+        assertFalse("Physical close must clear the reducer", reducer.pose().gazeDirected)
+
+        assertTrue(director.windowOpened("successor-window"))
+        assertTrue(reducer.pose(now).gazeDirected)
+        assertFalse("Stale close cannot retire its successor", director.windowClosed("expired-window"))
+        assertTrue("Successor gaze is retained", reducer.pose(now).gazeDirected)
+        assertTrue(director.windowClosed("successor-window"))
+        assertFalse(reducer.pose().gazeDirected)
     }
 
     @Test fun reducedMotionNeverLatchesAWindowHeadPose() {

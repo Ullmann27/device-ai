@@ -1171,11 +1171,13 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (!canAnimateFrame()) return
         val now = SystemClock.uptimeMillis()
         entranceMotion.advance(now)
+        val previousCameraProgress = cameraMotion.progress
         cameraMotion.advance(now, hasWindowFocus(), Settings.Global.getFloat(context.contentResolver,
             Settings.Global.ANIMATOR_DURATION_SCALE, 1f))
-        // The visible 3D projection follows motion even if Canvas draws are deferred.
+        // Keep the terminal frame too: progress reaches exactly zero before Canvas can draw,
+        // and dropping that last frame leaves a near-rest (but not rest) head projection cached.
         if (head3dEnabled && cameraFraming != null && cockpitHeadBounds != null &&
-            (cameraMotion.workActive || cameraMotion.progress > 0f)) updateAuraFraming()
+            (cameraMotion.workActive || cameraMotion.progress > 0f || previousCameraProgress > 0f)) updateAuraFraming()
         val delta = if (lastFrameMs == 0L) 0f else ((now - lastFrameMs) / 1000f).coerceIn(0f, .1f)
         lastFrameMs = now
         avatarSeconds = (avatarSeconds + delta) % 460f
