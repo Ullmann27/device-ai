@@ -288,7 +288,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         }
         canvas.save()
         if (zSliceEnabled && !reducedMotion) canvas.translate(
-            HollywoodFuiConstruct.layerShiftDp(tilt, 20f, true) * density, 0f)
+            HollywoodFuiConstruct.layerShiftDp(tilt, 20f, true), 0f)
         cinematics.drawBrackets(painter, boxDp, frame.brackets * frame.closeFrame, bloom)
         canvas.restore()
         if (prismRimEnabled && bloom && frame.brackets * frame.closeFrame > .1f) {
