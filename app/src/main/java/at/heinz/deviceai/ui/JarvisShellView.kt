@@ -104,8 +104,8 @@ class JarvisShellView(context: Context) : View(context) {
     }
 
     private fun refreshSpatialPresence() {
-        val enabled = JarvisCinematicSettings.enabled(context) &&
-            JarvisCinematicSettings.depthExperimentEnabled(context)
+        val enabled = JarvisCinematicSettings.experimentEnabled(context,
+            JarvisCinematicSettings.Experiment.EXP_01_Z_GLASS)
         val capable = motionBudgetProvider?.invoke()?.animate == true
         if (enabled && capable && workspaceFootprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE &&
             motionAllowed(animatorScale())) spatialPresence.start() else spatialPresence.stop()
@@ -235,11 +235,13 @@ class JarvisShellView(context: Context) : View(context) {
             missionClearance = JarvisDeckClearance.step(missionClearance, missionTarget, elapsed, animate)
         }
         deckFrameMs = now
-        val luxuryDepth = JarvisCinematicSettings.enabled(context) &&
-            JarvisCinematicSettings.depthExperimentEnabled(context)
+        val luxuryDepth = JarvisCinematicSettings.experimentEnabled(context,
+            JarvisCinematicSettings.Experiment.EXP_13_LUXURY)
+        val wings = JarvisCinematicSettings.experimentEnabled(context,
+            JarvisCinematicSettings.Experiment.EXP_05_WINGS)
         JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true,
             deckClearance = deckClearance, missionClearance = missionClearance,
-            luxuryDepth = luxuryDepth, depthBudget = motionBudgetProvider?.invoke())
+            luxuryDepth = luxuryDepth, depthBudget = motionBudgetProvider?.invoke(), enableWings = wings)
         canvas.restore()
         var workWindowMoving = false
         val effectiveScale = if (motionAllowed(scale)) scale else 0f
