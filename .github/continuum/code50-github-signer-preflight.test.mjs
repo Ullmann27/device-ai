@@ -12,7 +12,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const script = path.join(root, 'scripts/continuum-code50-github-signer.sh');
 const SHA = 'a'.repeat(40);
 const RUN = '123456789';
-const BRANCH = 'chatgpt/code50-qa-staging-20261108';
+const BRANCH = 'copilot/code51-master-integrator-20261108';
 const hasTools = ['bash', 'jq', 'base64', 'sha256sum', 'curl', 'stat'].every(t => spawnSync('sh', ['-c', `command -v ${t}`]).status === 0);
 
 const good = () => ({
@@ -22,9 +22,9 @@ const good = () => ({
   },
   policies: {branch_policies: [{name: BRANCH, type: 'branch'}]},
   run: {head_sha: SHA, head_branch: BRANCH, event: 'workflow_dispatch', status: 'completed', conclusion: 'success', path: '.github/workflows/continuum-code50-github-qa.yml'},
-  jobs: {jobs: [{name: 'node-backend', conclusion: 'success'}, {name: 'android-host', conclusion: 'success'}, {name: 'android-lifecycle-jdk21', conclusion: 'success'}]},
+  jobs: {jobs: [{name: 'node-backend', conclusion: 'success'}, {name: 'android-host', conclusion: 'success'}]},
   releaseExists: false,
-  latestTag: 'continuum-local-code48-c9fffb7dda9c173b6c5ccd4104672b09fd94de15'
+  latestTag: 'continuum-local-code50-473f79727e4b52509cc7d1af71e59b80ab9b6be5'
 });
 
 function runPreflight(mutate, {mode = 'preflight', overrides = {}} = {}) {
@@ -57,7 +57,7 @@ process.exit(7);
   } finally { fs.rmSync(dir, {recursive: true, force: true}); }
 }
 
-const failsWith = (res, code) => { assert.equal(res.status, 69, res.out); assert.match(res.out, new RegExp(`CODE50_SIGN_${code}\\b`), res.out); };
+const failsWith = (res, code) => { assert.equal(res.status, 69, res.out); assert.match(res.out, new RegExp(`CODE51_SIGN_${code}\\b`), res.out); };
 
 test('Preflight besteht nur mit allen Gates', {skip: !hasTools}, () => {
   const res = runPreflight();
@@ -65,7 +65,7 @@ test('Preflight besteht nur mit allen Gates', {skip: !hasTools}, () => {
   assert.match(res.out, /CHECKPOINT=ENVIRONMENT_OWNER_REVIEWER_AND_EXACT_BRANCH_POLICY_VERIFIED/);
   assert.match(res.out, /CHECKPOINT=EXACT_SOURCE_QA_RUN_GREEN/);
   assert.match(res.out, /STATUS=PREFLIGHT_OK/);
-  assert.match(res.out, /INFO=lifecycle_jdk21_job=success/);
+  assert.match(res.out, /INFO=lifecycle_jdk21_job=PASS_REQUIRED_IN_ANDROID_HOST/);
 });
 
 test('Path-Suffix @ref des QA-Laufs wird akzeptiert, fremder Workflow nicht', {skip: !hasTools}, () => {
@@ -90,12 +90,10 @@ test('QA-Lauf muss exakt, manuell, abgeschlossen und grün sein', {skip: !hasToo
   failsWith(runPreflight(f => { f.jobs.jobs = f.jobs.jobs.filter(j => j.name !== 'android-host'); }), 'ANDROID_HOST_NOT_GREEN');
 });
 
-test('Der fehlgeschlagene oder fehlende JDK-21-Job blockiert nicht, wird aber ausgewiesen', {skip: !hasTools}, () => {
-  const failed = runPreflight(f => { f.jobs.jobs[2].conclusion = 'failure'; });
-  assert.equal(failed.status, 0, failed.out);
-  assert.match(failed.out, /lifecycle_jdk21_job=failure/);
-  const missing = runPreflight(f => { f.jobs.jobs.pop(); });
-  assert.match(missing.out, /lifecycle_jdk21_job=NOT_RUN/);
+test('Unreadable or different upgrade baseline cannot silently permit publication', {skip: !hasTools}, () => {
+  failsWith(runPreflight(f => { f.latestTag = null; }), 'LATEST_RELEASE_UNREADABLE');
+  failsWith(runPreflight(f => { f.latestTag = 'unrelated'; }), 'LATEST_RELEASE_IDENTITY_INVALID');
+  failsWith(runPreflight(f => { f.latestTag = 'continuum-local-code50-' + SHA; }), 'CODE50_BASELINE_CHANGED');
 });
 
 test('Freigabe-SHA, Commit-Bindung, Branch, Event und Release-Zustand sind erzwungen', {skip: !hasTools}, () => {
@@ -106,7 +104,7 @@ test('Freigabe-SHA, Commit-Bindung, Branch, Event und Release-Zustand sind erzwu
   failsWith(runPreflight(null, {overrides: {GITHUB_EVENT_NAME: 'push'}}), 'WRONG_EVENT');
   failsWith(runPreflight(null, {overrides: {QA_RUN_ID: '12; rm -rf /'}}), 'QA_RUN_FORMAT');
   failsWith(runPreflight(f => { f.releaseExists = true; }), 'RELEASE_ALREADY_EXISTS');
-  failsWith(runPreflight(f => { f.latestTag = 'continuum-local-code50-' + SHA; }), 'NOT_HIGHER_THAN_LATEST_RELEASE');
+  failsWith(runPreflight(f => { f.latestTag = 'continuum-local-code51-' + SHA; }), 'NOT_HIGHER_THAN_LATEST_RELEASE');
   failsWith(runPreflight(null, {mode: 'unbekannt'}), 'BAD_MODE');
 });
 

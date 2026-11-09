@@ -423,3 +423,57 @@ on the integration branch, never force-push or reset another developer's work.
 
 No persistent owner-data schema changed in these integrations. Do not delete
 profiles, dialogue, memory, receipts or APK data as a rollback technique.
+## APK51 continuation — 09.11.2026 (new freeze, not covered by the old acceptance)
+
+The owner requested completion of APK51 including Bot Universe and an original-signed,
+data-preserving update over Code50. After renewed local AGP/Google Maven and both Render
+host failures, the owner explicitly approved the GitHub Code51 QA/signing channel.
+This channel decision is **not** final approval of an as-yet-unfrozen signing SHA.
+The required `Ullmann27` environment reviewer remains mandatory; no deployment approval,
+signing secret access, main merge, installation or publication has occurred.
+
+- `SOURCE_INTEGRATED`: #662 `5a0fd0a8e1bc2cd098693a62e766f3be19d23429`
+  merged as `16688ed015bf757c636a59126867b3ca76cc1bd0`.
+  Existing Chief coordinator/pool/store, owner-selected chief/two specialists, two bounded
+  serial model calls, zero tools, private-context separation, durable interrupted/no-replay
+  state and explicit missing-model/coding boundaries are retained.
+- `SOURCE_INTEGRATED`: only #659 production/tests from `76b26e22`, `6d392e3e`,
+  `34b2aa1f498f08779596b36331e6e786983b3e12`, isolated as
+  `f34842a074057ef876f55fdf851d200f790d03e0`. Existing cyan fill responds to real orb
+  energy; gaze follows native projected pane centers; work admitted during speech waits
+  without stealing speech gaze. Original GLB, energy orb, shared clock/budget and earlier
+  Code51 repairs survive. Upstream's contradictory compile evidence was not imported.
+- Added byte-for-byte regression over existing owner runtime files, 20 profiles, private
+  notes and dialogue history through team initialization, execution, reopen and history
+  clearing. This is host storage evidence, **not** proof of an actual installed update.
+- `HOST_TESTED`: 14 release-contract/preflight/JUnit-evidence tests pass on Node24.22.2:
+  `node --test .github/continuum/code50-github-release-contract.test.mjs
+  .github/continuum/code50-github-signer-preflight.test.mjs
+  scripts/continuum-code51-junit-check.test.mjs`.
+  Full combined Kotlin/Node regression and Android acceptance are pending on this new source.
+- Reuse existing registered `continuum-code50-github-qa.yml` and
+  `continuum-code50-sign-release.yml` paths on the #663 branch only, with Code51 guards,
+  artifacts and receipts. Their old filenames do not select Code50. The published Code50
+  branch is unchanged. No new workflow registration or main modification is needed.
+- Android gate: JDK21, SDK36/build-tools35, real compile + all unit/widget tests + lint,
+  no nonblocking lifecycle job. Expected 4,197 tests, zero failures/errors and exactly the
+  18 named pre-existing skips from original Code50 evidence, excluding its two JDK17-only
+  lifecycle skips. Missing/duplicate cases, changed skip identities and absent critical
+  new suites fail closed. Counts derive from source test annotations and must be confirmed
+  against actual Gradle XML, not treated as an observed pass.
+- Unsigned transport is original package, versionCode51/versionName0.3.50, ARM64 only.
+  QA independently downloads and verifies published Code50 APK SHA
+  `38b39da66a96d8be08b84937dd6412868fa279eb477a3ff5700d9195611a2778`,
+  package/version and original certificate
+  `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`.
+  The signer requires the same source, QA run, receipts, narrow environment branch policy,
+  original certificate and explicit owner approval, then draft/public readback.
+- `ANDROID_BUILD_VERIFIED`: pending. `DEVICE_VERIFIED`: **NOT_RUN**.
+  Original signing/publication: **BLOCKED** until new exact-SHA green QA and owner approval.
+  Existing environment branch policy still names only the Code50 branch; no protection was
+  weakened. Never uninstall or clear data to install this update. No 60FPS, real model
+  quality, native graphics or data-loss-free device-upgrade claim is made.
+
+Rollback remains isolated: revert the new graphics integration independently of the bot
+merge; revert the bot merge with `-m 1` if necessary. Do not remove existing profile,
+conversation, runtime or model files. Do not attempt an Android versionCode downgrade.

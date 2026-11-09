@@ -1,12 +1,11 @@
-name: "Continuum Code50 — GitHub source QA and unsigned APK"
+name: "Continuum Code51 — source QA and unsigned APK"
 
-# Besitzerentscheidung C (08.11.2026, nur Code 50): QA über GitHub statt Render.
-# Nur manueller Start; jeder Lauf ist per expected_sha an genau einen Quell-Commit gebunden.
+# Existing registered workflow path; explicit owner Code51 channel approval, 2026-11-09.
 on:
   workflow_dispatch:
     inputs:
       expected_sha:
-        description: "Exakter 40-stelliger Quell-Commit, der geprüft werden soll (muss dem HEAD des gewählten Branches entsprechen)"
+        description: "Exact Code51 source SHA on the #663 branch"
         required: true
         type: string
 
@@ -14,228 +13,155 @@ permissions:
   contents: read
 
 concurrency:
-  group: continuum-code50-github-qa-${{ github.ref }}
+  group: continuum-code51-github-qa-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   node-backend:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/copilot/code51-master-integrator-20261108'
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Bind run to expected source SHA
+      - name: Bind exact source
         env:
           EXPECTED_SHA: ${{ inputs.expected_sha }}
         run: |
           set -euo pipefail
           [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
           test "$EXPECTED_SHA" = "$GITHUB_SHA"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-      - name: Bind source to checkout
-        run: |
-          set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test -z "$(git status --porcelain --untracked-files=normal)"
-      - name: Cockpit, dialogue, Fold7 and app-intent contracts
-        run: |
-          set -euo pipefail
-          node --test --test-concurrency=2             .github/continuum/owner-cockpit-voice-original-orb.test.mjs             .github/continuum/continuum-local-dialogue-quality-wiring.test.mjs             .github/continuum/fold7-portrait-reference.test.mjs             .github/continuum/grounded-recall-android-wiring.test.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.2"
       - name: Source-bound full critical and Node QA
         run: |
           set -euo pipefail
-          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code50-critical"
-          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code50-full"
-          node -e "for(const p of ['code50-critical','code50-full']){const r=require(process.env.RUNNER_TEMP+'/'+p+'/report.json');if(r.status!=='PASS'||r.source.commit!==process.env.GITHUB_SHA||!r.sourceUnchanged)process.exit(69);console.log(p+' SOURCE_BOUND_PASS')}"
+          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code51-critical"
+          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code51-full"
+          node -e "for(const p of ['code51-critical','code51-full']){const r=require(process.env.RUNNER_TEMP+'/'+p+'/report.json');if(r.status!=='PASS'||r.source.commit!==process.env.GITHUB_SHA||!r.sourceUnchanged)process.exit(69);console.log(p+' SOURCE_BOUND_PASS')}"
       - name: Backend check and tests
         run: |
           set -euo pipefail
           npm --prefix backend ci --ignore-scripts --no-audit --no-fund
           npm --prefix backend run check
           npm --prefix backend test
-      - name: Preserve Node and backend receipts
+      - name: Preserve Node receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: code50-github-node-evidence
+          name: code51-github-node-evidence
           path: |
-            ${{ runner.temp }}/code50-critical/
-            ${{ runner.temp }}/code50-full/
+            ${{ runner.temp }}/code51-critical/
+            ${{ runner.temp }}/code51-full/
           if-no-files-found: warn
           retention-days: 14
 
   android-host:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/copilot/code51-master-integrator-20261108'
     runs-on: ubuntu-latest
     timeout-minutes: 120
-    env:
-      OWNER_PACKAGE: at.heinz.deviceai.continuumlocal
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Bind run to expected source SHA
+      - name: Bind exact source
         env:
           EXPECTED_SHA: ${{ inputs.expected_sha }}
         run: |
           set -euo pipefail
           [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
           test "$EXPECTED_SHA" = "$GITHUB_SHA"
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: "8.11.1"
-      - name: Install pinned Android SDK components
-        run: |
-          set -euo pipefail
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
-      - name: Source-bound Kotlin, JUnit, Robolectric and lint
-        run: |
-          set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test -z "$(git status --porcelain --untracked-files=normal)"
-          gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain \
-            -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' \
-            -Pkotlin.compiler.execution.strategy=in-process \
-            -PdeviceAiMentorPreview=true \
-            -PcontinuumUiWidgetTests=true \
-            -PcontinuumLocalStandaloneQa=true \
-            -PcontinuumStandaloneVersionCode=50 \
-            :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-      - name: Verify JUnit totals (4032 tests, 0 failures, 0 errors, 20 skips)
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import glob, os, sys, xml.etree.ElementTree as ET
-          t = f = e = k = 0
-          files = glob.glob('app/build/test-results/testDebugUnitTest/*.xml')
-          for p in files:
-              r = ET.parse(p).getroot()
-              t += int(r.get('tests', 0)); f += int(r.get('failures', 0))
-              e += int(r.get('errors', 0)); k += int(r.get('skipped', 0))
-          print(f'junit_files={len(files)} tests={t} failures={f} errors={e} skipped={k}')
-          open(os.environ['RUNNER_TEMP'] + '/junit-totals.txt', 'w').write(f'tests_total={t}\ntests_failed={f}\ntests_errors={e}\ntests_skipped={k}\n')
-          if f != 0 or e != 0 or t != 4032 or k != 20:
-              print('::error::JUnit totals differ from the Code 50 acceptance baseline 4032/0/0/20')
-              sys.exit(69)
-          PY
-      - name: Build original-package unsigned APK and AAB
-        run: |
-          set -euo pipefail
-          gradle --no-daemon --max-workers=2 --console=plain \
-            -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' \
-            -Pkotlin.compiler.execution.strategy=in-process \
-            -PdeviceAiMentorPreview=true -PcontinuumLocalRenderUnsigned=true \
-            -PcontinuumStandaloneVersionCode=50 :app:assembleRelease :app:bundleRelease
-          apk='app/build/outputs/apk/release/app-release-unsigned.apk'
-          test -s "$apk"
-          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging "$apk" | \
-            grep -F "package: name='at.heinz.deviceai.continuumlocal' versionCode='50' versionName='0.3.49'"
-          if "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify "$apk" >/dev/null 2>&1; then
-            echo "::error::Unsigned QA APK must not be signed"; exit 69
-          fi
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          mkdir -p "$RUNNER_TEMP/code50-unsigned"
-          cp "$apk" "$RUNNER_TEMP/code50-unsigned/Continuum-Code50-UNSIGNED-NOT-INSTALLABLE.apk"
-          (cd "$RUNNER_TEMP/code50-unsigned" && sha256sum Continuum-Code50-UNSIGNED-NOT-INSTALLABLE.apk > SHA256SUMS.txt)
-          printf 'status=UNSIGNED_QA_NOT_INSTALLABLE\nsource_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=50\nversionName=0.3.49\noriginalSigner=NOT_USED\nFold7=NOT_RUN\nqa_run_id=%s\nqa_run_attempt=%s\nqa_ref=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$GITHUB_REF" > "$RUNNER_TEMP/code50-unsigned/BUILD-INFO.txt"
-          cat "$RUNNER_TEMP/junit-totals.txt" >> "$RUNNER_TEMP/code50-unsigned/BUILD-INFO.txt"
-      - name: Upload unsigned APK ONLY if every Android gate passed
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Code50-UNSIGNED-NOT-INSTALLABLE
-          path: ${{ runner.temp }}/code50-unsigned/
-          if-no-files-found: error
-          retention-days: 14
-      - name: Preserve Android test and lint receipts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: code50-github-android-evidence
-          path: |
-            app/build/test-results/testDebugUnitTest/
-            app/build/reports/
-          if-no-files-found: warn
-          retention-days: 14
-
-  # Gesonderter Nachweis: LocalModelReloadLifecycleTest ist per assumeTrue erst ab JDK 21 aktiv.
-  # Dieser Job blockiert weder die Abnahme noch die Signierung; sein Ergebnis wird im Release gesondert ausgewiesen.
-  android-lifecycle-jdk21:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - name: Bind run to expected source SHA
-        env:
-          EXPECTED_SHA: ${{ inputs.expected_sha }}
-        run: |
-          set -euo pipefail
-          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
-          test "$EXPECTED_SHA" = "$GITHUB_SHA"
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "21"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.2"
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.11.1"
-      - name: Install pinned Android SDK components
+      - name: Install official Android SDK components
         run: |
           set -euo pipefail
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
-      # Die QA-Whitelist in app/build.gradle.kts lässt keine Task-Optionen wie --tests zu;
-      # daher läuft die gesamte Suite auf JDK 21 und nur das Lifecycle-XML wird bewertet.
-      - name: Unit tests on JDK 21 (LocalModelReloadLifecycleTest evidence)
+      - name: Kotlin, all unit and widget tests, lifecycle and lint
         run: |
           set -euo pipefail
-          java -version
-          gradle --no-daemon --max-workers=2 --console=plain \
-            -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' \
+          gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2500m -XX:MaxMetaspaceSize=768m' \
             -Pkotlin.compiler.execution.strategy=in-process \
-            -PdeviceAiMentorPreview=true \
-            -PcontinuumUiWidgetTests=true \
-            -PcontinuumLocalStandaloneQa=true \
-            -PcontinuumStandaloneVersionCode=50 \
-            :app:testDebugUnitTest
-      - name: Summarize lifecycle result (skips must be 0 on JDK 21)
-        if: always()
+            -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=51 \
+            :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
+          python3 scripts/continuum-code51-junit-check.py \
+            app/build/test-results/testDebugUnitTest "$RUNNER_TEMP/junit-totals.txt"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Build original-package unsigned ARM64 APK
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import glob, xml.etree.ElementTree as ET
-          t = f = e = k = 0
-          for p in glob.glob('app/build/test-results/testDebugUnitTest/*LocalModelReloadLifecycleTest*.xml'):
-              r = ET.parse(p).getroot()
-              t += int(r.get('tests', 0)); f += int(r.get('failures', 0))
-              e += int(r.get('errors', 0)); k += int(r.get('skipped', 0))
-          print(f'lifecycle_tests={t} failures={f} errors={e} skipped={k}')
-          if t == 0 or f or e or k:
-              print('::error::JDK-21 lifecycle evidence incomplete (no tests, failures, errors or skips)')
-              raise SystemExit(69)
-          PY
-      - name: Preserve lifecycle receipts
+          gradle --no-daemon --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2500m -XX:MaxMetaspaceSize=768m' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumLocalRenderUnsigned=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=51 :app:assembleRelease
+          apk='app/build/outputs/apk/release/app-release-unsigned.apk'
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging "$apk" > "$RUNNER_TEMP/badging.txt"
+          grep -F "package: name='at.heinz.deviceai.continuumlocal' versionCode='51' versionName='0.3.50'" "$RUNNER_TEMP/badging.txt"
+          grep -Fx "native-code: 'arm64-v8a'" "$RUNNER_TEMP/badging.txt"
+          if "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify "$apk" >/dev/null 2>&1; then
+            echo "::error::QA transport must remain unsigned"; exit 69
+          fi
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          mkdir -p "$RUNNER_TEMP/code51-unsigned"
+          cp "$apk" "$RUNNER_TEMP/code51-unsigned/Continuum-Code51-UNSIGNED-NOT-INSTALLABLE.apk"
+          (cd "$RUNNER_TEMP/code51-unsigned" && sha256sum Continuum-Code51-UNSIGNED-NOT-INSTALLABLE.apk > SHA256SUMS.txt)
+          printf 'status=UNSIGNED_QA_NOT_INSTALLABLE\nsource_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=51\nversionName=0.3.50\noriginalSigner=NOT_USED\nFold7=NOT_RUN\nqa_run_id=%s\nqa_run_attempt=%s\nqa_ref=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$GITHUB_REF" > "$RUNNER_TEMP/code51-unsigned/BUILD-INFO.txt"
+          cat "$RUNNER_TEMP/junit-totals.txt" >> "$RUNNER_TEMP/code51-unsigned/BUILD-INFO.txt"
+      - name: Verify the actual published Code50 upgrade baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          baseline='38b39da66a96d8be08b84937dd6412868fa279eb477a3ff5700d9195611a2778'
+          tag='continuum-local-code50-473f79727e4b52509cc7d1af71e59b80ab9b6be5'
+          mkdir "$RUNNER_TEMP/code50-baseline"
+          gh release download "$tag" --repo Ullmann27/device-ai --pattern "Continuum-Lokal-$baseline.apk" --dir "$RUNNER_TEMP/code50-baseline"
+          apk="$RUNNER_TEMP/code50-baseline/Continuum-Lokal-$baseline.apk"
+          test "$(sha256sum "$apk" | cut -d' ' -f1)" = "$baseline"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$apk" > "$RUNNER_TEMP/code50-certificate.txt"
+          grep -Fx 'Signer #1 certificate SHA-256 digest: 6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23' "$RUNNER_TEMP/code50-certificate.txt"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging "$apk" > "$RUNNER_TEMP/code50-badging.txt"
+          grep -F "package: name='at.heinz.deviceai.continuumlocal' versionCode='50' versionName='0.3.49'" "$RUNNER_TEMP/code50-badging.txt"
+          printf 'code50_apk_sha256=%s\n' "$baseline" >> "$RUNNER_TEMP/code51-unsigned/BUILD-INFO.txt"
+      - name: Upload unsigned APK only after all Android gates
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code51-UNSIGNED-NOT-INSTALLABLE
+          path: ${{ runner.temp }}/code51-unsigned/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Preserve Android receipts even on failure
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: code50-github-lifecycle-jdk21-evidence
-          path: app/build/test-results/testDebugUnitTest/*LocalModelReloadLifecycleTest*.xml
+          name: code51-github-android-evidence
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/
+            ${{ runner.temp }}/junit-totals.txt
+            ${{ runner.temp }}/badging.txt
+            ${{ runner.temp }}/code50-certificate.txt
+            ${{ runner.temp }}/code50-badging.txt
           if-no-files-found: warn
           retention-days: 14
