@@ -32,7 +32,9 @@ test('text-safe 0.09 raster never controls structural rim and scan',()=>{
   assert.match(cinema,/val rimAlpha = HollywoodFuiWorkActivity\.structuralOpacity\(frame\.grid, frame\.closeFrame\)/);
   assert.match(cinema,/val rasterAlpha = HollywoodFuiWorkActivity\.structuralOpacity\(innerRasterAlpha, frame\.closeFrame\)/);
   assert.match(overlay,/innerRasterAlpha = raster/);
-  assert.doesNotMatch(overlay,/frame\.copy\(grid = raster/);
+  assert.match(overlay,/val scanFrame = if \(rimIsolationEnabled\)/);
+  assert.match(overlay,/else frame\.copy\(grid = raster/);
+  assert.match(host,/fui\.rimIsolationEnabled = JarvisCinematicSettings\.experimentEnabled/);
 });
 
 test('only an honest completed tool result may trigger a current-window pulse',()=>{
