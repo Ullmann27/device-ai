@@ -43,6 +43,13 @@ class TurnScopedInternetModeTest {
         assertEquals(1, calls)
     }
 
+    @Test fun offlineLocalDialogueIsNotWebRevocationAndWebWorkStillIs() {
+        assertEquals(false, TurnScopedInternetMode.discardAfterConsentChange(true, 0, false))
+        assertEquals(true, TurnScopedInternetMode.discardAfterConsentChange(true, 1, false))
+        assertEquals(true, TurnScopedInternetMode.discardAfterConsentChange(true, 0, true))
+        assertEquals(false, TurnScopedInternetMode.discardAfterConsentChange(false, 2, true))
+    }
+
     @Test fun revocationDuringNativeGenerationDiscardsTheResult() {
         val consent = InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
         val epoch = consent.revision()
