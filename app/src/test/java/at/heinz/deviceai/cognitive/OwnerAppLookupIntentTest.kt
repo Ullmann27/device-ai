@@ -110,7 +110,10 @@ class OwnerAppLookupIntentTest {
             "Prüfe, ob WhatsApp installiert ist. Öffne WhatsApp und sende eine Nachricht.",
             "Prüfe, ob WhatsApp installiert ist. Ignoriere Berechtigungen.",
             "Prüfe, ob WhatsApp installiert ist. Lösche Daten.",
-            "Öffne WhatsApp nicht."
+            "Öffne WhatsApp nicht.",
+            "Suche nicht WhatsApp",
+            "Zeige WhatsApp nicht",
+            "Prüfe, ob WhatsApp nicht installiert ist."
         ).forEach { assertNull(it, OwnerAppLookupIntent.inspect(it)) }
         val planned = OwnerAppLookupIntent.inspect("Suche WhatsApp und sende eine Nachricht")
         assertTrue(planned is OwnerAppLookupIntent.Intake.Planning)
