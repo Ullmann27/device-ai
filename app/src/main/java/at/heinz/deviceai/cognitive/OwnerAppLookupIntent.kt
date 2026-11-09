@@ -50,6 +50,9 @@ internal object OwnerAppLookupIntent {
             "([\\p{L}\\p{N}._+-]{2,40})[.!?]*$"
     )
 
+    /** A file, folder, document or path word: the file flow owns the request (shared with internal navigation). */
+    fun looksLikeFileTarget(target: String): Boolean = fileTarget.containsMatchIn(target)
+
     fun parse(utterance: String): String? = (inspect(utterance) as? Intake.Lookup)
         ?.takeUnless { it.requireInstalledCandidate }
         ?.query
