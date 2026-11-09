@@ -23,7 +23,7 @@ object JarvisCinematicSettings {
         EXP_08_PRE_SPEECH("Vorbereitende Lippenbewegung", wired = true),
         EXP_09_FOCUS_BLINK("Blickwechsel-Lidschlag", wired = true),
         EXP_10_SENTENCE("Natürliche Satzgesten"),
-        EXP_11_ORB_LINK("Kugel-Fenster-Energiebrücke"),
+        EXP_11_ORB_LINK("Kugel-Fenster-Energiebrücke", wired = true),
         EXP_12_RECEIPTS("Bestätigte Arbeitsschritt-Impulse", wired = true),
         EXP_13_LUXURY("Edles Rauchglas und gerichtete Farben", wired = true),
         EXP_14_GLASS_SHADER("Hardware-Glaskanten", wired = true),
