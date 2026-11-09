@@ -4228,6 +4228,7 @@ class AgentActivity : Activity() {
         listOf(
             CenterAction("MEHR · ARBEITSBEREICHE") { showMoreWorkAreas() },
             CenterAction("SHIZUKU · VERBINDEN") { showShizukuConnectionDialog() },
+            CenterAction("WHATSAPP · NACHRICHT ENTWERFEN") { showWhatsAppDraftDialog() },
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
             CenterAction("OPENROUTER · API-KEY EINGEBEN") { showOpenRouterApiKeyDialog() },
@@ -4248,6 +4249,61 @@ class AgentActivity : Activity() {
             CenterAction("HOLOGRAMM · LIVE-FRAMES PRÜFEN", accent = true) { showHologramMotionAudit() }
         )
     )
+
+    private fun showWhatsAppDraftDialog() {
+        if (isFinishing || isDestroyed) return
+        val draft = EditText(this).apply {
+            hint = "Deine Nachricht …"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE or
+                InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            setTextColor(TEXT)
+            setHintTextColor(MUTED)
+            textSize = 15f
+            minLines = 3
+            maxLines = 8
+            setPadding(dp(12), dp(12), dp(12), dp(12))
+            background = rounded(Color.rgb(10, 24, 46), 14, BORDER)
+        }
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(16), dp(12), dp(16), dp(12))
+            addView(textView(
+                "Continuum öffnet nur einen Entwurf. Du wählst in WhatsApp den Kontakt " +
+                    "und sendest selbst. Keine Nachricht wird automatisch versendet oder gelesen.",
+                13f, MUTED), matchWidth())
+            addView(draft, matchWidth(top = 10))
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("WhatsApp · Nachricht entwerfen")
+            .setView(ScrollView(this).apply { addView(content) })
+            .setNegativeButton("Abbrechen", null)
+            .setPositiveButton("In WhatsApp öffnen", null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val text = WhatsAppDraftPolicy.validated(draft.text.toString())
+                if (text == null) {
+                    draft.error = "Bitte 1 bis 2000 Zeichen eingeben, ohne Steuerzeichen."
+                    return@setOnClickListener
+                }
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    setPackage(WhatsAppDraftPolicy.TARGET_PACKAGE)
+                    putExtra(Intent.EXTRA_TEXT, text)
+                }
+                try {
+                    startActivity(intent)
+                    dialog.dismiss()
+                    addToolActivity("WhatsApp-Entwurf angefordert · nicht als gesendet bestätigt")
+                } catch (_: ActivityNotFoundException) {
+                    Toast.makeText(this, "WhatsApp ist nicht als Empfangs-App verfügbar.", Toast.LENGTH_LONG).show()
+                } catch (_: SecurityException) {
+                    Toast.makeText(this, "Android hat die WhatsApp-Übergabe abgelehnt.", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        dialog.show()
+    }
 
     /** Existing local voice/model/speech/camera ports; this screen confers no tool authority. */
     private fun showReadinessGuide() {
