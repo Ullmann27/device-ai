@@ -4267,7 +4267,7 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.ui.JarvisCinematicSettings.preferences(this).edit()
                     .putBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.DEPTH_EXPERIMENT_KEY, !current)
                     .apply()
-                homeView?.jarvisShell?.invalidate()
+                homeView?.jarvisShell?.refreshMotionPolicy()
                 addToolActivity(if (current) "HOLOGRAMM · Standardmodus" else "HOLOGRAMM · Cinema 2030 aktiviert")
             }
             .show()
