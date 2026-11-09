@@ -131,7 +131,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     }
 
     /** Current frame cadence of the live (working) overlay in ms; 16 at full budget, longer when hot or saving power. */
-    fun liveFrameDelayMs(): Long = budget.frameDelayMs.coerceAtLeast(MIN_FRAME_DELAY_MS)
+    fun liveFrameDelayMs(): Long = maxOf(budget.frameDelayMs.coerceAtLeast(MIN_FRAME_DELAY_MS),
+        if (hasWindowFocus()) MIN_FRAME_DELAY_MS else 50L)
 
     fun setTelemetryText(value: String?) {
         val cleaned = value?.filterNot(Char::isISOControl)?.trim()?.take(64)?.ifEmpty { null }
@@ -161,7 +162,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         if (!reducedMotion && closing < 0L) emitPhaseFeedback(elapsed)
         invalidate()
         return budget.needsLiveFrames(active, reducedMotion,
-            isAttachedToWindow && isShown && windowVisibility == VISIBLE && hasWindowFocus(),
+            isAttachedToWindow && isShown && windowVisibility == VISIBLE,
             cinematicEffectsEnabled, closing >= 0L)
     }
 
@@ -191,15 +192,15 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         canvas.translate((source.left - stage.left) * (1f - openness), (source.top - stage.top) * (1f - openness))
         canvas.scale((source.width() + (stage.width() - source.width()) * openness) / stage.width(),
             (source.height() + (stage.height() - source.height()) * openness) / stage.height(), stage.left, stage.top)
-        val tilt = JarvisMotion.Depth.entranceTilt(openness, side, if (reducedMotion) 0f else 1f)
+        val tilt = HollywoodFuiConstruct.orientedTilt(frame.tiltDegrees, side, reducedMotion)
         if (tilt != 0f) {
             camera.save()
             camera.setLocation(0f, 0f, -JarvisMotion.Depth.CAMERA_DISTANCE_DP / 72f)
             camera.rotateY(tilt)
             camera.getMatrix(cameraMatrix)
             camera.restore()
-            cameraMatrix.preTranslate(-stage.left, -stage.top)
-            cameraMatrix.postTranslate(stage.left, stage.top)
+            cameraMatrix.preTranslate(-cx, -stage.centerY())
+            cameraMatrix.postTranslate(cx, stage.centerY())
             canvas.concat(cameraMatrix)
         }
 
@@ -218,7 +219,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         val raster = HollywoodFuiWorkActivity.rasterOpacity(frame.grid, frame.data,
             active, !reducedMotion && budget.animate)
         cinematics.drawGridAndScan(painter, boxDp,
-            frame.copy(grid = raster, scanEnabled = frame.scanEnabled && !reducedMotion), bloom)
+            frame.copy(scanEnabled = frame.scanEnabled && !reducedMotion), bloom,
+            innerRasterAlpha = raster)
         canvas.restore()
         // The native accessible body takes over. Never keep a second text plane behind its labels.
         val dataAlpha = frame.data * (1f - frame.data) * frame.closeData
