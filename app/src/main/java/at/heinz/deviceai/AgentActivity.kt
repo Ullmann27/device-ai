@@ -4260,9 +4260,10 @@ class AgentActivity : Activity() {
                 "Experimentelle räumliche Rauchglas-Kacheln und gestaffelte Flügel. " +
                     "Nur bei aktiven Arbeitsfenstern; kein neuer Agent, keine App-Berechtigung. " +
                     "Der Standardmodus bleibt verfügbar. Aktuell: " +
-                    if (current) "Cinema 2030 AN" else "Cinema 2030 AUS"
+                    (if (current) "Cinema 2030 AN" else "Cinema 2030 AUS")
             )
             .setNegativeButton("Abbrechen", null)
+            .setNeutralButton("15 Einzeloptionen") { _, _ -> showCinemaExperimentDetails() }
             .setPositiveButton(if (current) "Standardmodus" else "Cinema 2030 einschalten") { _, _ ->
                 at.heinz.deviceai.ui.JarvisCinematicSettings.preferences(this).edit()
                     .putBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.DEPTH_EXPERIMENT_KEY, !current)
@@ -4270,6 +4271,26 @@ class AgentActivity : Activity() {
                 homeView?.jarvisShell?.refreshMotionPolicy()
                 addToolActivity(if (current) "HOLOGRAMM · Standardmodus" else "HOLOGRAMM · Cinema 2030 aktiviert")
             }
+            .show()
+    }
+
+    private fun showCinemaExperimentDetails() {
+        val config = at.heinz.deviceai.ui.JarvisCinematicSettings
+        val experiments = at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.entries
+        val prefs = config.preferences(this)
+        val labels = experiments.map {
+            it.name.substring(4, 6) + " · " + it.label
+        }.toTypedArray()
+        val selected = experiments.map { prefs.getBoolean("exp52." + it.name, true) }.toBooleanArray()
+        AlertDialog.Builder(this)
+            .setTitle("Cinema 2030 · experimentelle Effekte")
+            .setMessage("Jede Einstellung ist einzeln rücknehmbar. Noch nicht angeschlossene Effekte " +
+                "werden hier nur vorbereitet; das Aktivieren ist kein Funktions- oder Gerätenachweis.")
+            .setMultiChoiceItems(labels, selected) { _, index, enabled ->
+                config.setExperiment(this, experiments[index], enabled)
+                homeView?.jarvisShell?.refreshMotionPolicy()
+            }
+            .setPositiveButton("Schließen", null)
             .show()
     }
 
