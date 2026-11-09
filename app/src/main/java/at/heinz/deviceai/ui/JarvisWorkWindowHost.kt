@@ -190,12 +190,17 @@ class JarvisWorkWindowHost(
         val presentation = JarvisCinematicSettings.preferences(activity)
         fun applyCinematics() {
             val enabled = JarvisCinematicSettings.enabled(activity)
+            val arc = JarvisCinematicSettings.experimentEnabled(activity,
+                JarvisCinematicSettings.Experiment.EXP_04_FOLDER_FLIGHT)
             fui.cinematicEffectsEnabled = enabled
+            fui.cinematicArcEnabled = arc
+            window.cinematicArcEnabled = arc
             window.cinematicEffectsEnabled = enabled
         }
         applyCinematics()
         val preferenceListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == JarvisCinematicSettings.KEY) applyCinematics()
+            if (key == JarvisCinematicSettings.KEY || key == JarvisCinematicSettings.DEPTH_EXPERIMENT_KEY ||
+                key?.startsWith("exp52.") == true) applyCinematics()
         }
         presentation.registerOnSharedPreferenceChangeListener(preferenceListener)
         var releaseGeometry: () -> Unit = {}
