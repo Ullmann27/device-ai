@@ -1,0 +1,25 @@
+name: "Continuum Code51 — source QA and unsigned APK"
+
+# Inert default-branch registration for manual workflow_dispatch.
+# The full source-bound QA exists only on the Code51 integration branch.
+# This default-branch file never builds, tests, signs, or publishes an APK.
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Exact Code51 source SHA on the #663 integration branch"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  registration-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Reject default-branch execution
+        run: |
+          echo "::error::This is registration only. Select branch copilot/code51-master-integrator-20261108 to run the full Code51 QA."
+          exit 1
