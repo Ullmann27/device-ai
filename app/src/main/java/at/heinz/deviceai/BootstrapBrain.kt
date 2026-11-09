@@ -237,6 +237,10 @@ object BootstrapBrain {
         if (low == "hallo" || low == "hi" || low == "hey" || low == "guten morgen" ||
             low == "guten tag" || low == "servus") return BootstrapDecision(BootstrapKind.REPLY,
                 "Hallo! Der lokale Startkern von Device AI Continuum ist aktiv. Was möchtest du ausprobieren?")
+        // An explicit request for an earlier device reading is not permission to measure again.
+        if (at.heinz.deviceai.cognitive.OwnerPreviousBatteryIntent.isPreviousReadingRequest(text))
+            return BootstrapDecision(BootstrapKind.REPLY,
+                "Keine neue Akkumessung gestartet. Eine frühere Messung kann nur aus einer belegten aktuellen Sitzung wiedergegeben werden.")
         if (at.heinz.deviceai.cognitive.LocalAssistantIdentity.isIdentityQuestion(text)) return BootstrapDecision(
             BootstrapKind.REPLY, identityDescription ?:
                 at.heinz.deviceai.cognitive.LocalAssistantIdentity.selfDescription(null))
