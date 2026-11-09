@@ -82,6 +82,7 @@ class JarvisWorkWindowHost(
             profile = cameraProfile(currentFootprint)
         )
         currentFui?.morphInPlace(bounds, scene)
+        home.hologram.setWorkWindowAccent(scene.accent)
         return true
     }
 
@@ -272,6 +273,7 @@ class JarvisWorkWindowHost(
         currentCameraSide = cameraSide(first)
         home.hologram.setWorkWindowCamera(true, currentCameraSide,
             profile = cameraProfile(currentFootprint))
+        home.hologram.setWorkWindowAccent(scene.accent)
         director.windowOpened(id, initialGaze)
         currentGaze = initialGaze
         window.reportPresentedCenter()
