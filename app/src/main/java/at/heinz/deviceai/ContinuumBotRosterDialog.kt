@@ -116,8 +116,13 @@ class ContinuumBotRosterDialog(
                     if (!live(token)) return@runOnUiThread
                     result.fold(done) {
                         body.removeAllViews()
+                        val code = ChiefBotProfileStore.diagnosticCode(it)
                         body.addView(label("Der Bot-Bestand konnte nicht sicher gelesen oder gespeichert werden. " +
-                            "Bitte im Entwicklerbereich prüfen. Bestehende Daten werden nicht automatisch ersetzt."))
+                            "Bestehende Daten werden nicht automatisch ersetzt."))
+                        body.addView(label("Speicherdiagnose: $code").apply {
+                            contentDescription = "Bot-Speicherdiagnose: $code"
+                        })
+                        body.addView(label(diagnosticAdvice(code)))
                         body.addView(action("Übersicht erneut öffnen") { show() })
                     }
                 }
@@ -129,6 +134,19 @@ class ContinuumBotRosterDialog(
                 body.addView(label("Die Sitzung wird beendet. Bitte die Bot-Übersicht erneut öffnen."))
             }
         }
+    }
+
+    private fun diagnosticAdvice(code: String): String = when (code) {
+        "BOT_REGISTRY_UNSUPPORTED_SCHEMA" -> "Dieser Bestand benötigt eine kompatible App-Version. Bitte keine App-Daten löschen."
+        "BOT_REGISTRY_CORRUPT", "BOT_REGISTRY_CHECKSUM_MISMATCH", "BOT_REGISTRY_CAPACITY_OR_CORRUPTION",
+        "BOT_DUPLICATE_ID", "BOT_REGISTRY_TRAILING_DATA" ->
+            "Der gespeicherte Bestand muss geprüft werden. Er wird weder neu angelegt noch zurückgesetzt."
+        "BOT_STORE_SYMLINK_REJECTED", "BOT_STORE_OUTSIDE_TRUSTED_ROOT", "BOT_STORE_NOT_FILE", "BOT_STORE_NOT_DIRECTORY" ->
+            "Der private Speicherpfad wurde aus Sicherheitsgründen abgelehnt. Bitte diese Diagnose zur Prüfung weitergeben."
+        "BOT_REGISTRY_WRITE_FAILED", "BOT_STORE_ACCESS_DENIED", "BOT_STORE_IO_ERROR" ->
+            "Der Speicherzugriff wurde nicht bestätigt. Bitte verfügbaren Gerätespeicher prüfen und erneut öffnen."
+        "BOT_PROFILE_VERSION_CONFLICT" -> "Das Profil wurde inzwischen geändert. Bitte die Übersicht erneut öffnen."
+        else -> "Bitte diese Diagnose zur Prüfung weitergeben und die Übersicht erneut öffnen."
     }
 
     private fun showPage(afterId: String?) {

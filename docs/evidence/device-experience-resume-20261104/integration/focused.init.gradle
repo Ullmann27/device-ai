@@ -1,0 +1,10 @@
+allprojects {
+    tasks.withType(Test).configureEach {
+        filter {
+            includeTestsMatching 'at.heinz.deviceai.ContinuumLiveCapabilitiesUiTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumBotStatusRoutingUiTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest'
+        }
+    }
+}
