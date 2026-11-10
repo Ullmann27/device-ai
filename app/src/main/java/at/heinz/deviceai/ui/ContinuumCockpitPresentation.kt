@@ -151,6 +151,7 @@ object ContinuumCockpitPresentation {
                 StepState.ACTIVE -> Tone.ACTIVE
                 StepState.DONE -> Tone.OK
                 StepState.WAITING -> Tone.WARN
+                StepState.UNVERIFIED -> Tone.NEUTRAL
                 StepState.BLOCKED, StepState.FAILED -> Tone.ERROR
             })
         }
@@ -162,6 +163,7 @@ object ContinuumCockpitPresentation {
         StepState.DONE -> "fertig"
         StepState.BLOCKED -> "blockiert"
         StepState.FAILED -> "fehlgeschlagen"
+        StepState.UNVERIFIED -> "nicht geprüft"
     }
 
     fun dialogRows(c: CockpitStatus): List<Row> {

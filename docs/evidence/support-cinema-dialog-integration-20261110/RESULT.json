@@ -1,0 +1,275 @@
+{
+  "evidenceClass": "COMBINED_ANDROID_COMPILE_AND_TARGETED_JUNIT_ROBOLECTRIC",
+  "source": {
+    "sourceRemote": "ca839c0555c121b248b843c4030c0e928603a535",
+    "sourceLocal": "d33bdc713bc617ef7002f522847c1d37bb356360",
+    "sourceTree": "a1ca894c4ea395f8807d5d158475cd753cd293a6"
+  },
+  "cinemaParent": "5d36c5a57c031308c8de91049e19e9e8cb8365d5",
+  "dialogParent": "e99530750f4b471d54dc397b7a7b7f8b2977f6d1",
+  "totals": {
+    "tests": 91,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "suite": "at.heinz.deviceai.AvatarExplicitConfirmationUiTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "42041cc8d2e360ab95ab67c68b4e87009ed3adf2aede0d0ebc131c10ebd853a4"
+    },
+    {
+      "suite": "at.heinz.deviceai.CinemaStopReturnUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "bcd75d362d0707067ca64bcc5a9b83a50114a302716aa37610e930ff855b3d5e"
+    },
+    {
+      "suite": "at.heinz.deviceai.ConsequentialActionApprovalTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "5b412eb81fd6e6c5debf0659e2ddbbd16a2f7d0cd85140b00b71bacb1ebb217f"
+    },
+    {
+      "suite": "at.heinz.deviceai.ResearchChatApprovalUiTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "6cb9e425edeb22bf0501d9e631c9afafbda14f42ebc525790fab5612501f9471"
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.AgentCancellationRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "b94dbbf100a66e174f5b45f5e1ac52b02f614a57c3680b93f399f8a130a160fe"
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "f613d46ae3ca0d8c944efeb6ab359363dce783373e65dc68085a1fd119eb199a"
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.ConversationControlTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "70c856f4440c53c04ad45e3285f89299ed5b0c2e85f9ae73def1e383284a25e1"
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.ConversationResearchApprovalIntegrationTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "0b1a424c207b83eca2d1ed987b4bf6aa66fa771699c3b4a57924a226d7b62588"
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.InternetConsentPolicyTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "328b2702b0831e5abd603e25f6e9d86dfc612ef425550b8e05d59c72aa2d6398"
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "795e49ab8c59200d977192ce6e6e2747d234aeb4649593094d4f0168624ff481"
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "c19ede2a3bdf93a13f306ef75b6ab15ab3aa3a861efdce1c57591a203bea64d3"
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.ResearchConsentReplyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "e08de5ae1ead9e15c24de7366211dbc814424ec35757f94b143b6ae564d7dca2"
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "ec17fbff5bf9bfaa5ee3bd02e830e9a46fdc19b864fdf5fabb9c2d230380164e"
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "1f9e7ea5a30aac88c02105c123519929ff55611f017a41f49c1f59a3bd7c7887"
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.WebResearchIntegrationTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlSha256": "b55b0c774cf29e20ee25615c9bfc6b1d30dc7caee79f8cd0e093409587842d7c"
+    }
+  ],
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "e1eaa43cad2085bbe8f88c96c89234553ea0e348bc02eee978abad891c3383e9",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "8da16a720414bc528f44f32508e45d90e7dcb19c38d01ceade666a4a60e2e294",
+    "app/src/main/java/at/heinz/deviceai/cognitive/ResearchConsentReply.kt": "2676b3d1df61d9a9af9ee5a8b298623976e9c47b847c82140a8cc74f41d646a9",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ConversationControlTest.kt": "0f9c6086668dac422d03842ef7f567b7992ba1ad93923ecf08a4db7550561bd8",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ConversationResearchApprovalIntegrationTest.kt": "df5caeee4e7a6781484a8620d2d546c463a47e11f6efb63f7262b34e648788c8",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ResearchConsentReplyTest.kt": "f9a7cb378a7eb8e1f118cbb3ed12d4fcbc9f6c4fb5510fb8683408464f647ef8",
+    "app/src/uiTest/java/at/heinz/deviceai/ResearchChatApprovalUiTest.kt": "68bf28f4dc33151d607d4708369db0f7b206fba0141a71d4abbacd0b01b59986"
+  },
+  "preservedCinemaMethods": [
+    {
+      "method": "cancelLocalRequest",
+      "identicalToCinema": true,
+      "sha256": "95d865e2f9de151c502bf8b87a2f8c2b7dbea70d0228e4e6d7d60c9ead187dc4"
+    },
+    {
+      "method": "clearTaskEffects",
+      "identicalToCinema": true,
+      "sha256": "408cc776606ecd0b62b86ef06752aa342c57c4169cedc0b90fcbb7b743e00dc3"
+    },
+    {
+      "method": "scheduleLocalReasoningWorkScene",
+      "identicalToCinema": true,
+      "sha256": "9ce75b436e519c19947ff290ce83e4d3c6c597fa793ece12472e4503df3b0e8f"
+    },
+    {
+      "method": "presentLocalReasoningWorkScene",
+      "identicalToCinema": true,
+      "sha256": "eaaa91b156f6369a848838b0890e2532361c5fed2bbb504866896d4944ecf025"
+    },
+    {
+      "method": "finishLocalReasoningWorkScene",
+      "identicalToCinema": true,
+      "sha256": "9f542ab27c8bd8389c79a819f56a26180fba8f76c3d2ef86e65771229438ac02"
+    }
+  ],
+  "firstAttempt": {
+    "result": "BUILD_DAEMON_DISAPPEARED",
+    "testExecution": "NOT_REACHED",
+    "sourceChangesBeforeRetry": false
+  },
+  "secondAttempt": {
+    "result": "BUILD_DAEMON_DISAPPEARED_AT_TEST_START",
+    "mainAndTestCompilation": "PASS",
+    "sourceChangesBeforeRetry": false
+  },
+  "finalAttempt": {
+    "sourceRemote": "ca839c0555c121b248b843c4030c0e928603a535",
+    "sourceLocal": "d33bdc713bc617ef7002f522847c1d37bb356360",
+    "sourceTree": "a1ca894c4ea395f8807d5d158475cd753cd293a6",
+    "started": "2026-11-10T20:46:59.902Z",
+    "completed": "2026-11-10T20:48:57.943Z",
+    "exitCode": 0,
+    "args": [
+      "--offline",
+      "--no-daemon",
+      "--max-workers=1",
+      "-Dorg.gradle.jvmargs=-Xmx512m -XX:MaxMetaspaceSize=384m -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -Dfile.encoding=UTF-8",
+      "-I",
+      "/workspace/scratch/006ff0a2565d/dialog-tests-memory.gradle",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-PdeviceAiMentorPreview=true",
+      "-PcontinuumOwnerLocalQa=true",
+      "-PcontinuumOwnerLocalVersionCode=52",
+      "-PcontinuumUiWidgetTests=true",
+      ":app:testDebugUnitTest",
+      "--tests",
+      "at.heinz.deviceai.AvatarExplicitConfirmationUiTest",
+      "--tests",
+      "at.heinz.deviceai.ConsequentialActionApprovalTest",
+      "--tests",
+      "at.heinz.deviceai.ResearchChatApprovalUiTest",
+      "--tests",
+      "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+      "--tests",
+      "at.heinz.deviceai.cognitive.ConversationControlTest",
+      "--tests",
+      "at.heinz.deviceai.cognitive.ConversationResearchApprovalIntegrationTest",
+      "--tests",
+      "at.heinz.deviceai.cognitive.InternetConsentPolicyTest",
+      "--tests",
+      "at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest",
+      "--tests",
+      "at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest",
+      "--tests",
+      "at.heinz.deviceai.cognitive.ResearchConsentReplyTest",
+      "--tests",
+      "at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest",
+      "--tests",
+      "at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest",
+      "--tests",
+      "at.heinz.deviceai.cognitive.WebResearchIntegrationTest",
+      "--tests",
+      "at.heinz.deviceai.CinemaStopReturnUiTest",
+      "--tests",
+      "at.heinz.deviceai.cognitive.AgentCancellationRegressionTest"
+    ],
+    "suites": [
+      "at.heinz.deviceai.AvatarExplicitConfirmationUiTest",
+      "at.heinz.deviceai.ConsequentialActionApprovalTest",
+      "at.heinz.deviceai.ResearchChatApprovalUiTest",
+      "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+      "at.heinz.deviceai.cognitive.ConversationControlTest",
+      "at.heinz.deviceai.cognitive.ConversationResearchApprovalIntegrationTest",
+      "at.heinz.deviceai.cognitive.InternetConsentPolicyTest",
+      "at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest",
+      "at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest",
+      "at.heinz.deviceai.cognitive.ResearchConsentReplyTest",
+      "at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest",
+      "at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest",
+      "at.heinz.deviceai.cognitive.WebResearchIntegrationTest",
+      "at.heinz.deviceai.CinemaStopReturnUiTest",
+      "at.heinz.deviceai.cognitive.AgentCancellationRegressionTest"
+    ],
+    "isolatedCheckout": true,
+    "isolatedGradleCache": true,
+    "lease": true
+  },
+  "limitations": [
+    "Targeted host suites, not the entire repository suite",
+    "Synthetic consent/input and work lifecycle; no real ASR, network dispatch or Gemma inference",
+    "Robolectric Canvas is not Fold7 GPU/Filament acceptance",
+    "No APK packaging, signing, installation or publication"
+  ],
+  "compiledArtifactsSha256": {
+    "app/build/intermediates/compile_app_classes_jar/debug/bundleDebugClassesToCompileJar/classes.jar": "08a67c8179ac76d13adf7eb1cb9201c66e92bfa58b048c66dc4abfa58de66dcc",
+    "app/build/intermediates/runtime_app_classes_jar/debug/bundleDebugClassesToRuntimeJar/classes.jar": "cd03ed3a98c63754ad6f02324c383e548ce479a56b210e77b9ca9f8bf9fc9fb2"
+  },
+  "testRuntime": {
+    "maxHeapSize": "768m",
+    "jvmArgs": [
+      "--add-opens=java.base/java.io=ALL-UNNAMED",
+      "-XX:+UseSerialGC",
+      "-XX:ActiveProcessorCount=2"
+    ],
+    "source": "ca839c0555c121b248b843c4030c0e928603a535"
+  }
+}

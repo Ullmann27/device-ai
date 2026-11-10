@@ -1,0 +1,25 @@
+JUnit version 4.13.2
+..............................................E
+Time: 5.638
+There was 1 failure:
+1) stopCancelsImmediatelyButReturnsVisibleWindow(at.heinz.deviceai.CinemaStopReturnUiTest)
+java.lang.NoSuchMethodError: 'void at.heinz.deviceai.ui.JarvisShellView.setMotionBudgetProvider$DeviceAI_app_debug(kotlin.jvm.functions.Function0)'
+	at at.heinz.deviceai.ui.ContinuumHomeView.<init>(ContinuumHomeView.kt:416)
+	at at.heinz.deviceai.AgentActivity.buildConversationPane(AgentActivity.kt:1151)
+	at at.heinz.deviceai.AgentActivity.buildUi(AgentActivity.kt:961)
+	at at.heinz.deviceai.AgentActivity.onCreate(AgentActivity.kt:632)
+	at android.app.Activity.performCreate(Activity.java:7136)
+	at android.app.Activity.performCreate(Activity.java:7127)
+	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1271)
+	at org.robolectric.android.internal.RoboMonitoringInstrumentation.callActivityOnCreate(RoboMonitoringInstrumentation.java:382)
+	at org.robolectric.android.controller.ActivityController.lambda$create$0(ActivityController.java:138)
+	at org.robolectric.shadows.ShadowPausedLooper.runPaused(ShadowPausedLooper.java:243)
+	at org.robolectric.android.controller.ActivityController.create(ActivityController.java:136)
+	at org.robolectric.android.controller.ActivityController.create(ActivityController.java:146)
+	at org.robolectric.android.controller.ActivityController.setup(ActivityController.java:341)
+	at at.heinz.deviceai.CinemaStopReturnUiTest.stopCancelsImmediatelyButReturnsVisibleWindow(CinemaStopReturnUiTest.kt:55)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 46,  Failures: 1
+

@@ -749,6 +749,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         StepState.DONE -> JarvisDesign.Colors.ok
         StepState.ACTIVE -> accent
         StepState.WAITING -> JarvisDesign.Colors.violet
+        StepState.UNVERIFIED -> JarvisDesign.Colors.textSecondary
         StepState.BLOCKED, StepState.FAILED -> JarvisDesign.Colors.magenta
     }
 
