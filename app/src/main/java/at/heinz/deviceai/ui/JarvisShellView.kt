@@ -579,9 +579,9 @@ class JarvisShellView(context: Context) : View(context) {
                 !exiting && workClear && resultForward && slot == JarvisShellLayout.Slot.WORK_DRAFT ->
                     JarvisCinemaEntrance.resultAdvance(workElapsedMs, budget, animatorScale)
                 !exiting && workClear && resultForward ->
-                    JarvisCinemaEntrance.pose(
-                        JarvisCinemaEntrance.Kind.WORK_WINDOW, rank, JarvisCinemaEntrance.SETTLE_MS,
-                        exiting = false, side = side, budget = budget, animatorScale = animatorScale)
+                    JarvisCinemaEntrance.settledPose(
+                        JarvisCinemaEntrance.Kind.WORK_WINDOW, rank,
+                        side = side, budget = budget, animatorScale = animatorScale)
                 !exiting && workClear ->
                     JarvisCinemaEntrance.workOrderPose(
                         slot, rank, elapsedMs, side, budget, animatorScale,

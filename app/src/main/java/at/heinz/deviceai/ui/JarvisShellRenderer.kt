@@ -169,8 +169,8 @@ object JarvisShellRenderer {
                 clearIdle && resultForward && slot == Slot.WORK_DRAFT ->
                     JarvisCinemaEntrance.resultAdvance(workElapsedMs, depthBudget, animatorScale)
                 clearIdle && resultForward && role == JarvisCinemaEntrance.StageRole.ENTER ->
-                    JarvisCinemaEntrance.pose(
-                        kind, rank, JarvisCinemaEntrance.SETTLE_MS, exiting = false,
+                    JarvisCinemaEntrance.settledPose(
+                        kind, rank,
                         side = side, budget = depthBudget, animatorScale = animatorScale)
                 clearIdle ->
                     JarvisCinemaEntrance.workOrderPose(

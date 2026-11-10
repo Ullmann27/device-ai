@@ -93,6 +93,16 @@ object JarvisCinemaEntrance {
             reducedMotion = reducedMotion,
         ) else HollywoodFuiConstruct.frame(elapsedMs.coerceAtLeast(0L), reducedMotion = reducedMotion)
 
+    /** Rank delay is already complete. */
+    fun settledPose(
+        kind: Kind,
+        rank: Int,
+        side: Float = 0f,
+        budget: JarvisRenderQuality.Budget? = null,
+        animatorScale: Float = 1f,
+    ): Pose = pose(kind, rank, SETTLE_MS + staggerMs(kind, rank),
+        side = side, budget = budget, animatorScale = animatorScale)
+
     fun pose(
         kind: Kind,
         rank: Int,
@@ -316,7 +326,7 @@ object JarvisCinemaEntrance {
                 returnResultElapsedMs >= 0L && slot == JarvisShellLayout.Slot.WORK_DRAFT ->
                     resultAdvance(returnResultElapsedMs, budget, animatorScale)
                 returnResultElapsedMs >= 0L && stageRole(slot) == StageRole.ENTER ->
-                    pose(kind, rank, SETTLE_MS, side = side, budget = budget, animatorScale = animatorScale)
+                    settledPose(kind, rank, side = side, budget = budget, animatorScale = animatorScale)
                 else -> workOrderPose(slot, rank, interruptedAfterMs, side, budget,
                     animatorScale, fromWorkingScene)
             }
@@ -376,8 +386,8 @@ object JarvisCinemaEntrance {
         budget: JarvisRenderQuality.Budget? = null,
         animatorScale: Float = 1f,
     ): Pose {
-        val base = pose(Kind.WORK_WINDOW, rankOf(JarvisShellLayout.Slot.WORK_DRAFT, 2),
-            SETTLE_MS, budget = budget, animatorScale = animatorScale)
+        val base = settledPose(Kind.WORK_WINDOW, rankOf(JarvisShellLayout.Slot.WORK_DRAFT, 2),
+            budget = budget, animatorScale = animatorScale)
         val reduced = animatorScale <= 0f || budget?.animate == false
         if (reduced) return base.copy(scale = 1.06f, dy = -8f, settled = true)
         val forward = HollywoodFuiConstruct.flight(elapsedMs)

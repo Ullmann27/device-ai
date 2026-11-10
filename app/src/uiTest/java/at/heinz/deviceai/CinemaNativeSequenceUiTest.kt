@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
+import at.heinz.deviceai.chief.TurnMilestone
 import at.heinz.deviceai.cockpit.CockpitAnimationTriggers
 import at.heinz.deviceai.ui.ContinuumHomeView
 import org.json.JSONObject
@@ -133,6 +134,15 @@ class CinemaNativeSequenceUiTest {
                 last = time
             }
             assertEquals("One active work window", 1, visibleWindows(root))
+            triggers.milestone("cinema-native-success", TurnMilestone.WORKER_REPORTED,
+                "Skriptierter Render-Prüfschritt")
+            advance(140)
+            capture("result-140ms")
+            advance(760)
+            capture("result-900ms")
+            val resultForward = home.jarvisShell.javaClass.getDeclaredField("resultForward")
+                .apply { isAccessible = true }.getBoolean(home.jarvisShell)
+            assertTrue("Real milestone advances result", resultForward)
             end("cinema-native-success", true)
             advance(650)
             capture("return-650ms")

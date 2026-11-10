@@ -145,4 +145,42 @@ class WindowProjectedMotionSamplerTest {
         assertNull(consider(sampler, projected.x, projected.y, at = 920L,
             phase = WindowProjectedMotion.Phase.CLOSING))
     }
+
+    @Test fun foreignEndCannotCloseAnotherTurnsWindow() {
+        val sampler = sampler()
+        consider(sampler, 200f, 480f, 100L, turnId = "b")
+        assertNull(sampler.closed("a", "work-document", 120L))
+        assertTrue(sampler.closeActive("a", 130L).isEmpty())
+        assertEquals("b", sampler.closeActive("b", 140L).single().turnId)
+    }
+
+    @Test fun bulkCloseLeavesOtherTurnsActive() {
+        val sampler = sampler()
+        consider(sampler, 200f, 480f, 100L, turnId = "a", windowId = "old")
+        consider(sampler, 300f, 480f, 110L, turnId = "b", windowId = "new")
+        assertEquals(listOf("old"), sampler.closeActive("a", 120L).map { it.windowId })
+        assertEquals(listOf("new"), sampler.closeActive("b", 130L).map { it.windowId })
+    }
+
+    @Test fun reducedMotionReuseKeepsTheLatestOwnerAndProjection() {
+        val sampler = sampler()
+        consider(sampler, 200f, 480f, 100L, turnId = "a")
+        assertNull(consider(sampler, 350f, 420f, 110L, turnId = "b", reduced = true, moving = false))
+        assertTrue(sampler.closeActive("a", 120L).isEmpty())
+        val closed = sampler.closeActive("b", 130L).single()
+        val expected = JarvisWindowGaze.fromProjection(350f, 420f, headX, headY, viewportW, viewportH)
+        assertEquals(expected.x, closed.gazeX, 0.0001f)
+        assertEquals(expected.y, closed.gazeY, 0.0001f)
+    }
+
+    @Test fun closedWindowCanBeReusedByANewTurn() {
+        val sampler = sampler()
+        consider(sampler, 200f, 480f, 100L, turnId = "a")
+        assertNotNull(sampler.closed("a", "work-document", 110L))
+        assertNull(consider(sampler, 300f, 480f, 120L, turnId = "a", reduced = true, moving = false))
+        assertTrue(sampler.closeActive("a", 130L).isEmpty())
+        assertNotNull(consider(sampler, 300f, 480f, 140L, turnId = "b"))
+        assertNull(sampler.closed("a", "work-document", 150L))
+        assertEquals("b", sampler.closeActive("b", 160L).single().turnId)
+    }
 }

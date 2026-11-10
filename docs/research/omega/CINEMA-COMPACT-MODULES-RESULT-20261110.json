@@ -1,0 +1,33 @@
+{
+  "source_commit": "c5de8558c86e97fc2ae894718972824cbb8bb6d2",
+  "baseline_source_commit": "b498becd85b1e0a53a465791bf0bd63bf9a01b0c",
+  "baseline_source_sha256": "376678c15af1e9ecc2fd8ea9e8b47d1e9740ec12702e06397a5a8792bb659889",
+  "candidate_source_sha256": "f090dfe8177aa8b9185b111643f77d51fabaffa0cd25d4977f1edd8521478947",
+  "backend": "JVM actual GridContent source with integrator-compiled Android class dependencies",
+  "compiler": "Kotlin2.4.0 / JDK21; heap256MB",
+  "junit": "4.13.2; heap128MB",
+  "tests": [
+    "JarvisCompactModuleGeometryTest",
+    "JarvisLivePanelsRegressionTest"
+  ],
+  "baseline": {
+    "tests": 9,
+    "failures": 1,
+    "compile_exit": 0,
+    "test_exit": 1,
+    "expected_failure": "compactDatabaseStrokeStaysInsideItsRow / Glyph stroke stays below row edge",
+    "log_sha256": "a699d3691e9b870776f9911c0bc8a2c76b888e0ae17be934c0d5d0125ead9aef"
+  },
+  "candidate": {
+    "tests": 9,
+    "failures": 0,
+    "compile_exit": 0,
+    "test_exit": 0,
+    "log_sha256": "be770bafcd951f1bced4d4096557325d8ee98269f6c6b551988e715f4977d5c5"
+  },
+  "native_png": "NOT_RUN for this patch",
+  "Fold7": "NOT_RUN",
+  "Filament_GPU": "NOT_RUN",
+  "new_assets": false,
+  "main_merge": false
+}

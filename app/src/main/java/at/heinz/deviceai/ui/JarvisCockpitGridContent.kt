@@ -244,11 +244,12 @@ object JarvisCockpitGridContent {
 
     private fun modulesPanel(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
         val list = modules(s); val rowH = (b.height - 8f) / list.size
+        val iconSize = minOf(18f, (rowH - 2f).coerceAtLeast(0f))
         val style = Type.caption; val cap = p.capHeight(style)
         list.forEachIndexed { i, m ->
             val cy = b.top + 4f + rowH * (i + .5f)
             if (i > 0) p.drawLine(b.left + 12f, cy - rowH / 2f, b.right - 10f, cy - rowH / 2f, .6f, Fill.Solid(Colors.rim), .65f)
-            ContinuumIcons.draw(p, m.icon, b.left + 17f, cy, 18f, Fill.Solid(Colors.cyanSoft))
+            ContinuumIcons.draw(p, m.icon, b.left + 17f, cy, iconSize, Fill.Solid(Colors.cyanSoft))
             val valueWidth = minOf(p.measureText(m.value, style), b.width * .32f)
             val valueStart = b.right - 10f - valueWidth
             p.drawText(fit(p, m.label, style, valueStart - b.left - 47f), b.left + 34f, cy + cap / 2f,
