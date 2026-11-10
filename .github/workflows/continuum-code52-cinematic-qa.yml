@@ -60,7 +60,14 @@ jobs:
         run: |
           set -euo pipefail
           bash scripts/code52-targeted-kotlin-check.sh
-          node --test .github/continuum/code52-no-orphans-accountability.test.mjs .github/continuum/android-local-consent-epoch.test.mjs .github/continuum/code52-project-isolation.test.mjs .github/continuum/code52-cinema-source-contract.test.mjs
+          node --test .github/continuum/code52-no-orphans-accountability.test.mjs .github/continuum/android-local-consent-epoch.test.mjs .github/continuum/code52-project-isolation.test.mjs .github/continuum/code52-cinema-source-contract.test.mjs .github/continuum/code52-graphics-branch-intake.test.mjs
+      - name: Host-only cinematic reference check and 36 frame previews
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/hollywood-fui-reference-fidelity.sh "$RUNNER_TEMP/code52-cinema-visual" CODE52-final
+          bash scripts/hollywood-fui-cinematics-preview.sh "$RUNNER_TEMP/code52-cinema-preview"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
       - name: Full Node and critical regression gates
         shell: bash
         run: |
@@ -159,6 +166,8 @@ jobs:
           path: |
             ${{ runner.temp }}/code52-critical/
             ${{ runner.temp }}/code52-full-node/
+            ${{ runner.temp }}/code52-cinema-visual/
+            ${{ runner.temp }}/code52-cinema-preview/
             ${{ runner.temp }}/code52-junit-totals.txt
             ${{ runner.temp }}/code52-badging.txt
             app/build/test-results/testDebugUnitTest/
