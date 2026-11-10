@@ -103,6 +103,7 @@ internal object WorkingTaskContext {
         if (!text(request, 512)) return clarify("INPUT_LIMIT")
         if (assent.matches(raw) || isStop(raw)) return WorkingTaskDecision.NoMatch
         if (raw.any { it in "\"„“»«" }) return clarify("QUOTED_REFERENCE")
+        if (declaresConstraintCorrection(state, raw)) return clarify("CONSTRAINT_CHANGE_REQUIRES_REBIND")
         if (Regex("(?iu)\\boder\\b").containsMatchIn(raw)) return clarify("ALTERNATIVE_TARGETS")
         val mentions = state.seed.references.filter { reference ->
             (reference.aliases + reference.label).any { contains(raw, it) }
@@ -170,11 +171,25 @@ internal object WorkingTaskContext {
                     if (inputWords.subList(start, start + part.size) != part) false else {
                         var before = start - 1
                         while (before >= 0 && inputWords[before] in setOf("die", "der", "das", "den")) before--
-                        val tail = inputWords.drop(start + part.size)
+                        val tail = inputWords.drop(start + part.size).filterNot { it == "bitte" }
+                        val prefix = inputWords.take(start).filterNot { it in setOf("bitte", "die", "der", "das", "den", "nein") }
+                        val rejectingLead = prefix.isEmpty() || prefix in listOf(
+                            listOf("ich", "meine"), listOf("ich", "meinte"), listOf("meine"), listOf("meinte"),
+                            listOf("ich", "will"), listOf("ich", "möchte"), listOf("nimm"), listOf("verwende"),
+                            listOf("nutze"), listOf("benutze"), listOf("wähle"))
                         before >= 0 && inputWords[before] in setOf("nicht", "kein", "keine", "keinen") ||
-                            tail == listOf("nicht") || tail == listOf("ist", "es", "nicht")
+                            rejectingLead && tail == listOf("nicht") || tail == listOf("ist", "es", "nicht")
                     }
                 }
+        }
+    }
+
+    private fun declaresConstraintCorrection(state: WorkingTaskSnapshot, input: String): Boolean {
+        if (!Regex("(?iu)^(?:korrektur|berichtigung|richtigstellung|änderung)\\s*:").containsMatchIn(input)) return false
+        val stopWords = setOf("behalten", "unverändert", "lassen", "bleiben", "ändern", "keine", "nicht", "diese", "jetzt")
+        val requestWords = tokens(input).toSet()
+        return state.seed.constraints.any { constraint ->
+            tokens(constraint.key + " " + constraint.value).any { it.length >= 4 && it !in stopWords && it in requestWords }
         }
     }
 

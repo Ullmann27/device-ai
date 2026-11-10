@@ -81,3 +81,23 @@ actual animation edit and APK/signing/install: NOT_RUN.
 
 Rollback: leave the default-off gate disabled; revert only this patch after
 root review. No changes to protected Build52, main, Cinema renderer or signing.
+
+## Post-holdout safety repair
+
+The first independent source-frozen evaluation of ad1f9ed was **17/24 pass,
+7fail; REJECT_PROMOTION**. Its results stay unchanged. Two exposed cases led to
+one bounded safety repair, not another architecture or independent holdout:
+
+- A named target followed by polite rejection was selected incorrectly.
+  Nominal/corrective rejection now recognizes `bitte nicht`. Ordinary predicate
+  negation (`Warum startet Licht Beta nicht?`) still resolves its subject.
+- An explicit `Korrektur:` overlapping a retained constraint could leave the
+  old constraint usable. The narrow marker/word overlap now requests clarification
+  and blocks plans until a trusted higher-revision rebind. It neither interprets
+  nor automatically applies the new constraint. Other phrasing is unsupported.
+
+Directed exposed regression: **52tests/2fail RED →52tests/0fail GREEN**.
+The original independent case requiring full natural-language constraint update
+remains a capability failure. These fixes do not restore promotion eligibility.
+Raw test results and source hashes: `post-holdout/red` and `post-holdout/green`.
+No other holdout cases were tuned. Device/model/product activation remain NOT_RUN.
