@@ -295,6 +295,7 @@ object JarvisTiles {
                       cinemaElapsedMs: Long? = null, cinemaExiting: Boolean = false,
                       cinemaBudget: JarvisRenderQuality.Budget? = null, animatorScale: Float = 1f) {
         if (items.isEmpty()) return
+        LuxuryHoloButtonRenderer.drawDockPlatform(p, b)
         val cells = bottomNavItemBoxes(b, items)
         val inset = 3f
         items.forEachIndexed { i, it ->
@@ -322,7 +323,7 @@ object JarvisTiles {
                 return@forEachIndexed
             }
             if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
-            drawSurface(p, tile, model, active, timeMs)
+            drawSurface(p, tile, model, active, timeMs, luxuryDepth = true)
             if (cinema.glassAlpha < 1f) p.restore()
             if (cinema.contentAlpha < 0.01f) { p.restore(); return@forEachIndexed }
             if (cinema.contentAlpha < 1f) p.saveAlpha(cinema.contentAlpha)

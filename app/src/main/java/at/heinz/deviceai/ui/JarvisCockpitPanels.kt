@@ -79,7 +79,14 @@ object JarvisCockpitPanels {
     }
 
     fun drawWorkProcess(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
+        if (isProcessVacant(s)) JarvisVisualDepth.recedeVacantPanel(p, b)
         drawStepList(p, b, "Verarbeitung", workProcessRows(s))
+    }
+
+    fun isProcessVacant(s: ContinuumDashboardState): Boolean {
+        val vis = DocumentBlueprintView.visible(s.document)
+        if (vis != null && vis.steps.isNotEmpty()) return false
+        return s.cockpit.steps.isEmpty() && s.cockpit.openWork.isEmpty()
     }
 
     fun drawDocumentPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
@@ -91,6 +98,7 @@ object JarvisCockpitPanels {
         val body = Type.body.copy(size = 14f)
         var y = rowsTop(p, y0)
         if (vis == null) {
+            JarvisVisualDepth.recedeVacantPanel(p, b)
             p.drawText(NONE, b.left + 16f, y + p.capHeight(st), st, Fill.Solid(Colors.textSecondary))
             return
         }
@@ -122,6 +130,7 @@ object JarvisCockpitPanels {
         val st = Type.caption
         var y = rowsTop(p, y0)
         if (vis == null || !vis.showsDraft) {
+            JarvisVisualDepth.recedeVacantPanel(p, b)
             p.drawText(NONE, b.left + 16f, y + p.capHeight(st), st, Fill.Solid(Colors.textSecondary))
             return
         }

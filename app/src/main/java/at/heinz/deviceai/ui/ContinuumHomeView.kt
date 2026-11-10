@@ -612,7 +612,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val shell = if (jarvisShellStage) shellGeometry(widthPx, heightPx) else null
         val stage = shell?.get(JarvisShellLayout.Slot.AVATAR)
         val head = shell?.headStage ?: shell?.headBounds
-        val orb = shell?.orbBounds
+        val header = shell?.grid?.areas?.get(JarvisCockpitGrid.Area.CONTINUUM_HEADER)
+        val orb = shell?.orbBounds?.let { ContinuumBrainOrbRenderer.columnFor(it, header) }
         if (stage == null || head == null || orb == null) {
             hologram.setCockpitRegions(null, null)
             hologram.setHeadFraming(.5f, 1f)
