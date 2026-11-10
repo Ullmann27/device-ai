@@ -1,0 +1,27 @@
+{
+  "devAndRetentionExcludedFromGradients": true,
+  "dynamicScheduleParity": "PENDING_RUN",
+  "dynamicTeacherAndCacheIntegrity": "PENDING_RUN",
+  "experiment": "EXP-12",
+  "fullCapacityClaimAllowed": false,
+  "hashes": {
+    "LmDistillPilot.kt": "24a79ea89e2a57ae5cbb1bf6aff7a5a0c94465d3db55a8fbc4c62dd5b6f338b1",
+    "LmSoftTargetKl.kt": "a0584ecea66b458555da0964cf24371043886de952d7059de117e62bd652d9ce"
+  },
+  "limitations": [
+    "Static inspection is not dynamic validation.",
+    "Design follows visible EXP-05 evidence.",
+    "Same consumed open DEV set remains marker/token-length confounded."
+  ],
+  "modelExecutions": 0,
+  "noMetricDrivenTrainingControlObserved": true,
+  "parameterUpdates": 0,
+  "prospectiveGenerationGate": "original successful IDs 2 and 3 must each retain 32 tokens",
+  "replayRetentionExactLineOverlap": 0,
+  "schema": "lm1-distill-independent-dataflow-review-v1",
+  "scope": "STATIC_SOURCE_AND_INPUT_IDENTITIES",
+  "status": "SOURCE_DATA_FLOW_PASS",
+  "teacherDataOnly": "replay.txt",
+  "teacherExamples": 16,
+  "trainDevRetainExcludedFromTeacherCache": true
+}
