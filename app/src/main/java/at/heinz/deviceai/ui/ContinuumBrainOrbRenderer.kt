@@ -447,18 +447,21 @@ class ContinuumBrainOrbRenderer {
             return minOf(slotW * .48f, slotH / STACK_HEIGHT).coerceAtLeast(1f)
         }
 
+        /** Gap between the continuum title/slogan box and the top of the glass sphere. */
+        const val HEADER_CLEARANCE_DP = 4f
+
         /**
-         * Visual column for the original orb: the continuum header sits directly above the
-         * orb box in Ref-B, so the sphere may use that full column. Layout boxes stay put.
+         * Visual column for the original orb. Title and slogan in [header] stay readable
+         * (ref-b: title above, sphere on its pedestal below). Layout boxes stay put.
          */
         fun columnFor(orb: JarvisShellLayout.Box, header: JarvisShellLayout.Box?): JarvisShellLayout.Box {
             if (header == null || header.width <= 0f || header.height <= 0f) return orb
             val aligned = kotlin.math.abs(header.left - orb.left) < 12f &&
                 kotlin.math.abs(header.right - orb.right) < 12f
             if (!aligned) return orb
-            return JarvisShellLayout.Box(
-                minOf(header.left, orb.left), minOf(header.top, orb.top),
-                maxOf(header.right, orb.right), maxOf(header.bottom, orb.bottom))
+            val safeTop = maxOf(orb.top, header.bottom + HEADER_CLEARANCE_DP)
+            if (safeTop >= orb.bottom) return orb
+            return JarvisShellLayout.Box(orb.left, safeTop, orb.right, orb.bottom)
         }
 
         fun placementIn(column: JarvisShellLayout.Box): Placement {
@@ -466,6 +469,18 @@ class ContinuumBrainOrbRenderer {
             val used = STACK_HEIGHT * r
             val top = column.top + (column.height - used).coerceAtLeast(0f) / 2f
             return Placement(column.centerX, top + r, r)
+        }
+
+        /** True when the glass sphere disk intersects the title/slogan box. */
+        fun overlapsHeader(placement: Placement, header: JarvisShellLayout.Box): Boolean {
+            if (header.width <= 0f || header.height <= 0f) return false
+            if (!placement.cx.isFinite() || !placement.cy.isFinite() ||
+                !placement.radius.isFinite() || placement.radius <= 0f) return true
+            val nx = placement.cx.coerceIn(header.left, header.right)
+            val ny = placement.cy.coerceIn(header.top, header.bottom)
+            val dx = placement.cx - nx
+            val dy = placement.cy - ny
+            return dx * dx + dy * dy < placement.radius * placement.radius
         }
 
         @Suppress("unused") private fun len(x: Float, y: Float) = sqrt(x * x + y * y)

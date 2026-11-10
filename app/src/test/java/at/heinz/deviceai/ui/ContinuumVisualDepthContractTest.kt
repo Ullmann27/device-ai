@@ -4,6 +4,7 @@ import java.lang.reflect.Proxy
 import kotlin.math.abs
 import kotlin.math.sin
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -62,21 +63,30 @@ class ContinuumVisualDepthContractTest {
         assertTrue("near dust stays sharp", rec.fillCircleRadii.any { it < 2f })
     }
 
-    @Test fun originalOrbFillsTheHeroColumnWithoutLeavingIt() {
+    @Test fun orbDoesNotCoverContinuumTitleAndSlogan() {
         val header = JarvisShellLayout.Box(100f, 10f, 300f, 60f)
         val orb = JarvisShellLayout.Box(100f, 64f, 300f, 210f)
         val column = ContinuumBrainOrbRenderer.columnFor(orb, header)
-        assertEquals(10f, column.top, 0f)
-        assertEquals(210f, column.bottom, 0f)
         val place = ContinuumBrainOrbRenderer.placementIn(column)
-        val slotOnly = ContinuumBrainOrbRenderer.radiusFor(orb.width, orb.height)
-        assertTrue("hero column is larger than the leftover orb box", place.radius > slotOnly)
-        assertTrue(place.cx > column.left && place.cx < column.right)
-        assertTrue(place.cy - place.radius >= column.top - 0.51f)
+        assertFalse(
+            "sphere must not intersect the title/slogan box",
+            ContinuumBrainOrbRenderer.overlapsHeader(place, header)
+        )
+        assertTrue(place.cy - place.radius >= header.bottom - 0.01f)
         assertTrue(place.cy + 1.44f * place.radius <= column.bottom + 0.51f)
         val unchanged = ContinuumBrainOrbRenderer.columnFor(orb, JarvisShellLayout.Box(0f, 0f, 40f, 20f))
         assertEquals(orb.left, unchanged.left, 0f)
         assertEquals(orb.top, unchanged.top, 0f)
+
+        val grid = JarvisCockpitGrid.create(884f, 760f)
+        val foldHeader = grid[JarvisCockpitGrid.Area.CONTINUUM_HEADER]
+        val foldOrb = grid[JarvisCockpitGrid.Area.ORB]
+        val live = ContinuumBrainOrbRenderer.placementIn(
+            ContinuumBrainOrbRenderer.columnFor(foldOrb, foldHeader))
+        assertFalse(
+            "Fold7-inner: sphere covers Continuum title/slogan",
+            ContinuumBrainOrbRenderer.overlapsHeader(live, foldHeader)
+        )
     }
 
     @Test fun vacantPanelRecedesAndWorkStagePaintsARing() {
