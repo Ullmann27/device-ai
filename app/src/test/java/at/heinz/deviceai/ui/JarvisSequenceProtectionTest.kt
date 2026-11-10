@@ -136,6 +136,16 @@ class JarvisSequenceProtectionTest {
         assertEquals("Unobstructed exit remains visible", 1, fx.drawnCardCount)
     }
 
+    @Test fun documentQuestionIsDisplayedAsGroundedDocumentSubtitle() {
+        val fx = JarvisSequenceEffects()
+        fx.card("doc", JarvisSequenceEffects.Kind.DOCUMENT,
+            "Befund.pdf", "Welche Seiten sind relevant?", 1000L)
+        val visible = frame(fx, 2000L)
+        assertEquals(1, fx.drawnCardCount)
+        assertTrue(visible.texts.contains("Befund.pdf"))
+        assertTrue(visible.texts.contains("Welche Seiten sind relevant?"))
+    }
+
     private fun frame(fx: JarvisSequenceEffects, now: Long): Recording = Recording().also {
         fx.draw(it, width, height, now)
     }
