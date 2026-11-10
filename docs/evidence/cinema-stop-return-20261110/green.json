@@ -1,0 +1,73 @@
+{
+  "local_source": "28bd3329efa7165448e5fe7c8782037c2b692ca4",
+  "remote_source": "468a479f2cb5009d7b398a2a202452eaef2a05f8",
+  "tree": "6c2b57b28c56d5d142d7bf6c326787867e522d45",
+  "tests": [
+    {
+      "name": "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "65e4edd2af36ac54a5185cb54ea5c9599160372207ba647e19c4015ff4d428cf"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.HollywoodFuiWindowUiTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "d2131e0ff30aca34ce27293677154087a67fdfe75b21683d7cfcdc4c6e7ecaa0"
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisWorkWindowUiTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "d31f7879c47e70a92f7fa9ab96c7feb484fe50c9203db64d4638f8fd31a262ee"
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisCinemaReplayUiTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "06b27a6613688da7d409919f54ae49b736195c06af7447178e49ca5de2068157"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest",
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "0cfcb5a0baadafb1676276bf6179ebafe8c4d95c9e8647466eccc66f75e31d18"
+    },
+    {
+      "name": "at.heinz.deviceai.LocalReasoningWorkSceneUiTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "f12d4bbdc853f2dc3582a7aca67a3337ea44dcdeef29cf75d6dfcc4b835e56d9"
+    },
+    {
+      "name": "at.heinz.deviceai.CinemaStopReturnUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "dbc3d9be97859254e7b4b5a4fd956ded7a1d04d8c5607c9a6e82cb049d6ef17c"
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumCockpitHandsFreeUiTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "e75ef78793b94a11611d4e2c5e701363607b5a0dc075c6abc221f886eeb5c5ca"
+    }
+  ],
+  "android_source_compile": "PASS",
+  "Fold7": "NOT_RUN"
+}

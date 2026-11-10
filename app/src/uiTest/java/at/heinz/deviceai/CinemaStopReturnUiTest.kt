@@ -90,8 +90,8 @@ class CinemaStopReturnUiTest {
             advance(1800)
             field("busy").set(a, true)
             field("activeLocalRequest").set(a, true)
-            (field("cockpitTriggers").get(a) as CockpitAnimationTriggers)
-                .commandAcknowledged("stop-proof", "Prüfauftrag")
+            val triggers = field("cockpitTriggers").get(a) as CockpitAnimationTriggers
+            triggers.commandAcknowledged("stop-proof", "Prüfauftrag")
             AgentActivity::class.java.getDeclaredMethod("presentLocalReasoningWorkScene",
                 String::class.java, String::class.java).apply { isAccessible = true }
                 .invoke(a, "stop-proof", "Prüfauftrag")
@@ -129,6 +129,8 @@ class CinemaStopReturnUiTest {
                 .invoke(a, "next-request", true)
             field("busy").set(a, false)
             field("activeLocalRequest").set(a, false)
+            // Scripted worker acknowledges cancellation.
+            triggers.turnEnded("stop-proof", false)
             advance(320)
             capture("stop-352ms")
             advance(2080)
