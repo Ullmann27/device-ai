@@ -49,10 +49,7 @@ class DocumentBlueprintProjection {
     }
 
     fun onLearned(event: CockpitAnimationEvent.DocumentLearned) {
-        if (name == null) {
-            name = event.docId
-            mime = event.kind
-        }
+        if (!hasDocument) return
         entriesAdded = event.entriesAdded.coerceAtLeast(0)
         if (event.entriesAdded > 0) upsert(DocumentPipelineStepEvent.KEY_CAPTURE, StepState.DONE)
     }
