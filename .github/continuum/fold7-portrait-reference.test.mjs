@@ -41,7 +41,8 @@ test('Fold portrait uses the shared width/font profile, one Activity rail and no
  assert.match(shell,/fun create\(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail\.LABELLED,\s*includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false\): Shell \{/);
  assert.match(shell,/return create\(widthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation\)/);
  assert.match(shell,/val profile = JarvisWindowProfile\.resolve\(widthDp, heightDp, fontScale, foldRail\)/);
- assert.match(shell,/return if \(profile\.referenceComposition\) reference\(widthDp, heightDp, profile\)\.let \{\s*if \(compactPresentation\) compactReference\(it\) else it\s*\} else reflow\(widthDp, heightDp, profile, includeBottomNavigation, compactPresentation\)/);
+ assert.match(shell,/return if \(profile\.referenceComposition\) reference\(widthDp, heightDp, profile\)\.let \{\s*if \(compactPresentation\) compactReference\(it\) else it\s*\} else if \(profile\.widthClass == WidthClass\.COMPACT\) \{\s*compactCinema\(widthDp, heightDp, profile, compactPresentation\)\s*\} else reflow\(widthDp, heightDp, profile, includeBottomNavigation, compactPresentation\)/);
+ assert.match(shell,/private fun compactCinema\(/);
  const ui=activityMember('private fun buildUi(): View');
  assert.match(ui,/val wide = windowWidthDp >= at\.heinz\.deviceai\.ui\.JarvisWindowProfile\.MEDIUM_MIN_DP/);
  assert.match(ui,/val rail = buildRail\(\)\.also/);

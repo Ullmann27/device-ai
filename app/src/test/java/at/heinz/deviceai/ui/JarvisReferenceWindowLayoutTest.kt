@@ -94,9 +94,10 @@ class JarvisReferenceWindowLayoutTest {
         assertEquals(listOf("Gespräch", "Gedächtnis", "Denken und Planen", "Forschung", "Mein KI-Team", "Aufgaben", "Internet", "Lernen", "Gerätesteuerung", "Systemstatus"),
             JarvisTiles.reference.map { it.label })
         val phone = JarvisShellLayout.create(412f, 915f)
-        assertEquals(2, phone.tileColumns)
-        assertTrue(phone.tileBoxes()[2].top > phone.tileBoxes()[0].bottom)
-        assertEquals(phone.tileBoxes()[0].left, phone.tileBoxes()[2].left, .001f)
+        assertFalse(phone.hasFeatureTiles)
+        assertEquals(0, phone.tileBoxes().size)
+        assertNotNull(phone[Slot.BOTTOM_NAV])
+        assertFalse(phone.requiresVerticalScroll)
         val dock = requireNotNull(shell[Slot.BOTTOM_NAV])
         assertEquals(JarvisTiles.railNav.map { it.target },
             JarvisTiles.bottomNavItemBoxes(dock).map { box ->
@@ -119,7 +120,9 @@ class JarvisReferenceWindowLayoutTest {
             assertNull(wide[Slot.NAV_RAIL])
         }
         assertEquals(2, JarvisShellLayout.create(760f, 884f).profile.informationColumns)
-        assertTrue(JarvisShellLayout.create(599f, 900f).hasFeatureTiles)
+        assertFalse("compact width uses the cinema composition, not the 10-tile overflow",
+            JarvisShellLayout.create(599f, 900f).hasFeatureTiles)
+        assertNotNull(JarvisShellLayout.create(599f, 900f)[Slot.BOTTOM_NAV])
     }
 
     @Test fun shortWideWindowAndLargeFontsReflowWithoutNegativeHeroBounds() {
@@ -135,17 +138,20 @@ class JarvisReferenceWindowLayoutTest {
         assertFalse(JarvisShellLayout.create(915f, 412f).ref5Grid)
     }
 
-    @Test fun compactPhoneKeepsHeadAndSphereBesideEachOtherAboveDialogue() {
+    @Test fun compactPhoneKeepsHeadAndSphereBesideEachOtherWithoutOverlappingTheTitle() {
         val shell = JarvisShellLayout.create(412f, 915f)
-        assertEquals(2, shell.tileColumns)
-        assertEquals(5, shell.tileRows)
         assertNull(shell[Slot.NAV_RAIL])
-        assertNull("Activity owns its five-category phone bar", shell[Slot.BOTTOM_NAV])
-        assertTrue(shell.headBounds!!.bottom <= shell[Slot.DIALOG]!!.top)
+        assertNotNull("cinema phone exposes the holographic dock", shell[Slot.BOTTOM_NAV])
+        assertNull(shell[Slot.TILES])
         assertTrue(shell.headBounds!!.right < shell.orbBounds!!.left)
-        assertTrue(shell.orbBounds!!.bottom <= shell[Slot.DIALOG]!!.top)
-        assertTrue(shell.orbBounds!!.bottom < shell[Slot.TILES]!!.top)
-        assertTrue(shell.requiresVerticalScroll)
+        assertTrue(shell[Slot.CONTINUUM_HEADER]!!.bottom <= shell.orbBounds!!.top + .01f)
+        assertFalse(intersects(shell.headBounds!!, shell.orbBounds!!))
+        assertFalse(intersects(shell[Slot.CONTINUUM_HEADER]!!, shell.orbBounds!!))
+        assertTrue("mission stays below both identities",
+            shell.headBounds!!.bottom <= shell[Slot.INPUT]!!.top &&
+                shell.orbBounds!!.bottom <= shell[Slot.INPUT]!!.top)
+        assertTrue(shell[Slot.WORK_DOCUMENT]!!.top > shell[Slot.INPUT]!!.bottom)
+        assertFalse(shell.requiresVerticalScroll)
         sane(shell)
     }
 
@@ -158,19 +164,18 @@ class JarvisReferenceWindowLayoutTest {
             val dialog = requireNotNull(shell[Slot.DIALOG])
             assertTrue("font$font: head and original orb share the hero", head.right < orb.left &&
                 maxOf(head.top, orb.top) < minOf(head.bottom, orb.bottom))
-            assertTrue("font$font: head keeps a usable viewport", head.height >= 220f)
-            assertTrue("font$font: original orb keeps a usable viewport", orb.height >= 112f)
-            assertTrue("font$font: dialogue stays below both identities",
-                head.bottom <= dialog.top && orb.bottom <= dialog.top)
-            val protected = listOf(head, orb, dialog)
-            val workspace = Box(8f, protected.maxOf { it.bottom } + 8f,
-                shell.width - 8f, shell.viewportHeight - 8f)
-            assertTrue("font$font: actual free width supports the work area", workspace.width >= 200f)
-            assertTrue("font$font: actual free height supports the work area: $workspace", workspace.height >= 160f - .01f)
-            protected.forEach { assertFalse("font$font: workspace cannot cover $it", intersects(workspace, it)) }
+            assertTrue("font$font: head keeps a usable viewport", head.height >= 164f)
+            assertTrue("font$font: original orb keeps a usable viewport", orb.height >= 96f)
+            assertTrue("font$font: Continuum title does not sit on the orb",
+                shell[Slot.CONTINUUM_HEADER]!!.bottom <= orb.top + .01f)
+            assertNotNull("font$font: cinema work window", shell[Slot.WORK_DOCUMENT])
+            assertNotNull("font$font: cinema dock", shell[Slot.BOTTOM_NAV])
+            val protected = listOf(head, orb)
             assertTrue("font$font: both identities stay visible", protected.all { it.bottom < shell.viewportHeight })
-            assertEquals(10, shell.tileBoxes().size)
+            assertFalse(shell.hasFeatureTiles)
+            assertEquals(0, shell.tileBoxes().size)
             sane(shell)
+            assertTrue("font$font: live card is one of the three top boxes", dialog.height > 0f)
         }
     }
 
@@ -244,7 +249,8 @@ class JarvisReferenceWindowLayoutTest {
         assertNotNull(pane[Slot.BOTTOM_NAV])
         val phone = JarvisShellLayout.forContent(412f, 915f, externalBottomBarHeightDp = 68f)
         assertEquals(847f, phone.viewportHeight, 0f)
-        assertNull(phone[Slot.BOTTOM_NAV])
+        assertNotNull("cinema phone keeps the holographic dock inside the reserved viewport", phone[Slot.BOTTOM_NAV])
+        assertFalse(phone.hasFeatureTiles)
     }
 
     @Test fun actualControlsHaveDisjointFortyEightDpHitBoxes() {
@@ -306,17 +312,26 @@ class JarvisReferenceWindowLayoutTest {
                 listOf(Slot.WORK_DOCUMENT, Slot.WORK_PROCESS, Slot.WORK_DRAFT).forEach {
                     assertNotNull("$it on compact packed cockpit", shell[it])
                 }
-                assertTrue("compact reference shortens the packed page", shell.height < shell.viewportHeight)
+                if (h >= 700f) {
+                    assertTrue("compact cinema/reference shortens a tall page", shell.height < shell.viewportHeight + .01f)
+                }
             }
         }
     }
 
-    @Test fun optionalStandalonePhoneBarIsOnlyAddedWhenRequested() {
-        assertNull(JarvisShellLayout.create(412f, 915f)[Slot.BOTTOM_NAV])
-        val withBar = JarvisShellLayout.create(412f, 915f, includeBottomNavigation = true)
-        assertNotNull(withBar[Slot.BOTTOM_NAV])
-        assertEquals("The optional bar is the rail replacement, not the old five-item subset",
+    @Test fun cinemaPhoneDockReachesEveryRailDestinationWithoutASecondBar() {
+        val phone = JarvisShellLayout.create(412f, 915f)
+        val dock = requireNotNull(phone[Slot.BOTTOM_NAV])
+        assertEquals("The dock is the rail replacement, not the old five-item subset",
             JarvisTiles.railNav.size, JarvisTiles.bottomNav.size)
+        assertEquals(JarvisTiles.railNav.map { it.target },
+            JarvisTiles.bottomNavItemBoxes(dock).map { box ->
+                JarvisShellContent.hitTarget(phone, JarvisTiles.reference, box.centerX, box.centerY)
+            })
+        val withBar = JarvisShellLayout.create(412f, 915f, includeBottomNavigation = true)
+        assertEquals("includeBottomNavigation must not add a second navigation row",
+            phone[Slot.BOTTOM_NAV], withBar[Slot.BOTTOM_NAV])
+        sane(phone)
         sane(withBar)
     }
 }

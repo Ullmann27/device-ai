@@ -372,7 +372,7 @@ class JarvisShellView(context: Context) : View(context) {
         textPainter.fontScale = resources.configuration.fontScale
         val save = canvas.save()
         canvas.scale(d, d)
-        JarvisShellRenderer.drawForeground(textPainter, s, content, deckClearance)
+        JarvisShellRenderer.drawForeground(textPainter, s, content, deckClearance, glass)
         canvas.restoreToCount(save)
     }
 

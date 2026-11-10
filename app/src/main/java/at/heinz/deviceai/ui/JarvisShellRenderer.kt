@@ -41,7 +41,7 @@ object JarvisShellRenderer {
 
     /** Drawn above the transparent native head. Keeps speech and status readable over the 3D silhouette. */
     fun drawForeground(p: ContinuumPainter, shell: Shell, content: Map<Slot, SlotContent>,
-                       deckClearance: Float = 0f) {
+                       deckClearance: Float = 0f, glass: GlassBackend? = null) {
         for (slot in foregroundSlots) {
             val box = shell[slot] ?: continue
             val clear = if (slot == Slot.COCKPIT_SECONDARY && deckClearance > 0f)
@@ -52,8 +52,10 @@ object JarvisShellRenderer {
             val k = JarvisDeckClearance.scale(clear)
             p.scale(k, k, box.centerX, box.centerY())
             if (slot != Slot.TOP_BAR && slot != Slot.CONTINUUM_HEADER) {
-                JarvisReferenceHud.surface(p, box, 14f, Colors.cyan,
-                    if (slot == Slot.COCKPIT_SECONDARY || slot == Slot.CAMERA_STATUS) Colors.violetRim else Colors.cyanDeep)
+                if (glass?.drawPanelGlass(box, 14f, 0f) != true) {
+                    JarvisReferenceHud.surface(p, box, 14f, Colors.cyan,
+                        if (slot == Slot.COCKPIT_SECONDARY || slot == Slot.CAMERA_STATUS) Colors.violetRim else Colors.cyanDeep)
+                }
             }
             content[slot]?.draw(p, box)
             p.restore()
@@ -68,7 +70,9 @@ object JarvisShellRenderer {
              depthBudget: JarvisRenderQuality.Budget? = null, enableWings: Boolean = luxuryDepth,
              exiting: Boolean = false, workElapsedMs: Long = elapsedMs,
              clearIdle: Boolean = false, resultForward: Boolean = false) {
-        background(p, shell.width, shell.height)
+        if (glass?.drawBackground(shell.width, shell.height, timeMs) != true) {
+            background(p, shell.width, shell.height)
+        }
         val backdropHeight = shell[Slot.INPUT]?.bottom ?: shell[Slot.AVATAR]?.bottom ?: shell.height
         JarvisReferenceHud.backdrop(p, shell.width, backdropHeight)
         val work = listOfNotNull(shell[Slot.WORK_DOCUMENT], shell[Slot.WORK_PROCESS], shell[Slot.WORK_DRAFT])
@@ -161,10 +165,13 @@ object JarvisShellRenderer {
                     q.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 2f, Fill.Solid(Colors.cyan))
                 }
                 if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
-                JarvisReferenceHud.surface(p, box, r, Colors.cyan,
-                    if (slot == Slot.INPUT) Colors.violetRim else Colors.cyanDeep,
-                    interaction = if (f.glow > .5f) JarvisReferenceHud.Interaction.SELECTED
-                        else JarvisReferenceHud.Interaction.NORMAL)
+                val glow = if (f.glow > .5f) f.glow else 0f
+                if (glass?.drawPanelGlass(box, r, glow) != true) {
+                    JarvisReferenceHud.surface(p, box, r, Colors.cyan,
+                        if (slot == Slot.INPUT) Colors.violetRim else Colors.cyanDeep,
+                        interaction = if (f.glow > .5f) JarvisReferenceHud.Interaction.SELECTED
+                            else JarvisReferenceHud.Interaction.NORMAL)
+                }
                 if (cinema.glassAlpha < 1f) p.restore()
             }
             if (cinema.contentAlpha > 0.01f) {
@@ -191,7 +198,7 @@ object JarvisShellRenderer {
         }
         p.restore()
         JarvisReferenceHud.frame(p, shell.width, shell[Slot.STATUS]?.bottom?.plus(12f) ?: shell.height)
-        if (!deferForeground) drawForeground(p, shell, content, deckClearance)
+        if (!deferForeground) drawForeground(p, shell, content, deckClearance, glass)
     }
 
     private fun Box.centerY() = (top + bottom) / 2f
