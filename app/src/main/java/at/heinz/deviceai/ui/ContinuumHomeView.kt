@@ -712,10 +712,12 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
         shell[JarvisShellLayout.Slot.BOTTOM_NAV]?.let { b ->
             val items = JarvisTiles.bottomNav
-            val cell = b.width / items.size
-            items.forEachIndexed { i, item ->
-                add("bottom:${item.target}", item.target, item.label,
-                    JarvisShellLayout.Box(b.left + i * cell, b.top, b.left + (i + 1) * cell, b.bottom))
+            // One canonical geometry for painting, native touch/accessibility and routing.
+            // Narrow screens use multiple 48dp+ rows; old 11-column slices made controls
+            // 23-35dp wide and sent second-row touches to the wrong destination.
+            JarvisTiles.bottomNavItemBoxes(b, items).forEachIndexed { i, cell ->
+                val item = items[i]
+                add("bottom:${item.target}", item.target, item.label, cell)
             }
         }
         val desired = actions.map { it.key }.toSet()
