@@ -27,6 +27,10 @@ object JarvisCinemaEntrance {
     const val STAGGER_MS = 70L
     const val SETTLE_MS = HollywoodFuiConstruct.DATA_END_MS
     const val EXIT_MS = HollywoodFuiConstruct.CLOSE_END_MS
+    /** Close-screenplay length of the work-order fly-away before holograms rebuild. */
+    const val DEPART_MS = EXIT_MS
+    /** Key written by [at.heinz.deviceai.cockpit.CockpitAnimationTriggers.commandAcknowledged]. */
+    const val ACK_STEP_KEY = "ack"
 
     data class Pose(
         val travel: Float,
@@ -156,7 +160,8 @@ object JarvisCinemaEntrance {
         is CockpitAnimationEvent.ActionStarted,
         is CockpitAnimationEvent.DocumentQuestion -> Trigger.ENTER
         is CockpitAnimationEvent.ProcessTimeline ->
-            if (event.steps.any { it.state == StepState.DONE }) Trigger.STEP else Trigger.IGNORE
+            if (event.steps.any { it.state == StepState.DONE && it.key != ACK_STEP_KEY }) Trigger.STEP
+            else Trigger.IGNORE
         is CockpitAnimationEvent.TurnEnded -> Trigger.EXIT
         is CockpitAnimationEvent.AreaChanged -> when {
             event.toTarget == JarvisCockpitPanels.STOP_TARGET -> Trigger.EXIT
@@ -189,6 +194,148 @@ object JarvisCinemaEntrance {
         JarvisShellLayout.Slot.USER_CARD,
         JarvisShellLayout.Slot.NAV_RAIL -> StageRole.DEPART
         else -> StageRole.STAY
+    }
+
+    /**
+     * Heinz: on a real work order everything cinematic must fly away — panels, the dock
+     * and the three larger work boxes — then rebuild as living holograms where needed.
+     * Avatar, status, input and dialog stay so speech and STOP remain reachable.
+     */
+    fun fliesAwayOnWorkOrder(slot: JarvisShellLayout.Slot?): Boolean = when (slot) {
+        JarvisShellLayout.Slot.WORK_DOCUMENT,
+        JarvisShellLayout.Slot.WORK_PROCESS,
+        JarvisShellLayout.Slot.WORK_DRAFT,
+        JarvisShellLayout.Slot.BOTTOM_NAV -> true
+        else -> stageRole(slot) == StageRole.DEPART
+    }
+
+    /** Work windows and the dock return after the fly-away; idle tiles stay receded. */
+    fun rebuildsAfterFlyAway(slot: JarvisShellLayout.Slot?): Boolean = when (slot) {
+        JarvisShellLayout.Slot.WORK_DOCUMENT,
+        JarvisShellLayout.Slot.WORK_PROCESS,
+        JarvisShellLayout.Slot.WORK_DRAFT,
+        JarvisShellLayout.Slot.BOTTOM_NAV -> true
+        else -> false
+    }
+
+    fun workOrderDurationMs(count: Int, animatorScale: Float = 1f): Long {
+        val last = staggerMs(Kind.WORK_WINDOW, (count - 1).coerceAtLeast(0))
+        val scale = if (animatorScale <= 0f) 0f else animatorScale
+        return if (scale == 0f) 0L else ((last + DEPART_MS + SETTLE_MS) * scale).toLong()
+    }
+
+    /**
+     * Two-phase work-order choreography on the shared event clock: each participant
+     * finishes its own [depart] (staggered) and only then, if it rebuilds, runs the
+     * existing entrance screenplay. Not a second motion engine.
+     */
+    enum class WorkOrderReplay { IGNORE, CONTINUE_FLIGHT, RESTART_FROM_WORKING }
+
+    /** Sentinel: return started from a fully settled work scene (not mid-flight). */
+    const val WORKING_SETTLED_MS = Long.MAX_VALUE / 4
+
+    fun workOrderReplay(sameTurn: Boolean, elapsedMs: Long): WorkOrderReplay = when {
+        sameTurn -> WorkOrderReplay.IGNORE
+        elapsedMs < DEPART_MS -> WorkOrderReplay.CONTINUE_FLIGHT
+        else -> WorkOrderReplay.RESTART_FROM_WORKING
+    }
+
+    fun workOrderPose(
+        slot: JarvisShellLayout.Slot?,
+        rank: Int,
+        elapsedMs: Long,
+        side: Float = 0f,
+        budget: JarvisRenderQuality.Budget? = null,
+        animatorScale: Float = 1f,
+        fromWorkingScene: Boolean = false,
+    ): Pose {
+        if (!fliesAwayOnWorkOrder(slot)) return SETTLED
+        val kind = kindOf(slot)
+        val rebuilds = rebuildsAfterFlyAway(slot)
+        val reduced = animatorScale <= 0f || budget?.animate == false
+        if (reduced) {
+            return if (rebuilds) {
+                pose(kind, rank, SETTLE_MS, exiting = false, side = 0f,
+                    budget = budget, animatorScale = animatorScale)
+            } else {
+                depart(rank, EXIT_MS, side = 0f, budget = budget, animatorScale = animatorScale)
+            }
+        }
+        if (fromWorkingScene && !rebuilds) {
+            return depart(rank, EXIT_MS, side, budget, animatorScale)
+        }
+        val departLocal = elapsedMs - staggerMs(Kind.PANEL, rank)
+        if (!rebuilds || departLocal < EXIT_MS) {
+            return depart(rank, elapsedMs, side, budget, animatorScale)
+        }
+        return pose(
+            kind, rank, elapsedMs - DEPART_MS, exiting = false,
+            side = side, budget = budget, animatorScale = animatorScale,
+        )
+    }
+
+    fun returnHoldMs(interruptedAfterMs: Long): Long {
+        if (interruptedAfterMs >= WORKING_SETTLED_MS || interruptedAfterMs >= DEPART_MS) return EXIT_MS
+        return (DEPART_MS - interruptedAfterMs).coerceAtLeast(0L)
+    }
+
+    fun returnDurationMs(count: Int, interruptedAfterMs: Long, animatorScale: Float = 1f): Long {
+        val last = staggerMs(Kind.WORK_WINDOW, (count - 1).coerceAtLeast(0))
+        val scale = if (animatorScale <= 0f) 0f else animatorScale
+        return if (scale == 0f) 0L else ((returnHoldMs(interruptedAfterMs) + SETTLE_MS + last) * scale).toLong()
+    }
+
+    /**
+     * Return flight after a finished, failed, stopped or superseded work order.
+     * Visible holograms close first; items still departing keep receding (no pop
+     * back to rest). Then the idle cockpit rebuilds via the entrance screenplay.
+     */
+    fun returnPose(
+        slot: JarvisShellLayout.Slot?,
+        rank: Int,
+        elapsedMs: Long,
+        interruptedAfterMs: Long = WORKING_SETTLED_MS,
+        side: Float = 0f,
+        budget: JarvisRenderQuality.Budget? = null,
+        animatorScale: Float = 1f,
+    ): Pose {
+        if (!fliesAwayOnWorkOrder(slot)) return SETTLED
+        val kind = kindOf(slot)
+        val rebuilds = rebuildsAfterFlyAway(slot)
+        val reduced = animatorScale <= 0f || budget?.animate == false
+        if (reduced) {
+            return pose(kind, rank, SETTLE_MS, exiting = false, side = 0f,
+                budget = budget, animatorScale = animatorScale)
+        }
+        val hold = returnHoldMs(interruptedAfterMs)
+        val rebuildLocal = when {
+            !rebuilds -> Long.MIN_VALUE
+            interruptedAfterMs >= WORKING_SETTLED_MS -> SETTLE_MS
+            else -> interruptedAfterMs - DEPART_MS - staggerMs(kind, rank)
+        }
+        val hologramSolid = if (rebuildLocal > 0L) {
+            val snap = pose(kind, rank, rebuildLocal, exiting = false, side = side,
+                budget = budget, animatorScale = animatorScale)
+            snap.settled || snap.contentAlpha > 0.5f
+        } else false
+        if (hologramSolid) {
+            return if (elapsedMs < EXIT_MS) {
+                pose(kind, rank, elapsedMs, exiting = true, side = side,
+                    budget = budget, animatorScale = animatorScale)
+            } else {
+                pose(kind, rank, elapsedMs - EXIT_MS, exiting = false, side = side,
+                    budget = budget, animatorScale = animatorScale)
+            }
+        }
+        val continued = if (interruptedAfterMs >= WORKING_SETTLED_MS) EXIT_MS + elapsedMs
+            else interruptedAfterMs + elapsedMs
+        if (elapsedMs < hold) {
+            return depart(rank, continued, side, budget, animatorScale)
+        }
+        return pose(
+            kind, rank, elapsedMs - hold, exiting = false,
+            side = side, budget = budget, animatorScale = animatorScale,
+        )
     }
 
     /**

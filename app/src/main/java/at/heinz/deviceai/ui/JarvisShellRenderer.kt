@@ -69,7 +69,9 @@ object JarvisShellRenderer {
              missionClearance: Float = deckClearance, luxuryDepth: Boolean = false,
              depthBudget: JarvisRenderQuality.Budget? = null, enableWings: Boolean = luxuryDepth,
              exiting: Boolean = false, workElapsedMs: Long = elapsedMs,
-             clearIdle: Boolean = false, resultForward: Boolean = false) {
+             clearIdle: Boolean = false, resultForward: Boolean = false,
+             fromWorkingScene: Boolean = false,
+             interruptedAfterMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS) {
         if (glass?.drawBackground(shell.width, shell.height, timeMs) != true) {
             background(p, shell.width, shell.height)
         }
@@ -105,22 +107,30 @@ object JarvisShellRenderer {
             val rank = JarvisCinemaEntrance.rankOf(slot, ranks[i])
             val role = JarvisCinemaEntrance.stageRole(slot)
             val cinema = when {
-                exiting && clearIdle && role == JarvisCinemaEntrance.StageRole.DEPART ->
-                    JarvisCinemaEntrance.depart(rank, JarvisCinemaEntrance.EXIT_MS, side, depthBudget, animatorScale)
+                exiting && clearIdle ->
+                    JarvisCinemaEntrance.returnPose(
+                        slot, rank, elapsedMs, interruptedAfterMs, side, depthBudget, animatorScale)
                 exiting -> JarvisCinemaEntrance.pose(
                     kind, rank, cinemaElapsed, exiting = true,
                     side = side, budget = depthBudget, animatorScale = animatorScale)
-                clearIdle && role == JarvisCinemaEntrance.StageRole.DEPART ->
-                    JarvisCinemaEntrance.depart(rank, elapsedMs, side, depthBudget, animatorScale)
-                clearIdle && role == JarvisCinemaEntrance.StageRole.STAY ->
-                    JarvisCinemaEntrance.SETTLED
-                resultForward && slot == Slot.WORK_DRAFT ->
+                clearIdle && resultForward && slot == Slot.WORK_DRAFT ->
                     JarvisCinemaEntrance.resultAdvance(workElapsedMs, depthBudget, animatorScale)
+                clearIdle && resultForward && role == JarvisCinemaEntrance.StageRole.ENTER ->
+                    JarvisCinemaEntrance.pose(
+                        kind, rank, JarvisCinemaEntrance.SETTLE_MS, exiting = false,
+                        side = side, budget = depthBudget, animatorScale = animatorScale)
+                clearIdle ->
+                    JarvisCinemaEntrance.workOrderPose(
+                        slot, rank, elapsedMs, side, depthBudget, animatorScale,
+                        fromWorkingScene = fromWorkingScene)
                 else -> JarvisCinemaEntrance.pose(
                     kind, rank, cinemaElapsed, exiting = false,
                     side = side, budget = depthBudget, animatorScale = animatorScale)
             }
-            val f = JarvisMotion.frame(JarvisMotion.panelSpecFor(box.centerX, cx),
+            // Work-order choreography owns travel; Muster-B fly-in would restart from alpha 0
+            // and fight the fly-away (panels popping sideways instead of leaving from rest).
+            val f = if (clearIdle) JarvisMotion.REST else JarvisMotion.frame(
+                JarvisMotion.panelSpecFor(box.centerX, cx),
                 elapsedMs - JarvisMotion.staggerStart(ranks[i], animatorScale = animatorScale), animatorScale)
             if (cinema.hidden && cinema.rimAlpha < 0.01f) return@forEachIndexed
             if (f.scale <= 0f) return@forEachIndexed
@@ -181,7 +191,8 @@ object JarvisShellRenderer {
                     slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
                     slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
                         timeMs = if (animatorScale > 0f) timeMs else 0L,
-                        cinemaElapsedMs = cinemaElapsed, cinemaExiting = exiting,
+                        cinemaElapsedMs = if (clearIdle) null else cinemaElapsed,
+                        cinemaExiting = exiting && !clearIdle,
                         cinemaBudget = depthBudget, animatorScale = animatorScale)
                     slot != null -> header(p, box, label(slot))
                     tileIndex < tiles.size -> JarvisTiles.draw(p, box, tiles[tileIndex])
@@ -193,7 +204,8 @@ object JarvisShellRenderer {
         }
         if (clearIdle && !exiting) {
             val reduced = animatorScale <= 0f || depthBudget?.animate == false
-            val built = if (reduced) 1f else HollywoodFuiConstruct.flight(workElapsedMs)
+            val rebuildElapsed = (elapsedMs - JarvisCinemaEntrance.DEPART_MS).coerceAtLeast(0L)
+            val built = if (reduced) 1f else HollywoodFuiConstruct.flight(rebuildElapsed)
             JarvisCinemaEntrance.drawStagePlatform(p, shell, built, reduced)
         }
         p.restore()
