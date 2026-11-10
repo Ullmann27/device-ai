@@ -53,3 +53,11 @@ SHA-256 pins:
 - Existing dependency `classes.jar`: `1a4cd2e8eb0c0e74e38fdc0f7f61fe3e24a2dcaf8c20050ff9ce1c525a5d0a82`.
 
 Next: integrator reviews/cherry-picks, runs the existing Android caller tests under the root build lease, and separately scopes bounded entity/reference work if required. Rollback: revert this milestone; no schema or persisted-data migration exists.
+
+## E checkpoint — pending research reply (WIP / UI NOT_RUN)
+
+The first milestone is published as `42ad3c9c6bd1a5df2d996948fbf5855429a572a9`, exact tree `0942cddca77003f0c066546f67167067a3265ee5`, in Draft PR #720. Direct Git push had no HTTPS username; the authorized connector published the source instead.
+
+The owner then requested actual pending-research reply support. This checkpoint adds an optional `Im Chat antworten` route to the existing ASK dialog. Strict `Ja, mach` / decline wording consumes only its current `WebToolApproval` through the same `respond` → `completeApproval` path. Session/foreground checks, nonce/epoch/expiry and one-shot authority stay in the existing code. The Send path handles a bound reply before busy-STOP; ambiguous/unrelated text invalidates the presentation binding. Generic/destructive tool confirmations are unchanged.
+
+Parser: **2 host tests PASS**. Existing exact-scope approval integration plus the new unbound-affirmation regression: **34 host tests PASS**, using recompiled actual consent/gate/context sources and the pinned dependency JAR. `ResearchChatApprovalUiTest` covers actual dialog, Send, waiting-turn, decline, expiry, replacement, session/foreground revocation and ambiguity. Its Android/host UI run is **NOT_RUN**, waiting for the root build lease. This WIP checkpoint is not a verified feature or device result. The root's `cancelLocalRequest` / `clearTaskEffects` methods are intentionally untouched.
