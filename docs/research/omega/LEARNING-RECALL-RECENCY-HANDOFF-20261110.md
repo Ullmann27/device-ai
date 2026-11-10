@@ -1,5 +1,9 @@
 # Existing experience recall: equal-relevance recency
 
+Historical first-candidate handoff: REJECT_PROMOTION after independent future-data
+regression. See `LEARNING-RECALL-WINDOW-REPAIR-20261110.md` for the one authorized
+repair and current status. The original result below remains preserved.
+
 Owner: current root integrator. Branch: research/continuum-learning-recall-20261110.
 Frozen baseline: local 515afc28af11b9befeb5a61f9c44411d423635a9,
 remote 28bee009ef54e8c60eb1468dc90c9f4a5a51edea,

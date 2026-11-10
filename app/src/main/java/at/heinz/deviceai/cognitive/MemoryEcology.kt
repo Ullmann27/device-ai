@@ -207,6 +207,24 @@ class MemoryWritePolicy(private val minimumConfidence: Double = 0.6) {
 
 interface ExperienceLookup {
     fun similar(taskType: String, request: String, limit: Int = 5): List<Experience>
+
+    // Inclusive bounds; no implicit clock.
+    // Legacy shortlist may omit matches.
+    fun similarWithin(
+        taskType: String,
+        request: String,
+        completedAtFrom: Long,
+        completedAtThrough: Long,
+        limit: Int = 5
+    ): List<Experience> {
+        require(limit >= 0)
+        require(completedAtFrom >= 0 && completedAtThrough >= completedAtFrom)
+        if (limit == 0) return emptyList()
+        return similar(taskType, request, limit).asSequence()
+            .filter { it.completedAt in completedAtFrom..completedAtThrough }
+            .take(limit)
+            .toList()
+    }
 }
 
 class InMemoryExperienceStore : ExperienceStore, ExperienceLookup {
@@ -224,11 +242,22 @@ class InMemoryExperienceStore : ExperienceStore, ExperienceLookup {
 
     @Synchronized override fun all(): List<Experience> = experiences.values.toList()
 
-    override fun similar(taskType: String, request: String, limit: Int): List<Experience> {
+    override fun similar(taskType: String, request: String, limit: Int): List<Experience> =
+        similarWithin(taskType, request, 0, Long.MAX_VALUE, limit)
+
+    override fun similarWithin(
+        taskType: String,
+        request: String,
+        completedAtFrom: Long,
+        completedAtThrough: Long,
+        limit: Int
+    ): List<Experience> {
         require(limit >= 0)
+        require(completedAtFrom >= 0 && completedAtThrough >= completedAtFrom)
         val queryTerms = terms(request)
         if (limit == 0) return emptyList()
         return all().asSequence()
+            .filter { it.completedAt in completedAtFrom..completedAtThrough }
             .filter { it.taskType.equals(taskType, ignoreCase = true) }
             .map { it to jaccard(queryTerms, terms(it.requestSummary)) }
             .filter { it.second > 0.0 || queryTerms.isEmpty() }

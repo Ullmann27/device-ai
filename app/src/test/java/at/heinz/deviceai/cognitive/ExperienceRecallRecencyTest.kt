@@ -89,10 +89,12 @@ class ExperienceRecallRecencyTest {
         assertEquals(2, AgentExperienceRecall.hints(store, task, now).size)
     }
 
-    @Test fun higherRelevanceExpiredRecordsRemainKnownLimitation() {
+    @Test fun unboundedLookupRetainsHigherRelevanceExpiredRecords() {
         val store = InMemoryExperienceStore()
         repeat(64) { store.store(past("old-$it", now - 31L * 24 * 60 * 60 * 1000)) }
         store.store(past("current", request = "$task extra detail"))
-        assertTrue(AgentExperienceRecall.hints(store, task, now).isEmpty())
+        val candidates = store.similar("agent_task", task, 64)
+        assertEquals(64, candidates.size)
+        assertTrue(candidates.all { it.id.startsWith("old-") })
     }
 }
