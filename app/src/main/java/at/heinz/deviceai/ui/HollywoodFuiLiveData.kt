@@ -1,6 +1,7 @@
 package at.heinz.deviceai.ui
 
 import at.heinz.deviceai.cockpit.CalcStep
+import at.heinz.deviceai.cockpit.DocumentDraftAction
 import at.heinz.deviceai.cockpit.ProcessStep
 import at.heinz.deviceai.cockpit.StepState
 
@@ -15,8 +16,23 @@ sealed class HollywoodFuiLiveData {
         val question: String?,
         /** Null until a real document source supplies it. Never infer from entries. */
         val pageCount: Int? = null,
-        val entriesAdded: Int? = null
-    ) : HollywoodFuiLiveData()
+        val entriesAdded: Int? = null,
+        /** Shown page index from the mounted renderer; null when unknown. */
+        val currentPage: Int? = null,
+        val steps: List<PipelineStep> = emptyList(),
+        val draft: Draft? = null,
+        /** 0–100 only when covered/total characters of a real draft are known. */
+        val progressPercent: Int? = null,
+        val actions: Set<DocumentDraftAction> = emptySet()
+    ) : HollywoodFuiLiveData() {
+        data class PipelineStep(val key: String, val label: String, val state: StepState)
+        data class Draft(
+            val goal: String?,
+            val approach: String?,
+            val openItems: String?,
+            val body: String?
+        )
+    }
 
     data class App(
         val provider: String,
@@ -62,14 +78,28 @@ sealed class HollywoodFuiLiveData {
             mime: String,
             question: String?,
             pageCount: Int? = null,
-            entriesAdded: Int? = null
-        ) = Document(
-            clean(name, 80),
-            clean(mime, 64),
-            question?.let { clean(it, 120) }?.ifEmpty { null },
-            pageCount?.coerceIn(1, 4),
-            entriesAdded?.coerceAtLeast(0)
-        )
+            entriesAdded: Int? = null,
+            currentPage: Int? = null,
+            steps: List<Document.PipelineStep> = emptyList(),
+            draft: Document.Draft? = null,
+            progressPercent: Int? = null,
+            actions: Set<DocumentDraftAction> = emptySet()
+        ): Document {
+            val pages = pageCount?.takeIf { it >= 1 }
+            val page = currentPage?.takeIf { it >= 1 && (pages == null || it <= pages) }
+            return Document(
+                clean(name, 80),
+                clean(mime, 64),
+                question?.let { clean(it, 120) }?.ifEmpty { null },
+                pages,
+                entriesAdded?.coerceAtLeast(0),
+                page,
+                steps,
+                draft,
+                progressPercent?.takeIf { it in 0..100 },
+                actions
+            )
+        }
 
         fun app(provider: String, accountLabel: String) =
             App(clean(provider, 48), clean(accountLabel, 80))

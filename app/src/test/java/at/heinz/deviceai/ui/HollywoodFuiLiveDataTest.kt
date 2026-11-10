@@ -10,7 +10,7 @@ import org.junit.Test
 
 class HollywoodFuiLiveDataTest {
     @Test
-    fun documentDoesNotInventPageCountAndClampsOnlyRealCounts() {
+    fun documentDoesNotInventPageCountAndKeepsTheMeasuredCount() {
         val unknown = HollywoodFuiLiveData.document(
             " Vertrag.pdf\u0007 ",
             " application/pdf ",
@@ -22,7 +22,8 @@ class HollywoodFuiLiveDataTest {
         val known = HollywoodFuiLiveData.document(
             "x.pdf", "application/pdf", null, pageCount = 9
         )
-        assertEquals(4, known.pageCount)
+        assertEquals(9, known.pageCount)
+        assertNull(HollywoodFuiLiveData.document("x.pdf", "application/pdf", null, pageCount = 0).pageCount)
     }
 
     @Test

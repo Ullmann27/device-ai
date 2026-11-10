@@ -103,4 +103,22 @@ class CockpitAnimationTriggersTest {
         assertNull(only<CockpitAnimationEvent.DocumentQuestion>().last().pageCount)
     }
 
+
+    @Test fun documentPipelineHelpersEmitOnlyCanonicalFacts() {
+        triggers.commandAcknowledged("doc", "PDF")
+        triggers.documentPipelineStep("doc", "unknown", "irgendwas", StepState.DONE)
+        assertTrue(only<DocumentPipelineStepEvent>().isEmpty())
+        triggers.documentDraftReady("doc", "   ")
+        assertTrue(only<DocumentDraftReadyEvent>().isEmpty())
+        triggers.documentPipelineStep("doc", "analyze", "Analysieren", StepState.ACTIVE)
+        val step = only<DocumentPipelineStepEvent>().single()
+        assertEquals("analyze", step.key)
+        assertEquals(StepState.ACTIVE, step.state)
+        triggers.documentDraftReady("doc", "Ziel: Klarheit.", coveredChars = 5, totalChars = 10,
+            actions = setOf(DocumentDraftAction.SAVE))
+        val draft = only<DocumentDraftReadyEvent>().single()
+        assertEquals("Ziel: Klarheit.", draft.text)
+        assertEquals(setOf(DocumentDraftAction.SAVE), draft.actions)
+    }
+
 }

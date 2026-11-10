@@ -4,6 +4,8 @@ import at.heinz.deviceai.cockpit.AlarmKind
 import at.heinz.deviceai.cockpit.CockpitAction
 import at.heinz.deviceai.cockpit.CockpitAnimationEvent
 import at.heinz.deviceai.cockpit.CockpitAnimationRenderer
+import at.heinz.deviceai.cockpit.DocumentDraftReadyEvent
+import at.heinz.deviceai.cockpit.DocumentPipelineStepEvent
 import at.heinz.deviceai.cockpit.StepState
 import at.heinz.deviceai.cognitive.MemoryRecord
 import at.heinz.deviceai.cognitive.ProactiveSideQuestAndCountdownEngine
@@ -39,6 +41,8 @@ class Airbus2100CockpitOrchestrator(
     private var foreground = true
     private var closed = false
     private var tickScheduled = false
+    private val document = DocumentBlueprintProjection()
+    private val swarmWorkers = LinkedHashMap<String, HollywoodFuiLiveData.Timeline.Line>()
 
     private val tick = Runnable { tickMissionClock() }
 
@@ -46,9 +50,20 @@ class Airbus2100CockpitOrchestrator(
     override fun render(event: CockpitAnimationEvent) {
         if (closed) return
         when (event) {
-            is CockpitAnimationEvent.CommandFlyIn -> beginMission(event.turnId)
+            is CockpitAnimationEvent.CommandFlyIn -> {
+                beginMission(event.turnId)
+                // Local Reasoning world: morphs an already-open window, never opens a new one.
+                onSceneProfile(scene(JarvisActionScenes.Kind.GENERIC))
+            }
             is CockpitAnimationEvent.ActionStarted -> {
-                if (activeTurnId == null && event.action == CockpitAction.WORKER) beginMission(event.turnId)
+                if (event.action == CockpitAction.WORKER) {
+                    if (activeTurnId == null) beginMission(event.turnId)
+                    val label = event.detail.take(64).ifBlank { event.turnId.take(32) }
+                    swarmWorkers[event.turnId] = HollywoodFuiLiveData.Timeline.Line(label, StepState.ACTIVE)
+                    promote(Phase.TOOL_ACTIVE, scene(JarvisActionScenes.Kind.PLANNING))
+                    onLiveData(HollywoodFuiLiveData.Timeline(swarmWorkers.values.toList()))
+                    return
+                }
                 if (event.turnId != activeTurnId) return
                 val next = when (event.action) {
                     CockpitAction.THINK -> Phase.LOCAL_REASONING
@@ -57,34 +72,54 @@ class Airbus2100CockpitOrchestrator(
                     CockpitAction.WORKER -> Phase.TOOL_ACTIVE
                 }
                 promote(next, sceneFor(event))
-                if (event.detail.isNotBlank()) {
+                if (event.detail.isNotBlank() && !document.hasDocument) {
                     onLiveData(HollywoodFuiLiveData.Timeline(listOf(
                         HollywoodFuiLiveData.Timeline.Line(event.detail.take(64), StepState.ACTIVE)
                     )))
                 }
             }
             is CockpitAnimationEvent.ProcessTimeline -> if (event.turnId == activeTurnId) {
-                onLiveData(HollywoodFuiLiveData.Timeline.from(event.steps))
+                document.onTimeline(event.steps)
+                if (document.hasDocument) onLiveData(document.snapshot())
+                else onLiveData(HollywoodFuiLiveData.Timeline.from(event.steps))
                 if (event.steps.any { it.state == StepState.WAITING }) promote(Phase.AWAITING_DECISION, null)
             }
             is CockpitAnimationEvent.AccountCardFlyIn -> if (event.turnId == activeTurnId) {
                 promote(Phase.TOOL_ACTIVE, scene(JarvisActionScenes.Kind.APP))
                 onLiveData(HollywoodFuiLiveData.app(event.provider, event.accountLabel))
             }
-            is CockpitAnimationEvent.DocumentQuestion -> if (event.turnId == activeTurnId) {
+            is CockpitAnimationEvent.DocumentQuestion -> {
+                // Owner-selected intake: attach to the running mission or start one. Do not
+                // drop it when the verbal command used a different turn id than document-<episode>.
+                if (activeTurnId == null) beginMission(event.turnId)
                 promote(Phase.AWAITING_DECISION, JarvisActionScenes.forDocument())
-                onLiveData(HollywoodFuiLiveData.document(
-                    event.documentName, event.mimeType, event.question, pageCount = event.pageCount
-                ))
+                document.onQuestion(event)
+                onLiveData(document.snapshot())
             }
-            is CockpitAnimationEvent.DocumentLearned -> if (event.turnId == activeTurnId) {
-                promote(Phase.TOOL_ACTIVE, JarvisActionScenes.forDocument())
-                onLiveData(HollywoodFuiLiveData.document(
-                    event.docId, event.kind, question = null, entriesAdded = event.entriesAdded
-                ))
+            is CockpitAnimationEvent.DocumentLearned -> {
+                // MEMORY_TURN is session-scoped, not a mission id.
+                document.onLearned(event)
+                if (document.hasDocument) {
+                    promote(Phase.TOOL_ACTIVE, JarvisActionScenes.forDocument())
+                    onLiveData(document.snapshot())
+                }
             }
-            is CockpitAnimationEvent.RecallHits -> if (event.turnId == activeTurnId) {
+            is CockpitAnimationEvent.RecallHits -> {
+                promote(Phase.TOOL_ACTIVE, scene(JarvisActionScenes.Kind.MEMORY))
                 onLiveData(HollywoodFuiLiveData.evidence(event.count, event.topScore, "Recall"))
+            }
+            is DocumentPipelineStepEvent -> {
+                if (activeTurnId == null) beginMission(event.turnId)
+                document.onPipelineStep(event)
+                if (document.hasDocument) onLiveData(document.snapshot())
+            }
+            is DocumentDraftReadyEvent -> {
+                if (activeTurnId == null) beginMission(event.turnId)
+                document.onDraft(event)
+                if (document.hasDocument) {
+                    promote(Phase.AWAITING_DECISION, JarvisActionScenes.forDocument())
+                    onLiveData(document.snapshot())
+                }
             }
             is CockpitAnimationEvent.CalculationShown -> if (event.turnId == activeTurnId) {
                 promote(Phase.TOOL_ACTIVE, JarvisActionScenes.forCalculation())
@@ -134,6 +169,8 @@ class Airbus2100CockpitOrchestrator(
         activeTurnId?.let { sideQuestEngine.stopMissionCountdown(it, clockNanos()) }
         activeTurnId = null
         phase = Phase.IDLE
+        document.reset()
+        swarmWorkers.clear()
         onLiveData(null)
         onTelemetry(null)
     }
@@ -143,6 +180,8 @@ class Airbus2100CockpitOrchestrator(
             activeTurnId?.let { sideQuestEngine.stopMissionCountdown(it, clockNanos()) }
             activeTurnId = turnId
             phase = Phase.LOCAL_REASONING
+            document.reset()
+            swarmWorkers.clear()
             onLiveData(null)
             sideQuestEngine.startMissionCountdown(turnId, nowNanos = clockNanos())
         }
@@ -196,7 +235,8 @@ class Airbus2100CockpitOrchestrator(
     }
 
     private fun sceneFor(event: CockpitAnimationEvent.ActionStarted): JarvisActionScenes.Scene? = when (event.action) {
-        CockpitAction.THINK -> null
+        CockpitAction.THINK ->
+            if (phase.rank <= Phase.LOCAL_REASONING.rank) scene(JarvisActionScenes.Kind.GENERIC) else null
         CockpitAction.TOOL, CockpitAction.EXECUTE -> JarvisActionScenes.forTool(event.detail)
         CockpitAction.RESEARCH, CockpitAction.VERIFY -> scene(JarvisActionScenes.Kind.WEB)
         CockpitAction.DEVELOP -> scene(JarvisActionScenes.Kind.DEVELOPMENT)
