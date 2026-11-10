@@ -361,6 +361,16 @@ class JarvisShellView(context: Context) : View(context) {
         if (motionAllowed(scale) && (workWindowMoving || deckStillMoving || cinemaRunning)) {
             if (frameDelay <= 16L) postInvalidateOnAnimation() else postDelayed(ambientFrame, frameDelay)
         } else if (ambientMotion(scale)) postDelayed(ambientFrame, maxOf(66L, frameDelay))
+        if (exiting && (elapsed >= total || !motionAllowed(scale))) {
+            // A completed fly-out must not leave the input, dock and status permanently hidden.
+            // All projected work-window CLOSED samples were published above before settling.
+            exitMs = -1L
+            startMs = -1L
+            workStartMs = -1L
+            workClear = false
+            resultForward = false
+            postInvalidateOnAnimation()
+        }
         if (frameLogging) recordFrame(drawStartedNanos, System.nanoTime())
     }
 
