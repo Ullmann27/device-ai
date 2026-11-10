@@ -35,6 +35,16 @@ approved_sha="${OWNER_APPROVED_SHA:-}"
 [[ "$approved_sha" =~ ^[0-9a-f]{40}$ ]] || fail APPROVED_SHA_FORMAT
 [[ "$qa_run" =~ ^[0-9]{6,20}$ ]] || fail QA_RUN_FORMAT
 [[ "$source_sha" == "$approved_sha" ]] || fail APPROVED_SHA_DIFFERS_FROM_SOURCE
+
+# Exact Cinema2030 SHA/run only; old source gate remains unchanged.
+cinema_source_sha="0df55d7c8d5cae8a53bf1a43e26651f902881e78"
+if [[ "$source_sha" == "$cinema_source_sha" ]]; then
+  [[ "$qa_run" == "42742886395" ]] || fail CINEMA_QA_RUN_MISMATCH
+  qa_branch="chatgpt/code52-cinema-prism-pixel-fix-20261110"
+  qa_workflow_path=".github/workflows/continuum-code52-cinematic-qa.yml"
+  artifact="Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE"
+  unsigned_name="Continuum-Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE.apk"
+fi
 [[ "$(git rev-parse HEAD)" == "${GITHUB_SHA:-}" ]] || fail SIGNER_WORKTREE_NOT_AT_RUN_COMMIT
 [[ -z "$(git status --porcelain --untracked-files=normal)" ]] || fail SIGNER_WORKTREE_DIRTY
 tag="continuum-local-code${code}-${source_sha}"
