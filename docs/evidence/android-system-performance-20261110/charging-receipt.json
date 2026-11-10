@@ -1,0 +1,21 @@
+{
+  "scope": "BatteryManager EXTRA_STATUS parity; plugged does not imply charging",
+  "baseline_remote_commit": "2535d5a070a56c574a0f41ac47f13c80fcf8892c",
+  "baseline_local_commit": "296486009874512012ac0c4d77122823a4bf51be",
+  "red": {
+    "test_methods": 14,
+    "failing_subcases": 9,
+    "status": "EXPECTED_FAILURE"
+  },
+  "green": {
+    "full_python_suite_tests": 60,
+    "failures": 0
+  },
+  "device_capture": "NOT_RUN",
+  "android_gradle": "NOT_RUN_BY_THIS_AGENT",
+  "source_sha256": {
+    "tools/fold7_quality_lab/fold7.py": "933377a0e5eb9df5297fa51c32bccccc407d58ebe37a8c12a28a10bd7eefb051",
+    "tools/fold7_quality_lab/system_capture.py": "b70c8bf1bd807d2cbbe1c45fdf0c0f366bdc755dae843eb85ce158325af748b3",
+    "tools/fold7_quality_lab/tests/test_system_capture.py": "1c5fad20b5ec433de89d73b5f288231e6149fb7714fe05a4ac13c297260af578"
+  }
+}
