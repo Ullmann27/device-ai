@@ -107,7 +107,10 @@ Android main and complete unit-test source compilation passed at local
 `b3e59e05155d16e3eb151d145ac59b6c67f834fd`.
 Initial integrated native run: 152 tests, 148 passed, four failed: two obsolete
 STOP expectations and two new render fixtures missing Cinema-shell setup.
-Corrections are committed; the next run must validate them. Scoped Node wiring:
+Corrections are committed; the next integrated run must validate them. A ten-minute
+nonblocking shared-slot wait ended without starting Gradle; no competing build was
+killed or lock bypassed. Isolated native Canvas surface test: 1/1 PASS, two PNGs
+visually checked; this is not full Activity/Cinema acceptance. Scoped Node wiring:
 26/26 PASS. Python lab: 60/60 PASS, mocked device I/O. Storage follow-up: 40/40
 PASS after five reproduced failures. Source-bound evidence:
 `docs/evidence/android-system-{access,storage,performance,intelligence}-20261110`.
@@ -116,7 +119,8 @@ PASS after five reproduced failures. Source-bound evidence:
 | --- | --- |
 | Kotlin policy/storage/statistics | Host tests, synthetic inputs |
 | Android API/wiring/bridge lifecycle | Robolectric API28, no real Shizuku |
-| Diagnosis visual | Native Canvas fixture; corrected capture pending |
+| Diagnosis data surface | Native Canvas 1/1 PASS; two source-bound fixture PNGs |
+| Full Activity/Cinema visual | Corrected capture still pending shared Gradle slot |
 | Physical Fold7 / Android17 / actual grants | NOT_RUN; adb lists no connected device |
 | Physical thermal/latency/storage improvement | NOT_RUN; no improvement claimed |
 | Root, personal-file deletion, messages/payments | NOT_RUN; not enabled |
