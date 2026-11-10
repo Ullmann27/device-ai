@@ -1,0 +1,76 @@
+[
+  {
+    "label": "before",
+    "source_commit": "3d206db052300a3d0c9f14851052dc3b8e28fba5",
+    "compile_exit": 0,
+    "export_exit": 0,
+    "exporter_sha256": "d8ef09e54a444005d35cf09576304621917dd849d5345f80263d298f876f12b2",
+    "jar_sha256": "a8f4aa83d7f36cfa02948eb5a9f2828169bac48b78fffa27aec769d3a06fb2e3",
+    "pose_sha256": "43bd470a09c29d616d693be316cca85b3b3157187295a243e89caaacf52fad5e",
+    "compile_command": [
+      "/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/bin/kotlinc",
+      "/workspace/scratch/5900afa6af29/avatar-state-render/app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "/workspace/scratch/5900afa6af29/avatar-state-render/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "/workspace/scratch/5900afa6af29/avatar-state-render/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+      "/workspace/scratch/5900afa6af29/avatar-state-render/app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt",
+      "/workspace/scratch/5900afa6af29/avatar-state-render/app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt",
+      "/workspace/scratch/5900afa6af29/avatar-state-render/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt",
+      "/workspace/scratch/5900afa6af29/avatar-state-render/tools/avatar-3d/reference-atlas/ExportAvatarReviewPoses.kt",
+      "-classpath",
+      "/workspace/scratch/5900afa6af29/qa-gradle-home/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar",
+      "-jvm-target",
+      "17",
+      "-include-runtime",
+      "-d",
+      "/workspace/scratch/5900afa6af29/avatar-state-render-output/before-export.jar"
+    ],
+    "export_command": [
+      "/workspace/scratch/5900afa6af29/qa-installed-tools/jdk/bin/java",
+      "-Xmx256m",
+      "-cp",
+      "/workspace/scratch/5900afa6af29/avatar-state-render-output/before-export.jar:/workspace/scratch/5900afa6af29/qa-gradle-home/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar",
+      "ExportAvatarReviewPosesKt",
+      "/workspace/scratch/5900afa6af29/avatar-state-render",
+      "3d206db052300a3d0c9f14851052dc3b8e28fba5",
+      "/workspace/scratch/5900afa6af29/avatar-state-render-output/before-poses.json",
+      "0"
+    ]
+  },
+  {
+    "label": "after",
+    "source_commit": "74892201d766d4d5c756079893642ed1547c95b8",
+    "compile_exit": 0,
+    "export_exit": 0,
+    "exporter_sha256": "d8ef09e54a444005d35cf09576304621917dd849d5345f80263d298f876f12b2",
+    "jar_sha256": "bc465657224d9cd3819c57ec8bc7f4f744aaed7a853e328d40325460137b2bf0",
+    "pose_sha256": "c07f36746f6b0eb8ac61917165a51766e9b6a20825d28770f02e1e0a0ab18aa9",
+    "compile_command": [
+      "/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/bin/kotlinc",
+      "/workspace/scratch/5900afa6af29/avatar-idle-light/app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "/workspace/scratch/5900afa6af29/avatar-idle-light/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "/workspace/scratch/5900afa6af29/avatar-idle-light/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+      "/workspace/scratch/5900afa6af29/avatar-idle-light/app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt",
+      "/workspace/scratch/5900afa6af29/avatar-idle-light/app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt",
+      "/workspace/scratch/5900afa6af29/avatar-idle-light/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt",
+      "/workspace/scratch/5900afa6af29/avatar-state-render/tools/avatar-3d/reference-atlas/ExportAvatarReviewPoses.kt",
+      "-classpath",
+      "/workspace/scratch/5900afa6af29/qa-gradle-home/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar",
+      "-jvm-target",
+      "17",
+      "-include-runtime",
+      "-d",
+      "/workspace/scratch/5900afa6af29/avatar-state-render-output/after-export.jar"
+    ],
+    "export_command": [
+      "/workspace/scratch/5900afa6af29/qa-installed-tools/jdk/bin/java",
+      "-Xmx256m",
+      "-cp",
+      "/workspace/scratch/5900afa6af29/avatar-state-render-output/after-export.jar:/workspace/scratch/5900afa6af29/qa-gradle-home/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar",
+      "ExportAvatarReviewPosesKt",
+      "/workspace/scratch/5900afa6af29/avatar-idle-light",
+      "74892201d766d4d5c756079893642ed1547c95b8",
+      "/workspace/scratch/5900afa6af29/avatar-state-render-output/after-poses.json",
+      "0"
+    ]
+  }
+]

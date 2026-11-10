@@ -72,6 +72,17 @@ fun main(args: Array<String>) {
     capture("after-interruption", reducer.pose(105), 1.016f, stopping)
     require(stopping.jawPitch == 0f)
     for (viseme in Viseme.entries) require(stopping.weights[metadata.targets.indexOf(viseme.name)] == 0f)
+    fun transitionSeries(from: AvatarState, to: AvatarState, name: String) {
+        val map = mapper()
+        val start = 2.4f
+        for (index in 0..144) map.update(pose(from), index / 60f, true)
+        capture("$name-before", pose(from), start, map)
+        for (index in 0..24) {
+            capture("$name-f%03d".format(index), pose(to), start + index / 60f, map)
+        }
+    }
+    transitionSeries(AvatarState.IDLE, AvatarState.THINKING, "idle-to-thinking")
+    transitionSeries(AvatarState.THINKING, AvatarState.IDLE, "thinking-to-idle")
     val idleCount = if (args.size == 4) args[3].toInt() else 0
     require(idleCount in 0..240)
     val animatedIdle = mapper()
@@ -85,6 +96,9 @@ fun main(args: Array<String>) {
         .put("focus", JSONObject().put("centerX", focus.centerX).put("centerY", focus.centerY).put("centerZ", focus.centerZ)
             .put("halfWidth", focus.halfWidth).put("halfHeight", focus.halfHeight).put("azimuthDegrees", focus.azimuthDegrees))
         .put("hiddenNodePrefix", hiddenPrefix)
+        .put("stateTransitions", JSONObject().put("framesPerSecond", 60)
+            .put("stateChangeSeconds", 2.4).put("warmupFrames", 145)
+            .put("framesAfterChange", 25).put("inputOrigin", "SYNTHETIC_STATE_CHANGE_FIXED_GAZE_SILENT"))
         .put("frames", frames).put("limitations", JSONArray(listOf(
             "Synthetic inputs through actual compiled source; no real TTS, microphone or camera",
             "Weights and joint angles are exact mapper outputs; render backend remains separate",

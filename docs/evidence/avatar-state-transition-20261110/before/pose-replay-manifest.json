@@ -1,0 +1,140 @@
+{
+  "schema": "continuum-exact-production-pose-host-replay-v1",
+  "status": "PASS",
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "assetSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "poseExportSha256": "43bd470a09c29d616d693be316cca85b3b3157187295a243e89caaacf52fad5e",
+  "renderScriptSha256": "c5c653f0bec450ea5c63cf95cc8935fec1f36510b7d21ede2eac373142feff67",
+  "mapperSourceCommit": "3d206db052300a3d0c9f14851052dc3b8e28fba5",
+  "mapperSourceHashes": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": "a4236dd37074c601ab94df68f2bbdb9c510a43ef167cc445d510130e627e01f6",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "8e9747b26fc6924fa926ba64b937a24de0fec77bd1debd7f92db863640651fb4",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt": "a8bcb17382b2e326ecc3d7aabf5ca3b91630d7c9d0046889bde3f29fa3bba333",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt": "86df1b2d4b1cccef6e3bf911a11b548ec708b3d85064dae946a08f98e14a13b3",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "a52e3fb38d06e243b8a80a18d2afc75aeec64c9ff78620eea10287e394bc911a",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "4f7bfd666634ff68ee75a98ee73197827aa34390b38c1b6d311971983113c7ed",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "34fddaa9bf283b8ef40930e7190542b8241700cd1f455452ba5f03329e5ac11f"
+  },
+  "backend": "Blender 4.3.2 Cycles CPU",
+  "cpuThreads": 1,
+  "hiddenNodes": [
+    "ToothLower0",
+    "ToothLower1",
+    "ToothLower2",
+    "ToothLower3",
+    "ToothLower4",
+    "ToothLower5",
+    "ToothLower6",
+    "ToothLower7",
+    "ToothUpper0",
+    "ToothUpper1",
+    "ToothUpper2",
+    "ToothUpper3",
+    "ToothUpper4",
+    "ToothUpper5",
+    "ToothUpper6",
+    "ToothUpper7"
+  ],
+  "jointPolicy": "production Neck plus residual Head",
+  "pixels": [
+    512,
+    640
+  ],
+  "samples": 32,
+  "denoising": false,
+  "rendered": true,
+  "frames": [
+    {
+      "name": "idle-to-thinking-f000",
+      "actualMapperPose": {
+        "input": {
+          "expression": "NEUTRAL",
+          "viseme": "SIL",
+          "jawOpen": 0,
+          "gazeX": 0,
+          "state": "THINKING",
+          "speakEnergy": 0,
+          "gazeY": 0,
+          "visemeWeight": 0,
+          "gazeObserved": false
+        },
+        "seconds": 2.4000000953674316,
+        "jawPitch": 0,
+        "motion": true,
+        "eyePitch": -1.7287031412124634,
+        "neckPitch": 1.123656988143921,
+        "name": "idle-to-thinking-f000",
+        "headYaw": 3.063290596008301,
+        "weights": {
+          "PP": 0,
+          "FF": 0,
+          "DD": 0,
+          "KK": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "BlinkRight": 0,
+          "CH": 0,
+          "E": 0,
+          "I": 0,
+          "BrowUp": 0,
+          "Smile": 0,
+          "BlinkLeft": 0,
+          "O": 0,
+          "JawOpen": 0,
+          "BrowDown": 0,
+          "TH": 0,
+          "U": 0,
+          "SIL": 0
+        },
+        "neckYaw": 1.9911388158798218,
+        "headPitch": 1.7287031412124634,
+        "eyeYaw": -3.6375732421875
+      },
+      "maximumControlMatrixError": 1.7136335372924805e-07,
+      "maximumFaceSkinPositionErrorMetres": 3.4698284483818525e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9985712766647339,
+          0.001245557446964085,
+          0.05342209339141846,
+          0.0012709266738966107
+        ],
+        [
+          0.0003669374855235219,
+          0.9995449185371399,
+          -0.03016362339258194,
+          0.2663075625896454
+        ],
+        [
+          -0.053435347974300385,
+          0.03014012984931469,
+          0.9981163740158081,
+          0.03773210197687149
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.24918846786022186,
+        2.093116521835327
+      ],
+      "file": "idle-to-thinking-f000.png",
+      "imageSha256": "8d5e0dcaf4566da4b3c551b71c705341176f3be9e1a596a834f50d46c5bbff09"
+    }
+  ],
+  "limitations": [
+    "Actual compiled mapper with synthetic inputs; no actual TTS/camera session",
+    "Blender materials, studio lights and glow are not native Filament pixel/performance evidence",
+    "Studio framing is not the adaptive app viewport",
+    "No app-driven smile exists in the exported contract; no smile is fabricated",
+    "Reference likeness still requires visual review"
+  ]
+}
