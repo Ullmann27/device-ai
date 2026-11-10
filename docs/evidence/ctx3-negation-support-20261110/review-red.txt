@@ -1,0 +1,13 @@
+JUnit version 4.13.2
+.........E............
+Time: 0.132
+There was 1 failure:
+1) otherNegatedChoiceVerbsCannotSelectTheirRejectedCandidate(at.heinz.deviceai.Ctx3OrderedCorrectionTest)
+java.lang.AssertionError: ich nehme die erste nicht
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.Ctx3OrderedCorrectionTest.otherNegatedChoiceVerbsCannotSelectTheirRejectedCandidate(Ctx3OrderedCorrectionTest.kt:132)
+
+FAILURES!!!
+Tests run: 21,  Failures: 1
+
