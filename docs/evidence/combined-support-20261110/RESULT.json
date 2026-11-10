@@ -1,0 +1,926 @@
+{
+  "status": "PASS",
+  "sourceRemote": "9e7931b877facf8a28f3feb06697dbcc68722b58",
+  "sourceLocal": "22890d24aef092b36ab89b84f315f42b45a3abe1",
+  "sourceTree": "88cceae4cea422e9878f5c7bcb3cfef0a61dbe05",
+  "frozenInputs": {
+    "cinema": "5d36c5a57c031308c8de91049e19e9e8cb8365d5",
+    "queuedResultPR724": "e61458f4c46f7af118614d01e71060b73a0c5521",
+    "dialogAsrPR720": "de831d06034c46c6ae039a6df32d52a4392a3521",
+    "outcomePR726": "d3185e72967832c7e0a5aee4a1b77ddad522caec"
+  },
+  "sourceAudit": "source-audit.json",
+  "sourceAuditSha256": "87c5a4799764654a9d9c912dfdbf13ccc7f48cc8ff8a52045e94b94e4244731c",
+  "sourceAuditRecheckedAfterTests": true,
+  "totals": {
+    "suites": 27,
+    "tests": 240,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fullMainAndTestCompilation": true,
+  "compiledArtifacts": [
+    {
+      "path": "app/build/intermediates/compile_app_classes_jar/debug/bundleDebugClassesToCompileJar/classes.jar",
+      "sha256": "c0868ab6e4226bfccb5bbed5dff419ffbe7f954c630c6e8fb1b97d9073ed5433",
+      "bytes": 18195710
+    },
+    {
+      "path": "app/build/intermediates/runtime_app_classes_jar/debug/bundleDebugClassesToRuntimeJar/classes.jar",
+      "sha256": "885bcbbbfa0c82ec2ba7dd4da27171dde5d43252cbe7d29329817ba0c2656f2f",
+      "bytes": 18195710
+    }
+  ],
+  "invocation": {
+    "sourceRemote": "9e7931b877facf8a28f3feb06697dbcc68722b58",
+    "sourceLocal": "22890d24aef092b36ab89b84f315f42b45a3abe1",
+    "sourceTree": "88cceae4cea422e9878f5c7bcb3cfef0a61dbe05",
+    "suites": [
+      "at.heinz.deviceai.AndroidOnDeviceSpeechRetryUiTest",
+      "at.heinz.deviceai.AvatarExplicitConfirmationUiTest",
+      "at.heinz.deviceai.CinemaStopReturnUiTest",
+      "at.heinz.deviceai.ConsequentialActionApprovalTest",
+      "at.heinz.deviceai.JarvisCinemaReplayUiTest",
+      "at.heinz.deviceai.LocalTurnOutcomeUiTest",
+      "at.heinz.deviceai.ResearchChatApprovalUiTest",
+      "at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest",
+      "at.heinz.deviceai.cognitive.AgentCancellationRegressionTest",
+      "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+      "at.heinz.deviceai.cognitive.ContinuousConversationModeTest",
+      "at.heinz.deviceai.cognitive.ContinuousConversationRecoveryTest",
+      "at.heinz.deviceai.cognitive.ConversationControlTest",
+      "at.heinz.deviceai.cognitive.ConversationResearchApprovalIntegrationTest",
+      "at.heinz.deviceai.cognitive.InternetConsentPolicyTest",
+      "at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest",
+      "at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest",
+      "at.heinz.deviceai.cognitive.LocalSpeechSessionTest",
+      "at.heinz.deviceai.cognitive.ResearchConsentReplyTest",
+      "at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest",
+      "at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest",
+      "at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest",
+      "at.heinz.deviceai.cognitive.WebResearchIntegrationTest",
+      "at.heinz.deviceai.ui.JarvisCinemaEntranceTest",
+      "at.heinz.deviceai.ui.JarvisSequenceOutcomeUiTest",
+      "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest",
+      "at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest"
+    ],
+    "isolatedCheckout": true,
+    "isolatedGradleCache": true,
+    "lease": true,
+    "phases": [
+      {
+        "name": "compile",
+        "started": "2026-11-10T21:21:46.754Z",
+        "completed": "2026-11-10T21:22:53.366Z",
+        "exitCode": 0,
+        "args": [
+          "--offline",
+          "--no-daemon",
+          "--max-workers=1",
+          "-Pkotlin.compiler.execution.strategy=in-process",
+          "-PdeviceAiMentorPreview=true",
+          "-PcontinuumOwnerLocalQa=true",
+          "-PcontinuumOwnerLocalVersionCode=52",
+          "-PcontinuumUiWidgetTests=true",
+          "-Dorg.gradle.jvmargs=-Xmx1200m -XX:MaxMetaspaceSize=512m -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -Dfile.encoding=UTF-8",
+          ":app:compileDebugKotlin",
+          ":app:compileDebugUnitTestKotlin"
+        ]
+      },
+      {
+        "name": "tests",
+        "started": "2026-11-10T21:22:53.443Z",
+        "completed": "2026-11-10T21:24:08.649Z",
+        "exitCode": 0,
+        "args": [
+          "--offline",
+          "--no-daemon",
+          "--max-workers=1",
+          "-Pkotlin.compiler.execution.strategy=in-process",
+          "-PdeviceAiMentorPreview=true",
+          "-PcontinuumOwnerLocalQa=true",
+          "-PcontinuumOwnerLocalVersionCode=52",
+          "-PcontinuumUiWidgetTests=true",
+          "-Dorg.gradle.jvmargs=-Xmx512m -XX:MaxMetaspaceSize=384m -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -Dfile.encoding=UTF-8",
+          "-I",
+          "/workspace/scratch/006ff0a2565d/dialog-tests-memory.gradle",
+          ":app:testDebugUnitTest",
+          "--tests",
+          "at.heinz.deviceai.AndroidOnDeviceSpeechRetryUiTest",
+          "--tests",
+          "at.heinz.deviceai.AvatarExplicitConfirmationUiTest",
+          "--tests",
+          "at.heinz.deviceai.CinemaStopReturnUiTest",
+          "--tests",
+          "at.heinz.deviceai.ConsequentialActionApprovalTest",
+          "--tests",
+          "at.heinz.deviceai.JarvisCinemaReplayUiTest",
+          "--tests",
+          "at.heinz.deviceai.LocalTurnOutcomeUiTest",
+          "--tests",
+          "at.heinz.deviceai.ResearchChatApprovalUiTest",
+          "--tests",
+          "at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.AgentCancellationRegressionTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.ContinuousConversationModeTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.ContinuousConversationRecoveryTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.ConversationControlTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.ConversationResearchApprovalIntegrationTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.InternetConsentPolicyTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.LocalSpeechSessionTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.ResearchConsentReplyTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest",
+          "--tests",
+          "at.heinz.deviceai.cognitive.WebResearchIntegrationTest",
+          "--tests",
+          "at.heinz.deviceai.ui.JarvisCinemaEntranceTest",
+          "--tests",
+          "at.heinz.deviceai.ui.JarvisSequenceOutcomeUiTest",
+          "--tests",
+          "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest",
+          "--tests",
+          "at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest"
+        ]
+      }
+    ]
+  },
+  "testRuntime": {
+    "maxHeapSize": "768m",
+    "jvmArgs": [
+      "--add-opens=java.base/java.io=ALL-UNNAMED",
+      "-XX:+UseSerialGC",
+      "-XX:ActiveProcessorCount=2"
+    ],
+    "source": "9e7931b877facf8a28f3feb06697dbcc68722b58"
+  },
+  "suites": [
+    {
+      "name": "at.heinz.deviceai.AndroidOnDeviceSpeechRetryUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 3.639,
+      "xml": "TEST-at.heinz.deviceai.AndroidOnDeviceSpeechRetryUiTest.xml",
+      "xmlSha256": "26983c8fe055be25f552f1c70fc3535cc92c017007fb414ef2d4f78b24858237",
+      "testcases": [
+        "onlyClientAndBusyUseTheBoundedRecoveryClass"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.AvatarExplicitConfirmationUiTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 3.234,
+      "xml": "TEST-at.heinz.deviceai.AvatarExplicitConfirmationUiTest.xml",
+      "xmlSha256": "56b3daca66e036c4c5fd866216d31b46cc606e97f2316fdb25a8b31f8aad8e7e",
+      "testcases": [
+        "destructiveApprovalNodsOnlyAfterTheLastExplicitPositiveButton",
+        "ordinaryApprovalNodsOnlyForExplicitExecute"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.CinemaStopReturnUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 43.876,
+      "xml": "TEST-at.heinz.deviceai.CinemaStopReturnUiTest.xml",
+      "xmlSha256": "89d3ed16f2054b1688b141880f1419f33878083cfda150ff785636193bc0c0b9",
+      "testcases": [
+        "stopCancelsImmediatelyButReturnsVisibleWindow"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ConsequentialActionApprovalTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.033,
+      "xml": "TEST-at.heinz.deviceai.ConsequentialActionApprovalTest.xml",
+      "xmlSha256": "1b7c5dfcc17026b0e88f127c9338f0d9844ced12facb1a8325c501329201dd42",
+      "testcases": [
+        "confirmationForOneCallCannotAuthorizeDifferentArgumentsUnderTheSameCallId",
+        "everyConsequentialRegistryToolIsRefusedWithoutAnExplicitOwnerYes",
+        "destructiveToolsNeedTheStrongSecondConfirmationAndOperatorPolicy",
+        "unknownToolsAreTreatedAsDestructiveAndNeverDispatched"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisCinemaReplayUiTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 1.514,
+      "xml": "TEST-at.heinz.deviceai.JarvisCinemaReplayUiTest.xml",
+      "xmlSha256": "0c56313b448dae2428da00d101222f2dd96f207042911c93600efce9a70c367d",
+      "testcases": [
+        "replacedQueuedOrderDoesNotInheritAnEarlierResult",
+        "endedQueuedOrderCannotTransferItsResultToTheNextOrder",
+        "earlyResultWaitsForConstructionAndStopCancelsIt",
+        "queuedEarlyResultAdvancesAfterReturnAndConstruction",
+        "oldTurnResultCannotAdvanceTheQueuedOrder",
+        "endedPendingOrderCannotRestartAfterReturn",
+        "newOrderWaitsForTheCurrentReturn",
+        "repeatedQueuedOrderKeepsItsEarlyResult"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.LocalTurnOutcomeUiTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.75,
+      "xml": "TEST-at.heinz.deviceai.LocalTurnOutcomeUiTest.xml",
+      "xmlSha256": "86429dfbced1dab0021311a36dac36de97581a103edda77c15bcd0b1cfd0c2b6",
+      "testcases": [
+        "acceptedAnswerIsNotVerifiedTaskSuccess",
+        "cancelledGenerationCannotReportSuccess",
+        "replacedSessionCannotReportSuccess",
+        "failedModelCannotMarkWorkDone"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ResearchChatApprovalUiTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 7.208,
+      "xml": "TEST-at.heinz.deviceai.ResearchChatApprovalUiTest.xml",
+      "xmlSha256": "b2eefb251ea82c2efe956ad20c960b82cd27a0a7a72e8e44d9202f78d6a9e626",
+      "testcases": [
+        "otherToolConfirmationDisarmsTheResearchChatReply",
+        "recognizedReplyDismissesItsOriginalModal",
+        "expiredChangedOrRevokedBindingCannotGrant",
+        "pauseThenResumeCannotReviveThePendingTicket",
+        "declineCompletesWithoutAGrant",
+        "staleActivitySpeechCallbackPreservesNewRecognition",
+        "replacedDialogCannotApproveTheCurrentChatRequest",
+        "exactReplyApprovesOnlyTheDisplayedTicketWhileTheModelWaits",
+        "ambiguousOrUnrelatedReplyInvalidatesTheChatBinding",
+        "recognizerResultCannotApproveAReplacementTicket"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.011,
+      "xml": "TEST-at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest.xml",
+      "xmlSha256": "b3e27611b007921d42445e1d870f0f6e1d686ff7ce50dd8fbe0b4f023b84e739",
+      "testcases": [
+        "deliveredReplyCannotInventApprovalStatus",
+        "deliveryPreservesPreviouslyObservedToolFailure",
+        "documentEventCarriesOnlyMeasuredPageCount",
+        "observedToolSuccessDoesNotLeaveFalseApprovalBlock",
+        "acknowledgedCommandUsesOneTimelineWithoutDuplicateThinkAction",
+        "documentPipelineHelpersEmitOnlyCanonicalFacts",
+        "approvalAndBlockedMilestonesAreVisibleSteps",
+        "workerStartAndReportAreTheirOwnTimeline",
+        "accountAndDocumentCardsOnlyFromTheirExplicitRealPaths",
+        "deliveryAloneDoesNotConfirmWorkOrToolOutcome",
+        "undeliveredOutcomeNeverConfirmsWork",
+        "verifiedOutcomeConfirmsWorkButDoesNotInventToolReceipt",
+        "brokenRendererDoesNotBreakOthersAndExtensionsPassThrough",
+        "failedTurnKeepsUnresolvedApprovalBlocked",
+        "endedTurnSettlesStepsAndDropsLateEvents",
+        "toolCallsMapToResearchOrToolAndCompleteTheirStep"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.AgentCancellationRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.009,
+      "xml": "TEST-at.heinz.deviceai.cognitive.AgentCancellationRegressionTest.xml",
+      "xmlSha256": "dae5b3516559385da7680a91353699b00aa628e672bee3c731cd3c1df861643b",
+      "testcases": [
+        "cancelDuringEvaluationDoesNotStoreSuccessfulExperience",
+        "cancelDuringModelDiscardsAnswerBeforeEvaluationAndLearning",
+        "cancelledBeforeRunDoesNotCallModelOrStoreExperience"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.013,
+      "xml": "TEST-at.heinz.deviceai.cognitive.ApprovedWebToolGateTest.xml",
+      "xmlSha256": "f33f47eebf4f07a9c06b99f2e9184ab64d2e174e3af27ad9b759e2830c2a0aa6",
+      "testcases": [
+        "staleDialogCannotCancelTheReplacementRequest",
+        "currentDialogCompletesExactlyOnceIncludingGenuineDecline",
+        "searchRequiresExactOneShotAuthorization",
+        "blocksLocalAndReservedHostsBeforeGrant",
+        "cancellationNeverCallsProvider",
+        "revokedDialogNeverDeliversApprovalOrDeclineFallback",
+        "readRequiresHttpsAndCannotExpandToAnotherSource",
+        "modeChangeAndReenableDoNotRevivePendingDialogs",
+        "invalidReplacementRevokesOldConsent",
+        "disabledModeCancelsPendingCall",
+        "mismatchedApprovalRevokesPendingConsent",
+        "revokedInFlightResultCannotBePublishedOrReused"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuousConversationModeTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.003,
+      "xml": "TEST-at.heinz.deviceai.cognitive.ContinuousConversationModeTest.xml",
+      "xmlSha256": "a640ffc05fd90abc4b61711a5c7126522762d8fbf01c70003d2ba362390debb2",
+      "testcases": [
+        "dictationIsNotAConversationTurnUntilExplicitlyStarted",
+        "nonSilenceRecognizerErrorPausesImmediately",
+        "bargeInTapDuringReplyListensImmediately",
+        "oldReplyCallbackCannotReopenTheMicrophone",
+        "ownerInterruptingTheReplyPausesInsteadOfListening",
+        "severalGermanTurnsIncludingFollowUpRunWithoutNewGesture",
+        "startIsIdempotentAndStopInvalidatesTokens",
+        "lateRecognizerResultOfAnOldTurnIsIgnored",
+        "openDialogPausesSoNoVoiceTurnCanAnswerAnApprovalPrompt",
+        "spokenStopEndsTheModeAndIsNotSentAsChat",
+        "rejectedSendPausesAndKeepsTheDraftForTheOwner",
+        "spokenPauseKeepsTheModeAndTapResumes",
+        "busyModelKeepsWaitingForTheReply",
+        "silenceIsRetriedOnceThenPauses",
+        "stopInsideASentenceIsAnOrdinaryTurn",
+        "newChatSessionEndsTheMode"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuousConversationRecoveryTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.002,
+      "xml": "TEST-at.heinz.deviceai.cognitive.ContinuousConversationRecoveryTest.xml",
+      "xmlSha256": "15d8fc2e857cfbaaf6216f4453b48adc84d66616389a450e49be439b307cab9b",
+      "testcases": [
+        "spokenStopDuringRecoveryEndsTheMode",
+        "silenceClassificationUsesStructuredFailuresNotMessageText",
+        "ownerTapAfterBusyPauseKeepsColdRecommendationUntilConsumed",
+        "busyIsRetriedBoundedThenPausesWithColdRecognizerRecommended",
+        "twentyHandsFreeTurnsWithInjectedBusyAfterEveryReplySurvive",
+        "successfulRecognitionResetsRecoveryBudgetForTheNextTurn",
+        "exhaustedRecoveryReportsTheActualFailureWithoutClaimingARestart",
+        "nonRecoverableErrorsStillPauseImmediately",
+        "bargeInTapDuringReplyThenBusyRecoversWithoutLoop",
+        "actualPostFailureDelaysMatchTheDocumentedSchedule"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ConversationControlTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.009,
+      "xml": "TEST-at.heinz.deviceai.cognitive.ConversationControlTest.xml",
+      "xmlSha256": "6bd1e1528fc4e23b8e8c726054bdb24d0075eb7850e902acf92949bd1c119fa3",
+      "testcases": [
+        "explicitBuildAndBranchLabelsRemainConcreteScopes",
+        "quotedTextAndRoleImpersonationCannotCreateContextCommands",
+        "explicitCorrectionChangesOnlyEphemeralFocusAndUnderstandingCanReportIt",
+        "resetRestartAndConversationChangeNeverImportPreviousFocus",
+        "temporalBackReferencesAreNotConcreteCorrectedScopes",
+        "ambiguousOrNegatedCorrectionsClearStaleFocusInsteadOfGuessing"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ConversationResearchApprovalIntegrationTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.029,
+      "xml": "TEST-at.heinz.deviceai.cognitive.ConversationResearchApprovalIntegrationTest.xml",
+      "xmlSha256": "8d0bed936b89f8555605927a8316176bcdbf079b7fc67219020db55b67ebcc9f",
+      "testcases": [
+        "naturalConversationUsesTheExistingRevocableGateForAllInternetModes",
+        "unboundYesCannotGrantResearchOrReviveAStaleApproval",
+        "privateNaturalRequestsAndSameTurnNetworkVetoNeverCreateAWebCall"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.InternetConsentPolicyTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.004,
+      "xml": "TEST-at.heinz.deviceai.cognitive.InternetConsentPolicyTest.xml",
+      "xmlSha256": "29f476a7a68a5f2d6dfd20d27dc4bff39a579755b29364366c6fc45dd11eaf70",
+      "testcases": [
+        "approvalIsOneShotAndBoundToExactQuestion",
+        "explicitAskSurvivesPreferenceRestoreAndReopeningSettings",
+        "supportsExplicitAlwaysOnMode",
+        "disabledModeAndCancellationDenyNetwork",
+        "persistedModeReloadNeverRestoresAskApprovalAndOffRevokesEverySession",
+        "switchingOffRevokesPendingResearch",
+        "rejectsBlankOrOversizedRequests",
+        "researchGateRejectsStaleOrReplayedPermission"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.006,
+      "xml": "TEST-at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest.xml",
+      "xmlSha256": "79e2b11efef6ddecc0a7f24eb8f53b2f76633e73eaaa2f33358cae6e1479a834",
+      "testcases": [
+        "topicResetAndCorrectionReport",
+        "exitAndSessionSwitchDoNotReport",
+        "normalizedSituationHintIsSameSessionNavigationNotOwnerEvidence",
+        "clearWithTurnsReportsTheirConversation",
+        "contextInvalidationClearsNormalizedSituationHints"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.006,
+      "xml": "TEST-at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest.xml",
+      "xmlSha256": "2e6e65c0db4595d84537c32797f33c00a28851a8393a3d704c3dcd64cd5131c0",
+      "testcases": [
+        "clearedSessionCannotPretendToHavePriorDialogue",
+        "historicalQuestionRetainsBothOwnerTurnsInTheSameSession",
+        "followUpCarriesCompleteOwnerEvidenceAsRequiredPromptBlock"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalSpeechSessionTest",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.009,
+      "xml": "TEST-at.heinz.deviceai.cognitive.LocalSpeechSessionTest.xml",
+      "xmlSha256": "1d83fd922df3d014a7badec695ef2b6d15bb3e7603e2ea9f596db936ec1d035e",
+      "testcases": [
+        "unavailableServiceNeverCreatesRecognizerOrTimer",
+        "cancellationInsideTerminalStateCallbackPreventsPendingTextDelivery",
+        "replacementDuringOldCancellationWinsOverOuterStart",
+        "lifecycleReleaseCancelsEveryTurnAndRemovesTimer",
+        "recognizedTextDeliveredExactlyOnceAndResourcesReleased",
+        "creationFailureNeverRetriesAutomatically",
+        "cancellationDoesNotReportFailureOrRestartAfterLateCallbacksAndTimeout",
+        "replacementInsideTerminalStateCallbackPreventsOldResultDelivery",
+        "unavailableServiceDoesNotRequestPermissionForAbsentRecognizer",
+        "emptyResultIsActionableNoMatch",
+        "deadlineReleasesAndReportsOnceEvenWhenTimerRacesWithResult",
+        "replacementInsidePreflightStateCallbackSuppressesOldError",
+        "timeoutActivelyCancelsAndLateResultsCannotReviveTurn",
+        "fullShutdownCancelsActiveTurnAndEndsPlatformLifetime",
+        "replacedTurnIgnoresOldErrorsResultsAndTimerWithoutDestroyingNewRecognizer",
+        "missingPermissionNeverCreatesRecognizerOrTimer",
+        "revokedMicrophoneNeverDeliversTranscript",
+        "creationSecurityFailureIsPermissionFailure",
+        "noInputAndPermissionLanguageAndServiceFailuresRemainDistinct"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ResearchConsentReplyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.0,
+      "xml": "TEST-at.heinz.deviceai.cognitive.ResearchConsentReplyTest.xml",
+      "xmlSha256": "961d3ce162a7bb63b77ef3ac48e793dcd5db75c01f71c76cd0e9839a3c9078c3",
+      "testcases": [
+        "vagueQuotedConditionalOrExtendedAnswersGrantNothing",
+        "exactBoundReplyWordingIsRecognized"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.025,
+      "xml": "TEST-at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest.xml",
+      "xmlSha256": "a29efbcf44fe3402408ea0e1909a7dc61b15e5bccefac6f60970d11db3362116",
+      "testcases": [
+        "onlyTheLatestResearchIsKept",
+        "expiryAndUnknownRetrievalCannotBeOverriddenByOnlineMode",
+        "nothingUsableYieldsNoDigest",
+        "researchLabelsStayTransientBoundedAndOutsideOwnerEvidence",
+        "revocationAndModeRoundTripCannotReactivatePriorTurnResearch",
+        "renderedResearchCarriesAnExplainableFreshnessVerdict",
+        "sessionChangeTopicResetAndClearDropResearch",
+        "researchBecomesFollowUpContextAndSurvivesTheFirewall",
+        "digestCarriesSynthesisSourcesAndRetrievalTime",
+        "sessionContextReportsFreshnessOnlyForItsOwnSession",
+        "citationLineShowsRetrievalDate",
+        "repealedStatuteEvidenceIsNeverPresentedAsCurrentLaw",
+        "ordinaryFollowUpAndContextReportRetainResearchWithoutCreatingOwnerEvidence",
+        "promptBoundaryCarriesTodayAndRetrievalDates",
+        "hostileSourceTextIsSanitizedAndBounded",
+        "leakedFramesAreRejectedByTheQualityGate",
+        "explicitScopeCorrectionDropsResearchAndItsFreshnessEvidence",
+        "currentAccessStateControlsWebEvidenceWithoutErasingHistoricalContext"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.013,
+      "xml": "TEST-at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest.xml",
+      "xmlSha256": "28c5116bc368b2f63615df7a9dc9dad84d23c1d3c2ee330aa97c88e030081472",
+      "testcases": [
+        "sessionResetAndTopicCorrectionDiscardOldOwnerProof",
+        "originalWhitespaceAndSwappedRolesKeepExactSourceOffsets",
+        "researchQuestionsAndModelRepliesAreNeverOwnerEvidence",
+        "confirmedLiteralKeepsOriginalWhitespaceAndOffsets",
+        "oversizedOwnerTurnInvalidatesProofInsteadOfKeepingATruncatedOrOldClaim",
+        "negationAfterPromptPreviewLimitCannotBecomeAPositiveProof",
+        "temporalCorrectionAfterPromptPreviewLimitCannotBecomeACurrentProof",
+        "unnamedRetractionMustNotBeFilteredOutBeforeVerification",
+        "directHelperCannotIgnoreOversizedCorrection"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.003,
+      "xml": "TEST-at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest.xml",
+      "xmlSha256": "879a9e5ed8c1926d9758d683b2228ff294f087ec6c5e9251a813ef7e832586d0",
+      "testcases": [
+        "throwingColdRestartReportsStartFailedOnce",
+        "retryFiringAfterCloseIsIgnored",
+        "fourthBusyGivesUpSoTheTurnFailsExactlyOnce",
+        "duplicateErrorWhileRetryPendingIsSwallowed",
+        "closeCancelsPendingRetryAndLaterErrorsDoNothing",
+        "busyBusyBusyIsRecoveredByWarmWarmColdWithoutReportingFailure",
+        "throwingWarmStartKeepsTheOriginalNonBusyReason"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.WebResearchIntegrationTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.022,
+      "xml": "TEST-at.heinz.deviceai.cognitive.WebResearchIntegrationTest.xml",
+      "xmlSha256": "9d37c8860a9fb2bf64620ca4fec09bef3f7daf31d20781a7c490cb7d4fb08446",
+      "testcases": [
+        "staleSameQuestionDialogCannotApproveNewRequestAndApprovalExpires",
+        "realToolGateAndEngineNeedOneShotOwnerPermissionForSearchAndRead",
+        "ordinaryChatNeverRequestsNetworkAndExplicitToolsDo",
+        "stoppingDuringPrimarySearchRevokesFallbackAndAnyLaterNetworkAccess",
+        "expiredNetworkBudgetCanReturnCollectedEvidenceButCannotFetchAgain",
+        "switchingOffRevokesAlreadyApprovedQueuedRequest",
+        "rawDiscoveryMarkupKeepsLinksAndRejectsUnsafeResultsAndRedirects"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisCinemaEntranceTest",
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.007,
+      "xml": "TEST-at.heinz.deviceai.ui.JarvisCinemaEntranceTest.xml",
+      "xmlSha256": "6eb274ae02ce86cbb5a182c1d5530b3b900ddc2685a466acba91b8cca87a768b",
+      "testcases": [
+        "stageRolesKeepChromeAndSendIdleCardsAway",
+        "workOrderFliesTheThreeTopWindowsAwayBeforeTheyRebuild",
+        "restartFromAWorkingSceneKeepsIdleTilesHidden",
+        "doubleOrderDuringFlyAwayContinuesInsteadOfRestartingFromRest",
+        "adaptiveAnimationStillFreezesWhenTheSharedBudgetSaysNo",
+        "avatarStaysPutOnReturnAndReducedMotionSettlesToRest",
+        "reducedMotionRebuildsWorkWindowsWithoutSweeping",
+        "idleTilesStayGoneAfterTheWorkOrderFlyAway",
+        "flightFollowsHollywoodConstructNotASecondSpring",
+        "abortDuringFlyAwayDoesNotPopWindowsBackToRest",
+        "zSlicingMatchesTheScreenplayPlanes",
+        "screenplayBuildsAnchorBracketsGridGlassThenNativeContent",
+        "staggerDelaysLaterWindowsWithoutShiftingRankZeroOffTheScreenplay",
+        "acknowledgementTimelineDoesNotRetriggerWorkWindows",
+        "onlyRealCockpitEventsTriggerEntranceOrExit",
+        "flyOutDropsNativeContentFirstThenGlassThenTheFrame",
+        "projectedWindowFollowsTheArcFromARealOriginAndStaysAClosedFolder",
+        "returnFliesTheDockOutThenBringsItBack",
+        "resultAdvanceStepsTheDraftTowardTheCameraOnARealStep",
+        "returnFromASettledWorkSceneFliesHologramsOutThenRebuildsTheCockpit",
+        "negativeElapsedIsHiddenUntilARealEventClockStarts",
+        "avatarAndStatusStayPutDuringTheWorkOrder",
+        "reducedMotionHidesDepartingPanelsWithoutASweep",
+        "returnKeepsIdleTilesHiddenUntilTheCockpitRebuilds",
+        "reducedMotionAndFrozenBudgetSettleWithoutSweeping",
+        "secondOrderWaitsForTheLastStaggeredRebuild",
+        "idlePanelsDepartSidewaysIntoDepthOnAWorkOrder",
+        "workOrderFliesTheDockAwayThenRebuildsIt",
+        "resultReturnStartsAtTheDisplayedResultPose"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisSequenceOutcomeUiTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.062,
+      "xml": "TEST-at.heinz.deviceai.ui.JarvisSequenceOutcomeUiTest.xml",
+      "xmlSha256": "c79249cbc0efaf0ea737e6728d849acb7a8017ec1200a539679f9d5ff0502dc4",
+      "testcases": [
+        "unverifiedWorkIsNotHiddenByLaterCompletedTool",
+        "unverifiedDetailClearsAnEarlierSuccessMark"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest",
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.718,
+      "xml": "TEST-at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.xml",
+      "xmlSha256": "e65784acf66e86b0826be939d4ce33128e4c21b86daf1fb5aadff37c4e5b0866",
+      "testcases": [
+        "memoryRecallRemainsIndependentOfCompletedTurns",
+        "unrelatedCompletionDuringPauseDoesNotRetireLiveWork",
+        "trimmedWorkCannotLeaveMainSceneTerminalAfterToolFailure",
+        "completionReceivedWhileMotionIsPausedRejectsLateTimeline",
+        "detachedSubscriberRetiresBackgroundCompletionsWithoutReattach",
+        "completionQueuedBeforeMotionPauseSurvivesGenerationChange",
+        "unseenCompletionReceivedDuringPauseRejectsDelayedCommand",
+        "completionQueuedBeforeDetachSurvivesReattach",
+        "delayedCommandCannotReopenACompletedTurn",
+        "bootEventDoesNotBlockTheFirstWorker",
+        "queuedVisualEventIsStillDiscardedAcrossDetach",
+        "completionReceivedWhileMotionIsPausedRejectsLateWorker",
+        "lateTimelineCannotReopenACompletedTurn",
+        "aNewWorkerCanStartAfterACompletedTurn",
+        "recentCompletionsRemainClosedAfterALongSession",
+        "reasoningAndToolContinuationShareOneMainScene",
+        "motionPauseKeepsCompletedTurnsClosed",
+        "motionPauseDoesNotDeclareActiveWorkCompleted",
+        "delayedOldCommandCannotDisplaceTheCurrentTurn",
+        "backgroundCompletionBeforeFirstAttachDoesNotWaitForAttachment",
+        "directlySubscribedViewRetainsCompletionReceivedWhileDetached",
+        "directlySubscribedViewRetainsBackgroundCompletionReceivedWhileDetached",
+        "unfinishedWorkCanResumeAfterDetach",
+        "navigationEventDoesNotBlockTheFirstWorker",
+        "lateCallbackFromANonvisibleCompletedTurnIsDropped",
+        "newWorkStartsAfterCompletionReceivedDuringPause",
+        "queuedVisualEventIsStillDiscardedAcrossMotionPause"
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.001,
+      "xml": "TEST-at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest.xml",
+      "xmlSha256": "7faa73e6c11d4b4b32cb3fb8f4120adb98f28f3116c586a1d2412737dea27748",
+      "testcases": [
+        "windowIdsAreStablePerWorkSlot",
+        "tinyGazeChangesAreRateLimited",
+        "noEventWithoutARealWindow",
+        "stopAfterReducedMotionStillClosesAPresentWindow",
+        "doesNotReopenAfterClosedOnTheSameTurn",
+        "flyingSampleFollowsTheProjectedCentreNotTheRestRectangle",
+        "stopEmitsClosedForARememberedWindow",
+        "reducedMotionWithoutMovementDoesNotEmit"
+      ]
+    }
+  ],
+  "sourceHashes": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "sha256": "fc5f1c4891bc7117a7d324af3dca0d5ca95c99a05e07cd9f30b4381bbdfca0fc"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+      "sha256": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggers.kt",
+      "sha256": "679b62e409cf36991fec9f0659350a1ec37f574d7a893f68724f88bda9a17874"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+      "sha256": "8da16a720414bc528f44f32508e45d90e7dcb19c38d01ceade666a4a60e2e294"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchConsentReply.kt",
+      "sha256": "2676b3d1df61d9a9af9ee5a8b298623976e9c47b847c82140a8cc74f41d646a9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumCockpitPresentation.kt",
+      "sha256": "540c623f95829b668e1dad78a2809525079cdf133c305549c43ec0bfd09a2eec"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt",
+      "sha256": "bc58a1c96ce687f0e3a9e058e26500260506caee056b6bc3a251450a715878ea"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt",
+      "sha256": "7fd8a5e9736005ba9a496ebc04c035225949dba02183b19c1e597afb49ddbdc0"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+      "sha256": "624cd79f8cbd35cbeccebde76b1526fa8b584eafc2deaa0cf506c1aece62335c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+      "sha256": "959a2fad27e05f1251a28ad06ace2897b320012146bfa7ad24b33e501bda1166"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+      "sha256": "b97179b3d3f03b1f4e8a7d082ad3a6623ed4a946db66bb9a88c85d59369cde70"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+      "sha256": "73b14e8b5dd010d282b9d2a20ce5ac7838b05924fdd48843752f6e807fd2ff4e"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ConsequentialActionApprovalTest.kt",
+      "sha256": "d077bdbc0f1f3aaa3186d99593d1a5b7e3099b3ee5184bf5c0635d49f52f4662"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggersTest.kt",
+      "sha256": "58a0e72faad25ddd67e11506082b703cc677136dd68c658e196627e7c596a9fc"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/AgentCancellationRegressionTest.kt",
+      "sha256": "3841f01fa55bab71b78d79258fd7fc51e58be9a935cb867eff93db32b78c400c"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ApprovedWebToolGateTest.kt",
+      "sha256": "04ba508667e80a933d518ae25a6eee7a6bdc0c59bb7dcd5d90acacd380eedbbe"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuousConversationModeTest.kt",
+      "sha256": "5642f99262eaa35dfa48e5ee0ea34a48c2b25706a10764245a57381f9b025f6f"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuousConversationRecoveryTest.kt",
+      "sha256": "23edc4e649ae5546e705d968d241d13676a65cc41bdf0d7d50038267ea308f3a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ConversationControlTest.kt",
+      "sha256": "0f9c6086668dac422d03842ef7f567b7992ba1ad93923ecf08a4db7550561bd8"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ConversationResearchApprovalIntegrationTest.kt",
+      "sha256": "df5caeee4e7a6781484a8620d2d546c463a47e11f6efb63f7262b34e648788c8"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/InternetConsentPolicyTest.kt",
+      "sha256": "99e835003f3cfc99fb977023c0bdc6894da5d39574c9ca06bbe11597abc40e7a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationContextInvalidationTest.kt",
+      "sha256": "5c0e8fc05f96984db6e9733c7fcd3a3f238f551df7e07f6671765f8a32704f97"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpIntegrationTest.kt",
+      "sha256": "b7320cf22aff36da16c7df29619cf64c3299f46aa77ead81e4eb2b0321ba5ffe"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LocalSpeechSessionTest.kt",
+      "sha256": "a80432c0d7ee5892782864ac5a6ab7892fd087e82e542a43e38780dd5a42b6fd"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ResearchConsentReplyTest.kt",
+      "sha256": "f9a7cb378a7eb8e1f118cbb3ed12d4fcbc9f6c4fb5510fb8683408464f647ef8"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ResearchDialogueHandoffTest.kt",
+      "sha256": "97d8747d7adc8fb6d4014708cd1083b970341513b38beea1df78ba31f92de7e4"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/SessionEvidenceIntegrityTest.kt",
+      "sha256": "4ff2fa11c68780c0493603db6b4b55e294ed043c92cc2dea0e05689b951f63e0"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/SpeechTurnRecoveryTest.kt",
+      "sha256": "bc9542da03366724644efcfc0734db33714380649c9e1c13fb775af1d47566de"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/WebResearchIntegrationTest.kt",
+      "sha256": "30bb71b27c7443d541f931243388733718ede5e00bdecf069f89f2bcf93cbfe8"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisCinemaEntranceTest.kt",
+      "sha256": "14e8fd9f2bc902075ad8bfc41c6db595a6d5e36f0f8e823a0ed83f7daa1f48e4"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/WindowProjectedMotionSamplerTest.kt",
+      "sha256": "671067e4414410f5fe030ba29523b83160c54055b8b57b44f205aaf6d25e91d8"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/AndroidOnDeviceSpeechRetryUiTest.kt",
+      "sha256": "8072ee6093feb8c9bee7365cc0b0a8e394cf5cad7b5446e305a1a074e425c05c"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/AvatarExplicitConfirmationUiTest.kt",
+      "sha256": "7c9128215fa39525c0db90ba984c8ce0c2aa3cfe4e1c498a1ce484a11114c824"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/CinemaStopReturnUiTest.kt",
+      "sha256": "18b77d4a3b2ee21f9bb35ad363d6481106aee8b9660e52efb53ea9b4d61e6b4a"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisCinemaReplayUiTest.kt",
+      "sha256": "0e97ea307b79d1fe1d026ef6b1fb993d0686b441d0a82b38f7147f1b0645e855"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/LocalTurnOutcomeUiTest.kt",
+      "sha256": "44895a52bbaf936658eb44a722a62ed1255b0ee834202de0db76ff9a43917b5f"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ResearchChatApprovalUiTest.kt",
+      "sha256": "27e34f1d8ad3914da2ddf6e0de9ed43962d712aebb02d60bfb9221aa63f43d88"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceOutcomeUiTest.kt",
+      "sha256": "f060c43bee0520f7028f833b61b84e127ae7bf8c012f0b4efc370c13408e6a3e"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt",
+      "sha256": "430e07aad5a079494a529728d60aff8f5fab67fdbb2e97beee71bd9159477c68"
+    }
+  ],
+  "evidenceHashes": [
+    {
+      "path": "compile.log",
+      "sha256": "964440c1443f59c8029bfef477704f4e4a8d874e8190b0f33299ed6dcf590d8c"
+    },
+    {
+      "path": "tests.log",
+      "sha256": "10fcab1c026f9f2c703d8977ec2a8c2fc1f79623e41d4ffa1ef82a57c2a4e8b9"
+    },
+    {
+      "path": "invocation.json",
+      "sha256": "75fa9ca10913febe45b54609f8b107df264e8fc935ab7aa50ef8aad21f2cf7d1"
+    },
+    {
+      "path": "test-memory.gradle",
+      "sha256": "492cc935f7f2fc7f18b43938382fca42609937ec4180fbc9b1103e1eebe1b634"
+    }
+  ],
+  "upstreamResultsAreNotSummed": true,
+  "prior91ResultSource": "ca839c0555c121b248b843c4030c0e928603a535",
+  "limitations": [
+    "Targeted Android JVM/Robolectric acceptance; not full repository QA.",
+    "No physical-device, real microphone, live network, Gemma or Fold7 result.",
+    "Newer Cinema material/pressure/ocular WIP source is excluded.",
+    "No APK generation, signing, publication, installation or canonical-branch merge."
+  ]
+}

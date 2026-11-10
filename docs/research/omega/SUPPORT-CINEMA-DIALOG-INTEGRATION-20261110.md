@@ -1,10 +1,22 @@
 # Cinema/dialog integration support
 
-Continuation checkpoint: #724's queued-result fix, latest #720 ASR binding and final #726 outcome fix are included. Combined verification of this frozen source is pending. The earlier 91-test result below belongs only to its explicitly pinned source.
+Current result: #724's queued-result fix, latest authorized #720 ASR binding and final #726 outcome fix are included and jointly verified: **240/240 tests PASS in exactly 27 suites**, 0 failures/errors/skips. The earlier 91-test result below belongs only to its explicitly pinned historical source.
 
 Owner: Continuum support root. Canonical development target: `cinema/fluid-light-stage-20261110` / PR #715. This isolated candidate integrates the current #720 source; the target branch remains untouched.
 
-## Frozen inputs
+## Current combined verification
+
+Tested remote source: `9e7931b877facf8a28f3feb06697dbcc68722b58`. Local equivalent: `22890d24aef092b36ab89b84f315f42b45a3abe1`. The entire source tree is identical: `88cceae4cea422e9878f5c7bcb3cfef0a61dbe05`. The remote source commit preserves parents `ec4b6a048eb2b477922d60aaabbacae99efc33af` and final #726 `d3185e72967832c7e0a5aee4a1b77ddad522caec`. Earlier merge commits preserve the original #724 and #720 donor parents.
+
+Full Android main/test compilation finished with Exit 0 in 1m 6s. The separate bounded test process finished with Exit 0 in 1m 15s. Both phases passed on the first invocation of this combined source. No source, test selector or assertion was changed between compilation and testing. The exact 27 expected XML suite names, all 240 testcase records and their freshness were checked after the run. The 14-file outcome source audit was also rechecked against the tested tree.
+
+Evidence: `docs/evidence/combined-support-20261110/RESULT.json`, `invocation.json`, raw `compile.log` / `tests.log`, all 27 raw JUnit XML files and the portable `test-memory.gradle`. The result records per-suite counts, source hashes, compiled class JAR hashes, exact arguments and source binding. The earlier source-audit status is retained as the truthful pre-test checkpoint; RESULT.json supplies the completed result. The evidence-only follow-up commit does not change product or test sources.
+
+The combined scope covers dialog context, research consent, approval-ticket-bound ASR, queued results, delivered-but-unverified outcomes, animation cleanup, STOP/return and session cancellation. This is targeted Android/JUnit/Robolectric host evidence. Physical-device/microphone/network/Gemma/Fold7 acceptance remains NOT_RUN. No APK was generated or signed. The build lease was released after the test process.
+
+To reproduce, use the two phase argument arrays in `invocation.json` with local JDK/SDK/cache paths; replace its scratch init-script path with this evidence directory's `test-memory.gradle`. Keep the 27 exact test selectors. Use an isolated checkout/cache and the repository's existing checkout lease. The portable init script retains the actual test memory/CPU settings; the scratch version additionally recorded classpath/runtime metadata.
+
+## Historical initial integration inputs
 
 - Cinema remote `5d36c5a57c031308c8de91049e19e9e8cb8365d5`, tree `970445b70dcd57d344f43ff95bfd58fd505f42ab`.
 - Local Cinema equivalent `47a86df300210de7298e7768959cd5bf0c96fb4f`, exactly the same complete Git tree.
@@ -13,7 +25,7 @@ Owner: Continuum support root. Canonical development target: `cinema/fluid-light
 
 Both remote PRs were read before integration. Compare showed diverged histories: three dialog commits and eight later Cinema commits. No newer equivalent integration was present among the latest open PRs. A fresh isolated checkout merges both pinned source trees; `AgentActivity.kt` merges without conflict. Other Cinema changes, original avatar and existing STOP/return methods remain intact.
 
-## Verification checkpoint
+## Historical 91-test verification checkpoint
 
 PORTIERT: combined source in Draft #725. VERIFIZIERT: **91/91 targeted Android host tests PASS**, 15 suites, 0 failures/errors/skips. GERÄTEBESTÄTIGT: NOT_RUN.
 
@@ -48,4 +60,4 @@ The support root explicitly froze the Cinema product baseline at `5d36c5a57c0313
 
 Upstream #724 has 46 scoped checks; upstream latest #720 has 91 ASR/approval checks. These counts overlap existing suites and are not summed or represented as a combined result. No Gradle build was started during the root's outcome compilation.
 
-The final outcome source has 49/49 scoped checks upstream. It distinguishes response delivery from verified task outcome, clears unresolved approval/presentation state and preserves existing recovery lifecycle rules. The source merged without conflict. Next: separate bounded Android compilation and test processes, with the 27 deduplicated context/consent/ASR/queued-result/outcome/cancellation suites. The root released its build lease before this combined run.
+The final outcome source has 49/49 scoped checks upstream. It distinguishes response delivery from verified task outcome, clears unresolved approval/presentation state and preserves existing recovery lifecycle rules. The source merged without conflict. Separate bounded Android compilation and test processes now passed for the 27 deduplicated context/consent/ASR/queued-result/outcome/cancellation suites, with 240 tests total. The root released its build lease before this combined run; the integration lease is also released.
