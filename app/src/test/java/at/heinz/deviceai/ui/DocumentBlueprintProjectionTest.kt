@@ -37,6 +37,16 @@ class DocumentBlueprintProjectionTest {
     }
 
     @Test
+    fun unrelatedMemoryLearningNeverCreatesDocumentProjection() {
+        val projection = DocumentBlueprintProjection()
+        projection.onLearned(CockpitAnimationEvent.DocumentLearned(
+            "memory", 1L, "foreign-archive", "application/pdf", entriesAdded = 7
+        ))
+        assertTrue(!projection.hasDocument)
+        assertNull(projection.snapshot())
+    }
+
+    @Test
     fun noPageLabelWithoutMeasuredPageCount() {
         val projection = DocumentBlueprintProjection()
         projection.onQuestion(
