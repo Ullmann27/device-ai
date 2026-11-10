@@ -101,9 +101,9 @@ object JarvisReferenceHud {
                 floatArrayOf(0f, .32f, .74f, 1f))
         }
         val body = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 1, feature)) {
-            val top = if (feature) Colors.tileFillStart else Argb.rgb(6, 18, 36)
-            val middle = if (feature) Colors.tileFillMiddle else Argb.rgb(3, 12, 28)
-            val bottom = if (feature) Colors.tileFillEnd else Argb.rgb(6, 16, 34)
+            val top = if (feature) Colors.tileFillStart else Argb.rgb(3, 8, 18)
+            val middle = if (feature) Colors.tileFillMiddle else Argb.rgb(2, 6, 14)
+            val bottom = if (feature) Colors.tileFillEnd else Argb.rgb(3, 8, 16)
             Fill.Linear(b.left, b.top, b.left, b.bottom,
                 intArrayOf(Argb.mix(top, accent, if (selected) .08f else .03f), middle,
                     middle, Argb.mix(bottom, endAccent, .04f)),
@@ -111,25 +111,65 @@ object JarvisReferenceHud {
         }
         val sheen = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 2, feature)) {
             Fill.Linear(b.left, b.top, b.left, b.top + depth,
-                intArrayOf(Argb.withAlpha(Colors.glowCore, if (selected) .18f else .11f), 0))
+                intArrayOf(Argb.withAlpha(Colors.glowCore, if (selected) .30f else .22f), 0))
         }
         val bevel = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 3, feature)) {
             Fill.Linear(b.left, b.top, b.right, b.bottom,
                 intArrayOf(Argb.withAlpha(Colors.glowCore, .28f), 0,
                     Argb.withAlpha(endAccent, .22f)), floatArrayOf(0f, .35f, 1f))
         }
-        // Soft drop (decoration only — control bounds stay on [b]).
-        p.fillRoundRect(b.left + 1.6f, b.top + 3.4f, b.right + 1.6f, b.bottom + 4.4f, r,
-            Fill.Solid(0x99010512.toInt()), .40f * opacity)
+        val thickness = JarvisVisualDepth.edgeThicknessDp()
+            .coerceAtMost(minOf(b.width, b.height) * .12f)
+        val rearDx = thickness * .55f
+        val rearDy = thickness
+        val rearBody = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 7, feature)) {
+            Fill.Linear(b.left + rearDx, b.top + rearDy, b.left + rearDx, b.bottom + rearDy,
+                intArrayOf(Argb.rgb(2, 8, 20), Argb.rgb(1, 6, 16)))
+        }
+        val slabBottom = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 8, feature)) {
+            Fill.Linear(b.left, b.bottom, b.left, b.bottom + rearDy,
+                intArrayOf(Argb.withAlpha(accent, .28f), Argb.withAlpha(Argb.rgb(4, 14, 28), .85f),
+                    Argb.withAlpha(endAccent, .18f)))
+        }
+        val slabRight = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 9, feature)) {
+            Fill.Linear(b.right, b.top, b.right + rearDx, b.top,
+                intArrayOf(Argb.withAlpha(accent, .16f), Argb.withAlpha(Argb.rgb(4, 14, 28), .80f),
+                    Argb.withAlpha(endAccent, .22f)))
+        }
+        val innerBounce = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 10, feature)) {
+            Fill.Linear(b.left, b.top, b.right, b.bottom,
+                intArrayOf(Argb.withAlpha(Colors.glowCore, .14f), 0, Argb.withAlpha(endAccent, .10f)),
+                floatArrayOf(0f, .45f, 1f))
+        }
+        // Contact shadow on the plane below (decoration — control bounds stay on [b]).
+        p.fillRoundRect(b.left + rearDx * .4f, b.top + rearDy * 1.15f,
+            b.right + rearDx * 1.05f, b.bottom + rearDy * 1.65f, r,
+            Fill.Solid(0xB3010510.toInt()), .50f * opacity)
+        // Rear glass plate (z = −24 dp, projected by the 14° cap).
+        p.fillRoundRect(b.left + rearDx, b.top + rearDy, b.right + rearDx, b.bottom + rearDy, r,
+            rearBody, .70f * opacity)
+        p.fillRect(b.left + r * .25f, b.bottom, b.right - r * .08f, b.bottom + rearDy,
+            slabBottom, .80f * opacity)
+        p.fillRect(b.right, b.top + r * .25f, b.right + rearDx, b.bottom - r * .08f,
+            slabRight, .75f * opacity)
         p.setAdditive(true)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 18f, edge, .09f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 10f, edge, .16f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 5f, edge, .30f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 2.6f, edge, .50f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 10f, edge, .18f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 3.2f, edge, .42f * opacity * glow)
         p.setAdditive(false)
         p.fillRoundRect(b.left, b.top, b.right, b.bottom, r, body, opacity)
+        // Re-assert the glass lip after the glow: an 18 dp bloom would otherwise hide the
+        // |z|·sin(14°) edge (~5.8 dp) of the rear plate.
+        p.fillRect(b.left + r * .25f, b.bottom, b.right - r * .08f, b.bottom + rearDy,
+            slabBottom, .92f * opacity)
+        p.fillRect(b.right, b.top + r * .25f, b.right + rearDx, b.bottom - r * .08f,
+            slabRight, .88f * opacity)
+        p.drawLine(b.left + r * .35f, b.bottom + rearDy, b.right + rearDx * .35f, b.bottom + rearDy,
+            1.15f, Fill.Solid(accent), .55f * opacity)
+        p.drawLine(b.right + rearDx, b.top + r * .35f, b.right + rearDx, b.bottom + rearDy * .35f,
+            1.15f, Fill.Solid(endAccent), .48f * opacity)
         p.save(); p.clipRoundRect(b.left, b.top, b.right, b.bottom, r)
         p.fillRect(b.left, b.top, b.right, b.top + depth, sheen, opacity)
+        p.fillRect(b.left, b.top, b.right, b.bottom, innerBounce, opacity)
         if (feature) {
             val side = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 4, true)) {
                 Fill.Linear(b.left, b.top, b.left + depth, b.top,
@@ -160,6 +200,11 @@ object JarvisReferenceHud {
         p.setAdditive(false)
         p.strokeRoundRect(b.left + inset, b.top + inset, b.right - inset, b.bottom - inset,
             (r - inset).coerceAtLeast(1f), .65f, bevel, opacity)
+        val lift = JarvisVisualDepth.frontLiftDp().coerceAtMost(inset + 4f)
+        // Front light plane (z = +20 dp) — sharp inner reflection, glow stays behind the rim.
+        p.strokeRoundRect(b.left + inset + lift * .15f, b.top + inset + lift * .15f,
+            b.right - inset - lift * .15f, b.bottom - inset - lift * .15f,
+            (r - inset).coerceAtLeast(1f), .85f, Fill.Solid(Colors.glowCore), .22f * opacity)
         cornerLight(p, b, r, accent, endAccent, opacity, glow)
         if (feature) {
             val glint = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 6, true)) {

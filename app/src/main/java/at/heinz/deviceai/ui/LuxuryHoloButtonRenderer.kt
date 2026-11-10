@@ -40,9 +40,15 @@ object LuxuryHoloButtonRenderer {
             radius, Fill.Solid(INSET_SHADOW), .60f * alpha)
         p.fillRoundRect(l, t, r, b, radius, Fill.Linear(l, t, l, b,
             intArrayOf(if (active) 0xE0122C4A.toInt() else OBSIDIAN_TOP, OBSIDIAN_BOTTOM)), .90f * alpha)
-        p.fillRoundRect(l + 1.2f, t + 1.0f, r - 1.2f, t + (b - t) * .42f, (radius - 1f).coerceAtLeast(1f),
-            Fill.Linear(l, t, l, t + (b - t) * .42f,
-                intArrayOf(Argb.of(55, 124, 232, 255), Argb.of(0, 124, 232, 255))), alpha)
+        p.fillRoundRect(l + 1.2f, t + 1.0f, r - 1.2f, t + (b - t) * .48f, (radius - 1f).coerceAtLeast(1f),
+            Fill.Linear(l, t, l, t + (b - t) * .48f,
+                intArrayOf(Argb.of(90, 180, 240, 255), Argb.of(0, 124, 232, 255))), alpha)
+        val lip = JarvisVisualDepth.edgeThicknessDp().coerceAtMost((b - t) * .14f)
+        p.fillRect(l + radius * .3f, b, r - radius * .15f, b + lip,
+            Fill.Linear(l, b, l, b + lip, intArrayOf(Argb.withAlpha(ICE_CYAN, .40f),
+                Argb.withAlpha(INSET_SHADOW, .80f))), .80f * alpha)
+        p.drawLine(l + radius, b + lip, r - radius, b + lip,
+            1.1f, Fill.Solid(ICE_CYAN), .45f * alpha)
         p.drawLine(l + radius, b - 1.2f, r - radius, b - 1.2f,
             .8f, Fill.Solid(INSET_SHADOW), .65f * alpha)
 
@@ -81,8 +87,10 @@ object LuxuryHoloButtonRenderer {
             Fill.Linear(box.left, box.top, box.right, box.bottom,
                 intArrayOf(Argb.withAlpha(ICE_CYAN, .10f), Argb.withAlpha(AMETHYST, .08f), 0)), .70f)
         val edge = Fill.Linear(box.left, box.top, box.right, box.top, intArrayOf(ICE_CYAN, AMETHYST, ICE_CYAN))
-        p.strokeRoundRect(box.left - 2f, box.top, box.right + 2f, box.bottom + 4f, radius, 10f, edge, .14f)
-        p.strokeRoundRect(box.left - 2f, box.top, box.right + 2f, box.bottom + 4f, radius, 2.2f, edge, .40f)
+        p.strokeRoundRect(box.left - 2f, box.top, box.right + 2f, box.bottom + 4f, radius, 10f, edge, .18f)
+        p.strokeRoundRect(box.left - 2f, box.top, box.right + 2f, box.bottom + 4f, radius, 2.4f, edge, .55f)
+        p.strokeOval(box.left + box.width * .18f, box.bottom - 6f,
+            box.right - box.width * .18f, box.bottom + 16f, 1.4f, edge, .50f)
         p.setAdditive(false)
     }
 }

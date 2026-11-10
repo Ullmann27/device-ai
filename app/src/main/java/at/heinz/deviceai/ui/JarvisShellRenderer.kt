@@ -69,6 +69,12 @@ object JarvisShellRenderer {
         background(p, shell.width, shell.height)
         val backdropHeight = shell[Slot.INPUT]?.bottom ?: shell[Slot.AVATAR]?.bottom ?: shell.height
         JarvisReferenceHud.backdrop(p, shell.width, backdropHeight)
+        val work = listOfNotNull(shell[Slot.WORK_DOCUMENT], shell[Slot.WORK_PROCESS], shell[Slot.WORK_DRAFT])
+        if (work.isNotEmpty()) {
+            JarvisVisualDepth.paintWorkStage(p, Box(
+                work.minOf { it.left }, work.minOf { it.top },
+                work.maxOf { it.right }, work.maxOf { it.bottom }))
+        }
         val dolly = 1f
         p.save(); p.scale(dolly, dolly, shell.width / 2f, shell.height / 2f)
         val cardSlots = shell.boxes.keys.filter { it !in bare && it != Slot.TILES }
@@ -146,17 +152,12 @@ object JarvisShellRenderer {
     /** Portable ref5 background: near-black navy, faint lower-edge haze and deterministic dust. */
     fun background(p: ContinuumPainter, w: Float, h: Float) {
         p.fillRect(0f, 0f, w, h, Fill.Linear(0f, 0f, 0f, h, intArrayOf(Colors.background, Colors.backgroundBottom)))
-        // Deep-space nebulae sampled from reference B (upper violet, right cyan, lower cyan cone, left magenta).
-        val span = maxOf(w, h)
-        JarvisNeon.halo(p, w * .34f, h * .22f, span * .34f, Colors.violet, .26f)
-        JarvisNeon.halo(p, w * .68f, h * .30f, span * .30f, Colors.cyan, .20f)
-        JarvisNeon.halo(p, w * .50f, h * .80f, span * .38f, Colors.cyan, .14f)
-        JarvisNeon.halo(p, w * .10f, h * .70f, span * .24f, Colors.magenta, .12f)
-        JarvisNeon.halo(p, w * .45f, h * .92f, span * .55f, Colors.backgroundHaze, .18f)
-        val step = 48f
+        // Multi-plane space (far nebulae + distance bokeh, mid arcs, near sharp grid).
+        JarvisVisualDepth.paintSpace(p, w, h)
+        val step = 96f
         p.setAdditive(true)
-        var x = 0f; while (x <= w) { p.drawLine(x, 0f, x, h, 3f, Fill.Solid(Colors.cyan), .004f); p.drawLine(x, 0f, x, h, .6f, Fill.Solid(Colors.cyan), .008f); x += step }
-        var y = 0f; while (y <= h) { p.drawLine(0f, y, w, y, 3f, Fill.Solid(Colors.cyan), .004f); p.drawLine(0f, y, w, y, .6f, Fill.Solid(Colors.cyan), .008f); y += step }
+        var x = 0f; while (x <= w) { p.drawLine(x, 0f, x, h, .7f, Fill.Solid(Colors.cyan), .014f); x += step }
+        var y = 0f; while (y <= h) { p.drawLine(0f, y, w, y, .7f, Fill.Solid(Colors.cyan), .014f); y += step }
         p.setAdditive(false)
         bokeh(p, w, h)
     }
