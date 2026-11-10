@@ -1,0 +1,38 @@
+{
+  "source_commit": "7b2cf49a4dee22e56f0a2ac13109c9472c96a064",
+  "source_tree": "a3cdf8fa794fab20d7aa50e97c2c0b6b08bb2a9a",
+  "backend": "Kotlin/JVM production painter and policy probes; no pixel renderer",
+  "compile_exit": 0,
+  "junit_exit": 0,
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisRenderQuality.kt": "5a247a1036b59e10b23e2b481ca49e91317cdfc8e0b9d02bb7f9789b9384082b",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisComputePhasePolicy.kt": "e85ca0246e4c6f4d24cd190d0843d4c304c413b21e3702c85b6b752197991358",
+    "app/src/main/java/at/heinz/deviceai/ui/AvatarEssentialMotionPolicy.kt": "32928855dd6b1980b69ac2ca257489a15e1ddc9d7f98a0f0d4aa646ff6992302",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt": "14296a36c0f77ddca564775148695ab6db00fe31c502bbfd08e17b726fb3b22d",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt": "1a89e0c4a4bcff81ac613f96f2726a530123e77014673a7f204f48a4131a735d",
+    "app/src/main/java/at/heinz/deviceai/ui/LuxuryHoloButtonRenderer.kt": "d697756f9a85236672958e0aa7625fa5eff55edf3e9f14777a6405bdc39bc58a",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisCinemaEntrance.kt": "38520dbd80c3535673f5b2bef7bfc145412c2beede4d063dd1f7302e3444c64d",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisFluidLight.kt": "2e082d43f3695db8823aae8ae7144840d16f4550b37a41d78fc1961d45886735",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisTileEnergy.kt": "540a74065b03f89db4c668168dcd7302014301ceecbbfde47fa659ec095fd5b3",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisThermalVisualContractTest.kt": "4715f1e0676dacd3cd0eaee01d0eceb63b0a6c6e8534e36f00afaed0c148eb59"
+  },
+  "dependencies": {
+    "preview.jar": "57a03b34e55ca7096f66c03c8f85f6a7a031fa2cc00d493902c8d314014fdfbf",
+    "junit.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "hamcrest.jar": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+  },
+  "host_setup": "Initial isolated compile omitted internal JarvisTileEnergy source; added that existing source without modification. Not a product regression.",
+  "device_gpu": "NOT_RUN",
+  "device_thermal": "NOT_RUN",
+  "live_tts_lipsync": "NOT_RUN",
+  "Fold7": "NOT_RUN",
+  "production_changes": false,
+  "status": "PASS",
+  "tests": 3,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "source_remote_commit": "0dbf5adab8f0953ad80085ea673c21d51155daf6",
+  "source_base_remote": "31f61c6f1ff24f116135824403f0a6a57721c787",
+  "dependency_note": "Existing source-bound Java2D preview dependency contains host-only tile/STOP boundary shims; tested policy and painter classes were recompiled from the listed production sources. This is not an Android runtime or pixel test."
+}
