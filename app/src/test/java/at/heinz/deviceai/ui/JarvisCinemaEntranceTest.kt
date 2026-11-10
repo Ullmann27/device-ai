@@ -278,4 +278,130 @@ class JarvisCinemaEntranceTest {
         assertTrue(reduced.scale > 1f)
         assertTrue(reduced.settled)
     }
+
+    @Test
+    fun workOrderFliesTheThreeTopWindowsAwayBeforeTheyRebuild() {
+        val slots = listOf(
+            JarvisShellLayout.Slot.WORK_DOCUMENT,
+            JarvisShellLayout.Slot.WORK_PROCESS,
+            JarvisShellLayout.Slot.WORK_DRAFT,
+        )
+        slots.forEachIndexed { rank, slot ->
+            assertTrue(JarvisCinemaEntrance.fliesAwayOnWorkOrder(slot))
+            assertTrue(JarvisCinemaEntrance.rebuildsAfterFlyAway(slot))
+            val rest = JarvisCinemaEntrance.workOrderPose(slot, rank, 0L, side = 1f, budget = high)
+            assertTrue(rest.contentAlpha > 0.98f)
+            assertEquals(0f, rest.recede, 0.05f)
+            assertFalse(rest.hidden)
+
+            val midAt = 280L + JarvisCinemaEntrance.staggerMs(JarvisCinemaEntrance.Kind.WORK_WINDOW, rank)
+            val mid = JarvisCinemaEntrance.workOrderPose(slot, rank, midAt, side = 1f, budget = high)
+            assertTrue(mid.recede > 0.12f)
+            assertTrue(mid.dx > 8f)
+            assertTrue(mid.scale < 0.97f)
+            assertTrue(mid.contentAlpha < rest.contentAlpha)
+
+            val seam = JarvisCinemaEntrance.DEPART_MS +
+                JarvisCinemaEntrance.staggerMs(JarvisCinemaEntrance.Kind.WORK_WINDOW, rank)
+            val leaving = JarvisCinemaEntrance.workOrderPose(slot, rank, seam - 1L, side = 1f, budget = high)
+            assertTrue(leaving.hidden || leaving.recede > 0.85f || leaving.contentAlpha < 0.12f)
+
+            val rebuildStart = JarvisCinemaEntrance.workOrderPose(slot, rank, seam, side = 1f, budget = high)
+            assertTrue(rebuildStart.contentAlpha < 0.15f)
+            assertTrue(rebuildStart.recede < 0.05f)
+
+            val rebuilt = JarvisCinemaEntrance.workOrderPose(
+                slot, rank, seam + JarvisCinemaEntrance.SETTLE_MS, side = 1f, budget = high)
+            assertTrue(rebuilt.settled)
+            assertFalse(rebuilt.hidden)
+            assertEquals(1f, rebuilt.contentAlpha, 0.02f)
+            assertEquals(0f, rebuilt.recede, 0.02f)
+        }
+    }
+
+    @Test
+    fun workOrderFliesTheDockAwayThenRebuildsIt() {
+        val slot = JarvisShellLayout.Slot.BOTTOM_NAV
+        assertTrue(JarvisCinemaEntrance.fliesAwayOnWorkOrder(slot))
+        assertTrue(JarvisCinemaEntrance.rebuildsAfterFlyAway(slot))
+        assertEquals(JarvisCinemaEntrance.StageRole.STAY, JarvisCinemaEntrance.stageRole(slot))
+
+        val rest = JarvisCinemaEntrance.workOrderPose(slot, 0, 0L, side = 1f, budget = high)
+        assertTrue(rest.contentAlpha > 0.98f)
+        assertFalse(rest.hidden)
+
+        val mid = JarvisCinemaEntrance.workOrderPose(slot, 0, 280L, side = 1f, budget = high)
+        assertTrue(mid.recede > 0.12f)
+        assertTrue(mid.dx > 8f)
+
+        val rebuilt = JarvisCinemaEntrance.workOrderPose(
+            slot, 0, JarvisCinemaEntrance.DEPART_MS + JarvisCinemaEntrance.SETTLE_MS, side = 1f, budget = high)
+        assertTrue(rebuilt.settled)
+        assertFalse(rebuilt.hidden)
+        assertEquals(1f, rebuilt.contentAlpha, 0.02f)
+    }
+
+    @Test
+    fun idleTilesStayGoneAfterTheWorkOrderFlyAway() {
+        assertTrue(JarvisCinemaEntrance.fliesAwayOnWorkOrder(JarvisShellLayout.Slot.TILES))
+        assertFalse(JarvisCinemaEntrance.rebuildsAfterFlyAway(JarvisShellLayout.Slot.TILES))
+        val gone = JarvisCinemaEntrance.workOrderPose(
+            JarvisShellLayout.Slot.TILES, 0,
+            JarvisCinemaEntrance.DEPART_MS + JarvisCinemaEntrance.SETTLE_MS,
+            side = -1f, budget = high)
+        assertTrue(gone.hidden || gone.recede >= 0.999f)
+
+        val feature = JarvisCinemaEntrance.workOrderPose(
+            null, 1, JarvisCinemaEntrance.DEPART_MS + 800L, side = 1f, budget = high)
+        assertTrue(feature.hidden || feature.recede >= 0.999f)
+    }
+
+    @Test
+    fun avatarAndStatusStayPutDuringTheWorkOrder() {
+        assertFalse(JarvisCinemaEntrance.fliesAwayOnWorkOrder(JarvisShellLayout.Slot.AVATAR))
+        assertFalse(JarvisCinemaEntrance.fliesAwayOnWorkOrder(JarvisShellLayout.Slot.STATUS))
+        val avatar = JarvisCinemaEntrance.workOrderPose(
+            JarvisShellLayout.Slot.AVATAR, 0, 240L, budget = high)
+        assertFalse(avatar.hidden)
+        assertEquals(0f, avatar.recede, 0.001f)
+        assertTrue(avatar.contentAlpha > 0.98f)
+        val status = JarvisCinemaEntrance.workOrderPose(
+            JarvisShellLayout.Slot.STATUS, 0, 240L, budget = high)
+        assertFalse(status.hidden)
+        assertEquals(0f, status.recede, 0.001f)
+    }
+
+    @Test
+    fun acknowledgementTimelineDoesNotRetriggerWorkWindows() {
+        assertEquals(
+            JarvisCinemaEntrance.Trigger.IGNORE,
+            JarvisCinemaEntrance.triggerFor(CockpitAnimationEvent.ProcessTimeline("t", 1L, listOf(
+                ProcessStep(JarvisCinemaEntrance.ACK_STEP_KEY, "Auftrag angenommen", StepState.DONE),
+                ProcessStep("work", "Bearbeitung", StepState.ACTIVE)))))
+        assertEquals(
+            JarvisCinemaEntrance.Trigger.STEP,
+            JarvisCinemaEntrance.triggerFor(CockpitAnimationEvent.ProcessTimeline("t", 2L, listOf(
+                ProcessStep(JarvisCinemaEntrance.ACK_STEP_KEY, "Auftrag angenommen", StepState.DONE),
+                ProcessStep("tool:1", "Werkzeug: read", StepState.DONE)))))
+        assertEquals(
+            JarvisCinemaEntrance.Trigger.ENTER,
+            JarvisCinemaEntrance.triggerFor(CockpitAnimationEvent.CommandFlyIn("t", 3L, "lies die pdf")))
+        assertEquals(
+            JarvisCinemaEntrance.Trigger.ENTER,
+            JarvisCinemaEntrance.triggerFor(CockpitAnimationEvent.ActionStarted(
+                "t", 4L, CockpitAction.TOOL, "read_document")))
+    }
+
+    @Test
+    fun reducedMotionRebuildsWorkWindowsWithoutSweeping() {
+        val window = JarvisCinemaEntrance.workOrderPose(
+            JarvisShellLayout.Slot.WORK_DOCUMENT, 0, 40L, side = 1f, budget = reduced)
+        assertTrue(window.settled)
+        assertFalse(window.hidden)
+        assertEquals(0f, window.dx, 0.0001f)
+        val tile = JarvisCinemaEntrance.workOrderPose(
+            JarvisShellLayout.Slot.TILES, 0, 40L, side = -1f, budget = reduced)
+        assertTrue(tile.hidden || tile.recede >= 0.999f)
+        assertEquals(0f, tile.dx, 0.0001f)
+    }
 }
