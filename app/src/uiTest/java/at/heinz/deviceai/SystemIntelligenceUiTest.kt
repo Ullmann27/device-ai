@@ -80,7 +80,8 @@ class SystemIntelligenceUiTest {
     fun compactCinemaPresentsMeasuredAndUnknownStates() {
         render("system-cover", 440, 956)
     }
-    @Test fun naturalRequestReachesDiagnosisContextVoiceAndSharedTurn() {
+    @Test @Config(qualifiers = "w440dp-h956dp-port-mdpi")
+    fun naturalRequestReachesDiagnosisContextAndSharedTurn() {
         render("system-dialog", 440, 956, diagnose = true)
     }
     private fun render(label: String, width: Int, height: Int, diagnose: Boolean = false) {

@@ -36,8 +36,16 @@ class ConversationControlTest {
             "Gemeint war der Build von vorhin.",
             "Ich meinte den Agenten von zuvor.",
             "Nein, ich meinte den vorigen.",
+            "Ich meinte den vorigen Build.",
+            "Gemeint war die vorige Version.",
+            "Ich meinte das vorige Ergebnis.",
             "Ich meinte den letzten.",
-            "Ich meinte den Build von früher."
+            "Gemeint war die letzte Version.",
+            "Ich meinte das letzte Ergebnis.",
+            "Ich meinte den Build von früher.",
+            "Ich meinte den früheren Build.",
+            "Gemeint war die frühere Version.",
+            "Ich meinte das frühere Ergebnis."
         )) {
             c.inspectRequest("one", "Ich meinte Projekt Atlas.")
             c.record("one", "Prüfe den Build 51 und den Build 52.", "Beide werden verglichen.")
@@ -69,7 +77,10 @@ class ConversationControlTest {
         for ((input, expected) in listOf(
             "Ich meinte Build 51." to "Build 51",
             "Gemeint war Branch Atlas." to "Branch Atlas",
-            "Ich meine das Projekt Vorhersehbar." to "Projekt Vorhersehbar"
+            "Ich meine das Projekt Vorhersehbar." to "Projekt Vorhersehbar",
+            "Ich meinte Projekt Vorigental." to "Projekt Vorigental",
+            "Gemeint war Projekt Letztendlich." to "Projekt Letztendlich",
+            "Ich meinte die Früherkennung." to "Früherkennung"
         )) {
             val correction = c.inspectRequest("one", input)!!
             assertEquals(input, ContextDirectiveKind.SCOPE_UPDATED, correction.kind)

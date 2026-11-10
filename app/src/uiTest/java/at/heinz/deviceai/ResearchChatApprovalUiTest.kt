@@ -13,6 +13,7 @@ import at.heinz.deviceai.cognitive.ApprovedWebResearchSession
 import at.heinz.deviceai.cognitive.ApprovedWebToolGate
 import at.heinz.deviceai.cognitive.InternetAccessMode
 import at.heinz.deviceai.cognitive.InternetConsentPolicy
+import at.heinz.deviceai.cognitive.LocalChatTranscriptStore
 import at.heinz.deviceai.cognitive.ResearchMode
 import at.heinz.deviceai.cognitive.WebToolRequest
 import org.junit.Assert.*
@@ -31,6 +32,8 @@ import org.robolectric.shadows.ShadowAlertDialog
 import org.robolectric.shadows.ShadowSpeechRecognizer
 import org.robolectric.shadows.ShadowPowerManager
 import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.TimeUnit
 
 /** Actual dialogs/send; no network execution. */
 @RunWith(RobolectricTestRunner::class)
@@ -112,10 +115,11 @@ class ResearchChatApprovalUiTest {
         idle()
     }
 
-    private fun startRecognizer(f: Fixture): SpeechRecognizer {
+    private fun startRecognizer(f: Fixture, handsFree: Boolean = true): SpeechRecognizer {
         shadowOf(RuntimeEnvironment.getApplication()).grantPermissions(Manifest.permission.RECORD_AUDIO)
         ShadowSpeechRecognizer.setIsOnDeviceRecognitionAvailable(true)
-        AgentActivity::class.java.getDeclaredMethod("onChatMicrophoneTap")
+        AgentActivity::class.java.getDeclaredMethod(
+            if (handsFree) "onChatMicrophoneTap" else "onChatMicrophoneLongPress")
             .apply { isAccessible = true }.invoke(f.activity)
         idle()
         val recognizer = requireNotNull(ShadowSpeechRecognizer.getLatestSpeechRecognizer())
@@ -123,9 +127,9 @@ class ResearchChatApprovalUiTest {
         return recognizer
     }
 
-    private fun deliverResult(recognizer: SpeechRecognizer) {
+    private fun deliverResult(recognizer: SpeechRecognizer, text: String = "Ja, mach.") {
         shadowOf(recognizer).triggerOnResults(Bundle().apply {
-            putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, arrayListOf("Ja, mach."))
+            putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, arrayListOf(text))
         })
         idle()
     }
@@ -151,18 +155,6 @@ class ResearchChatApprovalUiTest {
             recognize(f)
             assertEquals(WebToolRequest.Search("Neuer Auftrag"), f.completed.single()!!.call)
         }
-    }
-
-    @Test @Config(sdk = [35], shadows = [ConsentPowerManager::class])
-    fun resolvedTicketDoesNotDiscardAnOngoingDictation() = withActivity { f ->
-        val dialog = ask(f, "Alter Auftrag", inChat = false)
-        val recognizer = startRecognizer(f)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
-        idle()
-        assertNull(field(f.activity, "pendingResearchChatApproval"))
-        deliverResult(recognizer)
-        assertTrue((field(f.activity, "input") as EditText).text.contains("Ja, mach."))
-        assertEquals(listOf<ApprovedWebResearchSession?>(null), f.completed)
     }
 
     @Test fun requestPrecedesQuestionAndReplyInTheChat() = withActivity { f ->
@@ -203,6 +195,96 @@ class ResearchChatApprovalUiTest {
         assertEquals(true, field(f.activity, "voiceListening"))
         deliverResult(currentRecognizer)
         assertEquals(WebToolRequest.Search("Neuer Auftrag"), f.completed.single()!!.call)
+    }
+
+    @Test @Config(sdk = [35], shadows = [ConsentPowerManager::class])
+    fun resolvedTicketDoesNotDiscardCurrentDictation() {
+        for (accepted in listOf(true, false)) withActivity { f ->
+            ask(f, "Erledigter Diktatauftrag")
+            val recognizer = startRecognizer(f, handsFree = false)
+            reply(f, if (accepted) "Ja, mach." else "Nein.")
+            assertNull(field(f.activity, "pendingResearchChatApproval"))
+            val text = "Notiz zum nächsten Termin"
+            deliverResult(recognizer, text)
+            assertEquals(text, (field(f.activity, "input") as EditText).text.toString())
+            assertEquals(1, f.completed.size)
+            assertEquals(accepted, f.completed.single() != null)
+        }
+    }
+
+    @Test @Config(sdk = [35], shadows = [ConsentPowerManager::class])
+    fun resolvedTicketDoesNotEndCurrentHandsFreeSpeech() {
+        for (accepted in listOf(true, false)) withActivity { f ->
+            ask(f, "Erledigter Gesprächsauftrag")
+            val recognizer = startRecognizer(f)
+            reply(f, if (accepted) "Ja, mach." else "Nein.")
+            assertNull(field(f.activity, "pendingResearchChatApproval"))
+            val text = "Was hast du dadurch verstanden?"
+            deliverResult(recognizer, text)
+            assertTrue(transcript(f).any { it.user && it.text == text })
+            val conversation = field(f.activity, "continuousConversation") as
+                at.heinz.deviceai.cognitive.ContinuousConversationMode
+            assertTrue("Resolved consent must not stop the current conversation", conversation.active)
+            assertEquals(1, f.completed.size)
+            assertEquals(accepted, f.completed.single() != null)
+        }
+    }
+
+    @Test @Config(sdk = [35], shadows = [ConsentPowerManager::class])
+    fun speechStartedWithoutATicketCannotApproveANewTicket() = withActivity { f ->
+        val recognizer = startRecognizer(f)
+        ask(f, "Späterer Auftrag")
+        deliverResult(recognizer)
+        assertTrue(f.completed.isEmpty())
+        assertNotNull(field(f.activity, "pendingResearchChatApproval"))
+        recognize(f)
+        assertEquals(WebToolRequest.Search("Späterer Auftrag"), f.completed.single()!!.call)
+    }
+
+    private fun transcript(f: Fixture): List<LocalChatTranscriptStore.Entry> {
+        val id = field(f.activity, "sessionId") as String
+        return AgentActivity.chatTranscriptIo.submit(java.util.concurrent.Callable {
+            LocalChatTranscriptStore(java.io.File(f.activity.filesDir, "chat-history")).load(id)
+        }).get(2, TimeUnit.SECONDS)
+    }
+
+    private fun assertResearchTranscriptOrder(f: Fixture, request: String, submit: () -> Unit) {
+        (field(f.activity, "localAgentExecutor") as ExecutorService).shutdown()
+        val before = transcript(f).size
+        submit()
+        idle()
+        val dialog = requireNotNull(ShadowAlertDialog.getLatestAlertDialog())
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).performClick()
+        idle()
+        val waiting = transcript(f).drop(before)
+        assertEquals("Original request precedes the question", request, waiting.first().text)
+        assertTrue(waiting.first().user)
+        assertTrue(waiting.any { !it.user && it.text.startsWith("Soll ich diese Recherche") })
+        reply(f)
+        val entries = transcript(f).drop(before)
+        assertEquals(1, entries.count { it.user && it.text == request })
+        val prompt = entries.indexOfFirst { !it.user && it.text.startsWith("Soll ich diese Recherche") }
+        val approval = entries.indexOfFirst { it.user && it.text == "Ja, mach." }
+        assertTrue("Question precedes approval", prompt in 1 until approval)
+        assertTrue("No research execution", (field(f.activity, "localAgentExecutor") as ExecutorService).isShutdown)
+    }
+
+    @Test fun topicDialogRecordsRequestBeforeConsentAndNeverDuplicatesIt() = withActivity { f ->
+        val query = "Photosynthese und Blattfarben"
+        assertResearchTranscriptOrder(f, query) {
+            AgentActivity::class.java.getDeclaredMethod("confirmInternetResearch", String::class.java,
+                ResearchMode::class.java, String::class.java).apply { isAccessible = true }
+                .invoke(f.activity, query, ResearchMode.QUICK, null)
+        }
+    }
+
+    @Test fun chatWebRequestRecordsRequestBeforeConsentAndNeverDuplicatesIt() = withActivity { f ->
+        val request = "https://example.org/synthetic-order"
+        assertResearchTranscriptOrder(f, request) {
+            (field(f.activity, "input") as EditText).setText(request)
+            AgentActivity::class.java.getDeclaredMethod("sendCurrentInput", Boolean::class.javaPrimitiveType)
+                .apply { isAccessible = true }.invoke(f.activity, false)
+        }
     }
 
     @Test fun exactReplyApprovesOnlyTheDisplayedTicketWhileTheModelWaits() = withActivity { f ->

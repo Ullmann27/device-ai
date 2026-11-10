@@ -6380,7 +6380,8 @@ class AgentActivity : Activity() {
         val webRequest=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(request,researchArmed)
         if(webRequest!=null) {
             researchArmed=false
-            input.text.clear();addUserMessage(request)
+            input.text.clear()
+            addUserMessage(request)
             confirmWebRequest(webRequest,researchMode) { session ->
                 if(session!=null && !busy) {
                     runResearch(session)
@@ -13442,7 +13443,8 @@ class AgentActivity : Activity() {
                     (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog) &&
                     (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true)){
                     val currentResearchApproval = pendingResearchChatApproval?.approval
-                    if (requestCode == SPEECH_REQUEST && currentResearchApproval != null && currentResearchApproval !== scopeResearchApproval)
+                    if (requestCode == SPEECH_REQUEST && currentResearchApproval != null &&
+                        currentResearchApproval !== scopeResearchApproval)
                         endContinuousConversation("Recherchefreigabe geändert. Bitte erneut sprechen.")
                     else if(conversationTurn!=null)applyConversationSpeech(conversationTurn,spoken) else applyLocalSpeechText(requestCode,spoken)}},
                 onFailure={failure->
