@@ -1,0 +1,30 @@
+{
+  "schema": "lm1-distill-analysis-execution-v1",
+  "command": [
+    "python",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/evaluation/distill-v1/analyze_distill.py",
+    "--registration",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/registration.json",
+    "--evidence",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/results-v1",
+    "--baseline",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/baseline.lm1",
+    "--checkpoint",
+    "/workspace/scratch/970fc7edde8a/weights-distill-001/final.lm1",
+    "--data",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data",
+    "--weight-auditor",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/evaluation/audit_lm1_weights.py",
+    "--base-analyzer",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/evaluation/contrast-audit-v1/analyze_contrast.py",
+    "--reference-stdout",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/contrast-answer-results-v1/stdout.tsv",
+    "--output",
+    "/workspace/scratch/970fc7edde8a/evaluation-work/distill/results-v1/analysis.json"
+  ],
+  "exitCode": 0,
+  "stdoutSha256": "25589accf5e36636059af270dfe876c721d75ec8c9b056671369afc6efc5631f",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "modelInvocations": 0,
+  "optimizerUpdates": 0
+}

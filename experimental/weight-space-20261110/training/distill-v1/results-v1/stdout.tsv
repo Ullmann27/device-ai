@@ -1,0 +1,538 @@
+INPUT	file=baseline.lm1	sha256=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd
+INPUT	file=tokenizer.lmbp	sha256=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f
+INPUT	file=train.tsv	sha256=3666036e3b63db7738bebc391bd9058ca63bb0d1ea01b240726223c2ddc9039c
+INPUT	file=dev.tsv	sha256=057dac485d2d4d39ebcfcdc7de3fe15c9c6c4bebd2bea888b4db303949798935
+INPUT	file=retention.tsv	sha256=dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a
+INPUT	file=replay.txt	sha256=b5fdd3c9528fe5a0f7a1dbc24db9e7169f0a00f9b31a211aff4ca8c6c97553c1
+INPUT	file=retention_text.txt	sha256=699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019
+CONFIG	mode=distill	steps=128	parameters=132160	seed=20261110	rate=1.0E-4	answerBatch=4	replayBatch=2	replayWeight=0.1	teacherWeight=1.0	experiment=EXP-12	teacherScope=replay.txt-only
+TEACHER	phase=before	parameterSha256=b3662995f7b75d6df4d418587a34807191f5c2d68feecfe4a9e8dc8edcd8ddae	cacheSha256=0cbfab6629045fc09fa8ca5dda68d4b0a93855ab678c49db1c5c7f4b4ad38d03	examples=16	rows=915	source=replay.txt	originalCheckpointSha256=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd	elapsedMillis=247
+CASE	split=dev	step=0	id=note-dev-0001	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6921082E-4
+CASE	split=dev	step=0	id=note-dev-0002	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6891591E-4
+CASE	split=dev	step=0	id=note-dev-0003	expected=3	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.2154874E-4
+CASE	split=dev	step=0	id=note-dev-0004	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.9160552E-4
+CASE	split=dev	step=0	id=note-dev-0005	expected=3	predictedRestricted=2	tokens=45,337,258,32	ended=false	exact=false	firstEos=1.3037823E-4
+CASE	split=dev	step=0	id=note-dev-0006	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.9159936E-4
+CASE	split=dev	step=0	id=note-dev-0007	expected=3	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=2.0580458E-4
+CASE	split=dev	step=0	id=note-dev-0008	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.9161002E-4
+CASE	split=dev	step=0	id=note-dev-0009	expected=0	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=2.0577415E-4
+CASE	split=dev	step=0	id=note-dev-0010	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6909667E-4
+CASE	split=dev	step=0	id=note-dev-0011	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6875767E-4
+CASE	split=dev	step=0	id=note-dev-0012	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.9161036E-4
+CASE	split=dev	step=0	id=note-dev-0013	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3334541E-4
+CASE	split=dev	step=0	id=note-dev-0014	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5340833E-4
+CASE	split=dev	step=0	id=note-dev-0015	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6887544E-4
+CASE	split=dev	step=0	id=note-dev-0016	expected=0	predictedRestricted=2	tokens=45,337,258,32	ended=false	exact=false	firstEos=1.3047547E-4
+CASE	split=dev	step=0	id=note-dev-0017	expected=0	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.2150284E-4
+CASE	split=dev	step=0	id=note-dev-0018	expected=0	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=2.0577453E-4
+CASE	split=dev	step=0	id=note-dev-0019	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.9160056E-4
+CASE	split=dev	step=0	id=note-dev-0020	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6168863E-4
+CASE	split=dev	step=0	id=note-dev-0021	expected=3	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=2.0582658E-4
+CASE	split=dev	step=0	id=note-dev-0022	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6935934E-4
+CASE	split=dev	step=0	id=note-dev-0023	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.9161643E-4
+CASE	split=dev	step=0	id=note-dev-0024	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6715657E-4
+CASE	split=dev	step=0	id=note-dev-0025	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6575737E-4
+CASE	split=dev	step=0	id=note-dev-0026	expected=3	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.2141618E-4
+CASE	split=dev	step=0	id=note-dev-0027	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5639582E-4
+CASE	split=dev	step=0	id=note-dev-0028	expected=3	predictedRestricted=2	tokens=45,337,258,32	ended=false	exact=false	firstEos=1.3015998E-4
+CASE	split=dev	step=0	id=note-dev-0029	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5377859E-4
+CASE	split=dev	step=0	id=note-dev-0030	expected=0	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=2.0580573E-4
+CASE	split=dev	step=0	id=note-dev-0031	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6591021E-4
+CASE	split=dev	step=0	id=note-dev-0032	expected=0	predictedRestricted=2	tokens=45,337,258,32	ended=false	exact=false	firstEos=1.3024214E-4
+CASE	split=dev	step=0	id=note-dev-0033	expected=0	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.21643185E-4
+CASE	split=dev	step=0	id=note-dev-0034	expected=3	predictedRestricted=2	tokens=45,337,258,32	ended=false	exact=false	firstEos=1.3002266E-4
+CASE	split=dev	step=0	id=note-dev-0035	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6937815E-4
+CASE	split=dev	step=0	id=note-dev-0036	expected=3	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.2154586E-4
+CASE	split=dev	step=0	id=note-dev-0037	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5450084E-4
+CASE	split=dev	step=0	id=note-dev-0038	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6874971E-4
+CASE	split=dev	step=0	id=note-dev-0039	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.7117681E-4
+CASE	split=dev	step=0	id=note-dev-0040	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3273963E-4
+CASE	split=dev	step=0	id=note-dev-0041	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.530025E-4
+CASE	split=dev	step=0	id=note-dev-0042	expected=3	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=2.0577837E-4
+CASE	split=dev	step=0	id=note-dev-0043	expected=3	predictedRestricted=2	tokens=45,337,258,32	ended=false	exact=false	firstEos=1.3009315E-4
+CASE	split=dev	step=0	id=note-dev-0044	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3400808E-4
+CASE	split=dev	step=0	id=note-dev-0045	expected=0	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.21580146E-4
+CASE	split=dev	step=0	id=note-dev-0046	expected=0	predictedRestricted=2	tokens=45,337,258,32	ended=false	exact=false	firstEos=1.307369E-4
+CASE	split=dev	step=0	id=note-dev-0047	expected=3	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.21642E-4
+CASE	split=dev	step=0	id=note-dev-0048	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.9160431E-4
+CASE	split=dev	step=0	id=note-dev-0049	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.702545E-4
+CASE	split=dev	step=0	id=note-dev-0050	expected=0	predictedRestricted=2	tokens=45,337,258,32	ended=false	exact=false	firstEos=1.3044282E-4
+CASE	split=dev	step=0	id=note-dev-0051	expected=3	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=2.0578271E-4
+CASE	split=dev	step=0	id=note-dev-0052	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.629788E-4
+CASE	split=dev	step=0	id=note-dev-0053	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.9160118E-4
+CASE	split=dev	step=0	id=note-dev-0054	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3443331E-4
+CASE	split=dev	step=0	id=note-dev-0055	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3418711E-4
+CASE	split=dev	step=0	id=note-dev-0056	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3233165E-4
+CASE	split=dev	step=0	id=note-dev-0057	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6676972E-4
+CASE	split=dev	step=0	id=note-dev-0058	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3394843E-4
+CASE	split=dev	step=0	id=note-dev-0059	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3289528E-4
+CASE	split=dev	step=0	id=note-dev-0060	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5623483E-4
+CASE	split=dev	step=0	id=note-dev-0061	expected=0	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=2.0578947E-4
+CASE	split=dev	step=0	id=note-dev-0062	expected=0	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.2139606E-4
+CASE	split=dev	step=0	id=note-dev-0063	expected=3	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.541525E-4
+CASE	split=dev	step=0	id=note-dev-0064	expected=0	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5471726E-4
+SCORE	split=dev	step=0	exact=0	total=64	restrictedCorrect=0	answerNll=4.9694356545204865	prematureEos=0
+CASE	split=retention	step=0	id=retention-train-0001	expected=1	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3993701E-4
+CASE	split=retention	step=0	id=retention-train-0002	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.415501E-4
+CASE	split=retention	step=0	id=retention-train-0003	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5588869E-4
+CASE	split=retention	step=0	id=retention-train-0008	expected=1	predictedRestricted=1	tokens=45,32,81,499	ended=false	exact=false	firstEos=1.3584603E-4
+CASE	split=retention	step=0	id=retention-train-0009	expected=2	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.5069316E-4
+CASE	split=retention	step=0	id=retention-train-0010	expected=1	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3868362E-4
+CASE	split=retention	step=0	id=retention-train-0012	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6380782E-4
+CASE	split=retention	step=0	id=retention-train-0013	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.3929706E-4
+CASE	split=retention	step=0	id=retention-train-0015	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6288226E-4
+CASE	split=retention	step=0	id=retention-train-0016	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4534418E-4
+CASE	split=retention	step=0	id=retention-train-0017	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.636227E-4
+CASE	split=retention	step=0	id=retention-train-0018	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.406295E-4
+CASE	split=retention	step=0	id=retention-train-0019	expected=1	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3952926E-4
+CASE	split=retention	step=0	id=retention-train-0020	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.2456506E-4
+CASE	split=retention	step=0	id=retention-train-0021	expected=1	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5076257E-4
+CASE	split=retention	step=0	id=retention-train-0024	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5382784E-4
+CASE	split=retention	step=0	id=retention-train-0025	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.2450191E-4
+CASE	split=retention	step=0	id=retention-train-0026	expected=2	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4926934E-4
+CASE	split=retention	step=0	id=retention-train-0028	expected=1	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.518501E-4
+CASE	split=retention	step=0	id=retention-train-0030	expected=1	predictedRestricted=1	tokens=45,32,81,499	ended=false	exact=false	firstEos=1.36114E-4
+CASE	split=retention	step=0	id=retention-train-0032	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4340394E-4
+CASE	split=retention	step=0	id=retention-train-0034	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.243747E-4
+CASE	split=retention	step=0	id=retention-train-0035	expected=1	predictedRestricted=1	tokens=45,32,81,499	ended=false	exact=false	firstEos=1.3615623E-4
+CASE	split=retention	step=0	id=retention-train-0036	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4603969E-4
+CASE	split=retention	step=0	id=retention-train-0038	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6321416E-4
+CASE	split=retention	step=0	id=retention-train-0040	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.246359E-4
+CASE	split=retention	step=0	id=retention-train-0042	expected=1	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3938583E-4
+CASE	split=retention	step=0	id=retention-train-0043	expected=2	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.5054818E-4
+CASE	split=retention	step=0	id=retention-train-0044	expected=2	predictedRestricted=1	tokens=96,99,416,45	ended=false	exact=false	firstEos=1.1952842E-4
+CASE	split=retention	step=0	id=retention-train-0046	expected=2	predictedRestricted=1	tokens=96,99,416,45	ended=false	exact=false	firstEos=1.2129144E-4
+CASE	split=retention	step=0	id=retention-train-0048	expected=1	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.4715247E-4
+CASE	split=retention	step=0	id=retention-train-0050	expected=1	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5179177E-4
+CASE	split=retention	step=0	id=retention-train-0051	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.2447672E-4
+CASE	split=retention	step=0	id=retention-train-0053	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4558589E-4
+CASE	split=retention	step=0	id=retention-train-0055	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5439968E-4
+CASE	split=retention	step=0	id=retention-train-0058	expected=2	predictedRestricted=1	tokens=96,99,416,45	ended=false	exact=false	firstEos=1.1958881E-4
+CASE	split=retention	step=0	id=retention-train-0059	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5452655E-4
+CASE	split=retention	step=0	id=retention-train-0060	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5608543E-4
+CASE	split=retention	step=0	id=retention-train-0062	expected=2	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4870522E-4
+CASE	split=retention	step=0	id=retention-train-0063	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6466055E-4
+CASE	split=retention	step=0	id=retention-train-0066	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4765424E-4
+CASE	split=retention	step=0	id=retention-train-0070	expected=2	predictedRestricted=1	tokens=96,99,416,45	ended=false	exact=false	firstEos=1.1925719E-4
+CASE	split=retention	step=0	id=retention-train-0071	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4218457E-4
+CASE	split=retention	step=0	id=retention-train-0073	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.2448578E-4
+CASE	split=retention	step=0	id=retention-train-0077	expected=2	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4942452E-4
+CASE	split=retention	step=0	id=retention-train-0084	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4789953E-4
+CASE	split=retention	step=0	id=retention-train-0089	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.418309E-4
+CASE	split=retention	step=0	id=retention-train-0090	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4215855E-4
+CASE	split=retention	step=0	id=retention-train-0091	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.432148E-4
+CASE	split=retention	step=0	id=retention-train-0094	expected=1	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3791217E-4
+CASE	split=retention	step=0	id=retention-train-0095	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6348611E-4
+CASE	split=retention	step=0	id=retention-train-0096	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4115675E-4
+CASE	split=retention	step=0	id=retention-train-0097	expected=2	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.5009003E-4
+CASE	split=retention	step=0	id=retention-train-0100	expected=1	predictedRestricted=1	tokens=45,32,81,499	ended=false	exact=false	firstEos=1.3518916E-4
+CASE	split=retention	step=0	id=retention-train-0101	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.2470543E-4
+CASE	split=retention	step=0	id=retention-train-0105	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.41908E-4
+CASE	split=retention	step=0	id=retention-train-0108	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4134015E-4
+CASE	split=retention	step=0	id=retention-train-0110	expected=1	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.3853436E-4
+CASE	split=retention	step=0	id=retention-train-0113	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.4026981E-4
+CASE	split=retention	step=0	id=retention-train-0117	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5572215E-4
+CASE	split=retention	step=0	id=retention-train-0118	expected=2	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.5159062E-4
+CASE	split=retention	step=0	id=retention-train-0119	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.5735294E-4
+CASE	split=retention	step=0	id=retention-train-0121	expected=1	predictedRestricted=2	tokens=45,278,97,366	ended=false	exact=false	firstEos=1.473338E-4
+CASE	split=retention	step=0	id=retention-train-0124	expected=2	predictedRestricted=2	tokens=45,278,60,104	ended=false	exact=false	firstEos=1.6465594E-4
+SCORE	split=retention	step=0	exact=0	total=64	restrictedCorrect=32	answerNll=3.8890092361842594	prematureEos=0
+RETENTION	step=0	bpb=2.801409006940589	bytes=853
+CAPACITY	step=0	id=0	tokens=7	eos=true
+CAPACITY	step=0	id=1	tokens=4	eos=true
+CAPACITY	step=0	id=2	tokens=32	eos=false
+CAPACITY	step=0	id=3	tokens=32	eos=false
+SCHEDULE	step=1	answerIds=note-train-0076,note-train-0049,note-train-0017,note-train-0001	replayIndices=0,1
+UPDATE	step=1	answerLoss=6.524379730224609	replayWeightedLoss=0.38987311720848083	teacherKl=-1.0091405211465343E-9	gradientNorm=46.184191190289624
+SCHEDULE	step=2	answerIds=note-train-0068,note-train-0110,note-train-0040,note-train-0091	replayIndices=2,3
+UPDATE	step=2	answerLoss=6.426295280456543	replayWeightedLoss=0.3611334413290024	teacherKl=1.1787751645897515E-5	gradientNorm=47.26123555676811
+SCHEDULE	step=3	answerIds=note-train-0115,note-train-0037,note-train-0021,note-train-0030	replayIndices=4,5
+UPDATE	step=3	answerLoss=5.994260311126709	replayWeightedLoss=0.40620727837085724	teacherKl=1.4123221262707375E-4	gradientNorm=47.05632219313318
+SCHEDULE	step=4	answerIds=note-train-0125,note-train-0124,note-train-0078,note-train-0100	replayIndices=6,7
+UPDATE	step=4	answerLoss=5.542104959487915	replayWeightedLoss=0.3392475098371506	teacherKl=3.1294775544665754E-4	gradientNorm=46.27991434631018
+SCHEDULE	step=5	answerIds=note-train-0117,note-train-0014,note-train-0012,note-train-0122	replayIndices=8,9
+UPDATE	step=5	answerLoss=4.947526335716248	replayWeightedLoss=0.3690757602453232	teacherKl=0.0013222526176832616	gradientNorm=45.83328478879867
+SCHEDULE	step=6	answerIds=note-train-0125,note-train-0038,note-train-0077,note-train-0050	replayIndices=10,11
+UPDATE	step=6	answerLoss=4.450184881687164	replayWeightedLoss=0.3945503532886505	teacherKl=0.002523337840102613	gradientNorm=42.50437774862684
+SCHEDULE	step=7	answerIds=note-train-0082,note-train-0010,note-train-0053,note-train-0016	replayIndices=12,13
+UPDATE	step=7	answerLoss=3.8935317397117615	replayWeightedLoss=0.3555273115634918	teacherKl=0.004133475013077259	gradientNorm=36.01234176953186
+SCHEDULE	step=8	answerIds=note-train-0070,note-train-0081,note-train-0123,note-train-0112	replayIndices=14,15
+UPDATE	step=8	answerLoss=3.4551607370376587	replayWeightedLoss=0.31929147243499756	teacherKl=0.0047430796548724174	gradientNorm=31.23651994372927
+SCHEDULE	step=9	answerIds=note-train-0121,note-train-0094,note-train-0017,note-train-0017	replayIndices=0,1
+UPDATE	step=9	answerLoss=3.1137925386428833	replayWeightedLoss=0.3829791396856308	teacherKl=0.006586702540516853	gradientNorm=24.86529473067961
+SCHEDULE	step=10	answerIds=note-train-0035,note-train-0051,note-train-0116,note-train-0054	replayIndices=2,3
+UPDATE	step=10	answerLoss=2.8693398237228394	replayWeightedLoss=0.3557883948087692	teacherKl=0.008334400597959757	gradientNorm=20.623950502331304
+SCHEDULE	step=11	answerIds=note-train-0004,note-train-0026,note-train-0016,note-train-0043	replayIndices=4,5
+UPDATE	step=11	answerLoss=2.594885289669037	replayWeightedLoss=0.39731183648109436	teacherKl=0.013193522579967976	gradientNorm=17.69089343217407
+SCHEDULE	step=12	answerIds=note-train-0117,note-train-0031,note-train-0027,note-train-0040	replayIndices=6,7
+UPDATE	step=12	answerLoss=2.433845341205597	replayWeightedLoss=0.3326314240694046	teacherKl=0.009280127473175526	gradientNorm=16.24011388303713
+SCHEDULE	step=13	answerIds=note-train-0055,note-train-0007,note-train-0113,note-train-0003	replayIndices=8,9
+UPDATE	step=13	answerLoss=2.290428787469864	replayWeightedLoss=0.3636045604944229	teacherKl=0.014860067050904036	gradientNorm=15.02751052742991
+SCHEDULE	step=14	answerIds=note-train-0022,note-train-0051,note-train-0103,note-train-0100	replayIndices=10,11
+UPDATE	step=14	answerLoss=2.1671804785728455	replayWeightedLoss=0.3881653994321823	teacherKl=0.015687901992350817	gradientNorm=14.541731872744895
+SCHEDULE	step=15	answerIds=note-train-0096,note-train-0106,note-train-0015,note-train-0098	replayIndices=12,13
+UPDATE	step=15	answerLoss=2.0287013947963715	replayWeightedLoss=0.3513261526823044	teacherKl=0.018311397172510624	gradientNorm=13.778905505951865
+SCHEDULE	step=16	answerIds=note-train-0013,note-train-0072,note-train-0053,note-train-0056	replayIndices=14,15
+UPDATE	step=16	answerLoss=1.9169085621833801	replayWeightedLoss=0.31844839453697205	teacherKl=0.014444863889366388	gradientNorm=13.39046163384827
+SCHEDULE	step=17	answerIds=note-train-0076,note-train-0051,note-train-0059,note-train-0077	replayIndices=0,1
+UPDATE	step=17	answerLoss=1.8211229741573334	replayWeightedLoss=0.3790630102157593	teacherKl=0.01603792328387499	gradientNorm=12.881928054557964
+SCHEDULE	step=18	answerIds=note-train-0042,note-train-0042,note-train-0113,note-train-0093	replayIndices=2,3
+UPDATE	step=18	answerLoss=1.6659320294857025	replayWeightedLoss=0.35259367525577545	teacherKl=0.01660825777798891	gradientNorm=11.66613201237891
+SCHEDULE	step=19	answerIds=note-train-0076,note-train-0062,note-train-0017,note-train-0112	replayIndices=4,5
+UPDATE	step=19	answerLoss=1.5870730578899384	replayWeightedLoss=0.39222556352615356	teacherKl=0.01884475816041231	gradientNorm=11.561640202220342
+SCHEDULE	step=20	answerIds=note-train-0022,note-train-0062,note-train-0090,note-train-0017	replayIndices=6,7
+UPDATE	step=20	answerLoss=1.4893393218517303	replayWeightedLoss=0.32759609818458557	teacherKl=0.016569846775382757	gradientNorm=10.553855006445817
+SCHEDULE	step=21	answerIds=note-train-0033,note-train-0110,note-train-0113,note-train-0064	replayIndices=8,9
+UPDATE	step=21	answerLoss=1.4096234142780304	replayWeightedLoss=0.3610035628080368	teacherKl=0.020912209525704384	gradientNorm=9.941699724620127
+SCHEDULE	step=22	answerIds=note-train-0118,note-train-0118,note-train-0016,note-train-0126	replayIndices=10,11
+UPDATE	step=22	answerLoss=1.32639741897583	replayWeightedLoss=0.3827607184648514	teacherKl=0.020352804102003574	gradientNorm=9.357441767826181
+SCHEDULE	step=23	answerIds=note-train-0111,note-train-0038,note-train-0128,note-train-0032	replayIndices=12,13
+UPDATE	step=23	answerLoss=1.2481972873210907	replayWeightedLoss=0.34802067279815674	teacherKl=0.02297832816839218	gradientNorm=8.844365109783343
+SCHEDULE	step=24	answerIds=note-train-0005,note-train-0076,note-train-0001,note-train-0011	replayIndices=14,15
+UPDATE	step=24	answerLoss=1.1927488446235657	replayWeightedLoss=0.3159726709127426	teacherKl=0.017540205270051956	gradientNorm=8.35800217099579
+SCHEDULE	step=25	answerIds=note-train-0010,note-train-0099,note-train-0090,note-train-0001	replayIndices=0,1
+UPDATE	step=25	answerLoss=1.1116397678852081	replayWeightedLoss=0.3755101263523102	teacherKl=0.02052902150899172	gradientNorm=7.89719015350248
+SCHEDULE	step=26	answerIds=note-train-0060,note-train-0082,note-train-0114,note-train-0069	replayIndices=2,3
+UPDATE	step=26	answerLoss=1.073329672217369	replayWeightedLoss=0.3474522680044174	teacherKl=0.023644126020371914	gradientNorm=7.7068440001406096
+SCHEDULE	step=27	answerIds=note-train-0014,note-train-0023,note-train-0032,note-train-0020	replayIndices=4,5
+UPDATE	step=27	answerLoss=0.9979576468467712	replayWeightedLoss=0.38700494170188904	teacherKl=0.023894526064395905	gradientNorm=7.2056868277320785
+SCHEDULE	step=28	answerIds=note-train-0013,note-train-0106,note-train-0113,note-train-0112	replayIndices=6,7
+UPDATE	step=28	answerLoss=0.951595276594162	replayWeightedLoss=0.3237353712320328	teacherKl=0.023182117380201817	gradientNorm=6.968138080568483
+SCHEDULE	step=29	answerIds=note-train-0068,note-train-0052,note-train-0043,note-train-0077	replayIndices=8,9
+UPDATE	step=29	answerLoss=0.9094340205192566	replayWeightedLoss=0.35752154886722565	teacherKl=0.025715358555316925	gradientNorm=6.575979915244869
+SCHEDULE	step=30	answerIds=note-train-0038,note-train-0076,note-train-0020,note-train-0119	replayIndices=10,11
+UPDATE	step=30	answerLoss=0.8544342368841171	replayWeightedLoss=0.37760525941848755	teacherKl=0.025060873478651047	gradientNorm=6.115955924366572
+SCHEDULE	step=31	answerIds=note-train-0086,note-train-0089,note-train-0043,note-train-0059	replayIndices=12,13
+UPDATE	step=31	answerLoss=0.8450949192047119	replayWeightedLoss=0.3448389172554016	teacherKl=0.027349109761416912	gradientNorm=5.962421097583953
+SCHEDULE	step=32	answerIds=note-train-0068,note-train-0047,note-train-0025,note-train-0100	replayIndices=14,15
+UPDATE	step=32	answerLoss=0.7757014185190201	replayWeightedLoss=0.3117137849330902	teacherKl=0.021160823293030262	gradientNorm=5.440107423381589
+SCHEDULE	step=33	answerIds=note-train-0006,note-train-0094,note-train-0002,note-train-0064	replayIndices=0,1
+UPDATE	step=33	answerLoss=0.738833099603653	replayWeightedLoss=0.37162455916404724	teacherKl=0.025253990665078163	gradientNorm=5.000575967388757
+SCHEDULE	step=34	answerIds=note-train-0044,note-train-0062,note-train-0087,note-train-0120	replayIndices=2,3
+UPDATE	step=34	answerLoss=0.7121684104204178	replayWeightedLoss=0.3410057872533798	teacherKl=0.031275286339223385	gradientNorm=4.502956323434051
+SCHEDULE	step=35	answerIds=note-train-0075,note-train-0118,note-train-0098,note-train-0040	replayIndices=4,5
+UPDATE	step=35	answerLoss=0.6904848963022232	replayWeightedLoss=0.3798894137144089	teacherKl=0.028832603245973587	gradientNorm=4.003180352639598
+SCHEDULE	step=36	answerIds=note-train-0036,note-train-0022,note-train-0074,note-train-0016	replayIndices=6,7
+UPDATE	step=36	answerLoss=0.6634540855884552	replayWeightedLoss=0.3214932829141617	teacherKl=0.025865774601697922	gradientNorm=3.8659424019609663
+SCHEDULE	step=37	answerIds=note-train-0083,note-train-0102,note-train-0027,note-train-0087	replayIndices=8,9
+UPDATE	step=37	answerLoss=0.6373559087514877	replayWeightedLoss=0.35297316312789917	teacherKl=0.02834588009864092	gradientNorm=3.5062832949186062
+SCHEDULE	step=38	answerIds=note-train-0041,note-train-0036,note-train-0046,note-train-0067	replayIndices=10,11
+UPDATE	step=38	answerLoss=0.6177246868610382	replayWeightedLoss=0.3725484311580658	teacherKl=0.02844402100890875	gradientNorm=3.3594268187839003
+SCHEDULE	step=39	answerIds=note-train-0023,note-train-0117,note-train-0030,note-train-0017	replayIndices=12,13
+UPDATE	step=39	answerLoss=0.5948471277952194	replayWeightedLoss=0.34069229662418365	teacherKl=0.03013809211552143	gradientNorm=3.472003147208111
+SCHEDULE	step=40	answerIds=note-train-0014,note-train-0105,note-train-0056,note-train-0107	replayIndices=14,15
+UPDATE	step=40	answerLoss=0.5835043489933014	replayWeightedLoss=0.3071097284555435	teacherKl=0.024264508858323097	gradientNorm=3.218159080770331
+SCHEDULE	step=41	answerIds=note-train-0041,note-train-0047,note-train-0058,note-train-0113	replayIndices=0,1
+UPDATE	step=41	answerLoss=0.5581452995538712	replayWeightedLoss=0.3678576499223709	teacherKl=0.02736869640648365	gradientNorm=3.0339857490754287
+SCHEDULE	step=42	answerIds=note-train-0014,note-train-0049,note-train-0040,note-train-0100	replayIndices=2,3
+UPDATE	step=42	answerLoss=0.5392125695943832	replayWeightedLoss=0.3361855745315552	teacherKl=0.03469624184072018	gradientNorm=3.009417829245522
+SCHEDULE	step=43	answerIds=note-train-0031,note-train-0118,note-train-0091,note-train-0074	replayIndices=4,5
+UPDATE	step=43	answerLoss=0.5368458777666092	replayWeightedLoss=0.37276099622249603	teacherKl=0.03148013539612293	gradientNorm=2.6588263880627867
+SCHEDULE	step=44	answerIds=note-train-0089,note-train-0096,note-train-0073,note-train-0021	replayIndices=6,7
+UPDATE	step=44	answerLoss=0.5383217185735703	replayWeightedLoss=0.31841202080249786	teacherKl=0.026728670112788677	gradientNorm=2.3002741179771173
+SCHEDULE	step=45	answerIds=note-train-0057,note-train-0086,note-train-0012,note-train-0093	replayIndices=8,9
+UPDATE	step=45	answerLoss=0.5264054834842682	replayWeightedLoss=0.3486342430114746	teacherKl=0.02833231259137392	gradientNorm=2.2154663428044508
+SCHEDULE	step=46	answerIds=note-train-0005,note-train-0125,note-train-0054,note-train-0114	replayIndices=10,11
+UPDATE	step=46	answerLoss=0.5142617076635361	replayWeightedLoss=0.36684001982212067	teacherKl=0.0294790156185627	gradientNorm=2.12744540071067
+SCHEDULE	step=47	answerIds=note-train-0095,note-train-0086,note-train-0090,note-train-0020	replayIndices=12,13
+UPDATE	step=47	answerLoss=0.48648352921009064	replayWeightedLoss=0.3354692906141281	teacherKl=0.03037024848163128	gradientNorm=1.9461691401027814
+SCHEDULE	step=48	answerIds=note-train-0013,note-train-0033,note-train-0020,note-train-0116	replayIndices=14,15
+UPDATE	step=48	answerLoss=0.4751909077167511	replayWeightedLoss=0.30255888402462006	teacherKl=0.025175265036523342	gradientNorm=2.003564725848369
+SCHEDULE	step=49	answerIds=note-train-0037,note-train-0118,note-train-0053,note-train-0093	replayIndices=0,1
+UPDATE	step=49	answerLoss=0.4744904413819313	replayWeightedLoss=0.3632045388221741	teacherKl=0.027805130928754807	gradientNorm=1.9806723441105096
+SCHEDULE	step=50	answerIds=note-train-0104,note-train-0035,note-train-0078,note-train-0126	replayIndices=2,3
+UPDATE	step=50	answerLoss=0.484603576362133	replayWeightedLoss=0.3326956033706665	teacherKl=0.03250676207244396	gradientNorm=1.8357286636198216
+SCHEDULE	step=51	answerIds=note-train-0089,note-train-0121,note-train-0020,note-train-0091	replayIndices=4,5
+UPDATE	step=51	answerLoss=0.45288243889808655	replayWeightedLoss=0.36621227860450745	teacherKl=0.030887341126799583	gradientNorm=2.0083975894458814
+SCHEDULE	step=52	answerIds=note-train-0127,note-train-0115,note-train-0098,note-train-0048	replayIndices=6,7
+UPDATE	step=52	answerLoss=0.479380801320076	replayWeightedLoss=0.31370340287685394	teacherKl=0.02615457121282816	gradientNorm=1.6763567959512737
+SCHEDULE	step=53	answerIds=note-train-0037,note-train-0005,note-train-0048,note-train-0015	replayIndices=8,9
+UPDATE	step=53	answerLoss=0.4654883146286011	replayWeightedLoss=0.3439474403858185	teacherKl=0.02738430630415678	gradientNorm=1.76990602201601
+SCHEDULE	step=54	answerIds=note-train-0105,note-train-0121,note-train-0016,note-train-0080	replayIndices=10,11
+UPDATE	step=54	answerLoss=0.4316682368516922	replayWeightedLoss=0.35981449484825134	teacherKl=0.028839572332799435	gradientNorm=1.8521597750943197
+SCHEDULE	step=55	answerIds=note-train-0022,note-train-0044,note-train-0090,note-train-0101	replayIndices=12,13
+UPDATE	step=55	answerLoss=0.4459844082593918	replayWeightedLoss=0.3294699788093567	teacherKl=0.029251894913613796	gradientNorm=1.5668969294784725
+SCHEDULE	step=56	answerIds=note-train-0033,note-train-0095,note-train-0107,note-train-0061	replayIndices=14,15
+UPDATE	step=56	answerLoss=0.42516903579235077	replayWeightedLoss=0.29789556562900543	teacherKl=0.024636484682559967	gradientNorm=1.5214109571234296
+SCHEDULE	step=57	answerIds=note-train-0010,note-train-0095,note-train-0012,note-train-0128	replayIndices=0,1
+UPDATE	step=57	answerLoss=0.4395395815372467	replayWeightedLoss=0.35804687440395355	teacherKl=0.027046779170632362	gradientNorm=1.6498654524826442
+SCHEDULE	step=58	answerIds=note-train-0105,note-train-0049,note-train-0100,note-train-0012	replayIndices=2,3
+UPDATE	step=58	answerLoss=0.40705834329128265	replayWeightedLoss=0.32814785838127136	teacherKl=0.03028070740401745	gradientNorm=1.608953270939402
+SCHEDULE	step=59	answerIds=note-train-0006,note-train-0083,note-train-0032,note-train-0120	replayIndices=4,5
+UPDATE	step=59	answerLoss=0.42831268161535263	replayWeightedLoss=0.3602219969034195	teacherKl=0.02993463445454836	gradientNorm=1.7683955414859571
+SCHEDULE	step=60	answerIds=note-train-0037,note-train-0099,note-train-0077,note-train-0119	replayIndices=6,7
+UPDATE	step=60	answerLoss=0.41493333131074905	replayWeightedLoss=0.30836498737335205	teacherKl=0.025839131325483322	gradientNorm=1.374893107165136
+SCHEDULE	step=61	answerIds=note-train-0081,note-train-0052,note-train-0001,note-train-0008	replayIndices=8,9
+UPDATE	step=61	answerLoss=0.42757677286863327	replayWeightedLoss=0.3390798270702362	teacherKl=0.027133679017424583	gradientNorm=1.277537099461991
+SCHEDULE	step=62	answerIds=note-train-0121,note-train-0117,note-train-0077,note-train-0114	replayIndices=10,11
+UPDATE	step=62	answerLoss=0.4003198593854904	replayWeightedLoss=0.35384340584278107	teacherKl=0.02849835716187954	gradientNorm=1.6197472728128417
+SCHEDULE	step=63	answerIds=note-train-0102,note-train-0060,note-train-0032,note-train-0100	replayIndices=12,13
+UPDATE	step=63	answerLoss=0.39780957251787186	replayWeightedLoss=0.32455794513225555	teacherKl=0.028172648511826992	gradientNorm=1.4623353163791364
+SCHEDULE	step=64	answerIds=note-train-0089,note-train-0037,note-train-0074,note-train-0116	replayIndices=14,15
+UPDATE	step=64	answerLoss=0.4097707271575928	replayWeightedLoss=0.29380154609680176	teacherKl=0.023845309391617775	gradientNorm=1.2921564925332802
+SCHEDULE	step=65	answerIds=note-train-0055,note-train-0057,note-train-0025,note-train-0058	replayIndices=0,1
+UPDATE	step=65	answerLoss=0.4086056128144264	replayWeightedLoss=0.3536053001880646	teacherKl=0.02643038146197796	gradientNorm=1.3653393364347166
+SCHEDULE	step=66	answerIds=note-train-0044,note-train-0075,note-train-0122,note-train-0065	replayIndices=2,3
+UPDATE	step=66	answerLoss=0.4200109466910362	replayWeightedLoss=0.32396793365478516	teacherKl=0.02905147336423397	gradientNorm=1.4961715898772554
+SCHEDULE	step=67	answerIds=note-train-0076,note-train-0072,note-train-0069,note-train-0114	replayIndices=4,5
+UPDATE	step=67	answerLoss=0.43897443264722824	replayWeightedLoss=0.35495875775814056	teacherKl=0.03000689297914505	gradientNorm=1.550866874944294
+SCHEDULE	step=68	answerIds=note-train-0033,note-train-0022,note-train-0003,note-train-0116	replayIndices=6,7
+UPDATE	step=68	answerLoss=0.3908412754535675	replayWeightedLoss=0.3040057271718979	teacherKl=0.025534000247716904	gradientNorm=1.764437599357099
+SCHEDULE	step=69	answerIds=note-train-0044,note-train-0072,note-train-0053,note-train-0054	replayIndices=8,9
+UPDATE	step=69	answerLoss=0.39621449261903763	replayWeightedLoss=0.3348289430141449	teacherKl=0.02651553601026535	gradientNorm=1.8612403856741968
+SCHEDULE	step=70	answerIds=note-train-0024,note-train-0121,note-train-0091,note-train-0018	replayIndices=10,11
+UPDATE	step=70	answerLoss=0.3787725493311882	replayWeightedLoss=0.34903471171855927	teacherKl=0.028108151629567146	gradientNorm=1.7150949233316426
+SCHEDULE	step=71	answerIds=note-train-0052,note-train-0081,note-train-0092,note-train-0002	replayIndices=12,13
+UPDATE	step=71	answerLoss=0.4036603346467018	replayWeightedLoss=0.321029394865036	teacherKl=0.027232502587139606	gradientNorm=1.3153365179976084
+SCHEDULE	step=72	answerIds=note-train-0086,note-train-0118,note-train-0059,note-train-0073	replayIndices=14,15
+UPDATE	step=72	answerLoss=0.42608654499053955	replayWeightedLoss=0.2900114208459854	teacherKl=0.023161506280303	gradientNorm=1.9062730891029995
+SCHEDULE	step=73	answerIds=note-train-0110,note-train-0088,note-train-0059,note-train-0101	replayIndices=0,1
+UPDATE	step=73	answerLoss=0.40233398973941803	replayWeightedLoss=0.3501858413219452	teacherKl=0.025515040382742882	gradientNorm=1.4926486479562937
+SCHEDULE	step=74	answerIds=note-train-0099,note-train-0028,note-train-0008,note-train-0050	replayIndices=2,3
+UPDATE	step=74	answerLoss=0.37600505352020264	replayWeightedLoss=0.3209230601787567	teacherKl=0.027832175604999065	gradientNorm=1.7965520963490305
+SCHEDULE	step=75	answerIds=note-train-0033,note-train-0127,note-train-0064,note-train-0077	replayIndices=4,5
+UPDATE	step=75	answerLoss=0.3907768875360489	replayWeightedLoss=0.351883128285408	teacherKl=0.028773177415132523	gradientNorm=1.184855264306779
+SCHEDULE	step=76	answerIds=note-train-0026,note-train-0079,note-train-0021,note-train-0050	replayIndices=6,7
+UPDATE	step=76	answerLoss=0.43239056318998337	replayWeightedLoss=0.3016021102666855	teacherKl=0.025024613365530968	gradientNorm=1.87592112534829
+SCHEDULE	step=77	answerIds=note-train-0118,note-train-0075,note-train-0071,note-train-0029	replayIndices=8,9
+UPDATE	step=77	answerLoss=0.39625832438468933	replayWeightedLoss=0.3325260430574417	teacherKl=0.025871269404888153	gradientNorm=1.0139718711942791
+SCHEDULE	step=78	answerIds=note-train-0097,note-train-0031,note-train-0018,note-train-0101	replayIndices=10,11
+UPDATE	step=78	answerLoss=0.3641362860798836	replayWeightedLoss=0.34567923843860626	teacherKl=0.027750013396143913	gradientNorm=1.6026846389135159
+SCHEDULE	step=79	answerIds=note-train-0124,note-train-0125,note-train-0029,note-train-0002	replayIndices=12,13
+UPDATE	step=79	answerLoss=0.4216281399130821	replayWeightedLoss=0.31831513345241547	teacherKl=0.026516234502196312	gradientNorm=1.8436780222698355
+SCHEDULE	step=80	answerIds=note-train-0124,note-train-0076,note-train-0008,note-train-0120	replayIndices=14,15
+UPDATE	step=80	answerLoss=0.39913100004196167	replayWeightedLoss=0.2880912870168686	teacherKl=0.02277000993490219	gradientNorm=2.030742238496077
+SCHEDULE	step=81	answerIds=note-train-0052,note-train-0063,note-train-0050,note-train-0103	replayIndices=0,1
+UPDATE	step=81	answerLoss=0.3695289194583893	replayWeightedLoss=0.3477219343185425	teacherKl=0.024861752055585384	gradientNorm=1.9901672731326758
+SCHEDULE	step=82	answerIds=note-train-0005,note-train-0063,note-train-0112,note-train-0098	replayIndices=2,3
+UPDATE	step=82	answerLoss=0.3823007345199585	replayWeightedLoss=0.3188733160495758	teacherKl=0.02709660306572914	gradientNorm=1.7509928647237527
+SCHEDULE	step=83	answerIds=note-train-0060,note-train-0088,note-train-0046,note-train-0120	replayIndices=4,5
+UPDATE	step=83	answerLoss=0.41456400603055954	replayWeightedLoss=0.3476940840482712	teacherKl=0.02856325451284647	gradientNorm=1.478706519751681
+SCHEDULE	step=84	answerIds=note-train-0060,note-train-0088,note-train-0113,note-train-0087	replayIndices=6,7
+UPDATE	step=84	answerLoss=0.39588160067796707	replayWeightedLoss=0.3000488579273224	teacherKl=0.024874611757695675	gradientNorm=1.4184616715397163
+SCHEDULE	step=85	answerIds=note-train-0108,note-train-0057,note-train-0100,note-train-0039	replayIndices=8,9
+UPDATE	step=85	answerLoss=0.41472723335027695	replayWeightedLoss=0.3296968638896942	teacherKl=0.02539509069174528	gradientNorm=1.798410614758257
+SCHEDULE	step=86	answerIds=note-train-0088,note-train-0044,note-train-0074,note-train-0091	replayIndices=10,11
+UPDATE	step=86	answerLoss=0.3844255432486534	replayWeightedLoss=0.34297795593738556	teacherKl=0.02746299561113119	gradientNorm=1.6510564299085875
+SCHEDULE	step=87	answerIds=note-train-0105,note-train-0088,note-train-0017,note-train-0077	replayIndices=12,13
+UPDATE	step=87	answerLoss=0.3718954995274544	replayWeightedLoss=0.31648460030555725	teacherKl=0.026057437993586063	gradientNorm=1.6481819964996545
+SCHEDULE	step=88	answerIds=note-train-0035,note-train-0115,note-train-0071,note-train-0048	replayIndices=14,15
+UPDATE	step=88	answerLoss=0.436554990708828	replayWeightedLoss=0.2868906706571579	teacherKl=0.022573107853531837	gradientNorm=2.4423421391555973
+SCHEDULE	step=89	answerIds=note-train-0070,note-train-0051,note-train-0126,note-train-0074	replayIndices=0,1
+UPDATE	step=89	answerLoss=0.38678882271051407	replayWeightedLoss=0.3462814390659332	teacherKl=0.024356740526854992	gradientNorm=1.7144184725776237
+SCHEDULE	step=90	answerIds=note-train-0115,note-train-0060,note-train-0107,note-train-0090	replayIndices=2,3
+UPDATE	step=90	answerLoss=0.3991885334253311	replayWeightedLoss=0.3172846585512161	teacherKl=0.02660533506423235	gradientNorm=1.5914050474092636
+SCHEDULE	step=91	answerIds=note-train-0068,note-train-0038,note-train-0123,note-train-0040	replayIndices=4,5
+UPDATE	step=91	answerLoss=0.41153791546821594	replayWeightedLoss=0.34554584324359894	teacherKl=0.02813272550702095	gradientNorm=1.4543582479368617
+SCHEDULE	step=92	answerIds=note-train-0086,note-train-0049,note-train-0112,note-train-0119	replayIndices=6,7
+UPDATE	step=92	answerLoss=0.3492616266012192	replayWeightedLoss=0.2985401898622513	teacherKl=0.024613440968096256	gradientNorm=1.9602507227728518
+SCHEDULE	step=93	answerIds=note-train-0125,note-train-0036,note-train-0040,note-train-0092	replayIndices=8,9
+UPDATE	step=93	answerLoss=0.3949980363249779	replayWeightedLoss=0.3282795548439026	teacherKl=0.02498988527804613	gradientNorm=1.870443140349797
+SCHEDULE	step=94	answerIds=note-train-0111,note-train-0099,note-train-0077,note-train-0027	replayIndices=10,11
+UPDATE	step=94	answerLoss=0.364501528441906	replayWeightedLoss=0.3407559096813202	teacherKl=0.027355493046343327	gradientNorm=2.6258119478785584
+SCHEDULE	step=95	answerIds=note-train-0036,note-train-0041,note-train-0046,note-train-0078	replayIndices=12,13
+UPDATE	step=95	answerLoss=0.36889199912548065	replayWeightedLoss=0.31504805386066437	teacherKl=0.025791848078370094	gradientNorm=2.364826209840996
+SCHEDULE	step=96	answerIds=note-train-0055,note-train-0010,note-train-0101,note-train-0020	replayIndices=14,15
+UPDATE	step=96	answerLoss=0.3986941799521446	replayWeightedLoss=0.28595881164073944	teacherKl=0.022641905583441257	gradientNorm=1.8251478469085178
+SCHEDULE	step=97	answerIds=note-train-0079,note-train-0047,note-train-0091,note-train-0059	replayIndices=0,1
+UPDATE	step=97	answerLoss=0.3708308935165405	replayWeightedLoss=0.34505896270275116	teacherKl=0.0241567837074399	gradientNorm=1.7350374156621782
+SCHEDULE	step=98	answerIds=note-train-0057,note-train-0036,note-train-0065,note-train-0064	replayIndices=2,3
+UPDATE	step=98	answerLoss=0.35844726115465164	replayWeightedLoss=0.3160621076822281	teacherKl=0.026245401240885258	gradientNorm=1.6260873385622292
+SCHEDULE	step=99	answerIds=note-train-0076,note-train-0096,note-train-0126,note-train-0120	replayIndices=4,5
+UPDATE	step=99	answerLoss=0.38322415202856064	replayWeightedLoss=0.3440391719341278	teacherKl=0.027934759855270386	gradientNorm=1.8738750563718554
+SCHEDULE	step=100	answerIds=note-train-0028,note-train-0049,note-train-0100,note-train-0069	replayIndices=6,7
+UPDATE	step=100	answerLoss=0.3234679400920868	replayWeightedLoss=0.2977043390274048	teacherKl=0.02432191465049982	gradientNorm=1.967987114101392
+SCHEDULE	step=101	answerIds=note-train-0079,note-train-0076,note-train-0101,note-train-0074	replayIndices=8,9
+UPDATE	step=101	answerLoss=0.39844368398189545	replayWeightedLoss=0.32737234234809875	teacherKl=0.024844947271049023	gradientNorm=2.897848518793633
+SCHEDULE	step=102	answerIds=note-train-0006,note-train-0063,note-train-0059,note-train-0064	replayIndices=10,11
+UPDATE	step=102	answerLoss=0.3403133526444435	replayWeightedLoss=0.33963774144649506	teacherKl=0.027325560338795185	gradientNorm=1.7850068497034277
+SCHEDULE	step=103	answerIds=note-train-0037,note-train-0060,note-train-0078,note-train-0123	replayIndices=12,13
+UPDATE	step=103	answerLoss=0.3573007881641388	replayWeightedLoss=0.31417419016361237	teacherKl=0.02575879730284214	gradientNorm=1.5605390075971814
+SCHEDULE	step=104	answerIds=note-train-0070,note-train-0063,note-train-0109,note-train-0045	replayIndices=14,15
+UPDATE	step=104	answerLoss=0.3234216272830963	replayWeightedLoss=0.2852009981870651	teacherKl=0.022631444036960602	gradientNorm=1.9052965481527047
+SCHEDULE	step=105	answerIds=note-train-0097,note-train-0033,note-train-0029,note-train-0067	replayIndices=0,1
+UPDATE	step=105	answerLoss=0.307047002017498	replayWeightedLoss=0.3441403955221176	teacherKl=0.024076266214251518	gradientNorm=2.462632403431883
+SCHEDULE	step=106	answerIds=note-train-0022,note-train-0033,note-train-0092,note-train-0107	replayIndices=2,3
+UPDATE	step=106	answerLoss=0.3217526078224182	replayWeightedLoss=0.31510157883167267	teacherKl=0.026132444851100445	gradientNorm=1.6602795927134968
+SCHEDULE	step=107	answerIds=note-train-0127,note-train-0052,note-train-0011,note-train-0039	replayIndices=4,5
+UPDATE	step=107	answerLoss=0.38170861452817917	replayWeightedLoss=0.3431133031845093	teacherKl=0.027872891165316105	gradientNorm=1.7322043696079648
+SCHEDULE	step=108	answerIds=note-train-0089,note-train-0124,note-train-0128,note-train-0046	replayIndices=6,7
+UPDATE	step=108	answerLoss=0.4109823629260063	replayWeightedLoss=0.2971382290124893	teacherKl=0.02426560502499342	gradientNorm=1.8562520762366073
+SCHEDULE	step=109	answerIds=note-train-0111,note-train-0041,note-train-0069,note-train-0058	replayIndices=8,9
+UPDATE	step=109	answerLoss=0.3253393694758415	replayWeightedLoss=0.32696202397346497	teacherKl=0.024908272549510002	gradientNorm=1.9027170841172978
+SCHEDULE	step=110	answerIds=note-train-0036,note-train-0014,note-train-0112,note-train-0120	replayIndices=10,11
+UPDATE	step=110	answerLoss=0.34164324402809143	replayWeightedLoss=0.33867616951465607	teacherKl=0.0274296123534441	gradientNorm=2.0683259502288065
+SCHEDULE	step=111	answerIds=note-train-0079,note-train-0044,note-train-0103,note-train-0050	replayIndices=12,13
+UPDATE	step=111	answerLoss=0.3764931261539459	replayWeightedLoss=0.3135627508163452	teacherKl=0.02577259298413992	gradientNorm=2.496778909790721
+SCHEDULE	step=112	answerIds=note-train-0088,note-train-0014,note-train-0046,note-train-0021	replayIndices=14,15
+UPDATE	step=112	answerLoss=0.4025198370218277	replayWeightedLoss=0.28462672233581543	teacherKl=0.022704380564391613	gradientNorm=2.241075567771608
+SCHEDULE	step=113	answerIds=note-train-0037,note-train-0007,note-train-0074,note-train-0018	replayIndices=0,1
+UPDATE	step=113	answerLoss=0.3119515925645828	replayWeightedLoss=0.3436380624771118	teacherKl=0.024103276431560516	gradientNorm=1.8190255978553023
+SCHEDULE	step=114	answerIds=note-train-0035,note-train-0024,note-train-0018,note-train-0021	replayIndices=2,3
+UPDATE	step=114	answerLoss=0.3672224059700966	replayWeightedLoss=0.31433747708797455	teacherKl=0.026143642142415047	gradientNorm=2.4776306562654695
+SCHEDULE	step=115	answerIds=note-train-0072,note-train-0023,note-train-0067,note-train-0001	replayIndices=4,5
+UPDATE	step=115	answerLoss=0.3634352684020996	replayWeightedLoss=0.34255172312259674	teacherKl=0.027882122434675694	gradientNorm=1.6083177886180713
+SCHEDULE	step=116	answerIds=note-train-0099,note-train-0079,note-train-0001,note-train-0030	replayIndices=6,7
+UPDATE	step=116	answerLoss=0.33675888925790787	replayWeightedLoss=0.2967016249895096	teacherKl=0.024309569038450718	gradientNorm=2.1827977073926217
+SCHEDULE	step=117	answerIds=note-train-0052,note-train-0049,note-train-0071,note-train-0107	replayIndices=8,9
+UPDATE	step=117	answerLoss=0.3097114786505699	replayWeightedLoss=0.32658880949020386	teacherKl=0.025059334002435207	gradientNorm=1.9025704414001463
+SCHEDULE	step=118	answerIds=note-train-0038,note-train-0023,note-train-0058,note-train-0027	replayIndices=10,11
+UPDATE	step=118	answerLoss=0.37029845267534256	replayWeightedLoss=0.33807338774204254	teacherKl=0.02754082251340151	gradientNorm=1.9654185484051145
+SCHEDULE	step=119	answerIds=note-train-0115,note-train-0083,note-train-0109,note-train-0112	replayIndices=12,13
+UPDATE	step=119	answerLoss=0.3674742132425308	replayWeightedLoss=0.31325484812259674	teacherKl=0.0258644986897707	gradientNorm=3.0081817202927006
+SCHEDULE	step=120	answerIds=note-train-0117,note-train-0010,note-train-0020,note-train-0025	replayIndices=14,15
+UPDATE	step=120	answerLoss=0.3453182652592659	replayWeightedLoss=0.2842769920825958	teacherKl=0.022780039347708225	gradientNorm=1.7335472831593373
+SCHEDULE	step=121	answerIds=note-train-0009,note-train-0125,note-train-0002,note-train-0116	replayIndices=0,1
+UPDATE	step=121	answerLoss=0.3808954954147339	replayWeightedLoss=0.34313739836215973	teacherKl=0.02419933769851923	gradientNorm=1.9933236185250576
+SCHEDULE	step=122	answerIds=note-train-0005,note-train-0070,note-train-0093,note-train-0015	replayIndices=2,3
+UPDATE	step=122	answerLoss=0.40293025970458984	replayWeightedLoss=0.31392495334148407	teacherKl=0.026219729334115982	gradientNorm=2.657570650795119
+SCHEDULE	step=123	answerIds=note-train-0095,note-train-0014,note-train-0120,note-train-0016	replayIndices=4,5
+UPDATE	step=123	answerLoss=0.33790865540504456	replayWeightedLoss=0.3420095890760422	teacherKl=0.02800559811294079	gradientNorm=2.083957953759433
+SCHEDULE	step=124	answerIds=note-train-0089,note-train-0005,note-train-0100,note-train-0090	replayIndices=6,7
+UPDATE	step=124	answerLoss=0.39320265501737595	replayWeightedLoss=0.2964077442884445	teacherKl=0.024358507245779037	gradientNorm=2.2379466744514964
+SCHEDULE	step=125	answerIds=note-train-0108,note-train-0052,note-train-0056,note-train-0109	replayIndices=8,9
+UPDATE	step=125	answerLoss=0.3446587286889553	replayWeightedLoss=0.32625071704387665	teacherKl=0.025187303312122822	gradientNorm=2.4454009878757548
+SCHEDULE	step=126	answerIds=note-train-0084,note-train-0057,note-train-0050,note-train-0056	replayIndices=10,11
+UPDATE	step=126	answerLoss=0.381786584854126	replayWeightedLoss=0.3375729024410248	teacherKl=0.027614622376859188	gradientNorm=1.8791430202392316
+SCHEDULE	step=127	answerIds=note-train-0095,note-train-0026,note-train-0015,note-train-0074	replayIndices=12,13
+UPDATE	step=127	answerLoss=0.38154633343219757	replayWeightedLoss=0.3130297064781189	teacherKl=0.025955986231565475	gradientNorm=2.2543267692660454
+SCHEDULE	step=128	answerIds=note-train-0088,note-train-0111,note-train-0067,note-train-0056	replayIndices=14,15
+UPDATE	step=128	answerLoss=0.3492221496999264	replayWeightedLoss=0.28388336300849915	teacherKl=0.022828285582363605	gradientNorm=1.5003981122513257
+CHECKPOINT	sha256=e6b8c2853319d7265bd50e79a3e8ece4b95ff25a3ac8822d1b1b4f0127102069	bytes=529624
+CASE	split=dev	step=128	id=note-dev-0001	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.3291527E-4
+CASE	split=dev	step=128	id=note-dev-0002	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=1.2135561E-4
+CASE	split=dev	step=128	id=note-dev-0003	expected=3	predictedRestricted=3	tokens=51	ended=true	exact=true	firstEos=2.9632658E-5
+CASE	split=dev	step=128	id=note-dev-0004	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=5.6398912E-5
+CASE	split=dev	step=128	id=note-dev-0005	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.189663E-5
+CASE	split=dev	step=128	id=note-dev-0006	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=5.6424895E-5
+CASE	split=dev	step=128	id=note-dev-0007	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.753165E-5
+CASE	split=dev	step=128	id=note-dev-0008	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.637389E-5
+CASE	split=dev	step=128	id=note-dev-0009	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=6.779074E-5
+CASE	split=dev	step=128	id=note-dev-0010	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=1.2721289E-4
+CASE	split=dev	step=128	id=note-dev-0011	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=1.2239288E-4
+CASE	split=dev	step=128	id=note-dev-0012	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=5.6418132E-5
+CASE	split=dev	step=128	id=note-dev-0013	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=3.5528345E-5
+CASE	split=dev	step=128	id=note-dev-0014	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.170491E-5
+CASE	split=dev	step=128	id=note-dev-0015	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.3209347E-4
+CASE	split=dev	step=128	id=note-dev-0016	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=7.3812866E-5
+CASE	split=dev	step=128	id=note-dev-0017	expected=0	predictedRestricted=3	tokens=51	ended=true	exact=false	firstEos=3.14722E-5
+CASE	split=dev	step=128	id=note-dev-0018	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=6.779147E-5
+CASE	split=dev	step=128	id=note-dev-0019	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.6416608E-5
+CASE	split=dev	step=128	id=note-dev-0020	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.0511435E-4
+CASE	split=dev	step=128	id=note-dev-0021	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.750507E-5
+CASE	split=dev	step=128	id=note-dev-0022	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=1.3080155E-4
+CASE	split=dev	step=128	id=note-dev-0023	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.636851E-5
+CASE	split=dev	step=128	id=note-dev-0024	expected=3	predictedRestricted=3	tokens=51	ended=true	exact=true	firstEos=3.6359466E-5
+CASE	split=dev	step=128	id=note-dev-0025	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.0629082E-4
+CASE	split=dev	step=128	id=note-dev-0026	expected=3	predictedRestricted=3	tokens=51	ended=true	exact=true	firstEos=2.9813626E-5
+CASE	split=dev	step=128	id=note-dev-0027	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.313042E-4
+CASE	split=dev	step=128	id=note-dev-0028	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.138428E-5
+CASE	split=dev	step=128	id=note-dev-0029	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.2506696E-4
+CASE	split=dev	step=128	id=note-dev-0030	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=6.7758374E-5
+CASE	split=dev	step=128	id=note-dev-0031	expected=3	predictedRestricted=3	tokens=51	ended=true	exact=true	firstEos=3.6464633E-5
+CASE	split=dev	step=128	id=note-dev-0032	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=7.303581E-5
+CASE	split=dev	step=128	id=note-dev-0033	expected=0	predictedRestricted=3	tokens=51	ended=true	exact=false	firstEos=3.160417E-5
+CASE	split=dev	step=128	id=note-dev-0034	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.153742E-5
+CASE	split=dev	step=128	id=note-dev-0035	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.324696E-4
+CASE	split=dev	step=128	id=note-dev-0036	expected=3	predictedRestricted=3	tokens=51	ended=true	exact=true	firstEos=3.0663796E-5
+CASE	split=dev	step=128	id=note-dev-0037	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.4031534E-5
+CASE	split=dev	step=128	id=note-dev-0038	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.2732629E-4
+CASE	split=dev	step=128	id=note-dev-0039	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.97629E-5
+CASE	split=dev	step=128	id=note-dev-0040	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=3.568135E-5
+CASE	split=dev	step=128	id=note-dev-0041	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.2182684E-5
+CASE	split=dev	step=128	id=note-dev-0042	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.7749934E-5
+CASE	split=dev	step=128	id=note-dev-0043	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.287471E-5
+CASE	split=dev	step=128	id=note-dev-0044	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=6.0217364E-5
+CASE	split=dev	step=128	id=note-dev-0045	expected=0	predictedRestricted=3	tokens=51	ended=true	exact=false	firstEos=3.166211E-5
+CASE	split=dev	step=128	id=note-dev-0046	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=7.30216E-5
+CASE	split=dev	step=128	id=note-dev-0047	expected=3	predictedRestricted=3	tokens=51	ended=true	exact=true	firstEos=3.130894E-5
+CASE	split=dev	step=128	id=note-dev-0048	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.6398447E-5
+CASE	split=dev	step=128	id=note-dev-0049	expected=3	predictedRestricted=3	tokens=51	ended=true	exact=true	firstEos=3.9899798E-5
+CASE	split=dev	step=128	id=note-dev-0050	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=7.304873E-5
+CASE	split=dev	step=128	id=note-dev-0051	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.765803E-5
+CASE	split=dev	step=128	id=note-dev-0052	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.0596172E-4
+CASE	split=dev	step=128	id=note-dev-0053	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=5.6425033E-5
+CASE	split=dev	step=128	id=note-dev-0054	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=3.6942954E-5
+CASE	split=dev	step=128	id=note-dev-0055	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.065019E-5
+CASE	split=dev	step=128	id=note-dev-0056	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=5.798533E-5
+CASE	split=dev	step=128	id=note-dev-0057	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.1452081E-4
+CASE	split=dev	step=128	id=note-dev-0058	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=5.8070385E-5
+CASE	split=dev	step=128	id=note-dev-0059	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=5.7992187E-5
+CASE	split=dev	step=128	id=note-dev-0060	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.2554823E-4
+CASE	split=dev	step=128	id=note-dev-0061	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=6.765705E-5
+CASE	split=dev	step=128	id=note-dev-0062	expected=0	predictedRestricted=3	tokens=51	ended=true	exact=false	firstEos=3.0695217E-5
+CASE	split=dev	step=128	id=note-dev-0063	expected=3	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.7980414E-5
+CASE	split=dev	step=128	id=note-dev-0064	expected=0	predictedRestricted=0	tokens=48	ended=true	exact=true	firstEos=1.2553332E-4
+SCORE	split=dev	step=128	exact=35	total=64	restrictedCorrect=35	answerNll=0.7105847458185134	prematureEos=0
+CASE	split=retention	step=128	id=retention-train-0001	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=3.7805534E-5
+CASE	split=retention	step=128	id=retention-train-0002	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.1740215E-5
+CASE	split=retention	step=128	id=retention-train-0003	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.2158055E-5
+CASE	split=retention	step=128	id=retention-train-0008	expected=1	predictedRestricted=0	tokens=67,104,291,354	ended=false	exact=false	firstEos=7.700491E-5
+CASE	split=retention	step=128	id=retention-train-0009	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.589032E-5
+CASE	split=retention	step=128	id=retention-train-0010	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=3.5738536E-5
+CASE	split=retention	step=128	id=retention-train-0012	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.2078893E-5
+CASE	split=retention	step=128	id=retention-train-0013	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.7808193E-5
+CASE	split=retention	step=128	id=retention-train-0015	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.924941E-5
+CASE	split=retention	step=128	id=retention-train-0016	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.6915447E-5
+CASE	split=retention	step=128	id=retention-train-0017	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.126575E-5
+CASE	split=retention	step=128	id=retention-train-0018	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.6265428E-5
+CASE	split=retention	step=128	id=retention-train-0019	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=3.64511E-5
+CASE	split=retention	step=128	id=retention-train-0020	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.1694824E-5
+CASE	split=retention	step=128	id=retention-train-0021	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.901649E-5
+CASE	split=retention	step=128	id=retention-train-0024	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.117979E-5
+CASE	split=retention	step=128	id=retention-train-0025	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.1752566E-5
+CASE	split=retention	step=128	id=retention-train-0026	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.710864E-5
+CASE	split=retention	step=128	id=retention-train-0028	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=9.121401E-5
+CASE	split=retention	step=128	id=retention-train-0030	expected=1	predictedRestricted=0	tokens=67,104,291,354	ended=false	exact=false	firstEos=8.275705E-5
+CASE	split=retention	step=128	id=retention-train-0032	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.241831E-5
+CASE	split=retention	step=128	id=retention-train-0034	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.2142303E-5
+CASE	split=retention	step=128	id=retention-train-0035	expected=1	predictedRestricted=0	tokens=67,104,291,354	ended=false	exact=false	firstEos=7.820529E-5
+CASE	split=retention	step=128	id=retention-train-0036	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=7.874358E-5
+CASE	split=retention	step=128	id=retention-train-0038	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.7996164E-5
+CASE	split=retention	step=128	id=retention-train-0040	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.25946E-5
+CASE	split=retention	step=128	id=retention-train-0042	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=3.713669E-5
+CASE	split=retention	step=128	id=retention-train-0043	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.6119865E-5
+CASE	split=retention	step=128	id=retention-train-0044	expected=2	predictedRestricted=0	tokens=110,111,259,389	ended=false	exact=false	firstEos=6.002863E-5
+CASE	split=retention	step=128	id=retention-train-0046	expected=2	predictedRestricted=0	tokens=110,111,259,389	ended=false	exact=false	firstEos=5.9720875E-5
+CASE	split=retention	step=128	id=retention-train-0048	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.6718523E-5
+CASE	split=retention	step=128	id=retention-train-0050	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.881037E-5
+CASE	split=retention	step=128	id=retention-train-0051	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.2410917E-5
+CASE	split=retention	step=128	id=retention-train-0053	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=7.911416E-5
+CASE	split=retention	step=128	id=retention-train-0055	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.2120424E-5
+CASE	split=retention	step=128	id=retention-train-0058	expected=2	predictedRestricted=0	tokens=67,416,45,66	ended=false	exact=false	firstEos=6.17096E-5
+CASE	split=retention	step=128	id=retention-train-0059	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.263669E-5
+CASE	split=retention	step=128	id=retention-train-0060	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.192471E-5
+CASE	split=retention	step=128	id=retention-train-0062	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.5326254E-5
+CASE	split=retention	step=128	id=retention-train-0063	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.174944E-5
+CASE	split=retention	step=128	id=retention-train-0066	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=8.2082304E-5
+CASE	split=retention	step=128	id=retention-train-0070	expected=2	predictedRestricted=0	tokens=67,416,45,66	ended=false	exact=false	firstEos=6.1792794E-5
+CASE	split=retention	step=128	id=retention-train-0071	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=7.6520955E-5
+CASE	split=retention	step=128	id=retention-train-0073	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.2344167E-5
+CASE	split=retention	step=128	id=retention-train-0077	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.7089022E-5
+CASE	split=retention	step=128	id=retention-train-0084	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=8.467494E-5
+CASE	split=retention	step=128	id=retention-train-0089	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.1519976E-5
+CASE	split=retention	step=128	id=retention-train-0090	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.145795E-5
+CASE	split=retention	step=128	id=retention-train-0091	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.4995384E-5
+CASE	split=retention	step=128	id=retention-train-0094	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=3.5723304E-5
+CASE	split=retention	step=128	id=retention-train-0095	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.7734713E-5
+CASE	split=retention	step=128	id=retention-train-0096	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.2438838E-5
+CASE	split=retention	step=128	id=retention-train-0097	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.8055735E-5
+CASE	split=retention	step=128	id=retention-train-0100	expected=1	predictedRestricted=0	tokens=67,104,291,354	ended=false	exact=false	firstEos=7.675999E-5
+CASE	split=retention	step=128	id=retention-train-0101	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.267268E-5
+CASE	split=retention	step=128	id=retention-train-0105	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.1567957E-5
+CASE	split=retention	step=128	id=retention-train-0108	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.740214E-5
+CASE	split=retention	step=128	id=retention-train-0110	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=3.5868663E-5
+CASE	split=retention	step=128	id=retention-train-0113	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.6572735E-5
+CASE	split=retention	step=128	id=retention-train-0117	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.380429E-5
+CASE	split=retention	step=128	id=retention-train-0118	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=6.0877956E-5
+CASE	split=retention	step=128	id=retention-train-0119	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=4.704753E-5
+CASE	split=retention	step=128	id=retention-train-0121	expected=1	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=8.372802E-5
+CASE	split=retention	step=128	id=retention-train-0124	expected=2	predictedRestricted=0	tokens=48	ended=true	exact=false	firstEos=5.289381E-5
+SCORE	split=retention	step=128	exact=0	total=64	restrictedCorrect=0	answerNll=5.856101392586054	prematureEos=0
+RETENTION	step=128	bpb=2.723916624060788	bytes=853
+CAPACITY	step=128	id=0	tokens=7	eos=true
+CAPACITY	step=128	id=1	tokens=4	eos=true
+CAPACITY	step=128	id=2	tokens=12	eos=true
+CAPACITY	step=128	id=3	tokens=18	eos=true
+TEACHER	phase=after	parameterSha256=b3662995f7b75d6df4d418587a34807191f5c2d68feecfe4a9e8dc8edcd8ddae	cacheSha256=0cbfab6629045fc09fa8ca5dda68d4b0a93855ab678c49db1c5c7f4b4ad38d03	examples=16	rows=915	source=replay.txt	originalCheckpointSha256=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd
+RESULT	updates=128	inputUnchanged=true	teacherUnchanged=true	teacherCacheUnchanged=true	elapsedMillis=16384

@@ -1,0 +1,217 @@
+{
+  "analyzerSha256": "76c8f59b200b33d91a2cdc67716f909d61d183865c93e2e9f54874aed354eb8b",
+  "arm": "distill",
+  "baseAnalyzerSha256": "816fe2fb8edb921230bb73318e3c7654479ae6e4661499c855b23aa5fa9321e6",
+  "baselineRecordCount": 135,
+  "baselineRecordsByteIdentical": true,
+  "candidateAllFourCapacityProbes": false,
+  "capacity": {
+    "after": {
+      "0": {
+        "eos": true,
+        "tokens": 7
+      },
+      "1": {
+        "eos": true,
+        "tokens": 4
+      },
+      "2": {
+        "eos": true,
+        "tokens": 12
+      },
+      "3": {
+        "eos": true,
+        "tokens": 18
+      }
+    },
+    "afterFullLength": 0,
+    "before": {
+      "0": {
+        "eos": true,
+        "tokens": 7
+      },
+      "1": {
+        "eos": true,
+        "tokens": 4
+      },
+      "2": {
+        "eos": false,
+        "tokens": 32
+      },
+      "3": {
+        "eos": false,
+        "tokens": 32
+      }
+    },
+    "beforeFullLength": 2
+  },
+  "exp05FavorableDevSignal": "FAIL",
+  "exp05FrozenChecks": {
+    "baselineAllFourCapacityProbes": false,
+    "capacityCountNoDecline": false,
+    "devExactGainAtLeastEight": true,
+    "retentionExactNoDecline": true,
+    "textBpbIncreaseAtMostFivePercent": true
+  },
+  "exp12DevelopmentChecks": {
+    "devExactGainAtLeastEight": true,
+    "originalCapacityIdsTwoAndThreePreserved": false,
+    "restrictedRetentionAtLeastOriginal32": false,
+    "retentionExactNoDecline": true,
+    "textBpbIncreaseAtMostFivePercent": true
+  },
+  "exp12DevelopmentSignal": "FAIL",
+  "integrityStatus": "PASS",
+  "modelInvocationsByAnalysis": 0,
+  "optimizerUpdatesByAnalysis": 0,
+  "productionPromotion": false,
+  "receiptSha256": "5bdb5bdae83cf851b05075e37c2241964eda24d21028ded00e65e78e75ff3f75",
+  "referenceStdoutSha256": "0a4e8985c0cb8ed3f9868cc0b037878ebf7991bf0a7e65601b38d59f17db3076",
+  "registrationSha256": "30ff3daadb9e292f96eb9f538b9c37a537e1fd0e2db2a9c107336084ade0fa72",
+  "schedule": {
+    "answerDraws": 512,
+    "javaRandomScheduleMatched": true,
+    "replaySelections": 256,
+    "seed": 20261110,
+    "steps": 128
+  },
+  "schema": "lm1-distill-independent-analysis-v1",
+  "scores": {
+    "dev": {
+      "after": {
+        "answerNll": 0.7105847458185134,
+        "exact": 35,
+        "perClass": {
+          "0": {
+            "exact": 28,
+            "restrictedCorrect": 28,
+            "total": 32
+          },
+          "3": {
+            "exact": 7,
+            "restrictedCorrect": 7,
+            "total": 32
+          }
+        },
+        "prematureEos": 0,
+        "restrictedCorrect": 35,
+        "restrictedPredictionCounts": {
+          "0": 53,
+          "3": 11
+        },
+        "total": 64
+      },
+      "before": {
+        "answerNll": 4.9694356545204865,
+        "exact": 0,
+        "perClass": {
+          "0": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "total": 32
+          },
+          "3": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "total": 32
+          }
+        },
+        "prematureEos": 0,
+        "restrictedCorrect": 0,
+        "restrictedPredictionCounts": {
+          "2": 64
+        },
+        "total": 64
+      }
+    },
+    "retention": {
+      "after": {
+        "answerNll": 5.856101392586054,
+        "exact": 0,
+        "perClass": {
+          "1": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "total": 32
+          },
+          "2": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "total": 32
+          }
+        },
+        "prematureEos": 0,
+        "restrictedCorrect": 0,
+        "restrictedPredictionCounts": {
+          "0": 64
+        },
+        "total": 64
+      },
+      "before": {
+        "answerNll": 3.8890092361842594,
+        "exact": 0,
+        "perClass": {
+          "1": {
+            "exact": 0,
+            "restrictedCorrect": 4,
+            "total": 32
+          },
+          "2": {
+            "exact": 0,
+            "restrictedCorrect": 28,
+            "total": 32
+          }
+        },
+        "prematureEos": 0,
+        "restrictedCorrect": 32,
+        "restrictedPredictionCounts": {
+          "1": 8,
+          "2": 56
+        },
+        "total": 64
+      }
+    }
+  },
+  "stdoutSha256": "ba103d25c525045fe55723dd4c4c7f01790fd8deb7195da58c7dc72a7e7cbf36",
+  "teacher": {
+    "cacheSha256": "0cbfab6629045fc09fa8ca5dda68d4b0a93855ab678c49db1c5c7f4b4ad38d03",
+    "cacheUnchanged": true,
+    "examples": 16,
+    "originalWeightsIndependentlyBound": true,
+    "parameterSha256": "b3662995f7b75d6df4d418587a34807191f5c2d68feecfe4a9e8dc8edcd8ddae",
+    "rows": 915
+  },
+  "teacherKl": {
+    "first": -1.0091405211465343e-09,
+    "last": 0.022828285582363605,
+    "maximum": 0.03469624184072018,
+    "minimum": -1.0091405211465343e-09
+  },
+  "textRetention": {
+    "after": {
+      "bpb": 2.723916624060788,
+      "bytes": 853
+    },
+    "before": {
+      "bpb": 2.801409006940589,
+      "bytes": 853
+    },
+    "relativeBpbChange": -0.02766193108104209
+  },
+  "updates": 128,
+  "warnings": [
+    "Retention exact-match floor: unchanged zero is not evidence of preserved ability.",
+    "Restricted retention classification regressed; this is separate from the preregistered exact criterion.",
+    "Baseline capacity prerequisite fails; long-generation capacity is not established.",
+    "All data are open DEV diagnostics; no independent generalization or coherent-language claim."
+  ],
+  "weightAuditorSha256": "4915e1a4f90f0ed1ba4aa25d76adf0271b32681d1eba9e9389060c81570315ab",
+  "weights": {
+    "afterSha256": "e6b8c2853319d7265bd50e79a3e8ece4b95ff25a3ac8822d1b1b4f0127102069",
+    "beforeSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "changedFloat32Bits": 132160,
+    "changedNumericWeights": 132160,
+    "maximumAbsoluteDelta": 0.008085966110229492,
+    "parameters": 132160
+  }
+}
