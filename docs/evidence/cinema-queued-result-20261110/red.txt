@@ -1,0 +1,20 @@
+JUnit version 4.13.2
+....E....E
+Time: 3.42
+There were 2 failures:
+1) queuedEarlyResultAdvancesAfterReturnAndConstruction(at.heinz.deviceai.JarvisCinemaReplayUiTest)
+java.lang.AssertionError: The result must move forward after construction
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.JarvisCinemaReplayUiTest.queuedEarlyResultAdvancesAfterReturnAndConstruction(JarvisCinemaReplayUiTest.kt:59)
+2) repeatedQueuedOrderKeepsItsEarlyResult(at.heinz.deviceai.JarvisCinemaReplayUiTest)
+java.lang.AssertionError: expected:<true> but was:<false>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.JarvisCinemaReplayUiTest.repeatedQueuedOrderKeepsItsEarlyResult(JarvisCinemaReplayUiTest.kt:72)
+
+FAILURES!!!
+Tests run: 8,  Failures: 2
+
