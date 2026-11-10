@@ -1,0 +1,53 @@
+{
+  "schema": "continuum-original-weight-resume-registration-v1",
+  "status": "FROZEN_BEFORE_MODEL_EXECUTION",
+  "sourceCommit": "b5219e00a72550848127b36ce9bc6b11a6b2df14",
+  "historicalNativeSource": "4b8fa96effd5a390bd5fd83ed84b81ac850b1d5b",
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx768m",
+    "-cp",
+    "/workspace/scratch/87c6edbcb340/weights-build-resume-v2/experiment.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmOriginalResumeExperiment",
+    "run",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/baseline.lm1",
+    "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/tokenizer.lmbp",
+    "132160",
+    "95cf2d0f91be1d1c34635455dcc191850f14fd531a5c192ec30944a8d0ac77d1",
+    "/workspace/scratch/87c6edbcb340/weights-original-resume-run-001"
+  ],
+  "deadlineSeconds": 120,
+  "javaMaxHeapMiB": 768,
+  "maxOptimizerUpdates": 4,
+  "expectedCommittedStepsPerArm": 2,
+  "expectedParameters": 132160,
+  "outputDirectory": "/workspace/scratch/87c6edbcb340/weights-original-resume-run-001",
+  "inputSha256": {
+    "baseline.lm1": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+  },
+  "jarSha256": "9fab064c139b0d9cdec99fe60a68636251c2f38c3b8b7f7f63172ee7ee7218c7",
+  "sourceBindingSha256": "95cf2d0f91be1d1c34635455dcc191850f14fd531a5c192ec30944a8d0ac77d1",
+  "javaExecutableSha256": "1a7e0b17c39003c75b457d686775ccb032e56fa9c8afe3c492d8eb3715e8951a",
+  "javaVersion": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)\n",
+  "stdlibSha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+  "buildManifestSha256": "bfd247ef836f6737e5bf3d47ae56078ec18fb6107ece58a3be728be969e2f2b5",
+  "sourceFilesSha256": {
+    "experimental/weight-space-20261110/training/build_experiment.py": "b0562b82f6fc7117fbff1b5c7c0afa14ec115927b15726ba906cb86d94e199d4",
+    "experimental/weight-space-20261110/training/LmOriginalResumeExperiment.kt": "6cbb27c9b73a9e9701c46d5f2dfb38d263ac6261b30901eeee30d82a3e3c0eda",
+    "experimental/weight-space-20261110/training/PLAN.md": "467559195a02b7a6d3b950de576584671567e9717e63eafcdfab4490e525b891",
+    "experimental/weight-space-20261110/training/README.md": "25fa557ad7f7d672506479a6915615dbac29abcf97f9fdf11818fe87892198d4"
+  },
+  "acceptance": [
+    "exit code 0",
+    "complete continuous/resumed LM1T state identity",
+    "nonzero first and second moments",
+    "finite losses and parameters",
+    "unchanged original input hashes",
+    "independent exported LM1C parameter comparison"
+  ],
+  "modelUpdatesAlreadyExecuted": 0,
+  "languageQualityMeasured": false,
+  "androidMeasured": false
+}
