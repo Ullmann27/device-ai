@@ -7,6 +7,7 @@ on:
       - chatgpt/code52-cinema-prism-pixel-fix-20261110
       - chatgpt/code52-cinema-final-graphics-audit-20261110
       - chatgpt/code52-cinema-grounded-document-question-20261110
+      - chatgpt/code52-cinema-branch-safe-qa-20261110
     paths:
       - '.github/workflows/continuum-code52-cinematic-qa.yml'
       - 'app/**'
@@ -26,12 +27,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: continuum-code52-cinematic-unsigned-qa
+  group: continuum-code52-cinematic-unsigned-qa-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   validate-source-and-build:
-    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/chatgpt/code52-argon4-holographic-rim-20261109' || github.ref == 'refs/heads/chatgpt/code52-cinema-prism-pixel-fix-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-final-graphics-audit-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-grounded-document-question-20261110')
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/chatgpt/code52-argon4-holographic-rim-20261109' || github.ref == 'refs/heads/chatgpt/code52-cinema-prism-pixel-fix-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-final-graphics-audit-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-grounded-document-question-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-branch-safe-qa-20261110')
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -61,7 +62,7 @@ jobs:
         run: |
           set -euo pipefail
           bash scripts/code52-targeted-kotlin-check.sh
-          node --test .github/continuum/code52-no-orphans-accountability.test.mjs .github/continuum/android-local-consent-epoch.test.mjs .github/continuum/code52-project-isolation.test.mjs .github/continuum/code52-cinema-source-contract.test.mjs .github/continuum/code52-graphics-branch-intake.test.mjs .github/continuum/code52-document-question-grounding.test.mjs
+          node --test .github/continuum/code52-no-orphans-accountability.test.mjs .github/continuum/android-local-consent-epoch.test.mjs .github/continuum/code52-project-isolation.test.mjs .github/continuum/code52-cinema-source-contract.test.mjs .github/continuum/code52-graphics-branch-intake.test.mjs .github/continuum/code52-document-question-grounding.test.mjs .github/continuum/code52-cinematic-qa-branch-concurrency.test.mjs
       - name: Host-only cinematic reference check and 36 frame previews
         shell: bash
         run: |
