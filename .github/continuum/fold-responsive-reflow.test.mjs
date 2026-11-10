@@ -56,7 +56,7 @@ test('Fold rail and phone navigation are mutually exclusive after a reflow', () 
   assert.match(code, /wideContent\.addView\(rail, LinearLayout\.LayoutParams/);
   assert.match(code, /phonePane = null\s+phoneNavHeight = 0/);
   assert.match(code, /phonePane = buildConversationPane\(wide = false\)/);
-  assert.match(code, /ContinuumWorkAreaNavigationSpec\.showBottomBar\(wide, viewport\.compactDashboard\)/);
+  assert.match(code, /ContinuumWorkAreaNavigationSpec\.showBottomBar\(wide, keyboardCompact\)/);
 });
 
 test('keyboard-only height change does not recreate the Fold dashboard', () => {

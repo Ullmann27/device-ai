@@ -16,6 +16,8 @@ fun main(args: Array<String>) {
     val paths = listOf(
         "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
         "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt",
         "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
         "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt",
         "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt"
@@ -24,11 +26,15 @@ fun main(args: Array<String>) {
     for (path in paths) sourceHashes.put(path, sha(File(root, path)))
     val asset = File(root, "app/src/main/assets/avatar3d/continuum-avatar.glb")
     val metadata = AvatarGlbContract.validate(asset.readBytes())
+    val renderer = File(root, paths.last()).readText()
+    val hiddenPrefix = Regex("const val HIDDEN_NODE_PREFIX = \"([^\"]+)\"")
+        .find(renderer)?.groupValues?.get(1) ?: error("Hidden-node contract missing")
+    fun mapper() = AvatarMorphMapper(metadata.targets, metadata.focus.azimuthDegrees)
     val frames = JSONArray()
     fun pose(state: AvatarState = AvatarState.LISTENING, gazeX: Float = 0f, gazeY: Float = 0f,
              jaw: Float = 0f, viseme: Viseme = Viseme.SIL, weight: Float = 0f) =
         AvatarPose(state, AvatarExpression.NEUTRAL, gazeX, gazeY, jaw, viseme, weight, jaw)
-    fun capture(name: String, value: AvatarPose, seconds: Float, map: AvatarMorphMapper = AvatarMorphMapper(metadata.targets), motion: Boolean = true) {
+    fun capture(name: String, value: AvatarPose, seconds: Float, map: AvatarMorphMapper = mapper(), motion: Boolean = true) {
         map.update(value, seconds, motion)
         val weights = JSONObject()
         for ((index, target) in metadata.targets.withIndex()) weights.put(target, map.weights[index].toDouble())
@@ -39,6 +45,7 @@ fun main(args: Array<String>) {
                 .put("visemeWeight", value.visemeWeight.toDouble()).put("speakEnergy", value.speakEnergy.toDouble())
                 .put("gazeObserved", value.gazeObserved))
             .put("weights", weights).put("headYaw", map.headYaw.toDouble()).put("headPitch", map.headPitch.toDouble())
+            .put("neckYaw", map.neckYaw.toDouble()).put("neckPitch", map.neckPitch.toDouble())
             .put("eyeYaw", map.eyeYaw.toDouble()).put("eyePitch", map.eyePitch.toDouble()).put("jawPitch", map.jawPitch.toDouble())
         frames.put(frame)
     }
@@ -49,7 +56,7 @@ fun main(args: Array<String>) {
     capture("gaze-left", pose(gazeX = -1f), 1f)
     capture("gaze-right-up", pose(gazeX = 1f, gazeY = .6f), 1f)
     capture("idle-2s", pose(AvatarState.IDLE), 2f)
-    val transition = AvatarMorphMapper(metadata.targets)
+    val transition = mapper()
     capture("aa-before-transition", pose(AvatarState.SPEAKING, jaw = .6f, viseme = Viseme.AA, weight = 1f), 1f, transition)
     capture("aa-to-o-16ms", pose(AvatarState.SPEAKING, jaw = .6f, viseme = Viseme.O, weight = 1f), 1.016f, transition)
     capture("aa-to-o-48ms", pose(AvatarState.SPEAKING, jaw = .6f, viseme = Viseme.O, weight = 1f), 1.048f, transition)
@@ -57,7 +64,7 @@ fun main(args: Array<String>) {
     reducer.apply(AvatarEvent.SpeechStarted("review-synthetic", "A", 100))
     reducer.apply(AvatarEvent.AudioLevel("review-synthetic", 1f, 101))
     reducer.apply(AvatarEvent.VisemeCue("review-synthetic", Viseme.AA, 1f, 500, 101))
-    val stopping = AvatarMorphMapper(metadata.targets)
+    val stopping = mapper()
     capture("before-interruption", reducer.pose(102), 1f, stopping)
     reducer.apply(AvatarEvent.SpeechEnded("review-synthetic", true, 103))
     reducer.apply(AvatarEvent.AudioLevel("review-synthetic", 1f, 104))
@@ -67,21 +74,22 @@ fun main(args: Array<String>) {
     for (viseme in Viseme.entries) require(stopping.weights[metadata.targets.indexOf(viseme.name)] == 0f)
     val idleCount = if (args.size == 4) args[3].toInt() else 0
     require(idleCount in 0..240)
-    val animatedIdle = AvatarMorphMapper(metadata.targets)
+    val animatedIdle = mapper()
     for (index in 0 until idleCount) {
         capture("idle-f%03d".format(index), pose(AvatarState.IDLE), index / 12f, animatedIdle)
     }
     val focus = metadata.focus
-    val result = JSONObject().put("schema", "continuum-production-mapper-review-poses-v1")
+    val result = JSONObject().put("schema", "continuum-production-mapper-review-poses-v2")
         .put("evidenceClass", "ACTUAL_KOTLIN_MAPPER_SYNTHETIC_INPUT_NOT_DEVICE")
         .put("sourceCommit", args[1]).put("sourceHashes", sourceHashes).put("sourceAssetSha256", sha(asset))
         .put("focus", JSONObject().put("centerX", focus.centerX).put("centerY", focus.centerY).put("centerZ", focus.centerZ)
             .put("halfWidth", focus.halfWidth).put("halfHeight", focus.halfHeight).put("azimuthDegrees", focus.azimuthDegrees))
+        .put("hiddenNodePrefix", hiddenPrefix)
         .put("frames", frames).put("limitations", JSONArray(listOf(
             "Synthetic inputs through actual compiled source; no real TTS, microphone or camera",
             "Weights and joint angles are exact mapper outputs; render backend remains separate",
             "Smile has no current application event driver; no smile pose is fabricated here",
-            "Existing portrait camera/gaze mismatch remains visible and unchanged"
+            "Camera azimuth and head/neck split use the current production mapper"
         )))
     if (idleCount > 0) result.put("idleAnimation", JSONObject().put("framesPerSecond", 12).put("frameCount", idleCount)
         .put("durationSeconds", idleCount / 12.0).put("inputOrigin", "SYNTHETIC_IDLE_THROUGH_ACTUAL_PRODUCTION_MAPPER"))

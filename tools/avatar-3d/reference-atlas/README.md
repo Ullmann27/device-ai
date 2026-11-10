@@ -111,6 +111,8 @@ java -Xmx384m -cp "$CONTINUUM_AVATAR_JVM_DEPS/*" \
   app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt \
   app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt \
   app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt \
+  app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt \
+  app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt \
   app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt \
   tools/avatar-3d/reference-atlas/ExportAvatarReviewPoses.kt
 java -Xmx384m -cp "$avatar_export_dir/mapper-export.jar:$avatar_runtime_cp" \
@@ -138,3 +140,7 @@ python3 tools/jarvis-reference-review/validate_hinge_v2.py \
 The actual candidate still fails the historical V1 Eye/Jaw pivot window. The functional hinge/fixed-region V2 contract passes separately; its diagnostic legacy view is not the actual candidate. Neither result establishes measured human anatomy, native pixels, audible synchronization, device performance or owner acceptance of likeness.
 
 Handoff: `docs/research/omega/REFERENCE-AVATAR-V2-HANDOFF-20261104.md`. Evidence index: `docs/evidence/reference-avatar-v2-20261104/README.md`.
+
+### Current Cinema replay contract
+
+Pose schema v2 includes camera azimuth, separate Neck angles and residual Head angles. The replay hides the same tooth-prefix nodes as Filament and checks every imported face vertex against canonical glTF skinning. V1 exports are rejected: silently treating their missing neck channels as zero would misrepresent the current renderer. Studio lighting/framing remain Blender host evidence, not Android Filament pixels.

@@ -55,7 +55,8 @@ class JarvisDeterministicCaptureUiTest {
     }
 
     private fun capture(label: String, width: Int, height: Int, fontScale: Float = 1f,
-                        captureScrollDetails: Boolean = false, captureLiveTab: Boolean = false) {
+                        captureScrollDetails: Boolean = false, captureLiveTab: Boolean = false,
+                        captureNavigationCycle: Boolean = false) {
         val app = RuntimeEnvironment.getApplication()
         val resolver = app.contentResolver
         val previousScale = durationScale()
@@ -147,6 +148,7 @@ class JarvisDeterministicCaptureUiTest {
                             .put("fidelity", "android_activity_host_native_canvas_api28_explicit_2d_head")
                             .put("source_commit", System.getenv("CONTINUUM_CAPTURE_SOURCE_COMMIT") ?: JSONObject.NULL)
                             .put("capture_state", state)
+                            .put("external_navigation_visible", (field(activity, "bottomWorkAreaBar") as? View)?.isShown == true)
                             .put("pixel_width", width).put("pixel_height", height)
                             .put("viewport_width_dp", (width / density).toDouble())
                             .put("viewport_height_dp", (height / density).toDouble())
@@ -176,6 +178,25 @@ class JarvisDeterministicCaptureUiTest {
                 }
             }
             render(label, "home")
+            if (captureNavigationCycle) {
+                val bar = field(activity, "bottomWorkAreaBar") as View
+                val pane = (bar.parent as android.view.ViewGroup).getChildAt(0)
+                fun margin() = (pane.layoutParams as android.widget.FrameLayout.LayoutParams).bottomMargin
+                assertEquals("Cockpit dock owns Home navigation", View.GONE, bar.visibility)
+                assertEquals("Home reclaims the external reservation", 0, margin())
+                assertEquals(height.toFloat(), home.jarvisShell.viewportHeightDp, .01f)
+                JarvisHomeTestRoutes.touch(root, JarvisHomeTestRoutes.destination(root, "chat"))
+                measure()
+                assertEquals(ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
+                assertEquals("Chat retains navigation", View.VISIBLE, bar.visibility)
+                assertTrue("Chat reserves its visible navigation", margin() > 0)
+                JarvisHomeTestRoutes.touch(root, bar.findViewWithTag(ContinuumWorkArea.START))
+                measure()
+                assertEquals(View.GONE, bar.visibility)
+                assertEquals(0, margin())
+                assertSame("Navigation retains the avatar", avatar, field(activity, "hologramView"))
+                render("$label-return", "home_after_chat")
+            }
             if (captureLiveTab) {
                 val tab = requireNotNull(home.findViewWithTag<View>("jarvis-live-tab:system"))
                 JarvisHomeTestRoutes.touch(root, tab)
@@ -215,6 +236,10 @@ class JarvisDeterministicCaptureUiTest {
         }
         assertEquals("Activity cleanup unregisters its renderer", null, JarvisAvatarSlot.renderer)
     }
+
+    @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
+    fun compactDockOwnsNavigation() = capture("activity-single-dock-412x915", 412, 915,
+        captureNavigationCycle = true)
 
     @Test fun referenceRasterActivityCanvas() = capture("activity-raster-1536x1024", 1536, 1024)
     @Test @Config(qualifiers = "w390dp-h844dp-mdpi")
