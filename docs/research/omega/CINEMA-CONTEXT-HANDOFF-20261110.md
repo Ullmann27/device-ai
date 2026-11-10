@@ -18,7 +18,7 @@ The existing resolver now collects actual selector spans, rejects negated
 selectors, accepts one explicit `nicht … sondern …` replacement, and rewrites
 only the selected span. Unsupported/multiple positive selections clear focus
 and require clarification. A changed source version or missing ordered candidate
-set still prevents resolution. Named-entity correction behavior is unchanged.
+set still prevents resolution. A failed explicit replacement also clears the rejected old focus, so the next pronoun cannot revive it. Named-entity correction behavior is unchanged.
 
 This is an existing **SHADOW** path, not a new resolver in the live answer path:
 
@@ -35,17 +35,21 @@ sentences correctly in ordinary conversation.
 
 - Initial directed run: 12 methods, 3 failures; log in
   `docs/evidence/cinema-context-20261110/baseline.txt`.
-- Final directed run: 14 methods, 0 failures; added reverse-order, unsupported
+- Follow-up self-review found stale focus after an impossible replacement. One
+  additional genuine RED method (15 total) is retained in `review-red.txt`; the
+  subsequent fix clears focus only when an explicit correction cannot resolve.
+- Final directed run: 15 methods, 0 failures; added reverse-order, unsupported
   grammar, trailing negation, source-change and missing-focus controls.
-- Source-bound context/voice regression run: 105 methods, 0 failures, no skips.
-  Actual Kotlin 2.4.0/JDK21 compilation; pure JVM only, no substitute product
+- Source-bound context/voice regression run: 106 methods, 0 failures, no skips.
+  The prior 105-method checkpoint was independently rerun by QA and passed; the
+  final follow-up is identified separately. Actual Kotlin 2.4.0/JDK21 compilation; pure JVM only, no substitute product
   classes or Android stubs. Source hashes, tool versions and log are retained.
 - Full Android Gradle build, full repository tests, real model inference,
   Ctx3Shadow end-to-end execution and Fold7: **NOT_RUN** for this research slice.
 - The fixtures are author-created regression cases, **not** independent holdout
   tasks, not a general language benchmark and not a measured intelligence gain.
 
-Reproduce the 105-method run:
+Reproduce the 106-method run:
 
 ```sh
 KOTLINC=/path/to/kotlinc \
@@ -78,7 +82,7 @@ not a claim that the following experiments have already run.
 
 | Day | Work | Measurable acceptance / stop criterion |
 |---|---|---|
-| 1 | Freeze exact base/candidate SHAs, fixture IDs and expected outcomes. Record current 105-method result. Prepare 60 development dialogues and commission 40 independently authored holdout dialogues, spanning corrections, pronouns, task continuity, stale facts and approvals. | Every case has session/source IDs and an explicit expected referent or required clarification. Freeze holdout hash before the final implementation; no training or tuning on holdout. Current 14 directed methods remain regression cases. |
+| 1 | Freeze exact base/candidate SHAs, fixture IDs and expected outcomes. Record current 106-method result. Prepare 60 development dialogues and commission 40 independently authored holdout dialogues, spanning corrections, pronouns, task continuity, stale facts and approvals. | Every case has session/source IDs and an explicit expected referent or required clarification. Freeze holdout hash before the final implementation; no training or tuning on holdout. Current 15 directed methods remain regression cases. |
 | 2 | Compare current live context framing and SHADOW reference candidates using the same complete dialogues. Include `der davor`, multiple names, interrupted responses, negative selectors and source revocation. | Zero false source bindings in safety cases. Report correct binding, wrong binding, clarification and coverage separately; any wrong confident binding blocks promotion. Show every baseline/candidate difference. |
 | 3 | Exercise existing temporal memory and evidence binding with confirmed, planned, contradicted, revoked and stale records. Vary prompt budget and session restarts. | No planned/unconfirmed statement becomes a confirmed fact; zero cross-session leaks or stale-source resurrection. Partial-context cases abstain rather than drop a late correction. Preserve canonical memory schemas. |
 | 4 | Design a pending-approval conversational adapter around the existing exact proposal/call identity, session, expiry and ToolGate; build only after that contract is reviewed. | `ja` with no matching pending request does nothing. Changed arguments/session, expired request, cancellation, negative answer and double consumption do nothing. Destructive two-stage approval remains intact. 100% of these gates must pass; no live external mutations in the test corpus. |
@@ -95,7 +99,7 @@ and check files can be reviewed/cherry-picked together after exact-source checks
 there is no reason to merge unrelated old research branches or enable SHADOW.
 
 PORTIERT: existing SHADOW call path uses the repaired resolver.
-VERIFIZIERT: only the 105 pure-JVM methods listed above.
+VERIFIZIERT: only the 106 pure-JVM methods listed above.
 GERÄTEBESTÄTIGT: **NOT_RUN**.
 
 Next executable step: run this script after integration, then Android compilation

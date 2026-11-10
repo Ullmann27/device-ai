@@ -81,7 +81,11 @@ class Ctx3Context {
     return Ctx3Decision.Clarify("NO_UNIQUE_POSITIVE_ORDERED_REFERENT")
    }
    val deictic=accepted.single()
-   if(focus.size<2)return Ctx3Decision.Clarify("NO_ORDERED_ALTERNATIVES")
+   fun unresolved(reason:String):Ctx3Decision.Clarify {
+    if(selectors.size>accepted.size){focus=emptyList();selectedFocusIndex=-1}
+    return Ctx3Decision.Clarify(reason)
+   }
+   if(focus.size<2)return unresolved("NO_ORDERED_ALTERNATIVES")
    val targetIndex=when(deictic.kind) {
     "FIRST"->0
     "SECOND"->1
@@ -89,7 +93,7 @@ class Ctx3Context {
     "OTHER"->if(focus.size==2&&selectedFocusIndex in focus.indices)1-selectedFocusIndex else -1
     else->-1
    }
-   if(targetIndex !in focus.indices)return Ctx3Decision.Clarify("NO_UNIQUE_ORDERED_REFERENT")
+   if(targetIndex !in focus.indices)return unresolved("NO_UNIQUE_ORDERED_REFERENT")
    val target=focus[targetIndex]
    selectedFocusIndex=targetIndex;age=0
    return Ctx3Decision.Query(input.replaceRange(deictic.range,target.label),target.sourceIds)

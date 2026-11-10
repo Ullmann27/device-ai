@@ -59,4 +59,13 @@ class Ctx3OrderedCorrectionTest {
             assertTrue(input, prepared().decide(input, entities, "v1") is Ctx3Decision.Clarify)
         }
     }
+
+    @Test fun failedReplacementCannotReviveTheRejectedFocus() {
+        val single = Ctx3Context().apply { decide("Fokus App", entities, "v1") }
+        assertTrue(single.decide("Nicht die erste, sondern die zweite", entities, "v1") is Ctx3Decision.Clarify)
+        assertTrue(single.decide("Wo steht sie?", entities, "v1") is Ctx3Decision.Clarify)
+        val first = prepared()
+        assertTrue(first.decide("Nicht die erste, sondern die davor", entities, "v1") is Ctx3Decision.Clarify)
+        assertTrue(first.decide("Nimm das andere", entities, "v1") is Ctx3Decision.Clarify)
+    }
 }
