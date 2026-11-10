@@ -49,6 +49,11 @@ class ContinuumBrainOrbRenderer {
             intArrayOf(Argb.withAlpha(C.glowCore, .16f), Argb.withAlpha(C.cyan, .10f), 0),
             floatArrayOf(0f, .45f, 1f)))
         p.setAdditive(false)
+        // Inner glass cavity — visible shell thickness. Not the unique 0.78 r core.
+        p.fillCircle(cx, cy + r * .02f, r * .88f, Fill.Radial(cx, cy + r * .08f, r * .88f,
+            intArrayOf(Argb.withAlpha(C.background, .55f), Argb.withAlpha(C.cyanDeep, .16f),
+                Argb.withAlpha(C.cyan, .08f)),
+            floatArrayOf(0f, .72f, 1f)), .55f)
         drawNet(p, cx, cy, r, stable)
         drawCore(p, cx, cy, r, stable)
         drawNeurons(p, cx, cy, r, stable)
@@ -120,7 +125,7 @@ class ContinuumBrainOrbRenderer {
                         0 -> if (half) c.magenta else c.violetRim
                         1 -> if (half) c.cyan else c.violet
                         2 -> if (half) c.violetRim else c.cyan
-                        else -> if (half) c.cyanSoft else c.magenta
+                        else -> if (half) c.warn else c.magenta
                     }
                     p.drawLine(a[0], a[1], b[0], b[1], r * .070f, Fill.Solid(color), alpha * .16f)
                     p.drawLine(a[0], a[1], b[0], b[1], r * .034f, Fill.Solid(color), alpha * .28f)
@@ -135,7 +140,11 @@ class ContinuumBrainOrbRenderer {
             val bead = a
             point(s.phase * (.91f + ring * .11f) + ring * 2.1f, bead)
             if ((bead[2] < 0f) == back) {
-                val color = if (ring == 1) c.violetRim else c.cyan
+                val color = when (ring) {
+                    1 -> c.violetRim
+                    3 -> c.warn
+                    else -> c.cyan
+                }
                 JarvisNeon.halo(p, bead[0], bead[1], r * .09f, color, .35f)
                 p.fillCircle(bead[0], bead[1], r * .014f, Fill.Solid(c.glowCore))
             }
@@ -332,10 +341,14 @@ class ContinuumBrainOrbRenderer {
                     Fill.Linear(cx - r * k, ty, cx + r * k, ty, intArrayOf(C.violet, col, C.glowCore, col, C.violet)), if (j == 0) .95f else .6f)
             }
         }
+        p.fillOval(cx - r * 1.15f, top - r * .02f, cx + r * 1.15f, top + r * .38f,
+            Fill.Radial(cx, top + r * .16f, r * 1.15f,
+                intArrayOf(Argb.withAlpha(C.glowCore, .55f), Argb.withAlpha(C.cyan, .30f),
+                    Argb.withAlpha(C.warn, .10f), 0)), 1f)
         p.fillOval(cx - r * .9f, top + r * .06f, cx + r * .9f, top + r * .28f, Fill.Radial(cx, top + r * .17f, r * .9f,
             intArrayOf(Argb.withAlpha(C.glowCore, .45f), Argb.withAlpha(C.cyan, .30f), Argb.withAlpha(C.magenta, .10f), 0)), 1f)
         p.strokeOval(cx - r * 1.32f, top + r * .02f, cx + r * 1.32f, top + r * .40f, r * .012f,
-            Fill.Linear(cx - r * 1.32f, top, cx + r * 1.32f, top, intArrayOf(C.magenta, C.violetRim, C.cyan, C.violetRim, C.magenta)), .85f)
+            Fill.Linear(cx - r * 1.32f, top, cx + r * 1.32f, top, intArrayOf(C.magenta, C.violetRim, C.cyan, C.warn, C.magenta)), .85f)
         // Lichtbalken unter dem Sockel
         val by = top + r * .40f; val bw = r * .16f; val gap = r * .06f
         for (k in -1..1) {
@@ -359,7 +372,7 @@ class ContinuumBrainOrbRenderer {
             val w = r * (1.18f - t * .86f)
             val a = (1f - t) * .22f
             p.fillOval(cx - w, y - r * .045f, cx + w, y + r * .045f,
-                Fill.Solid(if (i % 2 == 0) C.cyan else C.violetRim), a)
+                Fill.Solid(if (i == 2) C.warn else if (i % 2 == 0) C.cyan else C.violetRim), a)
         }
         val beam = JarvisSceneFills.cached(listOf("cone", cx.toInt(), cy.toInt(), r.toInt())) {
             Fill.Linear(cx, baseY, cx, cy - r * .18f,

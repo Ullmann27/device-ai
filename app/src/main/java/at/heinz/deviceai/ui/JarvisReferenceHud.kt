@@ -118,9 +118,40 @@ object JarvisReferenceHud {
                 intArrayOf(Argb.withAlpha(Colors.glowCore, .28f), 0,
                     Argb.withAlpha(endAccent, .22f)), floatArrayOf(0f, .35f, 1f))
         }
-        // Soft drop (decoration only — control bounds stay on [b]).
-        p.fillRoundRect(b.left + 1.6f, b.top + 3.4f, b.right + 1.6f, b.bottom + 4.4f, r,
-            Fill.Solid(0x99010512.toInt()), .40f * opacity)
+        val thickness = JarvisVisualDepth.edgeThicknessDp()
+            .coerceAtMost(minOf(b.width, b.height) * .12f)
+        val rearDx = thickness * .55f
+        val rearDy = thickness
+        val rearBody = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 7, feature)) {
+            Fill.Linear(b.left + rearDx, b.top + rearDy, b.left + rearDx, b.bottom + rearDy,
+                intArrayOf(Argb.rgb(2, 8, 20), Argb.rgb(1, 6, 16)))
+        }
+        val slabBottom = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 8, feature)) {
+            Fill.Linear(b.left, b.bottom, b.left, b.bottom + rearDy,
+                intArrayOf(Argb.withAlpha(accent, .28f), Argb.withAlpha(Argb.rgb(4, 14, 28), .85f),
+                    Argb.withAlpha(endAccent, .18f)))
+        }
+        val slabRight = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 9, feature)) {
+            Fill.Linear(b.right, b.top, b.right + rearDx, b.top,
+                intArrayOf(Argb.withAlpha(accent, .16f), Argb.withAlpha(Argb.rgb(4, 14, 28), .80f),
+                    Argb.withAlpha(endAccent, .22f)))
+        }
+        val innerBounce = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 10, feature)) {
+            Fill.Linear(b.left, b.top, b.right, b.bottom,
+                intArrayOf(Argb.withAlpha(Colors.glowCore, .14f), 0, Argb.withAlpha(endAccent, .10f)),
+                floatArrayOf(0f, .45f, 1f))
+        }
+        // Contact shadow on the plane below (decoration — control bounds stay on [b]).
+        p.fillRoundRect(b.left + rearDx * .4f, b.top + rearDy * 1.15f,
+            b.right + rearDx * 1.05f, b.bottom + rearDy * 1.65f, r,
+            Fill.Solid(0xB3010510.toInt()), .50f * opacity)
+        // Rear glass plate (z = −24 dp, projected by the 14° cap).
+        p.fillRoundRect(b.left + rearDx, b.top + rearDy, b.right + rearDx, b.bottom + rearDy, r,
+            rearBody, .70f * opacity)
+        p.fillRect(b.left + r * .25f, b.bottom, b.right - r * .08f, b.bottom + rearDy,
+            slabBottom, .80f * opacity)
+        p.fillRect(b.right, b.top + r * .25f, b.right + rearDx, b.bottom - r * .08f,
+            slabRight, .75f * opacity)
         p.setAdditive(true)
         p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 18f, edge, .09f * opacity * glow)
         p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 10f, edge, .16f * opacity * glow)
@@ -130,6 +161,7 @@ object JarvisReferenceHud {
         p.fillRoundRect(b.left, b.top, b.right, b.bottom, r, body, opacity)
         p.save(); p.clipRoundRect(b.left, b.top, b.right, b.bottom, r)
         p.fillRect(b.left, b.top, b.right, b.top + depth, sheen, opacity)
+        p.fillRect(b.left, b.top, b.right, b.bottom, innerBounce, opacity)
         if (feature) {
             val side = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 4, true)) {
                 Fill.Linear(b.left, b.top, b.left + depth, b.top,
@@ -160,6 +192,11 @@ object JarvisReferenceHud {
         p.setAdditive(false)
         p.strokeRoundRect(b.left + inset, b.top + inset, b.right - inset, b.bottom - inset,
             (r - inset).coerceAtLeast(1f), .65f, bevel, opacity)
+        val lift = JarvisVisualDepth.frontLiftDp().coerceAtMost(inset + 4f)
+        // Front light plane (z = +20 dp) — sharp inner reflection, glow stays behind the rim.
+        p.strokeRoundRect(b.left + inset + lift * .15f, b.top + inset + lift * .15f,
+            b.right - inset - lift * .15f, b.bottom - inset - lift * .15f,
+            (r - inset).coerceAtLeast(1f), .85f, Fill.Solid(Colors.glowCore), .22f * opacity)
         cornerLight(p, b, r, accent, endAccent, opacity, glow)
         if (feature) {
             val glint = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 6, true)) {
