@@ -1,0 +1,14 @@
+test_class_collapse_is_not_pair_success (test_contrast_pairs.PairAuditTests.test_class_collapse_is_not_pair_success) ... ok
+test_reject_duplicate_case (test_contrast_pairs.PairAuditTests.test_reject_duplicate_case) ... ok
+test_reject_duplicate_metadata (test_contrast_pairs.PairAuditTests.test_reject_duplicate_metadata) ... ok
+test_reject_false_success_flag (test_contrast_pairs.PairAuditTests.test_reject_false_success_flag) ... ok
+test_reject_missing_case (test_contrast_pairs.PairAuditTests.test_reject_missing_case) ... ok
+test_reject_pair_byte_difference (test_contrast_pairs.PairAuditTests.test_reject_pair_byte_difference) ... ok
+test_reject_raw_input_hash_mismatch (test_contrast_pairs.PairAuditTests.test_reject_raw_input_hash_mismatch) ... ok
+test_reject_success_without_eos (test_contrast_pairs.PairAuditTests.test_reject_success_without_eos) ... ok
+test_reject_wrong_pair_label (test_contrast_pairs.PairAuditTests.test_reject_wrong_pair_label) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+OK

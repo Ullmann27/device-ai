@@ -1,0 +1,45 @@
+{
+  "schema": "lm1-distill-independent-source-review-v1",
+  "status": "PASS_SOURCE_REVIEW_ONLY",
+  "modelUpdatesByReview": 0,
+  "modelInferenceByReview": 0,
+  "sourceSha256": {
+    "LmDistillPilot.kt": "24a79ea89e2a57ae5cbb1bf6aff7a5a0c94465d3db55a8fbc4c62dd5b6f338b1",
+    "LmSoftTargetKl.kt": "a0584ecea66b458555da0964cf24371043886de952d7059de117e62bd652d9ce",
+    "LmDistillChecks.kt": "58634aad5f126c78ee2b38b0981a1a302907115e9750d782a0273694b39bff4a",
+    "run_registered.py": "73cb1f2324675a984620ad8764fd84431e13cfe7c62636f8d69583b7f4354c8d",
+    "controls.json": "62d0221cf576c7a533bfdebdd3d6ce7d0be722700dee2b6e02da7f5607f89b0d"
+  },
+  "checks": {
+    "teacherSeparatelyDecoded": true,
+    "teacherStudentArraysNotAliased": true,
+    "teacherUsesInferenceTapeOnly": true,
+    "teacherTargetsOnlySixteenReplayTexts": true,
+    "klDirectionTeacherToStudent": true,
+    "floatTeacherMassAccountedInDerivative": true,
+    "normalizationPooledReplayPositions": true,
+    "positiveKlWeightOne": true,
+    "answerAndReplayGradientAccumulationPreserved": true,
+    "answerScheduleAndOptimizerUnchangedFromOriginalReplay": true,
+    "teacherAndCacheDigestsCheckedBeforeAfter": true,
+    "nativeChecksCoverFiniteDifferenceCompositionAndAccumulation": true
+  },
+  "nativeSelftestObserved": {
+    "passed": 15,
+    "exitCode": 0,
+    "stdoutSha256": "c9e65f0a47507fbb34f72991ff9c9fa923bcaabc6f485bb5b119b974cf90b7d9"
+  },
+  "runtimeEvidenceStatus": "NOT_RUN_AT_REVIEW",
+  "runtimeRequirements": [
+    "original baseline tensor digest must match teacher records",
+    "all frozen hashes and run receipt must match",
+    "135 baseline metric records must match original run",
+    "all 128 answer and replay schedules must match independent reconstruction",
+    "all original and prospective EXP-12 metrics must be reported separately"
+  ],
+  "limits": [
+    "Code inspection and native primitive checks do not establish training quality.",
+    "Actual teacher cache probabilities are not independently recomputed by this no-inference reviewer.",
+    "Candidate runtime and metric results are not yet available."
+  ]
+}

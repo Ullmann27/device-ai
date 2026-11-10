@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "-v",
+    "test_weight_auditor.py"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 0.09982036200017319,
+  "tests": 7,
+  "note": "Repeat solely to capture raw source-bound evidence; not seven additional test types. No model training.",
+  "sha256": {
+    "audit_lm1_weights.py": "4915e1a4f90f0ed1ba4aa25d76adf0271b32681d1eba9e9389060c81570315ab",
+    "test_weight_auditor.py": "14c8818514f18925eac5dd305553f933ba203275ecb315b41e0b7ad772f8aec0",
+    "auditor-selftest.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "auditor-selftest.stderr.txt": "232a019f1f1e6c35dc2802e1b79586a29b0038f4001e9e910c87a9a294b908c1"
+  }
+}

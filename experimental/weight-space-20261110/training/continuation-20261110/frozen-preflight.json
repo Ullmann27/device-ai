@@ -1,0 +1,92 @@
+{
+  "registrationSha256": "349099d814832bb384c103afde8cdba59ee2ffe310eb1c157af009c620d1bdf6",
+  "hashChecks": {
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java": {
+      "exists": true,
+      "expected": "1a7e0b17c39003c75b457d686775ccb032e56fa9c8afe3c492d8eb3715e8951a",
+      "actual": "1a7e0b17c39003c75b457d686775ccb032e56fa9c8afe3c492d8eb3715e8951a"
+    },
+    "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/experiment.jar": {
+      "exists": true,
+      "expected": "d0a7214af4cba4d85be5d2513da90f511ad5d40c6f57af182a71b373221bde90",
+      "actual": "d0a7214af4cba4d85be5d2513da90f511ad5d40c6f57af182a71b373221bde90"
+    },
+    "/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar": {
+      "exists": true,
+      "expected": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+      "actual": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c"
+    },
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/training/LmContrastPilot.kt": {
+      "exists": true,
+      "expected": "e4af24197f081c08584b01617eda8602313e517485c0d4c0c3b0a5dffb8bdf7f",
+      "actual": "e4af24197f081c08584b01617eda8602313e517485c0d4c0c3b0a5dffb8bdf7f"
+    },
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/training/CONTRAST-PROTOCOL.md": {
+      "exists": true,
+      "expected": "0000978b8d82d83f2294e29a24dd6721c466f21cdddb67bfc35ba875d24be44b",
+      "actual": "0000978b8d82d83f2294e29a24dd6721c466f21cdddb67bfc35ba875d24be44b"
+    },
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/training/run_contrast.py": {
+      "exists": true,
+      "expected": "6575c2a40568af4c7091587bd6a40352339f3949bd194b263ad4f68b932ec114",
+      "actual": "6575c2a40568af4c7091587bd6a40352339f3949bd194b263ad4f68b932ec114"
+    },
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/training/build_experiment.py": {
+      "exists": true,
+      "expected": "b0562b82f6fc7117fbff1b5c7c0afa14ec115927b15726ba906cb86d94e199d4",
+      "actual": "b0562b82f6fc7117fbff1b5c7c0afa14ec115927b15726ba906cb86d94e199d4"
+    },
+    "/workspace/scratch/87c6edbcb340/weights-inputs/baseline.lm1": {
+      "exists": true,
+      "expected": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "actual": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd"
+    },
+    "/workspace/scratch/87c6edbcb340/weights-inputs/tokenizer.lmbp": {
+      "exists": true,
+      "expected": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+      "actual": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+    },
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data/note-contrasts-v1/train.tsv": {
+      "exists": true,
+      "expected": "3666036e3b63db7738bebc391bd9058ca63bb0d1ea01b240726223c2ddc9039c",
+      "actual": "3666036e3b63db7738bebc391bd9058ca63bb0d1ea01b240726223c2ddc9039c"
+    },
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data/note-contrasts-v1/dev.tsv": {
+      "exists": true,
+      "expected": "057dac485d2d4d39ebcfcdc7de3fe15c9c6c4bebd2bea888b4db303949798935",
+      "actual": "057dac485d2d4d39ebcfcdc7de3fe15c9c6c4bebd2bea888b4db303949798935"
+    },
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data/retention.tsv": {
+      "exists": true,
+      "expected": "dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a",
+      "actual": "dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a"
+    },
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data/replay.txt": {
+      "exists": true,
+      "expected": "b5fdd3c9528fe5a0f7a1dbc24db9e7169f0a00f9b31a211aff4ca8c6c97553c1",
+      "actual": "b5fdd3c9528fe5a0f7a1dbc24db9e7169f0a00f9b31a211aff4ca8c6c97553c1"
+    },
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data/retention_text.txt": {
+      "exists": true,
+      "expected": "699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019",
+      "actual": "699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019"
+    }
+  },
+  "allHashesMatch": true,
+  "replayOutputExists": false,
+  "replayEvidenceExists": false,
+  "replayCommand": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx768m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/experiment.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmContrastPilot",
+    "replay",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/baseline.lm1",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/tokenizer.lmbp",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data",
+    "/workspace/scratch/87c6edbcb340/weights-contrast-replay-001"
+  ],
+  "processes": []
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "lm1-distill-dev-run-v1",
+  "arm": "distill",
+  "registrationSha256": "30ff3daadb9e292f96eb9f538b9c37a537e1fd0e2db2a9c107336084ade0fa72",
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx768m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/970fc7edde8a/distill-build-v2/experiment.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmDistillPilot",
+    "distill",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/baseline.lm1",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/tokenizer.lmbp",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data",
+    "/workspace/scratch/970fc7edde8a/weights-distill-001"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "executionError": null,
+  "elapsedSeconds": 16.690573104999203,
+  "maxChildRssKiB": 124564,
+  "rssMeaning": "Linux child high-water mark, not Android",
+  "inputsUnchanged": true,
+  "stdoutSha256": "ba103d25c525045fe55723dd4c4c7f01790fd8deb7195da58c7dc72a7e7cbf36",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "artifacts": {
+    "final.lm1": {
+      "sha256": "e6b8c2853319d7265bd50e79a3e8ece4b95ff25a3ac8822d1b1b4f0127102069",
+      "bytes": 529624
+    }
+  },
+  "qualityAcceptance": "REQUIRES_INDEPENDENT_DEV_ANALYSIS",
+  "productionPromotion": false
+}

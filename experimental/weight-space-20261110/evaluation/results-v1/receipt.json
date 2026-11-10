@@ -1,0 +1,49 @@
+{
+  "schema": "lm1-weight-evaluation-execution-v1",
+  "registrationCommit": "81aeb120ec5cd7ca885c966fa9c2cc50862aeec7",
+  "registrationSha256": "22b477bd0418830b759b03e14acca8b9ecee06a187a121c5ef8166c8cba483fe",
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx512m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/87c6edbcb340/weights-build/eval-001/checks.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmWeightIdentityChecks",
+    "/workspace/scratch/87c6edbcb340/weights-evaluation-run-001"
+  ],
+  "timeoutSeconds": 180,
+  "timedOut": false,
+  "exitCode": 0,
+  "elapsedSeconds": 0.3858944980001979,
+  "maxChildRssKiB": 68792,
+  "preflightChildRssKiB": 0,
+  "rssMeaning": "Linux RUSAGE_CHILDREN maximum for this wrapper; not Android or simultaneous summed memory",
+  "stdoutSha256": "0c8e73eabe15fd37e81e3dd24b85e68e14e61d6daf4285f38377eee9dde107c2",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "summary": [
+    "SUMMARY\tpassed=16\tfailed=0\tupdates=80\tparameters=2632"
+  ],
+  "stateFiles": {
+    "states/1b4a2e90462bc4ceb4ea4e84abd2b588cbed8bcd0b11a110faf4e469b0b39864.lmtrain": {
+      "sha256": "1b4a2e90462bc4ceb4ea4e84abd2b588cbed8bcd0b11a110faf4e469b0b39864",
+      "bytes": 32268
+    },
+    "states/2112607fe170653b5785b6878ebede29221aeea0fb399cebce62a2aef3622b2f.lmtrain": {
+      "sha256": "2112607fe170653b5785b6878ebede29221aeea0fb399cebce62a2aef3622b2f",
+      "bytes": 32268
+    },
+    "states/69c495c4b6ec1e38bcab0954a324aeb9a8ea0aaf27a76a952c2bd7ff49268562.lmtrain": {
+      "sha256": "69c495c4b6ec1e38bcab0954a324aeb9a8ea0aaf27a76a952c2bd7ff49268562",
+      "bytes": 32268
+    },
+    "states/df925182e8ab68e44fb14973b881fa168c397d325267b08c252b5a1fcba475a3.lmtrain": {
+      "sha256": "df925182e8ab68e44fb14973b881fa168c397d325267b08c252b5a1fcba475a3",
+      "bytes": 32268
+    },
+    "states/f7608a51b0eee8716e6c86679832577f2afc6c2f12f66275f50d41cbc9dcc22c.lmtrain": {
+      "sha256": "f7608a51b0eee8716e6c86679832577f2afc6c2f12f66275f50d41cbc9dcc22c",
+      "bytes": 32268
+    }
+  },
+  "limits": "2632-parameter software fixture; no language quality,16M,Android,or app promotion claim"
+}

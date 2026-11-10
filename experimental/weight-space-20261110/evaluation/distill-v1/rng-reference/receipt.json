@@ -1,0 +1,29 @@
+{
+  "schema": "java-random-reference-v1",
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "/workspace/scratch/970fc7edde8a/evaluation-work/distill/rng-reference/RngReference.java"
+  ],
+  "exitCode": 0,
+  "sourceSha256": "00ee5586b541fc3c13e49a6082f96671477aceb51e24fc58a63d39d918ef0442",
+  "stdoutSha256": "bf48b0ba48dc9e30843c46c0099255751e1b22145c19cf64f09ffaba7d512a90",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "javaSha256": "1a7e0b17c39003c75b457d686775ccb032e56fa9c8afe3c492d8eb3715e8951a",
+  "seed": 20261110,
+  "bound": 64,
+  "draws": [
+    36,
+    24,
+    8,
+    0,
+    32,
+    55,
+    19,
+    45,
+    57,
+    18,
+    12,
+    16
+  ],
+  "modelInvocations": 0
+}

@@ -1,0 +1,70 @@
+{
+  "schema": "lm1-direct-weight-audit-v1",
+  "status": "PASS",
+  "models": {
+    "before": {
+      "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "bytes": 529297,
+      "config": [
+        1,
+        512,
+        64,
+        2,
+        4,
+        256,
+        256
+      ],
+      "tokenizer": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+      "parameters": 132160
+    },
+    "continuous": {
+      "sha256": "a0c54008308f7c330ec22a432388004b907e89c9e6424ac3aa9816d76bf0aa88",
+      "bytes": 529192,
+      "config": [
+        1,
+        512,
+        64,
+        2,
+        4,
+        256,
+        256
+      ],
+      "tokenizer": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+      "parameters": 132160
+    },
+    "resumed": {
+      "sha256": "a0c54008308f7c330ec22a432388004b907e89c9e6424ac3aa9816d76bf0aa88",
+      "bytes": 529192,
+      "config": [
+        1,
+        512,
+        64,
+        2,
+        4,
+        256,
+        256
+      ],
+      "tokenizer": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+      "parameters": 132160
+    }
+  },
+  "comparisons": {
+    "before_to_continuous": {
+      "parameters": 132160,
+      "changedFloat32Bits": 132153,
+      "changedNumericWeights": 132153,
+      "maximumAbsoluteDelta": 1.558661460876465e-05
+    },
+    "continuous_to_resumed": {
+      "parameters": 132160,
+      "changedFloat32Bits": 0,
+      "changedNumericWeights": 0,
+      "maximumAbsoluteDelta": 0.0
+    }
+  },
+  "checks": {
+    "training_changes_weights": true,
+    "resume_preserves_weight_bits": true
+  },
+  "scope": "read-only parameter identity; no new optimizer updates; no language-quality claim"
+}

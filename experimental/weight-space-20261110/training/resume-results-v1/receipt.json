@@ -1,0 +1,61 @@
+{
+  "schema": "continuum-original-weight-resume-receipt-v1",
+  "registrationCommit": "af8f746ff717a67d6bd52f8848cfda94a413139c",
+  "registrationSha256": "e01b440f62be9ababb7dc5cab2b7a4d03a746d7999da072fcd324795fde6a248",
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx768m",
+    "-cp",
+    "/workspace/scratch/87c6edbcb340/weights-build-resume-v2/experiment.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmOriginalResumeExperiment",
+    "run",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/baseline.lm1",
+    "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/tokenizer.lmbp",
+    "132160",
+    "95cf2d0f91be1d1c34635455dcc191850f14fd531a5c192ec30944a8d0ac77d1",
+    "/workspace/scratch/87c6edbcb340/weights-original-resume-run-001"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "deadlineSeconds": 120,
+  "javaMaxHeapMiB": 768,
+  "elapsedSeconds": 0.7293052673339844,
+  "startedUnixSeconds": 1794344646.52228,
+  "stdoutSha256": "44b1d4840cc0133e711d02c4744307f6b6ac54a652beb69a603d6454d94545e0",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "inputsUnchanged": true,
+  "sourceFilesUnchanged": true,
+  "artifacts": {
+    "continuous/ef51b01fa6227c45808bb4df63227eff33b908c4db4789df6dc78f44c05f5923.lmtrain": {
+      "bytes": 1586890,
+      "sha256": "ef51b01fa6227c45808bb4df63227eff33b908c4db4789df6dc78f44c05f5923"
+    },
+    "continuous/final.lm1": {
+      "bytes": 529192,
+      "sha256": "a0c54008308f7c330ec22a432388004b907e89c9e6424ac3aa9816d76bf0aa88"
+    },
+    "initial.lm1": {
+      "bytes": 529192,
+      "sha256": "7ce5bb557c1d688c4f00622368ddece347e7965930cace9b563a8200f3bde1c3"
+    },
+    "resumed/c348afceddc35c72cba72ddbb6a3aa28432bdeca913f73133556f3d62d07c04b.lmtrain": {
+      "bytes": 1586890,
+      "sha256": "c348afceddc35c72cba72ddbb6a3aa28432bdeca913f73133556f3d62d07c04b"
+    },
+    "resumed/ef51b01fa6227c45808bb4df63227eff33b908c4db4789df6dc78f44c05f5923.lmtrain": {
+      "bytes": 1586890,
+      "sha256": "ef51b01fa6227c45808bb4df63227eff33b908c4db4789df6dc78f44c05f5923"
+    },
+    "resumed/final.lm1": {
+      "bytes": 529192,
+      "sha256": "a0c54008308f7c330ec22a432388004b907e89c9e6424ac3aa9816d76bf0aa88"
+    },
+    "resumed/intermediate.lm1": {
+      "bytes": 529192,
+      "sha256": "b2f40f915dcc37406161cb1457a1dd58526ea2722512ac8cbd64cbb1a2f8a706"
+    }
+  },
+  "languageQualityMeasured": false,
+  "androidMeasured": false
+}

@@ -1,0 +1,12 @@
+test_checksum_rejected (test_weight_auditor.WeightAuditTests.test_checksum_rejected) ... ok
+test_exact_one_weight_change (test_weight_auditor.WeightAuditTests.test_exact_one_weight_change) ... ok
+test_metadata_only_counterexample (test_weight_auditor.WeightAuditTests.test_metadata_only_counterexample) ... ok
+test_nonfinite_rejected (test_weight_auditor.WeightAuditTests.test_nonfinite_rejected) ... ok
+test_parameter_count (test_weight_auditor.WeightAuditTests.test_parameter_count) ... ok
+test_trailing_body_rejected (test_weight_auditor.WeightAuditTests.test_trailing_body_rejected) ... ok
+test_truncation_rejected (test_weight_auditor.WeightAuditTests.test_truncation_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.006s
+
+OK

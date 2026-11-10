@@ -1,0 +1,8 @@
+{
+  "schema": "lm1-contrast-arms-baseline-identity-v1",
+  "status": "PASS",
+  "comparedBaselineRecords": 135,
+  "baselineRecordsByteIdentical": true,
+  "baselineRecordSha256": "c17c7e8117f4e635aae5461a37a320189aa67870e073733918b8328fde6aaf27",
+  "scope": "raw before-training CASE/SCORE/RETENTION/CAPACITY records; no model invocation"
+}

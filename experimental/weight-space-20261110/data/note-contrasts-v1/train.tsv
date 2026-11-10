@@ -1,0 +1,129 @@
+id	label	prompt
+note-train-0001	3	Angabe: Der Becher ist blau. Bitte als Notiz sichern.
+note-train-0002	3	Angabe: Das Brett ist glatt. Bitte merken.
+note-train-0003	3	Angabe: Der Becher ist blau. Jetzt als Notiz speichern.
+note-train-0004	0	Angabe: Das glatte Brett liegt quer neben der kleinen Kiste. Nicht als Notiz sichern.
+note-train-0005	0	Nicht als Notiz sichern: Der Raum ist leer.
+note-train-0006	0	Nicht merken: Der Raum ist leer.
+note-train-0007	0	Angabe: Der Becher ist blau. Nicht als Notiz sichern.
+note-train-0008	3	Angabe: Der leere Raum hat zwei Fenster und eine schmale Tür. Jetzt notieren.
+note-train-0009	0	Nicht notieren: Der weiche Stoff liegt oben auf dem breiten Regal.
+note-train-0010	0	Nicht als Notiz speichern: Der blaue Becher steht links neben dem leeren Teller.
+note-train-0011	3	Bitte als Notiz sichern: Der weiche Stoff liegt oben auf dem breiten Regal.
+note-train-0012	3	Angabe: Das glatte Brett liegt quer neben der kleinen Kiste. Bitte als Notiz sichern.
+note-train-0013	0	Angabe: Der Raum ist leer. Nicht notieren.
+note-train-0014	0	Nicht notieren: Der Stoff ist weich.
+note-train-0015	3	Jetzt notieren: Der Becher ist blau.
+note-train-0016	3	Bitte merken: Der blaue Becher steht links neben dem leeren Teller.
+note-train-0017	3	Jetzt notieren: Das glatte Brett liegt quer neben der kleinen Kiste.
+note-train-0018	3	Angabe: Der blaue Becher steht links neben dem leeren Teller. Bitte merken.
+note-train-0019	3	Bitte merken: Der Stoff ist weich.
+note-train-0020	3	Angabe: Der weiche Stoff liegt oben auf dem breiten Regal. Jetzt als Notiz speichern.
+note-train-0021	3	Jetzt notieren: Der Raum ist leer.
+note-train-0022	0	Nicht als Notiz sichern: Der weiche Stoff liegt oben auf dem breiten Regal.
+note-train-0023	0	Angabe: Der Raum ist leer. Nicht als Notiz sichern.
+note-train-0024	0	Nicht merken: Das Brett ist glatt.
+note-train-0025	3	Bitte merken: Das Brett ist glatt.
+note-train-0026	0	Angabe: Der Raum ist leer. Nicht als Notiz speichern.
+note-train-0027	3	Jetzt als Notiz speichern: Der weiche Stoff liegt oben auf dem breiten Regal.
+note-train-0028	0	Angabe: Der Becher ist blau. Nicht merken.
+note-train-0029	3	Angabe: Der Raum ist leer. Jetzt als Notiz speichern.
+note-train-0030	3	Angabe: Der Becher ist blau. Jetzt notieren.
+note-train-0031	0	Angabe: Das Brett ist glatt. Nicht merken.
+note-train-0032	3	Angabe: Das Brett ist glatt. Jetzt notieren.
+note-train-0033	0	Angabe: Der weiche Stoff liegt oben auf dem breiten Regal. Nicht merken.
+note-train-0034	0	Nicht als Notiz speichern: Der Stoff ist weich.
+note-train-0035	0	Nicht als Notiz sichern: Das glatte Brett liegt quer neben der kleinen Kiste.
+note-train-0036	0	Angabe: Der leere Raum hat zwei Fenster und eine schmale Tür. Nicht notieren.
+note-train-0037	0	Angabe: Der Becher ist blau. Nicht notieren.
+note-train-0038	0	Nicht merken: Der Stoff ist weich.
+note-train-0039	3	Angabe: Das glatte Brett liegt quer neben der kleinen Kiste. Bitte merken.
+note-train-0040	3	Angabe: Der Raum ist leer. Bitte als Notiz sichern.
+note-train-0041	0	Angabe: Der Stoff ist weich. Nicht notieren.
+note-train-0042	0	Nicht als Notiz sichern: Der blaue Becher steht links neben dem leeren Teller.
+note-train-0043	3	Jetzt notieren: Der weiche Stoff liegt oben auf dem breiten Regal.
+note-train-0044	0	Angabe: Der leere Raum hat zwei Fenster und eine schmale Tür. Nicht als Notiz speichern.
+note-train-0045	3	Jetzt notieren: Der Stoff ist weich.
+note-train-0046	3	Bitte merken: Der weiche Stoff liegt oben auf dem breiten Regal.
+note-train-0047	0	Angabe: Der blaue Becher steht links neben dem leeren Teller. Nicht merken.
+note-train-0048	3	Angabe: Der weiche Stoff liegt oben auf dem breiten Regal. Jetzt notieren.
+note-train-0049	0	Nicht als Notiz sichern: Der Becher ist blau.
+note-train-0050	3	Angabe: Der blaue Becher steht links neben dem leeren Teller. Jetzt als Notiz speichern.
+note-train-0051	0	Nicht als Notiz sichern: Der leere Raum hat zwei Fenster und eine schmale Tür.
+note-train-0052	0	Angabe: Der blaue Becher steht links neben dem leeren Teller. Nicht notieren.
+note-train-0053	3	Jetzt als Notiz speichern: Der leere Raum hat zwei Fenster und eine schmale Tür.
+note-train-0054	3	Jetzt notieren: Der blaue Becher steht links neben dem leeren Teller.
+note-train-0055	0	Nicht als Notiz sichern: Der Stoff ist weich.
+note-train-0056	3	Angabe: Der weiche Stoff liegt oben auf dem breiten Regal. Bitte als Notiz sichern.
+note-train-0057	0	Nicht notieren: Der blaue Becher steht links neben dem leeren Teller.
+note-train-0058	3	Jetzt als Notiz speichern: Das glatte Brett liegt quer neben der kleinen Kiste.
+note-train-0059	3	Bitte als Notiz sichern: Der blaue Becher steht links neben dem leeren Teller.
+note-train-0060	0	Nicht als Notiz sichern: Das Brett ist glatt.
+note-train-0061	3	Angabe: Das Brett ist glatt. Bitte als Notiz sichern.
+note-train-0062	0	Angabe: Das Brett ist glatt. Nicht notieren.
+note-train-0063	0	Angabe: Das glatte Brett liegt quer neben der kleinen Kiste. Nicht merken.
+note-train-0064	3	Angabe: Das Brett ist glatt. Jetzt als Notiz speichern.
+note-train-0065	3	Angabe: Der Raum ist leer. Jetzt notieren.
+note-train-0066	3	Jetzt als Notiz speichern: Der Becher ist blau.
+note-train-0067	3	Jetzt als Notiz speichern: Der blaue Becher steht links neben dem leeren Teller.
+note-train-0068	0	Nicht notieren: Der leere Raum hat zwei Fenster und eine schmale Tür.
+note-train-0069	3	Angabe: Der leere Raum hat zwei Fenster und eine schmale Tür. Bitte merken.
+note-train-0070	0	Angabe: Der blaue Becher steht links neben dem leeren Teller. Nicht als Notiz sichern.
+note-train-0071	3	Angabe: Der leere Raum hat zwei Fenster und eine schmale Tür. Bitte als Notiz sichern.
+note-train-0072	0	Angabe: Das Brett ist glatt. Nicht als Notiz speichern.
+note-train-0073	3	Bitte als Notiz sichern: Der Becher ist blau.
+note-train-0074	3	Angabe: Das glatte Brett liegt quer neben der kleinen Kiste. Jetzt notieren.
+note-train-0075	0	Angabe: Das glatte Brett liegt quer neben der kleinen Kiste. Nicht als Notiz speichern.
+note-train-0076	0	Nicht notieren: Das glatte Brett liegt quer neben der kleinen Kiste.
+note-train-0077	3	Angabe: Der Becher ist blau. Bitte merken.
+note-train-0078	3	Bitte merken: Der Raum ist leer.
+note-train-0079	0	Nicht merken: Das glatte Brett liegt quer neben der kleinen Kiste.
+note-train-0080	3	Angabe: Der Stoff ist weich. Jetzt notieren.
+note-train-0081	0	Nicht notieren: Das Brett ist glatt.
+note-train-0082	0	Nicht merken: Der weiche Stoff liegt oben auf dem breiten Regal.
+note-train-0083	0	Nicht als Notiz speichern: Das Brett ist glatt.
+note-train-0084	0	Angabe: Der Becher ist blau. Nicht als Notiz speichern.
+note-train-0085	3	Bitte merken: Der Becher ist blau.
+note-train-0086	0	Angabe: Der weiche Stoff liegt oben auf dem breiten Regal. Nicht als Notiz speichern.
+note-train-0087	3	Bitte als Notiz sichern: Das glatte Brett liegt quer neben der kleinen Kiste.
+note-train-0088	0	Nicht merken: Der blaue Becher steht links neben dem leeren Teller.
+note-train-0089	0	Nicht als Notiz speichern: Der Raum ist leer.
+note-train-0090	3	Angabe: Der weiche Stoff liegt oben auf dem breiten Regal. Bitte merken.
+note-train-0091	3	Bitte als Notiz sichern: Der Stoff ist weich.
+note-train-0092	3	Angabe: Der Raum ist leer. Bitte merken.
+note-train-0093	3	Angabe: Der Stoff ist weich. Bitte merken.
+note-train-0094	0	Nicht notieren: Der Becher ist blau.
+note-train-0095	0	Nicht als Notiz speichern: Der Becher ist blau.
+note-train-0096	0	Nicht als Notiz speichern: Der weiche Stoff liegt oben auf dem breiten Regal.
+note-train-0097	0	Angabe: Der leere Raum hat zwei Fenster und eine schmale Tür. Nicht merken.
+note-train-0098	3	Jetzt als Notiz speichern: Der Raum ist leer.
+note-train-0099	0	Angabe: Der Raum ist leer. Nicht merken.
+note-train-0100	3	Bitte merken: Das glatte Brett liegt quer neben der kleinen Kiste.
+note-train-0101	3	Jetzt notieren: Das Brett ist glatt.
+note-train-0102	0	Angabe: Der leere Raum hat zwei Fenster und eine schmale Tür. Nicht als Notiz sichern.
+note-train-0103	3	Jetzt als Notiz speichern: Das Brett ist glatt.
+note-train-0104	0	Angabe: Das Brett ist glatt. Nicht als Notiz sichern.
+note-train-0105	0	Angabe: Der Stoff ist weich. Nicht als Notiz sichern.
+note-train-0106	0	Angabe: Der Stoff ist weich. Nicht merken.
+note-train-0107	3	Angabe: Der blaue Becher steht links neben dem leeren Teller. Jetzt notieren.
+note-train-0108	0	Nicht merken: Der leere Raum hat zwei Fenster und eine schmale Tür.
+note-train-0109	3	Angabe: Der Stoff ist weich. Jetzt als Notiz speichern.
+note-train-0110	0	Angabe: Der Stoff ist weich. Nicht als Notiz speichern.
+note-train-0111	0	Angabe: Das glatte Brett liegt quer neben der kleinen Kiste. Nicht notieren.
+note-train-0112	3	Angabe: Das glatte Brett liegt quer neben der kleinen Kiste. Jetzt als Notiz speichern.
+note-train-0113	3	Bitte als Notiz sichern: Der Raum ist leer.
+note-train-0114	3	Jetzt als Notiz speichern: Der Stoff ist weich.
+note-train-0115	0	Nicht als Notiz speichern: Das glatte Brett liegt quer neben der kleinen Kiste.
+note-train-0116	3	Bitte als Notiz sichern: Das Brett ist glatt.
+note-train-0117	0	Angabe: Der weiche Stoff liegt oben auf dem breiten Regal. Nicht notieren.
+note-train-0118	0	Angabe: Der weiche Stoff liegt oben auf dem breiten Regal. Nicht als Notiz sichern.
+note-train-0119	3	Bitte merken: Der leere Raum hat zwei Fenster und eine schmale Tür.
+note-train-0120	3	Jetzt notieren: Der leere Raum hat zwei Fenster und eine schmale Tür.
+note-train-0121	0	Nicht merken: Der Becher ist blau.
+note-train-0122	3	Angabe: Der blaue Becher steht links neben dem leeren Teller. Bitte als Notiz sichern.
+note-train-0123	3	Bitte als Notiz sichern: Der leere Raum hat zwei Fenster und eine schmale Tür.
+note-train-0124	0	Nicht notieren: Der Raum ist leer.
+note-train-0125	0	Nicht als Notiz speichern: Der leere Raum hat zwei Fenster und eine schmale Tür.
+note-train-0126	3	Angabe: Der leere Raum hat zwei Fenster und eine schmale Tür. Jetzt als Notiz speichern.
+note-train-0127	0	Angabe: Der blaue Becher steht links neben dem leeren Teller. Nicht als Notiz speichern.
+note-train-0128	3	Angabe: Der Stoff ist weich. Bitte als Notiz sichern.

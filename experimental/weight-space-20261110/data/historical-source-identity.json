@@ -1,0 +1,17 @@
+{
+  "auditScope": "Historical consumed data only; not confirmation",
+  "repository": "Ullmann27/device-ai",
+  "pr": 508,
+  "sourceCommit": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
+  "generatorPath": "experimental/lm1-training-recovery-20261104/make_intent_data.py",
+  "generatorSha256": "4682b2d34d7fcf09dc87918e123c2a08f24833928c2df11f5f319dee6445ea6c",
+  "generatorCheck": "PASS",
+  "dataHashes": {
+    "train.tsv": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b",
+    "dev.tsv": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe",
+    "test.sealed.tsv": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a"
+  },
+  "modelUpdates": 0,
+  "oldTestStatus": "CONSUMED",
+  "newModelEvaluation": "NOT_RUN"
+}

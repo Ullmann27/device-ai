@@ -1,0 +1,8 @@
+Ein Rechteck hat vier Seiten und vier rechte Winkel. Je zwei gegenüberliegende Seiten sind gleich lang.
+Die Zahl zwölf lässt sich ohne Rest durch drei teilen. Das Ergebnis dieser Division ist vier.
+Ein Kilogramm entspricht tausend Gramm. Ein halbes Kilogramm entspricht deshalb fünfhundert Gramm.
+Ein Alphabet gibt eine Reihenfolge von Buchstaben an. Ein Wort wird aus einer Folge solcher Zeichen gebildet.
+Ein Rezept beschreibt Zutaten und Arbeitsschritte. Die Schritte erklären, wie eine bestimmte Speise zubereitet wird.
+Eine Landkarte stellt ein Gebiet verkleinert dar. Zeichen und Beschriftungen helfen bei der Orientierung.
+Eine Tabelle ordnet Angaben in Zeilen und Spalten. So können mehrere Einträge übersichtlich verglichen werden.
+Eine Kopie übernimmt den Inhalt einer Vorlage. Wird nur die Kopie verändert, bleibt die Vorlage unverändert.

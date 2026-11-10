@@ -1,0 +1,245 @@
+{
+  "analysisUnchanged": true,
+  "answerFinal": {
+    "exact": 38,
+    "groups": {
+      "directivePosition": {
+        "first": {
+          "exact": 16,
+          "restrictedCorrect": 16,
+          "restrictedPredictions": {
+            "0": 24,
+            "3": 8
+          },
+          "rows": 32
+        },
+        "last": {
+          "exact": 22,
+          "restrictedCorrect": 22,
+          "restrictedPredictions": {
+            "0": 26,
+            "3": 6
+          },
+          "rows": 32
+        }
+      },
+      "familyId": {
+        "note-v1-dev-file": {
+          "exact": 10,
+          "restrictedCorrect": 10,
+          "restrictedPredictions": {
+            "0": 12,
+            "3": 4
+          },
+          "rows": 16
+        },
+        "note-v1-dev-keep": {
+          "exact": 8,
+          "restrictedCorrect": 8,
+          "restrictedPredictions": {
+            "0": 14,
+            "3": 2
+          },
+          "rows": 16
+        },
+        "note-v1-dev-retain": {
+          "exact": 12,
+          "restrictedCorrect": 12,
+          "restrictedPredictions": {
+            "0": 10,
+            "3": 6
+          },
+          "rows": 16
+        },
+        "note-v1-dev-write": {
+          "exact": 8,
+          "restrictedCorrect": 8,
+          "restrictedPredictions": {
+            "0": 14,
+            "3": 2
+          },
+          "rows": 16
+        }
+      },
+      "label": {
+        "0": {
+          "exact": 28,
+          "restrictedCorrect": 28,
+          "restrictedPredictions": {
+            "0": 28,
+            "3": 4
+          },
+          "rows": 32
+        },
+        "3": {
+          "exact": 10,
+          "restrictedCorrect": 10,
+          "restrictedPredictions": {
+            "0": 22,
+            "3": 10
+          },
+          "rows": 32
+        }
+      },
+      "lengthLevel": {
+        "long": {
+          "exact": 19,
+          "restrictedCorrect": 19,
+          "restrictedPredictions": {
+            "0": 29,
+            "3": 3
+          },
+          "rows": 32
+        },
+        "short": {
+          "exact": 19,
+          "restrictedCorrect": 19,
+          "restrictedPredictions": {
+            "0": 21,
+            "3": 11
+          },
+          "rows": 32
+        }
+      }
+    },
+    "pairs": {
+      "bothExact": 6,
+      "neitherExact": 0,
+      "sameGreedyOutput": 26,
+      "sameRestrictedPrediction": 26,
+      "total": 32
+    },
+    "restrictedCorrect": 38,
+    "restrictedPredictions": {
+      "0": 50,
+      "3": 14
+    },
+    "rows": 64
+  },
+  "baselineResultsIdentical": true,
+  "modelExecutions": 0,
+  "promotion": false,
+  "replayFinal": {
+    "exact": 35,
+    "groups": {
+      "directivePosition": {
+        "first": {
+          "exact": 16,
+          "restrictedCorrect": 16,
+          "restrictedPredictions": {
+            "0": 24,
+            "3": 8
+          },
+          "rows": 32
+        },
+        "last": {
+          "exact": 19,
+          "restrictedCorrect": 19,
+          "restrictedPredictions": {
+            "0": 29,
+            "3": 3
+          },
+          "rows": 32
+        }
+      },
+      "familyId": {
+        "note-v1-dev-file": {
+          "exact": 8,
+          "restrictedCorrect": 8,
+          "restrictedPredictions": {
+            "0": 14,
+            "3": 2
+          },
+          "rows": 16
+        },
+        "note-v1-dev-keep": {
+          "exact": 8,
+          "restrictedCorrect": 8,
+          "restrictedPredictions": {
+            "0": 14,
+            "3": 2
+          },
+          "rows": 16
+        },
+        "note-v1-dev-retain": {
+          "exact": 11,
+          "restrictedCorrect": 11,
+          "restrictedPredictions": {
+            "0": 11,
+            "3": 5
+          },
+          "rows": 16
+        },
+        "note-v1-dev-write": {
+          "exact": 8,
+          "restrictedCorrect": 8,
+          "restrictedPredictions": {
+            "0": 14,
+            "3": 2
+          },
+          "rows": 16
+        }
+      },
+      "label": {
+        "0": {
+          "exact": 28,
+          "restrictedCorrect": 28,
+          "restrictedPredictions": {
+            "0": 28,
+            "3": 4
+          },
+          "rows": 32
+        },
+        "3": {
+          "exact": 7,
+          "restrictedCorrect": 7,
+          "restrictedPredictions": {
+            "0": 25,
+            "3": 7
+          },
+          "rows": 32
+        }
+      },
+      "lengthLevel": {
+        "long": {
+          "exact": 18,
+          "restrictedCorrect": 18,
+          "restrictedPredictions": {
+            "0": 30,
+            "3": 2
+          },
+          "rows": 32
+        },
+        "short": {
+          "exact": 17,
+          "restrictedCorrect": 17,
+          "restrictedPredictions": {
+            "0": 23,
+            "3": 9
+          },
+          "rows": 32
+        }
+      }
+    },
+    "pairs": {
+      "bothExact": 3,
+      "neitherExact": 0,
+      "sameGreedyOutput": 29,
+      "sameRestrictedPrediction": 29,
+      "total": 32
+    },
+    "restrictedCorrect": 35,
+    "restrictedPredictions": {
+      "0": 53,
+      "3": 11
+    },
+    "rows": 64
+  },
+  "schema": "lm1-replay-pair-comparison-v1",
+  "scope": "POST_HOC_OPEN_DEV",
+  "sourceHashes": {
+    "analyze_contrast_pairs.py": "f94c81cad16409824fc6293704aac2bec32597bc8fe8ea819120fbaa2c4d34bd",
+    "answer-pair-audit.json": "bfbd9b6fbcbfc5a56e43f7ad97a69809f009c610ff9889e58b1dc6af4c555e2b",
+    "replay-pair-audit.json": "a81a1c070ec17d94171ac7bc5d219c70f95395034b19d53eef31fb1c7ed86be5"
+  }
+}

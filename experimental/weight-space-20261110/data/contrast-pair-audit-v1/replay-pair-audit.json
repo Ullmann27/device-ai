@@ -1,0 +1,382 @@
+{
+  "dataset": {
+    "dev": {
+      "allPairsEqualUtf8Bytes": true,
+      "pairs": 32,
+      "postHocMarkerRule": {
+        "correct": 64,
+        "rule": "contains Nicht => 0; otherwise => 3",
+        "total": 64
+      },
+      "prefixTokenCountByLabel": {
+        "0": {
+          "26": 4,
+          "31": 2,
+          "32": 4,
+          "33": 2,
+          "37": 2,
+          "39": 2,
+          "47": 2,
+          "50": 2,
+          "52": 1,
+          "53": 2,
+          "54": 1,
+          "55": 1,
+          "56": 2,
+          "57": 1,
+          "58": 1,
+          "60": 1,
+          "61": 1,
+          "63": 1
+        },
+        "3": {
+          "27": 2,
+          "29": 2,
+          "32": 2,
+          "33": 2,
+          "35": 2,
+          "36": 2,
+          "38": 2,
+          "42": 2,
+          "48": 1,
+          "50": 1,
+          "51": 1,
+          "53": 2,
+          "54": 1,
+          "56": 2,
+          "57": 2,
+          "59": 2,
+          "60": 1,
+          "62": 1,
+          "63": 1,
+          "66": 1
+        }
+      },
+      "prefixTokenDeltaLabel0MinusLabel3": {
+        "-3": 16,
+        "-1": 16
+      },
+      "rows": 64
+    },
+    "train": {
+      "allPairsEqualUtf8Bytes": true,
+      "pairs": 64,
+      "postHocMarkerRule": {
+        "correct": 128,
+        "rule": "contains Nicht => 0; otherwise => 3",
+        "total": 128
+      },
+      "prefixTokenCountByLabel": {
+        "0": {
+          "25": 1,
+          "26": 3,
+          "27": 3,
+          "28": 1,
+          "30": 1,
+          "31": 4,
+          "32": 6,
+          "33": 4,
+          "34": 1,
+          "36": 1,
+          "37": 3,
+          "38": 3,
+          "39": 1,
+          "43": 2,
+          "44": 2,
+          "45": 2,
+          "46": 2,
+          "48": 2,
+          "49": 4,
+          "50": 4,
+          "51": 4,
+          "52": 2,
+          "54": 2,
+          "55": 2,
+          "56": 2,
+          "57": 2
+        },
+        "3": {
+          "26": 1,
+          "27": 2,
+          "28": 1,
+          "29": 1,
+          "30": 2,
+          "31": 2,
+          "32": 3,
+          "33": 3,
+          "34": 2,
+          "35": 3,
+          "36": 3,
+          "37": 2,
+          "38": 2,
+          "39": 1,
+          "40": 1,
+          "41": 2,
+          "42": 1,
+          "44": 2,
+          "46": 2,
+          "47": 2,
+          "49": 4,
+          "50": 2,
+          "51": 2,
+          "52": 4,
+          "53": 2,
+          "54": 2,
+          "55": 4,
+          "57": 2,
+          "58": 2,
+          "60": 2
+        }
+      },
+      "prefixTokenDeltaLabel0MinusLabel3": {
+        "-3": 32,
+        "-1": 32
+      },
+      "rows": 128
+    }
+  },
+  "limitations": [
+    "Post-hoc open DEV diagnostics; no independent generalization evidence.",
+    "Token counts use the frozen Python tokenizer port, not a new native execution.",
+    "Equal bytes do not remove the observed token-length and marker shortcuts.",
+    "Group differences describe this dataset; no causal attribution is established.",
+    "Pair success requires both opposing labels, whereas row accuracy can reward class collapse."
+  ],
+  "modelExecutions": 0,
+  "parameterUpdates": 0,
+  "promotion": false,
+  "results": {
+    "0": {
+      "exact": 0,
+      "groups": {
+        "directivePosition": {
+          "first": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "restrictedPredictions": {
+              "2": 32
+            },
+            "rows": 32
+          },
+          "last": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "restrictedPredictions": {
+              "2": 32
+            },
+            "rows": 32
+          }
+        },
+        "familyId": {
+          "note-v1-dev-file": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "restrictedPredictions": {
+              "2": 16
+            },
+            "rows": 16
+          },
+          "note-v1-dev-keep": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "restrictedPredictions": {
+              "2": 16
+            },
+            "rows": 16
+          },
+          "note-v1-dev-retain": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "restrictedPredictions": {
+              "2": 16
+            },
+            "rows": 16
+          },
+          "note-v1-dev-write": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "restrictedPredictions": {
+              "2": 16
+            },
+            "rows": 16
+          }
+        },
+        "label": {
+          "0": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "restrictedPredictions": {
+              "2": 32
+            },
+            "rows": 32
+          },
+          "3": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "restrictedPredictions": {
+              "2": 32
+            },
+            "rows": 32
+          }
+        },
+        "lengthLevel": {
+          "long": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "restrictedPredictions": {
+              "2": 32
+            },
+            "rows": 32
+          },
+          "short": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "restrictedPredictions": {
+              "2": 32
+            },
+            "rows": 32
+          }
+        }
+      },
+      "pairs": {
+        "bothExact": 0,
+        "neitherExact": 32,
+        "sameGreedyOutput": 32,
+        "sameRestrictedPrediction": 32,
+        "total": 32
+      },
+      "restrictedCorrect": 0,
+      "restrictedPredictions": {
+        "2": 64
+      },
+      "rows": 64
+    },
+    "128": {
+      "exact": 35,
+      "groups": {
+        "directivePosition": {
+          "first": {
+            "exact": 16,
+            "restrictedCorrect": 16,
+            "restrictedPredictions": {
+              "0": 24,
+              "3": 8
+            },
+            "rows": 32
+          },
+          "last": {
+            "exact": 19,
+            "restrictedCorrect": 19,
+            "restrictedPredictions": {
+              "0": 29,
+              "3": 3
+            },
+            "rows": 32
+          }
+        },
+        "familyId": {
+          "note-v1-dev-file": {
+            "exact": 8,
+            "restrictedCorrect": 8,
+            "restrictedPredictions": {
+              "0": 14,
+              "3": 2
+            },
+            "rows": 16
+          },
+          "note-v1-dev-keep": {
+            "exact": 8,
+            "restrictedCorrect": 8,
+            "restrictedPredictions": {
+              "0": 14,
+              "3": 2
+            },
+            "rows": 16
+          },
+          "note-v1-dev-retain": {
+            "exact": 11,
+            "restrictedCorrect": 11,
+            "restrictedPredictions": {
+              "0": 11,
+              "3": 5
+            },
+            "rows": 16
+          },
+          "note-v1-dev-write": {
+            "exact": 8,
+            "restrictedCorrect": 8,
+            "restrictedPredictions": {
+              "0": 14,
+              "3": 2
+            },
+            "rows": 16
+          }
+        },
+        "label": {
+          "0": {
+            "exact": 28,
+            "restrictedCorrect": 28,
+            "restrictedPredictions": {
+              "0": 28,
+              "3": 4
+            },
+            "rows": 32
+          },
+          "3": {
+            "exact": 7,
+            "restrictedCorrect": 7,
+            "restrictedPredictions": {
+              "0": 25,
+              "3": 7
+            },
+            "rows": 32
+          }
+        },
+        "lengthLevel": {
+          "long": {
+            "exact": 18,
+            "restrictedCorrect": 18,
+            "restrictedPredictions": {
+              "0": 30,
+              "3": 2
+            },
+            "rows": 32
+          },
+          "short": {
+            "exact": 17,
+            "restrictedCorrect": 17,
+            "restrictedPredictions": {
+              "0": 23,
+              "3": 9
+            },
+            "rows": 32
+          }
+        }
+      },
+      "pairs": {
+        "bothExact": 3,
+        "neitherExact": 0,
+        "sameGreedyOutput": 29,
+        "sameRestrictedPrediction": 29,
+        "total": 32
+      },
+      "restrictedCorrect": 35,
+      "restrictedPredictions": {
+        "0": 53,
+        "3": 11
+      },
+      "rows": 64
+    }
+  },
+  "schema": "lm1-contrast-pair-diagnostic-v1",
+  "scope": "POST_HOC_OPEN_DEV",
+  "sourceHashes": {
+    "analysis": "f94c81cad16409824fc6293704aac2bec32597bc8fe8ea819120fbaa2c4d34bd",
+    "dev": "057dac485d2d4d39ebcfcdc7de3fe15c9c6c4bebd2bea888b4db303949798935",
+    "metadata": "de9d9fbef1e27cdc8a16e2687fab1d77c80aca3f9e09210b7d742b5d82328155",
+    "rawLog": "872bacc3de67f3faea406d4176e6721cb5c362f037afc29d017ec6ca9d3023ae",
+    "tokenizer": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "tokenizerImplementation": "06d28e26b9d7d1ddbd6a7da264c6c28cba47ccdb4a24f957f40a882a58e5cf32",
+    "train": "3666036e3b63db7738bebc391bd9058ca63bb0d1ea01b240726223c2ddc9039c"
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "schema": "lm1-distill-dev-registration-v1",
+  "experiment": "EXP-12",
+  "status": "FROZEN_BEFORE_MODEL_EXECUTION",
+  "nativeSourceRef": "4b8fa96effd5a390bd5fd83ed84b81ac850b1d5b",
+  "build": {
+    "schema": "continuum-weight-native-build-v1",
+    "historicalSourceRef": "4b8fa96effd5a390bd5fd83ed84b81ac850b1d5b",
+    "compileCommand": [
+      "/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/bin/kotlinc",
+      "-jvm-target",
+      "17",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/LmTrainingState.kt",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/LmTrainingFixture.kt",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/LmDistillPilot.kt",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/LmSoftTargetKl.kt",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/LmDistillChecks.kt",
+      "-d",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/experiment.jar"
+    ],
+    "compileExitCode": 0,
+    "originalSha256": {
+      "LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+      "LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+      "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+      "LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+    },
+    "patchedSha256": {
+      "LmModel.kt": "effba147289041b068c94222c33ae9549c29f8b287fc45a861d1a0a373db3c53",
+      "LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+      "LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+      "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e"
+    },
+    "extraSha256": {
+      "LmTrainingState.kt": "e45eb6b39e2fbaeb07328b175ae118d2ea6f2d827d402b51f3275437d2a3fd10",
+      "LmTrainingFixture.kt": "adbb7a4bcafcf781618c5ff4392edd959bddb97d280c3f3a7da2402521725f56",
+      "LmDistillPilot.kt": "24a79ea89e2a57ae5cbb1bf6aff7a5a0c94465d3db55a8fbc4c62dd5b6f338b1",
+      "LmSoftTargetKl.kt": "a0584ecea66b458555da0964cf24371043886de952d7059de117e62bd652d9ce",
+      "LmDistillChecks.kt": "58634aad5f126c78ee2b38b0981a1a302907115e9750d782a0273694b39bff4a"
+    },
+    "patchSha256": "7deb89ca77f41b45babdf223ec5ce8e1f4771aaea0cbbd92bdfd27edbbc3abb8",
+    "compilerVersion": "info: kotlinc-jvm 2.4.0 (JRE 21.0.13+9-1-deb13u2-Debian)\n",
+    "compilerJarSha256": "66e73eacd619c9beb7c22042117af36b443529c4d80237ee82cc4b2acb6f3d0b",
+    "stdlibSha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+    "jarSha256": "29c9873aa10f11560dcfa94ddc629724fbed582fe22978446ca10817a45303f3",
+    "classpath": "/workspace/scratch/970fc7edde8a/distill-build-v2/experiment.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+    "modelUpdates": 0,
+    "sourceBindingSha256": "78b7279cfa73709fee2657ddcb022d39c9c62e10676b89b322a9583ad3a4acbf",
+    "builderSha256": "b0562b82f6fc7117fbff1b5c7c0afa14ec115927b15726ba906cb86d94e199d4"
+  },
+  "commands": {
+    "distill": [
+      "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+      "-Xmx768m",
+      "-XX:ActiveProcessorCount=1",
+      "-cp",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/experiment.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+      "at.heinz.deviceai.learning.lm.LmDistillPilot",
+      "distill",
+      "/workspace/scratch/87c6edbcb340/weights-inputs/baseline.lm1",
+      "/workspace/scratch/87c6edbcb340/weights-inputs/tokenizer.lmbp",
+      "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data",
+      "/workspace/scratch/970fc7edde8a/weights-distill-001"
+    ]
+  },
+  "fileHashes": {
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java": "1a7e0b17c39003c75b457d686775ccb032e56fa9c8afe3c492d8eb3715e8951a",
+    "/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/training/LmContrastPilot.kt": "e4af24197f081c08584b01617eda8602313e517485c0d4c0c3b0a5dffb8bdf7f",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/training/CONTRAST-PROTOCOL.md": "0000978b8d82d83f2294e29a24dd6721c466f21cdddb67bfc35ba875d24be44b",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/training/run_contrast.py": "6575c2a40568af4c7091587bd6a40352339f3949bd194b263ad4f68b932ec114",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/training/build_experiment.py": "b0562b82f6fc7117fbff1b5c7c0afa14ec115927b15726ba906cb86d94e199d4",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/baseline.lm1": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data/note-contrasts-v1/train.tsv": "3666036e3b63db7738bebc391bd9058ca63bb0d1ea01b240726223c2ddc9039c",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data/note-contrasts-v1/dev.tsv": "057dac485d2d4d39ebcfcdc7de3fe15c9c6c4bebd2bea888b4db303949798935",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data/retention.tsv": "dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data/replay.txt": "b5fdd3c9528fe5a0f7a1dbc24db9e7169f0a00f9b31a211aff4ca8c6c97553c1",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data/retention_text.txt": "699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/LmDistillPilot.kt": "24a79ea89e2a57ae5cbb1bf6aff7a5a0c94465d3db55a8fbc4c62dd5b6f338b1",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/LmSoftTargetKl.kt": "a0584ecea66b458555da0964cf24371043886de952d7059de117e62bd652d9ce",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/LmDistillChecks.kt": "58634aad5f126c78ee2b38b0981a1a302907115e9750d782a0273694b39bff4a",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/PROTOCOL.md": "2db651db565d309b4b12b3723a1cc8b2392f18f750fb5305488f60099f444d9d",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/controls.json": "62d0221cf576c7a533bfdebdd3d6ce7d0be722700dee2b6e02da7f5607f89b0d",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/run_registered.py": "73cb1f2324675a984620ad8764fd84431e13cfe7c62636f8d69583b7f4354c8d",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/build.json": "906dccc660a566d686d55f96220f7a78cfabf297316a344dbe018c875f1f6344",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/preflight-results.json": "550d8457f563f77c275383f5bded88046655793e2bf032a6b394cb5d9c972f7f",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/selftest.stdout.txt": "c9e65f0a47507fbb34f72991ff9c9fa923bcaabc6f485bb5b119b974cf90b7d9",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/selftest.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/inspect.stdout.txt": "1fecc2e1ab85fe7b2f5d45d6ae4c44bd6fafce8ede3a539a38ad12ecda7b28d7",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/inspect.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/workspace/scratch/970fc7edde8a/distill-build-v2/experiment.jar": "29c9873aa10f11560dcfa94ddc629724fbed582fe22978446ca10817a45303f3",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/evaluation/contrast-audit-v1/analyze_contrast.py": "816fe2fb8edb921230bb73318e3c7654479ae6e4661499c855b23aa5fa9321e6",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/evaluation/audit_lm1_weights.py": "4915e1a4f90f0ed1ba4aa25d76adf0271b32681d1eba9e9389060c81570315ab",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/contrast-answer-results-v1/stdout.tsv": "0a4e8985c0cb8ed3f9868cc0b037878ebf7991bf0a7e65601b38d59f17db3076",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/contrast-replay-results-v1/stdout.tsv": "872bacc3de67f3faea406d4176e6721cb5c362f037afc29d017ec6ca9d3023ae",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/contrast-registration/registration.json": "349099d814832bb384c103afde8cdba59ee2ffe310eb1c157af009c620d1bdf6",
+    "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/evaluation/distill-v1/analyze_distill.py": "76c8f59b200b33d91a2cdc67716f909d61d183865c93e2e9f54874aed354eb8b"
+  },
+  "timeoutSeconds": 660,
+  "evidenceDirectories": {
+    "distill": "/workspace/scratch/970fc7edde8a/device-ai-weights/experimental/weight-space-20261110/training/distill-v1/results-v1"
+  },
+  "maxUpdatesPerArm": 128,
+  "totalPlannedUpdates": 128,
+  "scope": "OPEN_DEV_ONLY",
+  "blindTest": false,
+  "promotion": false,
+  "prerequisites": {
+    "nativeLossSelftestsPassed": 15,
+    "inspectExitCode": 0,
+    "modelUpdatesBeforeRegistration": 0,
+    "independentAnalyzerPin": "76c8f59b200b33d91a2cdc67716f909d61d183865c93e2e9f54874aed354eb8b"
+  }
+}

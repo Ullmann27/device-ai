@@ -1,0 +1,21 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "-v",
+    "test_contrast_pairs.py"
+  ],
+  "errors": 0,
+  "failures": 0,
+  "modelExecutions": 0,
+  "schema": "lm1-pair-diagnostic-test-receipt-v1",
+  "sha256": {
+    "analyze_contrast_pairs.py": "f94c81cad16409824fc6293704aac2bec32597bc8fe8ea819120fbaa2c4d34bd",
+    "answer-pair-audit.json": "bfbd9b6fbcbfc5a56e43f7ad97a69809f009c610ff9889e58b1dc6af4c555e2b",
+    "test_contrast_pairs.py": "dd36d22ed128bb9e6bd6de6a98d4247c9b85374fe4c76b8879658584ddb02c3d",
+    "tests.stderr.txt": "82c2ef55cf6adbae2e08a3d3b6ac10e6e79e2d2852473dda33ec8a407a5c410e",
+    "tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "tests": 9
+}

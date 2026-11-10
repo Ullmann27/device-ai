@@ -1,0 +1,13 @@
+{
+  "schema": "lm1-independent-full-state-identity-v1",
+  "status": "PASS",
+  "continuousSha256": "ef51b01fa6227c45808bb4df63227eff33b908c4db4789df6dc78f44c05f5923",
+  "resumedSha256": "ef51b01fa6227c45808bb4df63227eff33b908c4db4789df6dc78f44c05f5923",
+  "byteIdentical": true,
+  "bytes": 1586890,
+  "bodyChecksumValid": true,
+  "magic": "LM1T",
+  "scope": "Complete LM1T bytes compared independently. Moments not separately decoded by this check. No model execution.",
+  "auditorSha256": "4915e1a4f90f0ed1ba4aa25d76adf0271b32681d1eba9e9389060c81570315ab",
+  "directWeightReportSha256": "a89f1f7dcdbc2a4cbe42da8e45d1a64e1c5b1445d0cfe77c3cf58c33ae991e72"
+}

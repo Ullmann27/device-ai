@@ -1,0 +1,102 @@
+{
+  "files": {
+    "dev": {
+      "contrastPairs": 32,
+      "directivePositionCounts": {
+        "first": 32,
+        "last": 32
+      },
+      "familyIds": [
+        "note-v1-dev-file",
+        "note-v1-dev-keep",
+        "note-v1-dev-retain",
+        "note-v1-dev-write"
+      ],
+      "labelCounts": {
+        "0": 32,
+        "3": 32
+      },
+      "lengthLevelCounts": {
+        "long": 32,
+        "short": 32
+      },
+      "objectIds": [
+        "dev-lamp",
+        "dev-ribbon"
+      ],
+      "promptUtf8BytesMax": 99,
+      "promptUtf8BytesMin": 37,
+      "rows": 64,
+      "sha256": "057dac485d2d4d39ebcfcdc7de3fe15c9c6c4bebd2bea888b4db303949798935"
+    },
+    "train": {
+      "contrastPairs": 64,
+      "directivePositionCounts": {
+        "first": 64,
+        "last": 64
+      },
+      "familyIds": [
+        "note-v1-train-record",
+        "note-v1-train-remember",
+        "note-v1-train-secure",
+        "note-v1-train-store"
+      ],
+      "labelCounts": {
+        "0": 64,
+        "3": 64
+      },
+      "lengthLevelCounts": {
+        "long": 64,
+        "short": 64
+      },
+      "objectIds": [
+        "train-board",
+        "train-cloth",
+        "train-cup",
+        "train-room"
+      ],
+      "promptUtf8BytesMax": 89,
+      "promptUtf8BytesMin": 32,
+      "rows": 128,
+      "sha256": "3666036e3b63db7738bebc391bd9058ca63bb0d1ea01b240726223c2ddc9039c"
+    }
+  },
+  "format": {
+    "encoding": "UTF-8",
+    "eosIsNotLiteralText": true,
+    "header": "id\tlabel\tprompt",
+    "lineEnding": "LF",
+    "maskedTargetsOnly": true,
+    "modelInput": "Auftrag: {prompt}\n",
+    "target": "one label token then actual EOS"
+  },
+  "generatorSha256": "85a62a87477c8b371d175ae03b994d1f2b700c797c36787df338ea6ec807fb3e",
+  "labelMap": {
+    "0": "do not store the presented note",
+    "3": "store the presented note"
+  },
+  "limitations": [
+    "Developer-visible TRAIN/DEV only; no test or blind generalization claim.",
+    "Same open authoring process; semantic families and markers are shared.",
+    "Bitte/Jetzt versus Nicht can solve the bounded task; no general language claim.",
+    "Matched UTF-8 byte length does not imply matched BPE token length.",
+    "Native tokenizer must validate every full sequence against its context limit.",
+    "Only labels 0 and 3; other intents and long generation require retention checks.",
+    "Synthetic statements are task inputs, not facts or owner memory."
+  ],
+  "origin": "New authored synthetic German scenarios",
+  "rowMetadataSha256": "de9d9fbef1e27cdc8a16e2687fab1d77c80aca3f9e09210b7d742b5d82328155",
+  "seed": 20261110,
+  "status": "OPEN_DEVELOPMENT_ONLY",
+  "validation": {
+    "balancedContentLengthLevels": true,
+    "balancedDirectivePositions": true,
+    "balancedLabels": true,
+    "disjointDirectives": true,
+    "disjointNormalizedPrompts": true,
+    "disjointObjectContent": true,
+    "equalLabelByteLengthDistributions": true,
+    "equalPairedByteLengths": true
+  },
+  "version": "lm1-note-contrast-dev-20261110-v1"
+}

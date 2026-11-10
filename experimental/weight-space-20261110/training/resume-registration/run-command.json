@@ -1,0 +1,14 @@
+[
+  "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+  "-Xmx768m",
+  "-cp",
+  "/workspace/scratch/87c6edbcb340/weights-build-resume-v2/experiment.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+  "at.heinz.deviceai.learning.lm.LmOriginalResumeExperiment",
+  "run",
+  "/workspace/scratch/87c6edbcb340/weights-inputs/baseline.lm1",
+  "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+  "/workspace/scratch/87c6edbcb340/weights-inputs/tokenizer.lmbp",
+  "132160",
+  "95cf2d0f91be1d1c34635455dcc191850f14fd531a5c192ec30944a8d0ac77d1",
+  "/workspace/scratch/87c6edbcb340/weights-original-resume-run-001"
+]

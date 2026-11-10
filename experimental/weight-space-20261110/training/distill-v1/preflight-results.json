@@ -1,0 +1,35 @@
+{
+  "selftest": {
+    "command": [
+      "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+      "-Xmx768m",
+      "-XX:ActiveProcessorCount=1",
+      "-cp",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/experiment.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+      "at.heinz.deviceai.learning.lm.LmDistillChecks"
+    ],
+    "exitCode": 0,
+    "stdoutSha256": "c9e65f0a47507fbb34f72991ff9c9fa923bcaabc6f485bb5b119b974cf90b7d9",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "modelUpdates": 0
+  },
+  "inspect": {
+    "command": [
+      "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+      "-Xmx768m",
+      "-XX:ActiveProcessorCount=1",
+      "-cp",
+      "/workspace/scratch/970fc7edde8a/distill-build-v2/experiment.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+      "at.heinz.deviceai.learning.lm.LmDistillPilot",
+      "inspect",
+      "/workspace/scratch/87c6edbcb340/weights-inputs/baseline.lm1",
+      "/workspace/scratch/87c6edbcb340/weights-inputs/tokenizer.lmbp",
+      "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data",
+      "/workspace/scratch/970fc7edde8a/distill-inspect-unused"
+    ],
+    "exitCode": 0,
+    "stdoutSha256": "1fecc2e1ab85fe7b2f5d45d6ae4c44bd6fafce8ede3a539a38ad12ecda7b28d7",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "modelUpdates": 0
+  }
+}
