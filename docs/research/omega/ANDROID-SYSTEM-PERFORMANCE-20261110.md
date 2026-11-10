@@ -27,6 +27,9 @@ cold/warm state, known equal charging and thermal states, battery within five
 percentage points, battery temperature within 2 C, and controlled background load.
 Unknown conditions default to `NOT_COMPARABLE`. Battery temperature is not CPU temperature.
 Raw deltas remain visible when a comparison is rejected.
+Charging matches Android `BatteryManager.EXTRA_STATUS`: CHARGING (2) is true;
+DISCHARGING (3), NOT_CHARGING (4) and FULL (5) are false; unknown/missing is null.
+An attached USB/AC power source alone does not establish active charging.
 
 The practical no-gain band is max(1 ms, 5% baseline) for timing, max(1 MiB, 5%) for
 PSS and zero bytes for storage. These thresholds are explicit engineering choices,
@@ -98,5 +101,8 @@ no physical Fold7 performance or model improvement. No Gradle run by this agent.
 The extended Fold7 lab passes 57 Python tests (11 added); device calls in new tests
 are mocked. Installed SDK `adb devices` actually ran and returned no attached
 device. Device capture execution and before/after Fold7 measurements: NOT_RUN.
+Charging-status follow-up: three added tests reproduce nine failing subcases with
+the previous power-source interpretation. After the status correction, the full
+Python suite passes 60 tests; raw red/green logs retained in the evidence folder.
 PORTIERT: root integration pending; VERIFIZIERT: scoped host; GERÄTEBESTÄTIGT: no.
 Rollback: revert measurement files; existing collectors and authority remain unchanged.

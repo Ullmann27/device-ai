@@ -72,10 +72,12 @@ class SystemIntelligenceUiTest {
         assertEquals(ToolExecutionStatus.REJECTED, result.record.status)
         assertEquals(0, dispatched)
     }
-    @Test fun existingCinemaPresentsMeasuredAndUnknownStates() {
+    @Test @Config(qualifiers = "w900dp-h1120dp-port-mdpi")
+    fun existingCinemaPresentsMeasuredAndUnknownStates() {
         render("system-inner", 900, 1120)
     }
-    @Test fun compactCinemaPresentsMeasuredAndUnknownStates() {
+    @Test @Config(qualifiers = "w440dp-h956dp-port-mdpi")
+    fun compactCinemaPresentsMeasuredAndUnknownStates() {
         render("system-cover", 440, 956)
     }
     private fun render(label: String, width: Int, height: Int) {
@@ -87,6 +89,8 @@ class SystemIntelligenceUiTest {
             .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
         app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
             .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit()
+            .clear().putBoolean("jarvis-shell", true).commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         var pump: CockpitHostFramePump? = null
         try {
@@ -109,6 +113,9 @@ class SystemIntelligenceUiTest {
             }
             fun field(name: String) = AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }
             val executor = field("executor").get(activity) as DeviceToolExecutor
+            val avatar = field("hologramView").get(activity) as ContinuumHologramView
+            avatar.setAnimationsEnabled(true)
+            avatar.setForegroundActive(true)
             val open = AgentActivity::class.java.getDeclaredMethod("showSystemIntelligence").apply { isAccessible = true }
             field("systemReport").set(activity, "TESTDATEN · keine Fold7-Messung. Noch keine Diagnose.")
             measure(); advance(800); open.invoke(activity); advance(1200)

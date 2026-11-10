@@ -3752,7 +3752,8 @@ class AgentActivity : Activity() {
         if (title == "Systemdiagnose") {
             box.addView(at.heinz.deviceai.ui.SystemDiagnosisHologramView(this, executor.lastDiagnosis), matchWidth(top = 8))
         }
-        box.addView(cockpit.section(this, "LIVE-STATUS · ECHTE GERÄTEDATEN"), matchWidth(top = 12))
+        box.addView(cockpit.section(this, if (title == "Systemdiagnose") "MESSSTATUS · LOKALE MOMENTAUFNAHME"
+            else "LIVE-STATUS · ECHTE GERÄTEDATEN"), matchWidth(top = 12))
         val statusGrid = cockpit.statusPane(this)
         cockpit.updateStatus(statusGrid, "Status wird gelesen …")
         box.addView(statusGrid, matchWidth(top = 3))
@@ -4439,6 +4440,8 @@ class AgentActivity : Activity() {
             activeLocalRequest = false
             setBusy(false)
             systemReport = result.output ?: "Schritt nicht erfolgreich: ${result.record.status}. Keine Verbesserung bestätigt."
+            if (call.name == SystemIntelligenceCommands.FILES && result.record.status == ToolExecutionStatus.SUCCEEDED)
+                executor.lastStorageAnalysis?.let { systemReport += "\n\n" + it.localPreview() }
             if (call.name in setOf(SystemIntelligenceCommands.CLEANUP, SystemIntelligenceCommands.RESTORE)) {
                 executor.lastCleanupResult?.takeIf { it.first == call.callId }?.second?.let {
                     systemReport += "\nBereinigungsstatus: ${it.status}; entfernte Berichte: ${it.removedFiles}." +
