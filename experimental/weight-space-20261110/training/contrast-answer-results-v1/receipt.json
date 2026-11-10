@@ -1,0 +1,34 @@
+{
+  "schema": "lm1-contrast-dev-run-v1",
+  "arm": "answer",
+  "registrationSha256": "349099d814832bb384c103afde8cdba59ee2ffe310eb1c157af009c620d1bdf6",
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx768m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/experiment.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmContrastPilot",
+    "answer",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/baseline.lm1",
+    "/workspace/scratch/87c6edbcb340/weights-inputs/tokenizer.lmbp",
+    "/workspace/scratch/87c6edbcb340/device-ai-weights/experimental/weight-space-20261110/data",
+    "/workspace/scratch/87c6edbcb340/weights-contrast-answer-001"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "elapsedSeconds": 8.970206138001231,
+  "maxChildRssKiB": 120128,
+  "rssMeaning": "Linux child high-water mark, not Android",
+  "inputsUnchanged": true,
+  "stdoutSha256": "0a4e8985c0cb8ed3f9868cc0b037878ebf7991bf0a7e65601b38d59f17db3076",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "artifacts": {
+    "final.lm1": {
+      "sha256": "3820d1596dee43a675305645feece6d46b2711f8a03db0be8171055ee45128ed",
+      "bytes": 529532
+    }
+  },
+  "qualityAcceptance": "REQUIRES_INDEPENDENT_DEV_ANALYSIS",
+  "productionPromotion": false
+}
