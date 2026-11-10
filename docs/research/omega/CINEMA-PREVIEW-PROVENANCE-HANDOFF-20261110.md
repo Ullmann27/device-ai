@@ -38,3 +38,30 @@ contracts do not prove actual touch/render behavior; the existing native
 fixtures remain the runtime gate. No Android source, workflow version pin,
 package, APK or signing change. Full combined QA remains with the root.
 Rollback: revert this test/evidence correction only.
+
+## Full-Node follow-up
+
+The root's full Node run on `1d61a30b99cdb3dd229ec0674a582d515dcdd7c1`
+reported three stale source-contract failures. Its two additional failures
+were `android-holographic-home.test.mjs` (the same listener) and
+`code52-graphics-branch-intake.test.mjs` (the old shared animation clock).
+
+The listener contract now requires origin capture, navigation and `finally`
+cleanup. The graphics contract requires scale and thermal-budget gating,
+pressed-only material time for tiles, ambient background time, and both
+caller-side motion gates and clock forwarding. Two negative tests reject
+11 mutated source snippets: three listener and eight clock/gate mutations.
+They verify source-contract sensitivity, not Android runtime behavior.
+
+Run the five-file command above with these two additional filenames:
+
+```sh
+.github/continuum/android-holographic-home.test.mjs
+.github/continuum/code52-graphics-branch-intake.test.mjs
+```
+
+Final seven-file selection on Node 24.22.1: **31/31 PASS**, 0 failures/skips,
+including both negative tests. Raw output:
+`docs/evidence/cinema-preview-contracts-20261110/node31.txt`.
+No product source changed. The root retains responsibility for rerunning the
+full Node gate on the integrated APK source; 31 is not a full-suite result.

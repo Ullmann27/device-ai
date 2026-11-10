@@ -17,6 +17,8 @@ const section=(start,end)=>{
  assert.ok(a>=0&&b>a,'Expected real Android UI method boundaries '+start);
  return activity.slice(a,b);
 };
+const assertShellAction=source=>assert.match(source,
+ /setOnClickListener \{\s*activatingShellAction = this\s*try \{ openJarvisTarget\(target\) \} finally \{ activatingShellAction = null \}\s*\}/);
 
 test('transparent native 3D hero has no network, model execution or fake status',()=>{
  assert.match(orb,/class ContinuumHologramView/);
@@ -84,10 +86,21 @@ test('responsive dashboard retains chat composer, updates and keyboard visibilit
  assert.match(pane,/home\.setJarvisShellStage\(true\)/);
  assert.match(shellAction,/isClickable = true/);
  assert.match(shellAction,/isFocusable = true/);
- assert.match(shellAction,/setOnClickListener \{ openJarvisTarget\(target\) \}/);
+ assertShellAction(shellAction);
  assert.match(shellAction,/JarvisShellContent\.tileValue\(target, state, System\.currentTimeMillis\(\)\)/);
  assert.match(shellAction,/contentDescription = label \+ \(value\?\.let/);
  assert.doesNotMatch(pane,/buildQuickActions\(\)/);
+});
+
+test('shell action contract rejects missing navigation or origin cleanup',()=>{
+ const listener=homeView.match(/setOnClickListener \{\s*activatingShellAction = this\s*try \{ openJarvisTarget\(target\) \} finally \{ activatingShellAction = null \}\s*\}/)?.[0];
+ assert.ok(listener,'Current shell listener');
+ assertShellAction(listener);
+ for(const removed of ['activatingShellAction = this','openJarvisTarget(target)',
+  'activatingShellAction = null']) {
+  assert.ok(listener.includes(removed),removed);
+  assert.throws(()=>assertShellAction(listener.replace(removed,'')),assert.AssertionError);
+ }
 });
 
 test('reference-style composer keeps real model/web/file actions and truthful idle state',()=>{
