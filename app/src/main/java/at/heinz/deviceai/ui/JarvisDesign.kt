@@ -31,6 +31,10 @@ object JarvisDesign {
         val chevron = Argb.rgb(0x51, 0xAD, 0xC5)            // tile.chevron #51ADC5 (antialiased 1 px stroke, true colour brighter)
         val pillRimStart = Argb.rgb(0x2A, 0xEA, 0xFC)       // pill.rim.left #2AEAFC
         val pillRimEnd = Argb.rgb(0xCC, 0x94, 0xEF)         // pill.rim.right #CC94EF
+        val cardRimStart = Argb.rgb(0x08, 0x80, 0x9A)       // card.rim.left median of 4 ref5 cards (#0588A1 #0C7792 #0F6A83 #0DB1BD)
+        val cardRimEnd = Argb.rgb(0x14, 0x92, 0xBA)         // card.rim.right median (#05B0E0 #16DAF6 #237394; violet only on right capability card)
+        val cardRimEndViolet = Argb.rgb(0x83, 0x5F, 0xBE)   // card.rim.right of right capability list #835FBE
+        val chipLocalSurface = Argb.rgb(0x02, 0x1E, 0x24)   // chip "Local · Private" fill #021E24
         val pillSurface = Argb.rgb(0x07, 0x20, 0x4D)        // pill.fill #07204D
         val cyan = Argb.rgb(0x2F, 0xF9, 0xFE)               // cyan.text #2FF9FE
         val cyanSoft = Argb.rgb(0x78, 0xF6, 0xFB)           // cyan.icon #78F6FB
