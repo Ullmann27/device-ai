@@ -69,6 +69,7 @@ class CinemaAvatarExperimentTest {
         assertEquals(0f, mapper.weights[blink], 0f)
         val idle = AvatarMorphMapper(AvatarGlbContract.TARGETS)
         idle.update(pose(gazeX = -.6f, directed = true), 1f, true, gazeBlinkEnabled = true)
+        idle.update(pose(gazeX = .6f, directed = true), 1.10f, true, gazeBlinkEnabled = true)
         idle.update(pose(gazeX = .6f, directed = true), 1.155f, true, gazeBlinkEnabled = true)
         assertTrue("a directed jump still blinks when the mouth is closed", idle.weights[blink] > .5f)
     }

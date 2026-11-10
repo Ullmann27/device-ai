@@ -67,7 +67,7 @@ class DocumentBlueprintProjection {
     }
 
     fun onDraft(event: DocumentDraftReadyEvent) {
-        val text = event.text.filterNot(Char::isISOControl).trim()
+        val text = event.text.filterNot { it.isISOControl() && it != '\n' }.trim()
         if (text.isEmpty()) return
         draft = parseDraft(text)
         actions = event.actions

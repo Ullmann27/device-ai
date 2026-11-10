@@ -129,7 +129,7 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
         actions: Set<DocumentDraftAction> = emptySet()
     ) {
         if (isClosed(turnId)) return
-        val cleaned = clean(text, 4_000)
+        val cleaned = text.filterNot { it.isISOControl() && it != '\n' }.trim().take(4_000)
         if (cleaned.isEmpty()) return
         bus.emit(DocumentDraftReadyEvent(
             turnId, clock(), cleaned,

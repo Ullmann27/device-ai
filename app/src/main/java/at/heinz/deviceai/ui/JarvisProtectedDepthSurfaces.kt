@@ -20,9 +20,14 @@ object JarvisProtectedDepthSurfaces {
      */
     fun recess(sheet: RectF, density: Float, out: RectF): Boolean {
         if (!usable(sheet) || !density.isFinite() || density <= 0f) return false
-        val inset = minOf(RECESS_DP * density, minOf(sheet.width(), sheet.height()) * .12f)
-        if (sheet.width() - 2f * inset <= 0f || sheet.height() - 2f * inset <= 0f) return false
-        out.set(sheet.left + inset, sheet.top + inset, sheet.right - inset, sheet.bottom - inset)
+        val sheetW = sheet.right - sheet.left
+        val sheetH = sheet.bottom - sheet.top
+        val inset = minOf(RECESS_DP * density, minOf(sheetW, sheetH) * .12f)
+        if (sheetW - 2f * inset <= 0f || sheetH - 2f * inset <= 0f) return false
+        out.left = sheet.left + inset
+        out.top = sheet.top + inset
+        out.right = sheet.right - inset
+        out.bottom = sheet.bottom - inset
         return usable(out)
     }
 
@@ -32,5 +37,6 @@ object JarvisProtectedDepthSurfaces {
     }
 
     private fun usable(box: RectF) = box.left.isFinite() && box.top.isFinite() &&
-        box.right.isFinite() && box.bottom.isFinite() && box.width() > 0f && box.height() > 0f
+        box.right.isFinite() && box.bottom.isFinite() &&
+        box.right - box.left > 0f && box.bottom - box.top > 0f
 }
