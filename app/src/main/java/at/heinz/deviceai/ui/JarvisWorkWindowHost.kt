@@ -99,6 +99,7 @@ class JarvisWorkWindowHost(
     }
 
     fun close(immediate: Boolean = false) {
+        currentId?.let { cameraHome?.jarvisShell?.closeProjectedWindow(it, android.os.SystemClock.uptimeMillis()) }
         if (immediate) cameraHome?.hologram?.setWorkWindowCamera(false, immediate = true)
         currentFui?.close(immediate)
         current?.close(immediate)
@@ -184,6 +185,23 @@ class JarvisWorkWindowHost(
                     director.windowMoved(id, if (workingId == id && emphasizedWork)
                         ToolWorkSceneLease.workingGaze(target) else target)
                 }
+                val phase = window.projectedMotionPhase()
+                val moving = phase == at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.FLYING ||
+                    phase == at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSING
+                val vp = framing.viewport
+                shell.offerProjectedMotion(
+                    windowId = id,
+                    projectedX = x,
+                    projectedY = y,
+                    headX = framing.face?.centerX() ?: vp.centerX(),
+                    headY = framing.face?.centerY() ?: vp.centerY(),
+                    viewportWidth = vp.width(),
+                    viewportHeight = vp.height(),
+                    phase = phase,
+                    accentArgb = scene.accent,
+                    reducedMotion = window.motionSuppressed(),
+                    moving = moving,
+                )
             }
         }
         fui.requestFrame = { shell.invalidate() }
