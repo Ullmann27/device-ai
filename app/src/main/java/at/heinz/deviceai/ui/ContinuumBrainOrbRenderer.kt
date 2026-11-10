@@ -33,17 +33,25 @@ class ContinuumBrainOrbRenderer {
         drawPedestal(p, cx, cy + r * 1.0f, r)
         drawLightCone(p, cx, cy, r)
         drawOrbits(p, cx, cy, r, stable, back = true)
-        // Quiet depth wash (violet = rear space). Not a neon flood around the original sphere.
+        // Hologram bloom toward ref-d: cyan volume plus a warm amber corona.
+        // Extra fillCircles only — no fifth orbit plane (Fold7 thermal budget).
         p.setAdditive(true)
+        p.fillCircle(cx, cy, r * 2.08f, Fill.Radial(cx, cy, r * 2.08f,
+            intArrayOf(Argb.withAlpha(C.cyan, .10f), Argb.withAlpha(C.warn, .06f), 0),
+            floatArrayOf(0f, .36f, 1f)))
+        p.fillCircle(cx, cy, r * 1.74f, Fill.Radial(cx, cy, r * 1.74f,
+            intArrayOf(Argb.withAlpha(C.cyan, .16f), Argb.withAlpha(C.violet, .08f), 0),
+            floatArrayOf(0f, .40f, 1f)))
         p.fillCircle(cx, cy, r * 1.55f, Fill.Radial(cx, cy, r * 1.55f,
-            intArrayOf(Argb.withAlpha(C.violet, .12f), Argb.withAlpha(C.cyan, .05f), 0),
+            intArrayOf(Argb.withAlpha(C.violet, .16f), Argb.withAlpha(C.cyan, .08f), 0),
             floatArrayOf(0f, .42f, 1f)))
         p.setAdditive(false)
-        // Obsidian glass: dark interior, cyan only as a Fresnel edge stop.
+        // Obsidian glass with volume: darker core, warm mid stop, brighter Fresnel rim.
+        // Still a single fill at radius r (unique 0.78 r core stays in drawCore).
         p.fillCircle(cx, cy, r, Fill.Radial(cx, cy - r * .22f, r * 1.05f,
-            intArrayOf(Argb.withAlpha(C.background, .72f), Argb.withAlpha(C.backgroundHaze, .50f),
-                Argb.withAlpha(C.cyanDeep, .28f), Argb.withAlpha(C.cyan, .50f)),
-            floatArrayOf(0f, .42f, .78f, 1f)), .78f)
+            intArrayOf(Argb.withAlpha(C.background, .64f), Argb.withAlpha(C.backgroundHaze, .44f),
+                Argb.withAlpha(C.cyanDeep, .30f), Argb.withAlpha(C.warn, .18f), Argb.withAlpha(C.cyan, .62f)),
+            floatArrayOf(0f, .36f, .66f, .86f, 1f)), .74f)
         p.setAdditive(true)
         p.fillCircle(cx, cy + r * .06f, r * .90f, Fill.Radial(cx, cy + r * .06f, r * .90f,
             intArrayOf(Argb.withAlpha(C.glowCore, .16f), Argb.withAlpha(C.cyan, .10f), 0),
@@ -78,6 +86,10 @@ class ContinuumBrainOrbRenderer {
         p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 208f, 50f, r * .013f, Fill.Solid(C.glowCore), .92f)
         p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 18f, 72f, r * .024f, Fill.Solid(C.violet), .70f)
         p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 328f, 58f, r * .014f, Fill.Solid(C.violetRim), .78f)
+        // Warm equatorial band (ref-d amber rings). strokeArc only — not a fifth projected orbit.
+        p.strokeArc(cx - r * 1.02f, cy - r * .20f, cx + r * 1.02f, cy + r * .20f, 192f, 156f, r * .030f, Fill.Solid(C.warn), .40f)
+        p.strokeArc(cx - r * 1.02f, cy - r * .20f, cx + r * 1.02f, cy + r * .20f, 200f, 140f, r * .011f, Fill.Solid(C.warn), .78f)
+        p.strokeArc(cx - r * 1.05f, cy - r * .36f, cx + r * 1.05f, cy + r * .36f, 14f, 148f, r * .016f, Fill.Solid(C.warn), .30f)
         // Specular sickle + point (upper left, same key-light direction).
         p.strokeArc(cx - r * .86f, cy - r * .86f, cx + r * .86f, cy + r * .86f, 200f, 60f, r * .05f, Fill.Solid(C.activeWhite), .22f)
         p.strokeArc(cx - r * .86f, cy - r * .86f, cx + r * .86f, cy + r * .86f, 210f, 40f, r * .015f, Fill.Solid(C.activeWhite), .55f)
@@ -127,10 +139,11 @@ class ContinuumBrainOrbRenderer {
                         2 -> if (half) c.violetRim else c.cyan
                         else -> if (half) c.warn else c.magenta
                     }
-                    p.drawLine(a[0], a[1], b[0], b[1], r * .070f, Fill.Solid(color), alpha * .16f)
-                    p.drawLine(a[0], a[1], b[0], b[1], r * .034f, Fill.Solid(color), alpha * .28f)
-                    p.drawLine(a[0], a[1], b[0], b[1], r * .014f, Fill.Solid(color), alpha)
-                    p.drawLine(a[0], a[1], b[0], b[1], r * .005f, Fill.Solid(c.glowCore), alpha)
+                    val warm = if (ring == 3) 1.20f else 1f
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .070f * warm, Fill.Solid(color), alpha * .16f * warm)
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .034f * warm, Fill.Solid(color), alpha * .28f * warm)
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .014f * warm, Fill.Solid(color), (alpha * warm).coerceAtMost(1f))
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .005f * warm, Fill.Solid(c.glowCore), (alpha * warm).coerceAtMost(1f))
                 }
                 val swap = a
                 a = b
@@ -212,7 +225,7 @@ class ContinuumBrainOrbRenderer {
         val glow = .65f + .25f * s.pulse.coerceIn(0f, 1f) + if (s.processing) .1f else 0f
         p.setAdditive(true)
         p.fillOval(bx - hw * 1.25f, by - hh * 1.4f, bx + hw * 1.25f, by + hh * 1.4f,
-            Fill.Radial(bx, by, hw * 1.25f, intArrayOf(Argb.withAlpha(C.violetSoft, .35f * glow), Argb.withAlpha(C.cyanDeep, .12f), 0)), 1f)
+            Fill.Radial(bx, by, hw * 1.25f, intArrayOf(Argb.withAlpha(C.cyan, .22f * glow), Argb.withAlpha(C.violetSoft, .38f * glow), Argb.withAlpha(C.cyanDeep, .14f), 0)), 1f)
         for (side in intArrayOf(-1, 1)) {
             brainPath.reset()
             val n = 48
@@ -349,6 +362,10 @@ class ContinuumBrainOrbRenderer {
             intArrayOf(Argb.withAlpha(C.glowCore, .45f), Argb.withAlpha(C.cyan, .30f), Argb.withAlpha(C.magenta, .10f), 0)), 1f)
         p.strokeOval(cx - r * 1.32f, top + r * .02f, cx + r * 1.32f, top + r * .40f, r * .012f,
             Fill.Linear(cx - r * 1.32f, top, cx + r * 1.32f, top, intArrayOf(C.magenta, C.violetRim, C.cyan, C.warn, C.magenta)), .85f)
+        p.strokeOval(cx - r * 1.40f, top - r * .02f, cx + r * 1.40f, top + r * .46f, r * .020f,
+            Fill.Solid(C.warn), .38f)
+        p.strokeOval(cx - r * 1.40f, top - r * .02f, cx + r * 1.40f, top + r * .46f, r * .008f,
+            Fill.Solid(C.warn), .70f)
         // Lichtbalken unter dem Sockel
         val by = top + r * .40f; val bw = r * .16f; val gap = r * .06f
         for (k in -1..1) {
@@ -372,7 +389,7 @@ class ContinuumBrainOrbRenderer {
             val w = r * (1.18f - t * .86f)
             val a = (1f - t) * .32f
             p.fillOval(cx - w, y - r * .045f, cx + w, y + r * .045f,
-                Fill.Solid(if (i == 2) C.warn else if (i % 2 == 0) C.cyan else C.violetRim), a)
+                Fill.Solid(if (i == 2 || i == 5) C.warn else if (i % 2 == 0) C.cyan else C.violetRim), a)
         }
         val beam = JarvisSceneFills.cached(listOf("cone", cx.toInt(), cy.toInt(), r.toInt())) {
             Fill.Linear(cx, baseY, cx, cy - r * .18f,
