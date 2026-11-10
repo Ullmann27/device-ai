@@ -1,0 +1,16 @@
+source_revision=2824c3718e560ce3f369eb20666b434b99db1c39
+d499bf6992116571d886487b9f1d8de9f104a9a5b7b25e036dd3a553721b3d95  /workspace/scratch/5900afa6af29/cognitive-budget/app/src/main/java/at/heinz/deviceai/cognitive/Deliberation.kt
+94c59bb5d7105773ab7b4c8aa79f044bb9e435311e5fccce8ffca20bc6deddfc  /workspace/scratch/5900afa6af29/cognitive-budget/app/src/main/java/at/heinz/deviceai/localmodel/LocalModelComputeBudget.kt
+9c4b2c84a0c7eb6f7432f5666f4d71baab68dce8e3ab22851942c22c8cc70144  /workspace/scratch/5900afa6af29/cognitive-budget/app/src/main/java/at/heinz/deviceai/cognitive/CognitiveBudgetController.kt
+5f6e4ed6c98908f82cbea2f013791097b98b67f423aa8b5d343539b591435ee5  /workspace/scratch/5900afa6af29/cognitive-budget/app/src/main/java/at/heinz/deviceai/cognitive/CognitiveBudgetResearchRunner.kt
+3e4af61366e7bcd6fed0048588fc97db77aaab2d59667010e1522009a7755367  /tmp/continuum-toolchain/cognitive-budget-final/ReasoningContracts.kt
+fa58a645a0c46c29bb1b2392a930c94451d0b597e09669d3ba152c4257338a26  /workspace/scratch/5900afa6af29/cognitive-budget/app/src/test/java/at/heinz/deviceai/cognitive/CognitiveBudgetControllerTest.kt
+4e3ea2b84e29492f01d9f4ca6ad112eb99707d29f11c909e1b7d37fe8ae94c67  /workspace/scratch/5900afa6af29/cognitive-budget/app/src/test/java/at/heinz/deviceai/cognitive/CognitiveBudgetResearchRunnerTest.kt
+4e31df93a62f0292a90bb83e147f7173e29c62ea748dda3d0d8d586935223c64  /workspace/scratch/5900afa6af29/cognitive-budget/app/src/test/java/at/heinz/deviceai/cognitive/DeliberationTest.kt
+beeb26e329c4d297123aa7a4df2bddef2481022fc7fae1d8765ab60c05c82867  /workspace/scratch/5900afa6af29/cognitive-budget/app/src/test/java/at/heinz/deviceai/localmodel/LocalModelComputeBudgetTest.kt
+c1af55664a6e2efc964702f45f7cbb47dbd8670d12176c7d5631f98a552d4f2d  /workspace/scratch/5900afa6af29/cognitive-budget/tools/continuum-cognitive-budget/CognitiveBudgetExperiment.kt
+24142bf89ef045537561b3e7a9ee8ae1d24ed83ede347db6ad28e92249a0ba67  /workspace/scratch/5900afa6af29/cognitive-budget/scripts/continuum-cognitive-budget-check.sh
+info: kotlinc-jvm 2.4.0 (JRE 21.0.13+9-1-deb13u2-Debian)
+openjdk version "21.0.13" 2026-10-20 LTS
+OpenJDK Runtime Environment Temurin-21.0.13+9 (build 21.0.13+9-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.13+9 (build 21.0.13+9-LTS, mixed mode, sharing)
