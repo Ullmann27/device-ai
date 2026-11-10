@@ -20,3 +20,15 @@ silence and avatar identity assertions remain.
 No production source changes. Root's ongoing full run is untouched. Revised-test
 compilation/execution: **NOT_RUN**, pending integration into the next root test
 run. `git diff --check`: PASS. No device, audio, renderer or APK claim.
+
+Two analogous camera assertions in `ContinuumSystemStatusWorkWindowUiTest` now
+require continuous projection at STOP, CLOSING for any remaining window, and a
+complete camera return after the canonical window-close and camera durations
+plus a 64 ms frame margin. Immediate speech/utterance cancellation and rejection
+of late word callbacks remain required. Focus loss, pause and reduced-motion
+checks still require immediate reset and no later replay.
+
+These two camera tests are source-contract corrections authorized by the
+integration owner while the original full run continues. Their failures have
+not yet been observed in that run, and their revised execution is **NOT_RUN**.
+No source or test file in the running root checkout was changed by this worker.
