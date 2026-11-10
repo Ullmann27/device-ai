@@ -79,6 +79,60 @@ class CinemaWindowGazeBridgeTest {
         CinemaWindowLightState.reset()
     }
 
+    @Test fun nextTurnCanReuseTheSameWorkWindow() {
+        CinemaWindowLightState.reset()
+        val (reducer, bridge) = reducerDirector()
+        bridge.render(motion(.4f))
+        now += 100L
+        bridge.render(CockpitAnimationEvent.TurnEnded("turn-1", now, true))
+        now += 100L
+        bridge.render(motion(-.4f, turnId = "turn-2"))
+        assertTrue(reducer.pose(now).gazeDirected)
+        assertEquals(-.4f, reducer.pose(now).gazeX, .0001f)
+        bridge.render(motion(.4f, phase = WindowProjectedMotion.Phase.CLOSED))
+        assertTrue(CinemaWindowLightState.open)
+        assertEquals(-.4f, CinemaWindowLightState.gazeX, 0f)
+    }
+
+    @Test fun closingTheLitWindowRestoresAnotherOpenWindow() {
+        CinemaWindowLightState.reset()
+        val (_, bridge) = reducerDirector()
+        bridge.render(motion(-.3f, y = .2f))
+        now += 100L
+        bridge.render(motion(.6f, y = -.4f, windowId = "work-process"))
+        now += 100L
+        bridge.render(motion(.6f, phase = WindowProjectedMotion.Phase.CLOSED, windowId = "work-process"))
+        assertTrue(CinemaWindowLightState.open)
+        assertEquals(-.3f, CinemaWindowLightState.gazeX, 0f)
+        assertEquals(.2f, CinemaWindowLightState.gazeY, 0f)
+    }
+
+    @Test fun speakingRetainsWindowLightingAndTerminalEventsStillCloseIt() {
+        CinemaWindowLightState.reset()
+        val director = AvatarDirector(clock = { now })
+        val bridge = CinemaWindowGazeBridge(director)
+        director.speechStarted("speech", "Synthetischer Testsatz.")
+        bridge.render(motion(.3f, y = -.7f))
+        assertEquals(-.7f, CinemaWindowLightState.gazeY, 0f)
+        now += 100L
+        bridge.render(CockpitAnimationEvent.TurnEnded("turn-1", now, false))
+        now += 100L
+        bridge.render(motion(.9f))
+        assertFalse(CinemaWindowLightState.open)
+    }
+
+    @Test fun delayedSamplesCannotMoveANewerWindow() {
+        CinemaWindowLightState.reset()
+        val (_, bridge) = reducerDirector()
+        now = 2_000L
+        bridge.render(motion(.6f, turnId = "turn-2"))
+        now = 1_000L
+        bridge.render(motion(-.6f))
+        assertEquals(.6f, CinemaWindowLightState.gazeX, 0f)
+        bridge.render(motion(Float.NaN))
+        assertEquals(.6f, CinemaWindowLightState.gazeX, 0f)
+    }
+
     @Test fun concurrentUiAndWorkerMotionCannotCorruptTheOpenWindowRegistry() {
         CinemaWindowLightState.reset()
         val (_, bridge) = reducerDirector()
