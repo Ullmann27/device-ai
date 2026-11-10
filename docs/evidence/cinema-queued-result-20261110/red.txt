@@ -1,6 +1,6 @@
 JUnit version 4.13.2
 ....E....E
-Time: 3.928
+Time: 3.42
 There were 2 failures:
 1) queuedEarlyResultAdvancesAfterReturnAndConstruction(at.heinz.deviceai.JarvisCinemaReplayUiTest)
 java.lang.AssertionError: The result must move forward after construction

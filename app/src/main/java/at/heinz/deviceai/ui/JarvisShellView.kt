@@ -58,6 +58,7 @@ class JarvisShellView(context: Context) : View(context) {
     private var interruptedAfterMs = JarvisCinemaEntrance.WORKING_SETTLED_MS
     private var returnResultElapsedMs = -1L
     private var pendingWorkStageTurnId: String? = null
+    private var pendingWorkResultTurnId: String? = null
     private var pendingResultAdvance = false
     var onProjectedMotion: ((WindowProjectedMotion) -> Unit)? = null
     private val projectedMotion = WindowProjectedMotionSampler()
@@ -224,7 +225,10 @@ class JarvisShellView(context: Context) : View(context) {
     }
 
     fun closeProjectedMotion(turnId: String, atMillis: Long) {
-        if (pendingWorkStageTurnId == turnId) pendingWorkStageTurnId = null
+        if (pendingWorkStageTurnId == turnId) {
+            pendingWorkStageTurnId = null
+            pendingWorkResultTurnId = null
+        }
         projectedMotion.closeActive(turnId, atMillis).forEach { onProjectedMotion?.invoke(it) }
     }
 
@@ -269,6 +273,7 @@ class JarvisShellView(context: Context) : View(context) {
 
     fun playEntrance() {
         pendingWorkStageTurnId = null
+        pendingWorkResultTurnId = null
         pendingResultAdvance = false
         returnResultElapsedMs = -1L
         workClear = false
@@ -287,7 +292,10 @@ class JarvisShellView(context: Context) : View(context) {
         val now = SystemClock.uptimeMillis()
         if (workClear && startMs >= 0L) {
             if (exitMs >= 0L) {
-                if (workStageTurnId != cinemaTurnId) pendingWorkStageTurnId = cinemaTurnId
+                if (workStageTurnId != cinemaTurnId && pendingWorkStageTurnId != cinemaTurnId) {
+                    pendingWorkStageTurnId = cinemaTurnId
+                    pendingWorkResultTurnId = null
+                }
                 postInvalidateOnAnimation()
                 return
             }
@@ -314,6 +322,7 @@ class JarvisShellView(context: Context) : View(context) {
 
     private fun beginWorkStage(turnId: String, now: Long) {
         pendingWorkStageTurnId = null
+        pendingWorkResultTurnId = null
         pendingResultAdvance = false
         returnResultElapsedMs = -1L
         workClear = true
@@ -327,7 +336,9 @@ class JarvisShellView(context: Context) : View(context) {
 
     private fun completeReturn(now: Long) {
         val next = pendingWorkStageTurnId
+        val nextResult = next != null && pendingWorkResultTurnId == next
         pendingWorkStageTurnId = null
+        pendingWorkResultTurnId = null
         val previous = workStageTurnId.ifBlank { cinemaTurnId }
         if (previous.isNotBlank()) closeProjectedMotion(previous, now)
         workClear = false
@@ -343,11 +354,17 @@ class JarvisShellView(context: Context) : View(context) {
         if (next != null) {
             cinemaTurnId = next
             beginWorkStage(next, now)
+            pendingResultAdvance = nextResult
         }
     }
 
     fun playWorkWindowEntrance() {
-        if (exitMs >= 0L) return
+        if (exitMs >= 0L) {
+            if (pendingWorkStageTurnId != null && pendingWorkStageTurnId == cinemaTurnId) {
+                pendingWorkResultTurnId = cinemaTurnId
+            }
+            return
+        }
         val now = SystemClock.uptimeMillis()
         val layout = currentShell()
         val count = layout?.let { it.boxes.size + it.tileBoxes().size } ?: 3
