@@ -47,5 +47,8 @@ test('thermal and document protections must survive visual branch merges', () =>
   assert.doesNotMatch(quality, /return Budget\(Tier\.HIGH, 16L, 70, 96, true\)/);
   assert.match(orchestrator, /private var documentTurnId: String\? = null/);
   assert.match(orchestrator, /if \(event\.turnId != documentTurnId \|\| !document\.hasDocument\) return/);
-  assert.match(document, /fun onLearned\(event: CockpitAnimationEvent\.DocumentLearned\) \{\s*if \(!hasDocument\) return/);
+  assert.match(orchestrator, /is CockpitAnimationEvent\.DocumentLearned -> Unit/);
+  assert.doesNotMatch(orchestrator, /document\.onLearned\(/);
+  assert.match(document, /fun onLearned\([\s\S]*?event: CockpitAnimationEvent\.DocumentLearned\) = Unit/);
+  assert.doesNotMatch(document, /entriesAdded = event\.entriesAdded/);
 });

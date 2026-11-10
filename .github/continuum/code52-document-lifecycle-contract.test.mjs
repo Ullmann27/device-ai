@@ -15,8 +15,13 @@ test('verbal completion cannot erase an in-flight document draft', () => {
 });
 
 test('memory and cancelled turns cannot create false document world', () => {
-  assert.match(orchestration, /is CockpitAnimationEvent\.DocumentLearned -> \{[\s\S]*?if \(!document\.hasDocument\) return/);
-  assert.match(projection, /fun onLearned\(event: CockpitAnimationEvent\.DocumentLearned\) \{\s*if \(!hasDocument\) return/);
+  // #701 isolation is stricter than a hasDocument early-return: DocumentLearned
+  // must never be applied to the document workscene, even when a PDF is already open.
+  assert.match(orchestration, /is CockpitAnimationEvent\.DocumentLearned -> Unit/);
+  assert.doesNotMatch(orchestration, /is CockpitAnimationEvent\.DocumentLearned -> \{/);
+  assert.doesNotMatch(orchestration, /document\.onLearned\(/);
+  assert.match(projection, /fun onLearned\([\s\S]*?event: CockpitAnimationEvent\.DocumentLearned\) = Unit/);
+  assert.doesNotMatch(projection, /entriesAdded = event\.entriesAdded/);
   assert.doesNotMatch(projection, /name = event\.docId/);
   assert.match(orchestration, /if \(!event\.delivered\) \{\s*document\.reset\(\)\s*documentTurnId = null/);
 });

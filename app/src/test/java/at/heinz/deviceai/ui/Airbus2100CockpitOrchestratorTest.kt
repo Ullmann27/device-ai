@@ -351,4 +351,47 @@ class Airbus2100CockpitOrchestratorTest {
         assertEquals(JarvisActionScenes.FuiProfile.CODE_FORGE, scenes.last())
     }
 
+
+    @Test
+    fun openedDocumentCannotBeHijackedByUnscopedOrForgedMemoryLearning() {
+        val scenes = mutableListOf<JarvisActionScenes.FuiProfile>()
+        val payloads = mutableListOf<HollywoodFuiLiveData?>()
+        val orchestrator = Airbus2100CockpitOrchestrator(
+            schedule = { _, _ -> }, cancel = {},
+            onSceneProfile = { scenes += it.fuiProfile },
+            onLiveData = { payloads += it },
+            onTelemetry = {}, onHoloCue = {}, onPostMission = {}
+        )
+        orchestrator.render(CockpitAnimationEvent.CommandFlyIn("verbal", 0L, "Bitte PDF lesen"))
+        orchestrator.render(CockpitAnimationEvent.DocumentQuestion(
+            "document-1", 1L, "Akten.pdf", "application/pdf", "Lies diese PDF", pageCount = 4
+        ))
+        val before = requireNotNull(orchestrator.documentSnapshot())
+        val beforeScenes = scenes.size
+        val beforePayloads = payloads.size
+        assertNull(before.entriesAdded)
+
+        // The real memory adapter emits MEMORY_TURN, not the selected PDF's episode.
+        orchestrator.render(CockpitAnimationEvent.DocumentLearned(
+            MEMORY_TURN, 2L, "unrelated-ledger-id", "application/pdf", entriesAdded = 15
+        ))
+        // Even a coincidentally named or turn-tagged event cannot prove ledger-to-intake identity.
+        orchestrator.render(CockpitAnimationEvent.DocumentLearned(
+            "document-1", 3L, "Akten.pdf", "application/pdf", entriesAdded = 99
+        ))
+        assertEquals(beforeScenes, scenes.size)
+        assertEquals(beforePayloads, payloads.size)
+        assertEquals(before, orchestrator.documentSnapshot())
+
+        // Only a properly correlated, actual document pipeline event updates this scene.
+        orchestrator.render(DocumentPipelineStepEvent(
+            "document-1", 4L, DocumentPipelineStepEvent.KEY_CAPTURE,
+            "Inhalte erfassen", StepState.DONE
+        ))
+        val after = requireNotNull(orchestrator.documentSnapshot())
+        assertNull(after.entriesAdded)
+        assertTrue(after.steps.any { it.key == DocumentPipelineStepEvent.KEY_CAPTURE && it.state == StepState.DONE })
+        orchestrator.close()
+    }
+
 }

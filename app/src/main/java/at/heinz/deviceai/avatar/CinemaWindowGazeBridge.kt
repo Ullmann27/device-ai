@@ -14,7 +14,8 @@ class CinemaWindowGazeBridge(private val director: AvatarDirector) : CockpitAnim
     private val openWindows = linkedMapOf<String, String>()
     private var lightTurnId: String? = null
 
-    override fun render(event: CockpitAnimationEvent) {
+    /** Bus dispatch may originate on UI or worker threads; map and light state share one monitor. */
+    @Synchronized override fun render(event: CockpitAnimationEvent) {
         when (event) {
             is WindowProjectedMotion -> onMotion(event)
             is CockpitAnimationEvent.TurnEnded -> closeTurn(event.turnId)

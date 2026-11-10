@@ -103,13 +103,11 @@ class Airbus2100CockpitOrchestrator(
                 document.onQuestion(event)
                 onLiveData(document.snapshot())
             }
-            is CockpitAnimationEvent.DocumentLearned -> {
-                // Unrelated memory events must not create a document world.
-                if (!document.hasDocument) return
-                document.onLearned(event)
-                promote(Phase.TOOL_ACTIVE, JarvisActionScenes.forDocument())
-                onLiveData(document.snapshot())
-            }
+            // Memory learning events come from MEMORY_TURN and contain an unrelated ledger docId.
+            // The active PDF intake exposes only its separate episode id/name, not a verified join key.
+            // Never claim that background learning belongs to the opened document.
+            // Other bus subscribers retain the event for the original memory/orb visualisation.
+            is CockpitAnimationEvent.DocumentLearned -> Unit
             is CockpitAnimationEvent.RecallHits -> {
                 promote(Phase.TOOL_ACTIVE, scene(JarvisActionScenes.Kind.MEMORY))
                 onLiveData(HollywoodFuiLiveData.evidence(event.count, event.topScore, "Recall"))
