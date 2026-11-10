@@ -114,4 +114,42 @@ class TtsHologramSignalTest {
         assertEquals(0f,signal.level(2000),0f)
     }
 
+
+    @Test fun lookAheadIsEightyMillisecondsOnBufferedPcm() {
+        val signal = TtsHologramSignal()
+        signal.activate("A")
+        signal.begin("A", 8_000, 2, 1)
+        signal.append("A", ByteArray(1_600)) // 100ms silence
+        signal.append("A", ByteArray(1_600) { if (it % 2 == 0) 0 else 64 }) // next 100ms measured
+        signal.anchor("A", 0, 1_000L)
+        assertEquals("80 ms look-ahead is still inside buffered silence",
+            0f, signal.prePhonatoryLevel("A", 1_019L), 0f)
+        assertTrue("80 ms look-ahead reaches already-buffered speech",
+            signal.prePhonatoryLevel("A", 1_020L) in .05f..0.12f)
+    }
+
+    @Test fun guessedOrUnbufferedFutureSpeechDoesNotMoveTheJaw() {
+        val signal = TtsHologramSignal()
+        signal.activate("A")
+        signal.begin("A", 8_000, 2, 1)
+        signal.append("A", ByteArray(1_600)) // 100ms silence only — nothing buffered after that
+        signal.anchor("A", 0, 1_000L)
+        assertEquals(0f, signal.prePhonatoryLevel("A", 1_020L), 0f)
+        assertEquals(0f, signal.prePhonatoryLevel("missing", 1_020L), 0f)
+    }
+
+    @Test fun silenceAndAlreadyAudibleSpeechDoNotAddAPreCue() {
+        val signal = TtsHologramSignal()
+        signal.activate("A")
+        signal.begin("A", 8_000, 2, 1)
+        signal.append("A", ByteArray(1_600))
+        signal.append("A", ByteArray(1_600) { if (it % 2 == 0) 0 else 64 })
+        signal.anchor("A", 0, 1_000L)
+        assertEquals("still silent and future still silent at the start",
+            0f, signal.prePhonatoryLevel("A", 1_000L), 0f)
+        assertEquals("once the measured PCM is audible the pre-cue stays off",
+            0f, signal.prePhonatoryLevel("A", 1_150L), 0f)
+        signal.stop()
+        assertEquals(0f, signal.prePhonatoryLevel("A", 1_020L), 0f)
+    }
 }

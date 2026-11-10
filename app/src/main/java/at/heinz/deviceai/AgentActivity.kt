@@ -1197,6 +1197,7 @@ class AgentActivity : Activity() {
             cockpitBus.subscribe(at.heinz.deviceai.ui.CockpitAnimationPresenter(home, cockpitBus, cockpitSessionId,
                 onGreeting = { line -> runOnUiThread { recordCockpitDialog(false, line) } }, drift = cameraDrift)),
             cockpitBus.subscribe(airbus),
+            cockpitBus.subscribe(at.heinz.deviceai.avatar.CinemaWindowGazeBridge(avatarDirector)),
             cockpitBus.subscribe { runOnUiThread { pushCockpitState() } }
         )
         subscribeMemoryEvents()

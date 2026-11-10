@@ -25,6 +25,10 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private var fillRed = .18f
     private var fillGreen = .82f
     private var fillBlue = 1f
+    private var fillX = SpatialWindowLight.REST_X
+    private var fillY = SpatialWindowLight.REST_Y
+    private var fillZ = SpatialWindowLight.REST_Z
+    private var skinRoughness = SpatialWindowLight.AUTHORED_SKIN_ROUGHNESS
     private var faceMaterial: MaterialInstance? = null
     private var faceEmission: AvatarGlbContract.SurfaceEmission? = null
     private var surfaceGain = 1f
@@ -178,9 +182,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     }
 
     private fun applyCoreLight(energy: Float, enabled: Boolean,
-                               windowAccentArgb: Int?, windowOpen: Boolean) {
+                               windowAccentArgb: Int?, windowOpen: Boolean, gazeX: Float) {
         val target = SpatialWindowLight.tint(windowAccentArgb, energy,
-            windowOpen, enabled && !reducedQuality)
+            windowOpen, enabled && !reducedQuality, gazeX)
         val light = requireNotNull(engine).lightManager
         if (kotlin.math.abs(target.lumens - coreLightLumens) >= 1f) {
             light.setIntensity(coreLightInstance, target.lumens)
@@ -190,6 +194,28 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             kotlin.math.abs(target.blue - fillBlue) >= .002f) {
             light.setColor(coreLightInstance, target.red, target.green, target.blue)
             fillRed = target.red; fillGreen = target.green; fillBlue = target.blue
+        }
+        if (kotlin.math.abs(target.positionX - fillX) + kotlin.math.abs(target.positionY - fillY) +
+            kotlin.math.abs(target.positionZ - fillZ) >= .002f) {
+            light.setPosition(coreLightInstance, target.positionX, target.positionY, target.positionZ)
+            fillX = target.positionX; fillY = target.positionY; fillZ = target.positionZ
+        }
+        applySkinRoughness(target.roughness)
+    }
+
+    private fun applySkinRoughness(roughness: Float) {
+        val material = faceMaterial ?: return
+        if (kotlin.math.abs(roughness - skinRoughness) < .001f) return
+        val name = when {
+            material.material.hasParameter("roughnessFactor") -> "roughnessFactor"
+            material.material.hasParameter("roughness") -> "roughness"
+            else -> return
+        }
+        try {
+            material.setParameter(name, roughness)
+            skinRoughness = roughness
+        } catch (_: RuntimeException) {
+            // Authored GLB roughness stays; do not claim a live roughness response.
         }
     }
 
@@ -233,7 +259,15 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         mapper.update(pose, seconds, motion, gazeBlinkEnabled = gazeBlinkEnabled)
         mapper.applyDiagnosticBlink(diagnosticBlink)
         applyGlow(if (motion) pose.speakEnergy else 0f)
-        applyCoreLight(coreEnergy, cinematicLighting && motion, windowAccentArgb, windowOpen)
+        val flyIn = CinemaWindowLightState
+        val accent = windowAccentArgb ?: flyIn.accentArgb
+        val open = windowOpen || flyIn.open
+        val side = when {
+            pose.gazeDirected -> pose.gazeX
+            flyIn.open -> flyIn.gazeX
+            else -> 0f
+        }
+        applyCoreLight(coreEnergy, cinematicLighting && motion, accent, open, side)
         applySurfaceRadiance(coreEnergy, cinematicLighting && motion)
         // Cosmetic view drift uses the existing clock. Reduced motion restores
         // the same rest camera immediately; it does not change the actual pose.
