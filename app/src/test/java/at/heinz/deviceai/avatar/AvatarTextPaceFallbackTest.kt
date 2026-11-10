@@ -75,6 +75,32 @@ class AvatarTextPaceFallbackTest {
         assertTrue(cues.isEmpty())
     }
 
+    @Test fun lateFrameKeepsTheOriginalEstimatedWordDeadline() {
+        val reducer = AvatarPoseReducer()
+        d.attach(AvatarSink { events += it; reducer.apply(it) })
+        d.speechStarted("u", "A O")
+        now += 470
+        d.audioLevel("u", 0f)
+
+        assertEquals(AudioLevelSource.TEXT_PACE_FALLBACK, audio.single().source)
+        assertEquals(Viseme.AA, reducer.pose(now).viseme)
+        assertEquals(listOf(10_250L, 10_430L), cues.map { it.atMillis })
+        assertEquals(Viseme.SIL, reducer.pose(10_610L).viseme)
+    }
+
+    @Test fun stalledFramesCannotRestartAnExpiredSentenceGesture() {
+        val reducer = AvatarPoseReducer()
+        d.attach(AvatarSink { events += it; reducer.apply(it) })
+        d.speechStarted("u", "A. O O O O O O")
+        now += 1_700
+        d.audioLevel("u", 0f)
+
+        assertEquals(AudioLevelSource.TEXT_PACE_FALLBACK, audio.single().source)
+        val sentence = events.filterIsInstance<AvatarEvent.SentenceEnd>().single()
+        assertEquals(10_250L, sentence.atMillis)
+        assertNull(reducer.pose(now).sentenceEnd)
+    }
+
     @Test fun pacingStopsAtSpeechEndAndNeverLeaksIntoTheNextUtterance() {
         d.speechStarted("u", "Hallo Heinz, wie geht es dir heute?")
         tick(20)
