@@ -96,6 +96,19 @@ data class AvatarPose(val state: AvatarState, val expression: AvatarExpression, 
 }
 
 /**
+ * EXP10 gate on the existing sentence-end pose. Does not invent a second gesture policy:
+ * [boundary] and [progress] already come from spoken text via [AvatarDirector] /
+ * [AvatarPoseReducer]. When disabled, renderers treat the pose as having no sentence gesture.
+ */
+object AvatarSentenceGesture {
+    fun published(boundary: SpeechBoundary?, progress: Float, enabled: Boolean): SpeechBoundary? {
+        if (!enabled || boundary == null) return null
+        if (!progress.isFinite() || progress < 0f || progress > 1f) return null
+        return boundary
+    }
+}
+
+/**
  * Reference reducer: folds [AvatarEvent]s into one bounded [AvatarPose] so every renderer maps mouth/gaze
  * the same way. Jaw mapping from the avatar lab (#338): smoothing 0.4 per nominal 33 ms,
  * adjusted for actual sample time; dead zone 0.025, gain 1.5.

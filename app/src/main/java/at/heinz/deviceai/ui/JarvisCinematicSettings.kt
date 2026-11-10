@@ -15,23 +15,26 @@ object JarvisCinematicSettings {
     enum class Experiment(val label: String, val wired: Boolean = false) {
         EXP_01_Z_GLASS("3D-Glasschichten", wired = true),
         EXP_02_RIM("Dauerhafter Hologrammrahmen", wired = true),
-        EXP_03_DEPTH_GLASS("Geschützte Tiefenflächen"),
+        EXP_03_DEPTH_GLASS("Geschützte Tiefenflächen", wired = true),
         EXP_04_FOLDER_FLIGHT("Fensterflug aus Kacheln", wired = true),
         EXP_05_WINGS("Räumliche Cockpit-Flügel", wired = true),
         EXP_06_FACE_LIGHT("Fensterlicht auf Avatar", wired = true),
-        EXP_07_GAZE("Augen-Hals-Kopplung"),
+        EXP_07_GAZE("Augen-Hals-Kopplung", wired = true),
         EXP_08_PRE_SPEECH("Vorbereitende Lippenbewegung", wired = true),
         EXP_09_FOCUS_BLINK("Blickwechsel-Lidschlag", wired = true),
-        EXP_10_SENTENCE("Natürliche Satzgesten"),
+        EXP_10_SENTENCE("Natürliche Satzgesten", wired = true),
         EXP_11_ORB_LINK("Kugel-Fenster-Energiebrücke", wired = true),
         EXP_12_RECEIPTS("Bestätigte Arbeitsschritt-Impulse", wired = true),
         EXP_13_LUXURY("Edles Rauchglas und gerichtete Farben", wired = true),
         EXP_14_GLASS_SHADER("Hardware-Glaskanten", wired = true),
-        EXP_15_FRAME_BUDGET("Thermisch adaptive Animation")
+        EXP_15_FRAME_BUDGET("Thermisch adaptive Animation", wired = true)
     }
 
+    fun cinemaOptIn(context: Context): Boolean =
+        enabled(context) && depthExperimentEnabled(context)
+
     fun experimentEnabled(context: Context, experiment: Experiment): Boolean =
-        experiment.wired && enabled(context) && depthExperimentEnabled(context) &&
+        experiment.wired && cinemaOptIn(context) &&
             preferences(context).getBoolean("exp52." + experiment.name, true)
 
     fun setExperiment(context: Context, experiment: Experiment, enabled: Boolean) {
