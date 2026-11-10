@@ -41,4 +41,28 @@ class SpatialWindowLightTest {
         assertTrue("violet accent raises red versus the cyan fill", right.red > idle.red)
         assertTrue(right.green < idle.green)
     }
+    @Test fun projectedElevationMovesTheExistingLightWithinBounds() {
+        val above = SpatialWindowLight.tint(null, .5f, true, true, gazeY = 1f)
+        val below = SpatialWindowLight.tint(null, .5f, true, true, gazeY = -1f)
+        assertEquals(SpatialWindowLight.REST_Y + SpatialWindowLight.HEIGHT_SPAN, above.positionY, 0f)
+        assertEquals(SpatialWindowLight.REST_Y - SpatialWindowLight.HEIGHT_SPAN, below.positionY, 0f)
+        assertEquals(above, SpatialWindowLight.tint(null, .5f, true, true, gazeY = 100f))
+        assertEquals(SpatialWindowLight.REST_Y,
+            SpatialWindowLight.tint(null, .5f, true, true, gazeY = Float.NaN).positionY, 0f)
+        assertEquals(SpatialWindowLight.REST_Y,
+            SpatialWindowLight.tint(null, .5f, false, true, gazeY = 1f).positionY, 0f)
+        assertEquals(SpatialWindowLight.REST_Y,
+            SpatialWindowLight.tint(null, .5f, true, false, gazeY = 1f).positionY, 0f)
+    }
+
+    @Test fun oneSnapshotKeepsGeometryAndAccentTogether() {
+        CinemaWindowLightState.apply(0xFF112233.toInt(), .3f, true, -.4f)
+        val before = CinemaWindowLightState.snapshot
+        CinemaWindowLightState.apply(0xFF665544.toInt(), -.8f, true, .7f)
+        assertEquals(0xFF112233.toInt(), before.accentArgb)
+        assertEquals(.3f, before.gazeX, 0f)
+        assertEquals(-.4f, before.gazeY, 0f)
+        CinemaWindowLightState.reset()
+        assertEquals(CinemaWindowLightState.Snapshot(), CinemaWindowLightState.snapshot)
+    }
 }

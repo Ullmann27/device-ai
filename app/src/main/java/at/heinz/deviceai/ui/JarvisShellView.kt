@@ -46,6 +46,7 @@ class JarvisShellView(context: Context) : View(context) {
         set(value) { field = value; invalidate() }
     var foldRail: JarvisShellLayout.Rail = JarvisShellLayout.Rail.LABELLED
         set(value) { field = value; invalidate() }
+    private var foregroundCinema = JarvisShellRenderer.CinemaFrame()
     private var startMs = -1L
     private var workStartMs = -1L
     private var exitMs = -1L
@@ -393,6 +394,8 @@ class JarvisShellView(context: Context) : View(context) {
         val wings = JarvisCinematicSettings.experimentEnabled(context,
             JarvisCinematicSettings.Experiment.EXP_05_WINGS)
         val depthBudget = motionBudgetProvider?.invoke()
+        foregroundCinema = JarvisShellRenderer.CinemaFrame(elapsed, scale, workClear, exiting,
+            interruptedAfterMs, fromWorkingScene, depthBudget, sceneTime)
         JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true,
             deckClearance = deckClearance, missionClearance = missionClearance,
             luxuryDepth = luxuryDepth, depthBudget = depthBudget, enableWings = wings,
@@ -446,10 +449,11 @@ class JarvisShellView(context: Context) : View(context) {
         val s = shell ?: return
         val d = resources.displayMetrics.density
         painter.begin(canvas)
+        glass.begin(canvas, d, width, height)
         textPainter.fontScale = resources.configuration.fontScale
         val save = canvas.save()
         canvas.scale(d, d)
-        JarvisShellRenderer.drawForeground(textPainter, s, content, deckClearance, glass)
+        JarvisShellRenderer.drawForeground(textPainter, s, content, deckClearance, glass, foregroundCinema)
         canvas.restoreToCount(save)
     }
 
@@ -519,7 +523,7 @@ class JarvisShellView(context: Context) : View(context) {
             val cinema = when {
                 exiting && workClear ->
                     JarvisCinemaEntrance.returnPose(
-                        slot, rank, elapsedMs, interruptedAfterMs, side, budget, animatorScale)
+                        slot, rank, elapsedMs, interruptedAfterMs, side, budget, animatorScale, fromWorkingScene)
                 !exiting && workClear && resultForward && slot == JarvisShellLayout.Slot.WORK_DRAFT ->
                     JarvisCinemaEntrance.resultAdvance(workElapsedMs, budget, animatorScale)
                 !exiting && workClear && resultForward ->

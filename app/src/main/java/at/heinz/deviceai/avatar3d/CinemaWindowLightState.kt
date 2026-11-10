@@ -1,22 +1,28 @@
 package at.heinz.deviceai.avatar3d
 
-/**
- * Latest fly-in window light published by [at.heinz.deviceai.avatar.CinemaWindowGazeBridge].
- * The Filament fill light reads this when the work-window host has not yet marked the
- * window open. Parameters are restored by [reset] / a CLOSED sample.
- */
+/** Canonical projected window geometry. */
 internal object CinemaWindowLightState {
-    @Volatile var accentArgb: Int? = null
-        private set
-    @Volatile var gazeX: Float = 0f
-        private set
-    @Volatile var open: Boolean = false
-        private set
+    data class Snapshot(
+        val accentArgb: Int? = null,
+        val gazeX: Float = 0f,
+        val gazeY: Float = 0f,
+        val open: Boolean = false,
+    )
 
-    fun apply(accentArgb: Int?, gazeX: Float, open: Boolean) {
-        this.accentArgb = if (open) accentArgb else null
-        this.gazeX = if (open && gazeX.isFinite()) gazeX.coerceIn(-1f, 1f) else 0f
-        this.open = open
+    @Volatile var snapshot = Snapshot()
+        private set
+    val accentArgb: Int? get() = snapshot.accentArgb
+    val gazeX: Float get() = snapshot.gazeX
+    val gazeY: Float get() = snapshot.gazeY
+    val open: Boolean get() = snapshot.open
+
+    fun apply(accentArgb: Int?, gazeX: Float, open: Boolean, gazeY: Float = 0f) {
+        snapshot = if (open) Snapshot(
+            accentArgb,
+            if (gazeX.isFinite()) gazeX.coerceIn(-1f, 1f) else 0f,
+            if (gazeY.isFinite()) gazeY.coerceIn(-1f, 1f) else 0f,
+            true,
+        ) else Snapshot()
     }
 
     fun reset() = apply(null, 0f, false)

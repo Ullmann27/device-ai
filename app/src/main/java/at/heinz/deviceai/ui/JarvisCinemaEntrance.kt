@@ -298,6 +298,7 @@ object JarvisCinemaEntrance {
         side: Float = 0f,
         budget: JarvisRenderQuality.Budget? = null,
         animatorScale: Float = 1f,
+        fromWorkingScene: Boolean = false,
     ): Pose {
         if (!fliesAwayOnWorkOrder(slot)) return SETTLED
         val kind = kindOf(slot)
@@ -308,29 +309,25 @@ object JarvisCinemaEntrance {
                 budget = budget, animatorScale = animatorScale)
         }
         val hold = returnHoldMs(interruptedAfterMs)
-        val rebuildLocal = when {
-            !rebuilds -> Long.MIN_VALUE
-            interruptedAfterMs >= WORKING_SETTLED_MS -> SETTLE_MS
-            else -> interruptedAfterMs - DEPART_MS - staggerMs(kind, rank)
-        }
-        val hologramSolid = if (rebuildLocal > 0L) {
-            val snap = pose(kind, rank, rebuildLocal, exiting = false, side = side,
-                budget = budget, animatorScale = animatorScale)
-            snap.settled || snap.contentAlpha > 0.5f
-        } else false
-        if (hologramSolid) {
-            return if (elapsedMs < EXIT_MS) {
-                pose(kind, rank, elapsedMs, exiting = true, side = side,
-                    budget = budget, animatorScale = animatorScale)
-            } else {
-                pose(kind, rank, elapsedMs - EXIT_MS, exiting = false, side = side,
-                    budget = budget, animatorScale = animatorScale)
-            }
-        }
-        val continued = if (interruptedAfterMs >= WORKING_SETTLED_MS) EXIT_MS + elapsedMs
-            else interruptedAfterMs + elapsedMs
         if (elapsedMs < hold) {
-            return depart(rank, continued, side, budget, animatorScale)
+            val snapshot = workOrderPose(slot, rank, interruptedAfterMs, side, budget,
+                animatorScale, fromWorkingScene)
+            if (elapsedMs <= 0L) return snapshot
+            val closingTime = (elapsedMs.toDouble() / hold * EXIT_MS).toLong()
+            val frame = constructFrame(closingTime, exiting = true)
+            val close = 1f - frame.closeFrame
+            val end = departedPose(frame, side, 1f, reduced = false)
+            fun blend(a: Float, b: Float) = a + (b - a) * close
+            return snapshot.copy(
+                dx = blend(snapshot.dx, end.dx), dy = blend(snapshot.dy, end.dy),
+                scale = blend(snapshot.scale, end.scale), tiltY = blend(snapshot.tiltY, end.tiltY),
+                travel = snapshot.travel * frame.closeFrame,
+                rimAlpha = snapshot.rimAlpha * frame.closeFrame,
+                glassAlpha = snapshot.glassAlpha * frame.closeGlass,
+                contentAlpha = snapshot.contentAlpha * frame.closeData,
+                recede = blend(snapshot.recede, 1f),
+                frame = frame, hidden = snapshot.hidden, settled = snapshot.hidden,
+            )
         }
         return pose(
             kind, rank, elapsedMs - hold, exiting = false,

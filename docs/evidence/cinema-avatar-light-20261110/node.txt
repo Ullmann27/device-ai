@@ -1,0 +1,26 @@
+✔ Face glow reuses original glTF emission (0.756746ms)
+✔ Face glow remains a safe optional layer (0.249628ms)
+✔ original frame timeline and safe keep-out remain canonical (0.837355ms)
+✔ text-safe 0.09 raster never controls structural rim and scan (0.223189ms)
+✔ EXP01 slices glass and brackets into different Z planes, not native text (0.124494ms)
+✔ only an honest completed tool result may trigger a current-window pulse (0.167838ms)
+✔ cinema uses the owner-controlled existing window and frame budget (1.541193ms)
+✔ EXP11 orb glow is tied to a real accepted window with a bounded time course (0.221156ms)
+✔ EXP14 shader rim uses pixel space after leaving dp scaled glass canvas (0.317598ms)
+✔ no fake external-send or new native frame timers introduced (0.65761ms)
+✔ original avatar bridge survives cinema branch integration (2.46102ms)
+✔ real PCM anticipation and existing Filament light remain wired (0.376044ms)
+✔ thermal and document protections must survive visual branch merges (0.415132ms)
+✔ PR #550 phase safety and PR #558 original-orb hypothesis marker remain live (0.931925ms)
+✔ PRs #489 #541 #549 animations arrive at the actual visible and budgeted tiles (0.162019ms)
+✔ PRs #565 #617 #659 #666 #677 #678 original avatar still owns one GLB renderer (0.143992ms)
+✔ Cinema 52 defaults to all wired effects and clips decorative glass around the native UI (1.325285ms)
+✔ Astra #661 Java2D reference-fidelity tool and preview both remain available (0.164393ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 93.132657

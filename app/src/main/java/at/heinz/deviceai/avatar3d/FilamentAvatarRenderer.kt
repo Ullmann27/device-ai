@@ -182,9 +182,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     }
 
     private fun applyCoreLight(energy: Float, enabled: Boolean,
-                               windowAccentArgb: Int?, windowOpen: Boolean, gazeX: Float) {
+                               windowAccentArgb: Int?, windowOpen: Boolean, gazeX: Float, gazeY: Float) {
         val target = SpatialWindowLight.tint(windowAccentArgb, energy,
-            windowOpen, enabled && !reducedQuality, gazeX)
+            windowOpen, enabled && !reducedQuality, gazeX, gazeY)
         val light = requireNotNull(engine).lightManager
         if (kotlin.math.abs(target.lumens - coreLightLumens) >= 1f) {
             light.setIntensity(coreLightInstance, target.lumens)
@@ -259,15 +259,13 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         mapper.update(pose, seconds, motion, gazeBlinkEnabled = gazeBlinkEnabled)
         mapper.applyDiagnosticBlink(diagnosticBlink)
         applyGlow(if (motion) pose.speakEnergy else 0f)
-        val flyIn = CinemaWindowLightState
-        val accent = windowAccentArgb ?: flyIn.accentArgb
+        val flyIn = CinemaWindowLightState.snapshot
+        val accent = if (flyIn.open) flyIn.accentArgb else windowAccentArgb
         val open = windowOpen || flyIn.open
-        val side = when {
-            pose.gazeDirected -> pose.gazeX
-            flyIn.open -> flyIn.gazeX
-            else -> 0f
-        }
-        applyCoreLight(coreEnergy, cinematicLighting && motion, accent, open, side)
+        // Light follows glass, not eyes.
+        val side = if (flyIn.open) flyIn.gazeX else if (pose.gazeDirected) pose.gazeX else 0f
+        val elevation = if (flyIn.open) flyIn.gazeY else if (pose.gazeDirected) pose.gazeY else 0f
+        applyCoreLight(coreEnergy, cinematicLighting && motion, accent, open, side, elevation)
         applySurfaceRadiance(coreEnergy, cinematicLighting && motion)
         // Cosmetic view drift uses the existing clock. Reduced motion restores
         // the same rest camera immediately; it does not change the actual pose.
