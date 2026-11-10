@@ -291,10 +291,10 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             HollywoodFuiConstruct.layerShiftDp(tilt, 20f, true), 0f)
         cinematics.drawBrackets(painter, boxDp, frame.brackets * frame.closeFrame, bloom)
         canvas.restore()
+        canvas.restore()
         if (prismRimEnabled && bloom && frame.brackets * frame.closeFrame > .1f) {
             prismRim?.draw(canvas, stage, frame.tiltDegrees, frame.pulse, density)
         }
-        canvas.restore()
 
         if (dataAlpha > 0f) drawTelemetry(canvas, constructed, dataAlpha)
         canvas.restore()
