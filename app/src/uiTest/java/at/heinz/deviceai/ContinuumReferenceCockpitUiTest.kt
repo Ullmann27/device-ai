@@ -884,7 +884,7 @@ class ContinuumReferenceCockpitUiTest {
         val avatar = field(activity, "hologramView") as ContinuumHologramView
         val originalHeight = avatar.height
         val originalContentHeight = home.height
-        val originalConversationTop = shellControl(activity, "jarvis-dialog:conversation").top
+        val originalConversationTop = shellControl(activity, "jarvis-input:conversation").top
         assertTrue(avatar.isNativeHeadEnabled())
         assertFalse(avatar.isNative3dEnabled())
         chooseAppearance(activity, "Kugel · Original")
@@ -898,7 +898,8 @@ class ContinuumReferenceCockpitUiTest {
         chooseAppearance(activity, "Kompakt · Kugel")
         assertFalse(avatar.isNativeHeadEnabled())
         assertTrue("Compact frees vertical room for conversation", avatar.height < originalHeight)
-        assertTrue("The active shell must move conversation upward", shellControl(activity, "jarvis-dialog:conversation").top < originalConversationTop)
+        assertTrue("Compact moves the actual conversation input upward while the three Cinema top cards stay anchored",
+            shellControl(activity, "jarvis-input:conversation").top < originalConversationTop)
         assertTrue("Compact reduces actual scrollable content", currentHome(activity).height < originalContentHeight)
         assertEquals("The renderer follows the same smaller slot", avatar.height, currentHome(activity).avatarSlotRect.height())
         assertTrue(activity.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
@@ -914,7 +915,7 @@ class ContinuumReferenceCockpitUiTest {
         assertFalse("Restore the owner's 2D fallback preference", avatar.isNative3dEnabled())
         assertEquals(originalHeight, avatar.height)
         assertEquals(originalContentHeight, currentHome(activity).height)
-        assertEquals(originalConversationTop, shellControl(activity, "jarvis-dialog:conversation").top)
+        assertEquals(originalConversationTop, shellControl(activity, "jarvis-input:conversation").top)
         assertFalse(activity.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
             .getBoolean("compact", true))
         appearanceDialog(activity).also {
