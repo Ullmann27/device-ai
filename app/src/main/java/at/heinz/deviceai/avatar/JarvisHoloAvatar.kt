@@ -55,7 +55,7 @@ class JarvisHoloAvatar(private val liveSurface: ContinuumHologramView? = null) :
 
     /** Kern's slot: coarse state → head (expression/gaze stay as last reported). */
     override fun onAvatarState(state: AvatarState) {
-        hologram?.onAvatarEvent(AvatarEvent.StateChanged(state, AvatarExpression.NEUTRAL, GazeTarget.OWNER, System.currentTimeMillis()))
+        hologram?.onAvatarEvent(AvatarEvent.StateChanged(state, AvatarExpression.NEUTRAL, GazeTarget.OWNER, android.os.SystemClock.elapsedRealtime()))
     }
 
     /** Full AvatarContract stream (speech, visemes, gaze, audio level) → the head. */

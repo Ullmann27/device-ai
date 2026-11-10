@@ -290,8 +290,6 @@ class JarvisReferenceWindowLayoutTest {
             val shell = JarvisShellLayout.create(w, h, compactPresentation = true)
             assertNull(shell.headBounds)
             assertEquals(112f, requireNotNull(shell.orbBounds).height, .01f)
-            assertTrue(shell.hasFeatureTiles)
-            assertEquals(10, shell.tileBoxes().size)
             assertNull(shell[Slot.NAV_RAIL])
             assertEquals(2, shell.dialogControlBoxes().size)
             val conversation = requireNotNull(shell.inputConversationBox())
@@ -299,7 +297,17 @@ class JarvisReferenceWindowLayoutTest {
                 assertTrue(shell[Slot.INPUT]!!.contains(it))
                 assertFalse(intersects(conversation, it))
             }
-            assertTrue(shell[Slot.ROW_AGENTS]!!.top > shell[Slot.STATUS]!!.bottom)
+            if (shell.hasFeatureTiles) {
+                assertEquals(10, shell.tileBoxes().size)
+                assertTrue(shell[Slot.ROW_AGENTS]!!.top > shell[Slot.STATUS]!!.bottom)
+            } else {
+                assertEquals(0, shell.tileBoxes().size)
+                assertNotNull(shell[Slot.BOTTOM_NAV])
+                listOf(Slot.WORK_DOCUMENT, Slot.WORK_PROCESS, Slot.WORK_DRAFT).forEach {
+                    assertNotNull("$it on compact packed cockpit", shell[it])
+                }
+                assertTrue("compact reference shortens the packed page", shell.height < shell.viewportHeight)
+            }
         }
     }
 
