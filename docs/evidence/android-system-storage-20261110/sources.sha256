@@ -1,0 +1,5 @@
+f9070a0f6481f8087cba07c739db8888131c2f09d029093ca23a932537a59d10  app/src/main/java/at/heinz/deviceai/systemintelligence/StorageContentAnalysis.kt
+4efd5fdd6efcceda5d0a1fb3f2d4fb7fec62b4e7ad7f0c752e2ec6264e1ba0c2  app/src/main/java/at/heinz/deviceai/systemintelligence/OwnDiagnosticCache.kt
+ed1cdbe3c1a5a7d1228e176226b1caf63b5ba0aa14f063a29b9c05b6d0815a65  app/src/test/java/at/heinz/deviceai/systemintelligence/StorageContentAnalysisTest.kt
+4cc958c32e7d5b2ea12c0e25af104eb709b2505b8b748e1cd5558b3eb2ae7b84  app/src/test/java/at/heinz/deviceai/systemintelligence/OwnDiagnosticCacheTest.kt
+f8e4e4fd8513734fa2035167085e98d6a5c878d8930795de7f13a0f4b5aa0a3e  app/src/main/java/at/heinz/deviceai/systemintelligence/SystemStorageInspector.kt

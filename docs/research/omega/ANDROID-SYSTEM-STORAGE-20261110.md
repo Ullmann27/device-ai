@@ -1,0 +1,118 @@
+# Storage and bounded cleanup
+
+Integration owner: root / Android System Intelligence PR #735, target
+`feature/android-system-intelligence-20261110`, then the owner's Cinema integration.
+EXP-08/EXP-11; existing ToolGate remains the only tool-approval authority.
+
+## Existing source audit
+
+- `LocalModelHost` supplies `cacheDir/litertlm` to the native Engine. Its opaque
+  cache has no audited file-format/ownership inventory. Model weights and native
+  caches stay protected, even while unloaded; no guessed extension allowlist.
+- `ContinuumOwnerUpdater` owns `cacheDir/owner-update` APK/download staging.
+  These files stay protected. This patch does not change its existing cleanup.
+- `.tmp` writers in `filesDir` are model, memory, receipt and research transactions.
+  A temporary suffix is not evidence of disposable content. They are untouched.
+- Renderer caches are currently in-memory Paths/shaders/layers. No synthetic
+  disk-render-cache producer or artificial storage workload was introduced.
+- No SAF scanner existed in the inspected production tree. Existing file tools
+  use shell paths, and existing `DeviceStorageProbe` only reads volume totals.
+
+## Implemented API
+
+`SystemStorageInspector` wraps the existing Android context, ContentResolver and
+grants. The root integrator must hold one instance and run it off the UI thread.
+
+- `analyzeGrantedTree(uri, cancelled)` reads a specifically selected tree.
+- `analyzeSelectedDocuments(uris, cancelled)` covers individually selected files,
+  including Downloads where Android refuses the root tree grant.
+- `retainDiagnosis(DiagnosticCacheRecord(...))` retains only an actual observed
+  numeric diagnostic summary for local history, max 32 records of 1024 bytes each.
+  It rejects growth when full; it never evicts records silently.
+- `diagnosisHistory()` rechecks the owned numeric records for local review.
+- `previewOwnCache(cancelled)` produces an ephemeral, expiring exact file plan.
+- `cleanupOwnCache(previewId, planDigest, cancelled)` requires the existing
+  ToolGate's per-action user approval. It cannot accept a caller-provided path.
+- `restoreOwnCache(undoId)` restores only the last cleanup, while the process
+  remains alive, for at most ten minutes, and never overwrites a target.
+
+The new history contains timestamps, available volume bytes, app PSS bytes,
+battery percentage and thermal status only. It is a small local cache, not a
+benchmark baseline, memory store, original measurement report or speedup technique.
+The integrator must keep active before/after baselines elsewhere. Retention may
+fail independently; a failed cache write must not fail the diagnosis itself.
+No data is generated just to demonstrate cleaning. Empty caches report zero.
+
+## Safety and limits
+
+SAF is read-only. No WRITE, MANAGE_EXTERNAL_STORAGE or broad media permission is
+added. The picker requests local-only files; the adapter additionally accepts
+only the three system-installed Android external-storage/download/media document
+providers. Unknown and cloud providers are refused even in online mode. Existing
+grants are checked again during operations; no hidden persistence of grants.
+
+Default scan limits: 512 entries, 12 levels, 128 MiB cumulative read budget,
+32 MiB per hashed file and 8 seconds. Cursor queries and opens carry a cancellation
+signal. A short-lived deadline watcher cancels provider operations and closes the
+active descriptor. Non-regular streaming descriptors are refused. Android provider
+cooperation and device timing still need physical validation; this is not a hard
+real-time cancellation guarantee for a malfunctioning provider.
+
+Equal positive sizes select candidates. Complete SHA-256 streams plus unchanged
+metadata establish content matches; names never establish duplicates. Oversized,
+changed, inaccessible and incompletely read candidates remain unverified. Multiple
+references to one provider document are deduplicated. Personal files are never
+deleted, moved or written. Local file names/URIs are excluded from tool summaries;
+the full result belongs only in the local UI, never a cloud prompt or tool journal.
+
+Own-cache cleanup is limited to exact numeric records registered by this producer
+in the app-private ownership index. Unknown files, perfectly formatted unregistered
+copies, model/update files, user documents, symlinks and replacement inodes are
+protected. Plans bind IDs, SHA-256, sizes, timestamps and inode identity; they expire
+after two minutes, are consumed once and are invalidated by a new history write.
+All selected entries are revalidated before the first deletion. Iteration is bounded,
+with cancellation checks and a five-second cooperative work budget.
+
+Deletion requires `SecureDirectoryStream` support and anchored relative operations.
+Each entry is moved to an unpredictable holding name, rechecked, then unlinked.
+Unsupported providers return `SECURE_DELETE_UNAVAILABLE` without deletion. An
+unexpected post-move change leaves the held entry protected and returns
+`QUARANTINED_REVIEW_REQUIRED`; it does not risk overwriting another file to restore
+it automatically. Android support must be measured on the actual device.
+
+`logicalBytesRemoved` counts verified record bytes; `availableBytesDelta` is a
+separate volume observation that can be zero or negative under concurrent I/O.
+Neither establishes CPU, latency or thermal improvement. Preview
+`protectedEntryCount` counts bounded top-level cache entries and unowned diagnostic
+entries, not recursively counted files inside opaque model/update directories.
+
+## Validation and promotion
+
+Focused host tests use real temporary files, hashes, replacement inodes, symlinks,
+cleanup and restoration; document-provider cases inject bounded streams/metadata.
+They are not real Android-provider or Fold7 tests. Standalone compile against the
+installed Android API 36 jar is distinct from a full Android application build.
+
+Reproduce:
+
+```sh
+KOTLINC=/path/to/kotlinc \
+CONTINUUM_JUNIT_JARS=/path/to/junit.jar:/path/to/hamcrest.jar \
+ANDROID_JAR=/path/to/android-36/android.jar \
+bash scripts/continuum-system-storage-check.sh /tmp/system-storage-check
+```
+
+Root acceptance: exact-source ToolGate denial/approval tests, Android integration,
+local picker/revocation tests, no cloud transfer, and real Fold7 cancellation,
+cleanup/restore/measurement verification. No main merge, signing or installation.
+Rollback: revert feature integration; preserve existing numeric history if desired.
+
+## Official references checked 2026-11-10
+
+- https://developer.android.com/training/data-storage/shared/documents-files
+- https://developer.android.com/reference/android/provider/DocumentsContract
+- https://developer.android.com/reference/android/content/ContentResolver
+- https://developer.android.com/reference/android/content/Intent
+
+Android 11+ does not permit selecting the Download root using the tree picker.
+The selected-document path is provided explicitly for that platform restriction.

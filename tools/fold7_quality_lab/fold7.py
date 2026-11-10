@@ -59,7 +59,7 @@ def parse_thermal(data):
     return int(value) if value is not None else None
 
 
-def parse_gfxinfo(data, budget_ms):
+def parse_gfx_frames(data):
     frames = []
     inside = False
     columns = None
@@ -85,9 +85,14 @@ def parse_gfxinfo(data, budget_ms):
             if not 0 < intended < completed < 2**63 - 1:
                 continue
             # Preserve completed multi-second stalls.
-            frames.append((completed - intended) / 1e6)
+            frames.append((intended, completed, (completed - intended) / 1e6))
         except (ValueError, IndexError, KeyError):
             continue
+    return frames
+
+
+def parse_gfxinfo(data, budget_ms):
+    frames = [row[2] for row in parse_gfx_frames(data)]
     if not frames:
         return {"frame_count": 0, "frame_p95_ms": None, "over_budget_pct": None}
     ordered = sorted(frames)

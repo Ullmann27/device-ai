@@ -1,5 +1,7 @@
 package at.heinz.deviceai
 
+import at.heinz.deviceai.systemintelligence.*
+
 import at.heinz.deviceai.chief.ChiefBotPersonas
 import at.heinz.deviceai.chief.ChiefBotTaskIntake
 import at.heinz.deviceai.chief.ChiefBotTaskMode
@@ -178,6 +180,7 @@ class AgentActivity : Activity() {
         /** Drafts changed before this moment belong to an earlier app process. */
         private val PROCESS_STARTED_AT = System.currentTimeMillis()
         private const val DRAFT_SAVE_REQUEST = 2246
+        private const val SYSTEM_FILES_REQUEST = 2247
         /** Characters of the document's own text shown in its work window; the full bounded text stays for drafting. */
         private const val DOCUMENT_EXCERPT_CHARS = 700
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
@@ -210,6 +213,11 @@ class AgentActivity : Activity() {
     private lateinit var bridge: ShizukuBridge
     private var shizukuConnectionDialog: ShizukuConnectionDialog? = null
     private lateinit var executor: DeviceToolExecutor
+    private var activeSystemGate: ToolGate? = null
+    private var systemGeneration = 0L
+    private var systemPickerSession: String? = null
+    private var systemReport = "Noch keine Diagnose ausgeführt."
+    private var systemBaseline: SystemPerformanceCapture? = null
     private lateinit var backend: AgentBackendClient
     private lateinit var modelCatalog: LocalModelCatalog
     private lateinit var localRuntime: LocalModelRuntime
@@ -753,6 +761,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        cancelSystemDiagnosis()
         botTeam?.invalidate()
         if (botTeamOwnsLane && ::localRuntime.isInitialized) localRuntime.cancel()
         airbusCockpitOrchestrator?.setForeground(false)
@@ -3743,6 +3752,9 @@ class AgentActivity : Activity() {
         val statusGrid = cockpit.statusPane(this)
         cockpit.updateStatus(statusGrid, "Status wird gelesen …")
         box.addView(statusGrid, matchWidth(top = 3))
+        if (title == "Systemdiagnose") {
+            box.addView(at.heinz.deviceai.ui.SystemDiagnosisHologramView(this, executor.lastDiagnosis), matchWidth(top = 8))
+        }
         if (title == "Systemstatus") {
             box.addView(cockpit.section(this, "HARDWARE · LIVE-WERTE (ALLE 5 SEKUNDEN)"),
                 matchWidth(top = 10))
@@ -4338,6 +4350,8 @@ class AgentActivity : Activity() {
         "Dienste, Hintergrundjobs und Freigaben. Internet und Cloud nur nach ausdrücklicher Freigabe.",
         learningIoStatus { systemCenterStatus() },
         listOf(
+            CenterAction("HANDY ANALYSIEREN", accent = true) { runSystemTool(SystemIntelligenceCommands.DIAGNOSE) },
+            CenterAction("DIAGNOSE & BEREINIGUNG") { showSystemIntelligence() },
             CenterAction("MEHR · ARBEITSBEREICHE") { showMoreWorkAreas() },
             CenterAction("SHIZUKU · VERBINDEN") { showShizukuConnectionDialog() },
             CenterAction("WHATSAPP · NACHRICHT ENTWERFEN") { showWhatsAppDraftDialog() },
@@ -4362,6 +4376,151 @@ class AgentActivity : Activity() {
             CenterAction("HOLOGRAMM · LIVE-FRAMES PRÜFEN", accent = true) { showHologramMotionAudit() }
         )
     )
+
+    private fun showSystemIntelligence() = showCenter(
+        "Systemdiagnose", "Lokale Messungen und ausdrücklich freigegebene Schritte. Root bleibt deaktiviert.",
+        { done -> done(systemReport) },
+        listOf(
+            CenterAction("JETZT ANALYSIEREN", accent = true) { runSystemTool(SystemIntelligenceCommands.DIAGNOSE) },
+            CenterAction("VORHER-MESSUNG MERKEN") {
+                val current = executor.lastDiagnosis
+                if (current != null) {
+                    systemBaseline = systemPerformanceCapture(current)
+                    systemReport = "Momentaufnahme als Vorher-Wert gemerkt. Warmzustand und Hintergrundlast sind unkontrolliert.\n" + current.report()
+                    showSystemIntelligence()
+                }
+            },
+            CenterAction("MESSBERICHT LOKAL SPEICHERN") {
+                executor.lastDiagnosis?.let { snapshot ->
+                    val call = ToolCallRequest(UUID.randomUUID().toString(), SystemIntelligenceCommands.SAVE,
+                        mapOf("snapshotId" to snapshot.observedAtMillis.toString()))
+                    showToolConfirmation(call, false) { allowed -> if (allowed) dispatchSystemTool(call, true, false) }
+                }
+            },
+            CenterAction("DATEIEN AUSWÄHLEN & PRÜFEN") { selectSystemFiles() },
+            CenterAction("CACHE-VORSCHAU") { runSystemTool(SystemIntelligenceCommands.PREVIEW) },
+            CenterAction("VORSCHAU FREIGEBEN") { confirmSystemCleanup() },
+            CenterAction("BEREINIGUNG ZURÜCKNEHMEN") {
+                executor.lastCleanupUndoId?.let { undoId ->
+                    val call = ToolCallRequest(UUID.randomUUID().toString(), SystemIntelligenceCommands.RESTORE, mapOf("undoId" to undoId))
+                    showToolConfirmation(call, false) { allowed -> if (allowed) dispatchSystemTool(call, true, false) }
+                }
+            },
+            CenterAction("SHIZUKU-ZUGRIFF PRÜFEN") { runSystemTool(SystemIntelligenceCommands.CAPABILITIES) },
+            CenterAction("SHIZUKU VERBINDEN") { showShizukuConnectionDialog() },
+            CenterAction("DATEIAUSWAHL WIDERRUFEN") {
+                systemPickerSession = null
+                executor.clearStorageSelection()
+                systemReport = "Dateiauswahl widerrufen. Keine dauerhafte Dateifreigabe gespeichert."
+                showSystemIntelligence()
+            }
+        )
+    )
+
+    private fun runSystemTool(name: String, arguments: Map<String, Any?> = emptyMap()) {
+        require(name in SystemIntelligenceCommands.localTools && ToolRegistry.risk(name) == Risk.READ_ONLY)
+        dispatchSystemTool(ToolCallRequest(UUID.randomUUID().toString(), name, arguments), false, false)
+    }
+
+    private fun dispatchSystemTool(call: ToolCallRequest, confirmed: Boolean, destructive: Boolean) {
+        if (busy || !foregroundLearningActive || isFinishing || isDestroyed) return
+        centerDialog?.dismiss(); centerDialog = null
+        val generation = ++systemGeneration
+        val ownerSession = sessionId
+        activeLocalRequest = true
+        setBusy(true)
+        val gate = createToolGate(ownerTurn = "Lokaler Systemauftrag", systemCallId = call.callId)
+        activeSystemGate = gate
+        executeToolResult(call, confirmed, destructive, gate) { result ->
+            if (generation != systemGeneration || ownerSession != sessionId || !foregroundLearningActive || isFinishing || isDestroyed)
+                return@executeToolResult
+            activeSystemGate = null
+            activeLocalRequest = false
+            setBusy(false)
+            systemReport = result.output ?: "Schritt nicht erfolgreich: ${result.record.status}. Keine Verbesserung bestätigt."
+            if (call.name in setOf(SystemIntelligenceCommands.CLEANUP, SystemIntelligenceCommands.RESTORE)) {
+                executor.lastCleanupResult?.let {
+                    systemReport += "\nBereinigungsstatus: ${it.status}; entfernte Berichte: ${it.removedFiles}." +
+                        "\nRücknahme verfügbar: ${executor.lastCleanupUndoId != null}."
+                }
+            }
+            if (call.name == SystemIntelligenceCommands.CAPABILITIES && result.record.status != ToolExecutionStatus.SUCCEEDED)
+                systemReport += "\n${bridge.statusDetail()}\nNormale Android-Diagnose benötigt Shizuku nicht."
+            if (call.name == SystemIntelligenceCommands.DIAGNOSE && result.record.status == ToolExecutionStatus.SUCCEEDED) {
+                executor.lastDiagnosis?.let { current ->
+                    systemBaseline?.let { baseline ->
+                        val comparison = SystemPerformanceEvaluator.compare(baseline, systemPerformanceCapture(current))
+                        systemReport += "\n\nVorher/Nachher: ${comparison.summaryGerman()}"
+                        comparison.metrics[SystemPerformanceMetric.AVAILABLE_STORAGE_BYTES]?.medianDelta?.let {
+                            systemReport += "\nBeobachtete Platzänderung: ${it.toLong()} Byte (keine Ursachenzuordnung)."
+                        }
+                    }
+                }
+            }
+            showSystemIntelligence()
+        }
+    }
+
+    private fun confirmSystemCleanup() {
+        val preview = executor.lastCachePreview ?: return
+        if (busy || !preview.complete || preview.entries.isEmpty()) {
+            systemReport = "Keine vollständig geprüfte Bereinigungsvorschau vorhanden."
+            showSystemIntelligence()
+            return
+        }
+        val call = ToolCallRequest(UUID.randomUUID().toString(), SystemIntelligenceCommands.CLEANUP,
+            mapOf("previewId" to preview.previewId, "planDigest" to preview.planDigest))
+        val ownerSession = sessionId
+        AlertDialog.Builder(this).setTitle("Diese Diagnoseberichte entfernen?")
+            .setMessage("Nur regenerierbare technische Momentaufnahmen. Persönliche Daten, Modellgewichte und APKs bleiben geschützt. " +
+                "Rücknahme ist 10 Minuten im laufenden App-Prozess möglich; nach App-Ende nicht mehr. Nur diese technischen Berichte werden gelöscht.\n\n" +
+                preview.entries.joinToString("\n") { "${it.id}: ${it.bytes} Byte" } +
+                "\n\nGesamt: ${preview.eligibleBytes} Byte. Kein schnelleres Gerät versprochen.")
+            .setNegativeButton("Abbrechen", null)
+            .setPositiveButton("Diese Berichte entfernen") { _, _ ->
+                if (ownerSession == sessionId && foregroundLearningActive) dispatchSystemTool(call, true, true)
+            }.show()
+    }
+
+    private fun selectSystemFiles() {
+        if (busy) return
+        systemPickerSession = sessionId
+        startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }, SYSTEM_FILES_REQUEST)
+    }
+
+    private fun systemPerformanceCapture(sample: SystemDiagnosis): SystemPerformanceCapture {
+        val display = resources.displayMetrics
+        val conditions = SystemPerformanceConditions(
+            "${android.os.Build.MANUFACTURER}/${android.os.Build.MODEL}",
+            "${android.os.Build.FINGERPRINT}/${BuildConfig.VERSION_CODE}", "system-snapshot-v1", "idle-observation",
+            "${display.widthPixels}x${display.heightPixels}/${display.densityDpi}",
+            batteryPercent = sample.batteryPercent, charging = sample.charging,
+            batteryTemperatureC = sample.batteryTemperatureC, thermalStatus = sample.thermalStatus)
+        val metrics = mutableMapOf<SystemPerformanceMetric, List<Double>>()
+        sample.storageAvailableBytes?.let { metrics[SystemPerformanceMetric.AVAILABLE_STORAGE_BYTES] = listOf(it.toDouble()) }
+        sample.ownPssBytes?.let { metrics[SystemPerformanceMetric.OWN_PSS_BYTES] = listOf(it.toDouble()) }
+        return SystemPerformanceCapture("snapshot-${sample.observedAtMillis}", sample.observedAtMillis, conditions, metrics,
+            mapOf(SystemPerformanceMetric.APP_START_MILLIS to "NOT_MEASURED",
+                SystemPerformanceMetric.UI_REACTION_MILLIS to "NOT_MEASURED", SystemPerformanceMetric.FRAME_MILLIS to "NOT_MEASURED",
+                SystemPerformanceMetric.MODEL_TASK_MILLIS to "NOT_MEASURED"))
+    }
+
+    private fun cancelSystemDiagnosis() {
+        systemGeneration++
+        activeSystemGate?.cancel()
+        if (activeSystemGate != null) {
+            activeSystemGate = null
+            activeLocalRequest = false
+            setBusy(false)
+        }
+        if (::executor.isInitialized) executor.clearStorageSelection()
+    }
 
     /** Cinema 52 is the standard release profile; no legacy master OFF switch. */
     private fun showCinemaDepthExperiment() {
@@ -5672,6 +5831,12 @@ class AgentActivity : Activity() {
             return
         }
         if (!botRoutingChecked && routeBotInput(input.text.toString())) return
+        if (SystemIntelligenceCommands.isDiagnosisRequest(request)) {
+            input.text.clear()
+            addUserMessage(request, keepCockpit = true)
+            runSystemTool(SystemIntelligenceCommands.DIAGNOSE)
+            return
+        }
         // Prior measurement requests never start a new tool, model or network call.
         if (!neuralCoach.isActive() &&
             at.heinz.deviceai.cognitive.OwnerPreviousBatteryIntent.isPreviousReadingRequest(request)) {
@@ -9604,6 +9769,11 @@ class AgentActivity : Activity() {
         }
 
         val call = calls[index]
+        if (!SystemIntelligenceCommands.cloudMayDispatch(call.name)) {
+            outputs += ToolOutput(call.callId, "LOCAL_ONLY_TOOL: im lokalen Gerätebereich ausführen; keine Freigabe zur Systemdatenübertragung.")
+            executeCloudCalls(calls, index + 1, outputs)
+            return
+        }
         val validationError = ToolRegistry.validate(call)
         if (validationError != null) {
             outputs += ToolOutput(call.callId, "TOOL_VALIDATION_ERROR: $validationError")
@@ -9706,7 +9876,7 @@ class AgentActivity : Activity() {
 
     private fun createToolGate(ownerTurn: String? = null, consentRevisionAtTurnStart: Long? = null,
                                ephemeralScreenContext:()->Boolean = {false},
-                               botTask: ChiefBotTaskTicket? = null): ToolGate {
+                               botTask: ChiefBotTaskTicket? = null, systemCallId: String? = null): ToolGate {
         // Capture at gate creation: a late old runner cannot borrow a subsequent turn's scope.
         val effectContext = currentTaskEffectContext
         val presentationGeneration = workPresentationGeneration
@@ -9740,6 +9910,9 @@ class AgentActivity : Activity() {
                 }
             }
             try {
+            check(request.name !in SystemIntelligenceCommands.localTools || request.callId == systemCallId) {
+                "SYSTEM_TOOLS_REQUIRE_EXPLICIT_LOCAL_ACTION"
+            }
             botTask?.let(::requireBotTaskCurrent)
             check(!ephemeralScreenContext() || at.heinz.deviceai.cognitive.ScreenObservationPrompt.allowsTool(request.name)) {
                 "SCREEN_DATA_CANNOT_AUTHORIZE_NETWORK_OR_SENSITIVE_ACTIONS"
@@ -11326,6 +11499,11 @@ class AgentActivity : Activity() {
             return
         }
         appLookupGeneration++
+        if (activeSystemGate != null) {
+            cancelSystemDiagnosis()
+            addToolActivity("Systemdiagnose abgebrochen; spätes Ergebnis wird verworfen")
+            return
+        }
         if (appLookupActive) {
             activeOwnerAppGate?.cancel()
             activeOwnerAppGate = null
@@ -13223,6 +13401,23 @@ class AgentActivity : Activity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
+            SYSTEM_FILES_REQUEST -> {
+                val expectedSession = systemPickerSession
+                systemPickerSession = null
+                if (resultCode == RESULT_OK && expectedSession == sessionId && data != null && !busy) {
+                    val uris = buildList {
+                        data.data?.let(::add)
+                        data.clipData?.let { clips ->
+                            for (i in 0 until minOf(clips.itemCount, 65)) add(clips.getItemAt(i).uri)
+                        }
+                    }.distinct()
+                    if (uris.size in 1..64) {
+                        val token = executor.selectStorage(uris)
+                        mainHandler.post { if (foregroundLearningActive && sessionId == expectedSession)
+                            runSystemTool(SystemIntelligenceCommands.FILES, mapOf("scopeToken" to token)) }
+                    }
+                }
+            }
             CONTINUUM_PACKAGE_MODEL_REQUEST -> {
                 pendingContinuumPackageModel=null
                 val modelUri=data?.data

@@ -2,15 +2,38 @@ package at.heinz.deviceai
 
 import android.content.Context
 import java.util.Locale
+import at.heinz.deviceai.systemintelligence.*
 
 class DeviceToolExecutor internal constructor(
     private val context: Context,
     private val bridgeReady: () -> Boolean,
     private val runBridge: (String, (Result<String>) -> Unit) -> Unit,
-    private val appActions: DeviceAppActionPort?
+    private val appActions: DeviceAppActionPort?,
+    private val probeBridge: (((Result<ShizukuCapabilities>) -> Unit) -> Unit)? = null
 ) {
     constructor(context: Context, bridge: ShizukuBridge) :
-        this(context, bridge::isReady, bridge::executeChecked, AndroidDeviceAppActions(context))
+        this(context, bridge::isReady, bridge::executeChecked, AndroidDeviceAppActions(context), bridge::probeCapabilities)
+    internal val systemStorage by lazy { SystemStorageInspector(context) }
+    @Volatile internal var lastDiagnosis: SystemDiagnosis? = null
+        private set
+    @Volatile internal var lastCachePreview: OwnCachePreview? = null
+        private set
+    @Volatile internal var lastStorageAnalysis: StorageAnalysis? = null
+        private set
+    @Volatile internal var lastCleanupUndoId: String? = null
+        private set
+    @Volatile internal var lastCleanupResult: OwnCacheCleanupResult? = null
+        private set
+    private data class SelectedStorage(val token: String, val uris: List<android.net.Uri>, val deadline: Long)
+    private val selectedStorage = java.util.concurrent.atomic.AtomicReference<SelectedStorage?>(null)
+
+    internal fun selectStorage(uris: List<android.net.Uri>): String {
+        require(uris.size in 1..64 && uris.all { it.scheme == "content" })
+        val token = java.util.UUID.randomUUID().toString()
+        selectedStorage.set(SelectedStorage(token, uris.toList(), android.os.SystemClock.elapsedRealtime() + 60_000))
+        return token
+    }
+    internal fun clearStorageSelection() { selectedStorage.set(null); lastStorageAnalysis = null }
     private val sharedRoots = listOf(
         "/sdcard/Download",
         "/sdcard/Documents",
@@ -22,6 +45,67 @@ class DeviceToolExecutor internal constructor(
     fun execute(call: ToolCallRequest, callback: (Result<String>) -> Unit) {
         ToolRegistry.validate(call)?.let {
             callback(Result.failure(IllegalArgumentException(it)))
+            return
+        }
+        if (call.name == SystemIntelligenceCommands.CAPABILITIES) {
+            val probe = probeBridge
+            if (probe == null) callback(Result.failure(IllegalStateException("SHIZUKU_PROBE_UNAVAILABLE")))
+            else probe { result -> callback(result.map { caps ->
+                "Android-API: ${caps.sdkInt}\nServer-UID: ${caps.serverUid}\nDienst-UID: ${caps.userServiceUid}" +
+                    "\nIdentität: ${caps.identity}\nRoot-Expertenmodus: deaktiviert" +
+                    "\nShell geeignet: ${caps.standardShellEligible}" +
+                    "\nDiagnoseprogramme vorhanden: dumpsys=${caps.dumpsysExecutable}, pm=${caps.packageManagerExecutable}, cmd=${caps.commandServiceExecutable}" +
+                    "\nVorhandensein beweist keine einzelne Befehlsberechtigung."
+            }) }
+            return
+        }
+        if (call.name in SystemIntelligenceCommands.localTools) {
+            callback(runCatching { executeSystemTool(call) })
+            return
+        }
+        if (call.name == "get_device_info") {
+            callback(Result.success("Hersteller: ${android.os.Build.MANUFACTURER}\nModell: ${android.os.Build.MODEL}" +
+                "\nAndroid: ${android.os.Build.VERSION.RELEASE}\nSDK: ${android.os.Build.VERSION.SDK_INT}" +
+                "\nBuild: ${android.os.Build.DISPLAY}"))
+            return
+        }
+        if (call.name == "list_installed_apps") {
+            callback(runCatching {
+                val userOnly = boolArg(call, "userOnly", true)
+                val packages = context.packageManager.getInstalledApplications(0)
+                    .filter { !userOnly || it.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM == 0 }
+                    .map { it.packageName }.sorted().take(400)
+                "Von Android sichtbare Pakete (${packages.size}, maximal 400; keine Vollständigkeitszusage):\n" +
+                    packages.joinToString("\n")
+            })
+            return
+        }
+        if (call.name == "get_app_info") {
+            callback(runCatching {
+                val pkg = resolvePackage(requiredString(call, "packageOrName")) ?: error("APP_NOT_FOUND")
+                @Suppress("DEPRECATION") val info = context.packageManager.getPackageInfo(pkg, 0)
+                val version = if (android.os.Build.VERSION.SDK_INT >= 28) info.longVersionCode else {
+                    @Suppress("DEPRECATION") info.versionCode.toLong()
+                }
+                "Paket: ${info.packageName}\nVersion: ${info.versionName ?: "unbekannt"}\nVersionscode: $version" +
+                    "\nApp-Speicher und Energieverbrauch hier nicht gemessen."
+            })
+            return
+        }
+        if (call.name == "open_android_settings") {
+            callback(runCatching {
+                val page = requiredString(call, "page").lowercase(Locale.GERMAN)
+                val action = when (page) {
+                    "wifi", "wlan" -> android.provider.Settings.ACTION_WIFI_SETTINGS
+                    "bluetooth" -> android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
+                    "akku", "battery" -> android.provider.Settings.ACTION_BATTERY_SAVER_SETTINGS
+                    "speicher", "storage" -> android.provider.Settings.ACTION_INTERNAL_STORAGE_SETTINGS
+                    "apps" -> android.provider.Settings.ACTION_APPLICATION_SETTINGS
+                    else -> android.provider.Settings.ACTION_SETTINGS
+                }
+                context.startActivity(android.content.Intent(action).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK))
+                "Android-Einstellungsseite angefordert; keine Einstellung geändert. Sichtbares Ergebnis nicht geprüft."
+            })
             return
         }
         if (call.name in setOf("launch_app", "read_app_screen")) {
@@ -64,6 +148,56 @@ class DeviceToolExecutor internal constructor(
             }
 
         runBridge(command, callback)
+    }
+
+    private fun executeSystemTool(call: ToolCallRequest): String {
+        val worker = Thread.currentThread()
+        fun cancelled() = worker.isInterrupted
+        return when (call.name) {
+            SystemIntelligenceCommands.SAVE -> {
+                val snapshot = lastDiagnosis ?: error("NO_SYSTEM_SNAPSHOT")
+                check(requiredString(call, "snapshotId") == snapshot.observedAtMillis.toString()) { "SYSTEM_SNAPSHOT_CHANGED" }
+                val id = systemStorage.retainDiagnosis(DiagnosticCacheRecord(snapshot.observedAtMillis,
+                    snapshot.storageAvailableBytes, snapshot.ownPssBytes, snapshot.batteryPercent, snapshot.thermalStatus))
+                "Technische Momentaufnahme lokal gespeichert: $id. Keine persönlichen Inhalte."
+            }
+            SystemIntelligenceCommands.DIAGNOSE -> {
+                val sample = AndroidSystemDiagnosis(context).capture(::cancelled)
+                check(!cancelled()) { "DIAGNOSIS_CANCELLED" }
+                lastDiagnosis = sample
+                sample.report()
+            }
+            SystemIntelligenceCommands.PREVIEW -> systemStorage.previewOwnCache(::cancelled).let {
+                lastCachePreview = it
+                "Bereinigungsvorschau: ${it.entries.size} technische Berichte; ${it.eligibleBytes} Byte." +
+                    "\nGeschützte Dateien: ${it.protectedFileCount}. Vollständig: ${it.complete}. Noch nichts verändert."
+            }
+            SystemIntelligenceCommands.CLEANUP -> systemStorage.cleanupOwnCache(
+                requiredString(call, "previewId"), requiredString(call, "planDigest"), ::cancelled).let {
+                lastCachePreview = null
+                lastCleanupUndoId = it.undoId
+                lastCleanupResult = it
+                if (it.status != "COMPLETED") throw ToolBackendFailure(ToolExecutionStatus.FAILED, "CACHE_${it.status}")
+                "Cache-Ergebnis: ${it.status}; ${it.removedFiles} Berichte; logisch ${it.logicalBytesRemoved} Byte." +
+                    "\nGemessene Platzänderung: ${it.availableBytesDelta?.let { delta -> "$delta Byte" } ?: "nicht verfügbar"}. Rücknahme: ${it.undoId != null}. Kein Geschwindigkeitsnachweis."
+            }
+            SystemIntelligenceCommands.RESTORE -> systemStorage.restoreOwnCache(requiredString(call, "undoId")).let {
+                lastCleanupResult = it
+                if (it.status != "RESTORED") throw ToolBackendFailure(ToolExecutionStatus.FAILED, "CACHE_${it.status}")
+                lastCleanupUndoId = null
+                "Wiederherstellung: ${it.status}."
+            }
+            SystemIntelligenceCommands.FILES -> {
+                val selected = selectedStorage.getAndSet(null) ?: error("NO_SELECTED_STORAGE_SCOPE")
+                check(selected.token == requiredString(call, "scopeToken") &&
+                    android.os.SystemClock.elapsedRealtime() <= selected.deadline) { "STORAGE_SCOPE_EXPIRED" }
+                systemStorage.analyzeSelectedDocuments(selected.uris, ::cancelled).also {
+                    check(!cancelled()) { "STORAGE_SCAN_CANCELLED" }
+                    lastStorageAnalysis = it
+                }.summaryForTool()
+            }
+            else -> error("UNSUPPORTED_SYSTEM_TOOL")
+        }
     }
 
     private class PendingAction(val callId:String) {
