@@ -1,0 +1,8 @@
+unrelated_decision=Resolved
+unrelated_target=beta
+opt_in_memory_directive=null
+default_memory_directive=MEMORY_LITERAL_REQUIRED
+quality_assertions=3 failures=2
+Exception in thread "main" java.lang.IllegalStateException: REJECT_PROMOTION: unresolved opt-in review counterexamples
+	at at.heinz.deviceai.cognitive.ReviewCounterexampleKt.main(ReviewCounterexample.kt:23)
+	at at.heinz.deviceai.cognitive.ReviewCounterexampleKt.main(ReviewCounterexample.kt)

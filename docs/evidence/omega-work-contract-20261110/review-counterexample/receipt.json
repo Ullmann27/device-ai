@@ -1,0 +1,16 @@
+{
+  "source_local_commit": "e398e8bd13d4e9b9854872cff73579fb7e7f30e2",
+  "source_sha256": {
+    "ConversationSituationModel.kt": "4dc13f0268cb720f01e60bef71d3ec0c67b7b80dddd5d7653b4769ebdcefece7",
+    "LocalConversationSituationTracker.kt": "61363f2c964e4267a37b33c5731f785c8ea6bca1e827588efc6a57ea631a6497",
+    "LocalConversationContext.kt": "456158b9ecbb5a99c11e583b29877ef96a48673598c78732f66344ef9810c7a8",
+    "WorkingTaskContext.kt": "ea14edbc8b25a67e80fcac3536f28c12168e3f43c2ae8a6f0d5702ac336b6b04"
+  },
+  "review_thread": "PRRT_kwDOVGSW-c614xvQ",
+  "quality_assertions": 3,
+  "failures": 2,
+  "process_exit": 1,
+  "decision": "REJECT_PROMOTION",
+  "repair_budget_exhausted": true,
+  "device": "NOT_RUN"
+}

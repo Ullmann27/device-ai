@@ -1,0 +1,7 @@
+PASS polite_rejected_target_clarifies
+PASS ordinary_negative_predicate_resolves
+PASS changed_constraint_invalidates_plan
+PASS later_reference_cannot_revive_stale_constraint
+PASS block_reason_retained
+PASS trusted_higher_revision_rebind_restores_planning
+6/6 PASS; exposed safety regression, no autonomous constraint update

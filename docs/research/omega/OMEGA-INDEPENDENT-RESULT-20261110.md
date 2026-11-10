@@ -79,3 +79,13 @@ The baseline remote equivalent above can replace its local SHA. Use the publishe
 Evidence: `docs/evidence/omega-work-contract-20261110/independent-first/`. The receipt binds source, harness and unchanged holdout hashes. Full Android acceptance is owned by the integrator, not this scoped host evaluation.
 
 **Local model inference, real tool execution, independently verified memory writes, live avatar/voice synchronization and physical Fold7: NOT_RUN.** The prototype remains default-off and has no production seed caller. It cannot currently claim the user's end-to-end animation-improvement request is completed.
+
+## One exposed safety repair — not new independent acceptance
+
+Source `1290e7673aca97ba18496331df23e05280bc0436` fixes only exposed H03/H13 safety defects. The exact unchanged 24 scenarios are rerun once: **18/24 context matches, six failures, zero errors**. H03 now clarifies without proposing the rejected reference. H13 now blocks planning until a trusted higher-revision seed is supplied; its frozen broader expectation of a naturally understood constraint update still fails. H02/H04/H07/H18/H22 remain unresolved.
+
+Six additional exposed safety checks independently verify polite rejection, ordinary negative predicate, old-plan invalidation, inability to revive the stale constraint with a later named reference, retained block reason, and recovery only through trusted higher-revision rebind: **6/6 PASS**. Existing independent budget/context controls remain **8/8 PASS** on the repaired source. These checks do not grant tool authority.
+
+The same fixed performance workload on the new source yields p50 **0.045327 ms**, p95 **0.242387 ms**, maximum **6.590302 ms**, measured thread CPU **91.558364 ms**, and **78,374,768 allocated bytes** over 1,160 admissions. This is another source-bound host measurement, not a selected best run or a demonstrated optimization over the first candidate. GC/JIT/load differ. Added model calls remain zero.
+
+The original **REJECT_PROMOTION** remains controlling. The repaired prototype is suitable for retained opt-in research, not live/default activation. The one allowed repair rerun is complete; no additional holdout tuning was performed. Final raw evidence: `docs/evidence/omega-work-contract-20261110/independent-exposed-rerun/`.

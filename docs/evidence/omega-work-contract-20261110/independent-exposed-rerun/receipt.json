@@ -1,0 +1,27 @@
+{
+  "candidate_commit": "1290e7673aca97ba18496331df23e05280bc0436",
+  "previous_candidate_commit": "ad1f9ed6b3d293d47c4cbb01fae3a6d17e197658",
+  "evaluation_kind": "ONE_EXPOSED_REGRESSION_RERUN",
+  "holdout_frozen_commit": "6671e2c5d7cf5f1cff70ab86693e66055a76fa22",
+  "holdout_sha256": "895da22531b7a73f5e86f6e0a8fcc67d38dc030faeb5be900e7b9355041e9a26",
+  "source_sha256": {
+    "ConversationSituationModel.kt": "4dc13f0268cb720f01e60bef71d3ec0c67b7b80dddd5d7653b4769ebdcefece7",
+    "LocalConversationContext.kt": "456158b9ecbb5a99c11e583b29877ef96a48673598c78732f66344ef9810c7a8",
+    "LocalConversationSituationTracker.kt": "61363f2c964e4267a37b33c5731f785c8ea6bca1e827588efc6a57ea631a6497",
+    "WorkingTaskContext.kt": "ea14edbc8b25a67e80fcac3536f28c12168e3f43c2ae8a6f0d5702ac336b6b04"
+  },
+  "harness_sha256": {
+    "IndependentApprovalControls.kt": "d8fc7d780e85d76d5e3e9e5b1b8508e9fb711dd30295517454d03c44e73a57ab",
+    "IndependentExposedSafetyRegression.kt": "d7c0964dd76592143826ed9feff6194987b6e2a56012105bb10b276bda8844aa",
+    "IndependentWorkingBudgetControls.kt": "ba32eede2d2d80295a76b40b1d930a5154e6288aa2ea597bf9a8b52f874a2f51",
+    "IndependentWorkingTaskHoldout.kt": "2118d0e2079d2c0e52b64ba321c045796d0a0224b7669239ea88664d57d9418f"
+  },
+  "dependency_class_manifest_sha256": "08b5e6f9961975ef0638606f278924b4a96eb112c675a01929bc6f9977d36613",
+  "context_pass": 18,
+  "context_fail": 6,
+  "errors": 0,
+  "initial_decision_retained": "REJECT_PROMOTION",
+  "new_independent_holdout": false,
+  "model_calls": 0,
+  "Fold7": "NOT_RUN"
+}
