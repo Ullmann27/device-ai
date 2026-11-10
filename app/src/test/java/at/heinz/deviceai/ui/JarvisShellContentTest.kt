@@ -56,14 +56,15 @@ class JarvisShellContentTest {
             assertEquals(null, JarvisShellContent.hitTarget(shell, tiles, 0f, 100f))
         }
         val phone = JarvisShellLayout.create(412f, 915f, includeBottomNavigation = true)
-        assertTrue(phone.hasFeatureTiles)
-        assertEquals(10, phone.tileBoxes().size)
-        phone.tileBoxes().forEachIndexed { index, tile ->
-            assertEquals(tiles[index].target,
-                JarvisShellContent.hitTarget(phone, tiles, tile.centerX, tile.centerY))
-        }
+        assertFalse(phone.hasFeatureTiles)
+        assertEquals(0, phone.tileBoxes().size)
         val nav = phone[JarvisShellLayout.Slot.BOTTOM_NAV]!!
-        assertEquals(JarvisTiles.bottomNav.last().target, JarvisShellContent.hitTarget(phone, tiles, nav.right - 4f, nav.top + 10f))
+        val cells = JarvisTiles.bottomNavItemBoxes(nav)
+        assertEquals(JarvisTiles.bottomNav.map { it.target },
+            cells.map { box -> JarvisShellContent.hitTarget(phone, tiles, box.centerX, box.centerY) })
+        val last = cells.last()
+        assertEquals(JarvisTiles.bottomNav.last().target,
+            JarvisShellContent.hitTarget(phone, tiles, last.centerX, last.centerY))
     }
 
     @Test fun timelineTimingsArePinnedToJarvisMotion() {

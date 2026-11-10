@@ -277,12 +277,42 @@ object JarvisTiles {
         "logic" to "Denken", "device" to "Geräte", "system" to "System", "agents" to "Helfer",
         "research" to "Forschung", "learning" to "Lernen", "memory" to "Gedächtnis")
 
+    const val DOCK_MIN_CELL_DP = 48f
+    const val DOCK_EXTRA_ROW_DP = 56f
+
+    /** Columns that keep every dock cell at least [DOCK_MIN_CELL_DP] wide. Wide Fold/tablet stays one row. */
+    fun bottomNavColumns(width: Float, itemCount: Int = bottomNav.size): Int {
+        if (itemCount <= 0 || !width.isFinite() || width <= 0f) return 1
+        val maxPerRow = maxOf(1, (width / DOCK_MIN_CELL_DP).toInt())
+        val rows = (itemCount + maxPerRow - 1) / maxPerRow
+        return (itemCount + rows - 1) / rows
+    }
+
+    fun bottomNavRows(width: Float, itemCount: Int = bottomNav.size): Int {
+        if (itemCount <= 0) return 1
+        val columns = bottomNavColumns(width, itemCount)
+        return (itemCount + columns - 1) / columns
+    }
+
+    fun bottomNavHeight(width: Float, fontScale: Float = 1f, itemCount: Int = bottomNav.size): Float {
+        val font = if (fontScale.isFinite() && fontScale > 0f) fontScale else 1f
+        val rows = bottomNavRows(width, itemCount)
+        return if (rows <= 1) JarvisShellLayout.TOOL_DOCK_HEIGHT_DP * font
+        else (JarvisShellLayout.TOOL_DOCK_HEIGHT_DP + (rows - 1) * DOCK_EXTRA_ROW_DP) * font
+    }
+
     /** Equal-width cells matching [ContinuumHomeView] hit targets and [JarvisShellContent.hitTarget]. */
     fun bottomNavItemBoxes(b: Box, items: List<NavItem> = bottomNav): List<Box> {
         if (items.isEmpty() || b.width <= 0f) return emptyList()
-        val w = b.width / items.size
+        val columns = bottomNavColumns(b.width, items.size)
+        val rows = (items.size + columns - 1) / columns
+        val cellW = b.width / columns
+        val cellH = b.height / rows
         return items.indices.map { i ->
-            Box(b.left + i * w, b.top, b.left + (i + 1) * w, b.bottom)
+            val col = i % columns
+            val row = i / columns
+            Box(b.left + col * cellW, b.top + row * cellH,
+                b.left + (col + 1) * cellW, b.top + (row + 1) * cellH)
         }
     }
 
@@ -300,7 +330,7 @@ object JarvisTiles {
         val inset = 3f
         items.forEachIndexed { i, it ->
             val cell = cells[i]
-            val tile = Box(cell.left + inset, b.top + 4f, cell.right - inset, b.bottom - 4f)
+            val tile = Box(cell.left + inset, cell.top + 4f, cell.right - inset, cell.bottom - 4f)
             if (tile.width <= 2f || tile.height <= 2f) return@forEachIndexed
             val cinema = if (cinemaElapsedMs != null) JarvisCinemaEntrance.pose(
                 JarvisCinemaEntrance.Kind.DOCK, i, cinemaElapsedMs, cinemaExiting,

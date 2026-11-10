@@ -41,16 +41,17 @@ class JarvisCockpitUxArchitectTest {
         }
     }
 
-    @Test fun foldOuterAndPhoneKeepTheActivityOwnedBarAndReachTargetsViaTiles() {
+    @Test fun foldOuterAndPhoneReachEveryRailTargetThroughTheCinemaDock() {
         for ((w, h, label) in listOf(Triple(foldOuter.first, foldOuter.second, "outer"),
             Triple(phone.first, phone.second, "phone"))) {
             val shell = JarvisShellLayout.create(w, h)
             assertNull("$label rail", shell[Slot.NAV_RAIL])
-            assertNull("$label activity owns the compact bar", shell[Slot.BOTTOM_NAV])
-            val hits = shell.tileBoxes().mapIndexed { i, box ->
-                JarvisShellContent.hitTarget(shell, JarvisTiles.reference, box.centerX, box.centerY)
-            }
-            assertEquals(JarvisTiles.reference.map { it.target }, hits)
+            assertFalse("$label must not keep the overflowing 10-tile reflow", shell.hasFeatureTiles)
+            val dock = requireNotNull(shell[Slot.BOTTOM_NAV])
+            assertEquals(JarvisTiles.railNav.map { it.target },
+                JarvisTiles.bottomNavItemBoxes(dock).map { box ->
+                    JarvisShellContent.hitTarget(shell, JarvisTiles.reference, box.centerX, box.centerY)
+                })
             assertTrue("home remains a routed destination", "home" in JarvisShellContent.routes)
         }
         val withBar = JarvisShellLayout.create(412f, 915f, includeBottomNavigation = true)

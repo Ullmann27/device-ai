@@ -138,6 +138,8 @@ object JarvisShellLayout {
         val profile = JarvisWindowProfile.resolve(widthDp, heightDp, fontScale, foldRail)
         return if (profile.referenceComposition) reference(widthDp, heightDp, profile).let {
             if (compactPresentation) compactReference(it) else it
+        } else if (profile.widthClass == WidthClass.COMPACT) {
+            compactCinema(widthDp, heightDp, profile, compactPresentation)
         } else reflow(widthDp, heightDp, profile, includeBottomNavigation, compactPresentation)
     }
 
@@ -250,6 +252,104 @@ object JarvisShellLayout {
                 Box(box.left, box.top + total, box.right, box.bottom + total)
         }
         return total
+    }
+
+    /**
+     * Phone / cover cinema composition matching ref-a/b/c without the Fold 4-column hero:
+     * three top boxes (Live, camera, modules), head + original orb, mission bar,
+     * three work windows, holographic dock and status. No left rail, no 10-tile overflow.
+     * Scrolls only when the viewport or font scale cannot hold the readable minimums.
+     */
+    private fun compactCinema(w: Float, viewport: Float, p: JarvisWindowProfile,
+                              compactPresentation: Boolean): Shell {
+        val b = linkedMapOf<Slot, Box>()
+        val gap = 8f
+        val margin = 12f
+        val font = maxOf(1f, p.fontScale)
+        val left = margin
+        val right = w - margin
+        val room = (right - left).coerceAtLeast(1f)
+
+        val headerH = 52f * font
+        val headerBottom = 8f + headerH
+        b[Slot.TOP_BAR] = Box(margin, 8f, right, headerBottom)
+
+        val threeH = 72f * font
+        val threeW = (room - 2f * gap) / 3f
+        var y = headerBottom + gap
+        b[Slot.DIALOG] = Box(left, y, left + threeW, y + threeH)
+        b[Slot.CAMERA_STATUS] = Box(left + threeW + gap, y, left + 2f * threeW + gap, y + threeH)
+        b[Slot.COCKPIT_SECONDARY] = Box(left + 2f * (threeW + gap), y, right, y + threeH)
+        y += threeH + gap
+
+        val inputH = 56f * font
+        val dockH = JarvisTiles.bottomNavHeight(room, font)
+        val statusH = maxOf(96f, TELEMETRY_BAND_DP * font)
+        val workMin = 96f * font
+        val bottomMargin = 10f
+        // After the hero: input, work, dock, status — four inter-block gaps plus the closing margin.
+        val afterHeroFixed = inputH + dockH + statusH + bottomMargin + 3f * gap
+        val compactTitleH = minOf(40f * font, 48f)
+        val compactStack = compactTitleH + 4f + 112f
+        val heroMin = 164f
+        val heroMax = 280f * font
+        val workH: Float
+        val heroH: Float
+        val available = viewport - y - afterHeroFixed
+        if (!compactPresentation && available >= heroMin + gap + workMin) {
+            val extra = available - heroMin - gap - workMin
+            var stackedHero = (heroMin + extra * .55f).coerceAtMost(heroMax)
+            if (available >= 220f + gap + workMin) stackedHero = maxOf(stackedHero, 220f).coerceAtMost(heroMax)
+            heroH = stackedHero
+            workH = maxOf(workMin, available - gap - stackedHero)
+        } else if (compactPresentation && available >= compactStack + gap + workMin) {
+            heroH = 112f
+            workH = maxOf(workMin, available - gap - compactStack)
+        } else {
+            heroH = if (compactPresentation) 112f
+                else if (y + 220f + 8f <= viewport) 220f
+                else heroMin
+            workH = workMin
+        }
+
+        val head: Box
+        val orb: Box
+        if (compactPresentation) {
+            val continuumH = compactTitleH
+            b[Slot.CONTINUUM_HEADER] = Box(left, y, right, y + continuumH)
+            orb = Box(left, y + continuumH + 4f, right, y + continuumH + 4f + heroH)
+            head = orb
+            b[Slot.AVATAR] = orb
+            y = orb.bottom + gap
+        } else {
+            val split = left + room * .52f
+            val continuumCap = (heroH - 116f).coerceAtLeast(24f)
+            val continuumH = minOf(40f * font, 48f, heroH * .22f, continuumCap).coerceAtLeast(24f)
+            head = Box(left, y, split - gap / 2f, y + heroH)
+            b[Slot.CONTINUUM_HEADER] = Box(split + gap / 2f, y, right, y + continuumH)
+            orb = Box(split + gap / 2f, y + continuumH + 4f, right, y + heroH)
+            b[Slot.AVATAR] = Box(left, y, right, y + heroH)
+            y += heroH + gap
+        }
+
+        b[Slot.INPUT] = Box(left, y, right, y + inputH)
+        y += inputH + gap
+
+        val workW = (room - 2f * gap) / 3f
+        b[Slot.WORK_DOCUMENT] = Box(left, y, left + workW, y + workH)
+        b[Slot.WORK_PROCESS] = Box(left + workW + gap, y, left + 2f * workW + gap, y + workH)
+        b[Slot.WORK_DRAFT] = Box(left + 2f * (workW + gap), y, right, y + workH)
+        y += workH + gap
+
+        b[Slot.BOTTOM_NAV] = Box(left, y, right, y + dockH)
+        y += dockH + gap
+        b[Slot.STATUS] = Box(margin, y, right, y + statusH)
+        y += statusH + bottomMargin
+
+        val overlays = setOf(Slot.AVATAR to Slot.CONTINUUM_HEADER)
+        return Shell(formFactor(w, viewport), w, maxOf(viewport, y), b, 0, 0,
+            null, overlays, viewportHeight = viewport, profile = p, tileGap = JarvisCockpitGrid.TILE_GAP_DP,
+            headBounds = if (compactPresentation) null else head, orbBounds = orb)
     }
 
     /** Reflow preserves readable labels. */
