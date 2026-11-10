@@ -9,7 +9,7 @@ Keine APK-, Fold7- oder Release-Freigabe aus Teilprüfungen ableiten.
 
 Cinema-Basis: #715 `c972f56ccc4caa2f1807bcaf1d4665347c66c629`.
 Kontrolliert übernommen: #725 `b0a1635`, #727 `ff27033`, #723 `6d515bc`,
-#735 bis `1223dc8`, #739 bis `0e8f6c7`. Die eingeschlossenen Vorläufer und getrennten
+#735 bis `1223dc8`, #739 bis `f495fd6`. Die eingeschlossenen Vorläufer und getrennten
 Experimente stehen mit vollständigen SHA-Werten in
 `docs/integration/ULTIMATE_SYSTEM_INTAKE_20261110.json`.
 Donor-PRs bleiben offen. Nur dieser Integrator verändert diesen gemeinsamen Branch.
@@ -115,7 +115,12 @@ Checkpoint `ab9d159c`: Node erneut vollständig grün (2.456 bestanden, 37
 auf die Lazy-Property statt deren Delegate und zwei Prüfungen vor dem terminalen
 Kameraframe. Der Delegate-Zugriff ist korrigiert; maximal acht zusätzliche 16-ms-
 Frames sind erlaubt, die Ruheposition bleibt exakt null. Kein Produktionscode
-oder Animationsablauf wurde dafür verändert. Gegenprüfung/Gesamtabnahme folgen.
+oder Animationsablauf wurde dafür verändert. Alle drei Gegenprüfungen sind auf `c8f772fd` (lokal `0a467118`) grün.
+Danach wurde der Nachtrag aus #739 `f495fd6` aufgenommen: fünf direkte
+Recherche-Aufrufer erklären eine bereits akzeptierte, aber wegen laufender Arbeit
+oder geschlossener Verarbeitung nicht gestartete Anfrage. Der Modellpfad darf
+weiterhin während seiner eigenen Wartephase freigegeben werden.
+Die vollständige gemeinsame Abnahme folgt auf dem neuen Quellstand.
 
 ## Verbindlicher Abschluss
 

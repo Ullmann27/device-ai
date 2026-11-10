@@ -1,0 +1,41 @@
+{
+  "source": "0a467118fa6d2b3496327db05ef7eaf096934bed",
+  "tree": "de835192a064193bc8b3be6d07bc061a43daa917",
+  "phase": "test-stop-preflight",
+  "command": [
+    "/tmp/continuum-toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerLocalQa=true",
+    "-PcontinuumOwnerLocalVersionCode=53",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumUiEvidenceDir=/workspace/scratch/c9f74e2967e3/qa/test-stop-preflight",
+    "-Dorg.gradle.jvmargs=-Xmx512m -XX:MaxMetaspaceSize=512m -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -Dfile.encoding=UTF-8",
+    "-I",
+    "/workspace/scratch/c9f74e2967e3/tests-memory.gradle",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.lookupCancellationClosesWorkWindowAndLateStatusCannotReopenIt",
+    "--tests",
+    "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.cameraReturnsAfterStopAndDoesNotReplayAfterLifecycleBoundaries",
+    "--tests",
+    "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.speakingInsideAnOpenWindowKeepsTheCameraAndStopReturnsItAfterSpeechEnds"
+  ],
+  "started": 1794351101.4877017,
+  "Fold7": "NOT_RUN",
+  "exitCode": 0,
+  "completed": 1794351643.8595505,
+  "sourceUnchanged": true,
+  "remoteSource": "c8f772fd97c05fd06cae6988299b7c01b5e95e18",
+  "counts": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "note": "Production code unchanged from ab9d159c; exact-zero camera rest and late-callback assertions retained."
+}

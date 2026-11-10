@@ -6147,7 +6147,7 @@ class AgentActivity : Activity() {
                     } else {
                         val researchSession = sessionId
                         confirmWebRequest(at.heinz.deviceai.cognitive.WebToolRequest.Search(command.topic),
-                            researchMode) { session ->
+                            researchMode, requireIdle = true) { session ->
                             if (session != null && !busy && sessionId == researchSession && foregroundLearningActive &&
                                 !isFinishing && !isDestroyed) runResearch(session)
                             else {
@@ -6331,7 +6331,7 @@ class AgentActivity : Activity() {
             val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(publicTopic)
             input.text.clear()
             addUserMessage(request)
-            confirmWebRequest(call, ResearchMode.STANDARD) { session ->
+            confirmWebRequest(call, ResearchMode.STANDARD, requireIdle = true) { session ->
                 if (session != null && !busy) {
                     runResearch(session)
                 } else session?.cancel()
@@ -6355,7 +6355,7 @@ class AgentActivity : Activity() {
                 val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(topic)
                 input.text.clear()
                 addUserMessage(request)
-                confirmWebRequest(call, ResearchMode.STANDARD) { session ->
+                confirmWebRequest(call, ResearchMode.STANDARD, requireIdle = true) { session ->
                     if (busy) { session?.cancel(); return@confirmWebRequest }
                     if (session != null) runResearch(session)
                     else {
@@ -6383,7 +6383,7 @@ class AgentActivity : Activity() {
             researchArmed=false
             input.text.clear()
             addUserMessage(request)
-            confirmWebRequest(webRequest,researchMode) { session ->
+            confirmWebRequest(webRequest,researchMode, requireIdle = true) { session ->
                 if(session!=null && !busy) {
                     runResearch(session)
                 } else session?.cancel()
@@ -9539,7 +9539,7 @@ class AgentActivity : Activity() {
     private fun confirmInternetResearch(question:String,selectedMode:ResearchMode,mentorArea:String?=null) {
         val call=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(question,true)?:return
         addUserMessage(question)
-        confirmWebRequest(call,selectedMode) { session ->
+        confirmWebRequest(call,selectedMode, requireIdle = true) { session ->
             if(session!=null && !busy){runResearch(session,mentorArea)} else session?.cancel()
         }
     }
@@ -9547,6 +9547,12 @@ class AgentActivity : Activity() {
     /** ASK consumes an exact dialog ticket; ALWAYS_ON uses the persisted owner
      * grant. Both paths mint the same bounded, revocable ToolGate capability. */
     private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
+        invalidated:()->Unit = {},
+        completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) =
+        confirmWebRequest(call, mode, false, invalidated, completed)
+
+    private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
+        requireIdle: Boolean,
         invalidated:()->Unit = {},
         completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) {
         val presentationRevision = ++researchApprovalPresentationRevision
@@ -9559,6 +9565,22 @@ class AgentActivity : Activity() {
             noticeEmitted = true
             addAssistantMessage(message, preserveLocalContext = true)
         }
+        fun complete(session: at.heinz.deviceai.cognitive.ApprovedWebResearchSession?) {
+            if (session != null && requireIdle) {
+                val blocked = when {
+                    busy -> "Recherche nicht ausgeführt: Ein anderer Auftrag läuft bereits."
+                    localAgentExecutor.isShutdown ->
+                        "Recherche nicht ausgeführt: Die lokale Verarbeitung ist derzeit nicht verfügbar."
+                    else -> null
+                }
+                if (blocked != null) {
+                    session.cancel()
+                    notExecuted(blocked)
+                    return
+                }
+            }
+            completed(session)
+        }
         pendingResearchChatApproval?.invalidate?.invoke()
         pendingResearchChatApproval = null
         if (!foregroundLearningActive || isFinishing || isDestroyed) {
@@ -9570,13 +9592,13 @@ class AgentActivity : Activity() {
         if(internetConsent.mode==at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
             val session = webToolGate.authorizeAlwaysOn(call,mode)
             if (session == null) notExecuted()
-            completed(session)
+            complete(session)
             return
         }
         val approval=webToolGate.prepare(call)
         if(approval==null){
             notExecuted("Kein Internetzugriff: Modus AUS oder ungültige Webanfrage. Öffentliche HTTPS-Quellen sind erforderlich.")
-            completed(null);return
+            complete(null);return
         }
         val approvalSession = sessionId
         var responded = false
@@ -9591,7 +9613,7 @@ class AgentActivity : Activity() {
             val current = sessionId == approvalSession && foregroundLearningActive && !isFinishing && !isDestroyed
             if (!current || !webToolGate.completeApproval(approval, mode, accepted) { session ->
                     if (session == null) notExecuted()
-                    completed(session)
+                    complete(session)
                 }) {
                 invalidated()
                 notExecuted()

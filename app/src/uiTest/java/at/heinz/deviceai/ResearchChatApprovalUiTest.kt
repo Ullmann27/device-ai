@@ -376,6 +376,40 @@ class ResearchChatApprovalUiTest {
         assertEquals(draft, (field(f.activity, "input") as EditText).text.toString())
     }
 
+    private fun assertAcceptedResearchBlocked(reason: String) {
+        for (fromChat in listOf(false, true)) withActivity { f ->
+            val before = noExecutionNotices(f).size
+            val dialog = if (fromChat) {
+                (field(f.activity, "input") as EditText).setText("https://example.org/synthetic-blocked")
+                AgentActivity::class.java.getDeclaredMethod("sendCurrentInput", Boolean::class.javaPrimitiveType)
+                    .apply { isAccessible = true }.invoke(f.activity, false)
+                idle()
+                requireNotNull(ShadowAlertDialog.getLatestAlertDialog())
+            } else askTopic(f, "Erlaubte Recherche ohne Start")
+            if (reason == "busy") set(f.activity, "busy", true)
+            else (field(f.activity, "localAgentExecutor") as ExecutorService).shutdown()
+            val draft = "Neuer ungesendeter Entwurf"
+            (field(f.activity, "input") as EditText).setText(draft)
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            idle()
+            val notices = noExecutionNotices(f).drop(before)
+            assertEquals(1, notices.size)
+            assertTrue(notices.single().text.contains(
+                if (reason == "busy") "anderer Auftrag" else "Verarbeitung"))
+            assertNull(field(f.activity, "activeWebResearchSession"))
+            assertNull(field(f.activity, "pendingResearchChatApproval"))
+            assertEquals(draft, (field(f.activity, "input") as EditText).text.toString())
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            idle()
+            assertEquals("One outcome after repeated acceptance", before + 1, noExecutionNotices(f).size)
+        }
+    }
+
+    @Test fun acceptedResearchWhileBusyExplainsWhyItDidNotStart() = assertAcceptedResearchBlocked("busy")
+
+    @Test fun acceptedResearchAfterExecutorShutdownExplainsWhyItDidNotStart() =
+        assertAcceptedResearchBlocked("executor")
+
     @Test fun exactReplyApprovesOnlyTheDisplayedTicketWhileTheModelWaits() = withActivity { f ->
         val dialog = ask(f, "Photosynthese")
         set(f.activity, "busy", true)

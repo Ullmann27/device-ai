@@ -5,7 +5,7 @@
     "branch": "integration/continuum-ultimate-system-20261110",
     "pr": 740,
     "integrator": "root",
-    "sourceCheckpoint": "3aa0b4613233afd49dca47ca08bb5dc865e9f25f"
+    "sourceCheckpoint": "c8f772fd97c05fd06cae6988299b7c01b5e95e18"
   },
   "baseline": "c972f56ccc4caa2f1807bcaf1d4665347c66c629",
   "entries": [
@@ -172,10 +172,11 @@
     {
       "pr": 735,
       "branch": "feature/android-system-intelligence-20261110",
-      "headAtSnapshot": "1223dc82ab6c8482d3f5be44bf2863cd2425ee8e",
+      "headAtSnapshot": "acca372a49972e35c2d8d0377187793416fa5a4f",
       "classification": "INTEGRATED",
-      "decision": "Local diagnosis, scoped storage, cache recovery and shared permission gate; no general phone optimizer.",
-      "deviceVerified": false
+      "decision": "Production source unchanged between merged 1223dc8 and acca372 (git diff app/src/main empty); later evidence remains available in donor PR. Local integration repairs retained.",
+      "deviceVerified": false,
+      "lastMergedHead": "1223dc82ab6c8482d3f5be44bf2863cd2425ee8e"
     },
     {
       "pr": 736,
@@ -204,15 +205,15 @@
     {
       "pr": 739,
       "branch": "integration/continuum-cinema-apk53-20261110",
-      "headAtSnapshot": "0e8f6c75eb667abb3b2c23e52c59bacbdfa59a47",
+      "headAtSnapshot": "f495fd633509e11a52519a0bd89d96b22cb91b3b",
       "classification": "INTEGRATED",
-      "decision": "Non-execution explanation and controlled STOP follow-up; stronger active-work gaze guard retained; combined QA pending.",
+      "decision": "Includes idle admission/non-execution follow-up for five direct research callers; model-awaiting approval retains its existing busy path. Final combined QA required.",
       "deviceVerified": false
     },
     {
       "pr": 740,
       "branch": "integration/continuum-ultimate-system-20261110",
-      "headAtSnapshot": "3aa0b4613233afd49dca47ca08bb5dc865e9f25f",
+      "headAtSnapshot": "c8f772fd97c05fd06cae6988299b7c01b5e95e18",
       "classification": "CANONICAL_CANDIDATE",
       "decision": "This mission; all production readiness claims await exact-source gates.",
       "deviceVerified": false
@@ -236,5 +237,5 @@
     "modelWeightsChanged": false,
     "originalAvatarChanged": false
   },
-  "recordedAtUtc": "2026-11-10T22:35:59.591221+00:00"
+  "recordedAtUtc": "2026-11-10T23:02:07.735956+00:00"
 }
