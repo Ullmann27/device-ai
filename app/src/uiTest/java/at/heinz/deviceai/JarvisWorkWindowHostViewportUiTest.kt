@@ -98,7 +98,8 @@ class JarvisWorkWindowHostViewportUiTest {
             assertEquals(676, home.width)
         }
 
-        fun card(): View = JarvisHomeTestRoutes.destination(home, "system")
+        private val cardTarget by lazy { JarvisHomeTestRoutes.destination(home, "system") }
+        fun card(): View = cardTarget
 
         fun bounds(view: View): RectF = Rect(0, 0, view.width, view.height).let {
             container.offsetDescendantRectToMyCoords(view, it)
