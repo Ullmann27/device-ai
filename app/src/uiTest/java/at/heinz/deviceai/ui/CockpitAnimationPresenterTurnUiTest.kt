@@ -157,4 +157,26 @@ class CockpitAnimationPresenterTurnUiTest {
         assertEquals("b", field("workStageTurnId"))
         assertEquals(-1L, field("exitMs"))
     }
+
+    @Test fun unknownEndWhileIdleDoesNotStartAReturn() {
+        end("unknown")
+        assertEquals(-1L, field("exitMs"))
+        assertTrue(projected.isEmpty())
+        start("next")
+        assertEquals("next", field("workStageTurnId"))
+        assertEquals(-1L, field("exitMs"))
+    }
+
+    @Test fun navigationResetAllowsANewIdleWorker() {
+        start("a")
+        sample()
+        emit(CockpitAnimationEvent.AreaChanged(NAV_TURN, 1L,
+            "chat", "home", TransitionPattern.B_FLY_IN))
+        assertEquals("a", projected.last().turnId)
+        assertEquals(WindowProjectedMotion.Phase.CLOSED, projected.last().phase)
+        emit(CockpitAnimationEvent.ActionStarted("worker", 2L, CockpitAction.WORKER, "Prüfung"))
+        assertEquals("worker", field("workStageTurnId"))
+        end("a")
+        assertEquals(-1L, field("exitMs"))
+    }
 }
