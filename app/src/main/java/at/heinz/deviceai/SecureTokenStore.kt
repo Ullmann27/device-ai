@@ -20,6 +20,8 @@ object SecureTokenStore {
     private const val KEY_MENTOR_DATA = "mentor_token_data"
     private const val KEY_OPENROUTER_IV = "openrouter_token_iv"
     private const val KEY_OPENROUTER_DATA = "openrouter_token_data"
+    private const val KEY_NVIDIA_IV = "nvidia_token_iv"
+    private const val KEY_NVIDIA_DATA = "nvidia_token_data"
 
     /**
      * BYOK: OpenRouter key is encrypted in private preferences with a non-exportable
@@ -55,6 +57,41 @@ object SecureTokenStore {
     fun clearOpenRouterToken(context: Context) {
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
             .remove(KEY_OPENROUTER_IV).remove(KEY_OPENROUTER_DATA).commit()
+    }
+
+    /**
+     * NVIDIA BYOK: key encrypted in app-private preferences with the existing
+     * non-exportable Android Keystore AES-GCM key. Never commit key material.
+     */
+    fun saveNvidiaToken(context: Context, token: String) {
+        require(token.matches(Regex("nvapi-[A-Za-z0-9_-]{32,240}"))) {
+            "Ungültiges NVIDIA-Schlüsselformat."
+        }
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.ENCRYPT_MODE, getOrCreateKey())
+        val encrypted = cipher.doFinal(token.toByteArray(Charsets.UTF_8))
+        check(context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putString(KEY_NVIDIA_IV, Base64.encodeToString(cipher.iv, Base64.NO_WRAP))
+            .putString(KEY_NVIDIA_DATA, Base64.encodeToString(encrypted, Base64.NO_WRAP))
+            .commit()) { "NVIDIA-Schlüssel konnte nicht sicher gespeichert werden." }
+    }
+
+    fun loadNvidiaToken(context: Context): String? {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val iv = prefs.getString(KEY_NVIDIA_IV, null) ?: return null
+        val data = prefs.getString(KEY_NVIDIA_DATA, null) ?: return null
+        return runCatching {
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            cipher.init(Cipher.DECRYPT_MODE, getOrCreateKey(),
+                GCMParameterSpec(128, Base64.decode(iv, Base64.NO_WRAP)))
+            String(cipher.doFinal(Base64.decode(data, Base64.NO_WRAP)), Charsets.UTF_8)
+                .takeIf { it.matches(Regex("nvapi-[A-Za-z0-9_-]{32,240}")) }
+        }.getOrNull()
+    }
+
+    fun clearNvidiaToken(context: Context) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .remove(KEY_NVIDIA_IV).remove(KEY_NVIDIA_DATA).commit()
     }
 
     fun saveMentorToken(context: Context, token: String) {
