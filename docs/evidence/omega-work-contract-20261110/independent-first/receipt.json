@@ -1,0 +1,28 @@
+{
+  "baseline_commit": "515afc28af11b9befeb5a61f9c44411d423635a9",
+  "baseline_remote_tree_equivalent": "28bee009ef54e8c60eb1468dc90c9f4a5a51edea",
+  "candidate_commit": "ad1f9ed6b3d293d47c4cbb01fae3a6d17e197658",
+  "candidate_tree": "2fec1752f7869b143abf7c23ffb7572d9addee72",
+  "holdout_frozen_commit": "6671e2c5d7cf5f1cff70ab86693e66055a76fa22",
+  "holdout_sha256": "895da22531b7a73f5e86f6e0a8fcc67d38dc030faeb5be900e7b9355041e9a26",
+  "candidate_source_sha256": {
+    "ConversationSituationModel.kt": "286fcb71ab4544629148ba96cc587affc10694247d50d57c893043354f160d65",
+    "LocalConversationContext.kt": "456158b9ecbb5a99c11e583b29877ef96a48673598c78732f66344ef9810c7a8",
+    "LocalConversationSituationTracker.kt": "61363f2c964e4267a37b33c5731f785c8ea6bca1e827588efc6a57ea631a6497",
+    "WorkingTaskContext.kt": "8e4be9f03e09a3c0f7f57ca9512b0c5d053e780cbf8c13c7a54789abdaad2ef6"
+  },
+  "harness_sha256": {
+    "IndependentApprovalControls.kt": "d8fc7d780e85d76d5e3e9e5b1b8508e9fb711dd30295517454d03c44e73a57ab",
+    "IndependentWorkingBudgetControls.kt": "ba32eede2d2d80295a76b40b1d930a5154e6288aa2ea597bf9a8b52f874a2f51",
+    "IndependentWorkingTaskHoldout.kt": "2118d0e2079d2c0e52b64ba321c045796d0a0224b7669239ea88664d57d9418f"
+  },
+  "compiled_dependencies": {
+    "files": 2836,
+    "manifest_sha256": "08b5e6f9961975ef0638606f278924b4a96eb112c675a01929bc6f9977d36613",
+    "source": "Root full baseline Android Kotlin compile; immutable copied class snapshot",
+    "limitation": "Scoped context source recompilation with precompiled dependencies, not full Android build in evaluator"
+  },
+  "decision": "REJECT_PROMOTION",
+  "model_calls": 0,
+  "Fold7": "NOT_RUN"
+}

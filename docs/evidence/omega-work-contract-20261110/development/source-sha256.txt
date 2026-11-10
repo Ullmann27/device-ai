@@ -1,0 +1,10 @@
+8e4be9f03e09a3c0f7f57ca9512b0c5d053e780cbf8c13c7a54789abdaad2ef6  /workspace/scratch/7366d957876c/omega-working-context/app/src/main/java/at/heinz/deviceai/cognitive/WorkingTaskContext.kt
+286fcb71ab4544629148ba96cc587affc10694247d50d57c893043354f160d65  /workspace/scratch/7366d957876c/omega-working-context/app/src/main/java/at/heinz/deviceai/cognitive/ConversationSituationModel.kt
+61363f2c964e4267a37b33c5731f785c8ea6bca1e827588efc6a57ea631a6497  /workspace/scratch/7366d957876c/omega-working-context/app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationSituationTracker.kt
+456158b9ecbb5a99c11e583b29877ef96a48673598c78732f66344ef9810c7a8  /workspace/scratch/7366d957876c/omega-working-context/app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt
+7280a97ee4efde1cc66ccc84afbb2ca7105c2ffdb006affd07e3cef4e535afc0  /workspace/scratch/7366d957876c/omega-working-context/app/src/test/java/at/heinz/deviceai/cognitive/WorkingTaskContextTest.kt
+ae593dfb4ea483b23b3b91ce6e0f11bd95b8f71467714db10e9173c9433f779a  /workspace/scratch/7366d957876c/omega-working-context/app/src/test/java/at/heinz/deviceai/cognitive/ConversationSituationModelTest.kt
+ebb4aaa8f816c721ec94031d280c877a4628c79935a4a47849f68e5be45f51bc  /workspace/scratch/7366d957876c/omega-working-context/app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationSituationTrackerTest.kt
+5c0e8fc05f96984db6e9733c7fcd3a3f238f551df7e07f6671765f8a32704f97  /workspace/scratch/7366d957876c/omega-working-context/app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationContextInvalidationTest.kt
+b7320cf22aff36da16c7df29619cf64c3299f46aa77ead81e4eb2b0321ba5ffe  /workspace/scratch/7366d957876c/omega-working-context/app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpIntegrationTest.kt
+3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed  /workspace/scratch/7366d957876c/omega-evaluation-output/dependencies/json.jar

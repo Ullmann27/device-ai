@@ -1,0 +1,33 @@
+JUnit version 4.13.2
+.....E.E...E.
+Time: 0.278
+There were 3 failures:
+1) executionSignalFollowsDurableDispatchCommit(at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest)
+java.lang.AssertionError: expected:<DISPATCH_COMMITTED> but was:<START_PENDING>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest.executionSignalFollowsDurableDispatchCommit$lambda$0(OmegaDownstreamScenarioTest.kt:193)
+	at at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest.withFixture(OmegaDownstreamScenarioTest.kt:74)
+	at at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest.executionSignalFollowsDurableDispatchCommit(OmegaDownstreamScenarioTest.kt:190)
+2) cancellationAtExecutionSignalIsAlreadyCommitted(at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest)
+java.lang.AssertionError: expected:<DISPATCH_COMMITTED> but was:<START_PENDING>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest.cancellationAtExecutionSignalIsAlreadyCommitted$lambda$0(OmegaDownstreamScenarioTest.kt:199)
+	at at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest.withFixture(OmegaDownstreamScenarioTest.kt:74)
+	at at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest.cancellationAtExecutionSignalIsAlreadyCommitted(OmegaDownstreamScenarioTest.kt:196)
+3) failedDurableCommitNeverSignalsExecution(at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest.failedDurableCommitNeverSignalsExecution(OmegaDownstreamScenarioTest.kt:226)
+
+FAILURES!!!
+Tests run: 10,  Failures: 3
+

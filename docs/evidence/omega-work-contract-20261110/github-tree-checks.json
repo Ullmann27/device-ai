@@ -1,0 +1,30 @@
+{
+  "note": "Remote tree preserved via unchanged AGENTS.md entry. No refs moved. Combined commit statuses empty; not a complete Actions/check-runs inventory.",
+  "checks": [
+    {
+      "pr": 715,
+      "tree": "735a663d522e16d56e979c78a908e9f3baa2f031",
+      "statuses": []
+    },
+    {
+      "pr": 716,
+      "tree": "13445d2b227e561c06bcada82eb6584fe3bbb6a0",
+      "statuses": []
+    },
+    {
+      "pr": 717,
+      "tree": "0bc0148057fd5117735c1df0d4cb46ad6005e726",
+      "statuses": []
+    },
+    {
+      "pr": 718,
+      "tree": "120269a4eb628ec036a0479f2d923d4fac17aa37",
+      "statuses": []
+    },
+    {
+      "pr": 719,
+      "tree": "7fbcba8edc5fc0df9b230b4da023b6bfac0a92ba",
+      "statuses": []
+    }
+  ]
+}

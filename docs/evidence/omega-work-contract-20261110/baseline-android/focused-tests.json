@@ -1,0 +1,58 @@
+[
+  {
+    "name": "at.heinz.deviceai.ToolDispatchObserverTest",
+    "tests": "3",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.093"
+  },
+  {
+    "name": "at.heinz.deviceai.cognitive.AgentTaskEvidenceTest",
+    "tests": "6",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.138"
+  },
+  {
+    "name": "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+    "tests": "12",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.024"
+  },
+  {
+    "name": "at.heinz.deviceai.cognitive.ConversationSituationModelTest",
+    "tests": "5",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.013"
+  },
+  {
+    "name": "at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest",
+    "tests": "5",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.014"
+  },
+  {
+    "name": "at.heinz.deviceai.cognitive.LocalConversationSituationTrackerTest",
+    "tests": "4",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.005"
+  },
+  {
+    "name": "at.heinz.deviceai.cognitive.LocalFollowUpTaskFrameTest",
+    "tests": "9",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.014"
+  }
+]

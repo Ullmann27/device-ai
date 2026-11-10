@@ -1,0 +1,9 @@
+request=Bernstein decision=Resolved target=bernstein
+request=Aber Bernstein nicht. decision=Resolved target=bernstein
+request=Also Bernstein nicht. decision=Resolved target=bernstein
+request=Lieber Bernstein nicht. decision=Resolved target=bernstein
+request=Okay, Bernstein nicht. decision=Resolved target=bernstein
+quality_assertions=5 failures=4
+Exception in thread "main" java.lang.IllegalStateException: REJECT_PROMOTION: negated target selected
+	at at.heinz.deviceai.cognitive.NegationReviewCounterexampleKt.main(NegationReviewCounterexample.kt:18)
+	at at.heinz.deviceai.cognitive.NegationReviewCounterexampleKt.main(NegationReviewCounterexample.kt)

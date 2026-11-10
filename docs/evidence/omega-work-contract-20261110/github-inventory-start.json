@@ -1,0 +1,117 @@
+{
+  "note": "Live connector snapshot, 2026-11-10. Empty PR-triggered workflow list is not proof no workflow exists. Review comments are allegations until source reproduction. Mergeability is transient.",
+  "snapshots": [
+    {
+      "pr": 715,
+      "head": "28bee009ef54e8c60eb1468dc90c9f4a5a51edea",
+      "branch": "cinema/fluid-light-stage-20261110",
+      "base": "code52/grok-release-candidate-0351-20261110",
+      "base_sha": "17491f4d8103f0e55836369333fab07e80e6e9c2",
+      "draft": true,
+      "merged": false,
+      "mergeable_at_read": true,
+      "open_review_threads": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+          "line": 264,
+          "body": [
+            "<details>\n<summary>⚠️ <b>Bug:</b> Null fly-in accent now overrides the host work-window accent</summary>\n\n`accent` used to be `windowAccentArgb ?: flyIn.accentArgb`. It is now `if (flyIn.open) flyIn.accentArgb else windowAccentArgb`. The shell's own work panels publish motion with `accentArgb = null` (`JarvisShellView.publishWorkWindowMotion`), and `publishLight()` mirrors whichever open window was updated last. The shell panels update every frame, so they often win, and then `flyIn.open` is true with a null accent. In that case the renderer throws away the real `workWindowAccentArgb` from `ContinuumHologramView`, and `SpatialWindowLight.tint` falls back to the base cyan fill. The result is that the avatar's window-coloured light flickers or disappears during a work order. Fix: keep the fly-in geometry, but fall back to the host accent when the snapshot has none.\n\n\n**Fall back to the host accent when the fly-in snapshot has no accent:**\n````\nval accent = (if (flyIn.open) flyIn.accentArgb else null) ?: windowAccentArgb\n````\n\n<!-- gitar:apply-fix-start -->\n<!-- gitar:fix-id:01a1c6e3-8c40-776c-92e6-15303e05779c -->\n- [ ] Apply fix\n<!-- gitar:apply-fix-end -->\n\n<sub><!-- gitar:footer-start -->Check the box to apply the fix or reply for a change | Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>"
+          ]
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+          "line": 350,
+          "body": [
+            "<details>\n<summary>⚠️ <b>Bug:</b> Result for a queued work order is dropped while the prior return runs</summary>\n\nIf turn b's CommandFlyIn arrives while turn a's return is still running, `playWorkStage` only queues it in `pendingWorkStageTurnId`. When b's result STEP then arrives before that return ends, `playWorkWindowEntrance` exits at `if (exitMs >= 0L) return` without saving anything. `completeReturn` → `beginWorkStage(next)` also resets `pendingResultAdvance = false`. So b's construction starts after the return, but its draft never steps forward (`resultForward` stays false), and the result arrival is lost until b exits. The presenter sends every STEP straight to `playWorkWindowEntrance` with no turn check, so a quick answer that lands within the return window reaches this path. Fix: when `exitMs >= 0L && pendingWorkStageTurnId == cinemaTurnId`, set a deferred flag. Carry it through `completeReturn`/`beginWorkStage` so it becomes `pendingResultAdvance = true` for the new stage, and clear it in `closeProjectedMotion` when the pending turn ends.\n\n\n**Defer the result for the queued turn and re-arm it after the return completes:**\n````\nfun playWorkWindowEntrance() {\n    if (exitMs >= 0L) {\n        if (pendingWorkStageTurnId != null && pendingWorkStageTurnId == cinemaTurnId) pendingResultForQueued = true\n        return\n    }\n    ...\n}\n// in completeReturn, after beginWorkStage(next, now):\n//     pendingResultAdvance = pendingResultForQueued\n// and reset pendingResultForQueued = false in completeReturn / closeProjectedMotion / playEntrance\n````\n\n<!-- gitar:apply-fix-start -->\n<!-- gitar:fix-id:01a1c6e9-87e3-7231-8fac-05bda7e0b461 -->\n- [ ] Apply fix\n<!-- gitar:apply-fix-end -->\n\n<sub><!-- gitar:footer-start -->Check the box to apply the fix or reply for a change | Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>"
+          ]
+        },
+        {
+          "path": "docs/evidence/cinema-fluid-light-20261110/preview-source-binding.json",
+          "line": 5,
+          "body": [
+            "<details>\n<summary>💡 <b>Quality:</b> Preview binding hashes the old helper, not the PNG-only helper</summary>\n\n`preview-source-binding.json` lists `CinemaFluidLightPreview.kt` with sha256 `a483d275…`. That is the file as of 5d98a14 (tree 88888ff), the version that always renders 96 video frames per size. This commit changes the file, and HEAD now hashes to `7e8a1667…`. The same JSON also says `compiled_input_hashes_match: true` against the \"current clean checkout\" and has a `png_only_helper_check` with `video_frames: 0`. Only the new helper can produce zero video frames, so the recorded input hashes don't match the helper that ran this check. Either the check ran on code that isn't bound here, or the match claim is wrong. Fix: re-run the helper at the final commit and record the new hash and source SHA, or split the PNG-only check into its own binding with its own input hash.\n\n<sub><!-- gitar:footer-start -->Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>"
+          ]
+        },
+        {
+          "path": "docs/research/omega/CINEMA-FLUID-LIGHT-HANDOFF-20261110.md",
+          "line": 32,
+          "body": [
+            "<details>\n<summary>💡 <b>Quality:</b> Node contract count disagrees: 20/20 in handoff vs 18/18 in QA</summary>\n\nTwo places report the Node contract count as 20/20 PASS: the handoff (line 32, left unchanged next to the newly added validation lines) and the PR description. The new QA evidence (`QA.md` line 11, `qa-receipt.json` `node_contracts.tests: 18`, and `build-log-excerpts.txt` \"tests 18; pass 18\") records 18/18 for the five listed files. Readers can't tell which run the 20 count refers to. Fix: align the handoff and PR description with the 18/18 receipt, or say which other run produced 20.\n\n<sub><!-- gitar:footer-start -->Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>"
+          ]
+        }
+      ],
+      "pr_workflow_runs": []
+    },
+    {
+      "pr": 716,
+      "head": "00cf15d925d2c114d8ce57ee23dac473a89e6e0f",
+      "branch": "research/continuum-context-cinema-20261110",
+      "base": "code52/grok-release-candidate-0351-20261110",
+      "base_sha": "17491f4d8103f0e55836369333fab07e80e6e9c2",
+      "draft": true,
+      "merged": false,
+      "mergeable_at_read": true,
+      "open_review_threads": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt",
+          "line": 78,
+          "body": [
+            "<details>\n<summary>⚠️ <b>Bug:</b> Contrast with a relative selector can resolve to the rejected option</summary>\n\nThe contrast branch accepts any positive kind after `sondern`, including `OTHER` and `PREVIOUS`. Those kinds are resolved relative to `selectedFocusIndex` and never against the selector that was just negated. With `prepared()` (focus [a,b], selected 0), `Nicht die zweite, sondern die andere` becomes `OTHER` → `1-0=1`. The result is a `Query` for `Liste App`/`s2`, which is the alternative the user just rejected, and focus moves to it. `Nicht die erste, sondern die davor` fails the same way when selected=1. Fix: only allow absolute ordinals (`FIRST`/`SECOND`) of different kinds in the contrast form. Alternatively, return Clarify when the target index equals the rejected selector's index.\n\n<sub><!-- gitar:footer-start -->Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>"
+          ]
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt",
+          "line": 76,
+          "body": [
+            "<details>\n<summary>💡 <b>Bug:</b> Any trailing <code>nicht</code> rejects the ordinal and wipes focus</summary>\n\n`words.lastOrNull()==\"nicht\"` counts every sentence that ends in `nicht` as a rejection, including ordinary negated predicates such as `Warum startet die zweite nicht?` or `Geht die erste nicht?`. These now return `Clarify` and also clear the whole candidate set, which the old resolver did not do. The pronoun path is narrower: it uses `trailingCorrection`, which also requires `meine/meinte/gemeint`, so `Warum startet sie nicht?` still resolves. Fix: count `nicht` as a rejection only for `trailingCorrection` or when it directly follows the selector (`die erste nicht`, `die erste ist es nicht`).\n\n<sub><!-- gitar:footer-start -->Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>"
+          ]
+        }
+      ],
+      "pr_workflow_runs": []
+    },
+    {
+      "pr": 717,
+      "head": "4ee9f9c05a1f4623427b41735733ab633f291c6b",
+      "branch": "research/continuum-cognitive-budget-20261110",
+      "base": "cinema/fluid-light-stage-20261110",
+      "base_sha": "8ff1bfd4dbbda412279279d7120f4cfabef54937",
+      "draft": true,
+      "merged": false,
+      "mergeable_at_read": true,
+      "open_review_threads": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveBudgetController.kt",
+          "line": 45,
+          "body": [
+            "<details>\n<summary>💡 <b>Edge Case:</b> requestedMode overrides explicit TOOL_PLAN/RESEARCH/VERIFY strategy</summary>\n\nIn `decide`, `requestedMode != null` is checked before the selector result, so the only routes that stay protected are the `expectedToolUse`, `factualFreshnessNeeded` and `memoryRequested` flags. Take a profile with `explicitStrategy = TOOL_PLAN` or `RESEARCH_BACKED`: `ReasoningStrategySelector.select` returns that strategy, but a requested FAST or DEEP replaces it, and the runner then makes 1–4 local model calls. That task should have gone to `EXISTING_PATH` with zero calls. The same happens with `verifyExistingAnswer` (VERIFY_ONLY), which can be raised to DEEP. This goes against the stated rule that specialized routes cannot be overridden, and `specializedRoutesCannotBeOverriddenByFast` only tests the boolean flags. Fix: check the selected TOOL_PLAN and RESEARCH_BACKED strategies before the requested mode, and add a test that uses `explicitStrategy`.\n\n\n**Check the selector's specialized strategies before the caller-requested mode.:**\n````\nval mode = when {\n    profile.expectedToolUse || selected == ReasoningStrategy.TOOL_PLAN -> CognitiveBudgetMode.TOOL\n    profile.factualFreshnessNeeded || selected == ReasoningStrategy.RESEARCH_BACKED -> CognitiveBudgetMode.RESEARCH\n    signals.memoryRequested -> CognitiveBudgetMode.MEMORY\n    requestedMode != null -> requestedMode\n    selected == ReasoningStrategy.FAST -> CognitiveBudgetMode.FAST\n    selected == ReasoningStrategy.STANDARD || selected == ReasoningStrategy.VERIFY_ONLY -> CognitiveBudgetMode.NORMAL\n    else -> CognitiveBudgetMode.DEEP\n}\n````\n\n<!-- gitar:apply-fix-start -->\n<!-- gitar:fix-id:01a1c70f-4bfb-7745-afe9-be462418999c -->\n- [ ] Apply fix\n<!-- gitar:apply-fix-end -->\n\n<sub><!-- gitar:footer-start -->Check the box to apply the fix or reply for a change | Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>"
+          ]
+        }
+      ],
+      "pr_workflow_runs": []
+    },
+    {
+      "pr": 718,
+      "head": "6eb6d3c26620f03a7844b9d6fe91b87a208d4910",
+      "branch": "research/brain-lab-controlled-20261110",
+      "base": "cinema/fluid-light-stage-20261110",
+      "base_sha": "56934505b674c8ed55c3a0ff3aa10aa914368743",
+      "draft": true,
+      "merged": false,
+      "mergeable_at_read": true,
+      "open_review_threads": [],
+      "pr_workflow_runs": []
+    },
+    {
+      "pr": 719,
+      "head": "dafb3187faf2580d0a060a66fb7e82915f8fc6fc",
+      "branch": "research/continuum-memory-skills-20261110",
+      "base": "cinema/fluid-light-stage-20261110",
+      "base_sha": "56934505b674c8ed55c3a0ff3aa10aa914368743",
+      "draft": true,
+      "merged": false,
+      "mergeable_at_read": false,
+      "open_review_threads": [],
+      "pr_workflow_runs": []
+    }
+  ]
+}

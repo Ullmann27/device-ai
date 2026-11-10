@@ -1,0 +1,14 @@
+{
+  "source_commit_local": "515afc28af11b9befeb5a61f9c44411d423635a9",
+  "source_commit_remote": "28bee009ef54e8c60eb1468dc90c9f4a5a51edea",
+  "main_source_tree": "30721ba782bdce41db98130c28881905a2d5cd18",
+  "result": "PASS",
+  "task": ":app:compileDebugKotlin",
+  "elapsed_reported": "1m41s",
+  "initial_attempt": "ENVIRONMENT_FAILURE: system JRE lacks JAVA_COMPILER; retained original log",
+  "retry": "installed Temurin JDK21, offline cached dependencies",
+  "test_execution": "NOT_RUN",
+  "Fold7": "NOT_RUN",
+  "model_inference": "NOT_RUN",
+  "APK": "NOT_BUILT"
+}

@@ -1,0 +1,2 @@
+Error: Could not find or load main class at.heinz.deviceai.cognitive.NegationReviewCounterexampleKt
+Caused by: java.lang.ClassNotFoundException: at.heinz.deviceai.cognitive.NegationReviewCounterexampleKt

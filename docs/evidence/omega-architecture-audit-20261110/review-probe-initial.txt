@@ -1,0 +1,5 @@
+[0.001s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/5 because it is locked by another process (errno = 11)
+relative_contrast_selects_rejected_s2=true
+Exception in thread "main" java.lang.IllegalStateException: Check failed.
+	at at.heinz.deviceai.learning.context.CtxReviewProbeKt.main(CtxReviewProbe.kt:15)
+	at at.heinz.deviceai.learning.context.CtxReviewProbeKt.main(CtxReviewProbe.kt)

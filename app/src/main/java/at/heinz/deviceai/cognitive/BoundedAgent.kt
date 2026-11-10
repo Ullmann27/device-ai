@@ -414,10 +414,9 @@ class BoundedAgentOrchestrator(
                                 invocation,
                                 approval.userConfirmed,
                                 approval.destructiveConfirmed,
-                                onExecutionStarted = {
-                                    emit(CognitiveWorkState.EXECUTING, invocation.id)
-                                },
+                                onExecutionStarted = null,
                                 onDispatchStarted = {
+                                    emit(CognitiveWorkState.EXECUTING, invocation.id)
                                     runCatching { onToolStarted(invocation.id, proposal.toolName) }
                                 }
                             )

@@ -1,0 +1,11 @@
+[
+  {
+    "name": "at.heinz.deviceai.cognitive.OmegaContinuousScenarioTest",
+    "tests": "2",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.151",
+    "xml_sha256": "ef6c4d32fbc800660b3badf766b62b1e5d1430d8abaf27279a59ad4ba7e8b503"
+  }
+]

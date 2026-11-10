@@ -1,0 +1,94 @@
+{
+  "source_local": "476e09b1c048319ad5ebd239753e7a989a5e9209",
+  "source_remote": "ad4c8d31ed8a7eefc717451121d7ea3301260a5b",
+  "main_source_tree": "c3c0aac29ab6c4b3e86dce1ea3103d2f665cc5e4",
+  "android_compile": "PASS",
+  "tests": [
+    {
+      "name": "at.heinz.deviceai.ToolDispatchObserverTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.07",
+      "xml_sha256": "f805397b71f150ba0bb6f0ae7e2e73c6a02cf136343c1ad200fbb60a0794d346"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.AgentTaskEvidenceTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.115",
+      "xml_sha256": "f34c6da9e316e5ff3c6201e0d4f85f8d6c0453c6e8492347c08e19eaacefbfc6"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.015",
+      "xml_sha256": "f830c2635122918da0dc6681523a104150763ea2edc6f2d8608d994f8dd63b29"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ConversationSituationModelTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.011",
+      "xml_sha256": "06a477dba9e5e31a6058fc67b86d93eadbf97d82893e8a1c76022b719576c994"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.01",
+      "xml_sha256": "b3dbe49be62704f56f21ced08948845b6a8052b6f9bd964018593eaeb502b873"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalConversationSituationTrackerTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.003",
+      "xml_sha256": "c97cf91dde1411af3757e3e39b648b7f23e20facd30a5905133778d8fb7bfd25"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalFollowUpTaskFrameTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.01",
+      "xml_sha256": "cb1c227cf9375952ecfde4a2f09b3277ad3ec5fe62e4fccf45a054b3aade389b"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.085",
+      "xml_sha256": "483cdfc587eda02fe4b02cb5fb30d7df375142e3e9b21875c580d0bf611a73dd"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.WorkingTaskContextTest",
+      "tests": "33",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.042",
+      "xml_sha256": "c3523ceac47678dc073c05b293ca741900628dc82e8a004e8709559b45e2e7ba"
+    }
+  ],
+  "total_tests": 87,
+  "neural_model_calls": 0,
+  "Fold7": "NOT_RUN",
+  "actual_animation_edit": "NOT_RUN",
+  "note": "Development/regression test pass does not override independent holdout failure."
+}

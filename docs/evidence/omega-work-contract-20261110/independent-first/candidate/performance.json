@@ -1,0 +1,43 @@
+{
+  "schema": "omega-independent-admission-performance-v1",
+  "owner_admissions": 1160,
+  "measured_case_runs": 960,
+  "warmup_case_runs": 240,
+  "process_memory_after": {
+    "heap_used_bytes": 21524416,
+    "rss_kb": 195628,
+    "heap_committed_bytes": 165675008,
+    "process_high_water_rss_kb": 195628
+  },
+  "wall_ns": {
+    "max": 2521700,
+    "count": 1160,
+    "sum": 100405474,
+    "p50": 51556,
+    "p95": 269216
+  },
+  "thread_allocated_bytes": {
+    "max": 244016,
+    "count": 1160,
+    "sum": 73797248,
+    "p50": 40376,
+    "p95": 128992
+  },
+  "thread_cpu_ns": {
+    "max": 696455,
+    "count": 1160,
+    "sum": 100536648,
+    "p50": 54521,
+    "p95": 271012
+  },
+  "process_memory_before": {
+    "heap_used_bytes": 32341960,
+    "rss_kb": 101392,
+    "heap_committed_bytes": 165675008,
+    "process_high_water_rss_kb": 102904
+  },
+  "scope": "inspectRequest plus resolveWorkingTask if present; excludes seed setup, record and model; candidate reflection overhead retained",
+  "model_calls": 0,
+  "Fold7": "NOT_RUN",
+  "arm": "candidate"
+}

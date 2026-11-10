@@ -1,0 +1,9 @@
+PASS plan_current_after_admission
+PASS whole_constraints_or_no_frame_budget_64
+PASS whole_constraints_or_no_frame_budget_256
+PASS whole_constraints_or_no_frame_budget_4096
+PASS changed_request_invalidates_prior_plan
+PASS forged_request_is_not_current_plan
+PASS source_revision_invalidates_plan
+PASS new_session_invalidates_plan
+8/8 PASS; context validity only, no tool authority or receipt verification
