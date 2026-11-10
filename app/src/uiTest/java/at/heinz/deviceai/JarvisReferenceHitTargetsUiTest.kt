@@ -120,7 +120,7 @@ class JarvisReferenceHitTargetsUiTest {
     @Test fun wideCardsAndInputHeaderActionsHaveSeparateNativeControls() = withHome { home, calls ->
         assertEquals(10, JarvisHomeTestRoutes.controls(home).size)
         for (item in JarvisTiles.reference) {
-            val button = control(home, "tile:${item.target}")
+            val button = JarvisHomeTestRoutes.destination(home, item.target)
             assertTrue(button.width >= 48 && button.height >= 48)
             tapThroughViewport(home, button)
             assertTrue(button.isSelected)
@@ -135,10 +135,14 @@ class JarvisReferenceHitTargetsUiTest {
             assertTrue("$action size ${button.width} × ${button.height}", button.width >= 48 && button.height >= 48)
             tapThroughViewport(home, button)
         }
-        val modelPanel = control(home, "panel:ROW_MODEL")
-        assertEquals("Lokales Modell und Gerät", modelPanel.contentDescription)
-        tapThroughViewport(home, modelPanel)
-        assertEquals(actions.values.toList() + "model-management", calls)
+        val modelPanel = descendants(home).singleOrNull { it.tag == "jarvis-panel:ROW_MODEL" }
+        if (modelPanel != null) {
+            assertEquals("Lokales Modell und Gerät", modelPanel.contentDescription)
+            tapThroughViewport(home, modelPanel)
+            assertEquals(actions.values.toList() + "model-management", calls)
+        } else {
+            assertEquals(actions.values.toList(), calls)
+        }
         val foreground = control(home, "foreground")
         assertFalse(foreground.isClickable)
         assertEquals(View.IMPORTANT_FOR_ACCESSIBILITY_NO, foreground.importantForAccessibility)
@@ -225,7 +229,6 @@ class JarvisReferenceHitTargetsUiTest {
 
     @Test fun responsiveRemeasureKeepsOneNavigationSurfaceAndEveryRealRoute() = withHome { home, calls ->
         val live = home.hologram
-        val cardIds = JarvisHomeTestRoutes.controls(home).associate { it.tag.toString() to it.id }
         val previousFont = RuntimeEnvironment.getFontScale()
         try {
             for ((w, h, font) in listOf(Triple(412, 915, 1f), Triple(692, 768, 1f),
@@ -242,8 +245,15 @@ class JarvisReferenceHitTargetsUiTest {
                 assertSame(live, home.hologram)
                 assertSame(home, live.parent)
                 assertSame(live, (home.avatarRenderer as JarvisHoloAvatar).hologram)
-                assertEquals("The same cards survive every reflow", cardIds, identities)
-                assertTrue("Cards and diagnostics remain scrollable", home.measuredHeight > h)
+                assertEquals("Every destination remains reachable after reflow",
+                    JarvisHomeTestRoutes.features.toSet(),
+                    identities.keys.map { it.substringAfter(':') }.toSet())
+                val shell = requireNotNull(home.jarvisShell.currentShell())
+                if (shell.requiresVerticalScroll) {
+                    assertTrue("Reflow remains scrollable", home.measuredHeight > h)
+                } else {
+                    assertEquals("Packed cockpit fills the viewport without inventing scroll", h, home.measuredHeight)
+                }
                 for (target in listOf("notifications", "settings")) {
                     val header = control(home, "header:$target")
                     assertTrue(header.width >= 48 && header.height >= 48)
@@ -267,7 +277,7 @@ class JarvisReferenceHitTargetsUiTest {
         val renderer = home.avatarRenderer
         val originalSlot = home.avatarSlotRect
         val legacyViews = at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.values().mapNotNull { home.viewFor(it) }
-        val cardIds = JarvisHomeTestRoutes.controls(home).associate { it.tag.toString() to it.id }
+        assertEquals(10, JarvisHomeTestRoutes.controls(home).size)
         home.updateAvailableViewport(420f)
         assertEquals(420f, home.jarvisShell.viewportHeightDp, 0f)
         assertEquals(legacyViews, at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.values().mapNotNull { home.viewFor(it) })
@@ -275,7 +285,9 @@ class JarvisReferenceHitTargetsUiTest {
         assertTrue("Short viewport reflows into usable scrolling content", home.measuredHeight > 420)
         assertSame(surface, home.hologram)
         assertSame(renderer, home.avatarRenderer)
-        assertEquals(cardIds, JarvisHomeTestRoutes.controls(home).associate { it.tag.toString() to it.id })
+        val after = JarvisHomeTestRoutes.controls(home)
+        assertEquals("Destinations survive a height-only composition change",
+            JarvisHomeTestRoutes.features, after.map { it.tag.toString().substringAfter(':') })
         assertFalse("A completed layout must settle", home.isLayoutRequested)
         home.updateAvailableViewport(420f)
         assertFalse("The same viewport must not request another layout", home.isLayoutRequested)

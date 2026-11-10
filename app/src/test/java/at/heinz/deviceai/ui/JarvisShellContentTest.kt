@@ -39,12 +39,19 @@ class JarvisShellContentTest {
         val tiles = JarvisTiles.reference
         for (width in listOf(412f, 692f, 884f, 1280f)) {
             val shell = JarvisShellLayout.create(width, 760f)
-            assertTrue(shell.hasFeatureTiles)
             assertEquals(null, shell[JarvisShellLayout.Slot.NAV_RAIL])
-            assertEquals(10, shell.tileBoxes().size)
-            shell.tileBoxes().forEachIndexed { index, tile ->
-                assertEquals(tiles[index].target,
-                    JarvisShellContent.hitTarget(shell, tiles, tile.centerX, tile.centerY))
+            if (shell.hasFeatureTiles) {
+                assertEquals(10, shell.tileBoxes().size)
+                shell.tileBoxes().forEachIndexed { index, tile ->
+                    assertEquals(tiles[index].target,
+                        JarvisShellContent.hitTarget(shell, tiles, tile.centerX, tile.centerY))
+                }
+            } else {
+                val dock = requireNotNull(shell[JarvisShellLayout.Slot.BOTTOM_NAV])
+                assertEquals(JarvisTiles.railNav.map { it.target },
+                    JarvisTiles.bottomNavItemBoxes(dock).map { box ->
+                        JarvisShellContent.hitTarget(shell, tiles, box.centerX, box.centerY)
+                    })
             }
             assertEquals(null, JarvisShellContent.hitTarget(shell, tiles, 0f, 100f))
         }

@@ -72,14 +72,15 @@ class JarvisHeaderBrandFitTest {
         assertTrue("Reference has two brand lines", "Deine KI-Steuerzentrale" !in texts)
     }
 
-    @Test fun systemClockIsNotDuplicatedInTheReferenceHeader() {
+    @Test fun referenceHeaderShowsASingleClockAndDate() {
         for ((w, h) in listOf(692f to 700f, 832f to 748f, 884f to 760f, 1536f to 1024f)) {
             val grid = JarvisCockpitGrid.create(w, h)
-            assertTrue(JarvisCockpitGrid.Area.DEVICE_STATUS !in grid.areas)
+            assertTrue(JarvisCockpitGrid.Area.DEVICE_STATUS in grid.areas)
             val p = Tracking()
             JarvisCockpitGridContent.draw(p, Slot.TOP_BAR, grid[JarvisCockpitGrid.Area.HEADER], grid,
-                ContinuumDashboardState(), 0L)
-            assertTrue(p.lines.none { it.first.matches(Regex("[0-9]{2}:[0-9]{2}")) })
+                ContinuumDashboardState(), 1_699_272_660_000L)
+            val times = p.lines.filter { it.first.matches(Regex("[0-9]{2}:[0-9]{2}")) }
+            assertTrue("exactly one header clock at ${w}x$h: ${p.lines.map { it.first }}", times.size == 1)
         }
     }
 }
