@@ -1,0 +1,31 @@
+name: "Continuum Code52 Cinema owner-signer contract QA (no secrets)"
+on:
+  push:
+    branches:
+      - chatgpt/code52-cinema-owner-signer-candidate-20261110
+    paths:
+      - 'scripts/continuum-code52-github-signer.sh'
+      - '.github/continuum/code52-owner-signing-contract.test.mjs'
+      - '.github/workflows/continuum-code52-cinema-signer-contract.yml'
+permissions:
+  contents: read
+jobs:
+  review-only:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-cinema-owner-signer-candidate-20261110'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - name: Safe source-static signer gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          bash -n scripts/continuum-code52-github-signer.sh
+          node --test .github/continuum/code52-owner-signing-contract.test.mjs
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
