@@ -13177,6 +13177,7 @@ class AgentActivity : Activity() {
         stopVoiceAnimation()
         val scopeGeneration=++speechScopeGeneration
         val scopeSession=sessionId
+        val scopeResearchApproval=pendingResearchChatApproval?.approval
         val scopeDialog=devDialog
         val readinessScope = if (requestCode == READINESS_SPEECH_REQUEST) readinessDialog else null
         // Non-null only while the owner deliberately started hands-free mode; dictation stays a draft.
@@ -13203,7 +13204,9 @@ class AgentActivity : Activity() {
                 onText={spoken->if(speechScopeGeneration==scopeGeneration&&sessionId==scopeSession&&
                     (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog) &&
                     (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true)){
-                    if(conversationTurn!=null)applyConversationSpeech(conversationTurn,spoken) else applyLocalSpeechText(requestCode,spoken)}},
+                    if (requestCode == SPEECH_REQUEST && pendingResearchChatApproval?.approval !== scopeResearchApproval)
+                        endContinuousConversation("Recherchefreigabe geändert. Bitte erneut sprechen.")
+                    else if(conversationTurn!=null)applyConversationSpeech(conversationTurn,spoken) else applyLocalSpeechText(requestCode,spoken)}},
                 onFailure={failure->
                     if (conversationTurn != null && speechScopeGeneration == scopeGeneration && sessionId == scopeSession &&
                         !isFinishing && !isDestroyed) onConversationListenFailed(conversationTurn, failure)

@@ -1,6 +1,6 @@
 # Cinema/dialog integration support
 
-Continuation checkpoint: #724's queued-result fix is now included. Combined verification with the incoming #726 outcome fix and latest #720 ASR binding is pending. The earlier 91-test result below belongs only to its explicitly pinned source.
+Continuation checkpoint: #724's queued-result fix and latest #720 ASR binding are included. Combined verification with the incoming #726 outcome fix is pending. The earlier 91-test result below belongs only to its explicitly pinned source.
 
 Owner: Continuum support root. Canonical development target: `cinema/fluid-light-stage-20261110` / PR #715. This isolated candidate integrates the current #720 source; the target branch remains untouched.
 
@@ -43,7 +43,7 @@ The support root explicitly froze the Cinema product baseline at `5d36c5a57c0313
 
 - Prior verified support HEAD: `12115355b3d1e198f9c073cac87dc318003a4aa7`.
 - Queued-result input #724: `e61458f4c46f7af118614d01e71060b73a0c5521`, local equivalent `6e9fc1b96ef92dfc3b31d562e20a508233ba643f`, identical tree `f33e36003af84a12d16e952c52b1d067266eb4fb`. Merged without conflict. Only its existing View lifecycle, tests and evidence are added.
-- Authorized ASR input #720: `de831d06034c46c6ae039a6df32d52a4392a3521`; pending incorporation at this checkpoint.
+- Authorized ASR input #720: `de831d06034c46c6ae039a6df32d52a4392a3521`, local equivalent `deaf1e4db9c96b3513bc0ffe45dc83290bbffd30`, tree `d6f6eac90d8c093035dbdd16035a45226f0087b8`. Included without conflict: recognition captures the original approval identity, rejects a changed-ticket result after existing generation/session checks, and preserves a newer recognition generation. Its API35 test shadow affects only host test setup.
 - Outcome input #726: wait for the root's final verified source; its WIP checkpoint is not an integration approval.
 
 Upstream #724 has 46 scoped checks; upstream latest #720 has 91 ASR/approval checks. These counts overlap existing suites and are not summed or represented as a combined result. No Gradle build was started during the root's outcome compilation.

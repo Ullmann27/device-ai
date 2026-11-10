@@ -1,5 +1,7 @@
 # Dialog reference correction — first bounded milestone
 
+ASR follow-up verified: **91/91 focused Android host tests PASS**. A delayed recognized reply is now bound to the research ticket present at microphone start. Same-ticket, replacement and newer-recognition cases pass through the actual adapter/Activity callbacks with synthetic text. Evidence: `docs/evidence/dialog-research-consent-20261110/ASR-RESULT.json`. Real microphone/device/network acceptance remains NOT_RUN.
+
 Current result: unresolved temporal corrections clarify; an exact reply to the pending research ASK request now uses its existing ticket. **87/87 Android host tests PASS**, including eight new actual Activity UI tests. Device/real microphone/network acceptance remains NOT_RUN. Final evidence: `docs/evidence/dialog-research-consent-20261110/RESULT.json`.
 
 Integration owner: Cinema root integrator. Target: `cinema/fluid-light-stage-20261110` / PR #715. Work branch: `fix/dialog-context-reference-20261110`, based on local root `4ac9c9b94b9fb5e391646e2e99e986db32ec7997` (published root checkpoint `ae3ce34b5aff285ed8c569ca2844975e34131a86`). Avatar commit `6d29411e2b96b5fcc1514a86728d9ad4455c1006` remains separate.
@@ -75,3 +77,18 @@ Parser: **2 host tests PASS**. Existing exact-scope approval integration plus th
 Executed under the root's exclusive build lease with JDK/SDK from `/tmp/continuum-toolchain`, existing Gradle 8.11.1, `--no-daemon --max-workers=1`, in-process Kotlin, `-PdeviceAiMentorPreview=true -PcontinuumOwnerLocalQa=true -PcontinuumOwnerLocalVersionCode=52 -PcontinuumUiWidgetTests=true`, task `:app:testDebugUnitTest`. Final selected suites are recorded exactly in RESULT.json. Logs are in `/workspace/scratch/5900afa6af29/dialog-research-final-green/run.log`; baseline/overlap logs are in the adjacent `dialog-research-ui-red` and `dialog-research-overlap-red` directories. RESULT.json pins every changed runtime/test source SHA-256 and the unchanged original avatar asset.
 
 This verifies the actual app input/dialog/gate wiring on the Android host. It does not establish real ASR, network-provider output, Fold7/native pixels, broad A–E referent resolution or release acceptance. Root-owned STOP/scene methods remain unchanged. Integrator: cherry-pick this branch's source commits and rerun the focused combined-source caller checks before any release decision.
+
+
+## ASR request-identity follow-up
+
+Source audit found that `startVoiceInput` captured recognition generation/session, but no research request identity. In the same session, replacing the ASK request left that callback live; its delayed `Ja, mach` reached `applyConversationSpeech` → `sendCurrentInput` and approved the new ticket. The existing gate correctly checked that new ticket, but could not know which prompt the old utterance answered.
+
+- API35 adapter RED: the unchanged-ticket positive control passed; replacement then failed `Old recognition must not approve replacement` (1 test, 1 expected failure).
+- Minimal live fix: capture the existing approval object at microphone start. After the existing generation/session/dialog guards, reject speech results if that identity changed. The old hands-free scope ends with a retry notice; the successor approval remains untouched. An older generation is ignored before this branch, preserving a newer microphone turn.
+- Final focused Android compile/JUnit/Robolectric: **91 tests, 0 failures/errors/skips**, 11 suites. The two added cases exercise real AndroidOnDeviceSpeechInput/LocalSpeechSession callbacks with simulated recognized text and an explicit stale Activity callback probe. Existing consent, overlap, expiry, pause/resume and speech recovery suites remain green.
+- The first setup attempt failed before ASR on Robolectric's missing executor thermal-listener overload. A test-only shadow delegates to existing ShadowPowerManager bookkeeping; this is fixture support, not production thermal verification.
+- Early WIP source checkpoint: `d708632f40ac8329f176d1371a94366f0f84fa1c`, exact local `ec3095f` tree `435a13cfda794b0c22a426a8cee1657e7cfd174c`. Final source hashes and exact selected suites are in ASR-RESULT.json.
+
+Reproduction uses the same exclusive-lease command/properties above, with each ASR-RESULT.json suite passed using `--tests`. The cached instrumented Android 15 SDK supplies the two API35 adapter tests; the existing Activity consent regressions remain API28. No real audio, automatic microphone activation, network dispatch or physical-device result is asserted. Existing microphone rules remain: ordinary dictation fills a draft, hands-free requires the owner's gesture, and a new hands-free session is refused while a model/bot is busy. That busy-start UX was not expanded by this safety fix.
+
+Integration remains owned by the cinema root integrator/PR #715. This follow-up changes only `startVoiceInput` scope/callback, its owned consent tests and handoff/evidence; STOP methods, graphics, speech cores and gate authorization logic remain unchanged. Rollback: revert this follow-up; no persisted-data migration.
