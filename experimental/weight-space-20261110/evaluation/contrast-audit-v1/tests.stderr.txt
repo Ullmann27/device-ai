@@ -1,0 +1,18 @@
+test_aggregate_disagreement_rejected (__main__.AnalysisTests.test_aggregate_disagreement_rejected) ... ok
+test_changed_log_rejected_by_receipt (__main__.AnalysisTests.test_changed_log_rejected_by_receipt) ... ok
+test_corrupt_label_rejected (__main__.AnalysisTests.test_corrupt_label_rejected) ... ok
+test_duplicate_case_rejected (__main__.AnalysisTests.test_duplicate_case_rejected) ... ok
+test_duplicate_field_rejected (__main__.AnalysisTests.test_duplicate_field_rejected) ... ok
+test_forged_exact_match_rejected (__main__.AnalysisTests.test_forged_exact_match_rejected) ... ok
+test_invalid_eos_token_rejected (__main__.AnalysisTests.test_invalid_eos_token_rejected) ... ok
+test_known_failure_stays_failure (__main__.AnalysisTests.test_known_failure_stays_failure) ... ok
+test_missing_capacity_rejected (__main__.AnalysisTests.test_missing_capacity_rejected) ... ok
+test_missing_case_rejected (__main__.AnalysisTests.test_missing_case_rejected) ... ok
+test_missing_update_rejected (__main__.AnalysisTests.test_missing_update_rejected) ... ok
+test_nonfinite_probability_rejected (__main__.AnalysisTests.test_nonfinite_probability_rejected) ... ok
+test_unknown_record_rejected (__main__.AnalysisTests.test_unknown_record_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.029s
+
+OK

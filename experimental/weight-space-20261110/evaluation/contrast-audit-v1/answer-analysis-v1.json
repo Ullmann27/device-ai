@@ -1,0 +1,184 @@
+{
+  "analyzerSha256": "816fe2fb8edb921230bb73318e3c7654479ae6e4661499c855b23aa5fa9321e6",
+  "arm": "answer",
+  "capacity": {
+    "after": {
+      "0": {
+        "eos": true,
+        "tokens": 0
+      },
+      "1": {
+        "eos": true,
+        "tokens": 4
+      },
+      "2": {
+        "eos": true,
+        "tokens": 3
+      },
+      "3": {
+        "eos": true,
+        "tokens": 1
+      }
+    },
+    "afterFullLength": 0,
+    "before": {
+      "0": {
+        "eos": true,
+        "tokens": 7
+      },
+      "1": {
+        "eos": true,
+        "tokens": 4
+      },
+      "2": {
+        "eos": false,
+        "tokens": 32
+      },
+      "3": {
+        "eos": false,
+        "tokens": 32
+      }
+    },
+    "beforeFullLength": 2
+  },
+  "favorableDevSignal": "FAIL",
+  "frozenChecks": {
+    "baselineAllFourCapacityProbes": false,
+    "capacityCountNoDecline": false,
+    "devExactGainAtLeastEight": true,
+    "retentionExactNoDecline": true,
+    "textBpbIncreaseAtMostFivePercent": true
+  },
+  "integrityStatus": "PASS",
+  "modelInvocations": 0,
+  "optimizerUpdatesPerformedByAnalysis": 0,
+  "productionPromotion": false,
+  "receiptSha256": "2ffa158e57eed5711c15b8de413c4426e2facf76ac5ff90711e28a6c703ec94d",
+  "schema": "lm1-contrast-independent-analysis-v1",
+  "scores": {
+    "dev": {
+      "after": {
+        "answerNll": 0.6799596636343735,
+        "exact": 38,
+        "perClass": {
+          "0": {
+            "exact": 28,
+            "restrictedCorrect": 28,
+            "total": 32
+          },
+          "3": {
+            "exact": 10,
+            "restrictedCorrect": 10,
+            "total": 32
+          }
+        },
+        "prematureEos": 0,
+        "restrictedCorrect": 38,
+        "restrictedPredictionCounts": {
+          "0": 50,
+          "3": 14
+        },
+        "total": 64
+      },
+      "before": {
+        "answerNll": 4.9694356545204865,
+        "exact": 0,
+        "perClass": {
+          "0": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "total": 32
+          },
+          "3": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "total": 32
+          }
+        },
+        "prematureEos": 0,
+        "restrictedCorrect": 0,
+        "restrictedPredictionCounts": {
+          "2": 64
+        },
+        "total": 64
+      }
+    },
+    "retention": {
+      "after": {
+        "answerNll": 5.966773315085502,
+        "exact": 0,
+        "perClass": {
+          "1": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "total": 32
+          },
+          "2": {
+            "exact": 0,
+            "restrictedCorrect": 0,
+            "total": 32
+          }
+        },
+        "prematureEos": 0,
+        "restrictedCorrect": 0,
+        "restrictedPredictionCounts": {
+          "0": 58,
+          "3": 6
+        },
+        "total": 64
+      },
+      "before": {
+        "answerNll": 3.8890092361842594,
+        "exact": 0,
+        "perClass": {
+          "1": {
+            "exact": 0,
+            "restrictedCorrect": 4,
+            "total": 32
+          },
+          "2": {
+            "exact": 0,
+            "restrictedCorrect": 28,
+            "total": 32
+          }
+        },
+        "prematureEos": 0,
+        "restrictedCorrect": 32,
+        "restrictedPredictionCounts": {
+          "1": 8,
+          "2": 56
+        },
+        "total": 64
+      }
+    }
+  },
+  "sourceRegistrationSha256": "349099d814832bb384c103afde8cdba59ee2ffe310eb1c157af009c620d1bdf6",
+  "stdoutSha256": "0a4e8985c0cb8ed3f9868cc0b037878ebf7991bf0a7e65601b38d59f17db3076",
+  "textRetention": {
+    "after": {
+      "bpb": 2.889189439607163,
+      "bytes": 853
+    },
+    "before": {
+      "bpb": 2.801409006940589,
+      "bytes": 853
+    },
+    "relativeBpbChange": 0.031334386535166736
+  },
+  "updates": 128,
+  "warnings": [
+    "Retention exact-match floor: unchanged zero is not evidence of preserved ability.",
+    "Restricted retention classification regressed; this is separate from the preregistered exact criterion.",
+    "Baseline capacity prerequisite fails; long-generation capacity is not established.",
+    "All data are open DEV diagnostics; no independent generalization or coherent-language claim."
+  ],
+  "weightAuditorSha256": "4915e1a4f90f0ed1ba4aa25d76adf0271b32681d1eba9e9389060c81570315ab",
+  "weights": {
+    "afterSha256": "3820d1596dee43a675305645feece6d46b2711f8a03db0be8171055ee45128ed",
+    "beforeSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "changedFloat32Bits": 132160,
+    "changedNumericWeights": 132160,
+    "maximumAbsoluteDelta": 0.008392803370952606,
+    "parameters": 132160
+  }
+}
