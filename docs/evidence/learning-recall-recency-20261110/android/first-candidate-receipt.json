@@ -1,0 +1,9 @@
+{
+  "candidate_local": "ad995a37463b110760e880a74db7cf1d806dd492",
+  "candidate_remote": "4f7d12c33f3f04a8e6a135802bfa4cca443d694b",
+  "command_task": ":app:compileDebugKotlin",
+  "exit": 1,
+  "result": "INCOMPLETE_DAEMON_DISAPPEARED",
+  "root_cause": "not established",
+  "Fold7": "NOT_RUN"
+}

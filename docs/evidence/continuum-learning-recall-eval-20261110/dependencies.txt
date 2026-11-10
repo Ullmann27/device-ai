@@ -1,0 +1,6 @@
+app-classes files=2837
+app-classes path-content-manifest-sha256=4fddd3a25dabb68539bdd3b973765442d080368369870ca07921d241a0c72cdf
+3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed  /workspace/scratch/7366d957876c/omega-evaluation-output/dependencies/json.jar
+8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3  /tmp/continuum-toolchain/junit.jar
+66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9  /tmp/continuum-toolchain/hamcrest.jar
+ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c  /tmp/continuum-toolchain/kotlinc/lib/kotlin-stdlib.jar
