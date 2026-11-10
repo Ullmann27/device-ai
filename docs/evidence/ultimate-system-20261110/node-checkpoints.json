@@ -1,0 +1,38 @@
+[
+  {
+    "run": "node-full-1",
+    "status": "FAIL",
+    "source": {
+      "commit": "2527e0d5b441290159f3828fa10379eb6032fc3e",
+      "branch": "integration/continuum-ultimate-system-20261110",
+      "treeDigest": "52f94da7c713772b3b6acca2bf9d6d00ff112acb2481ec4950af059605960183"
+    },
+    "sourceUnchanged": true,
+    "tests": {
+      "total": 2492,
+      "passed": 2454,
+      "failed": 1,
+      "skipped": 37
+    },
+    "reportSha256": "9062a12a15da75f422992acd08ff17b6ca6a3114e386373f7d096e51d3fa3431",
+    "junitSha256": "3eb1703f1ec5e5721af1fbe7fed0c8e2c8a245a2f82fa6551034765bbabafd79"
+  },
+  {
+    "run": "node-full-2",
+    "status": "PASS",
+    "source": {
+      "commit": "3f5b37d328cee4e26338b4f3e61d5720d71c4444",
+      "branch": "integration/continuum-ultimate-system-20261110",
+      "treeDigest": "16773630cbc1179a587e4834c1febfc7d840ae61dcdc5c3b134b1cf03a1289cc"
+    },
+    "sourceUnchanged": true,
+    "tests": {
+      "total": 2492,
+      "passed": 2455,
+      "failed": 0,
+      "skipped": 37
+    },
+    "reportSha256": "b75bb4a225efb295c5197636ae68a46ac5a87ccf41e09e81d2cd0a6c149c37c9",
+    "junitSha256": "52d2e6a99687fec8b0e91222acbfa8c45419c3e7e43cc55b6b8a3ac9003e9939"
+  }
+]

@@ -1,5 +1,12 @@
 # Continuum – verbindlicher Anschlussvertrag („No Orphans“)
 
+Aktuelle Integrationsmission (10.11.2026): **PR #740**, Branch
+`integration/continuum-ultimate-system-20261110`, Integrator root.
+Aktuelle Quellenentscheidungen: `ULTIMATE_SYSTEM_INTAKE_20261110.json`;
+Übergabe: `../research/omega/ULTIMATE-SYSTEM-INTEGRATION-HANDOFF-20261110.md`.
+Die folgenden Code-52-Ziele und Inventarzahlen sind historische Prüfsnapshots;
+ihre offenen Einzelaudits bleiben erhalten.
+
 Stand: 09.11.2026. Gültig für **nur** `Ullmann27/device-ai`, APK-Paket `at.heinz.deviceai.continuumlocal`. Kein anderes Projekt und keine Übernahme von Fremd-App-Code.
 
 ## Ein verbindlicher Weg statt Forschungssilos
