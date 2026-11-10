@@ -1,0 +1,110 @@
+{
+  "status": "PASS",
+  "tests": 25,
+  "validator_sha256": "e4f8ed4213b80564fe7ee7e4b04959ef7cd5caa10b59c4a03e081ed2fad48028",
+  "checks": [
+    {
+      "case": "correct_identity",
+      "status": "PASS"
+    },
+    {
+      "case": "qa_package_suffix",
+      "status": "PASS"
+    },
+    {
+      "case": "old_version",
+      "status": "PASS"
+    },
+    {
+      "case": "extra_native_abi",
+      "status": "PASS"
+    },
+    {
+      "case": "debuggable_release",
+      "status": "PASS"
+    },
+    {
+      "case": "explicit_missing_signature",
+      "status": "PASS"
+    },
+    {
+      "case": "explicit_no_jar_signatures",
+      "status": "PASS"
+    },
+    {
+      "case": "arbitrary_corruption",
+      "status": "PASS"
+    },
+    {
+      "case": "missing_signature_and_other_error",
+      "status": "PASS"
+    },
+    {
+      "case": "tool_failure_code",
+      "status": "PASS"
+    },
+    {
+      "case": "signature_success",
+      "status": "PASS"
+    },
+    {
+      "case": "contradictory_signature",
+      "status": "PASS"
+    },
+    {
+      "case": "parse_exception",
+      "status": "PASS"
+    },
+    {
+      "case": "actual_AAR_libc++_shared.so",
+      "status": "PASS"
+    },
+    {
+      "case": "actual_AAR_libopencv_java4.so",
+      "status": "PASS"
+    },
+    {
+      "case": "actual_AAR_liblitertlm_jni.so",
+      "status": "PASS"
+    },
+    {
+      "case": "actual_AAR_libfilament-jni.so",
+      "status": "PASS"
+    },
+    {
+      "case": "actual_AAR_libgltfio-jni.so",
+      "status": "PASS"
+    },
+    {
+      "case": "elf32_rejected",
+      "status": "PASS"
+    },
+    {
+      "case": "x86_library_rejected",
+      "status": "PASS"
+    },
+    {
+      "case": "elf_4k_alignment_rejected",
+      "status": "PASS"
+    },
+    {
+      "case": "elf_segment_overflow_rejected",
+      "status": "PASS"
+    },
+    {
+      "case": "elf_bad_program_table",
+      "status": "PASS"
+    },
+    {
+      "case": "duplicate_zip_entry",
+      "status": "PASS"
+    },
+    {
+      "case": "corrupt_zip_crc",
+      "status": "PASS"
+    }
+  ],
+  "actual_APK_validation": "NOT_RUN",
+  "compilers": "NOT_RUN",
+  "Fold7": "NOT_RUN"
+}

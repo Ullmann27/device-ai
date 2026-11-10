@@ -1,0 +1,77 @@
+{
+  "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "endSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "endStatus": "",
+  "checks": [
+    {
+      "check": "critical",
+      "command": [
+        "node",
+        "scripts/continuum-reliability-qa.mjs",
+        "critical",
+        "--out",
+        "/workspace/scratch/5900afa6af29/apk53-a980-host/critical"
+      ],
+      "exit": 0
+    },
+    {
+      "check": "full-node",
+      "command": [
+        "node",
+        "scripts/continuum-reliability-qa.mjs",
+        "full-node",
+        "--out",
+        "/workspace/scratch/5900afa6af29/apk53-a980-host/full-node"
+      ],
+      "exit": 0
+    },
+    {
+      "check": "backend-check",
+      "command": [
+        "npm",
+        "--prefix",
+        "backend",
+        "run",
+        "check"
+      ],
+      "exit": 0
+    },
+    {
+      "check": "backend-test",
+      "command": [
+        "npm",
+        "--prefix",
+        "backend",
+        "test"
+      ],
+      "exit": 0
+    },
+    {
+      "check": "source-safety",
+      "command": [
+        "bash",
+        "scripts/code52-targeted-kotlin-check.sh"
+      ],
+      "exit": 0
+    },
+    {
+      "check": "fidelity",
+      "command": [
+        "bash",
+        "scripts/hollywood-fui-reference-fidelity.sh",
+        "/workspace/scratch/5900afa6af29/apk53-a980-host/fidelity",
+        "CODE53-a980"
+      ],
+      "exit": 0
+    },
+    {
+      "check": "preview",
+      "command": [
+        "bash",
+        "scripts/hollywood-fui-cinematics-preview.sh",
+        "/workspace/scratch/5900afa6af29/apk53-a980-host/preview"
+      ],
+      "exit": 0
+    }
+  ]
+}
