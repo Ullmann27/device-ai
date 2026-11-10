@@ -114,7 +114,7 @@ class ContinuumTaskEffectsCallerUiTest {
         val started=CountDownLatch(1);val finish=AtomicReference<((Result<String>)->Unit)?>()
         set(a,"executor",DeviceToolExecutor(a,{true},{_,cb -> finish.set(cb);started.countDown()},null))
         call(a,"setBusy",true);advance()
-        val gate=call(a,"createToolGate",null,null,({false} as ()->Boolean),null) as ToolGate
+        val gate=call(a,"createToolGate",null,null,({false} as ()->Boolean),null,null) as ToolGate
         val result=AtomicReference<ToolExecutionResult>()
         val t=Thread {result.set(gate.execute(ToolProposal("get_device_info",emptyMap()).invocation("actual-device-read")))}
         t.start()
@@ -131,7 +131,7 @@ class ContinuumTaskEffectsCallerUiTest {
         var dispatched=false
         set(a,"executor",DeviceToolExecutor(a,{true},{_,cb -> dispatched=true;cb(Result.success("unexpected"))},null))
         call(a,"setBusy",true);advance()
-        val gate=call(a,"createToolGate",null,null,({false} as ()->Boolean),null) as ToolGate
+        val gate=call(a,"createToolGate",null,null,({false} as ()->Boolean),null,null) as ToolGate
         val result=gate.execute(ToolProposal("web_read",mapOf("url" to "https://example.org/")).invocation("denied-read"))
         idle();assertEquals(ToolExecutionStatus.REJECTED,result.record.status)
         assertFalse(dispatched);assertTrue(pulses(h).isEmpty())
