@@ -363,7 +363,9 @@ class JarvisShellView(context: Context) : View(context) {
         } else if (ambientMotion(scale)) postDelayed(ambientFrame, maxOf(66L, frameDelay))
         if (exiting && (elapsed >= total || !motionAllowed(scale))) {
             // A completed fly-out must not leave the input, dock and status permanently hidden.
-            // All projected work-window CLOSED samples were published above before settling.
+            // Reduced motion, no focus or power save can skip the rendered CLOSED phase.
+            // Close any remaining projected windows before restoring the settled home.
+            if (cinemaTurnId.isNotBlank()) closeProjectedMotion(cinemaTurnId, now)
             exitMs = -1L
             startMs = -1L
             workStartMs = -1L
