@@ -10470,7 +10470,13 @@ class AgentActivity : Activity() {
                         addToolActivity("CHIEF · " + line)
                     }
                 }
-            }),
+            }).let { observer ->
+                { event: at.heinz.deviceai.cognitive.AgentCognitiveEvent ->
+                    // Final result resolves ambiguous BLOCKED.
+                    if (event.state != at.heinz.deviceai.cognitive.CognitiveWorkState.BLOCKED)
+                        observer(event)
+                }
+            },
             onToolStarted = { callId, toolName ->
                 if (botTask == null && codingPlanning == null)
                     recordToolStarted(startedToolCalls, callId, toolName)

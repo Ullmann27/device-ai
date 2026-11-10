@@ -4,7 +4,64 @@ Owner: current support root; integration owner: Cinema root, target PR #715
 (`cinema/fluid-light-stage-20261110`). Combined dialog candidate #725 must retain
 this fix after exact-source integration and focused caller checks.
 
-## Initial checkpoint — WIP / UNVERIFIED
+## Final scoped verification — 49/49 PASS
+
+Root personally implemented this repair. Local tested source commit:
+`a54293d7b86720690836bb32bd0bd7ff47ad5f39`.
+Tested source tree: `95d1ebd3fccc4970694fecd6220405878589925d`.
+The subsequent evidence commit adds documentation/logs only. Remote transport
+uses a different commit ID; complete Git-tree equality and the 14 source hashes
+bind it to the local checked files.
+
+The actual runLocal path now closes exactly once after the existing delivery
+guards. A complete, current, blocker-free response is accepted separately from
+verified task completion. DONE additionally requires matching task ID and the
+existing `AgentTaskEvidence.outcomeVerified` flag. That flag represents the
+existing evaluator's acceptance of fresh outcomes, not independent truth.
+
+The local Chief presentation ignores the ambiguous intermediate BLOCKED state;
+BoundedAgent emits that state even for ordinary, valid, unverified text. The
+final checked result supplies the terminal presentation. Core events, traces,
+tool approvals, permissions, cancellation and model authority remain intact.
+
+Unfinished work becomes neutral UNVERIFIED after accepted delivery. Known tool
+DONE/FAILED results remain intact. A historical WAITING approval milestone has
+no recorded decision in this timeline: accepted delivery leaves it UNVERIFIED;
+failed delivery leaves it BLOCKED. Neither case fabricates an approval receipt.
+
+All affected presentations handle UNVERIFIED. The sequence aggregate preserves
+that state even when a later tool is DONE, stops its spinner and shows a neutral
+marker. Changing an existing detail from DONE to UNVERIFIED removes its old
+success mark and requests a new frame. The existing rule keeping an active
+shared scene alive across trimmed tool timelines is preserved.
+
+### Evidence and boundaries
+
+- Final scoped Kotlin compilation: exit 0, all changed production classes.
+- Final JUnit: **49 tests, 0 failures**, four suites: 16 trigger tests, four
+  actual Activity/runLocal cases, two sequence outcome UI cases, 27 existing
+  sequence lifecycle controls. Exact manifests/logs: `evidence/cinema-outcome-20261110/final/`.
+- Actual Activity cases: normal complete response, model failure, replaced
+  session, cancellation. One TurnEnded and an ended lifecycle are asserted.
+- Sequence UI probes inspect real renderer output, labels, spinner and success
+  colors; the attached settled view must also request its next frame.
+- Independent dialogue and visual review identified the ambiguous BLOCKED
+  milestone, retained approval line and missing invalidation. Each has a
+  failing regression before repair and a passing final run.
+- Baseline 15/5 failures; first patch 15/0; expanded review 18/1; animation
+  regression 47/2; first animation repair 47/0; final review 49/3; final 49/0.
+  Original compiler/test logs and the initial resource-path error remain saved.
+- `scoped-run.py` records the actual fixed-environment runner. The final run
+  compiles the current sources ahead of frozen #725 dependencies; this is not
+  a full Gradle build of the root branch. Dependencies and resources are
+  fingerprinted/bound as described below and are not uploaded as binaries.
+
+PORTIERT: verified support source for #726. VERIFIZIERT: the stated host scope.
+GERAETEBESTAETIGT: NOT_RUN. Combined #724/#725/#726 build: pending the integration
+owner's exact-source run. APK, installation, ASR, network/model inference,
+signing and main/release promotion are outside this repair's evidence.
+
+## Initial checkpoint — historical WIP
 
 Remote baseline: `041abb081ae7dac637d3f0fabdae525f19acf117`.
 Equivalent local baseline: `409bf1118546165b228d4b33fb63330daaa5fad0`.
@@ -25,7 +82,7 @@ Experiment compatibility: EXP-07 negative regression evidence and EXP-11
 existing orchestrator/presentation contract. This is a product correctness
 repair, not a promotion of research or model quality.
 
-## Implementation checkpoint — WIP / one known failing regression
+## Implementation checkpoint — historical WIP
 
 Response delivery now follows the existing session, consent and result guards.
 Only accepted, complete responses are delivered; the existing matching task
@@ -49,8 +106,8 @@ with a controlled LocalModelRuntime; they do not run model inference or a device
   tool-result controls pass in that expanded run.
 
 Evidence: `evidence/cinema-outcome-20261110/`, including exact source hashes.
-Remaining work: fix the ambiguous presentation milestone, test the neutral
-aggregate animation, rerun focused controls, integrate with #724/#725.
+Remaining work at that checkpoint was the ambiguous presentation milestone,
+neutral aggregate animation, focused controls and integration with #724/#725.
 
 PORTIERT: support source only. VERIFIZIERT: partial; one known failing regression.
 GERAETEBESTAETIGT: NOT_RUN. Full Gradle build of this patch: NOT_RUN.

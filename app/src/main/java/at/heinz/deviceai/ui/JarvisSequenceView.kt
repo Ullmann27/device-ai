@@ -183,7 +183,10 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
                 mainSceneStep(event.steps)?.let { (label, state) ->
                     // The turn is still alive until TurnEnded. Tool failures/done steps may be trimmed or followed
                     // by recovery work; never make the shared scene terminal from a bounded timeline snapshot.
-                    val visibleState = if (state == StepState.WAITING) StepState.WAITING else StepState.ACTIVE
+                    val visibleState = when (state) {
+                        StepState.WAITING, StepState.UNVERIFIED -> state
+                        else -> StepState.ACTIVE
+                    }
                     applyStepState(mainScene, label, visibleState, refreshLabel = true)
                 }
                 for (process in event.steps) {
@@ -215,11 +218,13 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         if (relevant.isEmpty()) return null
         val failed = relevant.lastOrNull { it.state == StepState.FAILED || it.state == StepState.BLOCKED }
         val live = relevant.lastOrNull { it.state == StepState.ACTIVE || it.state == StepState.WAITING }
-        val chosen = live ?: failed ?: relevant.last()
+        val unverified = relevant.lastOrNull { it.state == StepState.UNVERIFIED }
+        val chosen = live ?: failed ?: unverified ?: relevant.last()
         val state = when {
             relevant.any { it.state == StepState.ACTIVE } -> StepState.ACTIVE
             relevant.any { it.state == StepState.WAITING } -> StepState.WAITING
             failed != null -> failed.state
+            unverified != null -> StepState.UNVERIFIED
             relevant.all { it.state == StepState.DONE } -> StepState.DONE
             else -> chosen.state
         }
@@ -232,7 +237,8 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         if (old != state) when (state) {
             StepState.DONE -> stepFinished(id, true)
             StepState.FAILED, StepState.BLOCKED -> stepFinished(id, false)
-            StepState.ACTIVE, StepState.WAITING, StepState.UNVERIFIED -> Unit
+            StepState.UNVERIFIED -> if (effects.stepUnverified(id, clock())) kick()
+            StepState.ACTIVE, StepState.WAITING -> Unit
         }
         stepStates[id] = state
     }

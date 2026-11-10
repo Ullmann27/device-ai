@@ -71,10 +71,29 @@ class CockpitAnimationTriggersTest {
         assertEquals("UNVERIFIED", states["tool:pending"])
     }
 
-    @Test fun deliveredReplyCannotApproveWaitingStep() {
+    @Test fun deliveredReplyCannotInventApprovalStatus() {
         triggers.commandAcknowledged("waiting", "Lösche die Datei")
         triggers.milestone("waiting", TurnMilestone.APPROVAL_NEEDED)
         triggers.turnEnded("waiting", delivered = true)
+        assertEquals(StepState.UNVERIFIED, triggers.timeline("waiting").last().state)
+    }
+
+    @Test fun observedToolSuccessDoesNotLeaveFalseApprovalBlock() {
+        triggers.commandAcknowledged("approved", "Lies die Datei")
+        triggers.milestone("approved", TurnMilestone.APPROVAL_NEEDED)
+        triggers.toolStarted("approved", "read", "read_file")
+        triggers.toolFinished("approved", "read", "read_file", succeeded = true)
+        triggers.turnEnded("approved", delivered = true)
+        val steps = triggers.timeline("approved")
+        assertEquals(StepState.DONE, steps.single { it.key == "tool:read" }.state)
+        assertEquals(StepState.UNVERIFIED,
+            steps.single { it.key.startsWith("m:APPROVAL_NEEDED:") }.state)
+    }
+
+    @Test fun failedTurnKeepsUnresolvedApprovalBlocked() {
+        triggers.commandAcknowledged("waiting", "Lösche die Datei")
+        triggers.milestone("waiting", TurnMilestone.APPROVAL_NEEDED)
+        triggers.turnEnded("waiting", delivered = false)
         assertEquals(StepState.BLOCKED, triggers.timeline("waiting").last().state)
     }
 

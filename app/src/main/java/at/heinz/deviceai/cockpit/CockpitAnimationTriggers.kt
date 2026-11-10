@@ -85,7 +85,8 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
                 val step = list[i]
                 if (step.state != StepState.ACTIVE && step.state != StepState.WAITING) continue
                 val state = when {
-                    step.state == StepState.WAITING -> StepState.BLOCKED
+                    step.state == StepState.WAITING ->
+                        if (delivered) StepState.UNVERIFIED else StepState.BLOCKED
                     !delivered -> StepState.FAILED
                     step.key == "work" && outcomeVerified -> StepState.DONE
                     else -> StepState.UNVERIFIED
