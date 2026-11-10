@@ -1023,7 +1023,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             canvas.restoreToCount(auraCanvas)
         }
         if (headEnabled) {
-            val pose = proof?.pose ?: synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis(), canAnimateFrame()) }
+            val pose = proof?.pose ?: synchronized(avatarPose) { avatarPose.pose(SystemClock.elapsedRealtime(), canAnimateFrame()) }
             receipt.stageFlags = receipt.stageFlags or AvatarFrameReceipt.POSE_SAMPLED
             receipt.jawOpen = pose.jawOpen
             receipt.speakEnergy = pose.speakEnergy
