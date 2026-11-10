@@ -48,12 +48,15 @@ class DocumentBlueprintProjection {
         upsert(DocumentPipelineStepEvent.KEY_OPEN, StepState.DONE)
     }
 
-    // A memory hub DocumentLearned reports a ledger docId, which is NOT a verified identifier
-    // for the owner-selected PDF intake. Until a common, provenance-checked ID exists, do
-    // not turn unrelated background learning into this document's progress or added-entry count.
-    // Keep the protocol method for existing presenters; the verified document pipeline alone
-    // can advance its own CAPTURE step.
-    fun onLearned(@Suppress("UNUSED_PARAMETER") event: CockpitAnimationEvent.DocumentLearned) = Unit
+    @Suppress("UNUSED_PARAMETER")
+    fun onLearned(event: CockpitAnimationEvent.DocumentLearned) {
+        if (!hasDocument) return
+        // A memory hub DocumentLearned reports a ledger docId, which is NOT a verified identifier
+        // for the owner-selected PDF intake. Until a common, provenance-checked ID exists, do
+        // not turn unrelated background learning into this document's progress or added-entry count.
+        // Keep the protocol method for existing presenters; the verified document pipeline alone
+        // can advance its own CAPTURE step.
+    }
 
     fun onTimeline(processSteps: List<ProcessStep>) {
         processSteps.forEach { step ->
