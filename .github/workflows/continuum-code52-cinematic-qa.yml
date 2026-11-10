@@ -5,6 +5,7 @@ on:
     branches:
       - chatgpt/code52-argon4-holographic-rim-20261109
       - chatgpt/code52-cinema-prism-pixel-fix-20261110
+      - chatgpt/code52-cinema-final-graphics-audit-20261110
     paths:
       - '.github/workflows/continuum-code52-cinematic-qa.yml'
       - 'app/**'
@@ -29,7 +30,7 @@ concurrency:
 
 jobs:
   validate-source-and-build:
-    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/chatgpt/code52-argon4-holographic-rim-20261109' || github.ref == 'refs/heads/chatgpt/code52-cinema-prism-pixel-fix-20261110')
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/chatgpt/code52-argon4-holographic-rim-20261109' || github.ref == 'refs/heads/chatgpt/code52-cinema-prism-pixel-fix-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-final-graphics-audit-20261110')
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
