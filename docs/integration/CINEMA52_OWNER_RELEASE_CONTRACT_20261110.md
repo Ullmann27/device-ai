@@ -8,6 +8,7 @@ Bestätigte Produktentscheidung: **nur die neueste Cinema-Version**, nie ein äl
 - `JarvisCinematicSettings.depthExperimentEnabled` verwendet **true** als Default, niemals `false`.
 - `AgentActivity.onCreate` führt vor `buildUi()` die **einmalige Upgrade-Migration** `activateCinema52ByDefault(this)` aus. Dadurch werden alte persistierte OFF-Werte für Master-Cinema und die 15 angeschlossenen EXP01–EXP15 beim Upgrade auf Code52 auf **true** gesetzt.
 - Das normale Cinema-52-Menü darf **keinen** Hauptknopf „Standardmodus“ haben, der die ganze entwickelte Cinema-Oberfläche auf einen älteren Zustand zurückschaltet.
+- **Alle Einstiegsstellen** zählen: Auch im Avatar-/Kugel-Einstellungsdialog (`ContinuumHologramView.showAppearanceChooser`) ist „Statische Effekte · Rückfall“ verboten. Ein zweiter versteckter Master-OFF-Schalter ist ein Release-Blocker, selbst wenn das Cinema-Menü „aktiv“ meldet.
 - Spätere **explizite** individuelle Einstellungen des Besitzers werden nicht bei jedem Neustart überschrieben. Neue Nutzer erhalten immer alle angeschlossenen Effekte.
 - Android-Power-Save, `reducedMotion`, thermische Zustände, Hintergrund/fehlender Fokus und die vorhandene `JarvisRenderQuality`-Regelung behalten ihre Autorität. Der Sicherheitsbudgetschutz ist **nicht** das Deaktivieren des Cinema-Releases.
 
