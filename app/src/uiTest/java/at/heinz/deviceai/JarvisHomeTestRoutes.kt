@@ -64,6 +64,12 @@ internal object JarvisHomeTestRoutes {
         it.tag.toString().substringAfter(':') == target
     }
 
+    /** Packed dock: 10 destinations. Reflow: 10 cards plus the four diagnostic rows. */
+    fun expectedDeckSize(root: View): Int {
+        val shell = requireNotNull(home(root).jarvisShell.currentShell())
+        return if (shell.hasFeatureTiles) 14 else 10
+    }
+
     fun deck(root: View): List<View> {
         val home = home(root)
         val all = descendants(home)

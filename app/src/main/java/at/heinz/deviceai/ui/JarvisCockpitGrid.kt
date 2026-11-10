@@ -83,19 +83,31 @@ object JarvisCockpitGrid {
 
         val missionH = 56f * font
         val dockH = JarvisShellLayout.TOOL_DOCK_HEIGHT_DP * font
-        val statusH = 48f * font
+        // drawStatusBar only paints telemetry (including the GPU tile) when the band is at least 96 dp.
+        val statusH = maxOf(96f, JarvisShellLayout.TELEMETRY_BAND_DP * font)
         val bottomMargin = 10f
         val yAfterHeader = headerBottom + gap
         val reservedBottom = dockH + gap + statusH + bottomMargin
-        val available = (heightDp - yAfterHeader - missionH - gap - reservedBottom).coerceAtLeast(280f)
+        val remaining = (heightDp - yAfterHeader - missionH - gap - reservedBottom).coerceAtLeast(0f)
         val heroMax = PACKED_HERO_MAX_DP * font
-        val heroMin = PACKED_HERO_MIN_DP * font
-        val workMin = PACKED_WORK_MIN_DP * font
-        var heroH = (available * .46f).coerceIn(heroMin, heroMax)
-        var workH = available - heroH - gap
-        if (workH < workMin) {
-            heroH = (available - workMin - gap).coerceIn(140f * font, heroMax)
-            workH = (available - heroH - gap).coerceAtLeast(120f * font)
+        val heroMinPref = PACKED_HERO_MIN_DP * font
+        val workMinPref = PACKED_WORK_MIN_DP * font
+        val preferredStack = heroMinPref + gap + workMinPref
+        val heroH: Float
+        val workH: Float
+        if (remaining >= preferredStack) {
+            var stackedHero = (remaining * .46f).coerceIn(heroMinPref, heroMax)
+            var stackedWork = remaining - stackedHero - gap
+            if (stackedWork < workMinPref) {
+                stackedHero = (remaining - workMinPref - gap).coerceIn(140f * font, heroMax)
+                stackedWork = remaining - stackedHero - gap
+            }
+            heroH = stackedHero
+            workH = stackedWork
+        } else {
+            val usable = (remaining - gap).coerceAtLeast(0f)
+            heroH = usable * .46f
+            workH = usable - heroH
         }
 
         val heroTop = yAfterHeader
