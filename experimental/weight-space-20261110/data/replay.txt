@@ -1,0 +1,16 @@
+Ein Dreieck hat drei Seiten und drei Ecken. Seine Seiten verbinden die drei Eckpunkte miteinander.
+Eine ganze Zahl ist gerade, wenn sie ohne Rest durch zwei teilbar ist. Acht ist eine gerade Zahl.
+Eine Liste kann mehrere Einträge enthalten. Ihre Reihenfolge legt fest, welcher Eintrag vor einem anderen steht.
+Eine Woche besteht aus sieben Tagen. Auf Montag folgt Dienstag, und auf Dienstag folgt Mittwoch.
+Ein Meter besteht aus hundert Zentimetern. Zwei Meter entsprechen daher zweihundert Zentimetern.
+Eine Stunde besteht aus sechzig Minuten. Eine halbe Stunde dauert deshalb dreißig Minuten.
+Bei einer Addition werden Zahlen zusammengezählt. Drei plus vier ergibt sieben, und sieben plus eins ergibt acht.
+Bei einer Subtraktion wird eine Zahl von einer anderen abgezogen. Neun minus vier ergibt fünf.
+Ein Quadrat hat vier gleich lange Seiten und vier rechte Winkel. Jede Seite verbindet zwei seiner Ecken.
+Ein Buch besteht gewöhnlich aus mehreren Seiten. Ein Inhaltsverzeichnis nennt Abschnitte und hilft bei der Suche.
+Ein leeres Gefäß enthält keine eingefüllte Flüssigkeit. Beim Eingießen sammelt sich die Flüssigkeit darin.
+Eine Frage kann mit einem Fragezeichen enden. Ein Aussagesatz endet in der Regel mit einem Punkt.
+Eine Textdatei enthält Zeichen in einer bestimmten Reihenfolge. Beim Lesen werden diese Zeichen wiedergegeben.
+Ein Kalender ordnet Tage nach Wochen und Monaten. Er kann dabei helfen, einen vereinbarten Termin wiederzufinden.
+Ein geschlossener Kreis besitzt keine Endpunkte. Auf seiner Linie kann man zum Ausgangspunkt zurückkehren.
+Ein Vergleich betrachtet mindestens zwei Dinge. Dabei lassen sich gemeinsame Merkmale und Unterschiede beschreiben.

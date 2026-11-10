@@ -1,0 +1,81 @@
+{
+  "status": "INDEPENDENT_PYTHON_PORT_DIAGNOSTIC",
+  "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+  "nativeTokenizerValidation": "REQUIRED",
+  "bos": 510,
+  "eos": 511,
+  "labelTokens": {
+    "0": [
+      48
+    ],
+    "1": [
+      49
+    ],
+    "2": [
+      50
+    ],
+    "3": [
+      51
+    ]
+  },
+  "files": {
+    "replay.txt": {
+      "sha256": "b5fdd3c9528fe5a0f7a1dbc24db9e7169f0a00f9b31a211aff4ca8c6c97553c1",
+      "rows": 16,
+      "tokens": [
+        49,
+        52,
+        62,
+        54,
+        56,
+        49,
+        64,
+        51,
+        57,
+        59,
+        61,
+        47,
+        58,
+        61,
+        57,
+        62
+      ],
+      "minTokens": 47,
+      "maxTokens": 64
+    },
+    "retention_text.txt": {
+      "sha256": "699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019",
+      "rows": 8,
+      "tokens": [
+        52,
+        55,
+        61,
+        58,
+        65,
+        54,
+        60,
+        58
+      ],
+      "minTokens": 52,
+      "maxTokens": 65
+    },
+    "note-contrasts-v1/train.tsv": {
+      "sha256": "3666036e3b63db7738bebc391bd9058ca63bb0d1ea01b240726223c2ddc9039c",
+      "rows": 128,
+      "bosPrefixAnswerMaxTokens": 61,
+      "allFit256": true
+    },
+    "note-contrasts-v1/dev.tsv": {
+      "sha256": "057dac485d2d4d39ebcfcdc7de3fe15c9c6c4bebd2bea888b4db303949798935",
+      "rows": 64,
+      "bosPrefixAnswerMaxTokens": 67,
+      "allFit256": true
+    },
+    "retention.tsv": {
+      "sha256": "dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a",
+      "rows": 64,
+      "bosPrefixAnswerMaxTokens": 59,
+      "allFit256": true
+    }
+  }
+}
