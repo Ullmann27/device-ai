@@ -136,6 +136,6 @@ class JarvisShellLayoutTest {
         // ref5 component styles (px x 0.642 = dp)
         assertEquals(51f, JarvisDesign.Styles.tile.height, 0f); assertEquals(14f, JarvisDesign.Styles.tile.radius, 0f)
         assertEquals(32f, JarvisDesign.Styles.button.height, 0f); assertEquals(22f, JarvisDesign.Styles.pill.height, 0f)
-        assertEquals(13f, JarvisDesign.Type.tileLabel.size, 0f); assertEquals(10f, JarvisDesign.Type.subtitle.size, 0f)
+        assertEquals(15f, JarvisDesign.Type.tileLabel.size, 0f); assertEquals(10f, JarvisDesign.Type.subtitle.size, 0f)
     }
 }
