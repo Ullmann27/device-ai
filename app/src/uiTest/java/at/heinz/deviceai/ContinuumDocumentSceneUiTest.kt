@@ -145,7 +145,8 @@ class ContinuumDocumentSceneUiTest {
 
     @Test fun theDocumentArrivesAsItsOwnPageOnTheTrailAndJarvisLooksAtIt() = withCockpit { activity, root ->
         val originalDeck = JarvisHomeTestRoutes.deck(root)
-        assertEquals("The document fixture starts with the full deck", 14, originalDeck.size)
+        assertEquals("The document fixture starts with the full deck",
+            JarvisHomeTestRoutes.expectedDeckSize(root), originalDeck.size)
         assertTrue("The original deck is shown", originalDeck.all { it.isShown })
         val page = examplePage(360, 480)
         val text = "Projektübersicht Continuum. Ziel: ein lokales Cockpit auf dem Fold7."

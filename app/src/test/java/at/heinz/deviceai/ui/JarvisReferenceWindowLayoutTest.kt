@@ -94,8 +94,9 @@ class JarvisReferenceWindowLayoutTest {
         assertEquals(listOf("Gespräch", "Gedächtnis", "Denken und Planen", "Forschung", "Mein KI-Team", "Aufgaben", "Internet", "Lernen", "Gerätesteuerung", "Systemstatus"),
             JarvisTiles.reference.map { it.label })
         val phone = JarvisShellLayout.create(412f, 915f)
-        assertTrue(phone.tileBoxes()[5].top > phone.tileBoxes()[4].bottom)
-        assertEquals(phone.tileBoxes()[0].left, phone.tileBoxes()[5].left, .001f)
+        assertEquals(2, phone.tileColumns)
+        assertTrue(phone.tileBoxes()[2].top > phone.tileBoxes()[0].bottom)
+        assertEquals(phone.tileBoxes()[0].left, phone.tileBoxes()[2].left, .001f)
         val dock = requireNotNull(shell[Slot.BOTTOM_NAV])
         assertEquals(JarvisTiles.railNav.map { it.target },
             JarvisTiles.bottomNavItemBoxes(dock).map { box ->
