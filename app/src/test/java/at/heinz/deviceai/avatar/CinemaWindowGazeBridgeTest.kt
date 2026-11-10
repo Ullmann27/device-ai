@@ -133,6 +133,52 @@ class CinemaWindowGazeBridgeTest {
         assertEquals(.6f, CinemaWindowLightState.gazeX, 0f)
     }
 
+    @Test fun projectedTurnChangePreservesPhysicalDocumentReadingAndLight() {
+        CinemaWindowLightState.reset()
+        val reducer = AvatarPoseReducer()
+        val director = AvatarDirector(AvatarSink { reducer.apply(it) }) { now }
+        val bridge = CinemaWindowGazeBridge(director)
+        director.onRuntime(AvatarRuntimeSignals(busy = true))
+        bridge.render(motion(.2f, turnId = "document"))
+        assertTrue(director.windowWorkStarted("work-document", GazeTarget(.2f, -.2f)))
+        now += 80L
+        assertTrue(director.windowMoved("work-document", GazeTarget(.55f, -.3f)))
+        bridge.render(motion(.55f, -.3f, turnId = "local-draft"))
+        assertTrue("Projection cannot replace real reading", reducer.pose(now).reading)
+        assertEquals(.55f, reducer.pose(now).gazeX, .0001f)
+        assertEquals(-.3f, reducer.pose(now).gazeY, .0001f)
+        assertTrue("Projection still illuminates the face", CinemaWindowLightState.open)
+        assertEquals(.55f, CinemaWindowLightState.gazeX, 0f)
+        assertEquals(-.3f, CinemaWindowLightState.gazeY, 0f)
+
+        now += 80L
+        bridge.render(motion(.2f, phase = WindowProjectedMotion.Phase.CLOSED, turnId = "document"))
+        bridge.render(CockpitAnimationEvent.TurnEnded("document", now, true))
+        assertTrue("Old turn cannot end reading", reducer.pose(now).reading)
+        assertTrue("Old turn cannot extinguish current light", CinemaWindowLightState.open)
+
+        assertTrue(director.windowWorkEnded("work-document"))
+        assertFalse(reducer.pose(now).reading)
+        now += 80L
+        bridge.render(motion(-.3f, turnId = "local-draft"))
+        assertTrue("Deferred glance remains admissible", reducer.pose(now).gazeDirected)
+        assertEquals(-.3f, reducer.pose(now).gazeX, .0001f)
+        assertFalse(reducer.pose(now).reading)
+        CinemaWindowLightState.reset()
+    }
+
+    @Test fun lostWorkEndCannotBlockNewGlancesAfterItsBound() {
+        val reducer = AvatarPoseReducer()
+        val director = AvatarDirector(AvatarSink { reducer.apply(it) }) { now }
+        director.onRuntime(AvatarRuntimeSignals(busy = true))
+        assertTrue(director.windowWorkStarted("document", GazeTarget(.4f, -.2f)))
+        assertFalse("Real work outranks a brief glance", director.windowOpened("projection", GazeTarget(-.4f, .2f)))
+        now += AvatarPoseReducer.MAX_WINDOW_WORK_MS
+        assertTrue("Existing expiry releases priority", director.windowOpened("projection", GazeTarget(-.4f, .2f)))
+        assertFalse(reducer.pose(now).reading)
+        assertEquals(-.4f, reducer.pose(now).gazeX, .0001f)
+    }
+
     @Test fun concurrentUiAndWorkerMotionCannotCorruptTheOpenWindowRegistry() {
         CinemaWindowLightState.reset()
         val (_, bridge) = reducerDirector()

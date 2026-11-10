@@ -56,6 +56,7 @@ class ResearchChatApprovalUiTest {
         val gate = ApprovedWebToolGate(consent)
         val completed = mutableListOf<ApprovedWebResearchSession?>()
         var invalidated = 0
+        lateinit var whilePaused: (() -> Unit) -> Unit
     }
 
     private fun field(target: Any, name: String): Any? = target.javaClass.getDeclaredField(name)
@@ -80,6 +81,10 @@ class ResearchChatApprovalUiTest {
         try {
             controller.setup().visible().windowFocusChanged(true)
             val fixture = Fixture(controller.get()) { controller.pause().resume() }
+            fixture.whilePaused = { action ->
+                controller.pause()
+                try { action() } finally { controller.resume() }
+            }
             set(fixture.activity, "internetConsent", fixture.consent)
             set(fixture.activity, "webToolGate", fixture.gate)
             idle()
@@ -264,6 +269,90 @@ class ResearchChatApprovalUiTest {
             AgentActivity::class.java.getDeclaredMethod("sendCurrentInput", Boolean::class.javaPrimitiveType)
                 .apply { isAccessible = true }.invoke(f.activity, false)
         }
+    }
+
+    private fun askTopic(f: Fixture, query: String): AlertDialog {
+        AgentActivity::class.java.getDeclaredMethod("confirmInternetResearch", String::class.java,
+            ResearchMode::class.java, String::class.java).apply { isAccessible = true }
+            .invoke(f.activity, query, ResearchMode.QUICK, null)
+        idle()
+        return requireNotNull(ShadowAlertDialog.getLatestAlertDialog())
+    }
+
+    private fun noExecutionNotices(f: Fixture) = transcript(f).filter {
+        !it.user && it.text.startsWith("Recherche nicht ausgeführt:")
+    }
+
+    @Test fun declineCancelAndExpiredConsentExplainOnceWithoutReplacingTheDraft() {
+        for (ending in listOf("decline", "cancel", "expired")) withActivity { f ->
+            val before = noExecutionNotices(f).size
+            val dialog = askTopic(f, "Synthetische Recherche $ending")
+            val draft = "Neuer noch ungesendeter Entwurf"
+            (field(f.activity, "input") as EditText).setText(draft)
+            when (ending) {
+                "decline" -> dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+                "cancel" -> dialog.cancel()
+                else -> {
+                    f.now = 60_001
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+                }
+            }
+            idle()
+            assertEquals(before + 1, noExecutionNotices(f).size)
+            assertEquals(draft, (field(f.activity, "input") as EditText).text.toString())
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+            idle()
+            assertEquals("One outcome per ticket", before + 1, noExecutionNotices(f).size)
+            assertNull(field(f.activity, "activeWebResearchSession"))
+        }
+    }
+
+    @Test fun replacedConsentCannotExplainOrCancelTheSuccessorRequest() = withActivity { f ->
+        val before = noExecutionNotices(f).size
+        val old = askTopic(f, "Alter nicht ausgeführter Auftrag")
+        val current = askTopic(f, "Neuer aktueller Auftrag")
+        val binding = field(f.activity, "pendingResearchChatApproval")
+        old.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+        idle()
+        assertEquals(before, noExecutionNotices(f).size)
+        assertSame(binding, field(f.activity, "pendingResearchChatApproval"))
+        assertTrue(current.isShowing)
+        current.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+        idle()
+        assertEquals(before + 1, noExecutionNotices(f).size)
+    }
+
+    @Test fun oldConsentCannotWriteAnOutcomeIntoAnotherSession() = withActivity { f ->
+        val old = askTopic(f, "Auftrag aus der alten Sitzung")
+        set(f.activity, "sessionId", java.util.UUID.randomUUID().toString())
+        val before = transcript(f)
+        val draft = "Entwurf in der neuen Sitzung"
+        (field(f.activity, "input") as EditText).setText(draft)
+        old.cancel()
+        idle()
+        assertEquals(before, transcript(f))
+        assertEquals(draft, (field(f.activity, "input") as EditText).text.toString())
+        val current = askTopic(f, "Aktuelle neue Recherche")
+        current.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+        idle()
+        assertEquals(1, noExecutionNotices(f).size)
+    }
+
+    @Test fun pausedCurrentConsentKeepsItsOutcomeForResume() = withActivity { f ->
+        val before = noExecutionNotices(f).size
+        val dialog = askTopic(f, "Recherche vor dem Hintergrundwechsel")
+        val draft = "Ungesendeter Entwurf bleibt erhalten"
+        (field(f.activity, "input") as EditText).setText(draft)
+        f.whilePaused {
+            dialog.cancel()
+            idle()
+            assertEquals(before + 1, noExecutionNotices(f).size)
+            assertNull(field(f.activity, "activeWebResearchSession"))
+            assertFalse(field(f.activity, "voiceSpeaking") as Boolean)
+        }
+        idle()
+        assertEquals(before + 1, noExecutionNotices(f).size)
+        assertEquals(draft, (field(f.activity, "input") as EditText).text.toString())
     }
 
     @Test fun exactReplyApprovesOnlyTheDisplayedTicketWhileTheModelWaits() = withActivity { f ->
