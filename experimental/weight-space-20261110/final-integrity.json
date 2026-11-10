@@ -1,0 +1,29 @@
+{
+  "schema": "lm1-continuation-final-integrity-v1",
+  "frozenInputChecks": 32,
+  "allFrozenInputsUnchanged": true,
+  "artifacts": {
+    "contrast-answer-128.lm1": {
+      "bytes": 529532,
+      "sha256": "3820d1596dee43a675305645feece6d46b2711f8a03db0be8171055ee45128ed",
+      "gitBlobSha": "2ddc258ecfffd59363b4c0cdeef7d7c222edd1b1",
+      "productionPromotion": false
+    },
+    "contrast-replay-128.lm1": {
+      "bytes": 529532,
+      "sha256": "4b4c15535b8b13c9660f3a26b8393a84b595f6ece7f2d47ddb5844f81ff0d39e",
+      "gitBlobSha": "4ecffe27bff28c337aa3061e62de483695cf9d49",
+      "productionPromotion": false
+    },
+    "distill-128.lm1": {
+      "bytes": 529624,
+      "sha256": "e6b8c2853319d7265bd50e79a3e8ece4b95ff25a3ac8822d1b1b4f0127102069",
+      "gitBlobSha": "23547ede5a962beb574997b28cc295d7c7788d6a",
+      "productionPromotion": false
+    }
+  },
+  "modelInferenceByVerification": 0,
+  "additionalOptimizerUpdates": 0,
+  "apkBuild": "NOT_RUN",
+  "fold7": "NOT_RUN"
+}

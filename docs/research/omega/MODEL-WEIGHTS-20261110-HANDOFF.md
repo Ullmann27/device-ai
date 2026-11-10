@@ -29,12 +29,16 @@ das ursprüngliche DEV-Gesamtkriterium. Exakte Retention 0→0 ist ein Bodeneffe
 135 Baseline-Messzeilen beider Arme sind byte-identisch. Eigene kleine
 LM1-Forschungsgewichte, keine Gemma-LoRA oder Verbesserung der installierten App.
 
-Bereits begonnen: `training/distill-v1/` mit genau einem KL-Erhaltungsziel gegen
+Abgeschlossener kleiner Folgeversuch: `training/distill-v1/` mit einem KL-Erhaltungsziel gegen
 das unveränderte Originalmodell, Faktor 1.0 auf 16 vorhandenen Replaytexten.
-Aktueller Zwischencheckpoint: WIP, 15 native Verlust-/Gradientenprüfungen und
-Null-Update-Inspektion bestanden, Training NOT_RUN. Runner/Registrierung und
-unabhängige Auswertung müssen vor dem einen begrenzten Lauf fertig werden.
-Keine weitere Forschungsrunde danach beginnen. EXP-05 und EXP-12 bleiben aktiv.
+15 native Verlust-/Gradientenprüfungen und 13 neue Evaluatorprüfungen bestanden.
+Registrierung vor Ausführung veröffentlicht: `a5e0876d55ed41265ecf32e2567ea5f81b1e176f`.
+Ein Lauf mit 128 Updates abgeschlossen, Modell und Audit gesichert:
+`04784c9bd80c504c164d90fcc87391b8b4437cee`. DEV 35/64, Gegensatzpaare 3/32,
+Text-BPB 2.723916624, Textlängen 7/4/12/18. Öffnen/Suchen weiter 0/64.
+Teacher/Cache unverändert; alle 135 Baseline-Zeilen und Trainingsziehungen geprüft.
+Alte und neue Qualitätskriterien FAIL. Keine weitere Forschungsrunde beginnen.
+EXP-05/EXP-12 bleiben unfreigegebene Forschung; keine produktive Übernahme.
 
 Die neue Besitzeranweisung verlangt sofortige Sicherung auch unfertiger Teile
 und APK-Reife. Dieses Team hält sämtliche Modellgewichte außerhalb der App;

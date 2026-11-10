@@ -1,0 +1,59 @@
+{
+  "allAnswerIdsInTrain": true,
+  "answerExamplesChecked": 512,
+  "baselinePairDiagnosticsIdenticalAcrossArms": true,
+  "classesPerStep": {
+    "0": 2,
+    "3": 2
+  },
+  "devRetentionIdsInAnswerSchedule": 0,
+  "distillFinalPairMetricsEqualReplay": true,
+  "exitCode": 0,
+  "experiment": "EXP-12",
+  "inputsUnchanged": true,
+  "limitations": [
+    "Teacher/cache integrity is bound to native digest emissions and assertions; arrays were not independently exported and rehashed by reviewer.",
+    "Schedule verifies declared selected IDs; source review binds them to training arrays.",
+    "Same consumed open DEV and known TRAIN retention; no independent test or promotion."
+  ],
+  "modelExecutionsByReviewer": 0,
+  "parameterUpdatesByReviewer": 0,
+  "rawStdoutMatchesReceipt": true,
+  "registrationCommit": "a5e0876d55ed41265ecf32e2567ea5f81b1e176f",
+  "replayExampleUses": {
+    "0": 16,
+    "1": 16,
+    "2": 16,
+    "3": 16,
+    "4": 16,
+    "5": 16,
+    "6": 16,
+    "7": 16,
+    "8": 16,
+    "9": 16,
+    "10": 16,
+    "11": 16,
+    "12": 16,
+    "13": 16,
+    "14": 16,
+    "15": 16
+  },
+  "replayIndicesMatchFixedSchedule": true,
+  "scheduleStepsChecked": 128,
+  "schema": "lm1-distill-runtime-dataflow-audit-v1",
+  "scope": "COMPLETED_NATIVE_LOG_AND_DATA_IDENTITIES",
+  "sha256": {
+    "pairAnalysis": "3c10d8fafdea3a7375f1738d4a509e97393eae5551db2f4f2952c1b9daad9f97",
+    "receipt": "5bdb5bdae83cf851b05075e37c2241964eda24d21028ded00e65e78e75ff3f75",
+    "stdout": "ba103d25c525045fe55723dd4c4c7f01790fd8deb7195da58c7dc72a7e7cbf36"
+  },
+  "teacherCacheHashBeforeAfterMatches": true,
+  "teacherCacheSha256": "0cbfab6629045fc09fa8ca5dda68d4b0a93855ab678c49db1c5c7f4b4ad38d03",
+  "teacherExamples": 16,
+  "teacherParameterHashBeforeAfterMatches": true,
+  "teacherParameterSha256": "b3662995f7b75d6df4d418587a34807191f5c2d68feecfe4a9e8dc8edcd8ddae",
+  "teacherPositionRows": 915,
+  "teacherPositionRowsMatchIndependentTokenizer": true,
+  "teacherScopeReported": "replay.txt",
+  "unchangedPairDiagnostic": true
+}
