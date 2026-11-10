@@ -1,6 +1,6 @@
 # Brain lab handoff — controlled negative result retained
 
-Status: **RESEARCH_SHADOW / publication pending verification**.
+Status: **RESEARCH_SHADOW / PUBLISHED**. Draft [PR #718](https://github.com/Ullmann27/device-ai/pull/718).
 Branch: `research/brain-lab-controlled-20261110`.
 Base: `4ac9c9b94b9fb5e391646e2e99e986db32ec7997`.
 Integration owner: Cinema root integrator; target:
@@ -42,7 +42,13 @@ merge, signing or private data disclosure is included. Remote SHA will differ
 from local hashes because the connector uses the canonical equivalent-tree
 parent. Compare full Git tree and recorded source hashes, not SHA spelling.
 
-Next: verify the authorized connector publication; the prepared draft body is
+Published checkpoint: `42e74312bc9a600f68ad5e7ed1f0fa4c80a00fa3`, Git tree
+`18aa3d15e8b66abd811c5eace26440a86348e3dc`, byte-identical to local
+`c9ea5b2bda9134e8ed7575f6322ef484f191294a`. GitHub readback confirms draft #718
+with 20 owned changed files; all nine measured input hashes match. This
+follow-up only records publication metadata and changes no measured source.
+
+Next: the prepared draft body is
 `experimental/brain-lab-20261110/DRAFT-PR.md`. Retain this negative result on the
 one canonical integration line as research evidence; do not activate the
 candidate. Future real-workload evaluation requires new protocol and independent
