@@ -28,9 +28,11 @@ class CockpitAnimationPresenterTurnUiTest {
     private val bus = CockpitAnimationBus()
     private val projected = mutableListOf<WindowProjectedMotion>()
     private var subscription: AutoCloseable? = null
+    private var presenterSubscription: AutoCloseable? = null
 
     @Before fun attach() {
         CockpitTransitions.hook = null
+        JarvisAvatarSlot.register(null)
         CueOwner.values().forEach { CockpitCues.register(it, null) }
         controller.setup().visible()
         val activity = controller.get()
@@ -52,18 +54,21 @@ class CockpitAnimationPresenterTurnUiTest {
         idle()
         assertTrue(home.isPresentationActive())
         presenter = CockpitAnimationPresenter(home, bus, "presenter-test")
+        presenterSubscription = bus.subscribe(presenter)
         subscription = bus.subscribe { if (it is WindowProjectedMotion) projected += it }
     }
 
     @After fun detach() {
         subscription?.close()
+        presenterSubscription?.close()
+        JarvisAvatarSlot.register(null)
         controller.close()
         CockpitTransitions.hook = null
         CueOwner.values().forEach { CockpitCues.register(it, null) }
     }
 
     private fun idle() = shadowOf(Looper.getMainLooper()).idle()
-    private fun emit(event: CockpitAnimationEvent) { presenter.render(event); idle() }
+    private fun emit(event: CockpitAnimationEvent) { bus.emit(event); idle() }
     private fun start(id: String) = emit(CockpitAnimationEvent.CommandFlyIn(id, 1_700_000_000_000L, "Prüfauftrag"))
     private fun end(id: String, delivered: Boolean = true) =
         emit(CockpitAnimationEvent.TurnEnded(id, 1_700_000_000_100L, delivered))
@@ -174,9 +179,31 @@ class CockpitAnimationPresenterTurnUiTest {
             "chat", "home", TransitionPattern.B_FLY_IN))
         assertEquals("a", projected.last().turnId)
         assertEquals(WindowProjectedMotion.Phase.CLOSED, projected.last().phase)
+        sample("navigation-window")
+        assertEquals(NAV_TURN, projected.last().turnId)
         emit(CockpitAnimationEvent.ActionStarted("worker", 2L, CockpitAction.WORKER, "Prüfung"))
+        assertEquals(NAV_TURN, projected.last().turnId)
+        assertEquals(WindowProjectedMotion.Phase.CLOSED, projected.last().phase)
         assertEquals("worker", field("workStageTurnId"))
         end("a")
         assertEquals(-1L, field("exitMs"))
+    }
+
+    @Test fun synchronousCloseListenerQueuesTheNextRequestSafely() {
+        start("a")
+        sample()
+        val next = bus.subscribe {
+            if (it is WindowProjectedMotion && it.turnId == "a" &&
+                it.phase == WindowProjectedMotion.Phase.CLOSED) {
+                bus.emit(CockpitAnimationEvent.CommandFlyIn("c", 2L, "Folgeauftrag"))
+            }
+        }
+        try {
+            start("b")
+            assertEquals("c", field("workStageTurnId"))
+            end("a")
+            end("b")
+            assertEquals(-1L, field("exitMs"))
+        } finally { next.close() }
     }
 }

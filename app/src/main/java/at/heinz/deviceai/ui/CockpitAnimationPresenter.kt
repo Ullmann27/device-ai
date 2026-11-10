@@ -158,6 +158,7 @@ class CockpitAnimationPresenter(
             if (event.toTarget == JarvisCockpitPanels.STOP_TARGET ||
                 event.pattern == at.heinz.deviceai.cockpit.TransitionPattern.B_FLY_IN) {
                 replaceCinemaTurn(null)
+                home.jarvisShell.closeProjectedMotion(event.turnId, android.os.SystemClock.uptimeMillis())
             }
             return true
         }
@@ -168,6 +169,8 @@ class CockpitAnimationPresenter(
         if (event.turnId in retiredCinemaTurns) return false
         if (event is CockpitAnimationEvent.CommandFlyIn ||
             cinemaTurnId == null && trigger == JarvisCinemaEntrance.Trigger.ENTER) {
+            if (cinemaTurnId == null) home.jarvisShell.closeProjectedMotion(
+                at.heinz.deviceai.cockpit.NAV_TURN, android.os.SystemClock.uptimeMillis())
             replaceCinemaTurn(event.turnId)
         }
         return cinemaTurnId == event.turnId
@@ -177,7 +180,13 @@ class CockpitAnimationPresenter(
     private fun bindProjectedMotion(event: CockpitAnimationEvent) {
         if (!home.jarvisShellStage) return
         if (bus != null) home.jarvisShell.onProjectedMotion = { bus.emit(it) }
-        if (event is CockpitAnimationEvent.AreaChanged) return
+        if (event is CockpitAnimationEvent.AreaChanged) {
+            if (event.toTarget != JarvisCockpitPanels.STOP_TARGET &&
+                event.pattern == at.heinz.deviceai.cockpit.TransitionPattern.B_FLY_IN) {
+                home.jarvisShell.bindCinemaTurn(event.turnId)
+            }
+            return
+        }
         when (JarvisCinemaEntrance.triggerFor(event)) {
             JarvisCinemaEntrance.Trigger.ENTER,
             JarvisCinemaEntrance.Trigger.STEP -> home.jarvisShell.bindCinemaTurn(event.turnId)
