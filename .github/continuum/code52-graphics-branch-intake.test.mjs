@@ -68,7 +68,7 @@ test('Cinema 2030 remains owner-controlled and clips decorative glass around the
   const part = source.overlay.slice(source.overlay.indexOf('cinematics.drawMotesAndEnergy('), source.overlay.indexOf('if (dataAlpha > 0f) drawTelemetry('));
   assert.match(part, /cinematics\.drawBrackets\([\s\S]*?canvas\.restore\(\)\s*canvas\.restore\(\)\s*if \(prismRimEnabled/);
   assert.equal([...source.cinematic.matchAll(/EXP_\d\d_[A-Z_]+\("/g)].length, 15);
-  assert.equal([...source.cinematic.matchAll(/w i r e d = t r u e/g)].length, 0);
+  assert.equal([...source.cinematic.matchAll(/wired = true/g)].length, 11);
 });
 
 test('Astra #661 Java2D reference-fidelity tool and preview both remain available', () => {
