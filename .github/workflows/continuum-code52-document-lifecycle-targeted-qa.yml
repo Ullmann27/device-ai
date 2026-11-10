@@ -1,0 +1,87 @@
+name: "Continuum Code52 - Document Lifecycle Targeted Android QA (unsigned)"
+on:
+  push:
+    branches:
+      - chatgpt/code52-swarm-document-lifecycle-fix-20261110
+    paths:
+      - 'app/src/main/java/at/heinz/deviceai/ui/Airbus2100CockpitOrchestrator.kt'
+      - 'app/src/main/java/at/heinz/deviceai/ui/DocumentBlueprintProjection.kt'
+      - 'app/src/test/java/at/heinz/deviceai/ui/Airbus2100CockpitOrchestratorTest.kt'
+      - 'app/src/test/java/at/heinz/deviceai/ui/DocumentBlueprintProjectionTest.kt'
+      - '.github/continuum/code52-document-lifecycle-contract.test.mjs'
+      - '.github/workflows/continuum-code52-document-lifecycle-targeted-qa.yml'
+permissions:
+  contents: read
+concurrency:
+  group: continuum-code52-doc-p0-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  document-lifecycle:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-swarm-document-lifecycle-fix-20261110'
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Bind immutable SHA and static guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          node --test .github/continuum/code52-document-lifecycle-contract.test.mjs
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install official Android 36 SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+      - name: Execute real affected Android unit tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2500m -XX:MaxMetaspaceSize=768m' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=52 \
+            :app:testDebugUnitTest \
+            --tests at.heinz.deviceai.ui.Airbus2100CockpitOrchestratorTest \
+            --tests at.heinz.deviceai.ui.DocumentBlueprintProjectionTest
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          results=Path('app/build/test-results/testDebugUnitTest')
+          wanted={'at.heinz.deviceai.ui.Airbus2100CockpitOrchestratorTest',
+                  'at.heinz.deviceai.ui.DocumentBlueprintProjectionTest'}
+          executed={}
+          for f in results.glob('TEST-*.xml'):
+              root=ET.parse(f).getroot()
+              if root.attrib.get('name') not in wanted:
+                  continue
+              cases=root.findall('testcase')
+              if any(c.find('failure') is not None or c.find('error') is not None or c.find('skipped') is not None for c in cases):
+                  raise SystemExit('DOC_P0_ANDROID_RED '+f.name)
+              executed[root.attrib['name']]=len(cases)
+          if set(executed) != wanted or sum(executed.values()) < 14:
+              raise SystemExit('DOC_P0_ANDROID_MISSING '+repr(executed))
+          print('DOC_P0_ANDROID_GREEN', executed)
+          PY
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Preserve source-bound focused diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code52-DocumentLifecycle-Targeted-QA
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/tests/testDebugUnitTest/
+          retention-days: 7
+          if-no-files-found: warn
