@@ -9973,7 +9973,8 @@ class AgentActivity : Activity() {
         // Capture at gate creation: a late old runner cannot borrow a subsequent turn's scope.
         val effectContext = currentTaskEffectContext
         val presentationGeneration = workPresentationGeneration
-        val cockpitTurn = activeChiefTurn?.takeIf { it.phase != at.heinz.deviceai.chief.TurnPhase.ENDED }?.turnId
+        val cockpitLifecycle = activeChiefTurn?.takeIf { it.phase != at.heinz.deviceai.chief.TurnPhase.ENDED }
+        val cockpitTurn = cockpitLifecycle?.turnId
         return ToolGate(
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
@@ -9984,6 +9985,8 @@ class AgentActivity : Activity() {
             }
             fun actualStart() {
                 effectStarted = true
+                cockpitLifecycle?.milestone(at.heinz.deviceai.chief.TurnMilestone.TOOL_STARTED,
+                    ToolRegistry.label(request.name))
                 cockpitTurn?.let { cockpitTriggers.toolStarted(it, request.callId, request.name) }
                 val startedAt = android.os.SystemClock.uptimeMillis()
                 runOnUiThread {

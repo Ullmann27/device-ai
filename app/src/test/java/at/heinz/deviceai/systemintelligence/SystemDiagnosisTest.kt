@@ -12,11 +12,12 @@ class SystemDiagnosisTest {
             assertTrue(it, SystemIntelligenceCommands.isDiagnosisRequest(it))
         }
     }
-    @Test fun existingCloudToolsStillReachTheirCentralGate() {
-        SystemIntelligenceCommands.localTools.forEach {
+    @Test fun cloudToolsNeverExportUnapprovedDeviceData() {
+        (SystemIntelligenceCommands.localTools + listOf("get_battery_info", "get_device_info",
+            "get_storage_info", "read_logcat", "list_files", "list_processes", "unknown_future_tool")).forEach {
             assertFalse(it, SystemIntelligenceCommands.cloudMayDispatch(it))
         }
-        listOf("get_battery_info", "get_device_info", "web_search", "get_storage_info").forEach {
+        listOf("web_search", "web_read").forEach {
             assertTrue(it, SystemIntelligenceCommands.cloudMayDispatch(it))
         }
     }

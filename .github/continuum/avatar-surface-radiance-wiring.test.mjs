@@ -19,7 +19,9 @@ test('Face glow reuses original glTF emission',()=>{
 });
 test('Face glow remains a safe optional layer',()=>{
  assert.match(renderer,/applyCoreLight\(coreEnergy, cinematicLighting && motion, accent, open, side, elevation\)/);
- assert.match(renderer,/val accent = if \(flyIn\.open\) flyIn\.accentArgb else windowAccentArgb/);
+ assert.match(renderer,/val accent = flyIn\.accentOr\(windowAccentArgb\)/);
+ const light=fs.readFileSync(path.join(root,'app/src/main/java/at/heinz/deviceai/avatar3d/CinemaWindowLightState.kt'),'utf8');
+ assert.match(light,/if \(open\) accentArgb \?: fallback else fallback/);
  assert.match(renderer,/val open = windowOpen \|\| flyIn\.open/);
  assert.match(renderer,/windowAccentArgb: Int\?, windowOpen: Boolean, gazeX: Float/);
  assert.match(renderer,/SpatialWindowLight\.tint\(windowAccentArgb, energy,/);

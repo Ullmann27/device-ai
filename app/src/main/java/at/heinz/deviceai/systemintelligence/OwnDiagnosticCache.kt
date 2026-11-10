@@ -59,7 +59,8 @@ class OwnDiagnosticCache(
     private data class Identity(val key: Any, val modifiedMs: Long, val bytes: Long)
     private data class Pending(val preview: OwnCachePreview, val entries: List<Owned>,
         val identities: Map<String, Identity>, val expires: Long)
-    private data class Undo(val id: String, val files: Map<Owned, ByteArray>, val expires: Long)
+    private data class Undo(val id: String, val files: Map<Owned, ByteArray>, val expires: Long,
+        val pendingIndex: Map<Owned, Identity> = emptyMap())
     private class Quarantined(val recoveryId: String, cause: Exception) :
         IllegalStateException("CACHE_QUARANTINED_REVIEW_REQUIRED", cause)
     private val root = cacheDirectory.canonicalFile.toPath()
@@ -81,6 +82,7 @@ class OwnDiagnosticCache(
             check(monotonicMs() - start in 0 until WORK_BUDGET_MS) { "CACHE_OPERATION_EXPIRED" }
         }
         checkActive()
+        check(undo?.pendingIndex.isNullOrEmpty()) { "CACHE_INDEX_RECOVERY_REQUIRED" }
         checkRoot(root)
         checkRoot(ownershipRoot)
         if (!Files.exists(directory, NOFOLLOW_LINKS)) {
@@ -187,6 +189,7 @@ class OwnDiagnosticCache(
         if (now < plan.expires - PREVIEW_TTL_MS || now >= plan.expires)
             return OwnCacheCleanupResult("PREVIEW_EXPIRED")
         if (cancelled() || Thread.currentThread().isInterrupted) return OwnCacheCleanupResult("CANCELLED")
+        if (!undo?.pendingIndex.isNullOrEmpty()) return OwnCacheCleanupResult("RESTORE_INDEX_RECOVERY_REQUIRED")
         if (plan.entries.isEmpty()) return OwnCacheCleanupResult("NO_AUDITED_DISPOSABLE_FILES")
         val current = readLedger()
         if (plan.entries.any { it !in current }) return OwnCacheCleanupResult("STALE_PREVIEW")
@@ -255,8 +258,16 @@ class OwnDiagnosticCache(
         val current = readLedger()
         if ((current + backup.files.keys).distinctBy { it.id }.size > MAX_RECORDS)
             return OwnCacheCleanupResult("HISTORY_FULL")
-        if (backup.files.keys.any { Files.exists(path(it.id), NOFOLLOW_LINKS) })
-            return OwnCacheCleanupResult("RESTORE_TARGET_EXISTS")
+        if (current.any { currentEntry -> backup.files.keys.any { it.id == currentEntry.id && it != currentEntry } })
+            return OwnCacheCleanupResult("RESTORE_INDEX_CONFLICT")
+        val awaitingIndex = backup.pendingIndex.toMutableMap()
+        for (entry in backup.files.keys) {
+            if (Files.exists(path(entry.id), NOFOLLOW_LINKS)) {
+                val expected = awaitingIndex[entry] ?: return OwnCacheCleanupResult("RESTORE_TARGET_EXISTS")
+                if (identity(entry) != expected || verified(entry) == null || identity(entry) != expected)
+                    return OwnCacheCleanupResult("RESTORE_PENDING_CHANGED")
+            } else awaitingIndex.remove(entry)
+        }
         val restored = mutableListOf<Owned>()
         var status = "RESTORED"
         for ((entry, bytes) in backup.files) {
@@ -268,24 +279,44 @@ class OwnDiagnosticCache(
                 status = "RESTORE_TIME_LIMIT_PARTIAL"
                 break
             }
+            if (entry in awaitingIndex) continue
             try {
                 checkDirectory()
                 Files.write(path(entry.id), bytes, CREATE_NEW, WRITE)
+                val writtenIdentity = identity(entry)
+                check(writtenIdentity != null && verified(entry) != null && identity(entry) == writtenIdentity) {
+                    "RESTORE_TARGET_CHANGED"
+                }
+                awaitingIndex[entry] = writtenIdentity
                 restored += entry
             } catch (_: Exception) {
                 status = "RESTORE_PARTIAL"
                 break
             }
         }
+        undo = backup.copy(pendingIndex = awaitingIndex.toMap())
+        var indexed = emptySet<Owned>()
         try {
-            if (restored.isNotEmpty()) writeLedger((current + restored).distinctBy { it.id })
+            val stopped = cancelled() || Thread.currentThread().isInterrupted
+            val expired = monotonicMs() - now !in 0 until WORK_BUDGET_MS
+            if (restored.isEmpty() && (stopped || expired)) {
+                status = if (stopped) "CANCELLED" else "RESTORE_TIME_LIMIT_PARTIAL"
+            } else if (awaitingIndex.any { (entry, expected) ->
+                    identity(entry) != expected || verified(entry) == null || identity(entry) != expected
+                }) {
+                status = "RESTORE_PENDING_CHANGED"
+            } else if (awaitingIndex.isNotEmpty()) {
+                writeLedger((current + awaitingIndex.keys).distinctBy { it.id })
+                indexed = awaitingIndex.keys.toSet()
+            }
         } catch (_: Exception) {
             status = "RESTORE_INDEX_FAILED"
         }
-        val left = backup.files.filterKeys { it !in restored }
-        undo = if (left.isEmpty()) null else backup.copy(files = left)
+        val left = backup.files.filterKeys { it !in indexed }
+        undo = if (left.isEmpty()) null else backup.copy(files = left,
+            pendingIndex = awaitingIndex.filterKeys { it in left })
         pending = null
-        return OwnCacheCleanupResult(status, restoredFiles = restored.size)
+        return OwnCacheCleanupResult(status, restoredFiles = maxOf(restored.size, indexed.size))
     }
 
     private fun verified(entry: Owned): ByteArray? = try {

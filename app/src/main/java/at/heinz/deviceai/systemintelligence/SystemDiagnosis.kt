@@ -71,7 +71,7 @@ object SystemIntelligenceCommands {
     const val FILES = "analyze_granted_storage"
     const val SAVE = "save_system_snapshot"
     val localTools = setOf(DIAGNOSE, CAPABILITIES, PREVIEW, CLEANUP, RESTORE, FILES, SAVE)
-    fun cloudMayDispatch(toolName: String): Boolean = toolName !in localTools
+    fun cloudMayDispatch(toolName: String): Boolean = toolName in setOf("web_search", "web_read")
 
     fun isDiagnosisRequest(text: String): Boolean {
         val normalized = text.trim().lowercase(Locale.GERMAN)
