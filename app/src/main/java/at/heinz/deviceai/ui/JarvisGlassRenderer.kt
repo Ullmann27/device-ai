@@ -107,6 +107,20 @@ class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : Jarvis
         return true
     }
 
+    override fun drawFluidEdge(
+        box: JarvisShellLayout.Box, radius: Float, phase: Float, energy: Float, timeMs: Long,
+    ): Boolean {
+        if (!hardware || Build.VERSION.SDK_INT < 33) return false
+        if (!box.left.isFinite() || !box.top.isFinite() || !box.right.isFinite() ||
+            !box.bottom.isFinite() || box.width <= 0f || box.height <= 0f ||
+            !radius.isFinite() || !phase.isFinite() || !energy.isFinite()) return false
+        if (energy <= 0f) return true
+        val shader = agsl as? Agsl ?: return false
+        return shader.drawFluidEdge(bloomTarget ?: canvas, box,
+            radius.coerceIn(0f, minOf(box.width, box.height) / 2f),
+            phase.coerceIn(0f, 1f), energy.coerceIn(0f, 1f), timeMs)
+    }
+
     override fun beginDepth(box: JarvisShellLayout.Box, depth: JarvisMotion.Depth.State): Boolean {
         if (!hardware) return false
         val needBlur = depth.blurDp > 0f && blurCapable
@@ -171,6 +185,47 @@ class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : Jarvis
         private val rim = RuntimeShader(RIM)
         private val bgPaint = Paint().apply { shader = bg }
         private val rimPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { shader = rim }
+        private var fluidUnavailable = false
+        private var fluid: RuntimeShader? = null
+        private val fluidPaint = Paint()
+
+        fun drawFluidEdge(c: Canvas, b: JarvisShellLayout.Box, radius: Float,
+                          phase: Float, energy: Float, timeMs: Long): Boolean {
+            if (fluidUnavailable) return false
+            return try {
+                val effect = fluid ?: RuntimeShader(FLUID_EDGE).also {
+                    fluid = it
+                    fluidPaint.shader = it
+                }
+                effect.setFloatUniform("rect", b.left, b.top, b.right, b.bottom)
+                effect.setFloatUniform("radius", radius)
+                effect.setFloatUniform("phase", phase)
+                effect.setFloatUniform("energy", energy)
+                effect.setFloatUniform("time", (timeMs.coerceAtLeast(0L) % 600_000L) / 1000f)
+                val spread = FLUID_SPREAD_DP
+                val innerX = minOf(b.width / 2f, radius + spread)
+                val innerY = minOf(b.height / 2f, radius + spread)
+                val left = b.left - spread
+                val top = b.top - spread
+                val right = b.right + spread
+                val bottom = b.bottom + spread
+                // Disjoint strips avoid interior shading.
+                c.drawRect(left, top, b.left + innerX, bottom, fluidPaint)
+                c.drawRect(b.right - innerX, top, right, bottom, fluidPaint)
+                if (b.left + innerX < b.right - innerX) {
+                    c.drawRect(b.left + innerX, top, b.right - innerX, b.top + innerY, fluidPaint)
+                    c.drawRect(b.left + innerX, b.bottom - innerY, b.right - innerX, bottom, fluidPaint)
+                }
+                true
+            } catch (_: IllegalArgumentException) {
+                fluidUnavailable = true
+                false
+            } catch (_: IllegalStateException) {
+                fluidUnavailable = true
+                false
+            }
+        }
+
 
         fun drawBackground(c: Canvas, w: Float, h: Float, density: Float, timeMs: Long) {
             bg.setFloatUniform("size", w, h); bg.setFloatUniform("density", density)
@@ -198,6 +253,41 @@ class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : Jarvis
     }
 
     companion object {
+        const val FLUID_SPREAD_DP = 6f
+
+        // Local dp; premultiplied edge light.
+        const val FLUID_EDGE = """
+uniform float4 rect;
+uniform float radius;
+uniform float phase;
+uniform float energy;
+uniform float time;
+float sdFluidRound(float2 p, float2 b, float r) {
+  float2 q = abs(p) - b + r;
+  return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
+}
+half4 main(float2 p) {
+  float2 center = (rect.xy + rect.zw) * 0.5;
+  float2 halfSize = (rect.zw - rect.xy) * 0.5;
+  float2 local = p - rect.xy;
+  float2 uv = local / max(rect.zw - rect.xy, float2(1.0));
+  float d = sdFluidRound(p - center, halfSize, radius);
+  float band = 1.0 - smoothstep(2.0, 6.0, abs(d));
+  float flow = local.y - time * 84.0 - phase * 48.0;
+  float noise = sin(flow * 0.075 + sin(local.x * 0.043 + time * 1.7))
+              + 0.5 * sin(flow * 0.137 - local.x * 0.019 + time * 0.8);
+  float filament = 1.0 - smoothstep(0.35, 1.8, abs(d - noise * 0.72));
+  float packet = pow(0.5 + 0.5 * sin(flow * 0.052 + local.x * 0.022), 4.0);
+  float headDistance = (uv.y - phase) * 5.5;
+  float front = exp(-headDistance * headDistance);
+  float a = clamp(energy * band * (0.12 + filament * 0.42 + packet * 0.24 + front * 0.20), 0.0, 0.92);
+  half3 cyan = half3(0.08, 0.92, 1.0);
+  half3 violet = half3(0.67, 0.28, 1.0);
+  half3 color = mix(cyan, violet, half(0.5 + 0.5 * sin(uv.x * 4.0 + noise * 0.4)));
+  color = mix(color, half3(0.88, 0.98, 1.0), half(packet * filament * 0.35));
+  return half4(color * a, a);
+}"""
+
         /**
          * Pixel coordinates. Shared ref5 palette, faint cyan grid (48 dp), lower-edge haze,
          * bokeh (cells of 120 dp, ≤1 disc each, ≤5 % per ref5) and dust (cells of 35 dp ≈ 1 per 1200 dp², r 0.65 dp,
