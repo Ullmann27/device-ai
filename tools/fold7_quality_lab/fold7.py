@@ -80,9 +80,12 @@ def parse_gfxinfo(data, budget_ms):
         try:
             if fields[columns["Flags"]] != "0":
                 continue
-            ms = (int(fields[columns["FrameCompleted"]]) - int(fields[columns["IntendedVsync"]])) / 1e6
-            if 0 < ms < 1000:
-                frames.append(ms)
+            intended = int(fields[columns["IntendedVsync"]])
+            completed = int(fields[columns["FrameCompleted"]])
+            if not 0 < intended < completed < 2**63 - 1:
+                continue
+            # Preserve completed multi-second stalls.
+            frames.append((completed - intended) / 1e6)
         except (ValueError, IndexError, KeyError):
             continue
     if not frames:
