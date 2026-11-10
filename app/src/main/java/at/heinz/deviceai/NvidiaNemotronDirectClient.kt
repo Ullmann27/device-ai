@@ -44,6 +44,12 @@ class NvidiaNemotronDirectClient(private val context: Context) {
         }
         Thread({
             val result = runCatching {
+                // Re-read the owner's persisted switch on the network worker.
+                // A mode change after the confirmation dialog must fail closed.
+                if (context.getSharedPreferences("continuum-internet", Context.MODE_PRIVATE)
+                        .getString("mode", null) == "OFF") {
+                    throw IllegalStateException("NVIDIA-Anfrage blockiert: Internetmodus AUS.")
+                }
                 val key = SecureTokenStore.loadNvidiaToken(context)
                     ?: throw IllegalStateException(
                         "NVIDIA-Schlüssel fehlt. Bitte unter Cloud-Einstellungen sicher speichern."
