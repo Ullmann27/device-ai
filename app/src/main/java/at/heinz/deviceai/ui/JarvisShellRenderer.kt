@@ -107,8 +107,8 @@ object JarvisShellRenderer {
             val depthNative = depthState != JarvisMotion.Depth.FLAT &&
                 glass?.beginDepth(box, depthState) == true
             val tile = if (slot == null) tiles.getOrNull(tileIndex) else null
-            val ownsSurface = content[slot] != null &&
-                slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS)
+            val ownsSurface = slot == Slot.BOTTOM_NAV || (content[slot] != null &&
+                slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS))
             if (tile != null) {
                 JarvisTiles.drawSurface(p, box, tile, f.glow > .5f,
                     if (animatorScale > 0f) timeMs else 0L,
@@ -127,7 +127,8 @@ object JarvisShellRenderer {
             when {
                 slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
                 slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
-                slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box)
+                slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
+                    timeMs = if (animatorScale > 0f) timeMs else 0L)
                 slot != null -> header(p, box, label(slot))
                 tileIndex < tiles.size -> JarvisTiles.draw(p, box, tiles[tileIndex])
             }
