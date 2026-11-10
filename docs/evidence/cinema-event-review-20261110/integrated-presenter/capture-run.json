@@ -1,0 +1,71 @@
+{
+  "source_commit": "fac24859486959434529f4817c676dfdec9cfa00",
+  "application_main_tree": "46e8fbd3cf913f11c2d150830e89502f41bc5528",
+  "phase": "capture",
+  "result_scope": "HOST_NATIVE_TEST_CAPTURE",
+  "tests_selected": [
+    "at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest",
+    "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest"
+  ],
+  "command": [
+    "/tmp/continuum-toolchain/gradle-8.11.1/bin/gradle",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1100m -XX:MaxMetaspaceSize=384m",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerLocalQa=true",
+    "-PcontinuumOwnerLocalVersionCode=52",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumUiEvidenceDir=/workspace/scratch/5900afa6af29/cinema-presenter-native-rerun",
+    "-I",
+    "/workspace/scratch/5900afa6af29/device-ai/tools/capture/force_capture.gradle",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest",
+    "--tests",
+    "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest"
+  ],
+  "exit_code": 0,
+  "gradle_exit_code": 0,
+  "elapsed_seconds": 20.734880324998812,
+  "frames": [
+    {
+      "file": "crystal-after.png",
+      "sha256": "68c57cf2dafb8907b05c37952f226657fcf42259556e0dab850e5225b99188e8",
+      "metadata": "crystal-after.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "crystal-before-disc.png",
+      "sha256": "23499c720383aeaa0351b7cb98be35ab2b44109ed3cefc0fc97a0c88fd1680d2",
+      "metadata": "crystal-before-disc.json",
+      "declared_hash_matches": null
+    }
+  ],
+  "junit": [
+    {
+      "name": "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest",
+      "tests": "11",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "validation_errors": [],
+  "post_run_source_commit": "fac24859486959434529f4817c676dfdec9cfa00",
+  "tracked_changes_after_run": "",
+  "renderer": "Fixture-specific; defaults use Robolectric API28 native Canvas / 2D fallback",
+  "Fold7": "NOT_RUN",
+  "Filament": "NOT_RUN",
+  "GPU": "NOT_RUN",
+  "inference": "NOT_RUN"
+}

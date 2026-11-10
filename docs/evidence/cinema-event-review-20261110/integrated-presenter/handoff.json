@@ -1,0 +1,31 @@
+{
+  "kind": "INTEGRATED_SOURCE_HANDOFF",
+  "tested_integrated_source": "fac24859486959434529f4817c676dfdec9cfa00",
+  "tested_main_tree": "46e8fbd3cf913f11c2d150830e89502f41bc5528",
+  "local_fixture_sync_commit": "f2a6ee43fba84aa4c72fb78cc5db002b80a4c1d8",
+  "local_branch_full_android_suite": "NOT_RUN",
+  "file_equivalence_to_tested_source": {
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitAnimationPresenter.kt": "a4242bdb3f0f70d961e94820e71d9924783bd07a11d6a808722337fb5f138ecf",
+    "app/src/main/java/at/heinz/deviceai/ui/WindowProjectedMotionSampler.kt": "fdd0b742f1f7c291d66e346022a871b0092c8c6249cc4d431670ca8f9464633d",
+    "app/src/test/java/at/heinz/deviceai/ui/WindowProjectedMotionSamplerTest.kt": "6815e0f3318163a990104783f54a26e7264f09ae5f466a1d7e4213c5a8cdc6c6",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitAnimationPresenterTurnUiTest.kt": "4ae3fab59c4a1373b78f79678eea6c410268434d92672e7ba772f7bc0f1ac9f7"
+  },
+  "targeted_rerun": {
+    "tests": 19,
+    "passed": 19,
+    "failures": 0,
+    "presenter_tests": 11,
+    "existing_window_tests": 8
+  },
+  "initial_integrated_run": {
+    "source_commit": "bb4da2a128b2220d095625d49673032df1e1f6c1",
+    "main_tree": "46e8fbd3cf913f11c2d150830e89502f41bc5528",
+    "tests": 110,
+    "passed": 99,
+    "failed_setup": 11
+  },
+  "unique_tests_across_runs": 110,
+  "not_118": "Eight window lifecycle tests are repeated in both runs.",
+  "model_inference": "NOT_RUN",
+  "Fold7": "NOT_RUN"
+}

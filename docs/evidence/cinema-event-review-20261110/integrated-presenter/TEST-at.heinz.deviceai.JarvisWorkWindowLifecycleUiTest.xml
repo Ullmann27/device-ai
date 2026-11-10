@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:22:45" hostname="1a6f5c6cf9c0" time="1.073">
+  <properties/>
+  <testcase name="anInstalledAppRidesTheTrailInsideItsCrystal" classname="at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest" time="0.367"/>
+  <testcase name="reopeningBeforeCleanupCannotRemoveNewBodyOrRunStaleClose" classname="at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest" time="0.116"/>
+  <testcase name="theStatusStripNeverCoversControlsAtLargeType" classname="at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest" time="0.193"/>
+  <testcase name="largeTypeTitleNeverStarvesTheScrollViewportOfItsTallestControl" classname="at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest" time="0.073"/>
+  <testcase name="replacingContentKeepsTheSamePhysicalWindowAndGeometry" classname="at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest" time="0.143"/>
+  <testcase name="firstLayoutAtAnotherSizePlansAgainInsteadOfVanishing" classname="at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest" time="0.065"/>
+  <testcase name="finalDrawClosesLogicallyBeforeReleasingViewsAndCallingHost" classname="at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest" time="0.067"/>
+  <testcase name="fractionalDestinationSettlesExactlyInsideSafePixelBounds" classname="at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest" time="0.048"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

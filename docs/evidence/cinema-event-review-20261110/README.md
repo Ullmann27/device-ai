@@ -1,5 +1,7 @@
 # Cinema event ownership regression — 2026-11-10
 
+Later integrated Android result: **11/11 Presenter + 8/8 existing window tests PASS** on root `fac2485`; see [INTEGRATED-HANDOFF.md](INTEGRATED-HANDOFF.md). The results below describe the earlier isolated host checkpoint.
+
 Integration owner: root, `cinema/fluid-light-stage-20261110`, PR715. This branch is the reviewable fix candidate; no merge, signing, APK, device or model run occurred. Four owned code/test commits: `ca65f6c`, `c02690d`, `7985e24`, `d4d7971`.
 
 ## Source findings and bounded change

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:22:39" hostname="1a6f5c6cf9c0" time="5.639">
+  <properties/>
+  <testcase name="cancelledPendingRequestCannotRestartAfterReturn" classname="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" time="4.345"/>
+  <testcase name="navigationResetAllowsANewIdleWorker" classname="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" time="0.167"/>
+  <testcase name="unknownEndWhileIdleDoesNotStartAReturn" classname="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" time="0.178"/>
+  <testcase name="globalStopClosesTheTrackedOwner" classname="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" time="0.155"/>
+  <testcase name="duplicateStartDoesNotRestartTheFlight" classname="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" time="0.119"/>
+  <testcase name="oldAndForeignEndsCannotCloseTheNewRequest" classname="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" time="0.1"/>
+  <testcase name="synchronousCloseListenerQueuesTheNextRequestSafely" classname="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" time="0.101"/>
+  <testcase name="lateStartAndStepCannotReviveTheRetiredTurn" classname="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" time="0.156"/>
+  <testcase name="foreignWorkerCannotStealTheCurrentScene" classname="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" time="0.111"/>
+  <testcase name="oldBootDeadlineCannotResetANewerMission" classname="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" time="0.102"/>
+  <testcase name="backgroundCompletionStillClosesItsProjection" classname="at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest" time="0.104"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
