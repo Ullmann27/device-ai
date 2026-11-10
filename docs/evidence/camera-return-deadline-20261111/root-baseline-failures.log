@@ -16,4 +16,3 @@ ContinuumSystemStatusWorkWindowUiTest > speakingInsideAnOpenWindowKeepsTheCamera
         at org.junit.Assert.failNotEquals(Assert.java:835)
         at org.junit.Assert.assertEquals(Assert.java:577)
         at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.speakingInsideAnOpenWindowKeepsTheCameraAndStopReturnsItAfterSpeechEnds(ContinuumSystemStatusWorkWindowUiTest.kt:780)
-
