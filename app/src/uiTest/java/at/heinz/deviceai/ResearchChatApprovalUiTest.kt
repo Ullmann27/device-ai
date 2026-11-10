@@ -29,7 +29,7 @@ import org.robolectric.shadows.ShadowAlertDialog
 @GraphicsMode(GraphicsMode.Mode.LEGACY)
 @LooperMode(LooperMode.Mode.PAUSED)
 class ResearchChatApprovalUiTest {
-    private class Fixture(val activity: AgentActivity) {
+    private class Fixture(val activity: AgentActivity, val pauseAndResume: () -> Unit) {
         var now = 0L
         val consent = InternetConsentPolicy(InternetAccessMode.ASK) { now }
         val gate = ApprovedWebToolGate(consent)
@@ -58,7 +58,7 @@ class ResearchChatApprovalUiTest {
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         try {
             controller.setup().visible().windowFocusChanged(true)
-            val fixture = Fixture(controller.get())
+            val fixture = Fixture(controller.get()) { controller.pause().resume() }
             set(fixture.activity, "internetConsent", fixture.consent)
             set(fixture.activity, "webToolGate", fixture.gate)
             idle()
@@ -70,7 +70,7 @@ class ResearchChatApprovalUiTest {
         }
     }
 
-    private fun ask(f: Fixture, query: String): AlertDialog {
+    private fun ask(f: Fixture, query: String, inChat: Boolean = true): AlertDialog {
         val completed: (ApprovedWebResearchSession?) -> Unit = { f.completed += it }
         val invalidated: () -> Unit = { f.invalidated++ }
         AgentActivity::class.java.declaredMethods.single {
@@ -80,13 +80,16 @@ class ResearchChatApprovalUiTest {
         idle()
         return requireNotNull(ShadowAlertDialog.getLatestAlertDialog()).also {
             assertEquals("Im Chat antworten", it.getButton(AlertDialog.BUTTON_NEUTRAL).text.toString())
-            it.getButton(AlertDialog.BUTTON_NEUTRAL).performClick()
-            idle()
+            if (inChat) {
+                it.getButton(AlertDialog.BUTTON_NEUTRAL).performClick()
+                idle()
+            }
         }
     }
 
     private fun reply(f: Fixture, text: String = "Ja, mach.") {
         (field(f.activity, "input") as EditText).setText(text)
+        assertEquals("Recherchefreigabe senden", (field(f.activity, "sendButton") as Button).contentDescription)
         assertTrue((field(f.activity, "sendButton") as Button).performClick())
         idle()
     }
@@ -112,6 +115,26 @@ class ResearchChatApprovalUiTest {
         ask(f, "Photosynthese")
         reply(f, "Nein.")
         assertEquals(listOf<ApprovedWebResearchSession?>(null), f.completed)
+    }
+
+    @Test fun recognizedReplyDismissesItsOriginalModal() = withActivity { f ->
+        val dialog = ask(f, "Photosynthese", inChat = false)
+        assertTrue(dialog.isShowing)
+        (field(f.activity, "input") as EditText).setText("Ja, mach.")
+        AgentActivity::class.java.getDeclaredMethod("sendCurrentInput", Boolean::class.javaPrimitiveType)
+            .apply { isAccessible = true }.invoke(f.activity, false)
+        idle()
+        assertFalse(dialog.isShowing)
+        assertNotNull(f.completed.single())
+    }
+
+    @Test fun pauseThenResumeCannotReviveThePendingTicket() = withActivity { f ->
+        ask(f, "Photosynthese")
+        f.pauseAndResume()
+        idle()
+        reply(f)
+        assertTrue(f.completed.isEmpty())
+        assertEquals(1, f.invalidated)
     }
 
     @Test fun expiredChangedOrRevokedBindingCannotGrant() {
@@ -153,5 +176,32 @@ class ResearchChatApprovalUiTest {
         assertTrue(f.completed.isEmpty())
         (field(f.activity, "input") as EditText).setText("Ja, mach.")
         assertEquals(false, consume.invoke(f.activity))
+    }
+
+    @Test fun otherToolConfirmationDisarmsTheResearchChatReply() {
+        for (destructive in listOf(false, true)) withActivity { f ->
+            val researchDialog = ask(f, "Photosynthese")
+            val proposal = if (destructive) ToolProposal("delete_file",
+                mapOf("path" to "/storage/emulated/0/Download/synthetic-consent-test.txt"))
+            else ToolProposal("open_app", mapOf("packageOrName" to "com.example.synthetic"))
+            val decisions = mutableListOf<Boolean>()
+            val recordOnly: (Boolean) -> Unit = { decisions += it }
+            AgentActivity::class.java.declaredMethods.single {
+                it.name == "showStructuredToolConfirmation" && it.parameterCount == 3
+            }.apply { isAccessible = true }.invoke(f.activity, proposal, destructive, recordOnly)
+            idle()
+            val otherDialog = requireNotNull(ShadowAlertDialog.getLatestAlertDialog())
+            assertNotSame(researchDialog, otherDialog)
+            (field(f.activity, "input") as EditText).setText("Ja, mach.")
+            val consume = AgentActivity::class.java.getDeclaredMethod("consumePendingResearchChatReply")
+                .apply { isAccessible = true }
+            assertEquals(false, consume.invoke(f.activity))
+            researchDialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            idle()
+            assertEquals(1, f.invalidated)
+            assertTrue(f.completed.isEmpty())
+            assertTrue(decisions.isEmpty())
+            assertTrue(otherDialog.isShowing)
+        }
     }
 }

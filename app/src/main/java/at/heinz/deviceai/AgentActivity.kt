@@ -9358,9 +9358,12 @@ class AgentActivity : Activity() {
         }
         val approvalSession = sessionId
         var responded = false
+        var approvalDialog: AlertDialog? = null
         fun respond(accepted: Boolean) {
             if (responded) return
             responded = true
+            approvalDialog?.dismiss()
+            approvalDialog = null
             if (pendingResearchChatApproval?.approval === approval) pendingResearchChatApproval = null
             refreshSendButtonPresentation()
             val current = sessionId == approvalSession && foregroundLearningActive && !isFinishing && !isDestroyed
@@ -9373,12 +9376,14 @@ class AgentActivity : Activity() {
         pendingResearchChatApproval = PendingResearchChatApproval(approval, ::respond) {
             if (!responded) {
                 responded = true
+                approvalDialog?.dismiss()
+                approvalDialog = null
                 if (pendingResearchChatApproval?.approval === approval) pendingResearchChatApproval = null
                 refreshSendButtonPresentation()
                 invalidated()
             }
         }
-        AlertDialog.Builder(this)
+        approvalDialog = AlertDialog.Builder(this)
             .setTitle("Internetzugriff einmal erlauben?")
             .setMessage((if(call is at.heinz.deviceai.cognitive.WebToolRequest.Search)
                 "Diese Suchfrage wird an öffentliche Suchanbieter übertragen. Externe Webquellen werden unabhängig geprüft. "
@@ -9893,6 +9898,8 @@ class AgentActivity : Activity() {
         destructive: Boolean,
         onDecision: (Boolean) -> Unit
     ) {
+        if (proposal.toolName !in setOf("web_search", "web_read"))
+            pendingResearchChatApproval?.invalidate?.invoke()
         avatarAwaitingApproval = true
         refreshHologramState()
         val callback: (Boolean) -> Unit = { approved ->

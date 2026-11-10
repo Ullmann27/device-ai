@@ -1,5 +1,7 @@
 # Dialog reference correction — first bounded milestone
 
+Current result: unresolved temporal corrections clarify; an exact reply to the pending research ASK request now uses its existing ticket. **87/87 Android host tests PASS**, including eight new actual Activity UI tests. Device/real microphone/network acceptance remains NOT_RUN. Final evidence: `docs/evidence/dialog-research-consent-20261110/RESULT.json`.
+
 Integration owner: Cinema root integrator. Target: `cinema/fluid-light-stage-20261110` / PR #715. Work branch: `fix/dialog-context-reference-20261110`, based on local root `4ac9c9b94b9fb5e391646e2e99e986db32ec7997` (published root checkpoint `ae3ce34b5aff285ed8c569ca2844975e34131a86`). Avatar commit `6d29411e2b96b5fcc1514a86728d9ad4455c1006` remains separate.
 
 ## Verified defect and live effect
@@ -61,3 +63,15 @@ The first milestone is published as `42ad3c9c6bd1a5df2d996948fbf5855429a572a9`, 
 The owner then requested actual pending-research reply support. This checkpoint adds an optional `Im Chat antworten` route to the existing ASK dialog. Strict `Ja, mach` / decline wording consumes only its current `WebToolApproval` through the same `respond` → `completeApproval` path. Session/foreground checks, nonce/epoch/expiry and one-shot authority stay in the existing code. The Send path handles a bound reply before busy-STOP; ambiguous/unrelated text invalidates the presentation binding. Generic/destructive tool confirmations are unchanged.
 
 Parser: **2 host tests PASS**. Existing exact-scope approval integration plus the new unbound-affirmation regression: **34 host tests PASS**, using recompiled actual consent/gate/context sources and the pinned dependency JAR. `ResearchChatApprovalUiTest` covers actual dialog, Send, waiting-turn, decline, expiry, replacement, session/foreground revocation and ambiguity. Its Android/host UI run is **NOT_RUN**, waiting for the root build lease. This WIP checkpoint is not a verified feature or device result. The root's `cancelLocalRequest` / `clearTaskEffects` methods are intentionally untouched.
+
+## Final E verification — supersedes the WIP status
+
+- Original Activity + new UI tests: **7 tests / 7 expected failures** on absent `Im Chat antworten` control; no compile or fixture errors.
+- Bound reply implementation: **86/86 PASS**, including real dialog, Send and `sendCurrentInput` entry. Replies close only their own approval modal; real `pause()` → `resume()` cannot restore a revoked ticket.
+- Additional overlap RED: while another tool confirmation was open, the research reply was still consumed (`expected false / actual true`). The existing non-web confirmation entry now invalidates only the research chat binding before presenting its unchanged tool gate.
+- Final Android compile + JUnit/Robolectric: **87 tests, 0 failures, 0 errors, 0 skipped**, 13 suites. The eighth UI test covers both ordinary and destructive confirmation overlap and proves the successor dialog remains open and unapproved.
+- Exact research request/mode/nonce/epoch/expiry authority remains in `ApprovedWebToolGate.completeApproval`. Bare/conditional/quoted/extended replies are not grants; unrelated/ambiguous submissions invalidate the presentation binding. Generic/destructive buttons still require their original confirmations.
+
+Executed under the root's exclusive build lease with JDK/SDK from `/tmp/continuum-toolchain`, existing Gradle 8.11.1, `--no-daemon --max-workers=1`, in-process Kotlin, `-PdeviceAiMentorPreview=true -PcontinuumOwnerLocalQa=true -PcontinuumOwnerLocalVersionCode=52 -PcontinuumUiWidgetTests=true`, task `:app:testDebugUnitTest`. Final selected suites are recorded exactly in RESULT.json. Logs are in `/workspace/scratch/5900afa6af29/dialog-research-final-green/run.log`; baseline/overlap logs are in the adjacent `dialog-research-ui-red` and `dialog-research-overlap-red` directories. RESULT.json pins every changed runtime/test source SHA-256 and the unchanged original avatar asset.
+
+This verifies the actual app input/dialog/gate wiring on the Android host. It does not establish real ASR, network-provider output, Fold7/native pixels, broad A–E referent resolution or release acceptance. Root-owned STOP/scene methods remain unchanged. Integrator: cherry-pick this branch's source commits and rerun the focused combined-source caller checks before any release decision.
