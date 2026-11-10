@@ -1,0 +1,84 @@
+name: "Continuum Nemotron 3 Ultra - owner BYOK branch QA (no signing)"
+
+# Exactly one short-lived feature branch. No release, no publish, no secrets,
+# no automatic production merge; disabled when the repository is private.
+on:
+  push:
+    branches:
+      - chatgpt/nvidia-nemotron3-ultra-byok-20261110
+    paths:
+      - '.github/workflows/nvidia-nemotron-byok-qa.yml'
+      - '.github/continuum/nvidia-nemotron-byok-contract.test.mjs'
+      - 'app/src/main/java/at/heinz/deviceai/NvidiaNemotronDirectClient.kt'
+      - 'app/src/main/java/at/heinz/deviceai/SecureTokenStore.kt'
+      - 'app/src/main/java/at/heinz/deviceai/AgentActivity.kt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nemotron-byok-feature-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-nemotron:
+    if: github.repository == 'Ullmann27/device-ai' && !github.event.repository.private
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout exact source (no persistent credentials)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify source identity and prevent exposed credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          if grep -RIE 'nvapi-[A-Za-z0-9_-]{32,}' \
+            app/src/main/java/at/heinz/deviceai/NvidiaNemotronDirectClient.kt \
+            app/src/main/java/at/heinz/deviceai/SecureTokenStore.kt \
+            app/src/main/java/at/heinz/deviceai/AgentActivity.kt; then
+            echo "BLOCKED: Embedded NVIDIA key detected"
+            exit 1
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - name: Run source-bound Nemotron consent and security regression
+        run: node --test .github/continuum/nvidia-nemotron-byok-contract.test.mjs
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install Android 36 SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+      - name: Compile app and run Android unit tests on exact commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2500m -XX:MaxMetaspaceSize=768m' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=52 \
+            :app:compileDebugKotlin :app:testDebugUnitTest
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Preserve test records (no APK)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nemotron-BYOK-branch-QA-evidence
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/tests/testDebugUnitTest/

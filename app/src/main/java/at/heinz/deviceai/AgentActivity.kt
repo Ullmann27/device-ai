@@ -4332,6 +4332,8 @@ class AgentActivity : Activity() {
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
             CenterAction("OPENROUTER · API-KEY EINGEBEN") { showOpenRouterApiKeyDialog() },
             CenterAction("OPENROUTER · EINZELFRAGE") { showOpenRouterMentorDialog() },
+            CenterAction("NVIDIA NEMOTRON 3 ULTRA · API-KEY") { showNvidiaNemotronKeyDialog() },
+            CenterAction("NVIDIA NEMOTRON 3 ULTRA · TESTFRAGE") { showNvidiaNemotronDialog() },
             CenterAction("KI-MENTOR · GROQ (EINMALIG)") { showGroqMentorDialog() },
             CenterAction("UPDATES PRÜFEN UND LADEN", accent = true) {
                 startActivity(Intent(this, ContinuumOwnerUpdateActivity::class.java))
@@ -12269,6 +12271,132 @@ class AgentActivity : Activity() {
             .show()
     }
 
+
+    /**
+     * Owner-controlled NVIDIA direct BYOK key. This is not a backend token.
+     * AES-GCM Android Keystore encryption is shared with the existing OpenRouter path.
+     * Saving a key never contacts NVIDIA.
+     */
+    private fun showNvidiaNemotronKeyDialog() {
+        val field = EditText(this).apply {
+            hint = if (SecureTokenStore.loadNvidiaToken(this@AgentActivity) != null)
+                "Schlüssel gespeichert · neuen nvapi-Schlüssel zum Ersetzen" else "nvapi-..."
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            setSingleLine(true)
+            setPadding(dp(16), dp(12), dp(16), dp(12))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("NVIDIA Nemotron 3 Ultra · API-Schlüssel")
+            .setMessage(
+                "Füge deinen NVIDIA-API-Key von build.nvidia.com ein. " +
+                "Er wird verschlüsselt im Android-Keystore dieser Haupt-App gespeichert, " +
+                "niemals im APK-Code oder auf GitHub. " +
+                "Der Schlüssel allein startet keine Netzwerkanfrage. " +
+                "Weil der vorherige Schlüssel im Chat veröffentlicht wurde, " +
+                "solltest du ihn nach dem Test auf NVIDIA widerrufen."
+            )
+            .setView(field)
+            .setNegativeButton("ABBRECHEN", null)
+            .setNeutralButton("SCHLÜSSEL ENTFERNEN") { _, _ ->
+                SecureTokenStore.clearNvidiaToken(this)
+                addToolActivity("NVIDIA · lokaler API-Schlüssel entfernt")
+                Toast.makeText(this, "NVIDIA-Schlüssel am Gerät entfernt.", Toast.LENGTH_SHORT).show()
+            }
+            .setPositiveButton("VERSCHLÜSSELT SPEICHERN") { _, _ ->
+                val key = field.text.toString().trim()
+                if (!key.matches(Regex("nvapi-[A-Za-z0-9_-]{32,240}"))) {
+                    Toast.makeText(this, "Ungültiges NVIDIA-Key-Format.", Toast.LENGTH_LONG).show()
+                } else {
+                    runCatching { SecureTokenStore.saveNvidiaToken(this, key) }.fold(
+                        onSuccess = {
+                            Toast.makeText(this, "NVIDIA-Schlüssel sicher gespeichert.", Toast.LENGTH_LONG).show()
+                            addToolActivity("NVIDIA · Schlüssel gespeichert · keine Anfrage versendet")
+                        },
+                        onFailure = {
+                            Toast.makeText(this, "NVIDIA-Schlüssel konnte nicht gespeichert werden.", Toast.LENGTH_LONG).show()
+                        }
+                    )
+                }
+            }
+            .show()
+    }
+
+    /**
+     * Only a dedicated owner-confirmed turn contacts NVIDIA.
+     * Local chat, memory, Shizuku and tool permissions remain untouched.
+     */
+    private fun showNvidiaNemotronDialog(suggested: String = input.text.toString().trim()) {
+        if (busy) {
+            Toast.makeText(this, "Bitte zuerst den laufenden Auftrag beenden.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        restoreInternetMode()
+        if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF) {
+            AlertDialog.Builder(this)
+                .setTitle("Internet ist ausgeschaltet")
+                .setMessage("NVIDIA Nemotron ist ein Online-Modell. " +
+                    "Erst unter Systemstatus → INTERNET · FREIGABEN auf 'Auf Nachfrage' " +
+                    "oder 'Immer an' umstellen. Der normale Chat bleibt offline möglich.")
+                .setPositiveButton("OK", null)
+                .show()
+            return
+        }
+        if (SecureTokenStore.loadNvidiaToken(this) == null) {
+            showNvidiaNemotronKeyDialog()
+            return
+        }
+        val question = EditText(this).apply {
+            hint = "Welche einzelne Frage soll Nemotron 3 Ultra beantworten?"
+            setText(suggested.take(1800))
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            minLines = 2
+            maxLines = 5
+            setPadding(dp(16), dp(10), dp(16), dp(10))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Nemotron 3 Ultra · einmaliger NVIDIA-Test")
+            .setMessage("Nur die folgende einzelne Frage geht direkt über HTTPS an NVIDIA. " +
+                "Keine Chat-Historie, Erinnerungen, Geräteinformationen, Toolrechte " +
+                "oder Dateien. Maximal fünf lokale Versuche pro UTC-Tag. " +
+                "Der Anbieter kann Limits oder Gebühren festlegen. " +
+                "Keine automatische Cloud-Umschaltung oder Lernübernahme.")
+            .setView(question)
+            .setNegativeButton("LOKAL BLEIBEN", null)
+            .setPositiveButton("EINMALIG AN NVIDIA SENDEN") { _, _ ->
+                val content = question.text.toString().trim()
+                if (content.length !in 3..1800) {
+                    addAssistantMessage("NVIDIA-Frage muss 3 bis 1800 Zeichen lang sein.")
+                } else if (!busy) {
+                    restoreInternetMode()
+                    if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF) {
+                        addAssistantMessage("NVIDIA-Test blockiert: Internet inzwischen ausgeschaltet.")
+                    } else {
+                        addUserMessage(content)
+                        setBusy(true)
+                        addToolActivity("NVIDIA · einzelne Nemotron-Frage durch Benutzer freigegeben")
+                        NvidiaNemotronDirectClient(this).answer(content) { result ->
+                            setBusy(false)
+                            result.fold(
+                                onSuccess = { answer ->
+                                    addAssistantMessage("NVIDIA · NEMOTRON 3 ULTRA · EXTERN · UNBESTÄTIGT\n\n" +
+                                        answer + "\n\nKeine automatische Gedächtnisübernahme.")
+                                    addToolActivity("NVIDIA · Nemotron-Antwort empfangen · keine Geräte-Tools")
+                                },
+                                onFailure = { error ->
+                                    // Client never exposes upstream error body or credentials.
+                                    addAssistantMessage("NVIDIA Nemotron nicht verfügbar: " +
+                                        (error.message ?: error.javaClass.simpleName).take(160) +
+                                        ". Dein lokaler Chat bleibt unverändert.")
+                                    addToolActivity("NVIDIA · Anfrage ohne Lernübernahme beendet")
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+            .show()
+    }
+
     private fun showGroqMentorDialog(suggested: String = input.text.toString().trim()) {
         if (busy) {
             Toast.makeText(this, "Bitte zuerst den laufenden Auftrag beenden.", Toast.LENGTH_SHORT).show()
@@ -12422,6 +12550,12 @@ class AgentActivity : Activity() {
         }, matchWidth(top = 8))
         box.addView(actionButton("OPENROUTER · EINZELFRAGE STELLEN").apply {
             setOnClickListener { showOpenRouterMentorDialog() }
+        }, matchWidth(top = 8))
+        box.addView(actionButton("NVIDIA NEMOTRON 3 ULTRA · API-KEY").apply {
+            setOnClickListener { showNvidiaNemotronKeyDialog() }
+        }, matchWidth(top = 8))
+        box.addView(actionButton("NVIDIA NEMOTRON 3 ULTRA · EINZELFRAGE").apply {
+            setOnClickListener { showNvidiaNemotronDialog() }
         }, matchWidth(top = 8))
         box.addView(actionButton("OPENROUTER · GESICHERTER BACKEND-MENTOR").apply {
             setOnClickListener { showOpenRouterBackendMentorDialog() }
