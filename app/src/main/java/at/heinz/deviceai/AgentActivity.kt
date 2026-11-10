@@ -10470,7 +10470,13 @@ class AgentActivity : Activity() {
                         addToolActivity("CHIEF · " + line)
                     }
                 }
-            }),
+            }).let { observer ->
+                { event: at.heinz.deviceai.cognitive.AgentCognitiveEvent ->
+                    // Final result resolves ambiguous BLOCKED.
+                    if (event.state != at.heinz.deviceai.cognitive.CognitiveWorkState.BLOCKED)
+                        observer(event)
+                }
+            },
             onToolStarted = { callId, toolName ->
                 if (botTask == null && codingPlanning == null)
                     recordToolStarted(startedToolCalls, callId, toolName)
@@ -10502,13 +10508,12 @@ class AgentActivity : Activity() {
                     at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuard(
                         cancellation, localSessionId, imported).isCurrent(
                         activeChatCancellation, this@AgentActivity.sessionId, localRuntime.loadedModel)
-                cockpitTriggers.turnEnded(chiefTurn.turnId, chiefTurn.deliver())
-                finishLocalReasoningWorkScene(chiefTurn.turnId)
                 activeChatCancellation = null
                 activeOrchestrator = null
                 activeLocalRequest = false
                 planCard.visibility = View.GONE
                 if (!ownerDeliveryCurrent) {
+                    finishLocalConversationTurn(chiefTurn)
                     if (botTask == null && codingPlanning == null && sessionId == localSessionId &&
                         !ephemeralScreenRun.get()) {
                         lastLocalReply = null
@@ -10522,6 +10527,7 @@ class AgentActivity : Activity() {
                         sessionId != localSessionId ||
                         runCatching { cancellation.throwIfCancelled() }.isFailure ||
                         !LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel))) {
+                    finishLocalConversationTurn(chiefTurn)
                     finishBotTask(botTask, "Abgebrochen oder veraltet · mögliche Werkzeugwirkung prüfen")
                     addToolActivity("Bot-Auftrag beendet · veraltete Antwort verworfen; bereits gestartete Wirkungen können bestehen")
                     setBusy(false)
@@ -10532,6 +10538,7 @@ class AgentActivity : Activity() {
                     if(codingPlanning != null) {
                         val draft = if(planningDeliveryCurrent && run.blocker == null)
                             codingPlanning.decode(run.response) else null
+                        finishLocalConversationTurn(chiefTurn, run.takeIf { draft != null })
                         if(draft != null) showCodingTaskDraftDialog(draft)
                         addToolActivity(if(draft != null) "Coding-Entwurf bereit · vollständig prüfen; nichts übergeben oder gestartet"
                             else "Coding-Entwurf verworfen · keine gültige aktuelle Modellantwort")
@@ -10541,6 +10548,7 @@ class AgentActivity : Activity() {
                             internetConsent.revision() != internetRevisionAtTurnStart,
                             modelWebCalls, modelWebSessions.isNotEmpty(),
                             onlineResearchFrameUsed.get())) {
+                        finishLocalConversationTurn(chiefTurn)
                         lastLocalReply = null // Revoked turn cannot leave an old apparent-answer anchor.
                         if (botTask == null && sessionId == localSessionId && !ephemeralScreenRun.get())
                             localConversationContext.recordUnanswered(localSessionId, text)
@@ -10549,6 +10557,7 @@ class AgentActivity : Activity() {
                         return@onSuccess
                     }
                     if (modelWebSessions.any { !it.isAuthorized() }) {
+                        finishLocalConversationTurn(chiefTurn)
                         lastLocalReply = null
                         if (botTask == null && sessionId == localSessionId && !ephemeralScreenRun.get())
                             localConversationContext.recordUnanswered(localSessionId, text)
@@ -10557,11 +10566,13 @@ class AgentActivity : Activity() {
                         return@onSuccess
                     }
                     if(!at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {
+                        finishLocalConversationTurn(chiefTurn)
                         lastLocalReply = null
                         addToolActivity("Bildschirmfreigabe geändert: Antwort verworfen.")
                         botTask?.let { finishBotTask(it, "Bildschirmfreigabe geändert · Antwort verworfen") }
                         setBusy(false);return@onSuccess
                     }
+                    finishLocalConversationTurn(chiefTurn, run)
                     val hasPartialResponse = !run.responseComplete && run.response.isNotBlank()
                     val successful = run.responseComplete && run.blocker == null && run.response.isNotBlank()
                     val answerVerificationShadow = if (
@@ -10636,6 +10647,7 @@ class AgentActivity : Activity() {
                     refreshHologramState()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
                 }.onFailure { error ->
+                    finishLocalConversationTurn(chiefTurn)
                     if(codingPlanning != null) {
                         addToolActivity("Coding-Entwurf fehlgeschlagen · nichts übergeben oder gestartet")
                         return@onFailure
@@ -10694,6 +10706,19 @@ class AgentActivity : Activity() {
             }
             runOnUiThread { deliverResult() }
         }
+    }
+
+    private fun finishLocalConversationTurn(
+        turn: at.heinz.deviceai.chief.TurnLifecycle,
+        run: at.heinz.deviceai.cognitive.AgentRunResult? = null
+    ) {
+        if (!turn.deliver()) return
+        val accepted = run != null && run.responseComplete &&
+            run.blocker == null && run.response.isNotBlank()
+        val evidence = run?.taskEvidence
+        cockpitTriggers.turnEnded(turn.turnId, delivered = accepted,
+            outcomeVerified = accepted && evidence?.taskId == turn.turnId && evidence.outcomeVerified)
+        finishLocalReasoningWorkScene(turn.turnId)
     }
 
     /** Owner-local metadata only; telemetry is never memory or execution authority. */
