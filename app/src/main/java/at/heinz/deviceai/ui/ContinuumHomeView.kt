@@ -243,7 +243,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     var onNavigateTarget: ((String) -> Unit)? = null
         set(value) { field = value; refreshShellActionDescriptions() }
     private var selectedJarvisTarget = "home"
-    private var pressedJarvisTarget: String? = null
+    private var activatingShellAction: ShellActionView? = null
     private val shellActions = linkedMapOf<String, ShellActionView>()
     private var shellActionBounds: Map<String, JarvisShellLayout.Box> = emptyMap()
     private val shellRailList = ShellRailList(context)
@@ -262,6 +262,21 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         shellRailList.refreshSelection()
         if (jarvisShellStage) jarvisShell.tiles = shellTiles(state)
     }
+
+    /** Consumed within one native click. */
+    internal fun consumeActivatedControl(target: String): View? {
+        val view = activatingShellAction
+        activatingShellAction = null
+        return view?.takeIf {
+            it.target == target && it.isAttachedToWindow && it.isShown && it.isEnabled &&
+                it.width > 0 && it.height > 0
+        }
+    }
+
+    /** Own flight may hide its source. */
+    internal fun controlHiddenForWork(view: View): Boolean =
+        view is ShellActionView && view.visibility == INVISIBLE && deckHides(view.key) &&
+            shellActions[view.key] === view
 
     private fun openJarvisTarget(target: String) {
         val native = onNavigateTarget
@@ -593,7 +608,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         JarvisShellContent.tiles(s, System.currentTimeMillis(), subtitles = true).map { tile ->
             tile.copy(controlState = when {
                 tile.target !in JarvisShellContent.routes -> JarvisControlState.DISABLED
-                tile.target == pressedJarvisTarget -> JarvisControlState.PRESSED
+                jarvisShell.pressedControlKey == "tile:${tile.target}" -> JarvisControlState.PRESSED
                 tile.target == selectedJarvisTarget -> JarvisControlState.SELECTED
                 else -> JarvisControlState.NORMAL
             })
@@ -804,7 +819,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
             translationZ = density
             ContinuumControls.feedback(this, if (key.startsWith("dialog:")) 24f else 10f)
-            setOnClickListener { openJarvisTarget(target) }
+            setOnClickListener {
+                activatingShellAction = this
+                try { openJarvisTarget(target) } finally { activatingShellAction = null }
+            }
             refresh()
         }
 
@@ -821,18 +839,55 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             info.className = android.widget.Button::class.java.name
         }
 
-        @SuppressLint("ClickableViewAccessibility")
-        override fun onTouchEvent(event: MotionEvent): Boolean {
-            val handled = super.onTouchEvent(event)
-            val down = event.actionMasked != MotionEvent.ACTION_UP && event.actionMasked != MotionEvent.ACTION_CANCEL && isPressed
-            if (key.startsWith("tile:")) {
-                val wanted = target.takeIf { down }
-                if (pressedJarvisTarget != wanted) {
-                    pressedJarvisTarget = wanted
-                    jarvisShell.tiles = shellTiles(state)
-                }
+        private var pressX = .5f
+        private var pressY = .5f
+
+        private fun publishPress(down: Boolean) {
+            val before = jarvisShell.pressedControlKey
+            if (down && isEnabled && isShown && isAttachedToWindow && hasWindowFocus()) {
+                jarvisShell.controlPress = JarvisShellRenderer.ControlPress(key, target, pressX, pressY)
+            } else if (before == key) jarvisShell.controlPress = null
+            val after = jarvisShell.pressedControlKey
+            if (before != after && (before?.startsWith("tile:") == true || after?.startsWith("tile:") == true)) {
+                jarvisShell.tiles = shellTiles(state)
             }
             if (key.startsWith("rail:")) shellRailList.invalidate()
+        }
+
+        override fun setPressed(pressed: Boolean) {
+            super.setPressed(pressed)
+            publishPress(pressed)
+        }
+
+        override fun setEnabled(enabled: Boolean) {
+            super.setEnabled(enabled)
+            if (!enabled) publishPress(false)
+        }
+
+        override fun onDetachedFromWindow() {
+            publishPress(false)
+            super.onDetachedFromWindow()
+        }
+
+        override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
+            super.onWindowFocusChanged(hasWindowFocus)
+            if (!hasWindowFocus) publishPress(false)
+        }
+
+        override fun onVisibilityChanged(changedView: View, visibility: Int) {
+            super.onVisibilityChanged(changedView, visibility)
+            if (visibility != VISIBLE) publishPress(false)
+        }
+
+        @SuppressLint("ClickableViewAccessibility")
+        override fun onTouchEvent(event: MotionEvent): Boolean {
+            if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_MOVE) {
+                pressX = (event.x / width.coerceAtLeast(1)).coerceIn(0f, 1f)
+                pressY = (event.y / height.coerceAtLeast(1)).coerceIn(0f, 1f)
+            }
+            val handled = super.onTouchEvent(event)
+            publishPress(event.actionMasked != MotionEvent.ACTION_UP &&
+                event.actionMasked != MotionEvent.ACTION_CANCEL && isPressed)
             return handled
         }
     }

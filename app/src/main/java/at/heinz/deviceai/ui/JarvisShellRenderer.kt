@@ -40,6 +40,9 @@ object JarvisShellRenderer {
         Slot.CAMERA_STATUS, Slot.COCKPIT_SECONDARY)
     private val bare = setOf(Slot.AVATAR) + foregroundSlots
 
+    data class ControlPress(val key: String, val target: String,
+                            val xFraction: Float = .5f, val yFraction: Float = .5f)
+
     data class CinemaFrame(
         val elapsedMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS,
         val animatorScale: Float = 1f,
@@ -119,7 +122,7 @@ object JarvisShellRenderer {
              clearIdle: Boolean = false, resultForward: Boolean = false,
              fromWorkingScene: Boolean = false,
              interruptedAfterMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS,
-             returnResultElapsedMs: Long = -1L) {
+             returnResultElapsedMs: Long = -1L, controlPress: ControlPress? = null) {
         if (glass?.drawBackground(shell.width, shell.height, timeMs) != true) {
             background(p, shell.width, shell.height)
         }
@@ -234,7 +237,9 @@ object JarvisShellRenderer {
                 if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
                 JarvisTiles.drawSurface(p, box, tile, f.glow > .5f,
                     if (animatorScale > 0f) timeMs else 0L,
-                    luxuryDepth = luxuryDepth, lightSourceX = orbX, lightSourceY = orbY)
+                    luxuryDepth = luxuryDepth, lightSourceX = orbX, lightSourceY = orbY,
+                    pressX = controlPress?.takeIf { it.key == "tile:${tile.target}" }?.xFraction ?: .5f,
+                    pressY = controlPress?.takeIf { it.key == "tile:${tile.target}" }?.yFraction ?: .5f)
                 if (cinema.glassAlpha < 1f) p.restore()
             } else if (!ownsSurface) {
                 // Static HUD panels do not need repeated full-screen backdrop-blur copies.
@@ -264,6 +269,8 @@ object JarvisShellRenderer {
                     slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
                     slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
                         timeMs = if (animatorScale > 0f) timeMs else 0L,
+                        pressed = JarvisTiles.bottomNav.indexOfFirst { "bottom:${it.target}" == controlPress?.key },
+                        pressX = controlPress?.xFraction ?: .5f, pressY = controlPress?.yFraction ?: .5f,
                         cinemaElapsedMs = if (clearIdle) null else cinemaElapsed,
                         cinemaExiting = exiting && !clearIdle,
                         cinemaBudget = depthBudget, animatorScale = animatorScale)

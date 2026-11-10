@@ -2,6 +2,8 @@ package at.heinz.deviceai.ui
 
 import at.heinz.deviceai.ui.JarvisShellLayout.Box
 import kotlin.math.hypot
+import kotlin.math.sin
+import kotlin.math.PI
 
 /** EXP-52-CINE-DEPTH: source-directed, restrained glass for the ten real cockpit tiles. */
 object LuxuryHoloButtonRenderer {
@@ -19,11 +21,21 @@ object LuxuryHoloButtonRenderer {
         return (1f - distance / 950f).coerceIn(.12f, .72f)
     }
 
+    /** Native press, existing scene clock. */
+    fun pressure(pressed: Boolean, disabled: Boolean, timeMs: Long): Float {
+        if (!pressed || disabled) return 0f
+        if (timeMs <= 0L) return .85f
+        val phase = (timeMs % 1_200L) / 1_200f
+        return .85f + .15f * sin(phase * 2f * PI.toFloat())
+    }
+
     fun draw(p: ContinuumPainter, box: Box, sourceX: Float, sourceY: Float,
-             active: Boolean, disabled: Boolean, pressed: Boolean) {
+             active: Boolean, disabled: Boolean, pressed: Boolean,
+             timeMs: Long = 0L, pressX: Float = .5f, pressY: Float = .5f) {
         if (box.width <= 0f || box.height <= 0f) return
         val radius = minOf(10f, box.height / 2f)
-        val sink = if (pressed) 1.2f else 0f
+        val pressure = pressure(pressed, disabled, timeMs)
+        val sink = if (pressure > 0f) 1.8f else 0f
         val l = box.left + .4f * sink
         val t = box.top + sink
         val r = box.right - .4f * sink
@@ -36,7 +48,7 @@ object LuxuryHoloButtonRenderer {
         p.strokeRoundRect(l, t, r, b, radius, 8f, rim, .20f * alpha * glow)
         p.strokeRoundRect(l, t, r, b, radius, 3.6f, rim, .36f * alpha * glow)
         p.setAdditive(false)
-        if (!pressed) p.fillRoundRect(l + 1.5f, t + 4.5f, r + 1.5f, b + 5.5f,
+        if (pressure == 0f) p.fillRoundRect(l + 1.5f, t + 4.5f, r + 1.5f, b + 5.5f,
             radius, Fill.Solid(INSET_SHADOW), .60f * alpha)
         p.fillRoundRect(l, t, r, b, radius, Fill.Linear(l, t, l, b,
             intArrayOf(if (active) 0xE0122C4A.toInt() else OBSIDIAN_TOP, OBSIDIAN_BOTTOM)), .90f * alpha)
@@ -72,6 +84,19 @@ object LuxuryHoloButtonRenderer {
         p.drawLine(l + radius * 1.2f, t + .6f,
             l + (r - l) * (if (active) .75f else .43f), t + .6f,
             .8f, Fill.Solid(ICE_CYAN), (if (active) .67f else .25f * proximity) * alpha)
+        if (pressure > 0f) {
+            val x = l + (r - l) * (pressX.takeIf(Float::isFinite) ?: .5f).coerceIn(0f, 1f)
+            val y = t + (b - t) * (pressY.takeIf(Float::isFinite) ?: .5f).coerceIn(0f, 1f)
+            val contact = Fill.Radial(x, y, maxOf(r - l, b - t).coerceAtLeast(1f),
+                intArrayOf(ICE_CYAN, AMETHYST, Argb.withAlpha(ICE_CYAN, .08f)),
+                floatArrayOf(0f, .55f, 1f))
+            p.setAdditive(true)
+            try {
+                p.strokeRoundRect(l, t, r, b, radius, 6f, contact, .35f * pressure)
+                p.strokeRoundRect(l, t, r, b, radius, 1.8f, contact, .90f * pressure)
+            } finally { p.setAdditive(false) }
+        }
+
     }
 
     /** Shared holographic shelf under the tool dock. Decoration only; does not move hit targets. */
