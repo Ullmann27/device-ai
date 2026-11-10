@@ -1,0 +1,5 @@
+scenario	permutations	correct_priors	max_error	first_probe_variants	diagnoses	abstentions
+DEV-equal4	24	24	0.0	1	96	0
+HOLDOUT-unequal4	24	24	1.2772423896301177E-8	1	96	0
+HOLDOUT-equal6	720	720	4.967053740534411E-9	0	0	0
+METRICS wall_ns=85632496 cpu_ns=79544079 controls=26 energy_joules=UNAVAILABLE
