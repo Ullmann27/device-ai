@@ -4,6 +4,7 @@ import at.heinz.deviceai.avatar.AvatarGestureIntent
 import at.heinz.deviceai.avatar.AvatarExpression
 import at.heinz.deviceai.avatar.AvatarPose
 import at.heinz.deviceai.avatar.AvatarState
+import at.heinz.deviceai.avatar.AvatarSentenceGesture
 import at.heinz.deviceai.avatar.SpeechBoundary
 import at.heinz.deviceai.avatar.Viseme
 
@@ -60,7 +61,9 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
     }
 
     fun update(pose: AvatarPose, seconds: Float, motion: Boolean,
-               gazeBlinkEnabled: Boolean = false) {
+               gazeBlinkEnabled: Boolean = false,
+               eyeNeckCouplingEnabled: Boolean = true,
+               sentenceGesturesEnabled: Boolean = true) {
         weights.fill(0f)
         fun weight(name: String, value: Float) { weights[indices.getValue(name)] = finite(value, 0f, 1f) }
         val staticWindow = !motion && (pose.gazeDirected || pose.gesture == AvatarGestureIntent.WINDOW_FOCUS)
@@ -111,7 +114,7 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             visemeBlend.fill(0f); lastSeconds = Float.NaN
             layerSeconds = Float.NaN; speechAccent = 0f; speechSeconds = Float.NaN; blinkSeconds = Float.NaN
             gazeBlink.sample(gx, gy, seconds, enabled = false)
-            splitNeck(); return
+            splitNeck(eyeNeckCouplingEnabled); return
         }
         idleMotion.update(seconds)
         val work = pose.state == AvatarState.THINKING || pose.state == AvatarState.RESEARCHING || pose.state == AvatarState.LEARNING
@@ -161,8 +164,10 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         // Sentence ends of the spoken text (Director: text + TTS word range, no audio inference): a statement closes
         // with a small settling nod and a soft rebound, a question lifts the brows and slightly the chin on its last
         // word. A directed gaze keeps the head; the brows still move.
+        val sentenceEnd = AvatarSentenceGesture.published(
+            pose.sentenceEnd, pose.sentenceEndProgress, sentenceGesturesEnabled)
         val sentence = pose.sentenceEndProgress
-        if (sentence.isFinite() && sentence >= 0f && sentence <= 1f) when (pose.sentenceEnd) {
+        if (sentenceEnd != null && sentence.isFinite() && sentence >= 0f && sentence <= 1f) when (sentenceEnd) {
             SpeechBoundary.QUESTION -> {
                 val lift = questionLift(sentence)
                 val brow = indices.getValue("BrowUp")
@@ -170,7 +175,6 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
                 if (!pose.gazeDirected) headPitch -= QUESTION_CHIN_DEGREES * lift
             }
             SpeechBoundary.STATEMENT -> if (!pose.gazeDirected) headPitch += SETTLE_DEGREES * settle(sentence)
-            null -> Unit
         }
         val progress = pose.confirmationProgress
         if (progress.isFinite() && progress in 0f..1f) {
@@ -219,7 +223,7 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             gazeBlinkEnabled && motion && pose.gazeDirected && !syllableOpen)
         val totalLid = maxOf(scheduledLid, gazeLid)
         weight("BlinkLeft", totalLid); weight("BlinkRight", totalLid)
-        splitNeck()
+        splitNeck(eyeNeckCouplingEnabled)
     }
 
     /** Diagnostic-only override after normal mapping; null keeps production blink untouched. */
@@ -300,11 +304,16 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
 
     private fun smooth(x: Float): Float { val u = x.coerceIn(0f, 1f); return u * u * (3f - 2f * u) }
 
-    private fun splitNeck() {
+    private fun splitNeck(eyeNeckCouplingEnabled: Boolean) {
         headYaw = finite(headYaw, -MAX_HEAD_YAW_DEGREES, MAX_HEAD_YAW_DEGREES)
         headPitch = finite(headPitch, -MAX_HEAD_PITCH_DEGREES, MAX_HEAD_PITCH_DEGREES)
-        neckYaw = headYaw * NECK_SHARE
-        neckPitch = headPitch * NECK_SHARE
+        if (eyeNeckCouplingEnabled) {
+            neckYaw = headYaw * NECK_SHARE
+            neckPitch = headPitch * NECK_SHARE
+        } else {
+            neckYaw = 0f
+            neckPitch = 0f
+        }
     }
 
     companion object {

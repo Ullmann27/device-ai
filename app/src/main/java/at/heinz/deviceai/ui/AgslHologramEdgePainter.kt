@@ -77,3 +77,17 @@ internal class AgslHologramEdgePainter {
         """
     }
 }
+
+/**
+ * EXP14 coordinate contract: AGSL `main(float2 position)` receives overlay pixels, the same
+ * space as the chamfered stroke path and as [HollywoodFuiStageOverlay]'s `stage` bounds.
+ * UV = (position - origin) / extent, matching the RuntimeShader uniforms.
+ */
+internal object AgslHologramEdgeCoordinates {
+    fun uv(positionX: Float, positionY: Float, originX: Float, originY: Float,
+           extentX: Float, extentY: Float): Pair<Float, Float> {
+        val width = if (extentX > 1f) extentX else 1f
+        val height = if (extentY > 1f) extentY else 1f
+        return (positionX - originX) / width to (positionY - originY) / height
+    }
+}

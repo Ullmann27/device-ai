@@ -211,7 +211,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
                framing: AvatarFraming.Window? = null, diagnosticBlink: Float? = null,
                receipt: AvatarFrameReceipt? = null, coreEnergy: Float = 0f,
                cinematicLighting: Boolean = false, windowAccentArgb: Int? = null,
-               windowOpen: Boolean = false, gazeBlinkEnabled: Boolean = false): Boolean {
+               windowOpen: Boolean = false, gazeBlinkEnabled: Boolean = false,
+               eyeNeckCouplingEnabled: Boolean = true,
+               sentenceGesturesEnabled: Boolean = true): Boolean {
         val e = engine ?: return false
         if (width <= 0 || height <= 0 || !surface.isValid) return false
         if (viewportWidth != width || viewportHeight != height || appliedFraming != framingVersion) {
@@ -226,7 +228,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             camera!!.setProjection(Camera.Projection.ORTHO, fitted.left, fitted.right,
                 -fitted.halfHeight, fitted.halfHeight, .05, 10.0)
         }
-        mapper.update(pose, seconds, motion, gazeBlinkEnabled = gazeBlinkEnabled)
+        mapper.update(pose, seconds, motion, gazeBlinkEnabled = gazeBlinkEnabled,
+            eyeNeckCouplingEnabled = eyeNeckCouplingEnabled,
+            sentenceGesturesEnabled = sentenceGesturesEnabled)
         mapper.applyDiagnosticBlink(diagnosticBlink)
         applyGlow(if (motion) pose.speakEnergy else 0f)
         applyCoreLight(coreEnergy, cinematicLighting && motion, windowAccentArgb, windowOpen)

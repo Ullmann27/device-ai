@@ -59,6 +59,8 @@ private const val WINDOW_BACKING_ALPHA = .7f
 /** Rear sheets and the receding document plane (JarvisWorkWindowDepth): dark glass, a Fresnel rim, a top-edge glint. */
 private val DEPTH_GLASS_FILL = Fill.Solid(Colors.background)
 private val DEPTH_GLINT_FILL = Fill.Solid(Colors.cyanSoft)
+/** EXP03 plate: haze glass, not the generic window backing. Allocated once. */
+private val PROTECTED_DEPTH_FILL = Fill.Solid(Colors.backgroundHaze)
 private const val DEPTH_RADIUS_DP = 14f
 private const val HANDOVER_SLOT_LEFT_DP = 16f
 private const val HANDOVER_SLOT_TOP_DP = 60f
@@ -87,6 +89,13 @@ class JarvisWorkWindow(
     private var lastAnimatorScale = 1f
     private var phaseTiltDegrees = HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES
     internal var cinematicArcEnabled = false
+    /** EXP03: extra protected depth plates beyond [DEPTH_GLASS_FILL]. */
+    internal var protectedDepthSurfacesEnabled = false
+        set(value) {
+            if (field == value) return
+            field = value
+            requestFrame()
+        }
     internal var onCinematicFrame: ((Long, Long, Boolean, Float) -> Boolean)? = null
     internal var onPresentedCenter: ((Float, Float) -> Unit)? = null
     private val projectedCenter = FloatArray(2)
@@ -152,6 +161,7 @@ class JarvisWorkWindow(
     private val planeRect = RectF()
     private val slotRect = RectF()
     private val pageRect = RectF()
+    private val protectedDepthRect = RectF()
     private val painter = AndroidContinuumPainter(context.assets)
     private val opening = JarvisMotion.Presets.widget(JarvisMotion.Direction.DEPTH)
         .copy(distanceDp = 0f, fromScale = 0f)
@@ -674,6 +684,17 @@ class JarvisWorkWindow(
         painter.fillRoundRect(l, t, r, b, DEPTH_RADIUS_DP, DEPTH_GLASS_FILL, WINDOW_BACKING_ALPHA * alpha)
         painter.strokeRoundRect(l, t, r, b, DEPTH_RADIUS_DP, 1f, edge, .9f * alpha)
         painter.drawLine(l + DEPTH_RADIUS_DP, t, r - DEPTH_RADIUS_DP, t, 1.5f, DEPTH_GLINT_FILL, .35f * alpha)
+        if (protectedDepthSurfacesEnabled &&
+            JarvisProtectedDepthSurfaces.recess(rect, density, protectedDepthRect)) {
+            val pl = protectedDepthRect.left / density
+            val pt = protectedDepthRect.top / density
+            val pr = protectedDepthRect.right / density
+            val pb = protectedDepthRect.bottom / density
+            val plate = JarvisProtectedDepthSurfaces.plateAlpha(alpha)
+            painter.fillRoundRect(pl, pt, pr, pb, DEPTH_RADIUS_DP, PROTECTED_DEPTH_FILL, plate)
+            painter.strokeRoundRect(pl, pt, pr, pb, DEPTH_RADIUS_DP, 1f, DEPTH_GLINT_FILL,
+                JarvisProtectedDepthSurfaces.FRESNEL_ALPHA * alpha)
+        }
     }
 
     /** The real page (pixel canvas) from its place in the document window into the body's page slot. */

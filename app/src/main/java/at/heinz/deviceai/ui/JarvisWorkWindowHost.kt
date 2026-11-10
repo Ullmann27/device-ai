@@ -208,6 +208,8 @@ class JarvisWorkWindowHost(
                 JarvisCinematicSettings.Experiment.EXP_01_Z_GLASS)
             window.cinematicArcEnabled = arc
             window.cinematicEffectsEnabled = enabled
+            window.protectedDepthSurfacesEnabled = JarvisCinematicSettings.experimentEnabled(activity,
+                JarvisCinematicSettings.Experiment.EXP_03_DEPTH_GLASS)
         }
         applyCinematics()
         val preferenceListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->

@@ -23,4 +23,19 @@ object JarvisRenderQuality {
             coolInferenceLighting = inferenceActive && thermalStatus == 0)
         else -> Budget(Tier.HIGH, 16L, 70, 96, true)
     }
+
+    /**
+     * EXP15 contract on top of [resolve]: no second quality model and no second clock.
+     * Production (cinema not opted in) always keeps the resolved thermal budget. Under
+     * cinema opt-in the owner can turn the experiment off; hard safety floors
+     * (background, reduced motion, energy saving, severe thermal status) still apply.
+     */
+    fun adaptiveAnimation(foreground: Boolean, powerSave: Boolean, thermalStatus: Int?,
+                          reducedMotion: Boolean, inferenceActive: Boolean,
+                          cinemaOptIn: Boolean, experimentEnabled: Boolean): Budget {
+        val resolved = resolve(foreground, powerSave, thermalStatus, reducedMotion, inferenceActive)
+        if (!cinemaOptIn || experimentEnabled) return resolved
+        if (!foreground || powerSave || reducedMotion || (thermalStatus ?: 0) >= 3) return resolved
+        return Budget(Tier.HIGH, 16L, 70, 96, true)
+    }
 }

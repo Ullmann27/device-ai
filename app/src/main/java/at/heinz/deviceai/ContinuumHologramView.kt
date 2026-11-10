@@ -840,11 +840,15 @@ class ContinuumHologramView @JvmOverloads constructor(
         foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE
 
     private fun renderBudget(): at.heinz.deviceai.ui.JarvisRenderQuality.Budget {
-        val base = at.heinz.deviceai.ui.JarvisRenderQuality.resolve(
+        val cinemaOptIn = at.heinz.deviceai.ui.JarvisCinematicSettings.cinemaOptIn(context)
+        val exp15 = at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(context,
+            at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_15_FRAME_BUDGET)
+        val base = at.heinz.deviceai.ui.JarvisRenderQuality.adaptiveAnimation(
             foregroundActive && isAttachedToWindow && isShown && windowVisibility == VISIBLE,
             powerManager.isPowerSaveMode, thermalStatus,
             !animationsEnabled || !ValueAnimator.areAnimatorsEnabled(),
-            currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING)
+            currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING,
+            cinemaOptIn, exp15)
         val phase = when(currentState) {
             State.READY -> at.heinz.deviceai.ui.JarvisComputePhasePolicy.Phase.IDLE
             State.LISTENING -> at.heinz.deviceai.ui.JarvisComputePhasePolicy.Phase.LISTENING
@@ -1043,7 +1047,13 @@ class ContinuumHologramView @JvmOverloads constructor(
                             at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(context,
                                 at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_06_FACE_LIGHT),
                         gazeBlinkEnabled = at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(context,
-                            at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_09_FOCUS_BLINK)
+                            at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_09_FOCUS_BLINK),
+                        eyeNeckCouplingEnabled = !at.heinz.deviceai.ui.JarvisCinematicSettings.cinemaOptIn(context) ||
+                            at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(context,
+                                at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_07_GAZE),
+                        sentenceGesturesEnabled = !at.heinz.deviceai.ui.JarvisCinematicSettings.cinemaOptIn(context) ||
+                            at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(context,
+                                at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_10_SENTENCE)
                     )
                 }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
