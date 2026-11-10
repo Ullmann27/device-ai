@@ -78,10 +78,22 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
         if (changed) end(report.id, ok)
     }
 
-    fun turnEnded(turnId: String, delivered: Boolean) {
+    @JvmOverloads
+    fun turnEnded(turnId: String, delivered: Boolean, outcomeVerified: Boolean = false) {
         val changed = update(turnId) { list ->
-            for (i in list.indices) if (list[i].state == StepState.ACTIVE || list[i].state == StepState.WAITING)
-                list[i] = list[i].copy(state = if (delivered) StepState.DONE else StepState.FAILED)
+            for (i in list.indices) {
+                val step = list[i]
+                if (step.state != StepState.ACTIVE && step.state != StepState.WAITING) continue
+                val state = when {
+                    step.state == StepState.WAITING -> StepState.BLOCKED
+                    !delivered -> StepState.FAILED
+                    step.key == "work" && outcomeVerified -> StepState.DONE
+                    else -> StepState.UNVERIFIED
+                }
+                list[i] = step.copy(state = state,
+                    label = if (step.key == "work" && state == StepState.UNVERIFIED)
+                        "Antwort erstellt" else step.label)
+            }
         }
         if (changed) end(turnId, delivered)
     }

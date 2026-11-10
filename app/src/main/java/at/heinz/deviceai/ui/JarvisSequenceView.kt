@@ -232,7 +232,7 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         if (old != state) when (state) {
             StepState.DONE -> stepFinished(id, true)
             StepState.FAILED, StepState.BLOCKED -> stepFinished(id, false)
-            StepState.ACTIVE, StepState.WAITING -> Unit
+            StepState.ACTIVE, StepState.WAITING, StepState.UNVERIFIED -> Unit
         }
         stepStates[id] = state
     }

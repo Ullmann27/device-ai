@@ -62,6 +62,48 @@ class CockpitAnimationTriggersTest {
         assertEquals("No animation for a closed turn", before, events.size)
     }
 
+    @Test fun deliveryAloneDoesNotConfirmWorkOrToolOutcome() {
+        triggers.commandAcknowledged("unverified", "Prüfe die Datei")
+        triggers.toolStarted("unverified", "pending", "list_downloads")
+        triggers.turnEnded("unverified", delivered = true)
+        val states = triggers.timeline("unverified").associate { it.key to it.state.name }
+        assertEquals("UNVERIFIED", states["work"])
+        assertEquals("UNVERIFIED", states["tool:pending"])
+    }
+
+    @Test fun deliveredReplyCannotApproveWaitingStep() {
+        triggers.commandAcknowledged("waiting", "Lösche die Datei")
+        triggers.milestone("waiting", TurnMilestone.APPROVAL_NEEDED)
+        triggers.turnEnded("waiting", delivered = true)
+        assertEquals(StepState.BLOCKED, triggers.timeline("waiting").last().state)
+    }
+
+    @Test fun deliveryPreservesPreviouslyObservedToolFailure() {
+        triggers.commandAcknowledged("failed-tool", "Lies die Datei")
+        triggers.toolStarted("failed-tool", "failure", "list_downloads")
+        triggers.toolFinished("failed-tool", "failure", "list_downloads", succeeded = false)
+        triggers.turnEnded("failed-tool", delivered = true)
+        assertEquals(StepState.FAILED, triggers.timeline("failed-tool").last().state)
+    }
+
+    @Test fun verifiedOutcomeConfirmsWorkButDoesNotInventToolReceipt() {
+        triggers.commandAcknowledged("verified", "Prüfe die Datei")
+        triggers.toolStarted("verified", "known", "list_downloads")
+        triggers.toolFinished("verified", "known", "list_downloads", succeeded = true)
+        triggers.toolStarted("verified", "unknown", "list_downloads")
+        triggers.turnEnded("verified", delivered = true, outcomeVerified = true)
+        val states = triggers.timeline("verified").associate { it.key to it.state }
+        assertEquals(StepState.DONE, states["work"])
+        assertEquals(StepState.DONE, states["tool:known"])
+        assertEquals(StepState.UNVERIFIED, states["tool:unknown"])
+    }
+
+    @Test fun undeliveredOutcomeNeverConfirmsWork() {
+        triggers.commandAcknowledged("dropped", "Prüfe die Datei")
+        triggers.turnEnded("dropped", delivered = false, outcomeVerified = true)
+        assertEquals(StepState.FAILED, triggers.timeline("dropped").last().state)
+    }
+
     @Test fun workerStartAndReportAreTheirOwnTimeline() {
         triggers.workerStarted("status-1", "Teamleiterstatus lesen")
         assertEquals(CockpitAction.WORKER, only<CockpitAnimationEvent.ActionStarted>().single().action)
