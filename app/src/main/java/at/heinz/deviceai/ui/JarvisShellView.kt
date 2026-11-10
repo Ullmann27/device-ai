@@ -46,6 +46,8 @@ class JarvisShellView(context: Context) : View(context) {
     var foldRail: JarvisShellLayout.Rail = JarvisShellLayout.Rail.LABELLED
         set(value) { field = value; invalidate() }
     private var startMs = -1L
+    private var workStartMs = -1L
+    private var exitMs = -1L
     private var layoutFont = 0f
     private var layoutRail: JarvisShellLayout.Rail? = null
     private var layoutInset = Float.NaN
@@ -204,7 +206,24 @@ class JarvisShellView(context: Context) : View(context) {
             }
     }
 
-    fun playEntrance() { startMs = SystemClock.uptimeMillis(); postInvalidateOnAnimation() }
+    fun playEntrance() {
+        val now = SystemClock.uptimeMillis()
+        startMs = now
+        workStartMs = now
+        exitMs = -1L
+        postInvalidateOnAnimation()
+    }
+
+    fun playWorkWindowEntrance() {
+        workStartMs = SystemClock.uptimeMillis()
+        exitMs = -1L
+        postInvalidateOnAnimation()
+    }
+
+    fun playExit() {
+        exitMs = SystemClock.uptimeMillis()
+        postInvalidateOnAnimation()
+    }
 
     private fun animatorScale(): Float =
         Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)
@@ -218,7 +237,17 @@ class JarvisShellView(context: Context) : View(context) {
         val s = currentShell() ?: return
         val scale = animatorScale()
         val now = SystemClock.uptimeMillis()
-        val elapsed = if (startMs < 0) Long.MAX_VALUE / 4 else now - startMs
+        val exiting = exitMs >= 0L
+        val elapsed = when {
+            exiting -> now - exitMs
+            startMs < 0 -> Long.MAX_VALUE / 4
+            else -> now - startMs
+        }
+        val workElapsed = when {
+            exiting -> now - exitMs
+            workStartMs >= 0L -> now - workStartMs
+            else -> elapsed
+        }
         painter.begin(canvas); glass.begin(canvas, d, width, height)
         textPainter.fontScale = font
         canvas.save(); canvas.scale(d, d)
@@ -241,7 +270,8 @@ class JarvisShellView(context: Context) : View(context) {
             JarvisCinematicSettings.Experiment.EXP_05_WINGS)
         JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true,
             deckClearance = deckClearance, missionClearance = missionClearance,
-            luxuryDepth = luxuryDepth, depthBudget = motionBudgetProvider?.invoke(), enableWings = wings)
+            luxuryDepth = luxuryDepth, depthBudget = motionBudgetProvider?.invoke(), enableWings = wings,
+            exiting = exiting, workElapsedMs = workElapsed)
         canvas.restore()
         var workWindowMoving = false
         val effectiveScale = if (motionAllowed(scale)) scale else 0f
@@ -249,13 +279,18 @@ class JarvisShellView(context: Context) : View(context) {
             if (listener(now, effectiveScale)) workWindowMoving = true
         }
         onFrameDrawn?.invoke()
-        val total = JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, s.boxes.size + s.tileBoxes().size, animatorScale = scale)
+        val count = s.boxes.size + s.tileBoxes().size
+        val total = maxOf(
+            JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, count, animatorScale = scale),
+            JarvisCinemaEntrance.ensembleDurationMs(count, animatorScale = scale, exiting = exiting))
         // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
         removeCallbacks(ambientFrame)
         val deckStillMoving = kotlin.math.abs(deckClearance - tileTarget) > .0001f ||
             kotlin.math.abs(missionClearance - missionTarget) > .0001f
         val frameDelay = motionBudgetProvider?.invoke()?.frameDelayMillis ?: 16L
-        if (motionAllowed(scale) && (workWindowMoving || deckStillMoving || startMs >= 0 && elapsed < total)) {
+        val cinemaRunning = if (exiting) exitMs >= 0 && elapsed < total
+            else (startMs >= 0 || workStartMs >= 0) && elapsed < total
+        if (motionAllowed(scale) && (workWindowMoving || deckStillMoving || cinemaRunning)) {
             if (frameDelay <= 16L) postInvalidateOnAnimation() else postDelayed(ambientFrame, frameDelay)
         } else if (ambientMotion(scale)) postDelayed(ambientFrame, maxOf(66L, frameDelay))
         if (frameLogging) recordFrame(drawStartedNanos, System.nanoTime())

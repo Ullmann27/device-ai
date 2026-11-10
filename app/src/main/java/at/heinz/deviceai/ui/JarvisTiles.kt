@@ -291,7 +291,9 @@ object JarvisTiles {
      * [timeMs] 0 (reduced motion / still preview) skips the quiet edge energy.
      */
     fun drawBottomNav(p: ContinuumPainter, b: Box, items: List<NavItem> = bottomNav, selected: Int = 0,
-                      timeMs: Long = 0L, pressed: Int = -1) {
+                      timeMs: Long = 0L, pressed: Int = -1,
+                      cinemaElapsedMs: Long? = null, cinemaExiting: Boolean = false,
+                      cinemaBudget: JarvisRenderQuality.Budget? = null, animatorScale: Float = 1f) {
         if (items.isEmpty()) return
         val cells = bottomNavItemBoxes(b, items)
         val inset = 3f
@@ -299,12 +301,31 @@ object JarvisTiles {
             val cell = cells[i]
             val tile = Box(cell.left + inset, b.top + 4f, cell.right - inset, b.bottom - 4f)
             if (tile.width <= 2f || tile.height <= 2f) return@forEachIndexed
+            val cinema = if (cinemaElapsedMs != null) JarvisCinemaEntrance.pose(
+                JarvisCinemaEntrance.Kind.DOCK, i, cinemaElapsedMs, cinemaExiting,
+                side = if (i < items.size / 2) -1f else 1f, budget = cinemaBudget, animatorScale = animatorScale)
+                else JarvisCinemaEntrance.SETTLED
+            if (cinema.hidden && cinema.rimAlpha < 0.01f) return@forEachIndexed
+            p.save()
+            p.translate(cinema.dx, cinema.dy)
+            p.scale(cinema.scale, cinema.scale, tile.centerX, tile.centerY)
+            if (cinema.tiltY != 0f) p.rotate(cinema.tiltY * .25f, tile.centerX, tile.centerY)
             val active = i == selected || i == pressed
             val model = JarvisTile(it.target, it.label, it.icon,
                 controlState = if (i == pressed) JarvisControlState.PRESSED
                     else if (i == selected) JarvisControlState.SELECTED
                     else JarvisControlState.NORMAL)
+            if (cinema.glassAlpha < 0.02f && cinema.rimAlpha > 0.02f) {
+                p.strokeRoundRect(tile.left, tile.top, tile.right, tile.bottom, 10f, 1.4f,
+                    Fill.Solid(Colors.cyan), cinema.rimAlpha)
+                p.restore()
+                return@forEachIndexed
+            }
+            if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
             drawSurface(p, tile, model, active, timeMs)
+            if (cinema.glassAlpha < 1f) p.restore()
+            if (cinema.contentAlpha < 0.01f) { p.restore(); return@forEachIndexed }
+            if (cinema.contentAlpha < 1f) p.saveAlpha(cinema.contentAlpha)
             val iconSize = minOf(22f, tile.height * .38f, tile.width * .42f)
             val iy = tile.top + tile.height * .38f
             val color = if (it.target == "system") Colors.violetSoft else if (active) Colors.cyan else Colors.cyanSoft
@@ -317,6 +338,8 @@ object JarvisTiles {
             val label = if (p.measureText(it.label, style) <= room) it.label else short
             p.drawText(JarvisShellRenderer.fit(p, label, style, room), tile.centerX, tile.bottom - 8f,
                 style, Fill.Solid(if (active) Colors.text else Colors.textSecondary), TextAlign.CENTER)
+            if (cinema.contentAlpha < 1f) p.restore()
+            p.restore()
         }
     }
 }

@@ -163,8 +163,13 @@ class CockpitAnimationPresenter(
     private fun legacyPresent(event: CockpitAnimationEvent) {
         if (event is CockpitAnimationEvent.AreaChanged) return playArea(event)
         if (home.jarvisShellStage) {
-            // Shell stage: pattern B entrance inside JarvisShellView (JarvisMotion).
-            if (event is CockpitAnimationEvent.CommandFlyIn) home.jarvisShell.playEntrance()
+            // Shell stage: cinema entrance/exit inside JarvisShellView (same uptime clock, real events only).
+            when (JarvisCinemaEntrance.triggerFor(event)) {
+                JarvisCinemaEntrance.Trigger.ENTER -> home.jarvisShell.playEntrance()
+                JarvisCinemaEntrance.Trigger.STEP -> home.jarvisShell.playWorkWindowEntrance()
+                JarvisCinemaEntrance.Trigger.EXIT -> home.jarvisShell.playExit()
+                JarvisCinemaEntrance.Trigger.IGNORE -> Unit
+            }
             return
         }
         if (!home.landscapeCockpit) return
