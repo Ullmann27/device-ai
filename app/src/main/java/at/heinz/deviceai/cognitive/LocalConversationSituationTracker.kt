@@ -19,7 +19,13 @@ internal class LocalConversationSituationTracker(
 
     private val model = ConversationSituationModel(normalization = normalization)
 
-    fun reset() = model.reset()
+    fun reset(preserveWorkingTask: Boolean = false) = model.reset(preserveWorkingTask)
+
+    fun bindWorkingTask(seed: WorkingTaskSeed) = model.bindWorkingTask(seed)
+    fun workingTaskSnapshot() = model.workingTaskSnapshot()
+    fun resolveWorkingTask(request: String) = model.resolveWorkingTask(request)
+    fun invalidateWorkingTaskReference(referenceId: String) = model.invalidateWorkingTaskReference(referenceId)
+    fun isWorkingTaskPlanCurrent(plan: WorkingTaskPlan) = model.isWorkingTaskPlanCurrent(plan)
 
     fun observeOwnerTurn(text: String) {
         val clean = text.trim().take(512)
