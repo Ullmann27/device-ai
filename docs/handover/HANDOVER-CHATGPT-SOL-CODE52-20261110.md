@@ -50,3 +50,8 @@ Referenzbilder liegen privat auf Heinz' Grok-Box (/workspace/continuum-code52-re
 - #711 Bot 07 @0e9cf845: Compact-Layout 412×915 ohne Überlauf (914,9 dp statt 2632 dp, Host-Java2D); GlassBackend-Hooks in JarvisShellRenderer.draw() verdrahtet (Test JarvisShellRendererGlassHookTest). QA 42823322682 lief.
 - **Merge-Hinweis:** #710 und #711 ändern beide `JarvisShellRenderer.kt` → Konflikt sorgfältig von Hand lösen (Wegflug-Choreografie von #710 plus Layout und Glas-Hooks von #711 behalten).
 - #703-Inhalte sind sowohl in #706 als auch in #709 (Cherry-Picks); beim Zusammenführen nur einmal übernehmen.
+
+## Nachtrag 14:35 – Kandidat zusammengeführt
+- `code52/grok-release-candidate-0351-20261110` (#706) jetzt @`a21f2bed8e06c81267897bf99abdeae4c348cad5` = e6db897f + #708 + #711 + #710 (normale Merges). Einziger Konflikt: JarvisShellRenderer.draw()-Signatur, gelöst durch Kombination (Bot-04-Parameter fromWorkingScene/interruptedAfterMs plus Bot-07-GlassBackend-Hook mit Fallback).
+- Lokal `node --test .github/continuum/*.test.mjs`: 1601 bestanden, 9 fehlgeschlagen, 19 übersprungen. Alle 9 Fehler liegen in `coding-orchestrator-failure-report.test.mjs` (Backend, von den Merges nicht berührt). Vermutlich Box-Umgebung (vgl. die chroot/toolchain-Artefakte, die Bot 15 gemeldet hat); im CI prüfen.
+- Exakter QA-Lauf auf a21f2bed wurde durch den Push gestartet: Ergebnis lesen und Rotes reparieren. #709 (Altbestand) ist noch NICHT gemerged; seine #703-Cherry-Picks sind bereits im Kandidaten.
