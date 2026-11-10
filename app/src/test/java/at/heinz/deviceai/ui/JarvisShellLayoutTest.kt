@@ -133,9 +133,9 @@ class JarvisShellLayoutTest {
         assertEquals(Argb.of(250, 0x04, 0x0B, 0x1C), JarvisDesign.Colors.surface)
         assertEquals(Argb.rgb(0x17, 0x68, 0x7F), JarvisDesign.Colors.rim)
         assertEquals(Argb.rgb(0x03, 0x07, 0x15), JarvisDesign.Colors.backgroundBottom)
-        // ref5 component styles (px x 0.642 = dp)
+        // Ref-B retains the measured component dimensions while enlarging tile captions to 15sp for legibility.
         assertEquals(51f, JarvisDesign.Styles.tile.height, 0f); assertEquals(14f, JarvisDesign.Styles.tile.radius, 0f)
         assertEquals(32f, JarvisDesign.Styles.button.height, 0f); assertEquals(22f, JarvisDesign.Styles.pill.height, 0f)
-        assertEquals(13f, JarvisDesign.Type.tileLabel.size, 0f); assertEquals(10f, JarvisDesign.Type.subtitle.size, 0f)
+        assertEquals(15f, JarvisDesign.Type.tileLabel.size, 0f); assertEquals(10f, JarvisDesign.Type.subtitle.size, 0f)
     }
 }
