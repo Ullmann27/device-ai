@@ -124,3 +124,9 @@ Only then consider the canonical Kotlin ComputeFabric path in disabled shadow.
 Independent model/device/permission/thermal evidence and owner approval remain
 mandatory before activation. Remove this lab directory and its handoff to
 roll back; there are no application imports.
+
+The follow-up [seven-workday plan](SEVEN-DAY-PLAN.md) extends the existing #716
+context/voice protocol with measurable compute, memory and event gates.
+[Quality profiles](QUALITY-PROFILES.md) maps the existing Android policies and
+marks the future desktop runtime NOT_IMPLEMENTED. These documents add no
+execution evidence and do not change the rejected promotion decision.
