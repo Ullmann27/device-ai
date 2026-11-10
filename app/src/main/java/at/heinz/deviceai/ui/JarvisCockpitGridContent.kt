@@ -106,7 +106,7 @@ object JarvisCockpitGridContent {
                 p.restore()
             }
             Slot.STATUS -> JarvisCockpitPanels.drawStatusBar(p, b, s)
-            Slot.DIALOG -> dialog(p, b, s, shell)
+            Slot.DIALOG -> dialog(p, b, s, shell, now)
             Slot.INPUT -> input(p, b, s, shell)
             Slot.USER_CARD -> {
                 if (at.heinz.deviceai.cockpit.JarvisUserCardSlot.renderer == null)
@@ -253,38 +253,91 @@ object JarvisCockpitGridContent {
         }
     }
 
-    private fun dialog(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, shell: Shell?) {
-        val title = Type.heading.copy(size = (b.width * .095f).coerceIn(16f, 22f))
-        val detail = Type.caption.copy(size = 14f)
-        val badge = when {
-            s.presentation.listening -> "Hört zu"
-            s.presentation.speaking -> "Spricht"
-            s.presentation.processing -> "Denkt nach"
-            s.model.online -> "Bereit"
-            else -> s.model.stateLabel
+    fun liveBadge(s: ContinuumDashboardState): String = when {
+        s.presentation.listening -> "Hört zu"
+        s.presentation.speaking -> "Spricht"
+        s.presentation.processing -> "Denkt nach"
+        s.model.online -> "Bereit"
+        else -> s.model.stateLabel
+    }
+
+    /**
+     * Bar heights 0..1 from the measured PCM envelope.
+     * Missing signal → all zeros (drawn flat / "—"); never synthesizes speech energy.
+     */
+    fun liveWaveformHeights(level: Float?, bars: Int = 14, nowMs: Long = 0L): List<Float> {
+        val count = bars.coerceAtLeast(1)
+        if (level == null) return List(count) { 0f }
+        val amp = level.coerceIn(0f, 1f)
+        return List(count) { i ->
+            val t = if (count == 1) .5f else i / (count - 1f)
+            val envelope = .35f + .65f * kotlin.math.sin(Math.PI * t).toFloat()
+            val wave = if (nowMs <= 0L || amp == 0f) 1f
+            else {
+                val phase = (nowMs % 1000L) / 1000f * (2f * Math.PI.toFloat())
+                .72f + .28f * kotlin.math.sin(phase + i * .65f)
+            }
+            amp * envelope * wave
         }
-        val height = p.capHeight(title) + p.capHeight(detail) + 7f
-        val top = b.centerY - height / 2f
+    }
+
+    fun liveTaskText(s: ContinuumDashboardState): String = JarvisCockpitPanels.activeTaskText(s)
+
+    private fun dialog(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, shell: Shell?, now: Long) {
+        val title = Type.heading.copy(size = (b.width * .095f).coerceIn(16f, 22f))
+        val detail = Type.caption.copy(size = 12f)
+        val badge = liveBadge(s)
         val x = b.left + 42f
-        val room = b.right - x - 23f
-        ContinuumIcons.draw(p, Icon.PULSE, b.left + 23f, b.centerY, 23f, Fill.Solid(Colors.cyan))
-        p.drawText(fit(p, "JARVIS", title, room), x, top + p.capHeight(title), title, Fill.Solid(Colors.cyan))
-        p.drawText(fit(p, badge, detail, room), x, top + height, detail, Fill.Solid(Colors.textSecondary))
+        val room = b.right - x - 18f
+        ContinuumIcons.draw(p, Icon.PULSE, b.left + 23f, b.top + 16f, 20f, Fill.Solid(Colors.cyan))
+        val live = Type.caption.copy(size = 10f)
+        p.drawText(fit(p, "JARVIS", title, room * .7f), x, b.top + 8f + p.capHeight(title), title, Fill.Solid(Colors.cyan))
+        p.drawText("Live", b.right - 14f, b.top + 8f + p.capHeight(live), live,
+            Fill.Solid(if (s.presentation.live || s.model.online) Colors.ok else Colors.textMuted), TextAlign.RIGHT)
+        val waveTop = b.top + 8f + p.capHeight(title) + 6f
+        val waveBottom = minOf(b.bottom - p.capHeight(detail) - 10f, waveTop + 18f)
+        val level = s.presentation.measuredAudio
+        drawWaveform(p, Box(x, waveTop, b.right - 28f, waveBottom), level, now)
+        val task = liveTaskText(s)
+        val line = if (task != JarvisCockpitPanels.NONE) task else badge
+        p.drawText(fit(p, line, detail, room), x, b.bottom - 7f, detail, Fill.Solid(Colors.textSecondary))
         p.fillCircle(b.right - 14f, b.centerY + 8f, 3f,
             Fill.Solid(if (s.presentation.live || s.model.online) Colors.ok else Colors.textMuted))
+    }
+
+    private fun drawWaveform(p: ContinuumPainter, b: Box, level: Float?, now: Long) {
+        if (b.width <= 4f || b.height <= 4f) return
+        val heights = liveWaveformHeights(level, 14, now)
+        val gap = 1.6f
+        val barW = ((b.width - (heights.size - 1) * gap) / heights.size).coerceAtLeast(.8f)
+        val mid = b.centerY
+        heights.forEachIndexed { i, h ->
+            val cx = b.left + i * (barW + gap) + barW / 2f
+            val half = maxOf(1f, b.height * .5f * (if (level == null) .08f else h.coerceIn(0f, 1f)))
+            p.fillRoundRect(cx - barW / 2f, mid - half, cx + barW / 2f, mid + half, 1f,
+                Fill.Solid(if (level == null) Colors.textMuted else Colors.cyan),
+                if (level == null) .45f else .9f)
+        }
     }
 
     private fun input(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, shell: Shell?) {
         val textBox = shell?.inputConversationBox() ?: Box(b.left + 12f, b.top, b.right - 12f, b.bottom)
         val controls = shell?.dialogControlBoxes().orEmpty()
+        val taskRunning = JarvisCockpitPanels.isOwnerTaskRunning(s)
         controls.forEachIndexed { i, box ->
+            val stop = taskRunning && i != 0
             val active = i == 0 && s.presentation.listening
-            val color = if (active) Colors.ok else Colors.cyan
+            val color = if (stop) Colors.magenta else if (active) Colors.ok else Colors.cyan
             val radius = minOf(15f, box.width * .36f)
-            JarvisNeon.halo(p, box.centerX, box.centerY, radius * 1.5f, color, if (active) .20f else .07f)
+            JarvisNeon.halo(p, box.centerX, box.centerY, radius * 1.5f, color, if (active || stop) .20f else .07f)
             if (i == 0) {
                 p.strokeCircle(box.centerX, box.centerY, radius, 1f, Fill.Solid(color))
                 microphoneGlyph(p, box.centerX, box.centerY, 17f, color)
+            } else if (stop) {
+                p.strokeCircle(box.centerX, box.centerY, radius, 1f, Fill.Solid(color))
+                val k = 6f
+                p.fillRoundRect(box.centerX - k, box.centerY - k, box.centerX + k, box.centerY + k,
+                    2f, Fill.Solid(color))
             } else {
                 p.save(); p.translate(box.centerX - 14f, box.centerY - 14f)
                 p.scale(28f / 24f, 28f / 24f)
@@ -295,6 +348,10 @@ object JarvisCockpitGridContent {
         p.drawLine(textBox.left, b.centerY - 14f, textBox.left, b.centerY + 14f,
             .8f, Fill.Solid(Colors.cyanSoft), .55f)
         val room = textBox.width - 18f
+        if (taskRunning) {
+            drawActiveTask(p, textBox, s, room)
+            return
+        }
         val latest = s.cockpit.dialog.lastOrNull { !it.fromOwner }?.text
             ?.takeIf { it.isNotBlank() && (s.presentation.processing || s.presentation.speaking) }
         val prompt = when {
@@ -313,6 +370,30 @@ object JarvisCockpitGridContent {
         visible.forEachIndexed { i, line ->
             p.drawText(line, textBox.left + 10f, top + p.capHeight(style) + i * lineHeight,
                 style, Fill.Solid(Colors.text))
+        }
+    }
+
+    private fun drawActiveTask(p: ContinuumPainter, textBox: Box, s: ContinuumDashboardState, room: Float) {
+        val caption = Type.caption
+        val body = Type.body.copy(size = 15f)
+        val heading = fit(p, "Aktiver Auftrag", caption, room)
+        p.drawText(heading, textBox.left + 10f, textBox.top + 8f + p.capHeight(caption),
+            caption, Fill.Solid(Colors.cyan))
+        val timer = JarvisCockpitPanels.formatElapsed(JarvisCockpitPanels.activeTaskElapsedMillis(s))
+        val timerRoom = p.measureText(timer, caption)
+        p.drawText(timer, textBox.right - 8f, textBox.top + 8f + p.capHeight(caption),
+            caption, Fill.Solid(Colors.textSecondary), TextAlign.RIGHT)
+        val task = JarvisCockpitPanels.activeTaskText(s)
+        val taskRoom = room - timerRoom - 16f
+        p.drawText(fit(p, task, body, taskRoom), textBox.left + 10f,
+            textBox.centerY + p.capHeight(body) / 2f + 4f, body, Fill.Solid(Colors.text))
+        JarvisCockpitPanels.activeTaskProgress(s)?.let { (done, total) ->
+            val track = Box(textBox.left + 10f, textBox.bottom - 8f, textBox.right - 8f, textBox.bottom - 5f)
+            p.fillRoundRect(track.left, track.top, track.right, track.bottom, 2f, Fill.Solid(Colors.rim), .45f)
+            val frac = if (total <= 0) 0f else done.toFloat() / total.toFloat()
+            val fillTo = track.left + track.width * frac.coerceIn(0f, 1f)
+            if (fillTo > track.left)
+                p.fillRoundRect(track.left, track.top, fillTo, track.bottom, 2f, Fill.Solid(Colors.cyan), .9f)
         }
     }
 

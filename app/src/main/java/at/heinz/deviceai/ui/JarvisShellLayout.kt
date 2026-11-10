@@ -7,6 +7,17 @@ import at.heinz.deviceai.ui.JarvisWindowProfile.WidthClass
 object JarvisShellLayout {
     /** Kept for existing callers; layout decisions use the explicit [JarvisWindowProfile] width classes. */
     enum class FormFactor { PHONE_PORTRAIT, FOLD_OPEN, TABLET_LANDSCAPE }
+
+    /** One-row holographic tool dock that replaces the retired left rail. */
+    const val TOOL_DOCK_HEIGHT_DP = 76f
+    const val TOOL_DOCK_GAP_DP = 12f
+    /** Extra height so the status slot can show the telemetry band plus the full status line. */
+    const val TELEMETRY_BAND_DP = 64f
+
+    fun toolDockLayoutExtra(fontScale: Float = 1f): Float {
+        val font = if (fontScale.isFinite() && fontScale > 0f) fontScale else 1f
+        return (TOOL_DOCK_HEIGHT_DP + TOOL_DOCK_GAP_DP + TELEMETRY_BAND_DP) * font
+    }
     enum class Rail { LABELLED, ICONS }
 
     enum class Slot {
@@ -148,9 +159,40 @@ object JarvisShellLayout {
             Slot.ROW_TASKS to gr[Area.ROW_TASKS], Slot.ROW_MEMORY to gr[Area.ROW_MEMORY],
             Slot.ROW_MODEL to gr[Area.ROW_MODEL], Slot.STATUS to gr[Area.STATUS]
         )
-        return Shell(formFactor(w, h), w, gr.height, b, JarvisCockpitGrid.TILE_COLUMNS, JarvisCockpitGrid.TILE_ROWS, null,
+        val extra = installToolDock(b, w)
+        return Shell(formFactor(w, h), w, gr.height + extra, b, JarvisCockpitGrid.TILE_COLUMNS, JarvisCockpitGrid.TILE_ROWS, null,
             setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER),
             gr, h, profile, JarvisCockpitGrid.TILE_GAP_DP, head, orb, headStage = stage)
+    }
+
+    /**
+     * Places the holographic tool dock between the destination tiles and the status band,
+     * then expands the status slot so telemetry tiles and the full status line both fit.
+     * Existing grid boxes above the tiles stay byte-aligned with [JarvisCockpitGrid].
+     */
+    private fun installToolDock(boxes: MutableMap<Slot, Box>, width: Float): Float {
+        if (Slot.BOTTOM_NAV in boxes) return 0f
+        val tiles = boxes[Slot.TILES] ?: return 0f
+        val status = boxes[Slot.STATUS]
+        val margin = status?.left ?: 12f
+        val right = status?.right ?: (width - 12f)
+        val gap = TOOL_DOCK_GAP_DP
+        val dockH = TOOL_DOCK_HEIGHT_DP
+        val extraStatus = TELEMETRY_BAND_DP
+        val shiftBelowDock = dockH + gap
+        val total = shiftBelowDock + extraStatus
+        val dockTop = tiles.bottom + gap
+        boxes[Slot.BOTTOM_NAV] = Box(margin, dockTop, right, dockTop + dockH)
+        val cutoff = tiles.bottom + .5f
+        for ((slot, box) in boxes.toList()) {
+            if (slot == Slot.BOTTOM_NAV || slot == Slot.TILES) continue
+            if (box.top < cutoff) continue
+            boxes[slot] = if (slot == Slot.STATUS)
+                Box(box.left, box.top + shiftBelowDock, box.right, box.bottom + shiftBelowDock + extraStatus)
+            else
+                Box(box.left, box.top + total, box.right, box.bottom + total)
+        }
+        return total
     }
 
     /** Reflow preserves readable labels. */
@@ -200,12 +242,17 @@ object JarvisShellLayout {
         b[Slot.INPUT] = Box(left, y, right, y + inputHeight)
         y += inputHeight + gap
         val rows = (10 + p.tileColumns - 1) / p.tileColumns
-        val statusH = if (compact) 90f * font else 56f * font
+        val statusH = (if (compact) 90f else 56f) * font + TELEMETRY_BAND_DP * font
         val tileGap = JarvisCockpitGrid.TILE_GAP_DP
         val tileWidth = (room - (p.tileColumns - 1) * tileGap) / p.tileColumns
         val tileH = maxOf(JarvisCockpitGrid.MIN_TILE_DP * font, tileWidth / JarvisCockpitGrid.TILE_ASPECT)
         b[Slot.TILES] = Box(left, y, right, y + rows * tileH + (rows - 1) * tileGap)
         y = b.getValue(Slot.TILES).bottom + gap
+        if (!compact) {
+            val dockH = TOOL_DOCK_HEIGHT_DP * font
+            b[Slot.BOTTOM_NAV] = Box(left, y, right, y + dockH)
+            y += dockH + gap
+        }
         b[Slot.STATUS] = Box(margin, y, right, y + statusH)
         y += statusH + 24f
 

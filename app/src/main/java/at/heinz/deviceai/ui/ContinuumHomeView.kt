@@ -176,7 +176,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until
             if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until
             if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until
+            val taskChanged = JarvisCockpitPanels.isOwnerTaskRunning(field) !=
+                JarvisCockpitPanels.isOwnerTaskRunning(value)
             field = value
+            if (taskChanged) requestLayout()
             liveTabs.updateState(value)
             views.values.forEach { it.refresh() }
             if (jarvisShellStage) jarvisShell.tiles = shellTiles(value)
@@ -666,7 +669,9 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             add("dialog:conversation", "chat", "JARVIS: Konversation öffnen",
                 b)
             val controls = listOf(Triple("voice-input", "voice-input", "Mikrofon starten"),
-                Triple("send", "chat", "Gespräch öffnen"))
+                if (JarvisCockpitPanels.isOwnerTaskRunning(state))
+                    Triple("send", JarvisCockpitPanels.STOP_TARGET, "Auftrag stoppen")
+                else Triple("send", "chat", "Gespräch öffnen"))
             shell.dialogControlBoxes().forEachIndexed { i, box ->
                 add("dialog:${controls[i].first}", controls[i].second, controls[i].third, box)
             }
