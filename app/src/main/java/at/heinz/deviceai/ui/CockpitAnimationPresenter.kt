@@ -174,7 +174,10 @@ class CockpitAnimationPresenter(
             at.heinz.deviceai.cockpit.Cue.AVATAR_FROM_DEPTH, at.heinz.deviceai.cockpit.Cue.AVATAR_SHRINK,
             at.heinz.deviceai.cockpit.Cue.HEAD_ICON_BURST, at.heinz.deviceai.cockpit.Cue.FILE_ICONS_FROM_HEAD -> Unit
             at.heinz.deviceai.cockpit.Cue.COCKPIT_FLY_IN ->
-                if (home.jarvisShellStage) home.jarvisShell.playEntrance() else if (home.landscapeCockpit) flyInCards()
+                if (home.jarvisShellStage) {
+                    if (step.event is CockpitAnimationEvent.CommandFlyIn) home.jarvisShell.playWorkStage()
+                    else home.jarvisShell.playEntrance()
+                } else if (home.landscapeCockpit) flyInCards()
             else -> legacyPresent(step.event)
         }
     }
@@ -188,7 +191,7 @@ class CockpitAnimationPresenter(
             when (JarvisCinemaEntrance.triggerFor(event)) {
                 JarvisCinemaEntrance.Trigger.ENTER -> {
                     home.jarvisShell.bindCinemaTurn(event.turnId)
-                    home.jarvisShell.playEntrance()
+                    home.jarvisShell.playWorkStage()
                 }
                 JarvisCinemaEntrance.Trigger.STEP -> {
                     home.jarvisShell.bindCinemaTurn(event.turnId)

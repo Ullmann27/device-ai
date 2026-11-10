@@ -50,6 +50,8 @@ class JarvisShellView(context: Context) : View(context) {
     private var workStartMs = -1L
     private var exitMs = -1L
     private var cinemaTurnId = ""
+    private var workClear = false
+    private var resultForward = false
     var onProjectedMotion: ((WindowProjectedMotion) -> Unit)? = null
     private val projectedMotion = WindowProjectedMotionSampler()
     private var layoutFont = 0f
@@ -257,6 +259,18 @@ class JarvisShellView(context: Context) : View(context) {
     }
 
     fun playEntrance() {
+        workClear = false
+        resultForward = false
+        val now = SystemClock.uptimeMillis()
+        startMs = now
+        workStartMs = now
+        exitMs = -1L
+        postInvalidateOnAnimation()
+    }
+
+    fun playWorkStage() {
+        workClear = true
+        resultForward = false
         val now = SystemClock.uptimeMillis()
         startMs = now
         workStartMs = now
@@ -265,6 +279,7 @@ class JarvisShellView(context: Context) : View(context) {
     }
 
     fun playWorkWindowEntrance() {
+        resultForward = workClear
         workStartMs = SystemClock.uptimeMillis()
         exitMs = -1L
         postInvalidateOnAnimation()
@@ -322,7 +337,8 @@ class JarvisShellView(context: Context) : View(context) {
         JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true,
             deckClearance = deckClearance, missionClearance = missionClearance,
             luxuryDepth = luxuryDepth, depthBudget = depthBudget, enableWings = wings,
-            exiting = exiting, workElapsedMs = workElapsed)
+            exiting = exiting, workElapsedMs = workElapsed,
+            clearIdle = workClear, resultForward = resultForward)
         publishWorkWindowMotion(s, elapsed, workElapsed, exiting, scale, now, depthBudget)
         canvas.restore()
         var workWindowMoving = false

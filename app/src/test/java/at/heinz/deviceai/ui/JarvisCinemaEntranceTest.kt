@@ -212,4 +212,70 @@ class JarvisCinemaEntranceTest {
         assertEquals(destination.centerX, reduced.x, 0.01f)
         assertEquals(1f, reduced.progress, 0.0001f)
     }
+
+    @Test
+    fun idlePanelsDepartSidewaysIntoDepthOnAWorkOrder() {
+        val rest = JarvisCinemaEntrance.depart(0, 0L, side = 1f, budget = high)
+        assertEquals(0f, rest.recede, 0.02f)
+        assertTrue(rest.contentAlpha > 0.98f)
+        assertEquals(0f, rest.dx, 0.5f)
+
+        val mid = JarvisCinemaEntrance.depart(0, 280L, side = 1f, budget = high)
+        assertTrue(mid.recede > 0.15f && mid.recede < 0.95f)
+        assertTrue(mid.dx > 12f)
+        assertTrue(mid.scale < 0.95f)
+        assertTrue(mid.contentAlpha < 0.05f)
+        assertTrue(mid.glassAlpha > mid.contentAlpha)
+
+        val left = JarvisCinemaEntrance.depart(0, 280L, side = -1f, budget = high)
+        assertTrue(left.dx < -12f)
+
+        val gone = JarvisCinemaEntrance.depart(0, JarvisCinemaEntrance.EXIT_MS, side = 1f, budget = high)
+        assertTrue(gone.hidden || gone.recede >= 0.999f)
+        assertTrue(gone.travel < 0.02f)
+        assertTrue(gone.scale < 0.72f)
+    }
+
+    @Test
+    fun reducedMotionHidesDepartingPanelsWithoutASweep() {
+        val reducedGone = JarvisCinemaEntrance.depart(2, 40L, side = 1f, budget = reduced)
+        assertTrue(reducedGone.hidden || reducedGone.recede >= 0.999f)
+        assertEquals(0f, reducedGone.dx, 0.0001f)
+        assertEquals(0f, reducedGone.tiltY, 0.0001f)
+
+        val frozen = JarvisCinemaEntrance.depart(0, 40L, side = -1f, budget = paused)
+        assertTrue(frozen.hidden || frozen.recede >= 0.999f)
+    }
+
+    @Test
+    fun stageRolesKeepChromeAndSendIdleCardsAway() {
+        assertEquals(JarvisCinemaEntrance.StageRole.ENTER,
+            JarvisCinemaEntrance.stageRole(JarvisShellLayout.Slot.WORK_DOCUMENT))
+        assertEquals(JarvisCinemaEntrance.StageRole.ENTER,
+            JarvisCinemaEntrance.stageRole(JarvisShellLayout.Slot.WORK_PROCESS))
+        assertEquals(JarvisCinemaEntrance.StageRole.ENTER,
+            JarvisCinemaEntrance.stageRole(JarvisShellLayout.Slot.WORK_DRAFT))
+        assertEquals(JarvisCinemaEntrance.StageRole.DEPART,
+            JarvisCinemaEntrance.stageRole(JarvisShellLayout.Slot.TILES))
+        assertEquals(JarvisCinemaEntrance.StageRole.DEPART,
+            JarvisCinemaEntrance.stageRole(JarvisShellLayout.Slot.COCKPIT_PRIMARY))
+        assertEquals(JarvisCinemaEntrance.StageRole.DEPART, JarvisCinemaEntrance.stageRole(null))
+        assertEquals(JarvisCinemaEntrance.StageRole.STAY,
+            JarvisCinemaEntrance.stageRole(JarvisShellLayout.Slot.BOTTOM_NAV))
+        assertEquals(JarvisCinemaEntrance.StageRole.STAY,
+            JarvisCinemaEntrance.stageRole(JarvisShellLayout.Slot.STATUS))
+        assertEquals(JarvisCinemaEntrance.StageRole.STAY,
+            JarvisCinemaEntrance.stageRole(JarvisShellLayout.Slot.AVATAR))
+    }
+
+    @Test
+    fun resultAdvanceStepsTheDraftTowardTheCameraOnARealStep() {
+        val start = JarvisCinemaEntrance.resultAdvance(0L, budget = high)
+        val end = JarvisCinemaEntrance.resultAdvance(HollywoodFuiConstruct.GLASS_END_MS, budget = high)
+        assertTrue(end.scale > start.scale)
+        assertTrue(end.dy < start.dy)
+        val reduced = JarvisCinemaEntrance.resultAdvance(40L, budget = this.reduced)
+        assertTrue(reduced.scale > 1f)
+        assertTrue(reduced.settled)
+    }
 }

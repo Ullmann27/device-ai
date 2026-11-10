@@ -22,6 +22,8 @@ object JarvisCinemaEntrance {
 
     enum class Trigger { ENTER, STEP, EXIT, IGNORE }
 
+    enum class StageRole { ENTER, DEPART, STAY }
+
     const val STAGGER_MS = 70L
     const val SETTLE_MS = HollywoodFuiConstruct.DATA_END_MS
     const val EXIT_MS = HollywoodFuiConstruct.CLOSE_END_MS
@@ -38,6 +40,8 @@ object JarvisCinemaEntrance {
         val settled: Boolean,
         val hidden: Boolean,
         val frame: HollywoodFuiConstruct.Frame = HollywoodFuiConstruct.frame(HollywoodFuiConstruct.DATA_END_MS),
+        /** 0 at rest, 1 fully receded into depth (idle clearance). */
+        val recede: Float = 0f,
     )
 
     data class ProjectedWindow(
@@ -170,6 +174,70 @@ object JarvisCinemaEntrance {
         else -> Kind.PANEL
     }
 
+    fun stageRole(slot: JarvisShellLayout.Slot?): StageRole = when (slot) {
+        JarvisShellLayout.Slot.WORK_DOCUMENT,
+        JarvisShellLayout.Slot.WORK_PROCESS,
+        JarvisShellLayout.Slot.WORK_DRAFT -> StageRole.ENTER
+        null,
+        JarvisShellLayout.Slot.TILES,
+        JarvisShellLayout.Slot.COCKPIT_PRIMARY,
+        JarvisShellLayout.Slot.COCKPIT_SECONDARY,
+        JarvisShellLayout.Slot.ROW_AGENTS,
+        JarvisShellLayout.Slot.ROW_TASKS,
+        JarvisShellLayout.Slot.ROW_MEMORY,
+        JarvisShellLayout.Slot.ROW_MODEL,
+        JarvisShellLayout.Slot.USER_CARD,
+        JarvisShellLayout.Slot.NAV_RAIL -> StageRole.DEPART
+        else -> StageRole.STAY
+    }
+
+    /**
+     * Idle tiles and unused panels recede on a real work order: sideways, into Z
+     * (scale + [HollywoodFuiConstruct.layerShiftDp] on the rear glass plane) and fade
+     * with the existing close choreography (data, then glass, then frame). Not a second engine.
+     */
+    fun depart(
+        rank: Int,
+        elapsedMs: Long,
+        side: Float = 0f,
+        budget: JarvisRenderQuality.Budget? = null,
+        animatorScale: Float = 1f,
+    ): Pose {
+        val reduced = animatorScale <= 0f || budget?.animate == false
+        if (reduced) {
+            val frame = constructFrame(EXIT_MS, exiting = true, reducedMotion = true)
+            return departedPose(frame, side = 0f, leave = 1f, reduced = true)
+        }
+        val local = elapsedMs - staggerMs(Kind.PANEL, rank)
+        if (local < 0L) {
+            val frame = constructFrame(SETTLE_MS, reducedMotion = true)
+            return poseFrom(frame, travel = 1f, side = 0f, reduced = true)
+        }
+        val frame = constructFrame(local, exiting = true, reducedMotion = false)
+        val leave = (1f - frame.closeFrame).coerceIn(0f, 1f)
+        return departedPose(frame, side, leave, reduced = false)
+    }
+
+    /** After a real process step, the summary/result pane steps toward the camera. */
+    fun resultAdvance(
+        elapsedMs: Long,
+        budget: JarvisRenderQuality.Budget? = null,
+        animatorScale: Float = 1f,
+    ): Pose {
+        val base = pose(Kind.WORK_WINDOW, rankOf(JarvisShellLayout.Slot.WORK_DRAFT, 2),
+            SETTLE_MS, budget = budget, animatorScale = animatorScale)
+        val reduced = animatorScale <= 0f || budget?.animate == false
+        if (reduced) return base.copy(scale = 1.06f, dy = -8f, settled = true)
+        val forward = HollywoodFuiConstruct.flight(elapsedMs)
+        return base.copy(
+            scale = 1f + 0.07f * forward,
+            dy = -10f * forward,
+            tiltY = 0f,
+            settled = forward >= 0.999f,
+            recede = 0f,
+        )
+    }
+
     fun rankOf(slot: JarvisShellLayout.Slot?, fallback: Int): Int = when (slot) {
         JarvisShellLayout.Slot.WORK_DOCUMENT -> 0
         JarvisShellLayout.Slot.WORK_PROCESS -> 1
@@ -182,6 +250,32 @@ object JarvisCinemaEntrance {
      * [at.heinz.deviceai.avatar.ContinuumAvatarRenderer]; the device path composites it over Filament.
      * Not a second renderer. Gaze and window light belong to Bot 03.
      */
+    /** Glowing ring platform under the three work windows; strength follows construct flight. */
+    fun drawStagePlatform(p: ContinuumPainter, shell: JarvisShellLayout.Shell, progress: Float, reduced: Boolean) {
+        if (progress <= 0.02f) return
+        val boxes = listOf(
+            JarvisShellLayout.Slot.WORK_DOCUMENT,
+            JarvisShellLayout.Slot.WORK_PROCESS,
+            JarvisShellLayout.Slot.WORK_DRAFT,
+        ).mapNotNull { shell[it] }
+        if (boxes.isEmpty()) return
+        val left = boxes.minOf { it.left }
+        val right = boxes.maxOf { it.right }
+        val bottom = boxes.maxOf { it.bottom }
+        val cx = (left + right) / 2f
+        val cy = bottom + 8f
+        val built = progress.coerceIn(0f, 1f)
+        val rx = ((right - left) * 0.52f).coerceAtLeast(72f) * if (reduced) 1f else (0.70f + 0.30f * built)
+        val ry = rx * 0.22f
+        p.save()
+        p.saveAlpha((0.28f + 0.62f * built).coerceIn(0f, 1f))
+        JarvisNeon.ring(p, cx, cy, rx, ry, width = 2.2f)
+        JarvisNeon.ring(p, cx, cy, rx * 0.74f, ry * 0.70f, width = 1.1f)
+        JarvisNeon.halo(p, cx, cy, rx * 0.55f, Colors.cyan, 0.20f * built)
+        p.restore()
+        p.restore()
+    }
+
     fun drawHologramOverlay(p: ContinuumPainter, box: Box, timeSec: Float, energy: Float) {
         if (box.width <= 2f || box.height <= 2f) return
         val pulse = (0.55f + 0.45f * energy.coerceIn(0f, 1f)).coerceIn(0.2f, 1f)
@@ -199,6 +293,36 @@ object JarvisCinemaEntrance {
         p.strokeOval(box.centerX - r * 0.86f, box.centerY - r * 1.14f,
             box.centerX + r * 0.86f, box.centerY + r * 1.14f, 0.7f, Fill.Solid(Colors.violet), 0.22f * pulse)
         p.setAdditive(false)
+    }
+
+    private fun departedPose(
+        frame: HollywoodFuiConstruct.Frame,
+        side: Float,
+        leave: Float,
+        reduced: Boolean,
+    ): Pose {
+        val recede = leave.coerceIn(0f, 1f)
+        val spread = 88f * recede
+        val depth = HollywoodFuiConstruct.layerShiftDp(
+            HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES * recede,
+            HollywoodFuiConstruct.REAR_GLASS_Z_DP,
+            enabled = !reduced,
+        )
+        return Pose(
+            travel = 1f - recede,
+            dx = side.coerceIn(-1f, 1f) * spread,
+            dy = 30f * recede - depth,
+            scale = 1f - 0.32f * recede,
+            tiltY = HollywoodFuiConstruct.orientedTilt(
+                HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES * recede, side, reduced),
+            rimAlpha = frame.brackets * frame.closeFrame,
+            glassAlpha = frame.glass * frame.closeGlass,
+            contentAlpha = frame.data * frame.closeData,
+            settled = recede >= 0.999f,
+            hidden = recede >= 0.999f,
+            frame = frame,
+            recede = recede,
+        )
     }
 
     private fun poseFrom(
