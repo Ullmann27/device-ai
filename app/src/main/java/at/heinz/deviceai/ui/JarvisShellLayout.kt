@@ -160,9 +160,10 @@ object JarvisShellLayout {
             Slot.ROW_MODEL to gr[Area.ROW_MODEL], Slot.STATUS to gr[Area.STATUS]
         )
         val extra = installToolDock(b, w)
-        return Shell(formFactor(w, h), w, gr.height + extra, b, JarvisCockpitGrid.TILE_COLUMNS, JarvisCockpitGrid.TILE_ROWS, null,
+        return Shell(formFactor(w, h), w, gr.height, b, JarvisCockpitGrid.TILE_COLUMNS, JarvisCockpitGrid.TILE_ROWS, null,
             setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER),
             gr, h, profile, JarvisCockpitGrid.TILE_GAP_DP, head, orb, headStage = stage)
+            .copy(height = gr.height + extra)
     }
 
     /**
