@@ -98,13 +98,15 @@ class JarvisReferenceHitTargetsUiTest {
         }
     }
 
-    @Test fun compactNativeCardsRouteAndExposeTheirRealState() = withHome { home, calls ->
+    @Test fun compactCinemaDockRoutesAndExposesRealState() = withHome { home, calls ->
         size(home, 412, 915)
         val targets = listOf("chat", "memory", "logic", "research", "agents", "tasks", "web", "learning", "device", "system")
         assertEquals(targets, JarvisTiles.reference.map { it.target })
+        assertFalse("Compact Cinema uses a tool dock, not the retired tile grid",
+            requireNotNull(home.jarvisShell.currentShell()).hasFeatureTiles)
         assertEquals(10, JarvisHomeTestRoutes.controls(home).size)
         for (target in targets) {
-            val button = control(home, "tile:$target")
+            val button = control(home, "bottom:$target")
             assertTrue(button.isClickable && button.isFocusable && button.isEnabled)
             assertEquals(View.IMPORTANT_FOR_ACCESSIBILITY_YES, button.importantForAccessibility)
             assertTrue(button.contentDescription.isNotEmpty())
@@ -114,7 +116,9 @@ class JarvisReferenceHitTargetsUiTest {
             assertTrue(button.isSelected)
         }
         assertEquals(targets, calls)
-        assertEquals(10, descendants(home).count { it.tag?.toString()?.startsWith("jarvis-tile:") == true })
+        assertEquals(0, descendants(home).count { it.tag?.toString()?.startsWith("jarvis-tile:") == true })
+        assertEquals(JarvisTiles.bottomNav.size,
+            descendants(home).count { it.tag?.toString()?.startsWith("jarvis-bottom:") == true })
     }
 
     @Test fun wideCardsAndInputHeaderActionsHaveSeparateNativeControls() = withHome { home, calls ->
