@@ -34,6 +34,8 @@ test("NVIDIA is explicit and local internet OFF blocks sending", () => {
   assert.match(activity, /NVIDIA NEMOTRON 3 ULTRA · TESTFRAGE/);
   assert.match(activity, /EINMALIG AN NVIDIA SENDEN/);
   assert.match(activity, /internetConsent\.mode == at\.heinz\.deviceai\.cognitive\.InternetAccessMode\.OFF/);
+  assert.match(client, /getSharedPreferences\("continuum-internet", Context\.MODE_PRIVATE\)/);
+  assert.match(client, /getString\("mode", null\) == "OFF"/);
   assert.match(activity, /NvidiaNemotronDirectClient\(this\)\.answer\(content\)/);
   assert.doesNotMatch(activity, /NvidiaNemotronDirectClient\(this\)\.answer\(request\)/);
 });
