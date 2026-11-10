@@ -28,8 +28,20 @@ early result before any production edit; then preserve that result through
 return and construction. Cancellation, replacement and unrelated turn events
 must not transfer the result to another order. Reuse existing clocks/events.
 
-Current status: source diagnosis only; regression execution and fix NOT_RUN.
-PORTIERT: no new fix yet. VERIFIZIERT: read-only source/remote-tree comparison.
+Baseline regression: 8 actual-view tests, 2 expected failures. The queued early
+result never emits its forward motion; a repeated queued order also loses it.
+The other six existing/negative controls pass. Raw output and dependency/source
+hashes are in `docs/evidence/cinema-queued-result-20261110/`.
+
+The first isolated full Gradle attempt lost its daemon during Kotlin compilation;
+it did not execute tests. A scoped Kotlin 2.4.0/JDK21 compilation then rebuilt the
+actual baseline View and the tests against frozen existing app dependencies and
+ran JUnit/Robolectric API28. This is not a fresh full Android build or device test.
+Remote #715 advanced to `041abb081ae7dac637d3f0fabdae525f19acf117`; its only
+change since the baseline is the AGENTS checkpoint rule, not production code.
+
+Current status: regression reproduced; production fix NOT_RUN.
+PORTIERT: no new fix yet. VERIFIZIERT: bounded baseline failure and controls.
 GERAETEBESTAETIGT: NOT_RUN.
 
 Existing Cinema motion/thermal policy and the EXP-05/06/07/12/15 visual contracts
