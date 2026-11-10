@@ -467,6 +467,12 @@ class AgentActivity : Activity() {
     private var activeLocalRequest = false
     private val internetConsent = at.heinz.deviceai.cognitive.InternetConsentPolicy()
     private val webToolGate = at.heinz.deviceai.cognitive.ApprovedWebToolGate(internetConsent)
+    private data class PendingResearchChatApproval(
+        val approval: at.heinz.deviceai.cognitive.WebToolApproval,
+        val respond: (Boolean) -> Unit,
+        val invalidate: () -> Unit
+    )
+    private var pendingResearchChatApproval: PendingResearchChatApproval? = null
     private val approvedModelWebSession = java.util.concurrent.atomic.AtomicReference<at.heinz.deviceai.cognitive.ApprovedWebResearchSession?>()
     private var activeWebResearchSession:at.heinz.deviceai.cognitive.ApprovedWebResearchSession?=null
     private var researchArmed = false
@@ -5367,6 +5373,11 @@ class AgentActivity : Activity() {
             setPadding(dp(12), dp(9), dp(10), dp(9))
             at.heinz.deviceai.ui.ContinuumControls.feedback(this, 18f)
         }
+        input.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+            override fun afterTextChanged(s: android.text.Editable?) { refreshSendButtonPresentation() }
+        })
         inputRow.addView(input, LinearLayout.LayoutParams(0,
             LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
             marginStart = if (stackedComposer) 0 else dp(7)
@@ -5450,6 +5461,7 @@ class AgentActivity : Activity() {
             textSize = 21f
             contentDescription = "Nachricht senden"
             setOnClickListener {
+                if (consumePendingResearchChatReply()) return@setOnClickListener
                 val chiefStatus = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
                     ContinuumWorkerChatCommand.ChiefStatus
                 if (busy && activeLocalRequest && !chiefStatus) cancelLocalRequest()
@@ -5633,6 +5645,7 @@ class AgentActivity : Activity() {
     }
 
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
+        if (consumePendingResearchChatReply()) return
         // Exact status submissions stay read-only even while a model/bot is busy. The
         // Send button's explicit Stop/cancel behavior remains in its existing click handler.
         if (at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(input.text.toString(), neuralCoach.isActive()) ==
@@ -9334,6 +9347,8 @@ class AgentActivity : Activity() {
     private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
         invalidated:()->Unit = {},
         completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) {
+        pendingResearchChatApproval?.invalidate?.invoke()
+        pendingResearchChatApproval = null
         if (!foregroundLearningActive || isFinishing || isDestroyed) { invalidated(); return }
         restoreInternetMode()
         if(internetConsent.mode==at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
@@ -9347,9 +9362,14 @@ class AgentActivity : Activity() {
         }
         val approvalSession = sessionId
         var responded = false
+        var approvalDialog: AlertDialog? = null
         fun respond(accepted: Boolean) {
             if (responded) return
             responded = true
+            approvalDialog?.dismiss()
+            approvalDialog = null
+            if (pendingResearchChatApproval?.approval === approval) pendingResearchChatApproval = null
+            refreshSendButtonPresentation()
             val current = sessionId == approvalSession && foregroundLearningActive && !isFinishing && !isDestroyed
             if (!current || !webToolGate.completeApproval(approval, mode, accepted, completed)) {
                 invalidated()
@@ -9357,7 +9377,17 @@ class AgentActivity : Activity() {
                     addToolActivity("WEB · veraltete Freigabe verworfen · kein neuer Auftrag")
             }
         }
-        AlertDialog.Builder(this)
+        pendingResearchChatApproval = PendingResearchChatApproval(approval, ::respond) {
+            if (!responded) {
+                responded = true
+                approvalDialog?.dismiss()
+                approvalDialog = null
+                if (pendingResearchChatApproval?.approval === approval) pendingResearchChatApproval = null
+                refreshSendButtonPresentation()
+                invalidated()
+            }
+        }
+        approvalDialog = AlertDialog.Builder(this)
             .setTitle("Internetzugriff einmal erlauben?")
             .setMessage((if(call is at.heinz.deviceai.cognitive.WebToolRequest.Search)
                 "Diese Suchfrage wird an öffentliche Suchanbieter übertragen. Externe Webquellen werden unabhängig geprüft. "
@@ -9365,8 +9395,36 @@ class AgentActivity : Activity() {
                 "Gilt nur für diese Anfrage, ohne Gerätefreigabe oder automatische Folgeaufträge.\n\n"+call.question)
             .setNegativeButton("Ablehnen") { _,_->respond(false) }
             .setOnCancelListener { respond(false) }
+            .setNeutralButton("Im Chat antworten") { _, _ ->
+                if (pendingResearchChatApproval?.approval !== approval || sessionId != approvalSession ||
+                    !foregroundLearningActive || isFinishing || isDestroyed) respond(false)
+                else {
+                    input.text.clear()
+                    addAssistantMessage("Soll ich diese Recherche einmal ausführen?\n\n${call.question}\n\n" +
+                        "Antworte mit „Ja, mach“ oder „Nein“. Die Freigabe gilt nur für diese Anfrage.",
+                        preserveLocalContext = true)
+                }
+            }
             .setPositiveButton("Einmal erlauben") { _,_->respond(true) }
             .show()
+    }
+
+    private fun consumePendingResearchChatReply(): Boolean {
+        val pending = pendingResearchChatApproval ?: return false
+        val request = input.text.toString().trim()
+        if (request.isEmpty()) return false
+        val accepted = at.heinz.deviceai.cognitive.ResearchConsentReply.parse(request)
+        if (accepted == null) {
+            pending.invalidate()
+            webToolGate.cancel()
+            return false
+        }
+        voiceEngine?.stop()
+        stopVoiceAnimation()
+        input.text.clear()
+        addUserMessage(request)
+        pending.respond(accepted)
+        return true
     }
 
     private fun runResearch(session:at.heinz.deviceai.cognitive.ApprovedWebResearchSession,mentorArea:String?=null) {
@@ -9844,6 +9902,8 @@ class AgentActivity : Activity() {
         destructive: Boolean,
         onDecision: (Boolean) -> Unit
     ) {
+        if (proposal.toolName !in setOf("web_search", "web_read"))
+            pendingResearchChatApproval?.invalidate?.invoke()
         avatarAwaitingApproval = true
         refreshHologramState()
         val callback: (Boolean) -> Unit = { approved ->
@@ -12810,14 +12870,17 @@ class AgentActivity : Activity() {
     private fun refreshSendButtonPresentation() {
         if (!::sendButton.isInitialized) return
         sendButton.isEnabled = true
+        val researchReply = pendingResearchChatApproval != null &&
+            at.heinz.deviceai.cognitive.ResearchConsentReply.parse(input.text.toString()) != null
         // The compact 48dp row cannot fit a four-letter STOP label at 200% text.
         // Preserve the cancellation action and spoken label with a standard stop icon.
-        sendButton.text = if (busy && activeLocalRequest) {
+        sendButton.text = if (researchReply) "➤" else if (busy && activeLocalRequest) {
             if (usesStackedComposer()) "■" else "STOP"
         } else if (busy) "…" else "➤"
-        sendButton.contentDescription = if (busy && activeLocalRequest) "Lokale Anfrage abbrechen"
+        sendButton.contentDescription = if (researchReply) "Recherchefreigabe senden"
+            else if (busy && activeLocalRequest) "Lokale Anfrage abbrechen"
             else if (busy) "Device AI arbeitet" else "Nachricht senden"
-        sendButton.alpha = if (busy && !activeLocalRequest) 0.65f else 1f
+        sendButton.alpha = if (!researchReply && busy && !activeLocalRequest) 0.65f else 1f
     }
 
     /** UI thread. One bounded visual scope for existing owner work, never a scheduler. */
@@ -13114,6 +13177,7 @@ class AgentActivity : Activity() {
         stopVoiceAnimation()
         val scopeGeneration=++speechScopeGeneration
         val scopeSession=sessionId
+        val scopeResearchApproval=pendingResearchChatApproval?.approval
         val scopeDialog=devDialog
         val readinessScope = if (requestCode == READINESS_SPEECH_REQUEST) readinessDialog else null
         // Non-null only while the owner deliberately started hands-free mode; dictation stays a draft.
@@ -13140,7 +13204,9 @@ class AgentActivity : Activity() {
                 onText={spoken->if(speechScopeGeneration==scopeGeneration&&sessionId==scopeSession&&
                     (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog) &&
                     (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true)){
-                    if(conversationTurn!=null)applyConversationSpeech(conversationTurn,spoken) else applyLocalSpeechText(requestCode,spoken)}},
+                    if (requestCode == SPEECH_REQUEST && pendingResearchChatApproval?.approval !== scopeResearchApproval)
+                        endContinuousConversation("Recherchefreigabe geändert. Bitte erneut sprechen.")
+                    else if(conversationTurn!=null)applyConversationSpeech(conversationTurn,spoken) else applyLocalSpeechText(requestCode,spoken)}},
                 onFailure={failure->
                     if (conversationTurn != null && speechScopeGeneration == scopeGeneration && sessionId == scopeSession &&
                         !isFinishing && !isDestroyed) onConversationListenFailed(conversationTurn, failure)
