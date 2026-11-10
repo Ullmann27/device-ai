@@ -3403,7 +3403,7 @@ class AgentActivity : Activity() {
             addView(telemetry, matchWidth(top = 4))
             addView(progress, matchWidth(top = 8))
             addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this@AgentActivity, "STOP") {
-                cancelLocalRequest()
+                if (localReasoningSceneCurrent(lease)) cancelLocalRequest()
             }, matchWidth(top = 10))
         }
         fun show(retry: Boolean) {
@@ -3533,6 +3533,8 @@ class AgentActivity : Activity() {
         val home = homeView ?: run { key?.let(toolSceneLease::closed); return }
         val label = ToolRegistry.label(toolName)
         val app = ToolAppIdentity.resolve(packageManager, toolName, arguments)
+        val stopSession = sessionId
+        val stopGeneration = workPresentationGeneration
         val status = textView(if (app != null && toolName == "launch_app") "Öffnet ${app.label} · Prüfung läuft."
             else "$label läuft · Ergebnis wird abgewartet.", 13f, MUTED).apply { tag = "jarvis-tool-status:$callId" }
         val progress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
@@ -3549,7 +3551,9 @@ class AgentActivity : Activity() {
             addView(status)
             addView(progress, matchWidth(top = 8))
             addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this@AgentActivity, "STOP") {
-                cancelLocalRequest()
+                if (foregroundLearningActive && sessionId == stopSession &&
+                    workPresentationGeneration == stopGeneration && toolScene?.first == callId &&
+                    (key == null || currentToolScene(key))) cancelLocalRequest()
             })
         }
         val title = if (app != null) "APP · ${app.label}" else "WERKZEUG · $label"
@@ -11292,11 +11296,10 @@ class AgentActivity : Activity() {
             }
         }
         workWindowHost.workEnded()
-        workWindowHost.close(immediate = true)
         avatarDirector.clearAnimationIntents()
         voiceEngine?.stop()
         stopVoiceAnimation()
-        clearTaskEffects()
+        clearTaskEffects(immediate = !foregroundLearningActive)
         if (stoppedDraft?.sessionId == sessionId) addAssistantMessage(
             "Entwurf mit STOP abgebrochen – nichts gespeichert.", preserveLocalContext = true,
             keepCockpit = activeWorkArea == ContinuumWorkArea.START)
@@ -12826,13 +12829,15 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun clearTaskEffects() {
+    private fun clearTaskEffects() = clearTaskEffects(immediate = true)
+
+    private fun clearTaskEffects(immediate: Boolean) {
         toolSceneProgress?.second?.isIndeterminate = false
         toolSceneProgress = null
         toolSceneDialog?.dismiss()
         toolSceneDialog = null
         workWindowHost.workEnded()
-        workWindowHost.close(immediate = true)
+        workWindowHost.close(immediate)
         toolSceneLease.clear()
         toolScene = null
         toolSceneReturnArea = null

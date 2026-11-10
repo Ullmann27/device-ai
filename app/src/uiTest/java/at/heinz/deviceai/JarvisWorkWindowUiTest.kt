@@ -197,6 +197,34 @@ class JarvisWorkWindowUiTest {
         }
     }
 
+    @Test fun closingCancelsTouchAndRejectsOldControls() = withWindow { f ->
+        var downs = 0
+        var cancels = 0
+        val body = TextView(f.activity).apply {
+            text = "Aktiver Inhalt"
+            minHeight = 80
+            setOnTouchListener { _, event ->
+                if (event.actionMasked == MotionEvent.ACTION_DOWN) downs++
+                if (event.actionMasked == MotionEvent.ACTION_CANCEL) cancels++
+                true
+            }
+        }
+        assertTrue(f.open(body))
+        f.frame(1_000, 0f)
+        val bounds = android.graphics.Rect()
+        assertTrue(body.getGlobalVisibleRect(bounds))
+        val down = MotionEvent.obtain(0, 1, MotionEvent.ACTION_DOWN,
+            bounds.exactCenterX(), bounds.exactCenterY(), 0)
+        try { assertTrue(f.root.dispatchTouchEvent(down)) } finally { down.recycle() }
+        assertEquals(1, downs)
+        f.close()
+        assertEquals(1, cancels)
+        f.tap(bounds.exactCenterX(), bounds.exactCenterY())
+        assertEquals(1, downs)
+        f.tap(500f, 250f)
+        assertEquals(1, f.cockpitClicks)
+    }
+
     @Test fun detachingReleasesFrameSubscription() = withWindow { f ->
         val body = f.body()
         assertTrue(f.open(body))
