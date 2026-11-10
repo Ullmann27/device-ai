@@ -480,7 +480,7 @@ class JarvisCinemaEntranceTest {
         assertEquals(
             JarvisCinemaEntrance.WorkOrderReplay.RESTART_FROM_WORKING,
             JarvisCinemaEntrance.workOrderReplay(
-                sameTurn = false, elapsedMs = JarvisCinemaEntrance.DEPART_MS + 80L))
+                sameTurn = false, elapsedMs = JarvisCinemaEntrance.workOrderDurationMs(3)))
     }
 
     @Test
@@ -516,5 +516,33 @@ class JarvisCinemaEntranceTest {
         assertTrue(rest.settled)
         assertFalse(rest.hidden)
         assertEquals(0f, rest.dx, 0.0001f)
+    }
+    @Test fun secondOrderWaitsForTheLastStaggeredRebuild() {
+        for (count in listOf(1, 3, 8, 20)) {
+            val end = JarvisCinemaEntrance.workOrderDurationMs(count)
+            for (time in listOf(420L, 500L, end - 1L)) {
+                assertEquals(JarvisCinemaEntrance.WorkOrderReplay.CONTINUE_FLIGHT,
+                    JarvisCinemaEntrance.workOrderReplay(false, time, count))
+            }
+            assertEquals(JarvisCinemaEntrance.WorkOrderReplay.RESTART_FROM_WORKING,
+                JarvisCinemaEntrance.workOrderReplay(false, end, count))
+            assertEquals(JarvisCinemaEntrance.WorkOrderReplay.IGNORE,
+                JarvisCinemaEntrance.workOrderReplay(true, end, count))
+        }
+    }
+
+    @Test fun resultReturnStartsAtTheDisplayedResultPose() {
+        for (time in 0L..1000L step 23) {
+            val before = JarvisCinemaEntrance.resultAdvance(time, high)
+            val after = JarvisCinemaEntrance.returnPose(
+                JarvisShellLayout.Slot.WORK_DRAFT, 2, 0L,
+                interruptedAfterMs = 3000L, budget = high, returnResultElapsedMs = time)
+            assertEquals("Result at $time", before, after)
+            val restored = JarvisCinemaEntrance.returnPose(
+                JarvisShellLayout.Slot.WORK_DRAFT, 2, 3000L,
+                interruptedAfterMs = 3000L, budget = high, returnResultElapsedMs = time)
+            assertTrue(restored.settled && !restored.hidden)
+            assertEquals(1f, restored.scale, .0001f)
+        }
     }
 }

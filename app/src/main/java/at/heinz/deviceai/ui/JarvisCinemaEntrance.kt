@@ -234,9 +234,10 @@ object JarvisCinemaEntrance {
     /** Sentinel: return started from a fully settled work scene (not mid-flight). */
     const val WORKING_SETTLED_MS = Long.MAX_VALUE / 4
 
-    fun workOrderReplay(sameTurn: Boolean, elapsedMs: Long): WorkOrderReplay = when {
+    fun workOrderReplay(sameTurn: Boolean, elapsedMs: Long, count: Int = 3,
+                        animatorScale: Float = 1f): WorkOrderReplay = when {
         sameTurn -> WorkOrderReplay.IGNORE
-        elapsedMs < DEPART_MS -> WorkOrderReplay.CONTINUE_FLIGHT
+        elapsedMs < workOrderDurationMs(count, animatorScale) -> WorkOrderReplay.CONTINUE_FLIGHT
         else -> WorkOrderReplay.RESTART_FROM_WORKING
     }
 
@@ -299,6 +300,7 @@ object JarvisCinemaEntrance {
         budget: JarvisRenderQuality.Budget? = null,
         animatorScale: Float = 1f,
         fromWorkingScene: Boolean = false,
+        returnResultElapsedMs: Long = -1L,
     ): Pose {
         if (!fliesAwayOnWorkOrder(slot)) return SETTLED
         val kind = kindOf(slot)
@@ -310,8 +312,14 @@ object JarvisCinemaEntrance {
         }
         val hold = returnHoldMs(interruptedAfterMs)
         if (elapsedMs < hold) {
-            val snapshot = workOrderPose(slot, rank, interruptedAfterMs, side, budget,
-                animatorScale, fromWorkingScene)
+            val snapshot = when {
+                returnResultElapsedMs >= 0L && slot == JarvisShellLayout.Slot.WORK_DRAFT ->
+                    resultAdvance(returnResultElapsedMs, budget, animatorScale)
+                returnResultElapsedMs >= 0L && stageRole(slot) == StageRole.ENTER ->
+                    pose(kind, rank, SETTLE_MS, side = side, budget = budget, animatorScale = animatorScale)
+                else -> workOrderPose(slot, rank, interruptedAfterMs, side, budget,
+                    animatorScale, fromWorkingScene)
+            }
             if (elapsedMs <= 0L) return snapshot
             val closingTime = (elapsedMs.toDouble() / hold * EXIT_MS).toLong()
             val frame = constructFrame(closingTime, exiting = true)

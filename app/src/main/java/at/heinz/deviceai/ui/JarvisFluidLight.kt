@@ -53,7 +53,7 @@ object JarvisFluidLight {
                 val x = inverse * inverse * x0 + 2f * inverse * t * (x0 + (sinkX - x0) * .12f) +
                     t * t * sinkX + wave
                 val y = y0 + (sinkY - y0) * t + bend * (10f + strand * 3f)
-                val flow = if (sample.rebuilding) 1f - phase else phase
+                val flow = phase
                 val pulse = .5f + .5f * sin(t * 15f - flow * 22f + strand)
                 if (pulse > .22f) {
                     segments[count++] = lastX; segments[count++] = lastY

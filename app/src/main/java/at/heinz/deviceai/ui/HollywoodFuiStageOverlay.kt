@@ -240,7 +240,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         if (fluid.energy > 0f) JarvisFluidLight.drawTransfer(painter,
             JarvisShellLayout.Box(source.left / density, source.top / density,
                 source.right / density, source.bottom / density),
-            fluidBox.centerX, fluidBox.bottom, fluid, renderBudget)
+            fluidBox.centerX, fluidBox.bottom,
+            fluid.copy(energy = fluid.energy * frame.closeFrame), renderBudget)
         // The source is in screen space, never rotated with the arriving glass.
         cinematics.drawAnchor(painter, originX / density, originY / density, boxDp, frame, bloom)
         canvas.restore()

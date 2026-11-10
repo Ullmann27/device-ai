@@ -49,6 +49,7 @@ object JarvisShellRenderer {
         val fromWorkingScene: Boolean = false,
         val budget: JarvisRenderQuality.Budget? = null,
         val timeMs: Long = 0L,
+        val returnResultElapsedMs: Long = -1L,
     )
 
     /** Foreground shares the sampled scene frame. */
@@ -62,7 +63,8 @@ object JarvisShellRenderer {
             val side = if (box.centerX >= shell.width / 2f) 1f else -1f
             val pose = when {
                 moving && scene.exiting -> JarvisCinemaEntrance.returnPose(slot, 0, scene.elapsedMs,
-                    scene.interruptedAfterMs, side, scene.budget, scene.animatorScale, scene.fromWorkingScene)
+                    scene.interruptedAfterMs, side, scene.budget, scene.animatorScale, scene.fromWorkingScene,
+                    scene.returnResultElapsedMs)
                 moving -> JarvisCinemaEntrance.workOrderPose(slot, 0, scene.elapsedMs, side,
                     scene.budget, scene.animatorScale, scene.fromWorkingScene)
                 else -> JarvisCinemaEntrance.SETTLED
@@ -83,21 +85,25 @@ object JarvisShellRenderer {
                     1f, box.centerX, box.centerY())
             }
             if (slot != Slot.TOP_BAR && slot != Slot.CONTINUUM_HEADER) {
-                p.saveAlpha(pose.glassAlpha)
-                if (glass?.drawPanelGlass(box, 14f, 0f) != true) {
-                    JarvisReferenceHud.surface(p, box, 14f, Colors.cyan,
-                        if (slot == Slot.COCKPIT_SECONDARY || slot == Slot.CAMERA_STATUS) Colors.violetRim else Colors.cyanDeep)
+                if (pose.glassAlpha > .001f) {
+                    if (pose.glassAlpha < .999f) p.saveAlpha(pose.glassAlpha)
+                    if (glass?.drawPanelGlass(box, 14f, 0f) != true) {
+                        JarvisReferenceHud.surface(p, box, 14f, Colors.cyan,
+                            if (slot == Slot.COCKPIT_SECONDARY || slot == Slot.CAMERA_STATUS) Colors.violetRim else Colors.cyanDeep)
+                    }
+                    if (pose.glassAlpha < .999f) p.restore()
                 }
-                p.restore()
                 if (moving) {
                     val fluid = JarvisFluidLight.sample(scene.elapsedMs, 0, scene.budget, scene.animatorScale)
                     if (fluid.energy > 0f && glass?.drawFluidEdge(box, 14f, fluid.phase,
                             fluid.energy, scene.timeMs) != true) JarvisFluidLight.drawEdge(p, box, fluid)
                 }
             }
-            p.saveAlpha(pose.contentAlpha)
-            content[slot]?.draw(p, box)
-            p.restore()
+            if (pose.contentAlpha > .001f) {
+                if (pose.contentAlpha < .999f) p.saveAlpha(pose.contentAlpha)
+                content[slot]?.draw(p, box)
+                if (pose.contentAlpha < .999f) p.restore()
+            }
             if (nativeDepth) glass?.endDepth()
             p.restore()
         }
@@ -112,7 +118,8 @@ object JarvisShellRenderer {
              exiting: Boolean = false, workElapsedMs: Long = elapsedMs,
              clearIdle: Boolean = false, resultForward: Boolean = false,
              fromWorkingScene: Boolean = false,
-             interruptedAfterMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS) {
+             interruptedAfterMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS,
+             returnResultElapsedMs: Long = -1L) {
         if (glass?.drawBackground(shell.width, shell.height, timeMs) != true) {
             background(p, shell.width, shell.height)
         }
@@ -150,7 +157,8 @@ object JarvisShellRenderer {
             val cinema = when {
                 exiting && clearIdle ->
                     JarvisCinemaEntrance.returnPose(
-                        slot, rank, elapsedMs, interruptedAfterMs, side, depthBudget, animatorScale, fromWorkingScene)
+                        slot, rank, elapsedMs, interruptedAfterMs, side, depthBudget, animatorScale, fromWorkingScene,
+                        returnResultElapsedMs)
                 exiting -> JarvisCinemaEntrance.pose(
                     kind, rank, cinemaElapsed, exiting = true,
                     side = side, budget = depthBudget, animatorScale = animatorScale)
@@ -173,20 +181,35 @@ object JarvisShellRenderer {
             val f = if (clearIdle) JarvisMotion.REST else JarvisMotion.frame(
                 JarvisMotion.panelSpecFor(box.centerX, cx),
                 elapsedMs - JarvisMotion.staggerStart(ranks[i], animatorScale = animatorScale), animatorScale)
-            if (cinema.hidden && cinema.rimAlpha < 0.01f) return@forEachIndexed
-            if (f.scale <= 0f) return@forEachIndexed
             // Airbus deck: while a work window is open, tiles and lower rows make room instead of being covered.
             val sourceClearance = JarvisDeckClearance.clearance(slot, deckClearance, missionClearance)
             val clear = if (sourceClearance > 0f && JarvisDeckClearance.clears(slot))
                 JarvisDeckClearance.local(sourceClearance, JarvisDeckClearance.order(slot, box.centerX, shell.width)) else 0f
-            if (clear >= .999f) return@forEachIndexed
+            val k = f.scale * cinema.scale * JarvisDeckClearance.scale(clear)
+            val dx = f.dx + cinema.dx + JarvisDeckClearance.dx(clear, box.centerX, shell.width)
+            val dy = f.dy + cinema.dy + JarvisDeckClearance.dy(clear)
+            if (clearIdle && JarvisCinemaEntrance.fliesAwayOnWorkOrder(slot)) {
+                val stage = shell[Slot.WORK_PROCESS]
+                val fluid = JarvisFluidLight.sample(elapsedMs, rank, depthBudget, animatorScale)
+                if (stage != null && fluid.energy > .001f) {
+                    val projectedX = box.centerX + dx
+                    val projectedY = box.centerY() + dy
+                    val halfWidth = box.width * k * .5f *
+                        kotlin.math.cos(Math.toRadians(cinema.tiltY.toDouble())).toFloat()
+                    val halfHeight = box.height * k * .5f
+                    JarvisFluidLight.drawTransfer(p,
+                        Box(projectedX - halfWidth, projectedY - halfHeight,
+                            projectedX + halfWidth, projectedY + halfHeight),
+                        stage.centerX, stage.bottom + 8f, fluid, depthBudget)
+                }
+            }
+            if (cinema.hidden && cinema.rimAlpha < 0.01f) return@forEachIndexed
+            if (f.scale <= 0f || clear >= .999f) return@forEachIndexed
             val visible = maxOf(cinema.rimAlpha, cinema.glassAlpha, cinema.contentAlpha, f.alpha)
             val opacity = visible * if (clear > 0f) JarvisDeckClearance.alpha(clear) else 1f
             if (opacity < 0.01f) return@forEachIndexed
             if (opacity < 1f) p.saveAlpha(opacity) else p.save()
-            p.translate(f.dx + cinema.dx + JarvisDeckClearance.dx(clear, box.centerX, shell.width),
-                f.dy + cinema.dy + JarvisDeckClearance.dy(clear))
-            val k = f.scale * cinema.scale * JarvisDeckClearance.scale(clear)
+            p.translate(dx, dy)
             p.scale(k, k, box.centerX, box.centerY())
             val depthState = when {
                 cinema.tiltY != 0f || cinema.scale < 0.999f ->
@@ -258,24 +281,11 @@ object JarvisShellRenderer {
             val built = if (reduced) 1f else HollywoodFuiConstruct.flight(rebuildElapsed)
             JarvisCinemaEntrance.drawStagePlatform(p, shell, built, reduced)
         }
-        if (clearIdle && animatorScale > 0f && depthBudget?.animate != false) {
-            val stage = shell[Slot.WORK_PROCESS]
-            if (stage != null) {
-                cards.forEachIndexed { index, box ->
-                    val slot = cardSlots.getOrNull(index)
-                    if (JarvisCinemaEntrance.fliesAwayOnWorkOrder(slot)) {
-                        val rank = JarvisCinemaEntrance.rankOf(slot, ranks[index])
-                        val fluid = JarvisFluidLight.sample(elapsedMs, rank, depthBudget, animatorScale)
-                        JarvisFluidLight.drawTransfer(p, box, stage.centerX, stage.bottom + 8f, fluid, depthBudget)
-                    }
-                }
-            }
-        }
         p.restore()
         JarvisReferenceHud.frame(p, shell.width, shell[Slot.STATUS]?.bottom?.plus(12f) ?: shell.height)
         if (!deferForeground) drawForeground(p, shell, content, deckClearance, glass,
             CinemaFrame(elapsedMs, animatorScale, clearIdle, exiting, interruptedAfterMs,
-                fromWorkingScene, depthBudget, timeMs))
+                fromWorkingScene, depthBudget, timeMs, returnResultElapsedMs))
     }
 
     private fun Box.centerY() = (top + bottom) / 2f
