@@ -8,7 +8,7 @@ internal object CinemaWindowLightState {
         val gazeY: Float = 0f,
         val open: Boolean = false,
     ) {
-        fun accentOr(fallback: Int?): Int? = if (open) accentArgb else fallback
+        fun accentOr(fallback: Int?): Int? = if (open) accentArgb ?: fallback else fallback
     }
 
     @Volatile var snapshot = Snapshot()
