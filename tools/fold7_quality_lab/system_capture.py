@@ -17,9 +17,8 @@ def battery_conditions(text):
     level = fold7.number(r"^\s*level:\s*(\d+)", text)
     scale = fold7.number(r"^\s*scale:\s*(\d+)", text)
     percent = round(level * 100 / scale) if level is not None and scale and 0 <= level <= scale else None
-    sources = dict(re.findall(r"^\s*(AC|USB|Wireless|Dock) powered:\s*(true|false)\s*$", text, re.M))
-    charging = True if "true" in sources.values() else False if all(
-        sources.get(name) == "false" for name in ("AC", "USB", "Wireless")) else None
+    status = fold7.number(r"^\s*status:\s*([1-5])\b", text)
+    charging = True if status == 2 else False if status in (3, 4, 5) else None
     return percent, charging
 
 
