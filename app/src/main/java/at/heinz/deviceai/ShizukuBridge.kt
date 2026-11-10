@@ -79,6 +79,11 @@ class ShizukuBridge(
         service: IBinder?
     ) {
         if (!started || activeConnection !== attempted) return
+        if (!isShizukuRunning() || runCatching { Shizuku.checkSelfPermission() }.getOrNull() != PackageManager.PERMISSION_GRANTED) {
+            resetBinding()
+            reportStatus("Shizuku-Zugriff widerrufen · erneut freigeben")
+            return
+        }
         val candidate = runCatching { IDeviceShell.Stub.asInterface(service) }.getOrNull()
         if (candidate == null || !runCatching {
                 candidate.asBinder()?.pingBinder() == true

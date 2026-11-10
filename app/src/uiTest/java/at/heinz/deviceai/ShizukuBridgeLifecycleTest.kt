@@ -249,6 +249,17 @@ class ShizukuBridgeLifecycleTest {
         bridge.stop()
     }
 
+    @Test fun permissionRevokedBeforeBindCallbackCannotAttachShell() {
+        val bridge = bridge(mutableListOf())
+        bridge.start()
+        Server.granted = false
+        connect(Server.connections.single())
+        assertFalse(bridge.isReady())
+        assertTrue(bridge.statusDetail().contains("widerrufen"))
+        assertEquals(1, Server.unbound.size)
+        bridge.stop()
+    }
+
     @Test fun revokedPermissionCannotDispatchCheckedCommand() {
         val bridge = bridge(mutableListOf())
         bridge.start(); connect(Server.connections.single())
