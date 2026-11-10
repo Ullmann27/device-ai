@@ -67,7 +67,9 @@ object JarvisShellRenderer {
              missionClearance: Float = deckClearance, luxuryDepth: Boolean = false,
              depthBudget: JarvisRenderQuality.Budget? = null, enableWings: Boolean = luxuryDepth,
              exiting: Boolean = false, workElapsedMs: Long = elapsedMs,
-             clearIdle: Boolean = false, resultForward: Boolean = false) {
+             clearIdle: Boolean = false, resultForward: Boolean = false,
+             fromWorkingScene: Boolean = false,
+             interruptedAfterMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS) {
         background(p, shell.width, shell.height)
         val backdropHeight = shell[Slot.INPUT]?.bottom ?: shell[Slot.AVATAR]?.bottom ?: shell.height
         JarvisReferenceHud.backdrop(p, shell.width, backdropHeight)
@@ -101,8 +103,9 @@ object JarvisShellRenderer {
             val rank = JarvisCinemaEntrance.rankOf(slot, ranks[i])
             val role = JarvisCinemaEntrance.stageRole(slot)
             val cinema = when {
-                exiting && clearIdle && role == JarvisCinemaEntrance.StageRole.DEPART ->
-                    JarvisCinemaEntrance.depart(rank, JarvisCinemaEntrance.EXIT_MS, side, depthBudget, animatorScale)
+                exiting && clearIdle ->
+                    JarvisCinemaEntrance.returnPose(
+                        slot, rank, elapsedMs, interruptedAfterMs, side, depthBudget, animatorScale)
                 exiting -> JarvisCinemaEntrance.pose(
                     kind, rank, cinemaElapsed, exiting = true,
                     side = side, budget = depthBudget, animatorScale = animatorScale)
@@ -113,7 +116,9 @@ object JarvisShellRenderer {
                         kind, rank, JarvisCinemaEntrance.SETTLE_MS, exiting = false,
                         side = side, budget = depthBudget, animatorScale = animatorScale)
                 clearIdle ->
-                    JarvisCinemaEntrance.workOrderPose(slot, rank, elapsedMs, side, depthBudget, animatorScale)
+                    JarvisCinemaEntrance.workOrderPose(
+                        slot, rank, elapsedMs, side, depthBudget, animatorScale,
+                        fromWorkingScene = fromWorkingScene)
                 else -> JarvisCinemaEntrance.pose(
                     kind, rank, cinemaElapsed, exiting = false,
                     side = side, budget = depthBudget, animatorScale = animatorScale)
@@ -179,7 +184,7 @@ object JarvisShellRenderer {
                     slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
                     slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
                         timeMs = if (animatorScale > 0f) timeMs else 0L,
-                        cinemaElapsedMs = if (clearIdle && !exiting) null else cinemaElapsed,
+                        cinemaElapsedMs = if (clearIdle) null else cinemaElapsed,
                         cinemaExiting = exiting && !clearIdle,
                         cinemaBudget = depthBudget, animatorScale = animatorScale)
                     slot != null -> header(p, box, label(slot))

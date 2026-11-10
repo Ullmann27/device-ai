@@ -404,4 +404,117 @@ class JarvisCinemaEntranceTest {
         assertTrue(tile.hidden || tile.recede >= 0.999f)
         assertEquals(0f, tile.dx, 0.0001f)
     }
+
+    @Test
+    fun returnFromASettledWorkSceneFliesHologramsOutThenRebuildsTheCockpit() {
+        val slot = JarvisShellLayout.Slot.WORK_DOCUMENT
+        val start = JarvisCinemaEntrance.returnPose(slot, 0, 0L, budget = high)
+        assertTrue(start.contentAlpha > 0.98f)
+        assertFalse(start.hidden)
+
+        val afterData = JarvisCinemaEntrance.returnPose(slot, 0, 160L, budget = high)
+        assertTrue(afterData.contentAlpha < 0.05f)
+
+        val gone = JarvisCinemaEntrance.returnPose(
+            slot, 0, JarvisCinemaEntrance.EXIT_MS, budget = high)
+        assertTrue(gone.hidden || gone.contentAlpha < 0.15f)
+
+        val rest = JarvisCinemaEntrance.returnPose(
+            slot, 0, JarvisCinemaEntrance.EXIT_MS + JarvisCinemaEntrance.SETTLE_MS, budget = high)
+        assertTrue(rest.settled)
+        assertFalse(rest.hidden)
+        assertEquals(1f, rest.contentAlpha, 0.02f)
+    }
+
+    @Test
+    fun returnKeepsIdleTilesHiddenUntilTheCockpitRebuilds() {
+        val hidden = JarvisCinemaEntrance.returnPose(
+            JarvisShellLayout.Slot.TILES, 0, 80L, budget = high)
+        assertTrue(hidden.hidden || hidden.recede >= 0.999f)
+
+        val rebuilt = JarvisCinemaEntrance.returnPose(
+            JarvisShellLayout.Slot.TILES, 0,
+            JarvisCinemaEntrance.EXIT_MS + JarvisCinemaEntrance.SETTLE_MS, budget = high)
+        assertTrue(rebuilt.settled)
+        assertFalse(rebuilt.hidden)
+        assertEquals(1f, rebuilt.contentAlpha, 0.02f)
+    }
+
+    @Test
+    fun returnFliesTheDockOutThenBringsItBack() {
+        val slot = JarvisShellLayout.Slot.BOTTOM_NAV
+        val start = JarvisCinemaEntrance.returnPose(slot, 0, 0L, budget = high)
+        assertTrue(start.contentAlpha > 0.98f)
+        val rest = JarvisCinemaEntrance.returnPose(
+            slot, 0, JarvisCinemaEntrance.EXIT_MS + JarvisCinemaEntrance.SETTLE_MS, budget = high)
+        assertTrue(rest.settled)
+        assertFalse(rest.hidden)
+    }
+
+    @Test
+    fun abortDuringFlyAwayDoesNotPopWindowsBackToRest() {
+        val slot = JarvisShellLayout.Slot.WORK_DOCUMENT
+        val mid = JarvisCinemaEntrance.workOrderPose(slot, 0, 200L, side = 1f, budget = high)
+        val abort = JarvisCinemaEntrance.returnPose(
+            slot, 0, 0L, interruptedAfterMs = 200L, side = 1f, budget = high)
+        assertEquals(mid.recede, abort.recede, 0.08f)
+        assertTrue(abort.contentAlpha < 0.2f)
+        assertTrue(mid.contentAlpha < 0.2f)
+
+        val later = JarvisCinemaEntrance.returnPose(
+            slot, 0, JarvisCinemaEntrance.returnHoldMs(200L) + JarvisCinemaEntrance.SETTLE_MS,
+            interruptedAfterMs = 200L, side = 1f, budget = high)
+        assertTrue(later.settled)
+        assertFalse(later.hidden)
+        assertEquals(1f, later.contentAlpha, 0.02f)
+    }
+
+    @Test
+    fun doubleOrderDuringFlyAwayContinuesInsteadOfRestartingFromRest() {
+        assertEquals(
+            JarvisCinemaEntrance.WorkOrderReplay.IGNORE,
+            JarvisCinemaEntrance.workOrderReplay(sameTurn = true, elapsedMs = 180L))
+        assertEquals(
+            JarvisCinemaEntrance.WorkOrderReplay.CONTINUE_FLIGHT,
+            JarvisCinemaEntrance.workOrderReplay(sameTurn = false, elapsedMs = 180L))
+        assertEquals(
+            JarvisCinemaEntrance.WorkOrderReplay.RESTART_FROM_WORKING,
+            JarvisCinemaEntrance.workOrderReplay(
+                sameTurn = false, elapsedMs = JarvisCinemaEntrance.DEPART_MS + 80L))
+    }
+
+    @Test
+    fun restartFromAWorkingSceneKeepsIdleTilesHidden() {
+        val tiles = JarvisCinemaEntrance.workOrderPose(
+            JarvisShellLayout.Slot.TILES, 0, 0L, side = -1f, budget = high,
+            fromWorkingScene = true)
+        assertTrue(tiles.hidden || tiles.recede >= 0.999f)
+
+        val window = JarvisCinemaEntrance.workOrderPose(
+            JarvisShellLayout.Slot.WORK_DOCUMENT, 0, 0L, side = 1f, budget = high,
+            fromWorkingScene = true)
+        assertTrue(window.contentAlpha > 0.98f)
+        assertFalse(window.hidden)
+
+        val gone = JarvisCinemaEntrance.workOrderPose(
+            JarvisShellLayout.Slot.WORK_DOCUMENT, 0, JarvisCinemaEntrance.DEPART_MS,
+            side = 1f, budget = high, fromWorkingScene = true)
+        assertTrue(gone.hidden || gone.recede >= 0.85f || gone.contentAlpha < 0.12f)
+    }
+
+    @Test
+    fun avatarStaysPutOnReturnAndReducedMotionSettlesToRest() {
+        val avatar = JarvisCinemaEntrance.returnPose(
+            JarvisShellLayout.Slot.AVATAR, 0, 120L, interruptedAfterMs = 200L, budget = high)
+        assertFalse(avatar.hidden)
+        assertEquals(0f, avatar.recede, 0.001f)
+        assertTrue(avatar.contentAlpha > 0.98f)
+
+        val rest = JarvisCinemaEntrance.returnPose(
+            JarvisShellLayout.Slot.WORK_DOCUMENT, 0, 40L,
+            interruptedAfterMs = 200L, budget = reduced)
+        assertTrue(rest.settled)
+        assertFalse(rest.hidden)
+        assertEquals(0f, rest.dx, 0.0001f)
+    }
 }
