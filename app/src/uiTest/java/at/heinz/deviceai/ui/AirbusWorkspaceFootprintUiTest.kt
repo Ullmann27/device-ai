@@ -45,26 +45,22 @@ class AirbusWorkspaceFootprintUiTest {
                 assertNotNull(tag, found)
                 return requireNotNull(found)
             }
-            val tile = descendants(home).firstOrNull { it.tag?.toString()?.startsWith("jarvis-tile:") == true }
-            assertNotNull("at least one tile target", tile)
-            val row = tagged("jarvis-panel:ROW_AGENTS")
+            val dock = tagged("jarvis-bottom:chat")
             val secondary = tagged("jarvis-panel:COCKPIT_SECONDARY")
 
             home.setWorkspaceFootprint(JarvisActionScenes.WorkspaceFootprint.MEDIUM_TERMINAL)
             layout(home) // fold/keyboard/refit-style remeasure
-            assertEquals(View.INVISIBLE, requireNotNull(tile).visibility)
+            assertEquals("medium keeps the tool dock usable", View.VISIBLE, dock.visibility)
             assertEquals(View.INVISIBLE, secondary.visibility)
-            assertEquals("medium keeps mission rows usable", View.VISIBLE, row.visibility)
 
             home.setWorkspaceFootprint(JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY)
             layout(home)
-            assertEquals(View.INVISIBLE, row.visibility)
+            assertEquals("full mission still keeps the tool dock", View.VISIBLE, dock.visibility)
             assertEquals(View.INVISIBLE, secondary.visibility)
 
             home.setWorkspaceFootprint(JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE)
             layout(home)
-            assertEquals(View.VISIBLE, requireNotNull(tile).visibility)
-            assertEquals(View.VISIBLE, row.visibility)
+            assertEquals(View.VISIBLE, dock.visibility)
             assertEquals(View.VISIBLE, secondary.visibility)
         } finally {
             controller.close()

@@ -353,9 +353,13 @@ class JarvisWorkWindowHost(
         val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
         val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))
         val destination = JarvisWorkWindowGeometry.destination(viewport, withOrb, density) ?: return null
-        val navigation = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let {
-            val prefix = if (geometry.hasFeatureTiles) "jarvis-tile:" else "jarvis-rail:"
-            home.findViewWithTag<View>("$prefix${it.target}")
+        val navigation = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let { tile ->
+            val prefixes = when {
+                geometry.hasFeatureTiles -> listOf("jarvis-tile:")
+                geometry[JarvisShellLayout.Slot.BOTTOM_NAV] != null -> listOf("jarvis-bottom:", "jarvis-tile:")
+                else -> listOf("jarvis-rail:", "jarvis-bottom:", "jarvis-tile:")
+            }
+            prefixes.firstNotNullOfOrNull { prefix -> home.findViewWithTag<View>("$prefix${tile.target}") }
         }
         val origin = navigation?.let { visibleBounds(it, container) }
             ?: besideFace(face, viewport, density)
