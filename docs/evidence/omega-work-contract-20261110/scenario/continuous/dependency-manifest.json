@@ -1,0 +1,11 @@
+{
+  "kind": "precompiled app dependencies; critical sources recompiled",
+  "class_count": 2836,
+  "manifest_sha256": "effeb35797e6217d488ca01e0847ccfd988522d0850b532d6adfeb7419f53b07",
+  "kotlin_metadata": {
+    "META-INF/DeviceAI_app_debug.kotlin_module": "4f504437d20f45dd9b4b925a8e1f2aa2a0f74ed4ca403e613389c0f58cfbaee9"
+  },
+  "full_android_build": "NOT_RUN",
+  "model_inference": "NOT_RUN",
+  "Fold7": "NOT_RUN"
+}

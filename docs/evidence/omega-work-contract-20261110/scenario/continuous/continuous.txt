@@ -1,0 +1,20 @@
+HOST_FIXTURE
+initialDecision=Resolved
+target=animation-a
+source=source-a-v1
+constraints=2
+backendCalls=1
+deterministicPlanCallbacks=2
+modelInferenceCalls=0
+animationRepair=NOT_RUN
+Fold7=NOT_RUN
+response=Dateien suchen:
+HOST_FIXTURE: Animation A, Stand source-a-v1, als Datei gefunden. Nur Dateinachweis geprüft; Animation nicht geändert.
+AgentTaskEvidence(taskId=omega-continuous-inspect, attempt=0, requestSha256=339a1d0bba64480ef375a5f6d2225390b16a5ca368a572608112c3523363a0d5, plannedToolNames=[], calls=[AgentToolEvidence(callId=omega-continuous-inspect-1, toolName=find_files, argumentFingerprint=292bd46450f8591f45c8aa4c36304edbd70e23e307daa239d8728e6eeae01d7a, approvalRequested=false, ownerApproved=null, status=SUCCEEDED, outputSha256=27b2642683594a3186d1796ea00e47d1ea523efc28a54bea5ef2410dace8fa3c, freshOutput=true, outcomeUncertain=false, replayed=false)], events=[AgentCognitiveEvent(sequence=0, taskId=omega-continuous-inspect, attempt=0, state=UNDERSTANDING, elapsedMillis=1, callId=null), AgentCognitiveEvent(sequence=1, taskId=omega-continuous-inspect, attempt=0, state=PLANNING, elapsedMillis=1, callId=null), AgentCognitiveEvent(sequence=2, taskId=omega-continuous-inspect, attempt=0, state=EXECUTING, elapsedMillis=5, callId=omega-continuous-inspect-1), AgentCognitiveEvent(sequence=3, taskId=omega-continuous-inspect, attempt=0, state=VERIFYING, elapsedMillis=8, callId=null), AgentCognitiveEvent(sequence=4, taskId=omega-continuous-inspect, attempt=0, state=COMPLETED, elapsedMillis=8, callId=null)], evaluatorSucceeded=true, evaluationConfirmsOutcome=true, outcomeVerified=true, learningCandidateExperienceId=agent-4729bf1be1587193b22fd5624bab35d1-1794342705995-0)
+CommandFlyIn(turnId=omega-continuous-inspect, atMillis=1794342705986, commandPreview=Du, schau mal die Animation von vorher. Die ist noch nicht s)
+ProcessTimeline(turnId=omega-continuous-inspect, atMillis=1794342705986, steps=[ProcessStep(key=ack, label=Auftrag angenommen, state=DONE), ProcessStep(key=work, label=Bearbeitung, state=ACTIVE)])
+ProcessTimeline(turnId=omega-continuous-inspect, atMillis=1794342705993, steps=[ProcessStep(key=ack, label=Auftrag angenommen, state=DONE), ProcessStep(key=work, label=Bearbeitung, state=ACTIVE), ProcessStep(key=tool:omega-continuous-inspect-1, label=Werkzeug: find_files, state=ACTIVE)])
+ActionStarted(turnId=omega-continuous-inspect, atMillis=1794342705993, action=TOOL, detail=find_files, stepKey=tool:omega-continuous-inspect-1)
+ProcessTimeline(turnId=omega-continuous-inspect, atMillis=1794342705996, steps=[ProcessStep(key=ack, label=Auftrag angenommen, state=DONE), ProcessStep(key=work, label=Bearbeitung, state=ACTIVE), ProcessStep(key=tool:omega-continuous-inspect-1, label=Werkzeug: find_files, state=DONE)])
+ProcessTimeline(turnId=omega-continuous-inspect, atMillis=1794342705996, steps=[ProcessStep(key=ack, label=Auftrag angenommen, state=DONE), ProcessStep(key=work, label=Bearbeitung, state=DONE), ProcessStep(key=tool:omega-continuous-inspect-1, label=Werkzeug: find_files, state=DONE)])
+TurnEnded(turnId=omega-continuous-inspect, atMillis=1794342705996, delivered=true)

@@ -22,6 +22,16 @@ sources=(
   app/src/test/java/at/heinz/deviceai/cognitive/OmegaDownstreamScenarioTest.kt
 )
 tests=(at.heinz.deviceai.cognitive.OmegaDownstreamScenarioTest)
+if [[ ${CONTINUUM_OMEGA_CONTINUOUS:-0} == 1 ]]; then
+  sources+=(
+    app/src/main/java/at/heinz/deviceai/cognitive/WorkingTaskContext.kt
+    app/src/main/java/at/heinz/deviceai/cognitive/ConversationSituationModel.kt
+    app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationSituationTracker.kt
+    app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt
+    app/src/test/java/at/heinz/deviceai/cognitive/OmegaContinuousScenarioTest.kt
+  )
+  tests+=(at.heinz.deviceai.cognitive.OmegaContinuousScenarioTest)
+fi
 if [[ ${CONTINUUM_OMEGA_REGRESSIONS:-0} == 1 ]]; then
   sources+=(
     app/src/test/java/at/heinz/deviceai/ToolDispatchObserverTest.kt
@@ -46,6 +56,8 @@ canonical=''.join(f'{name}\0{sha}\n' for name,sha in rows)
 (out/'dependency-manifest.json').write_text(json.dumps({
  'kind':'precompiled app dependencies; critical sources recompiled',
  'class_count':len(rows),'manifest_sha256':hashlib.sha256(canonical.encode()).hexdigest(),
+ 'kotlin_metadata':{str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest()
+                    for p in sorted(root.rglob('*.kotlin_module'))},
  'full_android_build':'NOT_RUN','model_inference':'NOT_RUN','Fold7':'NOT_RUN'},indent=2)+'\n')
 PY
 "$compiler" -version > "$out/toolchain.txt" 2>&1
