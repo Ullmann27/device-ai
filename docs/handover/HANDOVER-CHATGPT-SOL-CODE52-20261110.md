@@ -60,3 +60,15 @@ Referenzbilder liegen privat auf Heinz' Grok-Box (/workspace/continuum-code52-re
 - Maßgeblich für den zusammengeführten Kandidaten ist Lauf [42824622921](https://github.com/Ullmann27/device-ai/actions/runs/42824622921) auf SHA `a21f2bed8e06c81267897bf99abdeae4c348cad5` (#706 = e6db897f + #708 Tiefe/Glas + #711 Phone-Layout/Glas-Hooks + #710 Wegflug). Stand 14:31: Safety-Checks und 36 Host-Frames grün; Full Node/Regression in Arbeit; Backend, Android Compile/Unit/UI/Lint und ARM64 ausstehend.
 - Lauf [42821055622](https://github.com/Ullmann27/device-ai/actions/runs/42821055622) prüft den **alten** SHA `e6db897f622f4d728bc79b571b0073c16701ade4` (Kandidat **ohne** die Grafik-Merges). ChatGPT hat ihn neu angestoßen und in #706 „Entwicklungsstopp, nur Build“ kommentiert. Dieser Lauf zählt **nicht** für die Original-Signatur und ersetzt 42824622921 nicht.
 - Die 9 lokalen Fehler in `coding-orchestrator-failure-report.test.mjs` sind auf den Einzel-Branches #708/#710/#711 in CI nicht aufgetreten (Node-Schritt jeweils success). Vermutlich Box-Umgebung; abwarten, ob 42824622921 sie zeigt. Keine Neuentwicklung, nur Reparatur bei Rot aus dem exakten Log.
+
+## Nachtrag 14:32 Europe/Vienna – BOT 15: Node/Backend auf a21f2bed grün
+Lauf [42824622921](https://github.com/Ullmann27/device-ai/actions/runs/42824622921) @`a21f2bed8e06c81267897bf99abdeae4c348cad5`:
+- Safety-Checks: grün
+- Host-Frames (36): grün
+- Full Node and critical regression gates: **grün** (13:31:14 UTC). Die 9 lokalen Fehler in `coding-orchestrator-failure-report.test.mjs` erscheinen in CI nicht; Box-Umgebung bestätigt.
+- Backend check and tests: **grün**
+- Android SDK: grün
+- Compile native Android app, unit/UI tests and lint: in Arbeit (seit 13:31:17 UTC)
+- ARM64 unsigned: ausstehend
+
+Feature-Freeze (Heinz 14:31): nur BOT 15 repariert, prüft und schließt den Build am Kandidaten #706 ab. Bot 08 liefert nur Analyse. Nichts Neues entwickeln.
