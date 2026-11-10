@@ -117,6 +117,13 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     @Synchronized fun windowOpened(windowId: String, target: GazeTarget = GazeTarget.WORK_WINDOW): Boolean =
         requestWindow(windowId, target, AvatarPoseReducer.WINDOW_GAZE_TTL_MS)
 
+    /**
+     * Peek for cinema fly-in samples: [windowOpened] would otherwise retire the window id
+     * while speech is held ([utterance] set) even before [onRuntime] marks SPEAKING.
+     */
+    @Synchronized fun canAdmitWindowGlance(): Boolean =
+        state != AvatarState.LISTENING && state != AvatarState.SPEAKING && utterance == null
+
     private fun requestWindow(windowId: String, target: GazeTarget, durationMs: Long, yieldsToObservedGaze: Boolean = false): Boolean {
         val at = clock()
         expireAnimationIntents(at)

@@ -1,6 +1,7 @@
 package at.heinz.deviceai.avatar3d
 
 import at.heinz.deviceai.avatar.AvatarExpression
+import at.heinz.deviceai.avatar.AvatarGestureIntent
 import at.heinz.deviceai.avatar.AvatarPose
 import at.heinz.deviceai.avatar.AvatarState
 import at.heinz.deviceai.avatar.Viseme
@@ -10,15 +11,17 @@ import org.junit.Test
 import kotlin.math.abs
 
 class AvatarVorStabilizationTest {
-    private fun pose(gazeX: Float = .5f, directed: Boolean = true, confirm: Float = -1f) =
+    private fun pose(gazeX: Float = .5f, directed: Boolean = true, confirm: Boolean = false) =
         AvatarPose(AvatarState.LISTENING, AvatarExpression.NEUTRAL, gazeX, 0f, 0f, Viseme.SIL,
-            0f, 0f, gazeDirected = directed, confirmationProgress = confirm)
+            0f, 0f, gazeDirected = directed,
+            gesture = if (confirm) AvatarGestureIntent.CONFIRM_NOD else null,
+            gestureProgress = if (confirm) .5f else 0f)
 
     @Test fun extraHeadNodIsCounterRotatedByTheEyesOnADirectedGaze() {
         val base = AvatarMorphMapper(AvatarGlbContract.TARGETS)
         val nodded = AvatarMorphMapper(AvatarGlbContract.TARGETS)
         base.update(pose(), 1f, true)
-        nodded.update(pose(confirm = .5f), 1f, true)
+        nodded.update(pose(confirm = true), 1f, true)
         val extraPitch = nodded.headPitch - base.headPitch
         assertTrue("confirmation still nods the head", extraPitch > 1f)
         assertEquals(

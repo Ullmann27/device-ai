@@ -12,6 +12,7 @@ import at.heinz.deviceai.cockpit.WindowProjectedMotion
  */
 class CinemaWindowGazeBridge(private val director: AvatarDirector) : CockpitAnimationRenderer {
     private val openWindows = linkedMapOf<String, String>()
+    private var lightTurnId: String? = null
 
     override fun render(event: CockpitAnimationEvent) {
         when (event) {
@@ -30,27 +31,30 @@ class CinemaWindowGazeBridge(private val director: AvatarDirector) : CockpitAnim
         val target = GazeTarget(event.gazeX, event.gazeY)
         if (openWindows.containsKey(event.windowId)) {
             director.windowMoved(event.windowId, target)
-        } else if (!busyForGlance() && director.windowOpened(event.windowId, target)) {
+        } else if (director.canAdmitWindowGlance() && director.windowOpened(event.windowId, target)) {
             openWindows[event.windowId] = event.turnId
-        } else if (!busyForGlance()) {
+        } else if (director.canAdmitWindowGlance()) {
             director.windowMoved(event.windowId, target)
         }
         CinemaWindowLightState.apply(event.accentArgb, event.gazeX, open = true)
-    }
-
-    private fun busyForGlance(): Boolean {
-        val state = director.state
-        return state == AvatarState.LISTENING || state == AvatarState.SPEAKING
+        lightTurnId = event.turnId
     }
 
     private fun closeWindow(windowId: String) {
         openWindows.remove(windowId)
         director.windowClosed(windowId)
-        if (openWindows.isEmpty()) CinemaWindowLightState.reset()
+        if (openWindows.isEmpty()) {
+            CinemaWindowLightState.reset()
+            lightTurnId = null
+        }
     }
 
     private fun closeTurn(turnId: String) {
         val closing = openWindows.filterValues { it == turnId }.keys.toList()
         for (id in closing) closeWindow(id)
+        if (lightTurnId == turnId) {
+            CinemaWindowLightState.reset()
+            lightTurnId = null
+        }
     }
 }

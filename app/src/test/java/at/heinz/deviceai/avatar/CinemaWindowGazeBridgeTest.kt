@@ -55,7 +55,7 @@ class CinemaWindowGazeBridgeTest {
         assertFalse(CinemaWindowLightState.open)
         assertNull(CinemaWindowLightState.accentArgb)
 
-        bridge.render(motion(-.5f, turnId = "turn-2"))
+        bridge.render(motion(-.5f, turnId = "turn-2", windowId = "work-process"))
         now += 50L
         bridge.render(CockpitAnimationEvent.TurnEnded("turn-2", now, delivered = true))
         assertFalse(reducer.pose(now).gazeDirected)
