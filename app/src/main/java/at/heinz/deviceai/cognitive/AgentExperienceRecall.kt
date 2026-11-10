@@ -22,7 +22,12 @@ internal object AgentExperienceRecall {
         val queryTerms = words(task)
         if (queryTerms.isEmpty()) return emptyList()
         val candidates = runCatching {
-            lookup.similar("agent_task", task, MAX_CANDIDATES)
+            lookup.similarWithin(
+                "agent_task", task,
+                completedAtFrom = (nowMillis - MAX_AGE_MILLIS).coerceAtLeast(0L),
+                completedAtThrough = nowMillis,
+                limit = MAX_CANDIDATES
+            )
         }.getOrElse { return emptyList() }
         val eligible = candidates.asSequence()
             .filter { exp ->
