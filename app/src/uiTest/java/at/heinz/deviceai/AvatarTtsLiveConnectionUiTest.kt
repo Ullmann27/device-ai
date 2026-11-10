@@ -370,7 +370,9 @@ class AvatarTtsLiveConnectionUiTest {
             set(f.activity, "busy", true)
 
             invoke(f.activity, "cancelLocalRequest")
-            assertFalse("Cancel closes immediately without animation", work.isShown)
+            assertTrue("Cancel closes or begins the existing return animation", !work.isShown ||
+                (work as at.heinz.deviceai.ui.JarvisWorkWindow).projectedMotionPhase() ==
+                at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSING)
             assertFalse("Cancel silences before the lookup return", field(f.activity, "voiceSpeaking") as Boolean)
             shadowOf(Looper.getMainLooper()).idle()
             assertSilent(f)
@@ -379,7 +381,7 @@ class AvatarTtsLiveConnectionUiTest {
             release.countDown()
             held.get(5L, TimeUnit.SECONDS)
             io.submit(Runnable {}).get(5L, TimeUnit.SECONDS)
-            advance(80L)
+            advance(1_200L)
             assertTrue("Late actual status cannot reopen cancelled work",
                 descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
             f.listener.onStart("cancel-window")

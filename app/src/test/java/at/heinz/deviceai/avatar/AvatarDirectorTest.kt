@@ -13,6 +13,33 @@ class AvatarDirectorTest {
     private var now = 1_000L
     private fun director(sink: AvatarSink) = AvatarDirector(sink) { now }
 
+    @Test fun projectedGlanceCannotReplaceActualDocumentReading() {
+        val sink = Recorder(); val d = director(sink)
+        d.onRuntime(AvatarRuntimeSignals(busy = true))
+        assertTrue(d.windowWorkStarted("document", GazeTarget.WORK_WINDOW))
+        assertEquals(false, d.canAdmitWindowGlance())
+        assertEquals(false, d.windowOpened("cinema:turn:document", GazeTarget(-.4f, .2f)))
+        assertTrue(sink.events.filterIsInstance<AvatarEvent.AnimationIntentsChanged>().last().windowReading)
+        assertTrue(d.windowWorkEnded("document"))
+        assertTrue(d.canAdmitWindowGlance())
+        assertTrue(d.windowOpened("cinema:turn:document", GazeTarget.WORK_WINDOW))
+    }
+
+    @Test fun legacyGlanceCannotReplaceActualDocumentReading() {
+        val sink = Recorder(); val d = director(sink)
+        assertTrue(d.windowWorkStarted("document", GazeTarget.WORK_WINDOW))
+        d.onWindowPresented()
+        assertTrue(sink.events.filterIsInstance<AvatarEvent.AnimationIntentsChanged>().last().windowReading)
+    }
+
+    @Test fun expiredReadingCannotBlockLaterWindows() {
+        val d = director(Recorder())
+        assertTrue(d.windowWorkStarted("document", GazeTarget.WORK_WINDOW))
+        now += AvatarPoseReducer.MAX_WINDOW_WORK_MS
+        assertTrue(d.canAdmitWindowGlance())
+        assertTrue(d.windowOpened("next-window", GazeTarget.WORK_WINDOW))
+    }
+
     @Test fun runtimeFlagsMapToOneStateWithPriorityAndNoDuplicates() {
         val r = Recorder(); val d = director(r)
         d.onRuntime(AvatarRuntimeSignals(busy = true))

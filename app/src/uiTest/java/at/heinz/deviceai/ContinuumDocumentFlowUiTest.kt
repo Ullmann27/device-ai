@@ -347,8 +347,8 @@ class ContinuumDocumentFlowUiTest {
         until(root, "the stopped run has ended") { !(field(activity, "busy") as Boolean) }
         assertEquals(1, context(activity).sessionEvidence(field(activity, "sessionId") as String)
             .orEmpty().count { it == "Entwurf: Zusammenfassung von „Notizen.pdf“" })
-        advance(400L); measure(root); draw(root)
-        assertFalse("STOP folds the window away at once", descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+        advance(1_200L); measure(root); draw(root)
+        assertFalse("STOP completes the bounded window return", descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
         assertEquals("the cockpit stays the stage after STOP", ContinuumWorkArea.START, field(activity, "activeWorkArea"))
         val sequence = field(field(activity, "hologramView")!!, "cockpitSequence") as at.heinz.deviceai.ui.JarvisSequenceView
         assertFalse("with the window gone the cards are back at their cockpit place", sequence.effects.docked)
