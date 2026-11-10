@@ -382,7 +382,9 @@ class AvatarTtsLiveConnectionUiTest {
             assertFalse(field(f.activity, "activeLocalRequest") as Boolean)
             assertFalse(field(f.activity, "busy") as Boolean)
             assertNull(field(f.activity, "currentTaskEffectContext"))
-            assertNull(field(field(f.activity, "workWindowHost")!!, "workingId"))
+            val host = AgentActivity::class.java.getDeclaredMethod("getWorkWindowHost")
+                .apply { isAccessible = true }.invoke(f.activity)
+            assertNull(field(requireNotNull(host), "workingId"))
             val window = work as JarvisWorkWindow
             if (work.isShown) assertEquals("Only the cancelled return remains",
                 at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSING, window.projectedMotionPhase())
