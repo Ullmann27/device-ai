@@ -12,13 +12,17 @@ class StorageContentAnalysisTest {
         val children = mutableMapOf<String, List<StorageDocument>>()
         var opened = 0
         var afterOpen: (() -> Unit)? = null
+        var metadataHook: (() -> Unit)? = null
         fun file(id: String, name: String, value: String, virtual: Boolean = false): StorageDocument {
             bytes[id] = value.toByteArray()
             return StorageDocument(id, name, "application/octet-stream", bytes.getValue(id).size.toLong(),
                 1_000, virtual = virtual).also { docs[id] = it }
         }
         override fun children(parentId: String, limit: Int) = children[parentId].orEmpty().take(limit)
-        override fun metadata(id: String) = docs[id]
+        override fun metadata(id: String): StorageDocument? {
+            metadataHook?.invoke()
+            return docs[id]
+        }
         override fun open(id: String): InputStream {
             opened++
             afterOpen?.invoke()
@@ -139,5 +143,17 @@ class StorageContentAnalysisTest {
         assertEquals(1, result.files.size)
         assertTrue(result.duplicates.isEmpty())
         assertEquals(0, source.opened)
+    }
+
+    @Test fun deadlineAfterFinalMetadataRejectsLateHash() {
+        val source = Source()
+        val docs = listOf(source.file("a", "a", "abc"), source.file("b", "b", "abc"))
+        var now = 0L
+        var calls = 0
+        source.metadataHook = { if (++calls >= 2) now = 100 }
+        val result = StorageContentAnalyzer(StorageScanLimits(maxDurationMs = 50)) { now }.analyze(source, docs)
+        assertTrue(result.duplicates.isEmpty())
+        assertNull(result.files.first().contentSha256)
+        assertFalse(result.complete)
     }
 }

@@ -45,11 +45,7 @@ class AndroidSystemDiagnosis(private val context: Context) {
         val temperature = battery?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, Int.MIN_VALUE)
             ?.takeIf { it in -400..1000 }?.div(10.0)
         if (temperature == null) missing.add("Akkutemperatur")
-        val charging = when (battery?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)) {
-            null, -1 -> null
-            0 -> false
-            else -> true
-        }
+        val charging = chargingStatus(battery?.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_STATUS_UNKNOWN))
         val thermal = if (Build.VERSION.SDK_INT >= 29) sample("Thermalstatus") {
             (context.getSystemService(Context.POWER_SERVICE) as PowerManager).currentThermalStatus.also { require(it in 0..6) }
         } else null
@@ -64,5 +60,14 @@ class AndroidSystemDiagnosis(private val context: Context) {
         return SystemDiagnosis(System.currentTimeMillis(), Build.VERSION.SDK_INT, disk?.first, disk?.second,
             memory?.totalMem, memory?.availMem, memory?.lowMemory, pss, percent, temperature, charging,
             thermal, cpu, wallDelta.coerceAtLeast(0), missing)
+    }
+
+    companion object {
+        internal fun chargingStatus(status: Int?): Boolean? = when (status) {
+            BatteryManager.BATTERY_STATUS_CHARGING -> true
+            BatteryManager.BATTERY_STATUS_FULL, BatteryManager.BATTERY_STATUS_DISCHARGING,
+            BatteryManager.BATTERY_STATUS_NOT_CHARGING -> false
+            else -> null
+        }
     }
 }

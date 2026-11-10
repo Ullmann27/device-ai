@@ -12,7 +12,7 @@ import android.os.SystemClock
 import android.provider.DocumentsContract
 import java.io.FilterInputStream
 import java.io.InputStream
-import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
@@ -23,34 +23,37 @@ class SystemStorageInspector(
     private val app = context.applicationContext
     private val cache = OwnDiagnosticCache(app.cacheDir, app.noBackupFilesDir)
 
-    fun retainDiagnosis(record: DiagnosticCacheRecord): String = cache.retain(record)
+    fun retainDiagnosis(record: DiagnosticCacheRecord, cancelled: () -> Boolean = { false }): String = cache.retain(record, cancelled)
     fun diagnosisHistory(): List<DiagnosticCacheRecord> = cache.history()
     fun previewOwnCache(cancelled: () -> Boolean = { false }): OwnCachePreview = cache.preview(cancelled)
     fun cleanupOwnCache(previewId: String, planDigest: String, cancelled: () -> Boolean = { false }): OwnCacheCleanupResult =
         cache.cleanup(previewId, planDigest, cancelled)
-    fun restoreOwnCache(undoId: String): OwnCacheCleanupResult = cache.restore(undoId)
+    fun restoreOwnCache(undoId: String, cancelled: () -> Boolean = { false }): OwnCacheCleanupResult = cache.restore(undoId, cancelled)
 
-    fun analyzeGrantedTree(uri: Uri, cancelled: () -> Boolean = { false }): StorageAnalysis {
+    fun analyzeGrantedTree(uri: Uri, cancelled: () -> Boolean = { false }): StorageAnalysis = boundedScan(cancelled) { stopped ->
         require(DocumentsContract.isTreeUri(uri)) { "TREE_URI_REQUIRED" }
         validateLocalGrant(uri)
-        LocalSource(uri, emptyMap(), cancelled).use { source ->
+        LocalSource(uri, emptyMap(), stopped).use { source ->
             val id = DocumentsContract.getTreeDocumentId(uri)
             val root = source.metadata(id) ?: error("TREE_UNAVAILABLE")
             check(root.directory) { "TREE_DIRECTORY_REQUIRED" }
-            return StorageContentAnalyzer(limits, SystemClock::elapsedRealtime).analyze(source, listOf(root), cancelled)
+            StorageContentAnalyzer(limits, SystemClock::elapsedRealtime).analyze(source, listOf(root), stopped)
         }
     }
 
-    fun analyzeSelectedDocuments(uris: List<Uri>, cancelled: () -> Boolean = { false }): StorageAnalysis {
+    fun analyzeSelectedDocuments(uris: List<Uri>, cancelled: () -> Boolean = { false }): StorageAnalysis = boundedScan(cancelled) { stopped ->
         require(uris.isNotEmpty() && uris.size <= limits.maxEntries) { "DOCUMENT_SELECTION_LIMIT" }
         uris.forEach(::validateLocalGrant)
         val selected = uris.distinct().associateBy { it.toString() }
-        LocalSource(null, selected, cancelled).use { source ->
+        LocalSource(null, selected, stopped).use { source ->
             val documents = selected.keys.map { source.metadata(it) ?: error("DOCUMENT_UNAVAILABLE") }
             require(documents.none { it.directory }) { "SELECT_FILES_OR_USE_TREE" }
-            return StorageContentAnalyzer(limits, SystemClock::elapsedRealtime).analyze(source, documents, cancelled)
+            StorageContentAnalyzer(limits, SystemClock::elapsedRealtime).analyze(source, documents, stopped)
         }
     }
+
+    private fun boundedScan(cancelled: () -> Boolean, work: (() -> Boolean) -> StorageAnalysis): StorageAnalysis =
+        SCAN_LANE.run(minOf(limits.maxDurationMs + 2_000, 12_000), cancelled, work)
 
     private fun validateLocalGrant(uri: Uri) {
         require(uri.scheme == "content" && uri.authority in LOCAL_AUTHORITIES) { "LOCAL_SYSTEM_DOCUMENT_PROVIDER_REQUIRED" }
@@ -70,17 +73,12 @@ class SystemStorageInspector(
         private val signal = CancellationSignal()
         private val deadline = SystemClock.elapsedRealtime() + limits.maxDurationMs
         private val active = AtomicReference<ParcelFileDescriptor?>()
-        private val guard = Executors.newSingleThreadScheduledExecutor { runnable ->
-            Thread(runnable, "continuum-storage-deadline").apply { isDaemon = true }
-        }
-        init {
-            guard.scheduleAtFixedRate({
+        private val guard = SCAN_GUARD.scheduleAtFixedRate({
                 if (cancelled() || SystemClock.elapsedRealtime() >= deadline) {
-                    signal.cancel()
                     runCatching { active.getAndSet(null)?.close() }
+                    signal.cancel()
                 }
             }, 0, 100, TimeUnit.MILLISECONDS)
-        }
 
         private fun checkActive() {
             check(!cancelled() && !Thread.currentThread().isInterrupted && SystemClock.elapsedRealtime() < deadline) {
@@ -164,13 +162,16 @@ class SystemStorageInspector(
         }
 
         override fun close() {
-            guard.shutdownNow()
-            signal.cancel()
+            guard.cancel(false)
             runCatching { active.getAndSet(null)?.close() }
         }
     }
 
     companion object {
+        private val SCAN_LANE = StorageScanLane()
+        private val SCAN_GUARD = ScheduledThreadPoolExecutor(1) { runnable ->
+            Thread(runnable, "continuum-storage-deadline").apply { isDaemon = true }
+        }.apply { removeOnCancelPolicy = true }
         private val LOCAL_AUTHORITIES = setOf("com.android.externalstorage.documents",
             "com.android.providers.downloads.documents", "com.android.providers.media.documents")
         private val PROJECTION = arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID,

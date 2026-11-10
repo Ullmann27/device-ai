@@ -1,7 +1,6 @@
 package at.heinz.deviceai
 
 import android.content.Context
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import org.json.JSONArray
@@ -11,6 +10,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 data class MentorPairingResult(val approved: Boolean, val fingerprint: String)
+
+internal fun cloudConversationPayload(sessionId: String, message: String?, outputs: List<ToolOutput>): JSONObject =
+    JSONObject().apply {
+        put("session_id", sessionId)
+        if (!message.isNullOrBlank()) put("message", message)
+        if (outputs.isNotEmpty()) put("tool_outputs", JSONArray().apply {
+            outputs.forEach { output -> put(JSONObject().put("call_id", output.callId).put("output", output.output)) }
+        })
+    }
 
 data class RemoteContinuumStatus(
     val autonomousResearchEnabled: Boolean,
@@ -217,7 +225,6 @@ class AgentBackendClient(private val context: Context) {
     fun send(
         sessionId: String,
         message: String?,
-        shizukuReady: Boolean,
         toolOutputs: List<ToolOutput> = emptyList(),
         callback: (Result<AgentReply>) -> Unit
     ) {
@@ -230,28 +237,7 @@ class AgentBackendClient(private val context: Context) {
 
         Thread {
             val result = runCatching {
-                val body = JSONObject().apply {
-                    put("session_id", sessionId)
-                    if (!message.isNullOrBlank()) put("message", message)
-                    put("device", JSONObject().apply {
-                        put("manufacturer", Build.MANUFACTURER)
-                        put("model", Build.MODEL)
-                        put("android", Build.VERSION.RELEASE)
-                        put("sdk", Build.VERSION.SDK_INT)
-                        put("app_version", BuildConfig.VERSION_NAME)
-                        put("shizuku_ready", shizukuReady)
-                    })
-                    if (toolOutputs.isNotEmpty()) {
-                        put("tool_outputs", JSONArray().apply {
-                            toolOutputs.forEach { output ->
-                                put(JSONObject().apply {
-                                    put("call_id", output.callId)
-                                    put("output", output.output)
-                                })
-                            }
-                        })
-                    }
-                }
+                val body = cloudConversationPayload(sessionId, message, toolOutputs)
 
                 val raw = request(
                     "POST",

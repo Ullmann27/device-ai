@@ -26,14 +26,14 @@ grants. The root integrator must hold one instance and run it off the UI thread.
 - `analyzeGrantedTree(uri, cancelled)` reads a specifically selected tree.
 - `analyzeSelectedDocuments(uris, cancelled)` covers individually selected files,
   including Downloads where Android refuses the root tree grant.
-- `retainDiagnosis(DiagnosticCacheRecord(...))` retains only an actual observed
+- `retainDiagnosis(DiagnosticCacheRecord(...), cancelled)` retains only an actual observed
   numeric diagnostic summary for local history, max 32 records of 1024 bytes each.
   It rejects growth when full; it never evicts records silently.
 - `diagnosisHistory()` rechecks the owned numeric records for local review.
 - `previewOwnCache(cancelled)` produces an ephemeral, expiring exact file plan.
 - `cleanupOwnCache(previewId, planDigest, cancelled)` requires the existing
   ToolGate's per-action user approval. It cannot accept a caller-provided path.
-- `restoreOwnCache(undoId)` restores only the last cleanup, while the process
+- `restoreOwnCache(undoId, cancelled)` restores only the last cleanup, while the process
   remains alive, for at most ten minutes, and never overwrites a target.
 
 The new history contains timestamps, available volume bytes, app PSS bytes,
@@ -53,10 +53,15 @@ grants are checked again during operations; no hidden persistence of grants.
 
 Default scan limits: 512 entries, 12 levels, 128 MiB cumulative read budget,
 32 MiB per hashed file and 8 seconds. Cursor queries and opens carry a cancellation
-signal. A short-lived deadline watcher cancels provider operations and closes the
-active descriptor. Non-regular streaming descriptors are refused. Android provider
-cooperation and device timing still need physical validation; this is not a hard
-real-time cancellation guarantee for a malfunctioning provider.
+signal. One shared single-worker lane performs provider IPC, with a bounded caller
+wait of at most 12 seconds. Timeout/STOP revokes results before interrupting the
+worker; a stuck provider keeps the lane busy, so replacements cannot accumulate.
+One shared cancellation watcher first attempts descriptor closure, then provider
+cancellation. Its thread count cannot grow if cancellation itself blocks. Pending
+watchers are removed when a scan completes. Non-regular streaming descriptors are
+refused. A malfunctioning provider may retain that worker until it returns; Android
+provider cooperation and physical timing remain device gates. Final metadata and
+EOF completion are followed by another deadline check before accepting a hash.
 
 Equal positive sizes select candidates. Complete SHA-256 streams plus unchanged
 metadata establish content matches; names never establish duplicates. Oversized,
@@ -78,7 +83,20 @@ Each entry is moved to an unpredictable holding name, rechecked, then unlinked.
 Unsupported providers return `SECURE_DELETE_UNAVAILABLE` without deletion. An
 unexpected post-move change leaves the held entry protected and returns
 `QUARANTINED_REVIEW_REQUIRED`; it does not risk overwriting another file to restore
-it automatically. Android support must be measured on the actual device.
+it automatically. The result's `quarantineId` names the retained entry under
+`cacheDir/system-diagnostics`; `.cleanup-<original-record-id>-<UUID>` also retains
+the original record mapping after process death. The original name is
+`summary-<original-record-id>.cdiag`. Inspect that exact protected entry and restore
+only after verifying its contents and an absent destination. No automatic unknown
+content recovery or deletion is claimed. Android support must be measured on the
+actual device.
+
+Retain/restore check STOP after synchronized admission and before each new file
+mutation. Partial restore keeps the remaining undo set; ownership bookkeeping for
+already completed writes is finalized to report the actual outcome. These ordinary
+private-cache writes use path checks; only deletion uses anchored directory handles.
+This does not claim protection against arbitrary malicious code with the same UID
+racing all private-directory or file-descriptor operations.
 
 `logicalBytesRemoved` counts verified record bytes; `availableBytesDelta` is a
 separate volume observation that can be zero or negative under concurrent I/O.
@@ -92,6 +110,12 @@ Focused host tests use real temporary files, hashes, replacement inodes, symlink
 cleanup and restoration; document-provider cases inject bounded streams/metadata.
 They are not real Android-provider or Fold7 tests. Standalone compile against the
 installed Android API 36 jar is distinct from a full Android application build.
+
+Final review run: 34/34 focused host tests PASS; four production files compiled
+against the Android API 36 jar. Includes real hung-worker timeout/STOP controls,
+replacement-worker refusal, final-metadata expiry, monitor-wait STOP, partial undo,
+same-content inode replacement, symlink protection and content-duplicate negatives.
+No full Gradle application build, real document provider or Fold7 test in this subtask.
 
 Reproduce:
 

@@ -2,6 +2,9 @@ package at.heinz.deviceai.systemintelligence
 
 import java.io.File
 import java.nio.file.Files
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -185,5 +188,60 @@ class OwnDiagnosticCacheTest {
         assertTrue(cleaner.preview().entries.isEmpty())
         cleaner.retain(record(999))
         assertEquals(listOf(record(999)), cleaner.history())
+    }
+
+    @Test fun stopWhileWaitingForMonitorCannotRetainSnapshot() {
+        val (cleaner, cache) = fixture()
+        val started = CountDownLatch(1)
+        val outcome = AtomicReference<Throwable?>()
+        val caller = Thread {
+            started.countDown()
+            try { cleaner.retain(record()) } catch (failure: Throwable) { outcome.set(failure) }
+        }
+        synchronized(cleaner) {
+            caller.start()
+            assertTrue(started.await(1, TimeUnit.SECONDS))
+            caller.interrupt()
+        }
+        caller.join(1_000)
+        assertFalse(caller.isAlive)
+        assertEquals("CACHE_OPERATION_CANCELLED", outcome.get()?.message)
+        assertTrue(cache.listFiles()!!.isEmpty())
+    }
+
+    @Test fun stopWhileWaitingForMonitorCannotRestoreSnapshot() {
+        val (cleaner) = fixture()
+        cleaner.retain(record())
+        val preview = cleaner.preview()
+        val cleanup = cleaner.cleanup(preview.previewId, preview.planDigest)
+        val started = CountDownLatch(1)
+        val outcome = AtomicReference<OwnCacheCleanupResult?>()
+        val caller = Thread {
+            started.countDown()
+            outcome.set(cleaner.restore(cleanup.undoId!!))
+        }
+        synchronized(cleaner) {
+            caller.start()
+            assertTrue(started.await(1, TimeUnit.SECONDS))
+            caller.interrupt()
+        }
+        caller.join(1_000)
+        assertFalse(caller.isAlive)
+        assertEquals("CANCELLED", outcome.get()?.status)
+        assertTrue(cleaner.history().isEmpty())
+    }
+
+    @Test fun partialRestorePreservesRemainingUndo() {
+        val (cleaner) = fixture()
+        repeat(3) { cleaner.retain(record(it.toLong())) }
+        val preview = cleaner.preview()
+        val cleanup = cleaner.cleanup(preview.previewId, preview.planDigest)
+        var checks = 0
+        val partial = cleaner.restore(cleanup.undoId!!) { ++checks > 2 }
+        assertEquals("RESTORE_CANCELLED_PARTIAL", partial.status)
+        assertEquals(1, partial.restoredFiles)
+        assertEquals(1, cleaner.history().size)
+        assertEquals("RESTORED", cleaner.restore(cleanup.undoId).status)
+        assertEquals(3, cleaner.history().size)
     }
 }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import at.heinz.deviceai.systemintelligence.SystemDiagnosis
 import at.heinz.deviceai.systemintelligence.SystemIntelligenceCommands
+import at.heinz.deviceai.systemintelligence.AndroidSystemDiagnosis
 import at.heinz.deviceai.ui.SystemDiagnosisHologramView
 import org.junit.Assert.*
 import org.junit.Test
@@ -29,6 +30,18 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class SystemIntelligenceUiTest {
+    @Test fun cloudEnvelopeContainsNoAutomaticDeviceMetadata() {
+        val payload = cloudConversationPayload("fixture", "Hallo", emptyList())
+        assertEquals(setOf("session_id", "message"), payload.keys().asSequence().toSet())
+        assertFalse(payload.has("device"))
+        assertFalse(payload.toString().contains("shizuku_ready"))
+    }
+    @Test fun pluggedButNotChargingRemainsFalse() {
+        assertEquals(false, AndroidSystemDiagnosis.chargingStatus(android.os.BatteryManager.BATTERY_STATUS_NOT_CHARGING))
+        assertEquals(false, AndroidSystemDiagnosis.chargingStatus(android.os.BatteryManager.BATTERY_STATUS_FULL))
+        assertEquals(true, AndroidSystemDiagnosis.chargingStatus(android.os.BatteryManager.BATTERY_STATUS_CHARGING))
+        assertNull(AndroidSystemDiagnosis.chargingStatus(android.os.BatteryManager.BATTERY_STATUS_UNKNOWN))
+    }
     @Test fun nativeDeviceInformationDoesNotRequireShizuku() {
         val app = RuntimeEnvironment.getApplication()
         var bridgeCalls = 0
@@ -121,6 +134,19 @@ class SystemIntelligenceUiTest {
             val result = gate.execute(ToolInvocation(unauthorized.callId, unauthorized))
             assertEquals(ToolExecutionStatus.FAILED, result.record.status)
             assertSame(sample, executor.lastDiagnosis)
+            val confirm = AgentActivity::class.java.getDeclaredMethod("confirmSystemChange",
+                ToolCallRequest::class.java, String::class.java, Boolean::class.javaPrimitiveType).apply { isAccessible = true }
+            for (name in listOf(SystemIntelligenceCommands.SAVE, SystemIntelligenceCommands.CLEANUP, SystemIntelligenceCommands.RESTORE)) {
+                val pending = ToolCallRequest("stale-$name", name, emptyMap())
+                confirm.invoke(activity, pending, "Stale approval fixture", name == SystemIntelligenceCommands.CLEANUP)
+                val dialog = field("systemConfirmationDialog").get(activity) as android.app.AlertDialog
+                assertTrue(dialog.isShowing)
+                controller.pause(); controller.resume()
+                assertFalse(dialog.isShowing)
+                dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick()
+                assertNull(field("activeSystemGate").get(activity))
+                assertFalse(field("busy").getBoolean(activity))
+            }
         } finally { pump?.close(); runCatching { controller.close() } }
     }
     private fun descendants(view: View): Sequence<View> = sequence {

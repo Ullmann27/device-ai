@@ -22,7 +22,7 @@ class DeviceToolExecutor internal constructor(
         private set
     @Volatile internal var lastCleanupUndoId: String? = null
         private set
-    @Volatile internal var lastCleanupResult: OwnCacheCleanupResult? = null
+    @Volatile internal var lastCleanupResult: Pair<String, OwnCacheCleanupResult>? = null
         private set
     private data class SelectedStorage(val token: String, val uris: List<android.net.Uri>, val deadline: Long)
     private val selectedStorage = java.util.concurrent.atomic.AtomicReference<SelectedStorage?>(null)
@@ -158,7 +158,7 @@ class DeviceToolExecutor internal constructor(
                 val snapshot = lastDiagnosis ?: error("NO_SYSTEM_SNAPSHOT")
                 check(requiredString(call, "snapshotId") == snapshot.observedAtMillis.toString()) { "SYSTEM_SNAPSHOT_CHANGED" }
                 val id = systemStorage.retainDiagnosis(DiagnosticCacheRecord(snapshot.observedAtMillis,
-                    snapshot.storageAvailableBytes, snapshot.ownPssBytes, snapshot.batteryPercent, snapshot.thermalStatus))
+                    snapshot.storageAvailableBytes, snapshot.ownPssBytes, snapshot.batteryPercent, snapshot.thermalStatus), ::cancelled)
                 "Technische Momentaufnahme lokal gespeichert: $id. Keine persönlichen Inhalte."
             }
             SystemIntelligenceCommands.DIAGNOSE -> {
@@ -175,14 +175,14 @@ class DeviceToolExecutor internal constructor(
             SystemIntelligenceCommands.CLEANUP -> systemStorage.cleanupOwnCache(
                 requiredString(call, "previewId"), requiredString(call, "planDigest"), ::cancelled).let {
                 lastCachePreview = null
-                lastCleanupUndoId = it.undoId
-                lastCleanupResult = it
+                if (it.undoId != null) lastCleanupUndoId = it.undoId
+                lastCleanupResult = call.callId to it
                 if (it.status != "COMPLETED") throw ToolBackendFailure(ToolExecutionStatus.FAILED, "CACHE_${it.status}")
                 "Cache-Ergebnis: ${it.status}; ${it.removedFiles} Berichte; logisch ${it.logicalBytesRemoved} Byte." +
                     "\nGemessene Platzänderung: ${it.availableBytesDelta?.let { delta -> "$delta Byte" } ?: "nicht verfügbar"}. Rücknahme: ${it.undoId != null}. Kein Geschwindigkeitsnachweis."
             }
-            SystemIntelligenceCommands.RESTORE -> systemStorage.restoreOwnCache(requiredString(call, "undoId")).let {
-                lastCleanupResult = it
+            SystemIntelligenceCommands.RESTORE -> systemStorage.restoreOwnCache(requiredString(call, "undoId"), ::cancelled).let {
+                lastCleanupResult = call.callId to it
                 if (it.status != "RESTORED") throw ToolBackendFailure(ToolExecutionStatus.FAILED, "CACHE_${it.status}")
                 lastCleanupUndoId = null
                 "Wiederherstellung: ${it.status}."

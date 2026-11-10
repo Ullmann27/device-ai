@@ -218,6 +218,7 @@ class AgentActivity : Activity() {
     private var systemPickerSession: String? = null
     private var systemReport = "Noch keine Diagnose ausgeführt."
     private var systemBaseline: SystemPerformanceCapture? = null
+    private var systemConfirmationDialog: AlertDialog? = null
     private lateinit var backend: AgentBackendClient
     private lateinit var modelCatalog: LocalModelCatalog
     private lateinit var localRuntime: LocalModelRuntime
@@ -3748,13 +3749,13 @@ class AgentActivity : Activity() {
         liveHardwareGauges = null
         val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
         val box = cockpit.panel(this, "DEVICE AI · DEIN BEREICH", title, intro)
+        if (title == "Systemdiagnose") {
+            box.addView(at.heinz.deviceai.ui.SystemDiagnosisHologramView(this, executor.lastDiagnosis), matchWidth(top = 8))
+        }
         box.addView(cockpit.section(this, "LIVE-STATUS · ECHTE GERÄTEDATEN"), matchWidth(top = 12))
         val statusGrid = cockpit.statusPane(this)
         cockpit.updateStatus(statusGrid, "Status wird gelesen …")
         box.addView(statusGrid, matchWidth(top = 3))
-        if (title == "Systemdiagnose") {
-            box.addView(at.heinz.deviceai.ui.SystemDiagnosisHologramView(this, executor.lastDiagnosis), matchWidth(top = 8))
-        }
         if (title == "Systemstatus") {
             box.addView(cockpit.section(this, "HARDWARE · LIVE-WERTE (ALLE 5 SEKUNDEN)"),
                 matchWidth(top = 10))
@@ -4377,7 +4378,7 @@ class AgentActivity : Activity() {
         )
     )
 
-    private fun showSystemIntelligence() = showCenter(
+    private fun showSystemIntelligence(): Unit = showCenter(
         "Systemdiagnose", "Lokale Messungen und ausdrücklich freigegebene Schritte. Root bleibt deaktiviert.",
         { done -> done(systemReport) },
         listOf(
@@ -4394,7 +4395,7 @@ class AgentActivity : Activity() {
                 executor.lastDiagnosis?.let { snapshot ->
                     val call = ToolCallRequest(UUID.randomUUID().toString(), SystemIntelligenceCommands.SAVE,
                         mapOf("snapshotId" to snapshot.observedAtMillis.toString()))
-                    showToolConfirmation(call, false) { allowed -> if (allowed) dispatchSystemTool(call, true, false) }
+                    confirmSystemChange(call, "Diese gemessenen technischen Zahlen lokal speichern?\n${snapshot.report()}", false)
                 }
             },
             CenterAction("DATEIEN AUSWÄHLEN & PRÜFEN") { selectSystemFiles() },
@@ -4403,7 +4404,7 @@ class AgentActivity : Activity() {
             CenterAction("BEREINIGUNG ZURÜCKNEHMEN") {
                 executor.lastCleanupUndoId?.let { undoId ->
                     val call = ToolCallRequest(UUID.randomUUID().toString(), SystemIntelligenceCommands.RESTORE, mapOf("undoId" to undoId))
-                    showToolConfirmation(call, false) { allowed -> if (allowed) dispatchSystemTool(call, true, false) }
+                    confirmSystemChange(call, "Die zuletzt entfernten technischen Diagnoseberichte wiederherstellen?", false)
                 }
             },
             CenterAction("SHIZUKU-ZUGRIFF PRÜFEN") { runSystemTool(SystemIntelligenceCommands.CAPABILITIES) },
@@ -4439,9 +4440,10 @@ class AgentActivity : Activity() {
             setBusy(false)
             systemReport = result.output ?: "Schritt nicht erfolgreich: ${result.record.status}. Keine Verbesserung bestätigt."
             if (call.name in setOf(SystemIntelligenceCommands.CLEANUP, SystemIntelligenceCommands.RESTORE)) {
-                executor.lastCleanupResult?.let {
+                executor.lastCleanupResult?.takeIf { it.first == call.callId }?.second?.let {
                     systemReport += "\nBereinigungsstatus: ${it.status}; entfernte Berichte: ${it.removedFiles}." +
                         "\nRücknahme verfügbar: ${executor.lastCleanupUndoId != null}."
+                    it.quarantineId?.let { id -> systemReport += "\nZur Prüfung erhalten: $id. Nicht als bereinigt gewertet." }
                 }
             }
             if (call.name == SystemIntelligenceCommands.CAPABILITIES && result.record.status != ToolExecutionStatus.SUCCEEDED)
@@ -4470,16 +4472,26 @@ class AgentActivity : Activity() {
         }
         val call = ToolCallRequest(UUID.randomUUID().toString(), SystemIntelligenceCommands.CLEANUP,
             mapOf("previewId" to preview.previewId, "planDigest" to preview.planDigest))
-        val ownerSession = sessionId
-        AlertDialog.Builder(this).setTitle("Diese Diagnoseberichte entfernen?")
-            .setMessage("Nur regenerierbare technische Momentaufnahmen. Persönliche Daten, Modellgewichte und APKs bleiben geschützt. " +
+        confirmSystemChange(call, "Nur regenerierbare technische Momentaufnahmen. Persönliche Daten, Modellgewichte und APKs bleiben geschützt. " +
                 "Rücknahme ist 10 Minuten im laufenden App-Prozess möglich; nach App-Ende nicht mehr. Nur diese technischen Berichte werden gelöscht.\n\n" +
                 preview.entries.joinToString("\n") { "${it.id}: ${it.bytes} Byte" } +
-                "\n\nGesamt: ${preview.eligibleBytes} Byte. Kein schnelleres Gerät versprochen.")
+                "\n\nGesamt: ${preview.eligibleBytes} Byte. Kein schnelleres Gerät versprochen.", true)
+    }
+
+    private fun confirmSystemChange(call: ToolCallRequest, message: String, destructive: Boolean) {
+        if (busy || !foregroundLearningActive || isFinishing || isDestroyed) return
+        val ownerSession = sessionId
+        val generation = systemGeneration
+        systemConfirmationDialog?.dismiss()
+        val dialog = AlertDialog.Builder(this).setTitle(ToolRegistry.label(call.name)).setMessage(message)
             .setNegativeButton("Abbrechen", null)
-            .setPositiveButton("Diese Berichte entfernen") { _, _ ->
-                if (ownerSession == sessionId && foregroundLearningActive) dispatchSystemTool(call, true, true)
-            }.show()
+            .setPositiveButton(if (destructive) "Diese Berichte entfernen" else "Freigeben") { _, _ ->
+                if (ownerSession == sessionId && generation == systemGeneration && foregroundLearningActive)
+                    dispatchSystemTool(call, true, destructive)
+            }.create()
+        systemConfirmationDialog = dialog
+        dialog.setOnDismissListener { if (systemConfirmationDialog === dialog) systemConfirmationDialog = null }
+        dialog.show()
     }
 
     private fun selectSystemFiles() {
@@ -4498,7 +4510,7 @@ class AgentActivity : Activity() {
         val display = resources.displayMetrics
         val conditions = SystemPerformanceConditions(
             "${android.os.Build.MANUFACTURER}/${android.os.Build.MODEL}",
-            "${android.os.Build.FINGERPRINT}/${BuildConfig.VERSION_CODE}", "system-snapshot-v1", "idle-observation",
+            "", "system-snapshot-v1", "idle-observation",
             "${display.widthPixels}x${display.heightPixels}/${display.densityDpi}",
             batteryPercent = sample.batteryPercent, charging = sample.charging,
             batteryTemperatureC = sample.batteryTemperatureC, thermalStatus = sample.thermalStatus)
@@ -4513,6 +4525,8 @@ class AgentActivity : Activity() {
 
     private fun cancelSystemDiagnosis() {
         systemGeneration++
+        systemConfirmationDialog?.dismiss()
+        systemConfirmationDialog = null
         activeSystemGate?.cancel()
         if (activeSystemGate != null) {
             activeSystemGate = null
@@ -9734,7 +9748,6 @@ class AgentActivity : Activity() {
         backend.send(
             sessionId = sessionId,
             message = message,
-            shizukuReady = bridge.isReady(),
             toolOutputs = outputs
         ) { result ->
             result.onFailure { error ->

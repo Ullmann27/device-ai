@@ -45,7 +45,9 @@ data class OwnCacheCleanupResult(
     val removedFiles: Int = 0,
     val logicalBytesRemoved: Long = 0,
     val availableBytesDelta: Long? = null,
-    val undoId: String? = null
+    val undoId: String? = null,
+    val restoredFiles: Int = 0,
+    val quarantineId: String? = null
 )
 
 class OwnDiagnosticCache(
@@ -58,6 +60,8 @@ class OwnDiagnosticCache(
     private data class Pending(val preview: OwnCachePreview, val entries: List<Owned>,
         val identities: Map<String, Identity>, val expires: Long)
     private data class Undo(val id: String, val files: Map<Owned, ByteArray>, val expires: Long)
+    private class Quarantined(val recoveryId: String, cause: Exception) :
+        IllegalStateException("CACHE_QUARANTINED_REVIEW_REQUIRED", cause)
     private val root = cacheDirectory.canonicalFile.toPath()
     private val ownershipRoot = ownershipDirectory.canonicalFile.toPath()
     private val directory = root.resolve("system-diagnostics")
@@ -70,18 +74,29 @@ class OwnDiagnosticCache(
         .sortedByDescending { it.observedAtEpochMs }
 
     @Synchronized
-    fun retain(record: DiagnosticCacheRecord): String {
+    fun retain(record: DiagnosticCacheRecord, cancelled: () -> Boolean = { false }): String {
+        val start = monotonicMs()
+        fun checkActive() {
+            check(!cancelled() && !Thread.currentThread().isInterrupted) { "CACHE_OPERATION_CANCELLED" }
+            check(monotonicMs() - start in 0 until WORK_BUDGET_MS) { "CACHE_OPERATION_EXPIRED" }
+        }
+        checkActive()
         checkRoot(root)
         checkRoot(ownershipRoot)
-        if (!Files.exists(directory, NOFOLLOW_LINKS)) Files.createDirectory(directory)
+        if (!Files.exists(directory, NOFOLLOW_LINKS)) {
+            checkActive()
+            Files.createDirectory(directory)
+        }
         checkDirectory()
         val owned = readLedger().filter { Files.exists(path(it.id), NOFOLLOW_LINKS) }
         check(owned.size < MAX_RECORDS) { "DIAGNOSTIC_HISTORY_FULL" }
         val id = UUID.randomUUID().toString().replace("-", "")
         val bytes = encode(record)
+        checkActive()
         Files.write(path(id), bytes, CREATE_NEW, WRITE)
         val new = Owned(id, sha(bytes), bytes.size)
         try {
+            checkActive()
             writeLedger(owned + new)
         } catch (failure: Exception) {
             throw IllegalStateException("DIAGNOSTIC_HISTORY_INDEX_FAILED", failure)
@@ -186,6 +201,7 @@ class OwnDiagnosticCache(
         val before = usableBytes()
         val removed = linkedMapOf<Owned, ByteArray>()
         var status = "COMPLETED"
+        var quarantineId: String? = null
         for ((entry, bytes) in backups) {
             if (cancelled() || Thread.currentThread().isInterrupted) {
                 status = "CANCELLED_PARTIAL"
@@ -208,6 +224,7 @@ class OwnDiagnosticCache(
             } catch (failure: Exception) {
                 status = if (failure.message == "CACHE_QUARANTINED_REVIEW_REQUIRED")
                     "QUARANTINED_REVIEW_REQUIRED" else "FAILED_PARTIAL"
+                quarantineId = (failure as? Quarantined)?.recoveryId
                 break
             }
         }
@@ -220,11 +237,13 @@ class OwnDiagnosticCache(
         }
         val after = usableBytes()
         return OwnCacheCleanupResult(status, removed.size, removed.keys.sumOf { it.bytes.toLong() },
-            if (before != null && after != null) after - before else null, token)
+            if (before != null && after != null) after - before else null, token,
+            quarantineId = quarantineId)
     }
 
     @Synchronized
-    fun restore(undoId: String): OwnCacheCleanupResult {
+    fun restore(undoId: String, cancelled: () -> Boolean = { false }): OwnCacheCleanupResult {
+        if (cancelled() || Thread.currentThread().isInterrupted) return OwnCacheCleanupResult("CANCELLED")
         val backup = undo ?: return OwnCacheCleanupResult("UNDO_UNAVAILABLE")
         if (backup.id != undoId) return OwnCacheCleanupResult("UNDO_MISMATCH")
         val now = monotonicMs()
@@ -239,20 +258,34 @@ class OwnDiagnosticCache(
         if (backup.files.keys.any { Files.exists(path(it.id), NOFOLLOW_LINKS) })
             return OwnCacheCleanupResult("RESTORE_TARGET_EXISTS")
         val restored = mutableListOf<Owned>()
+        var status = "RESTORED"
         for ((entry, bytes) in backup.files) {
+            if (cancelled() || Thread.currentThread().isInterrupted) {
+                status = if (restored.isEmpty()) "CANCELLED" else "RESTORE_CANCELLED_PARTIAL"
+                break
+            }
+            if (monotonicMs() - now !in 0 until WORK_BUDGET_MS) {
+                status = "RESTORE_TIME_LIMIT_PARTIAL"
+                break
+            }
             try {
                 checkDirectory()
                 Files.write(path(entry.id), bytes, CREATE_NEW, WRITE)
                 restored += entry
             } catch (_: Exception) {
+                status = "RESTORE_PARTIAL"
                 break
             }
         }
-        writeLedger((current + restored).distinctBy { it.id })
+        try {
+            if (restored.isNotEmpty()) writeLedger((current + restored).distinctBy { it.id })
+        } catch (_: Exception) {
+            status = "RESTORE_INDEX_FAILED"
+        }
         val left = backup.files.filterKeys { it !in restored }
         undo = if (left.isEmpty()) null else backup.copy(files = left)
         pending = null
-        return OwnCacheCleanupResult(if (left.isEmpty()) "RESTORED" else "RESTORE_PARTIAL")
+        return OwnCacheCleanupResult(status, restoredFiles = restored.size)
     }
 
     private fun verified(entry: Owned): ByteArray? = try {
@@ -316,7 +349,7 @@ class OwnDiagnosticCache(
             val anchoredRoot = opened as? SecureDirectoryStream<Path> ?: return false
             anchoredRoot.newDirectoryStream(Paths.get("system-diagnostics"), NOFOLLOW_LINKS).use { anchored ->
                 val original = Paths.get("summary-${entry.id}.cdiag")
-                val held = Paths.get(".cleanup-${UUID.randomUUID()}")
+                val held = Paths.get(".cleanup-${entry.id}-${UUID.randomUUID()}")
                 anchored.move(original, anchored, held)
                 try {
                     val attrs = anchored.getFileAttributeView(held,
@@ -328,7 +361,7 @@ class OwnDiagnosticCache(
                     check(bytes.size == entry.bytes && sha(bytes) == entry.digest && decode(bytes) != null) { "CACHE_CHANGED" }
                     anchored.deleteFile(held)
                 } catch (failure: Exception) {
-                    throw IllegalStateException("CACHE_QUARANTINED_REVIEW_REQUIRED", failure)
+                    throw Quarantined(held.toString(), failure)
                 }
             }
         }
@@ -344,7 +377,8 @@ class OwnDiagnosticCache(
         require(id.matches(ID))
         return directory.resolve("summary-$id.cdiag")
     }
-    private fun usableBytes(): Long? = root.toFile().usableSpace.takeIf { it > 0 }
+    private fun usableBytes(): Long? = try { Files.getFileStore(root).usableSpace.takeIf { it >= 0 } }
+        catch (_: Exception) { null }
 
     companion object {
         const val MAX_RECORDS = 32

@@ -162,6 +162,7 @@ class StorageContentAnalyzer(
                             check(extra < 0) { "CHANGED_DOCUMENT" }
                         }
                         check(source.metadata(document.id) == before) { "STALE_DOCUMENT" }
+                        check(allowed()) { "EXPIRED_DOCUMENT" }
                         digest = sha.digest().joinToString("") { "%02x".format(it) }
                     } catch (_: Exception) {
                         limitations += "CONTENT_UNVERIFIED"
