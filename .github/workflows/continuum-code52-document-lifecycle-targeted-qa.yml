@@ -1,4 +1,4 @@
-name: "Continuum Code52 - Document Lifecycle Targeted Android QA (unsigned)"
+name: "Continuum Code52 - Document Lifecycle Android JUnit QA (unsigned)"
 on:
   push:
     branches:
@@ -42,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
-      - name: Execute real affected Android unit tests
+      - name: Execute permitted full Android JUnit, inspect affected tests
         shell: bash
         run: |
           set -euo pipefail
@@ -52,9 +52,7 @@ jobs:
             -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true \
             -PcontinuumLocalStandaloneQa=true -PcontinuumOwnerArm64=true \
             -PcontinuumStandaloneVersionCode=52 \
-            :app:testDebugUnitTest \
-            --tests at.heinz.deviceai.ui.Airbus2100CockpitOrchestratorTest \
-            --tests at.heinz.deviceai.ui.DocumentBlueprintProjectionTest
+            :app:testDebugUnitTest
           python3 - <<'PY'
           from pathlib import Path
           import xml.etree.ElementTree as ET
