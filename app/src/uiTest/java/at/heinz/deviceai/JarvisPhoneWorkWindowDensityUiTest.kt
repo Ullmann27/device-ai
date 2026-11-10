@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import at.heinz.deviceai.ui.ContinuumHomeLayout
 import at.heinz.deviceai.ui.JarvisShellLayout
+import at.heinz.deviceai.ui.JarvisTiles
 import at.heinz.deviceai.ui.JarvisWorkWindow
 import at.heinz.deviceai.ui.JarvisWorkWindowGeometry
 import org.junit.Assert.*
@@ -88,8 +89,10 @@ class JarvisPhoneWorkWindowDensityUiTest {
             val dialogue = requireNotNull(shell[JarvisShellLayout.Slot.DIALOG])
             assertTrue("Head remains usable", head.height >= 220f)
             assertTrue("Original orb remains usable", orb.height >= 112f)
-            assertTrue("Both identities precede dialogue", head.bottom <= dialogue.top &&
-                orb.bottom <= dialogue.top && head.right < orb.left)
+            // Cinema compact shows three real top cards above the head/orb hero, not
+            // the removed legacy hero-first stack. All three must remain separate.
+            assertTrue("Cinema top live card precedes both unobstructed identities",
+                dialogue.bottom <= head.top && dialogue.bottom <= orb.top && head.right < orb.left)
             val protected = listOf(head, orb, dialogue).map(::pixels)
             val viewport = RectF(0f, 0f, shell.width * density, shell.viewportHeight * density)
             protected.forEach { assertTrue("Visible protected region $it", viewport.contains(it)) }
@@ -98,7 +101,11 @@ class JarvisPhoneWorkWindowDensityUiTest {
             val destination = requireNotNull(candidate)
             println("DENSITY_WINDOW native=${root.width}x${root.height}px density=$density font=${config.fontScale} viewport=$viewport target=$destination protected=$protected")
             val body = TextView(activity).apply { text = "Host-Geometrieprüfung" }
-            val origin = pixels(shell.tileBoxes().last())
+            val originCell = shell.tileBoxes().lastOrNull() ?: run {
+                val dock = requireNotNull(shell[JarvisShellLayout.Slot.BOTTOM_NAV])
+                JarvisTiles.bottomNavItemBoxes(dock).last()
+            }
+            val origin = pixels(originCell)
             assertTrue("Native work area must open: density=$density, viewport=$viewport, target=$destination",
                 window.open(body, origin, destination, "Systemstatus", protected))
             listeners.toList().forEach { it(1_000L, 1f) }
