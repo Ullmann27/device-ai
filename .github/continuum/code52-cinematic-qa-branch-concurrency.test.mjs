@@ -15,11 +15,20 @@ test('separate Cinema QA source branches cannot cancel each other', () => {
 test('each permitted push branch is also gated by the exact source ref', () => {
   const push = source.match(/^    branches:\s*\n([\s\S]*?)(?=^    paths:)/m);
   assert.ok(push, 'push branch allowlist required');
-  const branches = [...push[1].matchAll(/^      - ([a-zA-Z0-9_/-]+)$/gm)].map(match => match[1]);
+  const branches = [...push[1].matchAll(/^      - (.+)$/gm)].map((match) => {
+    const raw = match[1];
+    const quoted = raw.match(/^['"](.+)['"]$/);
+    return quoted ? quoted[1] : raw;
+  });
   assert.ok(branches.length >= 4);
   const gate = source.match(/^    if: (.*)$/m)?.[1] || '';
   for (const branch of branches) {
-    assert.ok(gate.includes("github.ref == 'refs/heads/" + branch + "'"), branch + ' bypasses source-ref gate');
+    if (branch.endsWith('/**')) {
+      const prefix = branch.slice(0, -2);
+      assert.ok(gate.includes("startsWith(github.ref, 'refs/heads/" + prefix + "')"), branch + ' bypasses prefix-ref gate');
+    } else {
+      assert.ok(gate.includes("github.ref == 'refs/heads/" + branch + "'"), branch + ' bypasses source-ref gate');
+    }
   }
   assert.match(source, /permissions:\s*\n  contents: read/);
   assert.ok(source.includes('node --test') && source.includes(testPath), 'CI must run this guard');
