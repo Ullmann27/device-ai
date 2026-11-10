@@ -9199,7 +9199,7 @@ class AgentActivity : Activity() {
         val modes = listOf(at.heinz.deviceai.cognitive.InternetAccessMode.ASK,
             at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON,
             at.heinz.deviceai.cognitive.InternetAccessMode.OFF)
-        val options = arrayOf("Auf Nachfrage (Standard)", "Dauerhaft erlauben · ALWAYS_ON", "Aus (kein Webzugriff)")
+        val options = at.heinz.deviceai.cognitive.InternetAccessModeLabels.dialogOptions(modes)
         AlertDialog.Builder(this)
             .setTitle("Continuum · Internetzugang")
             .setSingleChoiceItems(options, modes.indexOf(internetConsent.mode)) { dialog, selection ->
