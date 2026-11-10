@@ -234,6 +234,103 @@ class Airbus2100CockpitOrchestratorTest {
     }
 
     @Test
+    fun documentDraftSurvivesVerbalCompletionAndRejectsStaleDocumentTurns() {
+        val payloads = mutableListOf<HollywoodFuiLiveData?>()
+        val orchestrator = Airbus2100CockpitOrchestrator(
+            schedule = { _, _ -> }, cancel = {},
+            onSceneProfile = {}, onLiveData = { payloads += it },
+            onTelemetry = {}, onHoloCue = {}, onPostMission = {}
+        )
+        orchestrator.render(CockpitAnimationEvent.CommandFlyIn("speech", 0L, "PDF lesen"))
+        orchestrator.render(CockpitAnimationEvent.DocumentQuestion(
+            "document-1", 1L, "Akten.pdf", "application/pdf", "Bitte analysieren", pageCount = 4
+        ))
+        orchestrator.render(CockpitAnimationEvent.TurnEnded("speech", 2L, delivered = true))
+        assertNull(orchestrator.activeTurnForTest())
+
+        val count = payloads.size
+        orchestrator.render(DocumentPipelineStepEvent(
+            "document-stale", 3L, DocumentPipelineStepEvent.KEY_ANALYZE,
+            "Analysieren", StepState.DONE
+        ))
+        orchestrator.render(DocumentDraftReadyEvent(
+            "document-stale", 4L, "Ziel: Falsches Dokument", actions = setOf(DocumentDraftAction.OPEN)
+        ))
+        assertEquals(count, payloads.size)
+
+        orchestrator.render(DocumentPipelineStepEvent(
+            "document-1", 5L, DocumentPipelineStepEvent.KEY_ANALYZE,
+            "Analysieren", StepState.DONE
+        ))
+        orchestrator.render(DocumentDraftReadyEvent(
+            "document-1", 6L, "Ziel: Korrektes Dokument",
+            coveredChars = 5, totalChars = 10, actions = setOf(DocumentDraftAction.OPEN)
+        ))
+        val document = requireNotNull(payloads.last() as? HollywoodFuiLiveData.Document)
+        val visible = requireNotNull(DocumentBlueprintView.visible(document))
+        assertEquals("Akten.pdf", document.documentName)
+        assertEquals("Bitte analysieren", visible.question)
+        assertEquals("Korrektes Dokument", visible.draftGoal)
+        assertEquals(50, visible.progressPercent)
+        assertEquals(listOf("Entwurf öffnen"), visible.buttons)
+    }
+
+    @Test
+    fun unrelatedMemoryLearnedCannotCreateDocumentWorld() {
+        val scenes = mutableListOf<JarvisActionScenes.FuiProfile>()
+        val payloads = mutableListOf<HollywoodFuiLiveData?>()
+        val orchestrator = Airbus2100CockpitOrchestrator(
+            schedule = { _, _ -> }, cancel = {},
+            onSceneProfile = { scenes += it.fuiProfile },
+            onLiveData = { payloads += it },
+            onTelemetry = {}, onHoloCue = {}, onPostMission = {}
+        )
+        orchestrator.render(CockpitAnimationEvent.CommandFlyIn("speech", 0L, "Rechne"))
+        val beforeScenes = scenes.size
+        val beforePayloads = payloads.size
+        orchestrator.render(CockpitAnimationEvent.DocumentLearned(
+            MEMORY_TURN, 1L, "fremdes-archiv", "pdf", 10
+        ))
+        assertEquals(beforeScenes, scenes.size)
+        assertEquals(beforePayloads, payloads.size)
+        assertTrue(payloads.none { it is HollywoodFuiLiveData.Document })
+    }
+
+    @Test
+    fun newDocumentClearsPreviousDraftAndAbortedTurnRejectsLateCallbacks() {
+        val payloads = mutableListOf<HollywoodFuiLiveData?>()
+        val orchestrator = Airbus2100CockpitOrchestrator(
+            schedule = { _, _ -> }, cancel = {},
+            onSceneProfile = {}, onLiveData = { payloads += it },
+            onTelemetry = {}, onHoloCue = {}, onPostMission = {}
+        )
+        orchestrator.render(CockpitAnimationEvent.CommandFlyIn("speech", 0L, "Erste PDF"))
+        orchestrator.render(CockpitAnimationEvent.DocumentQuestion(
+            "document-1", 1L, "alt.pdf", "application/pdf", "Alte Frage"
+        ))
+        orchestrator.render(DocumentDraftReadyEvent(
+            "document-1", 2L, "Ziel: Alter Entwurf", actions = setOf(DocumentDraftAction.OPEN)
+        ))
+        orchestrator.render(CockpitAnimationEvent.DocumentQuestion(
+            "document-2", 3L, "neu.pdf", "application/pdf", "Neue Frage"
+        ))
+        val latest = requireNotNull(DocumentBlueprintView.visible(
+            payloads.last() as HollywoodFuiLiveData.Document
+        ))
+        assertEquals("Neue Frage", latest.question)
+        assertNull(latest.draftGoal)
+        assertTrue(latest.buttons.isEmpty())
+
+        orchestrator.render(CockpitAnimationEvent.TurnEnded("speech", 4L, delivered = false))
+        assertNull(payloads.last())
+        val count = payloads.size
+        orchestrator.render(DocumentDraftReadyEvent(
+            "document-2", 5L, "Ziel: Zu spät", actions = setOf(DocumentDraftAction.OPEN)
+        ))
+        assertEquals(count, payloads.size)
+    }
+
+    @Test
     fun thinkOpensLocalReasoningOnlyWhileNoStrongerWorldIsShowing() {
         val scenes = mutableListOf<JarvisActionScenes.FuiProfile>()
         val orchestrator = Airbus2100CockpitOrchestrator(
