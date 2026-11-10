@@ -58,7 +58,13 @@ class AvatarFramingTest {
         /** Same normalization and 6 dp gap as ContinuumHomeView.dialogKeepOut. */
         val keepOut get() = AvatarFraming.KeepOut(((dialog.right + 6f - box.left) / box.width).toDouble(),
             ((dialog.top - 6f - box.top) / box.height).toDouble())
-        val dialogLocal get() = (dialog.right - box.left).toDouble() to (dialog.top - box.top).toDouble()
+        // Compact Cinema puts the three live top cards entirely ABOVE the head and orb.
+        // Do not fabricate an intersecting keep-out rectangle for a different screen row.
+        // The original Fold overlap is still checked, including the historical regression.
+        val dialogLocal: Pair<Double, Double>?
+            get() = if (dialog.right <= box.left || dialog.left >= box.right ||
+                dialog.bottom <= box.top || dialog.top >= box.bottom) null
+            else (dialog.right - box.left).toDouble() to (dialog.top - box.top).toDouble()
     }
 
     private fun stages() = listOf(884f to 760f, 832f to 748f, 840f to 649f, 960f to 640f, 1280f to 800f, 1536f to 1024f)
