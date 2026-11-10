@@ -1,8 +1,12 @@
 package at.heinz.deviceai
 
 import android.app.AlertDialog
+import android.Manifest
 import android.content.Context
+import android.os.Bundle
 import android.os.Looper
+import android.os.PowerManager
+import android.speech.SpeechRecognizer
 import android.widget.Button
 import android.widget.EditText
 import at.heinz.deviceai.cognitive.ApprovedWebResearchSession
@@ -20,8 +24,13 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.Implementation
+import org.robolectric.annotation.Implements
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowAlertDialog
+import org.robolectric.shadows.ShadowSpeechRecognizer
+import org.robolectric.shadows.ShadowPowerManager
+import java.util.concurrent.Executor
 
 /** Actual dialogs/send; no network execution. */
 @RunWith(RobolectricTestRunner::class)
@@ -29,6 +38,15 @@ import org.robolectric.shadows.ShadowAlertDialog
 @GraphicsMode(GraphicsMode.Mode.LEGACY)
 @LooperMode(LooperMode.Mode.PAUSED)
 class ResearchChatApprovalUiTest {
+    @Implements(PowerManager::class)
+    class ConsentPowerManager : ShadowPowerManager() {
+        @Implementation(minSdk = 29)
+        protected fun addThermalStatusListener(executor: Executor,
+            listener: PowerManager.OnThermalStatusChangedListener) {
+            super.addThermalStatusListener(listener)
+        }
+    }
+
     private class Fixture(val activity: AgentActivity, val pauseAndResume: () -> Unit) {
         var now = 0L
         val consent = InternetConsentPolicy(InternetAccessMode.ASK) { now }
@@ -92,6 +110,38 @@ class ResearchChatApprovalUiTest {
         assertEquals("Recherchefreigabe senden", (field(f.activity, "sendButton") as Button).contentDescription)
         assertTrue((field(f.activity, "sendButton") as Button).performClick())
         idle()
+    }
+
+    private fun recognize(f: Fixture, beforeResult: () -> Unit = {}) {
+        shadowOf(RuntimeEnvironment.getApplication()).grantPermissions(Manifest.permission.RECORD_AUDIO)
+        ShadowSpeechRecognizer.setIsOnDeviceRecognitionAvailable(true)
+        AgentActivity::class.java.getDeclaredMethod("onChatMicrophoneTap")
+            .apply { isAccessible = true }.invoke(f.activity)
+        idle()
+        val recognizer = requireNotNull(ShadowSpeechRecognizer.getLatestSpeechRecognizer())
+        assertEquals(true, field(f.activity, "voiceListening"))
+        beforeResult()
+        shadowOf(recognizer).triggerOnResults(Bundle().apply {
+            putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, arrayListOf("Ja, mach."))
+        })
+        idle()
+    }
+
+    @Test @Config(sdk = [35], shadows = [ConsentPowerManager::class])
+    fun recognizerResultCannotApproveAReplacementTicket() {
+        withActivity { f ->
+            ask(f, "Unveränderter Auftrag")
+            recognize(f)
+            assertEquals(WebToolRequest.Search("Unveränderter Auftrag"), f.completed.single()!!.call)
+        }
+        withActivity { f ->
+            ask(f, "Alter Auftrag")
+            recognize(f) { ask(f, "Neuer Auftrag") }
+            assertTrue("Old recognition must not approve replacement", f.completed.isEmpty())
+            assertTrue((field(f.activity, "input") as EditText).text.isBlank())
+            recognize(f)
+            assertEquals(WebToolRequest.Search("Neuer Auftrag"), f.completed.single()!!.call)
+        }
     }
 
     @Test fun exactReplyApprovesOnlyTheDisplayedTicketWhileTheModelWaits() = withActivity { f ->

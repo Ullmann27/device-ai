@@ -1,5 +1,7 @@
 # Dialog reference correction — first bounded milestone
 
+Follow-up WIP: the ASR callback retains session/generation but not the pending research ticket identity. A targeted API35 host regression now exercises the actual Activity → AndroidOnDeviceSpeechInput → LocalSpeechSession → Activity callback with simulated recognizer text, including a same-ticket control and a replacement-ticket case. Runtime remains unchanged at this checkpoint. The first attempt stopped during unrelated PowerManager executor-listener setup; a test-local shadow now delegates that overload to existing Robolectric bookkeeping. Defect RED/GREEN is pending, and no microphone/device success is claimed.
+
 Current result: unresolved temporal corrections clarify; an exact reply to the pending research ASK request now uses its existing ticket. **87/87 Android host tests PASS**, including eight new actual Activity UI tests. Device/real microphone/network acceptance remains NOT_RUN. Final evidence: `docs/evidence/dialog-research-consent-20261110/RESULT.json`.
 
 Integration owner: Cinema root integrator. Target: `cinema/fluid-light-stage-20261110` / PR #715. Work branch: `fix/dialog-context-reference-20261110`, based on local root `4ac9c9b94b9fb5e391646e2e99e986db32ec7997` (published root checkpoint `ae3ce34b5aff285ed8c569ca2844975e34131a86`). Avatar commit `6d29411e2b96b5fcc1514a86728d9ad4455c1006` remains separate.
