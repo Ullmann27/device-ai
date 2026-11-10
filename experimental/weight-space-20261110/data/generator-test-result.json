@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "testsExecuted": 6,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "command": "python -m unittest discover -s experimental/weight-space-20261110/data -p 'test_note_contrasts.py' -v",
+  "checks": [
+    "reproducibility and paired balance",
+    "shared template rejection",
+    "shared content rejection",
+    "invalid positive/negative directive rejection",
+    "multiline content rejection",
+    "existing output preservation"
+  ],
+  "sourceSha256": {
+    "make_note_contrasts.py": "85a62a87477c8b371d175ae03b994d1f2b700c797c36787df338ea6ec807fb3e",
+    "test_note_contrasts.py": "4ece1d0d88cfb72c2e1a7eefb80619b566cabbea3f932a156631ff48c0e6c822"
+  },
+  "modelTrainingPerformed": false
+}

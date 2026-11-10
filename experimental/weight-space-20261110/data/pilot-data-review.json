@@ -1,0 +1,130 @@
+{
+  "status": "PASS_WITH_STATED_LIMITATIONS",
+  "scope": "Data regeneration and source review only; no model process started by reviewer",
+  "source": {
+    "pilotPath": "experimental/weight-space-20261110/training/LmContrastPilot.kt",
+    "pilotSha256": "e4af24197f081c08584b01617eda8602313e517485c0d4c0c3b0a5dffb8bdf7f",
+    "protocolSha256": "0000978b8d82d83f2294e29a24dd6721c466f21cdddb67bfc35ba875d24be44b",
+    "stableDuringReview": true
+  },
+  "regeneration": {
+    "freshTemporaryDirectory": true,
+    "generatedFiles": {
+      "dev.tsv": true,
+      "manifest.json": true,
+      "row-metadata.json": true,
+      "train.tsv": true
+    },
+    "allGeneratedFilesByteIdentical": true,
+    "retentionReconstructedFromHistoricalTrain": true,
+    "packageFilesUnchanged": 18,
+    "packageFileHashes": {
+      "package-audit.json": "6c2e9691fb5021bc1cbf34fe784c8ae0c16587bfb10c4462bdd12fa0a4a39c62",
+      "audit_data_package.py": "06d28e26b9d7d1ddbd6a7da264c6c28cba47ccdb4a24f957f40a882a58e5cf32",
+      "generator-test-result.json": "79a1e98800a4894dc6797358b784784aad993d5bc5227257198835d2c80fd2be",
+      "replay.txt": "b5fdd3c9528fe5a0f7a1dbc24db9e7169f0a00f9b31a211aff4ca8c6c97553c1",
+      "retention-provenance.json": "2c6b1c596c2a62d1cc548d8cbb3fd9822e9a7f70f9aca74ef6d1876af85b7324",
+      "retention_text.txt": "699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019",
+      "historical-source-identity.json": "e6c88604659d7513451b82fa19a2ff38fccbe2fd93682b90edc917829fe37432",
+      "README.md": "a49824a8205a5faf2c18c8c4634248c57f0a424ce1c451347e48c5b986c0f14c",
+      "token-length-diagnostic.json": "5df4d969c988512b2c3bb433410fd687d4be1120f6a5d9a46db65efb5561e8a3",
+      "make_note_contrasts.py": "85a62a87477c8b371d175ae03b994d1f2b700c797c36787df338ea6ec807fb3e",
+      "HISTORICAL-DATA-AUDIT.md": "c3ce43d11353cdf8a5b8f0ba6f53c0170ada29fd968868b34e2499387a4fcef7",
+      "retention.tsv": "dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a",
+      "test_note_contrasts.py": "4ece1d0d88cfb72c2e1a7eefb80619b566cabbea3f932a156631ff48c0e6c822",
+      "historical-length-audit.json": "4c6c69bfbae6b9e91b17baafae6d68a266ee51ce03afc36c60e8daf8d181ee5f",
+      "note-contrasts-v1/row-metadata.json": "de9d9fbef1e27cdc8a16e2687fab1d77c80aca3f9e09210b7d742b5d82328155",
+      "note-contrasts-v1/manifest.json": "25d43ea5ff6a60ed8657fee88a700412a29c499516cd82857140b4dd41d25cbe",
+      "note-contrasts-v1/dev.tsv": "057dac485d2d4d39ebcfcdc7de3fe15c9c6c4bebd2bea888b4db303949798935",
+      "note-contrasts-v1/train.tsv": "3666036e3b63db7738bebc391bd9058ca63bb0d1ea01b240726223c2ddc9039c"
+    }
+  },
+  "tests": {
+    "executed": 6,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "repeatOfExistingSixChecks": true,
+    "additionalIndependentTestTypes": 0,
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "test_never_overwrite (test_note_contrasts.NoteContrastChecks.test_never_overwrite) ... ok\ntest_reject_invalid_semantic_pair (test_note_contrasts.NoteContrastChecks.test_reject_invalid_semantic_pair) ... ok\ntest_reject_multiline_content (test_note_contrasts.NoteContrastChecks.test_reject_multiline_content) ... ok\ntest_reject_shared_content (test_note_contrasts.NoteContrastChecks.test_reject_shared_content) ... ok\ntest_reject_shared_template (test_note_contrasts.NoteContrastChecks.test_reject_shared_template) ... ok\ntest_reproducibility_and_pairs (test_note_contrasts.NoteContrastChecks.test_reproducibility_and_pairs) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.010s\n\nOK\n"
+  },
+  "nativeInspectReadback": {
+    "path": "/workspace/scratch/87c6edbcb340/weights-build-contrast/inspect.stdout.txt",
+    "sha256": "26c058313920ed11ffbff110141d0886c53418e237a044aee687b43687dba665",
+    "dataInputHashesMatch": true,
+    "rows": {
+      "train": "128",
+      "dev": "64",
+      "retention": "64",
+      "updates": "0"
+    },
+    "reviewerStartedNativeProcess": false,
+    "jarSourceBindingIndependentlyReverified": false
+  },
+  "sampling": {
+    "sourceReview": "two independent draws with replacement per class per update; not paired-batch sampling",
+    "seed": 20261110,
+    "updates": 128,
+    "intentExamples": 512,
+    "examplesPerClass": 256,
+    "uniqueExamplesPerClass": {
+      "0": 63,
+      "3": 61
+    },
+    "independentJavaRandomScheduleSha256": "5f11e13788d7e24666ede1c55344e0ac6e996f0de7351b6b4897db60824a1052",
+    "sameAnswerScheduleAcrossArmsByControlFlow": true,
+    "replaySchedule": "two successive cyclic text rows; no RNG consumption",
+    "replayUsesRetentionTexts": false
+  },
+  "checks": [
+    {
+      "name": "train_dev_retention_flow",
+      "result": "PASS",
+      "evidence": "Only examples derived from train.tsv enter selected/accumulate; replay.txt enters replay arm only."
+    },
+    {
+      "name": "answer_mask",
+      "result": "PASS_SOURCE_REVIEW",
+      "evidence": "ids=prefix+label; target[prefix.lastIndex]=label; target[last]=EOS; every earlier target=-1. Tape.crossEntropy ignores negative targets."
+    },
+    {
+      "name": "answer_normalization",
+      "result": "PASS_SOURCE_REVIEW",
+      "evidence": "Four examples times two supervised targets; divisor=8."
+    },
+    {
+      "name": "replay_normalization",
+      "result": "PASS_SOURCE_REVIEW",
+      "evidence": "Full next-token targets including EOS; divisor=10*sum(target counts), giving weight0.1."
+    },
+    {
+      "name": "evaluation",
+      "result": "PASS_SOURCE_REVIEW",
+      "evidence": "Greedy full-vocabulary four-token generation; exact label plus EOS required. Restricted classification reported separately."
+    },
+    {
+      "name": "retention",
+      "result": "PASS_SOURCE_REVIEW",
+      "evidence": "Text BPB excludes EOS NLL and divides by UTF8 content bytes. Four generation probes measure count/earlyEOS, not semantic quality."
+    },
+    {
+      "name": "development_use",
+      "result": "PASS_SOURCE_REVIEW",
+      "evidence": "Only fixed initial/final evaluations; no Dev-driven optimizer branching or checkpoint selection."
+    }
+  ],
+  "limitations": [
+    "This is a separate audit pass by the data author, not an independent author or a blind holdout.",
+    "Static source review is not dynamic model/gradient/evaluator validation.",
+    "Byte-matched label pairs differ by one or three BPE tokens; no token-length causal claim.",
+    "Positive/negative marker contrast can solve this narrow task; no general language claim.",
+    "Classes1/2 probes are historical TRAIN and may have zero baseline exact accuracy; zero-to-zero does not demonstrate preserved competence.",
+    "Current generation probes are newly authored open DEV probes, not the historical full capacity benchmark.",
+    "Data hashes are checked through outer registration/inspect and at exit; no atomic defense against concurrent file replacement is established."
+  ],
+  "changesToPilot": false,
+  "modelUpdatesByReviewer": 0,
+  "remoteMutationsByReviewer": false
+}
