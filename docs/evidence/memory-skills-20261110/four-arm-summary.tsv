@@ -1,0 +1,17 @@
+fixture	ablation	arm	positive_correct	positive_total	negative_correct	negative_total	context_characters	prioritized_episodes
+clean	surprise-on	NONE	0	8	4	4	0	16
+clean	surprise-on	RAW	8	8	4	4	1966	16
+clean	surprise-on	EPISODIC	8	8	4	4	984	16
+clean	surprise-on	PROCEDURAL	8	8	4	4	186	16
+clean	surprise-off	NONE	0	8	4	4	0	56
+clean	surprise-off	RAW	8	8	4	4	1966	56
+clean	surprise-off	EPISODIC	8	8	4	4	984	56
+clean	surprise-off	PROCEDURAL	8	8	4	4	186	56
+poisoned	surprise-on	NONE	0	8	4	4	0	16
+poisoned	surprise-on	RAW	0	8	3	4	3027	16
+poisoned	surprise-on	EPISODIC	8	8	4	4	984	16
+poisoned	surprise-on	PROCEDURAL	8	8	4	4	186	16
+poisoned	surprise-off	NONE	0	8	4	4	0	56
+poisoned	surprise-off	RAW	0	8	3	4	3027	56
+poisoned	surprise-off	EPISODIC	8	8	4	4	984	56
+poisoned	surprise-off	PROCEDURAL	8	8	4	4	186	56

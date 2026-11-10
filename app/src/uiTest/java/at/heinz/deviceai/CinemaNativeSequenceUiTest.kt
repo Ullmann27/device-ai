@@ -44,15 +44,11 @@ class CinemaNativeSequenceUiTest {
             .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
         app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
             .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
-        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit()
-            .clear().putBoolean("jarvis-shell", true).commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         var pump: CockpitHostFramePump? = null
         val hashes = mutableSetOf<String>()
         try {
-            controller.setup().visible()
-            shadowOf(Looper.getMainLooper()).idleFor(32, TimeUnit.MILLISECONDS)
-            controller.windowFocusChanged(true)
+            controller.setup().visible().windowFocusChanged(true)
             val activity = controller.get()
             val root = activity.window.decorView
             val home = field("homeView").get(activity) as ContinuumHomeView
