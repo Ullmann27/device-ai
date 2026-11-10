@@ -1,0 +1,180 @@
+{
+  "publication_checkpoint": "2d3d1814dd08119044f9aad9226d67d44701d068",
+  "agents": [
+    {
+      "branch": "research/omega-literature-20261110",
+      "local": "4f0aab53d4bed9c0608cb71414bef4440b0b58b1",
+      "remote": "258f990bb8e4c85dce288f7ebf295df402be4334",
+      "tree": "06a8fcda0b9d48bfa9837e837d196581d2861265"
+    },
+    {
+      "branch": "research/omega-architecture-audit-20261110",
+      "local": "1ca620dc54ee67a813ee16ec65786c1aaa718e64",
+      "remote": "26bb4a4494e7f6949372b4970c198fd74dd20d6a",
+      "tree": "3bb2c4e43198ee0bdbbf5fe262c5c876a9429740"
+    },
+    {
+      "branch": "research/omega-scenario-20261110",
+      "local": "c1d6bcce3c7c226349b1fe9e97a3101923f2e5d6",
+      "remote": "4dcd2cd728feb8fdf8bd3d336a87dbf0dd864156",
+      "tree": "827045801558f77803d14d303842a1230454c549"
+    },
+    {
+      "branch": "research/omega-working-context-20261110",
+      "local": "1290e7673aca97ba18496331df23e05280bc0436",
+      "remote": "1dd59c8542879b84a95f9d11427d36e28c9debea",
+      "tree": "5cf5f8d02f5f01a2842bbcf63f5b7b1a2456352f"
+    },
+    {
+      "branch": "research/omega-evaluation-20261110",
+      "local": "8a4d0943e5524efaa7b57afd81ff764607158bd3",
+      "remote": "8344d2c8fe9db9e2a33de00c356ee8ef92038570",
+      "tree": "1091591e2bbd65aeeb216d57597f8b66fcb45a16"
+    }
+  ],
+  "observed_pr_heads": [
+    {
+      "pr": 706,
+      "head": "17491f4d8103f0e55836369333fab07e80e6e9c2",
+      "draft": true,
+      "merged": false,
+      "mergeable": false,
+      "state": "open",
+      "branch": "code52/grok-release-candidate-0351-20261110",
+      "base": "code52/final-integrator-cinema-20261110"
+    },
+    {
+      "pr": 715,
+      "head": "041abb081ae7dac637d3f0fabdae525f19acf117",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "state": "open",
+      "branch": "cinema/fluid-light-stage-20261110",
+      "base": "code52/grok-release-candidate-0351-20261110"
+    },
+    {
+      "pr": 716,
+      "head": "00cf15d925d2c114d8ce57ee23dac473a89e6e0f",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "state": "open",
+      "branch": "research/continuum-context-cinema-20261110",
+      "base": "code52/grok-release-candidate-0351-20261110"
+    },
+    {
+      "pr": 717,
+      "head": "4ee9f9c05a1f4623427b41735733ab633f291c6b",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "state": "open",
+      "branch": "research/continuum-cognitive-budget-20261110",
+      "base": "cinema/fluid-light-stage-20261110"
+    },
+    {
+      "pr": 718,
+      "head": "401f94602ea5622e7dbcc513787eba3c91107488",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "state": "open",
+      "branch": "research/brain-lab-controlled-20261110",
+      "base": "cinema/fluid-light-stage-20261110"
+    },
+    {
+      "pr": 719,
+      "head": "dafb3187faf2580d0a060a66fb7e82915f8fc6fc",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "state": "open",
+      "branch": "research/continuum-memory-skills-20261110",
+      "base": "cinema/fluid-light-stage-20261110"
+    },
+    {
+      "pr": 720,
+      "head": "e99530750f4b471d54dc397b7a7b7f8b2977f6d1",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "state": "open",
+      "branch": "fix/dialog-context-reference-20261110",
+      "base": "cinema/fluid-light-stage-20261110"
+    },
+    {
+      "pr": 721,
+      "head": "2d3d1814dd08119044f9aad9226d67d44701d068",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "state": "open",
+      "branch": "research/omega-work-contract-20261110",
+      "base": "cinema/fluid-light-stage-20261110"
+    }
+  ],
+  "review_threads": [
+    {
+      "id": "PRRT_kwDOVGSW-c614xvQ",
+      "is_resolved": false,
+      "is_outdated": false,
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/WorkingTaskContext.kt",
+      "line": 63,
+      "diff_side": "RIGHT",
+      "start_line": 63,
+      "start_diff_side": null,
+      "original_line": 63,
+      "original_start_line": null,
+      "resolved_by": null,
+      "comments": [
+        {
+          "id": "PRRC_kwDOVGSW-c8AAAABDgSxIQ",
+          "database_id": 4530155809,
+          "body": "<details>\n<summary>⚠️ <b>Bug:</b> Common pronouns resolve any request to the task and skip guards</summary>\n\nThe `pronoun` selector matches very common German words like `es`, `sie`, `diese` and `damit`. When a reference is focused (the seed sets `selectedReferenceId`), `select()` returns `refs[focused]` for any request that contains one of them. For example, \"Wie spät ist es?\" resolves to `beta`. That has two effects:\n\n- A `Resolved` plan is stored, so `render` adds the ARBEITSKONTEXT block to the prompt for unrelated questions. The `unrelatedRequestDoesNotLeakTaskIntoPrompt` test only passes because \"Wie warm ist Wien?\" contains no pronoun.\n- In `inspectRequest`, `Resolved` returns `null` before the later checks run. \"Merke dir diese Entscheidung\" matches `diese`, resolves, and never reaches the `MEMORY_LITERAL_REQUIRED` directive. Turning on the research flag therefore switches off an existing safety directive.\n\nFix: only let a bare pronoun resolve when the request also names the task scope or a reference (`scopeCue`, or a mention). Also run the memory-literal and correction checks before the working-task block. Add tests for \"Wie spät ist es?\" and \"Merke dir diese Entscheidung\".\n\n\n**Require a scope cue or explicit mention before a bare pronoun can select the focused reference:**\n````\nval relative = other.containsMatchIn(raw) || previous.containsMatchIn(raw) || ordinal.containsMatchIn(raw)\nval pronounOnly = pronoun.containsMatchIn(raw) && scopeCue.containsMatchIn(raw)\nval hasSelector = relative || pronounOnly\nif (mentions.isEmpty() && !hasSelector && !scopeCue.containsMatchIn(raw)) return WorkingTaskDecision.NoMatch\n````\n\n<!-- gitar:apply-fix-start -->\n<!-- gitar:fix-id:01a1c728-08a7-702d-9790-3577eeb8680d -->\n- [ ] Apply fix\n<!-- gitar:apply-fix-end -->\n\n<sub><!-- gitar:footer-start -->Check the box to apply the fix or reply for a change | Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>",
+          "created_at": "2026-11-10T20:30:53Z",
+          "updated_at": "2026-11-10T20:30:53Z",
+          "author": {
+            "login": "gitar-bot",
+            "name": "gitar-bot",
+            "email": null,
+            "avatar_url": "https://avatars.githubusercontent.com/in/827041?v=4",
+            "id": null
+          },
+          "viewer_did_author": false
+        }
+      ]
+    },
+    {
+      "id": "PRRT_kwDOVGSW-c6148EP",
+      "is_resolved": false,
+      "is_outdated": false,
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/WorkingTaskContext.kt",
+      "line": 181,
+      "diff_side": "RIGHT",
+      "start_line": 174,
+      "start_diff_side": "RIGHT",
+      "original_line": 181,
+      "original_start_line": 174,
+      "resolved_by": null,
+      "comments": [
+        {
+          "id": "PRRC_kwDOVGSW-c8AAAABDgXE1w",
+          "database_id": 4530226391,
+          "body": "<details>\n<summary>⚠️ <b>Bug:</b> Prefix allowlist makes 'Aber Bernstein nicht.' resolve to the rejected ref</summary>\n\nIn this commit, a trailing `nicht` only counts as a rejection when the words before the label are empty or appear in a short allowlist (`rejectsNamed`, L175-181). Before, `X nicht` was rejected wherever it appeared. Now a short rejection with any other lead word passes as a selection. Take \"Aber Bernstein nicht.\", \"Also Bernstein nicht.\", \"Lieber Bernstein nicht.\" or \"Okay, Bernstein nicht.\": the prefix is `[aber]`, `[also]`, etc., so `rejectingLead` is false. None of the `rejectsReference` regexes match either, since they need a following selector, an ordinal, `meine`, or a leading `nicht`. `select` then returns the explicitly named reference, and `resolve` returns `Resolved` with the target the owner just rejected. That is the exact failure that led to REJECT_PROMOTION. The allowlist only exists to keep questions like \"Läuft Bernstein nicht?\" from counting as rejections. A safer approach is to go back to treating `tail == [nicht]` as a rejection by default, and exempt only interrogative or predicate forms (a verb before the label, or a trailing `?`). Ambiguous phrasings should then return Clarify instead of resolving.\n\n\n**Fail closed: treat a bare trailing 'nicht' as a rejection unless the utterance is a question or a verb comes before the label:**\n````\nval isQuestion = input.trimEnd().endsWith(\"?\")\nval predicateLead = prefix.isNotEmpty() && prefix.first() in setOf(\"wieso\", \"warum\", \"weshalb\", \"läuft\", \"funktioniert\", \"geht\")\nval rejectingLead = !isQuestion && !predicateLead\nbefore >= 0 && inputWords[before] in setOf(\"nicht\", \"kein\", \"keine\", \"keinen\") ||\n    rejectingLead && tail == listOf(\"nicht\") || tail == listOf(\"ist\", \"es\", \"nicht\")\n````\n\n<!-- gitar:apply-fix-start -->\n<!-- gitar:fix-id:01a1c72d-c33d-73de-bb2e-d75e8f7587e5 -->\n- [ ] Apply fix\n<!-- gitar:apply-fix-end -->\n\n<sub><!-- gitar:footer-start -->Check the box to apply the fix or reply for a change | Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>",
+          "created_at": "2026-11-10T20:37:08Z",
+          "updated_at": "2026-11-10T20:37:08Z",
+          "author": {
+            "login": "gitar-bot",
+            "name": "gitar-bot",
+            "email": null,
+            "avatar_url": "https://avatars.githubusercontent.com/in/827041?v=4",
+            "id": null
+          },
+          "viewer_did_author": false
+        }
+      ]
+    }
+  ],
+  "scope": "Snapshot only. Frozen experiment baseline unchanged; later Cinema commits are not re-tested by OMEGA."
+}

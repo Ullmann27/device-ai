@@ -1,0 +1,156 @@
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:20:27: error: unresolved reference 'ResearchDialogueHandoff'.
+    private var research: ResearchDialogueHandoff.Digest? = null
+                          ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:70:27: error: unresolved reference 'LocalChatTranscriptStore'.
+        append(sessionId, LocalChatTranscriptStore.ContextTurn(request, response,
+                          ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:74:56: error: unresolved reference 'LocalChatTranscriptStore'.
+    @Synchronized fun restore(sessionId: String, turn: LocalChatTranscriptStore.ContextTurn) {
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:79:49: error: unresolved reference 'LocalChatTranscriptStore'.
+    private fun append(sessionId: String, turn: LocalChatTranscriptStore.ContextTurn, notify: Boolean = true) {
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:81:28: error: unresolved reference 'bounded'.
+        val bounded = turn.bounded()
+                           ^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:82:23: error: inapplicable candidate(s): constructor(request: String, response: String, originalUserRequest: String? = ..., isOwnerTurn: Boolean = ..., responseComplete: Boolean = ..., modelResponse: Boolean = ..., responseHasEnd: Boolean = ...): LocalConversationContext.Turn
+        turns.addLast(Turn(bounded.request, bounded.response,
+                      ^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:83:29: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            bounded.request.takeIf { bounded.requestComplete }, responseComplete = bounded.responseComplete,
+                            ^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:83:36: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            bounded.request.takeIf { bounded.requestComplete }, responseComplete = bounded.responseComplete,
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:86:29: error: unresolved reference 'LocalDialogueContextLimits'.
+        while (turns.size > LocalDialogueContextLimits.MAX_TURNS) turns.removeFirst()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:100:13: error: unresolved reference 'LocalDialogueContextLimits'.
+        if (LocalDialogueContextLimits.completeOwner(request) && last?.isOwnerTurn == true &&
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:102:27: error: unresolved reference 'LocalChatTranscriptStore'.
+        append(sessionId, LocalChatTranscriptStore.ContextTurn(request, "(Keine bestätigte Modellantwort)",
+                          ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:111:27: error: unresolved reference 'LocalChatTranscriptStore'.
+        append(sessionId, LocalChatTranscriptStore.ContextTurn(request, label, modelResponse = false))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:116:65: error: unresolved reference 'ResearchDialogueHandoff'.
+    @Synchronized fun recordResearch(sessionId: String, digest: ResearchDialogueHandoff.Digest) {
+                                                                ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:120:40: error: unresolved reference 'question'.
+        turns.addLast(Turn(data(digest.question, 300), "(Antwort aus Webrecherche; siehe EXTERNE RECHERCHEDATEN)",
+                                       ^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:122:29: error: unresolved reference 'LocalDialogueContextLimits'.
+        while (turns.size > LocalDialogueContextLimits.MAX_TURNS) turns.removeFirst()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:129:9: error: unresolved reference 'FreshKnowledgeNeed'.
+        FreshKnowledgeNeed.FreshnessVerdict? =
+        ^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:130:35: error: null cannot be a value of a non-null type 'uninferred K (of fun <K> WHEN_CALL)'.
+        if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                  ^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:130:55: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                                      ^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:130:55: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                                      ^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:130:55: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T, R> T.let(block: (T) -> R): R
+        if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                                      ^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:130:59: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:130:61: error: unresolved reference 'ResearchDialogueHandoff'.
+        if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:177:45: error: unresolved reference 'LocalChatTranscriptStore'.
+    @Volatile var onTurnRecorded: ((String, LocalChatTranscriptStore.ContextTurn) -> Unit)? = null
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:200:43: error: unresolved reference 'InternetAccessMode'.
+                            internetMode: InternetAccessMode = InternetAccessMode.OFF,
+                                          ^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:200:64: error: unresolved reference 'InternetAccessMode'.
+                            internetMode: InternetAccessMode = InternetAccessMode.OFF,
+                                                               ^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:204:13: error: unresolved reference 'LocalChatPromptBudget'.
+            LocalChatPromptBudget.FULL_CHARACTERS)
+            ^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:207:43: error: unresolved reference 'InternetAccessMode'.
+                            internetMode: InternetAccessMode = InternetAccessMode.OFF,
+                                          ^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:207:64: error: unresolved reference 'InternetAccessMode'.
+                            internetMode: InternetAccessMode = InternetAccessMode.OFF,
+                                                               ^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:216:70: error: unresolved reference 'InternetAccessMode'.
+        val offline = ownerForbidsExternalNetwork || internetMode == InternetAccessMode.OFF ||
+                                                                     ^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:217:29: error: unresolved reference 'InternetAccessMode'.
+            internetMode == InternetAccessMode.ASK && !onlineApprovalActive
+                            ^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:220:23: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
+                      ^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:220:23: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
+                      ^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:220:23: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T, R> T.let(block: (T) -> R): R
+            research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
+                      ^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:220:27: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:220:36: error: unresolved reference 'ResearchDialogueHandoff'.
+            research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
+                                   ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:224:16: error: unresolved reference 'LocalDialoguePromptHistory'.
+        return LocalDialoguePromptHistory.render(retainedTurns(ownerOnly = false), maxBytes,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:229:33: error: unresolved reference 'LocalDialoguePromptHistory'.
+        session == sessionId && LocalDialoguePromptHistory.hasContinuation(retainedTurns(ownerOnly = true))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:231:57: error: unresolved reference 'LocalChatTranscriptStore'.
+    private fun retainedTurns(ownerOnly: Boolean): List<LocalChatTranscriptStore.ContextTurn> =
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:232:55: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        turns.filter { !ownerOnly || it.isOwnerTurn }.map {
+                                                      ^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:234:13: error: unresolved reference 'LocalChatTranscriptStore'.
+            LocalChatTranscriptStore.ContextTurn(request.orEmpty(), it.response,
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:245:43: error: unresolved reference 'MemoryRecord'.
+        fun renderMemories(memories: List<MemoryRecord>): String = buildString {
+                                          ^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:248:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            memories.take(8).forEach {
+                     ^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:248:22: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T> Iterable<T>.take(n: Int): List<T>
+            memories.take(8).forEach {
+                     ^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:248:30: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            memories.take(8).forEach {
+                             ^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:248:38: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            memories.take(8).forEach {
+                                     ^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:249:48: error: unresolved reference 'id'.
+                append("- id=").append(data(it.id, 80)).append(" provenance=").append(it.provenance.name)
+                                               ^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:249:90: error: unresolved reference 'provenance'.
+                append("- id=").append(data(it.id, 80)).append(" provenance=").append(it.provenance.name)
+                                                                                         ^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:250:55: error: unresolved reference 'validationState'.
+                    .append(" validation=").append(it.validationState.name)
+                                                      ^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:251:58: error: unresolved reference 'provenance'.
+                    .append(" ownerProvided=").append(it.provenance == ProvenanceType.USER_PROVIDED)
+                                                         ^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:251:72: error: unresolved reference 'ProvenanceType'.
+                    .append(" ownerProvided=").append(it.provenance == ProvenanceType.USER_PROVIDED)
+                                                                       ^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:252:50: error: unresolved reference 'content'.
+                    .append(": ").append(data(it.content, 512)).append('\n')
+                                                 ^^^^^^^

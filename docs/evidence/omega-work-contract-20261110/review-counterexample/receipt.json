@@ -12,5 +12,14 @@
   "process_exit": 1,
   "decision": "REJECT_PROMOTION",
   "repair_budget_exhausted": true,
-  "device": "NOT_RUN"
+  "device": "NOT_RUN",
+  "negation_review": {
+    "thread": "PRRT_kwDOVGSW-c6148EP",
+    "quality_assertions": 5,
+    "failures": 4,
+    "process_exit": 1,
+    "positive_name_control": "PASS",
+    "initial_unmatched_label_fixture": "4 NoMatch; no reproduced rejection failure",
+    "source_sha256": "41bfb03a2a883f66bc4290f7370fa955791c44bfe2951fde41093bbdfc96680b"
+  }
 }

@@ -1,0 +1,5 @@
+request=Aber Bernstein nicht. decision=NoMatch target=null
+request=Also Bernstein nicht. decision=NoMatch target=null
+request=Lieber Bernstein nicht. decision=NoMatch target=null
+request=Okay, Bernstein nicht. decision=NoMatch target=null
+quality_assertions=4 failures=0
