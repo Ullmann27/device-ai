@@ -57,7 +57,11 @@ test('only an honest completed tool result may trigger a current-window pulse',(
 test('cinema uses the owner-controlled existing window and frame budget',()=>{
   assert.match(settings,/DEPTH_EXPERIMENT_KEY = "exp-52-cine-depth"/);
   assert.equal([...settings.matchAll(/EXP_\d\d_[A-Z_]+\("/g)].length,15);
-  assert.match(settings,/getBoolean\(DEPTH_EXPERIMENT_KEY, false\)/);
+  assert.match(settings,/getBoolean\(DEPTH_EXPERIMENT_KEY, true\)/);
+  assert.match(settings,/fun activateCinema52ByDefault\(/);
+  assert.match(settings,/putBoolean\(DEPTH_EXPERIMENT_KEY, true\)/);
+  assert.match(settings,/Experiment\.entries\.filter \{ it\.wired \}/);
+  assert.match(agent,/JarvisCinematicSettings\.activateCinema52ByDefault\(this\)/);
   assert.match(shell,/JarvisTiles\.drawSurface\(/);
   assert.match(shell,/PerimeterWingChoreographer\.depth/);
   assert.match(read(base+'ui/JarvisShellView.kt'),/JarvisShellRenderer\.draw\(/);
