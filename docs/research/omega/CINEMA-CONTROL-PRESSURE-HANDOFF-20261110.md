@@ -1,4 +1,4 @@
-# Cinema control pressure — WIP checkpoint
+# Cinema control pressure — host-verified checkpoint
 
 Canonical integration: PR #715, root integrator. Own branch: `cinema/control-material-pressure-20261110`.
 Base local `47a86df300210de7298e7768959cd5bf0c96fb4f`; published equivalent `5d36c5a57c031308c8de91049e19e9e8cb8365d5`, identical tree `970445b70dcd57d344f43ff95bfd58fd505f42ab`.
@@ -12,13 +12,16 @@ Base local `47a86df300210de7298e7768959cd5bf0c96fb4f`; published equivalent `5d3
 
 ## Evidence at this checkpoint
 
-WIP / NOT Android verified. Root owns `CinemaButtonMaterialUiTest.kt` and native PNG before/after captures.
+HOST VERIFIED / NOT Android verified. Root owns `CinemaButtonMaterialUiTest.kt` and native PNG before/after captures.
 
-- Focused 256 MB Kotlin compilation of changed platform-free painter/render files: PASS against the previously verified Java2D preview dependency jar.
-- Added four focused pure tests (six total in `LuxuryHoloButtonRendererTest`): bounded clock/disabled pressure, actual contact placement, exact dock routing and reduced-motion/thermal static feedback. Execution pending root build lease release.
+- Focused 256 MB Kotlin compilation of changed platform-free painter/render files and tests: PASS against the previously verified Java2D preview dependency jar.
+- 47/47 JUnit PASS: seven `LuxuryHoloButtonRendererTest`, three `JarvisTileAmbientNeonTest`, and 37 existing fluid/entrance cases. The five new pressure cases cover bounded clock/disabled pressure, actual contact placement, exact dock routing, reduced-motion/thermal static feedback and a frozen background remaining frozen during contact animation.
+- Foreground pause, window hiding and detach clear native pending input, native pressed flags and shared material state. Delayed callbacks must match the existing `presentationGeneration`; a fresh native touch/key down captures the current generation. Native Android teardown verification remains assigned to root.
+- Material time and background time sample the same existing `now`; their presentation gates are separate so held feedback cannot restart a disabled ambient background.
 - A larger preview compilation was killed with exit 137 during shared host memory pressure. A premature dependent test compilation then lacked the missing jar. Neither is application-test RED evidence.
 - Android native lifecycle/geometry checks, actual native PNG comparison, GPU/Fold7/frame-time acceptance: NOT_RUN for this patch.
 - No Gradle, signing, APK or installation performed by this worker.
+- Root independently reported the baseline native capture RED for both layouts: held `bottom:system` did not reach renderer press state. That is baseline evidence, not this patch's Android result.
 
 ## Files and rollback
 

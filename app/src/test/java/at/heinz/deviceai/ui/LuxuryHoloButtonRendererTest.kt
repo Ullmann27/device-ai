@@ -113,4 +113,22 @@ class LuxuryHoloButtonRendererTest {
         assertEquals(before.contacts.map { it.alpha }, reduced.contacts.map { it.alpha })
     }
 
+    @Test fun heldMaterialClockDoesNotAdvanceFrozenBackground() {
+        val shell = JarvisShellLayout.create(884f, 760f)
+        val probe = Probe()
+        var backgroundTime = -1L
+        val glass = object : JarvisShellRenderer.GlassBackend {
+            override fun drawBackground(width: Float, height: Float, timeMs: Long): Boolean {
+                backgroundTime = timeMs
+                return true
+            }
+            override fun drawPanelGlass(box: JarvisShellLayout.Box, radius: Float, glow: Float) = false
+        }
+        JarvisShellRenderer.draw(probe.painter, shell, glass = glass, timeMs = 0L,
+            materialTimeMs = 300L, controlPress = JarvisShellRenderer.ControlPress("bottom:system", "system"))
+        assertEquals(0L, backgroundTime)
+        assertEquals(2, probe.contacts.size)
+        assertEquals(.35f, probe.contacts.first().alpha, .0001f)
+    }
+
 }

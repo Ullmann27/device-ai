@@ -122,7 +122,8 @@ object JarvisShellRenderer {
              clearIdle: Boolean = false, resultForward: Boolean = false,
              fromWorkingScene: Boolean = false,
              interruptedAfterMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS,
-             returnResultElapsedMs: Long = -1L, controlPress: ControlPress? = null) {
+             returnResultElapsedMs: Long = -1L, controlPress: ControlPress? = null,
+             materialTimeMs: Long = timeMs) {
         if (glass?.drawBackground(shell.width, shell.height, timeMs) != true) {
             background(p, shell.width, shell.height)
         }
@@ -235,8 +236,10 @@ object JarvisShellRenderer {
                 p.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 1.6f, Fill.Solid(Colors.cyan), cinema.rimAlpha)
             } else if (tile != null) {
                 if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
+                val pressed = controlPress?.key == "tile:${tile.target}"
                 JarvisTiles.drawSurface(p, box, tile, f.glow > .5f,
-                    if (animatorScale > 0f) timeMs else 0L,
+                    if (animatorScale > 0f && depthBudget?.animate != false)
+                        (if (pressed) materialTimeMs else timeMs) else 0L,
                     luxuryDepth = luxuryDepth, lightSourceX = orbX, lightSourceY = orbY,
                     pressX = controlPress?.takeIf { it.key == "tile:${tile.target}" }?.xFraction ?: .5f,
                     pressY = controlPress?.takeIf { it.key == "tile:${tile.target}" }?.yFraction ?: .5f)
@@ -268,7 +271,7 @@ object JarvisShellRenderer {
                     slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
                     slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
                     slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
-                        timeMs = if (animatorScale > 0f) timeMs else 0L,
+                        timeMs = if (animatorScale > 0f) materialTimeMs else 0L,
                         pressed = JarvisTiles.bottomNav.indexOfFirst { "bottom:${it.target}" == controlPress?.key },
                         pressX = controlPress?.xFraction ?: .5f, pressY = controlPress?.yFraction ?: .5f,
                         cinemaElapsedMs = if (clearIdle) null else cinemaElapsed,

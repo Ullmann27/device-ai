@@ -82,6 +82,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         foregroundActive = active
         if (!active) hologram.clearMemoryScene()
         if (!active) liveTabs.collapseImmediately()
+        if (!active) clearShellPress()
         jarvisShell.refreshMotionPolicy()
         updateWaveAnimation()
     }
@@ -140,6 +141,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onDetachedFromWindow() {
         presentationGeneration++
+        clearShellPress()
         presentationBudgetRegistration?.close()
         presentationBudgetRegistration = null
         liveTabs.collapseImmediately()
@@ -160,6 +162,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         if (visibility != View.VISIBLE) presentationGeneration++
         if (visibility != View.VISIBLE) hologram.clearMemoryScene()
         if (visibility != View.VISIBLE) liveTabs.collapseImmediately()
+        if (visibility != View.VISIBLE) clearShellPress()
         updateWaveAnimation()
     }
 
@@ -168,6 +171,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         if (!isShown) presentationGeneration++
         if (!isShown) hologram.clearMemoryScene()
         if (!isShown) liveTabs.collapseImmediately()
+        if (!isShown) clearShellPress()
         updateWaveAnimation()
     }
     var state: ContinuumDashboardState = ContinuumDashboardState()
@@ -261,6 +265,15 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         shellActions.values.forEach { it.isSelected = it.target == target }
         shellRailList.refreshSelection()
         if (jarvisShellStage) jarvisShell.tiles = shellTiles(state)
+    }
+
+    private fun clearShellPress() {
+        val tileWasPressed = jarvisShell.pressedControlKey?.startsWith("tile:") == true
+        jarvisShell.controlPress = null
+        activatingShellAction = null
+        shellActions.values.forEach { it.cancelPendingInputEvents(); it.isPressed = false }
+        shellRailList.releasePress()
+        if (tileWasPressed) jarvisShell.tiles = shellTiles(state)
     }
 
     /** Consumed within one native click. */
@@ -839,12 +852,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             info.className = android.widget.Button::class.java.name
         }
 
+        private var pressGeneration = presentationGeneration
         private var pressX = .5f
         private var pressY = .5f
 
         private fun publishPress(down: Boolean) {
             val before = jarvisShell.pressedControlKey
-            if (down && isEnabled && isShown && isAttachedToWindow && hasWindowFocus()) {
+            if (down && pressGeneration == presentationGeneration && isPresentationActive() &&
+                isEnabled && isShown && isAttachedToWindow && hasWindowFocus()) {
                 jarvisShell.controlPress = JarvisShellRenderer.ControlPress(key, target, pressX, pressY)
             } else if (before == key) jarvisShell.controlPress = null
             val after = jarvisShell.pressedControlKey
@@ -879,8 +894,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             if (visibility != VISIBLE) publishPress(false)
         }
 
+        override fun onKeyDown(keyCode: Int, event: android.view.KeyEvent): Boolean {
+            pressGeneration = presentationGeneration
+            return super.onKeyDown(keyCode, event)
+        }
+
         @SuppressLint("ClickableViewAccessibility")
         override fun onTouchEvent(event: MotionEvent): Boolean {
+            if (event.actionMasked == MotionEvent.ACTION_DOWN) pressGeneration = presentationGeneration
             if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_MOVE) {
                 pressX = (event.x / width.coerceAtLeast(1)).coerceIn(0f, 1f)
                 pressY = (event.y / height.coerceAtLeast(1)).coerceIn(0f, 1f)
@@ -908,6 +929,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
 
         fun refreshSelection() { buttons.forEach { it.refresh() }; invalidate() }
+        fun releasePress() { buttons.forEach { it.cancelPendingInputEvents(); it.isPressed = false } }
 
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
             val w = MeasureSpec.getSize(widthMeasureSpec)

@@ -430,7 +430,8 @@ class JarvisShellView(context: Context) : View(context) {
         painter.begin(canvas); glass.begin(canvas, d, width, height)
         textPainter.fontScale = font
         canvas.save(); canvas.scale(d, d)
-        val sceneTime = if (ambientMotion(scale) || (materialPressed() && motionAllowed(scale))) now else 0L
+        val sceneTime = if (ambientMotion(scale)) now else 0L
+        val materialTime = if (motionAllowed(scale)) now else 0L
         val tileTarget = if (workspaceFootprint == JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE) 0f else 1f
         val missionTarget = if (workspaceFootprint == JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY) 1f else 0f
         val deckMoving = kotlin.math.abs(deckClearance - tileTarget) > .0001f ||
@@ -456,7 +457,7 @@ class JarvisShellView(context: Context) : View(context) {
             exiting = exiting, workElapsedMs = workElapsed,
             clearIdle = workClear, resultForward = resultForward,
             fromWorkingScene = fromWorkingScene, interruptedAfterMs = interruptedAfterMs,
-            returnResultElapsedMs = returnResultElapsedMs, controlPress = controlPress)
+            returnResultElapsedMs = returnResultElapsedMs, controlPress = controlPress, materialTimeMs = materialTime)
         publishWorkWindowMotion(s, elapsed, workElapsed, exiting, scale, now, depthBudget)
         canvas.restore()
         var workWindowMoving = false
