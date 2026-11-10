@@ -1,0 +1,67 @@
+{
+  "schema": "lm1-weight-evaluation-registration-v1",
+  "status": "COMPILED_NOT_RUN",
+  "nativeSourceCommit": "4b8fa96effd5a390bd5fd83ed84b81ac850b1d5b",
+  "evaluationFreezeCommit": "9972a3269e3ba27796dac87cfd84659e50c87beb",
+  "fixtureSourceIdentity": "1111111111111111111111111111111111111111111111111111111111111111",
+  "fixtureSourceIdentityMeaning": "symbolic test identity; not a source checksum; actual identities are below",
+  "originalSources": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+  },
+  "patchedSources": {
+    "LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "LmModel.kt": "effba147289041b068c94222c33ae9549c29f8b287fc45a861d1a0a373db3c53",
+    "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+  },
+  "researchSources": {
+    "experimental/weight-space-20261104/support-round3/LmTrainingState.kt": "e45eb6b39e2fbaeb07328b175ae118d2ea6f2d827d402b51f3275437d2a3fd10",
+    "experimental/weight-space-20261104/support-round3/LmTrainingFixture.kt": "adbb7a4bcafcf781618c5ff4392edd959bddb97d280c3f3a7da2402521725f56",
+    "experimental/weight-space-20261110/evaluation/LmWeightIdentityChecks.kt": "9f980e53bcdc8c409e588d22048a195bc62a3bc7f1aeac279866187d290091c3",
+    "experimental/weight-space-20261104/support-round3/training-continuity.patch": "7deb89ca77f41b45babdf223ec5ce8e1f4771aaea0cbbd92bdfd27edbbc3abb8",
+    "experimental/weight-space-20261110/evaluation/PROTOCOL.md": "8d7efedbeef61c98d95d9b43e47dceb25208f9a4ea8ee1850d9b29e2b8799bdb"
+  },
+  "toolchain": {
+    "java": "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "javaSha256": "1a7e0b17c39003c75b457d686775ccb032e56fa9c8afe3c492d8eb3715e8951a",
+    "javaVersion": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)\n",
+    "kotlinc": "/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/bin/kotlinc",
+    "kotlincScriptSha256": "90750c977cc043dd2b05c69dd4e052c10377554925dd5a155e74ef732be28c7d",
+    "kotlinCompilerSha256": "66e73eacd619c9beb7c22042117af36b443529c4d80237ee82cc4b2acb6f3d0b",
+    "stdlib": "/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+    "stdlibSha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c"
+  },
+  "compileCommand": [
+    "/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/bin/kotlinc",
+    "/workspace/scratch/87c6edbcb340/weights-build/eval-001/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build/eval-001/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build/eval-001/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build/eval-001/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build/eval-001/LmTrainingState.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build/eval-001/LmTrainingFixture.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build/eval-001/LmWeightIdentityChecks.kt",
+    "-jvm-target",
+    "17",
+    "-d",
+    "/workspace/scratch/87c6edbcb340/weights-build/eval-001/checks.jar"
+  ],
+  "compileExitCode": 0,
+  "compileSeconds": 14.828773387000183,
+  "jar": "/workspace/scratch/87c6edbcb340/weights-build/eval-001/checks.jar",
+  "jarSha256": "778b723f3463a3d941a902b932daff31d761b42436b926f70b293c33f1c152fa",
+  "runCommand": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx512m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/87c6edbcb340/weights-build/eval-001/checks.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmWeightIdentityChecks",
+    "/workspace/scratch/87c6edbcb340/weights-evaluation-run-001"
+  ],
+  "timeoutSeconds": 180,
+  "actualOptimizerUpdatesExpected": 80,
+  "modelParametersExpected": 2632
+}
