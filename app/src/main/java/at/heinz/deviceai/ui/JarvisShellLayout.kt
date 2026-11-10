@@ -158,7 +158,7 @@ object JarvisShellLayout {
         val headerBottom = 8f + headerH
         b[Slot.TOP_BAR] = Box(margin, 8f, right, headerBottom)
 
-        val dialogTop = 8f
+        val dialogTop = 0f
         val dialogH = 56f * font
         val liveW = (room * .28f).coerceIn(120f, 188f)
         b[Slot.DIALOG] = Box(left, dialogTop, left + liveW, dialogTop + dialogH)
