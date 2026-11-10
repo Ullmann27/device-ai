@@ -227,34 +227,46 @@ half4 main(float2 p) {
   float soft = 1.6 * density; float core = 0.45 * density;
   c += half3(cyanColor) * half(exp(-d * d / (2.0 * soft * soft)) * 0.004 + exp(-d * d / (2.0 * core * core)) * 0.008);
   float r = distance(p, float2(size.x * 0.45, size.y * 0.92)) / (max(size.x, size.y) * 0.70);
-  c = mix(c, half3(hazeColor), half(0.65 * max(0.0, 1.0 - r)));
-  float2 n1 = uv - float2(0.34, 0.22); c += half3(violetColor) * half(exp(-dot(n1, n1) * 7.0) * 0.12);
-  float2 n2 = uv - float2(0.72, 0.28); c += half3(cyanColor) * half(exp(-dot(n2, n2) * 8.0) * 0.10);
-  float2 n3 = uv - float2(0.50, 0.82); c += half3(cyanColor) * half(exp(-dot(n3, n3) * 6.0) * 0.08);
-  float2 n4 = uv - float2(0.10, 0.70); c += half3(violetColor) * half(exp(-dot(n4, n4) * 9.0) * 0.07);
-  float2 n5 = uv - float2(0.82, 0.16); c += half3(amberColor) * half(exp(-dot(n5, n5) * 18.0) * 0.055);
-  float farB = particle(p, 180.0 * density, 22.0 * density, 1.0);
-  float farA = particle(p + 140.0 * density, 220.0 * density, 16.0 * density, 11.0);
-  c += half3(cyanColor) * half(farB * 0.04) + half3(amberColor) * half(farA * 0.03);
+  c = mix(c, half3(hazeColor), half(0.72 * max(0.0, 1.0 - r)));
+  float2 n1 = uv - float2(0.34, 0.22); c += half3(violetColor) * half(exp(-dot(n1, n1) * 7.0) * 0.16);
+  float2 n2 = uv - float2(0.72, 0.28); c += half3(cyanColor) * half(exp(-dot(n2, n2) * 8.0) * 0.15);
+  float2 n3 = uv - float2(0.50, 0.82); c += half3(cyanColor) * half(exp(-dot(n3, n3) * 6.0) * 0.10);
+  float2 n4 = uv - float2(0.10, 0.70); c += half3(violetColor) * half(exp(-dot(n4, n4) * 9.0) * 0.08);
+  float2 n5 = uv - float2(0.82, 0.16); c += half3(amberColor) * half(exp(-dot(n5, n5) * 14.0) * 0.09);
+  float2 n6 = uv - float2(0.62, 0.36); c += half3(amberColor) * half(exp(-dot(n6, n6) * 22.0) * 0.05);
+  float farB = particle(p, 180.0 * density, 28.0 * density, 1.0);
+  float farA = particle(p + 140.0 * density, 220.0 * density, 22.0 * density, 11.0);
+  c += half3(cyanColor) * half(farB * 0.055) + half3(amberColor) * half(farA * 0.05);
   float bokeh = particle(p, 120.0 * density, 7.0 * density, 3.0);
   float bokehV = particle(p + 60.0 * density, 120.0 * density, 6.0 * density, 9.0);
-  c += half3(cyanColor) * half(bokeh * 0.05) + half3(violetColor) * half(bokehV * 0.05);
+  c += half3(cyanColor) * half(bokeh * 0.06) + half3(violetColor) * half(bokehV * 0.05);
   float2 dp = p + float2(0.0, time * 6.0 * density);
   c += half3(dustColor) * half(particle(dp, 35.0 * density, 0.65 * density, 17.0) * 2.2);
   return half4(c, 1.0);
 }"""
 
-        /** Outer glow of a rounded rect via SDF, cyan, premultiplied. Local (dp) coordinates. */
+        /**
+         * Rounded-rect SDF rim with volumetric glass: outer glow plus a short inner
+         * sheen that fades away from the edge (does not fill the panel). Cyan-to-violet
+         * with a warm amber mid accent matching ContinuumTheme.AMBER (255,196,92).
+         * Premultiplied. Local (dp) coordinates.
+         */
         const val RIM = """
 uniform float4 rect; uniform float radius; uniform float spread; uniform float intensity;
 float sdRound(float2 p, float2 b, float r) { float2 q = abs(p) - b + r; return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r; }
 half4 main(float2 p) {
   float2 c = (rect.xy + rect.zw) * 0.5; float2 h = (rect.zw - rect.xy) * 0.5;
   float d = sdRound(p - c, h, radius);
-  if (d < 0.0) return half4(0.0);
   float t = clamp((p.x - rect.x) / max(rect.z - rect.x, 1.0), 0.0, 1.0);
   half3 col = mix(half3(0.00, 0.90, 1.00), half3(0.83, 0.24, 1.00), half(t));
-  float a = exp(-d / spread) * intensity * 0.70;
+  col = mix(col, half3(1.00, 0.77, 0.36), half(0.20 * (1.0 - abs(t * 2.0 - 1.0))));
+  if (d < 0.0) {
+    float inner = exp(d / (spread * 0.55)) * intensity * 0.28;
+    float top = clamp(((c.y - p.y) / max(h.y, 1.0)) * 0.5 + 0.5, 0.0, 1.0);
+    half3 sheen = mix(col, half3(0.85, 0.95, 1.00), half(0.45 * top));
+    return half4(sheen * inner, inner);
+  }
+  float a = exp(-d / spread) * intensity * 0.78;
   return half4(col * a, a);
 }"""
     }
