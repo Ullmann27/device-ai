@@ -43,3 +43,10 @@ SHAs der WIP-Branches können sich durch letzte Pushes noch erhöht haben: immer
 7. Signierte APK prüfen (Paket, versionCode 52, versionName 0.3.51, Zertifikat-SHA-256), Heinz zur Installation geben. Kein Publish.
 
 Referenzbilder liegen privat auf Heinz' Grok-Box (/workspace/continuum-code52-ref/ref-a,b,c,d) und sind nicht im Repo.
+
+## Nachtrag 14:30 – Endberichte der Bots (alles gepusht, kein Bot läuft mehr)
+- #709 Bot 01 @2822d77b: Tabelle lückenlos in docs/handover/GROK-LEGACY-INTEGRATION-20261110.md (767 Branches, 661 PRs klassifiziert). Code51-Kern ist bereits in #698. Wirklich fehlende Quellen: 54 Dateien (§5). Noch zu portieren: `feature/continuum-dual-control-profiles-20261030` (ContinuumDualControlPolicy.kt), M8-Dateien (Presence/Initiative, MemoryQuestionResolver, MemoryTimeline, LocalModelClaimAudit, SelfInspection), `code52/final-integrator-ui-fixes-20261110` (fbe35a7de, 3ba8fc4f6) und #598 für das Layout, #487 restliche video3-Szenen. QA 42822470897 lief.
+- #710 Bot 04 @b2f0006b: Wegflug der drei Kästchen, des Docks und der Idle-Panels mit Hologramm-Neuaufbau; Rückflug, Abbruch und Doppelauftrag. Host 27/27, Node 18/18. QA 42823681775 lief. Offen: COCKPIT_SECONDARY fliegt nicht mit; Stagger auf dem Phone.
+- #711 Bot 07 @0e9cf845: Compact-Layout 412×915 ohne Überlauf (914,9 dp statt 2632 dp, Host-Java2D); GlassBackend-Hooks in JarvisShellRenderer.draw() verdrahtet (Test JarvisShellRendererGlassHookTest). QA 42823322682 lief.
+- **Merge-Hinweis:** #710 und #711 ändern beide `JarvisShellRenderer.kt` → Konflikt sorgfältig von Hand lösen (Wegflug-Choreografie von #710 plus Layout und Glas-Hooks von #711 behalten).
+- #703-Inhalte sind sowohl in #706 als auch in #709 (Cherry-Picks); beim Zusammenführen nur einmal übernehmen.
