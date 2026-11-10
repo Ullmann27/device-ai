@@ -1,0 +1,108 @@
+{
+  "sourceSha256": "4682b2d34d7fcf09dc87918e123c2a08f24833928c2df11f5f319dee6445ea6c",
+  "measurement": "Static source templates expanded, no model run",
+  "splits": {
+    "train": {
+      "0": {
+        "n": 32,
+        "templates": 8,
+        "bytesMin": 36,
+        "bytesMedian": 58.5,
+        "bytesMax": 77,
+        "charactersMedian": 58.0
+      },
+      "1": {
+        "n": 32,
+        "templates": 8,
+        "bytesMin": 28,
+        "bytesMedian": 50.0,
+        "bytesMax": 72,
+        "charactersMedian": 49.0
+      },
+      "2": {
+        "n": 32,
+        "templates": 8,
+        "bytesMin": 41,
+        "bytesMedian": 59.0,
+        "bytesMax": 87,
+        "charactersMedian": 58.5
+      },
+      "3": {
+        "n": 32,
+        "templates": 8,
+        "bytesMin": 40,
+        "bytesMedian": 64.5,
+        "bytesMax": 84,
+        "charactersMedian": 64.0
+      }
+    },
+    "dev": {
+      "0": {
+        "n": 6,
+        "templates": 3,
+        "bytesMin": 44,
+        "bytesMedian": 64.5,
+        "bytesMax": 81,
+        "charactersMedian": 64.5
+      },
+      "1": {
+        "n": 6,
+        "templates": 3,
+        "bytesMin": 47,
+        "bytesMedian": 61.0,
+        "bytesMax": 68,
+        "charactersMedian": 59.0
+      },
+      "2": {
+        "n": 6,
+        "templates": 3,
+        "bytesMin": 44,
+        "bytesMedian": 57.5,
+        "bytesMax": 79,
+        "charactersMedian": 56.5
+      },
+      "3": {
+        "n": 6,
+        "templates": 3,
+        "bytesMin": 52,
+        "bytesMedian": 100.5,
+        "bytesMax": 104,
+        "charactersMedian": 99.0
+      }
+    },
+    "test": {
+      "0": {
+        "n": 12,
+        "templates": 4,
+        "bytesMin": 72,
+        "bytesMedian": 75.0,
+        "bytesMax": 90,
+        "charactersMedian": 74.0
+      },
+      "1": {
+        "n": 12,
+        "templates": 4,
+        "bytesMin": 54,
+        "bytesMedian": 70.5,
+        "bytesMax": 117,
+        "charactersMedian": 69.5
+      },
+      "2": {
+        "n": 12,
+        "templates": 4,
+        "bytesMin": 54,
+        "bytesMedian": 78.5,
+        "bytesMax": 98,
+        "charactersMedian": 77.0
+      },
+      "3": {
+        "n": 12,
+        "templates": 4,
+        "bytesMin": 75,
+        "bytesMedian": 113.0,
+        "bytesMax": 132,
+        "charactersMedian": 110.5
+      }
+    }
+  }
+}
