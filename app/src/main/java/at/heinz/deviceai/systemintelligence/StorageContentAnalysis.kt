@@ -135,7 +135,7 @@ class StorageContentAnalyzer(
             val size = document.sizeBytes
             if (size in matchingSizes) {
                 if (document.virtual) limitations += "VIRTUAL_DOCUMENT"
-                else if (size == null || size > limits.maxFileHashBytes || size > limits.maxHashBytes - hashedBytes) {
+                else if (size == null || size > limits.maxFileHashBytes || size >= limits.maxHashBytes - hashedBytes) {
                     limitations += "HASH_BYTE_LIMIT"
                 } else if (allowed()) {
                     try {

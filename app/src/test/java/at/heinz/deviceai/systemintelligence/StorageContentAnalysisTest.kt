@@ -156,4 +156,27 @@ class StorageContentAnalysisTest {
         assertNull(result.files.first().contentSha256)
         assertFalse(result.complete)
     }
+
+    @Test fun exactRemainingBudgetDoesNotOpenUnverifiableCandidate() {
+        val source = Source()
+        val docs = listOf(source.file("a", "a", "abcdef"), source.file("b", "b", "abcdef"))
+        val result = StorageContentAnalyzer(StorageScanLimits(maxHashBytes = 12, maxFileHashBytes = 6))
+            .analyze(source, docs)
+        assertEquals(1, source.opened)
+        assertEquals(6L, result.hashedBytes)
+        assertTrue("HASH_BYTE_LIMIT" in result.limitations)
+        assertFalse("CONTENT_UNVERIFIED" in result.limitations)
+        assertTrue(result.duplicates.isEmpty())
+    }
+
+    @Test fun eofReserveAllowsCompleteCandidateWithoutSpendingPhantomBytes() {
+        val source = Source()
+        val docs = listOf(source.file("a", "a", "abcdef"), source.file("b", "b", "abcdef"))
+        val result = StorageContentAnalyzer(StorageScanLimits(maxHashBytes = 13, maxFileHashBytes = 6))
+            .analyze(source, docs)
+        assertEquals(2, source.opened)
+        assertEquals(12L, result.hashedBytes)
+        assertTrue(result.complete)
+        assertEquals(1, result.duplicates.size)
+    }
 }

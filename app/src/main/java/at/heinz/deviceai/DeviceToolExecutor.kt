@@ -170,7 +170,7 @@ class DeviceToolExecutor internal constructor(
             SystemIntelligenceCommands.PREVIEW -> systemStorage.previewOwnCache(::cancelled).let {
                 lastCachePreview = it
                 "Bereinigungsvorschau: ${it.entries.size} technische Berichte; ${it.eligibleBytes} Byte." +
-                    "\nGeschützte Dateien: ${it.protectedFileCount}. Vollständig: ${it.complete}. Noch nichts verändert."
+                    "\nGeschützte Cache-Einträge: ${it.protectedEntryCount}. Vollständig: ${it.complete}. Noch nichts verändert."
             }
             SystemIntelligenceCommands.CLEANUP -> systemStorage.cleanupOwnCache(
                 requiredString(call, "previewId"), requiredString(call, "planDigest"), ::cancelled).let {
