@@ -253,7 +253,7 @@ class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : Jarvis
     }
 
     companion object {
-        const val FLUID_SPREAD_DP = 6f
+        const val FLUID_SPREAD_DP = 10f
 
         // Local dp; premultiplied edge light.
         const val FLUID_EDGE = """
@@ -272,19 +272,21 @@ half4 main(float2 p) {
   float2 local = p - rect.xy;
   float2 uv = local / max(rect.zw - rect.xy, float2(1.0));
   float d = sdFluidRound(p - center, halfSize, radius);
-  float band = 1.0 - smoothstep(2.0, 6.0, abs(d));
-  float flow = local.y - time * 84.0 - phase * 48.0;
-  float noise = sin(flow * 0.075 + sin(local.x * 0.043 + time * 1.7))
-              + 0.5 * sin(flow * 0.137 - local.x * 0.019 + time * 0.8);
-  float filament = 1.0 - smoothstep(0.35, 1.8, abs(d - noise * 0.72));
-  float packet = pow(0.5 + 0.5 * sin(flow * 0.052 + local.x * 0.022), 4.0);
-  float headDistance = (uv.y - phase) * 5.5;
-  float front = exp(-headDistance * headDistance);
-  float a = clamp(energy * band * (0.12 + filament * 0.42 + packet * 0.24 + front * 0.20), 0.0, 0.92);
+  float band = 1.0 - smoothstep(8.8, 10.0, abs(d));
+  float flow = local.y * 0.071 + local.x * 0.039 - time * 2.2 - phase * 2.5;
+  float drift = sin(flow + 0.65 * sin(local.x * 0.045 - time * 1.1));
+  float lobe = 0.5 + 0.5 * sin(flow * 0.79 + sin(local.y * 0.043 + phase * 2.0));
+  float width = 2.0 + 3.8 * lobe * lobe;
+  float meniscus = d - drift * 1.8;
+  float body = 1.0 - smoothstep(width * 0.48, width + 1.4, abs(meniscus));
+  float lip = 1.0 - smoothstep(0.25, 1.3, abs(meniscus + width * 0.55));
+  float wake = (1.0 - smoothstep(0.0, 8.6, abs(meniscus))) * (0.35 + 0.65 * lobe);
+  float fleck = pow(0.5 + 0.5 * sin(flow * 2.3 + drift), 6.0);
+  float a = clamp(energy * band * (body * 0.48 + lip * 0.26 + wake * 0.12), 0.0, 0.86);
   half3 cyan = half3(0.08, 0.92, 1.0);
   half3 violet = half3(0.67, 0.28, 1.0);
-  half3 color = mix(cyan, violet, half(0.5 + 0.5 * sin(uv.x * 4.0 + noise * 0.4)));
-  color = mix(color, half3(0.88, 0.98, 1.0), half(packet * filament * 0.35));
+  half3 color = mix(cyan, violet, half(0.28 + 0.24 * sin(uv.x * 4.0 + drift * 0.6)));
+  color = mix(color, half3(0.88, 0.98, 1.0), half(lip * (0.25 + fleck * 0.35)));
   return half4(color * a, a);
 }"""
 
