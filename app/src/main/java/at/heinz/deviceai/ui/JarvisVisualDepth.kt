@@ -42,11 +42,11 @@ object JarvisVisualDepth {
         JarvisNeon.halo(p, w * .10f, h * .70f, span * .28f, C.magenta, .10f)
         JarvisNeon.halo(p, w * .45f, h * .94f, span * .60f, C.backgroundHaze, .16f)
         // Spare warm key-light (palette extension, one far source).
-        JarvisNeon.halo(p, w * .82f, h * .16f, span * .18f, C.warn, .07f)
+        JarvisNeon.halo(p, w * .82f, h * .16f, span * .18f, C.warn, .10f)
 
-        paintBokehLayer(p, w, h, count = 16, minR = 20f, maxR = 46f, alpha = .055f,
+        paintBokehLayer(p, w, h, count = 16, minR = 20f, maxR = 46f, alpha = .11f,
             seed = 0xF11A, includeAmber = true)
-        paintBokehLayer(p, w, h, count = 20, minR = 8f, maxR = 16f, alpha = .05f,
+        paintBokehLayer(p, w, h, count = 20, minR = 8f, maxR = 16f, alpha = .08f,
             seed = 0xA22B, includeAmber = false)
         paintLightArcs(p, w, h)
     }

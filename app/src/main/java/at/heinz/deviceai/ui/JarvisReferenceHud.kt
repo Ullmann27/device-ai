@@ -159,6 +159,16 @@ object JarvisReferenceHud {
         p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 2.6f, edge, .50f * opacity * glow)
         p.setAdditive(false)
         p.fillRoundRect(b.left, b.top, b.right, b.bottom, r, body, opacity)
+        // Re-assert the glass lip after the glow: an 18 dp bloom would otherwise hide the
+        // |z|·sin(14°) edge (~5.8 dp) of the rear plate.
+        p.fillRect(b.left + r * .25f, b.bottom, b.right - r * .08f, b.bottom + rearDy,
+            slabBottom, .92f * opacity)
+        p.fillRect(b.right, b.top + r * .25f, b.right + rearDx, b.bottom - r * .08f,
+            slabRight, .88f * opacity)
+        p.drawLine(b.left + r * .35f, b.bottom + rearDy, b.right + rearDx * .35f, b.bottom + rearDy,
+            1.15f, Fill.Solid(accent), .55f * opacity)
+        p.drawLine(b.right + rearDx, b.top + r * .35f, b.right + rearDx, b.bottom + rearDy * .35f,
+            1.15f, Fill.Solid(endAccent), .48f * opacity)
         p.save(); p.clipRoundRect(b.left, b.top, b.right, b.bottom, r)
         p.fillRect(b.left, b.top, b.right, b.top + depth, sheen, opacity)
         p.fillRect(b.left, b.top, b.right, b.bottom, innerBounce, opacity)
