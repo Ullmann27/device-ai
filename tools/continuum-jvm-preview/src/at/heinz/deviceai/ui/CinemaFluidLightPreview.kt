@@ -23,6 +23,7 @@ object CinemaFluidLightPreview {
         val root = File(args[0])
         val out = File(args[1]).apply { mkdirs() }
         val label = args[2]
+        val video = args.getOrNull(3) == "video"
         for ((name, width, height) in listOf(Triple("fold", 884, 760), Triple("cover", 411, 960))) {
             val shell = JarvisShellLayout.create(width.toFloat(), height.toFloat())
             fun frame(path: File, time: Long, work: Boolean, exit: Boolean, caption: String) {
@@ -87,7 +88,7 @@ object CinemaFluidLightPreview {
             for (time in listOf(0L, 140L, 280L, 420L, 650L, 900L, 1600L)) {
                 frame(File(out, "$name-return-${time}ms.png"), time, true, true, "RETURN $time ms")
             }
-            repeat(96) { index ->
+            repeat(if (video) 144 else 0) { index ->
                 val ms = index * 1000L / 24L
                 val work = ms >= 500L
                 val exit = ms >= 2600L
@@ -96,6 +97,6 @@ object CinemaFluidLightPreview {
                     when { exit -> "RETURN $age ms"; work -> "WORK $age ms"; else -> "IDLE" })
             }
         }
-        println("Production painter: 32 stills, 192 video frames; Java2D only.")
+        println("Production painter: 32 stills, ${if (video) 288 else 0} video frames; Java2D only.")
     }
 }

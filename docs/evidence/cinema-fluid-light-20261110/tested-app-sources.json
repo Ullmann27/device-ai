@@ -1,0 +1,68 @@
+{
+  "source_commit": "e2fb22d71464415ac4438fea7f53558a25a6558f",
+  "tree": "88888ff449a420a4c39bab4b85fbc065efca37b5",
+  "app_tree": "1a516b2c1d059d24663d6cb5ff279edfd975de07",
+  "app_matches_source_commit": true,
+  "changed_app_files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/CinemaWindowGazeBridge.kt",
+      "sha256": "a9317eaa9f9c5cac98ae5ce751d798778b053cd2f0879f81e54d200cea9050b7"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/CinemaWindowLightState.kt",
+      "sha256": "d23009cf31fa9a7e4099013c787d66beed486a7a015826bf11e50f74a4d36bca"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+      "sha256": "34fddaa9bf283b8ef40930e7190542b8241700cd1f455452ba5f03329e5ac11f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/SpatialWindowLight.kt",
+      "sha256": "491b32b3efb773ac4bab53effe4cf0dff8766a592d456c2d3585563d4e67b9d4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt",
+      "sha256": "6793e545b10c4b15ea727659c9bcf31d5fe92b7587a67dd5115558d5811afa20"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCinemaEntrance.kt",
+      "sha256": "38520dbd80c3535673f5b2bef7bfc145412c2beede4d063dd1f7302e3444c64d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisFluidLight.kt",
+      "sha256": "a4d6f6434cc6ef2179fad43d28c7fe809a73baae2aba4aa70527812ec4efafc0"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisGlassRenderer.kt",
+      "sha256": "dfabe25a9b4a56939a405d11c993fc206e1f8546adce5139424043809fad12da"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt",
+      "sha256": "25976dc3fae773819cb74f594fa0d82f8ff4df83378b588c2a000e0e37da4909"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+      "sha256": "b994ab2db43cc5a333737350ca9fb9011a8b80209c465c598a2adf73702929dd"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/CinemaWindowGazeBridgeTest.kt",
+      "sha256": "09a711774b7d9c8edac04b8516b4966282eca2d8f239c6e6bda5f6b16b3bb974"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/SpatialWindowLightTest.kt",
+      "sha256": "575ddfd2cbdec2eede9cd471edc7f04ff4979a04c15b75368522e006068ef099"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisCinemaEntranceTest.kt",
+      "sha256": "14e8fd9f2bc902075ad8bfc41c6db595a6d5e36f0f8e823a0ed83f7daa1f48e4"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisFluidLightTest.kt",
+      "sha256": "6642e7ff771c5b6063e85484ed67a814cfb54b8683e66718ff7ad40608c97de5"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisCinemaReplayUiTest.kt",
+      "sha256": "01c9fa7f729fcad5ff80ae42f53997640eb88a6f08fb2e54214715a0e4699eac"
+    }
+  ]
+}

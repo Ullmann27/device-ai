@@ -1,0 +1,223 @@
+{
+  "source_sha": "e2fb22d71464415ac4438fea7f53558a25a6558f",
+  "source_tree": "88888ff449a420a4c39bab4b85fbc065efca37b5",
+  "source_clean": true,
+  "compiled_input_hashes_match": true,
+  "inputs": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt",
+      "sha256": "9f3d0b53d4c68581332be7ceb75bf9be0d7ebc41e3ae41a21ce21a2d7ae5164d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumFonts.kt",
+      "sha256": "a786e449ace87409cb4b40dd727554f7aa4521c0d0e27908e766827632327660"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumTheme.kt",
+      "sha256": "09a9174238a21fe1765358ee9abe4cb46907eabd21c5656a7e28489d91eed661"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
+      "sha256": "0f20bceefe13a6a0d135c6a4182a6f1e5f47d45e591801993aa4ca4825f854e2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisNeon.kt",
+      "sha256": "3998ff0778fbba6fa374e510ee6be541fef3caddcca4ed5f0d8080fb4b60ce63"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt",
+      "sha256": "cc008c70187bf9bace0377caf0eebd648442cf12bae1fdbcc02466609afe6042"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "sha256": "80cb6329301780a1a998b3116e8792da7a8ef80aef2e0acc9e0806d379d2ce46"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt",
+      "sha256": "25976dc3fae773819cb74f594fa0d82f8ff4df83378b588c2a000e0e37da4909"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt",
+      "sha256": "33a4248ebf56a761d81ab0cf1058f1513a9dde84e597113a70c587900da27026"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumIcons.kt",
+      "sha256": "ce0a00016560753110669e5871d400f53fa7c45a9c3af7b57dffc41716e6b98b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisReferenceHud.kt",
+      "sha256": "43f3702e520e5f82a13f6056fa3154ee99db507434feba387c09e884e9e8052b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisVisualDepth.kt",
+      "sha256": "56e23b71ea83e648eac0845188b62d2f6785602ccb5dc67b1dea95cec7e97917"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDeckClearance.kt",
+      "sha256": "85c30d9e864a08b22e3e0b18483fdf22ea6a123448e92c6248cc3a342371d35f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCinemaEntrance.kt",
+      "sha256": "38520dbd80c3535673f5b2bef7bfc145412c2beede4d063dd1f7302e3444c64d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiConstruct.kt",
+      "sha256": "38fa344c98e49f4f089531bbfcc2539053c889bc167e8167b09488cf4675ca52"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisRenderQuality.kt",
+      "sha256": "5a247a1036b59e10b23e2b481ca49e91317cdfc8e0b9d02bb7f9789b9384082b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt",
+      "sha256": "7a31a7298a7dabc156ab17fc85dca63bddd67ae341f8013bdce946c3ae9e583e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt",
+      "sha256": "034ec53a6daa0ab471bcbb0453f8524680287b1dfdaeb4d76cb16254113b1a15"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisRailIcons.kt",
+      "sha256": "6568efa347e1256280c61ec14e511f62f8cd048a9c7a98d5ed0289f25d632a51"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisTileEnergy.kt",
+      "sha256": "540a74065b03f89db4c668168dcd7302014301ceecbbfde47fa659ec095fd5b3"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/LuxuryHoloButtonRenderer.kt",
+      "sha256": "f4baee0b64f521f7cdac49706d6e3c902756f7c0433bd0cd038a4975e664320d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/PerimeterWingChoreographer.kt",
+      "sha256": "89aae648143adc867deb411c9abaf2730ebba0cf13ba1a044ae5f992bf18ad96"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSceneFills.kt",
+      "sha256": "2c2f4fc578d6af6a6494e99fa0e2f710f63cd1ab2acf7048cef03da51fc1c887"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+      "sha256": "0dd2e9a54dc901035b31407f95dc3fcc5727cdd7c1f3b369e86ac5fec2b3a5a9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramPlexus.kt",
+      "sha256": "3ce63bfb8ae0a656b20eca5a388dc5b8202a4e8128e7797d4f0cef3a258e1027"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt",
+      "sha256": "97ea8358c09c23ac688fbdc7eed4579b3a88ce80d3b3a010890df84406a3a46b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisFluidLight.kt",
+      "sha256": "a4d6f6434cc6ef2179fad43d28c7fe809a73baae2aba4aa70527812ec4efafc0"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/DampedSpring.kt",
+      "sha256": "5ad148ea950fd1707cd133d7bcb8b25d33401339797cbdce66a5f7470f39cc36"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/Easings.kt",
+      "sha256": "929530b6d93a9471f4dd9ef7f45c03e1bf9940c487bdb59a988f787772ce07fb"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/MotionPresets.kt",
+      "sha256": "07fa68bbcf019e695bb04fdc7faf8aff20bd484966ec6b47eaf67140c3b63fc9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt",
+      "sha256": "de75dd1bd97e11ab27c97a63e9ad9012eab265340bf2fe066fd445d99f775d88"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/Staggers.kt",
+      "sha256": "147f299ac10f76720fb7dcb2913576ead372ca35b0f99b0953d13eec30461866"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt",
+      "sha256": "061c1b425a9c960c522faca28361592baa02c8c1994287cedec05dfa232b237b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+      "sha256": "199a00d240cb948c6ef3afa0243ec054bf37fca79f44e833dc6610b5f0f53bd8"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+      "sha256": "6873b4652a01873e8736781c9eafc13b006e92c9a537e457e151630e029b94b6"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitTimeline.kt",
+      "sha256": "537bd7de8f210994dfc5e9a5943509364da164211cfbf666515ffb4f5d470d06"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "sha256": "8e9747b26fc6924fa926ba64b937a24de0fec77bd1debd7f92db863640651fb4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/ContinuumAvatarRenderer.kt",
+      "sha256": "c09d7de2100d55eb4912dff47ed95678280621c3b27534276c13b2375d4b5fc2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarIconBurst.kt",
+      "sha256": "281633a50029b24b7410158122a8696a38d1cd5189f4f45a9aa0c35a2eac5a99"
+    },
+    {
+      "path": "generated/HostTileMembers.kt",
+      "sha256": "c6c52bbabe60a6737ce33dae6a5d44afc599503e191122d697af50684379cb6a"
+    },
+    {
+      "path": "generated/HostStopConstant.kt",
+      "sha256": "fad00441b93c339d9c05587ecbd1159fdf5ca06f18b572ba475453f0b276ab54"
+    },
+    {
+      "path": "generated/HostForegroundBoundary.kt",
+      "sha256": "74b79e9c73a1e28cc67243ce24e712eecf7f5019193db3e10654c61c1e3e8f1c"
+    },
+    {
+      "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/Java2DContinuumPainter.kt",
+      "sha256": "9006b4c2a127547b46443ea015c850a1fa0608bddcb7895efa5e749dd1ff1f74"
+    },
+    {
+      "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/CinemaFluidLightPreview.kt",
+      "sha256": "a483d275ed9b3ebd7e15b21d9d112462c6c29334b4764d9cddc048e27c63e8c7"
+    }
+  ],
+  "method": "compare every compiled source digest against current clean checkout",
+  "renderer": "Java2D",
+  "device_test": "NOT_RUN",
+  "remote_source_commit": "5d98a14273a5372f4502eeb4b37fa075918582ec",
+  "app_tree": "1a516b2c1d059d24663d6cb5ff279edfd975de07",
+  "images": [
+    {
+      "filename": "Continuum_Window_Flight_280ms_Java2D.png",
+      "sha256": "11eb12ad277f80cd326f027f5a2c6936379ed2bc10e59ba63bb6fae549b11dc3"
+    },
+    {
+      "filename": "Continuum_Fold_Light_650ms_Java2D.png",
+      "sha256": "ed5edd9541fe2991b5c4a290317c11499995602f90a8562865c8c99d7d430288"
+    },
+    {
+      "filename": "Continuum_Window_Rebuild_1180ms_Java2D.png",
+      "sha256": "3ce66507a41f68c85105e4278f0efa91670d85b6e986e104ebff5f87bde3d1e3"
+    },
+    {
+      "filename": "Continuum_Return_650ms_Java2D.png",
+      "sha256": "32f7cb04986f113433bbc0475ed6b129d3b1002dbd9038c3a24eb724df20ebc3"
+    },
+    {
+      "filename": "Continuum_Cover_Build_1180ms_Java2D.png",
+      "sha256": "ee7cb895b3f6e8be56546d2210346af761f63e87104915392d35a2636e77b7c4"
+    }
+  ],
+  "boundaries": {
+    "avatar": "portable stand-in; original Filament GLB not rendered",
+    "AGSL": "NOT_RUN in these images",
+    "Fold7": "NOT_RUN",
+    "scene_data": "synthetic labels; not live task telemetry"
+  },
+  "png_only_helper_check": {
+    "status": "PASS",
+    "stills": 32,
+    "video_frames": 0,
+    "production_app_tree_unchanged": true
+  }
+}

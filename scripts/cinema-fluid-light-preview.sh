@@ -5,6 +5,8 @@ script_root=$(cd "$(dirname "$0")/.." && pwd -P)
 source_root=${CONTINUUM_PREVIEW_SOURCE_ROOT:-$script_root}
 out=${1:?Pass external output directory}
 label=${2:-candidate}
+mode=${3:-stills}
+[[ "$mode" == stills || "$mode" == video ]]
 sdk_jar=${ANDROID_JAR:?Set platform android.jar path}
 mkdir -p "$out"
 out=$(cd "$out" && pwd -P)
@@ -77,8 +79,8 @@ printf '%s\n' "${sources[@]}" > "$out/source-files.txt"
 "${KOTLINC:-kotlinc}" "${sources[@]}" -cp "$sdk_jar" -jvm-target 17 -nowarn \
     -include-runtime -d "$out/preview.jar" > "$out/compile.log" 2>&1
 "${JAVA:-java}" -Xmx512m -Djava.awt.headless=true -cp "$out/preview.jar:$sdk_jar" \
-    at.heinz.deviceai.ui.CinemaFluidLightPreview "$source_root" "$out" "$label"
-if command -v ffmpeg >/dev/null; then
+    at.heinz.deviceai.ui.CinemaFluidLightPreview "$source_root" "$out" "$label" "$mode"
+if [[ "$mode" == video ]] && command -v ffmpeg >/dev/null; then
     for size in fold cover; do
         ffmpeg -v error -y -framerate 24 -i "$out/$size-sequence/%03d.png" \
             -vf 'pad=ceil(iw/2)*2:ceil(ih/2)*2' -c:v libx264 -pix_fmt yuv420p -crf 19 "$out/$size-sequence.mp4"

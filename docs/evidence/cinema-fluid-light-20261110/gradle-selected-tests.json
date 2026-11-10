@@ -1,0 +1,136 @@
+{
+  "format": 1,
+  "source_commit": "e2fb22d71464415ac4438fea7f53558a25a6558f",
+  "source_tree": "88888ff449a420a4c39bab4b85fbc065efca37b5",
+  "status": "PASS",
+  "tests": 56,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "runtime": "Gradle JUnit; three lifecycle cases run with Robolectric SDK 28",
+  "raw_properties_omitted": true,
+  "classes": [
+    {
+      "class": "at.heinz.deviceai.JarvisCinemaReplayUiTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 1.849,
+      "raw_xml_sha256": "a2632c3c0325df4bd9cf365ce6ff90388e8939c9af1a3f01b8971af87ab4ee15",
+      "cases": [
+        "earlyResultWaitsForConstructionAndStopCancelsIt",
+        "endedPendingOrderCannotRestartAfterReturn",
+        "newOrderWaitsForTheCurrentReturn"
+      ]
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.CinemaWindowGazeBridgeTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.03,
+      "raw_xml_sha256": "286488a237e58c55eb10141e68bcc842976c3055abf44028f0e9f21e492cd8d8",
+      "cases": [
+        "speechDoesNotRetireTheWindowIdWhenASampleArrives",
+        "gazeFollowsEachProjectedSampleInsteadOfTheEndpoint",
+        "speakingRetainsWindowLightingAndTerminalEventsStillCloseIt",
+        "concurrentUiAndWorkerMotionCannotCorruptTheOpenWindowRegistry",
+        "closingTheLitWindowRestoresAnotherOpenWindow",
+        "nextTurnCanReuseTheSameWorkWindow",
+        "delayedSamplesCannotMoveANewerWindow",
+        "closedSampleAndTurnEndReleaseGazeAndRestoreLight"
+      ]
+    },
+    {
+      "class": "at.heinz.deviceai.avatar3d.SpatialWindowLightTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.001,
+      "raw_xml_sha256": "3ecf126dc8478e4260b179c4441292e6f45c8ca932a6cd79b09ba4adac6fcefb",
+      "cases": [
+        "verifiedWindowAccentTintsExistingLightWithoutChangingFaceGeometry",
+        "oneSnapshotKeepsGeometryAndAccentTogether",
+        "thermalAndPermissionFallbackRestoreOriginalCyanFill",
+        "projectedElevationMovesTheExistingLightWithinBounds",
+        "rightWindowShiftsCatchlightToTheMatchingFaceSideAndRestoresOnClose"
+      ]
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisCinemaEntranceTest",
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.01,
+      "raw_xml_sha256": "667f32e02ee2d98645347730f264fe60308e07be5fb489128eec0d5f7a58008a",
+      "cases": [
+        "stageRolesKeepChromeAndSendIdleCardsAway",
+        "workOrderFliesTheThreeTopWindowsAwayBeforeTheyRebuild",
+        "restartFromAWorkingSceneKeepsIdleTilesHidden",
+        "doubleOrderDuringFlyAwayContinuesInsteadOfRestartingFromRest",
+        "adaptiveAnimationStillFreezesWhenTheSharedBudgetSaysNo",
+        "avatarStaysPutOnReturnAndReducedMotionSettlesToRest",
+        "reducedMotionRebuildsWorkWindowsWithoutSweeping",
+        "idleTilesStayGoneAfterTheWorkOrderFlyAway",
+        "flightFollowsHollywoodConstructNotASecondSpring",
+        "abortDuringFlyAwayDoesNotPopWindowsBackToRest",
+        "zSlicingMatchesTheScreenplayPlanes",
+        "screenplayBuildsAnchorBracketsGridGlassThenNativeContent",
+        "staggerDelaysLaterWindowsWithoutShiftingRankZeroOffTheScreenplay",
+        "acknowledgementTimelineDoesNotRetriggerWorkWindows",
+        "onlyRealCockpitEventsTriggerEntranceOrExit",
+        "flyOutDropsNativeContentFirstThenGlassThenTheFrame",
+        "projectedWindowFollowsTheArcFromARealOriginAndStaysAClosedFolder",
+        "returnFliesTheDockOutThenBringsItBack",
+        "resultAdvanceStepsTheDraftTowardTheCameraOnARealStep",
+        "returnFromASettledWorkSceneFliesHologramsOutThenRebuildsTheCockpit",
+        "negativeElapsedIsHiddenUntilARealEventClockStarts",
+        "avatarAndStatusStayPutDuringTheWorkOrder",
+        "reducedMotionHidesDepartingPanelsWithoutASweep",
+        "returnKeepsIdleTilesHiddenUntilTheCockpitRebuilds",
+        "reducedMotionAndFrozenBudgetSettleWithoutSweeping",
+        "secondOrderWaitsForTheLastStaggeredRebuild",
+        "idlePanelsDepartSidewaysIntoDepthOnAWorkOrder",
+        "workOrderFliesTheDockAwayThenRebuildsIt",
+        "resultReturnStartsAtTheDisplayedResultPose"
+      ]
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisFluidLightTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.016,
+      "raw_xml_sha256": "afc25e070de0b4ea1c0952d8a2caa859f39e4cc225a6f7808bac6caf6add7ff8",
+      "cases": [
+        "cancellingAnyConstructionFramePreservesTheVisiblePose",
+        "lightBridgesDepartureAndReconstruction",
+        "replayIsBoundedAndUsesTheExistingStagger",
+        "suspendedAndThermalBudgetsCannotAnimate"
+      ]
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisRenderQualityTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.001,
+      "raw_xml_sha256": "36494f4133617c66b2973eb2a9b6b636d4b331abd48e230938876c2e9bfd147e",
+      "cases": [
+        "reducedMotionAndPowerSavingSuppressAnimationEvenDuringInference",
+        "inferenceOnAWarmDeviceGetsTheSmallestAnimatedBudget",
+        "activeInferenceReservesCapacityWhileNormalForegroundKeepsFullQuality",
+        "moderateHeatReducesFrameWorkBeforeSevereWithoutDroppingAnimation",
+        "thermalPressureNeverIncreasesRenderWork",
+        "explicitlyCoolInferencePreservesLightingWithoutDefeatingWarmThrottling",
+        "hiddenScenesSuspendForEveryDeviceAndInferenceState"
+      ]
+    }
+  ]
+}
