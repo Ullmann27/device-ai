@@ -165,9 +165,16 @@ echo CHECKPOINT=DRAFT_RELEASE_READBACK_VERIFIED
 # 8. Signierung und unabhängige Prüfung beenden diesen Workflow.
 # Das Release bleibt ausdrücklich ENTWURF. Veröffentlichung nur durch
 # separaten, ausdrücklichen Besitzerentscheid; kein automatisches Publish.
-draft_json="$(gh api "repos/$repo/releases/tags/$tag")" || fail DRAFT_READBACK_UNREADABLE
-jq -e --arg tag "$tag" --arg name "$name" --arg sha "sha256:$digest" --argjson size "$size" '
-  .tag_name==$tag and .draft==true and .prerelease==false
+release_pages="$(gh api --paginate --slurp "repos/$repo/releases?per_page=100")" || fail DRAFT_LIST_UNREADABLE
+release_id="$(jq -er --arg tag "$tag" '
+  [.[][] | select(.tag_name==$tag)] |
+  if length==1 then .[0].id else error("ambiguous draft identity") end
+' <<< "$release_pages")" || fail DRAFT_IDENTITY_AMBIGUOUS
+[[ "$release_id" =~ ^[1-9][0-9]*$ ]] || fail DRAFT_ID_INVALID
+unset release_pages
+draft_json="$(gh api "repos/$repo/releases/$release_id")" || fail DRAFT_READBACK_UNREADABLE
+jq -e --arg tag "$tag" --arg source "$source_sha" --arg name "$name" --arg sha "sha256:$digest" --argjson size "$size" '
+  .tag_name==$tag and .target_commitish==$source and .draft==true and .prerelease==false
   and ([.assets[] | select(.name|test("^Continuum-Lokal-[a-f0-9]{64}[.]apk$"))] | length==1)
   and ([.assets[] | select(.name==$name and .digest==$sha and .size==$size)] | length==1)
 ' <<< "$draft_json" >/dev/null || fail DRAFT_RELEASE_METADATA_MISMATCH
@@ -175,4 +182,5 @@ latest_after="$(gh api "repos/$repo/releases/latest" --jq .tag_name)" || fail LA
 [[ "$latest_after" == "$latest_tag" ]] || fail DRAFT_CHANGED_LATEST_RELEASE
 echo CHECKPOINT=SIGNED_DRAFT_READBACK_VERIFIED
 echo STATUS=SIGNED_DRAFT_VERIFIED_NOT_PUBLISHED
-printf 'DRAFT_RELEASE_URL=https://github.com/%s/releases/tag/%s\nAPK_SHA256=%s\nAPK_BYTES=%s\nPUBLISHED=false\n' "$repo" "$tag" "$digest" "$size"
+printf 'DRAFT_RELEASE_URL=%s\nAPK_SHA256=%s\nAPK_BYTES=%s\nPUBLISHED=false\n' "$(jq -r .html_url <<< "$draft_json")" "$digest" "$size"
+
