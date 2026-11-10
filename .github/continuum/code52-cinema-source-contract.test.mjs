@@ -76,6 +76,15 @@ test('EXP11 orb glow is tied to a real accepted window with a bounded time cours
   assert.match(orb,/workWindowPulseStartedAtMs = -1L/);
 });
 
+test('EXP14 shader rim uses pixel space after leaving dp scaled glass canvas',()=>{
+  const start=overlay.indexOf('cinematics.drawMotesAndEnergy(');
+  const end=overlay.indexOf('if (dataAlpha > 0f) drawTelemetry(',start);
+  assert.ok(start>=0 && end>start);
+  const draw=overlay.slice(start,end);
+  assert.match(draw,/cinematics\.drawBrackets\([\s\S]*?canvas\.restore\(\)\s*canvas\.restore\(\)\s*if \(prismRimEnabled/);
+  assert.match(draw,/prismRim\?\.draw\(canvas, stage, frame\.tiltDegrees, frame\.pulse, density\)/);
+});
+
 test('no fake external-send or new native frame timers introduced',()=>{
   assert.match(agent,/Intent\.ACTION_SEND/);
   assert.match(agent,/kein.*gesendet|nicht als gesendet bestätigt/i);
