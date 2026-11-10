@@ -1,0 +1,578 @@
+{
+  "schema": "omega-independent-context-result-v1",
+  "context_pass": 18,
+  "context_fail": 6,
+  "cases": 24,
+  "context_partial": 0,
+  "model_calls": 0,
+  "Fold7": "NOT_RUN",
+  "rows": [
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Resolved",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H01",
+      "category": "relative_previous",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-cobalt"
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": false,
+        "target": false
+      },
+      "decision": "Clarify",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H02",
+      "category": "explicit_correction",
+      "context_status": "FAIL",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": null
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "excluded_target": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Clarify",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H03",
+      "category": "negative_selector",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": null
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "excluded_target": true,
+        "clarification": false,
+        "target": false
+      },
+      "decision": "Clarify",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H04",
+      "category": "rejected_relative",
+      "context_status": "FAIL",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": null
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Resolved",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H05",
+      "category": "predicate_negation",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-amber"
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Clarify",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H06",
+      "category": "unknown_target",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": null
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": false,
+        "target": true
+      },
+      "decision": "NoMatch",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H07",
+      "category": "no_selection",
+      "context_status": "FAIL",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": null
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Clarify",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H08",
+      "category": "three_candidates",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": null
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Resolved",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H09",
+      "category": "long_detour",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-cobalt"
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Resolved",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H10",
+      "category": "pause_resume",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-cobalt"
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Resolved",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H11",
+      "category": "topic_detour",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-amber"
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Resolved",
+      "unsupported_events": ["untrusted_memory: no candidate output/owner-memory ingestion in context slice"],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H12",
+      "category": "contradictory_memory",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-amber"
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": false,
+        "revoked_constraint_absent": false,
+        "clarification": false,
+        "target": false
+      },
+      "decision": "Clarify",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H13",
+      "category": "constraint_correction",
+      "context_status": "FAIL",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": null
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Clarify",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H14",
+      "category": "conflicting_confirmations",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": null
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "NoMatch",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H15",
+      "category": "bare_assent",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-amber"
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "NoMatch",
+      "unsupported_events": [
+        "pending_approval: actual authorization module not invoked",
+        "tool_proposal: actual authorization module not invoked"
+      ],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H16",
+      "category": "cross_tool_assent",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-amber"
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "NoMatch",
+      "unsupported_events": ["pending_approval: actual authorization module not invoked"],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H17",
+      "category": "negative_assent",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-amber"
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": false,
+        "target": false
+      },
+      "decision": "Clarify",
+      "unsupported_events": [
+        "pending_approval: actual authorization module not invoked",
+        "trusted_approval_callback: actual authorization module not invoked"
+      ],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H18",
+      "category": "stale_approval",
+      "context_status": "FAIL",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": null
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Resolved",
+      "unsupported_events": [
+        "dispatch: no ToolGate dispatch from this context-only harness",
+        "result: no external outcome evaluator or memory admission in context slice"
+      ],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H19",
+      "category": "stale_result",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-cobalt"
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "NoStructuredDecision",
+      "unsupported_events": [
+        "trusted_approval_callback: actual authorization module not invoked",
+        "dispatch: no ToolGate dispatch from this context-only harness",
+        "result: no external outcome evaluator or memory admission in context slice"
+      ],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H20",
+      "category": "fresh_receipt",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-amber"
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "NoStructuredDecision",
+      "unsupported_events": ["model_text: no candidate output/owner-memory ingestion in context slice"],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H21",
+      "category": "proposal_is_not_execution",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-amber"
+    },
+    {
+      "goal": null,
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": false,
+        "target": true
+      },
+      "decision": "NoMatch",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H22",
+      "category": "session_isolation",
+      "context_status": "FAIL",
+      "constraints": [],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": null
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "excluded_target": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Clarify",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H23",
+      "category": "oversized_input",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": null
+    },
+    {
+      "goal": "Übergang der Arbeitsfenster verbessern",
+      "checks": {
+        "goal_available": true,
+        "constraints_available": true,
+        "clarification": true,
+        "target": true
+      },
+      "decision": "Resolved",
+      "unsupported_events": [],
+      "stale_plan_admitted": null,
+      "tool_authority": "NOT_RUN",
+      "id": "H24",
+      "category": "central_instruction",
+      "context_status": "PASS",
+      "constraints": [
+        "Originalavatar behalten",
+        "Energiekugel behalten",
+        "Stimme unverändert lassen"
+      ],
+      "receipt_memory_avatar_e2e": "NOT_RUN",
+      "target": "anim-cobalt"
+    }
+  ],
+  "arm": "candidate",
+  "errors": 0
+}
