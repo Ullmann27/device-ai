@@ -1,0 +1,211 @@
+{
+  "source_commit": "27039079f509add2faca22400b1ab4bb3a320f9f",
+  "application_main_tree": "dc6a0e743f4d1c4f2d4b48052fd4ebd3da15591c",
+  "phase": "capture",
+  "result_scope": "HOST_NATIVE_TEST_CAPTURE",
+  "tests_selected": [
+    "at.heinz.deviceai.SystemIntelligenceUiTest",
+    "at.heinz.deviceai.systemintelligence.SystemDiagnosisTest",
+    "at.heinz.deviceai.systemintelligence.SystemPerformanceTest",
+    "at.heinz.deviceai.systemintelligence.OwnDiagnosticCacheTest",
+    "at.heinz.deviceai.systemintelligence.StorageContentAnalysisTest",
+    "at.heinz.deviceai.systemintelligence.StorageScanLaneTest",
+    "at.heinz.deviceai.ShizukuCapabilitiesTest",
+    "at.heinz.deviceai.ShizukuBridgeLifecycleTest",
+    "at.heinz.deviceai.ShizukuConnectionDialogTest",
+    "at.heinz.deviceai.ToolRegistryTest",
+    "at.heinz.deviceai.AgentToolLayerTest",
+    "at.heinz.deviceai.DeviceToolExecutorRunnerTest",
+    "at.heinz.deviceai.DeviceBatteryProbeTest",
+    "at.heinz.deviceai.ui.JarvisActionScenesTest",
+    "at.heinz.deviceai.ScreenObservationRevisionTest",
+    "at.heinz.deviceai.cognitive.ScreenObservationPromptTest",
+    "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest"
+  ],
+  "command": [
+    "/workspace/scratch/5900afa6af29/qa-installed-tools/gradle-8.11.1/bin/gradle",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1100m -XX:MaxMetaspaceSize=384m",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerLocalQa=true",
+    "-PcontinuumOwnerLocalVersionCode=52",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumUiEvidenceDir=/workspace/scratch/cc2ab95db73d/system-native-tests",
+    "-I",
+    "/workspace/scratch/cc2ab95db73d/device-ai-system/tools/capture/force_capture.gradle",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.SystemIntelligenceUiTest",
+    "--tests",
+    "at.heinz.deviceai.systemintelligence.SystemDiagnosisTest",
+    "--tests",
+    "at.heinz.deviceai.systemintelligence.SystemPerformanceTest",
+    "--tests",
+    "at.heinz.deviceai.systemintelligence.OwnDiagnosticCacheTest",
+    "--tests",
+    "at.heinz.deviceai.systemintelligence.StorageContentAnalysisTest",
+    "--tests",
+    "at.heinz.deviceai.systemintelligence.StorageScanLaneTest",
+    "--tests",
+    "at.heinz.deviceai.ShizukuCapabilitiesTest",
+    "--tests",
+    "at.heinz.deviceai.ShizukuBridgeLifecycleTest",
+    "--tests",
+    "at.heinz.deviceai.ShizukuConnectionDialogTest",
+    "--tests",
+    "at.heinz.deviceai.ToolRegistryTest",
+    "--tests",
+    "at.heinz.deviceai.AgentToolLayerTest",
+    "--tests",
+    "at.heinz.deviceai.DeviceToolExecutorRunnerTest",
+    "--tests",
+    "at.heinz.deviceai.DeviceBatteryProbeTest",
+    "--tests",
+    "at.heinz.deviceai.ui.JarvisActionScenesTest",
+    "--tests",
+    "at.heinz.deviceai.ScreenObservationRevisionTest",
+    "--tests",
+    "at.heinz.deviceai.cognitive.ScreenObservationPromptTest",
+    "--tests",
+    "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest"
+  ],
+  "exit_code": 1,
+  "gradle_exit_code": 1,
+  "elapsed_seconds": 403.06685130999904,
+  "frames": [],
+  "junit": [
+    {
+      "name": "at.heinz.deviceai.AgentToolLayerTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "tests": "10",
+      "failures": "2",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.DeviceBatteryProbeTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.DeviceToolExecutorRunnerTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ScreenObservationRevisionTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ShizukuBridgeLifecycleTest",
+      "tests": "21",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ShizukuCapabilitiesTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ShizukuConnectionDialogTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.SystemIntelligenceUiTest",
+      "tests": "7",
+      "failures": "2",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ToolRegistryTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ScreenObservationPromptTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.systemintelligence.OwnDiagnosticCacheTest",
+      "tests": "19",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.systemintelligence.StorageContentAnalysisTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.systemintelligence.StorageScanLaneTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.systemintelligence.SystemDiagnosisTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.systemintelligence.SystemPerformanceTest",
+      "tests": "24",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisActionScenesTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "validation_errors": [
+    "Missing fresh image or JUnit results",
+    "Fresh JUnit failures/errors/skips retained"
+  ],
+  "post_run_source_commit": "27039079f509add2faca22400b1ab4bb3a320f9f",
+  "tracked_changes_after_run": "",
+  "renderer": "Fixture-specific; defaults use Robolectric API28 native Canvas / 2D fallback",
+  "Fold7": "NOT_RUN",
+  "Filament": "NOT_RUN",
+  "GPU": "NOT_RUN",
+  "inference": "NOT_RUN"
+}

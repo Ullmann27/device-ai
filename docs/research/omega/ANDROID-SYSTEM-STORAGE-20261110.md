@@ -117,6 +117,20 @@ replacement-worker refusal, final-metadata expiry, monitor-wait STOP, partial un
 same-content inode replacement, symlink protection and content-duplicate negatives.
 No full Gradle application build, real document provider or Fold7 test in this subtask.
 
+Reviewer-proposed deadline case was also run against the earlier scanner from
+`f45ce8733166758039caa906f1dc1ef724d8443c`: 12 test methods, one expected failure
+because final metadata returned after the deadline but its hash was still accepted.
+The corrected 34-test run includes the unchanged failing case. Baseline source
+SHA-256: `f9070a0f6481f8087cba07c739db8888131c2f09d029093ca23a932537a59d10`.
+The matched test SHA-256 is in `sources.sha256`; retained baseline output is
+`docs/evidence/android-system-storage-20261110/review-baseline-junit.txt`.
+
+Published source: PR #738 / `57f4e1c9bd9806e335331b536281383b5c36706e`.
+Full tree `ac9950d6b9725d31077b009addcc176e9e2bba56` exactly matches local
+`9a6ed9c1a510f09a36efb5a96ee2c9ef19238162`; differing SHA is connector commit
+transport on the equivalent published parent. Root is incorporating these commits
+in the single canonical feature PR #735; this support branch remains open.
+
 Reproduce:
 
 ```sh

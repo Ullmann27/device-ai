@@ -182,10 +182,12 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 assertEquals("Accepted window drives camera", 1f, avatar.cameraProgress(), .00001f)
             }
             fun cancel() {
+                val beforeStop = avatar.cameraProgress()
                 AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest")
                     .apply { isAccessible = true }.invoke(activity)
-                assertEquals("STOP resets before next frame", 0f, avatar.cameraProgress(), 0f)
+                assertEquals("STOP preserves the return origin", beforeStop, avatar.cameraProgress(), 0f)
                 advance(1_200L); measure(root); draw(root)
+                assertEquals("STOP completes the camera return", 0f, avatar.cameraProgress(), 0f)
                 assertTrue(descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
             }
             open(); cancel()
@@ -754,7 +756,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             assertTrue("the window stays while JARVIS speaks", descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
             // STOP: the owner's button routes to cancelLocalRequest.
             AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest").apply { isAccessible = true }.invoke(activity)
-            assertEquals("STOP resets the camera before the next frame", 0f, avatar.cameraProgress(), 0f)
+            assertEquals("STOP begins the existing camera return", 1f, avatar.cameraProgress(), .00001f)
             assertEquals("STOP ends the utterance in the Director", null, field(director, "utterance"))
             assertTrue("STOP leaves the speaking state", director.state != at.heinz.deviceai.avatar.AvatarState.SPEAKING)
             assertFalse("a late word of the stopped utterance is refused", director.wordRange(id, 0, 4))

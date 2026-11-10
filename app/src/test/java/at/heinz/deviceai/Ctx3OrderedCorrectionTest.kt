@@ -110,6 +110,7 @@ class Ctx3OrderedCorrectionTest {
     @Test fun sentenceInitialQuestionWordsRetainTheOrdinalReferent() {
         for ((input, source) in listOf(
             "Warum startet die zweite nicht?" to "s2",
+            "Startet die zweite nicht?" to "s2",
             "Geht die erste nicht?" to "s1"
         )) {
             val result = prepared().decide(input, entities, "v1")

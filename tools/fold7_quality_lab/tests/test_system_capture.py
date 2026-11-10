@@ -15,10 +15,25 @@ def gfx(rows):
 
 
 class SystemCaptureTest(unittest.TestCase):
-    def test_battery_uses_scale_and_power_sources(self):
-        self.assertEqual(capture.battery_conditions("level: 100\nscale: 200\nUSB powered: true\n"), (50, True))
+    def test_battery_uses_scale_and_status(self):
+        self.assertEqual(capture.battery_conditions("level: 100\nscale: 200\nstatus: 2\nUSB powered: true\n"), (50, True))
         self.assertEqual(capture.battery_conditions("level: 100\nscale: 100\nstatus: 5\n"
                          "AC powered: false\nUSB powered: false\nWireless powered: false\n"), (100, False))
+
+    def test_plugged_full_and_not_charging_are_not_charging(self):
+        for status in (3, 4, 5):
+            with self.subTest(status=status):
+                self.assertEqual(capture.battery_conditions(f"level: 100\nscale: 100\nstatus: {status}\n"
+                                 "AC powered: true\nUSB powered: true\nWireless powered: false\n"), (100, False))
+
+    def test_status_unknown_or_missing_stays_unknown_when_plugged(self):
+        for status_line in ("", "status: 1\n", "status: 0\n", "status: 6\n", "status: 22\n"):
+            with self.subTest(status_line=status_line):
+                self.assertEqual(capture.battery_conditions("level: 75\nscale: 100\n" + status_line +
+                                 "AC powered: true\nUSB powered: false\nWireless powered: false\n"), (75, None))
+
+    def test_charging_status_does_not_require_power_source_fields(self):
+        self.assertEqual(capture.battery_conditions("level: 80\nscale: 100\nstatus: 2\n"), (80, True))
 
     def test_missing_battery_is_not_zero_or_unplugged(self):
         for text in ("", "level: 0", "level: 201\nscale: 200", "level: 0\nscale: 0"):
@@ -112,7 +127,7 @@ class SystemCaptureTest(unittest.TestCase):
                 frame_reads += 1
                 return 0, gfx([(1, 2)]) if frame_reads == 1 else gfx([(1, 2), (10, 20)])
             if command == ("dumpsys", "battery"):
-                return 0, "level: 70\nscale: 100\nAC powered: false\nUSB powered: false\nWireless powered: false"
+                return 0, "level: 70\nscale: 100\nstatus: 3\nAC powered: false\nUSB powered: false\nWireless powered: false"
             if command == ("df", "-k", "/data"):
                 return 0, "/dev/data 100 10 90 10% /data"
             raise AssertionError(command)
@@ -131,6 +146,7 @@ class SystemCaptureTest(unittest.TestCase):
         self.assertIsNone(result["conditions"]["batteryTemperatureC"])
         self.assertEqual(result["conditions"]["warmState"], "UNKNOWN")
         self.assertFalse(result["conditions"]["backgroundControlled"])
+        self.assertFalse(result["conditions"]["charging"])
         self.assertEqual(result["unavailable"]["MODEL_TASK_MILLIS"], "NOT_INSTRUMENTED")
 
 
