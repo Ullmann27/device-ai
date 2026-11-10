@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+........E
+Time: 0.009
+There was 1 failure:
+1) openWindowWithoutAccentRetainsExistingSceneLight(at.heinz.deviceai.avatar3d.SpatialWindowLightTest)
+java.lang.AssertionError: Projected geometry retains the available scene tint expected:<Tint(red=0.25103292, green=0.5740062, blue=1.0, lumens=32666.953, positionX=0.58599997, positionY=0.23799999, positionZ=-0.16, side=0.7, roughness=0.46)> but was:<Tint(red=0.18, green=0.82, blue=1.0, lumens=28666.953, positionX=0.58599997, positionY=0.23799999, positionZ=-0.16, side=0.7, roughness=0.46)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.avatar3d.SpatialWindowLightTest.openWindowWithoutAccentRetainsExistingSceneLight(SpatialWindowLightTest.kt:15)
+
+FAILURES!!!
+Tests run: 8,  Failures: 1
+
