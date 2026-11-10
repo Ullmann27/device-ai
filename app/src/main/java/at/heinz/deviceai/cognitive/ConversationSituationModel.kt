@@ -83,6 +83,80 @@ internal class ConversationSituationModel(
     private var currentProject: String? = null
     private var currentTask: String? = null
     private var unresolvedReference: String? = null
+    private var workingTask: WorkingTaskSnapshot? = null
+    private var workingTaskGeneration = 0L
+    private var workingTaskResolutionTurn = -1
+    private val workingTaskContextNonce = java.util.UUID.randomUUID().toString()
+
+    fun bindWorkingTask(seed: WorkingTaskSeed): Boolean {
+        val previous = workingTask
+        if (previous != null && previous.seed.taskId == seed.taskId && seed.revision < previous.seed.revision)
+            return false
+        if (previous?.blockedReason != null && previous.seed.taskId == seed.taskId && seed.revision <= previous.seed.revision)
+            return false
+        if (!WorkingTaskContext.valid(seed) || previous != null && previous.seed.taskId == seed.taskId &&
+            seed.revision == previous.seed.revision && seed != previous.seed) {
+            workingTask = previous?.copy(currentPlan = null, blockedReason = "CONFLICTING_TASK_BINDING",
+                admissionGeneration = nextWorkingTaskGeneration())
+            return false
+        }
+        workingTask = WorkingTaskSnapshot(WorkingTaskContext.copy(seed), seed.selectedReferenceId,
+            admissionGeneration = nextWorkingTaskGeneration(), contextNonce = workingTaskContextNonce)
+        workingTaskResolutionTurn = -1
+        setExplicitScope(task = seed.taskId, goal = seed.goal)
+        return true
+    }
+
+    fun workingTaskSnapshot(): WorkingTaskSnapshot? = workingTask?.let(WorkingTaskContext::copy)
+
+    fun resolveWorkingTask(request: String): WorkingTaskDecision {
+        val old = workingTask ?: return WorkingTaskDecision.NoMatch
+        if (WorkingTaskContext.isStop(request)) {
+            suspendWorkingTask()
+            return WorkingTaskDecision.NoMatch
+        }
+        val sameAdmission = old.currentPlan?.originalRequest == request && workingTaskResolutionTurn == turn
+        val admitted = if (sameAdmission) old else old.copy(admissionGeneration = nextWorkingTaskGeneration())
+        val decision = WorkingTaskContext.resolve(admitted, request)
+        workingTask = when (decision) {
+            is WorkingTaskDecision.Resolved -> admitted.copy(currentPlan = WorkingTaskContext.copy(decision.plan),
+                suspended = false, unresolvedReference = null)
+            is WorkingTaskDecision.Clarify -> admitted.copy(currentPlan = null, selectedReferenceId = null,
+                unresolvedReference = request.take(160))
+            else -> admitted.copy(currentPlan = null)
+        }
+        workingTaskResolutionTurn = turn
+        if (decision is WorkingTaskDecision.Resolved) setExplicitScope(task = old.seed.taskId, goal = old.seed.goal)
+        return decision
+    }
+
+    fun suspendWorkingTask() {
+        workingTask = workingTask?.copy(suspended = true, currentPlan = null, unresolvedReference = null,
+            admissionGeneration = nextWorkingTaskGeneration())
+    }
+
+    fun invalidateWorkingTaskReference(referenceId: String): Boolean {
+        val old = workingTask ?: return false
+        if (old.seed.references.none { it.id == referenceId }) return false
+        val seed = old.seed.copy(references = old.seed.references.map {
+            if (it.id == referenceId) it.copy(revoked = true) else it
+        }, selectedReferenceId = old.seed.selectedReferenceId?.takeUnless { it == referenceId })
+        workingTask = old.copy(seed = seed,
+            selectedReferenceId = old.selectedReferenceId?.takeUnless { it == referenceId }, currentPlan = null,
+            admissionGeneration = nextWorkingTaskGeneration())
+        return true
+    }
+
+    private fun nextWorkingTaskGeneration(): Long = Math.addExact(workingTaskGeneration, 1L).also {
+        workingTaskGeneration = it
+    }
+
+    fun isWorkingTaskPlanCurrent(plan: WorkingTaskPlan): Boolean {
+        val current = workingTask ?: return false
+        return !current.suspended && current.blockedReason == null && current.currentPlan == plan &&
+            current.seed.taskId == plan.taskId && current.seed.revision == plan.revision &&
+            current.seed.references.any { it == plan.reference && !it.revoked }
+    }
 
     fun nextTurn(): Int = ++turn
 
@@ -199,7 +273,7 @@ internal class ConversationSituationModel(
             .thenByDescending { it.lastTouchedTurn }.thenBy { it.id })
     )
 
-    fun reset() {
+    fun reset(preserveWorkingTask: Boolean = false) {
         threads.clear()
         turn = 0
         activeId = null
@@ -207,6 +281,7 @@ internal class ConversationSituationModel(
         currentProject = null
         currentTask = null
         unresolvedReference = null
+        if (preserveWorkingTask) suspendWorkingTask() else workingTask = null
     }
 
     private fun activate(id: String, atTurn: Int) {

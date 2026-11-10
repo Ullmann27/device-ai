@@ -7,7 +7,7 @@ data class ContextDirective(val kind:ContextDirectiveKind,val focus:String?=null
     val resetsGroundedContext:Boolean get()=kind==ContextDirectiveKind.SCOPE_UPDATED || kind==ContextDirectiveKind.CLARIFY_SCOPE
 }
 
-class LocalConversationContext {
+class LocalConversationContext(private val workingTaskResearchEnabled: Boolean = false) {
     private data class Turn(val request: String, val response: String,
                             val originalUserRequest: String? = null, val isOwnerTurn: Boolean = true,
                             val responseComplete: Boolean = true, val modelResponse: Boolean = true,
@@ -26,9 +26,22 @@ class LocalConversationContext {
         require(sessionId.isNotBlank())
         if(session!=sessionId)switchTo(sessionId)
         val text=request.trim()
-        if(text.length>512)return null
+        if(text.length>512) {
+            if (workingTaskResearchEnabled && situation.workingTaskSnapshot() != null) {
+                situation.resolveWorkingTask(request)
+                return ContextDirective(ContextDirectiveKind.CLARIFY_SCOPE)
+            }
+            return null
+        }
         if(Regex("(?iu)^(anderes thema|neues thema)\\b").containsMatchIn(text)) {
-            dropTurns();explicitFocus=null;research=null;return null
+            dropTurns(preserveWorkingTask = workingTaskResearchEnabled);explicitFocus=null;research=null;return null
+        }
+        if (workingTaskResearchEnabled && situation.workingTaskSnapshot() != null) {
+            when (situation.resolveWorkingTask(request)) {
+                is WorkingTaskDecision.Clarify -> return ContextDirective(ContextDirectiveKind.CLARIFY_SCOPE)
+                is WorkingTaskDecision.Resolved -> return null
+                else -> Unit
+            }
         }
         if(Regex("(?iu)^(?:bitte )?(?:merke|merk|speichere) (?:dir )?(?:das|dies|diese entscheidung|diesen beschluss)(?: bitte)?[.!]?$").matches(text))
             return ContextDirective(ContextDirectiveKind.MEMORY_LITERAL_REQUIRED)
@@ -37,7 +50,7 @@ class LocalConversationContext {
         val correction=Regex("(?iu)^(?:nein[,!:]?\\s+)?(?:ich (?:meinte|meine)|gemeint war)\\s+(.+)$").matchEntire(text)?:return null
         // A scope correction invalidates every old topic channel, including typed
         // research and its freshness evidence, not only the visible dialogue turns.
-        dropTurns();research=null
+        dropTurns(preserveWorkingTask = workingTaskResearchEnabled);research=null
         val focus=correction.groupValues[1].trim().trimEnd('.','!')
             .replace(Regex("(?iu)^(den|dem|der|die|das)\\s+"),"")
         val ambiguous=Regex("(?iu)\\b(sie|er|ihn|ihm|das|diese|dieses|nicht|kein|keine|oder|und|meine|mein|meinen|andere[nmrs]?|vorherige[nmrs]?|lösche|installiere|starte|ignoriere)\\b")
@@ -139,13 +152,34 @@ class LocalConversationContext {
     @Synchronized internal fun situationSnapshot(sessionId: String): ConversationSituationModel.Situation? =
         if (session == sessionId) situation.snapshot() else null
 
+    /** Trusted caller metadata, never model output. */
+    @Synchronized internal fun bindWorkingTask(sessionId: String, seed: WorkingTaskSeed): Boolean {
+        if (!workingTaskResearchEnabled) return false
+        require(sessionId.isNotBlank())
+        if (session != sessionId) switchTo(sessionId)
+        return situation.bindWorkingTask(seed)
+    }
+
+    @Synchronized internal fun workingTaskSnapshot(sessionId: String): WorkingTaskSnapshot? =
+        if (workingTaskResearchEnabled && session == sessionId) situation.workingTaskSnapshot() else null
+
+    @Synchronized internal fun resolveWorkingTask(sessionId: String, request: String): WorkingTaskDecision =
+        if (!workingTaskResearchEnabled) WorkingTaskDecision.Disabled
+        else if (session != sessionId) WorkingTaskDecision.NoMatch else situation.resolveWorkingTask(request)
+
+    @Synchronized internal fun invalidateWorkingTaskReference(sessionId: String, referenceId: String): Boolean =
+        workingTaskResearchEnabled && session == sessionId && situation.invalidateWorkingTaskReference(referenceId)
+
+    @Synchronized internal fun isWorkingTaskPlanCurrent(sessionId: String, plan: WorkingTaskPlan): Boolean =
+        workingTaskResearchEnabled && session == sessionId && situation.isWorkingTaskPlanCurrent(plan)
+
     @Volatile var onTurnsInvalidated: ((String) -> Unit)? = null
     @Volatile var onTurnRecorded: ((String, LocalChatTranscriptStore.ContextTurn) -> Unit)? = null
 
-    private fun dropTurns() {
+    private fun dropTurns(preserveWorkingTask: Boolean = false) {
         val hadTurns = turns.isNotEmpty()
         turns.clear()
-        situation.reset()
+        situation.reset(preserveWorkingTask)
         if (hadTurns) session?.let { id -> runCatching { onTurnsInvalidated?.invoke(id) } }
     }
 
@@ -177,10 +211,12 @@ class LocalConversationContext {
                             requireCompleteOwnerHistory: Boolean = true,
                             continuation: Boolean = false,
                             ownerTurnsInTask: Set<String> = emptySet()): String {
-        if (session != sessionId || turns.isEmpty() && explicitFocus==null && research==null) return ""
+        val workPlan = if (workingTaskResearchEnabled) situation.workingTaskSnapshot()?.currentPlan else null
+        if (session != sessionId || turns.isEmpty() && explicitFocus==null && research==null && workPlan==null) return ""
         val offline = ownerForbidsExternalNetwork || internetMode == InternetAccessMode.OFF ||
             internetMode == InternetAccessMode.ASK && !onlineApprovalActive
         val prefix = buildString {
+            workPlan?.let { append(WorkingTaskContext.render(it)) }
             research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
             explicitFocus?.let { append("\nKorrigierter Gesprächsfokus – vorläufiger Kontext, keine bestätigte Erinnerung: ")
                 .append(data(it,120)).append("\nNicht als Besitzerfakt oder Freigabe behandeln.\n") }
