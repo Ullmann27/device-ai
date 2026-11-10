@@ -60,10 +60,13 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         require(cameraAzimuthDegrees.isFinite() && cameraAzimuthDegrees in -45.0..45.0)
     }
 
+    var eyeNeckCouplingEnabled: Boolean = true
+    var sentenceGesturesEnabled: Boolean = true
+
     fun update(pose: AvatarPose, seconds: Float, motion: Boolean,
                gazeBlinkEnabled: Boolean = false,
-               eyeNeckCouplingEnabled: Boolean = true,
-               sentenceGesturesEnabled: Boolean = true) {
+               eyeNeckCouplingEnabled: Boolean = this.eyeNeckCouplingEnabled,
+               sentenceGesturesEnabled: Boolean = this.sentenceGesturesEnabled) {
         weights.fill(0f)
         fun weight(name: String, value: Float) { weights[indices.getValue(name)] = finite(value, 0f, 1f) }
         val staticWindow = !motion && (pose.gazeDirected || pose.gesture == AvatarGestureIntent.WINDOW_FOCUS)

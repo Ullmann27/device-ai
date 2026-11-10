@@ -34,7 +34,7 @@ object JarvisCinematicSettings {
         enabled(context) && depthExperimentEnabled(context)
 
     fun experimentEnabled(context: Context, experiment: Experiment): Boolean =
-        experiment.wired && cinemaOptIn(context) &&
+        experiment.wired && enabled(context) && depthExperimentEnabled(context) &&
             preferences(context).getBoolean("exp52." + experiment.name, true)
 
     fun setExperiment(context: Context, experiment: Experiment, enabled: Boolean) {

@@ -228,9 +228,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             camera!!.setProjection(Camera.Projection.ORTHO, fitted.left, fitted.right,
                 -fitted.halfHeight, fitted.halfHeight, .05, 10.0)
         }
-        mapper.update(pose, seconds, motion, gazeBlinkEnabled = gazeBlinkEnabled,
-            eyeNeckCouplingEnabled = eyeNeckCouplingEnabled,
-            sentenceGesturesEnabled = sentenceGesturesEnabled)
+        mapper.eyeNeckCouplingEnabled = eyeNeckCouplingEnabled
+        mapper.sentenceGesturesEnabled = sentenceGesturesEnabled
+        mapper.update(pose, seconds, motion, gazeBlinkEnabled = gazeBlinkEnabled)
         mapper.applyDiagnosticBlink(diagnosticBlink)
         applyGlow(if (motion) pose.speakEnergy else 0f)
         applyCoreLight(coreEnergy, cinematicLighting && motion, windowAccentArgb, windowOpen)
