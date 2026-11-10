@@ -1,0 +1,5 @@
+Source app: da3cb58 / remote 11f756e6
+Test: JarvisDeterministicCaptureUiTest.compactDockOwnsNavigation
+Result: FAIL before correction
+Assertion: Cockpit dock owns Home navigation expected:<8> but was:<0>
+Expected GONE, observed VISIBLE.
