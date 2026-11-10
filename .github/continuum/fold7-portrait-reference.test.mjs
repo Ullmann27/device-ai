@@ -115,7 +115,7 @@ test('ten action controls share draw bounds while head and original orb retain s
 test('Fold chat remains a real native action and both content and rail stay scrollable',()=>{
  assert.match(tiles,/NavItem\("chat", "Gespräch", Icon\.CHAT\)/);
  assert.match(content,/"chat" to ContinuumHomeLayout\.Slot\.LABEL_THINKING/);
- assert.match(view,/setOnClickListener \{ openJarvisTarget\(target\) \}/);
+ assert.match(view,/setOnClickListener \{\s*activatingShellAction = this\s*try \{ openJarvisTarget\(target\) \} finally \{ activatingShellAction = null \}\s*\}/);
  assert.match(view,/if \(native != null\) native\(target\) else onSlot\(requireNotNull\(route\), 0f, 0f\)/);
  assert.match(activity,/home\.onNavigateTarget = ::navigateDashboardTarget/);
  assert.match(activityMember('private fun navigateDashboardTarget('),
