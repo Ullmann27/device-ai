@@ -24,7 +24,8 @@ test('signing stays manual, non-main and owner-review protected', () => {
 });
 
 test('unverified or unsigned Code52 source can never be published', () => {
-  assert.match(script, /qa_branch="code52\/cinema-native-qa-review-fixes-20261110"/);
+  assert.match(script, /qa_branch="code52\/grok-release-candidate-0351-20261110"/);
+  assert.doesNotMatch(script, /qa_branch="code52\/cinema-native-qa-review-fixes-20261110"/);
   assert.match(script, /qa_workflow_path="\.github\/workflows\/continuum-code52-cinematic-qa\.yml"/);
   assert.match(script, /artifact="Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE"/);
   assert.match(script, /unsigned_name="Continuum-Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE\.apk"/);

@@ -13,7 +13,7 @@ mode="${1:-}"
 
 repo="Ullmann27/device-ai"
 branch="chatgpt/code52-owner-signing-20261109"
-qa_branch="code52/cinema-native-qa-review-fixes-20261110"
+qa_branch="code52/grok-release-candidate-0351-20261110"
 qa_workflow_path=".github/workflows/continuum-code52-cinematic-qa.yml"
 environment_name="continuum-original-signing"
 owner_login="Ullmann27"
