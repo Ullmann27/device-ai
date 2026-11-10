@@ -16,6 +16,8 @@ import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
 import rikka.shizuku.Shizuku
 import java.time.Duration
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /** Actual bridge and Android Handler; only the unavailable Shizuku server is shadowed. */
 @RunWith(RobolectricTestRunner::class)
@@ -26,11 +28,14 @@ class ShizukuBridgeLifecycleTest {
         companion object {
             var running = true
             var granted = true
+            var uid = 2000
             var permissionRequests = 0
             var permissionListener: Shizuku.OnRequestPermissionResultListener? = null
             val connections = mutableListOf<ServiceConnection>()
             val unbound = mutableListOf<ServiceConnection>()
             @Implementation @JvmStatic fun pingBinder() = running
+            @Implementation @JvmStatic fun getUid() = uid
+            @Implementation @JvmStatic fun getVersion() = 13
             @Implementation @JvmStatic fun checkSelfPermission() =
                 if (granted) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
             @Implementation @JvmStatic fun shouldShowRequestPermissionRationale() = false
@@ -51,7 +56,7 @@ class ShizukuBridgeLifecycleTest {
     }
 
     @Before fun reset() {
-        Server.running = true; Server.granted = true; Server.permissionRequests = 0
+        Server.running = true; Server.granted = true; Server.uid = 2000; Server.permissionRequests = 0
         Server.connections.clear(); Server.unbound.clear()
         Server.permissionListener = null
     }
@@ -232,6 +237,92 @@ class ShizukuBridgeLifecycleTest {
         bridge.start(); bridge.requestAccess()
         assertTrue(status.last().contains("nicht gestartet"))
         assertTrue(Server.connections.isEmpty()); assertEquals(0, Server.permissionRequests)
+        bridge.stop()
+    }
+
+    @Test fun revokedPermissionImmediatelyRemovesReadiness() {
+        val bridge = bridge(mutableListOf())
+        bridge.start(); connect(Server.connections.single())
+        assertTrue(bridge.isReady())
+        Server.granted = false
+        assertFalse(bridge.isReady())
+        bridge.stop()
+    }
+
+    @Test fun permissionRevokedBeforeBindCallbackCannotAttachShell() {
+        val bridge = bridge(mutableListOf())
+        bridge.start()
+        Server.granted = false
+        connect(Server.connections.single())
+        assertFalse(bridge.isReady())
+        assertTrue(bridge.statusDetail().contains("widerrufen"))
+        assertEquals(1, Server.unbound.size)
+        bridge.stop()
+    }
+
+    @Test fun revokedPermissionCannotDispatchCheckedCommand() {
+        val bridge = bridge(mutableListOf())
+        bridge.start(); connect(Server.connections.single())
+        Server.granted = false
+        val done = CountDownLatch(1)
+        var failure: Throwable? = null
+        bridge.executeChecked("echo forbidden") { failure = it.exceptionOrNull(); done.countDown() }
+        assertTrue(done.await(5, TimeUnit.SECONDS))
+        assertNotNull(failure)
+        assertFalse(failure!!.message.orEmpty().contains("No shell execution"))
+        bridge.stop()
+    }
+
+    @Test fun rootServerDoesNotEnableRegularCommands() {
+        val bridge = bridge(mutableListOf())
+        bridge.start(); connect(Server.connections.single())
+        Server.uid = 0
+        bridge.refresh()
+        assertTrue(bridge.statusDetail().contains("Root UID 0"))
+        val done = CountDownLatch(1)
+        var failure: Throwable? = null
+        bridge.executeChecked("echo forbidden") { failure = it.exceptionOrNull(); done.countDown() }
+        assertTrue(done.await(5, TimeUnit.SECONDS))
+        assertEquals("ROOT_EXPERT_DISABLED", failure?.message)
+        bridge.stop()
+    }
+
+    @Test fun fixedProbeVerifiesRealUserServiceIdentity() {
+        val bridge = bridge(mutableListOf())
+        bridge.start()
+        Server.uid = 0
+        Server.connections.single().onServiceConnected(ComponentName("test", "test.Shell"), object : IDeviceShell.Stub() {
+            override fun execute(command: String): String {
+                assertEquals(ShizukuCapabilityProbe.COMMAND, ShellExecutionWire.decodeRequest(command).command)
+                return ShellExecutionWire.encodeResult(ShellExecutionResult(ShellOutcome.COMPLETED, 0,
+                    "CONTINUUM_SHIZUKU_CAPABILITIES_V1\n0\n28\nDUMPSYS=1\nPM=1\nCMD=1\n"))
+            }
+            override fun destroy() {}
+        })
+        val done = CountDownLatch(1)
+        var result: Result<ShizukuCapabilities>? = null
+        bridge.probeCapabilities { result = it; done.countDown() }
+        assertTrue(done.await(5, TimeUnit.SECONDS))
+        assertEquals(ShizukuIdentity.ROOT, result!!.getOrThrow().identity)
+        assertFalse(result!!.getOrThrow().rootExpertEnabled)
+        bridge.stop()
+    }
+
+    @Test fun permissionRevokedDuringShellExecutionSuppressesSuccess() {
+        val bridge = bridge(mutableListOf())
+        bridge.start()
+        Server.connections.single().onServiceConnected(ComponentName("test", "test.Shell"), object : IDeviceShell.Stub() {
+            override fun execute(command: String): String {
+                Server.granted = false
+                return ShellExecutionWire.encodeResult(ShellExecutionResult(ShellOutcome.COMPLETED, 0, "done"))
+            }
+            override fun destroy() {}
+        })
+        val done = CountDownLatch(1)
+        var result: Result<String>? = null
+        bridge.executeChecked("echo test") { result = it; done.countDown() }
+        assertTrue(done.await(5, TimeUnit.SECONDS))
+        assertTrue(result!!.isFailure)
         bridge.stop()
     }
 }

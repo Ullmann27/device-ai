@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Handler
+import android.os.Build
 import android.os.IBinder
 import android.os.Looper
 import rikka.shizuku.Shizuku
@@ -37,6 +38,12 @@ class ShizukuBridge(
     @Volatile private var lastConnectionStatus = "Shizuku-Verbindung noch nicht geprüft"
 
     fun statusDetail(): String = lastConnectionStatus
+
+    private fun readyStatus(): String = when (runCatching { Shizuku.getUid() }.getOrNull()) {
+        2000 -> "Bereit · ADB-Shell UID 2000 · Einzelrechte werden geprüft"
+        0 -> "Verbunden · Root UID 0 · Expertenmodus deaktiviert"
+        else -> "Verbunden · Shizuku-Identität ungeprüft"
+    }
 
     private fun reportStatus(value: String) {
         lastConnectionStatus = value
@@ -72,6 +79,11 @@ class ShizukuBridge(
         service: IBinder?
     ) {
         if (!started || activeConnection !== attempted) return
+        if (!isShizukuRunning() || runCatching { Shizuku.checkSelfPermission() }.getOrNull() != PackageManager.PERMISSION_GRANTED) {
+            resetBinding()
+            reportStatus("Shizuku-Zugriff widerrufen · erneut freigeben")
+            return
+        }
         val candidate = runCatching { IDeviceShell.Stub.asInterface(service) }.getOrNull()
         if (candidate == null || !runCatching {
                 candidate.asBinder()?.pingBinder() == true
@@ -83,7 +95,7 @@ class ShizukuBridge(
         cancelBindTimeout()
         checkedSession.incrementAndGet()
         shell = candidate
-        reportStatus("Bereit · Shell UID über Shizuku")
+        reportStatus(readyStatus())
     }
 
     @Synchronized private fun bindFailed(
@@ -155,7 +167,7 @@ class ShizukuBridge(
     @Synchronized fun refresh() {
         if (!started) return
         if (isReady()) {
-            reportStatus("Bereit · Shell UID über Shizuku")
+            reportStatus(readyStatus())
         } else if (!isShizukuRunning()) {
             resetBinding()
             clearPermissionPending()
@@ -192,10 +204,20 @@ class ShizukuBridge(
         runCatching { Shizuku.pingBinder() }.getOrDefault(false)
 
     fun isReady(): Boolean = runCatching {
-        started && isShizukuRunning() && shell?.asBinder()?.pingBinder() == true
+        started && isShizukuRunning() &&
+            Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED &&
+            shell?.asBinder()?.pingBinder() == true
     }.getOrDefault(false)
 
     fun execute(command: String, callback: (String) -> Unit) {
+        if (!isReady()) {
+            callback("Shizuku-Verbindung oder Berechtigung fehlt.")
+            return
+        }
+        if (runCatching { Shizuku.getUid() }.getOrNull() != 2000) {
+            callback("Root-Expertenmodus deaktiviert oder Shizuku-Identität ungeprüft.")
+            return
+        }
         val service = shell
         if (service == null) {
             callback("Noch nicht verbunden. Starte Shizuku und verbinde Device AI.")
@@ -204,7 +226,9 @@ class ShizukuBridge(
 
         Thread {
             val result = runCatching {
+                check(isReady() && shell === service && Shizuku.getUid() == 2000) { "SHIZUKU_ACCESS_CHANGED" }
                 val raw = service.execute(command)
+                check(isReady() && shell === service && Shizuku.getUid() == 2000) { "SHIZUKU_ACCESS_CHANGED" }
                 if (raw.startsWith("DEVICE_AI_SHELL_RESULT_")) ShellExecutionWire.decodeResult(raw).display()
                 else raw // legacy human console display only; tools never use this fallback
             }.getOrElse { "Fehler: ${it.message ?: it.javaClass.simpleName}" }
@@ -216,6 +240,25 @@ class ShizukuBridge(
      * unknown result version or failed exit never becomes a successful string.
      */
     fun executeChecked(command: String, callback: (Result<String>) -> Unit) {
+        executeCheckedInternal(command, identityProbe = false, callback)
+    }
+
+    fun probeCapabilities(callback: (Result<ShizukuCapabilities>) -> Unit) {
+        val identity = runCatching { Shizuku.getUid() to Shizuku.getVersion() }
+        if (identity.isFailure) {
+            callback(Result.failure(IllegalStateException("SHIZUKU_IDENTITY_UNAVAILABLE")))
+            return
+        }
+        val (uid, version) = identity.getOrThrow()
+        executeCheckedInternal(ShizukuCapabilityProbe.COMMAND, identityProbe = true) { result ->
+            callback(result.mapCatching {
+                check(Shizuku.getUid() == uid && Shizuku.getVersion() == version) { "SHIZUKU_IDENTITY_CHANGED" }
+                ShizukuCapabilityProbe.parse(it, uid, Build.VERSION.SDK_INT, version)
+            })
+        }
+    }
+
+    private fun executeCheckedInternal(command: String, identityProbe: Boolean, callback: (Result<String>) -> Unit) {
         val request = runCatching { ShellExecutionRequest(command, 15_000) }
         if (request.isFailure) { callback(Result.failure(request.exceptionOrNull()!!)); return }
         val service = shell
@@ -225,8 +268,12 @@ class ShizukuBridge(
             check(checkedSession.get() == sessionAtStart && shell === service && isReady()) {
                 "Shizuku service changed or stopped."
             }
+            val uid = Shizuku.getUid()
+            check(uid == 2000 || identityProbe && command == ShizukuCapabilityProbe.COMMAND && uid == 0) {
+                if (uid == 0) "ROOT_EXPERT_DISABLED" else "SHIZUKU_UNSUPPORTED_IDENTITY"
+            }
             val raw = service.execute(ShellExecutionWire.encodeRequest(request.getOrThrow()))
-            check(checkedSession.get() == sessionAtStart && shell === service) {
+            check(checkedSession.get() == sessionAtStart && shell === service && isReady() && Shizuku.getUid() == uid) {
                 "Shizuku service changed or stopped during execution."
             }
             ShellExecutionWire.decodeResult(raw).checkedOutput()
@@ -243,7 +290,7 @@ class ShizukuBridge(
                 return
             }
             when {
-                isReady() -> reportStatus("Bereit · Shell UID über Shizuku")
+                isReady() -> reportStatus(readyStatus())
                 Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED -> {
                     clearPermissionPending()
                     bindShellService()
@@ -280,7 +327,7 @@ class ShizukuBridge(
     @Synchronized private fun bindShellService() {
         if (!started) return
         if (isReady()) {
-            reportStatus("Bereit · Shell UID über Shizuku")
+            reportStatus(readyStatus())
             return
         }
         if (activeConnection != null) {
