@@ -67,6 +67,21 @@ class ContinuumSystemStatusWorkWindowUiTest {
         }
     }
 
+    private fun finishWindowReturn(root: View, avatar: ContinuumHologramView) {
+        val camera = field(avatar, "cameraMotion") as AvatarCameraMotion
+        fun windowShown() = descendants(root).any { it.tag == "jarvis-work-window" && it.isShown }
+        val frameMs = avatar.presentationRenderBudget().frameDelayMillis.coerceAtLeast(16L) + 16L
+        val deadline = SystemClock.uptimeMillis() + HollywoodFuiConstruct.CLOSE_END_MS + 2L * frameMs
+        // Closure precedes the camera return.
+        while ((windowShown() || camera.workActive) && SystemClock.uptimeMillis() < deadline) {
+            advance(minOf(16L, deadline - SystemClock.uptimeMillis()))
+        }
+        assertFalse("The window closes within its scheduled duration", windowShown())
+        assertFalse("Actual closure starts the camera return", camera.workActive)
+        advance(AvatarCameraMotion.DURATION_MS + frameMs)
+        assertFalse("The camera cannot reactivate after closure", camera.workActive)
+    }
+
     private fun measure(root: View, width: Int = 884, height: Int = 760) {
         root.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
@@ -194,7 +209,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
                     (it as JarvisWorkWindow).projectedMotionPhase() ==
                         at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSING
                 })
-                advance(HollywoodFuiConstruct.CLOSE_END_MS + AvatarCameraMotion.DURATION_MS + 64L)
+                finishWindowReturn(root, avatar)
                 measure(root); draw(root)
                 assertTrue(descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
                 assertEquals("STOP finishes the camera return", 0f, avatar.cameraProgress(), 0f)
@@ -774,7 +789,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             assertEquals("STOP ends the utterance in the Director", null, field(director, "utterance"))
             assertTrue("STOP leaves the speaking state", director.state != at.heinz.deviceai.avatar.AvatarState.SPEAKING)
             assertFalse("a late word of the stopped utterance is refused", director.wordRange(id, 0, 4))
-            advance(HollywoodFuiConstruct.CLOSE_END_MS + AvatarCameraMotion.DURATION_MS + 64L)
+            finishWindowReturn(root, avatar)
             measure(root); draw(root)
             assertTrue("the window has folded away", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
             assertEquals("nothing replays the camera afterwards", 0f, avatar.cameraProgress(), 0f)
