@@ -18,6 +18,7 @@ test('memory and cancelled turns cannot create false document world', () => {
   // #701 isolation is stricter than a hasDocument early-return: DocumentLearned
   // must never be applied to the document workscene, even when a PDF is already open.
   assert.match(orchestration, /is CockpitAnimationEvent\.DocumentLearned -> Unit/);
+  assert.doesNotMatch(orchestration, /is CockpitAnimationEvent\.DocumentLearned -> \{/);
   assert.doesNotMatch(orchestration, /document\.onLearned\(/);
   assert.match(projection, /fun onLearned\([\s\S]*?event: CockpitAnimationEvent\.DocumentLearned\) = Unit/);
   assert.doesNotMatch(projection, /entriesAdded = event\.entriesAdded/);
