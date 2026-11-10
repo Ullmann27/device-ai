@@ -24,6 +24,10 @@ object HollywoodFuiConstruct {
     const val SCAN_PERIOD_MS = 2_200L
     /** Entrance perspective of the construct (degrees around the vertical axis); settles to 0 at [GLASS_END_MS]. */
     const val ENTRANCE_TILT_DEGREES = 14f
+    /** B Z-slicing: rear glass plane, content at the screen, front light brackets (dp). */
+    const val REAR_GLASS_Z_DP = -24f
+    const val CONTENT_Z_DP = 0f
+    const val FRONT_BRACKET_Z_DP = 20f
 
     private const val CLOSE_DATA_END_MS = 160L
     private const val CLOSE_GLASS_START_MS = 80L

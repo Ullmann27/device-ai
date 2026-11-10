@@ -65,7 +65,8 @@ object JarvisShellRenderer {
              tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L,
              deferForeground: Boolean = false, deckClearance: Float = 0f,
              missionClearance: Float = deckClearance, luxuryDepth: Boolean = false,
-             depthBudget: JarvisRenderQuality.Budget? = null, enableWings: Boolean = luxuryDepth) {
+             depthBudget: JarvisRenderQuality.Budget? = null, enableWings: Boolean = luxuryDepth,
+             exiting: Boolean = false, workElapsedMs: Long = elapsedMs) {
         background(p, shell.width, shell.height)
         val backdropHeight = shell[Slot.INPUT]?.bottom ?: shell[Slot.AVATAR]?.bottom ?: shell.height
         JarvisReferenceHud.backdrop(p, shell.width, backdropHeight)
@@ -85,53 +86,77 @@ object JarvisShellRenderer {
             p.restore()
         }
         cards.forEachIndexed { i, box ->
-            val f = JarvisMotion.frame(JarvisMotion.panelSpecFor(box.centerX, cx),
-                elapsedMs - JarvisMotion.staggerStart(ranks[i], animatorScale = animatorScale), animatorScale)
             val slot = cardSlots.getOrNull(i)
             val tileIndex = i - cardSlots.size
-            if (f.alpha <= 0f || f.scale <= 0f) return@forEachIndexed
-            val depth = JarvisMotion.Depth.FLAT
+            val kind = JarvisCinemaEntrance.kindOf(slot)
+            val cinemaElapsed = if (kind == JarvisCinemaEntrance.Kind.WORK_WINDOW) workElapsedMs else elapsedMs
+            val cinema = JarvisCinemaEntrance.pose(
+                kind, JarvisCinemaEntrance.rankOf(slot, ranks[i]), cinemaElapsed, exiting,
+                side = if (box.centerX >= cx) 1f else -1f, budget = depthBudget, animatorScale = animatorScale)
+            val f = JarvisMotion.frame(JarvisMotion.panelSpecFor(box.centerX, cx),
+                elapsedMs - JarvisMotion.staggerStart(ranks[i], animatorScale = animatorScale), animatorScale)
+            if (cinema.hidden && cinema.rimAlpha < 0.01f) return@forEachIndexed
+            if (f.scale <= 0f) return@forEachIndexed
             // Airbus deck: while a work window is open, tiles and lower rows make room instead of being covered.
             val sourceClearance = JarvisDeckClearance.clearance(slot, deckClearance, missionClearance)
             val clear = if (sourceClearance > 0f && JarvisDeckClearance.clears(slot))
                 JarvisDeckClearance.local(sourceClearance, JarvisDeckClearance.order(slot, box.centerX, shell.width)) else 0f
             if (clear >= .999f) return@forEachIndexed
-            val opacity = f.alpha * if (clear > 0f) JarvisDeckClearance.alpha(clear) else 1f
+            val visible = maxOf(cinema.rimAlpha, cinema.glassAlpha, cinema.contentAlpha, f.alpha)
+            val opacity = visible * if (clear > 0f) JarvisDeckClearance.alpha(clear) else 1f
+            if (opacity < 0.01f) return@forEachIndexed
             if (opacity < 1f) p.saveAlpha(opacity) else p.save()
-            p.translate(f.dx + depth.dx + JarvisDeckClearance.dx(clear, box.centerX, shell.width),
-                f.dy + depth.dy + JarvisDeckClearance.dy(clear))
-            val k = f.scale * depth.scale * JarvisDeckClearance.scale(clear)
+            p.translate(f.dx + cinema.dx + JarvisDeckClearance.dx(clear, box.centerX, shell.width),
+                f.dy + cinema.dy + JarvisDeckClearance.dy(clear))
+            val k = f.scale * cinema.scale * JarvisDeckClearance.scale(clear)
             p.scale(k, k, box.centerX, box.centerY())
-            val depthState = if (enableWings && depthBudget != null)
-                PerimeterWingChoreographer.depth(slot, box, shell.width, clear, true, depthBudget)
-                else JarvisMotion.Depth.FLAT
+            if (cinema.tiltY != 0f) p.rotate(cinema.tiltY, box.centerX, box.centerY())
+            val depthState = when {
+                cinema.tiltY != 0f || cinema.scale < 0.999f ->
+                    JarvisMotion.Depth.State(cinema.scale, 0f, 0f, cinema.tiltY, cinema.dx, cinema.dy)
+                enableWings && depthBudget != null ->
+                    PerimeterWingChoreographer.depth(slot, box, shell.width, clear, true, depthBudget)
+                else -> JarvisMotion.Depth.FLAT
+            }
             val depthNative = depthState != JarvisMotion.Depth.FLAT &&
                 glass?.beginDepth(box, depthState) == true
             val tile = if (slot == null) tiles.getOrNull(tileIndex) else null
             val ownsSurface = slot == Slot.BOTTOM_NAV || (content[slot] != null &&
                 slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS))
-            if (tile != null) {
+            val r = JarvisDesign.Metrics.radiusCard
+            if (cinema.glassAlpha < 0.02f && cinema.rimAlpha > 0.02f) {
+                p.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 1.6f, Fill.Solid(Colors.cyan), cinema.rimAlpha)
+            } else if (tile != null) {
+                if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
                 JarvisTiles.drawSurface(p, box, tile, f.glow > .5f,
                     if (animatorScale > 0f) timeMs else 0L,
                     luxuryDepth = luxuryDepth, lightSourceX = orbX, lightSourceY = orbY)
+                if (cinema.glassAlpha < 1f) p.restore()
             } else if (!ownsSurface) {
-                val r = JarvisDesign.Metrics.radiusCard
                 // Static HUD panels do not need repeated full-screen backdrop-blur copies.
-                if (f.glow > .5f) glass?.bloom(JarvisNeon.BLOOM_RADIUS_DP, f.glow) { q ->
+                if (f.glow > .5f) glass?.bloom(JarvisNeon.BLOOM_RADIUS_DP, f.glow * cinema.glassAlpha) { q ->
                     q.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 2f, Fill.Solid(Colors.cyan))
                 }
+                if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
                 JarvisReferenceHud.surface(p, box, r, Colors.cyan,
                     if (slot == Slot.INPUT) Colors.violetRim else Colors.cyanDeep,
                     interaction = if (f.glow > .5f) JarvisReferenceHud.Interaction.SELECTED
                         else JarvisReferenceHud.Interaction.NORMAL)
+                if (cinema.glassAlpha < 1f) p.restore()
             }
-            when {
-                slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
-                slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
-                slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
-                    timeMs = if (animatorScale > 0f) timeMs else 0L)
-                slot != null -> header(p, box, label(slot))
-                tileIndex < tiles.size -> JarvisTiles.draw(p, box, tiles[tileIndex])
+            if (cinema.contentAlpha > 0.01f) {
+                if (cinema.contentAlpha < 1f) p.saveAlpha(cinema.contentAlpha)
+                when {
+                    slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
+                    slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
+                    slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
+                        timeMs = if (animatorScale > 0f) timeMs else 0L,
+                        cinemaElapsedMs = cinemaElapsed, cinemaExiting = exiting,
+                        cinemaBudget = depthBudget, animatorScale = animatorScale)
+                    slot != null -> header(p, box, label(slot))
+                    tileIndex < tiles.size -> JarvisTiles.draw(p, box, tiles[tileIndex])
+                }
+                if (cinema.contentAlpha < 1f) p.restore()
             }
             if (depthNative) glass?.endDepth()
             p.restore()

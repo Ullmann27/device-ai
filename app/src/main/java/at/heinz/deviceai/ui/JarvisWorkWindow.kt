@@ -229,6 +229,15 @@ class JarvisWorkWindow(
 
     val isShowing: Boolean get() = phase != Phase.CLOSED
 
+    internal fun projectedMotionPhase(): at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase = when (phase) {
+        Phase.OPENING -> at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.FLYING
+        Phase.OPEN -> at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.SETTLED
+        Phase.CLOSING -> at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSING
+        Phase.CLOSED -> at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSED
+    }
+
+    internal fun motionSuppressed(): Boolean = lastAnimatorScale <= 0f
+
     /** The running work's steps for the status strip; null or blank hides it. Only real, current steps. */
     fun setStatus(text: String?) {
         val value = text?.takeIf { it.isNotBlank() }
