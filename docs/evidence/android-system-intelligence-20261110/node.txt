@@ -1,0 +1,34 @@
+✔ learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android (316.34884ms)
+✔ cognitive runtime owns the single chat path, privacy boundaries and background diagnostics (590.772255ms)
+✔ background consolidation records failure without losing interrupted source trials (3.14896ms)
+✔ experimental module is inspectable and not on any automatic model promotion path (0.238421ms)
+✔ activity request codes are unique and every one has a result handler (320.450067ms)
+✔ scheduled offline job names the JobService declared in the manifest (0.366249ms)
+✔ user-visible texts contain line breaks, not a literal backslash-n (6.171324ms)
+✔ learning-core and research store I/O stays off the UI thread in dialogs and chat input (1003.185279ms)
+✔ neural weights are saved by compare-and-swap and foreground practice can be stopped (62.491025ms)
+✔ startup bootstrap training stops with the activity and is retried later (153.165023ms)
+✔ startup I/O off the UI thread and shell commands stop with their activity (240.449597ms)
+✔ local language model path is reachable: model center, loading, chat escalation and reasoning chain (495.187206ms)
+✔ every area has a center reachable from the start screen; no demo buttons; experiments marked (244.301682ms)
+✔ Teamleader Android UI reports status without false success (81.104767ms)
+✔ live model status does not revert the beginner cockpit to English (64.591329ms)
+✔ model setup stays usable for beginners while preserving SHA-256 integrity (214.538471ms)
+✔ new visual start screen is local, accessible and honest about capabilities (121.745973ms)
+✔ neural training failures expose bounded diagnostics without claiming saved weights (66.661491ms)
+✔ Wikipedia article research uses bounded authentic extracts and original citations (1.201836ms)
+✔ Android-first Teamleader is scheduled, observable and serialized across background and chat (1.794654ms)
+✔ explicit M5 project planning command reaches reviewed builder without bypassing approval (1.375456ms)
+✔ Owner-accessible WhatsApp draft does not claim message delivery (1.592107ms)
+✔ ToolRegistry keeps screenshot and app launch on the CONFIRM path (1.301298ms)
+✔ expert-mode planner binds screenshot and launch risks to ToolRegistry (0.247876ms)
+✔ expert-mode confirmation dialogs show the exact shell command and the same strong destructive pair as AgentActivity (1.339274ms)
+✔ host and unit evidence for the expert-mode gate stay in source (0.156581ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4103.818511

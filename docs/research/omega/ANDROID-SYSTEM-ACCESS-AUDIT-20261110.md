@@ -1,5 +1,11 @@
 # Android system access audit
 
+Final integration note: incorporated in PR #735; complete Android source compilation
+and 155 selected integrated tests pass on published `02120f079ce1bdb1d3311f16f88d1a51bb7fbe09`.
+The scoped results below are historical checkpoints; final scope/provenance is in
+[the integration handoff](ANDROID-SYSTEM-INTELLIGENCE-HANDOFF-20261110.md).
+Physical device validation remains NOT_RUN.
+
 Base: Cinema `c1fdbaeab95d8f808715c180fbc77762e459a59c`.
 Integration: root / `feature/android-system-intelligence-20261110`, PR #735.
 Experiments: EXP-08/EXP-11; existing ToolGate, Shizuku transport and screen service only.

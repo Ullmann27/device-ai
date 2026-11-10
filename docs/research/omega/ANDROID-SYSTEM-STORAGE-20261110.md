@@ -1,5 +1,11 @@
 # Storage and bounded cleanup
 
+Final integration note: incorporated in PR #735; complete Android source compilation
+and 155 selected integrated tests pass on published `02120f079ce1bdb1d3311f16f88d1a51bb7fbe09`.
+The scoped results below are historical checkpoints; final scope/provenance is in
+[the integration handoff](ANDROID-SYSTEM-INTELLIGENCE-HANDOFF-20261110.md).
+Physical device validation remains NOT_RUN.
+
 Integration owner: root / Android System Intelligence PR #735, target
 `feature/android-system-intelligence-20261110`, then the owner's Cinema integration.
 EXP-08/EXP-11; existing ToolGate remains the only tool-approval authority.

@@ -5,6 +5,8 @@ Canonical feature: [PR #735](https://github.com/Ullmann27/device-ai/pull/735),
 `cinema/fluid-light-stage-20261110`, verified base
 `c1fdbaeab95d8f808715c180fbc77762e459a59c`.
 Integration owner: this PR's root integrator. EXP-08/EXP-11.
+Current Cinema parent `c972f56ccc4caa2f1807bcaf1d4665347c66c629` was merged
+into this feature without conflict; its avatar evidence/fixture repairs are preserved.
 This is an additional bounded prototype, not a complete phone optimizer or accepted
 Fold7 release. No main merge, APK, signing, installation or publication.
 
@@ -100,31 +102,34 @@ failure. STOP tests are aligned with the existing Cinema contract from baseline
 focus loss and reduced motion still reset immediately. Production animation is
 unchanged. The red integration result is retained rather than overwritten.
 
-## Verification checkpoint
+## Final host verification
 
-Android main and complete unit-test source compilation passed at local
-`27039079f509add2faca22400b1ab4bb3a320f9f`, published tree-equivalent
-`b3e59e05155d16e3eb151d145ac59b6c67f834fd`.
-Initial integrated native run: 152 tests, 148 passed, four failed: two obsolete
-STOP expectations and two new render fixtures missing Cinema-shell setup.
-Corrections are committed; the next integrated run must validate them. A ten-minute
-nonblocking shared-slot wait ended without starting Gradle; no competing build was
-killed or lock bypassed. Isolated native Canvas surface test: 1/1 PASS, two PNGs
-visually checked; this is not full Activity/Cinema acceptance. Scoped Node wiring:
-26/26 PASS. Python lab: 60/60 PASS, mocked device I/O. Storage follow-up: 40/40
-PASS after five reproduced failures. Source-bound evidence:
-`docs/evidence/android-system-{access,storage,performance,intelligence}-20261110`.
+Tested source: local `b00ff926dc5f0fe66a8fd75ecd5d110053cb1e7c`, published
+`02120f079ce1bdb1d3311f16f88d1a51bb7fbe09`; exact shared full tree
+`5d054bfd1214d4175424454b01d109ce6fe743e1`. Later completion commits are
+reports/evidence only. [Raw evidence and reproduction](../../evidence/android-system-intelligence-20261110/README.md).
 
-| Target | Actual status |
+| Check | Actual result |
 | --- | --- |
-| Kotlin policy/storage/statistics | Host tests, synthetic inputs |
-| Android API/wiring/bridge lifecycle | Robolectric API28, no real Shizuku |
-| Diagnosis data surface | Native Canvas 1/1 PASS; two source-bound fixture PNGs |
-| Full Activity/Cinema visual | Corrected capture still pending shared Gradle slot |
-| Physical Fold7 / Android17 / actual grants | NOT_RUN; adb lists no connected device |
+| Entire Android main/unit-source compilation | PASS |
+| Selected integrated Android/JVM suites | 155 PASS, 0 failures/errors/skips |
+| Scoped Node wiring | 26/26 PASS |
+| Python Fold7 lab | 60/60 PASS; device I/O mocked |
+| Activity/Cinema native rendering | Nine frames; inner/cover diagnosis visually checked |
+| Isolated native data surface | 1/1 test, two frames visually checked |
+| Full repository tests / Android lint | NOT_RUN |
+| Physical Fold7 / Android17 / actual Shizuku and SAF grants | NOT_RUN; no connected device |
 | Physical thermal/latency/storage improvement | NOT_RUN; no improvement claimed |
 | Root, personal-file deletion, messages/payments | NOT_RUN; not enabled |
-| APK/signing/install/release | NOT_RUN; not authorized here |
+| APK/signing/install/release | NOT_RUN |
+
+The first integrated run had 148/152 passes. Both obsolete STOP expectations and
+both render fixture failures passed in the final corrective run. Eight initially
+passing navigation cases were not repeated. Storage/preview subset counts overlap
+the 155 cases and are not added again. All original red evidence is retained.
+The shared Gradle slot was respected throughout the main APK integration work.
+No model-quality, GPU, on-device permission or acceleration claim follows from
+host tests. PORTIERT: yes; VERIFIZIERT: scoped host; GERÄTEBESTÄTIGT: no.
 
 ## Research, contributors, next gates
 
@@ -135,13 +140,12 @@ PASS after five reproduced failures. Source-bound evidence:
 - Support PRs #736 access, #737 measurements, #738 storage stay open. Completed
   sources are integrated without overwriting their branches.
 
-Next: finish exact-source host/render checks, then separately authorized Fold7
-validation of real Shizuku reconnect/revocation, local providers, secure-delete
+Next: separately authorized Fold7 validation of real Shizuku reconnect/revocation, local providers, secure-delete
 support/undo, lifecycle, cover/inner display and controlled A-B-B-A observations.
 Optional Usage Access statistics and narrow verified-node actions remain later
 work. General autonomous Accessibility control is not claimed Play-compliant;
 see official sources in the access audit. Root actions stay unimplemented/off.
 Rollback: revert this feature on its development branch. No memory, weights,
 signer, package, active research default or system setting is migrated.
-PORTIERT: yes; VERIFIZIERT: scoped host, corrective run pending;
-GERÄTEBESTÄTIGT: no. Branches remain open.
+Branches remain open. Final host acceptance does not authorize signing, installation
+or productive promotion before the owner/device gates.
