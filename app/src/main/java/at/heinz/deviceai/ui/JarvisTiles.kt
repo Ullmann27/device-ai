@@ -309,7 +309,7 @@ object JarvisTiles {
             p.save()
             p.translate(cinema.dx, cinema.dy)
             p.scale(cinema.scale, cinema.scale, tile.centerX, tile.centerY)
-            if (cinema.tiltY != 0f) p.rotate(cinema.tiltY * .25f, tile.centerX, tile.centerY)
+            if (cinema.tiltY != 0f) p.rotate(cinema.tiltY, tile.centerX, tile.centerY)
             val active = i == selected || i == pressed
             val model = JarvisTile(it.target, it.label, it.icon,
                 controlState = if (i == pressed) JarvisControlState.PRESSED

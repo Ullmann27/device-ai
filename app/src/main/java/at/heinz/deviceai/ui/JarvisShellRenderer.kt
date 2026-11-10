@@ -110,7 +110,7 @@ object JarvisShellRenderer {
                 f.dy + cinema.dy + JarvisDeckClearance.dy(clear))
             val k = f.scale * cinema.scale * JarvisDeckClearance.scale(clear)
             p.scale(k, k, box.centerX, box.centerY())
-            if (cinema.tiltY != 0f) p.rotate(cinema.tiltY * .35f, box.centerX, box.centerY())
+            if (cinema.tiltY != 0f) p.rotate(cinema.tiltY, box.centerX, box.centerY())
             val depthState = when {
                 cinema.tiltY != 0f || cinema.scale < 0.999f ->
                     JarvisMotion.Depth.State(cinema.scale, 0f, 0f, cinema.tiltY, cinema.dx, cinema.dy)
