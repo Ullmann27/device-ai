@@ -319,8 +319,14 @@ class ContinuumReferenceCockpitUiTest {
         assertTrue("No invisible rail duplicates remain", descendants(home).none {
             it.tag?.toString()?.startsWith("jarvis-rail:") == true
         })
-        val tiles = descendants(home).count { it.tag?.toString()?.startsWith("jarvis-tile:") == true }
-        val dock = descendants(home).count { it.tag?.toString()?.startsWith("jarvis-bottom:") == true }
+        val tiles = descendants(home).count {
+            val tag = it.tag?.toString() ?: return@count false
+            tag.startsWith("jarvis-tile:") && tag.substringAfter(':') in JarvisHomeTestRoutes.features
+        }
+        val dock = descendants(home).count {
+            val tag = it.tag?.toString() ?: return@count false
+            tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.features
+        }
         assertEquals("All ten feature controls remain in the hierarchy", 10, if (tiles > 0) tiles else dock)
     }
 

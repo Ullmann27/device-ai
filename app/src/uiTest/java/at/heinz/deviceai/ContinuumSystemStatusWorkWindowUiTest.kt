@@ -460,9 +460,11 @@ class ContinuumSystemStatusWorkWindowUiTest {
             }
             // The framework's own selection of children offered to accessibility services (TalkBack).
             fun a11yChildren() = ArrayList<View>().also { home.addChildrenForAccessibility(it) }
-                .count { v -> v.tag?.toString()?.let {
-                    it.startsWith("jarvis-tile:") || it.startsWith("jarvis-panel:ROW_") || it.startsWith("jarvis-bottom:")
-                } == true }
+                .count { v ->
+                    val tag = v.tag?.toString() ?: return@count false
+                    tag.startsWith("jarvis-tile:") || tag.startsWith("jarvis-panel:ROW_") ||
+                        (tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.features)
+                }
             val a11yBefore = a11yChildren()
             tap(root, memory)
             advance(640L); measure(root); draw(root)
@@ -657,9 +659,11 @@ class ContinuumSystemStatusWorkWindowUiTest {
             framePump = CockpitHostFramePump { controller.get().window.decorView }
             fun home() = field(activity, "homeView") as ContinuumHomeView
             home().setForegroundActive(true)
-            fun deckTag(v: View) = v.tag?.toString()?.let {
-                it.startsWith("jarvis-tile:") || it.startsWith("jarvis-panel:ROW_") || it.startsWith("jarvis-bottom:")
-            } == true
+            fun deckTag(v: View): Boolean {
+                val tag = v.tag?.toString() ?: return false
+                return tag.startsWith("jarvis-tile:") || tag.startsWith("jarvis-panel:ROW_") ||
+                    (tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.features)
+            }
             fun deck() = JarvisHomeTestRoutes.deck(root).count { it.isShown }
             fun hidden() = JarvisHomeTestRoutes.deck(root).count { it.visibility == View.INVISIBLE }
             fun a11y() = ArrayList<View>().also { home().addChildrenForAccessibility(it) }.count(::deckTag)

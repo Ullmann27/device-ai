@@ -60,7 +60,8 @@ object JarvisCockpitGrid {
         val headerH = 52f * font
         val headerBottom = 8f + headerH
         a[Area.HEADER] = Box(margin, 8f, right, headerBottom)
-        val iconsW = if (room >= 680f) 96f else 72f
+        // Two 48 dp header actions need 96 dp; three actions (notifications/settings/more) need 144 dp.
+        val iconsW = if (room >= 680f) 144f else 96f
         val iconsLeft = right - iconsW
         val privacyW = (widthDp * .17f).coerceIn(108f, 168f)
         val privacyRight = iconsLeft - gap
@@ -106,8 +107,15 @@ object JarvisCockpitGrid {
             workH = stackedWork
         } else {
             val usable = (remaining - gap).coerceAtLeast(0f)
-            heroH = usable * .46f
-            workH = usable - heroH
+            val readableHero = 140f
+            val minWork = 48f
+            if (usable >= readableHero + minWork) {
+                heroH = maxOf(readableHero, usable * .46f).coerceAtMost(usable - minWork)
+                workH = usable - heroH
+            } else {
+                heroH = usable * .46f
+                workH = usable - heroH
+            }
         }
 
         val heroTop = yAfterHeader
@@ -128,7 +136,7 @@ object JarvisCockpitGrid {
         val continuumH = minOf(56f * font, heroH * .28f).coerceAtLeast(36f * font)
         a[Area.CONTINUUM_HEADER] = Box(orbLeft, heroTop, orbRight, heroTop + continuumH)
         a[Area.ORB] = Box(orbLeft, heroTop + continuumH + 4f, orbRight, heroBottom)
-        val cameraH = minOf(56f * font, heroH * .28f).coerceAtLeast(40f * font)
+        val cameraH = minOf(56f * font, heroH * .28f).coerceAtLeast(48f * font)
         a[Area.CAMERA_STATUS] = Box(modulesLeft, heroTop, right, heroTop + cameraH)
         a[Area.MODULES] = Box(modulesLeft, heroTop + cameraH + gap, right, heroBottom)
 
