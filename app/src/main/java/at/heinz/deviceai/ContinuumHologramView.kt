@@ -582,16 +582,16 @@ class ContinuumHologramView @JvmOverloads constructor(
             }
             .setPositiveButton("15s Animationstest") { _, _ -> startAvatarProof() }
             .setNeutralButton("Film-Effekte") { _, _ ->
-                AlertDialog.Builder(context).setTitle("Arbeitsfenster · Darstellung")
-                    .setSingleChoiceItems(arrayOf("Filmische Glaskonstruktion", "Statische Effekte · Rückfall"),
-                        if (at.heinz.deviceai.ui.JarvisCinematicSettings.enabled(context)) 0 else 1) { dialog, item ->
-                        presentation.edit().putBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.KEY, item == 0).apply()
-                        dialog.dismiss()
-                    }
+                // Code52 is a Cinema-only release: an alternate master OFF switch in the
+                // avatar chooser would silently disable all 15 effects after migration.
+                AlertDialog.Builder(context).setTitle("Arbeitsfenster · Cinema 52")
+                    .setMessage("Cinema-Glas, Fensterflug, Avatar-Licht und Kugelkopplung sind " +
+                        "im Cinema-Release standardmäßig aktiviert. Die Android-Einstellungen " +
+                        "für reduzierte Bewegung und die thermischen Schutzgrenzen gelten weiterhin.")
                     .setNeutralButton("Bewegung prüfen") { _, _ ->
                         Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
                     }
-                    .setNegativeButton("Schließen", null).show()
+                    .setPositiveButton("Schließen", null).show()
             }
             .setNegativeButton("Schließen", null).show()
     }
