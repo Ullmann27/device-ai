@@ -1,0 +1,55 @@
+error: source file or directory not found: app/src/main/java/at/heinz/deviceai/motion/Easing.kt
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:16:18: error: unresolved reference 'Easing'.
+    val linear = Easing { c(it) }
+                 ^^^^^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:16:29: error: unresolved reference 'it'.
+    val linear = Easing { c(it) }
+                            ^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:17:23: error: unresolved reference 'Easing'.
+    val easeInCubic = Easing { val x = c(it); x * x * x }
+                      ^^^^^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:17:42: error: unresolved reference 'it'.
+    val easeInCubic = Easing { val x = c(it); x * x * x }
+                                         ^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:18:24: error: unresolved reference 'Easing'.
+    val easeOutCubic = Easing { val x = 1f - c(it); 1f - x * x * x }
+                       ^^^^^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:18:48: error: unresolved reference 'it'.
+    val easeOutCubic = Easing { val x = 1f - c(it); 1f - x * x * x }
+                                               ^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:19:26: error: unresolved reference 'Easing'.
+    val easeInOutCubic = Easing { val x = c(it); if (x < .5f) 4f * x * x * x else 1f - (-2f * x + 2f).pow(3) / 2f }
+                         ^^^^^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:19:45: error: unresolved reference 'it'.
+    val easeInOutCubic = Easing { val x = c(it); if (x < .5f) 4f * x * x * x else 1f - (-2f * x + 2f).pow(3) / 2f }
+                                            ^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:21:24: error: unresolved reference 'Easing'.
+    val easeOutQuint = Easing { val x = 1f - c(it); 1f - x * x * x * x * x }
+                       ^^^^^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:21:48: error: unresolved reference 'it'.
+    val easeOutQuint = Easing { val x = 1f - c(it); 1f - x * x * x * x * x }
+                                               ^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:23:22: error: unresolved reference 'Easing'.
+    val easeInExpo = Easing { val x = c(it); if (x <= 0f) 0f else if (x >= 1f) 1f else 2f.pow(10f * x - 10f) }
+                     ^^^^^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:23:41: error: unresolved reference 'it'.
+    val easeInExpo = Easing { val x = c(it); if (x <= 0f) 0f else if (x >= 1f) 1f else 2f.pow(10f * x - 10f) }
+                                        ^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:25:25: error: unresolved reference 'Easing'.
+    val easeInOutSine = Easing { -(cos(PI.toFloat() * c(it)) - 1f) / 2f }
+                        ^^^^^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:25:57: error: unresolved reference 'it'.
+    val easeInOutSine = Easing { -(cos(PI.toFloat() * c(it)) - 1f) / 2f }
+                                                        ^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:27:23: error: unresolved reference 'Easing'.
+    val easeOutBack = Easing { val x = c(it) - 1f; val k = 1.2f; 1f + (k + 1f) * x * x * x + k * x * x }
+                      ^^^^^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:27:42: error: unresolved reference 'it'.
+    val easeOutBack = Easing { val x = c(it) - 1f; val k = 1.2f; 1f + (k + 1f) * x * x * x + k * x * x }
+                                         ^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:33:66: error: unresolved reference 'Easing'.
+    fun cubicBezier(x1: Float, y1: Float, x2: Float, y2: Float): Easing {
+                                                                 ^^^^^^
+app/src/main/java/at/heinz/deviceai/motion/Easings.kt:39:77: error: unresolved reference 'Easing'.
+    private class CubicBezier(x1: Float, y1: Float, x2: Float, y2: Float) : Easing {
+                                                                            ^^^^^^

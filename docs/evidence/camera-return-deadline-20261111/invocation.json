@@ -1,0 +1,44 @@
+{
+  "base": "f495fd633509e11a52519a0bd89d96b22cb91b3b",
+  "compiler": [
+    "/tmp/continuum-toolchain/kotlinc/bin/kotlinc",
+    "-J-Xmx256m",
+    "-J-XX:ActiveProcessorCount=2",
+    "-cp",
+    "/tmp/continuum-toolchain/junit.jar:/tmp/continuum-toolchain/hamcrest.jar",
+    "-d",
+    "/workspace/scratch/5900afa6af29/camera-return-deadline-check/classes",
+    "app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt",
+    "app/src/main/java/at/heinz/deviceai/motion/Easings.kt",
+    "app/src/main/java/at/heinz/deviceai/motion/DampedSpring.kt",
+    "app/src/main/java/at/heinz/deviceai/motion/Staggers.kt",
+    "app/src/main/java/at/heinz/deviceai/motion/MotionPresets.kt",
+    "app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCameraMotion.kt",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCameraMotionTest.kt"
+  ],
+  "compilerExit": 0,
+  "runner": [
+    "/tmp/continuum-toolchain/jdk/bin/java",
+    "-Xmx128m",
+    "-XX:ActiveProcessorCount=2",
+    "-cp",
+    "/workspace/scratch/5900afa6af29/camera-return-deadline-check/classes:/tmp/continuum-toolchain/junit.jar:/tmp/continuum-toolchain/hamcrest.jar:/tmp/continuum-toolchain/kotlinc/lib/kotlin-stdlib.jar",
+    "org.junit.runner.JUnitCore",
+    "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest"
+  ],
+  "runnerExit": 0,
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt": "de75dd1bd97e11ab27c97a63e9ad9012eab265340bf2fe066fd445d99f775d88",
+    "app/src/main/java/at/heinz/deviceai/motion/Easings.kt": "929530b6d93a9471f4dd9ef7f45c03e1bf9940c487bdb59a988f787772ce07fb",
+    "app/src/main/java/at/heinz/deviceai/motion/DampedSpring.kt": "5ad148ea950fd1707cd133d7bcb8b25d33401339797cbdce66a5f7470f39cc36",
+    "app/src/main/java/at/heinz/deviceai/motion/Staggers.kt": "147f299ac10f76720fb7dcb2913576ead372ca35b0f99b0953d13eec30461866",
+    "app/src/main/java/at/heinz/deviceai/motion/MotionPresets.kt": "07fa68bbcf019e695bb04fdc7faf8aff20bd484966ec6b47eaf67140c3b63fc9",
+    "app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt": "061c1b425a9c960c522faca28361592baa02c8c1994287cedec05dfa232b237b",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCameraMotion.kt": "b46dde7eba334e651c68a1c9154781c62197d89bc2cb949099af978236ab6a6c",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCameraMotionTest.kt": "afe09d4791699cb7c9a4a4a7138fa45c7ac3015f82ab65692e24d0071f07a923"
+  },
+  "androidUiTestSourceSha256": "50c9ea7ec507d06a54600fbde856d758f9704dd452266fab99b63c7c55eafc54",
+  "androidUiTests": "NOT_RUN_BY_THIS_AGENT",
+  "fold7": "NOT_RUN"
+}

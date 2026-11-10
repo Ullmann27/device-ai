@@ -1,0 +1,19 @@
+ContinuumSystemStatusWorkWindowUiTest > cameraReturnsAfterStopAndDoesNotReplayAfterLifecycleBoundaries STARTED
+
+ContinuumSystemStatusWorkWindowUiTest > cameraReturnsAfterStopAndDoesNotReplayAfterLifecycleBoundaries FAILED
+    java.lang.AssertionError: STOP finishes the camera return expected:<0.0> but was:<1.4543533E-5>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:577)
+        at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.cameraReturnsAfterStopAndDoesNotReplayAfterLifecycleBoundaries$cancel(ContinuumSystemStatusWorkWindowUiTest.kt:200)
+        at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.cameraReturnsAfterStopAndDoesNotReplayAfterLifecycleBoundaries(ContinuumSystemStatusWorkWindowUiTest.kt:225)
+
+ContinuumSystemStatusWorkWindowUiTest > speakingInsideAnOpenWindowKeepsTheCameraAndStopReturnsItAfterSpeechEnds STARTED
+
+ContinuumSystemStatusWorkWindowUiTest > speakingInsideAnOpenWindowKeepsTheCameraAndStopReturnsItAfterSpeechEnds FAILED
+    java.lang.AssertionError: nothing replays the camera afterwards expected:<0.0> but was:<1.4543533E-5>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:577)
+        at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.speakingInsideAnOpenWindowKeepsTheCameraAndStopReturnsItAfterSpeechEnds(ContinuumSystemStatusWorkWindowUiTest.kt:780)
+
