@@ -69,10 +69,20 @@ class Ctx3Context {
 
   // Ordered deictic selectors are deterministic only inside an already established candidate set.
   // They never invent a new entity and fail closed when no unique position exists.
-  val deictic=resolveOrderedDeictic(words)
-  if(deictic!=null) {
+  val selectors=orderedDeictics(input)
+  if(selectors.isNotEmpty()) {
+   val accepted=selectors.filterNot {
+    negative(tokens(input.substring(0,it.range.first)).size)||words.lastOrNull()=="nicht"
+   }
+   val contrast=selectors.size==2&&accepted.size==1&&accepted.single()==selectors.last()&&
+    Regex("(?iu)\\bsondern\\b").containsMatchIn(input.substring(selectors.first().range.last+1,selectors.last().range.first))
+   if(accepted.size!=1||(selectors.size>1&&!contrast)) {
+    focus=emptyList();selectedFocusIndex=-1
+    return Ctx3Decision.Clarify("NO_UNIQUE_POSITIVE_ORDERED_REFERENT")
+   }
+   val deictic=accepted.single()
    if(focus.size<2)return Ctx3Decision.Clarify("NO_ORDERED_ALTERNATIVES")
-   val targetIndex=when(deictic) {
+   val targetIndex=when(deictic.kind) {
     "FIRST"->0
     "SECOND"->1
     "PREVIOUS"->if(selectedFocusIndex>0)selectedFocusIndex-1 else -1
@@ -82,7 +92,7 @@ class Ctx3Context {
    if(targetIndex !in focus.indices)return Ctx3Decision.Clarify("NO_UNIQUE_ORDERED_REFERENT")
    val target=focus[targetIndex]
    selectedFocusIndex=targetIndex;age=0
-   return Ctx3Decision.Query(rewriteDeictic(input,target.label),target.sourceIds)
+   return Ctx3Decision.Query(input.replaceRange(deictic.range,target.label),target.sourceIds)
   }
 
   val ref=words.withIndex().firstOrNull { it.value in setOf("er","ihn","ihm","sie","es","damit","dazu","darüber","des") }
@@ -112,31 +122,21 @@ class Ctx3Context {
   }
  }
 
- private fun resolveOrderedDeictic(words:List<String>):String? {
-  fun has(vararg terms:String)=terms.all { it in words }
-  return when {
-   has("davor") && words.any { it in setOf("der","die","das","variante","option") } -> "PREVIOUS"
-   words.any { it in setOf("andere","anderen","anderes","anderer") } &&
-    words.any { it in setOf("der","die","das","variante","option") } -> "OTHER"
-   words.any { it in setOf("erste","ersten","erstes","erster") } -> "FIRST"
-   words.any { it in setOf("zweite","zweiten","zweites","zweiter") } -> "SECOND"
-   else -> null
-  }
- }
+ private data class Deictic(val kind:String,val range:IntRange)
 
- private fun rewriteDeictic(input:String,label:String):String {
-  val patterns=listOf(
-   "(?iu)\\b(?:der|die|das)\\s+davor\\b",
-   "(?iu)\\b(?:der|die|das)\\s+ander(?:e|en|es|er)\\b",
-   "(?iu)\\b(?:die\\s+)?erste(?:n|s|r)?(?:\\s+variante|\\s+option)?\\b",
-   "(?iu)\\b(?:die\\s+)?zweite(?:n|s|r)?(?:\\s+variante|\\s+option)?\\b"
-  )
-  var out=input
-  for(pattern in patterns)out=out.replace(Regex(pattern),Regex.escapeReplacement(label))
-  return out
- }
+ private fun orderedDeictics(input:String):List<Deictic> = ORDERED_PATTERNS.flatMap { (kind,pattern)->
+  pattern.findAll(input).map { Deictic(kind,it.range) }.toList()
+ }.sortedBy { it.range.first }
 
- companion object { fun tokens(text:String)=Regex("[\\p{L}\\p{N}]+",RegexOption.IGNORE_CASE).findAll(text).map { it.value.lowercase(Locale.ROOT) }.toList() }
+ companion object {
+  private val ORDERED_PATTERNS=listOf(
+   "PREVIOUS" to "(?iu)\\b(?:der|die|das|variante|option)\\s+davor\\b",
+   "OTHER" to "(?iu)\\b(?:der|die|das)\\s+ander(?:e|en|es|er)\\b",
+   "FIRST" to "(?iu)\\b(?:die\\s+)?erste(?:n|s|r)?(?:\\s+variante|\\s+option)?\\b",
+   "SECOND" to "(?iu)\\b(?:die\\s+)?zweite(?:n|s|r)?(?:\\s+variante|\\s+option)?\\b"
+  ).map { (kind,pattern)->kind to Regex(pattern) }
+  fun tokens(text:String)=Regex("[\\p{L}\\p{N}]+",RegexOption.IGNORE_CASE).findAll(text).map { it.value.lowercase(Locale.ROOT) }.toList()
+ }
 }
 
 /** Conservative surface reader; unsupported fact grammar stays unsupported. No truth inferred from a turn. */
