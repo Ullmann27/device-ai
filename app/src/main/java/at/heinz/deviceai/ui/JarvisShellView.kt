@@ -52,6 +52,9 @@ class JarvisShellView(context: Context) : View(context) {
     private var cinemaTurnId = ""
     private var workClear = false
     private var resultForward = false
+    private var workStageTurnId = ""
+    private var fromWorkingScene = false
+    private var interruptedAfterMs = JarvisCinemaEntrance.WORKING_SETTLED_MS
     var onProjectedMotion: ((WindowProjectedMotion) -> Unit)? = null
     private val projectedMotion = WindowProjectedMotionSampler()
     private var layoutFont = 0f
@@ -261,6 +264,9 @@ class JarvisShellView(context: Context) : View(context) {
     fun playEntrance() {
         workClear = false
         resultForward = false
+        workStageTurnId = ""
+        fromWorkingScene = false
+        interruptedAfterMs = JarvisCinemaEntrance.WORKING_SETTLED_MS
         val now = SystemClock.uptimeMillis()
         startMs = now
         workStartMs = now
@@ -269,9 +275,35 @@ class JarvisShellView(context: Context) : View(context) {
     }
 
     fun playWorkStage() {
+        val now = SystemClock.uptimeMillis()
+        if (workClear && startMs >= 0L) {
+            if (exitMs >= 0L) {
+                if (workStageTurnId == cinemaTurnId) {
+                    postInvalidateOnAnimation()
+                    return
+                }
+                val returnElapsed = now - exitMs
+                fromWorkingScene = returnElapsed < JarvisCinemaEntrance.returnHoldMs(interruptedAfterMs)
+                exitMs = -1L
+                interruptedAfterMs = JarvisCinemaEntrance.WORKING_SETTLED_MS
+            } else when (JarvisCinemaEntrance.workOrderReplay(
+                workStageTurnId == cinemaTurnId, now - startMs)) {
+                JarvisCinemaEntrance.WorkOrderReplay.IGNORE -> {
+                    postInvalidateOnAnimation()
+                    return
+                }
+                JarvisCinemaEntrance.WorkOrderReplay.CONTINUE_FLIGHT -> {
+                    workStageTurnId = cinemaTurnId
+                    postInvalidateOnAnimation()
+                    return
+                }
+                JarvisCinemaEntrance.WorkOrderReplay.RESTART_FROM_WORKING ->
+                    fromWorkingScene = true
+            }
+        }
         workClear = true
         resultForward = false
-        val now = SystemClock.uptimeMillis()
+        workStageTurnId = cinemaTurnId
         startMs = now
         workStartMs = now
         exitMs = -1L
@@ -286,7 +318,18 @@ class JarvisShellView(context: Context) : View(context) {
     }
 
     fun playExit() {
-        exitMs = SystemClock.uptimeMillis()
+        val now = SystemClock.uptimeMillis()
+        if (exitMs >= 0L) {
+            postInvalidateOnAnimation()
+            return
+        }
+        interruptedAfterMs = if (workClear && startMs >= 0L) {
+            (now - startMs).coerceAtLeast(0L)
+        } else {
+            JarvisCinemaEntrance.WORKING_SETTLED_MS
+        }
+        exitMs = now
+        resultForward = false
         postInvalidateOnAnimation()
     }
 
@@ -302,11 +345,27 @@ class JarvisShellView(context: Context) : View(context) {
         val s = currentShell() ?: return
         val scale = animatorScale()
         val now = SystemClock.uptimeMillis()
-        val exiting = exitMs >= 0L
-        val elapsed = when {
+        var exiting = exitMs >= 0L
+        var elapsed = when {
             exiting -> now - exitMs
             startMs < 0 -> Long.MAX_VALUE / 4
             else -> now - startMs
+        }
+        if (exiting && workClear) {
+            val tearDown = JarvisCinemaEntrance.returnDurationMs(
+                s.boxes.size + s.tileBoxes().size, interruptedAfterMs, animatorScale = scale)
+            if (scale <= 0f || elapsed >= tearDown) {
+                workClear = false
+                resultForward = false
+                workStageTurnId = ""
+                fromWorkingScene = false
+                interruptedAfterMs = JarvisCinemaEntrance.WORKING_SETTLED_MS
+                startMs = -1L
+                workStartMs = -1L
+                exitMs = -1L
+                exiting = false
+                elapsed = Long.MAX_VALUE / 4
+            }
         }
         val workElapsed = when {
             exiting -> now - exitMs
@@ -338,7 +397,8 @@ class JarvisShellView(context: Context) : View(context) {
             deckClearance = deckClearance, missionClearance = missionClearance,
             luxuryDepth = luxuryDepth, depthBudget = depthBudget, enableWings = wings,
             exiting = exiting, workElapsedMs = workElapsed,
-            clearIdle = workClear, resultForward = resultForward)
+            clearIdle = workClear, resultForward = resultForward,
+            fromWorkingScene = fromWorkingScene, interruptedAfterMs = interruptedAfterMs)
         publishWorkWindowMotion(s, elapsed, workElapsed, exiting, scale, now, depthBudget)
         canvas.restore()
         var workWindowMoving = false
@@ -350,7 +410,12 @@ class JarvisShellView(context: Context) : View(context) {
         val count = s.boxes.size + s.tileBoxes().size
         val total = maxOf(
             JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, count, animatorScale = scale),
-            JarvisCinemaEntrance.ensembleDurationMs(count, animatorScale = scale, exiting = exiting))
+            when {
+                workClear && exiting -> JarvisCinemaEntrance.returnDurationMs(
+                    count, interruptedAfterMs, animatorScale = scale)
+                workClear && !exiting -> JarvisCinemaEntrance.workOrderDurationMs(count, animatorScale = scale)
+                else -> JarvisCinemaEntrance.ensembleDurationMs(count, animatorScale = scale, exiting = exiting)
+            })
         // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
         removeCallbacks(ambientFrame)
         val deckStillMoving = kotlin.math.abs(deckClearance - tileTarget) > .0001f ||
@@ -437,19 +502,29 @@ class JarvisShellView(context: Context) : View(context) {
         )) {
             val box = s[slot] ?: continue
             val windowId = WindowProjectedMotionSampler.windowIdOf(slot) ?: continue
-            val cinema = JarvisCinemaEntrance.pose(
-                JarvisCinemaEntrance.Kind.WORK_WINDOW,
-                JarvisCinemaEntrance.rankOf(slot, 0),
-                workElapsedMs,
-                exiting,
-                side = if (box.centerX >= cx) 1f else -1f,
-                budget = budget,
-                animatorScale = animatorScale,
-            )
-            val f = JarvisMotion.frame(
+            val rank = JarvisCinemaEntrance.rankOf(slot, 0)
+            val side = if (box.centerX >= cx) 1f else -1f
+            val cinema = when {
+                exiting && workClear ->
+                    JarvisCinemaEntrance.returnPose(
+                        slot, rank, elapsedMs, interruptedAfterMs, side, budget, animatorScale)
+                !exiting && workClear && resultForward && slot == JarvisShellLayout.Slot.WORK_DRAFT ->
+                    JarvisCinemaEntrance.resultAdvance(workElapsedMs, budget, animatorScale)
+                !exiting && workClear && resultForward ->
+                    JarvisCinemaEntrance.pose(
+                        JarvisCinemaEntrance.Kind.WORK_WINDOW, rank, JarvisCinemaEntrance.SETTLE_MS,
+                        exiting = false, side = side, budget = budget, animatorScale = animatorScale)
+                !exiting && workClear ->
+                    JarvisCinemaEntrance.workOrderPose(
+                        slot, rank, elapsedMs, side, budget, animatorScale,
+                        fromWorkingScene = fromWorkingScene)
+                else -> JarvisCinemaEntrance.pose(
+                    JarvisCinemaEntrance.Kind.WORK_WINDOW, rank, workElapsedMs, exiting,
+                    side = side, budget = budget, animatorScale = animatorScale)
+            }
+            val f = if (workClear) JarvisMotion.REST else JarvisMotion.frame(
                 JarvisMotion.panelSpecFor(box.centerX, cx),
-                elapsedMs - JarvisMotion.staggerStart(
-                    JarvisCinemaEntrance.rankOf(slot, 0), animatorScale = animatorScale),
+                elapsedMs - JarvisMotion.staggerStart(rank, animatorScale = animatorScale),
                 animatorScale,
             )
             val phase = when {
