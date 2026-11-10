@@ -9,7 +9,7 @@ Keine APK-, Fold7- oder Release-Freigabe aus Teilprüfungen ableiten.
 
 Cinema-Basis: #715 `c972f56ccc4caa2f1807bcaf1d4665347c66c629`.
 Kontrolliert übernommen: #725 `b0a1635`, #727 `ff27033`, #723 `6d515bc`,
-#735 bis `1223dc8`, #739 `c7a8b7f`. Die eingeschlossenen Vorläufer und getrennten
+#735 bis `1223dc8`, #739 bis `0e8f6c7`. Die eingeschlossenen Vorläufer und getrennten
 Experimente stehen mit vollständigen SHA-Werten in
 `docs/integration/ULTIMATE_SYSTEM_INTAKE_20261110.json`.
 Donor-PRs bleiben offen. Nur dieser Integrator verändert diesen gemeinsamen Branch.
@@ -47,6 +47,8 @@ PRs und keine pauschale Verbindung jeder früheren Versuchsklasse.
 - Der Bericht gelangt in denselben Gesprächsverlauf und den bestehenden Antwort- /
   Sprachpfad. Folgerunden sehen eine begrenzte, datierte Werkzeugbeobachtung mit
   ausdrücklichem Hinweis, dass dies weder eine neue Messung noch eine Freigabe ist.
+- Abgelehnte oder ungültig gewordene Recherchefreigaben erklären die Nichtausführung
+  genau einmal im aktuellen Dialog. Ersetzte Anfragen und Sitzungen übernehmen keine alte Rückmeldung.
 - Ursprüngliche Rechercheaufträge erscheinen vor der Rückfrage. Ein erledigtes
   Freigabeticket verwirft kein noch laufendes Diktat; ersetzte Tickets bleiben gesperrt.
 - Ergebniszustellung und verifizierter Handlungserfolg sind getrennt. Alte
@@ -99,6 +101,15 @@ Kompakte rote/grüne Belege: `docs/evidence/ultimate-system-20261110/`.
 Der fremde Cinema-Gesamtlauf ist keine Abnahme dieses gemeinsamen Quellstands.
 Die vorhandene gemeinsame Gradle-Sperre wird respektiert; keine fremden Builds
 oder Arbeitsstände werden abgebrochen oder verändert.
+
+## Letzter kombinierter Prüfstand
+
+Checkpoint `3aa0b461` (lokal `6cd3522d`, gleicher Git-Baum): vollständige Kotlin-
+und Testkompilierung bestanden; Node 2.455 bestanden, 37 übersprungen, null Fehler.
+Gezielter Android-/UI-Lauf: 156 Tests, ein Fehler im neuen Diagnose-UI-Test. Dieser
+las den Turn vor Ende der asynchronen Namenszuordnung. Die korrigierte Prüfung
+wartet auf den regulären Lookup und Werkzeugabschluss; sie umgeht keinen Router.
+Nach Übernahme von #739 `0e8f6c7` erneute Android-/Node-Abnahme erforderlich.
 
 ## Verbindlicher Abschluss
 

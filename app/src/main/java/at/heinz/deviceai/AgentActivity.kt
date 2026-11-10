@@ -482,6 +482,7 @@ class AgentActivity : Activity() {
         val invalidate: () -> Unit
     )
     private var pendingResearchChatApproval: PendingResearchChatApproval? = null
+    private var researchApprovalPresentationRevision = 0L
     private val approvedModelWebSession = java.util.concurrent.atomic.AtomicReference<at.heinz.deviceai.cognitive.ApprovedWebResearchSession?>()
     private var activeWebResearchSession:at.heinz.deviceai.cognitive.ApprovedWebResearchSession?=null
     private var researchArmed = false
@@ -9548,17 +9549,33 @@ class AgentActivity : Activity() {
     private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
         invalidated:()->Unit = {},
         completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) {
+        val presentationRevision = ++researchApprovalPresentationRevision
+        val presentationSession = sessionId
+        var noticeEmitted = false
+        fun notExecuted(message: String = "Recherche nicht ausgeführt: Es liegt keine aktuelle Freigabe für diese Anfrage vor.") {
+            if (noticeEmitted || sessionId != presentationSession ||
+                researchApprovalPresentationRevision != presentationRevision ||
+                isFinishing || isDestroyed) return
+            noticeEmitted = true
+            addAssistantMessage(message, preserveLocalContext = true)
+        }
         pendingResearchChatApproval?.invalidate?.invoke()
         pendingResearchChatApproval = null
-        if (!foregroundLearningActive || isFinishing || isDestroyed) { invalidated(); return }
+        if (!foregroundLearningActive || isFinishing || isDestroyed) {
+            invalidated()
+            notExecuted()
+            return
+        }
         restoreInternetMode()
         if(internetConsent.mode==at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
-            completed(webToolGate.authorizeAlwaysOn(call,mode))
+            val session = webToolGate.authorizeAlwaysOn(call,mode)
+            if (session == null) notExecuted()
+            completed(session)
             return
         }
         val approval=webToolGate.prepare(call)
         if(approval==null){
-            addAssistantMessage("Kein Internetzugriff: Modus AUS oder ungültige Webanfrage. Öffentliche HTTPS-Quellen sind erforderlich.")
+            notExecuted("Kein Internetzugriff: Modus AUS oder ungültige Webanfrage. Öffentliche HTTPS-Quellen sind erforderlich.")
             completed(null);return
         }
         val approvalSession = sessionId
@@ -9572,10 +9589,12 @@ class AgentActivity : Activity() {
             if (pendingResearchChatApproval?.approval === approval) pendingResearchChatApproval = null
             refreshSendButtonPresentation()
             val current = sessionId == approvalSession && foregroundLearningActive && !isFinishing && !isDestroyed
-            if (!current || !webToolGate.completeApproval(approval, mode, accepted, completed)) {
+            if (!current || !webToolGate.completeApproval(approval, mode, accepted) { session ->
+                    if (session == null) notExecuted()
+                    completed(session)
+                }) {
                 invalidated()
-                if (!isFinishing && !isDestroyed)
-                    addToolActivity("WEB · veraltete Freigabe verworfen · kein neuer Auftrag")
+                notExecuted()
             }
         }
         pendingResearchChatApproval = PendingResearchChatApproval(approval, ::respond) {
@@ -9586,6 +9605,7 @@ class AgentActivity : Activity() {
                 if (pendingResearchChatApproval?.approval === approval) pendingResearchChatApproval = null
                 refreshSendButtonPresentation()
                 invalidated()
+                notExecuted()
             }
         }
         approvalDialog = AlertDialog.Builder(this)

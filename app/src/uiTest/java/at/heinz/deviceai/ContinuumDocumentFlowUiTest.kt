@@ -338,8 +338,13 @@ class ContinuumDocumentFlowUiTest {
         val scene = startDraft(activity, root, runtime, "Notizen.pdf", "Notizen zum Projekt.")
         until(root, "the journal records the running draft") { state(scene) == CockpitWorkJournal.State.DRAFTING }
         assertTrue(reading(activity))
+        val window = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
+            as at.heinz.deviceai.ui.JarvisWorkWindow
         call(activity, "cancelLocalRequest")
         assertEquals("STOP confirms before queued delivery", 1, stopReplies(activity))
+        assertFalse("STOP ends reading immediately", reading(activity))
+        assertEquals("STOP begins controlled window return",
+            at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSING, window.projectedMotionPhase())
         call(activity, "cancelLocalRequest")
         assertEquals("repeated STOP adds no duplicate", 1, stopReplies(activity))
         until(root, "STOP is recorded") { state(scene) == CockpitWorkJournal.State.ABORTED }
@@ -347,8 +352,8 @@ class ContinuumDocumentFlowUiTest {
         until(root, "the stopped run has ended") { !(field(activity, "busy") as Boolean) }
         assertEquals(1, context(activity).sessionEvidence(field(activity, "sessionId") as String)
             .orEmpty().count { it == "Entwurf: Zusammenfassung von „Notizen.pdf“" })
-        advance(1_200L); measure(root); draw(root)
-        assertFalse("STOP completes the bounded window return", descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+        advance(at.heinz.deviceai.ui.HollywoodFuiConstruct.CLOSE_END_MS + 64L); measure(root); draw(root)
+        assertFalse("STOP completes the bounded return", descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
         assertEquals("the cockpit stays the stage after STOP", ContinuumWorkArea.START, field(activity, "activeWorkArea"))
         val sequence = field(field(activity, "hologramView")!!, "cockpitSequence") as at.heinz.deviceai.ui.JarvisSequenceView
         assertFalse("with the window gone the cards are back at their cockpit place", sequence.effects.docked)

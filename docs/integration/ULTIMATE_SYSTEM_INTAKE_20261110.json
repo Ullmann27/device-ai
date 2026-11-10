@@ -5,7 +5,7 @@
     "branch": "integration/continuum-ultimate-system-20261110",
     "pr": 740,
     "integrator": "root",
-    "sourceCheckpoint": "63a7e245f3668ff55c03ba79e391f4beb6bcd92b"
+    "sourceCheckpoint": "3aa0b4613233afd49dca47ca08bb5dc865e9f25f"
   },
   "baseline": "c972f56ccc4caa2f1807bcaf1d4665347c66c629",
   "entries": [
@@ -204,15 +204,15 @@
     {
       "pr": 739,
       "branch": "integration/continuum-cinema-apk53-20261110",
-      "headAtSnapshot": "c7a8b7f415f738993df2f26b1d2b589ef90ea885",
+      "headAtSnapshot": "0e8f6c75eb667abb3b2c23e52c59bacbdfa59a47",
       "classification": "INTEGRATED",
-      "decision": "Cinema release review fixes at c7a8b7f; independent overall QA required.",
+      "decision": "Non-execution explanation and controlled STOP follow-up; stronger active-work gaze guard retained; combined QA pending.",
       "deviceVerified": false
     },
     {
       "pr": 740,
       "branch": "integration/continuum-ultimate-system-20261110",
-      "headAtSnapshot": "4aaea17301ddd0aa641bd1bd33144c7769b21091",
+      "headAtSnapshot": "3aa0b4613233afd49dca47ca08bb5dc865e9f25f",
       "classification": "CANONICAL_CANDIDATE",
       "decision": "This mission; all production readiness claims await exact-source gates.",
       "deviceVerified": false
@@ -236,5 +236,5 @@
     "modelWeightsChanged": false,
     "originalAvatarChanged": false
   },
-  "recordedAtUtc": "2026-11-10T22:14:41.643547+00:00"
+  "recordedAtUtc": "2026-11-10T22:35:59.591221+00:00"
 }

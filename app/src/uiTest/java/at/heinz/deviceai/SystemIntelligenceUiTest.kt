@@ -123,15 +123,18 @@ class SystemIntelligenceUiTest {
                 val input = field("input").get(activity) as android.widget.EditText
                 input.setText(request)
                 (field("sendButton").get(activity) as android.widget.Button).performClick()
-                val turn = field("activeChiefTurn").get(activity) as at.heinz.deviceai.chief.TurnLifecycle
                 val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
-                while (field("busy").getBoolean(activity) && System.nanoTime() < deadline) {
+                while ((field("botLookupPending").getBoolean(activity) || field("busy").getBoolean(activity)) &&
+                    System.nanoTime() < deadline) {
                     Thread.sleep(10); shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
                 }
+                assertFalse("Address lookup completed", field("botLookupPending").getBoolean(activity))
                 assertFalse("Diagnosis completed", field("busy").getBoolean(activity))
+                val turn = field("activeChiefTurn").get(activity) as? at.heinz.deviceai.chief.TurnLifecycle
+                assertNotNull("Natural request reached the shared turn", turn)
                 assertNotNull(executor.lastDiagnosis)
                 assertNull(executor.lastCleanupResult)
-                assertEquals(at.heinz.deviceai.chief.TurnPhase.ENDED, turn.phase)
+                assertEquals(at.heinz.deviceai.chief.TurnPhase.ENDED, turn!!.phase)
                 val context = field("localConversationContext").get(activity) as at.heinz.deviceai.cognitive.LocalConversationContext
                 val prompt = context.render(field("sessionId").get(activity) as String)
                 assertTrue(prompt, prompt.contains("diagnose_device"))
