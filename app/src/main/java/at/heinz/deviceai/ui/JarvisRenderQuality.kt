@@ -25,17 +25,21 @@ object JarvisRenderQuality {
     }
 
     /**
-     * EXP15 contract on top of [resolve]: no second quality model and no second clock.
-     * Production (cinema not opted in) always keeps the resolved thermal budget. Under
-     * cinema opt-in the owner can turn the experiment off; hard safety floors
-     * (background, reduced motion, energy saving, severe thermal status) still apply.
+     * EXP15 can further reduce decoration, never override the base thermal/inference floor.
+     * Disabled EXP15 keeps the existing safe production budget, not unrestricted HIGH.
      */
     fun adaptiveAnimation(foreground: Boolean, powerSave: Boolean, thermalStatus: Int?,
                           reducedMotion: Boolean, inferenceActive: Boolean,
                           cinemaOptIn: Boolean, experimentEnabled: Boolean): Budget {
         val resolved = resolve(foreground, powerSave, thermalStatus, reducedMotion, inferenceActive)
-        if (!cinemaOptIn || experimentEnabled) return resolved
-        if (!foreground || powerSave || reducedMotion || (thermalStatus ?: 0) >= 3) return resolved
-        return Budget(Tier.HIGH, 16L, 70, 96, true)
+        if (!cinemaOptIn || !experimentEnabled || !resolved.animate) return resolved
+        if (!inferenceActive && (thermalStatus ?: 0) < 1) return resolved
+        val minimumFrameMs = if ((thermalStatus ?: 0) >= 2) 66L else 50L
+        return resolved.copy(
+            frameDelayMillis = maxOf(resolved.frameDelayMillis, minimumFrameMs),
+            particleCount = minOf(resolved.particleCount, 12),
+            orbitSegments = minOf(resolved.orbitSegments, 40),
+            coolInferenceLighting = false
+        )
     }
 }
