@@ -39,6 +39,19 @@ test('unverified or unsigned Code52 source can never be published', () => {
   assert.match(script, /name_version="0\.3\.51"/);
 });
 
+test('Cinema2030 signer accepts only pinned source and QA-run pair', () => {
+  assert.ok(script.includes("cinema_source_sha=\"0df55d7c8d5cae8a53bf1a43e26651f902881e78\""), "cinema_source_sha=\"0df55d7c8d5cae8a53bf1a43e26651f902881e78\"");
+  assert.ok(script.includes("if [[ \"$source_sha\" == \"$cinema_source_sha\" ]]; then"), "if [[ \"$source_sha\" == \"$cinema_source_sha\" ]]; then");
+  assert.ok(script.includes("[[ \"$qa_run\" == \"42742886395\" ]] || fail CINEMA_QA_RUN_MISMATCH"), "[[ \"$qa_run\" == \"42742886395\" ]] || fail CINEMA_QA_RUN_MISMATCH");
+  assert.ok(script.includes("qa_branch=\"chatgpt/code52-cinema-prism-pixel-fix-20261110\""), "qa_branch=\"chatgpt/code52-cinema-prism-pixel-fix-20261110\"");
+  assert.ok(script.includes("qa_workflow_path=\".github/workflows/continuum-code52-cinematic-qa.yml\""), "qa_workflow_path=\".github/workflows/continuum-code52-cinematic-qa.yml\"");
+  assert.ok(script.includes("artifact=\"Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE\""), "artifact=\"Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE\"");
+  assert.ok(script.includes("unsigned_name=\"Continuum-Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE.apk\""), "unsigned_name=\"Continuum-Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE.apk\"");
+  assert.ok(script.includes('qa_branch="chatgpt/code52-unified-integration-20261109"'));
+  assert.match(script, /APPROVED_SHA_DIFFERS_FROM_SOURCE/);
+  assert.match(script, /--draft --latest=false/);
+});
+
 test('original certificate bound and no secret echoed', () => {
   assert.match(script, /fingerprint="6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23"/);
   assert.match(script, /pkg="at\.heinz\.deviceai\.continuumlocal"/);
