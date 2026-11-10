@@ -19,7 +19,8 @@ class BoundedAgentOutcomeEvidenceTest {
             AgentEvaluator { _, _ -> Evaluation(true, 1.0) }, InMemoryExperienceStore(),
             modelReputation = reputation
         ).run("Prüfe den freien Speicher")
-        assertEquals(ExperienceOutcome.PARTIAL, result.experience!!.outcome)
+        assertEquals(ExperienceOutcome.FAILURE, result.experience!!.outcome)
+        assertNotNull(result.blocker)
         assertTrue(result.experience.sourceIds.isEmpty())
         assertEquals(0, reputation.get("test-planner", ModelCapability.TOOL_USE, "agent").taskCount)
     }

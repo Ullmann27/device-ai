@@ -15,6 +15,9 @@ internal object OwnerDocumentIntent {
     private val read = Regex(
         "(?iu)$START(lies|lese|öffne|zeige|analysiere|prüfe|fasse|nimm|verwende)$END[^.!?]{0,40}?$START(pdf|pdf-datei|pdf-dokument|dokument)$END"
     )
+    private val namedPdf = Regex(
+        "(?iu)^(lies|lese|öffne|zeige)\\s+(?:die\\s+)?datei\\s+[\\p{L}\\p{N} _-]{1,80}\\.pdf[.!?]*$"
+    )
     private const val COURTESY = "(?:(?:bitte|mir|mal|kurz|eben|für\\s+mich)\\s+)*"
     private val politeRead = Regex(
         "(?iu)^(?:(?:kannst|könntest|würdest|magst)\\s+du|ich\\s+(?:möchte|will|würde\\s+gern(?:e)?))\\s+" +
@@ -45,7 +48,7 @@ internal object OwnerDocumentIntent {
         if (utterance.length !in 8..160 || utterance.any { it.isISOControl() }) return null
         val text = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName)
             .replace(Regex("(?iu)^bitte\\s+"), "")
-        val direct = read.find(text)
+        val direct = read.find(text) ?: namedPdf.matchEntire(text)
         if (prohibited.containsMatchIn(text) || (direct == null && !politeRead.matches(text))) return null
         if (direct != null && (joinedObject.containsMatchIn(direct.value) ||
                 extraAction.findAll(text).any { it.groups[1]!!.range.first != direct.range.first })) return null

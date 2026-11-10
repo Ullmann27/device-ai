@@ -467,6 +467,15 @@ class BoundedAgentOrchestrator(
                 transition(AgentState.EVALUATE, "Result evaluated.")
                 emit(CognitiveWorkState.VERIFYING)
                 lastEvaluation = evaluator.evaluate(lastOutput, lastRecord)
+                if (lastEvaluation.success) {
+                    toolObservations.lastOrNull { it.status != ToolExecutionStatus.SUCCEEDED }?.let { failed ->
+                        val reason = if (ToolRegistry.get(failed.toolName) == null)
+                            "UNAVAILABLE: ${failed.toolName} ist kein verfügbares lokales Werkzeug."
+                        else "Werkzeugauftrag nicht abgeschlossen: ${failed.toolName} meldet ${failed.status}. " +
+                            "Eine erfolgreiche Ausführung ist nicht bestätigt."
+                        lastEvaluation = Evaluation(false, 0.0, reason)
+                    }
+                }
                 cancellation.throwIfCancelled()
                 if (!chosen.responseComplete) {
                     val acceptedText = if (lastEvaluation.success) lastOutput else ""
@@ -603,4 +612,3 @@ class BoundedAgentOrchestrator(
         )
     }
 }
-

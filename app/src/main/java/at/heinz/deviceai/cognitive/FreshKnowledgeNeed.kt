@@ -37,7 +37,7 @@ internal object FreshKnowledgeNeed {
     )
 
     fun classify(message: String): Need {
-        val text = message.trim().replace(Regex("\\s+"), " ")
+        val text = OwnerAppLookupIntent.stripAddress(message.trim(), null).replace(Regex("\\s+"), " ")
         if (text.isEmpty() || text.length > 512) return Need.STATIC
         val lower = text.lowercase(Locale.ROOT)
         val fresh = temporal.containsMatchIn(lower) || yearNearNow.containsMatchIn(lower) ||

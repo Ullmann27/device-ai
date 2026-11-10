@@ -14,7 +14,7 @@ internal object ResearchQuestionFocus {
         "why", "where", "when", "which", "who"
     )
     private val lookupCommands = setOf(
-        "suche", "finde", "recherchiere", "prüfe", "zeige", "nenne"
+        "suche", "such", "finde", "recherchiere", "recherchier", "prüfe", "zeige", "nenne"
     )
     private val generic = interrogatives + setOf(
         "funktioniert", "funktionieren", "funktioniere", "geht", "gehts",
@@ -26,7 +26,7 @@ internal object ResearchQuestionFocus {
         "zur", "ich", "du", "es", "sie", "wir", "the", "does", "do",
         "did", "are", "is", "can", "work", "works", "working", "about",
         "please", "tell", "me", "of", "for", "in", "a", "an", "and",
-        "suche", "such", "finde", "recherchiere", "prüfe", "prüfen", "zeige",
+        "suche", "such", "finde", "recherchiere", "recherchier", "prüfe", "prüfen", "zeige",
         "nenne", "nenn", "online", "aktuell", "aktuelle", "aktuellen",
         "aktueller", "fassung", "quelle", "quellen", "konkrete",
         "konkreten", "link", "im"

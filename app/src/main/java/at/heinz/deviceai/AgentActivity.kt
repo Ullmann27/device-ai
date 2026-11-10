@@ -5498,13 +5498,7 @@ class AgentActivity : Activity() {
             showModelVersions()
             return
         }
-        val center: (() -> Unit)? = when (request.lowercase(Locale.GERMAN)) {
-            "lernzentrum" -> ::showLearningCenter
-            "entwicklungszentrum" -> ::showDevelopmentCenter
-            "gedächtnis", "gedächtniszentrum" -> ::showMemoryCenter
-            "systemstatus" -> ::showSystemCenter
-            else -> null
-        }
+        val center = localCenter(request)
         if (center != null) {
             input.text.clear()
             addUserMessage(request)
@@ -5586,6 +5580,28 @@ class AgentActivity : Activity() {
             }
             null -> Unit
         }
+        // Explicit public research precedes generic app discovery ("Suche die neuesten Quellen").
+        if (at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.isResearchRequest(request)) {
+            researchArmed = false
+            val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.explicitTopic(request)
+            input.text.clear()
+            addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            if (topic == null) {
+                addAssistantMessage("Diese Recherche bleibt lokal: Der Auftrag enthält private, mehrdeutige " +
+                    "oder zusätzliche Handlungsangaben oder verbietet Internetzugriff. " +
+                    "Bitte nenne ausschließlich das öffentliche Thema, ohne persönliche Daten oder Dokumentinhalte.",
+                    preserveLocalContext = false,
+                    keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            } else {
+                val researchSession = sessionId
+                confirmWebRequest(at.heinz.deviceai.cognitive.WebToolRequest.Search(topic), ResearchMode.STANDARD) { session ->
+                    if (session != null && !busy && sessionId == researchSession && foregroundLearningActive &&
+                        !isFinishing && !isDestroyed) runResearch(session)
+                    else session?.cancel()
+                }
+            }
+            return
+        }
         // Recognition grants no execution.
         OwnerAppLookupIntent.inspect(request, at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
             continuumState?.archive?.identityState?.chosenName))?.let { intake ->
@@ -5595,14 +5611,7 @@ class AgentActivity : Activity() {
             addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
             when (intake) {
                 is OwnerAppLookupIntent.Intake.Lookup -> {
-                    val localArea: (() -> Unit)? = if (intake.opening) when (intake.query.lowercase(Locale.GERMAN)) {
-                        "lernzentrum" -> ::showLearningCenter
-                        "entwicklungszentrum" -> ::showDevelopmentCenter
-                        "gedächtnis", "gedächtniszentrum" -> ::showMemoryCenter
-                        "systemstatus" -> ::showSystemCenter
-                        "modelle", "modellverwaltung" -> ::showModelCenter
-                        else -> null
-                    } else null
+                    val localArea = if (intake.opening) localCenter(intake.query) else null
                     if (localArea != null) localArea() else runExplicitAppLookup(request, intake)
                 }
                 is OwnerAppLookupIntent.Intake.Clarify -> clarifyAppRequest(request,
@@ -5836,6 +5845,17 @@ class AgentActivity : Activity() {
         presentBootstrapDecision(request, BootstrapBrain.decide(request, emptyList(), bootstrapMemory.learnedCommands(),
             identityDescription = at.heinz.deviceai.cognitive.LocalAssistantIdentity.selfDescription(
                 continuumState?.archive?.identityState?.chosenName, localRuntime.loadedModel, localRuntime.state)))
+    }
+
+    private fun localCenter(query: String): (() -> Unit)? = when (OwnerAppLookupIntent.centerTarget(query)) {
+        "gedächtniszentrum" -> ::showMemoryCenter
+        "logik und planung" -> ::showLogicCenter
+        "entwicklungsaufgaben" -> ::showDevelopmentBacklog
+        "lernzentrum" -> ::showLearningCenter
+        "entwicklungszentrum" -> ::showDevelopmentCenter
+        "systemstatus" -> ::showSystemCenter
+        "modelle" -> ::showModelCenter
+        else -> null
     }
 
     private fun presentBootstrapDecision(request: String, decision: BootstrapDecision, requestRecorded: Boolean = false) {
@@ -13215,7 +13235,4 @@ class AgentActivity : Activity() {
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
 }
-
-
-
 

@@ -105,7 +105,8 @@ class BoundedAgentTest {
         assertNotNull(reflected?.evidence)
         assertNotNull(reflected?.correction)
         assertEquals(1, result.experience?.retries)
-        assertNull(result.blocker)
+        assertNotNull(result.blocker)
+        assertTrue(result.response.contains("UNAVAILABLE"))
 
         val blocked = BoundedAgentOrchestrator(
             model = AgentModel { _, _, _, _ -> AgentModelOutput("model", "not accepted") },

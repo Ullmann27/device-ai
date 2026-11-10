@@ -15,7 +15,7 @@ internal object OwnerAppLookupIntent {
 
     private val negation = Regex("(?iu)\\b(nicht|niemals|kein|keine|keinen|keinem|keiner|ohne)\\b")
     private val additional = Regex("(?iu)\\b(und|oder|danach|anschließend|sende|senden|schreibe|schreiben|tippe|lösche|installiere|kaufe|bezahle|überweise)\\b")
-    private val direct = Regex("(?iu)^(öffne|starte|suche|finde|zeige)\\s+(.+?)[.!?]*$")
+    private val direct = Regex("(?iu)^(öffne|oeffne|offne|starte|suche|finde|zeige|zeig)\\s+(.+?)[.!?]*$")
     private val polite = Regex("(?iu)^(?:kannst|könntest|würdest|magst)\\s+du\\s+(.+?)\\s+(öffnen|starten|suchen|finden|zeigen)(?:\\s+bitte)?[.!?]*$")
     private val desire = Regex("(?iu)^ich\\s+(?:möchte|will|würde\\s+gern(?:e)?)\\s+(.+?)\\s+(öffnen|starten)[.!?]*$")
     private val openUp = Regex("(?iu)^mach(?:e)?\\s+(.+?)\\s+auf[.!?]*$")
@@ -33,7 +33,9 @@ internal object OwnerAppLookupIntent {
     private val nonAppNeedTargets = setOf("hilfe", "pause", "rat", "dich", "mich", "dir", "mir",
         "zeit", "ruhe", "mehr", "antwort", "auskunft")
     private val vague = Regex("(?iu)^(?:ich\\s+)?(?:bräuchte|brauche|hätte\\s+gern(?:e)?|möchte|will)\\s+(?:bitte\\s+)?(?:etwas|was)\\s+(?:von|aus|in)\\s+(.+?)[.!?]*$")
-    private val action = Regex("(?iu)\\b(öffne|öffnen|starte|starten|suche|suchen|finde|finden|aufmachen)\\b")
+    private val action = Regex(
+        "(?iu)(?<![\\p{L}\\p{N}_])(öffne|öffnen|starte|starten|suche|suchen|finde|finden|aufmachen)(?![\\p{L}\\p{N}_])"
+    )
     private val requestStart = Regex("(?iu)^(?:öffne|starte|suche|finde|zeige|mach(?:e)?|kannst|könntest|würdest|magst|ich)\\b")
     private val query = Regex("[\\p{L}\\p{N}][\\p{L}\\p{N} ._+-]{0,79}")
     private val courtesy = Regex("(?iu)^(?:(?:bitte|mir|mal|kurz|eben)|für\\s+mich)\\s+")
@@ -93,16 +95,18 @@ internal object OwnerAppLookupIntent {
         val p = polite.matchEntire(text) ?: desire.matchEntire(text)
         val m = openUp.matchEntire(text)
         when {
-            d != null -> { opening = d.groupValues[1].lowercase() in setOf("öffne", "starte"); target = d.groupValues[2] }
+            d != null -> { opening = d.groupValues[1].lowercase() in setOf("öffne", "oeffne", "offne", "starte"); target = d.groupValues[2] }
             p != null -> { opening = p.groupValues[2].lowercase() in setOf("öffnen", "starten"); target = p.groupValues[1] }
             m != null -> { opening = true; target = m.groupValues[1] }
             needTarget != null -> { opening = true; target = needTarget }
             else -> return if (requestStart.containsMatchIn(text) && action.containsMatchIn(text)) planning(utterance) else null
         }
         if (!Regex("(?iu)\\bapp\\b").containsMatchIn(target) && fileTarget.containsMatchIn(target)) return null
-        if (additional.containsMatchIn(target)) return planning(utterance)
         var name = target.trim().trimEnd('.', '!', '?').trim()
         repeat(4) { name = name.replace(courtesy, "").replace(trailingCourtesy, "").trim() }
+        centerTarget(name)?.let { return Intake.Lookup(it, opening = true) }
+        if (d?.groupValues?.get(1)?.lowercase() in setOf("zeig", "oeffne", "offne")) return null
+        if (additional.containsMatchIn(target)) return planning(utterance)
         if (isReference(name)) return Intake.Lookup(name, opening)
         name = name.replace(Regex("(?iu)^(?:die|den|das|meine|meinen)\\s+"), "")
             .replace(Regex("(?iu)^app\\s+"), "").replace(Regex("(?iu)\\s+app$"), "").trim()
@@ -113,6 +117,22 @@ internal object OwnerAppLookupIntent {
             opening = opening,
             requireInstalledCandidate = needRequiresInstalledCandidate
         )
+    }
+
+    /** Exact supported titles only; a conjunction inside a title grants no further action. */
+    fun centerTarget(query: String): String? {
+        val name = query.trim().trimEnd('.', '!', '?').lowercase(java.util.Locale.GERMAN)
+            .replace(Regex("\\s+"), " ")
+            .replace(Regex("^(?:die|den|das|dein|deine|deinen)\\s+"), "")
+        return when (name) {
+            "gedächtnis", "gedächtniszentrum", "gedachtniszentrum", "gedächtnis zentrum",
+            "erinnerungen" -> "gedächtniszentrum"
+            "logik", "planung", "logik und planung" -> "logik und planung"
+            "arbeitsaufträge", "aufgabenübersicht", "entwicklungsaufgaben", "backlog" -> "entwicklungsaufgaben"
+            "lernzentrum", "entwicklungszentrum", "systemstatus" -> name
+            "modelle", "modellverwaltung" -> "modelle"
+            else -> null
+        }
     }
 
     fun shouldFallbackToConversation(
