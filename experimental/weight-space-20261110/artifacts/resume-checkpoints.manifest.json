@@ -1,0 +1,64 @@
+{
+  "allSourceReceiptsMatched": true,
+  "archive": "resume-checkpoints.zip",
+  "archiveBytes": 4535845,
+  "archiveSha256": "33ee25d9f5b8135c2279e27076499c46addf9a0d1c639ea6a9887e632875320f",
+  "entries": {
+    "manifest.json": {
+      "bytes": 7264,
+      "sha256": "660f11f08af244d7fcddd2cd0db8a81a8e62b1aeca7ab0e0bb3b5d937e84c017"
+    },
+    "original132k/7ce5bb557c1d688c4f00622368ddece347e7965930cace9b563a8200f3bde1c3.lm1": {
+      "bytes": 529192,
+      "sha256": "7ce5bb557c1d688c4f00622368ddece347e7965930cace9b563a8200f3bde1c3"
+    },
+    "original132k/a0c54008308f7c330ec22a432388004b907e89c9e6424ac3aa9816d76bf0aa88.lm1": {
+      "bytes": 529192,
+      "sha256": "a0c54008308f7c330ec22a432388004b907e89c9e6424ac3aa9816d76bf0aa88"
+    },
+    "original132k/b2f40f915dcc37406161cb1457a1dd58526ea2722512ac8cbd64cbb1a2f8a706.lm1": {
+      "bytes": 529192,
+      "sha256": "b2f40f915dcc37406161cb1457a1dd58526ea2722512ac8cbd64cbb1a2f8a706"
+    },
+    "original132k/c348afceddc35c72cba72ddbb6a3aa28432bdeca913f73133556f3d62d07c04b.lmtrain": {
+      "bytes": 1586890,
+      "sha256": "c348afceddc35c72cba72ddbb6a3aa28432bdeca913f73133556f3d62d07c04b"
+    },
+    "original132k/ef51b01fa6227c45808bb4df63227eff33b908c4db4789df6dc78f44c05f5923.lmtrain": {
+      "bytes": 1586890,
+      "sha256": "ef51b01fa6227c45808bb4df63227eff33b908c4db4789df6dc78f44c05f5923"
+    },
+    "original132k/tokenizer.lmbp": {
+      "bytes": 2040,
+      "sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+    },
+    "tiny2632/1b4a2e90462bc4ceb4ea4e84abd2b588cbed8bcd0b11a110faf4e469b0b39864.lmtrain": {
+      "bytes": 32268,
+      "sha256": "1b4a2e90462bc4ceb4ea4e84abd2b588cbed8bcd0b11a110faf4e469b0b39864"
+    },
+    "tiny2632/2112607fe170653b5785b6878ebede29221aeea0fb399cebce62a2aef3622b2f.lmtrain": {
+      "bytes": 32268,
+      "sha256": "2112607fe170653b5785b6878ebede29221aeea0fb399cebce62a2aef3622b2f"
+    },
+    "tiny2632/69c495c4b6ec1e38bcab0954a324aeb9a8ea0aaf27a76a952c2bd7ff49268562.lmtrain": {
+      "bytes": 32268,
+      "sha256": "69c495c4b6ec1e38bcab0954a324aeb9a8ea0aaf27a76a952c2bd7ff49268562"
+    },
+    "tiny2632/df925182e8ab68e44fb14973b881fa168c397d325267b08c252b5a1fcba475a3.lmtrain": {
+      "bytes": 32268,
+      "sha256": "df925182e8ab68e44fb14973b881fa168c397d325267b08c252b5a1fcba475a3"
+    },
+    "tiny2632/f7608a51b0eee8716e6c86679832577f2afc6c2f12f66275f50d41cbc9dcc22c.lmtrain": {
+      "bytes": 32268,
+      "sha256": "f7608a51b0eee8716e6c86679832577f2afc6c2f12f66275f50d41cbc9dcc22c"
+    },
+    "tiny2632/tokenizer.lmbp": {
+      "bytes": 8,
+      "sha256": "f5f85a95e5046abcde7813eb7178161722163766cd0fa73dd7c1b3f682b73f8b"
+    }
+  },
+  "entryCount": 13,
+  "manifestSha256": "660f11f08af244d7fcddd2cd0db8a81a8e62b1aeca7ab0e0bb3b5d937e84c017",
+  "schema": "continuum-resume-archive-binding-v1",
+  "zipCrcAndByteReplayPassed": true
+}
