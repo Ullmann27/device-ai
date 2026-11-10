@@ -78,7 +78,8 @@ class JarvisWorkWindowHostViewportUiTest {
             JarvisAvatarSlot.register(JarvisHoloAvatar(live))
             home.setJarvisShellStage(true)
             home.jarvisShell.ambientMotionEnabled = false
-            home.configure(676f, true, windowHeightDp = 620f)
+            // Below REFERENCE_MIN_HEIGHT so the fixture keeps feature tiles and a scrollable deck.
+            home.configure(676f, true, windowHeightDp = 520f)
             home.onNavigateTarget = { target ->
                 assertEquals("system", target)
                 routed++
@@ -97,7 +98,7 @@ class JarvisWorkWindowHostViewportUiTest {
             assertEquals(676, home.width)
         }
 
-        fun card(): View = home.findViewWithTag("jarvis-tile:system")
+        fun card(): View = JarvisHomeTestRoutes.destination(home, "system")
 
         fun bounds(view: View): RectF = Rect(0, 0, view.width, view.height).let {
             container.offsetDescendantRectToMyCoords(view, it)
