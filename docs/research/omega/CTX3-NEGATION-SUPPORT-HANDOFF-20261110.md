@@ -30,7 +30,64 @@ EXP-12 invalidation, EXP-14 existing CTX3 OFF/SHADOW boundary.
 No API, schema, memory, permission, model, renderer or default-activation change.
 No main, protected #706, signing, release or installed-device mutation.
 
-Initial checkpoint: WIP; reproduction and candidate tests NOT_RUN.
-PORTIERT: no candidate yet. VERIFIZIERT: NOT_RUN.
-GERÄTEBESTÄTIGT: NOT_RUN.
+## Reproduced causes and small correction
+
+The contrast parser accepted relative OTHER/PREVIOUS selectors, which resolve
+against the old selected focus instead of the explicitly rejected ordinal.
+Only two different absolute ordinals are now admitted in a contrast. Relative
+or self-replacing contrasts clarify and clear the candidate set; standalone
+OTHER/PREVIOUS keep their existing behavior.
+
+Every trailing `nicht` previously rejected an ordinal, including ordinary
+`startet`/`geht` predicate questions. Those bounded predicate forms now retain
+their source and the candidate set. Explicit choice rejection and unsupported
+trailing-negation forms remain conservative. Sentence-initial `Warum`/`Geht`
+are recognized as ordinary words; unknown named entities remain blocked.
+This is not unrestricted German grammar: other predicates or added modifiers
+can still require clarification. No inferred model interpretation was added.
+
+An initial broader correction passed 111 existing/new methods but a further
+negative control exposed `ich nehme die erste nicht` selecting the rejected
+candidate. The retained review-red log records that failure. The final
+correction only admits the named predicate forms; it does not generally allow
+other phrases ending in `nicht`.
+
+## Actual validation
+
+Kotlin 2.4.0 / OpenJDK 21, actual production source, no substitutes or stubs.
+Evidence directory: `docs/evidence/ctx3-negation-support-20261110/`.
+
+- Initial RED: 20 methods, 4 failures.
+- Self-review RED: 21 methods, 1 failure on the intermediate correction.
+- Frozen baseline with final tests: 21 methods, 4 failures.
+- Final directed checks: 21/21 PASS.
+- Existing source-bound context/voice harness: 112/112 PASS, no skips.
+  The 21 directed methods are included in 112; do not add the totals.
+- `git diff --check`: PASS.
+- Full repository/Gradle/Android/model/Ctx3Shadow E2E/Fold7: NOT_RUN.
+
+The baseline and candidate used the identical final test files. Input hashes,
+tool versions, compiler output, initial/review failures and the final results
+are retained. The recorded input HEAD is the documentation checkpoint with
+the tested diff; hashes bind the actual source that was compiled. These are
+authored regression cases, not a new independent language holdout or an
+intelligence/latency improvement measurement.
+
+Reproduce the source-bound harness without downloading dependencies:
+
+```sh
+KOTLINC=/path/to/kotlinc \
+CONTINUUM_JUNIT_JARS=/path/to/junit-4.13.2.jar:/path/to/hamcrest-core-1.3.jar \
+bash scripts/continuum-context-cinema-check.sh /tmp/ctx3-negation-check
+```
+
+For the directed baseline, compile the base commit's Ctx3Context.kt together
+with this branch's Ctx3ContextTest.kt and Ctx3OrderedCorrectionTest.kt. Run both
+JUnit classes against that output; the four recorded failures must return.
+For the candidate, compile those same tests with this branch's production file.
+
+PORTIERT: existing opt-in SHADOW resolver in this support branch; #716/#715
+integration remains for their named owners.
+VERIFIZIERT: 112 pure-JVM methods on the recorded source hashes.
+GERÄTEBESTÄTIGT: NOT_RUN. No ordinary-chat improvement is claimed.
 Rollback: revert only this support slice; no persisted-data migration.

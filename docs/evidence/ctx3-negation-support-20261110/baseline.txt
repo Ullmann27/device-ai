@@ -1,0 +1,28 @@
+JUnit version 4.13.2
+..............E...E..E.E.
+Time: 0.115
+There were 4 failures:
+1) relativeContrastCannotSelectTheRejectedAlternative(at.heinz.deviceai.Ctx3OrderedCorrectionTest)
+java.lang.AssertionError: Nicht die zweite, sondern die andere
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.Ctx3OrderedCorrectionTest.relativeContrastCannotSelectTheRejectedAlternative(Ctx3OrderedCorrectionTest.kt:80)
+2) negatedPredicateRetainsTheExplicitOrdinalAndAlternatives(at.heinz.deviceai.Ctx3OrderedCorrectionTest)
+java.lang.AssertionError: warum startet die zweite nicht?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.Ctx3OrderedCorrectionTest.negatedPredicateRetainsTheExplicitOrdinalAndAlternatives(Ctx3OrderedCorrectionTest.kt:102)
+3) sentenceInitialQuestionWordsRetainTheOrdinalReferent(at.heinz.deviceai.Ctx3OrderedCorrectionTest)
+java.lang.AssertionError: Warum startet die zweite nicht?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.Ctx3OrderedCorrectionTest.sentenceInitialQuestionWordsRetainTheOrdinalReferent(Ctx3OrderedCorrectionTest.kt:116)
+4) repeatingTheRejectedOrdinalIsNotAReplacement(at.heinz.deviceai.Ctx3OrderedCorrectionTest)
+java.lang.AssertionError: Nicht die erste, sondern die erste
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.Ctx3OrderedCorrectionTest.repeatingTheRejectedOrdinalIsNotAReplacement(Ctx3OrderedCorrectionTest.kt:88)
+
+FAILURES!!!
+Tests run: 21,  Failures: 4
+

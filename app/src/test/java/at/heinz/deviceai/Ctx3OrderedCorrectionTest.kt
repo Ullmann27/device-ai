@@ -68,4 +68,72 @@ class Ctx3OrderedCorrectionTest {
         assertTrue(first.decide("Nicht die erste, sondern die davor", entities, "v1") is Ctx3Decision.Clarify)
         assertTrue(first.decide("Nimm das andere", entities, "v1") is Ctx3Decision.Clarify)
     }
+
+    @Test fun relativeContrastCannotSelectTheRejectedAlternative() {
+        for ((input, selected) in listOf(
+            "Nicht die zweite, sondern die andere" to "s1",
+            "Nicht die erste, sondern die davor" to "s2",
+            "Nicht die erste, sondern die andere" to "s2",
+            "Nicht die zweite, sondern die davor" to "s2"
+        )) {
+            val context = prepared().apply { observe(setOf(selected), entities) }
+            assertTrue(input, context.decide(input, entities, "v1") is Ctx3Decision.Clarify)
+            assertTrue(input, context.decide("Nimm das andere", entities, "v1") is Ctx3Decision.Clarify)
+        }
+    }
+
+    @Test fun repeatingTheRejectedOrdinalIsNotAReplacement() {
+        for (input in listOf("Nicht die erste, sondern die erste", "Nicht die zweite, sondern die zweite")) {
+            val context = prepared()
+            assertTrue(input, context.decide(input, entities, "v1") is Ctx3Decision.Clarify)
+            assertTrue(input, context.decide("Nimm das andere", entities, "v1") is Ctx3Decision.Clarify)
+        }
+    }
+
+    @Test fun negatedPredicateRetainsTheExplicitOrdinalAndAlternatives() {
+        for ((input, source, nextSource) in listOf(
+            Triple("warum startet die zweite nicht?", "s2", "s1"),
+            Triple("geht die erste nicht?", "s1", "s2"),
+            Triple("die erste startet nicht?", "s1", "s2"),
+            Triple("die zweite geht nicht?", "s2", "s1")
+        )) {
+            val context = prepared()
+            val result = context.decide(input, entities, "v1")
+            assertTrue(input, result is Ctx3Decision.Query)
+            assertEquals(input, setOf(source), (result as Ctx3Decision.Query).sourceIds)
+            assertTrue(input, result.query.endsWith("nicht?"))
+            val next = context.decide("Nimm das andere", entities, "v1") as Ctx3Decision.Query
+            assertEquals(input, setOf(nextSource), next.sourceIds)
+        }
+    }
+
+    @Test fun sentenceInitialQuestionWordsRetainTheOrdinalReferent() {
+        for ((input, source) in listOf(
+            "Warum startet die zweite nicht?" to "s2",
+            "Geht die erste nicht?" to "s1"
+        )) {
+            val result = prepared().decide(input, entities, "v1")
+            assertTrue(input, result is Ctx3Decision.Query)
+            assertEquals(input, setOf(source), (result as Ctx3Decision.Query).sourceIds)
+        }
+        assertTrue(prepared().decide("Warum startet Gustav nicht?", entities, "v1") is Ctx3Decision.Abstain)
+    }
+
+    @Test fun explicitSelectionRejectionsStillInvalidateTheCandidateSet() {
+        for (input in listOf("Die erste nicht", "Die erste ist es nicht", "Nimm die erste nicht",
+            "Nein, die zweite nicht", "Bitte die zweite nicht", "Die erste meine ich nicht")) {
+            val context = prepared()
+            assertTrue(input, context.decide(input, entities, "v1") is Ctx3Decision.Clarify)
+            assertTrue(input, context.decide("Wo steht sie?", entities, "v1") is Ctx3Decision.Clarify)
+            assertTrue(input, context.decide("Nimm das andere", entities, "v1") is Ctx3Decision.Clarify)
+        }
+    }
+
+    @Test fun otherNegatedChoiceVerbsCannotSelectTheirRejectedCandidate() {
+        for (input in listOf("ich nehme die erste nicht", "wähle die zweite nicht", "ich will die zweite nicht")) {
+            val context = prepared()
+            assertTrue(input, context.decide(input, entities, "v1") is Ctx3Decision.Clarify)
+            assertTrue(input, context.decide("Nimm das andere", entities, "v1") is Ctx3Decision.Clarify)
+        }
+    }
 }
