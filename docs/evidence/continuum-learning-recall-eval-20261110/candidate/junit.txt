@@ -1,0 +1,15 @@
+JUnit version 4.13.2
+...E.....
+Time: 0.189
+There was 1 failure:
+1) r6FutureRecordsCannotEvictEligibleEvidence(at.heinz.deviceai.cognitive.IndependentRecallOrderingTest)
+java.lang.AssertionError: expected:<[agent-experience-hint-db5b99420abbf3ea1a51b0e7]> but was:<[]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.IndependentRecallOrderingTest.r6FutureRecordsCannotEvictEligibleEvidence(IndependentRecallOrderingTest.kt:74)
+
+FAILURES!!!
+Tests run: 8,  Failures: 1
+

@@ -115,10 +115,11 @@ class IndependentRecallOrderingTest {
             assertEquals(enabled, sawHints)
             assertTrue(result.experience!!.memoryIds.isEmpty())
             assertFalse(result.taskEvidence!!.outcomeVerified)
-            assertEquals(false, result.taskEvidence.calls.single().ownerApproved)
-            assertEquals(ToolExecutionStatus.REJECTED, result.taskEvidence.calls.single().status)
+            assertNotNull(result.blocker)
+            assertTrue(result.taskEvidence.calls.none { it.ownerApproved == true || it.status == ToolExecutionStatus.SUCCEEDED })
             outcomes += result
         }
+        assertEquals(outcomes[0].blocker, outcomes[1].blocker)
         assertEquals(outcomes[0].taskEvidence!!.calls, outcomes[1].taskEvidence!!.calls)
         assertEquals(outcomes[0].experience!!.outcome, outcomes[1].experience!!.outcome)
         assertEquals(outcomes[0].state, outcomes[1].state)
