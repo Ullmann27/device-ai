@@ -56,7 +56,8 @@ object JarvisTiles {
 
     fun drawSurface(p: ContinuumPainter, b: Box, tile: JarvisTile, highlighted: Boolean,
                     timeMs: Long = 0L, luxuryDepth: Boolean = false,
-                    lightSourceX: Float = b.centerX, lightSourceY: Float = b.top) {
+                    lightSourceX: Float = b.centerX, lightSourceY: Float = b.top,
+                    pressX: Float = .5f, pressY: Float = .5f) {
         val source = style(tile.target)
         val disabled = tile.controlState == JarvisControlState.DISABLED
         val st = if (disabled) source.copy(glow = JarvisDesign.Glow.OFF,
@@ -71,7 +72,7 @@ object JarvisTiles {
         }
         if (luxuryDepth) {
             LuxuryHoloButtonRenderer.draw(p, b, lightSourceX, lightSourceY, active,
-                disabled, tile.controlState == JarvisControlState.PRESSED)
+                disabled, tile.controlState == JarvisControlState.PRESSED, timeMs, pressX, pressY)
             if (tile.controlState == JarvisControlState.LOADING) {
                 p.drawText("…", b.right - 9f, b.top + 15f, JarvisDesign.Type.caption,
                     Fill.Solid(Colors.cyanSoft), TextAlign.RIGHT)
@@ -323,7 +324,8 @@ object JarvisTiles {
     fun drawBottomNav(p: ContinuumPainter, b: Box, items: List<NavItem> = bottomNav, selected: Int = 0,
                       timeMs: Long = 0L, pressed: Int = -1,
                       cinemaElapsedMs: Long? = null, cinemaExiting: Boolean = false,
-                      cinemaBudget: JarvisRenderQuality.Budget? = null, animatorScale: Float = 1f) {
+                      cinemaBudget: JarvisRenderQuality.Budget? = null, animatorScale: Float = 1f,
+                      pressX: Float = .5f, pressY: Float = .5f) {
         if (items.isEmpty()) return
         LuxuryHoloButtonRenderer.drawDockPlatform(p, b)
         val cells = bottomNavItemBoxes(b, items)
@@ -353,7 +355,8 @@ object JarvisTiles {
                 return@forEachIndexed
             }
             if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
-            drawSurface(p, tile, model, active, timeMs, luxuryDepth = true)
+            val materialTime = if (animatorScale > 0f && cinemaBudget?.animate != false) timeMs else 0L
+            drawSurface(p, tile, model, active, materialTime, luxuryDepth = true, pressX = pressX, pressY = pressY)
             if (cinema.glassAlpha < 1f) p.restore()
             if (cinema.contentAlpha < 0.01f) { p.restore(); return@forEachIndexed }
             if (cinema.contentAlpha < 1f) p.saveAlpha(cinema.contentAlpha)

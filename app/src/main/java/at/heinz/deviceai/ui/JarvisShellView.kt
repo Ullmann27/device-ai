@@ -44,6 +44,13 @@ class JarvisShellView(context: Context) : View(context) {
     /** Presentation model of the action tiles (label/icon/target, optional display text from Kern). */
     var tiles: List<JarvisTile> = JarvisTiles.reference
         set(value) { field = value; invalidate() }
+    internal var controlPress: JarvisShellRenderer.ControlPress? = null
+        set(value) { if (field != value) { field = value; invalidate() } }
+    val pressedControlKey: String? get() = controlPress?.key
+    val pressedTarget: String? get() = controlPress?.target
+    private fun materialPressed() = controlPress?.key?.let {
+        it.startsWith("tile:") || it.startsWith("bottom:")
+    } == true
     var foldRail: JarvisShellLayout.Rail = JarvisShellLayout.Rail.LABELLED
         set(value) { field = value; invalidate() }
     private var foregroundCinema = JarvisShellRenderer.CinemaFrame()
@@ -424,6 +431,7 @@ class JarvisShellView(context: Context) : View(context) {
         textPainter.fontScale = font
         canvas.save(); canvas.scale(d, d)
         val sceneTime = if (ambientMotion(scale)) now else 0L
+        val materialTime = if (motionAllowed(scale)) now else 0L
         val tileTarget = if (workspaceFootprint == JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE) 0f else 1f
         val missionTarget = if (workspaceFootprint == JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY) 1f else 0f
         val deckMoving = kotlin.math.abs(deckClearance - tileTarget) > .0001f ||
@@ -449,7 +457,7 @@ class JarvisShellView(context: Context) : View(context) {
             exiting = exiting, workElapsedMs = workElapsed,
             clearIdle = workClear, resultForward = resultForward,
             fromWorkingScene = fromWorkingScene, interruptedAfterMs = interruptedAfterMs,
-            returnResultElapsedMs = returnResultElapsedMs)
+            returnResultElapsedMs = returnResultElapsedMs, controlPress = controlPress, materialTimeMs = materialTime)
         publishWorkWindowMotion(s, elapsed, workElapsed, exiting, scale, now, depthBudget)
         canvas.restore()
         var workWindowMoving = false
@@ -474,7 +482,7 @@ class JarvisShellView(context: Context) : View(context) {
         val frameDelay = motionBudgetProvider?.invoke()?.frameDelayMillis ?: 16L
         val cinemaRunning = if (exiting) exitMs >= 0 && elapsed < total
             else (startMs >= 0 || workStartMs >= 0) && elapsed < total
-        if (motionAllowed(scale) && (workWindowMoving || deckStillMoving || cinemaRunning)) {
+        if (motionAllowed(scale) && (workWindowMoving || deckStillMoving || cinemaRunning || materialPressed())) {
             if (frameDelay <= 16L) postInvalidateOnAnimation() else postDelayed(ambientFrame, frameDelay)
         } else if (ambientMotion(scale)) postDelayed(ambientFrame, maxOf(66L, frameDelay))
         if (exiting && (elapsed >= total || !motionAllowed(scale))) {
