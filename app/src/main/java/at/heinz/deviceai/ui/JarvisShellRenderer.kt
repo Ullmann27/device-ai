@@ -146,7 +146,13 @@ object JarvisShellRenderer {
     /** Portable ref5 background: near-black navy, faint lower-edge haze and deterministic dust. */
     fun background(p: ContinuumPainter, w: Float, h: Float) {
         p.fillRect(0f, 0f, w, h, Fill.Linear(0f, 0f, 0f, h, intArrayOf(Colors.background, Colors.backgroundBottom)))
-        JarvisNeon.halo(p, w * .45f, h * .92f, maxOf(w, h) * .55f, Colors.backgroundHaze, .18f)
+        // Deep-space nebulae sampled from reference B (upper violet, right cyan, lower cyan cone, left magenta).
+        val span = maxOf(w, h)
+        JarvisNeon.halo(p, w * .34f, h * .22f, span * .34f, Colors.violet, .26f)
+        JarvisNeon.halo(p, w * .68f, h * .30f, span * .30f, Colors.cyan, .20f)
+        JarvisNeon.halo(p, w * .50f, h * .80f, span * .38f, Colors.cyan, .14f)
+        JarvisNeon.halo(p, w * .10f, h * .70f, span * .24f, Colors.magenta, .12f)
+        JarvisNeon.halo(p, w * .45f, h * .92f, span * .55f, Colors.backgroundHaze, .18f)
         val step = 48f
         p.setAdditive(true)
         var x = 0f; while (x <= w) { p.drawLine(x, 0f, x, h, 3f, Fill.Solid(Colors.cyan), .004f); p.drawLine(x, 0f, x, h, .6f, Fill.Solid(Colors.cyan), .008f); x += step }
@@ -201,7 +207,8 @@ object JarvisShellRenderer {
     fun header(p: ContinuumPainter, b: Box, text: String) {
         val style = JarvisDesign.Type.title
         val y = if (b.height < 70f) b.top + b.height / 2f + p.capHeight(style) / 2f else b.top + 14f + p.capHeight(style)
-        p.drawText(fit(p, text, style, b.width - 24f), b.left + 12f, y, style, Fill.Solid(Colors.text))
+        JarvisNeon.text(p, fit(p, text, style, b.width - 24f), b.left + 12f, y, style,
+            Colors.cyan, TextAlign.LEFT, JarvisDesign.Glow.NORMAL, ink = Colors.text)
     }
 
     /** Shrink before bounded ellipsis. */

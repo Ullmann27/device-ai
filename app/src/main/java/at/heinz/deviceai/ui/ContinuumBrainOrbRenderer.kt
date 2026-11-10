@@ -31,12 +31,27 @@ class ContinuumBrainOrbRenderer {
             else s.copy(pulse = pulse, recall = recall, phase = phase)
         val C = JarvisDesign.Colors
         drawPedestal(p, cx, cy + r * 1.0f, r)
+        drawLightCone(p, cx, cy, r)
         drawOrbits(p, cx, cy, r, stable, back = true)
-        // Glaskörper
-        p.fillCircle(cx, cy, r, Fill.Radial(cx, cy - r * .25f, r * 1.05f,
-            intArrayOf(C.cyanDeep, C.backgroundHaze, C.pillSurface, Argb.withAlpha(C.pillSurface, .9f)), floatArrayOf(0f, .45f, .8f, 1f)), .92f)
+        // Quiet depth wash (violet = rear space). Not a neon flood around the original sphere.
+        p.setAdditive(true)
+        p.fillCircle(cx, cy, r * 1.55f, Fill.Radial(cx, cy, r * 1.55f,
+            intArrayOf(Argb.withAlpha(C.violet, .12f), Argb.withAlpha(C.cyan, .05f), 0),
+            floatArrayOf(0f, .42f, 1f)))
+        p.setAdditive(false)
+        // Obsidian glass: dark interior, cyan only as a Fresnel edge stop.
+        p.fillCircle(cx, cy, r, Fill.Radial(cx, cy - r * .22f, r * 1.05f,
+            intArrayOf(Argb.withAlpha(C.background, .72f), Argb.withAlpha(C.backgroundHaze, .50f),
+                Argb.withAlpha(C.cyanDeep, .28f), Argb.withAlpha(C.cyan, .50f)),
+            floatArrayOf(0f, .42f, .78f, 1f)), .78f)
+        p.setAdditive(true)
+        p.fillCircle(cx, cy + r * .06f, r * .90f, Fill.Radial(cx, cy + r * .06f, r * .90f,
+            intArrayOf(Argb.withAlpha(C.glowCore, .16f), Argb.withAlpha(C.cyan, .10f), 0),
+            floatArrayOf(0f, .45f, 1f)))
+        p.setAdditive(false)
         drawNet(p, cx, cy, r, stable)
         drawCore(p, cx, cy, r, stable)
+        drawNeurons(p, cx, cy, r, stable)
         drawBrain(p, cx, cy - r * .33f, r, stable)
         // Unconfirmed memory stays visibly distinct.
         if (stable.hypothesis) {
@@ -47,18 +62,20 @@ class ContinuumBrainOrbRenderer {
             }
             p.setAdditive(false)
         }
-        // Rand-Bloom: mehrere additive Ringe (violett oben/rechts, cyan unten/links), dann scharfe Kante.
+        // Containment rings stay quiet; catchlights are angle-dependent (key light upper-left).
         p.setAdditive(true)
-        // 59509: a markedly stronger violet/magenta rim bloom around the glass sphere.
         val rimSweep = intArrayOf(C.cyan, C.violet, C.magenta, C.violetRim, C.magenta, C.cyan, C.violet, C.cyan)
-        for ((w, a) in listOf(.36f to .10f, .22f to .17f, .12f to .30f, .05f to .58f))
-            p.strokeCircle(cx, cy, r * (1f + w * .15f), r * w, Fill.Sweep(cx, cy, rimSweep), a)
-        p.strokeCircle(cx, cy, r * .995f, r * .016f, Fill.Sweep(cx, cy, intArrayOf(C.glowCore, C.violetRim, C.violet, C.cyan, C.glowCore)), 1f)
-        p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 200f, 110f, r * .012f, Fill.Solid(C.violetRim), .9f)
-        p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 330f, 70f, r * .012f, Fill.Solid(C.violetRim), .9f)
-        // Glas-Glanz: Sichel oben links + kleiner Spiegelpunkt
-        p.strokeArc(cx - r * .86f, cy - r * .86f, cx + r * .86f, cy + r * .86f, 200f, 60f, r * .05f, Fill.Solid(C.activeWhite), .16f)
-        p.strokeArc(cx - r * .86f, cy - r * .86f, cx + r * .86f, cy + r * .86f, 210f, 40f, r * .015f, Fill.Solid(C.activeWhite), .45f)
+        for ((w, a) in listOf(.36f to .08f, .22f to .14f, .12f to .26f, .05f to .48f))
+            p.strokeCircle(cx, cy, r * (1f + w * .14f), r * w, Fill.Sweep(cx, cy, rimSweep), a)
+        p.strokeCircle(cx, cy, r * .995f, r * .018f, Fill.Sweep(cx, cy, intArrayOf(C.glowCore, C.violetRim, C.violet, C.cyan, C.glowCore)), 1f)
+        // Facing the key light: sharp cyan/white Fresnel. Opposite/rear: violet depth edge.
+        p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 198f, 78f, r * .030f, Fill.Solid(C.cyan), .50f)
+        p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 208f, 50f, r * .013f, Fill.Solid(C.glowCore), .92f)
+        p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 18f, 72f, r * .024f, Fill.Solid(C.violet), .70f)
+        p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 328f, 58f, r * .014f, Fill.Solid(C.violetRim), .78f)
+        // Specular sickle + point (upper left, same key-light direction).
+        p.strokeArc(cx - r * .86f, cy - r * .86f, cx + r * .86f, cy + r * .86f, 200f, 60f, r * .05f, Fill.Solid(C.activeWhite), .22f)
+        p.strokeArc(cx - r * .86f, cy - r * .86f, cx + r * .86f, cy + r * .86f, 210f, 40f, r * .015f, Fill.Solid(C.activeWhite), .55f)
         p.fillCircle(cx - r * .55f, cy - r * .58f, r * .05f, Fill.Radial(cx - r * .55f, cy - r * .58f, r * .05f, intArrayOf(Argb.withAlpha(C.activeWhite, .8f), 0)))
         p.setAdditive(false)
         drawDust(p, cx, cy, r, s.particles)
@@ -70,10 +87,10 @@ class ContinuumBrainOrbRenderer {
     private fun drawOrbits(p: ContinuumPainter, cx: Float, cy: Float, r: Float, s: Signals, back: Boolean) {
         val c = JarvisDesign.Colors
         val segments = s.orbitSegments.coerceIn(32, 128)
-        val inclinations = floatArrayOf(.24f, -.49f, .78f)
-        val azimuths = floatArrayOf(-.20f, .27f, -.42f)
+        val inclinations = floatArrayOf(.24f, -.49f, .78f, -.31f)
+        val azimuths = floatArrayOf(-.20f, .27f, -.42f, .55f)
         p.setAdditive(true)
-        for (ring in 0 until 3) {
+        for (ring in 0 until 4) {
             val tilt = inclinations[ring]
             val yaw = azimuths[ring] + s.phase * (.07f + ring * .013f)
             val size = 1.25f + ring * .07f
@@ -99,12 +116,16 @@ class ContinuumBrainOrbRenderer {
                 if (behind == back) {
                     val alpha = if (behind) .28f else .70f
                     val half = (i + ring * 13) % segments < segments / 2
-                    val color = when (ring) { 0 -> if (half) c.magenta else c.violetRim; 1 -> if (half) c.cyan else c.violet
-                        else -> if (half) c.violetRim else c.cyan }
-                    p.drawLine(a[0], a[1], b[0], b[1], r * .060f, Fill.Solid(color), alpha * .10f)
-                    p.drawLine(a[0], a[1], b[0], b[1], r * .030f, Fill.Solid(color), alpha * .18f)
-                    p.drawLine(a[0], a[1], b[0], b[1], r * .012f, Fill.Solid(color), alpha)
-                    p.drawLine(a[0], a[1], b[0], b[1], r * .004f, Fill.Solid(c.glowCore), alpha)
+                    val color = when (ring) {
+                        0 -> if (half) c.magenta else c.violetRim
+                        1 -> if (half) c.cyan else c.violet
+                        2 -> if (half) c.violetRim else c.cyan
+                        else -> if (half) c.cyanSoft else c.magenta
+                    }
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .070f, Fill.Solid(color), alpha * .16f)
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .034f, Fill.Solid(color), alpha * .28f)
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .014f, Fill.Solid(color), alpha)
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .005f, Fill.Solid(c.glowCore), alpha)
                 }
                 val swap = a
                 a = b
@@ -197,8 +218,8 @@ class ContinuumBrainOrbRenderer {
             }
             brainPath.close()
             p.fillPath(brainPath, Fill.Linear(bx, by - hh, bx + side * hw, by + hh,
-                intArrayOf(C.glowCore, C.cyanDeep, C.violetSoft)), .55f * glow)
-            p.strokePath(brainPath, r * .02f, Fill.Linear(bx, by, bx + side * hw, by, intArrayOf(C.cyanSoft, C.violetSoft)), .9f)
+                intArrayOf(C.glowCore, C.cyanDeep, C.violetSoft)), .72f * glow)
+            p.strokePath(brainPath, maxOf(1.15f, r * .016f), Fill.Linear(bx, by, bx + side * hw, by, intArrayOf(C.cyanSoft, C.violetSoft)), .55f)
             // Windungen: konturparallele Lappenlinien (eingerückte Kopien der Kontur) + Rippen aus der Mittelfurche
             for (inset in floatArrayOf(.82f, .64f, .46f)) {
                 val g = VectorPath(); val n = 40
@@ -236,8 +257,8 @@ class ContinuumBrainOrbRenderer {
             val a = hash(i, 11) * 2f * PI.toFloat(); val d = r * (.2f + 1.35f * hash(i, 23))
             val x = cx + cos(a) * d; val y = cy + sin(a) * d * .9f
             if (kotlin.math.abs(x - cx) < r * .45f && y > cy && y < cy + r * .85f) continue
-            val s = r * (.006f + .014f * hash(i, 37)); val col = if (i % 3 == 0) C.violetRim else C.glowCore
-            p.fillCircle(x, y, s * 3f, Fill.Radial(x, y, s * 3f, intArrayOf(Argb.withAlpha(col, .5f), 0)))
+            val s = r * (.007f + .016f * hash(i, 37)); val col = if (i % 3 == 0) C.violetRim else C.glowCore
+            p.fillCircle(x, y, s * 3.8f, Fill.Radial(x, y, s * 3.8f, intArrayOf(Argb.withAlpha(col, .62f), 0)))
             p.fillCircle(x, y, s, Fill.Solid(C.activeWhite), .9f)
             if (i % 9 == 0) { p.drawLine(x - s * 5, y, x + s * 5, y, s * .5f, Fill.Solid(col), .7f); p.drawLine(x, y - s * 5, x, y + s * 5, s * .5f, Fill.Solid(col), .7f) }
         }
@@ -258,9 +279,9 @@ class ContinuumBrainOrbRenderer {
             .cubicTo(cx - iw * 1.15f, iy + ih * 1.1f, cx - iw * .5f, iy + ih * 1.4f, cx, iy)
         p.setAdditive(true); p.strokePath(infinity, r * .06f, Fill.Solid(C.cyan), .25f); p.setAdditive(false)
         p.strokePath(infinity, r * .03f, Fill.Solid(C.cyan), 1f)
-        val st = TextStyle(FontFamily.TEXT, 500, r * .165f)
-        p.drawText(label1, cx, cy + r * .5f, st, Fill.Solid(C.activeWhite), TextAlign.CENTER)
-        p.drawText(label2, cx, cy + r * .72f, st, Fill.Solid(C.activeWhite), TextAlign.CENTER)
+        val st = TextStyle(FontFamily.DISPLAY, 500, maxOf(7f, r * .11f))
+        p.drawText(label1, cx, cy + r * .52f, st, Fill.Solid(Argb.withAlpha(C.activeWhite, .62f)), TextAlign.CENTER)
+        p.drawText(label2, cx, cy + r * .70f, st, Fill.Solid(Argb.withAlpha(C.cyanSoft, .55f)), TextAlign.CENTER)
     }
 
     /** Luminous inner source (59509): white-cyan centre, violet/magenta corona, slow sine breathing. */
@@ -321,6 +342,77 @@ class ContinuumBrainOrbRenderer {
             val x = cx + k * (bw + gap)
             p.fillRoundRect(x - bw / 2, by, x + bw / 2, by + r * .035f, r * .02f, Fill.Solid(C.cyan), .95f)
             p.fillRoundRect(x - bw / 2 - r * .02f, by - r * .02f, x + bw / 2 + r * .02f, by + r * .055f, r * .04f, Fill.Solid(C.cyan), .2f)
+        }
+        p.setAdditive(false)
+    }
+
+    /** Upward holographic cone from the pedestal into the sphere (ref B). */
+    private fun drawLightCone(p: ContinuumPainter, cx: Float, cy: Float, r: Float) {
+        val C = JarvisDesign.Colors
+        val baseY = cy + r * 1.08f
+        val topY = cy + r * .06f
+        p.setAdditive(true)
+        val steps = 9
+        for (i in 0 until steps) {
+            val t = i / (steps - 1f)
+            val y = baseY + (topY - baseY) * t
+            val w = r * (1.18f - t * .86f)
+            val a = (1f - t) * .22f
+            p.fillOval(cx - w, y - r * .045f, cx + w, y + r * .045f,
+                Fill.Solid(if (i % 2 == 0) C.cyan else C.violetRim), a)
+        }
+        val beam = JarvisSceneFills.cached(listOf("cone", cx.toInt(), cy.toInt(), r.toInt())) {
+            Fill.Linear(cx, baseY, cx, cy - r * .18f,
+                intArrayOf(Argb.withAlpha(C.cyan, .38f), Argb.withAlpha(C.magenta, .10f), 0))
+        }
+        p.fillRect(cx - r * .24f, cy - r * .12f, cx + r * .24f, baseY, beam, .58f)
+        p.setAdditive(false)
+    }
+
+    /**
+     * Volumetric neuron plexus inside two lobes. Node count follows [Signals.particles]
+     * so JarvisRenderQuality can thin the mesh on a warm device. Geometry is deterministic.
+     */
+    private fun drawNeurons(p: ContinuumPainter, cx: Float, cy: Float, r: Float, s: Signals) {
+        val count = (18 + s.particles / 3).coerceIn(18, 36)
+        val xs = FloatArray(count); val ys = FloatArray(count); val zs = FloatArray(count)
+        val rot = s.phase * .11f
+        val cr = cos(rot); val sr = sin(rot)
+        for (i in 0 until count) {
+            val u = hash(i, 3); val v = hash(i, 7); val w = hash(i, 13)
+            val theta = u * PI.toFloat()
+            val phi = v * 2f * PI.toFloat()
+            // Fill the glass volume, with a mild two-lobe bias so it still reads as a brain.
+            val lobe = if (i % 2 == 0) -1f else 1f
+            val rad = .22f + .70f * w
+            val x = sin(theta) * cos(phi) * r * .82f * rad + lobe * r * .08f
+            val y = cos(theta) * r * .72f * rad - r * .10f
+            val z = sin(theta) * sin(phi) * r * .82f * rad
+            xs[i] = cx + x * cr - z * sr
+            ys[i] = cy + y
+            zs[i] = x * sr + z * cr
+        }
+        p.setAdditive(true)
+        val maxDist2 = (r * .48f) * (r * .48f)
+        val C = JarvisDesign.Colors
+        val stroke = maxOf(1.15f, r * .022f)
+        for (i in 0 until count) for (j in i + 1 until count) {
+            val dx = xs[i] - xs[j]; val dy = ys[i] - ys[j]; val dz = zs[i] - zs[j]
+            val d2 = dx * dx + dy * dy + dz * dz
+            if (d2 > maxDist2) continue
+            val z = ((zs[i] + zs[j]) * .5f / r).coerceIn(-1f, 1f)
+            if (z < -.42f) continue
+            val a = (.28f + .55f * ((z + 1f) * .5f)) * (1f - d2 / maxDist2)
+            val col = when ((i + j) % 3) { 0 -> C.magenta; 1 -> C.violetRim; else -> C.cyan }
+            p.drawLine(xs[i], ys[i], xs[j], ys[j], stroke, Fill.Solid(col), a)
+        }
+        for (i in 0 until count) {
+            val z = (zs[i] / r).coerceIn(-1f, 1f)
+            if (z < -.45f) continue
+            val col = if (i % 3 == 0) C.magenta else C.cyan
+            val sz = maxOf(1.15f, r * (.016f + .020f * ((z + 1f) * .5f)))
+            JarvisSceneFills.halo(p, xs[i], ys[i], sz * 3.6f, col, .40f + .30f * ((z + 1f) * .5f))
+            p.fillCircle(xs[i], ys[i], sz, Fill.Solid(C.glowCore), .92f)
         }
         p.setAdditive(false)
     }

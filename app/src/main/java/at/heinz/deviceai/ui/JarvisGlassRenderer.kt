@@ -188,7 +188,7 @@ class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : Jarvis
             Argb.red(color) / 255f, Argb.green(color) / 255f, Argb.blue(color) / 255f)
 
         fun drawRim(c: Canvas, b: JarvisShellLayout.Box, radius: Float, intensity: Float) {
-            val spread = 10f
+            val spread = 12f
             rim.setFloatUniform("rect", b.left, b.top, b.right, b.bottom)
             rim.setFloatUniform("radius", radius); rim.setFloatUniform("spread", spread / 2.5f)
             rim.setFloatUniform("intensity", intensity)
@@ -226,6 +226,10 @@ half4 main(float2 p) {
   c += half3(cyanColor) * half(exp(-d * d / (2.0 * soft * soft)) * 0.004 + exp(-d * d / (2.0 * core * core)) * 0.008);
   float r = distance(p, float2(size.x * 0.45, size.y * 0.92)) / (max(size.x, size.y) * 0.70);
   c = mix(c, half3(hazeColor), half(0.65 * max(0.0, 1.0 - r)));
+  float2 n1 = uv - float2(0.34, 0.22); c += half3(violetColor) * half(exp(-dot(n1, n1) * 7.0) * 0.12);
+  float2 n2 = uv - float2(0.68, 0.30); c += half3(cyanColor) * half(exp(-dot(n2, n2) * 8.0) * 0.10);
+  float2 n3 = uv - float2(0.50, 0.80); c += half3(cyanColor) * half(exp(-dot(n3, n3) * 6.0) * 0.08);
+  float2 n4 = uv - float2(0.10, 0.70); c += half3(violetColor) * half(exp(-dot(n4, n4) * 9.0) * 0.07);
   float bokeh = particle(p, 120.0 * density, 7.0 * density, 3.0);
   float bokehV = particle(p + 60.0 * density, 120.0 * density, 6.0 * density, 9.0);
   c += half3(cyanColor) * half(bokeh * 0.05) + half3(violetColor) * half(bokehV * 0.05);
@@ -242,8 +246,10 @@ half4 main(float2 p) {
   float2 c = (rect.xy + rect.zw) * 0.5; float2 h = (rect.zw - rect.xy) * 0.5;
   float d = sdRound(p - c, h, radius);
   if (d < 0.0) return half4(0.0);
-  float a = exp(-d / spread) * intensity * 0.55;
-  return half4(0.0, a, a, a);
+  float t = clamp((p.x - rect.x) / max(rect.z - rect.x, 1.0), 0.0, 1.0);
+  half3 col = mix(half3(0.00, 0.90, 1.00), half3(0.83, 0.24, 1.00), half(t));
+  float a = exp(-d / spread) * intensity * 0.70;
+  return half4(col * a, a);
 }"""
     }
 }
