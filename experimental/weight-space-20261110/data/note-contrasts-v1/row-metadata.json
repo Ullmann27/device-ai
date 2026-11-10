@@ -1,0 +1,1926 @@
+{
+  "dev": [
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0001",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-write-ribbon-short-first",
+      "promptUtf8Bytes": 39
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0002",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-retain-ribbon-short-first",
+      "promptUtf8Bytes": 37
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0003",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-retain-lamp-short-first",
+      "promptUtf8Bytes": 38
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0004",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-file-ribbon-long-first",
+      "promptUtf8Bytes": 85
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0005",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-keep-lamp-long-last",
+      "promptUtf8Bytes": 99
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0006",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-keep-ribbon-long-first",
+      "promptUtf8Bytes": 91
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0007",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-file-lamp-long-first",
+      "promptUtf8Bytes": 85
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0008",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-file-ribbon-long-first",
+      "promptUtf8Bytes": 85
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0009",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-keep-lamp-long-first",
+      "promptUtf8Bytes": 91
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0010",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-write-ribbon-short-first",
+      "promptUtf8Bytes": 39
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0011",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-file-ribbon-short-first",
+      "promptUtf8Bytes": 44
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0012",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-retain-ribbon-long-first",
+      "promptUtf8Bytes": 78
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0013",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-file-ribbon-long-last",
+      "promptUtf8Bytes": 93
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0014",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-write-ribbon-long-last",
+      "promptUtf8Bytes": 88
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0015",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-retain-ribbon-short-first",
+      "promptUtf8Bytes": 37
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0016",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-keep-ribbon-short-last",
+      "promptUtf8Bytes": 58
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0017",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-retain-lamp-short-first",
+      "promptUtf8Bytes": 38
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0018",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-write-lamp-long-first",
+      "promptUtf8Bytes": 80
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0019",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-keep-ribbon-long-first",
+      "promptUtf8Bytes": 91
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0020",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-retain-lamp-short-last",
+      "promptUtf8Bytes": 46
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0021",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-retain-lamp-long-first",
+      "promptUtf8Bytes": 78
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0022",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-keep-ribbon-short-first",
+      "promptUtf8Bytes": 50
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0023",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-retain-ribbon-long-first",
+      "promptUtf8Bytes": 78
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0024",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-retain-ribbon-long-last",
+      "promptUtf8Bytes": 86
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0025",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-retain-lamp-long-last",
+      "promptUtf8Bytes": 86
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0026",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-file-lamp-short-first",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0027",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-write-ribbon-short-last",
+      "promptUtf8Bytes": 47
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0028",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-keep-ribbon-long-last",
+      "promptUtf8Bytes": 99
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0029",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-write-lamp-short-last",
+      "promptUtf8Bytes": 48
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0030",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-retain-lamp-long-first",
+      "promptUtf8Bytes": 78
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0031",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-retain-lamp-short-last",
+      "promptUtf8Bytes": 46
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0032",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-keep-lamp-short-last",
+      "promptUtf8Bytes": 59
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0033",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-keep-lamp-short-first",
+      "promptUtf8Bytes": 51
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0034",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-keep-lamp-short-last",
+      "promptUtf8Bytes": 59
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0035",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-keep-ribbon-short-first",
+      "promptUtf8Bytes": 50
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0036",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-write-lamp-short-first",
+      "promptUtf8Bytes": 40
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0037",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-write-lamp-long-last",
+      "promptUtf8Bytes": 88
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0038",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-file-ribbon-short-first",
+      "promptUtf8Bytes": 44
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0039",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-retain-ribbon-short-last",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0040",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-file-lamp-short-last",
+      "promptUtf8Bytes": 53
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0041",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-write-lamp-short-last",
+      "promptUtf8Bytes": 48
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0042",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-keep-lamp-long-first",
+      "promptUtf8Bytes": 91
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0043",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-keep-ribbon-short-last",
+      "promptUtf8Bytes": 58
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0044",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-file-ribbon-short-last",
+      "promptUtf8Bytes": 52
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0045",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-write-lamp-short-first",
+      "promptUtf8Bytes": 40
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0046",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-keep-lamp-long-last",
+      "promptUtf8Bytes": 99
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0047",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-keep-lamp-short-first",
+      "promptUtf8Bytes": 51
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0048",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-write-ribbon-long-first",
+      "promptUtf8Bytes": 80
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0049",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-retain-lamp-long-last",
+      "promptUtf8Bytes": 86
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-keep",
+      "id": "note-dev-0050",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-keep-ribbon-long-last",
+      "promptUtf8Bytes": 99
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0051",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-write-lamp-long-first",
+      "promptUtf8Bytes": 80
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0052",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-retain-ribbon-long-last",
+      "promptUtf8Bytes": 86
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0053",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-write-ribbon-long-first",
+      "promptUtf8Bytes": 80
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0054",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-file-lamp-long-last",
+      "promptUtf8Bytes": 93
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0055",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-file-ribbon-short-last",
+      "promptUtf8Bytes": 52
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0056",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-file-lamp-short-last",
+      "promptUtf8Bytes": 53
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-retain",
+      "id": "note-dev-0057",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-retain-ribbon-short-last",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0058",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-file-lamp-long-last",
+      "promptUtf8Bytes": 93
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0059",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-file-ribbon-long-last",
+      "promptUtf8Bytes": 93
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0060",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-write-lamp-long-last",
+      "promptUtf8Bytes": 88
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0061",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-file-lamp-long-first",
+      "promptUtf8Bytes": 85
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-dev-file",
+      "id": "note-dev-0062",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "dev-lamp",
+      "pairId": "note-v1-dev-file-lamp-short-first",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0063",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-write-ribbon-short-last",
+      "promptUtf8Bytes": 47
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-dev-write",
+      "id": "note-dev-0064",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "dev-ribbon",
+      "pairId": "note-v1-dev-write-ribbon-long-last",
+      "promptUtf8Bytes": 88
+    }
+  ],
+  "train": [
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0001",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-secure-cup-short-last",
+      "promptUtf8Bytes": 53
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0002",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-remember-board-short-last",
+      "promptUtf8Bytes": 42
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0003",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-store-cup-short-last",
+      "promptUtf8Bytes": 55
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0004",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-secure-board-long-last",
+      "promptUtf8Bytes": 85
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0005",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-secure-room-short-first",
+      "promptUtf8Bytes": 43
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0006",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-remember-room-short-first",
+      "promptUtf8Bytes": 32
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0007",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-secure-cup-short-last",
+      "promptUtf8Bytes": 53
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0008",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-record-room-long-last",
+      "promptUtf8Bytes": 78
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0009",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-record-cloth-long-first",
+      "promptUtf8Bytes": 66
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0010",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-store-cup-long-first",
+      "promptUtf8Bytes": 80
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0011",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-secure-cloth-long-first",
+      "promptUtf8Bytes": 75
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0012",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-secure-board-long-last",
+      "promptUtf8Bytes": 85
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0013",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-record-room-short-last",
+      "promptUtf8Bytes": 42
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0014",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-record-cloth-short-first",
+      "promptUtf8Bytes": 36
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0015",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-record-cup-short-first",
+      "promptUtf8Bytes": 36
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0016",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-remember-cup-long-first",
+      "promptUtf8Bytes": 67
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0017",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-record-board-long-first",
+      "promptUtf8Bytes": 68
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0018",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-remember-cup-long-last",
+      "promptUtf8Bytes": 75
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0019",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-remember-cloth-short-first",
+      "promptUtf8Bytes": 34
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0020",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-store-cloth-long-last",
+      "promptUtf8Bytes": 85
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0021",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-record-room-short-first",
+      "promptUtf8Bytes": 34
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0022",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-secure-cloth-long-first",
+      "promptUtf8Bytes": 75
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0023",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-secure-room-short-last",
+      "promptUtf8Bytes": 51
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0024",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-remember-board-short-first",
+      "promptUtf8Bytes": 34
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0025",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-remember-board-short-first",
+      "promptUtf8Bytes": 34
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0026",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-store-room-short-last",
+      "promptUtf8Bytes": 53
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0027",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-store-cloth-long-first",
+      "promptUtf8Bytes": 77
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0028",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-remember-cup-short-last",
+      "promptUtf8Bytes": 42
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0029",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-store-room-short-last",
+      "promptUtf8Bytes": 53
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0030",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-record-cup-short-last",
+      "promptUtf8Bytes": 44
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0031",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-remember-board-short-last",
+      "promptUtf8Bytes": 42
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0032",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-record-board-short-last",
+      "promptUtf8Bytes": 44
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0033",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-remember-cloth-long-last",
+      "promptUtf8Bytes": 72
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0034",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-store-cloth-short-first",
+      "promptUtf8Bytes": 47
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0035",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-secure-board-long-first",
+      "promptUtf8Bytes": 77
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0036",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-record-room-long-last",
+      "promptUtf8Bytes": 78
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0037",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-record-cup-short-last",
+      "promptUtf8Bytes": 44
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0038",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-remember-cloth-short-first",
+      "promptUtf8Bytes": 34
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0039",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-remember-board-long-last",
+      "promptUtf8Bytes": 74
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0040",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-secure-room-short-last",
+      "promptUtf8Bytes": 51
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0041",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-record-cloth-short-last",
+      "promptUtf8Bytes": 44
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0042",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-secure-cup-long-first",
+      "promptUtf8Bytes": 78
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0043",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-record-cloth-long-first",
+      "promptUtf8Bytes": 66
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0044",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-store-room-long-last",
+      "promptUtf8Bytes": 89
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0045",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-record-cloth-short-first",
+      "promptUtf8Bytes": 36
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0046",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-remember-cloth-long-first",
+      "promptUtf8Bytes": 64
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0047",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-remember-cup-long-last",
+      "promptUtf8Bytes": 75
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0048",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-record-cloth-long-last",
+      "promptUtf8Bytes": 74
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0049",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-secure-cup-short-first",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0050",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-store-cup-long-last",
+      "promptUtf8Bytes": 88
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0051",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-secure-room-long-first",
+      "promptUtf8Bytes": 79
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0052",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-record-cup-long-last",
+      "promptUtf8Bytes": 77
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0053",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-store-room-long-first",
+      "promptUtf8Bytes": 81
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0054",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-record-cup-long-first",
+      "promptUtf8Bytes": 69
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0055",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-secure-cloth-short-first",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0056",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-secure-cloth-long-last",
+      "promptUtf8Bytes": 83
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0057",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-record-cup-long-first",
+      "promptUtf8Bytes": 69
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0058",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-store-board-long-first",
+      "promptUtf8Bytes": 79
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0059",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-secure-cup-long-first",
+      "promptUtf8Bytes": 78
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0060",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-secure-board-short-first",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0061",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-secure-board-short-last",
+      "promptUtf8Bytes": 53
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0062",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-record-board-short-last",
+      "promptUtf8Bytes": 44
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0063",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-remember-board-long-last",
+      "promptUtf8Bytes": 74
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0064",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-store-board-short-last",
+      "promptUtf8Bytes": 55
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0065",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-record-room-short-last",
+      "promptUtf8Bytes": 42
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0066",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-store-cup-short-first",
+      "promptUtf8Bytes": 47
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0067",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-store-cup-long-first",
+      "promptUtf8Bytes": 80
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0068",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-record-room-long-first",
+      "promptUtf8Bytes": 70
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0069",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-remember-room-long-last",
+      "promptUtf8Bytes": 76
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0070",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-secure-cup-long-last",
+      "promptUtf8Bytes": 86
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0071",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-secure-room-long-last",
+      "promptUtf8Bytes": 87
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0072",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-store-board-short-last",
+      "promptUtf8Bytes": 55
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0073",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-secure-cup-short-first",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0074",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-record-board-long-last",
+      "promptUtf8Bytes": 76
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0075",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-store-board-long-last",
+      "promptUtf8Bytes": 87
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0076",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-record-board-long-first",
+      "promptUtf8Bytes": 68
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0077",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-remember-cup-short-last",
+      "promptUtf8Bytes": 42
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0078",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-remember-room-short-first",
+      "promptUtf8Bytes": 32
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0079",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-remember-board-long-first",
+      "promptUtf8Bytes": 66
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0080",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-record-cloth-short-last",
+      "promptUtf8Bytes": 44
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0081",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-record-board-short-first",
+      "promptUtf8Bytes": 36
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0082",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-remember-cloth-long-first",
+      "promptUtf8Bytes": 64
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0083",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-store-board-short-first",
+      "promptUtf8Bytes": 47
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0084",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-store-cup-short-last",
+      "promptUtf8Bytes": 55
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0085",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-remember-cup-short-first",
+      "promptUtf8Bytes": 34
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0086",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-store-cloth-long-last",
+      "promptUtf8Bytes": 85
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0087",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-secure-board-long-first",
+      "promptUtf8Bytes": 77
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0088",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-remember-cup-long-first",
+      "promptUtf8Bytes": 67
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0089",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-store-room-short-first",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0090",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-remember-cloth-long-last",
+      "promptUtf8Bytes": 72
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0091",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-secure-cloth-short-first",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0092",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-remember-room-short-last",
+      "promptUtf8Bytes": 40
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0093",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-remember-cloth-short-last",
+      "promptUtf8Bytes": 42
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0094",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-record-cup-short-first",
+      "promptUtf8Bytes": 36
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0095",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-store-cup-short-first",
+      "promptUtf8Bytes": 47
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0096",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-store-cloth-long-first",
+      "promptUtf8Bytes": 77
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0097",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-remember-room-long-last",
+      "promptUtf8Bytes": 76
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0098",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-store-room-short-first",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0099",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-remember-room-short-last",
+      "promptUtf8Bytes": 40
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0100",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-remember-board-long-first",
+      "promptUtf8Bytes": 66
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0101",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-record-board-short-first",
+      "promptUtf8Bytes": 36
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0102",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-secure-room-long-last",
+      "promptUtf8Bytes": 87
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0103",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-store-board-short-first",
+      "promptUtf8Bytes": 47
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0104",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-secure-board-short-last",
+      "promptUtf8Bytes": 53
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0105",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-secure-cloth-short-last",
+      "promptUtf8Bytes": 53
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0106",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-remember-cloth-short-last",
+      "promptUtf8Bytes": 42
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0107",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-record-cup-long-last",
+      "promptUtf8Bytes": 77
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0108",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-remember-room-long-first",
+      "promptUtf8Bytes": 68
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0109",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-store-cloth-short-last",
+      "promptUtf8Bytes": 55
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0110",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-store-cloth-short-last",
+      "promptUtf8Bytes": 55
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0111",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-record-board-long-last",
+      "promptUtf8Bytes": 76
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0112",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-store-board-long-last",
+      "promptUtf8Bytes": 87
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0113",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-secure-room-short-first",
+      "promptUtf8Bytes": 43
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0114",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-store-cloth-short-first",
+      "promptUtf8Bytes": 47
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0115",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-store-board-long-first",
+      "promptUtf8Bytes": 79
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0116",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-board",
+      "pairId": "note-v1-train-secure-board-short-first",
+      "promptUtf8Bytes": 45
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0117",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-record-cloth-long-last",
+      "promptUtf8Bytes": 74
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0118",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-secure-cloth-long-last",
+      "promptUtf8Bytes": 83
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0119",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-remember-room-long-first",
+      "promptUtf8Bytes": 68
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0120",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-record-room-long-first",
+      "promptUtf8Bytes": 70
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-remember",
+      "id": "note-train-0121",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-remember-cup-short-first",
+      "promptUtf8Bytes": 34
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0122",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-secure-cup-long-last",
+      "promptUtf8Bytes": 86
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0123",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-secure-room-long-first",
+      "promptUtf8Bytes": 79
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-record",
+      "id": "note-train-0124",
+      "label": "0",
+      "lengthLevel": "short",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-record-room-short-first",
+      "promptUtf8Bytes": 34
+    },
+    {
+      "directivePosition": "first",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0125",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-store-room-long-first",
+      "promptUtf8Bytes": 81
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0126",
+      "label": "3",
+      "lengthLevel": "long",
+      "objectId": "train-room",
+      "pairId": "note-v1-train-store-room-long-last",
+      "promptUtf8Bytes": 89
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-store",
+      "id": "note-train-0127",
+      "label": "0",
+      "lengthLevel": "long",
+      "objectId": "train-cup",
+      "pairId": "note-v1-train-store-cup-long-last",
+      "promptUtf8Bytes": 88
+    },
+    {
+      "directivePosition": "last",
+      "familyId": "note-v1-train-secure",
+      "id": "note-train-0128",
+      "label": "3",
+      "lengthLevel": "short",
+      "objectId": "train-cloth",
+      "pairId": "note-v1-train-secure-cloth-short-last",
+      "promptUtf8Bytes": 53
+    }
+  ]
+}
