@@ -104,7 +104,8 @@ class AvatarFramingTest {
     /** How far (dp) the rest face reaches into the dialogue card (stage-local right/top edge in dp). */
     private fun Stage.restDialogDp(w: AvatarFraming.Window): Double {
         val dpPerMetre = box.height / (2 * w.halfHeight)
-        val (right, top) = dialogLocal
+        // Separate top-card rows cannot collide with the avatar silhouette.
+        val (right, top) = dialogLocal ?: return 0.0
         var d = 0.0
         for (p in restFace) {
             val sx = (p[0] - focus.centerX - w.left) * dpPerMetre; val sy = (w.cameraCenterY + w.halfHeight - p[1]) * dpPerMetre
