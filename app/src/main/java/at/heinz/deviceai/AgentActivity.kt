@@ -1487,7 +1487,8 @@ class AgentActivity : Activity() {
                 if (!foregroundLearningActive) return@onSuccess
                 homeView?.takeIf { it.isShown }?.let { home ->
                     home.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
-                        memoryActivity = memoryActivitySnapshot(state.memory))
+                        memoryActivity = memoryActivitySnapshot(state.memory),
+                        document = airbusCockpitOrchestrator?.documentSnapshot())
                 }
                 if (liveHardwareGauges?.isShown == true) liveHardwareGauges?.updateTelemetry(state.system)
                 navigationView?.takeIf { it.isShown }?.state = state
@@ -1551,7 +1552,8 @@ class AgentActivity : Activity() {
         val home = homeView ?: return
         if (isFinishing || isDestroyed) return
         home.state = home.state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
-            memoryActivity = memoryActivitySnapshot(home.state.memory))
+            memoryActivity = memoryActivitySnapshot(home.state.memory),
+            document = airbusCockpitOrchestrator?.documentSnapshot())
         // The running turn's steps dock into the open work window instead of covering the avatar and the orb.
         workWindowHost.showStatus(cockpitTriggers.activeTimeline())
     }

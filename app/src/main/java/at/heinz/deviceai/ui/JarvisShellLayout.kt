@@ -24,7 +24,8 @@ object JarvisShellLayout {
         TOP_BAR, NAV_RAIL, BOTTOM_NAV, AVATAR, DIALOG, INPUT,
         COCKPIT_PRIMARY, COCKPIT_SECONDARY, TILES,
         ROW_AGENTS, ROW_TASKS, ROW_MEMORY, ROW_MODEL, STATUS, USER_CARD,
-        CONTINUUM_HEADER, CAMERA_STATUS
+        CONTINUUM_HEADER, CAMERA_STATUS,
+        WORK_DOCUMENT, WORK_PROCESS, WORK_DRAFT
     }
 
     data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {
@@ -151,19 +152,19 @@ object JarvisShellLayout {
         val stage = head
         val b = linkedMapOf(
             Slot.TOP_BAR to gr[Area.HEADER],
-            Slot.AVATAR to Box(stage.left, minOf(head.top, orb.top), orb.right, maxOf(head.bottom, orb.bottom)),
-            Slot.DIALOG to gr[Area.DIALOG], Slot.INPUT to gr[Area.INPUT], Slot.TILES to gr[Area.TILES],
+            Slot.AVATAR to Box(head.left, minOf(head.top, orb.top), orb.right, maxOf(head.bottom, orb.bottom)),
+            Slot.DIALOG to gr[Area.DIALOG], Slot.INPUT to gr[Area.INPUT],
             Slot.CONTINUUM_HEADER to gr[Area.CONTINUUM_HEADER],
             Slot.CAMERA_STATUS to gr[Area.CAMERA_STATUS], Slot.COCKPIT_SECONDARY to gr[Area.MODULES],
-            Slot.ROW_AGENTS to gr[Area.ROW_AGENTS],
-            Slot.ROW_TASKS to gr[Area.ROW_TASKS], Slot.ROW_MEMORY to gr[Area.ROW_MEMORY],
-            Slot.ROW_MODEL to gr[Area.ROW_MODEL], Slot.STATUS to gr[Area.STATUS]
+            Slot.WORK_DOCUMENT to gr[Area.WORK_DOCUMENT],
+            Slot.WORK_PROCESS to gr[Area.WORK_PROCESS],
+            Slot.WORK_DRAFT to gr[Area.WORK_DRAFT],
+            Slot.BOTTOM_NAV to gr[Area.TOOL_DOCK],
+            Slot.STATUS to gr[Area.STATUS]
         )
-        val extra = installToolDock(b, w)
         return Shell(formFactor(w, h), w, gr.height, b, JarvisCockpitGrid.TILE_COLUMNS, JarvisCockpitGrid.TILE_ROWS, null,
-            setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER),
+            setOf(Slot.AVATAR to Slot.CONTINUUM_HEADER),
             gr, h, profile, JarvisCockpitGrid.TILE_GAP_DP, head, orb, headStage = stage)
-            .copy(height = gr.height + extra)
     }
 
     /**

@@ -112,6 +112,9 @@ object JarvisCockpitGridContent {
                 if (at.heinz.deviceai.cockpit.JarvisUserCardSlot.renderer == null)
                     JarvisOwnerCardContent.draw(p, b, at.heinz.deviceai.cockpit.JarvisUserCardSlot.latest)
             }
+            Slot.WORK_DOCUMENT -> JarvisCockpitPanels.drawDocumentPreview(p, b, s)
+            Slot.WORK_PROCESS -> JarvisCockpitPanels.drawWorkProcess(p, b, s)
+            Slot.WORK_DRAFT -> JarvisCockpitPanels.drawDraftPreview(p, b, s)
             else -> return false
         }
         return true

@@ -19,7 +19,8 @@ object JarvisDeckClearance {
     const val STAGGER = .35f
     const val DURATION_MS = 360L
 
-    private val rows = setOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL)
+    private val rows = setOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL,
+        Slot.WORK_DOCUMENT, Slot.WORK_PROCESS, Slot.WORK_DRAFT)
 
     /** Tiles have no slot of their own (null); the secondary panel and lower rows may clear as well. */
     fun clears(slot: Slot?): Boolean = slot == null || slot == Slot.COCKPIT_SECONDARY || slot in rows

@@ -30,7 +30,8 @@ object JarvisShellRenderer {
     /** Depth layer per slot (Z-Ebenen). Tiles/dialog/input near, side panels mid, frame elements far. */
     fun layerOf(slot: Slot?): JarvisMotion.Depth.Layer = when (slot) {
         null, Slot.DIALOG, Slot.INPUT -> JarvisMotion.Depth.Layer.NEAR
-        Slot.COCKPIT_PRIMARY, Slot.COCKPIT_SECONDARY, Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL -> JarvisMotion.Depth.Layer.MID
+        Slot.COCKPIT_PRIMARY, Slot.COCKPIT_SECONDARY, Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL,
+        Slot.WORK_DOCUMENT, Slot.WORK_PROCESS, Slot.WORK_DRAFT -> JarvisMotion.Depth.Layer.MID
         else -> JarvisMotion.Depth.Layer.FAR
     }
 
@@ -191,7 +192,9 @@ object JarvisShellRenderer {
         Slot.NAV_RAIL, Slot.BOTTOM_NAV -> "Navigation"; Slot.DIALOG -> "JARVIS"
         Slot.INPUT -> "Nachricht an Continuum …"; Slot.COCKPIT_PRIMARY -> "Kern-Status"; Slot.COCKPIT_SECONDARY -> "System-Status"
         Slot.ROW_AGENTS -> "Aktive Agenten"; Slot.ROW_TASKS -> "Aktueller Ablauf"; Slot.ROW_MEMORY -> "Gedächtnis-Aktivität"
-        Slot.ROW_MODEL -> "Lokales Modell"; Slot.STATUS -> "System- & Continuum-Status"; else -> slot.name
+        Slot.ROW_MODEL -> "Lokales Modell"; Slot.STATUS -> "System- & Continuum-Status"
+        Slot.WORK_DOCUMENT -> "Dokument"; Slot.WORK_PROCESS -> "Verarbeitung"
+        Slot.WORK_DRAFT -> "Zusammenfassung – Entwurf"; else -> slot.name
     }
 
     /** Panel header (title only; values come from Kern via SlotContent). */

@@ -186,8 +186,7 @@ class JarvisDeterministicCaptureUiTest {
                 JarvisHomeTestRoutes.touch(root, tab)
                 shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
             }
-            if (captureScrollDetails) {
-                assertTrue("All profiles keep their reference cards", shell.hasFeatureTiles)
+            if (captureScrollDetails && shell.hasFeatureTiles) {
                 assertEquals("The fixed Home rail is removed", null, shell[JarvisShellLayout.Slot.NAV_RAIL])
                 assertTrue("Cards precede their status strip",
                     requireNotNull(shell[JarvisShellLayout.Slot.TILES]).bottom <= status.top)

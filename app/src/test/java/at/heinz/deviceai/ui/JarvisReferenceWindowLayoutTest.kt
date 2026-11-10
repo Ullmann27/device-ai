@@ -25,53 +25,62 @@ class JarvisReferenceWindowLayoutTest {
                 assertFalse("unexpected visual-region overlap $pair", intersects(entries[i].value, entries[j].value))
             }
         }
-        val tiles = shell.tileBoxes()
-        assertTrue(shell.hasFeatureTiles)
-        val tileArea = requireNotNull(shell[Slot.TILES])
-        assertEquals(10, tiles.size)
         assertNull("Home has no fixed rail", shell[Slot.NAV_RAIL])
         assertNull(shell.rail)
         assertEquals(0f, shell.profile.railWidthDp, 0f)
-        for (tile in tiles) {
-            assertTrue(tileArea.contains(tile))
-            assertTrue("tile hit width $tile", tile.width >= 48f - .01f)
-            assertTrue("tile hit height $tile", tile.height >= 158f * maxOf(1f, shell.profile.fontScale) - .01f)
+        val tiles = shell.tileBoxes()
+        if (shell.hasFeatureTiles) {
+            val tileArea = requireNotNull(shell[Slot.TILES])
+            assertEquals(10, tiles.size)
+            for (tile in tiles) {
+                assertTrue(tileArea.contains(tile))
+                assertTrue("tile hit width $tile", tile.width >= 48f - .01f)
+                assertTrue("tile hit height $tile", tile.height >= 158f * maxOf(1f, shell.profile.fontScale) - .01f)
+            }
+            assertTrue(tileArea.top > shell[Slot.INPUT]!!.bottom)
+            assertTrue(shell[Slot.STATUS]!!.top > tileArea.bottom)
+            for (i in tiles.indices) for (j in i + 1 until tiles.size) assertFalse(intersects(tiles[i], tiles[j]))
+        } else {
+            assertEquals(0, tiles.size)
+            assertNotNull(shell[Slot.BOTTOM_NAV])
+            listOf(Slot.WORK_DOCUMENT, Slot.WORK_PROCESS, Slot.WORK_DRAFT).forEach {
+                assertNotNull("$it on packed cockpit", shell[it])
+            }
         }
-        assertTrue(tileArea.top > shell[Slot.INPUT]!!.bottom)
-        assertTrue(shell[Slot.STATUS]!!.top > tileArea.bottom)
-        for (slot in listOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.ROW_AGENTS, Slot.ROW_TASKS))
-            assertTrue("$slot follows the complete home", shell[slot]!!.top > shell[Slot.STATUS]!!.bottom)
-        for (i in tiles.indices) for (j in i + 1 until tiles.size) assertFalse(intersects(tiles[i], tiles[j]))
+        for (slot in listOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.ROW_AGENTS, Slot.ROW_TASKS)) {
+            val box = shell[slot] ?: continue
+            assertTrue("$slot follows the complete home", box.top > shell[Slot.STATUS]!!.bottom)
+        }
         val avatar = requireNotNull(shell[Slot.AVATAR])
         assertTrue(avatar.contains(requireNotNull(shell.headBounds)))
         assertTrue(avatar.contains(requireNotNull(shell.orbBounds)))
         assertFalse("head and brain are independent viewports", intersects(shell.headBounds!!, shell.orbBounds!!))
     }
 
-    @Test fun referenceHomeKeepsTallCardsBeforeScrollableDiagnostics() {
+    @Test fun referenceHomePacksWorkPanelsIntoTheViewportWithoutScrolling() {
         val s = JarvisShellLayout.create(1536f, 1024f)
         val g = requireNotNull(s.grid)
         assertEquals(1536f, s.width, 0f)
         assertEquals(1024f, s.viewportHeight, 0f)
-        assertEquals(g.height + JarvisShellLayout.toolDockLayoutExtra(), s.height, 0f)
+        assertEquals(g.height, s.height, 0f)
+        assertEquals(s.viewportHeight, s.height, 0f)
+        assertFalse(s.requiresVerticalScroll)
         assertNotNull("Fold/tablet home uses the holographic tool dock, not a left rail", s[Slot.BOTTOM_NAV])
-        assertTrue(s[Slot.BOTTOM_NAV]!!.top >= s[Slot.TILES]!!.bottom - .01f)
+        assertTrue(s[Slot.BOTTOM_NAV]!!.top >= s[Slot.WORK_DOCUMENT]!!.bottom - .01f)
         assertTrue(s[Slot.STATUS]!!.top >= s[Slot.BOTTOM_NAV]!!.bottom - .01f)
         assertEquals(g[Area.HEAD], s.headBounds)
         assertEquals(g[Area.HEAD], s.headStage)
         assertEquals(g[Area.ORB], s.orbBounds)
         assertEquals(g[Area.INPUT], s[Slot.INPUT])
-        assertEquals(56f, g[Area.DIALOG].height, .01f)
-        assertEquals(88f, g[Area.INPUT].height, .01f)
-        assertEquals(640f, g[Area.HEAD].height, .01f)
-        assertTrue(g[Area.TILES].top > g[Area.INPUT].bottom)
-        assertTrue(g[Area.STATUS].top > g[Area.TILES].bottom)
-        assertTrue(g[Area.ROW_MEMORY].top > g[Area.STATUS].bottom)
-        assertEquals(g[Area.ROW_MEMORY].top, g[Area.ROW_MODEL].top, .01f)
-        assertTrue(g[Area.ROW_AGENTS].top > g[Area.ROW_MEMORY].bottom)
-        assertTrue(g[Area.CAMERA_STATUS].top > g[Area.STATUS].bottom)
+        assertTrue(g[Area.DIALOG].height >= 140f)
+        assertTrue(g[Area.INPUT].height >= 40f)
+        assertTrue(g[Area.HEAD].height <= JarvisCockpitGrid.PACKED_HERO_MAX_DP + .01f)
+        assertTrue(g[Area.WORK_DOCUMENT].top > g[Area.INPUT].bottom)
+        assertTrue(g[Area.TOOL_DOCK].top > g[Area.WORK_DOCUMENT].bottom)
+        assertTrue(g[Area.STATUS].top > g[Area.TOOL_DOCK].bottom)
+        assertTrue(g[Area.CAMERA_STATUS].left > g[Area.ORB].right)
         assertFalse(Area.RAIL in g.areas)
-        assertFalse(Area.DEVICE_STATUS in g.areas)
+        assertTrue(Area.DEVICE_STATUS in g.areas)
         assertEquals(1f, g.unit, 0f)
         sane(s)
     }
@@ -84,8 +93,14 @@ class JarvisReferenceWindowLayoutTest {
             JarvisTiles.reference.map { it.target })
         assertEquals(listOf("Gespräch", "Gedächtnis", "Denken und Planen", "Forschung", "Mein KI-Team", "Aufgaben", "Internet", "Lernen", "Gerätesteuerung", "Systemstatus"),
             JarvisTiles.reference.map { it.label })
-        assertTrue(shell.tileBoxes()[5].top > shell.tileBoxes()[4].bottom)
-        assertEquals(shell.tileBoxes()[0].left, shell.tileBoxes()[5].left, .001f)
+        val phone = JarvisShellLayout.create(412f, 915f)
+        assertTrue(phone.tileBoxes()[5].top > phone.tileBoxes()[4].bottom)
+        assertEquals(phone.tileBoxes()[0].left, phone.tileBoxes()[5].left, .001f)
+        val dock = requireNotNull(shell[Slot.BOTTOM_NAV])
+        assertEquals(JarvisTiles.railNav.map { it.target },
+            JarvisTiles.bottomNavItemBoxes(dock).map { box ->
+                JarvisShellContent.hitTarget(shell, JarvisTiles.reference, box.centerX, box.centerY)
+            })
     }
 
     @Test fun widthBreakpointsAreExplicitAndNotGuessedFromTheDeviceModel() {
@@ -97,7 +112,9 @@ class JarvisReferenceWindowLayoutTest {
             val wide = JarvisShellLayout.create(w, 884f)
             assertEquals(5, wide.tileColumns)
             assertEquals(2, wide.tileRows)
-            assertTrue(wide.hasFeatureTiles)
+            assertTrue(wide.ref5Grid)
+            assertFalse(wide.requiresVerticalScroll)
+            assertNotNull(wide[Slot.BOTTOM_NAV])
             assertNull(wide[Slot.NAV_RAIL])
         }
         assertEquals(2, JarvisShellLayout.create(760f, 884f).profile.informationColumns)
@@ -156,52 +173,50 @@ class JarvisReferenceWindowLayoutTest {
         }
     }
 
-    @Test fun wideWindowsKeepChartsInTheScrollableDetails() {
+    @Test fun wideWindowsKeepWorkPanelsOnTheFirstScreen() {
         for (shell in listOf(JarvisShellLayout.create(1536f, 1024f), JarvisShellLayout.create(760f, 884f))) {
             assertEquals(2, shell.profile.informationColumns)
-            assertTrue(shell[Slot.ROW_MEMORY]!!.top > shell[Slot.STATUS]!!.bottom)
-            assertEquals(shell[Slot.ROW_MEMORY]!!.top, shell[Slot.ROW_MODEL]!!.top, .01f)
-            assertTrue(shell[Slot.ROW_MEMORY]!!.right < shell[Slot.ROW_MODEL]!!.left)
-            assertEquals(shell[Slot.ROW_AGENTS]!!.top, shell[Slot.ROW_TASKS]!!.top, .01f)
-            assertTrue(shell[Slot.ROW_AGENTS]!!.top > shell[Slot.ROW_MEMORY]!!.bottom)
-            assertTrue(shell[Slot.ROW_MEMORY]!!.height > shell[Slot.ROW_AGENTS]!!.height)
+            assertFalse(shell.requiresVerticalScroll)
+            assertEquals(shell[Slot.WORK_DOCUMENT]!!.top, shell[Slot.WORK_PROCESS]!!.top, .01f)
+            assertTrue(shell[Slot.WORK_DOCUMENT]!!.right < shell[Slot.WORK_PROCESS]!!.left)
+            assertTrue(shell[Slot.WORK_PROCESS]!!.right < shell[Slot.WORK_DRAFT]!!.left)
+            assertNull(shell[Slot.ROW_MEMORY])
+            assertNotNull(shell[Slot.BOTTOM_NAV])
         }
     }
 
     @Test fun viewportHeightDoesNotDistortTheReferenceProportions() {
         val original = JarvisShellLayout.create(1536f, 1024f)
         val taller = JarvisShellLayout.create(1536f, 1224f)
-        assertEquals(original.headBounds, taller.headBounds)
-        assertTrue(taller.headBounds!!.height <= 640f)
-        assertEquals(original[Slot.ROW_MEMORY]!!.height, taller[Slot.ROW_MEMORY]!!.height, .01f)
-        assertEquals(original.tileBoxes(), taller.tileBoxes())
-        assertEquals(original[Slot.STATUS], taller[Slot.STATUS])
+        assertFalse(original.requiresVerticalScroll)
+        assertFalse(taller.requiresVerticalScroll)
+        assertTrue(taller.headBounds!!.height <= JarvisCockpitGrid.PACKED_HERO_MAX_DP + .01f)
+        assertTrue(original.headBounds!!.height <= JarvisCockpitGrid.PACKED_HERO_MAX_DP + .01f)
         assertEquals(original.grid!!.unit, taller.grid!!.unit, 0f)
+        assertNotNull(taller[Slot.WORK_DOCUMENT])
         sane(taller)
     }
 
-    @Test fun fullWidthHeroAndTallCardsKeepThePortraitReferenceRatios() {
+    @Test fun packedHeroKeepsHeadAndOrbBesideTheLiveAndStatusColumns() {
         for ((w, h) in listOf(692f to 700f, 840f to 900f, 884f to 1400f)) {
             val shell = JarvisShellLayout.create(w, h)
             val hero = requireNotNull(shell[Slot.AVATAR])
-            assertEquals(12f, hero.left, .01f)
-            assertEquals(w - 12f, hero.right, .01f)
-            assertTrue("large hero matches reference", hero.height / hero.width in 0.70f..0.74f)
-            shell.tileBoxes().forEach { tile ->
-                assertEquals(.74f, tile.width / tile.height, .01f)
-                assertTrue(tile.height >= 158f)
-            }
+            assertTrue(shell[Slot.DIALOG]!!.right < hero.left)
+            assertTrue(shell[Slot.COCKPIT_SECONDARY]!!.left > hero.right)
+            assertTrue("packed hero stays inside the viewport", hero.height <= JarvisCockpitGrid.PACKED_HERO_MAX_DP + .01f)
+            assertFalse(shell.requiresVerticalScroll)
+            assertNull(shell[Slot.NAV_RAIL])
         }
     }
 
-    @Test fun compactBadgeLeavesTheUpperHeadClearAndMovesControlsBelowIt() {
+    @Test fun liveCardSitsBesideTheHeadAndMovesControlsBelowIt() {
         for ((w, h) in listOf(692f to 700f, 832f to 748f, 840f to 560f, 884f to 760f, 1536f to 1024f)) {
             for (font in listOf(1f, 1.3f)) {
                 val shell = JarvisShellLayout.create(w, h, font)
                 if (!shell.ref5Grid) continue
                 val head = shell.headBounds!!; val dialog = shell[Slot.DIALOG]!!
-                assertTrue("$w×$h font$font: badge belongs to stage", head.contains(dialog))
-                assertTrue("badge leaves upper face free", dialog.top >= head.top + head.height * .6f)
+                assertFalse("$w×$h font$font: live card is not painted over the face", intersects(head, dialog))
+                assertTrue("live card stays left of the head", dialog.right < head.left)
                 shell.dialogControlBoxes().forEach {
                     assertTrue(it.width >= 48f - .01f && it.height >= 48f - .01f)
                     assertTrue(it.top > head.bottom)
@@ -223,8 +238,9 @@ class JarvisReferenceWindowLayoutTest {
         assertNull(pane[Slot.NAV_RAIL])
         assertFalse(Area.RAIL in pane.grid!!.areas)
         assertEquals(full, pane)
-        assertTrue(pane.hasFeatureTiles)
-        assertEquals(10, pane.tileBoxes().size)
+        assertFalse(pane.hasFeatureTiles)
+        assertEquals(0, pane.tileBoxes().size)
+        assertNotNull(pane[Slot.BOTTOM_NAV])
         val phone = JarvisShellLayout.forContent(412f, 915f, externalBottomBarHeightDp = 68f)
         assertEquals(847f, phone.viewportHeight, 0f)
         assertNull(phone[Slot.BOTTOM_NAV])
@@ -247,26 +263,23 @@ class JarvisReferenceWindowLayoutTest {
         }
     }
 
-    @Test fun nearSquareFoldKeepsReferenceScaleAndScrollsAfterTheStartComposition() {
+    @Test fun nearSquareFoldKeepsThePackedStartCompositionWithoutScrolling() {
         for ((w, h) in listOf(692f to 700f, 832f to 748f, 840f to 560f, 884f to 760f, 960f to 640f)) {
             val shell = JarvisShellLayout.create(w, h)
             assertTrue(shell.ref5Grid)
-            assertEquals(56f, requireNotNull(shell[Slot.DIALOG]).height, .01f)
+            assertTrue(requireNotNull(shell[Slot.DIALOG]).height >= 140f)
             assertTrue(requireNotNull(shell[Slot.INPUT]).top > requireNotNull(shell[Slot.AVATAR]).bottom)
-            assertTrue(shell.hasFeatureTiles)
-            assertEquals(10, shell.tileBoxes().size)
+            assertFalse(shell.hasFeatureTiles)
+            assertEquals(0, shell.tileBoxes().size)
             assertEquals(5, shell.tileColumns)
             assertEquals(2, shell.tileRows)
             assertNull(shell[Slot.NAV_RAIL])
-            assertTrue(shell.headBounds!!.height >= 480f)
-            assertTrue(shell[Slot.TILES]!!.top > shell[Slot.INPUT]!!.bottom)
-            assertTrue(shell[Slot.STATUS]!!.top > shell[Slot.TILES]!!.bottom)
-            assertTrue(shell[Slot.ROW_MEMORY]!!.top > shell[Slot.STATUS]!!.bottom)
-            for (slot in listOf(Slot.ROW_MEMORY, Slot.ROW_MODEL)) assertTrue(shell[slot]!!.height >= 190f - .01f)
-            for (slot in listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS)) assertTrue(shell[slot]!!.height >= 132f - .01f)
-            assertTrue("readable controls scroll", shell.requiresVerticalScroll)
-            assertTrue(shell[Slot.ROW_TASKS]!!.top > shell[Slot.STATUS]!!.bottom)
-            assertTrue(shell[Slot.COCKPIT_SECONDARY]!!.top > shell[Slot.STATUS]!!.bottom)
+            assertTrue(shell.headBounds!!.height <= JarvisCockpitGrid.PACKED_HERO_MAX_DP + .01f)
+            assertTrue(shell[Slot.WORK_DOCUMENT]!!.top > shell[Slot.INPUT]!!.bottom)
+            assertTrue(shell[Slot.STATUS]!!.top > shell[Slot.BOTTOM_NAV]!!.bottom)
+            assertFalse("packed fold/tablet cockpit does not scroll", shell.requiresVerticalScroll)
+            assertTrue(shell[Slot.COCKPIT_SECONDARY]!!.left > shell.orbBounds!!.right)
+            assertEquals(h, shell.height, .01f)
             sane(shell)
         }
     }
