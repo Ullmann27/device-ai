@@ -370,7 +370,7 @@ class ContinuumBrainOrbRenderer {
             val t = i / (steps - 1f)
             val y = baseY + (topY - baseY) * t
             val w = r * (1.18f - t * .86f)
-            val a = (1f - t) * .22f
+            val a = (1f - t) * .32f
             p.fillOval(cx - w, y - r * .045f, cx + w, y + r * .045f,
                 Fill.Solid(if (i == 2) C.warn else if (i % 2 == 0) C.cyan else C.violetRim), a)
         }
@@ -433,8 +433,41 @@ class ContinuumBrainOrbRenderer {
     companion object {
         /** Largest core gain: breath 1 + MemoryStored pulse .25 + processing .12. */
         const val CORE_GAIN_MAX = 1.37f
-        /** Ref5-Komposition (gemessen): Kugelradius ≈ 0.36 × Slotbreite, Mitte bei (0.63 w, 0.445 h) des Ausschnitts. */
-        fun radiusFor(slotW: Float, slotH: Float) = minOf(slotW * .36f, slotH / 2.9f)
+        /**
+         * Sphere + light pedestal height in radii (matches [draw] and the host preview stack).
+         * Using this (not 2.9) lets the original orb fill the Ref-B hero column.
+         */
+        const val STACK_HEIGHT = 2.44f
+
+        data class Placement(val cx: Float, val cy: Float, val radius: Float)
+
+        /** Largest radius that still fits [slotW] × [slotH], including the pedestal. */
+        fun radiusFor(slotW: Float, slotH: Float): Float {
+            if (!slotW.isFinite() || !slotH.isFinite() || slotW <= 0f || slotH <= 0f) return 1f
+            return minOf(slotW * .48f, slotH / STACK_HEIGHT).coerceAtLeast(1f)
+        }
+
+        /**
+         * Visual column for the original orb: the continuum header sits directly above the
+         * orb box in Ref-B, so the sphere may use that full column. Layout boxes stay put.
+         */
+        fun columnFor(orb: JarvisShellLayout.Box, header: JarvisShellLayout.Box?): JarvisShellLayout.Box {
+            if (header == null || header.width <= 0f || header.height <= 0f) return orb
+            val aligned = kotlin.math.abs(header.left - orb.left) < 12f &&
+                kotlin.math.abs(header.right - orb.right) < 12f
+            if (!aligned) return orb
+            return JarvisShellLayout.Box(
+                minOf(header.left, orb.left), minOf(header.top, orb.top),
+                maxOf(header.right, orb.right), maxOf(header.bottom, orb.bottom))
+        }
+
+        fun placementIn(column: JarvisShellLayout.Box): Placement {
+            val r = radiusFor(column.width, column.height)
+            val used = STACK_HEIGHT * r
+            val top = column.top + (column.height - used).coerceAtLeast(0f) / 2f
+            return Placement(column.centerX, top + r, r)
+        }
+
         @Suppress("unused") private fun len(x: Float, y: Float) = sqrt(x * x + y * y)
     }
 }

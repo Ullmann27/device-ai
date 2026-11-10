@@ -101,9 +101,9 @@ object JarvisReferenceHud {
                 floatArrayOf(0f, .32f, .74f, 1f))
         }
         val body = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 1, feature)) {
-            val top = if (feature) Colors.tileFillStart else Argb.rgb(6, 18, 36)
-            val middle = if (feature) Colors.tileFillMiddle else Argb.rgb(3, 12, 28)
-            val bottom = if (feature) Colors.tileFillEnd else Argb.rgb(6, 16, 34)
+            val top = if (feature) Colors.tileFillStart else Argb.rgb(3, 8, 18)
+            val middle = if (feature) Colors.tileFillMiddle else Argb.rgb(2, 6, 14)
+            val bottom = if (feature) Colors.tileFillEnd else Argb.rgb(3, 8, 16)
             Fill.Linear(b.left, b.top, b.left, b.bottom,
                 intArrayOf(Argb.mix(top, accent, if (selected) .08f else .03f), middle,
                     middle, Argb.mix(bottom, endAccent, .04f)),
@@ -111,7 +111,7 @@ object JarvisReferenceHud {
         }
         val sheen = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 2, feature)) {
             Fill.Linear(b.left, b.top, b.left, b.top + depth,
-                intArrayOf(Argb.withAlpha(Colors.glowCore, if (selected) .18f else .11f), 0))
+                intArrayOf(Argb.withAlpha(Colors.glowCore, if (selected) .30f else .22f), 0))
         }
         val bevel = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 3, feature)) {
             Fill.Linear(b.left, b.top, b.right, b.bottom,
@@ -153,10 +153,8 @@ object JarvisReferenceHud {
         p.fillRect(b.right, b.top + r * .25f, b.right + rearDx, b.bottom - r * .08f,
             slabRight, .75f * opacity)
         p.setAdditive(true)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 18f, edge, .09f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 10f, edge, .16f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 5f, edge, .30f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 2.6f, edge, .50f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 10f, edge, .18f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 3.2f, edge, .42f * opacity * glow)
         p.setAdditive(false)
         p.fillRoundRect(b.left, b.top, b.right, b.bottom, r, body, opacity)
         // Re-assert the glass lip after the glow: an 18 dp bloom would otherwise hide the

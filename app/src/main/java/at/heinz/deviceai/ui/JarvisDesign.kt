@@ -71,12 +71,12 @@ object JarvisDesign {
      * 1296 px ref5 screen width), font size = cap height / 0.711 (Roboto cap ratio). See docs/JARVIS-REF5-FARBEN.md.
      */
     object Type {
-        val brand = ContinuumTheme.display(600, 16f)          // "Device AI Continuum": cap 18 px
-        val title = ContinuumTheme.display(500, 20f)          // "Continuum" header: cap 23 px (incl. glow)
-        val heading = ContinuumTheme.text(500, 12f)
-        val tileLabel = ContinuumTheme.text(500, 13f)
+        val brand = ContinuumTheme.display(600, 18f)          // "Device AI Continuum": cap 18 px
+        val title = ContinuumTheme.display(500, 24f)          // "Continuum" header: cap 23 px (incl. glow)
+        val heading = ContinuumTheme.text(500, 15f)
+        val tileLabel = ContinuumTheme.text(500, 15f)
         val nav = ContinuumTheme.text(400, 13f)
-        val body = ContinuumTheme.text(400, 13f)              // dialog "Good afternoon.": cap 15 px
+        val body = ContinuumTheme.text(400, 14f)              // dialog "Good afternoon.": cap 15 px
         val subtitle = ContinuumTheme.text(400, 10f)
         val pill = ContinuumTheme.text(500, 10f)              // "JARVIS Mode": cap 11 px
         val caption = ContinuumTheme.text(400, 10f)

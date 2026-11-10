@@ -62,6 +62,33 @@ class ContinuumVisualDepthContractTest {
         assertTrue("near dust stays sharp", rec.fillCircleRadii.any { it < 2f })
     }
 
+    @Test fun originalOrbFillsTheHeroColumnWithoutLeavingIt() {
+        val header = JarvisShellLayout.Box(100f, 10f, 300f, 60f)
+        val orb = JarvisShellLayout.Box(100f, 64f, 300f, 210f)
+        val column = ContinuumBrainOrbRenderer.columnFor(orb, header)
+        assertEquals(10f, column.top, 0f)
+        assertEquals(210f, column.bottom, 0f)
+        val place = ContinuumBrainOrbRenderer.placementIn(column)
+        val slotOnly = ContinuumBrainOrbRenderer.radiusFor(orb.width, orb.height)
+        assertTrue("hero column is larger than the leftover orb box", place.radius > slotOnly)
+        assertTrue(place.cx > column.left && place.cx < column.right)
+        assertTrue(place.cy - place.radius >= column.top - 0.51f)
+        assertTrue(place.cy + 1.44f * place.radius <= column.bottom + 0.51f)
+        val unchanged = ContinuumBrainOrbRenderer.columnFor(orb, JarvisShellLayout.Box(0f, 0f, 40f, 20f))
+        assertEquals(orb.left, unchanged.left, 0f)
+        assertEquals(orb.top, unchanged.top, 0f)
+    }
+
+    @Test fun vacantPanelRecedesAndWorkStagePaintsARing() {
+        val box = JarvisShellLayout.Box(20f, 40f, 300f, 220f)
+        val recede = record { JarvisVisualDepth.recedeVacantPanel(it, box) }
+        recede.assertFiniteAndBalanced()
+        assertTrue(recede.fillRoundRects >= 1)
+        val stage = record { JarvisVisualDepth.paintWorkStage(it, box) }
+        stage.assertFiniteAndBalanced()
+        assertTrue("ring platform", stage.strokeOvals >= 3)
+    }
+
     @Test fun orbKeepsOriginalGuardsAndPaintsInnerVolume() {
         val rec = record { painter ->
             ContinuumBrainOrbRenderer().draw(

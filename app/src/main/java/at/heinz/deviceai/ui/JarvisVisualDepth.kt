@@ -35,14 +35,13 @@ object JarvisVisualDepth {
         if (w <= 0f || h <= 0f) return
         val span = maxOf(w, h)
         val C = JarvisDesign.Colors
-        // FAR: large soft nebulae (distance wash).
-        JarvisNeon.halo(p, w * .34f, h * .22f, span * .38f, C.violet, .22f)
-        JarvisNeon.halo(p, w * .72f, h * .28f, span * .36f, C.cyan, .16f)
-        JarvisNeon.halo(p, w * .50f, h * .82f, span * .44f, C.cyan, .11f)
-        JarvisNeon.halo(p, w * .10f, h * .70f, span * .28f, C.magenta, .10f)
-        JarvisNeon.halo(p, w * .45f, h * .94f, span * .60f, C.backgroundHaze, .16f)
-        // Spare warm key-light (palette extension, one far source).
-        JarvisNeon.halo(p, w * .82f, h * .16f, span * .18f, C.warn, .10f)
+        // Dark field with localized light islands (hero / orb), not a flat cyan wash.
+        JarvisNeon.halo(p, w * .38f, h * .22f, span * .22f, C.violet, .34f)
+        JarvisNeon.halo(p, w * .58f, h * .24f, span * .20f, C.cyan, .30f)
+        JarvisNeon.halo(p, w * .48f, h * .20f, span * .16f, C.magenta, .16f)
+        JarvisNeon.halo(p, w * .12f, h * .78f, span * .18f, C.magenta, .08f)
+        JarvisNeon.halo(p, w * .50f, h * .92f, span * .40f, C.backgroundHaze, .10f)
+        JarvisNeon.halo(p, w * .82f, h * .16f, span * .14f, C.warn, .08f)
 
         paintBokehLayer(p, w, h, count = 16, minR = 20f, maxR = 46f, alpha = .11f,
             seed = 0xF11A, includeAmber = true)
@@ -76,6 +75,44 @@ object JarvisVisualDepth {
             p.fillCircle(bx, by, br * .55f, Fill.Radial(bx, by, br * .55f,
                 intArrayOf(Argb.withAlpha(color, alpha * 1.4f), 0)))
         }
+        p.setAdditive(false)
+    }
+
+    /** Darken an already painted empty glass panel so the hero stays dominant. Boxes do not shrink. */
+    fun recedeVacantPanel(p: ContinuumPainter, b: JarvisShellLayout.Box) {
+        if (b.width <= 2f || b.height <= 2f) return
+        val r = minOf(14f, minOf(b.width, b.height) * .25f).coerceAtLeast(1f)
+        p.fillRoundRect(b.left, b.top, b.right, b.bottom, r,
+            Fill.Solid(Argb.rgb(1, 4, 10)), .40f)
+    }
+
+    /**
+     * Glowing ring platform under the three work windows (ref-b / ref-c). Decoration only —
+     * the windows keep their layout boxes and fly-away remains Bot 04 / #692.
+     */
+    fun paintWorkStage(p: ContinuumPainter, stage: JarvisShellLayout.Box) {
+        if (stage.width <= 8f || stage.height <= 8f) return
+        val cx = stage.centerX
+        val cy = stage.bottom + stage.height * .06f
+        val rx = stage.width * .42f
+        val ry = rx * .22f
+        val C = JarvisDesign.Colors
+        p.setAdditive(true)
+        p.fillOval(cx - rx * 1.05f, cy - ry * 1.15f, cx + rx * 1.05f, cy + ry * 1.35f,
+            Fill.Radial(cx, cy, rx, intArrayOf(Argb.withAlpha(C.cyan, .22f),
+                Argb.withAlpha(C.violet, .14f), Argb.withAlpha(C.magenta, .06f), 0)), .90f)
+        p.strokeOval(cx - rx, cy - ry, cx + rx, cy + ry, 10f, Fill.Solid(C.cyan), .10f)
+        p.strokeOval(cx - rx, cy - ry, cx + rx, cy + ry, 3.2f, Fill.Solid(C.violetRim), .28f)
+        p.strokeOval(cx - rx, cy - ry, cx + rx, cy + ry, 1.3f,
+            Fill.Linear(cx - rx, cy, cx + rx, cy, intArrayOf(C.magenta, C.cyan, C.violet, C.cyan, C.magenta)), .85f)
+        p.strokeOval(cx - rx * .72f, cy - ry * .62f, cx + rx * .72f, cy + ry * .62f, 1.1f,
+            Fill.Solid(C.cyan), .55f)
+        p.strokeOval(cx - rx * .46f, cy - ry * .38f, cx + rx * .46f, cy + ry * .38f, 2.4f,
+            Fill.Solid(C.magenta), .22f)
+        // Upward well — no second brain; the original orb stays in the hero column.
+        p.fillRect(cx - rx * .18f, stage.top + stage.height * .35f, cx + rx * .18f, cy,
+            Fill.Linear(cx, cy, cx, stage.top + stage.height * .35f,
+                intArrayOf(Argb.withAlpha(C.cyan, .20f), Argb.withAlpha(C.violet, .08f), 0)), .55f)
         p.setAdditive(false)
     }
 
