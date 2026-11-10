@@ -112,7 +112,7 @@ class ResearchChatApprovalUiTest {
         idle()
     }
 
-    private fun recognize(f: Fixture, beforeResult: () -> Unit = {}) {
+    private fun startRecognizer(f: Fixture): SpeechRecognizer {
         shadowOf(RuntimeEnvironment.getApplication()).grantPermissions(Manifest.permission.RECORD_AUDIO)
         ShadowSpeechRecognizer.setIsOnDeviceRecognitionAvailable(true)
         AgentActivity::class.java.getDeclaredMethod("onChatMicrophoneTap")
@@ -120,11 +120,20 @@ class ResearchChatApprovalUiTest {
         idle()
         val recognizer = requireNotNull(ShadowSpeechRecognizer.getLatestSpeechRecognizer())
         assertEquals(true, field(f.activity, "voiceListening"))
-        beforeResult()
+        return recognizer
+    }
+
+    private fun deliverResult(recognizer: SpeechRecognizer) {
         shadowOf(recognizer).triggerOnResults(Bundle().apply {
             putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, arrayListOf("Ja, mach."))
         })
         idle()
+    }
+
+    private fun recognize(f: Fixture, beforeResult: () -> Unit = {}) {
+        val recognizer = startRecognizer(f)
+        beforeResult()
+        deliverResult(recognizer)
     }
 
     @Test @Config(sdk = [35], shadows = [ConsentPowerManager::class])
@@ -142,6 +151,25 @@ class ResearchChatApprovalUiTest {
             recognize(f)
             assertEquals(WebToolRequest.Search("Neuer Auftrag"), f.completed.single()!!.call)
         }
+    }
+
+    @Test @Config(sdk = [35], shadows = [ConsentPowerManager::class])
+    fun staleActivitySpeechCallbackPreservesNewRecognition() = withActivity { f ->
+        ask(f, "Alter Auftrag")
+        startRecognizer(f)
+        val speech = requireNotNull(field(f.activity, "onDeviceSpeech"))
+        val session = requireNotNull(field(speech, "session"))
+        val active = requireNotNull(field(session, "active"))
+        @Suppress("UNCHECKED_CAST")
+        val delayedCallback = field(active, "onText") as (String) -> Unit
+        ask(f, "Neuer Auftrag")
+        val currentRecognizer = startRecognizer(f)
+        delayedCallback("Ja, mach.")
+        idle()
+        assertTrue(f.completed.isEmpty())
+        assertEquals(true, field(f.activity, "voiceListening"))
+        deliverResult(currentRecognizer)
+        assertEquals(WebToolRequest.Search("Neuer Auftrag"), f.completed.single()!!.call)
     }
 
     @Test fun exactReplyApprovesOnlyTheDisplayedTicketWhileTheModelWaits() = withActivity { f ->
