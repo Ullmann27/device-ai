@@ -6130,10 +6130,10 @@ class AgentActivity : Activity() {
             at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
         if (publicTopic != null && !researchArmed) {
             val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(publicTopic)
+            input.text.clear()
+            addUserMessage(request)
             confirmWebRequest(call, ResearchMode.STANDARD) { session ->
                 if (session != null && !busy) {
-                    input.text.clear()
-                    addUserMessage(request)
                     runResearch(session)
                 } else session?.cancel()
             }
@@ -6154,10 +6154,10 @@ class AgentActivity : Activity() {
             if (topic != null) {
                 if (staleResearch != null) addToolActivity("AKTUALITÄT · Recherchestand ${staleResearch.status.name.lowercase()} · ${staleResearch.reason}")
                 val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(topic)
+                input.text.clear()
+                addUserMessage(request)
                 confirmWebRequest(call, ResearchMode.STANDARD) { session ->
                     if (busy) { session?.cancel(); return@confirmWebRequest }
-                    input.text.clear()
-                    addUserMessage(request)
                     if (session != null) runResearch(session)
                     else {
                         addToolActivity("WEB · nicht freigegeben · lokale Antwort ohne aktuelle Quellen")
@@ -6182,9 +6182,11 @@ class AgentActivity : Activity() {
         val webRequest=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(request,researchArmed)
         if(webRequest!=null) {
             researchArmed=false
+            input.text.clear()
+            addUserMessage(request)
             confirmWebRequest(webRequest,researchMode) { session ->
                 if(session!=null && !busy) {
-                    input.text.clear();addUserMessage(request);runResearch(session)
+                    runResearch(session)
                 } else session?.cancel()
             }
             return
@@ -9337,8 +9339,9 @@ class AgentActivity : Activity() {
 
     private fun confirmInternetResearch(question:String,selectedMode:ResearchMode,mentorArea:String?=null) {
         val call=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(question,true)?:return
+        addUserMessage(question)
         confirmWebRequest(call,selectedMode) { session ->
-            if(session!=null && !busy){addUserMessage(question);runResearch(session,mentorArea)} else session?.cancel()
+            if(session!=null && !busy){runResearch(session,mentorArea)} else session?.cancel()
         }
     }
 
@@ -13229,7 +13232,9 @@ class AgentActivity : Activity() {
                 onText={spoken->if(speechScopeGeneration==scopeGeneration&&sessionId==scopeSession&&
                     (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog) &&
                     (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true)){
-                    if (requestCode == SPEECH_REQUEST && pendingResearchChatApproval?.approval !== scopeResearchApproval)
+                    val currentResearchApproval = pendingResearchChatApproval?.approval
+                    if (requestCode == SPEECH_REQUEST && currentResearchApproval != null &&
+                        currentResearchApproval !== scopeResearchApproval)
                         endContinuousConversation("Recherchefreigabe geändert. Bitte erneut sprechen.")
                     else if(conversationTurn!=null)applyConversationSpeech(conversationTurn,spoken) else applyLocalSpeechText(requestCode,spoken)}},
                 onFailure={failure->

@@ -40,7 +40,7 @@ class LocalConversationContext {
         dropTurns();research=null
         val focus=correction.groupValues[1].trim().trimEnd('.','!')
             .replace(Regex("(?iu)^(den|dem|der|die|das)\\s+"),"")
-        val ambiguous=Regex("(?iu)\\b(sie|er|ihn|ihm|das|diese|dieses|nicht|kein|keine|oder|und|meine|mein|meinen|andere[nmrs]?|vorherige[nmrs]?|vorher|davor|zuvor|vorhin|lösche|installiere|starte|ignoriere)\\b")
+        val ambiguous=Regex("(?iu)\\b(sie|er|ihn|ihm|das|diese|dieses|nicht|kein|keine|oder|und|meine|mein|meinen|andere[nmrs]?|vorherige[nmrs]?|vorige[nmrs]?|letzte[nmrs]?|frühere[nmrs]?|früher|vorher|davor|zuvor|vorhin|lösche|installiere|starte|ignoriere)\\b")
         if(!Regex("[\\p{L}\\p{N}][\\p{L}\\p{N} -]{2,119}").matches(focus)||ambiguous.containsMatchIn(focus)) {
             explicitFocus=null;return ContextDirective(ContextDirectiveKind.CLARIFY_SCOPE)
         }
