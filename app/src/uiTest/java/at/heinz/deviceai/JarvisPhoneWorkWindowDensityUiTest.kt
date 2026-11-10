@@ -11,7 +11,6 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import at.heinz.deviceai.ui.ContinuumHomeLayout
 import at.heinz.deviceai.ui.JarvisShellLayout
-import at.heinz.deviceai.ui.JarvisTiles
 import at.heinz.deviceai.ui.JarvisWorkWindow
 import at.heinz.deviceai.ui.JarvisWorkWindowGeometry
 import org.junit.Assert.*
@@ -101,11 +100,9 @@ class JarvisPhoneWorkWindowDensityUiTest {
             val destination = requireNotNull(candidate)
             println("DENSITY_WINDOW native=${root.width}x${root.height}px density=$density font=${config.fontScale} viewport=$viewport target=$destination protected=$protected")
             val body = TextView(activity).apply { text = "Host-Geometrieprüfung" }
-            val originCell = shell.tileBoxes().lastOrNull() ?: run {
-                val dock = requireNotNull(shell[JarvisShellLayout.Slot.BOTTOM_NAV])
-                JarvisTiles.bottomNavItemBoxes(dock).last()
-            }
-            val origin = pixels(originCell)
+            // The compact Cinema action window emerges beside the live avatar,
+            // never from a dock cell that may be below the Fold cover viewport.
+            val origin = pixels(shell.tileBoxes().lastOrNull() ?: head)
             assertTrue("Native work area must open: density=$density, viewport=$viewport, target=$destination",
                 window.open(body, origin, destination, "Systemstatus", protected))
             listeners.toList().forEach { it(1_000L, 1f) }
