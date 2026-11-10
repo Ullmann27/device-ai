@@ -34,7 +34,7 @@ class CockpitAnimationPresenterTurnUiTest {
         CockpitTransitions.hook = null
         JarvisAvatarSlot.register(null)
         CueOwner.values().forEach { CockpitCues.register(it, null) }
-        controller.setup().visible()
+        controller.setup()
         val activity = controller.get()
         val hologram = ContinuumHologramView(activity).apply {
             setNativeHeadEnabled(false)
@@ -47,12 +47,17 @@ class CockpitAnimationPresenterTurnUiTest {
             jarvisShell.ambientMotionEnabled = false
         }
         activity.setContentView(home)
+        controller.visible()
+        shadowOf(Looper.getMainLooper()).idleFor(32, TimeUnit.MILLISECONDS)
+        controller.windowFocusChanged(true)
         home.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
         home.layout(0, 0, 884, 760)
         home.setForegroundActive(true)
         idle()
-        assertTrue(home.isPresentationActive())
+        assertTrue("attached=${home.isAttachedToWindow}, shown=${home.isShown}, " +
+            "windowVisibility=${home.windowVisibility}, visibility=${home.visibility}, " +
+            "focus=${home.hasWindowFocus()}", home.isPresentationActive())
         presenter = CockpitAnimationPresenter(home, bus, "presenter-test")
         presenterSubscription = bus.subscribe(presenter)
         subscription = bus.subscribe { if (it is WindowProjectedMotion) projected += it }
