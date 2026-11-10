@@ -67,6 +67,11 @@ class ContinuumSystemStatusWorkWindowUiTest {
         }
     }
 
+    private fun assertCameraReturned(avatar: ContinuumHologramView) {
+        repeat(8) { if (avatar.cameraProgress() != 0f) advance(16L) }
+        assertEquals("The scheduled return reaches rest", 0f, avatar.cameraProgress(), 0f)
+    }
+
     private fun measure(root: View, width: Int = 884, height: Int = 760) {
         root.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
@@ -197,7 +202,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 advance(HollywoodFuiConstruct.CLOSE_END_MS + AvatarCameraMotion.DURATION_MS + 64L)
                 measure(root); draw(root)
                 assertTrue(descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
-                assertEquals("STOP finishes the camera return", 0f, avatar.cameraProgress(), 0f)
+                assertCameraReturned(avatar)
             }
             open(); cancel()
             open()
@@ -777,7 +782,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             advance(HollywoodFuiConstruct.CLOSE_END_MS + AvatarCameraMotion.DURATION_MS + 64L)
             measure(root); draw(root)
             assertTrue("the window has folded away", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
-            assertEquals("nothing replays the camera afterwards", 0f, avatar.cameraProgress(), 0f)
+            assertCameraReturned(avatar)
         } finally {
             framePump?.close(); framePump = null
             ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()

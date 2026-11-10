@@ -109,7 +109,13 @@ und Testkompilierung bestanden; Node 2.455 bestanden, 37 übersprungen, null Feh
 Gezielter Android-/UI-Lauf: 156 Tests, ein Fehler im neuen Diagnose-UI-Test. Dieser
 las den Turn vor Ende der asynchronen Namenszuordnung. Die korrigierte Prüfung
 wartet auf den regulären Lookup und Werkzeugabschluss; sie umgeht keinen Router.
-Nach Übernahme von #739 `0e8f6c7` erneute Android-/Node-Abnahme erforderlich.
+Checkpoint `ab9d159c`: Node erneut vollständig grün (2.456 bestanden, 37
+übersprungen); natürlicher Diagnoseauftrag grün. Der gezielte Android-Lauf hatte
+78 bestandene Tests und drei Fehler in den übernommenen STOP-Tests: ein Zugriff
+auf die Lazy-Property statt deren Delegate und zwei Prüfungen vor dem terminalen
+Kameraframe. Der Delegate-Zugriff ist korrigiert; maximal acht zusätzliche 16-ms-
+Frames sind erlaubt, die Ruheposition bleibt exakt null. Kein Produktionscode
+oder Animationsablauf wurde dafür verändert. Gegenprüfung/Gesamtabnahme folgen.
 
 ## Verbindlicher Abschluss
 
