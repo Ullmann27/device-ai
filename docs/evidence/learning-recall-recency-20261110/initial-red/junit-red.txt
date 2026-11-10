@@ -1,0 +1,19 @@
+JUnit version 4.13.2
+.E.E.
+Time: 0.148
+There were 2 failures:
+1) olderSuccessesCannotHideLatestFailureWarning(at.heinz.deviceai.cognitive.RecallEligibilityProbeTest)
+java.lang.AssertionError: Latest similar failure was outside the ID-ordered cutoff expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.RecallEligibilityProbeTest.olderSuccessesCannotHideLatestFailureWarning(RecallEligibilityProbeTest.kt:34)
+2) expiredMatchesCannotHideCurrentExperience(at.heinz.deviceai.cognitive.RecallEligibilityProbeTest)
+java.lang.AssertionError: Current eligible experience was excluded before eligibility filtering expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.RecallEligibilityProbeTest.expiredMatchesCannotHideCurrentExperience(RecallEligibilityProbeTest.kt:26)
+
+FAILURES!!!
+Tests run: 3,  Failures: 2
