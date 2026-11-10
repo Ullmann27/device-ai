@@ -14,7 +14,7 @@ for name in MemoryEcology AgentExperienceRecall CognitiveCore; do
     sources+=("$root/app/src/main/java/at/heinz/deviceai/cognitive/$name.kt")
 done
 tests=()
-for name in ExperienceRecallRecency AgentExperienceRecall MemoryEcology; do
+for name in ExperienceRecallRecency ExperienceRecallWindow AgentExperienceRecall MemoryEcology; do
     sources+=("$root/app/src/test/java/at/heinz/deviceai/cognitive/${name}Test.kt")
     tests+=("at.heinz.deviceai.cognitive.${name}Test")
 done
