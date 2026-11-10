@@ -1,0 +1,14 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt b/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt
+index 3368e69..3bac221 100644
+--- a/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt
++++ b/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt
+@@ -232,7 +232,8 @@ class InMemoryExperienceStore : ExperienceStore, ExperienceLookup {
+             .filter { it.taskType.equals(taskType, ignoreCase = true) }
+             .map { it to jaccard(queryTerms, terms(it.requestSummary)) }
+             .filter { it.second > 0.0 || queryTerms.isEmpty() }
+-            .sortedWith(compareByDescending<Pair<Experience, Double>> { it.second }.thenBy { it.first.id })
++            .sortedWith(compareByDescending<Pair<Experience, Double>> { it.second }
++                .thenByDescending { it.first.completedAt }.thenBy { it.first.id })
+             .take(limit)
+             .map { it.first }
+             .toList()
