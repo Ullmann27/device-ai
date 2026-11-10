@@ -104,7 +104,7 @@ const val BOOT_TURN = "boot"
 /** Controls of the cockpit action bar plus the two non-bar work kinds. */
 enum class CockpitAction { THINK, RESEARCH, LEARN, DEVELOP, EXECUTE, VERIFY, TOOL, WORKER }
 
-enum class StepState { ACTIVE, WAITING, DONE, BLOCKED, FAILED }
+enum class StepState { ACTIVE, WAITING, DONE, BLOCKED, FAILED, UNVERIFIED }
 
 data class ProcessStep(val key: String, val label: String, val state: StepState)
 

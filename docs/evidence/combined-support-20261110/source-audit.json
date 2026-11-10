@@ -1,0 +1,170 @@
+{
+  "frozenCinemaRemote": "5d36c5a57c031308c8de91049e19e9e8cb8365d5",
+  "previousSupportRemote": "ec4b6a048eb2b477922d60aaabbacae99efc33af",
+  "outcomeRemote": "d3185e72967832c7e0a5aee4a1b77ddad522caec",
+  "outcomeInputManifest": {
+    "donorRemote": "d3185e72967832c7e0a5aee4a1b77ddad522caec",
+    "donorLocal": "94294881d312787da44b3bee52e2d6365fb40adb",
+    "sources": [
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "sha256": "c2eb3e7a8b7fb7ae3f070fff127b08df70310870614a2e09c917827cc6643cf0",
+        "matches": true
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/chief/TurnLifecycle.kt",
+        "sha256": "2ae5be8a93c4ac1addbc3f1f7a2a224a4716c296dfd135ab0d2f1d7406eaed7a",
+        "matches": true
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggers.kt",
+        "sha256": "679b62e409cf36991fec9f0659350a1ec37f574d7a893f68724f88bda9a17874",
+        "matches": true
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+        "sha256": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3",
+        "matches": true
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggersTest.kt",
+        "sha256": "58a0e72faad25ddd67e11506082b703cc677136dd68c658e196627e7c596a9fc",
+        "matches": true
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/LocalTurnOutcomeUiTest.kt",
+        "sha256": "44895a52bbaf936658eb44a722a62ed1255b0ee834202de0db76ff9a43917b5f",
+        "matches": true
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumCockpitPresentation.kt",
+        "sha256": "540c623f95829b668e1dad78a2809525079cdf133c305549c43ec0bfd09a2eec",
+        "matches": true
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt",
+        "sha256": "7fd8a5e9736005ba9a496ebc04c035225949dba02183b19c1e597afb49ddbdc0",
+        "matches": true
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+        "sha256": "959a2fad27e05f1251a28ad06ace2897b320012146bfa7ad24b33e501bda1166",
+        "matches": true
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+        "sha256": "624cd79f8cbd35cbeccebde76b1526fa8b584eafc2deaa0cf506c1aece62335c",
+        "matches": true
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceOutcomeUiTest.kt",
+        "sha256": "f060c43bee0520f7028f833b61b84e127ae7bf8c012f0b4efc370c13408e6a3e",
+        "matches": true
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt",
+        "sha256": "430e07aad5a079494a529728d60aff8f5fab67fdbb2e97beee71bd9159477c68",
+        "matches": true
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+        "sha256": "73b14e8b5dd010d282b9d2a20ce5ac7838b05924fdd48843752f6e807fd2ff4e",
+        "matches": true
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt",
+        "sha256": "bc58a1c96ce687f0e3a9e058e26500260506caee056b6bc3a251450a715878ea",
+        "matches": true
+      }
+    ]
+  },
+  "combinedOutcomeSources": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "inputSha256": "c2eb3e7a8b7fb7ae3f070fff127b08df70310870614a2e09c917827cc6643cf0",
+      "combinedSha256": "fc5f1c4891bc7117a7d324af3dca0d5ca95c99a05e07cd9f30b4381bbdfca0fc",
+      "identical": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/TurnLifecycle.kt",
+      "inputSha256": "2ae5be8a93c4ac1addbc3f1f7a2a224a4716c296dfd135ab0d2f1d7406eaed7a",
+      "combinedSha256": "2ae5be8a93c4ac1addbc3f1f7a2a224a4716c296dfd135ab0d2f1d7406eaed7a",
+      "identical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggers.kt",
+      "inputSha256": "679b62e409cf36991fec9f0659350a1ec37f574d7a893f68724f88bda9a17874",
+      "combinedSha256": "679b62e409cf36991fec9f0659350a1ec37f574d7a893f68724f88bda9a17874",
+      "identical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+      "inputSha256": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3",
+      "combinedSha256": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3",
+      "identical": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggersTest.kt",
+      "inputSha256": "58a0e72faad25ddd67e11506082b703cc677136dd68c658e196627e7c596a9fc",
+      "combinedSha256": "58a0e72faad25ddd67e11506082b703cc677136dd68c658e196627e7c596a9fc",
+      "identical": true
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/LocalTurnOutcomeUiTest.kt",
+      "inputSha256": "44895a52bbaf936658eb44a722a62ed1255b0ee834202de0db76ff9a43917b5f",
+      "combinedSha256": "44895a52bbaf936658eb44a722a62ed1255b0ee834202de0db76ff9a43917b5f",
+      "identical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumCockpitPresentation.kt",
+      "inputSha256": "540c623f95829b668e1dad78a2809525079cdf133c305549c43ec0bfd09a2eec",
+      "combinedSha256": "540c623f95829b668e1dad78a2809525079cdf133c305549c43ec0bfd09a2eec",
+      "identical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt",
+      "inputSha256": "7fd8a5e9736005ba9a496ebc04c035225949dba02183b19c1e597afb49ddbdc0",
+      "combinedSha256": "7fd8a5e9736005ba9a496ebc04c035225949dba02183b19c1e597afb49ddbdc0",
+      "identical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+      "inputSha256": "959a2fad27e05f1251a28ad06ace2897b320012146bfa7ad24b33e501bda1166",
+      "combinedSha256": "959a2fad27e05f1251a28ad06ace2897b320012146bfa7ad24b33e501bda1166",
+      "identical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+      "inputSha256": "624cd79f8cbd35cbeccebde76b1526fa8b584eafc2deaa0cf506c1aece62335c",
+      "combinedSha256": "624cd79f8cbd35cbeccebde76b1526fa8b584eafc2deaa0cf506c1aece62335c",
+      "identical": true
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceOutcomeUiTest.kt",
+      "inputSha256": "f060c43bee0520f7028f833b61b84e127ae7bf8c012f0b4efc370c13408e6a3e",
+      "combinedSha256": "f060c43bee0520f7028f833b61b84e127ae7bf8c012f0b4efc370c13408e6a3e",
+      "identical": true
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt",
+      "inputSha256": "430e07aad5a079494a529728d60aff8f5fab67fdbb2e97beee71bd9159477c68",
+      "combinedSha256": "430e07aad5a079494a529728d60aff8f5fab67fdbb2e97beee71bd9159477c68",
+      "identical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+      "inputSha256": "73b14e8b5dd010d282b9d2a20ce5ac7838b05924fdd48843752f6e807fd2ff4e",
+      "combinedSha256": "73b14e8b5dd010d282b9d2a20ce5ac7838b05924fdd48843752f6e807fd2ff4e",
+      "identical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt",
+      "inputSha256": "bc58a1c96ce687f0e3a9e058e26500260506caee056b6bc3a251450a715878ea",
+      "combinedSha256": "bc58a1c96ce687f0e3a9e058e26500260506caee056b6bc3a251450a715878ea",
+      "identical": true
+    }
+  ],
+  "outcomeActivityDiffPreserved": true,
+  "dialogAsrActivityDiffPreserved": true,
+  "combinedTests": "NOT_RUN_AT_SOURCE_CHECKPOINT"
+}

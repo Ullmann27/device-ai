@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.LocalTurnOutcomeUiTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:23:58" hostname="1a6f5c6cf9c0" time="0.75">
+  <properties/>
+  <testcase name="acceptedAnswerIsNotVerifiedTaskSuccess" classname="at.heinz.deviceai.LocalTurnOutcomeUiTest" time="0.601"/>
+  <testcase name="cancelledGenerationCannotReportSuccess" classname="at.heinz.deviceai.LocalTurnOutcomeUiTest" time="0.05"/>
+  <testcase name="replacedSessionCannotReportSuccess" classname="at.heinz.deviceai.LocalTurnOutcomeUiTest" time="0.049"/>
+  <testcase name="failedModelCannotMarkWorkDone" classname="at.heinz.deviceai.LocalTurnOutcomeUiTest" time="0.049"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

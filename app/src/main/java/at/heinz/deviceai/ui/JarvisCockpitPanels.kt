@@ -186,7 +186,7 @@ object JarvisCockpitPanels {
         StepState.ACTIVE -> Tone.ACTIVE
         StepState.FAILED -> Tone.ERROR
         StepState.BLOCKED -> Tone.WARN
-        StepState.WAITING -> Tone.NEUTRAL
+        StepState.WAITING, StepState.UNVERIFIED -> Tone.NEUTRAL
     }
 
     // ---- Active owner task ----------------------------------------------------------------------------------------
