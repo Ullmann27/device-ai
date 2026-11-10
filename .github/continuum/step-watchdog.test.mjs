@@ -13,7 +13,10 @@ const proc=['linux','android'].includes(process.platform);
 
 function backlog(t){
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-step-watch-'));
-  t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+  // Orphaned watchdog/grandchild cleanup may still be completing in parallel with
+  // the test's after hook. Node's built-in bounded retry handles ENOTEMPTY/EBUSY
+  // without weakening the parent-death/process-termination assertions above.
+  t.after(()=>fs.rmSync(dir,{recursive:true,force:true,maxRetries:40,retryDelay:50}));
   const file=path.join(dir,'development-backlog.json');
   const store=new BacklogStore(file,{actor:'owner'});
   store.apply([{op:'propose',actor:'owner',at:1,task:{id:'repair-watched',title:'Watched repair',kind:'REPAIR',
