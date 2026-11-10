@@ -124,3 +124,27 @@ Public research publishing was temporarily paused after root reported an automat
 approval-review rejection; the owner subsequently explicitly authorized immediate
 pushes on assigned research branches. The final checkpoint uses that authorization.
 No main merge, protected release edit, signing or APK operation is included.
+
+## Android main compilation follow-up
+
+`ANDROID_MAIN_KOTLIN_COMPILE_PASS`: complete Android `:app:compileDebugKotlin`
+succeeded with17 tasks in1m21s, using existing SDK36/AGP8.10.0/Kotlin2.4.0/JDK21.
+This closes the earlier local-factory **compilation** gap, not native inference.
+
+Actual QA commit `25766f72cd511f247950c7d558fe323be6be2d4c`, complete Git tree
+`c15f1ab11e0777fac53f0d6a6b77b282bebe9016`, app main-source tree
+`db972eea5028e650361907777c863510a1f14c60`. It combines local root4209453 with
+the three budget sources and independently reviewed `ContinuumMemorySkillResearch`.
+All four input SHA256s and emitted class hashes are in
+`docs/evidence/cognitive-budget-20261110/android-main-compile/receipt.json`.
+The raw successful log and command are adjacent. No production caller was added.
+
+Root4209453 was not individually published. Remote root
+`2eca96cf50df2a4f4538f61cac911aa90563a93d` is main-source identical; its later local
+9fd5d14 difference is test setup only. This is **not** full-tree equivalence.
+Reconstruct this main-source tree from that published root and the four pinned
+research files. Main-source compile does not run the unit tests or establish APK,
+model, learning, Fold7, thermal or later Cinema revision acceptance.
+
+The QA-only worktree and branch remain separate. This receipt is published only
+on this cognitive research branch; the root graphics branch stays untouched.

@@ -1,0 +1,16 @@
+Run from the isolated combined QA checkout. Set JAVA_HOME to JDK21,
+ANDROID_HOME/ANDROID_SDK_ROOT to existing SDK36 and GRADLE_USER_HOME to
+existing qa-gradle-home. No signer credentials are used.
+
+gradle --offline --no-daemon --max-workers=1 --console=plain \
+  '-Dorg.gradle.jvmargs=-Xmx2400m -XX:MaxMetaspaceSize=512m' \
+  -Pkotlin.compiler.execution.strategy=in-process \
+  -PdeviceAiMentorPreview=true -PcontinuumOwnerLocalQa=true \
+  -PcontinuumOwnerLocalVersionCode=52 :app:compileDebugKotlin
+
+Reconstruct the main sources from remote root2eca96cf50df2a4f4538f61cac911aa90563a93d
+plus the four files pinned in receipt.json from the two research revisions.
+Check app/src/main Git tree equals db972eea5028e650361907777c863510a1f14c60.
+The full QA tree also carries research test/evidence cherry-picks; the native
+compile task does not run those tests. No equality of complete remote root
+and local QA commit is claimed.

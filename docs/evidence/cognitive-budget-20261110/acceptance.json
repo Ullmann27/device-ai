@@ -3,7 +3,7 @@
   "experiment": "EXP-05/EXP-11 cognitive-budget",
   "sourceCommit": "2824c3718e560ce3f369eb20666b434b99db1c39",
   "integrationTarget": "cinema/fluid-light-stage-20261110 / PR715",
-  "publicPush": "Owner subsequently explicitly authorized research branch publishing; pending verified remote checkpoint.",
+  "publicPush": "Published research PR717 at0b8a784b65464cb98e9e0323e1d386af2a133324; later receipt commit is documentation only.",
   "verification": {
     "hostJunit": {
       "passed": 47,
@@ -12,11 +12,12 @@
       "existing": 11
     },
     "sourceContracts": "Exact DTO extraction from ContinuumIntelligence.kt; no replacement behavior",
-    "localFactoryCompile": "NOT_RUN in scoped host script; root integration compile pending",
+    "localFactoryCompile": "PASS: actual full Android main compilation on combined QA25766f72; see android-main-compile/receipt.json.",
     "realLocalInference": "NOT_RUN",
     "cloudInference": "NOT_RUN",
-    "fullAndroidBuild": "NOT_RUN",
-    "Fold7": "NOT_RUN"
+    "fullAndroidBuild": "NOT_RUN: only main Kotlin compilation, no APK packaging.",
+    "Fold7": "NOT_RUN",
+    "androidMainSourceCompile": "PASS on separately pinned combined research tree, not later Cinema revisions."
   },
   "controlledAB": {
     "fixed": {
