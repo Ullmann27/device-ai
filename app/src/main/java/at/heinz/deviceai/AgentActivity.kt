@@ -4370,7 +4370,6 @@ class AgentActivity : Activity() {
         val config = at.heinz.deviceai.ui.JarvisCinematicSettings
         val all = at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.entries
         val experiments = all.filter { it.wired }
-        val pending = all.filterNot { it.wired }
         val prefs = config.preferences(this)
         val labels = experiments.map {
             it.name.substring(4, 6) + " · " + it.label
