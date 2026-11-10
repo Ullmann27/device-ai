@@ -12378,8 +12378,8 @@ class AgentActivity : Activity() {
                             setBusy(false)
                             result.fold(
                                 onSuccess = { answer ->
-                                    addAssistantMessage("NVIDIA · NEMOTRON 3 ULTRA · EXTERN · UNBESTÄTIGT\\n\\n" +
-                                        answer + "\\n\\nKeine automatische Gedächtnisübernahme.")
+                                    addAssistantMessage("NVIDIA · NEMOTRON 3 ULTRA · EXTERN · UNBESTÄTIGT\n\n" +
+                                        answer + "\n\nKeine automatische Gedächtnisübernahme.")
                                     addToolActivity("NVIDIA · Nemotron-Antwort empfangen · keine Geräte-Tools")
                                 },
                                 onFailure = { error ->
