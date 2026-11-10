@@ -200,8 +200,13 @@ object JarvisTiles {
         NavItem("tasks", "Aufgaben", Icon.CHECK_CIRCLE), NavItem("web", "Internet", Icon.GLOBE),
         NavItem("learning", "Lernen", Icon.BOOK), NavItem("device", "Gerätesteuerung", Icon.CPU),
         NavItem("system", "Systemstatus", Icon.PULSE))
-    // The Activity supplies its grouped phone bar. Retained for standalone shell previews / embedding.
-    val bottomNav = listOf(railNav[0], railNav[1], railNav[2], railNav[5], railNav[10])
+    /**
+     * Holographic tool dock that replaces the retired left rail.
+     * Same destinations and order as [railNav] so every previous rail target stays reachable.
+     * Labels stay the real German owner terms; reference mock-up names such as "Dateien" or "PDF"
+     * are not shown because those routes do not exist.
+     */
+    val bottomNav = railNav
 
     /** Shared by drawing, hit testing and the native, independently scrollable rail controls. */
     fun railItemBoxes(b: Box, count: Int = railNav.size, fontScale: Float = 1f): List<Box> {
@@ -268,14 +273,50 @@ object JarvisTiles {
         return compoundBreaks[label]?.toList() ?: listOf(label)
     }
 
-    fun drawBottomNav(p: ContinuumPainter, b: Box, items: List<NavItem> = bottomNav, selected: Int = 0) {
-        val w = b.width / items.size; val style = JarvisDesign.Type.caption
+    private val dockShortLabels = mapOf(
+        "logic" to "Denken", "device" to "Geräte", "system" to "System", "agents" to "Helfer",
+        "research" to "Forschung", "learning" to "Lernen", "memory" to "Gedächtnis")
+
+    /** Equal-width cells matching [ContinuumHomeView] hit targets and [JarvisShellContent.hitTarget]. */
+    fun bottomNavItemBoxes(b: Box, items: List<NavItem> = bottomNav): List<Box> {
+        if (items.isEmpty() || b.width <= 0f) return emptyList()
+        val w = b.width / items.size
+        return items.indices.map { i ->
+            Box(b.left + i * w, b.top, b.left + (i + 1) * w, b.bottom)
+        }
+    }
+
+    /**
+     * Glass tiles with icon + label, using the existing animation clock via [timeMs].
+     * [timeMs] 0 (reduced motion / still preview) skips the quiet edge energy.
+     */
+    fun drawBottomNav(p: ContinuumPainter, b: Box, items: List<NavItem> = bottomNav, selected: Int = 0,
+                      timeMs: Long = 0L, pressed: Int = -1) {
+        if (items.isEmpty()) return
+        val cells = bottomNavItemBoxes(b, items)
+        val inset = 3f
         items.forEachIndexed { i, it ->
-            val cx = b.left + w * i + w / 2f
-            if (i == selected) p.fillRoundRect(cx - w / 2f + 4f, b.top + 6f, cx + w / 2f - 4f, b.bottom - 6f, 12f, Fill.Solid(Argb.of(60, 0, 255, 255)))
-            val c = if (i == selected) Colors.cyan else Colors.textSecondary
-            ContinuumIcons.draw(p, it.icon, cx, b.top + b.height * .4f, 20f, Fill.Solid(c))
-            p.drawText(JarvisShellRenderer.fit(p, it.label, style, w - 6f), cx, b.bottom - 14f, style, Fill.Solid(c), TextAlign.CENTER)
+            val cell = cells[i]
+            val tile = Box(cell.left + inset, b.top + 4f, cell.right - inset, b.bottom - 4f)
+            if (tile.width <= 2f || tile.height <= 2f) return@forEachIndexed
+            val active = i == selected || i == pressed
+            val model = JarvisTile(it.target, it.label, it.icon,
+                controlState = if (i == pressed) JarvisControlState.PRESSED
+                    else if (i == selected) JarvisControlState.SELECTED
+                    else JarvisControlState.NORMAL)
+            drawSurface(p, tile, model, active, timeMs)
+            val iconSize = minOf(22f, tile.height * .38f, tile.width * .42f)
+            val iy = tile.top + tile.height * .38f
+            val color = if (it.target == "system") Colors.violetSoft else if (active) Colors.cyan else Colors.cyanSoft
+            JarvisSceneFills.halo(p, tile.centerX, iy, iconSize * .7f, color, if (active) .16f else .08f)
+            if (!JarvisRailIcons.draw(p, it.target, tile.centerX - iconSize / 2f, iy - iconSize / 2f, iconSize, color))
+                ContinuumIcons.draw(p, it.icon, tile.centerX, iy, iconSize, Fill.Solid(color))
+            val style = JarvisDesign.Type.caption
+            val room = tile.width - 6f
+            val short = dockShortLabels[it.target] ?: it.label
+            val label = if (p.measureText(it.label, style) <= room) it.label else short
+            p.drawText(JarvisShellRenderer.fit(p, label, style, room), tile.centerX, tile.bottom - 8f,
+                style, Fill.Solid(if (active) Colors.text else Colors.textSecondary), TextAlign.CENTER)
         }
     }
 }

@@ -108,6 +108,37 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
         ))
     }
 
+    /** A verified document-pipeline step. Unknown or blank keys are ignored. */
+    fun documentPipelineStep(turnId: String, key: String, label: String, state: StepState) {
+        if (isClosed(turnId)) return
+        val safeKey = clean(key, 32)
+        val safeLabel = clean(label, 64)
+        if (safeKey.isEmpty() || DocumentPipelineStepEvent.canonicalKey(safeKey, safeLabel) == null) return
+        bus.emit(DocumentPipelineStepEvent(turnId, clock(), safeKey, safeLabel, state))
+    }
+
+    /**
+     * A locally produced document draft plus the owner actions that actually exist.
+     * Empty text is ignored so a failed model run cannot fake a result card.
+     */
+    fun documentDraftReady(
+        turnId: String,
+        text: String,
+        coveredChars: Int? = null,
+        totalChars: Int? = null,
+        actions: Set<DocumentDraftAction> = emptySet()
+    ) {
+        if (isClosed(turnId)) return
+        val cleaned = text.filterNot { it.isISOControl() && it != '\n' }.trim().take(4_000)
+        if (cleaned.isEmpty()) return
+        bus.emit(DocumentDraftReadyEvent(
+            turnId, clock(), cleaned,
+            coveredChars?.takeIf { it >= 0 },
+            totalChars?.takeIf { it >= 0 },
+            actions
+        ))
+    }
+
     @Synchronized fun timeline(turnId: String): List<ProcessStep> = timelines[turnId]?.toList().orEmpty()
 
     /** Steps of the most recent turn that has not ended yet – what a work window's status strip shows; empty when none runs. */

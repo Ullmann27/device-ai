@@ -468,4 +468,109 @@ class ContinuumDocumentSceneUiTest {
             System.currentTimeMillis() < deadline) { Thread.sleep(20); advance(16L) }
         assertEquals(at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED, journal.all().single { it.id == episodeId }.state)
     }
+
+    @Test fun documentBlueprintPipelineEventsFollowRealIntakeAndDraft() = withCockpit { activity, root ->
+        val bus = field(activity, "cockpitBus") as at.heinz.deviceai.cockpit.CockpitAnimationBus
+        val events = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cockpit.CockpitAnimationEvent>()
+        bus.subscribe { events += it }
+
+        val scan = PdfDocumentIntake.Document("Scan.pdf", null, 1, examplePage(200, 280), "",
+            PdfDocumentIntake.TextState.NO_TEXT_LAYER, 1)
+        AgentActivity::class.java.getDeclaredMethod("presentDocumentScene", PdfDocumentIntake.Document::class.java)
+            .apply { isAccessible = true }.invoke(activity, scan)
+        advance(64L)
+        val scanSteps = events.filterIsInstance<at.heinz.deviceai.cockpit.DocumentPipelineStepEvent>()
+        assertEquals(listOf("open"), scanSteps.map { it.key })
+        assertEquals(at.heinz.deviceai.cockpit.StepState.DONE, scanSteps.single().state)
+        assertTrue(events.filterIsInstance<at.heinz.deviceai.cockpit.DocumentDraftReadyEvent>().isEmpty())
+        assertTrue(events.filterIsInstance<at.heinz.deviceai.cockpit.CockpitAnimationEvent.DocumentQuestion>()
+            .any { it.documentName == "Scan.pdf" })
+
+        events.clear()
+        val text = "Projektübersicht Continuum. Ziel: ein lokales Cockpit auf dem Fold7."
+        val doc = PdfDocumentIntake.Document("Projektübersicht.pdf", 12_288L, 3, examplePage(200, 280), text,
+            PdfDocumentIntake.TextState.EXTRACTED, 3)
+        AgentActivity::class.java.getDeclaredMethod("presentDocumentScene", PdfDocumentIntake.Document::class.java)
+            .apply { isAccessible = true }.invoke(activity, doc)
+        advance(64L)
+        val intake = events.filterIsInstance<at.heinz.deviceai.cockpit.DocumentPipelineStepEvent>()
+        assertEquals(listOf("open", "capture"), intake.map { it.key })
+        assertTrue(intake.all { it.state == at.heinz.deviceai.cockpit.StepState.DONE })
+        assertTrue("no analysis without a started draft", intake.none { it.key == "analyze" || it.key == "draft" })
+        val question = events.filterIsInstance<at.heinz.deviceai.cockpit.CockpitAnimationEvent.DocumentQuestion>()
+            .single { it.documentName == "Projektübersicht.pdf" }
+        assertEquals(3, question.pageCount)
+
+        events.clear()
+        val prompt = requireNotNull(at.heinz.deviceai.cognitive.DocumentDraftPrompt.build("Projektübersicht.pdf", text))
+        val episodeId = field(activity, "workEpisodeId") as String
+        val reply = "Kernaussagen:\n- Ziel ist ein lokales Cockpit auf dem Fold7.\nZiel: ein lokales Cockpit."
+        val turnClass = AgentActivity::class.java.declaredClasses.single { it.simpleName == "DocumentDraftTurn" }
+        val window = AgentActivity::class.java.getDeclaredMethod("onDocumentDraftReply", turnClass, String::class.java)
+            .apply { isAccessible = true }.invoke(activity, draftTurn(prompt, "Projektübersicht.pdf", episodeId), reply)
+        assertNotNull("native draft surface exists, so CONTINUE and SAVE are authorised", window)
+        val successSteps = events.filterIsInstance<at.heinz.deviceai.cockpit.DocumentPipelineStepEvent>()
+        assertEquals(setOf("analyze", "keypoints"), successSteps.map { it.key }.toSet())
+        assertTrue(successSteps.all { it.state == at.heinz.deviceai.cockpit.StepState.DONE })
+        val ready = events.filterIsInstance<at.heinz.deviceai.cockpit.DocumentDraftReadyEvent>().single()
+        assertEquals("document-$episodeId", ready.turnId)
+        assertEquals(reply, ready.text)
+        assertEquals(prompt.coveredChars, ready.coveredChars)
+        assertEquals(prompt.totalChars, ready.totalChars)
+        assertEquals(
+            setOf(
+                at.heinz.deviceai.cockpit.DocumentDraftAction.CONTINUE,
+                at.heinz.deviceai.cockpit.DocumentDraftAction.SAVE
+            ),
+            ready.actions
+        )
+
+        events.clear()
+        val failed = AgentActivity::class.java.getDeclaredMethod("onDocumentDraftReply", turnClass, String::class.java)
+            .apply { isAccessible = true }.invoke(activity, draftTurn(prompt, "Projektübersicht.pdf", episodeId), "")
+        assertEquals(null, failed)
+        assertTrue(events.filterIsInstance<at.heinz.deviceai.cockpit.DocumentDraftReadyEvent>().isEmpty())
+        val failedSteps = events.filterIsInstance<at.heinz.deviceai.cockpit.DocumentPipelineStepEvent>()
+        assertEquals(setOf("analyze", "draft"), failedSteps.map { it.key }.toSet())
+        assertTrue(failedSteps.all { it.state == at.heinz.deviceai.cockpit.StepState.FAILED })
+    }
+
+    @Test fun dashboardTargetStopUsesTheExistingCancelPath() = withCockpit { activity, root ->
+        val journal = at.heinz.deviceai.cognitive.CockpitWorkJournal(activity.filesDir)
+        val episode = journal.begin(
+            at.heinz.deviceai.cognitive.CockpitWorkJournal.Kind.DOCUMENT,
+            "Lies diese PDF und erstelle mir eine Zusammenfassung als Entwurf.",
+            at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING,
+            "Bericht.pdf", 1, 20
+        )
+        val prompt = requireNotNull(at.heinz.deviceai.cognitive.DocumentDraftPrompt.build("Bericht.pdf", "Ein kurzer Bericht."))
+        val sessionId = field(activity, "sessionId") as String
+        val turnClass = AgentActivity::class.java.declaredClasses.single { it.simpleName == "DocumentDraftTurn" }
+        val running = turnClass.getDeclaredConstructor(
+            at.heinz.deviceai.cognitive.DocumentDraftPrompt::class.java,
+            String::class.java,
+            String::class.java,
+            android.graphics.Bitmap::class.java,
+            String::class.java
+        ).apply { isAccessible = true }.newInstance(prompt, "Bericht.pdf", episode.id, null, sessionId)
+        AgentActivity::class.java.getDeclaredField("documentDraftTurn").apply { isAccessible = true }
+            .set(activity, running)
+        AgentActivity::class.java.getDeclaredField("workEpisodeId").apply { isAccessible = true }
+            .set(activity, episode.id)
+        val bus = field(activity, "cockpitBus") as at.heinz.deviceai.cockpit.CockpitAnimationBus
+        val events = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cockpit.CockpitAnimationEvent>()
+        bus.subscribe { events += it }
+        AgentActivity::class.java.getDeclaredMethod("navigateDashboardTargetNow", String::class.java)
+            .apply { isAccessible = true }.invoke(activity, "stop")
+        assertEquals(null, field(activity, "documentDraftTurn"))
+        val deadline = System.currentTimeMillis() + 5_000
+        fun stored() = journal.all().single { it.id == episode.id }
+        while (stored().state == at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING &&
+            System.currentTimeMillis() < deadline) { Thread.sleep(20); advance(16L) }
+        assertEquals(at.heinz.deviceai.cognitive.CockpitWorkJournal.State.ABORTED, stored().state)
+        val stopped = events.filterIsInstance<at.heinz.deviceai.cockpit.DocumentPipelineStepEvent>()
+        assertEquals(setOf("analyze", "draft"), stopped.map { it.key }.toSet())
+        assertTrue(stopped.all { it.state == at.heinz.deviceai.cockpit.StepState.FAILED })
+        assertTrue(chatTexts(activity).any { it.contains("Entwurf mit STOP abgebrochen") })
+    }
 }

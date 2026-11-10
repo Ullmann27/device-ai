@@ -4,6 +4,10 @@ import at.heinz.deviceai.cockpit.AlarmKind
 import at.heinz.deviceai.cockpit.ChartKind
 import at.heinz.deviceai.cockpit.CockpitAction
 import at.heinz.deviceai.cockpit.CockpitAnimationEvent
+import at.heinz.deviceai.cockpit.DocumentDraftAction
+import at.heinz.deviceai.cockpit.DocumentDraftReadyEvent
+import at.heinz.deviceai.cockpit.DocumentPipelineStepEvent
+import at.heinz.deviceai.cockpit.MEMORY_TURN
 import at.heinz.deviceai.cockpit.ProcessStep
 import at.heinz.deviceai.cockpit.StepState
 import org.junit.Assert.assertEquals
@@ -139,4 +143,115 @@ class Airbus2100CockpitOrchestratorTest {
         orchestrator.close()
         assertTrue(scheduled.isEmpty())
     }
+
+    @Test
+    fun documentQuestionAttachesAcrossTurnIdsAndKeepsTheRealQuestion() {
+        val scenes = mutableListOf<JarvisActionScenes.FuiProfile>()
+        val payloads = mutableListOf<HollywoodFuiLiveData?>()
+        val orchestrator = Airbus2100CockpitOrchestrator(
+            schedule = { _, _ -> },
+            cancel = {},
+            onSceneProfile = { scenes += it.fuiProfile },
+            onLiveData = { payloads += it },
+            onTelemetry = {},
+            onHoloCue = {},
+            onPostMission = {}
+        )
+        orchestrator.render(CockpitAnimationEvent.CommandFlyIn("verbal-turn", 0L, "Lies diese PDF"))
+        assertEquals(JarvisActionScenes.FuiProfile.GENERIC, scenes.last())
+
+        orchestrator.render(CockpitAnimationEvent.DocumentQuestion(
+            "document-w-1", 1L, "Projektübersicht.pdf", "application/pdf",
+            "Lies die PDF und erstelle eine Zusammenfassung als Entwurf.", pageCount = 4
+        ))
+        val document = payloads.filterIsInstance<HollywoodFuiLiveData.Document>().last()
+        val visible = requireNotNull(DocumentBlueprintView.visible(document))
+        assertEquals("Lies die PDF und erstelle eine Zusammenfassung als Entwurf.", visible.question)
+        assertEquals("1/4", visible.pageLabel)
+        assertEquals(JarvisActionScenes.FuiProfile.DOCUMENT_BLUEPRINT, scenes.last())
+        assertTrue(visible.buttons.isEmpty())
+        assertNull(visible.draftTitle)
+
+        orchestrator.render(CockpitAnimationEvent.ProcessTimeline(
+            "verbal-turn", 2L, listOf(ProcessStep("work", "Bearbeitung", StepState.ACTIVE))
+        ))
+        val afterTimeline = payloads.filterIsInstance<HollywoodFuiLiveData.Document>().last()
+        assertEquals(
+            "Lies die PDF und erstelle eine Zusammenfassung als Entwurf.",
+            DocumentBlueprintView.visible(afterTimeline)!!.question
+        )
+
+        orchestrator.render(DocumentPipelineStepEvent(
+            "document-w-1", 3L, DocumentPipelineStepEvent.KEY_ANALYZE, "Analysieren", StepState.DONE
+        ))
+        orchestrator.render(DocumentDraftReadyEvent(
+            "document-w-1", 4L,
+            "Ziel: Arbeitsabläufe vereinfachen.\nVorgehen: Schritte klar gliedern.",
+            coveredChars = 10,
+            totalChars = 20,
+            actions = setOf(DocumentDraftAction.OPEN)
+        ))
+        val drafted = DocumentBlueprintView.visible(
+            payloads.filterIsInstance<HollywoodFuiLiveData.Document>().last()
+        )!!
+        assertEquals("Arbeitsabläufe vereinfachen.", drafted.draftGoal)
+        assertEquals(listOf("Entwurf öffnen"), drafted.buttons)
+        assertEquals(50, drafted.progressPercent)
+        assertEquals("Lies die PDF und erstelle eine Zusammenfassung als Entwurf.", drafted.question)
+    }
+
+    @Test
+    fun memoryAndWorkerEventsReachTheirWorldsWithRealCounts() {
+        val scenes = mutableListOf<JarvisActionScenes.FuiProfile>()
+        val payloads = mutableListOf<HollywoodFuiLiveData?>()
+        val orchestrator = Airbus2100CockpitOrchestrator(
+            schedule = { _, _ -> },
+            cancel = {},
+            onSceneProfile = { scenes += it.fuiProfile },
+            onLiveData = { payloads += it },
+            onTelemetry = {},
+            onHoloCue = {},
+            onPostMission = {}
+        )
+        orchestrator.render(CockpitAnimationEvent.CommandFlyIn("t", 0L, "arbeite"))
+        orchestrator.render(CockpitAnimationEvent.ActionStarted("worker-a", 1L, CockpitAction.WORKER, "Datei lesen"))
+        orchestrator.render(CockpitAnimationEvent.ActionStarted("worker-b", 2L, CockpitAction.WORKER, "Tests prüfen"))
+        assertEquals(JarvisActionScenes.FuiProfile.SWARM_GRID, scenes.last())
+        val swarm = payloads.filterIsInstance<HollywoodFuiLiveData.Timeline>().last()
+        assertEquals(2, swarm.lines.size)
+        assertEquals("Datei lesen", swarm.lines[0].label)
+        assertEquals("Tests prüfen", swarm.lines[1].label)
+
+        orchestrator.render(CockpitAnimationEvent.RecallHits(MEMORY_TURN, 3L, "q", 3, 0.8f))
+        assertEquals(JarvisActionScenes.FuiProfile.EVIDENCE_CONSTELLATION, scenes.last())
+        val evidence = payloads.filterIsInstance<HollywoodFuiLiveData.Evidence>().single()
+        assertEquals(3, evidence.count)
+        assertEquals(0.8f, evidence.topScore)
+
+        orchestrator.render(CockpitAnimationEvent.ActionStarted("t", 4L, CockpitAction.THINK, "weiterdenken"))
+        // A stronger world is already showing; THINK must not overwrite it.
+        assertEquals(JarvisActionScenes.FuiProfile.EVIDENCE_CONSTELLATION, scenes.last())
+    }
+
+    @Test
+    fun thinkOpensLocalReasoningOnlyWhileNoStrongerWorldIsShowing() {
+        val scenes = mutableListOf<JarvisActionScenes.FuiProfile>()
+        val orchestrator = Airbus2100CockpitOrchestrator(
+            schedule = { _, _ -> },
+            cancel = {},
+            onSceneProfile = { scenes += it.fuiProfile },
+            onLiveData = {},
+            onTelemetry = {},
+            onHoloCue = {},
+            onPostMission = {}
+        )
+        orchestrator.render(CockpitAnimationEvent.CommandFlyIn("t", 0L, "denk nach"))
+        orchestrator.render(CockpitAnimationEvent.ActionStarted("t", 1L, CockpitAction.THINK, "lokal"))
+        assertEquals(JarvisActionScenes.FuiProfile.GENERIC, scenes.last())
+        orchestrator.render(CockpitAnimationEvent.ActionStarted("t", 2L, CockpitAction.DEVELOP, "build"))
+        assertEquals(JarvisActionScenes.FuiProfile.CODE_FORGE, scenes.last())
+        orchestrator.render(CockpitAnimationEvent.ActionStarted("t", 3L, CockpitAction.THINK, "weiter"))
+        assertEquals(JarvisActionScenes.FuiProfile.CODE_FORGE, scenes.last())
+    }
+
 }

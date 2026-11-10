@@ -333,17 +333,21 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
 
     private fun drawDocument(canvas: Canvas, box: RectF, alpha: Float) {
         val data = liveData as? HollywoodFuiLiveData.Document
+        val visible = DocumentBlueprintView.visible(data)
         val pages = (data?.pageCount ?: 1).coerceIn(1, 4)
         val pageWidth = min(box.width() * 0.24f, dp(96f))
-        val pageHeight = min(box.height() * 0.68f, dp(132f))
+        val pageHeight = min(box.height() * 0.52f, dp(132f))
+        val pageTop = box.top + dp(8f)
+        var frontPage: RectF? = null
         for (index in pages - 1 downTo 0) {
             val offset = dp(10f) * index
             val page = RectF(
                 box.left + offset,
-                box.centerY() - pageHeight / 2f - offset * .35f,
+                pageTop - offset * .35f,
                 box.left + offset + pageWidth,
-                box.centerY() + pageHeight / 2f - offset * .35f
+                pageTop + pageHeight - offset * .35f
             )
+            if (index == 0) frontPage = page
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = dp(1f)
             paint.color = withAlpha(
@@ -353,13 +357,131 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             canvas.drawRoundRect(page, dp(3f), dp(3f), paint)
         }
         data ?: return
-        val textLeft = box.left + pageWidth + dp(24f)
-        drawSmallLabel(canvas, data.documentName, textLeft, box.top + dp(20f), alpha, accent)
-        data.question?.let {
-            drawWrappedLines(canvas, listOf(it), textLeft, box.top + dp(44f), box.right, alpha)
+        val view = visible ?: return
+        frontPage?.let { page ->
+            view.pageLabel?.let { label ->
+                drawSmallLabel(
+                    canvas, label, page.left + dp(6f), page.bottom - dp(8f),
+                    alpha, JarvisDesign.Colors.text
+                )
+            }
         }
-        data.entriesAdded?.let {
-            drawSmallLabel(canvas, "$it bestätigte Einträge", textLeft, box.bottom - dp(18f), alpha, JarvisDesign.Colors.ok)
+        val textLeft = box.left + pageWidth + dp(20f)
+        val stepWidth = if (view.steps.isEmpty()) 0f else min(box.width() * 0.30f, dp(148f))
+        val textRight = if (stepWidth == 0f) box.right else box.right - stepWidth - dp(10f)
+        drawSmallLabel(canvas, view.documentName, textLeft, box.top + dp(18f), alpha, accent)
+        view.question?.let {
+            drawWrappedLines(canvas, listOf(it), textLeft, box.top + dp(38f), textRight, alpha)
+        }
+        view.entriesLabel?.let {
+            drawSmallLabel(canvas, it, textLeft, box.bottom - dp(14f), alpha, JarvisDesign.Colors.ok)
+        }
+        if (view.steps.isNotEmpty()) {
+            drawDocumentSteps(canvas, RectF(box.right - stepWidth, box.top, box.right, box.bottom), view, alpha)
+        }
+        if (view.showsDraft || view.buttons.isNotEmpty() || view.progressPercent != null) {
+            val draftTop = pageTop + pageHeight + dp(14f)
+            drawDocumentDraft(canvas, RectF(textLeft, draftTop, textRight, box.bottom - dp(4f)), view, alpha)
+        }
+    }
+
+    private fun drawDocumentSteps(
+        canvas: Canvas,
+        box: RectF,
+        view: DocumentBlueprintView.Visible,
+        alpha: Float
+    ) {
+        val stepCenters = ArrayList<Pair<Float, Float>>(view.steps.size)
+        view.steps.forEachIndexed { index, step ->
+            val y = box.top + dp(22f + index * 22f)
+            if (y > box.bottom) return@forEachIndexed
+            val cx = box.left + dp(7f)
+            stepCenters += cx to y - dp(3f)
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = dp(1.1f)
+            paint.color = withAlpha(stateColor(step.state), .72f * alpha)
+            canvas.drawCircle(cx, y - dp(3f), dp(5f), paint)
+            if (step.state == StepState.DONE) {
+                paint.style = Paint.Style.FILL
+                canvas.drawCircle(cx, y - dp(3f), dp(2.4f), paint)
+            }
+            drawSmallLabel(canvas, step.label, box.left + dp(18f), y, alpha, stateColor(step.state))
+        }
+        DocumentBlueprintView.lightBridgeFrom(view.steps).forEach { index ->
+            val from = stepCenters.getOrNull(index) ?: return@forEach
+            val to = stepCenters.getOrNull(index + 1) ?: return@forEach
+            drawDocumentLightBridge(canvas, from.first, from.second, to.first, to.second, alpha)
+        }
+    }
+
+    private fun drawDocumentLightBridge(
+        canvas: Canvas,
+        x1: Float,
+        y1: Float,
+        x2: Float,
+        y2: Float,
+        alpha: Float
+    ) {
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = dp(1.4f)
+        paint.color = withAlpha(JarvisDesign.Colors.cyan, .28f * alpha)
+        canvas.drawLine(x1, y1, x2, y2, paint)
+        if (reducedMotion) return
+        val travel = ((elapsedMs % 900L) / 900f).coerceIn(0f, 1f)
+        val x = x1 + (x2 - x1) * travel
+        val y = y1 + (y2 - y1) * travel
+        paint.style = Paint.Style.FILL
+        paint.color = withAlpha(JarvisDesign.Colors.glowCore, .80f * alpha)
+        canvas.drawCircle(x, y, dp(2.2f), paint)
+    }
+
+    private fun drawDocumentDraft(
+        canvas: Canvas,
+        box: RectF,
+        view: DocumentBlueprintView.Visible,
+        alpha: Float
+    ) {
+        if (box.height() < dp(28f)) return
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = dp(1f)
+        paint.color = withAlpha(accent, .36f * alpha)
+        canvas.drawRoundRect(box, dp(5f), dp(5f), paint)
+        var y = box.top + dp(16f)
+        view.draftTitle?.let {
+            drawSmallLabel(canvas, it, box.left + dp(10f), y, alpha, accent)
+            y += dp(16f)
+        }
+        fun row(title: String, value: String?) {
+            val text = value ?: return
+            if (y > box.bottom - dp(18f)) return
+            drawSmallLabel(canvas, "$title: $text", box.left + dp(10f), y, alpha, JarvisDesign.Colors.text)
+            y += dp(15f)
+        }
+        row("Ziel", view.draftGoal)
+        row("Vorgehen", view.draftApproach)
+        row("Offene Punkte", view.draftOpenItems)
+        view.draftBody?.let {
+            if (y <= box.bottom - dp(18f)) {
+                drawWrappedLines(canvas, listOf(it), box.left + dp(10f), y, box.right - dp(10f), alpha)
+                y += dp(32f)
+            }
+        }
+        view.progressPercent?.let { percent ->
+            val size = dp(22f)
+            val ring = RectF(box.right - dp(36f), box.top + dp(8f), box.right - dp(14f), box.top + dp(8f) + size)
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = dp(2f)
+            paint.color = withAlpha(accent, .24f * alpha)
+            canvas.drawArc(ring, 0f, 360f, false, paint)
+            paint.color = withAlpha(JarvisDesign.Colors.ok, .80f * alpha)
+            canvas.drawArc(ring, -90f, 360f * (percent / 100f), false, paint)
+        }
+        if (view.buttons.isEmpty()) return
+        var buttonLeft = box.left + dp(10f)
+        val buttonY = box.bottom - dp(16f)
+        view.buttons.forEach { label ->
+            drawSmallLabel(canvas, label, buttonLeft, buttonY, alpha, JarvisDesign.Colors.cyan)
+            buttonLeft += paint.measureText(label.take(72)) + dp(16f)
         }
     }
 
@@ -395,6 +517,14 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             canvas.drawCircle(box.centerX(), box.centerY(), dp(7f), paint)
             return
         }
+        drawSmallLabel(
+            canvas,
+            "${lines.size} Agenten",
+            box.left,
+            box.top + dp(14f),
+            alpha,
+            accent
+        )
         val cardWidth = box.width() * .28f
         val cardHeight = box.height() * .30f
         val centreX = box.centerX()

@@ -4,6 +4,7 @@ import at.heinz.deviceai.avatar.AvatarGestureIntent
 import at.heinz.deviceai.avatar.AvatarExpression
 import at.heinz.deviceai.avatar.AvatarPose
 import at.heinz.deviceai.avatar.AvatarState
+import at.heinz.deviceai.avatar.AvatarSentenceGesture
 import at.heinz.deviceai.avatar.SpeechBoundary
 import at.heinz.deviceai.avatar.Viseme
 
@@ -59,8 +60,13 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         require(cameraAzimuthDegrees.isFinite() && cameraAzimuthDegrees in -45.0..45.0)
     }
 
+    var eyeNeckCouplingEnabled: Boolean = true
+    var sentenceGesturesEnabled: Boolean = true
+
     fun update(pose: AvatarPose, seconds: Float, motion: Boolean,
-               gazeBlinkEnabled: Boolean = false) {
+               gazeBlinkEnabled: Boolean = false,
+               eyeNeckCouplingEnabled: Boolean = this.eyeNeckCouplingEnabled,
+               sentenceGesturesEnabled: Boolean = this.sentenceGesturesEnabled) {
         weights.fill(0f)
         fun weight(name: String, value: Float) { weights[indices.getValue(name)] = finite(value, 0f, 1f) }
         val staticWindow = !motion && (pose.gazeDirected || pose.gesture == AvatarGestureIntent.WINDOW_FOCUS)
@@ -82,6 +88,8 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         }
         headYaw = headYawSpring.value
         headPitch = headPitchSpring.value
+        val drivenYaw = headYaw
+        val drivenPitch = headPitch
 
         // Eyes target the direct ocular share plus the head lag, then follow with their much faster spring.
         val targetEyeYaw = cameraAzimuthDegrees.toFloat() +
@@ -111,7 +119,7 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             visemeBlend.fill(0f); lastSeconds = Float.NaN
             layerSeconds = Float.NaN; speechAccent = 0f; speechSeconds = Float.NaN; blinkSeconds = Float.NaN
             gazeBlink.sample(gx, gy, seconds, enabled = false)
-            splitNeck(); return
+            splitNeck(eyeNeckCouplingEnabled); return
         }
         idleMotion.update(seconds)
         val work = pose.state == AvatarState.THINKING || pose.state == AvatarState.RESEARCHING || pose.state == AvatarState.LEARNING
@@ -161,8 +169,10 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         // Sentence ends of the spoken text (Director: text + TTS word range, no audio inference): a statement closes
         // with a small settling nod and a soft rebound, a question lifts the brows and slightly the chin on its last
         // word. A directed gaze keeps the head; the brows still move.
+        val sentenceEnd = AvatarSentenceGesture.published(
+            pose.sentenceEnd, pose.sentenceEndProgress, sentenceGesturesEnabled)
         val sentence = pose.sentenceEndProgress
-        if (sentence.isFinite() && sentence >= 0f && sentence <= 1f) when (pose.sentenceEnd) {
+        if (sentenceEnd != null && sentence.isFinite() && sentence >= 0f && sentence <= 1f) when (sentenceEnd) {
             SpeechBoundary.QUESTION -> {
                 val lift = questionLift(sentence)
                 val brow = indices.getValue("BrowUp")
@@ -170,15 +180,14 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
                 if (!pose.gazeDirected) headPitch -= QUESTION_CHIN_DEGREES * lift
             }
             SpeechBoundary.STATEMENT -> if (!pose.gazeDirected) headPitch += SETTLE_DEGREES * settle(sentence)
-            null -> Unit
         }
         val progress = pose.confirmationProgress
         if (progress.isFinite() && progress in 0f..1f) {
             val wave = kotlin.math.sin(Math.PI * progress).toFloat()
             val nod = CONFIRMATION_PITCH_DEGREES * wave * wave
             headPitch += nod
-            eyePitch = (eyePitch - nod).coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
         }
+        stabilizeGaze(drivenYaw, drivenPitch, idleEyes)
         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
         val bilabialClosure = pose.viseme == Viseme.PP && cueWeight > 0f
         // M/B/P require a closed lip seal even while the measured audio remains loud.
@@ -219,7 +228,7 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             gazeBlinkEnabled && motion && pose.gazeDirected && !syllableOpen)
         val totalLid = maxOf(scheduledLid, gazeLid)
         weight("BlinkLeft", totalLid); weight("BlinkRight", totalLid)
-        splitNeck()
+        splitNeck(eyeNeckCouplingEnabled)
     }
 
     /** Diagnostic-only override after normal mapping; null keeps production blink untouched. */
@@ -228,6 +237,21 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         val blink = finite(value, 0f, 1f)
         weights[indices.getValue("BlinkLeft")] = blink
         weights[indices.getValue("BlinkRight")] = blink
+    }
+
+
+    /**
+     * Small vestibulo-ocular counter-rotation: extra head motion after the gaze springs
+     * (speech, work residual, confirmation) is subtracted from the eyes so the look-at
+     * point stays on the current target. Cosmetic idle saccades keep their authored path.
+     */
+    private fun stabilizeGaze(drivenYaw: Float, drivenPitch: Float, idleEyes: Boolean) {
+        if (idleEyes) return
+        val extraYaw = headYaw - drivenYaw
+        val extraPitch = headPitch - drivenPitch
+        if (extraYaw == 0f && extraPitch == 0f) return
+        eyeYaw = (eyeYaw - extraYaw * VOR_GAIN).coerceIn(-EYE_MAX_YAW_DEGREES, EYE_MAX_YAW_DEGREES)
+        eyePitch = (eyePitch - extraPitch * VOR_GAIN).coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
     }
 
     private fun fadeLayers(idle: Boolean, speech: Boolean, work: Boolean, seconds: Float) {
@@ -300,11 +324,16 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
 
     private fun smooth(x: Float): Float { val u = x.coerceIn(0f, 1f); return u * u * (3f - 2f * u) }
 
-    private fun splitNeck() {
+    private fun splitNeck(eyeNeckCouplingEnabled: Boolean) {
         headYaw = finite(headYaw, -MAX_HEAD_YAW_DEGREES, MAX_HEAD_YAW_DEGREES)
         headPitch = finite(headPitch, -MAX_HEAD_PITCH_DEGREES, MAX_HEAD_PITCH_DEGREES)
-        neckYaw = headYaw * NECK_SHARE
-        neckPitch = headPitch * NECK_SHARE
+        if (eyeNeckCouplingEnabled) {
+            neckYaw = headYaw * NECK_SHARE
+            neckPitch = headPitch * NECK_SHARE
+        } else {
+            neckYaw = 0f
+            neckPitch = 0f
+        }
     }
 
     companion object {
@@ -336,6 +365,8 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         /** Critically damped natural frequencies: step response reaches ~80 % at 55 ms / 220 ms. */
         const val EYE_SPRING_OMEGA = 54.44f
         const val HEAD_SPRING_OMEGA = 13.61f
+        /** Full counter-rotation of extra head motion; confirmation used the same 1:1 offset. */
+        const val VOR_GAIN = 1f
         /** Human oculomotor range used while the head is still turning. */
         const val EYE_MAX_YAW_DEGREES = 30f
         const val EYE_MAX_PITCH_DEGREES = 20f

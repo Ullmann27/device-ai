@@ -8,6 +8,8 @@ on:
       - chatgpt/code52-cinema-final-graphics-audit-20261110
       - chatgpt/code52-cinema-grounded-document-question-20261110
       - chatgpt/code52-cinema-branch-safe-qa-20261110
+      - integration/code52-swarm-20261110
+      - 'code52/**'
     paths:
       - '.github/workflows/continuum-code52-cinematic-qa.yml'
       - 'app/**'
@@ -32,7 +34,7 @@ concurrency:
 
 jobs:
   validate-source-and-build:
-    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/chatgpt/code52-argon4-holographic-rim-20261109' || github.ref == 'refs/heads/chatgpt/code52-cinema-prism-pixel-fix-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-final-graphics-audit-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-grounded-document-question-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-branch-safe-qa-20261110')
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/chatgpt/code52-argon4-holographic-rim-20261109' || github.ref == 'refs/heads/chatgpt/code52-cinema-prism-pixel-fix-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-final-graphics-audit-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-grounded-document-question-20261110' || github.ref == 'refs/heads/chatgpt/code52-cinema-branch-safe-qa-20261110' || github.ref == 'refs/heads/integration/code52-swarm-20261110' || startsWith(github.ref, 'refs/heads/code52/'))
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:

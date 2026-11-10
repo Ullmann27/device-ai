@@ -53,7 +53,10 @@ class JarvisReferenceWindowLayoutTest {
         val g = requireNotNull(s.grid)
         assertEquals(1536f, s.width, 0f)
         assertEquals(1024f, s.viewportHeight, 0f)
-        assertEquals(g.height, s.height, 0f)
+        assertEquals(g.height + JarvisShellLayout.toolDockLayoutExtra(), s.height, 0f)
+        assertNotNull("Fold/tablet home uses the holographic tool dock, not a left rail", s[Slot.BOTTOM_NAV])
+        assertTrue(s[Slot.BOTTOM_NAV]!!.top >= s[Slot.TILES]!!.bottom - .01f)
+        assertTrue(s[Slot.STATUS]!!.top >= s[Slot.BOTTOM_NAV]!!.bottom - .01f)
         assertEquals(g[Area.HEAD], s.headBounds)
         assertEquals(g[Area.HEAD], s.headStage)
         assertEquals(g[Area.ORB], s.orbBounds)
@@ -290,7 +293,8 @@ class JarvisReferenceWindowLayoutTest {
         assertNull(JarvisShellLayout.create(412f, 915f)[Slot.BOTTOM_NAV])
         val withBar = JarvisShellLayout.create(412f, 915f, includeBottomNavigation = true)
         assertNotNull(withBar[Slot.BOTTOM_NAV])
-        assertEquals(5, JarvisTiles.bottomNav.size)
+        assertEquals("The optional bar is the rail replacement, not the old five-item subset",
+            JarvisTiles.railNav.size, JarvisTiles.bottomNav.size)
         sane(withBar)
     }
 }
