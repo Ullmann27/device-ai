@@ -1,0 +1,9 @@
+5c05973403f488bbb3e154ee1ff40606b5a949cc docs(research): checkpoint bounded cognitive budget contract
+3985796c8cf0b17cb3f39b3f20645c2618e2bfe9 feat(research): add opt-in bounded cognitive budget controller
+468699603d193ba163e075524bc11d43f0bb1a8d test(research): record source-bound cognitive budget controls
+dacfc11058c5225054fb5c95cfdbf8881a96c245 docs(research): register bounded memory skill experiment
+2d52d4fc50fc3bbb55470872dc0a356bde4d3162 feat(research): bound surprise recall and evidence gated skill candidates
+57320ae2b022ea5eabe75859d063495a21e97043 test(research): add clean control and bounded metadata regression
+3e3309793aba90f4fd21f058c5bc343eb09c2c43 fix(research): bind skill review to source revision
+24fc9207b5af9d1fe5365987598605b8b9a917c3 docs(research): record exact memory skill host evidence and limits
+25766f72cd511f247950c7d558fe323be6be2d4c docs(research): map verified memory sources to published checkpoint

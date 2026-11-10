@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "experiment": "EXP-05/EXP-11 cognitive-budget",
+  "sourceCommit": "2824c3718e560ce3f369eb20666b434b99db1c39",
+  "integrationTarget": "cinema/fluid-light-stage-20261110 / PR715",
+  "publicPush": "Published research PR717 at0b8a784b65464cb98e9e0323e1d386af2a133324; later receipt commit is documentation only.",
+  "verification": {
+    "hostJunit": {
+      "passed": 47,
+      "failed": 0,
+      "new": 36,
+      "existing": 11
+    },
+    "sourceContracts": "Exact DTO extraction from ContinuumIntelligence.kt; no replacement behavior",
+    "localFactoryCompile": "PASS: actual full Android main compilation on combined QA25766f72; see android-main-compile/receipt.json.",
+    "realLocalInference": "NOT_RUN",
+    "cloudInference": "NOT_RUN",
+    "fullAndroidBuild": "NOT_RUN: only main Kotlin compilation, no APK packaging.",
+    "Fold7": "NOT_RUN",
+    "androidMainSourceCompile": "PASS on separately pinned combined research tree, not later Cinema revisions."
+  },
+  "controlledAB": {
+    "fixed": {
+      "fixtures": 64,
+      "adapterCalls": 256,
+      "promptBytes": 76714,
+      "outputBytes": 4472,
+      "medianObservedWallMicros": 1173.3895,
+      "medianObservedThreadCpuMicros": 1170.684
+    },
+    "adaptive": {
+      "fixtures": 64,
+      "adapterCalls": 192,
+      "promptBytes": 55680,
+      "outputBytes": 3331,
+      "medianObservedWallMicros": 950.8715,
+      "medianObservedThreadCpuMicros": 948.0730000000001
+    }
+  },
+  "candidateEquivalence": {
+    "all": {
+      "same": 48,
+      "total": 64
+    },
+    "nonCycle": {
+      "same": 48,
+      "total": 48
+    },
+    "cycle": {
+      "different": 16,
+      "total": 16
+    }
+  },
+  "interpretation": "Scripted responses measure orchestration only. Repetition is not correctness; cycles change candidate selection. Timing includes JVM/controller/receipt overhead, not model performance. No tokens, joules or model-quality claims.",
+  "limitations": [
+    "Cooperative adapter cancellation; arbitrary blocking adapters cannot be forcibly stopped.",
+    "Production construction must use the existing guarded local runtime and already-owned inference lane.",
+    "No global aggregate budget across separate explicit research runs.",
+    "Thread count is a load-time recommendation, not live engine reconfiguration.",
+    "sourceRevision in receipts is caller supplied; source hashes bind this harness run, not signed runtime attestation."
+  ]
+}

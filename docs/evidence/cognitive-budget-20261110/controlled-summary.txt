@@ -1,0 +1,1 @@
+CONTROLLED_ONLY fixed_calls=256 adaptive_calls=192 identical_candidates=48/64 non_cycle_identical=48/48 cycle_differences=16/16

@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "status": "ANDROID_MAIN_KOTLIN_COMPILE_PASS",
+  "exitCode": 0,
+  "observedAtUtc": "2026-11-10T20:08:36.087743+00:00",
+  "task": ":app:compileDebugKotlin",
+  "durationFromGradle": "1m 21s",
+  "executedTasks": 17,
+  "actualQaBranch": "qa/continuum-cognitive-memory-20261110",
+  "actualQaCommit": "25766f72cd511f247950c7d558fe323be6be2d4c",
+  "actualQaTree": "c15f1ab11e0777fac53f0d6a6b77b282bebe9016",
+  "actualAppMainTree": "db972eea5028e650361907777c863510a1f14c60",
+  "actualBaseCommit": "4209453ac649a2ab4fca67608e1e109e662cf58d",
+  "actualBaseTree": "5067aedc359181fce1f55fc19ef83f2ff5c0b23c",
+  "remoteBaseMainSourceEquivalent": "2eca96cf50df2a4f4538f61cac911aa90563a93d",
+  "remoteBaseEquivalenceScope": "app/src/main only; local4209453 was not published separately. Later9fd5d14 changes test setup only.",
+  "baseAppMainTree": "30721ba782bdce41db98130c28881905a2d5cd18",
+  "researchSourceRevisions": {
+    "cognitiveBudget": "0b8a784b65464cb98e9e0323e1d386af2a133324",
+    "memorySkills": "dafb3187faf2580d0a060a66fb7e82915f8fc6fc"
+  },
+  "changedMainSources": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveBudgetController.kt": "9c4b2c84a0c7eb6f7432f5666f4d71baab68dce8e3ab22851942c22c8cc70144",
+    "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveBudgetLocalResearch.kt": "e8011e3e933c2c10b873d9f0e0757a15a5e883dece2ded9fb77613006689b6af",
+    "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveBudgetResearchRunner.kt": "5f6e4ed6c98908f82cbea2f013791097b98b67f423aa8b5d343539b591435ee5",
+    "app/src/main/java/at/heinz/deviceai/cognitive/research/ContinuumMemorySkillResearch.kt": "4a768ebd801d68126410458207746a5ffbe1f42a9e28dd0daf73d9e3df8ad033"
+  },
+  "emittedClassSha256": {
+    "at/heinz/deviceai/cognitive/CognitiveBudgetController.class": "692559705674e9d6077009affc49c8321ed5eb7c375da980ce455dd904810966",
+    "at/heinz/deviceai/cognitive/CognitiveBudgetLocalResearch.class": "13234fb2d9b1e50e846ea673fbfd34225d67133af5a33b799ecf0b6caac8e7e2",
+    "at/heinz/deviceai/cognitive/CognitiveBudgetResearchRunner.class": "720121619c4fb0447606f36b75fbe1639b9f6b0bf549f409a53d6cff5fab111b",
+    "at/heinz/deviceai/cognitive/research/ContinuumMemorySkillResearch.class": "2a62fcd8197aa605b789a14d3a9c00be94e9a85b76aecea8e42697f0da11bf7c"
+  },
+  "logSha256": "60f85caeab2331198396d37c1045987611407188627dba66f266a9ac0114f214",
+  "toolchain": {
+    "jdk": "Temurin21.0.13+9",
+    "gradle": "8.11.1",
+    "kotlinPlugin": "2.4.0",
+    "androidGradlePlugin": "8.10.0",
+    "androidPlatform": 36
+  },
+  "execution": {
+    "offline": true,
+    "workers": 1,
+    "kotlinStrategy": "in-process",
+    "ownerLocalQa": true,
+    "mentorPreview": true,
+    "qaVersionCode": 52
+  },
+  "trackedSourceCleanBeforeAndAfter": true,
+  "rootWorktreeModified": false,
+  "productionCallerAdded": false,
+  "automaticLearning": false,
+  "realModelInference": "NOT_RUN",
+  "fullApkBuild": "NOT_RUN",
+  "signing": "NOT_RUN",
+  "device": "NOT_RUN",
+  "testsInThisGradleRun": "NOT_RUN",
+  "scope": "Actual full Android main Kotlin compilation for this combined research tree. Not a compilation of later Cinema revisions, a full test-suite result, an APK or a device/model result.",
+  "logPath": "compile.txt"
+}
