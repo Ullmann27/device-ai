@@ -18,6 +18,11 @@ PINS = {
     "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
     "LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
 }
+SUPPORT_PINS = {
+    "training-continuity.patch": "7deb89ca77f41b45babdf223ec5ce8e1f4771aaea0cbbd92bdfd27edbbc3abb8",
+    "LmTrainingState.kt": "e45eb6b39e2fbaeb07328b175ae118d2ea6f2d827d402b51f3275437d2a3fd10",
+    "LmTrainingFixture.kt": "adbb7a4bcafcf781618c5ff4392edd959bddb97d280c3f3a7da2402521725f56",
+}
 
 
 def sha(path):
@@ -33,6 +38,9 @@ def main():
     args = parser.parse_args()
     repo = args.repo.resolve(strict=True)
     compiler = args.compiler.resolve(strict=True)
+    for name, expected in SUPPORT_PINS.items():
+        if sha(repo / SUPPORT / name) != expected:
+            raise ValueError("support source identity changed: " + name)
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
     source = out / "source" / NATIVE
@@ -78,6 +86,11 @@ def main():
         "stdlibSha256": sha(stdlib), "jarSha256": sha(jar) if jar.exists() else None,
         "classpath": str(jar) + ":" + str(stdlib), "modelUpdates": 0,
     }
+    bindings = {key: manifest[key] for key in
+                ("originalSha256", "patchedSha256", "extraSha256", "patchSha256")}
+    manifest["sourceBindingSha256"] = hashlib.sha256(
+        json.dumps(bindings, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    manifest["builderSha256"] = sha(__file__)
     (out / "build.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps({"build": str(out / "build.json"), "compileExitCode": result.returncode,
                       "jarSha256": manifest["jarSha256"]}))
