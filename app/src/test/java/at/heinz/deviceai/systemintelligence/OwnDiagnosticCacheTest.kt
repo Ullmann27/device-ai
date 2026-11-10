@@ -244,4 +244,86 @@ class OwnDiagnosticCacheTest {
         assertEquals("RESTORED", cleaner.restore(cleanup.undoId).status)
         assertEquals(3, cleaner.history().size)
     }
+
+    private fun failRestoreIndex(cleaner: OwnDiagnosticCache, owner: File, undoId: String): OwnCacheCleanupResult {
+        val index = File(owner, "system-diagnostic-cache-v1.index")
+        val held = File(owner, "held-index")
+        var calls = 0
+        try {
+            return cleaner.restore(undoId) {
+                if (++calls == 2) {
+                    assertTrue(index.renameTo(held))
+                    assertTrue(index.mkdir())
+                }
+                false
+            }
+        } finally {
+            if (held.exists()) {
+                assertTrue(index.delete())
+                assertTrue(held.renameTo(index))
+            }
+        }
+    }
+
+    @Test fun failedRestoreIndexKeepsBackupAndRetriesOwnership() {
+        val (cleaner, cache, owner) = fixture()
+        val id = cleaner.retain(record())
+        val preview = cleaner.preview()
+        val cleanup = cleaner.cleanup(preview.previewId, preview.planDigest)
+        val failure = failRestoreIndex(cleaner, owner, cleanup.undoId!!)
+        assertEquals("RESTORE_INDEX_FAILED", failure.status)
+        assertEquals(1, failure.restoredFiles)
+        val file = File(cache, "system-diagnostics/summary-$id.cdiag")
+        val restoredBytes = file.readBytes()
+        val restoredIdentity = Files.readAttributes(file.toPath(), java.nio.file.attribute.BasicFileAttributes::class.java).fileKey()
+        assertTrue(cleaner.history().isEmpty())
+        assertThrows(IllegalStateException::class.java) { cleaner.retain(record(2_000)) }
+        val blockedPreview = cleaner.preview()
+        assertEquals("RESTORE_INDEX_RECOVERY_REQUIRED", cleaner.cleanup(blockedPreview.previewId, blockedPreview.planDigest).status)
+        assertEquals("CANCELLED", cleaner.restore(cleanup.undoId) { true }.status)
+        assertEquals("RESTORED", cleaner.restore(cleanup.undoId).status)
+        assertEquals(listOf(record()), cleaner.history())
+        assertArrayEquals(restoredBytes, file.readBytes())
+        assertEquals(restoredIdentity, Files.readAttributes(file.toPath(), java.nio.file.attribute.BasicFileAttributes::class.java).fileKey())
+        assertEquals("UNDO_UNAVAILABLE", cleaner.restore(cleanup.undoId).status)
+    }
+
+    @Test fun failedIndexRetryPreservesChangedTarget() {
+        val (cleaner, cache, owner) = fixture()
+        val id = cleaner.retain(record())
+        val preview = cleaner.preview()
+        val cleanup = cleaner.cleanup(preview.previewId, preview.planDigest)
+        assertEquals("RESTORE_INDEX_FAILED", failRestoreIndex(cleaner, owner, cleanup.undoId!!).status)
+        val file = File(cache, "system-diagnostics/summary-$id.cdiag")
+        file.writeText("new private content")
+        assertEquals("RESTORE_PENDING_CHANGED", cleaner.restore(cleanup.undoId).status)
+        assertEquals("new private content", file.readText())
+        assertTrue(cleaner.history().isEmpty())
+    }
+
+    @Test fun failedIndexRetryRejectsSameContentReplacementInode() {
+        val (cleaner, cache, owner) = fixture()
+        val id = cleaner.retain(record())
+        val preview = cleaner.preview()
+        val cleanup = cleaner.cleanup(preview.previewId, preview.planDigest)
+        assertEquals("RESTORE_INDEX_FAILED", failRestoreIndex(cleaner, owner, cleanup.undoId!!).status)
+        val file = File(cache, "system-diagnostics/summary-$id.cdiag")
+        val bytes = file.readBytes()
+        val replacement = File(cache, "replacement").apply { writeBytes(bytes); setLastModified(file.lastModified()) }
+        Files.move(replacement.toPath(), file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        assertEquals("RESTORE_PENDING_CHANGED", cleaner.restore(cleanup.undoId).status)
+        assertArrayEquals(bytes, file.readBytes())
+        assertTrue(cleaner.history().isEmpty())
+    }
+
+    @Test fun evictedPendingRestoreCanBeRecreatedWithoutOverwrite() {
+        val (cleaner, cache, owner) = fixture()
+        val id = cleaner.retain(record())
+        val preview = cleaner.preview()
+        val cleanup = cleaner.cleanup(preview.previewId, preview.planDigest)
+        assertEquals("RESTORE_INDEX_FAILED", failRestoreIndex(cleaner, owner, cleanup.undoId!!).status)
+        assertTrue(File(cache, "system-diagnostics/summary-$id.cdiag").delete())
+        assertEquals("RESTORED", cleaner.restore(cleanup.undoId).status)
+        assertEquals(listOf(record()), cleaner.history())
+    }
 }
