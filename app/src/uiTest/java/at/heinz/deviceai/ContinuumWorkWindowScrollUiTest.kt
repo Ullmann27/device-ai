@@ -139,7 +139,12 @@ class ContinuumWorkWindowScrollUiTest {
     @Test fun backgroundScrollClosesTheRealWorkAreaAndGlance() = withOpenWindow { f ->
         assertTrue("Work area directs the existing gaze", gazeDirected(f.avatar))
         val before = f.background.scrollY
+        // The compact cockpit may already be at the lower scroll limit after opening
+        // the system tile. Require a real scroll in either available direction.
         f.background.scrollTo(f.background.scrollX, before + 32)
+        if (f.background.scrollY == before) {
+            f.background.scrollTo(f.background.scrollX, (before - 32).coerceAtLeast(0))
+        }
         assertTrue("Real background scroll advances", f.background.scrollY != before)
         advance(32L)
         println("SCROLL_WINDOW background=$before->${f.background.scrollY} workShown=${f.work.isShown}")

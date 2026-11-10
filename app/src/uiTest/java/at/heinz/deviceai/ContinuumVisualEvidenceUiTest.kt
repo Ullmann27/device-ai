@@ -276,7 +276,12 @@ class ContinuumVisualEvidenceUiTest {
             assertTrue("Phone retains a real scrolling cockpit", viewport != null)
             val scrolling = requireNotNull(viewport)
             val beforeScroll = scrolling.scrollY
+            // The compact cockpit may already be at the lower scroll limit after opening
+            // the system tile. Require a real scroll in either available direction.
             scrolling.scrollTo(scrolling.scrollX, beforeScroll + 32)
+            if (scrolling.scrollY == beforeScroll) {
+                scrolling.scrollTo(scrolling.scrollX, (beforeScroll - 32).coerceAtLeast(0))
+            }
             assertTrue("The actual background scroll changed", scrolling.scrollY != beforeScroll)
             advance(32L)
             assertFalse("A moved background invalidates protected work bounds", reopened.isShown)
