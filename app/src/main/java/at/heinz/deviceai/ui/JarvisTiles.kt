@@ -293,6 +293,7 @@ object JarvisTiles {
     fun drawBottomNav(p: ContinuumPainter, b: Box, items: List<NavItem> = bottomNav, selected: Int = 0,
                       timeMs: Long = 0L, pressed: Int = -1) {
         if (items.isEmpty()) return
+        LuxuryHoloButtonRenderer.drawDockPlatform(p, b)
         val cells = bottomNavItemBoxes(b, items)
         val inset = 3f
         items.forEachIndexed { i, it ->
@@ -304,7 +305,7 @@ object JarvisTiles {
                 controlState = if (i == pressed) JarvisControlState.PRESSED
                     else if (i == selected) JarvisControlState.SELECTED
                     else JarvisControlState.NORMAL)
-            drawSurface(p, tile, model, active, timeMs)
+            drawSurface(p, tile, model, active, timeMs, luxuryDepth = true)
             val iconSize = minOf(22f, tile.height * .38f, tile.width * .42f)
             val iy = tile.top + tile.height * .38f
             val color = if (it.target == "system") Colors.violetSoft else if (active) Colors.cyan else Colors.cyanSoft

@@ -125,7 +125,8 @@ object JarvisNeon {
      * No offset copies, so large system fonts stay single and sharp.
      */
     fun text(p: ContinuumPainter, s: String, x: Float, y: Float, style: TextStyle, color: Int = Colors.cyan,
-             align: TextAlign = TextAlign.LEFT, glow: Glow = Glow.SUBTLE, active: Boolean = false) {
+             align: TextAlign = TextAlign.LEFT, glow: Glow = Glow.SUBTLE, active: Boolean = false,
+             ink: Int = color) {
         if (glow != Glow.OFF && s.isNotEmpty()) {
             val w = p.measureText(s, style); val h = p.capHeight(style)
             val l = when (align) { TextAlign.LEFT -> x; TextAlign.CENTER -> x - w / 2f; TextAlign.RIGHT -> x - w }
@@ -140,7 +141,7 @@ object JarvisNeon {
             val cx = when (align) { TextAlign.LEFT -> x + w / 2f; TextAlign.CENTER -> x; TextAlign.RIGHT -> x - w / 2f }
             bloom(p, cx, y - p.capHeight(style) / 2f, maxOf(w * .45f, style.size), color, .6f)
         }
-        p.drawText(s, x, y, style, Fill.Solid(if (active) Argb.mix(color, Colors.activeWhite, .35f) else color), align)
+        p.drawText(s, x, y, style, Fill.Solid(if (active) Argb.mix(ink, Colors.activeWhite, .35f) else ink), align)
     }
 
     // ---- Active-state bloom (Jarvis Avatar extension, VIDEO-SPEC "starker Bloom") -------------------------------
