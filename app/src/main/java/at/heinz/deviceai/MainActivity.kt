@@ -399,25 +399,24 @@ class MainActivity : Activity() {
             Risk.CONFIRM -> {
                 AlertDialog.Builder(this)
                     .setTitle(plan.title)
-                    .setMessage(
-                        "Geplante Aktionen:\n\n" +
-                            plan.steps.joinToString("\n") { "• ${it.label}" } +
-                            "\n\nAusführen?"
-                    )
+                    .setMessage(ExpertModeConsent.confirmMessage(plan))
                     .setNegativeButton("Abbrechen", null)
                     .setPositiveButton("Ausführen") { _, _ -> execute(plan) }
                     .show()
             }
             Risk.DESTRUCTIVE -> {
                 AlertDialog.Builder(this)
-                    .setTitle("Kritische Aktion")
-                    .setMessage(
-                        "Dieser Auftrag enthält eine destruktive Aktion:\n\n" +
-                            plan.steps.joinToString("\n") { "• ${it.label}" } +
-                            "\n\nNur fortfahren, wenn du das wirklich willst."
-                    )
+                    .setTitle(ExpertModeConsent.DESTRUCTIVE_TITLE)
+                    .setMessage(ExpertModeConsent.destructiveFirstMessage(plan))
                     .setNegativeButton("Abbrechen", null)
-                    .setPositiveButton("Trotzdem ausführen") { _, _ -> execute(plan) }
+                    .setPositiveButton(ExpertModeConsent.DESTRUCTIVE_CONTINUE) { _, _ ->
+                        AlertDialog.Builder(this)
+                            .setTitle(ExpertModeConsent.STRONG_TITLE)
+                            .setMessage(ExpertModeConsent.destructiveStrongMessage(plan))
+                            .setNegativeButton("Abbrechen", null)
+                            .setPositiveButton(ExpertModeConsent.STRONG_CONFIRM) { _, _ -> execute(plan) }
+                            .show()
+                    }
                     .show()
             }
         }
