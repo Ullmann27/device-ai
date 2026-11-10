@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:24:07" hostname="1a6f5c6cf9c0" time="0.001">
+  <properties/>
+  <testcase name="windowIdsAreStablePerWorkSlot" classname="at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest" time="0.0"/>
+  <testcase name="tinyGazeChangesAreRateLimited" classname="at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest" time="0.001"/>
+  <testcase name="noEventWithoutARealWindow" classname="at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest" time="0.0"/>
+  <testcase name="stopAfterReducedMotionStillClosesAPresentWindow" classname="at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest" time="0.0"/>
+  <testcase name="doesNotReopenAfterClosedOnTheSameTurn" classname="at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest" time="0.0"/>
+  <testcase name="flyingSampleFollowsTheProjectedCentreNotTheRestRectangle" classname="at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest" time="0.0"/>
+  <testcase name="stopEmitsClosedForARememberedWindow" classname="at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest" time="0.0"/>
+  <testcase name="reducedMotionWithoutMovementDoesNotEmit" classname="at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

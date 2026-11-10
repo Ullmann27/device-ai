@@ -1,0 +1,95 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:604:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:605:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:607:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1104:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1549:67 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3679:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4233:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4649:40 Condition is always 'true'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4649:56 Condition is always 'true'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6755:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6770:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6799:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9502:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10154:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10154:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10577:25 Condition is always 'true'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10577:44 Condition is always 'true'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10639:58 Condition is always 'true'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10642:53 Unnecessary safe call on a non-null receiver of type 'LocalGroundedRecall'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:11549:74 Unnecessary safe call on a non-null receiver of type '(ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:11595:70 Unnecessary safe call on a non-null receiver of type '(ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt:209:13 'when' is exhaustive so 'else' is redundant here.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:604:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:605:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:607:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1104:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1549:67 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3679:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4233:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4649:40 Condition is always 'true'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4649:56 Condition is always 'true'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6755:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6770:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6799:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9502:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10154:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10154:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10577:25 Condition is always 'true'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10577:44 Condition is always 'true'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10639:58 Condition is always 'true'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10642:53 Unnecessary safe call on a non-null receiver of type 'LocalGroundedRecall'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:11549:74 Unnecessary safe call on a non-null receiver of type '(ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:11595:70 Unnecessary safe call on a non-null receiver of type '(ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt:209:13 'when' is exhaustive so 'else' is redundant here.
+
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar
+
+> Task :app:compileDebugUnitTestKotlin
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:35:66 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:36:108 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:42:48 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisCockpitGrid.Grid'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:71:69 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:72:48 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:72:67 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:73:79 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+[Incubating] Problems report is available at: file:///workspace/scratch/006ff0a2565d/cinema-dialog-integration/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 1m 6s
+21 actionable tasks: 3 executed, 18 up-to-date

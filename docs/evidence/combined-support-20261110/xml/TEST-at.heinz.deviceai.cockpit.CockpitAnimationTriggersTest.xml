@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:24:06" hostname="1a6f5c6cf9c0" time="0.011">
+  <properties/>
+  <testcase name="deliveredReplyCannotInventApprovalStatus" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.004"/>
+  <testcase name="deliveryPreservesPreviouslyObservedToolFailure" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.001"/>
+  <testcase name="documentEventCarriesOnlyMeasuredPageCount" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.001"/>
+  <testcase name="observedToolSuccessDoesNotLeaveFalseApprovalBlock" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.0"/>
+  <testcase name="acknowledgedCommandUsesOneTimelineWithoutDuplicateThinkAction" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.001"/>
+  <testcase name="documentPipelineHelpersEmitOnlyCanonicalFacts" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.001"/>
+  <testcase name="approvalAndBlockedMilestonesAreVisibleSteps" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.0"/>
+  <testcase name="workerStartAndReportAreTheirOwnTimeline" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.001"/>
+  <testcase name="accountAndDocumentCardsOnlyFromTheirExplicitRealPaths" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.0"/>
+  <testcase name="deliveryAloneDoesNotConfirmWorkOrToolOutcome" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.001"/>
+  <testcase name="undeliveredOutcomeNeverConfirmsWork" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.0"/>
+  <testcase name="verifiedOutcomeConfirmsWorkButDoesNotInventToolReceipt" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.0"/>
+  <testcase name="brokenRendererDoesNotBreakOthersAndExtensionsPassThrough" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.0"/>
+  <testcase name="failedTurnKeepsUnresolvedApprovalBlocked" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.001"/>
+  <testcase name="endedTurnSettlesStepsAndDropsLateEvents" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.0"/>
+  <testcase name="toolCallsMapToResearchOrToolAndCompleteTheirStep" classname="at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
