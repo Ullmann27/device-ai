@@ -82,7 +82,7 @@ class OwnDiagnosticCache(
             check(monotonicMs() - start in 0 until WORK_BUDGET_MS) { "CACHE_OPERATION_EXPIRED" }
         }
         checkActive()
-        check(undo?.pendingIndex.isNullOrEmpty()) { "CACHE_INDEX_RECOVERY_REQUIRED" }
+        check(activeUndo()?.pendingIndex.isNullOrEmpty()) { "CACHE_INDEX_RECOVERY_REQUIRED" }
         checkRoot(root)
         checkRoot(ownershipRoot)
         if (!Files.exists(directory, NOFOLLOW_LINKS)) {
@@ -189,7 +189,7 @@ class OwnDiagnosticCache(
         if (now < plan.expires - PREVIEW_TTL_MS || now >= plan.expires)
             return OwnCacheCleanupResult("PREVIEW_EXPIRED")
         if (cancelled() || Thread.currentThread().isInterrupted) return OwnCacheCleanupResult("CANCELLED")
-        if (!undo?.pendingIndex.isNullOrEmpty()) return OwnCacheCleanupResult("RESTORE_INDEX_RECOVERY_REQUIRED")
+        if (!activeUndo()?.pendingIndex.isNullOrEmpty()) return OwnCacheCleanupResult("RESTORE_INDEX_RECOVERY_REQUIRED")
         if (plan.entries.isEmpty()) return OwnCacheCleanupResult("NO_AUDITED_DISPOSABLE_FILES")
         val current = readLedger()
         if (plan.entries.any { it !in current }) return OwnCacheCleanupResult("STALE_PREVIEW")
@@ -317,6 +317,16 @@ class OwnDiagnosticCache(
             pendingIndex = awaitingIndex.filterKeys { it in left })
         pending = null
         return OwnCacheCleanupResult(status, restoredFiles = maxOf(restored.size, indexed.size))
+    }
+
+    private fun activeUndo(): Undo? {
+        val current = undo ?: return null
+        val now = monotonicMs()
+        if (now < current.expires - UNDO_TTL_MS || now >= current.expires) {
+            undo = null
+            return null
+        }
+        return current
     }
 
     private fun verified(entry: Owned): ByteArray? = try {

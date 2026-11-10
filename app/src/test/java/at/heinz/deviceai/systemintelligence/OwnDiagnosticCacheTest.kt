@@ -326,4 +326,29 @@ class OwnDiagnosticCacheTest {
         assertEquals("RESTORED", cleaner.restore(cleanup.undoId).status)
         assertEquals(listOf(record()), cleaner.history())
     }
+    @Test fun expiredIndexRecoveryNeverBlocksNewRetentionOrCleanup() {
+        for (retainFirst in listOf(true, false)) {
+            var now = 1_000L
+            val cache = temporary.newFolder()
+            val owner = temporary.newFolder()
+            val cleaner = OwnDiagnosticCache(cache, owner) { now }
+            val id = cleaner.retain(record())
+            val preview = cleaner.preview()
+            val cleanup = cleaner.cleanup(preview.previewId, preview.planDigest)
+            assertEquals("RESTORE_INDEX_FAILED", failRestoreIndex(cleaner, owner, cleanup.undoId!!).status)
+            val old = File(cache, "system-diagnostics/summary-$id.cdiag")
+            val bytes = old.readBytes()
+            now += OwnDiagnosticCache.UNDO_TTL_MS
+            if (retainFirst) {
+                cleaner.retain(record(2_000))
+                assertEquals(listOf(record(2_000)), cleaner.history())
+            } else {
+                val fresh = cleaner.preview()
+                assertEquals("NO_AUDITED_DISPOSABLE_FILES", cleaner.cleanup(fresh.previewId, fresh.planDigest).status)
+            }
+            assertArrayEquals(bytes, old.readBytes())
+            assertEquals("UNDO_UNAVAILABLE", cleaner.restore(cleanup.undoId).status)
+        }
+    }
+
 }
