@@ -1,0 +1,14 @@
+[0.001s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/6 because it is locked by another process (errno = 11)
+IDENTITY	model=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd	tokenizer=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f	data=bc8d906df87bcd43bb3467ecdf18495256d814e2041c94c50857bd081c339b63	parameters=132160	bos=510	eos=511
+WEIGHTS	file=initial.lm1	sha256=7ce5bb557c1d688c4f00622368ddece347e7965930cace9b563a8200f3bde1c3	parameters=132160
+UPDATE	arm=continuous	step=1	targets=11	loss=4.70284366607666
+UPDATE	arm=continuous	step=2	targets=16	loss=2.3084211349487305
+MOMENTS	arm=continuous	step=2	firstNonzero=132160	secondNonzero=132160
+WEIGHTS	file=final.lm1	sha256=a0c54008308f7c330ec22a432388004b907e89c9e6424ac3aa9816d76bf0aa88	parameters=132160
+UPDATE	arm=resumed	step=1	targets=11	loss=4.70284366607666
+MOMENTS	arm=intermediate	step=1	firstNonzero=132160	secondNonzero=132160
+WEIGHTS	file=intermediate.lm1	sha256=b2f40f915dcc37406161cb1457a1dd58526ea2722512ac8cbd64cbb1a2f8a706	parameters=132160
+UPDATE	arm=resumed	step=2	targets=16	loss=2.3084211349487305
+MOMENTS	arm=resumed	step=2	firstNonzero=132160	secondNonzero=132160
+WEIGHTS	file=final.lm1	sha256=a0c54008308f7c330ec22a432388004b907e89c9e6424ac3aa9816d76bf0aa88	parameters=132160
+RESULT	status=PASS	optimizerUpdates=4	committedStepsPerArm=2	stateSha256=ef51b01fa6227c45808bb4df63227eff33b908c4db4789df6dc78f44c05f5923	languageQuality=NOT_MEASURED
