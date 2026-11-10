@@ -290,4 +290,32 @@ class WorkingTaskContextTest {
         val c = context()
         assertTrue(c.resolveWorkingTask(session, " ".repeat(520) + "Licht Alpha") is WorkingTaskDecision.Clarify)
     }
+
+    @Test fun exposedPoliteRejectionIsNotPredicateNegation() {
+        for (request in listOf("Licht Beta bitte nicht.", "Bitte Licht Beta nicht.", "Ich meine Licht Beta bitte nicht.")) {
+            val c = context()
+            assertTrue(request, c.resolveWorkingTask(session, request) is WorkingTaskDecision.Clarify)
+        }
+        val c = context()
+        assertEquals("beta", plan(c, "Warum startet Licht Beta nicht?").reference.id)
+        assertEquals("beta", plan(c, "Startet Licht Beta nicht?").reference.id)
+    }
+
+    @Test fun exposedConstraintCorrectionNeedsTrustedRebinding() {
+        val c = context()
+        val withVoice = seed(2).copy(constraints = seed().constraints +
+            WorkingTaskConstraint("voice", "Stimme unverändert lassen", "owner-voice"))
+        assertTrue(c.bindWorkingTask(session, withVoice))
+        val old = plan(c, "Licht Alpha verbessern")
+        val change = "Korrektur: Die Stimme darf jetzt heller werden. Avatar bleibt unverändert."
+        assertTrue(c.resolveWorkingTask(session, change) is WorkingTaskDecision.Clarify)
+        assertFalse(c.isWorkingTaskPlanCurrent(session, old))
+        assertEquals(withVoice.constraints, c.workingTaskSnapshot(session)!!.seed.constraints)
+        assertTrue(c.resolveWorkingTask(session, "Licht Alpha verbessern") is WorkingTaskDecision.Clarify)
+        assertTrue(c.bindWorkingTask(session, withVoice.copy(revision = 3,
+            constraints = withVoice.constraints.map {
+                if (it.key == "voice") it.copy(value = "Stimme darf heller werden", sourceId = "owner-voice-correction") else it
+            })))
+        assertEquals("alpha", plan(c, "Licht Alpha verbessern").reference.id)
+    }
 }

@@ -1,0 +1,9 @@
+PASS assent_is_not_a_web_request
+PASS negation_overrides_armed_web
+PASS stale_callback_cannot_approve_replacement
+PASS grant_rejects_changed_tool_argument
+PASS one_shot_cannot_replay
+PASS offline_denies_grant
+PASS cancel_prevents_execution
+PASS revoked_result_is_unauthorized
+8/8 PASS; real gate, synthetic actions, no network/model/device

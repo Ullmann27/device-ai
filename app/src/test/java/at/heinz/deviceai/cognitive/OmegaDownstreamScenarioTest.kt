@@ -91,7 +91,7 @@ class OmegaDownstreamScenarioTest {
         assertTrue(call.freshOutput)
         assertEquals(result.experience!!.id, proof.learningCandidateExperienceId)
         assertEquals(1, f.store.all().size)
-        assertTrue(ExperienceCompiler().compile(f.store.all()).all { it.requiresOwnerApproval })
+        assertTrue(ExperienceCompiler().compile(f.store.all()).isEmpty())
         val action = f.visualEvents.filterIsInstance<CockpitAnimationEvent.ActionStarted>().single()
         assertEquals(CockpitAction.TOOL, action.action)
         assertFalse(f.visualEvents.any { it is CockpitAnimationEvent.ActionStarted &&

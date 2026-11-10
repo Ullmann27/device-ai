@@ -1,0 +1,25 @@
+{
+  "source_local": "e398e8bd13d4e9b9854872cff73579fb7e7f30e2",
+  "main_source_tree": "ac71f51d397a420a442a6754bb12efaa46d3e014",
+  "test_source_tree": "417876ac7e7c09acf6364642c8f77f68f3a3d834",
+  "compileDebugKotlin": "PASS",
+  "junit_distinct_tests": 103,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "invocations": [
+    {
+      "tests": 101,
+      "log": "gradle-main-and-focused.txt"
+    },
+    {
+      "tests": 2,
+      "log": "gradle-continuous.txt"
+    }
+  ],
+  "note": "Initial filter typo omitted OmegaContinuousScenarioTest; corrected separate two-test run on byte-identical production/test source. Do not add overlapping host counts. Whole repository suite NOT_RUN. Independent holdout rejection is retained.",
+  "Fold7": "NOT_RUN",
+  "neural_inference": "NOT_RUN",
+  "rendering_and_audio": "NOT_RUN",
+  "APK": "NOT_BUILT"
+}

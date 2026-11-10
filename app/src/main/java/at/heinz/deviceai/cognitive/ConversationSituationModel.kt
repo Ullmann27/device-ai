@@ -122,7 +122,8 @@ internal class ConversationSituationModel(
             is WorkingTaskDecision.Resolved -> admitted.copy(currentPlan = WorkingTaskContext.copy(decision.plan),
                 suspended = false, unresolvedReference = null)
             is WorkingTaskDecision.Clarify -> admitted.copy(currentPlan = null, selectedReferenceId = null,
-                unresolvedReference = request.take(160))
+                unresolvedReference = request.take(160), blockedReason =
+                    if (decision.reason == "CONSTRAINT_CHANGE_REQUIRES_REBIND") decision.reason else admitted.blockedReason)
             else -> admitted.copy(currentPlan = null)
         }
         workingTaskResolutionTurn = turn

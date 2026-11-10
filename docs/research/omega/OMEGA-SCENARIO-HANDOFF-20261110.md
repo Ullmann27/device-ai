@@ -80,3 +80,31 @@ This suite is development verification, not the independent unseen holdout.
 
 Rollback: revert the BoundedAgent callback relocation; remove no existing bus,
 receipts or gates. Keep the negative source-bound evidence.
+
+## Continuous context-to-inspection test
+
+OmegaContinuousScenarioTest now executes one continuous host sequence over the
+frozen context source ad1f9ed6b3d293d47c4cbb01fae3a6d17e197658. The exact owner
+utterance resolves the other of two trusted displayed animation variants,
+retaining the goal and two confirmed constraints. The source-bound plan is
+checked current before a test-supplied read-only inspection proposal enters
+the existing gate, receipt, evaluation, experience and cockpit paths. The
+returned text explicitly says the animation was not changed. One experience
+is insufficient to produce a compiled skill candidate; this is asserted.
+
+A second case has no selected reference. It must clarify, with no tool dispatch,
+action-start event or verified episode. This is a development integration test;
+the independent evaluator owns the separate unseen holdout and promotion verdict.
+
+Use CONTINUUM_OMEGA_CONTINUOUS=1 with the script. Combining it with
+CONTINUUM_OMEGA_REGRESSIONS=1 runs33distinct methods. The continuous mode
+recompiles the four actual context source files as well as the ten downstream
+sources. Transitive dependencies must be a frozen copy of a completed Android
+build; do not point to a directory Gradle is concurrently rewriting. The final
+run used the independent evaluator's read-only baseline snapshot.
+
+The typed goal/constraints and displayed variants are explicit trusted fixtures,
+not automatically extracted from arbitrary natural dialogue. The inspection
+proposal is also a test mapping, not a semantic planner. Thus this proves a
+host-level through-path under declared inputs; real autonomous animation repair,
+voice and the full user's11-stage Android request remain NOT_RUN.
