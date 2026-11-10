@@ -253,7 +253,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         canvas.save()
         canvas.scale(density, density)
         if (zSliceEnabled && !reducedMotion) canvas.translate(
-            HollywoodFuiConstruct.layerShiftDp(tilt, HollywoodFuiConstruct.REAR_GLASS_Z_DP, true), 0f)
+            HollywoodFuiConstruct.layerShiftDp(tilt, -24f, true), 0f)
         if (!reducedMotion && active) canvas.translate(parallaxX * 5f, parallaxY * 3.5f)
         val radiusDp = 6f
         cinematics.drawGlassLayers(painter, boxDp, frame, radiusDp, budget.glassLayers)
@@ -288,7 +288,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         }
         canvas.save()
         if (zSliceEnabled && !reducedMotion) canvas.translate(
-            HollywoodFuiConstruct.layerShiftDp(tilt, HollywoodFuiConstruct.FRONT_BRACKET_Z_DP, true), 0f)
+            HollywoodFuiConstruct.layerShiftDp(tilt, 20f, true), 0f)
         cinematics.drawBrackets(painter, boxDp, frame.brackets * frame.closeFrame, bloom)
         canvas.restore()
         canvas.restore()
