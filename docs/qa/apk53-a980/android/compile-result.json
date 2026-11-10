@@ -1,0 +1,31 @@
+{
+  "phase": "compile",
+  "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "sourceTree": "a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e",
+  "sourceStatus": "",
+  "command": [
+    "/tmp/continuum-toolchain/gradle-8.11.1/bin/gradle",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=1",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx2200m -XX:MaxMetaspaceSize=512m -XX:+UseSerialGC -XX:ActiveProcessorCount=2",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerArm64=true",
+    "-PcontinuumStandaloneVersionCode=53",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumUiEvidenceDir=/workspace/scratch/5900afa6af29/apk53-a980-android/compile/images",
+    "-I",
+    "/workspace/scratch/5900afa6af29/apk53-a980-android/apk53-test-memory.gradle",
+    ":app:testDebugUnitTest",
+    "-I",
+    "/workspace/scratch/5900afa6af29/apk53-a980-android/apk53-compile-only.gradle"
+  ],
+  "started": 1794354660.6833456,
+  "exit": 0,
+  "finished": 1794354680.4350514,
+  "endSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "endStatus": ""
+}

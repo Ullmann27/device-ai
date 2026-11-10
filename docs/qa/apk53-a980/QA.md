@@ -1,4 +1,4 @@
-# APK53 QA draft — host gates passed, Android pending
+# APK53 QA checkpoint — focused Android green, full suite running
 
 Frozen source: `a980a19ed3ab44323009ae27eb299d322ff11679`  
 Git tree: `a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e`  
@@ -53,13 +53,17 @@ this final Android source.
 
 | Gate | Status |
 |---|---|
-| Android compile, focused tests, full tests, lint | **PENDING** |
+| Android compilation | **PASS** — compilation only, no test claim |
+| Focused Android camera tests | **11 PASS /0 FAIL /0 SKIP**, including both repaired UI cases |
+| Full Android suite | **RUNNING** |
+| NewApi lint | **PENDING** |
 | ARM64 unsigned APK / code 53 | **PENDING** — no artifact hash or size yet |
 | Original signing, publication, installation | **NOT_RUN** |
 | Physical Fold7, hardware AGSL/Filament, live microphone, Gemma | **NOT_RUN** |
 
-The queued pipeline is configured for this exact SHA. No Android pipeline
-result is imported into this draft. The root must replace pending statuses
+The active pipeline is bound to this exact SHA. Compilation and focused-test
+receipts are included under `android/`; all eleven focused cases belong to the
+full suite and must not be added to its eventual total. The root must replace pending statuses
 only from completed source-bound receipts; source changes invalidate this
 draft's applicability to the changed code.
 

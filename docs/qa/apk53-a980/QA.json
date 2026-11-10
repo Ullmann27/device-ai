@@ -1,7 +1,7 @@
 {
   "schema": "apk53-frozen-host-evidence-draft-v1",
   "recordedAtUtc": "2026-11-10T23:21:36.302085+00:00",
-  "status": "HOST_GATES_PASS_ANDROID_PENDING",
+  "status": "HOST_AND_FOCUSED_ANDROID_PASS_FULL_RUNNING",
   "source": {
     "commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
     "gitTree": "a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e",
@@ -107,7 +107,7 @@
         {
           "id": 7,
           "file": ".github/continuum/cognitive-action-integration.test.mjs",
-          "name": "native natural request \u2192 actual tool \u2192 receipt \u2192 persisted episode, with negative regressions",
+          "name": "native natural request → actual tool → receipt → persisted episode, with negative regressions",
           "reasonId": "S03"
         },
         {
@@ -280,7 +280,7 @@
         {
           "id": "S05",
           "count": 1,
-          "xmlReason": "Run scripts/continuum-fabric-jvm-check.sh for the actual JVM\u2192Node test"
+          "xmlReason": "Run scripts/continuum-fabric-jvm-check.sh for the actual JVM→Node test"
         },
         {
           "id": "S06",
@@ -581,7 +581,7 @@
   ],
   "pending": {
     "androidPipeline": {
-      "status": "PENDING",
+      "status": "FULL_SUITE_RUNNING",
       "configuredSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
       "configuredPhases": [
         "compile",
@@ -590,7 +590,18 @@
         "lint",
         "assemble"
       ],
-      "resultImported": false
+      "resultImported": true,
+      "completedPhases": [
+        "compile",
+        "targeted"
+      ],
+      "focused": {
+        "total": 11,
+        "passed": 11,
+        "failed": 0,
+        "skipped": 0,
+        "partOfFullSuite": true
+      }
     },
     "unsignedArm64Apk": {
       "status": "PENDING",
@@ -605,7 +616,7 @@
     "physicalFold7": "NOT_RUN",
     "liveMicrophoneSpeech": "NOT_RUN",
     "GemmaInference": "NOT_RUN",
-    "sourceChangeRule": "Any changed product source requires new exact-source acceptance; this draft imports no queued Android result."
+    "sourceChangeRule": "Changed source requires new exact-source acceptance. Full Android, lint and unsigned assembly are still pending."
   },
   "receiptHashes": [
     {
