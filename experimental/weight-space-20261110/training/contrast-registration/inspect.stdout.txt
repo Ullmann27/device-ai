@@ -1,0 +1,9 @@
+INPUT	file=baseline.lm1	sha256=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd
+INPUT	file=tokenizer.lmbp	sha256=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f
+INPUT	file=train.tsv	sha256=3666036e3b63db7738bebc391bd9058ca63bb0d1ea01b240726223c2ddc9039c
+INPUT	file=dev.tsv	sha256=057dac485d2d4d39ebcfcdc7de3fe15c9c6c4bebd2bea888b4db303949798935
+INPUT	file=retention.tsv	sha256=dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a
+INPUT	file=replay.txt	sha256=b5fdd3c9528fe5a0f7a1dbc24db9e7169f0a00f9b31a211aff4ca8c6c97553c1
+INPUT	file=retention_text.txt	sha256=699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019
+CONFIG	mode=inspect	steps=128	parameters=132160	seed=20261110	rate=1.0E-4	answerBatch=4	replayBatch=0	replayWeight=0.0
+INSPECT	train=128	dev=64	retention=64	updates=0

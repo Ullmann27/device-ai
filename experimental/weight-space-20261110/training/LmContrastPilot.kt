@@ -118,8 +118,8 @@ object LmContrastPilot {
         val restored = LmCheckpoint.decode(baselineBytes, tok)
         val model = LmModel(restored.params)
         require(model.params.count == 132160)
-        val train = rows(data.resolve("train.tsv"))
-        val dev = rows(data.resolve("dev.tsv"))
+        val train = rows(data.resolve("note-contrasts-v1/train.tsv"))
+        val dev = rows(data.resolve("note-contrasts-v1/dev.tsv"))
         val retain = rows(data.resolve("retention.tsv"))
         val replayTexts = Files.readAllLines(data.resolve("replay.txt")).filter { it.isNotBlank() }
         val retainTexts = Files.readAllLines(data.resolve("retention_text.txt")).filter { it.isNotBlank() }
@@ -133,11 +133,13 @@ object LmContrastPilot {
         (dev + retain).forEach { answer(tok, it, model.config.context) }
         val replay = replayTexts.map { textSample(tok, it, model.config.context) }
         retainTexts.forEach { textSample(tok, it, model.config.context) }
-        val paths = listOf(baseline, tokenizerPath) + listOf("train.tsv", "dev.tsv", "retention.tsv", "replay.txt", "retention_text.txt").map(data::resolve)
+        val paths = listOf(baseline, tokenizerPath) + listOf("note-contrasts-v1/train.tsv", "note-contrasts-v1/dev.tsv", "retention.tsv", "replay.txt", "retention_text.txt").map(data::resolve)
         val hashes = paths.associateWith { sha(Files.readAllBytes(it)) }
         hashes.forEach { (p, hash) -> emit("INPUT", "file" to p.fileName, "sha256" to hash) }
         emit("CONFIG", "mode" to mode, "steps" to STEPS, "parameters" to model.params.count,
-            "seed" to 20261110, "rate" to .0001, "answerBatch" to 4, "replayBatch" to 2, "replayWeight" to .1)
+            "seed" to 20261110, "rate" to .0001, "answerBatch" to 4,
+            "replayBatch" to if (mode == "replay") 2 else 0,
+            "replayWeight" to if (mode == "replay") .1 else .0)
         if (mode == "inspect") {
             emit("INSPECT", "train" to train.size, "dev" to dev.size, "retention" to retain.size, "updates" to 0)
             return
@@ -176,7 +178,7 @@ object LmContrastPilot {
         }
         val checkpoint = LmCheckpoint.encode(model.params, tok, restored.meta + mapOf(
             "experiment" to "contrast-dev-20261110", "scope" to "RESEARCH_SHADOW", "arm" to mode,
-            "parent" to BASE, "adaptSteps" to "$STEPS", "data" to hashes.getValue(data.resolve("train.tsv"))))
+            "parent" to BASE, "adaptSteps" to "$STEPS", "data" to hashes.getValue(data.resolve("note-contrasts-v1/train.tsv"))))
         Files.write(out.resolve("final.lm1"), checkpoint, StandardOpenOption.CREATE_NEW)
         check(LmCheckpoint.decode(checkpoint, tok).params.count == 132160)
         emit("CHECKPOINT", "sha256" to sha(checkpoint), "bytes" to checkpoint.size)

@@ -1,0 +1,45 @@
+{
+  "schema": "continuum-weight-native-build-v1",
+  "historicalSourceRef": "4b8fa96effd5a390bd5fd83ed84b81ac850b1d5b",
+  "compileCommand": [
+    "/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/bin/kotlinc",
+    "-jvm-target",
+    "17",
+    "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/LmTrainingState.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/LmTrainingFixture.kt",
+    "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/LmContrastPilot.kt",
+    "-d",
+    "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/experiment.jar"
+  ],
+  "compileExitCode": 0,
+  "originalSha256": {
+    "LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+  },
+  "patchedSha256": {
+    "LmModel.kt": "effba147289041b068c94222c33ae9549c29f8b287fc45a861d1a0a373db3c53",
+    "LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e"
+  },
+  "extraSha256": {
+    "LmTrainingState.kt": "e45eb6b39e2fbaeb07328b175ae118d2ea6f2d827d402b51f3275437d2a3fd10",
+    "LmTrainingFixture.kt": "adbb7a4bcafcf781618c5ff4392edd959bddb97d280c3f3a7da2402521725f56",
+    "LmContrastPilot.kt": "e4af24197f081c08584b01617eda8602313e517485c0d4c0c3b0a5dffb8bdf7f"
+  },
+  "patchSha256": "7deb89ca77f41b45babdf223ec5ce8e1f4771aaea0cbbd92bdfd27edbbc3abb8",
+  "compilerVersion": "info: kotlinc-jvm 2.4.0 (JRE 21.0.13+9-1-deb13u2-Debian)\n",
+  "compilerJarSha256": "66e73eacd619c9beb7c22042117af36b443529c4d80237ee82cc4b2acb6f3d0b",
+  "stdlibSha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+  "jarSha256": "d0a7214af4cba4d85be5d2513da90f511ad5d40c6f57af182a71b373221bde90",
+  "classpath": "/workspace/scratch/87c6edbcb340/weights-build-contrast-v2/experiment.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/lib/kotlin-stdlib.jar",
+  "modelUpdates": 0,
+  "sourceBindingSha256": "2bedb5c77d30c4dbaa901a2ce027ccce6849c6d4c884919fce767c5578d18b22",
+  "builderSha256": "b0562b82f6fc7117fbff1b5c7c0afa14ec115927b15726ba906cb86d94e199d4"
+}
