@@ -1,0 +1,16 @@
+{
+  "status": "HOST_VERIFIED_ONLY",
+  "source_commit": "8037215ae4a82031cdb20ee57308bfec1421b334",
+  "tests": 44,
+  "new_tests": 20,
+  "existing_tests": 24,
+  "synthetic_case_decisions": 192,
+  "model": "NONE",
+  "android_gradle": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "baseline_local": "4ac9c9b94b9fb5e391646e2e99e986db32ec7997",
+  "baseline_remote": "ae3ce34b5aff285ed8c569ca2844975e34131a86",
+  "candidate_authority": "OWNER_REVIEW_ONLY",
+  "surprise_accuracy_gain": false,
+  "provenance_excluded_from_text_count": true
+}

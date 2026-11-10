@@ -1,0 +1,12 @@
+Evidence: deterministic synthetic selection; no Gemma, inference, latency or device claim.
+Training: clean 56 synthetic episodes; poisoned adds 4 false labels rejected by the fixture oracle.
+Holdout: 12 authored tasks; 8 positive, 4 abstention controls, disjoint IDs and request strings.
+All arms use the same frozen history and held-out tasks; no holdout feeds consolidation.
+Raw uses existing MemoryRetriever; episodic uses existing InMemoryExperienceStore.
+Procedural returns existing candidate tool-name metadata only; never executes a tool or approved skill.
+Arms intentionally differ in validation and representation; results do not isolate representation alone.
+Surprise ablation changes bounded recall, not the compiler input or candidate evidence denominator.
+Candidate routing uses known task-type metadata, so no language-understanding improvement is established.
+Context characters count exposed selection text, excluding provenance retained alongside every candidate.
+No paid service, persistence mutation, training, wall-clock speed claim or hidden model call.
+Result SHA-256: c170e7f20c708d6e7c08267b6b1005458fdbf345a08c16225300468b247274b7
