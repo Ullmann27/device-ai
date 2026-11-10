@@ -678,7 +678,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (!active) cancelAvatarProof()
         if (!active) synchronized(avatarPose) {
             avatarPose.clearSpeech()
-            avatarPose.clearObservedGaze(SystemClock.elapsedRealtime())
+            avatarPose.clearObservedGaze(System.currentTimeMillis())
         }
         updateMotionPolicy()
     }
@@ -795,7 +795,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         avatarInvalidationPending.set(false)
         synchronized(avatarPose) {
             avatarPose.clearSpeech()
-            avatarPose.clearObservedGaze(SystemClock.elapsedRealtime())
+            avatarPose.clearObservedGaze(System.currentTimeMillis())
         }
         removeCallbacks(drawFrame)
         framePending = false
@@ -914,7 +914,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             resetCamera()
             resetAvatarEntrance()
             clearTaskEffects()
-            synchronized(avatarPose) { avatarPose.clearObservedGaze(SystemClock.elapsedRealtime()) }
+            synchronized(avatarPose) { avatarPose.clearObservedGaze(System.currentTimeMillis()) }
             settleState()
             audio.reset()
             audioEnergy = 0f
@@ -1023,7 +1023,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             canvas.restoreToCount(auraCanvas)
         }
         if (headEnabled) {
-            val pose = proof?.pose ?: synchronized(avatarPose) { avatarPose.pose(SystemClock.elapsedRealtime(), canAnimateFrame()) }
+            val pose = proof?.pose ?: synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis(), canAnimateFrame()) }
             receipt.stageFlags = receipt.stageFlags or AvatarFrameReceipt.POSE_SAMPLED
             receipt.jawOpen = pose.jawOpen
             receipt.speakEnergy = pose.speakEnergy
