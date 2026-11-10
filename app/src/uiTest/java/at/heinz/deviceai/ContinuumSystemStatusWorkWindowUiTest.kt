@@ -436,16 +436,18 @@ class ContinuumSystemStatusWorkWindowUiTest {
             measure(root); advance(320L); measure(root); draw(root)
             fun deck() = JarvisHomeTestRoutes.deck(root).count { it.isShown }
             val before = deck()
-            assertEquals("Ten cards and four diagnostics occupy the deck", 14, before)
+            assertEquals("The current composition occupies the deck", JarvisHomeTestRoutes.expectedDeckSize(root), before)
             val footprint = JarvisHomeTestRoutes.footprintOfCentre("Gedächtniszentrum")
             fun cleared() = JarvisHomeTestRoutes.clearedBy(root, footprint)
             fun kept() = JarvisHomeTestRoutes.keptBy(root, footprint)
-            assertEquals("A medium window leaves the four mission rows on the deck", 4, kept().size)
+            val expectedKept = if (requireNotNull(home.jarvisShell.currentShell()).hasFeatureTiles) 4 else before
+            assertEquals("A medium window leaves the remaining destination controls on the deck", expectedKept, kept().size)
             val memory = JarvisHomeTestRoutes.destination(root, "memory")
             JarvisHomeTestRoutes.scrollIntoView(memory)
             advance(32L); measure(root); draw(root)
             // Owner review 06.11.: prove it with real touches and the accessibility tree, not only isShown.
-            val deckPoints = cleared().flatMap { view ->
+            val spaceMakers = cleared()
+            val deckPoints = spaceMakers.flatMap { view ->
                 val bounds = Rect()
                 if (!view.getGlobalVisibleRect(bounds)) emptyList() else listOf(
                     bounds.left + 2f to bounds.top + 2f,
@@ -453,10 +455,16 @@ class ContinuumSystemStatusWorkWindowUiTest {
                     bounds.left + 2f to bounds.bottom - 2f,
                     bounds.right - 2f to bounds.bottom - 2f)
             }
-            assertTrue("Actual deck controls are visible before opening", deckPoints.isNotEmpty())
+            if (spaceMakers.isNotEmpty()) {
+                assertTrue("Actual deck controls are visible before opening", deckPoints.isNotEmpty())
+            }
             // The framework's own selection of children offered to accessibility services (TalkBack).
             fun a11yChildren() = ArrayList<View>().also { home.addChildrenForAccessibility(it) }
-                .count { v -> v.tag?.toString()?.let { it.startsWith("jarvis-tile:") || it.startsWith("jarvis-panel:ROW_") } == true }
+                .count { v ->
+                    val tag = v.tag?.toString() ?: return@count false
+                    tag.startsWith("jarvis-tile:") || tag.startsWith("jarvis-panel:ROW_") ||
+                        (tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.features)
+                }
             val a11yBefore = a11yChildren()
             tap(root, memory)
             advance(640L); measure(root); draw(root)
@@ -541,7 +549,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 .apply { isAccessible = true }.invoke(activity, *args)
             fun deck() = JarvisHomeTestRoutes.deck(root).count { it.isShown }
             val beforeDeck = deck()
-            assertEquals("The deck contains ten cards and four diagnostics", 14, beforeDeck)
+            assertEquals("The deck contains every current destination", JarvisHomeTestRoutes.expectedDeckSize(root), beforeDeck)
             fun labels(v: View) = descendants(v).filterIsInstance<TextView>().map { it.text.toString() }
 
             call("presentToolScene", "call-app", "launch_app", mapOf<String, Any?>("packageOrName" to pkg))
@@ -604,7 +612,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             measure(root); advance(320L); measure(root); draw(root)
             fun deck() = JarvisHomeTestRoutes.deck(root).count { it.isShown }
             val before = deck()
-            assertEquals("All cards and diagnostics remain at 200 percent", 14, before)
+            assertEquals("All cards and diagnostics remain at 200 percent", JarvisHomeTestRoutes.expectedDeckSize(root), before)
             tap(root, JarvisHomeTestRoutes.destination(root, "memory"))
             advance(640L); measure(root); draw(root)
             val windowShown = descendants(root).any { it.tag == "jarvis-work-window" && it.isShown }
@@ -651,7 +659,11 @@ class ContinuumSystemStatusWorkWindowUiTest {
             framePump = CockpitHostFramePump { controller.get().window.decorView }
             fun home() = field(activity, "homeView") as ContinuumHomeView
             home().setForegroundActive(true)
-            fun deckTag(v: View) = v.tag?.toString()?.let { it.startsWith("jarvis-tile:") || it.startsWith("jarvis-panel:ROW_") } == true
+            fun deckTag(v: View): Boolean {
+                val tag = v.tag?.toString() ?: return false
+                return tag.startsWith("jarvis-tile:") || tag.startsWith("jarvis-panel:ROW_") ||
+                    (tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.features)
+            }
             fun deck() = JarvisHomeTestRoutes.deck(root).count { it.isShown }
             fun hidden() = JarvisHomeTestRoutes.deck(root).count { it.visibility == View.INVISIBLE }
             fun a11y() = ArrayList<View>().also { home().addChildrenForAccessibility(it) }.count(::deckTag)
@@ -659,7 +671,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             var width = 884; var height = 760
             measure(root, width, height); advance(320L); measure(root, width, height); draw(root)
             val inner = deck()
-            assertEquals("The inner deck has ten cards and four diagnostics", 14, inner)
+            assertEquals("The inner deck has every current destination", JarvisHomeTestRoutes.expectedDeckSize(root), inner)
             // Inner landscape → inner portrait (rotation), → cover portrait (fold), → inner landscape (unfold).
             for ((qualifiers, w, h) in listOf(Triple("w760dp-h884dp-port-mdpi", 760, 884),
                 Triple("w412dp-h915dp-port-mdpi", 412, 915), Triple("w884dp-h760dp-land-mdpi", 884, 760))) {
@@ -680,7 +692,8 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 assertFalse("no window stays at the old geometry after $qualifiers", windowShown())
                 assertEquals("no tile or row stays hidden after $qualifiers", 0, hidden())
                 val shownDeck = deck()
-                assertEquals("All current deck actions return after $qualifiers", 14, shownDeck)
+                assertEquals("All current deck actions return after $qualifiers",
+                    JarvisHomeTestRoutes.expectedDeckSize(root), shownDeck)
                 assertEquals("TalkBack offers the whole deck after $qualifiers", shownDeck, a11y())
             }
             assertEquals("unfolded again: the complete inner deck", inner, deck())

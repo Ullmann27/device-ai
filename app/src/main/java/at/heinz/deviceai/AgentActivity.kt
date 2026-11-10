@@ -297,8 +297,10 @@ class AgentActivity : Activity() {
     }
     private var voiceEngine: TextToSpeech? = null
     // M3 avatar preparation: rendering-free event contract (docs/CONTINUUM_AVATAR_CONTRACT.md).
+    // Glance and work TTLs use the same monotonic elapsedRealtime as observed-gaze ages.
     private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(
-        at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut { android.os.Handler(android.os.Looper.getMainLooper()).post(it) })
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut { android.os.Handler(android.os.Looper.getMainLooper()).post(it) },
+        android.os.SystemClock::elapsedRealtime)
     @Volatile private var voiceAvatarText: String = ""
     // Avatar-only flags (no behaviour change): a tool approval dialog is open / the last turn was refused or blocked.
     private var avatarAwaitingApproval = false
@@ -1197,7 +1199,6 @@ class AgentActivity : Activity() {
             cockpitBus.subscribe(at.heinz.deviceai.ui.CockpitAnimationPresenter(home, cockpitBus, cockpitSessionId,
                 onGreeting = { line -> runOnUiThread { recordCockpitDialog(false, line) } }, drift = cameraDrift)),
             cockpitBus.subscribe(airbus),
-            cockpitBus.subscribe(at.heinz.deviceai.avatar.CinemaWindowGazeBridge(avatarDirector)),
             cockpitBus.subscribe { runOnUiThread { pushCockpitState() } }
         )
         subscribeMemoryEvents()
@@ -1488,7 +1489,8 @@ class AgentActivity : Activity() {
                 if (!foregroundLearningActive) return@onSuccess
                 homeView?.takeIf { it.isShown }?.let { home ->
                     home.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
-                        memoryActivity = memoryActivitySnapshot(state.memory))
+                        memoryActivity = memoryActivitySnapshot(state.memory),
+                        document = airbusCockpitOrchestrator?.documentSnapshot())
                 }
                 if (liveHardwareGauges?.isShown == true) liveHardwareGauges?.updateTelemetry(state.system)
                 navigationView?.takeIf { it.isShown }?.state = state
@@ -1552,7 +1554,8 @@ class AgentActivity : Activity() {
         val home = homeView ?: return
         if (isFinishing || isDestroyed) return
         home.state = home.state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
-            memoryActivity = memoryActivitySnapshot(home.state.memory))
+            memoryActivity = memoryActivitySnapshot(home.state.memory),
+            document = airbusCockpitOrchestrator?.documentSnapshot())
         // The running turn's steps dock into the open work window instead of covering the avatar and the orb.
         workWindowHost.showStatus(cockpitTriggers.activeTimeline())
     }

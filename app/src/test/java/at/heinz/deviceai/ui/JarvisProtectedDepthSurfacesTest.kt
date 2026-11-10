@@ -5,12 +5,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [28])
 class JarvisProtectedDepthSurfacesTest {
     private val sheet = rect(100f, 200f, 500f, 800f)
     private val density = 2.5f

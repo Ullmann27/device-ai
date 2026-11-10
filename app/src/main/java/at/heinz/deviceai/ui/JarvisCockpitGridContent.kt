@@ -112,6 +112,9 @@ object JarvisCockpitGridContent {
                 if (at.heinz.deviceai.cockpit.JarvisUserCardSlot.renderer == null)
                     JarvisOwnerCardContent.draw(p, b, at.heinz.deviceai.cockpit.JarvisUserCardSlot.latest)
             }
+            Slot.WORK_DOCUMENT -> JarvisCockpitPanels.drawDocumentPreview(p, b, s)
+            Slot.WORK_PROCESS -> JarvisCockpitPanels.drawWorkProcess(p, b, s)
+            Slot.WORK_DRAFT -> JarvisCockpitPanels.drawDraftPreview(p, b, s)
             else -> return false
         }
         return true
@@ -133,8 +136,11 @@ object JarvisCockpitGridContent {
         // Local coordinates: the box's right edge lies at brand.left + width / fitScale (scaled around brand.left).
         val room = brand.left + (brand.right - brand.left) / fitScale - tx
         val top = cy - block / 2f
-        p.drawText(fit(p, "Device AI", brandStyle, room), tx, top + cap, brandStyle, Fill.Solid(Colors.text))
-        p.drawText(fit(p, "Continuum", brandStyle, room), tx, top + 2f * cap + 3f, brandStyle, Fill.Solid(Colors.text))
+        // Identity strings shrink to fit; they are never ellipsized.
+        val deviceStyle = fitting(p, "Device AI", brandStyle, room)
+        val continuumStyle = fitting(p, "Continuum", brandStyle, room)
+        p.drawText("Device AI", tx, top + cap, deviceStyle, Fill.Solid(Colors.text))
+        p.drawText("Continuum", tx, top + 2f * cap + 3f, continuumStyle, Fill.Solid(Colors.text))
         p.restore()
         g?.areas?.get(Area.DEVICE_STATUS)?.let { clock ->
             JarvisReferenceHud.surface(p, clock, 14f, Colors.cyanDeep, Colors.cyanDeep)
@@ -300,7 +306,8 @@ object JarvisCockpitGridContent {
         drawWaveform(p, Box(x, waveTop, b.right - 28f, waveBottom), level, now)
         val task = liveTaskText(s)
         val line = if (task != JarvisCockpitPanels.NONE) task else badge
-        p.drawText(fit(p, line, detail, room), x, b.bottom - 7f, detail, Fill.Solid(Colors.textSecondary))
+        val taskStyle = fitting(p, line, detail, room)
+        p.drawText(line, x, b.bottom - 7f, taskStyle, Fill.Solid(Colors.textSecondary))
         p.fillCircle(b.right - 14f, b.centerY + 8f, 3f,
             Fill.Solid(if (s.presentation.live || s.model.online) Colors.ok else Colors.textMuted))
     }

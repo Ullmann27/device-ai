@@ -70,7 +70,7 @@ internal class TtsHologramSignal {
     @Synchronized fun prePhonatoryLevel(id: String, nowMillis: Long): Float {
         if (utterance != id || !playing) return 0f
         val current = readLevel(nowMillis) ?: return 0f
-        val future = readLevel(nowMillis + LOOK_AHEAD_MS) ?: return 0f
+        val future = readLevel(nowMillis + 75L) ?: return 0f
         return if (current < .04f && future >= .18f) (future * .22f).coerceIn(0f, .12f) else 0f
     }
 
@@ -81,10 +81,4 @@ internal class TtsHologramSignal {
     }
 
     @Synchronized fun stop() { utterance = null; playing = false; points.clear(); nextFrame = 0 }
-
-    companion object {
-        /** Argon4 look-ahead: only already-buffered PCM this far ahead may prep the jaw. */
-        const val LOOK_AHEAD_MS = 80L
-    }
 }
-

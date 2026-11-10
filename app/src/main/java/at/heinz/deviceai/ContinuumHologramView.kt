@@ -678,7 +678,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (!active) cancelAvatarProof()
         if (!active) synchronized(avatarPose) {
             avatarPose.clearSpeech()
-            avatarPose.clearObservedGaze(System.currentTimeMillis())
+            avatarPose.clearObservedGaze(SystemClock.elapsedRealtime())
         }
         updateMotionPolicy()
     }
@@ -795,7 +795,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         avatarInvalidationPending.set(false)
         synchronized(avatarPose) {
             avatarPose.clearSpeech()
-            avatarPose.clearObservedGaze(System.currentTimeMillis())
+            avatarPose.clearObservedGaze(SystemClock.elapsedRealtime())
         }
         removeCallbacks(drawFrame)
         framePending = false
@@ -914,7 +914,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             resetCamera()
             resetAvatarEntrance()
             clearTaskEffects()
-            synchronized(avatarPose) { avatarPose.clearObservedGaze(System.currentTimeMillis()) }
+            synchronized(avatarPose) { avatarPose.clearObservedGaze(SystemClock.elapsedRealtime()) }
             settleState()
             audio.reset()
             audioEnergy = 0f
@@ -1023,7 +1023,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             canvas.restoreToCount(auraCanvas)
         }
         if (headEnabled) {
-            val pose = proof?.pose ?: synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis(), canAnimateFrame()) }
+            val pose = proof?.pose ?: synchronized(avatarPose) { avatarPose.pose(SystemClock.elapsedRealtime(), canAnimateFrame()) }
             receipt.stageFlags = receipt.stageFlags or AvatarFrameReceipt.POSE_SAMPLED
             receipt.jawOpen = pose.jawOpen
             receipt.speakEnergy = pose.speakEnergy
@@ -1118,6 +1118,11 @@ class ContinuumHologramView @JvmOverloads constructor(
             painter.begin(canvas)
             at.heinz.deviceai.ui.JarvisHeadAura.drawLightStreams(painter, headDrawBounds.width() / density,
                 headDrawBounds.height() / density)
+            at.heinz.deviceai.ui.JarvisCinemaEntrance.drawHologramOverlay(
+                painter,
+                at.heinz.deviceai.ui.JarvisShellLayout.Box(
+                    0f, 0f, headDrawBounds.width() / density, headDrawBounds.height() / density),
+                avatarSeconds, renderFrame.energy)
             canvas.restoreToCount(streams)
         }
         if (!canAnimateFrame() || !renderBudget().animate) return

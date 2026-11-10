@@ -20,8 +20,9 @@ class JarvisCockpitGridTest {
         for ((w, h) in sizes) {
             assertTrue("$w×$h is Fold7 open", JarvisCockpitGrid.applies(w, h, 1f))
             val g = JarvisCockpitGrid.create(w, h)
-            assertEquals(Area.values().toSet() - setOf(Area.USER_CARD, Area.DEVICE_STATUS, Area.TAGLINE, Area.RAIL),
-                g.areas.keys - Area.TAGLINE)
+            val retired = setOf(Area.RAIL, Area.USER_CARD, Area.TILES,
+                Area.ROW_AGENTS, Area.ROW_TASKS, Area.ROW_MEMORY, Area.ROW_MODEL)
+            assertEquals(Area.values().toSet() - retired - setOf(Area.TAGLINE), g.areas.keys - Area.TAGLINE)
             val e = g.areas.entries.toList()
             e.forEach { (k, b) ->
                 assertTrue("$k inside $w×$h: $b", b.left >= 0f && b.top >= 0f && b.right <= w + .01f && b.bottom <= g.height + .01f)
@@ -35,37 +36,37 @@ class JarvisCockpitGridTest {
         }
     }
 
-    @Test fun largeReferenceHeroLeadsIntoInputCardsAndStatusWithoutAFixedRail() {
+    @Test fun packedCompositionPlacesLiveHeadOrbModulesThenWorkWithoutAFixedRail() {
         val g = JarvisCockpitGrid.create(692f, 700f)
-        val head = g[Area.HEAD]; val orb = g[Area.ORB]
+        val head = g[Area.HEAD]; val orb = g[Area.ORB]; val live = g[Area.DIALOG]
         assertFalse(Area.RAIL in g.areas)
-        assertEquals(12f, head.left, .01f)
-        assertTrue("orb right of head", orb.left > head.right)
-        assertTrue("modules follow primary status", g[Area.MODULES].top > g[Area.STATUS].bottom)
         assertFalse(Area.USER_CARD in g.areas)
-        assertTrue("badge stays inside its stage", head.contains(g[Area.DIALOG]))
-        assertEquals(56f, g[Area.DIALOG].height, .01f)
+        assertFalse(Area.TILES in g.areas)
+        assertTrue("live card left of head", live.right < head.left)
+        assertTrue("orb right of head", orb.left > head.right)
+        assertTrue("modules right of orb", g[Area.MODULES].left > orb.right)
+        assertTrue("camera sits with modules", g[Area.CAMERA_STATUS].left > orb.right)
         assertTrue("conversation beneath stage", g[Area.INPUT].top > head.bottom)
-        assertTrue("cards beneath conversation", g[Area.TILES].top > g[Area.INPUT].bottom)
-        assertTrue("status closes the home", g[Area.STATUS].top > g[Area.TILES].bottom)
-        assertEquals(g[Area.ROW_MEMORY].top, g[Area.ROW_MODEL].top, .01f)
-        assertTrue("activity follows charts", g[Area.ROW_AGENTS].top > g[Area.ROW_MEMORY].bottom)
-        for (area in listOf(Area.ROW_AGENTS, Area.ROW_TASKS, Area.ROW_MEMORY, Area.ROW_MODEL))
-            assertTrue("$area follows primary status", g[area].top > g[Area.STATUS].bottom)
-        assertTrue("head keeps reference scale", head.height >= 480f)
-        assertEquals(190f, g[Area.ROW_MEMORY].height, .01f)
-        assertEquals(132f, g[Area.ROW_AGENTS].height, .01f)
+        assertTrue("work panels beneath conversation", g[Area.WORK_DOCUMENT].top > g[Area.INPUT].bottom)
+        assertEquals(g[Area.WORK_DOCUMENT].top, g[Area.WORK_PROCESS].top, .01f)
+        assertEquals(g[Area.WORK_PROCESS].top, g[Area.WORK_DRAFT].top, .01f)
+        assertTrue("dock under work", g[Area.TOOL_DOCK].top > g[Area.WORK_DOCUMENT].bottom)
+        assertTrue("status closes the viewport", g[Area.STATUS].top > g[Area.TOOL_DOCK].bottom)
+        assertTrue("clock lives in the header", Area.DEVICE_STATUS in g.areas)
+        assertEquals(g.height, 700f, .01f)
     }
 
-    @Test fun bothIdentitiesShareTheFullWidthWithoutASidePanel() {
+    @Test fun bothIdentitiesShareTheHeroWithoutASideRail() {
         for ((w, h) in sizes) {
             val g = JarvisCockpitGrid.create(w, h)
             val head = g[Area.HEAD]; val orb = g[Area.ORB]
-            assertEquals(w - 12f, orb.right, .01f)
+            assertTrue("live card left of head", g[Area.DIALOG].right < head.left)
+            assertTrue("modules right of orb", g[Area.MODULES].left > orb.right)
+            assertEquals(w - 12f, g[Area.MODULES].right, .01f)
             assertTrue("broad head stage", head.width > (orb.right - head.left) * .48f)
             assertTrue("independent viewports", !overlaps(head, orb))
             assertTrue("heading above original orb", g[Area.CONTINUUM_HEADER].bottom < orb.top)
-            assertTrue("camera no longer covers hero", g[Area.CAMERA_STATUS].top > g[Area.STATUS].bottom)
+            assertTrue("camera rides with the hero", g[Area.CAMERA_STATUS].bottom <= head.bottom + .01f)
         }
     }
 

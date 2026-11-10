@@ -99,6 +99,7 @@ class JarvisWorkWindowHost(
     }
 
     fun close(immediate: Boolean = false) {
+        currentId?.let { cameraHome?.jarvisShell?.closeProjectedWindow(it, android.os.SystemClock.uptimeMillis()) }
         if (immediate) cameraHome?.hologram?.setWorkWindowCamera(false, immediate = true)
         currentFui?.close(immediate)
         current?.close(immediate)
@@ -184,6 +185,23 @@ class JarvisWorkWindowHost(
                     director.windowMoved(id, if (workingId == id && emphasizedWork)
                         ToolWorkSceneLease.workingGaze(target) else target)
                 }
+                val phase = window.projectedMotionPhase()
+                val moving = phase == at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.FLYING ||
+                    phase == at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSING
+                val vp = framing.viewport
+                shell.offerProjectedMotion(
+                    windowId = id,
+                    projectedX = x,
+                    projectedY = y,
+                    headX = framing.face?.centerX() ?: vp.centerX(),
+                    headY = framing.face?.centerY() ?: vp.centerY(),
+                    viewportWidth = vp.width(),
+                    viewportHeight = vp.height(),
+                    phase = phase,
+                    accentArgb = scene.accent,
+                    reducedMotion = window.motionSuppressed(),
+                    moving = moving,
+                )
             }
         }
         fui.requestFrame = { shell.invalidate() }
@@ -335,9 +353,13 @@ class JarvisWorkWindowHost(
         val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
         val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))
         val destination = JarvisWorkWindowGeometry.destination(viewport, withOrb, density) ?: return null
-        val navigation = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let {
-            val prefix = if (geometry.hasFeatureTiles) "jarvis-tile:" else "jarvis-rail:"
-            home.findViewWithTag<View>("$prefix${it.target}")
+        val navigation = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let { tile ->
+            val prefixes = when {
+                geometry.hasFeatureTiles -> listOf("jarvis-tile:")
+                geometry[JarvisShellLayout.Slot.BOTTOM_NAV] != null -> listOf("jarvis-bottom:", "jarvis-tile:")
+                else -> listOf("jarvis-rail:", "jarvis-bottom:", "jarvis-tile:")
+            }
+            prefixes.firstNotNullOfOrNull { prefix -> home.findViewWithTag<View>("$prefix${tile.target}") }
         }
         val origin = navigation?.let { visibleBounds(it, container) }
             ?: besideFace(face, viewport, density)

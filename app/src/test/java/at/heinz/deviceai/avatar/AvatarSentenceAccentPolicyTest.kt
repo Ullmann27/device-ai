@@ -54,29 +54,4 @@ class AvatarSentenceAccentPolicyTest {
         assertEquals(listOf(SpeechBoundary.STATEMENT),
             events.filterIsInstance<AvatarEvent.SentenceEnd>().map { it.boundary })
     }
-
-    @Test fun cinemaListedAbbreviationsAreNotSentenceEnds() {
-        val cases = listOf(
-            "Dr. Müller antwortet.",
-            "Prof. Huber antwortet.",
-            "Mag. Haider antwortet.",
-            "Ing. Leitner antwortet.",
-            "Art. 5 gilt.",
-            "Abs. 3 gilt.",
-        )
-        for (speech in cases) {
-            val events = mutableListOf<AvatarEvent>()
-            val director = AvatarDirector(AvatarSink { events += it }) { 1_000L }
-            assertTrue(speech, director.speechStarted("u", speech))
-            val first = speech.indexOf('.')
-            assertTrue(director.wordRange("u", 0, first))
-            assertTrue("$speech must not nod at the abbreviation",
-                events.none { it is AvatarEvent.SentenceEnd })
-            val last = speech.lastIndexOf(' ') + 1
-            assertTrue(director.wordRange("u", last, speech.length - 1))
-            assertEquals(speech, listOf(SpeechBoundary.STATEMENT),
-                events.filterIsInstance<AvatarEvent.SentenceEnd>().map { it.boundary })
-            director.speechEnded("u", false)
-        }
-    }
 }

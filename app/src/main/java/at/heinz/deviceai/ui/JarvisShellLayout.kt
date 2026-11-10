@@ -24,7 +24,8 @@ object JarvisShellLayout {
         TOP_BAR, NAV_RAIL, BOTTOM_NAV, AVATAR, DIALOG, INPUT,
         COCKPIT_PRIMARY, COCKPIT_SECONDARY, TILES,
         ROW_AGENTS, ROW_TASKS, ROW_MEMORY, ROW_MODEL, STATUS, USER_CARD,
-        CONTINUUM_HEADER, CAMERA_STATUS
+        CONTINUUM_HEADER, CAMERA_STATUS,
+        WORK_DOCUMENT, WORK_PROCESS, WORK_DRAFT
     }
 
     data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {
@@ -141,7 +142,62 @@ object JarvisShellLayout {
     }
 
     private fun compactReference(shell: Shell): Shell {
-        return reflow(shell.width, shell.viewportHeight, shell.profile, false, true)
+        // Keep the packed reference-B hierarchy (work panels + dock) but shrink the hero to the
+        // original orb so conversation can move up and the page actually gets shorter.
+        val w = shell.width
+        val viewport = shell.viewportHeight
+        val font = maxOf(1f, shell.profile.fontScale)
+        val margin = 12f
+        val gap = 8f
+        val left = margin
+        val right = w - margin
+        val room = right - left
+        val b = linkedMapOf<Slot, Box>()
+
+        val headerH = 52f * font
+        val headerBottom = 8f + headerH
+        b[Slot.TOP_BAR] = Box(margin, 8f, right, headerBottom)
+
+        val dialogTop = 8f
+        val dialogH = 56f * font
+        val liveW = (room * .28f).coerceIn(120f, 188f)
+        b[Slot.DIALOG] = Box(left, dialogTop, left + liveW, dialogTop + dialogH)
+
+        val orbTop = headerBottom + gap
+        val continuumH = 70f * font
+        val orbH = 112f
+        val orbLeft = (left + liveW + gap).coerceAtMost(right - 120f)
+        b[Slot.CONTINUUM_HEADER] = Box(orbLeft, orbTop, right, orbTop + continuumH)
+        val orb = Box(orbLeft, orbTop + continuumH + 4f, right, orbTop + continuumH + 4f + orbH)
+        b[Slot.AVATAR] = orb
+        val cameraH = 48f * font
+        b[Slot.CAMERA_STATUS] = Box(left, orbTop, left + liveW, orbTop + cameraH)
+        b[Slot.COCKPIT_SECONDARY] = Box(left, orbTop + cameraH + gap, left + liveW, orb.bottom)
+
+        val inputH = 56f * font
+        var y = maxOf(b.getValue(Slot.DIALOG).bottom, orb.bottom) + gap
+        b[Slot.INPUT] = Box(left, y, right, y + inputH)
+        y += inputH + gap
+
+        val workH = 120f * font
+        val workW = (room - 2f * gap) / 3f
+        b[Slot.WORK_DOCUMENT] = Box(left, y, left + workW, y + workH)
+        b[Slot.WORK_PROCESS] = Box(left + workW + gap, y, left + 2f * workW + gap, y + workH)
+        b[Slot.WORK_DRAFT] = Box(left + 2f * (workW + gap), y, right, y + workH)
+        y += workH + gap
+
+        val dockH = TOOL_DOCK_HEIGHT_DP * font
+        b[Slot.BOTTOM_NAV] = Box(left, y, right, y + dockH)
+        y += dockH + gap
+
+        val statusH = maxOf(96f, TELEMETRY_BAND_DP * font)
+        b[Slot.STATUS] = Box(margin, y, right, y + statusH)
+        y += statusH + 10f
+
+        val overlays = setOf(Slot.AVATAR to Slot.CONTINUUM_HEADER, Slot.TOP_BAR to Slot.DIALOG)
+        return Shell(formFactor(w, viewport), w, y, b, JarvisCockpitGrid.TILE_COLUMNS, JarvisCockpitGrid.TILE_ROWS,
+            null, overlays, viewportHeight = viewport, profile = shell.profile, tileGap = JarvisCockpitGrid.TILE_GAP_DP,
+            headBounds = null, orbBounds = orb)
     }
 
     private fun reference(w: Float, h: Float, profile: JarvisWindowProfile): Shell {
@@ -151,19 +207,19 @@ object JarvisShellLayout {
         val stage = head
         val b = linkedMapOf(
             Slot.TOP_BAR to gr[Area.HEADER],
-            Slot.AVATAR to Box(stage.left, minOf(head.top, orb.top), orb.right, maxOf(head.bottom, orb.bottom)),
-            Slot.DIALOG to gr[Area.DIALOG], Slot.INPUT to gr[Area.INPUT], Slot.TILES to gr[Area.TILES],
+            Slot.AVATAR to Box(head.left, minOf(head.top, orb.top), orb.right, maxOf(head.bottom, orb.bottom)),
+            Slot.DIALOG to gr[Area.DIALOG], Slot.INPUT to gr[Area.INPUT],
             Slot.CONTINUUM_HEADER to gr[Area.CONTINUUM_HEADER],
             Slot.CAMERA_STATUS to gr[Area.CAMERA_STATUS], Slot.COCKPIT_SECONDARY to gr[Area.MODULES],
-            Slot.ROW_AGENTS to gr[Area.ROW_AGENTS],
-            Slot.ROW_TASKS to gr[Area.ROW_TASKS], Slot.ROW_MEMORY to gr[Area.ROW_MEMORY],
-            Slot.ROW_MODEL to gr[Area.ROW_MODEL], Slot.STATUS to gr[Area.STATUS]
+            Slot.WORK_DOCUMENT to gr[Area.WORK_DOCUMENT],
+            Slot.WORK_PROCESS to gr[Area.WORK_PROCESS],
+            Slot.WORK_DRAFT to gr[Area.WORK_DRAFT],
+            Slot.BOTTOM_NAV to gr[Area.TOOL_DOCK],
+            Slot.STATUS to gr[Area.STATUS]
         )
-        val extra = installToolDock(b, w)
         return Shell(formFactor(w, h), w, gr.height, b, JarvisCockpitGrid.TILE_COLUMNS, JarvisCockpitGrid.TILE_ROWS, null,
-            setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER),
+            setOf(Slot.AVATAR to Slot.CONTINUUM_HEADER),
             gr, h, profile, JarvisCockpitGrid.TILE_GAP_DP, head, orb, headStage = stage)
-            .copy(height = gr.height + extra)
     }
 
     /**

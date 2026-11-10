@@ -88,8 +88,6 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         }
         headYaw = headYawSpring.value
         headPitch = headPitchSpring.value
-        val drivenYaw = headYaw
-        val drivenPitch = headPitch
 
         // Eyes target the direct ocular share plus the head lag, then follow with their much faster spring.
         val targetEyeYaw = cameraAzimuthDegrees.toFloat() +
@@ -186,8 +184,8 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             val wave = kotlin.math.sin(Math.PI * progress).toFloat()
             val nod = CONFIRMATION_PITCH_DEGREES * wave * wave
             headPitch += nod
+            eyePitch = (eyePitch - nod).coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
         }
-        stabilizeGaze(drivenYaw, drivenPitch, idleEyes)
         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
         val bilabialClosure = pose.viseme == Viseme.PP && cueWeight > 0f
         // M/B/P require a closed lip seal even while the measured audio remains loud.
@@ -237,21 +235,6 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         val blink = finite(value, 0f, 1f)
         weights[indices.getValue("BlinkLeft")] = blink
         weights[indices.getValue("BlinkRight")] = blink
-    }
-
-
-    /**
-     * Small vestibulo-ocular counter-rotation: extra head motion after the gaze springs
-     * (speech, work residual, confirmation) is subtracted from the eyes so the look-at
-     * point stays on the current target. Cosmetic idle saccades keep their authored path.
-     */
-    private fun stabilizeGaze(drivenYaw: Float, drivenPitch: Float, idleEyes: Boolean) {
-        if (idleEyes) return
-        val extraYaw = headYaw - drivenYaw
-        val extraPitch = headPitch - drivenPitch
-        if (extraYaw == 0f && extraPitch == 0f) return
-        eyeYaw = (eyeYaw - extraYaw * VOR_GAIN).coerceIn(-EYE_MAX_YAW_DEGREES, EYE_MAX_YAW_DEGREES)
-        eyePitch = (eyePitch - extraPitch * VOR_GAIN).coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
     }
 
     private fun fadeLayers(idle: Boolean, speech: Boolean, work: Boolean, seconds: Float) {
@@ -365,8 +348,6 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         /** Critically damped natural frequencies: step response reaches ~80 % at 55 ms / 220 ms. */
         const val EYE_SPRING_OMEGA = 54.44f
         const val HEAD_SPRING_OMEGA = 13.61f
-        /** Full counter-rotation of extra head motion; confirmation used the same 1:1 offset. */
-        const val VOR_GAIN = 1f
         /** Human oculomotor range used while the head is still turning. */
         const val EYE_MAX_YAW_DEGREES = 30f
         const val EYE_MAX_PITCH_DEGREES = 20f
