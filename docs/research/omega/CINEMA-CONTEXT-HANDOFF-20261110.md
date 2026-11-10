@@ -41,8 +41,8 @@ sentences correctly in ordinary conversation.
 - Final directed run: 15 methods, 0 failures; added reverse-order, unsupported
   grammar, trailing negation, source-change and missing-focus controls.
 - Source-bound context/voice regression run: 106 methods, 0 failures, no skips.
-  The prior 105-method checkpoint was independently rerun by QA and passed; the
-  final follow-up is identified separately. Actual Kotlin 2.4.0/JDK21 compilation; pure JVM only, no substitute product
+  QA independently reran the final source: 106/106 PASS, with byte-identical
+  source/test hashes. Its scoped source/negation review found no further issue. Actual Kotlin 2.4.0/JDK21 compilation; pure JVM only, no substitute product
   classes or Android stubs. Source hashes, tool versions and log are retained.
 - Full Android Gradle build, full repository tests, real model inference,
   Ctx3Shadow end-to-end execution and Fold7: **NOT_RUN** for this research slice.
