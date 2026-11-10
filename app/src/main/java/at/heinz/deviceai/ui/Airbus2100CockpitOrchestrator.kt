@@ -42,6 +42,7 @@ class Airbus2100CockpitOrchestrator(
     private var closed = false
     private var tickScheduled = false
     private val document = DocumentBlueprintProjection()
+    private var documentTurnId: String? = null
     private val swarmWorkers = LinkedHashMap<String, HollywoodFuiLiveData.Timeline.Line>()
 
     private val tick = Runnable { tickMissionClock() }
@@ -92,28 +93,31 @@ class Airbus2100CockpitOrchestrator(
                 // Owner-selected intake: attach to the running mission or start one. Do not
                 // drop it when the verbal command used a different turn id than document-<episode>.
                 if (activeTurnId == null) beginMission(event.turnId)
+                if (documentTurnId != event.turnId) document.reset()
+                documentTurnId = event.turnId
                 promote(Phase.AWAITING_DECISION, JarvisActionScenes.forDocument())
                 document.onQuestion(event)
                 onLiveData(document.snapshot())
             }
             is CockpitAnimationEvent.DocumentLearned -> {
-                // MEMORY_TURN is session-scoped, not a mission id.
+                // Unrelated memory events must not create a document world.
+                if (!document.hasDocument) return
                 document.onLearned(event)
-                if (document.hasDocument) {
-                    promote(Phase.TOOL_ACTIVE, JarvisActionScenes.forDocument())
-                    onLiveData(document.snapshot())
-                }
+                promote(Phase.TOOL_ACTIVE, JarvisActionScenes.forDocument())
+                onLiveData(document.snapshot())
             }
             is CockpitAnimationEvent.RecallHits -> {
                 promote(Phase.TOOL_ACTIVE, scene(JarvisActionScenes.Kind.MEMORY))
                 onLiveData(HollywoodFuiLiveData.evidence(event.count, event.topScore, "Recall"))
             }
             is DocumentPipelineStepEvent -> {
+                if (event.turnId != documentTurnId || !document.hasDocument) return
                 if (activeTurnId == null) beginMission(event.turnId)
                 document.onPipelineStep(event)
                 if (document.hasDocument) onLiveData(document.snapshot())
             }
             is DocumentDraftReadyEvent -> {
+                if (event.turnId != documentTurnId || !document.hasDocument) return
                 if (activeTurnId == null) beginMission(event.turnId)
                 document.onDraft(event)
                 if (document.hasDocument) {
@@ -134,7 +138,14 @@ class Airbus2100CockpitOrchestrator(
                 ))
                 onHoloCue()
             }
-            is CockpitAnimationEvent.TurnEnded -> if (event.turnId == activeTurnId) finishMission(event.turnId)
+            is CockpitAnimationEvent.TurnEnded -> if (event.turnId == activeTurnId) {
+                if (!event.delivered) {
+                    document.reset()
+                    documentTurnId = null
+                    onLiveData(null)
+                }
+                finishMission(event.turnId)
+            }
             else -> Unit
         }
     }
@@ -170,6 +181,7 @@ class Airbus2100CockpitOrchestrator(
         activeTurnId = null
         phase = Phase.IDLE
         document.reset()
+        documentTurnId = null
         swarmWorkers.clear()
         onLiveData(null)
         onTelemetry(null)
@@ -180,9 +192,12 @@ class Airbus2100CockpitOrchestrator(
             activeTurnId?.let { sideQuestEngine.stopMissionCountdown(it, clockNanos()) }
             activeTurnId = turnId
             phase = Phase.LOCAL_REASONING
-            document.reset()
+            if (turnId != documentTurnId) {
+                document.reset()
+                documentTurnId = null
+                onLiveData(null)
+            }
             swarmWorkers.clear()
-            onLiveData(null)
             sideQuestEngine.startMissionCountdown(turnId, nowNanos = clockNanos())
         }
         publishTimer()
