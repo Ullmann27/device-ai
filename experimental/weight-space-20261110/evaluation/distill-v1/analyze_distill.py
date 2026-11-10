@@ -177,7 +177,81 @@ def main():
         parser.add_argument('--' + name, type=Path, required=True)
     args = parser.parse_args()
     require(not args.output.exists(), 'output already exists')
-    raise SystemExit('Receipt schema must be frozen before enabling this command.')
+    report = audit(args)
+    with args.output.open('x') as stream:
+        json.dump(report, stream, indent=2, sort_keys=True)
+        stream.write('\n')
+    print(json.dumps({'integrityStatus': report['integrityStatus'],
+                      'exp12DevelopmentSignal': report['exp12DevelopmentSignal'],
+                      'exp05FavorableDevSignal': report['exp05FavorableDevSignal']}))
+
+
+def audit(args):
+    spec = json.loads(args.registration.read_text())
+    receipt = json.loads((args.evidence / 'receipt.json').read_text())
+    require(spec['schema'] == 'lm1-distill-dev-registration-v1', 'unsupported registration')
+    require(receipt['schema'] == 'lm1-distill-dev-run-v1', 'unsupported receipt')
+    require(receipt['registrationSha256'] == sha(args.registration), 'registration identity mismatch')
+    require(receipt['exitCode'] == 0 and receipt['timedOut'] is False and receipt['inputsUnchanged'] is True,
+            'unsuccessful run receipt')
+    require(receipt.get('executionError') is None, 'runner execution error')
+    require(receipt['arm'] == 'distill', 'unexpected receipt arm')
+    require(receipt['command'] == spec['commands']['distill'], 'command mismatch')
+    require(receipt['productionPromotion'] is False, 'unexpected promotion')
+    require(sha(args.evidence / 'stdout.tsv') == receipt['stdoutSha256'], 'stdout identity mismatch')
+    require(sha(args.evidence / 'stderr.txt') == receipt['stderrSha256'], 'stderr identity mismatch')
+    for path, digest in spec['fileHashes'].items():
+        require(sha(path) == digest, 'registered input changed: ' + path)
+    for path in (args.base_analyzer, args.weight_auditor, args.reference_stdout, Path(__file__)):
+        require(spec['fileHashes'].get(str(path.resolve())) == sha(path), 'unregistered audit input: ' + str(path))
+    base = load_module(args.base_analyzer, 'original_contrast_analysis')
+    reader = load_module(args.weight_auditor, 'independent_lm1_reader')
+    command = spec['commands']['distill']
+    require(sha(args.baseline) == spec['fileHashes'][command[-4]], 'original checkpoint binding mismatch')
+    registered_data = Path(command[-2])
+    for relative in ('note-contrasts-v1/train.tsv', 'note-contrasts-v1/dev.tsv', 'retention.tsv', 'replay.txt', 'retention_text.txt'):
+        require(sha(args.data / relative) == spec['fileHashes'][str(registered_data / relative)], 'data binding mismatch')
+    artifact = receipt['artifacts']['final.lm1']
+    require(sha(args.checkpoint) == artifact['sha256'] and args.checkpoint.stat().st_size == artifact['bytes'],
+            'checkpoint binding mismatch')
+    before, after = reader.read(args.baseline), reader.read(args.checkpoint)
+    comparison = reader.compare(before, after)
+    require(before['parameters'] == 132160, 'unexpected parameter count')
+    require(before['tokenizer'] == spec['fileHashes'][command[-3]], 'checkpoint tokenizer mismatch')
+    require(comparison['changedNumericWeights'] > 0, 'no numeric weight updates')
+    text = (args.evidence / 'stdout.tsv').read_text()
+    records = parse_log(text, base)
+    logged_inputs = {row['file']: row['sha256'] for row in records['INPUT']}
+    expected_inputs = {Path(path).name: spec['fileHashes'][path] for path in (
+        command[-4], command[-3],
+        *[str(registered_data / relative) for relative in (
+            'note-contrasts-v1/train.tsv', 'note-contrasts-v1/dev.tsv',
+            'retention.tsv', 'replay.txt', 'retention_text.txt')])}
+    require(len(logged_inputs) == len(records['INPUT']) and logged_inputs == expected_inputs, 'logged input mismatch')
+    logged_checkpoint = base.singleton(records, 'CHECKPOINT')
+    require(logged_checkpoint['sha256'] == artifact['sha256'] and base.integer(logged_checkpoint['bytes']) == artifact['bytes'],
+            'logged checkpoint mismatch')
+    require(base.integer(base.singleton(records, 'CONFIG')['parameters']) == before['parameters'], 'logged parameter mismatch')
+    expected = {'dev': base.read_rows(args.data / 'note-contrasts-v1/dev.tsv'),
+                'retention': base.read_rows(args.data / 'retention.tsv')}
+    require(spec['maxUpdatesPerArm'] == 128, 'unexpected update budget')
+    analysis = analyze_records(records, expected, base, 128, before['config'][1])
+    teacher = validate_teacher(records, before, base)
+    schedule = validate_schedule(records, args.data / 'note-contrasts-v1/train.tsv', base)
+    baseline = baseline_records(text)
+    require(len(baseline) == 135 and baseline == baseline_records(args.reference_stdout.read_text()),
+            'baseline records differ from original run')
+    return {
+        'schema': 'lm1-distill-independent-analysis-v1', 'integrityStatus': 'PASS',
+        'registrationSha256': sha(args.registration), 'receiptSha256': sha(args.evidence / 'receipt.json'),
+        'stdoutSha256': sha(args.evidence / 'stdout.tsv'), 'analyzerSha256': sha(Path(__file__)),
+        'baseAnalyzerSha256': sha(args.base_analyzer), 'weightAuditorSha256': sha(args.weight_auditor),
+        'referenceStdoutSha256': sha(args.reference_stdout), 'baselineRecordCount': len(baseline),
+        'baselineRecordsByteIdentical': True, 'teacher': teacher, 'schedule': schedule,
+        'weights': {'beforeSha256': before['sha256'], 'afterSha256': after['sha256'], **comparison},
+        **analysis, 'productionPromotion': False, 'modelInvocationsByAnalysis': 0,
+        'optimizerUpdatesByAnalysis': 0,
+    }
 
 
 if __name__ == '__main__':

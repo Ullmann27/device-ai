@@ -1,0 +1,18 @@
+test_capacity_count_cannot_hide_identity_loss (__main__.DistillAnalysisTests.test_capacity_count_cannot_hide_identity_loss) ... ok
+test_changed_teacher_rejected (__main__.DistillAnalysisTests.test_changed_teacher_rejected) ... ok
+test_expanded_parser_rejects_unknown_fields (__main__.DistillAnalysisTests.test_expanded_parser_rejects_unknown_fields) ... ok
+test_java_rng_reference_vector (__main__.DistillAnalysisTests.test_java_rng_reference_vector) ... ok
+test_missing_teacher_record_rejected (__main__.DistillAnalysisTests.test_missing_teacher_record_rejected) ... ok
+test_negative_kl_rejected (__main__.DistillAnalysisTests.test_negative_kl_rejected) ... ok
+test_nonfinite_kl_rejected (__main__.DistillAnalysisTests.test_nonfinite_kl_rejected) ... ok
+test_original_gates_remain_failed (__main__.DistillAnalysisTests.test_original_gates_remain_failed) ... ok
+test_roundoff_tolerance_bounded (__main__.DistillAnalysisTests.test_roundoff_tolerance_bounded) ... ok
+test_schedule_change_rejected (__main__.DistillAnalysisTests.test_schedule_change_rejected) ... ok
+test_teacher_digest_binds_actual_tensor_bytes (__main__.DistillAnalysisTests.test_teacher_digest_binds_actual_tensor_bytes) ... ok
+test_teacher_scope_change_rejected (__main__.DistillAnalysisTests.test_teacher_scope_change_rejected) ... ok
+test_teacher_weight_change_rejected (__main__.DistillAnalysisTests.test_teacher_weight_change_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.032s
+
+OK
