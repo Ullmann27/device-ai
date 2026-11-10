@@ -52,7 +52,7 @@ class Ctx3Context {
    selectedFocusIndex=selectedId?.let { id->focus.indexOfFirst { it.id==id } } ?: -1
   }
   val covered=hits.flatMap { (it.start until it.end).toList() }.toSet()
-  val ordinary=setOf("wer","was","wie","wo","und","ich","nicht","nein","erzähl","erzähle","kannst","kann","bitte","servus","hallo","farbe","alter","name","jahre","hilfe","text","app","gerät","projekt","datei","notizen","zähler","montag","dienstag","mittwoch","donnerstag","freitag","samstag","sonntag","sie","er","es","nimm","meine","meinte","gemeint","der","die","das","davor","andere","anderen","anderes","anderer","erste","ersten","erstes","erster","zweite","zweiten","zweites","zweiter","variante","option")
+  val ordinary=setOf("wer","was","wie","wo","warum","geht","und","ich","nicht","nein","erzähl","erzähle","kannst","kann","bitte","servus","hallo","farbe","alter","name","jahre","hilfe","text","app","gerät","projekt","datei","notizen","zähler","montag","dienstag","mittwoch","donnerstag","freitag","samstag","sonntag","sie","er","es","nimm","meine","meinte","gemeint","der","die","das","davor","andere","anderen","anderes","anderer","erste","ersten","erstes","erster","zweite","zweiten","zweites","zweiter","variante","option")
   val unknown=Regex("[\\p{L}\\p{N}]+").findAll(input).map { it.value }.withIndex().any {
    it.index !in covered&&it.value.first().isUpperCase()&&it.value.lowercase(Locale.ROOT) !in ordinary
   }
@@ -72,9 +72,16 @@ class Ctx3Context {
   val selectors=orderedDeictics(input)
   if(selectors.isNotEmpty()) {
    val accepted=selectors.filterNot {
-    negative(tokens(input.substring(0,it.range.first)).size)||words.lastOrNull()=="nicht"
+    val before=tokens(input.substring(0,it.range.first))
+    val after=tokens(input.substring(it.range.last+1))
+    val predicates=setOf("startet","geht")
+    val predicateNegation=(before.lastOrNull() in predicates&&after==listOf("nicht"))||
+     (after.size==2&&after[0] in predicates&&after[1]=="nicht")
+    // Unknown negations remain rejected.
+    negative(before.size)||(words.lastOrNull()=="nicht"&&!predicateNegation)
    }
    val contrast=selectors.size==2&&accepted.size==1&&accepted.single()==selectors.last()&&
+    selectors.all { it.kind=="FIRST"||it.kind=="SECOND" }&&selectors.first().kind!=selectors.last().kind&&
     Regex("(?iu)\\bsondern\\b").containsMatchIn(input.substring(selectors.first().range.last+1,selectors.last().range.first))
    if(accepted.size!=1||(selectors.size>1&&!contrast)) {
     focus=emptyList();selectedFocusIndex=-1
