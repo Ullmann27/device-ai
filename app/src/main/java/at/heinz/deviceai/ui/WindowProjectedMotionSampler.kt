@@ -33,8 +33,10 @@ class WindowProjectedMotionSampler {
         if (!windowPresent || turnId.isBlank() || windowId.isBlank()) return null
         if (!projectedX.isFinite() || !projectedY.isFinite()) return null
         if (viewportWidth <= 0f || viewportHeight <= 0f) return null
-        if (phase != WindowProjectedMotion.Phase.CLOSED) active.add(windowId)
         if (phase == WindowProjectedMotion.Phase.CLOSED) return closed(turnId, windowId, atMillis)
+        val previous = lastByWindow[windowId]
+        if (previous?.turnId == turnId && previous.phase == WindowProjectedMotion.Phase.CLOSED) return null
+        active.add(windowId)
         val gaze = JarvisWindowGaze.fromProjection(
             projectedX, projectedY, headX, headY, viewportWidth, viewportHeight)
         val next = WindowProjectedMotion(
@@ -53,7 +55,8 @@ class WindowProjectedMotionSampler {
 
     fun closed(turnId: String, windowId: String, atMillis: Long): WindowProjectedMotion? {
         if (turnId.isBlank() || windowId.isBlank()) return null
-        val prev = lastByWindow[windowId] ?: lastSeen[windowId]
+        val prev = lastSeen[windowId] ?: lastByWindow[windowId]
+        if (prev != null && prev.turnId != turnId) return null
         if (prev?.phase == WindowProjectedMotion.Phase.CLOSED && prev.turnId == turnId) return null
         val event = WindowProjectedMotion(
             turnId = turnId,
@@ -65,6 +68,7 @@ class WindowProjectedMotionSampler {
             phase = WindowProjectedMotion.Phase.CLOSED,
         )
         lastByWindow[windowId] = event
+        lastSeen[windowId] = event
         active.remove(windowId)
         return event
     }

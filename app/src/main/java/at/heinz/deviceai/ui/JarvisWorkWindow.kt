@@ -447,6 +447,9 @@ class JarvisWorkWindow(
         if (immediate || openness <= 0f) { finishClose(); return }
         if (phase == Phase.CLOSING) return
         phase = Phase.CLOSING
+        val now = android.os.SystemClock.uptimeMillis()
+        val cancel = MotionEvent.obtain(now, now, MotionEvent.ACTION_CANCEL, 0f, 0f, 0)
+        try { super.dispatchTouchEvent(cancel) } finally { cancel.recycle() }
         closeFrom = openness
         closeAlpha = opacity
         startedAt = null
@@ -635,6 +638,7 @@ class JarvisWorkWindow(
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (!isShowing || (event.actionMasked == MotionEvent.ACTION_DOWN &&
                 protectedBounds.any { it.contains(event.x, event.y) })) return false
+        if (phase == Phase.CLOSING) return true
         return super.dispatchTouchEvent(event)
     }
 

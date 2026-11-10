@@ -396,6 +396,7 @@ class AgentActivity : Activity() {
     // Navigation is presentation-only; no learning-state or tool permission mutation.
     private var activeWorkArea = ContinuumWorkArea.START
     private var bottomWorkAreaBar: View? = null
+    private var syncPhoneNavigation: (() -> Unit)? = null
     // Reference-design start screen (PR #74): real data only, see ContinuumDashboardCollector.
     private var homeView: at.heinz.deviceai.ui.ContinuumHomeView? = null
     // Jarvis cockpit animation layer (docs/CONTINUUM_COCKPIT.md): real events only, default visuals replaceable.
@@ -925,6 +926,7 @@ class AgentActivity : Activity() {
         val wide = windowWidthDp >= at.heinz.deviceai.ui.JarvisWindowProfile.MEDIUM_MIN_DP
         // A wide rebuild must drop stale references to the old phone bottom bar.
         bottomWorkAreaBar = null
+        syncPhoneNavigation = null
         navigationView = null
         railView = null
         conversationRail = null
@@ -975,6 +977,22 @@ class AgentActivity : Activity() {
                 phoneNavHeight,
                 Gravity.BOTTOM
             ))
+        }
+
+        syncPhoneNavigation = {
+            val homeOwnsNavigation = homeView?.jarvisShellStage == true &&
+                dashboardSection?.visibility == View.VISIBLE
+            val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(wide, keyboardCompact) && !homeOwnsNavigation
+            bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
+            val navigationPane = phonePane
+            if (navigationPane != null) {
+                val paneParams = navigationPane.layoutParams as android.widget.FrameLayout.LayoutParams
+                val requiredMargin = if (showNavigation) phoneNavHeight else 0
+                if (paneParams.bottomMargin != requiredMargin) {
+                    paneParams.bottomMargin = requiredMargin
+                    navigationPane.layoutParams = paneParams
+                }
+            }
         }
 
         fun availableWidthDp(): Float =
@@ -1092,21 +1110,11 @@ class AgentActivity : Activity() {
                 ) {
                     view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
                 }
-                val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(wide, viewport.compactDashboard)
-                bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
-                val navigationPane = phonePane
-                if (navigationPane != null) {
-                    val paneParams = navigationPane.layoutParams as android.widget.FrameLayout.LayoutParams
-                    val requiredMargin = if (showNavigation) phoneNavHeight else 0
-                    if (paneParams.bottomMargin != requiredMargin) {
-                        paneParams.bottomMargin = requiredMargin
-                        navigationPane.layoutParams = paneParams
-                    }
-                }
                 if (keyboardCompact != viewport.compactDashboard) {
                     keyboardCompact = viewport.compactDashboard
                     refreshConversationLayout()
                 }
+                syncPhoneNavigation?.invoke()
                 root.post { applyViewportChange() }
                 insets
             }
@@ -1121,6 +1129,7 @@ class AgentActivity : Activity() {
             override fun onViewAttachedToWindow(v: View) = Unit
             override fun onViewDetachedFromWindow(v: View) { stopReadinessCamera() }
         })
+        syncPhoneNavigation?.invoke()
         return root
     }
 
@@ -1150,7 +1159,7 @@ class AgentActivity : Activity() {
         // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
         val windowHeight = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()
         home.configure(windowWidth, wide, railOffset = 0f, windowHeightDp = windowHeight,
-            externalBottomBarHeightDp = if (wide) 0f else at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT)
+            externalBottomBarHeightDp = 0f)
         home.onNavigateTarget = ::navigateDashboardTarget
         home.setJarvisShellStage(true)
         home.setForegroundActive(foregroundLearningActive)
@@ -3193,6 +3202,7 @@ class AgentActivity : Activity() {
         val training = learningVisualActive || activeNeuralCancellation != null
         if (::neuralMonitor.isInitialized) neuralMonitor.visibility = if (chat || training) View.VISIBLE else View.GONE
         if (::neuralProgress.isInitialized) neuralProgress.visibility = if (training) View.VISIBLE else View.GONE
+        syncPhoneNavigation?.invoke()
         if (!chat && !dashboardWasVisible) refreshDashboard()
     }
 
@@ -3393,7 +3403,7 @@ class AgentActivity : Activity() {
             addView(telemetry, matchWidth(top = 4))
             addView(progress, matchWidth(top = 8))
             addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this@AgentActivity, "STOP") {
-                cancelLocalRequest()
+                if (localReasoningSceneCurrent(lease)) cancelLocalRequest()
             }, matchWidth(top = 10))
         }
         fun show(retry: Boolean) {
@@ -3523,6 +3533,8 @@ class AgentActivity : Activity() {
         val home = homeView ?: run { key?.let(toolSceneLease::closed); return }
         val label = ToolRegistry.label(toolName)
         val app = ToolAppIdentity.resolve(packageManager, toolName, arguments)
+        val stopSession = sessionId
+        val stopGeneration = workPresentationGeneration
         val status = textView(if (app != null && toolName == "launch_app") "Öffnet ${app.label} · Prüfung läuft."
             else "$label läuft · Ergebnis wird abgewartet.", 13f, MUTED).apply { tag = "jarvis-tool-status:$callId" }
         val progress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
@@ -3539,7 +3551,9 @@ class AgentActivity : Activity() {
             addView(status)
             addView(progress, matchWidth(top = 8))
             addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this@AgentActivity, "STOP") {
-                cancelLocalRequest()
+                if (foregroundLearningActive && sessionId == stopSession &&
+                    workPresentationGeneration == stopGeneration && toolScene?.first == callId &&
+                    (key == null || currentToolScene(key))) cancelLocalRequest()
             })
         }
         val title = if (app != null) "APP · ${app.label}" else "WERKZEUG · $label"
@@ -11282,11 +11296,10 @@ class AgentActivity : Activity() {
             }
         }
         workWindowHost.workEnded()
-        workWindowHost.close(immediate = true)
         avatarDirector.clearAnimationIntents()
         voiceEngine?.stop()
         stopVoiceAnimation()
-        clearTaskEffects()
+        clearTaskEffects(immediate = !foregroundLearningActive)
         if (stoppedDraft?.sessionId == sessionId) addAssistantMessage(
             "Entwurf mit STOP abgebrochen – nichts gespeichert.", preserveLocalContext = true,
             keepCockpit = activeWorkArea == ContinuumWorkArea.START)
@@ -12816,13 +12829,15 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun clearTaskEffects() {
+    private fun clearTaskEffects() = clearTaskEffects(immediate = true)
+
+    private fun clearTaskEffects(immediate: Boolean) {
         toolSceneProgress?.second?.isIndeterminate = false
         toolSceneProgress = null
         toolSceneDialog?.dismiss()
         toolSceneDialog = null
         workWindowHost.workEnded()
-        workWindowHost.close(immediate = true)
+        workWindowHost.close(immediate)
         toolSceneLease.clear()
         toolScene = null
         toolSceneReturnArea = null

@@ -23,6 +23,7 @@ object JarvisShellRenderer {
         /** Start a depth layer for one panel (Android: Camera rotationX/Y + RenderEffect depth blur). true if handled. */
         fun beginDepth(box: Box, depth: JarvisMotion.Depth.State): Boolean = false
         fun endDepth() {}
+        fun drawFluidEdge(box: Box, radius: Float, phase: Float, energy: Float, timeMs: Long): Boolean = false
         /** Real bloom (blurred additive light) around [emissive] drawing; false → portable JarvisNeon fallback. */
         fun bloom(radiusDp: Float, intensity: Float, emissive: (ContinuumPainter) -> Unit): Boolean = false
     }
@@ -39,25 +40,74 @@ object JarvisShellRenderer {
         Slot.CAMERA_STATUS, Slot.COCKPIT_SECONDARY)
     private val bare = setOf(Slot.AVATAR) + foregroundSlots
 
-    /** Drawn above the transparent native head. Keeps speech and status readable over the 3D silhouette. */
+    data class ControlPress(val key: String, val target: String,
+                            val xFraction: Float = .5f, val yFraction: Float = .5f)
+
+    data class CinemaFrame(
+        val elapsedMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS,
+        val animatorScale: Float = 1f,
+        val clearIdle: Boolean = false,
+        val exiting: Boolean = false,
+        val interruptedAfterMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS,
+        val fromWorkingScene: Boolean = false,
+        val budget: JarvisRenderQuality.Budget? = null,
+        val timeMs: Long = 0L,
+        val returnResultElapsedMs: Long = -1L,
+    )
+
+    /** Foreground shares the sampled scene frame. */
     fun drawForeground(p: ContinuumPainter, shell: Shell, content: Map<Slot, SlotContent>,
-                       deckClearance: Float = 0f, glass: GlassBackend? = null) {
+                       deckClearance: Float = 0f, glass: GlassBackend? = null,
+                       cinemaFrame: CinemaFrame = CinemaFrame()) {
+        val scene = cinemaFrame
         for (slot in foregroundSlots) {
             val box = shell[slot] ?: continue
-            val clear = if (slot == Slot.COCKPIT_SECONDARY && deckClearance > 0f)
+            val moving = scene.clearIdle && JarvisCinemaEntrance.fliesAwayOnWorkOrder(slot)
+            val side = if (box.centerX >= shell.width / 2f) 1f else -1f
+            val pose = when {
+                moving && scene.exiting -> JarvisCinemaEntrance.returnPose(slot, 0, scene.elapsedMs,
+                    scene.interruptedAfterMs, side, scene.budget, scene.animatorScale, scene.fromWorkingScene,
+                    scene.returnResultElapsedMs)
+                moving -> JarvisCinemaEntrance.workOrderPose(slot, 0, scene.elapsedMs, side,
+                    scene.budget, scene.animatorScale, scene.fromWorkingScene)
+                else -> JarvisCinemaEntrance.SETTLED
+            }
+            if (pose.hidden) continue
+            val clear = if (!moving && slot == Slot.COCKPIT_SECONDARY && deckClearance > 0f)
                 JarvisDeckClearance.local(deckClearance, .65f) else 0f
             if (clear >= .999f) continue
             if (clear > 0f) p.saveAlpha(JarvisDeckClearance.alpha(clear)) else p.save()
-            p.translate(JarvisDeckClearance.dx(clear, box.centerX, shell.width), JarvisDeckClearance.dy(clear))
-            val k = JarvisDeckClearance.scale(clear)
+            p.translate(pose.dx + JarvisDeckClearance.dx(clear, box.centerX, shell.width),
+                pose.dy + JarvisDeckClearance.dy(clear))
+            val k = pose.scale * JarvisDeckClearance.scale(clear)
             p.scale(k, k, box.centerX, box.centerY())
+            val nativeDepth = pose.tiltY != 0f && glass?.beginDepth(box,
+                JarvisMotion.Depth.State(1f, 0f, 0f, pose.tiltY, 0f, 0f)) == true
+            if (!nativeDepth && pose.tiltY != 0f) {
+                p.scale(kotlin.math.cos(Math.toRadians(pose.tiltY.toDouble())).toFloat(),
+                    1f, box.centerX, box.centerY())
+            }
             if (slot != Slot.TOP_BAR && slot != Slot.CONTINUUM_HEADER) {
-                if (glass?.drawPanelGlass(box, 14f, 0f) != true) {
-                    JarvisReferenceHud.surface(p, box, 14f, Colors.cyan,
-                        if (slot == Slot.COCKPIT_SECONDARY || slot == Slot.CAMERA_STATUS) Colors.violetRim else Colors.cyanDeep)
+                if (pose.glassAlpha > .001f) {
+                    if (pose.glassAlpha < .999f) p.saveAlpha(pose.glassAlpha)
+                    if (glass?.drawPanelGlass(box, 14f, 0f) != true) {
+                        JarvisReferenceHud.surface(p, box, 14f, Colors.cyan,
+                            if (slot == Slot.COCKPIT_SECONDARY || slot == Slot.CAMERA_STATUS) Colors.violetRim else Colors.cyanDeep)
+                    }
+                    if (pose.glassAlpha < .999f) p.restore()
+                }
+                if (moving) {
+                    val fluid = JarvisFluidLight.sample(scene.elapsedMs, 0, scene.budget, scene.animatorScale)
+                    if (fluid.energy > 0f && glass?.drawFluidEdge(box, 14f, fluid.phase,
+                            fluid.energy, scene.timeMs) != true) JarvisFluidLight.drawEdge(p, box, fluid)
                 }
             }
-            content[slot]?.draw(p, box)
+            if (pose.contentAlpha > .001f) {
+                if (pose.contentAlpha < .999f) p.saveAlpha(pose.contentAlpha)
+                content[slot]?.draw(p, box)
+                if (pose.contentAlpha < .999f) p.restore()
+            }
+            if (nativeDepth) glass?.endDepth()
             p.restore()
         }
     }
@@ -71,7 +121,9 @@ object JarvisShellRenderer {
              exiting: Boolean = false, workElapsedMs: Long = elapsedMs,
              clearIdle: Boolean = false, resultForward: Boolean = false,
              fromWorkingScene: Boolean = false,
-             interruptedAfterMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS) {
+             interruptedAfterMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS,
+             returnResultElapsedMs: Long = -1L, controlPress: ControlPress? = null,
+             materialTimeMs: Long = timeMs) {
         if (glass?.drawBackground(shell.width, shell.height, timeMs) != true) {
             background(p, shell.width, shell.height)
         }
@@ -109,15 +161,16 @@ object JarvisShellRenderer {
             val cinema = when {
                 exiting && clearIdle ->
                     JarvisCinemaEntrance.returnPose(
-                        slot, rank, elapsedMs, interruptedAfterMs, side, depthBudget, animatorScale)
+                        slot, rank, elapsedMs, interruptedAfterMs, side, depthBudget, animatorScale, fromWorkingScene,
+                        returnResultElapsedMs)
                 exiting -> JarvisCinemaEntrance.pose(
                     kind, rank, cinemaElapsed, exiting = true,
                     side = side, budget = depthBudget, animatorScale = animatorScale)
                 clearIdle && resultForward && slot == Slot.WORK_DRAFT ->
                     JarvisCinemaEntrance.resultAdvance(workElapsedMs, depthBudget, animatorScale)
                 clearIdle && resultForward && role == JarvisCinemaEntrance.StageRole.ENTER ->
-                    JarvisCinemaEntrance.pose(
-                        kind, rank, JarvisCinemaEntrance.SETTLE_MS, exiting = false,
+                    JarvisCinemaEntrance.settledPose(
+                        kind, rank,
                         side = side, budget = depthBudget, animatorScale = animatorScale)
                 clearIdle ->
                     JarvisCinemaEntrance.workOrderPose(
@@ -132,22 +185,36 @@ object JarvisShellRenderer {
             val f = if (clearIdle) JarvisMotion.REST else JarvisMotion.frame(
                 JarvisMotion.panelSpecFor(box.centerX, cx),
                 elapsedMs - JarvisMotion.staggerStart(ranks[i], animatorScale = animatorScale), animatorScale)
-            if (cinema.hidden && cinema.rimAlpha < 0.01f) return@forEachIndexed
-            if (f.scale <= 0f) return@forEachIndexed
             // Airbus deck: while a work window is open, tiles and lower rows make room instead of being covered.
             val sourceClearance = JarvisDeckClearance.clearance(slot, deckClearance, missionClearance)
             val clear = if (sourceClearance > 0f && JarvisDeckClearance.clears(slot))
                 JarvisDeckClearance.local(sourceClearance, JarvisDeckClearance.order(slot, box.centerX, shell.width)) else 0f
-            if (clear >= .999f) return@forEachIndexed
+            val k = f.scale * cinema.scale * JarvisDeckClearance.scale(clear)
+            val dx = f.dx + cinema.dx + JarvisDeckClearance.dx(clear, box.centerX, shell.width)
+            val dy = f.dy + cinema.dy + JarvisDeckClearance.dy(clear)
+            if (clearIdle && JarvisCinemaEntrance.fliesAwayOnWorkOrder(slot)) {
+                val stage = shell[Slot.WORK_PROCESS]
+                val fluid = JarvisFluidLight.sample(elapsedMs, rank, depthBudget, animatorScale)
+                if (stage != null && fluid.energy > .001f) {
+                    val projectedX = box.centerX + dx
+                    val projectedY = box.centerY() + dy
+                    val halfWidth = box.width * k * .5f *
+                        kotlin.math.cos(Math.toRadians(cinema.tiltY.toDouble())).toFloat()
+                    val halfHeight = box.height * k * .5f
+                    JarvisFluidLight.drawTransfer(p,
+                        Box(projectedX - halfWidth, projectedY - halfHeight,
+                            projectedX + halfWidth, projectedY + halfHeight),
+                        stage.centerX, stage.bottom + 8f, fluid, depthBudget)
+                }
+            }
+            if (cinema.hidden && cinema.rimAlpha < 0.01f) return@forEachIndexed
+            if (f.scale <= 0f || clear >= .999f) return@forEachIndexed
             val visible = maxOf(cinema.rimAlpha, cinema.glassAlpha, cinema.contentAlpha, f.alpha)
             val opacity = visible * if (clear > 0f) JarvisDeckClearance.alpha(clear) else 1f
             if (opacity < 0.01f) return@forEachIndexed
             if (opacity < 1f) p.saveAlpha(opacity) else p.save()
-            p.translate(f.dx + cinema.dx + JarvisDeckClearance.dx(clear, box.centerX, shell.width),
-                f.dy + cinema.dy + JarvisDeckClearance.dy(clear))
-            val k = f.scale * cinema.scale * JarvisDeckClearance.scale(clear)
+            p.translate(dx, dy)
             p.scale(k, k, box.centerX, box.centerY())
-            if (cinema.tiltY != 0f) p.rotate(cinema.tiltY, box.centerX, box.centerY())
             val depthState = when {
                 cinema.tiltY != 0f || cinema.scale < 0.999f ->
                     JarvisMotion.Depth.State(cinema.scale, 0f, 0f, cinema.tiltY, cinema.dx, cinema.dy)
@@ -157,6 +224,10 @@ object JarvisShellRenderer {
             }
             val depthNative = depthState != JarvisMotion.Depth.FLAT &&
                 glass?.beginDepth(box, depthState) == true
+            if (!depthNative && cinema.tiltY != 0f) {
+                val perspective = kotlin.math.cos(Math.toRadians(cinema.tiltY.toDouble())).toFloat()
+                p.scale(perspective, 1f, box.centerX, box.centerY())
+            }
             val tile = if (slot == null) tiles.getOrNull(tileIndex) else null
             val ownsSurface = slot == Slot.BOTTOM_NAV || (content[slot] != null &&
                 slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS))
@@ -165,9 +236,13 @@ object JarvisShellRenderer {
                 p.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 1.6f, Fill.Solid(Colors.cyan), cinema.rimAlpha)
             } else if (tile != null) {
                 if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
+                val pressed = controlPress?.key == "tile:${tile.target}"
                 JarvisTiles.drawSurface(p, box, tile, f.glow > .5f,
-                    if (animatorScale > 0f) timeMs else 0L,
-                    luxuryDepth = luxuryDepth, lightSourceX = orbX, lightSourceY = orbY)
+                    if (animatorScale > 0f && depthBudget?.animate != false)
+                        (if (pressed) materialTimeMs else timeMs) else 0L,
+                    luxuryDepth = luxuryDepth, lightSourceX = orbX, lightSourceY = orbY,
+                    pressX = controlPress?.takeIf { it.key == "tile:${tile.target}" }?.xFraction ?: .5f,
+                    pressY = controlPress?.takeIf { it.key == "tile:${tile.target}" }?.yFraction ?: .5f)
                 if (cinema.glassAlpha < 1f) p.restore()
             } else if (!ownsSurface) {
                 // Static HUD panels do not need repeated full-screen backdrop-blur copies.
@@ -184,13 +259,21 @@ object JarvisShellRenderer {
                 }
                 if (cinema.glassAlpha < 1f) p.restore()
             }
+            if (clearIdle && JarvisCinemaEntrance.fliesAwayOnWorkOrder(slot)) {
+                val fluid = JarvisFluidLight.sample(elapsedMs, rank, depthBudget, animatorScale)
+                if (fluid.energy > 0f && glass?.drawFluidEdge(box, r, fluid.phase, fluid.energy, timeMs) != true) {
+                    JarvisFluidLight.drawEdge(p, box, fluid)
+                }
+            }
             if (cinema.contentAlpha > 0.01f) {
                 if (cinema.contentAlpha < 1f) p.saveAlpha(cinema.contentAlpha)
                 when {
                     slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
                     slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
                     slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
-                        timeMs = if (animatorScale > 0f) timeMs else 0L,
+                        timeMs = if (animatorScale > 0f) materialTimeMs else 0L,
+                        pressed = JarvisTiles.bottomNav.indexOfFirst { "bottom:${it.target}" == controlPress?.key },
+                        pressX = controlPress?.xFraction ?: .5f, pressY = controlPress?.yFraction ?: .5f,
                         cinemaElapsedMs = if (clearIdle) null else cinemaElapsed,
                         cinemaExiting = exiting && !clearIdle,
                         cinemaBudget = depthBudget, animatorScale = animatorScale)
@@ -210,7 +293,9 @@ object JarvisShellRenderer {
         }
         p.restore()
         JarvisReferenceHud.frame(p, shell.width, shell[Slot.STATUS]?.bottom?.plus(12f) ?: shell.height)
-        if (!deferForeground) drawForeground(p, shell, content, deckClearance, glass)
+        if (!deferForeground) drawForeground(p, shell, content, deckClearance, glass,
+            CinemaFrame(elapsedMs, animatorScale, clearIdle, exiting, interruptedAfterMs,
+                fromWorkingScene, depthBudget, timeMs, returnResultElapsedMs))
     }
 
     private fun Box.centerY() = (top + bottom) / 2f

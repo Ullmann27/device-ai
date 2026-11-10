@@ -1,0 +1,126 @@
+{
+  "status": "PASS_SOURCE_TARGETED_VERIFICATION",
+  "source_commit": "fac24859486959434529f4817c676dfdec9cfa00",
+  "application_main_tree": "46e8fbd3cf913f11c2d150830e89502f41bc5528",
+  "unique_tests_passed": 110,
+  "counting": "Initial 99 passes + repaired 11 presenter passes; 8 window tests rerun, not counted twice",
+  "suites": [
+    {
+      "name": "at.heinz.deviceai.CinemaButtonMaterialUiTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "initial"
+    },
+    {
+      "name": "at.heinz.deviceai.CinemaNativeSequenceUiTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "initial"
+    },
+    {
+      "name": "at.heinz.deviceai.CinemaStopReturnUiTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "initial"
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "fixture-repair"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarOcularTransitionTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "initial"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest",
+      "tests": "11",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "fixture-repair"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisCinemaEntranceTest",
+      "tests": "29",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "initial"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisCompactModuleGeometryTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "initial"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisLivePanelsRegressionTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "initial"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisResultVisibilityTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "initial"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest",
+      "tests": "27",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "initial"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisThermalVisualContractTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "initial"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "run": "initial"
+    }
+  ],
+  "initial_failure": "11 shared presenter fixture attach assertions; behavior not reached. Native window traversal fixed fixture, no app runtime changes. Two legacy PNG sidecars added.",
+  "changed_test_files": [
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowLifecycleUiTest.kt",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitAnimationPresenterTurnUiTest.kt"
+  ],
+  "native_app_frames": 35,
+  "window_fixture_frames": 2,
+  "original_avatar_blender_frames": 5,
+  "Fold7": "NOT_RUN",
+  "Filament": "NOT_RUN",
+  "hardware_AGSL": "NOT_RUN",
+  "device_performance_thermals": "NOT_RUN",
+  "live_speech": "NOT_RUN"
+}

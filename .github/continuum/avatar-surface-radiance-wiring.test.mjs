@@ -18,8 +18,8 @@ test('Face glow reuses original glTF emission',()=>{
  assert.match(gain,/MAX_GAIN = 1\.32f/);
 });
 test('Face glow remains a safe optional layer',()=>{
- assert.match(renderer,/applyCoreLight\(coreEnergy, cinematicLighting && motion, accent, open, side\)/);
- assert.match(renderer,/val accent = windowAccentArgb \?: flyIn\.accentArgb/);
+ assert.match(renderer,/applyCoreLight\(coreEnergy, cinematicLighting && motion, accent, open, side, elevation\)/);
+ assert.match(renderer,/val accent = if \(flyIn\.open\) flyIn\.accentArgb else windowAccentArgb/);
  assert.match(renderer,/val open = windowOpen \|\| flyIn\.open/);
  assert.match(renderer,/windowAccentArgb: Int\?, windowOpen: Boolean, gazeX: Float/);
  assert.match(renderer,/SpatialWindowLight\.tint\(windowAccentArgb, energy,/);

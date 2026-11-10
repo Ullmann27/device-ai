@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "fidelity": "android_activity_host_native_canvas_api28_explicit_2d_head",
+  "source_commit": "4ac9c9b94b9fb5e391646e2e99e986db32ec7997",
+  "capture_state": "home_after_chat",
+  "external_navigation_visible": false,
+  "pixel_width": 412,
+  "pixel_height": 915,
+  "viewport_width_dp": 412,
+  "viewport_height_dp": 915,
+  "density": 1,
+  "font_scale": 1,
+  "has_feature_tiles": false,
+  "live_panel_expanded": false,
+  "animation_duration_scale": 0,
+  "head_mode": "existing_2d_renderer_explicitly_selected",
+  "native_filament_verified": false,
+  "physical_device_verified": false,
+  "data_policy": "isolated empty test storage; real application startup; no invented status data",
+  "bounds_coordinate_space": "each View relative to its real parent; no synthetic composition",
+  "home_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 412,
+    "bottom": 915
+  },
+  "avatar_bounds": {
+    "left": 12,
+    "top": 148,
+    "right": 400,
+    "bottom": 411
+  },
+  "shell_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 412,
+    "bottom": 915
+  },
+  "scroll_viewport_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 412,
+    "bottom": 915
+  },
+  "scroll_x_px": 0,
+  "scroll_y_px": 0,
+  "scroll_y_dp": 0,
+  "scroll_content_height_px": 972,
+  "slot_bounds_coordinate_space": "actual shell-local dp",
+  "slot_bounds_dp": {
+    "STATUS": {
+      "left": 12,
+      "top": 809,
+      "right": 400,
+      "bottom": 905
+    }
+  },
+  "png_sha256": "3f5b55f78e60a031f40ab89e3c5b15c12979ea65c61d7ef7ff0922866f8ec03c"
+}

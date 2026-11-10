@@ -46,5 +46,7 @@ test('keyboard hides phone navigation and frees the same reserved space', () => 
   assert.match(buildUi, /val requiredMargin = if \(showNavigation\) phoneNavHeight else 0/);
   assert.match(buildUi, /paneParams\.bottomMargin = requiredMargin/);
   assert.match(buildUi, /navigationPane\.layoutParams = paneParams/);
-  assert.match(buildPane, /externalBottomBarHeightDp = if \(wide\) 0f else at\.heinz\.deviceai\.ui\.ContinuumHomeLayout\.PHONE_NAV_HEIGHT/);
+  assert.match(buildPane, /externalBottomBarHeightDp = 0f/);
+  assert.match(buildUi, /showBottomBar\(wide, keyboardCompact\) && !homeOwnsNavigation/);
+  assert.match(activity, /syncPhoneNavigation\?\.invoke\(\)/);
 });

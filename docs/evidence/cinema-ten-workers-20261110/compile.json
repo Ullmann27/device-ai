@@ -1,0 +1,20 @@
+{
+  "source_commit": "bb4da2a128b2220d095625d49673032df1e1f6c1",
+  "application_main_tree": "46e8fbd3cf913f11c2d150830e89502f41bc5528",
+  "phase": "compile",
+  "result_scope": "KOTLIN_COMPILATION_ONLY",
+  "tests_selected": [],
+  "exit_code": 0,
+  "gradle_exit_code": 0,
+  "elapsed_seconds": 26.825938760999634,
+  "frames": [],
+  "junit": [],
+  "validation_errors": [],
+  "post_run_source_commit": "bb4da2a128b2220d095625d49673032df1e1f6c1",
+  "tracked_changes_after_run": "",
+  "renderer": "NOT_RUN",
+  "Fold7": "NOT_RUN",
+  "Filament": "NOT_RUN",
+  "GPU": "NOT_RUN",
+  "inference": "NOT_RUN"
+}

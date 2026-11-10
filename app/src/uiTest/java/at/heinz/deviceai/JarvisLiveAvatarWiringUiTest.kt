@@ -204,7 +204,7 @@ class JarvisLiveAvatarWiringUiTest {
     @Config(sdk = [28], qualifiers = "w592dp-h760dp-mdpi")
     fun crossingThe600DpBoundaryReassignsNavigationEvenForASmallWidthDelta() = withShell(592, 760) { activity, home, live ->
         val director = field(activity, "avatarDirector") as AvatarDirector
-        assertTrue("Compact starts with phone navigation", (field(activity, "bottomWorkAreaBar") as View).isShown)
+        assertFalse("Compact Home uses its Cinema dock", (field(activity, "bottomWorkAreaBar") as View).isShown)
         assertTrue("Compact starts without a desktop sidebar", visibleRails(activity, home).isEmpty())
 
         resizeWindow(activity, 606, 760)

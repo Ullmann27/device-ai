@@ -129,7 +129,8 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         // Cosmetic idle motion, not observed gaze or invented speech/work. The existing view
         // owns the clock and stops it on pause/reduced motion. Actual task/observed gaze wins.
         // The eyes keep their saccades; the head part fades with the state and yields to the speech layer.
-        if (idleEyes) { eyeYaw += idleMotion.eyeYaw; eyePitch += idleMotion.eyePitch }
+        eyeYaw += idleMotion.eyeYaw * idleLayer
+        eyePitch += idleMotion.eyePitch * idleLayer
         // Reading (owner brief 06.11.: the avatar watches the document while the model really processes it): the eyes
         // sweep the lines of the directed window – a slow pass to the right, a quick return, a little lower each line –
         // while the head stays on the window. Only for a real held work gaze (Director windowWorkStarted).
@@ -148,7 +149,7 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             val cycle = 2.0 * Math.PI * seconds.toDouble()
             headPitch += workLayer * (.35 * kotlin.math.sin(cycle / 5.3)).toFloat()
             headYaw += workLayer * (.40 * kotlin.math.sin(cycle / 7.7)).toFloat()
-            if (work && !pose.gazeDirected) eyeYaw += (.65 * kotlin.math.sin(cycle / 2.9)).toFloat()
+            eyeYaw += workLayer * (.65 * kotlin.math.sin(cycle / 2.9)).toFloat()
         }
         // Speech accents (owner brief 05.11.): while the avatar really speaks, the head accents what it says – a small
         // nod following the smoothed real mouth opening (TTS word ranges via the director), a slow sway and a brow lift
@@ -187,7 +188,7 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             val nod = CONFIRMATION_PITCH_DEGREES * wave * wave
             headPitch += nod
         }
-        stabilizeGaze(drivenYaw, drivenPitch, idleEyes)
+        stabilizeGaze(drivenYaw, drivenPitch, idleLayer)
         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
         val bilabialClosure = pose.viseme == Viseme.PP && cueWeight > 0f
         // M/B/P require a closed lip seal even while the measured audio remains loud.
@@ -245,13 +246,14 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
      * (speech, work residual, confirmation) is subtracted from the eyes so the look-at
      * point stays on the current target. Cosmetic idle saccades keep their authored path.
      */
-    private fun stabilizeGaze(drivenYaw: Float, drivenPitch: Float, idleEyes: Boolean) {
-        if (idleEyes) return
+    private fun stabilizeGaze(drivenYaw: Float, drivenPitch: Float, idleWeight: Float) {
+        val gain = VOR_GAIN * (1f - idleWeight)
+        if (gain <= 0f) return
         val extraYaw = headYaw - drivenYaw
         val extraPitch = headPitch - drivenPitch
         if (extraYaw == 0f && extraPitch == 0f) return
-        eyeYaw = (eyeYaw - extraYaw * VOR_GAIN).coerceIn(-EYE_MAX_YAW_DEGREES, EYE_MAX_YAW_DEGREES)
-        eyePitch = (eyePitch - extraPitch * VOR_GAIN).coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
+        eyeYaw = (eyeYaw - extraYaw * gain).coerceIn(-EYE_MAX_YAW_DEGREES, EYE_MAX_YAW_DEGREES)
+        eyePitch = (eyePitch - extraPitch * gain).coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
     }
 
     private fun fadeLayers(idle: Boolean, speech: Boolean, work: Boolean, seconds: Float) {

@@ -414,17 +414,19 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         paceActive = true
         while (paceWordIndex < paceWords.size &&
             since >= TEXT_PACE_GRACE_MS + paceWordIndex * TEXT_PACE_WORD_MS) {
+            // Keep original estimated word deadlines.
+            val wordAt = speechStartedAt + TEXT_PACE_GRACE_MS + paceWordIndex * TEXT_PACE_WORD_MS
             val range = paceWords[paceWordIndex++]
             val visemes = GermanVisemeApproximation.visemes(text.substring(range.first, range.last + 1))
             if (visemes.isNotEmpty()) {
                 val per = (TEXT_PACE_WORD_MS / visemes.size).coerceAtLeast(MIN_VISEME_MS)
                 val wordCues = visemes.mapIndexed { i, v ->
-                    AvatarEvent.VisemeCue(utteranceId, v, if (v == Viseme.SIL) 0f else 1f, per, at + i * per)
+                    AvatarEvent.VisemeCue(utteranceId, v, if (v == Viseme.SIL) 0f else 1f, per, wordAt + i * per)
                 }
                 lastWordCues = wordCues.takeLast(MAX_REATTACHED_CUES)
                 wordCues.forEach(::emit)
             }
-            sentenceEndAfter(range.first, range.last + 1)?.let { emit(AvatarEvent.SentenceEnd(utteranceId, it, at)) }
+            sentenceEndAfter(range.first, range.last + 1)?.let { emit(AvatarEvent.SentenceEnd(utteranceId, it, wordAt)) }
         }
         return 0.10f + 0.18f * kotlin.math.abs(kotlin.math.sin(since / 75f))
     }

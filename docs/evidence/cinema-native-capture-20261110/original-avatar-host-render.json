@@ -1,0 +1,256 @@
+{
+  "schema": "continuum-exact-production-pose-host-replay-v1",
+  "status": "PASS",
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "assetSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "poseExportSha256": "8fc0f0a4e5bf40dd12b8fd08a5a7e16298170c2eb3a33425c4b458232a3ae56f",
+  "renderScriptSha256": "c5c653f0bec450ea5c63cf95cc8935fec1f36510b7d21ede2eac373142feff67",
+  "mapperSourceCommit": "da3cb58c590feb9b568a227f20769cb5f283d082",
+  "mapperSourceHashes": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": "a4236dd37074c601ab94df68f2bbdb9c510a43ef167cc445d510130e627e01f6",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "8e9747b26fc6924fa926ba64b937a24de0fec77bd1debd7f92db863640651fb4",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt": "a8bcb17382b2e326ecc3d7aabf5ca3b91630d7c9d0046889bde3f29fa3bba333",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt": "86df1b2d4b1cccef6e3bf911a11b548ec708b3d85064dae946a08f98e14a13b3",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "a52e3fb38d06e243b8a80a18d2afc75aeec64c9ff78620eea10287e394bc911a",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "4f7bfd666634ff68ee75a98ee73197827aa34390b38c1b6d311971983113c7ed",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "34fddaa9bf283b8ef40930e7190542b8241700cd1f455452ba5f03329e5ac11f"
+  },
+  "backend": "Blender 4.3.2 Cycles CPU",
+  "cpuThreads": 1,
+  "hiddenNodes": [
+    "ToothLower0",
+    "ToothLower1",
+    "ToothLower2",
+    "ToothLower3",
+    "ToothLower4",
+    "ToothLower5",
+    "ToothLower6",
+    "ToothLower7",
+    "ToothUpper0",
+    "ToothUpper1",
+    "ToothUpper2",
+    "ToothUpper3",
+    "ToothUpper4",
+    "ToothUpper5",
+    "ToothUpper6",
+    "ToothUpper7"
+  ],
+  "jointPolicy": "production Neck plus residual Head",
+  "pixels": [
+    480,
+    640
+  ],
+  "samples": 12,
+  "denoising": false,
+  "rendered": true,
+  "frames": [
+    {
+      "name": "neutral-listening",
+      "actualMapperPose": {
+        "name": "neutral-listening",
+        "seconds": 0,
+        "headYaw": 0,
+        "headPitch": 0,
+        "neckYaw": 0,
+        "neckPitch": 0,
+        "eyeYaw": 0,
+        "eyePitch": 0,
+        "jawPitch": 0
+      },
+      "maximumControlMatrixError": 1.6858743379088992e-07,
+      "maximumFaceSkinPositionErrorMetres": 9.560832206131516e-09,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.2669999897480011
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.034999996423721313
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.2471020519733429,
+        2.064140558242798
+      ],
+      "file": "neutral-listening.png",
+      "imageSha256": "690f35649a55a8aba943ca7f4ef87ff4fcf9a0695c5f9e2efd37233b67f6bf4c"
+    },
+    {
+      "name": "speaking-aa",
+      "actualMapperPose": {
+        "name": "speaking-aa",
+        "seconds": 1,
+        "headYaw": 1.9360783100128174,
+        "headPitch": 0.9180001616477966,
+        "neckYaw": 1.2584508657455444,
+        "neckPitch": 0.5967000722885132,
+        "eyeYaw": -1.9360783100128174,
+        "eyePitch": -0.9180001616477966,
+        "jawPitch": 9
+      },
+      "maximumControlMatrixError": 1.1920928955078125e-07,
+      "maximumFaceSkinPositionErrorMetres": 7.783593162193087e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9994291663169861,
+          0.005697593558579683,
+          0.033300068229436874,
+          0.0007725257310084999
+        ],
+        [
+          0.00012316300126258284,
+          0.9850553274154663,
+          -0.17223799228668213,
+          0.26664072275161743
+        ],
+        [
+          -0.03378375619649887,
+          0.17214377224445343,
+          0.9844922423362732,
+          0.03645692765712738
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.24355243146419525,
+        2.076648235321045
+      ],
+      "file": "speaking-aa.png",
+      "imageSha256": "71bd715604037764ceae6902fa13699ed4754634fe581cc6e74a12de63f10072"
+    },
+    {
+      "name": "gaze-left",
+      "actualMapperPose": {
+        "name": "gaze-left",
+        "seconds": 1,
+        "headYaw": -24,
+        "headPitch": 0,
+        "neckYaw": -15.59999942779541,
+        "neckPitch": 0,
+        "eyeYaw": -12,
+        "eyePitch": 0,
+        "jawPitch": 0
+      },
+      "maximumControlMatrixError": 1.6955584669631207e-07,
+      "maximumFaceSkinPositionErrorMetres": 2.7989688425491775e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9135454297065735,
+          0.0,
+          -0.40673667192459106,
+          -0.008960362523794174
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.2669999897480011
+        ],
+        [
+          0.40673667192459106,
+          0.0,
+          0.9135454297065735,
+          0.0334651954472065
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.24355243146419525,
+        2.076648235321045
+      ],
+      "file": "gaze-left.png",
+      "imageSha256": "1a7a6549503198ddab77175736582305b797b9fba781c4da479517c0436ca232"
+    },
+    {
+      "name": "after-interruption",
+      "actualMapperPose": {
+        "name": "after-interruption",
+        "seconds": 1.0160000324249268,
+        "headYaw": 1.7844929695129395,
+        "headPitch": 1.5969141721725464,
+        "neckYaw": 1.159920334815979,
+        "neckPitch": 1.037994146347046,
+        "eyeYaw": 0.6299999952316284,
+        "eyePitch": -0.3765999972820282,
+        "jawPitch": 0
+      },
+      "maximumControlMatrixError": 1.7136335372924805e-07,
+      "maximumFaceSkinPositionErrorMetres": 6.080511783416236e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9995150566101074,
+          0.000670424778945744,
+          0.03113168105483055,
+          0.0007358997827395797
+        ],
+        [
+          0.00019746817997656763,
+          0.9996116161346436,
+          -0.027866683900356293,
+          0.266362726688385
+        ],
+        [
+          -0.03113827295601368,
+          0.027859319001436234,
+          0.9991267919540405,
+          0.037540435791015625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.24355356395244598,
+        2.076845169067383
+      ],
+      "file": "after-interruption.png",
+      "imageSha256": "18bf3c76d3b33905a2b80e50055e0f71042547932497d6e4f1b088de78f120c5"
+    }
+  ],
+  "limitations": [
+    "Actual compiled mapper with synthetic inputs; no actual TTS/camera session",
+    "Blender materials, studio lights and glow are not native Filament pixel/performance evidence",
+    "Studio framing is not the adaptive app viewport",
+    "No app-driven smile exists in the exported contract; no smile is fabricated",
+    "Reference likeness still requires visual review"
+  ],
+  "note": "Original GLB unchanged; production mapper sources still match the tested Cinema app. Blender studio pixels are not Filament evidence."
+}

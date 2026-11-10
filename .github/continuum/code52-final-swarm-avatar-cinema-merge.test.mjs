@@ -17,7 +17,7 @@ test('original avatar bridge survives cinema branch integration', () => {
   assert.match(activity, /cockpitBus\.subscribe\(at\.heinz\.deviceai\.avatar\.CinemaWindowGazeBridge\(avatarDirector\)\)/);
   assert.match(activity, /android\.os\.SystemClock::elapsedRealtime/);
   assert.match(bridge, /is WindowProjectedMotion -> onMotion\(event\)/);
-  assert.match(bridge, /director\.windowMoved\(event\.windowId, target\)/);
+  assert.match(bridge, /director\.windowMoved\(id, target\)/);
   assert.match(bridge, /CinemaWindowLightState\.reset\(\)/);
   assert.match(director, /fun windowMoved\(windowId: String, target: GazeTarget\)/);
   assert.match(presenter, /onProjectedMotion = \{ bus\.emit\(it\) \}/);

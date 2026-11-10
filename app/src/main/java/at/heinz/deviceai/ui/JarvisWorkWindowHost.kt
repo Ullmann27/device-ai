@@ -169,9 +169,15 @@ class JarvisWorkWindowHost(
             JarvisWorkWindow.Recession(bounds, page, image, handover)
         } } else null
         val inheritedLayers = if (recession != null) maxOf(depthLayers, current?.depthLayers ?: 0) else depthLayers
-        val planned = plan(home, container, scene) ?: return null
+        val activatedControl = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let {
+            home.consumeActivatedControl(it.target)
+        }
+        val planned = plan(home, container, scene, activatedControl) ?: return null
         val first = previous?.let { Planned(JarvisWorkWindow.Plan(it, planned.plan.destination, planned.plan.protectedBounds),
             planned.face, planned.viewport) } ?: planned
+        val controlOrigin = activatedControl?.takeIf { previous == null }?.let {
+            ControlOrigin(it, localBounds(it, container), RectF(planned.viewport), RectF(planned.plan.origin))
+        }
         close(immediate = true)
         val id = "work-window-${++serial}"
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
@@ -245,7 +251,7 @@ class JarvisWorkWindowHost(
         container.addView(window, ViewGroup.LayoutParams(-1, -1))
         // A first layout at another size (rotation/fold/keyboard still pending) plans again on the real size.
         val refit = {
-            if (current === window) plan(home, container, scene)?.also {
+            if (current === window) plan(home, container, scene, activatedControl, controlOrigin)?.also {
                 // applyFrame publishes the projected centre after the new layout and transform are installed.
                 framing = it
                 currentCameraSide = cameraSide(it)
@@ -323,6 +329,9 @@ class JarvisWorkWindowHost(
         return window
     }
 
+    private class ControlOrigin(val view: View, val sourceBounds: RectF,
+                                val viewport: RectF, val origin: RectF)
+
     private class Planned(val plan: JarvisWorkWindow.Plan, val face: RectF?, val viewport: RectF)
 
     /** Projected panel and head use the same local overlay coordinates, including a refit after folding. */
@@ -340,7 +349,8 @@ class JarvisWorkWindowHost(
     }
 
     /** Current geometry, including undrawn layouts. */
-    private fun plan(home: ContinuumHomeView, container: ViewGroup, scene: JarvisActionScenes.Scene): Planned? {
+    private fun plan(home: ContinuumHomeView, container: ViewGroup, scene: JarvisActionScenes.Scene,
+                     activatedControl: View? = null, controlOrigin: ControlOrigin? = null): Planned? {
         val shell = home.jarvisShell
         val geometry = shell.currentShell() ?: return null
         val density = activity.resources.displayMetrics.density
@@ -361,7 +371,15 @@ class JarvisWorkWindowHost(
             }
             prefixes.firstNotNullOfOrNull { prefix -> home.findViewWithTag<View>("$prefix${tile.target}") }
         }
-        val origin = navigation?.let { visibleBounds(it, container) }
+        val exactOrigin = activatedControl?.takeIf {
+            it.isAttachedToWindow && it.isShown && it.isEnabled && it.width > 0 && it.height > 0
+        }?.let { visibleBounds(it, container) }
+        val stableOrigin = controlOrigin?.takeIf {
+            it.view === activatedControl && it.view.isAttachedToWindow && it.view.isEnabled &&
+                it.viewport == viewport && it.sourceBounds == localBounds(it.view, container) &&
+                (exactOrigin != null || home.controlHiddenForWork(it.view))
+        }?.origin
+        val origin = stableOrigin ?: exactOrigin ?: navigation?.let { visibleBounds(it, container) }
             ?: besideFace(face, viewport, density)
         return Planned(JarvisWorkWindow.Plan(origin, destination, withOrb), face, viewport)
     }

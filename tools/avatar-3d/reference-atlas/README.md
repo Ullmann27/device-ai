@@ -2,7 +2,9 @@
 
 The pipeline bakes the committed generated frontal artwork onto the existing animated mesh. The output is a real GLB with embedded texture, the original rig and all 21 morph targets. A single frontal image does not establish an exact reconstruction of the face or unseen profile.
 
-Accepted package: `app/src/main/assets/avatar3d/continuum-avatar.glb`, SHA-256 `70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145`, 12,552,372 bytes. The builder retains the historical output filename `continuum-reference-head-v1.glb`; the accepted revision is identified by this hash and the v2 evidence directory.
+Historical atlas package: SHA-256 `70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145`, 12,552,372 bytes. The builder retains the historical output filename `continuum-reference-head-v1.glb`; that revision is identified by this hash and the v2 evidence directory.
+
+The Cinema 2026-11-10 replay instead uses the unchanged current `app/src/main/assets/avatar3d/continuum-avatar.glb`, SHA-256 `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`. Its actual source hashes and pose verification are in `docs/evidence/cinema-native-capture-20261110/original-avatar-host-render.json`. The build recipe and hash table below describe the historical atlas revision, not the current package or revised pose-export scripts.
 
 ## Inputs and environment
 
@@ -111,6 +113,8 @@ java -Xmx384m -cp "$CONTINUUM_AVATAR_JVM_DEPS/*" \
   app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt \
   app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt \
   app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt \
+  app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt \
+  app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt \
   app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt \
   tools/avatar-3d/reference-atlas/ExportAvatarReviewPoses.kt
 java -Xmx384m -cp "$avatar_export_dir/mapper-export.jar:$avatar_runtime_cp" \
@@ -138,3 +142,7 @@ python3 tools/jarvis-reference-review/validate_hinge_v2.py \
 The actual candidate still fails the historical V1 Eye/Jaw pivot window. The functional hinge/fixed-region V2 contract passes separately; its diagnostic legacy view is not the actual candidate. Neither result establishes measured human anatomy, native pixels, audible synchronization, device performance or owner acceptance of likeness.
 
 Handoff: `docs/research/omega/REFERENCE-AVATAR-V2-HANDOFF-20261104.md`. Evidence index: `docs/evidence/reference-avatar-v2-20261104/README.md`.
+
+### Current Cinema replay contract
+
+Pose schema v2 includes camera azimuth, separate Neck angles and residual Head angles. The replay hides the same tooth-prefix nodes as Filament and checks every imported face vertex against canonical glTF skinning. V1 exports are rejected: silently treating their missing neck channels as zero would misrepresent the current renderer. Studio lighting/framing remain Blender host evidence, not Android Filament pixels.

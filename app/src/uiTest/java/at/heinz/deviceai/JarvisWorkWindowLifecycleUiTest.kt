@@ -246,8 +246,15 @@ class JarvisWorkWindowLifecycleUiTest {
                     bitmap.getPixels(pixels, 0, 884, 0, 0, 884, 760)
                     // HOST evidence: before (glass disc) / after (crystal), same frame and route.
                     System.getProperty("continuum.ui.evidenceDir")?.let { dir ->
-                        java.io.File(dir).apply { mkdirs() }.resolve(if (crystal) "crystal-after.png" else "crystal-before-disc.png")
-                            .outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                        val file = java.io.File(dir).apply { mkdirs() }
+                            .resolve(if (crystal) "crystal-after.png" else "crystal-before-disc.png")
+                        file.outputStream().use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
+                        java.io.File(file.parentFile, file.nameWithoutExtension + ".json").writeText(
+                            org.json.JSONObject()
+                                .put("source_commit", System.getenv("CONTINUUM_CAPTURE_SOURCE_COMMIT"))
+                                .put("backend", "Robolectric API28 native Canvas window fixture")
+                                .put("inputs", "Synthetic green icon; same scripted route and time")
+                                .put("Fold7", "NOT_RUN").put("Filament", "NOT_RUN").toString(2))
                     }
                 } finally { bitmap.recycle() }
             }

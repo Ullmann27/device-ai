@@ -43,7 +43,7 @@ def main():
     require(asset_hash == args.expected_asset_sha256, "Asset pin mismatch")
     require(pose_hash == args.expected_poses_sha256, "Actual mapper pose export pin mismatch")
     poses = json.loads(pose_raw)
-    require(poses["schema"] == "continuum-production-mapper-review-poses-v1", "Unexpected pose schema")
+    require(poses["schema"] == "continuum-production-mapper-review-poses-v2", "Unexpected pose schema")
     if args.frames == "all":
         wanted = [frame["name"] for frame in poses["frames"]]
     elif args.frames == "idle":
@@ -76,7 +76,8 @@ def main():
 
     def global_matrices(frame=None):
         overrides = {} if frame is None else {
-            "Head": rotation(frame["headYaw"], frame["headPitch"]),
+            "Neck": rotation(frame["neckYaw"], frame["neckPitch"]),
+            "Head": rotation(frame["headYaw"] - frame["neckYaw"], frame["headPitch"] - frame["neckPitch"]),
             "EyeLeft": rotation(frame["eyeYaw"], frame["eyePitch"]),
             "EyeRight": rotation(frame["eyeYaw"], frame["eyePitch"]),
             "Jaw": rotation(0, frame["jawPitch"]),
@@ -106,9 +107,13 @@ def main():
     armatures = [obj for obj in bpy.data.objects if obj.type == "ARMATURE"]
     require(len(armatures) == 1, "One imported skin rig required")
     armature = armatures[0]
-    head = armature.pose.bones["Head"]
+    rig_bones = {name: armature.pose.bones[name] for name in ("Neck", "Head")}
     bpy.context.view_layer.update()
-    rest_head = armature.matrix_world @ head.matrix
+    rest_bones = {name: armature.matrix_world @ bone.matrix for name, bone in rig_bones.items()}
+    hidden = [obj for obj in bpy.data.objects if obj.name.startswith(poses["hiddenNodePrefix"])]
+    require(hidden, "Hidden-node prefix matched no geometry")
+    for obj in hidden:
+        obj.hide_render = True
     controls = {name: bpy.data.objects[name] for name in ("EyeLeft", "EyeRight", "Jaw")}
     rest_control_world = {name: obj.matrix_world.copy() for name, obj in controls.items()}
     rest_control_basis = {name: obj.matrix_basis.copy() for name, obj in controls.items()}
@@ -187,11 +192,11 @@ def main():
                     key.value = frame["weights"][key.name]
         bpy.context.view_layer.update()
         worlds = global_matrices(frame)
-        head_index = names.index("Head")
-        change = conversion @ worlds[head_index] @ original_world[head_index].inverted() @ inverse_conversion
-        desired_head = change @ rest_head
-        head.matrix = armature.matrix_world.inverted() @ desired_head
-        bpy.context.view_layer.update()
+        for name, bone in rig_bones.items():
+            index = names.index(name)
+            change = conversion @ worlds[index] @ original_world[index].inverted() @ inverse_conversion
+            bone.matrix = armature.matrix_world.inverted() @ change @ rest_bones[name]
+            bpy.context.view_layer.update()
         expected_controls = {}
         for name, obj in controls.items():
             index = names.index(name)
@@ -218,7 +223,7 @@ def main():
         require(actual_positions.shape == expected_positions.shape, "Importer changed face vertex order/count; cannot certify direct replay")
         maximum_skin_error = float(np.max(np.linalg.norm(actual_positions - expected_positions, axis=1)))
         require(maximum_skin_error < 2e-6, "Imported face differs from canonical runtime skin/morph pose")
-        # Reproduce the current renderer camera formulas without fixing its known gaze offset.
+        # Studio framing; production camera azimuth.
         vertical = max(focus["halfHeight"], focus["halfWidth"] / (args.width / args.height)) * 1.08
         camera_data.ortho_scale = vertical * 2
         seconds = frame["seconds"]
@@ -249,11 +254,12 @@ def main():
         "renderScriptSha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "mapperSourceCommit": poses["sourceCommit"], "mapperSourceHashes": poses["sourceHashes"],
         "backend": "Blender " + bpy.app.version_string + " Cycles CPU", "cpuThreads": 1,
+        "hiddenNodes": [obj.name for obj in hidden], "jointPolicy": "production Neck plus residual Head",
         "pixels": [args.width, args.height], "samples": args.samples, "denoising": False,
         "rendered": not args.no_render, "frames": records,
         "limitations": ["Actual compiled mapper with synthetic inputs; no actual TTS/camera session",
             "Blender materials, studio lights and glow are not native Filament pixel/performance evidence",
-            "Existing portrait camera/gaze offset remains unchanged",
+            "Studio framing is not the adaptive app viewport",
             "No app-driven smile exists in the exported contract; no smile is fabricated",
             "Reference likeness still requires visual review"]}
     (args.output / "pose-replay-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")

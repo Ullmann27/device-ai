@@ -1,0 +1,124 @@
+{
+  "scope": "Ocular continuity using existing idle/work layers",
+  "base_local": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+  "base_remote": "5457351a7585eada2393f80aa81db4bff5cc8897",
+  "base_tree": "6906b84e8434d4247a759ac0e7cf701ad82416dc",
+  "red": {
+    "tests": 2,
+    "failures": 1,
+    "diagnostic": "IDLE -> LISTENING at 2.4 s, no elapsed time: eyeYaw +0.630 -> -3.0632906 degrees",
+    "run": {
+      "source_sha256": {
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "a52e3fb38d06e243b8a80a18d2afc75aeec64c9ff78620eea10287e394bc911a",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": "a4236dd37074c601ab94df68f2bbdb9c510a43ef167cc445d510130e627e01f6",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt": "86df1b2d4b1cccef6e3bf911a11b548ec708b3d85064dae946a08f98e14a13b3",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt": "a8bcb17382b2e326ecc3d7aabf5ca3b91630d7c9d0046889bde3f29fa3bba333",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarOcularTransitionTest.kt": "25a4f56d93309d377dd2bec163114dc660d9303d4f196bedd3c4ca1b20763a42"
+      },
+      "dependency_jar_sha256": "6eda6beae0b79c076a619d7532c8648216b25111cbecce7ba0e99d957e206002",
+      "compile_command": [
+        "/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/bin/kotlinc",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarOcularTransitionTest.kt",
+        "-Xfriend-paths=/workspace/scratch/5900afa6af29/device-ai/app/build/intermediates/compile_app_classes_jar/debug/bundleDebugClassesToCompileJar/classes.jar",
+        "-classpath",
+        "/workspace/scratch/5900afa6af29/device-ai/app/build/intermediates/compile_app_classes_jar/debug/bundleDebugClassesToCompileJar/classes.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/5900afa6af29/qa-gradle-home/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar",
+        "-include-runtime",
+        "-d",
+        "/workspace/scratch/5900afa6af29/avatar-ocular-red/tests.jar"
+      ],
+      "test_command": [
+        "/tmp/continuum-toolchain/jdk/bin/java",
+        "-Xmx384m",
+        "-cp",
+        "/workspace/scratch/5900afa6af29/avatar-ocular-red/tests.jar:/workspace/scratch/5900afa6af29/device-ai/app/build/intermediates/compile_app_classes_jar/debug/bundleDebugClassesToCompileJar/classes.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/5900afa6af29/qa-gradle-home/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar",
+        "org.junit.runner.JUnitCore",
+        "at.heinz.deviceai.avatar3d.AvatarOcularTransitionTest"
+      ],
+      "compile_exit": 0,
+      "test_exit": 1
+    }
+  },
+  "green": {
+    "tests": 41,
+    "failures": 0,
+    "junit_seconds": 2.193,
+    "run": {
+      "source_sha256": {
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "61db876a606701efaa50c5555909c96696bba95322665918625f88bbb1e3cc3c",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": "a4236dd37074c601ab94df68f2bbdb9c510a43ef167cc445d510130e627e01f6",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt": "86df1b2d4b1cccef6e3bf911a11b548ec708b3d85064dae946a08f98e14a13b3",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt": "a8bcb17382b2e326ecc3d7aabf5ca3b91630d7c9d0046889bde3f29fa3bba333",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarOcularTransitionTest.kt": "25a4f56d93309d377dd2bec163114dc660d9303d4f196bedd3c4ca1b20763a42",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarHeadFollowTest.kt": "719f6d097f0422d9e8e5ce23048e44e36461f7dfc32336c2084a4c6eb67843c5",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarVorStabilizationTest.kt": "e6d92c802508107753089306141552b7094160280b2a631b8539220fc3773d9e",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarSpeechAccentTest.kt": "7901b90cee845e96e2447221076f6adc9e8375ef702d5505dee64c670b480b16",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphMapperComparisonTest.kt": "84b57e42b11af458142438cc19b1e40ab97a7d06ed79305b7825a9e3d68d54e0",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarIdleMotionBoundaryTest.kt": "66e85d2ab1b13486e2aa9218ab77765ea061b5e973621f532a6ec900886eafe7",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarNaturalBlinkTimingTest.kt": "ef80b6cb6084c37e4905e73c8df781bde429649d5740356c5b714c454496a80d",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarBlinkEasingTest.kt": "eaf5ae0eeab13c99973f8a6220b0881edcdee31a527198765964feb8fa4016d2",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarNeckSplitTest.kt": "c987c326262be6f1891d33ca0d2d386e779893d4119a3fb9428d4be8681a1733",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt": "026dd68eb9b734dd01c8a44e4bcd1aef12ed87911eb9cf76c601848af2af5c95",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt": "2fae0506f3911d6c69b81a3e383d9ebc375ecc9b8ccecdf87f3ec621e7266ad7",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/GlbSkinningRig.kt": "0e4aec21acb5d486494d75b51a8f6113239951a34823397cf8cc89caf416d872"
+      },
+      "dependency_jar_sha256": "6eda6beae0b79c076a619d7532c8648216b25111cbecce7ba0e99d957e206002",
+      "compile_command": [
+        "/workspace/scratch/5900afa6af29/qa-installed-tools/kotlinc/bin/kotlinc",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarOcularTransitionTest.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarHeadFollowTest.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarVorStabilizationTest.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarSpeechAccentTest.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphMapperComparisonTest.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarIdleMotionBoundaryTest.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarNaturalBlinkTimingTest.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarBlinkEasingTest.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarNeckSplitTest.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/GlbSkinningRig.kt",
+        "-Xfriend-paths=/workspace/scratch/5900afa6af29/device-ai/app/build/intermediates/compile_app_classes_jar/debug/bundleDebugClassesToCompileJar/classes.jar",
+        "-classpath",
+        "/workspace/scratch/5900afa6af29/device-ai/app/build/intermediates/compile_app_classes_jar/debug/bundleDebugClassesToCompileJar/classes.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/5900afa6af29/qa-gradle-home/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar",
+        "-include-runtime",
+        "-d",
+        "/workspace/scratch/5900afa6af29/avatar-ocular-green/tests.jar"
+      ],
+      "test_command": [
+        "/tmp/continuum-toolchain/jdk/bin/java",
+        "-Xmx384m",
+        "-cp",
+        "/workspace/scratch/5900afa6af29/avatar-ocular-green/tests.jar:/workspace/scratch/5900afa6af29/device-ai/app/build/intermediates/compile_app_classes_jar/debug/bundleDebugClassesToCompileJar/classes.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/5900afa6af29/qa-installed-tools/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/5900afa6af29/qa-gradle-home/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar",
+        "org.junit.runner.JUnitCore",
+        "at.heinz.deviceai.avatar3d.AvatarOcularTransitionTest",
+        "at.heinz.deviceai.avatar3d.AvatarHeadFollowTest",
+        "at.heinz.deviceai.avatar3d.AvatarVorStabilizationTest",
+        "at.heinz.deviceai.avatar3d.AvatarSpeechAccentTest",
+        "at.heinz.deviceai.avatar3d.AvatarMorphMapperComparisonTest",
+        "at.heinz.deviceai.avatar3d.AvatarIdleMotionBoundaryTest",
+        "at.heinz.deviceai.avatar3d.AvatarNaturalBlinkTimingTest",
+        "at.heinz.deviceai.avatar3d.AvatarBlinkEasingTest",
+        "at.heinz.deviceai.avatar3d.AvatarNeckSplitTest",
+        "at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest",
+        "at.heinz.deviceai.avatar3d.Avatar3dContractTest"
+      ],
+      "compile_exit": 0,
+      "test_exit": 0
+    }
+  },
+  "asset_sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "asset_targets": 21,
+  "limits": [
+    "Pure JVM tests of actual mapper source and original GLB geometry, no Filament GPU render",
+    "No Blender/physical-device/camera/microphone/network test",
+    "Dependencies use pinned actual app compile JAR; runtime mapper and its motion helpers recompiled from this checkout",
+    "No speech cues or timestamps changed; no new clock/state/renderer"
+  ]
+}

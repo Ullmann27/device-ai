@@ -1,0 +1,28 @@
+✔ Face glow reuses original glTF emission (0.935308ms)
+✔ Face glow remains a safe optional layer (6.324227ms)
+✔ EXP14 uses hardware-only single-pass stroke, never a full-window postprocess (2.028939ms)
+✔ EXP14 respects original avatar/dialog protected bounds and owner opt-in (0.47544ms)
+✔ original frame timeline and safe keep-out remain canonical (1.688427ms)
+✔ text-safe 0.09 raster never controls structural rim and scan (0.57042ms)
+✔ EXP01 slices glass and brackets into different Z planes, not native text (1.653976ms)
+✔ only an honest completed tool result may trigger a current-window pulse (0.433418ms)
+✔ cinema uses the owner-controlled existing window and frame budget (0.69948ms)
+✔ EXP11 orb glow is tied to a real accepted window with a bounded time course (0.355153ms)
+✔ EXP14 shader rim uses pixel space after leaving dp scaled glass canvas (0.259482ms)
+✔ no fake external-send or new native frame timers introduced (0.900797ms)
+✔ original avatar bridge survives cinema branch integration (12.151261ms)
+✔ real PCM anticipation and existing Filament light remain wired (0.90254ms)
+✔ thermal and document protections must survive visual branch merges (0.368482ms)
+✔ Fold portrait uses the shared width/font profile, one Activity rail and no duplicated shell rail (2.544408ms)
+✔ current information panels and separate status keep real sources and complete scrollable rows (1.014855ms)
+✔ ten action controls share draw bounds while head and original orb retain separate regions (2.465261ms)
+✔ Fold chat remains a real native action and both content and rail stay scrollable (1.036757ms)
+✔ phone and Fold share the original live surface and preserve its lifecycle during reflow (0.525194ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 266.816662

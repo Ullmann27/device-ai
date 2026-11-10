@@ -1,0 +1,9 @@
+{
+  "production_source": "515afc28af11b9befeb5a61f9c44411d423635a9",
+  "test_sha256": "77bf9c34c7763ef5614bf29de7ff952703274f94ccba838201023ccbee567afe",
+  "tests": 1,
+  "failures": 1,
+  "assertion": "java.lang.AssertionError: Visible window must return before removal",
+  "xml_sha256": "be0d387e1bd64245b1c0451552bb4c8605d416751ce57b865db7b7ab41aa9009",
+  "input": "Real decor touch on existing STOP button; host scripted work request, no model"
+}

@@ -47,6 +47,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
     private val painter = AndroidContinuumPainter(context.assets)
+    private val fluidGlass by lazy { JarvisGlassRenderer(painter) }
     private val camera = Camera()
     private val cameraMatrix = Matrix()
     private val prismRim by lazy {
@@ -54,6 +55,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     }
     private var cinematics = HollywoodFuiCinematics.Painterly(JarvisDesign.Colors.cyan)
     private var budget = HollywoodFuiCinematics.Budget.FULL
+    private var renderBudget: JarvisRenderQuality.Budget? = null
     private var originX = Float.NaN
     private var originY = Float.NaN
     private var moteSeed = 0
@@ -158,6 +160,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
 
     /** Couples motes, bloom and the live frame cadence to the cockpit's current render budget. */
     fun setRenderBudget(value: JarvisRenderQuality.Budget) {
+        renderBudget = value
         val next = HollywoodFuiCinematics.Budget.from(value)
         if (budget == next) return
         budget = next
@@ -229,6 +232,16 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         canvas.scale(density, density)
         val boxDp = HollywoodFuiCinematics.Box(stage.left / density, stage.top / density,
             stage.right / density, stage.bottom / density)
+        val fluidTime = if (closingElapsedMs >= 0L) closingElapsedMs + HollywoodFuiConstruct.ANCHOR_END_MS
+            else elapsedMs + JarvisCinemaEntrance.DEPART_MS
+        val fluid = JarvisFluidLight.sample(fluidTime, budget = renderBudget,
+            animatorScale = if (reducedMotion || !budget.animate) 0f else 1f)
+        val fluidBox = JarvisShellLayout.Box(boxDp.left, boxDp.top, boxDp.right, boxDp.bottom)
+        if (fluid.energy > 0f) JarvisFluidLight.drawTransfer(painter,
+            JarvisShellLayout.Box(source.left / density, source.top / density,
+                source.right / density, source.bottom / density),
+            fluidBox.centerX, fluidBox.bottom,
+            fluid.copy(energy = fluid.energy * frame.closeFrame), renderBudget)
         // The source is in screen space, never rotated with the arriving glass.
         cinematics.drawAnchor(painter, originX / density, originY / density, boxDp, frame, bloom)
         canvas.restore()
@@ -290,6 +303,13 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         if (zSliceEnabled && !reducedMotion) canvas.translate(
             HollywoodFuiConstruct.layerShiftDp(tilt, 20f, true), 0f)
         cinematics.drawBrackets(painter, boxDp, frame.brackets * frame.closeFrame, bloom)
+        if (fluid.energy > 0f) {
+            val edgeEnergy = fluid.energy * frame.brackets * frame.closeFrame
+            fluidGlass.begin(canvas, density, width, height)
+            if (!fluidGlass.drawFluidEdge(fluidBox, radiusDp, fluid.phase, edgeEnergy, fluidTime)) {
+                JarvisFluidLight.drawEdge(painter, fluidBox, fluid.copy(energy = edgeEnergy))
+            }
+        }
         canvas.restore()
         canvas.restore()
         if (prismRimEnabled && bloom && frame.brackets * frame.closeFrame > .1f) {

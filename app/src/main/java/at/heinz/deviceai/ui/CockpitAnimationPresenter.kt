@@ -39,6 +39,9 @@ class CockpitAnimationPresenter(
 ) : CockpitAnimationRenderer {
     private val density = home.resources.displayMetrics.density
     private val power = home.context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    private var cinemaTurnId: String? = null
+    private var cinemaRevision = 0L
+    private val retiredCinemaTurns = linkedSetOf<String>()
 
     override fun render(event: CockpitAnimationEvent) {
         val generation = home.presentationGeneration
@@ -86,6 +89,10 @@ class CockpitAnimationPresenter(
      * centre. C: hook only.
      */
     private fun playArea(event: CockpitAnimationEvent.AreaChanged) {
+        if (home.jarvisShellStage && event.toTarget == JarvisCockpitPanels.STOP_TARGET) {
+            home.jarvisShell.playExit()
+            return
+        }
         when (event.pattern) {
             at.heinz.deviceai.cockpit.TransitionPattern.B_FLY_IN ->
                 if (home.jarvisShellStage) home.jarvisShell.playEntrance() else if (home.landscapeCockpit) flyInCards()
@@ -116,6 +123,7 @@ class CockpitAnimationPresenter(
         if (event is CockpitAnimationEvent.Extension && event.kind == WindowProjectedMotion.KIND) return
         if (!home.isAttachedToWindow) return
         if (event !is CockpitAnimationEvent.TurnEnded && !home.isPresentationActive()) return
+        if (home.jarvisShellStage && !acceptCinemaEvent(event)) return
         bindProjectedMotion(event)
         if (home.ownsAvatarSlot) home.avatarRenderer?.let { r -> runCatching { r.onAnimationEvent(event) } }
         if (!home.isPresentationActive()) return
@@ -124,18 +132,68 @@ class CockpitAnimationPresenter(
         runTimeline(event)
     }
 
+    private fun retireCinemaTurn(turnId: String) {
+        retiredCinemaTurns.add(turnId)
+        while (retiredCinemaTurns.size > 24) retiredCinemaTurns.remove(retiredCinemaTurns.first())
+    }
+
+    private fun replaceCinemaTurn(turnId: String?) {
+        if (cinemaTurnId == turnId) return
+        cinemaTurnId?.let {
+            retireCinemaTurn(it)
+            home.jarvisShell.closeProjectedMotion(it, android.os.SystemClock.uptimeMillis())
+        }
+        cinemaTurnId = turnId
+        cinemaRevision++
+    }
+
+    private fun acceptCinemaEvent(event: CockpitAnimationEvent): Boolean {
+        if (event is CockpitAnimationEvent.TurnEnded) {
+            retireCinemaTurn(event.turnId)
+            if (cinemaTurnId != event.turnId) return false
+            replaceCinemaTurn(null)
+            return true
+        }
+        if (event is CockpitAnimationEvent.AreaChanged) {
+            if (event.toTarget == JarvisCockpitPanels.STOP_TARGET ||
+                event.pattern == at.heinz.deviceai.cockpit.TransitionPattern.B_FLY_IN) {
+                replaceCinemaTurn(null)
+                home.jarvisShell.closeProjectedMotion(event.turnId, android.os.SystemClock.uptimeMillis())
+            }
+            return true
+        }
+        if (event is CockpitAnimationEvent.BootStarted) return cinemaTurnId == null
+        val trigger = JarvisCinemaEntrance.triggerFor(event)
+        if (trigger != JarvisCinemaEntrance.Trigger.ENTER &&
+            trigger != JarvisCinemaEntrance.Trigger.STEP) return true
+        if (event.turnId in retiredCinemaTurns) return false
+        if (event is CockpitAnimationEvent.CommandFlyIn ||
+            cinemaTurnId == null && trigger == JarvisCinemaEntrance.Trigger.ENTER) {
+            if (cinemaTurnId == null) home.jarvisShell.closeProjectedMotion(
+                at.heinz.deviceai.cockpit.NAV_TURN, android.os.SystemClock.uptimeMillis())
+            replaceCinemaTurn(event.turnId)
+        }
+        return cinemaTurnId == event.turnId
+    }
+
     /** Sender hook for Bot 03: bind the triggering turn and emit CLOSED on STOP/TurnEnded. */
     private fun bindProjectedMotion(event: CockpitAnimationEvent) {
         if (!home.jarvisShellStage) return
         if (bus != null) home.jarvisShell.onProjectedMotion = { bus.emit(it) }
+        if (event is CockpitAnimationEvent.AreaChanged) {
+            if (event.toTarget != JarvisCockpitPanels.STOP_TARGET &&
+                event.pattern == at.heinz.deviceai.cockpit.TransitionPattern.B_FLY_IN) {
+                home.jarvisShell.bindCinemaTurn(event.turnId)
+            }
+            return
+        }
         when (JarvisCinemaEntrance.triggerFor(event)) {
             JarvisCinemaEntrance.Trigger.ENTER,
             JarvisCinemaEntrance.Trigger.STEP -> home.jarvisShell.bindCinemaTurn(event.turnId)
             JarvisCinemaEntrance.Trigger.EXIT -> {
-                val stop = event is CockpitAnimationEvent.TurnEnded ||
-                    (event is CockpitAnimationEvent.AreaChanged &&
-                        event.toTarget == JarvisCockpitPanels.STOP_TARGET)
-                if (stop) home.jarvisShell.closeProjectedMotion(event.turnId, event.atMillis)
+                if (event is CockpitAnimationEvent.TurnEnded) {
+                    home.jarvisShell.closeProjectedMotion(event.turnId, android.os.SystemClock.uptimeMillis())
+                }
             }
             JarvisCinemaEntrance.Trigger.IGNORE -> Unit
         }
@@ -147,8 +205,10 @@ class CockpitAnimationPresenter(
         val generation = home.presentationGeneration
         val avatar = home.avatarRenderer
         val cueGeneration = avatar?.cueGeneration
+        val sceneRevision = cinemaRevision
         fun current() = home.isPresentationActive() && generation == home.presentationGeneration &&
-            avatar === home.avatarRenderer && cueGeneration == avatar?.cueGeneration
+            avatar === home.avatarRenderer && cueGeneration == avatar?.cueGeneration &&
+            (!home.jarvisShellStage || sceneRevision == cinemaRevision)
         for (step in at.heinz.deviceai.cockpit.CockpitTimeline.steps(event)) {
             val delay = if (motion) step.atMs else 0L
             if (delay == 0L) execute(step) else home.postDelayed({ if (current()) execute(step) }, delay)
@@ -199,10 +259,6 @@ class CockpitAnimationPresenter(
                 }
                 JarvisCinemaEntrance.Trigger.EXIT -> {
                     home.jarvisShell.playExit()
-                    val stop = event is CockpitAnimationEvent.TurnEnded ||
-                        (event is CockpitAnimationEvent.AreaChanged &&
-                            event.toTarget == JarvisCockpitPanels.STOP_TARGET)
-                    if (stop) home.jarvisShell.closeProjectedMotion(event.turnId, event.atMillis)
                 }
                 JarvisCinemaEntrance.Trigger.IGNORE -> Unit
             }
