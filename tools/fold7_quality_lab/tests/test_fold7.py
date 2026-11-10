@@ -40,6 +40,28 @@ class Fold7LabTest(unittest.TestCase):
     def test_gfxinfo_empty(self):
         self.assertIsNone(fold7.parse_gfxinfo("no data", 8.33)["frame_p95_ms"])
 
+    def test_gfxinfo_keeps_completed_frozen_frames(self):
+        data = "\n".join(["---PROFILEDATA---", "Flags,IntendedVsync,FrameCompleted",
+                           "0,1000000000,1010000000", "0,2000000000,3000000000",
+                           "0,4000000000,5500000000", "0,6000000000,11000000000",
+                           "---PROFILEDATA---"])
+        result = fold7.parse_gfxinfo(data, 16.667)
+        self.assertEqual(result["frame_count"], 4)
+        self.assertEqual(result["frame_p95_ms"], 5000.0)
+        self.assertEqual(result["over_budget_pct"], 75.0)
+
+    def test_gfxinfo_rejects_invalid_timestamps(self):
+        data = "\n".join(["---PROFILEDATA---", "Flags,IntendedVsync,FrameCompleted",
+                           "0,1000000000,0", "0,1000000000,9223372036854775807",
+                           "0,0,1000000", "0,-1000000,1000000",
+                           "0,2000000000,1000000000", "0,1000000000,1000000000",
+                           "0,1000000000", "0,1000000000,invalid", "1,1,5000000000",
+                           "---PROFILEDATA---"])
+        result = fold7.parse_gfxinfo(data, 16.667)
+        self.assertEqual(result["frame_count"], 0)
+        self.assertIsNone(result["frame_p95_ms"])
+        self.assertIsNone(result["over_budget_pct"])
+
     def test_version(self):
         self.assertEqual(fold7.parse_package("versionCode=44 minSdk=26\nversionName=0.3.43"),
                          {"version_code": 44, "version_name": "0.3.43"})
