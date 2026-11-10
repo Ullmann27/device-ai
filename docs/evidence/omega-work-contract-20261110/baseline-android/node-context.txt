@@ -1,0 +1,24 @@
+✔ single hologram frame callback advances phase independently of Canvas onDraw (5.554957ms)
+✔ Android window visibility and focus can restore orbital clock without cached view visibility (0.261986ms)
+✔ foreground lifecycle explicitly pauses, cancels, and resumes hologram while low budgets preserve only essential motion (0.313822ms)
+✔ local model prompt never reads a profile-wide old dialogue after session change (0.177591ms)
+✔ each AgentActivity chat turn captures only its session-scoped local-model topic plus bounded state telegram (0.73355ms)
+✔ context plan uses a bounded byte estimate and reserves actual client output (2.715948ms)
+✔ context truncates Unicode and JSON escape-heavy input within the real serialized budget (5.50891ms)
+✔ diagnostics precede source under pressure and omitted context is reported (4.787757ms)
+✔ rejects out-of-bounds contexts, unbounded inputs and unsafe fragment paths (4.576847ms)
+✔ preserves the complete goal or refuses instead of silently truncating its meaning (0.426799ms)
+✔ diagnosis requires a matching admission identity and never labels input as verified facts (1.246915ms)
+✔ local diagnosis uses the existing fixed-loopback client with no tool or promotion rights (7.868763ms)
+✔ injected source remains quoted data and model instructions cannot select shell tools (1.386451ms)
+✔ reviewed lexical source is only an untrusted, byte-bounded model suggestion (8.558128ms)
+✔ rejects unreviewed, revoked, corrupted, and unanchored candidates (0.517742ms)
+✔ limits excerpt bytes and rejects oversized or malformed inputs (1.252463ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 217.357504

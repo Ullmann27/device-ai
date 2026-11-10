@@ -1,0 +1,11 @@
+1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f  app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt
+885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1  app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt
+6b7f888df37491de793d225b6431d555e7995adacaba4da426d00048e9e4f92e  app/src/main/java/at/heinz/deviceai/ToolRegistry.kt
+f339fef918ebfa551b41c6f6433f66443d155fc01dfa4d6f0b6f981c4a869da7  app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt
+fdc83c064b5f0d23d2a890541d1da32d0d50ecc8ad03b89ba03828e86038d557  app/src/main/java/at/heinz/deviceai/cognitive/AgentTaskEvidence.kt
+a22c23d54d83da9b650e054c4840e6f76e1d382e6c5f5eeacbf8cbfc41942185  app/src/main/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlan.kt
+2751814783f6d1c14df7d90bd077f4451cff2bdb31029a3ca968aea93485e1e9  app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt
+30b9d4cf451898330fb7a15e856b7189a8c90c9a9f57e4e28900bfe8bec15ab3  app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt
+199a00d240cb948c6ef3afa0243ec054bf37fca79f44e833dc6610b5f0f53bd8  app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt
+6d9de20a6560d7492b496c3068f19ce0b91e720bf21545f6e6f589db967e1f79  app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggers.kt
+556bb2b2eef81a7be7c0783f28ec6e75935e741d07d101f61445a70e4bb818fd  app/src/test/java/at/heinz/deviceai/cognitive/OmegaDownstreamScenarioTest.kt

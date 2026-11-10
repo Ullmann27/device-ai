@@ -1,0 +1,4 @@
+50dcaf1a90083a96801aa0c35cf61e6b70029f20a2285370d3f8312228ed3ab8  app/src/test/java/at/heinz/deviceai/ToolDispatchObserverTest.kt
+7eb5e5895418a44417ccc2cd4dee49202e03cfb422b73152a675bbc258cd0d13  app/src/test/java/at/heinz/deviceai/cognitive/AgentTaskEvidenceTest.kt
+7e2a7632361c0f96f83dfea38193823f8164fdc4093aa5fd026dcd74b715edb8  app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentOutcomeEvidenceTest.kt
+a7d6e0be6b72ddc6badcd6fc08ef4e31e982911703d9d8b1c8afa51e6745e9c3  app/src/test/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggersTest.kt

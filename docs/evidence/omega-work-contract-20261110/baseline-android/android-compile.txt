@@ -1,0 +1,56 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+
+> Task :app:prepareOwnerFaceModels
+CONTINUUM_OWNER_FACE_MODELS_VERIFIED {"models":[{"id":"yunet","asset":"faceid/face_detection_yunet_2023mar.onnx","sha256":"8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4","byteLength":232589},{"id":"sface","asset":"faceid/face_recognition_sface_2021dec.onnx","sha256":"0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79","byteLength":38696353}],"opencvSha256":"a8c9b0929d8d6367bb476320a1f36587db2b57ea18d8f7521ce509514903ca04"}
+
+> Task :app:preBuild
+> Task :app:preDebugBuild
+> Task :app:compileDebugAidl
+> Task :app:generateDebugBuildConfig
+> Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:mergeDebugResources
+> Task :app:packageDebugResources
+> Task :app:parseDebugLocalResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :app:processDebugResources
+> Task :app:compileDebugKotlin FAILED
+[Incubating] Problems report is available at: file:///workspace/scratch/7366d957876c/device-ai/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugKotlin'.
+> Failed to query the value of task ':app:compileDebugKotlin' property 'associatedJavaCompileTaskTargetCompatibility$kotlin_gradle_plugin_common'.
+   > Could not create task ':app:compileDebugJavaWithJavac'.
+      > Failed to calculate the value of task ':app:compileDebugJavaWithJavac' property 'javaCompiler'.
+         > Toolchain installation '/usr/lib/jvm/java-21-openjdk-amd64' does not provide the required capabilities: [JAVA_COMPILER]
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 10s
+17 actionable tasks: 17 executed
