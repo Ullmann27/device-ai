@@ -110,12 +110,13 @@ object SystemPerformanceEvaluator {
         val keys = (before.metrics.keys + after.metrics.keys + before.unavailable.keys +
             after.unavailable.keys + before.failedSamples.keys + after.failedSamples.keys).sortedBy { it.ordinal }
         val changes = keys.associateWith { metric -> compareMetric(metric, before, after, conditions.isEmpty()) }
+        val performance = changes.filterKeys { it != SystemPerformanceMetric.AVAILABLE_STORAGE_BYTES }.values
         val verdict = when {
             conditions.isNotEmpty() -> SystemPerformanceVerdict.NOT_COMPARABLE
-            changes.values.any { it.verdict == SystemPerformanceVerdict.REGRESSION } -> SystemPerformanceVerdict.REGRESSION
+            performance.any { it.verdict == SystemPerformanceVerdict.REGRESSION } -> SystemPerformanceVerdict.REGRESSION
             changes.isEmpty() || changes.values.any { it.verdict == SystemPerformanceVerdict.INSUFFICIENT_EVIDENCE } ->
                 SystemPerformanceVerdict.INSUFFICIENT_EVIDENCE
-            changes.values.any { it.verdict == SystemPerformanceVerdict.EXPLORATORY_GAIN } -> SystemPerformanceVerdict.EXPLORATORY_GAIN
+            performance.any { it.verdict == SystemPerformanceVerdict.EXPLORATORY_GAIN } -> SystemPerformanceVerdict.EXPLORATORY_GAIN
             else -> SystemPerformanceVerdict.NO_MEASURED_GAIN
         }
         val reasons = conditions + when (verdict) {

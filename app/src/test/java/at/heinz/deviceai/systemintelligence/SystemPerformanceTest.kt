@@ -15,6 +15,19 @@ class SystemPerformanceTest {
         count: Int = metric.minimumSamples) = SystemPerformanceCapture(id, if (id == "before") 1L else 2L,
         conditions, mapOf(metric to List(count) { value }))
 
+    @Test fun freeSpaceDriftCannotClaimPerformanceGainOrRegression() {
+        for (afterBytes in listOf(999.0, 1001.0)) {
+            val before = capture("before").copy(metrics = capture("before").metrics +
+                (SystemPerformanceMetric.AVAILABLE_STORAGE_BYTES to listOf(1000.0)))
+            val after = capture("after").copy(metrics = capture("after").metrics +
+                (SystemPerformanceMetric.AVAILABLE_STORAGE_BYTES to listOf(afterBytes)))
+            val compared = SystemPerformanceEvaluator.compare(before, after)
+            assertEquals(SystemPerformanceVerdict.NO_MEASURED_GAIN, compared.verdict)
+            assertEquals(afterBytes - 1000.0,
+                compared.metrics.getValue(SystemPerformanceMetric.AVAILABLE_STORAGE_BYTES).medianDelta!!, 0.0)
+        }
+    }
+
     @Test fun missingIsNotZero() {
         val stats = SystemPerformanceEvaluator.stats(emptyList())
         assertEquals(0, stats.count)

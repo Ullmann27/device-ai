@@ -12,12 +12,22 @@ class SystemDiagnosisTest {
             assertTrue(it, SystemIntelligenceCommands.isDiagnosisRequest(it))
         }
     }
-    @Test fun cloudCannotReadAnyDeviceTool() {
-        (SystemIntelligenceCommands.localTools + setOf("read_app_screen", "get_device_info", "read_logcat",
-            "get_battery_info", "list_files", "get_app_info", "get_storage_info", "unknown_future_tool")).forEach {
+    @Test fun existingCloudToolsStillReachTheirCentralGate() {
+        SystemIntelligenceCommands.localTools.forEach {
             assertFalse(it, SystemIntelligenceCommands.cloudMayDispatch(it))
         }
-        assertTrue(SystemIntelligenceCommands.cloudMayDispatch("web_search"))
+        listOf("get_battery_info", "get_device_info", "web_search", "get_storage_info").forEach {
+            assertTrue(it, SystemIntelligenceCommands.cloudMayDispatch(it))
+        }
+    }
+    @Test fun naturalDiagnosisPlansNeverAuthorizeCleanup() {
+        val text = "Continuum, schau dir bitte an, warum mein Handy so langsam geworden ist. " +
+            "Prüf zuerst alles, sag mir, was du gefunden hast, und mach danach die Verbesserungen, die ich dir freigebe."
+        assertTrue(SystemIntelligenceCommands.isDiagnosisRequest(text))
+        assertFalse(SystemIntelligenceCommands.isDiagnosisRequest("Er sagte: $text"))
+        assertFalse(SystemIntelligenceCommands.isDiagnosisRequest(text + " Aber nicht jetzt."))
+        assertFalse(SystemIntelligenceCommands.isDiagnosisRequest("Wenn du Zeit hast, " + text))
+        assertFalse(SystemIntelligenceCommands.isDiagnosisRequest("Schau dir bitte an, warum mein Handy so langsam geworden ist und lösche alles"))
     }
     @Test fun negationQuotesAndConditionalCannotDispatch() {
         listOf("Analysiere mein Handy nicht", "Keine Systemdiagnose", "Wenn ich sage analysiere mein Handy",

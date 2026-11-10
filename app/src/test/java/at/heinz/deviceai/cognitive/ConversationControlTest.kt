@@ -34,7 +34,10 @@ class ConversationControlTest {
             "Nein, ich meinte den davor.",
             "Ich meine der von vorher.",
             "Gemeint war der Build von vorhin.",
-            "Ich meinte den Agenten von zuvor."
+            "Ich meinte den Agenten von zuvor.",
+            "Nein, ich meinte den vorigen.",
+            "Ich meinte den letzten.",
+            "Ich meinte den Build von früher."
         )) {
             c.inspectRequest("one", "Ich meinte Projekt Atlas.")
             c.record("one", "Prüfe den Build 51 und den Build 52.", "Beide werden verglichen.")
@@ -46,6 +49,19 @@ class ConversationControlTest {
             assertNull(c.inspectRequest("one", "Was hast du dadurch verstanden?")!!.focus)
             assertTrue(c.render("one").isBlank())
         }
+    }
+
+    @Test fun deviceObservationStaysSessionBoundAndNeverBecomesOwnerEvidence() {
+        val context = LocalConversationContext()
+        context.recordToolResult("one", "Analysiere mein Handy", "diagnose_device", "Messzeit: 123; Akku: 73 %")
+        val prompt = context.render("one")
+        assertTrue(prompt.contains("Werkzeugbeobachtung"))
+        assertTrue(prompt.contains("Akku: 73 %"))
+        assertTrue(prompt.contains("keine neue Messung, keine Freigabe"))
+        assertEquals(listOf("Analysiere mein Handy"), context.sessionEvidence("one"))
+        assertTrue(context.render("two").isEmpty())
+        context.clear()
+        assertTrue(context.render("one").isEmpty())
     }
 
     @Test fun explicitBuildAndBranchLabelsRemainConcreteScopes() {

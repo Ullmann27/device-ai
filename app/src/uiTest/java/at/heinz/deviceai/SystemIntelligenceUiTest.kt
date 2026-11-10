@@ -78,7 +78,10 @@ class SystemIntelligenceUiTest {
     @Test fun compactCinemaPresentsMeasuredAndUnknownStates() {
         render("system-cover", 440, 956)
     }
-    private fun render(label: String, width: Int, height: Int) {
+    @Test fun naturalRequestReachesDiagnosisContextVoiceAndSharedTurn() {
+        render("system-dialog", 440, 956, diagnose = true)
+    }
+    private fun render(label: String, width: Int, height: Int, diagnose: Boolean = false) {
         ShadowChoreographer.setPaused(true)
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
         val app = RuntimeEnvironment.getApplication()
@@ -109,6 +112,29 @@ class SystemIntelligenceUiTest {
             }
             fun field(name: String) = AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }
             val executor = field("executor").get(activity) as DeviceToolExecutor
+            if (diagnose) {
+                val request = "Continuum, schau dir bitte an, warum mein Handy so langsam geworden ist. " +
+                    "Prüf zuerst alles, sag mir, was du gefunden hast, und mach danach die Verbesserungen, die ich dir freigebe."
+                val input = field("input").get(activity) as android.widget.EditText
+                input.setText(request)
+                (field("sendButton").get(activity) as android.widget.Button).performClick()
+                val turn = field("activeChiefTurn").get(activity) as at.heinz.deviceai.chief.TurnLifecycle
+                val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
+                while (field("busy").getBoolean(activity) && System.nanoTime() < deadline) {
+                    Thread.sleep(10); shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
+                }
+                assertFalse("Diagnosis completed", field("busy").getBoolean(activity))
+                assertNotNull(executor.lastDiagnosis)
+                assertNull(executor.lastCleanupResult)
+                assertEquals(at.heinz.deviceai.chief.TurnPhase.ENDED, turn.phase)
+                val context = field("localConversationContext").get(activity) as at.heinz.deviceai.cognitive.LocalConversationContext
+                val prompt = context.render(field("sessionId").get(activity) as String)
+                assertTrue(prompt, prompt.contains("diagnose_device"))
+                assertTrue(prompt, prompt.contains("Messzeit"))
+                assertTrue(descendants(root).filterIsInstance<android.widget.TextView>().any {
+                    it.text.contains("Lokale Systemdiagnose") })
+                return
+            }
             val open = AgentActivity::class.java.getDeclaredMethod("showSystemIntelligence").apply { isAccessible = true }
             field("systemReport").set(activity, "TESTDATEN · keine Fold7-Messung. Noch keine Diagnose.")
             measure(); advance(800); open.invoke(activity); advance(1200)

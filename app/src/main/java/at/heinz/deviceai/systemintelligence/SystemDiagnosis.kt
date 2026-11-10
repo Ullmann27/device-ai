@@ -71,13 +71,15 @@ object SystemIntelligenceCommands {
     const val FILES = "analyze_granted_storage"
     const val SAVE = "save_system_snapshot"
     val localTools = setOf(DIAGNOSE, CAPABILITIES, PREVIEW, CLEANUP, RESTORE, FILES, SAVE)
-    fun cloudMayDispatch(toolName: String): Boolean = toolName in setOf("web_search", "web_read")
+    fun cloudMayDispatch(toolName: String): Boolean = toolName !in localTools
 
     fun isDiagnosisRequest(text: String): Boolean {
         val normalized = text.trim().lowercase(Locale.GERMAN)
             .removePrefix("continuum,").removePrefix("continuum ")
             .removePrefix("jarvis,").removePrefix("jarvis ").trim().trimEnd('.', '!')
         if (Regex("\\b(nicht|keine?|niemals|später|spaeter|wenn|falls)\\b").containsMatchIn(normalized)) return false
+        if (Regex("^(?:schau|sieh) dir (?:bitte )?an,? warum mein (?:handy|gerät|geraet|smartphone) " +
+                "(?:so )?langsam(?: geworden)? ist(?:[.!?]|$)").containsMatchIn(normalized)) return true
         return setOf("analysiere mein handy", "analysiere mein gerät", "analysiere mein geraet",
             "analysiere mein smartphone", "prüfe mein handy", "pruefe mein handy", "systemdiagnose",
             "schau dir mein handy mal komplett an").any {

@@ -29,7 +29,7 @@ Earlier owner reference directory was located through the existing project dossi
 
 - Initial exact candidate host law: 31/31 Kotlin/JUnit PASS (27 existing +4 fluid/abort tests).
 - Avatar: two real failing regression probes on base, 19/19 final host tests; see committed avatar logs.
-- Current targeted Node contracts: 20/20 PASS.
+- Historical targeted Node contracts: 18/18 PASS (see source-bound qa-receipt.json).
 - PNG-only production-painter preview: PASS, 32 PNG stills, 0 video frames. This is a host preview, not a device test.
 - Embedded shader: 8/8 actual Skia RuntimeEffect software-raster tests, including compilation, premultiplication, transparent content area, deterministic replay and disjoint-strip equality.
 - Targeted Android SDK36 compilation of native painter/glass/overlay paths: PASS, no GPU execution.

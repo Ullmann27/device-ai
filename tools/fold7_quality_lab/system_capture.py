@@ -7,6 +7,7 @@ import math
 import re
 import sys
 import uuid
+from pathlib import Path
 
 import fold7
 
@@ -42,13 +43,16 @@ def new_frames(before, after):
     boundary = max(row[0] for row in first)
     seen = set()
     result = []
-    for intended, completed, duration in fold7.parse_gfx_frames(after):
+    after_frames = fold7.parse_gfx_frames(after)
+    for intended, completed, duration in after_frames:
         if intended <= boundary or (intended, completed) in seen:
             continue
         seen.add((intended, completed))
         result.append(duration)
     if len(result) > 4096:
         return [], "FRAME_SAMPLE_BOUND_EXCEEDED"
+    if result and not any(row[0] == boundary for row in after_frames):
+        return [], "FRAME_WINDOW_OVERFLOW"
     return result, None if result else "NO_NEW_COMPLETED_FRAMES"
 
 
@@ -59,7 +63,7 @@ def apk_build_key(serial):
         return ""
     digests = []
     for path in sorted(paths):
-        if not re.fullmatch(r"/data/app/[A-Za-z0-9_+./=\-]+\.apk", path):
+        if not re.fullmatch(r"/data/app/[A-Za-z0-9_+./=~\-]+\.apk", path):
             return ""
         code, result = fold7.adb(serial, "sha256sum", path)
         match = re.fullmatch(r"([0-9a-fA-F]{64})\s+\S+\s*", result)
@@ -158,6 +162,8 @@ def main(argv=None):
     parser.add_argument("--interval", type=float, default=5)
     parser.add_argument("--output", required=True)
     args = parser.parse_args(argv)
+    if Path(args.output).exists():
+        raise FileExistsError("Refusing overwrite before capture")
     fold7.atomic_json(args.output, capture(args))
     print("Saved read-only capture; no performance verdict.")
 

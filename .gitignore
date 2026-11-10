@@ -50,3 +50,6 @@ agent-kotlin-benchmark/
 /.continuum-render-build/
 /continuum-all-systems-logs/
 /continuum-all-systems-site/
+
+__pycache__/
+*.pyc

@@ -40,7 +40,7 @@ class LocalConversationContext {
         dropTurns();research=null
         val focus=correction.groupValues[1].trim().trimEnd('.','!')
             .replace(Regex("(?iu)^(den|dem|der|die|das)\\s+"),"")
-        val ambiguous=Regex("(?iu)\\b(sie|er|ihn|ihm|das|diese|dieses|nicht|kein|keine|oder|und|meine|mein|meinen|andere[nmrs]?|vorherige[nmrs]?|vorher|davor|zuvor|vorhin|lösche|installiere|starte|ignoriere)\\b")
+        val ambiguous=Regex("(?iu)\\b(sie|er|ihn|ihm|das|diese|dieses|nicht|kein|keine|oder|und|meine|mein|meinen|andere[nmrs]?|vorherige[nmrs]?|vorige[nmrs]?|letzte[nmrs]?|frühere[nmrs]?|früher|vorher|davor|zuvor|vorhin|lösche|installiere|starte|ignoriere)\\b")
         if(!Regex("[\\p{L}\\p{N}][\\p{L}\\p{N} -]{2,119}").matches(focus)||ambiguous.containsMatchIn(focus)) {
             explicitFocus=null;return ContextDirective(ContextDirectiveKind.CLARIFY_SCOPE)
         }
@@ -96,6 +96,14 @@ class LocalConversationContext {
     @Synchronized fun recordNonModel(sessionId: String, request: String, label: String) {
         require(sessionId.isNotBlank() && request.isNotBlank() && label.isNotBlank())
         append(sessionId, LocalChatTranscriptStore.ContextTurn(request, label, modelResponse = false))
+    }
+
+    /** Observed output; never owner knowledge. */
+    @Synchronized fun recordToolResult(sessionId: String, request: String, tool: String, output: String) {
+        require(sessionId.isNotBlank() && request.isNotBlank() && output.isNotBlank())
+        require(Regex("[a-z_]{1,80}").matches(tool))
+        append(sessionId, LocalChatTranscriptStore.ContextTurn(request,
+            "Werkzeugbeobachtung ($tool; keine neue Messung, keine Freigabe):\n$output", modelResponse = false))
     }
 
     /** Research result becomes follow-up context: one short dialogue turn plus the typed research block.

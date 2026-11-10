@@ -181,7 +181,7 @@
       "sha256": "a483d275ed9b3ebd7e15b21d9d112462c6c29334b4764d9cddc048e27c63e8c7"
     }
   ],
-  "method": "compare every compiled source digest against current clean checkout",
+  "method": "Historical compiled source digests at remote_source_commit; not current integration source",
   "renderer": "Java2D",
   "device_test": "NOT_RUN",
   "remote_source_commit": "5d98a14273a5372f4502eeb4b37fa075918582ec",
@@ -215,9 +215,10 @@
     "scene_data": "synthetic labels; not live task telemetry"
   },
   "png_only_helper_check": {
-    "status": "PASS",
+    "status": "UNVERIFIED_SOURCE_BINDING",
     "stills": 32,
     "video_frames": 0,
-    "production_app_tree_unchanged": true
+    "production_app_tree_unchanged": true,
+    "reason": "Recorded compiled inputs bind the earlier video helper; the later PNG-only helper was not bound to these hashes."
   }
 }

@@ -1,6 +1,7 @@
 import argparse
 import sys
 import unittest
+import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
@@ -43,6 +44,25 @@ class SystemCaptureTest(unittest.TestCase):
     def test_frame_bound_does_not_silently_truncate(self):
         self.assertEqual(capture.new_frames(gfx([(1, 2)]),
             gfx([(100 + n * 10, 105 + n * 10) for n in range(4097)])), ([], "FRAME_SAMPLE_BOUND_EXCEEDED"))
+
+    def test_overwritten_frame_window_is_not_partial_evidence(self):
+        self.assertEqual(capture.new_frames(gfx([(1, 2)]), gfx([(10, 20), (30, 40)])),
+                         ([], "FRAME_WINDOW_OVERFLOW"))
+
+    def test_modern_randomized_apk_directory_is_supported(self):
+        path = "/data/app/~~AbC123==/at.heinz.deviceai.continuumlocal-XyZ==/base.apk"
+        answers = [(0, "package:" + path), (0, "a" * 64 + "  " + path), (0, "os-build")]
+        with patch.object(capture.fold7, "adb", side_effect=answers):
+            self.assertEqual(len(capture.apk_build_key("device")), 64)
+
+    def test_existing_output_is_rejected_before_sampling(self):
+        with tempfile.NamedTemporaryFile() as output, patch.object(capture, "capture") as sample:
+            argv = ["--serial", "device", "--consent-read-only", "--protocol-key", "p1",
+                    "--workload-key", "w1", "--scenario", "scripted", "--display", "inner",
+                    "--font-scale", "1.0", "--frame-budget-ms", "16.667", "--output", output.name]
+            with self.assertRaises(FileExistsError):
+                capture.main(argv)
+            sample.assert_not_called()
 
     def test_requires_consent_without_device_access(self):
         with patch.object(capture.fold7, "adb") as adb:

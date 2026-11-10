@@ -154,6 +154,39 @@ class ResearchChatApprovalUiTest {
     }
 
     @Test @Config(sdk = [35], shadows = [ConsentPowerManager::class])
+    fun resolvedTicketDoesNotDiscardAnOngoingDictation() = withActivity { f ->
+        val dialog = ask(f, "Alter Auftrag", inChat = false)
+        val recognizer = startRecognizer(f)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+        idle()
+        assertNull(field(f.activity, "pendingResearchChatApproval"))
+        deliverResult(recognizer)
+        assertTrue((field(f.activity, "input") as EditText).text.contains("Ja, mach."))
+        assertEquals(listOf<ApprovedWebResearchSession?>(null), f.completed)
+    }
+
+    @Test fun requestPrecedesQuestionAndReplyInTheChat() = withActivity { f ->
+        (field(f.activity, "input") as EditText).setText("Suche im Internet nach Photosynthese")
+        (field(f.activity, "sendButton") as Button).performClick()
+        idle()
+        val dialog = requireNotNull(ShadowAlertDialog.getLatestAlertDialog())
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).performClick()
+        idle()
+        reply(f, "Nein.")
+        fun texts(view: android.view.View): List<String> = when (view) {
+            is android.widget.TextView -> listOf(view.text.toString())
+            is android.view.ViewGroup -> (0 until view.childCount).flatMap { texts(view.getChildAt(it)) }
+            else -> emptyList()
+        }
+        val rows = texts(field(f.activity, "chatContainer") as android.view.View)
+        val request = rows.indexOf("Suche im Internet nach Photosynthese")
+        val question = rows.indexOfFirst { it.startsWith("Soll ich diese Recherche") }
+        val reply = rows.indexOf("Nein.")
+        assertTrue(rows.toString(), request >= 0 && question > request && reply > question)
+        assertEquals(1, rows.count { it == "Suche im Internet nach Photosynthese" })
+    }
+
+    @Test @Config(sdk = [35], shadows = [ConsentPowerManager::class])
     fun staleActivitySpeechCallbackPreservesNewRecognition() = withActivity { f ->
         ask(f, "Alter Auftrag")
         startRecognizer(f)

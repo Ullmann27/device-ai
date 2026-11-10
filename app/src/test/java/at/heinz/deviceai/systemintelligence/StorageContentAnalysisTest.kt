@@ -41,6 +41,17 @@ class StorageContentAnalysisTest {
         assertTrue(result.complete)
     }
 
+    @Test fun exactByteBudgetReservesTheEofProbeBeforeOpening() {
+        val source = Source()
+        val a = source.file("a", "a", "abcd")
+        val b = source.file("b", "b", "abcd")
+        val result = StorageContentAnalyzer(StorageScanLimits(maxHashBytes = 4, maxFileHashBytes = 4)).analyze(source, listOf(a, b))
+        assertEquals(0, source.opened)
+        assertEquals(0L, result.hashedBytes)
+        assertTrue(result.limitations.contains("HASH_BYTE_LIMIT"))
+        assertFalse(result.limitations.contains("CONTENT_UNVERIFIED"))
+    }
+
     @Test fun shortAndGrowingContentNeverProduceDuplicates() {
         val source = Source()
         val a = source.file("a", "a", "abc")

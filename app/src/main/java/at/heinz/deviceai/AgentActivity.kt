@@ -4424,25 +4424,32 @@ class AgentActivity : Activity() {
         )
     )
 
-    private fun runSystemTool(name: String, arguments: Map<String, Any?> = emptyMap()) {
+    private fun runSystemTool(name: String, arguments: Map<String, Any?> = emptyMap(), ownerRequest: String? = null) {
         require(name in SystemIntelligenceCommands.localTools && ToolRegistry.risk(name) == Risk.READ_ONLY)
-        dispatchSystemTool(ToolCallRequest(UUID.randomUUID().toString(), name, arguments), false, false)
+        dispatchSystemTool(ToolCallRequest(UUID.randomUUID().toString(), name, arguments), false, false, ownerRequest)
     }
 
-    private fun dispatchSystemTool(call: ToolCallRequest, confirmed: Boolean, destructive: Boolean) {
+    private fun dispatchSystemTool(call: ToolCallRequest, confirmed: Boolean, destructive: Boolean, ownerRequest: String? = null) {
         if (busy || !foregroundLearningActive || isFinishing || isDestroyed) return
         centerDialog?.dismiss(); centerDialog = null
         val generation = ++systemGeneration
         val ownerSession = sessionId
+        val turn = at.heinz.deviceai.chief.TurnLifecycle(call.callId)
+        activeChiefTurn = turn
+        turn.acknowledge()?.let {
+            cockpitTriggers.commandAcknowledged(turn.turnId, ownerRequest ?: ToolRegistry.label(call.name))
+        }
         activeLocalRequest = true
         setBusy(true)
-        val gate = createToolGate(ownerTurn = "Lokaler Systemauftrag", systemCallId = call.callId)
+        val gate = createToolGate(ownerTurn = ownerRequest ?: "Lokaler Systemauftrag", systemCallId = call.callId)
         activeSystemGate = gate
         executeToolResult(call, confirmed, destructive, gate) { result ->
             if (generation != systemGeneration || ownerSession != sessionId || !foregroundLearningActive || isFinishing || isDestroyed)
                 return@executeToolResult
             activeSystemGate = null
             activeLocalRequest = false
+            val delivered = result.record.status == ToolExecutionStatus.SUCCEEDED && !result.record.outcomeUncertain
+            if (turn.deliver()) cockpitTriggers.turnEnded(turn.turnId, delivered = delivered, outcomeVerified = false)
             setBusy(false)
             systemReport = result.output ?: "Schritt nicht erfolgreich: ${result.record.status}. Keine Verbesserung bestätigt."
             if (call.name in setOf(SystemIntelligenceCommands.CLEANUP, SystemIntelligenceCommands.RESTORE)) {
@@ -4464,6 +4471,12 @@ class AgentActivity : Activity() {
                         }
                     }
                 }
+            }
+            if (ownerRequest != null) {
+                if (delivered && !result.replayed)
+                    localConversationContext.recordToolResult(ownerSession, ownerRequest, call.name, systemReport)
+                else localConversationContext.recordUnanswered(ownerSession, ownerRequest)
+                addAssistantMessage(systemReport, preserveLocalContext = true, keepCockpit = true)
             }
             showSystemIntelligence()
         }
@@ -4535,6 +4548,9 @@ class AgentActivity : Activity() {
         systemConfirmationDialog = null
         activeSystemGate?.cancel()
         if (activeSystemGate != null) {
+            activeChiefTurn?.let { turn ->
+                if (turn.deliver()) cockpitTriggers.turnEnded(turn.turnId, delivered = false)
+            }
             activeSystemGate = null
             activeLocalRequest = false
             setBusy(false)
@@ -5861,7 +5877,7 @@ class AgentActivity : Activity() {
         if (SystemIntelligenceCommands.isDiagnosisRequest(request)) {
             input.text.clear()
             addUserMessage(request, keepCockpit = true)
-            runSystemTool(SystemIntelligenceCommands.DIAGNOSE)
+            runSystemTool(SystemIntelligenceCommands.DIAGNOSE, ownerRequest = request)
             return
         }
         // Prior measurement requests never start a new tool, model or network call.
@@ -6309,10 +6325,10 @@ class AgentActivity : Activity() {
             at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
         if (publicTopic != null && !researchArmed) {
             val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(publicTopic)
+            input.text.clear()
+            addUserMessage(request)
             confirmWebRequest(call, ResearchMode.STANDARD) { session ->
                 if (session != null && !busy) {
-                    input.text.clear()
-                    addUserMessage(request)
                     runResearch(session)
                 } else session?.cancel()
             }
@@ -6333,10 +6349,10 @@ class AgentActivity : Activity() {
             if (topic != null) {
                 if (staleResearch != null) addToolActivity("AKTUALITÄT · Recherchestand ${staleResearch.status.name.lowercase()} · ${staleResearch.reason}")
                 val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(topic)
+                input.text.clear()
+                addUserMessage(request)
                 confirmWebRequest(call, ResearchMode.STANDARD) { session ->
                     if (busy) { session?.cancel(); return@confirmWebRequest }
-                    input.text.clear()
-                    addUserMessage(request)
                     if (session != null) runResearch(session)
                     else {
                         addToolActivity("WEB · nicht freigegeben · lokale Antwort ohne aktuelle Quellen")
@@ -6361,9 +6377,10 @@ class AgentActivity : Activity() {
         val webRequest=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(request,researchArmed)
         if(webRequest!=null) {
             researchArmed=false
+            input.text.clear();addUserMessage(request)
             confirmWebRequest(webRequest,researchMode) { session ->
                 if(session!=null && !busy) {
-                    input.text.clear();addUserMessage(request);runResearch(session)
+                    runResearch(session)
                 } else session?.cancel()
             }
             return
@@ -9516,8 +9533,9 @@ class AgentActivity : Activity() {
 
     private fun confirmInternetResearch(question:String,selectedMode:ResearchMode,mentorArea:String?=null) {
         val call=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(question,true)?:return
+        addUserMessage(question)
         confirmWebRequest(call,selectedMode) { session ->
-            if(session!=null && !busy){addUserMessage(question);runResearch(session,mentorArea)} else session?.cancel()
+            if(session!=null && !busy){runResearch(session,mentorArea)} else session?.cancel()
         }
     }
 
@@ -13420,7 +13438,8 @@ class AgentActivity : Activity() {
                 onText={spoken->if(speechScopeGeneration==scopeGeneration&&sessionId==scopeSession&&
                     (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog) &&
                     (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true)){
-                    if (requestCode == SPEECH_REQUEST && pendingResearchChatApproval?.approval !== scopeResearchApproval)
+                    val currentResearchApproval = pendingResearchChatApproval?.approval
+                    if (requestCode == SPEECH_REQUEST && currentResearchApproval != null && currentResearchApproval !== scopeResearchApproval)
                         endContinuousConversation("Recherchefreigabe geändert. Bitte erneut sprechen.")
                     else if(conversationTurn!=null)applyConversationSpeech(conversationTurn,spoken) else applyLocalSpeechText(requestCode,spoken)}},
                 onFailure={failure->
