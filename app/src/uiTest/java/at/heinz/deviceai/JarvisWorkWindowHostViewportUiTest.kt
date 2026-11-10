@@ -98,7 +98,8 @@ class JarvisWorkWindowHostViewportUiTest {
             assertEquals(676, home.width)
         }
 
-        fun card(): View = JarvisHomeTestRoutes.destination(home, "system")
+        // Keep locating the real card after it is intentionally hidden by the opened window.
+        fun card(): View = requireNotNull(home.findViewWithTag<View>("jarvis-tile:system"))
 
         fun bounds(view: View): RectF = Rect(0, 0, view.width, view.height).let {
             container.offsetDescendantRectToMyCoords(view, it)
@@ -106,7 +107,8 @@ class JarvisWorkWindowHostViewportUiTest {
         }
 
         fun tapCard(): RectF {
-            val shown = bounds(card()).apply { assertTrue(intersect(viewport)) }
+            val shown = bounds(JarvisHomeTestRoutes.destination(home, "system"))
+                .apply { assertTrue(intersect(viewport)) }
             assertTrue(shown.width() >= 48f && shown.height() >= 48f)
             val now = SystemClock.uptimeMillis()
             for ((action, time) in listOf(MotionEvent.ACTION_DOWN to now, MotionEvent.ACTION_UP to now + 16)) {
