@@ -26,7 +26,7 @@ internal object JarvisHomeTestRoutes {
     }
 
     private fun visibleWithinHome(view: View, home: ContinuumHomeView): Boolean =
-        generateSequence(view) { it.parent as? View }.takeWhile { it !== home }
+        generateSequence(view.parent as? View) { it.parent as? View }.takeWhile { it !== home }
             .all { it.visibility == View.VISIBLE }
 
     fun controls(root: View): List<View> {

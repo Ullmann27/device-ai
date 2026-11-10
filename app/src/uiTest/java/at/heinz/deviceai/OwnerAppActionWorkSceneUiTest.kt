@@ -154,7 +154,7 @@ class OwnerAppActionWorkSceneUiTest {
         }
     }
     private fun pose(a: AgentActivity) = (get(get(a, "hologramView")!!, "avatarPose") as AvatarPoseReducer)
-        .pose(System.currentTimeMillis())
+        .pose(android.os.SystemClock.elapsedRealtime())
 
     @Test fun chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult() = withActivity { a, port, _ ->
         submit(a, "Jarvis kannst du mir bitte Signal öffnen?")
