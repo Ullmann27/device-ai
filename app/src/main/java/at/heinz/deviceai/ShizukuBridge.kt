@@ -134,6 +134,7 @@ class ShizukuBridge(
                 if (runCatching { Shizuku.checkSelfPermission() }.getOrNull() == PackageManager.PERMISSION_GRANTED) {
                     ensurePermissionAndBind()
                 } else {
+                    resetBinding()
                     reportStatus("Shizuku-Zugriff abgelehnt · Berechtigung in Shizuku prüfen")
                 }
             }
@@ -173,6 +174,9 @@ class ShizukuBridge(
             clearPermissionPending()
             reportStatus("Shizuku ist noch nicht gestartet · Shizuku-App öffnen")
         } else {
+            if (shell != null && runCatching { Shizuku.checkSelfPermission() }.getOrNull() != PackageManager.PERMISSION_GRANTED) {
+                resetBinding()
+            }
             ensurePermissionAndBind()
         }
     }

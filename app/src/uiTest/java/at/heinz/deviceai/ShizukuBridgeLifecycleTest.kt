@@ -28,13 +28,13 @@ class ShizukuBridgeLifecycleTest {
         companion object {
             var running = true
             var granted = true
-            var uid = 2000
+            var serverUid = 2000
             var permissionRequests = 0
             var permissionListener: Shizuku.OnRequestPermissionResultListener? = null
             val connections = mutableListOf<ServiceConnection>()
             val unbound = mutableListOf<ServiceConnection>()
             @Implementation @JvmStatic fun pingBinder() = running
-            @Implementation @JvmStatic fun getUid() = uid
+            @Implementation @JvmStatic fun getUid() = serverUid
             @Implementation @JvmStatic fun getVersion() = 13
             @Implementation @JvmStatic fun checkSelfPermission() =
                 if (granted) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
@@ -56,7 +56,7 @@ class ShizukuBridgeLifecycleTest {
     }
 
     @Before fun reset() {
-        Server.running = true; Server.granted = true; Server.uid = 2000; Server.permissionRequests = 0
+        Server.running = true; Server.granted = true; Server.serverUid = 2000; Server.permissionRequests = 0
         Server.connections.clear(); Server.unbound.clear()
         Server.permissionListener = null
     }
@@ -260,6 +260,21 @@ class ShizukuBridgeLifecycleTest {
         bridge.stop()
     }
 
+    @Test fun observedRevocationInvalidatesBindingBeforeReapproval() {
+        val bridge = bridge(mutableListOf())
+        bridge.start(); connect(Server.connections.single())
+        Server.granted = false
+        bridge.refresh()
+        assertEquals(1, Server.unbound.size)
+        Server.granted = true
+        bridge.refresh()
+        assertFalse(bridge.isReady())
+        assertEquals(2, Server.connections.size)
+        connect(Server.connections.last())
+        assertTrue(bridge.isReady())
+        bridge.stop()
+    }
+
     @Test fun revokedPermissionCannotDispatchCheckedCommand() {
         val bridge = bridge(mutableListOf())
         bridge.start(); connect(Server.connections.single())
@@ -276,7 +291,7 @@ class ShizukuBridgeLifecycleTest {
     @Test fun rootServerDoesNotEnableRegularCommands() {
         val bridge = bridge(mutableListOf())
         bridge.start(); connect(Server.connections.single())
-        Server.uid = 0
+        Server.serverUid = 0
         bridge.refresh()
         assertTrue(bridge.statusDetail().contains("Root UID 0"))
         val done = CountDownLatch(1)
@@ -290,7 +305,7 @@ class ShizukuBridgeLifecycleTest {
     @Test fun fixedProbeVerifiesRealUserServiceIdentity() {
         val bridge = bridge(mutableListOf())
         bridge.start()
-        Server.uid = 0
+        Server.serverUid = 0
         Server.connections.single().onServiceConnected(ComponentName("test", "test.Shell"), object : IDeviceShell.Stub() {
             override fun execute(command: String): String {
                 assertEquals(ShizukuCapabilityProbe.COMMAND, ShellExecutionWire.decodeRequest(command).command)

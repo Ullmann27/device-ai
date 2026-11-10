@@ -1,0 +1,3 @@
+app/src/uiTest/java/at/heinz/deviceai/ShizukuBridgeLifecycleTest.kt:322:27: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Result<ShizukuCapabilities>'.
+        assertFalse(result!!.getOrThrow().rootExpertEnabled)
+                          ^^
