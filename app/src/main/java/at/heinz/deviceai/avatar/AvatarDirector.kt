@@ -127,6 +127,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     private fun requestWindow(windowId: String, target: GazeTarget, durationMs: Long, yieldsToObservedGaze: Boolean = false): Boolean {
         val at = clock()
         expireAnimationIntents(at)
+        if (windowIntent?.reading == true) return false
         if (windowId.isBlank() || windowId == windowIntent?.id || windowId in retiredWindows) return false
         if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) {
             remember(retiredWindows, windowId)
