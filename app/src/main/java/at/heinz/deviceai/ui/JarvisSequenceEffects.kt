@@ -21,7 +21,7 @@ import kotlin.math.sin
  */
 class JarvisSequenceEffects {
     enum class Kind { STEP, ACCOUNT, DOCUMENT, RESULT, INFO }
-    enum class Outcome { RUNNING, DONE, FAILED }
+    enum class Outcome { RUNNING, DONE, FAILED, UNVERIFIED }
 
     private class Card(val id: String, val kind: Kind, var title: String, var subtitle: String?, val at: Long, val fromLeft: Boolean) {
         var outcome = Outcome.RUNNING
@@ -220,6 +220,14 @@ class JarvisSequenceEffects {
         val c = cards.firstOrNull { it.id == id && it.leavingAt < 0 } ?: return false
         if (c.outcome != Outcome.RUNNING) return false
         c.outcome = if (ok) Outcome.DONE else Outcome.FAILED; c.outcomeAt = nowMillis
+        return true
+    }
+
+    fun stepUnverified(id: String, nowMillis: Long): Boolean {
+        val c = cards.firstOrNull { it.id == id && it.leavingAt < 0 } ?: return false
+        if (c.outcome == Outcome.UNVERIFIED) return false
+        c.outcome = Outcome.UNVERIFIED
+        c.outcomeAt = nowMillis
         return true
     }
 
@@ -473,6 +481,12 @@ class JarvisSequenceEffects {
                 p.drawLine(x - 5f, y, x - 1.5f, y + 4f, 1.8f, Fill.Solid(JarvisDesign.Colors.ok)); p.drawLine(x - 1.5f, y + 4f, x + 5.5f, y - 4f, 1.8f, Fill.Solid(JarvisDesign.Colors.ok)); return }
             Outcome.FAILED -> { p.strokeCircle(x, y, 11f, 1.4f, Fill.Solid(JarvisDesign.Colors.error))
                 p.drawLine(x - 4f, y - 4f, x + 4f, y + 4f, 1.8f, Fill.Solid(JarvisDesign.Colors.error)); p.drawLine(x + 4f, y - 4f, x - 4f, y + 4f, 1.8f, Fill.Solid(JarvisDesign.Colors.error)); return }
+            Outcome.UNVERIFIED -> {
+                val neutral = Fill.Solid(JarvisDesign.Colors.textSecondary)
+                p.strokeCircle(x, y, 11f, 1.4f, neutral)
+                p.drawLine(x - 4f, y, x + 4f, y, 1.8f, neutral)
+                return
+            }
             Outcome.RUNNING -> Unit
         }
         when (c.kind) {
