@@ -2289,6 +2289,19 @@ class AgentActivity : Activity() {
                 if (documentDraftTurn != null) {
                     workWindowHost.workStarted()
                     showDocumentDraftAction(enabled = false)
+                    workEpisodeId?.let { episodeId ->
+                        val documentTurnId = "document-$episodeId"
+                        cockpitTriggers.documentPipelineStep(
+                            documentTurnId,
+                            at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_ANALYZE,
+                            "Analysieren",
+                            at.heinz.deviceai.cockpit.StepState.ACTIVE)
+                        cockpitTriggers.documentPipelineStep(
+                            documentTurnId,
+                            at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_DRAFT,
+                            "Entwurf erstellen",
+                            at.heinz.deviceai.cockpit.StepState.ACTIVE)
+                    }
                 }
             }
         }
@@ -2346,6 +2359,19 @@ class AgentActivity : Activity() {
             recordWork(turn.episodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED) }
             // The window may never keep saying „wird erstellt“ for a run that failed.
             showDocumentDraftStatus("Entwurf fehlgeschlagen – das lokale Modell hat keinen Entwurf geliefert. Nichts gespeichert.")
+            turn.episodeId?.let { episodeId ->
+                val documentTurnId = "document-$episodeId"
+                cockpitTriggers.documentPipelineStep(
+                    documentTurnId,
+                    at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_ANALYZE,
+                    "Analysieren",
+                    at.heinz.deviceai.cockpit.StepState.FAILED)
+                cockpitTriggers.documentPipelineStep(
+                    documentTurnId,
+                    at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_DRAFT,
+                    "Entwurf erstellen",
+                    at.heinz.deviceai.cockpit.StepState.FAILED)
+            }
             return null
         }
         recordWork(turn.episodeId) {
@@ -2353,7 +2379,34 @@ class AgentActivity : Activity() {
                 coveredChars = turn.prompt.coveredChars)
         }
         workEpisodeId = turn.episodeId
-        return presentDraftScene(turn, response)
+        val window = presentDraftScene(turn, response)
+        turn.episodeId?.let { episodeId ->
+            val documentTurnId = "document-$episodeId"
+            cockpitTriggers.documentPipelineStep(
+                documentTurnId,
+                at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_ANALYZE,
+                "Analysieren",
+                at.heinz.deviceai.cockpit.StepState.DONE)
+            if (Regex("(?im)^[ \t]*Kernaussagen[ \t]*:").containsMatchIn(response)) {
+                cockpitTriggers.documentPipelineStep(
+                    documentTurnId,
+                    at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_KEYPOINTS,
+                    "Kernaussagen",
+                    at.heinz.deviceai.cockpit.StepState.DONE)
+            }
+            val actions = if (window != null) setOf(
+                at.heinz.deviceai.cockpit.DocumentDraftAction.CONTINUE,
+                at.heinz.deviceai.cockpit.DocumentDraftAction.SAVE
+            ) else emptySet()
+            cockpitTriggers.documentDraftReady(
+                documentTurnId,
+                response.trim(),
+                turn.prompt.coveredChars,
+                turn.prompt.totalChars,
+                actions
+            )
+        }
+        return window
     }
 
     /** The model run of [turn] failed (error, heat stop, context): journal FAILED, the window says so, reading ends. */
@@ -2368,6 +2421,19 @@ class AgentActivity : Activity() {
             else "das lokale Modell meldete einen Fehler"
         showDocumentDraftStatus("Entwurf fehlgeschlagen – $why. Nichts gespeichert.")
         showDocumentDraftAction(enabled = true)
+        turn.episodeId?.let { episodeId ->
+            val documentTurnId = "document-$episodeId"
+            cockpitTriggers.documentPipelineStep(
+                documentTurnId,
+                at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_ANALYZE,
+                "Analysieren",
+                at.heinz.deviceai.cockpit.StepState.FAILED)
+            cockpitTriggers.documentPipelineStep(
+                documentTurnId,
+                at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_DRAFT,
+                "Entwurf erstellen",
+                at.heinz.deviceai.cockpit.StepState.FAILED)
+        }
     }
 
     private fun editDraft(target: TextView) {
@@ -2553,8 +2619,23 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.ui.JarvisActionScenes.forDocument(), emblem,
                 depthLayers = at.heinz.deviceai.ui.JarvisWorkWindowDepth.layers(doc.pageCount)) {}
         }
-        if (window != null) cockpitTriggers.documentReceived(
-            "document-" + episode.id, doc.name, "application/pdf", request, doc.pageCount)
+        if (window != null) {
+            val documentTurnId = "document-" + episode.id
+            cockpitTriggers.documentReceived(
+                documentTurnId, doc.name, "application/pdf", request, doc.pageCount)
+            cockpitTriggers.documentPipelineStep(
+                documentTurnId,
+                at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_OPEN,
+                "Dokument öffnen",
+                at.heinz.deviceai.cockpit.StepState.DONE)
+            if (hasText && doc.text.isNotEmpty()) {
+                cockpitTriggers.documentPipelineStep(
+                    documentTurnId,
+                    at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_CAPTURE,
+                    "Inhalte erfassen",
+                    at.heinz.deviceai.cockpit.StepState.DONE)
+            }
+        }
         // The same facts in the conversation; with an open window the cockpit stays (no switch to the chat area).
         addAssistantMessage(report, preserveLocalContext = true, keepCockpit = window != null)
         if (wantsDraft && hasText && localModelReady()) startDocumentDraft(doc)
@@ -2612,6 +2693,7 @@ class AgentActivity : Activity() {
             "privacy" -> showResearchModeDialog()
             "mobile-builder" -> openMobileBuilder()
             "brain" -> showBrainScene()
+            "stop" -> cancelLocalRequest()
             else -> menuNavigator.navigate(target)
         }
     }
@@ -11183,6 +11265,19 @@ class AgentActivity : Activity() {
             recordWork(turn.episodeId) {
                 if (it.state == at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING)
                     it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.ABORTED) else it
+            }
+            turn.episodeId?.let { episodeId ->
+                val documentTurnId = "document-$episodeId"
+                cockpitTriggers.documentPipelineStep(
+                    documentTurnId,
+                    at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_ANALYZE,
+                    "Analysieren",
+                    at.heinz.deviceai.cockpit.StepState.FAILED)
+                cockpitTriggers.documentPipelineStep(
+                    documentTurnId,
+                    at.heinz.deviceai.cockpit.DocumentPipelineStepEvent.KEY_DRAFT,
+                    "Entwurf erstellen",
+                    at.heinz.deviceai.cockpit.StepState.FAILED)
             }
         }
         workWindowHost.workEnded()
