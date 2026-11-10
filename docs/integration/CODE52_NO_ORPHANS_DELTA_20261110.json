@@ -1,0 +1,112 @@
+{
+  "schema": "CONTINUUM_NO_ORPHANS_LEDGER_DELTA_V1",
+  "generated_at_vienna": "2026-11-10T06:42:00+01:00",
+  "parent_ledger": "docs/integration/CODE52_NO_ORPHANS_LEDGER.json",
+  "parent_ledger_last_source_audit": "2026-11-09",
+  "integration_head": {
+    "pr": 685,
+    "branch": "chatgpt/code52-cinema-branch-safe-qa-20261110",
+    "source_sha": "322c0c1d080b3f99262c6a97ce15c7a7b685688f",
+    "android_qa_run": 42757104497,
+    "android_qa_for_this_sha_only": true,
+    "tests": 4257,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 18
+  },
+  "inventory_delta": {
+    "prs_inventoried_20261109": 627,
+    "prs_inventory_max": 671,
+    "new_prs_since_inventory": [672, 673, 675, 676, 677, 678, 679, 680, 681, 682, 683, 684, 685],
+    "missing_pr_numbers": [674],
+    "prs_greater_than_685": [],
+    "branches_inventoried_20261109": 727,
+    "branches_live_ls_remote": 740,
+    "new_branches": [
+      {"branch": "chatgpt/code52-argon4-holographic-rim-20261109", "head_sha": "bbcb61b9a451cb07a6e15847cce2ccd821afcaf9"},
+      {"branch": "chatgpt/code52-ci-coverage-20261109", "head_sha": "fed197963453e0202584b5b162ce593fd2e5eef2"},
+      {"branch": "chatgpt/code52-cinema-avatar-finesse-20261109", "head_sha": "2c1a70bb6a75ee1fd5f8f8fc16853e17a592e83a"},
+      {"branch": "chatgpt/code52-cinema-branch-safe-qa-20261110", "head_sha": "322c0c1d080b3f99262c6a97ce15c7a7b685688f"},
+      {"branch": "chatgpt/code52-cinema-final-graphics-audit-20261110", "head_sha": "01bdbadb1242339f908f7282cd53d0b8df2d6a02"},
+      {"branch": "chatgpt/code52-cinema-grounded-document-question-20261110", "head_sha": "09635722e060b95603baa1095d5a5b010bb162b6"},
+      {"branch": "chatgpt/code52-cinema-owner-signer-candidate-20261110", "head_sha": "a7125a06af7281a7b32564a9b32e5b9f4e0230a8"},
+      {"branch": "chatgpt/code52-cinema-prism-pixel-fix-20261110", "head_sha": "0df55d7c8d5cae8a53bf1a43e26651f902881e78"},
+      {"branch": "chatgpt/code52-cinema-prism-shader-20261109", "head_sha": "bbcb61b9a451cb07a6e15847cce2ccd821afcaf9"},
+      {"branch": "chatgpt/code52-cinema-switch-contract-20261109", "head_sha": "3fb0a731935fa156f9217602c21510980241c620"},
+      {"branch": "chatgpt/code52-intent-regression-20261109", "head_sha": "b57c6374828276d7cf3c8f15efaa66cbe04637a3"},
+      {"branch": "chatgpt/code52-owner-signing-20261109", "head_sha": "d34f3ee9c2e4127a868792368f5775f69394ec7d"},
+      {"branch": "chatgpt/code52-project-isolation-20261109", "head_sha": "c402b046c55987e68fc79be610b979e14a8e2faf"}
+    ],
+    "gone_branches": [],
+    "sha_changed_existing_branches": [
+      {"branch": "chatgpt/code52-unified-integration-20261109", "old": "f8697bf62b65d1c17edb5e2d27d57b25d47ffc77", "new": "fed197963453e0202584b5b162ce593fd2e5eef2", "note": "PR #671 fortschreiben"},
+      {"branch": "main", "old": "5271fa03c4f27775179cc8a98ddf9f316e42e438", "new": "0ab778c5f3f6d5178352ffae8948a25757d94e4e", "note": "Merge #675 Signier-Registrierung; kein Dispatch in diesem Lauf"},
+      {"branch": "continuum-state", "old": "bd11fe1e0e101468792e579d2f6e7afd708157cb", "new": "ae711d97e300f883022f490dab95c554bf92c5e3", "status": "AUDIT_REQUIRED"},
+      {"branch": "research/continuum-nvidia-automation-ledger-20261030", "old": "112bf479c2700482aea24bf1e2af8b0bcfdafd31", "new": "d51a4b0395bea32f06f0f916b5ae10ce1cdca07a", "status": "AUDIT_REQUIRED"}
+    ]
+  },
+  "owner_decision_left_rail": {
+    "decided_at_vienna": "2026-11-10",
+    "decision": "NO_FIXED_LEFT_TASKBAR",
+    "navigation": "bottom_toolbar_and_holographic_elements",
+    "reference_images_still_bind": ["head_and_orb", "hologram_windows", "processing", "draft", "pedestal", "bottom_toolbar", "telemetry_tiles", "status_line"],
+    "existing_rail_action": "REPLACE_DO_NOT_DELETE_WITHOUT_REPLACEMENT",
+    "code_anchors": [
+      "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt:13",
+      "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt:129",
+      "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt:197"
+    ]
+  },
+  "status_counts_this_graphics_series": {
+    "ALREADY_PRESENT": 5,
+    "INTEGRATED": 12,
+    "PARTIAL_SOURCE_CONNECTED": 5,
+    "RESEARCH_ONLY": 1,
+    "SUPERSEDED": 6,
+    "BLOCKED": 1,
+    "AUDIT_REQUIRED": 3,
+    "total_entries": 33
+  },
+  "entries": [
+    {"pr": 479, "branch": "grok/jarvis-design-system", "checkpoint_sha": "34d3488b3444a34e08f46f858b099adcff9cfd17", "status": "SUPERSEDED", "device_verified": false, "evidence": "JarvisDesign.kt 2379e22a10 != 4889fbbfa5; Motion-Kerne spater uber #489 identisch", "next_step": "Nicht zuruckkopieren; visuelle Restlucken uber Rolle 07 gegen Referenz, nicht gegen #479-Dateien"},
+    {"pr": 481, "branch": "design/jarvis-cockpit-home-20261104", "checkpoint_sha": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c", "status": "PARTIAL_SOURCE_CONNECTED", "device_verified": false, "evidence": "JarvisCockpitGridContent.kt 35b9aafb43 != a40820e918; Header/Raster existieren weiterentwickelt", "next_step": "Kein Vollmerge; Layoutlucken (Live-Karte, Auftrag, Telemetrie, untere Leiste) gegen Referenz schliessen"},
+    {"pr": 482, "branch": "jarvis-grafik/avatar-ref-match", "checkpoint_sha": "e9659ff553ce90e1248123767930e3447e63380c", "status": "PARTIAL_SOURCE_CONNECTED", "device_verified": false, "evidence": "DampedSpring/Easings/MotionPresets identisch; JarvisMotion.kt aafe2aad55 != 51fd5a5d26", "next_step": "Keinen Wireframe-Ersatzkopf uber das Original-GLB legen; JarvisMotion-Diff isoliert prufen"},
+    {"pr": 487, "branch": "jarvis-luecke/video3-alarm-warp-ganzkoerper", "checkpoint_sha": "85a0562d02542ff3cea020690d4d7f38bece2783", "status": "PARTIAL_SOURCE_CONNECTED", "device_verified": false, "evidence": "In #685: Video3WarpScene.kt (differt), Video3MemoryScene.kt, Video3FileTunnel.kt. Fehlend: JarvisGreetingCard, JarvisUserCard, Video3AlarmScene, Video3CalmNotice, Video3Contracts, Video3Curves, Video3Pills", "next_step": "Fehlende Dateien isoliert gegen bestehenden Warp-Pfad vergleichen, nicht blind kopieren"},
+    {"pr": 489, "branch": "jarvis-mathematik/motion-math", "checkpoint_sha": "bc2416abcb7f0a5d05219902588180b9b01c1313", "status": "ALREADY_PRESENT", "device_verified": false, "evidence": "DampedSpring bd86f2c7c7, Easings cd7d3bbff8, MotionPresets bf8d9c4e74 identisch. Staggers/TrackTimeline in #685 neuer", "next_step": "Keine #489-Varianten von Staggers/TrackTimeline zuruckspielen"},
+    {"pr": null, "branch": "wip/stop-20261104-integration-nav", "checkpoint_sha": "69b823133e132c5535626edb34eb26327bebb86c", "status": "AUDIT_REQUIRED", "device_verified": false, "evidence": "24 produktive Dateien seit Merge-Basis, 17 differieren inklusive JarvisDesign.kt und JarvisShellRenderer.kt", "next_step": "Dateigenauen Unique-Diff gegen #685, kein Blind-Merge"},
+    {"pr": null, "branch": "wip/stop-20261104-sicherheit-m5fg", "checkpoint_sha": "d1da1d1dbf31e25d4816d0df0362195e5e282a67", "status": "AUDIT_REQUIRED", "device_verified": false, "evidence": "4 differierende Dateien; Stop-WIP 2026-11-04", "next_step": "Unique-Diff gegen aktuelle Sicherheits- und Cinema-Linie"},
+    {"pr": null, "branch": "wip/stop-20261104-welten-optik-design", "checkpoint_sha": "c7fc330d911af82dbb0baff4c2a56ed0e074b05d", "status": "AUDIT_REQUIRED", "device_verified": false, "evidence": "3 differierende Dateien inklusive JarvisDesign.kt und JarvisShellRenderer.kt", "next_step": "Unique-Diff; Kollision mit Rolle 07 beachten"},
+    {"pr": 535, "branch": "ccr-4f80075a-ycl67y", "checkpoint_sha": "4bbf2863dc3c7debe74ac81f3d16521926c8ae0a", "status": "SUPERSEDED", "device_verified": false, "evidence": "AvatarIdleMotion.kt 31801578f47f != 23e9c0229f5e (#565/#685)", "next_step": "Nicht uber #565-Stand kopieren"},
+    {"pr": 540, "branch": "codex/continuum-avatar-natural-blink-20261105", "checkpoint_sha": "1419e0f738accec7eb9c8916e481688125bbe37b", "status": "SUPERSEDED", "device_verified": false, "evidence": "AvatarIdleMotion.kt e6188eac3691 != 23e9c0229f5e", "next_step": "Nachfolger #565 ist Vorfahre von #685"},
+    {"pr": 551, "branch": "bot1/avatar-blink-kinematics-20261105", "checkpoint_sha": "27df89c5e54b8581e46f8d21576daf82c50e3689", "status": "SUPERSEDED", "device_verified": false, "evidence": "AvatarIdleMotion.kt 5b89c17443ca != 23e9c0229f5e", "next_step": "Nachfolger #565 ist Vorfahre von #685"},
+    {"pr": 565, "branch": "claude/continuum-jarvis-cockpit-z7bo60", "checkpoint_sha": "cd1c072f412e722ac4933275ef0b06512d5d22b3", "status": "ALREADY_PRESENT", "device_verified": false, "evidence": "Vorfahre von #685; AvatarIdleMotion.kt 23e9c0229f5e und AvatarFraming.kt 367dc713b1aa identisch", "next_step": "Original-GLB-Skinning unverandert lassen"},
+    {"pr": 549, "branch": "bot2/isolated-neon-tile-energy-20261105", "checkpoint_sha": "ea315130b990f4a1610d8efbc3f68f32d34162da", "status": "ALREADY_PRESENT", "device_verified": false, "evidence": "JarvisTileEnergy.kt 43dd016796 identisch", "next_step": "Keine zweite Kachel-Uhr anlegen"},
+    {"pr": 550, "branch": "qa/orb-phase-finite-idle-20261105-b3-r2", "checkpoint_sha": "e247e1b51bf74880ddfcee6b81596bc36654aaf1", "status": "ALREADY_PRESENT", "device_verified": false, "evidence": "Datei nicht bytegleich, Guard wieder in ContinuumBrainOrbRenderer.kt:29 und ContinuumOrbNonFiniteSignalsTest.kt:20-22", "next_step": "Guard und Tests nicht abschwachen"},
+    {"pr": 594, "branch": "codex/continuum-code49-orb-render-performance-20261107", "checkpoint_sha": "88dfd45139471463618673a1f827ee062e9bf6d5", "status": "INTEGRATED", "device_verified": false, "evidence": "Vorfahre von #685; Renderer danach durch #683-Guard geandert ad652ff81f -> 23e0be27b4", "next_step": "Keine altere Vollkopie uber den aktuellen Renderer legen"},
+    {"pr": 563, "branch": "research/continuum-cockpit-voice-original-orb-20261105", "checkpoint_sha": "17ee574abc021b8f1cf1edf93e96ef484ac0ec4d", "status": "INTEGRATED", "device_verified": false, "evidence": "Vorfahre von #685", "next_step": "Originalkugel beibehalten"},
+    {"pr": 617, "branch": "chatgpt/code50-airbus2100-camera-gaze-20261108", "checkpoint_sha": "599ac783f06e9e201a29c91c0c06ea2e9457e0e3", "status": "INTEGRATED", "device_verified": false, "evidence": "MERGED und Vorfahre von #685; Airbus2100CockpitOrchestrator.kt in #685 vorhanden 7a96116ece", "next_step": "Keinen zweiten Head-Motion-Renderer anlegen"},
+    {"pr": null, "branch": "codex/airbus2100-hollywood-fui-20261108", "checkpoint_sha": "2b195acc0f64adf9a78a7c2383b239fb020fd0a1", "status": "SUPERSEDED", "device_verified": false, "evidence": "Nicht Vorfahre; HollywoodFuiConstruct alter; Orchestrator-Pfad fehlt auf diesem SHA", "next_step": "#617+Cinema als Kanon behalten"},
+    {"pr": 614, "branch": "chatgpt/code50-hollywood-fui-foundation-20261108", "checkpoint_sha": "ca0bf6e5d8468df585891fd998963cddd195d0a5", "status": "SUPERSEDED", "device_verified": false, "evidence": "HollywoodFuiConstruct.kt 7a4af9a67d != 6ced375126", "next_step": "Nicht auf Foundation-Stand zurucksetzen; ersetzt vorherigen Ledger-Status AUDIT_REQUIRED fur diesen Kandidaten"},
+    {"pr": 651, "branch": "fable/code51-fui-cinematic-construct-20261108", "checkpoint_sha": "09722adf6c88453ac7607a2a484ae97f00a8fc00", "status": "INTEGRATED", "device_verified": false, "evidence": "Vorfahre von #685; Construct spater weiterentwickelt 889a672619 -> 6ced375126", "next_step": "Overlay weiter uber HollywoodFuiConstruct.frame; Fold7-Look offen"},
+    {"pr": 659, "branch": "astra/continuum-holographic-v2-20261108", "checkpoint_sha": "69e9b3986d9fad86bda64b3e47c43073e1c76d3a", "status": "PARTIAL_SOURCE_CONNECTED", "device_verified": false, "evidence": "AvatarSurfaceRadiance.kt 55524f3762dd und JarvisWindowGaze.kt 5ba6ea57ff identisch; FUI-Dateien Cinema-Superset", "next_step": "Keine altere Fenster-Engine zuruckkopieren; Fold7-Film offen"},
+    {"pr": 661, "branch": "astra/continuum-holo-reference-fidelity-20261108", "checkpoint_sha": "58c545aaefefb233371c92948ad1a9a002c7c004", "status": "RESEARCH_ONLY", "device_verified": false, "evidence": "Host-Messwerkzeug; HollywoodFuiReferenceFidelity.kt 811c588851e1 != 4a39a6e10c0c", "next_step": "Als Messung nutzen, nicht als Gerate-PASS; ersetzt vorherigen Ledger-Status AUDIT_REQUIRED fur diesen Kandidaten"},
+    {"pr": 666, "branch": "chatgpt/cinematic-sustained-hologram-20261109", "checkpoint_sha": "f1a5a2b250414c14f772178498dcc0d3327b7542", "status": "PARTIAL_SOURCE_CONNECTED", "device_verified": false, "evidence": "Radiance/Gaze identisch; FUI weiterentwickelt; Satzgesten-Kern vorhanden, EXP10 nicht eigenstandig verdrahtet", "next_step": "EXP10 nicht durch Flag-Flip fertigmelden"},
+    {"pr": 671, "branch": "chatgpt/code52-unified-integration-20261109", "checkpoint_sha": "fed197963453e0202584b5b162ce593fd2e5eef2", "status": "INTEGRATED", "device_verified": false, "evidence": "Vorfahre von #685; Live-HEAD stimmt mit Ausgangsstand uberein", "next_step": "Als historische Integrationsstufe behalten, nicht erneut vollmergen"},
+    {"pr": 677, "branch": "chatgpt/code52-argon4-holographic-rim-20261109", "checkpoint_sha": "bbcb61b9a451cb07a6e15847cce2ccd821afcaf9", "status": "INTEGRATED", "device_verified": false, "evidence": "Vorfahre von #685", "next_step": "Nicht erneut cherry-picken"},
+    {"pr": 678, "branch": "chatgpt/code52-cinema-avatar-finesse-20261109", "checkpoint_sha": "2c1a70bb6a75ee1fd5f8f8fc16853e17a592e83a", "status": "INTEGRATED", "device_verified": false, "evidence": "MERGED in Cinema-Linie; GazeBlinkPolicy.kt 4ebd4fb30813 identisch in #685", "next_step": "Nicht erneut ubernehmen"},
+    {"pr": 679, "branch": "chatgpt/code52-cinema-prism-shader-20261109", "checkpoint_sha": "bbcb61b9a451cb07a6e15847cce2ccd821afcaf9", "status": "INTEGRATED", "device_verified": false, "evidence": "MERGED; HEAD identisch mit #677", "next_step": "Nicht erneut ubernehmen"},
+    {"pr": 680, "branch": "chatgpt/code52-cinema-switch-contract-20261109", "checkpoint_sha": "3fb0a731935fa156f9217602c21510980241c620", "status": "INTEGRATED", "device_verified": false, "evidence": "Vorfahre von #685; 11 verdrahtete und 4 unverdrahtete Experimente", "next_step": "Schalter erhalten; EXP03/07/10/15 nicht per wired=true fertigmelden"},
+    {"pr": 681, "branch": "chatgpt/code52-cinema-prism-pixel-fix-20261110", "checkpoint_sha": "0df55d7c8d5cae8a53bf1a43e26651f902881e78", "status": "INTEGRATED", "device_verified": false, "evidence": "Vorfahre von #685", "next_step": "#682 bleibt an diesen SHA gebunden und darf nicht fur #685 verwendet werden"},
+    {"pr": 682, "branch": "chatgpt/code52-cinema-owner-signer-candidate-20261110", "checkpoint_sha": "a7125a06af7281a7b32564a9b32e5b9f4e0230a8", "status": "BLOCKED", "device_verified": false, "evidence": "An #681 0df55d7c und Lauf 42742886395 gebunden, nicht an 322c0c1d / 42757104497", "next_step": "Kein workflow_dispatch; neue SHA-Bindung erst nach neuer QA und Eigentumerfreigabe"},
+    {"pr": 683, "branch": "chatgpt/code52-cinema-final-graphics-audit-20261110", "checkpoint_sha": "01bdbadb1242339f908f7282cd53d0b8df2d6a02", "status": "INTEGRATED", "device_verified": false, "evidence": "Vorfahre von #685; Phase-Guard und Hypothesen-Test wiederhergestellt", "next_step": "Guard/Tests behalten"},
+    {"pr": 684, "branch": "chatgpt/code52-cinema-grounded-document-question-20261110", "checkpoint_sha": "09635722e060b95603baa1095d5a5b010bb162b6", "status": "INTEGRATED", "device_verified": false, "evidence": "Vorfahre von #685; echte Dokumentfrage statt erfundener Antwort-Pills", "next_step": "Bei FUI-Ausbau die echte question behalten"},
+    {"pr": 685, "branch": "chatgpt/code52-cinema-branch-safe-qa-20261110", "checkpoint_sha": "322c0c1d080b3f99262c6a97ce15c7a7b685688f", "status": "ALREADY_PRESENT", "device_verified": false, "evidence": "Aktuelle Integrationsbasis; QA-Lauf 42757104497 success, 4257/0/18", "next_step": "Neuer SHA braucht neue QA; Fold7 bleibt NOT_RUN"}
+  ],
+  "unwired_cinema_experiments": [
+    {"id": "EXP_03_DEPTH_GLASS", "enum": "app/src/main/java/at/heinz/deviceai/ui/JarvisCinematicSettings.kt:18", "missing": "Kein experimentEnabled-Aufruf; nur DEPTH_GLASS_FILL in JarvisWorkWindow.kt:60,674"},
+    {"id": "EXP_07_GAZE", "enum": "app/src/main/java/at/heinz/deviceai/ui/JarvisCinematicSettings.kt:22", "missing": "Kein experimentEnabled-Aufruf; Blicktechnik bereits in JarvisWindowGaze und AvatarDirector vorhanden, nicht als eigener Schalter"},
+    {"id": "EXP_10_SENTENCE", "enum": "app/src/main/java/at/heinz/deviceai/ui/JarvisCinematicSettings.kt:25", "missing": "Kein experimentEnabled-Aufruf; Satzgesten-Kern in AvatarContract.kt:325-330 und AvatarDirector.kt:360"},
+    {"id": "EXP_15_FRAME_BUDGET", "enum": "app/src/main/java/at/heinz/deviceai/ui/JarvisCinematicSettings.kt:30", "missing": "Kein experimentEnabled-Aufruf; Budget bereits in JarvisRenderQuality.kt:13-23"}
+  ],
+  "unchanged_prior_ledger_note": "Eintraege des Parent-Ledgers ausserhalb dieser Serie bleiben in ihrem bisherigen Status. Dieser Delta ersetzt sie nicht und loescht sie nicht."
+}
