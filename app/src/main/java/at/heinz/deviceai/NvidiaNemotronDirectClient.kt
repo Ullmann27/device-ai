@@ -74,11 +74,15 @@ class NvidiaNemotronDirectClient(private val context: Context) {
         // chat_template_kwargs field at the JSON top level (OpenAI SDK extra_body).
         val payload = JSONObject().apply {
             put("model", MODEL)
-            put("temperature", 0.4)
-            put("top_p", 0.95)
+            put("temperature", 0.7)
             put("max_tokens", 4096)
             put("stream", false)
-            put("chat_template_kwargs", JSONObject().put("enable_thinking", true))
+            // Keep reasoning bounded for this five-requests/day smoke-test client.
+            // NVIDIA recommends medium_effort as a starting point.
+            put("chat_template_kwargs", JSONObject()
+                .put("enable_thinking", true)
+                .put("medium_effort", true)
+                .put("force_nonempty_content", true))
             put("messages", JSONArray().apply {
                 put(JSONObject().put("role", "system").put(
                     "content",
