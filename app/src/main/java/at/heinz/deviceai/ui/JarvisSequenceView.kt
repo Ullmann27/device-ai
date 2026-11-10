@@ -198,9 +198,10 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
                 } else card(key("acc.${event.provider}"), JarvisSequenceEffects.Kind.ACCOUNT, event.provider, event.accountLabel)
             is CockpitAnimationEvent.DocumentQuestion -> {
                 effects.closeEnvelope()
-                card(key("doc"), JarvisSequenceEffects.Kind.DOCUMENT, event.documentName, null)
-                // Muster G; TODO(Kern): DocumentQuestion carries one question, the pills need the answer options.
-                effects.questionPills(listOf(event.question), clock()); kick()
+                effects.clearPills()
+                // A question is data, never an invented answer choice.
+                card(key("doc"), JarvisSequenceEffects.Kind.DOCUMENT, event.documentName,
+                    event.question.takeIf { it.isNotBlank() })
             }
             else -> Unit
         }
