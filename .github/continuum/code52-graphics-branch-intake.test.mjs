@@ -62,8 +62,8 @@ test('PRs #565 #617 #659 #666 #677 #678 original avatar still owns one GLB rende
   contains('gaze', ['fun fromProjection(']);
 });
 
-test('Cinema 2030 remains owner-controlled and clips decorative glass around the native UI', () => {
-  contains('cinematic', ['DEPTH_EXPERIMENT_KEY', 'getBoolean(DEPTH_EXPERIMENT_KEY, false)', 'experiment.wired && enabled(context)']);
+test('Cinema 52 defaults to all wired effects and clips decorative glass around the native UI', () => {
+  contains('cinematic', ['DEPTH_EXPERIMENT_KEY', 'getBoolean(DEPTH_EXPERIMENT_KEY, true)', 'activateCinema52ByDefault', 'putBoolean(DEPTH_EXPERIMENT_KEY, true)', 'experiment.wired && enabled(context)']);
   contains('overlay', ['protectedBounds.forEach { canvas.clipOutRect(it) }', 'cinematics.drawBrackets(painter', 'prismRim?.draw(canvas, stage, frame.tiltDegrees, frame.pulse, density)']);
   const part = source.overlay.slice(source.overlay.indexOf('cinematics.drawMotesAndEnergy('), source.overlay.indexOf('if (dataAlpha > 0f) drawTelemetry('));
   assert.match(part, /cinematics\.drawBrackets\([\s\S]*?canvas\.restore\(\)\s*canvas\.restore\(\)\s*if \(prismRimEnabled/);

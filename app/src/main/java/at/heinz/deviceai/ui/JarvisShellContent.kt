@@ -91,7 +91,8 @@ object JarvisShellContent {
         }
         shell[Slot.BOTTOM_NAV]?.takeIf { it.contains(x, y) }?.let { b ->
             val items = JarvisTiles.bottomNav
-            return items.getOrNull(((x - b.left) / (b.width / items.size)).toInt())?.target
+            val index = JarvisTiles.bottomNavItemBoxes(b, items).indexOfFirst { it.contains(x, y) }
+            return items.getOrNull(index)?.target
         }
         return null
     }

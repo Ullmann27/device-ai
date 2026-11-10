@@ -26,16 +26,20 @@ class JarvisShellLayoutTest {
         }
     }
 
-    @Test fun compactPhoneStacksReadableComponentsAndAllTenTiles() {
+    @Test fun compactPhoneUsesTheCinemaCompositionInsteadOfTenOverflowTiles() {
         val s = JarvisShellLayout.create(412f, 915f)
         assertEquals(FormFactor.PHONE_PORTRAIT, s.formFactor)
-        listOf(Slot.TOP_BAR, Slot.AVATAR, Slot.DIALOG, Slot.INPUT, Slot.TILES, Slot.STATUS).forEach { assertNotNull(it.name, s[it]) }
+        listOf(Slot.TOP_BAR, Slot.AVATAR, Slot.DIALOG, Slot.CAMERA_STATUS, Slot.COCKPIT_SECONDARY,
+            Slot.INPUT, Slot.WORK_DOCUMENT, Slot.WORK_PROCESS, Slot.WORK_DRAFT, Slot.BOTTOM_NAV, Slot.STATUS)
+            .forEach { assertNotNull(it.name, s[it]) }
         assertNull(s[Slot.NAV_RAIL])
-        assertEquals(2, s.tileColumns); assertEquals(5, s.tileRows); assertEquals(10, s.tileBoxes().size)
-        assertNull("External Activity owns the phone category bar", s[Slot.BOTTOM_NAV])
-        assertTrue(s.requiresVerticalScroll)
-        assertTrue("input below hero, above tiles", s[Slot.INPUT]!!.top >= s[Slot.AVATAR]!!.bottom && s[Slot.INPUT]!!.bottom <= s[Slot.TILES]!!.top)
-        assertTrue("hero dominates", s[Slot.AVATAR]!!.height > 300f)
+        assertNull(s[Slot.TILES])
+        assertEquals(0, s.tileBoxes().size)
+        assertNotNull(s[Slot.BOTTOM_NAV])
+        assertFalse("412×915 cinema composition must not overflow", s.requiresVerticalScroll)
+        assertTrue("input below hero, above work", s[Slot.INPUT]!!.top >= s[Slot.AVATAR]!!.bottom &&
+            s[Slot.INPUT]!!.bottom <= s[Slot.WORK_DOCUMENT]!!.top)
+        assertTrue("hero stays readable", s[Slot.AVATAR]!!.height >= 164f)
         assertSane(s)
     }
 
@@ -115,7 +119,7 @@ class JarvisShellLayoutTest {
         assertEquals(listOf("Gespräch", "Gedächtnis", "Denken und Planen", "Forschung", "Mein KI-Team", "Aufgaben", "Internet", "Lernen", "Gerätesteuerung", "Systemstatus"),
             JarvisTiles.reference.map { it.label })
         assertTrue(JarvisTiles.reference.all { it.displayText == null })
-        assertEquals(JarvisTiles.reference.size, JarvisShellLayout.create(412f, 915f).tileBoxes().size)
+        assertEquals(0, JarvisShellLayout.create(412f, 915f).tileBoxes().size)
         assertEquals(0, JarvisShellLayout.create(884f, 760f).tileBoxes().size)
         assertEquals(JarvisTiles.railNav.size,
             JarvisTiles.bottomNavItemBoxes(JarvisShellLayout.create(884f, 760f)[Slot.BOTTOM_NAV]!!).size)

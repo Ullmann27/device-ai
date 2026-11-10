@@ -44,14 +44,47 @@ class JarvisCockpitFidelityTest {
         }
     }
 
-    @Test fun phoneMayScrollAndKeepsDestinationTiles() {
+    @Test fun phoneFitsTheCinemaCompositionWithoutScrollingOrALeftRail() {
         val shell = JarvisShellLayout.create(phone.first, phone.second)
-        assertTrue(shell.requiresVerticalScroll)
+        assertFalse("412×915 must not overflow", shell.requiresVerticalScroll)
+        assertEquals(phone.second, shell.height, .01f)
+        assertFalse(shell.ref5Grid)
         assertNull(shell[Slot.NAV_RAIL])
-        assertNull(shell[Slot.BOTTOM_NAV])
-        assertTrue(shell.hasFeatureTiles)
-        assertEquals(10, shell.tileBoxes().size)
+        assertFalse(shell.hasFeatureTiles)
+        assertEquals(0, shell.tileBoxes().size)
+        listOf(Slot.TOP_BAR, Slot.DIALOG, Slot.CAMERA_STATUS, Slot.COCKPIT_SECONDARY, Slot.AVATAR,
+            Slot.CONTINUUM_HEADER, Slot.INPUT, Slot.WORK_DOCUMENT, Slot.WORK_PROCESS, Slot.WORK_DRAFT,
+            Slot.BOTTOM_NAV, Slot.STATUS).forEach {
+            assertNotNull("phone $it", shell[it])
+            assertTrue("phone $it stays in the viewport", shell[it]!!.bottom <= phone.second + .01f)
+        }
+        val live = shell[Slot.DIALOG]!!
+        val camera = shell[Slot.CAMERA_STATUS]!!
+        val modules = shell[Slot.COCKPIT_SECONDARY]!!
+        assertEquals("three top boxes share a row", live.top, camera.top, .01f)
+        assertEquals(camera.top, modules.top, .01f)
+        assertTrue(live.right < camera.left)
+        assertTrue(camera.right < modules.left)
+        assertTrue("top boxes sit above the hero", live.bottom <= shell[Slot.AVATAR]!!.top + .01f)
+        assertTrue(shell.headBounds!!.right < shell.orbBounds!!.left)
+        assertTrue("orb stays below the Continuum title",
+            shell[Slot.CONTINUUM_HEADER]!!.bottom <= shell.orbBounds!!.top + .01f)
+        assertFalse(intersects(shell.headBounds!!, shell.orbBounds!!))
+        assertFalse(intersects(shell[Slot.CONTINUUM_HEADER]!!, shell.orbBounds!!))
+        assertTrue("mission under hero", shell[Slot.INPUT]!!.top > shell[Slot.AVATAR]!!.bottom)
+        assertTrue("work under mission", shell[Slot.WORK_DOCUMENT]!!.top > shell[Slot.INPUT]!!.bottom)
+        assertTrue("dock under work", shell[Slot.BOTTOM_NAV]!!.top > shell[Slot.WORK_DRAFT]!!.bottom)
+        assertTrue("status under dock", shell[Slot.STATUS]!!.top > shell[Slot.BOTTOM_NAV]!!.bottom)
+        val dock = shell[Slot.BOTTOM_NAV]!!
+        val cells = JarvisTiles.bottomNavItemBoxes(dock)
+        assertEquals(JarvisTiles.railNav.size, cells.size)
+        cells.forEach { assertTrue("dock cell is a usable target $it", it.width >= 48f - .01f && it.height >= 48f - .01f) }
+        assertEquals(JarvisTiles.railNav.map { it.target },
+            cells.map { box -> JarvisShellContent.hitTarget(shell, JarvisTiles.reference, box.centerX, box.centerY) })
     }
+
+    private fun intersects(a: JarvisShellLayout.Box, b: JarvisShellLayout.Box) =
+        a.left < b.right - .01f && b.left < a.right - .01f && a.top < b.bottom - .01f && b.top < a.bottom - .01f
 
     @Test fun dockExposesEveryRealRailDestination() {
         for ((w, h) in listOf(foldInner, tablet)) {

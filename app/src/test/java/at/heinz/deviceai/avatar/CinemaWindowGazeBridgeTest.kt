@@ -78,4 +78,33 @@ class CinemaWindowGazeBridgeTest {
         assertEquals(.5f, reducer.pose(now).gazeX, .0001f)
         CinemaWindowLightState.reset()
     }
+
+    @Test fun concurrentUiAndWorkerMotionCannotCorruptTheOpenWindowRegistry() {
+        CinemaWindowLightState.reset()
+        val (_, bridge) = reducerDirector()
+        val workers = java.util.concurrent.Executors.newFixedThreadPool(4)
+        try {
+            val jobs = (0 until 4).map { worker ->
+                workers.submit {
+                    repeat(150) { sample ->
+                        val id = "work-${worker}"
+                        bridge.render(motion(.45f, windowId = id))
+                        if (sample % 5 == 0) {
+                            bridge.render(motion(.45f, phase = WindowProjectedMotion.Phase.CLOSED, windowId = id))
+                        }
+                        if (sample % 13 == 0) {
+                            bridge.render(CockpitAnimationEvent.TurnEnded("turn-1", now, delivered = true))
+                        }
+                    }
+                }
+            }
+            jobs.forEach { it.get(10, java.util.concurrent.TimeUnit.SECONDS) }
+            bridge.render(CockpitAnimationEvent.TurnEnded("turn-1", now + 1L, delivered = true))
+            assertFalse("Every concurrent projected window must be closed", CinemaWindowLightState.open)
+            assertNull(CinemaWindowLightState.accentArgb)
+        } finally {
+            workers.shutdownNow()
+            CinemaWindowLightState.reset()
+        }
+    }
 }

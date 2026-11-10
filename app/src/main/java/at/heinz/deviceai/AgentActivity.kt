@@ -561,6 +561,9 @@ class AgentActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Cinema 52 is the only owner-approved release profile. Upgrade legacy persisted OFF
+        // switches before the first Home/Avatar/Workscene is constructed.
+        at.heinz.deviceai.ui.JarvisCinematicSettings.activateCinema52ByDefault(this)
         // Android can recreate this activity while the system document picker is
         // in front. Without restoring these three fields the returned URI is
         // silently dropped and the owner sees only the home screen.
@@ -4346,26 +4349,20 @@ class AgentActivity : Activity() {
         )
     )
 
-    /** Reversible presentation experiment; this does not grant tools or permissions. */
+    /** Cinema 52 is the standard release profile; no legacy master OFF switch. */
     private fun showCinemaDepthExperiment() {
-        val current = at.heinz.deviceai.ui.JarvisCinematicSettings.depthExperimentEnabled(this)
+        val config = at.heinz.deviceai.ui.JarvisCinematicSettings
+        config.activateCinema52ByDefault(this)
         AlertDialog.Builder(this)
-            .setTitle("Hologramm · Cinema 2030")
+            .setTitle("Hologramm · Cinema 52")
             .setMessage(
-                "Experimentelle räumliche Rauchglas-Kacheln und gestaffelte Flügel. " +
-                    "Nur bei aktiven Arbeitsfenstern; kein neuer Agent, keine App-Berechtigung. " +
-                    "Der Standardmodus bleibt verfügbar. Aktuell: " +
-                    (if (current) "Cinema 2030 AN" else "Cinema 2030 AUS")
+                "Cinema 52 mit den entwickelten holografischen Effekten ist standardmäßig aktiv. " +
+                    "Die Originalkugel, der Originalavatar und die Arbeitswelten bleiben erhalten. " +
+                    "Android-Energiesparen, reduzierte Bewegung und thermische Schutzgrenzen " +
+                    "begrenzen bei Bedarf nur die Darstellung, nicht die freigeschalteten Funktionen."
             )
-            .setNegativeButton("Abbrechen", null)
-            .setNeutralButton("Effekte einzeln") { _, _ -> showCinemaExperimentDetails() }
-            .setPositiveButton(if (current) "Standardmodus" else "Cinema 2030 einschalten") { _, _ ->
-                at.heinz.deviceai.ui.JarvisCinematicSettings.preferences(this).edit()
-                    .putBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.DEPTH_EXPERIMENT_KEY, !current)
-                    .apply()
-                homeView?.jarvisShell?.refreshMotionPolicy()
-                addToolActivity(if (current) "HOLOGRAMM · Standardmodus" else "HOLOGRAMM · Cinema 2030 aktiviert")
-            }
+            .setNeutralButton("Cinema-Effekte anzeigen") { _, _ -> showCinemaExperimentDetails() }
+            .setPositiveButton("Schließen", null)
             .show()
     }
 
@@ -4373,7 +4370,6 @@ class AgentActivity : Activity() {
         val config = at.heinz.deviceai.ui.JarvisCinematicSettings
         val all = at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.entries
         val experiments = all.filter { it.wired }
-        val pending = all.filterNot { it.wired }
         val prefs = config.preferences(this)
         val labels = experiments.map {
             it.name.substring(4, 6) + " · " + it.label
@@ -4381,10 +4377,10 @@ class AgentActivity : Activity() {
         val selected = experiments.map { prefs.getBoolean("exp52." + it.name, true) }.toBooleanArray()
         AlertDialog.Builder(this)
             .setTitle("Cinema 2030 · angeschlossene Effekte")
-            .setMessage("Die folgenden elf Funktionen sind im Code verdrahtet und einzeln abschaltbar. " +
-                "Noch nicht als eigene Effekte angeschlossen: " +
-                pending.joinToString(", ") { it.name.substring(4, 6) } +
-                ". Auch angeschlossene Funktionen benötigen die Fold7-Geräteabnahme.")
+            .setMessage("Alle ${experiments.size} Cinema-Effekte sind im Code verdrahtet und " +
+                "beim ersten Start von Cinema 52 aktiviert. Individuelle Änderungen sind nur " +
+                "eine bewusste Benutzereinstellung, keine versteckte Release-Voreinstellung. " +
+                "Die tatsächliche Fold7-Geräteabnahme bleibt erforderlich.")
             .setMultiChoiceItems(labels, selected) { _, index, enabled ->
                 config.setExperiment(this, experiments[index], enabled)
                 homeView?.jarvisShell?.refreshMotionPolicy()
@@ -9199,7 +9195,7 @@ class AgentActivity : Activity() {
         val modes = listOf(at.heinz.deviceai.cognitive.InternetAccessMode.ASK,
             at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON,
             at.heinz.deviceai.cognitive.InternetAccessMode.OFF)
-        val options = arrayOf("Auf Nachfrage (Standard)", "Dauerhaft erlauben · ALWAYS_ON", "Aus (kein Webzugriff)")
+        val options = at.heinz.deviceai.cognitive.InternetAccessModeLabels.dialogOptions(modes)
         AlertDialog.Builder(this)
             .setTitle("Continuum · Internetzugang")
             .setSingleChoiceItems(options, modes.indexOf(internetConsent.mode)) { dialog, selection ->

@@ -23,5 +23,8 @@ test('EXP14 respects original avatar/dialog protected bounds and owner opt-in',(
   assert.match(overlay,/Build\.VERSION\.SDK_INT >= 33/);
   assert.match(host,/fui\.prismRimEnabled = JarvisCinematicSettings\.experimentEnabled\(activity,/);
   assert.match(host,/Experiment\.EXP_14_GLASS_SHADER/);
-  assert.match(settings,/getBoolean\(DEPTH_EXPERIMENT_KEY, false\)/);
+  assert.match(settings,/getBoolean\(DEPTH_EXPERIMENT_KEY, true\)/);
+  assert.match(settings,/fun activateCinema52ByDefault\(/);
+  assert.match(settings,/putBoolean\(DEPTH_EXPERIMENT_KEY, true\)/);
+  assert.match(settings,/Experiment\.entries\.filter \{ it\.wired \}/);
 });

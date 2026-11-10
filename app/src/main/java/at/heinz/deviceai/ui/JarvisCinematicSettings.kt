@@ -3,15 +3,34 @@ package at.heinz.deviceai.ui
 import android.content.Context
 import android.content.SharedPreferences
 
-/** Reversible presentation-only switch; never changes avatar, speech or task state. */
+/** Cinema 52 release presentation: active by default; Android thermal/accessibility safety remains authoritative. */
 object JarvisCinematicSettings {
     const val KEY = "cinematic-work-windows"
     const val DEPTH_EXPERIMENT_KEY = "exp-52-cine-depth"
+    private const val CINEMA52_MIGRATED_KEY = "cinema52-effects-enabled-on-upgrade-v1"
     fun depthExperimentEnabled(context: Context): Boolean =
-        preferences(context).getBoolean(DEPTH_EXPERIMENT_KEY, false)
+        preferences(context).getBoolean(DEPTH_EXPERIMENT_KEY, true)
     fun preferences(context: Context): SharedPreferences =
         context.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
     fun enabled(context: Context): Boolean = preferences(context).getBoolean(KEY, true)
+
+    /**
+     * One-time Code52 migration: old persisted OFF switches must not silently downgrade
+     * an in-place upgrade to an almost empty/legacy-looking screen. All 15 wired Cinema
+     * features become active on first Code52 launch, including for existing installations.
+     * A later explicit per-effect owner choice is not rewritten on each launch.
+     * GPU/CPU protection and Android reduced-motion remain handled by JarvisRenderQuality.
+     */
+    @Synchronized fun activateCinema52ByDefault(context: Context) {
+        val prefs = preferences(context)
+        if (prefs.getBoolean(CINEMA52_MIGRATED_KEY, false)) return
+        val editor = prefs.edit().putBoolean(KEY, true).putBoolean(DEPTH_EXPERIMENT_KEY, true)
+        Experiment.entries.filter { it.wired }.forEach { experiment ->
+            editor.putBoolean("exp52." + experiment.name, true)
+        }
+        editor.putBoolean(CINEMA52_MIGRATED_KEY, true).apply()
+    }
+
     enum class Experiment(val label: String, val wired: Boolean = false) {
         EXP_01_Z_GLASS("3D-Glasschichten", wired = true),
         EXP_02_RIM("Dauerhafter Hologrammrahmen", wired = true),

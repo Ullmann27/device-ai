@@ -16,6 +16,10 @@ class ToolRegistryTest {
     fun installsNeedConfirmation() {
         assertEquals(Risk.CONFIRM, ToolRegistry.risk("install_apk"))
         assertEquals(Risk.CONFIRM, ToolRegistry.risk("restart_app"))
+        assertEquals(Risk.CONFIRM, ToolRegistry.risk("take_screenshot"))
+        assertEquals(Risk.CONFIRM, ToolRegistry.risk("launch_app"))
+        assertEquals(Risk.CONFIRM, ToolRegistry.risk("record_screen"))
+        assertEquals(Risk.CONFIRM, ToolRegistry.risk("stop_app"))
     }
 
     @Test

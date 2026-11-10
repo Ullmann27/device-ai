@@ -36,16 +36,25 @@ object JarvisVisualDepth {
         val span = maxOf(w, h)
         val C = JarvisDesign.Colors
         // Dark field with localized light islands (hero / orb), not a flat cyan wash.
-        JarvisNeon.halo(p, w * .38f, h * .22f, span * .22f, C.violet, .34f)
-        JarvisNeon.halo(p, w * .58f, h * .24f, span * .20f, C.cyan, .30f)
-        JarvisNeon.halo(p, w * .48f, h * .20f, span * .16f, C.magenta, .16f)
-        JarvisNeon.halo(p, w * .12f, h * .78f, span * .18f, C.magenta, .08f)
-        JarvisNeon.halo(p, w * .50f, h * .92f, span * .40f, C.backgroundHaze, .10f)
-        JarvisNeon.halo(p, w * .82f, h * .16f, span * .14f, C.warn, .08f)
+        // Intensities raised toward ref-d (cinematic volume) without inventing HUD values.
+        JarvisNeon.halo(p, w * .38f, h * .22f, span * .22f, C.violet, .42f)
+        JarvisNeon.halo(p, w * .58f, h * .24f, span * .20f, C.cyan, .40f)
+        JarvisNeon.halo(p, w * .48f, h * .20f, span * .16f, C.magenta, .20f)
+        JarvisNeon.halo(p, w * .12f, h * .78f, span * .18f, C.magenta, .10f)
+        JarvisNeon.halo(p, w * .50f, h * .92f, span * .40f, C.backgroundHaze, .14f)
+        JarvisNeon.halo(p, w * .82f, h * .16f, span * .14f, C.warn, .16f)
+        JarvisNeon.halo(p, w * .64f, h * .38f, span * .11f, C.warn, .10f)
 
-        paintBokehLayer(p, w, h, count = 16, minR = 20f, maxR = 46f, alpha = .11f,
+        // Corner falloff: near-black vignette so mid-field reads closer than the edges.
+        p.fillRect(0f, 0f, w, h, Fill.Radial(w * .50f, h * .36f, span * .92f,
+            intArrayOf(0, Argb.withAlpha(C.background, .18f), Argb.withAlpha(C.background, .48f)),
+            floatArrayOf(0f, .62f, 1f)), .55f)
+
+        paintBokehLayer(p, w, h, count = 10, minR = 52f, maxR = 78f, alpha = .09f,
+            seed = 0xC03D, includeAmber = true)
+        paintBokehLayer(p, w, h, count = 16, minR = 20f, maxR = 46f, alpha = .13f,
             seed = 0xF11A, includeAmber = true)
-        paintBokehLayer(p, w, h, count = 20, minR = 8f, maxR = 16f, alpha = .08f,
+        paintBokehLayer(p, w, h, count = 20, minR = 8f, maxR = 16f, alpha = .09f,
             seed = 0xA22B, includeAmber = false)
         paintLightArcs(p, w, h)
     }
@@ -65,7 +74,7 @@ object JarvisVisualDepth {
             s = s * 1103515245 + 12345
             val br = minR + ((s ushr 8) % 1000) / 1000f * (maxR - minR)
             val color = when {
-                includeAmber && i == 3 -> C.warn
+                includeAmber && i % 5 == 3 -> C.warn
                 i % 3 == 0 -> C.violet
                 i % 3 == 1 -> C.cyan
                 else -> C.magenta
@@ -74,6 +83,8 @@ object JarvisVisualDepth {
             p.fillCircle(bx, by, br, Fill.Radial(bx, by, br, intArrayOf(Argb.withAlpha(color, alpha), 0)))
             p.fillCircle(bx, by, br * .55f, Fill.Radial(bx, by, br * .55f,
                 intArrayOf(Argb.withAlpha(color, alpha * 1.4f), 0)))
+            p.fillCircle(bx, by, br * .28f, Fill.Radial(bx, by, br * .28f,
+                intArrayOf(Argb.withAlpha(color, alpha * 1.8f), 0)))
         }
         p.setAdditive(false)
     }
@@ -84,6 +95,14 @@ object JarvisVisualDepth {
         val r = minOf(14f, minOf(b.width, b.height) * .25f).coerceAtLeast(1f)
         p.fillRoundRect(b.left, b.top, b.right, b.bottom, r,
             Fill.Solid(Argb.rgb(1, 4, 10)), .40f)
+        val inset = minOf(b.width, b.height) * .08f
+        if (inset > 2f) {
+            p.fillRoundRect(b.left + inset, b.top + inset, b.right - inset, b.bottom - inset,
+                (r - 2f).coerceAtLeast(1f),
+                Fill.Radial(b.centerX, b.centerY, maxOf(b.width, b.height) * .55f,
+                    intArrayOf(Argb.withAlpha(Argb.rgb(0, 2, 6), .22f), Argb.withAlpha(Argb.rgb(0, 2, 6), .50f))),
+                .55f)
+        }
     }
 
     /**
@@ -109,6 +128,10 @@ object JarvisVisualDepth {
             Fill.Solid(C.cyan), .55f)
         p.strokeOval(cx - rx * .46f, cy - ry * .38f, cx + rx * .46f, cy + ry * .38f, 2.4f,
             Fill.Solid(C.magenta), .22f)
+        p.strokeOval(cx - rx * 1.08f, cy - ry * 1.12f, cx + rx * 1.08f, cy + ry * 1.12f, 2.0f,
+            Fill.Solid(C.warn), .22f)
+        p.strokeOval(cx - rx * .88f, cy - ry * .78f, cx + rx * .88f, cy + ry * .78f, 1.4f,
+            Fill.Linear(cx - rx, cy, cx + rx, cy, intArrayOf(C.warn, C.cyan, C.warn)), .40f)
         // Upward well — no second brain; the original orb stays in the hero column.
         p.fillRect(cx - rx * .18f, stage.top + stage.height * .35f, cx + rx * .18f, cy,
             Fill.Linear(cx, cy, cx, stage.top + stage.height * .35f,
@@ -123,6 +146,8 @@ object JarvisVisualDepth {
         p.strokeArc(w * -.05f, h * .08f, w * .62f, h * .95f, 200f, 70f, 1.4f, Fill.Solid(C.cyan), .22f)
         p.strokeArc(w * .38f, h * -.10f, w * 1.12f, h * .72f, 110f, 55f, 8f, Fill.Solid(C.violet), .05f)
         p.strokeArc(w * .38f, h * -.10f, w * 1.12f, h * .72f, 110f, 55f, 1.2f, Fill.Solid(C.violet), .18f)
+        p.strokeArc(w * .18f, h * .22f, w * .92f, h * 1.05f, 220f, 48f, 9f, Fill.Solid(C.warn), .05f)
+        p.strokeArc(w * .18f, h * .22f, w * .92f, h * 1.05f, 220f, 48f, 1.3f, Fill.Solid(C.warn), .16f)
         p.setAdditive(false)
     }
 }
