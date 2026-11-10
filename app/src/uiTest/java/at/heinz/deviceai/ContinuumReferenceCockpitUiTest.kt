@@ -319,9 +319,15 @@ class ContinuumReferenceCockpitUiTest {
         assertTrue("No invisible rail duplicates remain", descendants(home).none {
             it.tag?.toString()?.startsWith("jarvis-rail:") == true
         })
-        assertEquals("All ten feature controls remain in the hierarchy", 10, descendants(home).count {
-            it.tag?.toString()?.startsWith("jarvis-tile:") == true
-        })
+        val tiles = descendants(home).count {
+            val tag = it.tag?.toString() ?: return@count false
+            tag.startsWith("jarvis-tile:") && tag.substringAfter(':') in JarvisHomeTestRoutes.features
+        }
+        val dock = descendants(home).count {
+            val tag = it.tag?.toString() ?: return@count false
+            tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.features
+        }
+        assertEquals("All ten feature controls remain in the hierarchy", 10, if (tiles > 0) tiles else dock)
     }
 
     private fun assertVisibleShellControlsDoNotOverlap(root: View) {
@@ -351,11 +357,16 @@ class ContinuumReferenceCockpitUiTest {
         val navigation = JarvisHomeTestRoutes.controls(home)
         assertEquals("Every destination has exactly one feature card", tileTargets,
             navigation.map { it.tag.toString().substringAfter(':') })
-        for (tag in listOf("jarvis-dialog:conversation", "jarvis-dialog:voice-input", "jarvis-dialog:send",
-            "jarvis-input:conversation", "jarvis-camera:settings", "jarvis-header:notifications", "jarvis-header:settings",
-            "jarvis-panel:ROW_AGENTS", "jarvis-panel:ROW_TASKS", "jarvis-panel:ROW_MEMORY", "jarvis-panel:ROW_MODEL")) {
-            tagged(home, tag)
+        val required = mutableListOf("jarvis-dialog:conversation", "jarvis-dialog:voice-input", "jarvis-dialog:send",
+            "jarvis-input:conversation", "jarvis-camera:settings", "jarvis-header:notifications", "jarvis-header:settings")
+        val shell = requireNotNull(home.jarvisShell.currentShell())
+        if (shell.hasFeatureTiles) {
+            required += listOf("jarvis-panel:ROW_AGENTS", "jarvis-panel:ROW_TASKS",
+                "jarvis-panel:ROW_MEMORY", "jarvis-panel:ROW_MODEL")
+        } else {
+            required += listOf("jarvis-panel:COCKPIT_SECONDARY", "jarvis-panel:STATUS")
         }
+        for (tag in required) tagged(home, tag)
         for (target in tileTargets) destination(activity, target)
         targets.forEach { view ->
             val name = view.tag.toString()
@@ -743,8 +754,10 @@ class ContinuumReferenceCockpitUiTest {
                 "tasks" to "Entwicklungsaufgaben",
                 "device" to "Systemstatus"
             )) {
-                val control = if (target == "agents-panel") shellControl(activity, "jarvis-panel:ROW_AGENTS")
-                    else destination(activity, target)
+                val control = if (target == "agents-panel") {
+                    descendants(home).singleOrNull { it.tag == "jarvis-panel:ROW_AGENTS" }
+                        ?: destination(activity, "agents")
+                } else destination(activity, target)
                 tap(activity.window.decorView, control)
                 when (title) {
                     "Systemstatus" -> closeSystemWorkWindow(activity)

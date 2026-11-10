@@ -46,6 +46,10 @@ class Airbus2100CockpitOrchestrator(
 
     private val tick = Runnable { tickMissionClock() }
 
+    /** Honest Document-Blueprint snapshot; null when no document is in this turn. */
+    @Synchronized
+    fun documentSnapshot(): HollywoodFuiLiveData.Document? = document.snapshot()
+
     @Synchronized
     override fun render(event: CockpitAnimationEvent) {
         if (closed) return

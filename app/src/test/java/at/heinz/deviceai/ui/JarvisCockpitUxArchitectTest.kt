@@ -32,7 +32,7 @@ class JarvisCockpitUxArchitectTest {
             val shell = JarvisShellLayout.create(w, h)
             assertNull("$w×$h left rail", shell[Slot.NAV_RAIL])
             val dock = requireNotNull(shell[Slot.BOTTOM_NAV])
-            assertTrue("$w×$h dock under tiles", dock.top >= shell[Slot.TILES]!!.bottom - .01f)
+            assertTrue("$w×$h dock under work panels", dock.top >= shell[Slot.WORK_DOCUMENT]!!.bottom - .01f)
             assertTrue("$w×$h status under dock", shell[Slot.STATUS]!!.top >= dock.bottom - .01f)
             val hits = JarvisTiles.bottomNavItemBoxes(dock).mapIndexed { i, box ->
                 JarvisShellContent.hitTarget(shell, JarvisTiles.reference, box.centerX, box.centerY)

@@ -12,7 +12,8 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Slot
 object JarvisShellContent {
     val filled = listOf(Slot.TOP_BAR, Slot.DIALOG, Slot.INPUT, Slot.COCKPIT_PRIMARY, Slot.COCKPIT_SECONDARY,
         Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS, Slot.USER_CARD,
-        Slot.CONTINUUM_HEADER, Slot.CAMERA_STATUS)
+        Slot.CONTINUUM_HEADER, Slot.CAMERA_STATUS,
+        Slot.WORK_DOCUMENT, Slot.WORK_PROCESS, Slot.WORK_DRAFT)
 
     fun title(slot: Slot, s: ContinuumDashboardState): String = when (slot) {
         Slot.TOP_BAR -> "CONTINUUM"

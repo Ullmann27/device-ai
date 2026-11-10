@@ -24,7 +24,9 @@ data class ContinuumDashboardState(
     /** Actual foreground audio/camera/consent signals. Unknown is never an active status. */
     val presentation: PresentationStatus = PresentationStatus(),
     /** Event bars are session observations, separately labelled from the persistent ledger totals. */
-    val memoryActivity: MemoryActivitySnapshot? = null
+    val memoryActivity: MemoryActivitySnapshot? = null,
+    /** Honest Document-Blueprint snapshot (#687); null = no document in this turn. Never sampled. */
+    val document: HollywoodFuiLiveData.Document? = null
 ) {
     data class PresentationStatus(
         val listening: Boolean = false,

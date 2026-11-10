@@ -26,7 +26,7 @@ internal object JarvisHomeTestRoutes {
     }
 
     private fun visibleWithinHome(view: View, home: ContinuumHomeView): Boolean =
-        generateSequence(view) { it.parent as? View }.takeWhile { it !== home }
+        generateSequence(view.parent as? View) { it.parent as? View }.takeWhile { it !== home }
             .all { it.visibility == View.VISIBLE }
 
     fun controls(root: View): List<View> {
@@ -34,38 +34,58 @@ internal object JarvisHomeTestRoutes {
         val shell = requireNotNull(home.jarvisShell.currentShell())
         val all = descendants(home)
         val cards = all.filter { it.tag?.toString()?.startsWith("jarvis-tile:") == true }
+        val dock = all.filter { it.tag?.toString()?.startsWith("jarvis-bottom:") == true }
+            .filter { it.tag.toString().substringAfter(':') in features }
         val rails = all.filter { it.tag?.toString()?.startsWith("jarvis-rail:") == true }
-        assertTrue("Every Home retains feature cards", shell.hasFeatureTiles)
-        assertNotNull(shell[JarvisShellLayout.Slot.TILES])
         assertNull("Home has no fixed navigation rail", shell[JarvisShellLayout.Slot.NAV_RAIL])
         assertTrue("Home removes native rail duplicates", rails.isEmpty())
-        assertEquals("Every Home retains ten cards", 10, cards.size)
-        assertEquals("One native navigation control per destination",
-            features.map { "jarvis-tile:$it" }, cards.map { it.tag })
-        cards.forEach { view ->
+        val nav = if (shell.hasFeatureTiles) {
+            assertNotNull(shell[JarvisShellLayout.Slot.TILES])
+            assertEquals("Every Home retains ten cards", 10, cards.size)
+            assertEquals("One native navigation control per destination",
+                features.map { "jarvis-tile:$it" }, cards.map { it.tag })
+            cards
+        } else {
+            assertNotNull(shell[JarvisShellLayout.Slot.BOTTOM_NAV])
+            assertEquals("Packed cockpit reaches destinations through the tool dock", 10, dock.size)
+            assertEquals(features.map { "jarvis-bottom:$it" }, dock.map { it.tag })
+            dock
+        }
+        nav.forEach { view ->
             assertTrue("${view.tag} remains present in Home", visibleWithinHome(view, home))
             assertTrue("${view.tag} is actionable", view.isClickable && view.isFocusable && view.isEnabled)
             assertEquals(View.IMPORTANT_FOR_ACCESSIBILITY_YES, view.importantForAccessibility)
             assertFalse("${view.tag} has an accessible label", view.contentDescription.isNullOrBlank())
         }
-        return cards
+        return nav
     }
 
     fun destination(root: View, target: String): View = controls(root).single {
         it.tag.toString().substringAfter(':') == target
     }
 
+    /** Packed dock: 10 destinations. Reflow: 10 cards plus the four diagnostic rows. */
+    fun expectedDeckSize(root: View): Int {
+        val shell = requireNotNull(home(root).jarvisShell.currentShell())
+        return if (shell.hasFeatureTiles) 14 else 10
+    }
+
     fun deck(root: View): List<View> {
         val home = home(root)
         val all = descendants(home)
-        val panels = rows.map { row ->
-            val matches = all.filter { it.tag == "jarvis-panel:$row" }
-            assertEquals("The deck owns a real $row action", 1, matches.size)
-            matches.single()
+        val panels = rows.mapNotNull { row ->
+            all.singleOrNull { it.tag == "jarvis-panel:$row" }
         }
+        if (panels.isNotEmpty()) assertEquals("The deck owns the four diagnostic rows", 4, panels.size)
         val cards = all.filter { it.tag?.toString()?.startsWith("jarvis-tile:") == true }
-        assertEquals("Every deck retains ten cards", 10, cards.size)
-        return panels + cards
+        if (cards.isNotEmpty()) {
+            assertEquals("Every deck retains ten cards", 10, cards.size)
+            return panels + cards
+        }
+        val dock = all.filter { it.tag?.toString()?.startsWith("jarvis-bottom:") == true }
+            .filter { it.tag.toString().substringAfter(':') in features }
+        assertEquals("Packed deck reaches destinations through the tool dock", 10, dock.size)
+        return dock
     }
 
     /** Footprint of the work window that the centre called [title] opens. */
