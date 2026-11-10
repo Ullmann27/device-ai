@@ -111,11 +111,11 @@ class JarvisLiveAvatarWiringUiTest {
         director.audioLevel("fixture", .8f)
         shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.MILLISECONDS)
         val visible = (home.avatarRenderer as JarvisHoloAvatar).hologram!!
-        val pose = (field(visible, "avatarPose") as AvatarPoseReducer).pose(System.currentTimeMillis())
+        val pose = (field(visible, "avatarPose") as AvatarPoseReducer).pose(android.os.SystemClock.elapsedRealtime())
         assertEquals("The live TTS state must reach the visible head", AvatarState.SPEAKING, pose.state)
         assertTrue("Measured audio must open the visible mouth", pose.jawOpen > 0f)
         director.speechEnded("fixture", true)
-        val stopped = (field(visible, "avatarPose") as AvatarPoseReducer).pose(System.currentTimeMillis())
+        val stopped = (field(visible, "avatarPose") as AvatarPoseReducer).pose(android.os.SystemClock.elapsedRealtime())
         assertEquals(0f, stopped.jawOpen, 0f)
     }
 
@@ -159,7 +159,7 @@ class JarvisLiveAvatarWiringUiTest {
         assertSame("A bounds change must not create a new renderer", before, docked.hologram)
         assertSame(live, docked.hologram)
         assertEquals(AvatarState.SPEAKING,
-            (field(live, "avatarPose") as AvatarPoseReducer).pose(System.currentTimeMillis()).state)
+            (field(live, "avatarPose") as AvatarPoseReducer).pose(android.os.SystemClock.elapsedRealtime()).state)
     }
 
     @Test fun heightOnlyWindowResizeUpdatesTheViewportWithoutReplacingLiveOwners() = withShell { activity, home, live ->
@@ -185,7 +185,7 @@ class JarvisLiveAvatarWiringUiTest {
         assertEquals(4, composer.selectionStart)
         assertEquals(12, composer.selectionEnd)
         assertEquals(AvatarState.SPEAKING,
-            (field(live, "avatarPose") as AvatarPoseReducer).pose(System.currentTimeMillis()).state)
+            (field(live, "avatarPose") as AvatarPoseReducer).pose(android.os.SystemClock.elapsedRealtime()).state)
         director.speechEnded("height-only", true)
     }
 

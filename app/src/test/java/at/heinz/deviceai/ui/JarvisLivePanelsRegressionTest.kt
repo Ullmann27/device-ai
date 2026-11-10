@@ -26,14 +26,16 @@ class JarvisLivePanelsRegressionTest {
     }
 
     @Test fun actualGridUsesTheModelCardAndItsRealReadiness() {
-        val grid = JarvisCockpitGrid.create(884f, 760f)
+        val shell = JarvisShellLayout.create(884f, 760f)
         val p = JarvisPresentationRecordingPainter()
-        JarvisCockpitGridContent.draw(p, JarvisShellLayout.Slot.ROW_MODEL,
-            grid[JarvisCockpitGrid.Area.ROW_MODEL], grid,
-            ContinuumDashboardState(model = ContinuumDashboardState.ModelStatus(name = "Testmodell", online = true, stateLabel = "Bereit")), 0L)
-        assertTrue("The model card uses the wide area for actual telemetry", "App-CPU" in p.texts)
+        val state = ContinuumDashboardState(model = ContinuumDashboardState.ModelStatus(name = "Testmodell", online = true, stateLabel = "Bereit"))
+        JarvisCockpitGridContent.draw(p, JarvisShellLayout.Slot.COCKPIT_SECONDARY,
+            shell[JarvisShellLayout.Slot.COCKPIT_SECONDARY]!!, shell.grid, state, 0L, shell)
+        assertTrue("Lokales Modell" in p.texts)
+        assertTrue("The compact module reports real readiness", "online" in p.texts)
+        CockpitLocalModelCard(1f).draw(p, 340f, 230f, state)
+        assertTrue("The model card still uses the wide area for actual telemetry", "App-CPU" in p.texts)
         assertTrue("Geräte-RAM" in p.texts)
-        assertTrue("Online" in p.texts)
         assertTrue("Missing measurements remain unknown", "—" in p.texts)
     }
 
@@ -60,11 +62,15 @@ class JarvisLivePanelsRegressionTest {
     }
 
     @Test fun actualGridShowsMeasuredMemoryCountsWithoutInventingActivity() {
-        val grid = JarvisCockpitGrid.create(884f, 760f)
+        val shell = JarvisShellLayout.create(884f, 760f)
         val p = JarvisPresentationRecordingPainter()
         val stats = ContinuumMemoryStats(43, 7, null, 18, 3, 2, 1)
-        JarvisCockpitGridContent.draw(p, JarvisShellLayout.Slot.ROW_MEMORY,
-            grid[JarvisCockpitGrid.Area.ROW_MEMORY], grid, ContinuumDashboardState(memory = stats), 0L)
+        val state = ContinuumDashboardState(memory = stats)
+        JarvisCockpitGridContent.draw(p, JarvisShellLayout.Slot.COCKPIT_SECONDARY,
+            shell[JarvisShellLayout.Slot.COCKPIT_SECONDARY]!!, shell.grid, state, 0L, shell)
+        assertTrue("Gedächtnis" in p.texts)
+        assertTrue("aktiv" in p.texts)
+        JarvisMemoryActivityPanel.draw(p, 0f, 0f, 340f, 190f, MemoryActivitySnapshot.from(stats, null))
         assertTrue("Today's measured additions must reach the activity card", "+7" in p.texts)
         assertTrue("43" in p.texts)
         assertTrue("2" in p.texts)

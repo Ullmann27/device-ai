@@ -67,8 +67,102 @@ object JarvisCockpitPanels {
     fun taskRows(s: ContinuumDashboardState): List<Row> = ContinuumCockpitPresentation.processRows(s.cockpit)
 
     fun drawTaskFlow(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
-        val y0 = title(p, b, "Aktueller Ablauf") { x, y -> ContinuumIcons.draw(p, Icon.REFRESH, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f) }
-        val rows = taskRows(s); val st = Type.caption; val cap = p.capHeight(st)
+        drawStepList(p, b, "Aktueller Ablauf", taskRows(s))
+    }
+
+    fun workProcessRows(s: ContinuumDashboardState): List<Row> {
+        val vis = DocumentBlueprintView.visible(s.document)
+        if (vis != null && vis.steps.isNotEmpty()) {
+            return vis.steps.map { Row(it.label, "", null, stepTone(it.state)) }
+        }
+        return taskRows(s)
+    }
+
+    fun drawWorkProcess(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
+        if (isProcessVacant(s)) JarvisVisualDepth.recedeVacantPanel(p, b)
+        drawStepList(p, b, "Verarbeitung", workProcessRows(s))
+    }
+
+    fun isProcessVacant(s: ContinuumDashboardState): Boolean {
+        val vis = DocumentBlueprintView.visible(s.document)
+        if (vis != null && vis.steps.isNotEmpty()) return false
+        return s.cockpit.steps.isEmpty() && s.cockpit.openWork.isEmpty()
+    }
+
+    fun drawDocumentPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
+        val y0 = title(p, b, "Dokument") { x, y ->
+            ContinuumIcons.draw(p, Icon.DOCUMENT, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f)
+        }
+        val vis = DocumentBlueprintView.visible(s.document)
+        val st = Type.caption
+        val body = Type.body.copy(size = 14f)
+        var y = rowsTop(p, y0)
+        if (vis == null) {
+            JarvisVisualDepth.recedeVacantPanel(p, b)
+            p.drawText(NONE, b.left + 16f, y + p.capHeight(st), st, Fill.Solid(Colors.textSecondary))
+            return
+        }
+        val nameStyle = Type.heading
+        val nameRoom = b.width - 48f
+        p.drawText(fit(p, vis.documentName, nameStyle, nameRoom), b.left + 16f,
+            y + p.capHeight(nameStyle), nameStyle, Fill.Solid(Colors.text))
+        vis.pageLabel?.let { page ->
+            p.drawText(page, b.right - 12f, y + p.capHeight(st), st,
+                Fill.Solid(Colors.textSecondary), TextAlign.RIGHT)
+        }
+        y += p.capHeight(nameStyle) + 10f
+        vis.question?.takeIf { it.isNotBlank() }?.let { question ->
+            p.drawText(fit(p, question, body, b.width - 32f), b.left + 16f,
+                y + p.capHeight(body), body, Fill.Solid(Colors.text))
+            y += p.capHeight(body) + 8f
+        }
+        vis.entriesLabel?.let { entries ->
+            p.drawText(fit(p, entries, st, b.width - 32f), b.left + 16f,
+                y + p.capHeight(st), st, Fill.Solid(Colors.textSecondary))
+        }
+    }
+
+    fun drawDraftPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
+        val y0 = title(p, b, "Zusammenfassung – Entwurf") { x, y ->
+            ContinuumIcons.draw(p, Icon.CODE, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f)
+        }
+        val vis = DocumentBlueprintView.visible(s.document)
+        val st = Type.caption
+        var y = rowsTop(p, y0)
+        if (vis == null || !vis.showsDraft) {
+            JarvisVisualDepth.recedeVacantPanel(p, b)
+            p.drawText(NONE, b.left + 16f, y + p.capHeight(st), st, Fill.Solid(Colors.textSecondary))
+            return
+        }
+        val lines = listOf(
+            vis.draftGoal?.let { "Ziel: $it" },
+            vis.draftApproach?.let { "Vorgehen: $it" },
+            vis.draftOpenItems?.let { "Offene Punkte: $it" },
+            vis.draftBody
+        ).mapNotNull { it?.takeIf { text -> text.isNotBlank() } }
+        val lineH = p.capHeight(st) + 6f
+        lines.take(((b.bottom - 28f - y) / lineH).toInt().coerceAtLeast(0)).forEach { line ->
+            p.drawText(fit(p, line, st, b.width - 32f), b.left + 16f, y + p.capHeight(st),
+                st, Fill.Solid(Colors.text))
+            y += lineH
+        }
+        if (vis.buttons.isEmpty()) return
+        val buttonH = 22f
+        val buttonY = (b.bottom - 10f - buttonH).coerceAtLeast(y + 4f)
+        val gap = 6f
+        val w = (b.width - 24f - (vis.buttons.size - 1) * gap) / vis.buttons.size
+        vis.buttons.forEachIndexed { i, label ->
+            val left = b.left + 12f + i * (w + gap)
+            val box = Box(left, buttonY, left + w, buttonY + buttonH)
+            JarvisReferenceHud.surface(p, box, 8f, Colors.cyan, Colors.cyanDeep)
+            p.drawText(fit(p, label, st, box.width - 8f), box.centerX,
+                box.centerY + p.capHeight(st) / 2f, st, Fill.Solid(Colors.text), TextAlign.CENTER)
+        }
+    }
+
+    private fun drawStepList(p: ContinuumPainter, b: Box, heading: String, rows: List<Row>) {
+        val y0 = title(p, b, heading) { x, y -> ContinuumIcons.draw(p, Icon.REFRESH, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f) }
+        val st = Type.caption; val cap = p.capHeight(st)
         val top = rowsTop(p, y0); val h = pitch(p, b, top, 5)
         val n = rows.take(((b.bottom - 4f - top) / h).toInt().coerceAtLeast(0))
         val x = b.left + 15f; val r = 5.5f
@@ -85,6 +179,14 @@ object JarvisCockpitPanels {
             val color = if (row.state == Tone.NEUTRAL) Colors.textSecondary else Colors.text
             p.drawText(fit(p, row.label, st, b.right - 8f - (x + 12f)), x + 12f, cy + cap / 2f, st, Fill.Solid(color))
         }
+    }
+
+    private fun stepTone(state: StepState) = when (state) {
+        StepState.DONE -> Tone.OK
+        StepState.ACTIVE -> Tone.ACTIVE
+        StepState.FAILED -> Tone.ERROR
+        StepState.BLOCKED -> Tone.WARN
+        StepState.WAITING -> Tone.NEUTRAL
     }
 
     // ---- Active owner task ----------------------------------------------------------------------------------------

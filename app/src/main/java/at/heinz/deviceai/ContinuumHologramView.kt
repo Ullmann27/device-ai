@@ -1023,7 +1023,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             canvas.restoreToCount(auraCanvas)
         }
         if (headEnabled) {
-            val pose = proof?.pose ?: synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis(), canAnimateFrame()) }
+            val pose = proof?.pose ?: synchronized(avatarPose) { avatarPose.pose(SystemClock.elapsedRealtime(), canAnimateFrame()) }
             receipt.stageFlags = receipt.stageFlags or AvatarFrameReceipt.POSE_SAMPLED
             receipt.jawOpen = pose.jawOpen
             receipt.speakEnergy = pose.speakEnergy
@@ -1118,6 +1118,11 @@ class ContinuumHologramView @JvmOverloads constructor(
             painter.begin(canvas)
             at.heinz.deviceai.ui.JarvisHeadAura.drawLightStreams(painter, headDrawBounds.width() / density,
                 headDrawBounds.height() / density)
+            at.heinz.deviceai.ui.JarvisCinemaEntrance.drawHologramOverlay(
+                painter,
+                at.heinz.deviceai.ui.JarvisShellLayout.Box(
+                    0f, 0f, headDrawBounds.width() / density, headDrawBounds.height() / density),
+                avatarSeconds, renderFrame.energy)
             canvas.restoreToCount(streams)
         }
         if (!canAnimateFrame() || !renderBudget().animate) return

@@ -53,11 +53,21 @@ test('Fold portrait uses the shared width/font profile, one Activity rail and no
 test('current information panels and separate status keep real sources and complete scrollable rows',()=>{
  assert.match(grid,/const val REF_W = 1536f/);
  assert.match(grid,/const val REF_H = 1024f/);
- for(const slot of ['ROW_AGENTS','ROW_TASKS','ROW_MEMORY','ROW_MODEL'])
-  assert.match(shell,new RegExp('Slot\\.'+slot+' to gr\\[Area\\.'+slot+'\\]'));
- assert.match(grid,/informationRow\(listOf\(Area\.ROW_MEMORY, Area\.ROW_MODEL\), chartHeight\)/);
- assert.match(grid,/informationRow\(listOf\(Area\.ROW_AGENTS, Area\.ROW_TASKS\), activityHeight\)/);
- assert.match(grid,/a\[Area\.STATUS\] = Box\(margin, y, right, y \+ statusHeight\)/);
+ // Owner contract after the dock: Fold/tablet reference maps three honest work
+ // windows, the holographic tool dock and status. The left-rail ROW_* grid
+ // bindings are gone; phone/large-text reflow below still keeps scrollable rows.
+ for (const slot of ['WORK_DOCUMENT','WORK_PROCESS','WORK_DRAFT'])
+  assert.match(shell, new RegExp('Slot\\.'+slot+' to gr\\[Area\\.'+slot+'\\]'));
+ assert.match(shell,/Slot\.BOTTOM_NAV to gr\[Area\.TOOL_DOCK\]/);
+ assert.match(shell,/Slot\.STATUS to gr\[Area\.STATUS\]/);
+ assert.doesNotMatch(shell,/Slot\.ROW_AGENTS to gr\[Area\.ROW_AGENTS\]/);
+ assert.doesNotMatch(shell,/Slot\.NAV_RAIL to gr\[/);
+ assert.match(grid,/a\[Area\.WORK_DOCUMENT\] = Box\(left, y, left \+ workW, y \+ workH\)/);
+ assert.match(grid,/a\[Area\.WORK_PROCESS\] = Box\(left \+ workW \+ gap, y, left \+ 2f \* workW \+ gap, y \+ workH\)/);
+ assert.match(grid,/a\[Area\.WORK_DRAFT\] = Box\(left \+ 2f \* \(workW \+ gap\), y, right, y \+ workH\)/);
+ assert.match(grid,/a\[Area\.TOOL_DOCK\] = Box\(left, y, right, y \+ dockH\)/);
+ assert.match(grid,/a\[Area\.STATUS\] = Box\(margin, y, right, y \+ statusH\)/);
+ assert.doesNotMatch(grid,/a\[Area\.RAIL\] =/);
  assert.match(content,/Slot\.ROW_AGENTS -> ContinuumCockpitPresentation\.agentRows\(s\.cockpit\)/);
  assert.match(content,/Slot\.ROW_TASKS -> ContinuumCockpitPresentation\.processRows\(s\.cockpit\)/);
  assert.match(content,/Slot\.ROW_MEMORY -> ContinuumCockpitPresentation\.memoryRows\(s, nowMillis\)/);

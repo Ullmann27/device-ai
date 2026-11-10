@@ -612,7 +612,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val shell = if (jarvisShellStage) shellGeometry(widthPx, heightPx) else null
         val stage = shell?.get(JarvisShellLayout.Slot.AVATAR)
         val head = shell?.headStage ?: shell?.headBounds
-        val orb = shell?.orbBounds
+        val header = shell?.grid?.areas?.get(JarvisCockpitGrid.Area.CONTINUUM_HEADER)
+        val orb = shell?.orbBounds?.let { ContinuumBrainOrbRenderer.columnFor(it, header) }
         if (stage == null || head == null || orb == null) {
             hologram.setCockpitRegions(null, null)
             hologram.setHeadFraming(.5f, 1f)
@@ -637,6 +638,9 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private fun dialogKeepOut(shell: JarvisShellLayout.Shell, stage: JarvisShellLayout.Box): at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? {
         val dialog = shell[JarvisShellLayout.Slot.DIALOG] ?: return null
         if (shell.headStage == null || stage.width <= 0f || stage.height <= 0f) return null
+        // Live card is a sibling column on the packed cockpit; keep-out only when it actually covers the face.
+        if (dialog.right <= stage.left || dialog.left >= stage.right ||
+            dialog.bottom <= stage.top || dialog.top >= stage.bottom) return null
         val gap = 6f
         return at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut(
             ((dialog.right + gap - stage.left) / stage.width).toDouble(),

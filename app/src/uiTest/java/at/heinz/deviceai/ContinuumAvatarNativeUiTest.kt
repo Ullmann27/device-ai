@@ -74,13 +74,13 @@ class ContinuumAvatarNativeUiTest {
                 view.setNativeHeadEnabled(true)
                 attachVisible(controller.get(), view, width, height)
                 view.setForegroundActive(true)
-                val director = AvatarDirector(view)
+                val director = AvatarDirector(view, android.os.SystemClock::elapsedRealtime)
                 director.onRuntime(AvatarRuntimeSignals(speaking = true))
                 assertTrue("Speech pixels require a live visible head", view.motionDiagnostics().contains("LIVE"))
                 val closed = snapshot(view, "head-${width}x$height-closed").also { frames += it }
                 director.speechStarted("fixture", "Hallo Heinz")
-                // Director events and View.pose both use real wall time. Model the existing
-                // 33 ms PCM cadence while keeping virtual idle motion fixed for pixel equality.
+                // Director timestamps must use the same Android elapsedRealtime as View.pose.
+                // Drive the real PCM cadence while Robolectric virtual idle motion stays fixed.
                 repeat(8) { index ->
                     if (index > 0) Thread.sleep(33)
                     director.audioLevel("fixture", .8f)

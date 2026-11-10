@@ -2,17 +2,17 @@ package at.heinz.deviceai.ui
 
 import at.heinz.deviceai.ui.JarvisShellLayout.Box
 
-/** Reference composition; readable controls scroll. */
+/** Packed Fold/tablet composition: one viewport without scrolling. Phone/large-text may scroll via reflow. */
 object JarvisCockpitGrid {
     enum class Area {
         HEADER, DEVICE_STATUS, BRAND, MODE_PILL, PRIVACY_PILL, ICONS,
         RAIL, USER_CARD, HEAD, ORB, DIALOG, INPUT, MODULES, TILES,
         ROW_AGENTS, ROW_TASKS, ROW_MEMORY, ROW_MODEL, STATUS,
-        TAGLINE, CONTINUUM_HEADER, CAMERA_STATUS
+        TAGLINE, CONTINUUM_HEADER, CAMERA_STATUS,
+        WORK_DOCUMENT, WORK_PROCESS, WORK_DRAFT, TOOL_DOCK
     }
 
     val overlays: Set<Pair<Area, Area>> = setOf(
-        Area.HEAD to Area.DIALOG,
         Area.HEADER to Area.DEVICE_STATUS, Area.HEADER to Area.BRAND,
         Area.HEADER to Area.MODE_PILL, Area.HEADER to Area.PRIVACY_PILL,
         Area.HEADER to Area.ICONS, Area.HEADER to Area.TAGLINE
@@ -35,9 +35,12 @@ object JarvisCockpitGrid {
     const val MAX_HERO_DP = 640f
     const val HEAD_ANCHOR_X = .50f
     const val HEAD_CLOSE_UP = .92f
+    const val PACKED_HERO_MAX_DP = 280f
+    const val PACKED_HERO_MIN_DP = 160f
+    const val PACKED_WORK_MIN_DP = 132f
 
     fun applies(widthDp: Float, heightDp: Float, fontScale: Float): Boolean =
-        widthDp.isFinite() && heightDp.isFinite() && widthDp > 0f && heightDp > 0f &&
+        widthDp.isFinite() && heightDp.isFinite() && widthDp > 0f && heightDp.isFinite() && heightDp > 0f &&
             JarvisWindowProfile.resolve(widthDp, heightDp, fontScale).referenceComposition
 
     fun unit(widthDp: Float, heightDp: Float): Float = minOf(widthDp / REF_W, heightDp / REF_H)
@@ -48,73 +51,107 @@ object JarvisCockpitGrid {
         val profile = JarvisWindowProfile.resolve(widthDp, heightDp, fontScale)
         val font = maxOf(1f, profile.fontScale)
         val margin = 12f
-        val gap = 12f
+        val gap = 8f
         val left = margin
         val right = widthDp - margin
         val room = right - left
         val a = linkedMapOf<Area, Box>()
 
-        val headerBottom = 8f + (widthDp * .1065f).coerceIn(64f, 96f) * font
+        val headerH = 52f * font
+        val headerBottom = 8f + headerH
         a[Area.HEADER] = Box(margin, 8f, right, headerBottom)
-        val iconsLeft = right - 96f
+        // Two 48 dp header actions need 96 dp; three actions (notifications/settings/more) need 144 dp.
+        val iconsW = if (room >= 680f) 144f else 96f
+        val iconsLeft = right - iconsW
+        val privacyW = (widthDp * .17f).coerceIn(108f, 168f)
         val privacyRight = iconsLeft - gap
-        val privacyLeft = privacyRight - (widthDp * .19f).coerceIn(136f, 176f)
+        val privacyLeft = privacyRight - privacyW
+        val modeW = if (room >= 680f) 104f else 88f
         val modeRight = privacyLeft - gap
-        val modeLeft = modeRight - 112f
-        val brandRight = minOf(modeLeft - 8f, margin + (widthDp * .28f).coerceIn(220f, 264f))
-        a[Area.BRAND] = Box(margin + 6f, 8f, brandRight, headerBottom)
+        val modeLeft = modeRight - modeW
+        val clockW = if (room >= 640f) 84f else 72f
+        val clockRight = left + clockW
+        val brandLeft = clockRight + 6f
+        val brandRight = minOf(modeLeft - 8f, brandLeft + (widthDp * .24f).coerceIn(148f, 220f))
+            .coerceAtLeast(brandLeft + 72f)
+        a[Area.DEVICE_STATUS] = Box(left, 8f, clockRight, headerBottom)
+        a[Area.BRAND] = Box(brandLeft, 8f, brandRight, headerBottom)
         a[Area.MODE_PILL] = Box(modeLeft, 8f, modeRight, headerBottom)
         a[Area.PRIVACY_PILL] = Box(privacyLeft, 8f, privacyRight, headerBottom)
         a[Area.ICONS] = Box(iconsLeft, 8f, right, headerBottom)
-        if (modeLeft - brandRight >= 164f)
+        if (modeLeft - brandRight >= 140f)
             a[Area.TAGLINE] = Box(brandRight + gap, 14f, modeLeft - gap, headerBottom - 6f)
 
-        val heroTop = headerBottom + gap
-        val informationColumns = profile.informationColumns
-        val chartHeight = 190f * font
-        val activityHeight = 132f * font
-        val inputHeight = (room * .10f).coerceIn(56f, 88f) * font
-        val statusHeight = 56f * font
-        val heroHeight = (room * HERO_HEIGHT_RATIO).coerceAtMost(MAX_HERO_DP)
-        val heroBottom = heroTop + heroHeight
-        val split = left + room * .54f
-        a[Area.HEAD] = Box(left, heroTop, split - gap / 2f, heroBottom)
-        a[Area.CONTINUUM_HEADER] = Box(split + gap / 2f, heroTop, right, heroTop + 70f * font)
-        a[Area.ORB] = Box(split + gap / 2f, heroTop + 70f * font + 4f, right, heroBottom)
-        val badgeWidth = minOf(224f * font, a.getValue(Area.HEAD).width - 12f)
-        a[Area.DIALOG] = Box(left + 6f, heroBottom - MIN_DIALOG_DP * font - 6f,
-            left + 6f + badgeWidth, heroBottom - 6f)
+        val missionH = 56f * font
+        val dockH = JarvisShellLayout.TOOL_DOCK_HEIGHT_DP * font
+        // drawStatusBar only paints telemetry (including the GPU tile) when the band is at least 96 dp.
+        val statusH = maxOf(96f, JarvisShellLayout.TELEMETRY_BAND_DP * font)
+        val bottomMargin = 10f
+        val yAfterHeader = headerBottom + gap
+        val reservedBottom = dockH + gap + statusH + bottomMargin
+        val remaining = (heightDp - yAfterHeader - missionH - gap - reservedBottom).coerceAtLeast(0f)
+        val heroMax = PACKED_HERO_MAX_DP * font
+        val heroMinPref = PACKED_HERO_MIN_DP * font
+        val workMinPref = PACKED_WORK_MIN_DP * font
+        val preferredStack = heroMinPref + gap + workMinPref
+        val heroH: Float
+        val workH: Float
+        if (remaining >= preferredStack) {
+            var stackedHero = (remaining * .46f).coerceIn(heroMinPref, heroMax)
+            var stackedWork = remaining - stackedHero - gap
+            if (stackedWork < workMinPref) {
+                stackedHero = (remaining - workMinPref - gap).coerceIn(140f * font, heroMax)
+                stackedWork = remaining - stackedHero - gap
+            }
+            heroH = stackedHero
+            workH = stackedWork
+        } else {
+            val usable = (remaining - gap).coerceAtLeast(0f)
+            val readableHero = 140f
+            val minWork = 48f
+            if (usable >= readableHero + minWork) {
+                heroH = maxOf(readableHero, usable * .46f).coerceAtMost(usable - minWork)
+                workH = usable - heroH
+            } else {
+                heroH = usable * .46f
+                workH = usable - heroH
+            }
+        }
+
+        val heroTop = yAfterHeader
+        val heroBottom = heroTop + heroH
+        val liveW = (room * .19f).coerceIn(120f, 188f)
+        val rightW = (room * .20f).coerceIn(128f, 200f)
+        val mid = (room - liveW - rightW - 2f * gap).coerceAtLeast(200f)
+        val headW = mid * .54f
+        val liveRight = left + liveW
+        val headLeft = liveRight + gap
+        val headRight = headLeft + headW
+        val orbLeft = headRight + gap
+        val orbRight = orbLeft + (mid - headW - gap)
+        val modulesLeft = orbRight + gap
+
+        a[Area.DIALOG] = Box(left, heroTop, liveRight, heroBottom)
+        a[Area.HEAD] = Box(headLeft, heroTop, headRight, heroBottom)
+        val continuumH = minOf(56f * font, heroH * .28f).coerceAtLeast(36f * font)
+        a[Area.CONTINUUM_HEADER] = Box(orbLeft, heroTop, orbRight, heroTop + continuumH)
+        a[Area.ORB] = Box(orbLeft, heroTop + continuumH + 4f, orbRight, heroBottom)
+        val cameraH = minOf(56f * font, heroH * .28f).coerceAtLeast(48f * font)
+        a[Area.CAMERA_STATUS] = Box(modulesLeft, heroTop, right, heroTop + cameraH)
+        a[Area.MODULES] = Box(modulesLeft, heroTop + cameraH + gap, right, heroBottom)
 
         var y = heroBottom + gap
-        a[Area.INPUT] = Box(left, y, right, y + inputHeight)
-        y += inputHeight + gap
-        val tileWidth = (room - (TILE_COLUMNS - 1) * TILE_GAP_DP) / TILE_COLUMNS
-        val tileHeight = maxOf(MIN_TILE_DP * font, tileWidth / TILE_ASPECT)
-        a[Area.TILES] = Box(left, y, right, y + TILE_ROWS * tileHeight + (TILE_ROWS - 1) * TILE_GAP_DP)
-        y = a.getValue(Area.TILES).bottom + gap
-        a[Area.STATUS] = Box(margin, y, right, y + statusHeight)
-        y += statusHeight + 24f
-        val infoWidth = (room - (informationColumns - 1) * gap) / informationColumns
-        fun informationRow(areas: List<Area>, cardHeight: Float) {
-            areas.forEachIndexed { i, area ->
-                val x = left + (i % informationColumns) * (infoWidth + gap)
-                val top = y + (i / informationColumns) * (cardHeight + gap)
-                a[area] = Box(x, top, x + infoWidth, top + cardHeight)
-            }
-            y += ((areas.size + informationColumns - 1) / informationColumns) * (cardHeight + gap)
-        }
-        informationRow(listOf(Area.ROW_MEMORY, Area.ROW_MODEL), chartHeight)
-        informationRow(listOf(Area.ROW_AGENTS, Area.ROW_TASKS), activityHeight)
-        if (informationColumns == 1) {
-            a[Area.CAMERA_STATUS] = Box(left, y, right, y + 56f * font)
-            y += 56f * font + gap
-            a[Area.MODULES] = Box(left, y, right, y + 164f * font)
-        } else {
-            val detailWidth = (room - gap) / 2f
-            a[Area.CAMERA_STATUS] = Box(left, y, left + detailWidth, y + 56f * font)
-            a[Area.MODULES] = Box(left + detailWidth + gap, y, right, y + 164f * font)
-        }
-        val contentHeight = maxOf(heightDp, a.getValue(Area.MODULES).bottom + margin)
-        return Grid(widthDp, contentHeight, unit(widthDp, heightDp), a)
+        a[Area.INPUT] = Box(left, y, right, y + missionH)
+        y += missionH + gap
+        val workW = (room - 2f * gap) / 3f
+        a[Area.WORK_DOCUMENT] = Box(left, y, left + workW, y + workH)
+        a[Area.WORK_PROCESS] = Box(left + workW + gap, y, left + 2f * workW + gap, y + workH)
+        a[Area.WORK_DRAFT] = Box(left + 2f * (workW + gap), y, right, y + workH)
+        y += workH + gap
+        a[Area.TOOL_DOCK] = Box(left, y, right, y + dockH)
+        y += dockH + gap
+        a[Area.STATUS] = Box(margin, y, right, y + statusH)
+
+        return Grid(widthDp, heightDp, unit(widthDp, heightDp), a)
     }
 }

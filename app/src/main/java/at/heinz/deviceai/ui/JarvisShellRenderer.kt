@@ -30,7 +30,8 @@ object JarvisShellRenderer {
     /** Depth layer per slot (Z-Ebenen). Tiles/dialog/input near, side panels mid, frame elements far. */
     fun layerOf(slot: Slot?): JarvisMotion.Depth.Layer = when (slot) {
         null, Slot.DIALOG, Slot.INPUT -> JarvisMotion.Depth.Layer.NEAR
-        Slot.COCKPIT_PRIMARY, Slot.COCKPIT_SECONDARY, Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL -> JarvisMotion.Depth.Layer.MID
+        Slot.COCKPIT_PRIMARY, Slot.COCKPIT_SECONDARY, Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL,
+        Slot.WORK_DOCUMENT, Slot.WORK_PROCESS, Slot.WORK_DRAFT -> JarvisMotion.Depth.Layer.MID
         else -> JarvisMotion.Depth.Layer.FAR
     }
 
@@ -64,10 +65,18 @@ object JarvisShellRenderer {
              tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L,
              deferForeground: Boolean = false, deckClearance: Float = 0f,
              missionClearance: Float = deckClearance, luxuryDepth: Boolean = false,
-             depthBudget: JarvisRenderQuality.Budget? = null, enableWings: Boolean = luxuryDepth) {
+             depthBudget: JarvisRenderQuality.Budget? = null, enableWings: Boolean = luxuryDepth,
+             exiting: Boolean = false, workElapsedMs: Long = elapsedMs,
+             clearIdle: Boolean = false, resultForward: Boolean = false) {
         background(p, shell.width, shell.height)
         val backdropHeight = shell[Slot.INPUT]?.bottom ?: shell[Slot.AVATAR]?.bottom ?: shell.height
         JarvisReferenceHud.backdrop(p, shell.width, backdropHeight)
+        val work = listOfNotNull(shell[Slot.WORK_DOCUMENT], shell[Slot.WORK_PROCESS], shell[Slot.WORK_DRAFT])
+        if (work.isNotEmpty()) {
+            JarvisVisualDepth.paintWorkStage(p, Box(
+                work.minOf { it.left }, work.minOf { it.top },
+                work.maxOf { it.right }, work.maxOf { it.bottom }))
+        }
         val dolly = 1f
         p.save(); p.scale(dolly, dolly, shell.width / 2f, shell.height / 2f)
         val cardSlots = shell.boxes.keys.filter { it !in bare && it != Slot.TILES }
@@ -84,56 +93,101 @@ object JarvisShellRenderer {
             p.restore()
         }
         cards.forEachIndexed { i, box ->
-            val f = JarvisMotion.frame(JarvisMotion.panelSpecFor(box.centerX, cx),
-                elapsedMs - JarvisMotion.staggerStart(ranks[i], animatorScale = animatorScale), animatorScale)
             val slot = cardSlots.getOrNull(i)
             val tileIndex = i - cardSlots.size
-            if (f.alpha <= 0f || f.scale <= 0f) return@forEachIndexed
-            val depth = JarvisMotion.Depth.FLAT
+            val kind = JarvisCinemaEntrance.kindOf(slot)
+            val cinemaElapsed = if (kind == JarvisCinemaEntrance.Kind.WORK_WINDOW) workElapsedMs else elapsedMs
+            val side = if (box.centerX >= cx) 1f else -1f
+            val rank = JarvisCinemaEntrance.rankOf(slot, ranks[i])
+            val role = JarvisCinemaEntrance.stageRole(slot)
+            val cinema = when {
+                exiting && clearIdle && role == JarvisCinemaEntrance.StageRole.DEPART ->
+                    JarvisCinemaEntrance.depart(rank, JarvisCinemaEntrance.EXIT_MS, side, depthBudget, animatorScale)
+                exiting -> JarvisCinemaEntrance.pose(
+                    kind, rank, cinemaElapsed, exiting = true,
+                    side = side, budget = depthBudget, animatorScale = animatorScale)
+                clearIdle && role == JarvisCinemaEntrance.StageRole.DEPART ->
+                    JarvisCinemaEntrance.depart(rank, elapsedMs, side, depthBudget, animatorScale)
+                clearIdle && role == JarvisCinemaEntrance.StageRole.STAY ->
+                    JarvisCinemaEntrance.SETTLED
+                resultForward && slot == Slot.WORK_DRAFT ->
+                    JarvisCinemaEntrance.resultAdvance(workElapsedMs, depthBudget, animatorScale)
+                else -> JarvisCinemaEntrance.pose(
+                    kind, rank, cinemaElapsed, exiting = false,
+                    side = side, budget = depthBudget, animatorScale = animatorScale)
+            }
+            val f = JarvisMotion.frame(JarvisMotion.panelSpecFor(box.centerX, cx),
+                elapsedMs - JarvisMotion.staggerStart(ranks[i], animatorScale = animatorScale), animatorScale)
+            if (cinema.hidden && cinema.rimAlpha < 0.01f) return@forEachIndexed
+            if (f.scale <= 0f) return@forEachIndexed
             // Airbus deck: while a work window is open, tiles and lower rows make room instead of being covered.
             val sourceClearance = JarvisDeckClearance.clearance(slot, deckClearance, missionClearance)
             val clear = if (sourceClearance > 0f && JarvisDeckClearance.clears(slot))
                 JarvisDeckClearance.local(sourceClearance, JarvisDeckClearance.order(slot, box.centerX, shell.width)) else 0f
             if (clear >= .999f) return@forEachIndexed
-            val opacity = f.alpha * if (clear > 0f) JarvisDeckClearance.alpha(clear) else 1f
+            val visible = maxOf(cinema.rimAlpha, cinema.glassAlpha, cinema.contentAlpha, f.alpha)
+            val opacity = visible * if (clear > 0f) JarvisDeckClearance.alpha(clear) else 1f
+            if (opacity < 0.01f) return@forEachIndexed
             if (opacity < 1f) p.saveAlpha(opacity) else p.save()
-            p.translate(f.dx + depth.dx + JarvisDeckClearance.dx(clear, box.centerX, shell.width),
-                f.dy + depth.dy + JarvisDeckClearance.dy(clear))
-            val k = f.scale * depth.scale * JarvisDeckClearance.scale(clear)
+            p.translate(f.dx + cinema.dx + JarvisDeckClearance.dx(clear, box.centerX, shell.width),
+                f.dy + cinema.dy + JarvisDeckClearance.dy(clear))
+            val k = f.scale * cinema.scale * JarvisDeckClearance.scale(clear)
             p.scale(k, k, box.centerX, box.centerY())
-            val depthState = if (enableWings && depthBudget != null)
-                PerimeterWingChoreographer.depth(slot, box, shell.width, clear, true, depthBudget)
-                else JarvisMotion.Depth.FLAT
+            if (cinema.tiltY != 0f) p.rotate(cinema.tiltY, box.centerX, box.centerY())
+            val depthState = when {
+                cinema.tiltY != 0f || cinema.scale < 0.999f ->
+                    JarvisMotion.Depth.State(cinema.scale, 0f, 0f, cinema.tiltY, cinema.dx, cinema.dy)
+                enableWings && depthBudget != null ->
+                    PerimeterWingChoreographer.depth(slot, box, shell.width, clear, true, depthBudget)
+                else -> JarvisMotion.Depth.FLAT
+            }
             val depthNative = depthState != JarvisMotion.Depth.FLAT &&
                 glass?.beginDepth(box, depthState) == true
             val tile = if (slot == null) tiles.getOrNull(tileIndex) else null
             val ownsSurface = slot == Slot.BOTTOM_NAV || (content[slot] != null &&
                 slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS))
-            if (tile != null) {
+            val r = JarvisDesign.Metrics.radiusCard
+            if (cinema.glassAlpha < 0.02f && cinema.rimAlpha > 0.02f) {
+                p.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 1.6f, Fill.Solid(Colors.cyan), cinema.rimAlpha)
+            } else if (tile != null) {
+                if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
                 JarvisTiles.drawSurface(p, box, tile, f.glow > .5f,
                     if (animatorScale > 0f) timeMs else 0L,
                     luxuryDepth = luxuryDepth, lightSourceX = orbX, lightSourceY = orbY)
+                if (cinema.glassAlpha < 1f) p.restore()
             } else if (!ownsSurface) {
-                val r = JarvisDesign.Metrics.radiusCard
                 // Static HUD panels do not need repeated full-screen backdrop-blur copies.
-                if (f.glow > .5f) glass?.bloom(JarvisNeon.BLOOM_RADIUS_DP, f.glow) { q ->
+                if (f.glow > .5f) glass?.bloom(JarvisNeon.BLOOM_RADIUS_DP, f.glow * cinema.glassAlpha) { q ->
                     q.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 2f, Fill.Solid(Colors.cyan))
                 }
+                if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
                 JarvisReferenceHud.surface(p, box, r, Colors.cyan,
                     if (slot == Slot.INPUT) Colors.violetRim else Colors.cyanDeep,
                     interaction = if (f.glow > .5f) JarvisReferenceHud.Interaction.SELECTED
                         else JarvisReferenceHud.Interaction.NORMAL)
+                if (cinema.glassAlpha < 1f) p.restore()
             }
-            when {
-                slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
-                slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
-                slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
-                    timeMs = if (animatorScale > 0f) timeMs else 0L)
-                slot != null -> header(p, box, label(slot))
-                tileIndex < tiles.size -> JarvisTiles.draw(p, box, tiles[tileIndex])
+            if (cinema.contentAlpha > 0.01f) {
+                if (cinema.contentAlpha < 1f) p.saveAlpha(cinema.contentAlpha)
+                when {
+                    slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
+                    slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
+                    slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
+                        timeMs = if (animatorScale > 0f) timeMs else 0L,
+                        cinemaElapsedMs = cinemaElapsed, cinemaExiting = exiting,
+                        cinemaBudget = depthBudget, animatorScale = animatorScale)
+                    slot != null -> header(p, box, label(slot))
+                    tileIndex < tiles.size -> JarvisTiles.draw(p, box, tiles[tileIndex])
+                }
+                if (cinema.contentAlpha < 1f) p.restore()
             }
             if (depthNative) glass?.endDepth()
             p.restore()
+        }
+        if (clearIdle && !exiting) {
+            val reduced = animatorScale <= 0f || depthBudget?.animate == false
+            val built = if (reduced) 1f else HollywoodFuiConstruct.flight(workElapsedMs)
+            JarvisCinemaEntrance.drawStagePlatform(p, shell, built, reduced)
         }
         p.restore()
         JarvisReferenceHud.frame(p, shell.width, shell[Slot.STATUS]?.bottom?.plus(12f) ?: shell.height)
@@ -145,11 +199,11 @@ object JarvisShellRenderer {
     /** Portable ref5 background: near-black navy, faint lower-edge haze and deterministic dust. */
     fun background(p: ContinuumPainter, w: Float, h: Float) {
         p.fillRect(0f, 0f, w, h, Fill.Linear(0f, 0f, 0f, h, intArrayOf(Colors.background, Colors.backgroundBottom)))
-        JarvisNeon.halo(p, w * .45f, h * .92f, maxOf(w, h) * .55f, Colors.backgroundHaze, .18f)
-        val step = 48f
+        JarvisVisualDepth.paintSpace(p, w, h)
+        val step = 96f
         p.setAdditive(true)
-        var x = 0f; while (x <= w) { p.drawLine(x, 0f, x, h, 3f, Fill.Solid(Colors.cyan), .004f); p.drawLine(x, 0f, x, h, .6f, Fill.Solid(Colors.cyan), .008f); x += step }
-        var y = 0f; while (y <= h) { p.drawLine(0f, y, w, y, 3f, Fill.Solid(Colors.cyan), .004f); p.drawLine(0f, y, w, y, .6f, Fill.Solid(Colors.cyan), .008f); y += step }
+        var x = 0f; while (x <= w) { p.drawLine(x, 0f, x, h, .7f, Fill.Solid(Colors.cyan), .014f); x += step }
+        var y = 0f; while (y <= h) { p.drawLine(0f, y, w, y, .7f, Fill.Solid(Colors.cyan), .014f); y += step }
         p.setAdditive(false)
         bokeh(p, w, h)
     }
@@ -191,14 +245,17 @@ object JarvisShellRenderer {
         Slot.NAV_RAIL, Slot.BOTTOM_NAV -> "Navigation"; Slot.DIALOG -> "JARVIS"
         Slot.INPUT -> "Nachricht an Continuum …"; Slot.COCKPIT_PRIMARY -> "Kern-Status"; Slot.COCKPIT_SECONDARY -> "System-Status"
         Slot.ROW_AGENTS -> "Aktive Agenten"; Slot.ROW_TASKS -> "Aktueller Ablauf"; Slot.ROW_MEMORY -> "Gedächtnis-Aktivität"
-        Slot.ROW_MODEL -> "Lokales Modell"; Slot.STATUS -> "System- & Continuum-Status"; else -> slot.name
+        Slot.ROW_MODEL -> "Lokales Modell"; Slot.STATUS -> "System- & Continuum-Status"
+        Slot.WORK_DOCUMENT -> "Dokument"; Slot.WORK_PROCESS -> "Verarbeitung"
+        Slot.WORK_DRAFT -> "Zusammenfassung – Entwurf"; else -> slot.name
     }
 
     /** Panel header (title only; values come from Kern via SlotContent). */
     fun header(p: ContinuumPainter, b: Box, text: String) {
         val style = JarvisDesign.Type.title
         val y = if (b.height < 70f) b.top + b.height / 2f + p.capHeight(style) / 2f else b.top + 14f + p.capHeight(style)
-        p.drawText(fit(p, text, style, b.width - 24f), b.left + 12f, y, style, Fill.Solid(Colors.text))
+        JarvisNeon.text(p, fit(p, text, style, b.width - 24f), b.left + 12f, y, style,
+            Colors.cyan, TextAlign.LEFT, JarvisDesign.Glow.NORMAL, ink = Colors.text)
     }
 
     /** Shrink before bounded ellipsis. */
