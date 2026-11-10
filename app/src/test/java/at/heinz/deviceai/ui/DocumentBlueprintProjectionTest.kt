@@ -137,4 +137,33 @@ class DocumentBlueprintProjectionTest {
         assertEquals(100, structured.progressPercent)
         assertTrue(structured.buttons.none { it == "Entwurf öffnen" })
     }
+
+    @Test
+    fun openPdfCannotInheritUnverifiedBackgroundLearningMetadata() {
+        val projection = DocumentBlueprintProjection()
+        projection.onQuestion(CockpitAnimationEvent.DocumentQuestion(
+            "document-episode", 1L, "Meine-Akte.pdf", "application/pdf",
+            "Was steht in der Akte?", pageCount = 3
+        ))
+        val before = requireNotNull(projection.snapshot())
+        assertNull(before.entriesAdded)
+        assertEquals(1, before.steps.size)
+
+        projection.onLearned(CockpitAnimationEvent.DocumentLearned(
+            "memory", 2L, "foreign-ledger-id", "application/pdf", entriesAdded = 8
+        ))
+        projection.onLearned(CockpitAnimationEvent.DocumentLearned(
+            "document-episode", 3L, "Meine-Akte.pdf", "application/pdf", entriesAdded = 99
+        ))
+        assertEquals(before, projection.snapshot())
+
+        projection.onPipelineStep(DocumentPipelineStepEvent(
+            "document-episode", 4L, DocumentPipelineStepEvent.KEY_CAPTURE,
+            "Inhalte erfassen", StepState.DONE
+        ))
+        val after = requireNotNull(projection.snapshot())
+        assertNull(after.entriesAdded)
+        assertEquals(2, after.steps.size)
+    }
+
 }
