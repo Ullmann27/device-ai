@@ -99,4 +99,23 @@ class AvatarCameraMotionTest {
         assertFalse(camera.workActive)
         assertEquals(0f, camera.advance(200L, true), 0f)
     }
+
+    @Test fun delayedWindowClosureStartsItsOwnFullReturnDuration() {
+        val camera = AvatarCameraMotion()
+        camera.setWorkActive(true, 0L)
+        for (time in 16L..640L step 16L) camera.advance(time, true)
+        assertEquals(1f, camera.progress, 0f)
+        // Window retains projection while closing.
+        for (time in 656L..1_120L step 16L) camera.advance(time, true)
+        assertEquals(1f, camera.progress, 0f)
+        val closedAt = 1_120L
+        camera.setWorkActive(false, closedAt)
+        for (elapsed in 16L..512L step 16L) camera.advance(closedAt + elapsed, true)
+        assertEquals("512 ms is still inside the canonical return", 1.4543533E-5f, camera.progress, 0f)
+        assertFalse(camera.workActive)
+        assertEquals("First frame beyond 520 ms reaches exact rest", 0f,
+            camera.advance(closedAt + 528L, true), 0f)
+        assertEquals("Later frames cannot replay the return", 0f,
+            camera.advance(closedAt + 544L, true), 0f)
+    }
 }

@@ -24,6 +24,14 @@ const source = {
 const contains = (name, parts) => {
   for (const part of parts) assert.ok(source[name].includes(part), name + ' missing ' + part);
 };
+const assertMaterialClocks = (shell, shellView) => {
+  assert.match(shell, /JarvisTiles\.drawSurface\(p, box, tile, f\.glow > \.5f,\s*if \(animatorScale > 0f && depthBudget\?\.animate != false\)\s*\(if \(pressed\) materialTimeMs else timeMs\) else 0L,/);
+  assert.match(shell, /glass\?\.drawBackground\(shell\.width, shell\.height, timeMs\)/);
+  assert.match(shellView, /val sceneTime = if \(ambientMotion\(scale\)\) now else 0L/);
+  assert.match(shellView, /val materialTime = if \(motionAllowed\(scale\)\) now else 0L/);
+  assert.match(shellView, /JarvisShellRenderer\.draw\(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true,/);
+  assert.match(shellView, /materialTimeMs = materialTime/);
+};
 
 test('PR #550 phase safety and PR #558 original-orb hypothesis marker remain live', () => {
   contains('orb', [
@@ -45,13 +53,31 @@ test('PRs #489 #541 #549 animations arrive at the actual visible and budgeted ti
   contains('motion', ['at.heinz.deviceai.motion.MotionPresets', 'DampedSpring.fromStiffness']);
   contains('tileEnergy', ['CYCLE_MS = 13_000L', 'fun sample(', 'cos(angle)', 'sin(angle)']);
   contains('tiles', ['JarvisTileEnergy.sample(timeMs, b.width, b.height, tile.target, radius)', 'JarvisTileEnergy.sample(timeMs - 140L']);
-  contains('shell', ['JarvisTiles.drawSurface(p, box, tile', 'if (animatorScale > 0f) timeMs else 0L']);
+  assertMaterialClocks(source.shell, source.shellView);
   contains('shellView', [
     'var ambientMotionEnabled = true',
     'private fun ambientMotion(scale: Float) = ambientMotionEnabled && motionAllowed(scale)',
     '!powerManager.isPowerSaveMode',
     'motionBudgetProvider?.invoke()?.animate != false'
   ]);
+});
+
+test('material clock contract rejects ungated motion and background coupling', () => {
+  assertMaterialClocks(source.shell, source.shellView);
+  for (const [name, before, after] of [
+    ['shell', 'animatorScale > 0f && depthBudget?.animate != false', 'animatorScale > 0f'],
+    ['shell', 'animatorScale > 0f && depthBudget?.animate != false', 'depthBudget?.animate != false'],
+    ['shell', '(if (pressed) materialTimeMs else timeMs) else 0L', 'materialTimeMs else 0L'],
+    ['shell', 'drawBackground(shell.width, shell.height, timeMs)', 'drawBackground(shell.width, shell.height, materialTimeMs)'],
+    ['shellView', 'val sceneTime = if (ambientMotion(scale)) now else 0L', 'val sceneTime = now'],
+    ['shellView', 'val materialTime = if (motionAllowed(scale)) now else 0L', 'val materialTime = now'],
+    ['shellView', 'tiles, glass, sceneTime, deferForeground = true', 'tiles, glass, materialTime, deferForeground = true'],
+    ['shellView', 'materialTimeMs = materialTime', 'materialTimeMs = sceneTime']
+  ]) {
+    assert.ok(source[name].includes(before), before);
+    const mutant = {...source, [name]: source[name].replace(before, after)};
+    assert.throws(() => assertMaterialClocks(mutant.shell, mutant.shellView), assert.AssertionError);
+  }
 });
 
 test('PRs #565 #617 #659 #666 #677 #678 original avatar still owns one GLB renderer', () => {

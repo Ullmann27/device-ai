@@ -1,0 +1,27 @@
+JUnit version 4.13.2
+.E...E..................E...........................
+Time: 4.18
+There were 3 failures:
+1) deliveredReplyCannotInventApprovalStatus(at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest)
+java.lang.AssertionError: expected:<UNVERIFIED> but was:<BLOCKED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest.deliveredReplyCannotInventApprovalStatus(CockpitAnimationTriggersTest.kt:78)
+2) observedToolSuccessDoesNotLeaveFalseApprovalBlock(at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest)
+java.lang.AssertionError: expected:<UNVERIFIED> but was:<BLOCKED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest.observedToolSuccessDoesNotLeaveFalseApprovalBlock(CockpitAnimationTriggersTest.kt:89)
+3) unverifiedDetailClearsAnEarlierSuccessMark(at.heinz.deviceai.ui.JarvisSequenceOutcomeUiTest)
+java.lang.AssertionError: Settled detail requests a new frame
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ui.JarvisSequenceOutcomeUiTest.unverifiedDetailClearsAnEarlierSuccessMark(JarvisSequenceOutcomeUiTest.kt:120)
+
+FAILURES!!!
+Tests run: 49,  Failures: 3
+

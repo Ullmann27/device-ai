@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" tests="27" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:24:07" hostname="1a6f5c6cf9c0" time="0.718">
+  <properties/>
+  <testcase name="memoryRecallRemainsIndependentOfCompletedTurns" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.027"/>
+  <testcase name="unrelatedCompletionDuringPauseDoesNotRetireLiveWork" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.025"/>
+  <testcase name="trimmedWorkCannotLeaveMainSceneTerminalAfterToolFailure" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.024"/>
+  <testcase name="completionReceivedWhileMotionIsPausedRejectsLateTimeline" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.023"/>
+  <testcase name="detachedSubscriberRetiresBackgroundCompletionsWithoutReattach" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.035"/>
+  <testcase name="completionQueuedBeforeMotionPauseSurvivesGenerationChange" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.027"/>
+  <testcase name="unseenCompletionReceivedDuringPauseRejectsDelayedCommand" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.024"/>
+  <testcase name="completionQueuedBeforeDetachSurvivesReattach" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.027"/>
+  <testcase name="delayedCommandCannotReopenACompletedTurn" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.026"/>
+  <testcase name="bootEventDoesNotBlockTheFirstWorker" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.022"/>
+  <testcase name="queuedVisualEventIsStillDiscardedAcrossDetach" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.029"/>
+  <testcase name="completionReceivedWhileMotionIsPausedRejectsLateWorker" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.026"/>
+  <testcase name="lateTimelineCannotReopenACompletedTurn" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.028"/>
+  <testcase name="aNewWorkerCanStartAfterACompletedTurn" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.024"/>
+  <testcase name="recentCompletionsRemainClosedAfterALongSession" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.029"/>
+  <testcase name="reasoningAndToolContinuationShareOneMainScene" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.024"/>
+  <testcase name="motionPauseKeepsCompletedTurnsClosed" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.021"/>
+  <testcase name="motionPauseDoesNotDeclareActiveWorkCompleted" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.056"/>
+  <testcase name="delayedOldCommandCannotDisplaceTheCurrentTurn" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.024"/>
+  <testcase name="backgroundCompletionBeforeFirstAttachDoesNotWaitForAttachment" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.024"/>
+  <testcase name="directlySubscribedViewRetainsCompletionReceivedWhileDetached" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.027"/>
+  <testcase name="directlySubscribedViewRetainsBackgroundCompletionReceivedWhileDetached" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.026"/>
+  <testcase name="unfinishedWorkCanResumeAfterDetach" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.026"/>
+  <testcase name="navigationEventDoesNotBlockTheFirstWorker" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.024"/>
+  <testcase name="lateCallbackFromANonvisibleCompletedTurnIsDropped" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.023"/>
+  <testcase name="newWorkStartsAfterCompletionReceivedDuringPause" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.022"/>
+  <testcase name="queuedVisualEventIsStillDiscardedAcrossMotionPause" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.023"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

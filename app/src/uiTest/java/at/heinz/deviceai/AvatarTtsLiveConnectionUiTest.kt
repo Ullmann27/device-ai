@@ -18,6 +18,8 @@ import at.heinz.deviceai.avatar.JarvisHoloAvatar
 import at.heinz.deviceai.avatar.Viseme
 import at.heinz.deviceai.cockpit.JarvisAvatarSlot
 import at.heinz.deviceai.ui.ContinuumHomeView
+import at.heinz.deviceai.ui.HollywoodFuiConstruct
+import at.heinz.deviceai.ui.JarvisWorkWindow
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -368,9 +370,24 @@ class AvatarTtsLiveConnectionUiTest {
             set(f.activity, "appLookupActive", true)
             set(f.activity, "activeLocalRequest", true)
             set(f.activity, "busy", true)
+            val lookupGeneration = field(f.activity, "appLookupGeneration") as Long
+            val presentationGeneration = field(f.activity, "workPresentationGeneration") as Long
 
             invoke(f.activity, "cancelLocalRequest")
-            assertFalse("Cancel closes immediately without animation", work.isShown)
+            assertEquals("Cancel invalidates pending lookup immediately", lookupGeneration + 1L,
+                field(f.activity, "appLookupGeneration"))
+            assertEquals("Cancel invalidates pending presentation immediately", presentationGeneration + 1L,
+                field(f.activity, "workPresentationGeneration"))
+            assertFalse(field(f.activity, "appLookupActive") as Boolean)
+            assertFalse(field(f.activity, "activeLocalRequest") as Boolean)
+            assertFalse(field(f.activity, "busy") as Boolean)
+            assertNull(field(f.activity, "currentTaskEffectContext"))
+            val host = AgentActivity::class.java.getDeclaredMethod("getWorkWindowHost")
+                .apply { isAccessible = true }.invoke(f.activity)
+            assertNull(field(requireNotNull(host), "workingId"))
+            val window = work as JarvisWorkWindow
+            if (work.isShown) assertEquals("Only the cancelled return remains",
+                at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSING, window.projectedMotionPhase())
             assertFalse("Cancel silences before the lookup return", field(f.activity, "voiceSpeaking") as Boolean)
             shadowOf(Looper.getMainLooper()).idle()
             assertSilent(f)
@@ -380,13 +397,22 @@ class AvatarTtsLiveConnectionUiTest {
             held.get(5L, TimeUnit.SECONDS)
             io.submit(Runnable {}).get(5L, TimeUnit.SECONDS)
             advance(80L)
-            assertTrue("Late actual status cannot reopen cancelled work",
+            val visible = descendants(root).filter { it.tag == "jarvis-work-window" && it.isShown }
+            assertTrue("Late status creates no replacement window", visible.all { it === work })
+            if (work.isShown) assertEquals("Late status cannot restart the cancelled window",
+                at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSING, window.projectedMotionPhase())
+            assertFalse("Late status cannot reactivate work", field(f.activity, "activeLocalRequest") as Boolean)
+            advance(HollywoodFuiConstruct.CLOSE_END_MS + 32L)
+            assertFalse("Return removes the cancelled window", work.isShown)
+            assertTrue("No work window survives its return",
                 descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
             f.listener.onStart("cancel-window")
             f.listener.onRangeStart("cancel-window", 0, 1, 0)
             f.listener.onAudioAvailable("cancel-window", pcm16())
             advance(170L)
             assertSilent(f)
+            assertTrue("Late speech cannot reopen cancelled work",
+                descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
             assertSame(f.live, field(f.activity, "hologramView"))
             assertTrue(f.live.isShown)
         } finally {

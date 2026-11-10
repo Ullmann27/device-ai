@@ -1,0 +1,16 @@
+JUnit version 4.13.2
+...............E...
+Time: 4.815
+There was 1 failure:
+1) acceptedAnswerIsNotVerifiedTaskSuccess(at.heinz.deviceai.LocalTurnOutcomeUiTest)
+java.lang.AssertionError: Accepted reply must not retain a false failure
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.acceptedAnswerIsNotVerifiedTaskSuccess$lambda$0(LocalTurnOutcomeUiTest.kt:112)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.withRun(LocalTurnOutcomeUiTest.kt:94)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.withRun$default(LocalTurnOutcomeUiTest.kt:67)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.acceptedAnswerIsNotVerifiedTaskSuccess(LocalTurnOutcomeUiTest.kt:110)
+
+FAILURES!!!
+Tests run: 18,  Failures: 1
+

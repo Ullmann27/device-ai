@@ -13,6 +13,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import at.heinz.deviceai.ui.ContinuumHomeView
 import at.heinz.deviceai.ui.JarvisActionScenes
+import at.heinz.deviceai.ui.HollywoodFuiConstruct
+import at.heinz.deviceai.ui.JarvisWorkWindow
+import at.heinz.deviceai.avatar3d.AvatarCameraMotion
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -62,6 +65,21 @@ class ContinuumSystemStatusWorkWindowUiTest {
             framePump?.drawRequestedFrame()
             remaining -= step
         }
+    }
+
+    private fun finishWindowReturn(root: View, avatar: ContinuumHologramView) {
+        val camera = field(avatar, "cameraMotion") as AvatarCameraMotion
+        fun windowShown() = descendants(root).any { it.tag == "jarvis-work-window" && it.isShown }
+        val frameMs = avatar.presentationRenderBudget().frameDelayMillis.coerceAtLeast(16L) + 16L
+        val deadline = SystemClock.uptimeMillis() + HollywoodFuiConstruct.CLOSE_END_MS + 2L * frameMs
+        // Closure precedes the camera return.
+        while ((windowShown() || camera.workActive) && SystemClock.uptimeMillis() < deadline) {
+            advance(minOf(16L, deadline - SystemClock.uptimeMillis()))
+        }
+        assertFalse("The window closes within its scheduled duration", windowShown())
+        assertFalse("Actual closure starts the camera return", camera.workActive)
+        advance(AvatarCameraMotion.DURATION_MS + frameMs)
+        assertFalse("The camera cannot reactivate after closure", camera.workActive)
     }
 
     private fun measure(root: View, width: Int = 884, height: Int = 760) {
@@ -158,7 +176,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
         }
     }
 
-    @Test fun cameraStopsImmediatelyAndDoesNotReplayAfterLifecycleBoundaries() {
+    @Test fun cameraReturnsAfterStopAndDoesNotReplayAfterLifecycleBoundaries() {
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
             .putBoolean("voice_enabled", false).commit()
@@ -182,11 +200,19 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 assertEquals("Accepted window drives camera", 1f, avatar.cameraProgress(), .00001f)
             }
             fun cancel() {
+                val before = avatar.cameraProgress()
                 AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest")
                     .apply { isAccessible = true }.invoke(activity)
-                assertEquals("STOP resets before next frame", 0f, avatar.cameraProgress(), 0f)
-                advance(1_200L); measure(root); draw(root)
+                assertEquals("STOP preserves projection until the return frame", before, avatar.cameraProgress(), 0f)
+                val visible = descendants(root).filter { it.tag == "jarvis-work-window" && it.isShown }
+                assertTrue("Only returning windows remain", visible.all {
+                    (it as JarvisWorkWindow).projectedMotionPhase() ==
+                        at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSING
+                })
+                finishWindowReturn(root, avatar)
+                measure(root); draw(root)
                 assertTrue(descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+                assertEquals("STOP finishes the camera return", 0f, avatar.cameraProgress(), 0f)
             }
             open(); cancel()
             open()
@@ -711,10 +737,10 @@ class ContinuumSystemStatusWorkWindowUiTest {
     /**
      * #565 × #571 interplay (06.11.2026), HOST + SIMULATED_TTS_CALLBACKS, REAL_DEVICE_NOT_RUN: while a work window holds
      * the bounded camera move, JARVIS speaks a question (the TTS start and word callbacks the Activity receives from
-     * Android are fed to the same Director). Speaking does not reset the camera; STOP ends camera, speech and window
-     * at once, and nothing replays afterwards.
+     * Android are fed to the same Director). Speaking keeps camera placement. STOP ends speech immediately;
+     * the window and camera return, and nothing replays afterwards.
      */
-    @Test fun speakingInsideAnOpenWindowKeepsTheCameraAndStopEndsBothAtOnce() {
+    @Test fun speakingInsideAnOpenWindowKeepsTheCameraAndStopReturnsItAfterSpeechEnds() {
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
@@ -754,11 +780,17 @@ class ContinuumSystemStatusWorkWindowUiTest {
             assertTrue("the window stays while JARVIS speaks", descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
             // STOP: the owner's button routes to cancelLocalRequest.
             AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest").apply { isAccessible = true }.invoke(activity)
-            assertEquals("STOP resets the camera before the next frame", 0f, avatar.cameraProgress(), 0f)
+            assertEquals("STOP preserves the projection for its return", 1f, avatar.cameraProgress(), .00001f)
+            val returning = descendants(root).filter { it.tag == "jarvis-work-window" && it.isShown }
+            assertTrue("The remaining window only returns", returning.all {
+                (it as JarvisWorkWindow).projectedMotionPhase() ==
+                    at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.CLOSING
+            })
             assertEquals("STOP ends the utterance in the Director", null, field(director, "utterance"))
             assertTrue("STOP leaves the speaking state", director.state != at.heinz.deviceai.avatar.AvatarState.SPEAKING)
             assertFalse("a late word of the stopped utterance is refused", director.wordRange(id, 0, 4))
-            advance(1_200L); measure(root); draw(root)
+            finishWindowReturn(root, avatar)
+            measure(root); draw(root)
             assertTrue("the window has folded away", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
             assertEquals("nothing replays the camera afterwards", 0f, avatar.cameraProgress(), 0f)
         } finally {

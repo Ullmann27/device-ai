@@ -1,0 +1,27 @@
+{
+  "status": "WIP_ANDROID_NOT_RUN",
+  "base_local": "e4e30135a7dd20676ad26a5ef60b31dcc842ac72",
+  "base_remote": "3908ec1a0bb595207bd8c8ec093e9434a6ee568f",
+  "review": "PR739 / PRRT_kwDOVGSW-c616rUr",
+  "change": "Scoped single notice when current consent is declined, cancelled or invalid; no composer write",
+  "scope": "Captured session plus monotone approval presentation revision, incremented before replacing old approval. Superseded-session/ticket callbacks are silent. Same-session paused outcomes remain in transcript; authorization and speech foreground guards are unchanged.",
+  "android_regressions": {
+    "suite": "at.heinz.deviceai.ResearchChatApprovalUiTest",
+    "tests_prepared": 19,
+    "new_tests": 4,
+    "cases": [
+      "decline/cancel/expired current consent: exactly one notice, draft unchanged",
+      "replacement: old callback silent, successor binding/dialog unchanged",
+      "session change: no old notice in new transcript; new request can still report its own decline",
+      "actual pause/cancel/resume: current outcome persists once, draft retained, no research or speech"
+    ],
+    "status": "NOT_RUN"
+  },
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "45a7ddcd984e39ad0ae090a7e8532735c7cbfb34db7baeba050ae2d0a8b7dab5",
+    "app/src/uiTest/java/at/heinz/deviceai/ResearchChatApprovalUiTest.kt": "15420bb9e76b570f0ca1adbbb8a6c5c92fd110df8408175f1a606597dcc6d522"
+  },
+  "build": "NOT_RUN",
+  "network": "NOT_RUN",
+  "model": "NOT_RUN"
+}
