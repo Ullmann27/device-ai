@@ -73,6 +73,14 @@ classification using UTF-8 bytes, characters, word count, and native token
 count. No hyperparameter search or holdout-fitted vocabulary/threshold.
 Controls are diagnostic; no heuristic is placed in front of LM1.
 
+Before training, include the data pilot's fixed stronger controls too:
+word-unigram count logistic regression, word 1–2-gram TF-IDF logistic
+regression, character 3–5-gram TF-IDF logistic regression (all C=1,
+max_iter=1000, random_state=20261111), and a depth-three decision tree on
+lengths plus count of `nicht`. Fit only the same frozen TRAIN. The exact
+legacy substring-`nicht` rule and negation-parity rule are reported separately.
+`controls.py` fixes lexical action stems before any holdout/model evaluation.
+
 If any trivial control solves at least 90% of the independent semantic
 holdout, the benchmark is shortcut-compromised and cannot support adoption.
 Do not quietly edit that frozen holdout after seeing model results.
@@ -117,5 +125,7 @@ round of optimization. Final decision belongs to the coordinator.
 
 ## Initial status
 
-Holdout creation: PENDING. Native evaluator: NOT_RUN. A/B: NOT_RUN.
-Training/data integrity audit: PENDING. No success claim.
+Initial protocol commit: holdout creation PENDING; native evaluator NOT_RUN;
+A/B NOT_RUN. Subsequent preflight receipts record data creation and tokenizer
+validation without model inference. Training/data integrity audit PENDING.
+No success claim.

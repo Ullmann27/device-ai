@@ -1,0 +1,1154 @@
+[
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-1-3-0",
+    "label": "0",
+    "objectId": "Mondsteg",
+    "pairId": "h-07-1-3",
+    "prompt": "Mein Wunsch besteht darin, dass „Erstelle eine Notiz über Mondsteg“ unterbleibt, während du „Tu gar nichts“ umsetzt.",
+    "promptSha256": "699062ef39bde02100b31432b34b2cfef1308290f6b41711959f3cdcf10867c0"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-1-0-0",
+    "label": "0",
+    "objectId": "Sonnenkiste",
+    "pairId": "h-06-1-0",
+    "prompt": "Mein Wunsch besteht darin, dass du „Tu gar nichts“ umsetzt, während „Öffne die Datei Sonnenkiste.txt“ unterbleibt.",
+    "promptSha256": "0998060848d48f46854e111067d9e01ebcf30088cb1e6ed483485b864ff1b4bb"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-0-0-0",
+    "label": "1",
+    "objectId": "Blattbrücke",
+    "pairId": "h-05-0-0",
+    "prompt": "Was ich bloß erwähne, ist „Tu gar nichts“; worum ich dich bitte, ist „Öffne die Datei Blattbrücke.txt“.",
+    "promptSha256": "2a725d121bacad3cfd26bae25bda444e38df1887aebc9314f0c3f1039fdbc2d7"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-1-3-0",
+    "label": "3",
+    "objectId": "Silberpfad",
+    "pairId": "h-01-1-3",
+    "prompt": "Dir weise ich „Erstelle eine Notiz über Silberpfad“ zu; an Vera delegiere ich „Tu gar nichts“.",
+    "promptSha256": "a974328c99f159ce63168c0806171ce8767bb2f643eac655fdd1667cecfb95a9"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-0-1-1",
+    "label": "2",
+    "objectId": "Wiesenfenster",
+    "pairId": "h-04-0-1",
+    "prompt": "Was ich von dir verlange, ist „Suche Informationen über Wiesenfenster“; was ich nur erwähne, ist „Öffne die Datei Wiesenfenster.txt“.",
+    "promptSha256": "29d9aca091f6decb304b985f41527600de9fbca97c0952d8ab7a3ceb4db18a28"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-0-1-1",
+    "label": "2",
+    "objectId": "Wolkenkarte",
+    "pairId": "h-02-0-1",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Suche Informationen über Wolkenkarte“ („Öffne die Datei Wolkenkarte.txt“).",
+    "promptSha256": "e92557fec38c82bfd145d5f983632e0407f67a34e63924dc4459b9b4b297f31e"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-0-0-1",
+    "label": "1",
+    "objectId": "Wolkenkarte",
+    "pairId": "h-02-0-0",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Öffne die Datei Wolkenkarte.txt“ („Tu gar nichts“).",
+    "promptSha256": "d534ee30a02ed4672dbbec3cc2f19e9b36b4389f0447df89befbce9bd0b1a95b"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-1-3-0",
+    "label": "0",
+    "objectId": "Quarzspindel",
+    "pairId": "h-05-1-3",
+    "prompt": "Was ich bloß erwähne, ist „Erstelle eine Notiz über Quarzspindel“; worum ich dich bitte, ist „Tu gar nichts“.",
+    "promptSha256": "072910fc848d7a1969bc5f6364fa74df005c0c08a03990aec6ed59717736ea9c"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-1-0-0",
+    "label": "1",
+    "objectId": "Mondsteg",
+    "pairId": "h-07-1-0",
+    "prompt": "Mein Wunsch besteht darin, dass „Tu gar nichts“ unterbleibt, während du „Öffne die Datei Mondsteg.txt“ umsetzt.",
+    "promptSha256": "2b1290734790173675751b613adb1e157d601820797f960073dd2f7fd48f367b"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-1-1-1",
+    "label": "1",
+    "objectId": "Bernsteinspur",
+    "pairId": "h-03-1-1",
+    "prompt": "In Klammern steht bloß ein Einschub („Suche Informationen über Bernsteinspur“); dein Auftrag lautet „Öffne die Datei Bernsteinspur.txt“.",
+    "promptSha256": "5d193afebbcebd87d6ecd66862d8bbbd95b47280eb9ef5861ca6d5c1c4372ada"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-0-3-1",
+    "label": "0",
+    "objectId": "Wolkenkarte",
+    "pairId": "h-02-0-3",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Tu gar nichts“ („Erstelle eine Notiz über Wolkenkarte“).",
+    "promptSha256": "9a76ad014a6e0a84b53df40def83030e1178980d4f1aad4fa29e8b561893a3a6"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-0-1-0",
+    "label": "1",
+    "objectId": "Kreidehafen",
+    "pairId": "h-01-0-1",
+    "prompt": "Dir weise ich „Öffne die Datei Kreidehafen.txt“ zu; an Vera delegiere ich „Suche Informationen über Kreidehafen“.",
+    "promptSha256": "83e6a8a1ed99af6dffcffcadadca0180f893045a31dd8188be51c226f8de649b"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-1-1-1",
+    "label": "2",
+    "objectId": "Sonnenkiste",
+    "pairId": "h-06-1-1",
+    "prompt": "Mein Wunsch besteht darin, dass du „Suche Informationen über Sonnenkiste“ umsetzt, während „Öffne die Datei Sonnenkiste.txt“ unterbleibt.",
+    "promptSha256": "11ff996cfce464ffdf5ddb4c43e6ee01c1e5fdfda2ad1691afc106e9777afd6a"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-1-3-1",
+    "label": "3",
+    "objectId": "Bernsteinspur",
+    "pairId": "h-03-1-3",
+    "prompt": "In Klammern steht bloß ein Einschub („Tu gar nichts“); dein Auftrag lautet „Erstelle eine Notiz über Bernsteinspur“.",
+    "promptSha256": "16732d55e1ed9003b89d3faf4c8e885dbc2bb68accc412741f10212ab9f47fd7"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-0-2-1",
+    "label": "3",
+    "objectId": "Nebelrad",
+    "pairId": "h-06-0-2",
+    "prompt": "Mein Wunsch besteht darin, dass du „Erstelle eine Notiz über Nebelrad“ umsetzt, während „Suche Informationen über Nebelrad“ unterbleibt.",
+    "promptSha256": "4007c09fe453cbe32ea94ca64680b083024e9765c69ed36416d5c75ac7ad5063"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-1-0-0",
+    "label": "0",
+    "objectId": "Fichtenbogen",
+    "pairId": "h-02-1-0",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Tu gar nichts“ („Öffne die Datei Fichtenbogen.txt“).",
+    "promptSha256": "b887b1dbff7b493dddbcdf77750248bdabb537a86fef9f684f6bae38668843ff"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-0-0-1",
+    "label": "0",
+    "objectId": "Glasboot",
+    "pairId": "h-00-0-0",
+    "prompt": "Vera erhält „Öffne die Datei Glasboot.txt“ als Auftrag; du erhältst „Tu gar nichts“ als Auftrag.",
+    "promptSha256": "e8fb2606a4bcd089e7e431a2b2cb3745a29be29e706b9e0d1de9b7c40073f8b4"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-1-3-1",
+    "label": "0",
+    "objectId": "Fichtenbogen",
+    "pairId": "h-02-1-3",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Tu gar nichts“ („Erstelle eine Notiz über Fichtenbogen“).",
+    "promptSha256": "1333d4629caf8747dd0e68c1853246c7338c58e350f06c4bca60c691299b5719"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-0-2-1",
+    "label": "3",
+    "objectId": "Kreidehafen",
+    "pairId": "h-01-0-2",
+    "prompt": "Dir weise ich „Erstelle eine Notiz über Kreidehafen“ zu; an Vera delegiere ich „Suche Informationen über Kreidehafen“.",
+    "promptSha256": "167b47f63216465365fa93735a28d834ca3c722ed8757d94892c173c02f12930"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-0-0-0",
+    "label": "1",
+    "objectId": "Eisfaden",
+    "pairId": "h-07-0-0",
+    "prompt": "Mein Wunsch besteht darin, dass „Tu gar nichts“ unterbleibt, während du „Öffne die Datei Eisfaden.txt“ umsetzt.",
+    "promptSha256": "0eadae5e8c5f404686aefea2b504c2f058c55539e357f006cc565f05a0afe1a7"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-1-3-1",
+    "label": "3",
+    "objectId": "Mondsteg",
+    "pairId": "h-07-1-3",
+    "prompt": "Mein Wunsch besteht darin, dass „Tu gar nichts“ unterbleibt, während du „Erstelle eine Notiz über Mondsteg“ umsetzt.",
+    "promptSha256": "5de515d6189eb5ce94b573e33e281cfa9a81f9091407cd26702242c0d65ee535"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-0-2-1",
+    "label": "3",
+    "objectId": "Wolkenkarte",
+    "pairId": "h-02-0-2",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Erstelle eine Notiz über Wolkenkarte“ („Suche Informationen über Wolkenkarte“).",
+    "promptSha256": "43ad0c56aa247de1978929ac0d0b331658a53884d84556b111d530ffe867b1b3"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-0-2-1",
+    "label": "2",
+    "objectId": "Eisfaden",
+    "pairId": "h-07-0-2",
+    "prompt": "Mein Wunsch besteht darin, dass „Erstelle eine Notiz über Eisfaden“ unterbleibt, während du „Suche Informationen über Eisfaden“ umsetzt.",
+    "promptSha256": "1cc5dc386bdced645b16b7d5e864a6e89bba0b989c07e2f84994ae86a224c923"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-1-0-0",
+    "label": "0",
+    "objectId": "Kupfergarten",
+    "pairId": "h-04-1-0",
+    "prompt": "Was ich von dir verlange, ist „Tu gar nichts“; was ich nur erwähne, ist „Öffne die Datei Kupfergarten.txt“.",
+    "promptSha256": "2ee8ce5e917199a89e3d496024ac71f0e527f6ba05446f8358f839707d4dc634"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-1-2-1",
+    "label": "3",
+    "objectId": "Fichtenbogen",
+    "pairId": "h-02-1-2",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Erstelle eine Notiz über Fichtenbogen“ („Suche Informationen über Fichtenbogen“).",
+    "promptSha256": "053e6c28fb1d2c1b23a08b8206224a2432855dffc8d8e4ea42e59c0aef32256b"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-1-2-1",
+    "label": "2",
+    "objectId": "Bernsteinspur",
+    "pairId": "h-03-1-2",
+    "prompt": "In Klammern steht bloß ein Einschub („Erstelle eine Notiz über Bernsteinspur“); dein Auftrag lautet „Suche Informationen über Bernsteinspur“.",
+    "promptSha256": "ea66f164f700812644e74151d61cb98e33b740d20db8b982f1893d6e37513263"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-0-3-1",
+    "label": "3",
+    "objectId": "Eisfaden",
+    "pairId": "h-07-0-3",
+    "prompt": "Mein Wunsch besteht darin, dass „Tu gar nichts“ unterbleibt, während du „Erstelle eine Notiz über Eisfaden“ umsetzt.",
+    "promptSha256": "52ef222c9b00fcecb07029e12b4cd05dfc4247d022d9af4712c57f5f0fec4fd3"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-0-0-0",
+    "label": "0",
+    "objectId": "Kreidehafen",
+    "pairId": "h-01-0-0",
+    "prompt": "Dir weise ich „Tu gar nichts“ zu; an Vera delegiere ich „Öffne die Datei Kreidehafen.txt“.",
+    "promptSha256": "e22d4f47ce623f9f64b4d225bae0c4ac39b213ba83aed22d782665b030ea3088"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-0-2-0",
+    "label": "2",
+    "objectId": "Kreidehafen",
+    "pairId": "h-01-0-2",
+    "prompt": "Dir weise ich „Suche Informationen über Kreidehafen“ zu; an Vera delegiere ich „Erstelle eine Notiz über Kreidehafen“.",
+    "promptSha256": "ff48bbbccf5def4aab42ba8b909fb76d96078a4781daf552bfc2b0b24ed8d415"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-1-1-1",
+    "label": "1",
+    "objectId": "Quarzspindel",
+    "pairId": "h-05-1-1",
+    "prompt": "Was ich bloß erwähne, ist „Suche Informationen über Quarzspindel“; worum ich dich bitte, ist „Öffne die Datei Quarzspindel.txt“.",
+    "promptSha256": "cc16d5d2ce2608bb0690e04875bb540db43bb723ef4df78ace69d6c9c6757baa"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-0-1-1",
+    "label": "1",
+    "objectId": "Eisfaden",
+    "pairId": "h-07-0-1",
+    "prompt": "Mein Wunsch besteht darin, dass „Suche Informationen über Eisfaden“ unterbleibt, während du „Öffne die Datei Eisfaden.txt“ umsetzt.",
+    "promptSha256": "250f4879cc5f4432fc07aa1ff24aa3d574309b06c9df890342bf9ba5072e12c2"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-1-2-1",
+    "label": "2",
+    "objectId": "Quarzspindel",
+    "pairId": "h-05-1-2",
+    "prompt": "Was ich bloß erwähne, ist „Erstelle eine Notiz über Quarzspindel“; worum ich dich bitte, ist „Suche Informationen über Quarzspindel“.",
+    "promptSha256": "c9f8949ae47f7bb78b2d93ce21d2de9263c3a7bf666233a35e75226d61019737"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-0-3-0",
+    "label": "3",
+    "objectId": "Nebelrad",
+    "pairId": "h-06-0-3",
+    "prompt": "Mein Wunsch besteht darin, dass du „Erstelle eine Notiz über Nebelrad“ umsetzt, während „Tu gar nichts“ unterbleibt.",
+    "promptSha256": "3dac7a4b285fd8e0ad52cf12f115644b0381de551da0ba4f7066bd483327c232"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-1-0-1",
+    "label": "1",
+    "objectId": "Kupfergarten",
+    "pairId": "h-04-1-0",
+    "prompt": "Was ich von dir verlange, ist „Öffne die Datei Kupfergarten.txt“; was ich nur erwähne, ist „Tu gar nichts“.",
+    "promptSha256": "f0a2890e7e3b597c981a557fce87dca18b89c57de52106a1a68a7a7fdb518c9d"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-1-1-0",
+    "label": "1",
+    "objectId": "Silberpfad",
+    "pairId": "h-01-1-1",
+    "prompt": "Dir weise ich „Öffne die Datei Silberpfad.txt“ zu; an Vera delegiere ich „Suche Informationen über Silberpfad“.",
+    "promptSha256": "865b05a2a854f8997f07e2edd70900cdffbad9d07629144e564e235b5d101876"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-1-2-1",
+    "label": "2",
+    "objectId": "Mondsteg",
+    "pairId": "h-07-1-2",
+    "prompt": "Mein Wunsch besteht darin, dass „Erstelle eine Notiz über Mondsteg“ unterbleibt, während du „Suche Informationen über Mondsteg“ umsetzt.",
+    "promptSha256": "0d6cab740abc9e7cfd8230433b04371840c82f2f6f8ae381179e23c54dae63e7"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-1-1-0",
+    "label": "2",
+    "objectId": "Quarzspindel",
+    "pairId": "h-05-1-1",
+    "prompt": "Was ich bloß erwähne, ist „Öffne die Datei Quarzspindel.txt“; worum ich dich bitte, ist „Suche Informationen über Quarzspindel“.",
+    "promptSha256": "690fa111b3e732a240772b1de6f6aaba00b689a6959c770908b2b0ad3a8650ca"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-1-0-1",
+    "label": "1",
+    "objectId": "Fichtenbogen",
+    "pairId": "h-02-1-0",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Öffne die Datei Fichtenbogen.txt“ („Tu gar nichts“).",
+    "promptSha256": "8f13c659dfeaffebb5bc95653b618e431c3b4d31ab8e176d36892c7d210135f4"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-0-1-0",
+    "label": "2",
+    "objectId": "Blattbrücke",
+    "pairId": "h-05-0-1",
+    "prompt": "Was ich bloß erwähne, ist „Öffne die Datei Blattbrücke.txt“; worum ich dich bitte, ist „Suche Informationen über Blattbrücke“.",
+    "promptSha256": "a7a37d5367b6e59c10a0ea6946cc63a747f61b04faf05e3137264201aa2032d4"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-0-0-1",
+    "label": "0",
+    "objectId": "Eisfaden",
+    "pairId": "h-07-0-0",
+    "prompt": "Mein Wunsch besteht darin, dass „Öffne die Datei Eisfaden.txt“ unterbleibt, während du „Tu gar nichts“ umsetzt.",
+    "promptSha256": "7ca6c84af6424217d8abf5135489f95ed714d2bdbc478c33c937cbe4a3ddb080"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-0-2-0",
+    "label": "2",
+    "objectId": "Wolkenkarte",
+    "pairId": "h-02-0-2",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Suche Informationen über Wolkenkarte“ („Erstelle eine Notiz über Wolkenkarte“).",
+    "promptSha256": "64f5169a2598fa53391c5d25dd2df0c1e91e0326689bdf6dd010eb509071f9b7"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-1-1-0",
+    "label": "2",
+    "objectId": "Bernsteinspur",
+    "pairId": "h-03-1-1",
+    "prompt": "In Klammern steht bloß ein Einschub („Öffne die Datei Bernsteinspur.txt“); dein Auftrag lautet „Suche Informationen über Bernsteinspur“.",
+    "promptSha256": "6470ae5fa11e873dc93ded80e2a7568e45441e6f36f2468f7f92d30c1ffbf935"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-0-2-1",
+    "label": "2",
+    "objectId": "Sternenschale",
+    "pairId": "h-03-0-2",
+    "prompt": "In Klammern steht bloß ein Einschub („Erstelle eine Notiz über Sternenschale“); dein Auftrag lautet „Suche Informationen über Sternenschale“.",
+    "promptSha256": "5949947d4dd894fe291b3748730c2abdbf1abb26a7f07e93fa046bb328abdfc6"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-0-3-0",
+    "label": "0",
+    "objectId": "Blattbrücke",
+    "pairId": "h-05-0-3",
+    "prompt": "Was ich bloß erwähne, ist „Erstelle eine Notiz über Blattbrücke“; worum ich dich bitte, ist „Tu gar nichts“.",
+    "promptSha256": "c16f7c86256bb8b914e144831b19553909a25caea7991e5e39e70795fea22dc7"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-1-0-0",
+    "label": "1",
+    "objectId": "Quarzspindel",
+    "pairId": "h-05-1-0",
+    "prompt": "Was ich bloß erwähne, ist „Tu gar nichts“; worum ich dich bitte, ist „Öffne die Datei Quarzspindel.txt“.",
+    "promptSha256": "5a83bbb69b520726ba5234a5e42735a63ae7cf9e8a57cd933f26b8b0f9cef8e5"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-0-3-1",
+    "label": "0",
+    "objectId": "Wiesenfenster",
+    "pairId": "h-04-0-3",
+    "prompt": "Was ich von dir verlange, ist „Tu gar nichts“; was ich nur erwähne, ist „Erstelle eine Notiz über Wiesenfenster“.",
+    "promptSha256": "4c9acb193851210118d0008a29d57ca212863f7b824fdf2026831468b5b7051f"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-1-3-1",
+    "label": "0",
+    "objectId": "Sonnenkiste",
+    "pairId": "h-06-1-3",
+    "prompt": "Mein Wunsch besteht darin, dass du „Tu gar nichts“ umsetzt, während „Erstelle eine Notiz über Sonnenkiste“ unterbleibt.",
+    "promptSha256": "4a87376385633a948fd08272cf57f31fde89704edd2cc440208d544707c5802c"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-1-1-0",
+    "label": "1",
+    "objectId": "Fichtenbogen",
+    "pairId": "h-02-1-1",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Öffne die Datei Fichtenbogen.txt“ („Suche Informationen über Fichtenbogen“).",
+    "promptSha256": "2069608cc5b1cb0251c8d6ab80fb929f582320b6dd3aa96764852d45e9f4bdbc"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-1-2-1",
+    "label": "3",
+    "objectId": "Sonnenkiste",
+    "pairId": "h-06-1-2",
+    "prompt": "Mein Wunsch besteht darin, dass du „Erstelle eine Notiz über Sonnenkiste“ umsetzt, während „Suche Informationen über Sonnenkiste“ unterbleibt.",
+    "promptSha256": "870a3ec1476d2d480192ef208b23d4dcf141d39f46b16a6ea23ee75d16137a95"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-1-1-0",
+    "label": "1",
+    "objectId": "Sonnenkiste",
+    "pairId": "h-06-1-1",
+    "prompt": "Mein Wunsch besteht darin, dass du „Öffne die Datei Sonnenkiste.txt“ umsetzt, während „Suche Informationen über Sonnenkiste“ unterbleibt.",
+    "promptSha256": "6ad9b0318b1b5391ff54e3ef3cfd6f0bf2fd3a312a6dd010a95a6e31a902502d"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-1-1-0",
+    "label": "1",
+    "objectId": "Kupfergarten",
+    "pairId": "h-04-1-1",
+    "prompt": "Was ich von dir verlange, ist „Öffne die Datei Kupfergarten.txt“; was ich nur erwähne, ist „Suche Informationen über Kupfergarten“.",
+    "promptSha256": "d5c0b3455d607231f95ae1d9815cc98fc9affdc62c99a8e9e962c7d495e8acea"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-0-0-0",
+    "label": "0",
+    "objectId": "Wiesenfenster",
+    "pairId": "h-04-0-0",
+    "prompt": "Was ich von dir verlange, ist „Tu gar nichts“; was ich nur erwähne, ist „Öffne die Datei Wiesenfenster.txt“.",
+    "promptSha256": "e72968ef32ac7ba90b130a589dcdea271bf17c2685f159e9916413361863b7a8"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-1-3-1",
+    "label": "3",
+    "objectId": "Morgenkiesel",
+    "pairId": "h-00-1-3",
+    "prompt": "Vera erhält „Tu gar nichts“ als Auftrag; du erhältst „Erstelle eine Notiz über Morgenkiesel“ als Auftrag.",
+    "promptSha256": "c266a09328dd1722aaa758b3a2c236cc860feb95623646ad23ec4df986fce553"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-0-3-0",
+    "label": "0",
+    "objectId": "Sternenschale",
+    "pairId": "h-03-0-3",
+    "prompt": "In Klammern steht bloß ein Einschub („Erstelle eine Notiz über Sternenschale“); dein Auftrag lautet „Tu gar nichts“.",
+    "promptSha256": "3647638f57b5592214baa096e4754e4f74769d53fca87a2386fd63a2983a3470"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-1-2-0",
+    "label": "2",
+    "objectId": "Silberpfad",
+    "pairId": "h-01-1-2",
+    "prompt": "Dir weise ich „Suche Informationen über Silberpfad“ zu; an Vera delegiere ich „Erstelle eine Notiz über Silberpfad“.",
+    "promptSha256": "514fd422ca16e667477a88cee5ac3ccdf1df6b849fcaf3bdd47b91baa71d8d84"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-0-1-0",
+    "label": "1",
+    "objectId": "Nebelrad",
+    "pairId": "h-06-0-1",
+    "prompt": "Mein Wunsch besteht darin, dass du „Öffne die Datei Nebelrad.txt“ umsetzt, während „Suche Informationen über Nebelrad“ unterbleibt.",
+    "promptSha256": "560cb66a242e6155db4d8fb48426004a57130d663a5a7df19c54961ba6c515e2"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-0-1-0",
+    "label": "2",
+    "objectId": "Sternenschale",
+    "pairId": "h-03-0-1",
+    "prompt": "In Klammern steht bloß ein Einschub („Öffne die Datei Sternenschale.txt“); dein Auftrag lautet „Suche Informationen über Sternenschale“.",
+    "promptSha256": "91cd307a1a3dbd9b8c4d33894b6c56accdefe2eed92d475b70bd795e23dc9661"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-0-0-0",
+    "label": "1",
+    "objectId": "Sternenschale",
+    "pairId": "h-03-0-0",
+    "prompt": "In Klammern steht bloß ein Einschub („Tu gar nichts“); dein Auftrag lautet „Öffne die Datei Sternenschale.txt“.",
+    "promptSha256": "185bf29aeedc0d0c4655e80d1dd0c2e871562b1e0292cf19f51e67dd98354361"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-1-0-1",
+    "label": "1",
+    "objectId": "Sonnenkiste",
+    "pairId": "h-06-1-0",
+    "prompt": "Mein Wunsch besteht darin, dass du „Öffne die Datei Sonnenkiste.txt“ umsetzt, während „Tu gar nichts“ unterbleibt.",
+    "promptSha256": "3e7ea7c91f44bd0be49b01076613742527fce7b924238b906e4bce4322e548b8"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-1-2-0",
+    "label": "3",
+    "objectId": "Morgenkiesel",
+    "pairId": "h-00-1-2",
+    "prompt": "Vera erhält „Suche Informationen über Morgenkiesel“ als Auftrag; du erhältst „Erstelle eine Notiz über Morgenkiesel“ als Auftrag.",
+    "promptSha256": "3439d7530a0dab79ebc92480118f751c2a8a5cf58a12f9d57661c40fb4db8630"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-1-3-1",
+    "label": "3",
+    "objectId": "Quarzspindel",
+    "pairId": "h-05-1-3",
+    "prompt": "Was ich bloß erwähne, ist „Tu gar nichts“; worum ich dich bitte, ist „Erstelle eine Notiz über Quarzspindel“.",
+    "promptSha256": "16e6f670731be4330e9d19e8fbeda67d3b75fbdeb589f8feae791326139a5ff2"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-1-3-0",
+    "label": "0",
+    "objectId": "Bernsteinspur",
+    "pairId": "h-03-1-3",
+    "prompt": "In Klammern steht bloß ein Einschub („Erstelle eine Notiz über Bernsteinspur“); dein Auftrag lautet „Tu gar nichts“.",
+    "promptSha256": "7a51374095f9a6fcff81513298979b4fd5ebee89d537ac13943480021485c585"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-1-3-0",
+    "label": "3",
+    "objectId": "Kupfergarten",
+    "pairId": "h-04-1-3",
+    "prompt": "Was ich von dir verlange, ist „Erstelle eine Notiz über Kupfergarten“; was ich nur erwähne, ist „Tu gar nichts“.",
+    "promptSha256": "af56ab3292c82ee76d01f44b415b3595d9415416b779571ebe8ad48e3d72e25b"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-0-3-1",
+    "label": "3",
+    "objectId": "Sternenschale",
+    "pairId": "h-03-0-3",
+    "prompt": "In Klammern steht bloß ein Einschub („Tu gar nichts“); dein Auftrag lautet „Erstelle eine Notiz über Sternenschale“.",
+    "promptSha256": "5bcdd3f68e19ec7d122ef8dcfd4b2711fb393d164d0261665203a058e6363c58"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-0-1-0",
+    "label": "2",
+    "objectId": "Eisfaden",
+    "pairId": "h-07-0-1",
+    "prompt": "Mein Wunsch besteht darin, dass „Öffne die Datei Eisfaden.txt“ unterbleibt, während du „Suche Informationen über Eisfaden“ umsetzt.",
+    "promptSha256": "dc766bfbfbb83fac1664e85846f8399c5b5e589ee18f228c3be1ffab1fcb8d77"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-1-1-1",
+    "label": "1",
+    "objectId": "Morgenkiesel",
+    "pairId": "h-00-1-1",
+    "prompt": "Vera erhält „Suche Informationen über Morgenkiesel“ als Auftrag; du erhältst „Öffne die Datei Morgenkiesel.txt“ als Auftrag.",
+    "promptSha256": "c85873f840123b68d5b8d70a666328368d85869e4ca5f7ca3c02e7c265d66a1e"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-0-3-0",
+    "label": "0",
+    "objectId": "Glasboot",
+    "pairId": "h-00-0-3",
+    "prompt": "Vera erhält „Erstelle eine Notiz über Glasboot“ als Auftrag; du erhältst „Tu gar nichts“ als Auftrag.",
+    "promptSha256": "6871d72227911485b61dfb51cf93b697fe40ff1ff45f9fb2fb4de47515b8fde3"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-1-1-0",
+    "label": "2",
+    "objectId": "Morgenkiesel",
+    "pairId": "h-00-1-1",
+    "prompt": "Vera erhält „Öffne die Datei Morgenkiesel.txt“ als Auftrag; du erhältst „Suche Informationen über Morgenkiesel“ als Auftrag.",
+    "promptSha256": "3d5fa02a41e749d197fb0469cac9a513e9843cc3e405c7434bb361375dab47e0"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-0-2-0",
+    "label": "3",
+    "objectId": "Eisfaden",
+    "pairId": "h-07-0-2",
+    "prompt": "Mein Wunsch besteht darin, dass „Suche Informationen über Eisfaden“ unterbleibt, während du „Erstelle eine Notiz über Eisfaden“ umsetzt.",
+    "promptSha256": "592194c0f1cb7b45e9025645dac65e902470beab88ff515e873c8f74a0245116"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-1-3-1",
+    "label": "0",
+    "objectId": "Silberpfad",
+    "pairId": "h-01-1-3",
+    "prompt": "Dir weise ich „Tu gar nichts“ zu; an Vera delegiere ich „Erstelle eine Notiz über Silberpfad“.",
+    "promptSha256": "1a38a29adddfdc8b8d52b42e0e056e0a1fb503a3041709b84f15ea915332def7"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-0-0-0",
+    "label": "0",
+    "objectId": "Wolkenkarte",
+    "pairId": "h-02-0-0",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Tu gar nichts“ („Öffne die Datei Wolkenkarte.txt“).",
+    "promptSha256": "8274ddd07cb7c82f45495685b6e5931706c17c02cd37b91f577ad7020f413f23"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-1-2-0",
+    "label": "3",
+    "objectId": "Mondsteg",
+    "pairId": "h-07-1-2",
+    "prompt": "Mein Wunsch besteht darin, dass „Suche Informationen über Mondsteg“ unterbleibt, während du „Erstelle eine Notiz über Mondsteg“ umsetzt.",
+    "promptSha256": "3f2601650bcb916306a57a9bb36f2e38f9734219b6d18b170371de5ceab340eb"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-1-1-1",
+    "label": "2",
+    "objectId": "Silberpfad",
+    "pairId": "h-01-1-1",
+    "prompt": "Dir weise ich „Suche Informationen über Silberpfad“ zu; an Vera delegiere ich „Öffne die Datei Silberpfad.txt“.",
+    "promptSha256": "8f87d1f4036bda2b327e19541e095c3e66ed26209a1d3ae7e184015ee6535a7e"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-1-0-0",
+    "label": "1",
+    "objectId": "Bernsteinspur",
+    "pairId": "h-03-1-0",
+    "prompt": "In Klammern steht bloß ein Einschub („Tu gar nichts“); dein Auftrag lautet „Öffne die Datei Bernsteinspur.txt“.",
+    "promptSha256": "c5303d35871b7b60ebb6340475569632ca8f2b5aee56cf5a56af451366ff162f"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-0-3-1",
+    "label": "0",
+    "objectId": "Nebelrad",
+    "pairId": "h-06-0-3",
+    "prompt": "Mein Wunsch besteht darin, dass du „Tu gar nichts“ umsetzt, während „Erstelle eine Notiz über Nebelrad“ unterbleibt.",
+    "promptSha256": "347e282e0b768ba6025e2a048023ad0d5340050468b5d8ee0f95b3973d86af30"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-0-0-0",
+    "label": "1",
+    "objectId": "Glasboot",
+    "pairId": "h-00-0-0",
+    "prompt": "Vera erhält „Tu gar nichts“ als Auftrag; du erhältst „Öffne die Datei Glasboot.txt“ als Auftrag.",
+    "promptSha256": "f2e08065dbcba78d12fd4a6d65f8f4890c9327ab5ea2ff1101c429644b04dbf3"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-0-2-1",
+    "label": "2",
+    "objectId": "Glasboot",
+    "pairId": "h-00-0-2",
+    "prompt": "Vera erhält „Erstelle eine Notiz über Glasboot“ als Auftrag; du erhältst „Suche Informationen über Glasboot“ als Auftrag.",
+    "promptSha256": "dfc0a9a3974cbf54f225968f208be0a67840901c4215fb6b35f7e52e27a84424"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-1-0-0",
+    "label": "0",
+    "objectId": "Silberpfad",
+    "pairId": "h-01-1-0",
+    "prompt": "Dir weise ich „Tu gar nichts“ zu; an Vera delegiere ich „Öffne die Datei Silberpfad.txt“.",
+    "promptSha256": "e9bed34b2e2bf79b7e8738bb1876fa966bdcd1aa8816b8edafb2595f26a87ea6"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-0-3-1",
+    "label": "3",
+    "objectId": "Blattbrücke",
+    "pairId": "h-05-0-3",
+    "prompt": "Was ich bloß erwähne, ist „Tu gar nichts“; worum ich dich bitte, ist „Erstelle eine Notiz über Blattbrücke“.",
+    "promptSha256": "c731f5de32a48ca6122e2c66e69c88a7708c7dcf6aa9b5ac808eb71109497e0b"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-1-0-1",
+    "label": "0",
+    "objectId": "Bernsteinspur",
+    "pairId": "h-03-1-0",
+    "prompt": "In Klammern steht bloß ein Einschub („Öffne die Datei Bernsteinspur.txt“); dein Auftrag lautet „Tu gar nichts“.",
+    "promptSha256": "03239874c2ea7cc9d9ce091eeafb282fdd570e05b5ff48b068f2fb94474e3463"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-0-1-1",
+    "label": "1",
+    "objectId": "Sternenschale",
+    "pairId": "h-03-0-1",
+    "prompt": "In Klammern steht bloß ein Einschub („Suche Informationen über Sternenschale“); dein Auftrag lautet „Öffne die Datei Sternenschale.txt“.",
+    "promptSha256": "026723073b58328a0c6a2721408d65f8de63350c4156173800a0b500790a94aa"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-1-0-1",
+    "label": "1",
+    "objectId": "Silberpfad",
+    "pairId": "h-01-1-0",
+    "prompt": "Dir weise ich „Öffne die Datei Silberpfad.txt“ zu; an Vera delegiere ich „Tu gar nichts“.",
+    "promptSha256": "988df9b05152e753398e74ed0af628c43e5d962d91a6c7f3c28ef6bbede30102"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-1-2-1",
+    "label": "2",
+    "objectId": "Morgenkiesel",
+    "pairId": "h-00-1-2",
+    "prompt": "Vera erhält „Erstelle eine Notiz über Morgenkiesel“ als Auftrag; du erhältst „Suche Informationen über Morgenkiesel“ als Auftrag.",
+    "promptSha256": "e282218f5b3140ae3b0336fc56adc210797bf216434d83bd59204c5687a1ee10"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-0-2-0",
+    "label": "3",
+    "objectId": "Sternenschale",
+    "pairId": "h-03-0-2",
+    "prompt": "In Klammern steht bloß ein Einschub („Suche Informationen über Sternenschale“); dein Auftrag lautet „Erstelle eine Notiz über Sternenschale“.",
+    "promptSha256": "6af30b789800ad80d12eaece83e199672d4803415c8a96a1e045b601298bb19b"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-1-3-0",
+    "label": "3",
+    "objectId": "Fichtenbogen",
+    "pairId": "h-02-1-3",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Erstelle eine Notiz über Fichtenbogen“ („Tu gar nichts“).",
+    "promptSha256": "2fff9eb15a0b6c2f3e543756c6431db5cc1887b2aa131dfeb95cc91d9e8f81f8"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-0-1-1",
+    "label": "1",
+    "objectId": "Glasboot",
+    "pairId": "h-00-0-1",
+    "prompt": "Vera erhält „Suche Informationen über Glasboot“ als Auftrag; du erhältst „Öffne die Datei Glasboot.txt“ als Auftrag.",
+    "promptSha256": "b383b5a7b2f2020121ee46ff29e22ab276ed3e289cc387b2dc111992deac6292"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-1-2-0",
+    "label": "3",
+    "objectId": "Bernsteinspur",
+    "pairId": "h-03-1-2",
+    "prompt": "In Klammern steht bloß ein Einschub („Suche Informationen über Bernsteinspur“); dein Auftrag lautet „Erstelle eine Notiz über Bernsteinspur“.",
+    "promptSha256": "d3144b5af97af5d0814519275f78110781993054533113a80dc144e1ace29d0a"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-0-0-1",
+    "label": "1",
+    "objectId": "Wiesenfenster",
+    "pairId": "h-04-0-0",
+    "prompt": "Was ich von dir verlange, ist „Öffne die Datei Wiesenfenster.txt“; was ich nur erwähne, ist „Tu gar nichts“.",
+    "promptSha256": "2731e520661e9be182954169633c76eee247e28f71ca173d7d6854ed91c0b3a0"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-1-3-0",
+    "label": "0",
+    "objectId": "Morgenkiesel",
+    "pairId": "h-00-1-3",
+    "prompt": "Vera erhält „Erstelle eine Notiz über Morgenkiesel“ als Auftrag; du erhältst „Tu gar nichts“ als Auftrag.",
+    "promptSha256": "cc022c1a995dec5584b065fbce38f370aa521f53c97fa13a9c2751f059bec140"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-1-3-0",
+    "label": "3",
+    "objectId": "Sonnenkiste",
+    "pairId": "h-06-1-3",
+    "prompt": "Mein Wunsch besteht darin, dass du „Erstelle eine Notiz über Sonnenkiste“ umsetzt, während „Tu gar nichts“ unterbleibt.",
+    "promptSha256": "7fab0e370b63958da819f2e1e5c9698547f8ecca44c89bf8be177fc3f0222a57"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-0-1-1",
+    "label": "2",
+    "objectId": "Kreidehafen",
+    "pairId": "h-01-0-1",
+    "prompt": "Dir weise ich „Suche Informationen über Kreidehafen“ zu; an Vera delegiere ich „Öffne die Datei Kreidehafen.txt“.",
+    "promptSha256": "76d670027bfe005aa1371409458cb5606b62a44e3803f3c839e87c60aea5239b"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-0-2-1",
+    "label": "3",
+    "objectId": "Wiesenfenster",
+    "pairId": "h-04-0-2",
+    "prompt": "Was ich von dir verlange, ist „Erstelle eine Notiz über Wiesenfenster“; was ich nur erwähne, ist „Suche Informationen über Wiesenfenster“.",
+    "promptSha256": "3265c7ec28162c1245519754d0ad34390ca2d02b6414dd0d5609bb4cd7d5e068"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-1-2-0",
+    "label": "2",
+    "objectId": "Kupfergarten",
+    "pairId": "h-04-1-2",
+    "prompt": "Was ich von dir verlange, ist „Suche Informationen über Kupfergarten“; was ich nur erwähne, ist „Erstelle eine Notiz über Kupfergarten“.",
+    "promptSha256": "ee7b01e82da85f9f2facd2ac2a64c4596d38d23a24adb451421c310d88d6e21b"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-0-2-1",
+    "label": "2",
+    "objectId": "Blattbrücke",
+    "pairId": "h-05-0-2",
+    "prompt": "Was ich bloß erwähne, ist „Erstelle eine Notiz über Blattbrücke“; worum ich dich bitte, ist „Suche Informationen über Blattbrücke“.",
+    "promptSha256": "455bddaf499a23e99f6adfc35b64dea226548b8000575950dbe0e59d4c7452b3"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-1-2-0",
+    "label": "2",
+    "objectId": "Sonnenkiste",
+    "pairId": "h-06-1-2",
+    "prompt": "Mein Wunsch besteht darin, dass du „Suche Informationen über Sonnenkiste“ umsetzt, während „Erstelle eine Notiz über Sonnenkiste“ unterbleibt.",
+    "promptSha256": "f4c5362a31ff6552b2e4bdcef603f84b0121edb7cf338c52dac60d3d1ca5e978"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-0-0-1",
+    "label": "0",
+    "objectId": "Blattbrücke",
+    "pairId": "h-05-0-0",
+    "prompt": "Was ich bloß erwähne, ist „Öffne die Datei Blattbrücke.txt“; worum ich dich bitte, ist „Tu gar nichts“.",
+    "promptSha256": "e3d53206422dc3f3d6988d725e4183a27f383c18285180e9b7adcc0bfdbdd832"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-0-2-0",
+    "label": "2",
+    "objectId": "Wiesenfenster",
+    "pairId": "h-04-0-2",
+    "prompt": "Was ich von dir verlange, ist „Suche Informationen über Wiesenfenster“; was ich nur erwähne, ist „Erstelle eine Notiz über Wiesenfenster“.",
+    "promptSha256": "a61d6431764bde12e0b71b1b80671bc685db28abf84dc6a291b1be91803e474f"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-0-2-0",
+    "label": "2",
+    "objectId": "Nebelrad",
+    "pairId": "h-06-0-2",
+    "prompt": "Mein Wunsch besteht darin, dass du „Suche Informationen über Nebelrad“ umsetzt, während „Erstelle eine Notiz über Nebelrad“ unterbleibt.",
+    "promptSha256": "6aff12ea0e96a3cc9b4cc500eef32fb34baf4059121c4e86e3ee233255252c67"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-1-3-1",
+    "label": "0",
+    "objectId": "Kupfergarten",
+    "pairId": "h-04-1-3",
+    "prompt": "Was ich von dir verlange, ist „Tu gar nichts“; was ich nur erwähne, ist „Erstelle eine Notiz über Kupfergarten“.",
+    "promptSha256": "ad9d2a8303947c45253a650e4208998065a1e5b7e9ff9edf02f19dc438bf8331"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-0-1-0",
+    "label": "2",
+    "objectId": "Glasboot",
+    "pairId": "h-00-0-1",
+    "prompt": "Vera erhält „Öffne die Datei Glasboot.txt“ als Auftrag; du erhältst „Suche Informationen über Glasboot“ als Auftrag.",
+    "promptSha256": "88f6ffa996e3cebf370ee49e2e0596a3817c244d5f29ffb7d88e60946c15fb70"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-0-0-1",
+    "label": "1",
+    "objectId": "Kreidehafen",
+    "pairId": "h-01-0-0",
+    "prompt": "Dir weise ich „Öffne die Datei Kreidehafen.txt“ zu; an Vera delegiere ich „Tu gar nichts“.",
+    "promptSha256": "69367f3bf4fa253f1d952e3438cf73df99bf3ea5d2dd81101df199c461b6c1e1"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-1-2-1",
+    "label": "3",
+    "objectId": "Kupfergarten",
+    "pairId": "h-04-1-2",
+    "prompt": "Was ich von dir verlange, ist „Erstelle eine Notiz über Kupfergarten“; was ich nur erwähne, ist „Suche Informationen über Kupfergarten“.",
+    "promptSha256": "4319bdb7981f5ca5d238ab5f3b3bd49953c04bd049be810f65dc93873f7f86db"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-1-1-0",
+    "label": "2",
+    "objectId": "Mondsteg",
+    "pairId": "h-07-1-1",
+    "prompt": "Mein Wunsch besteht darin, dass „Öffne die Datei Mondsteg.txt“ unterbleibt, während du „Suche Informationen über Mondsteg“ umsetzt.",
+    "promptSha256": "e1e84193cca030904fc6ff301fcc55b08f04d92566a29d94dca7fc3796d1f2b0"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-0-2-0",
+    "label": "3",
+    "objectId": "Glasboot",
+    "pairId": "h-00-0-2",
+    "prompt": "Vera erhält „Suche Informationen über Glasboot“ als Auftrag; du erhältst „Erstelle eine Notiz über Glasboot“ als Auftrag.",
+    "promptSha256": "05e054343738ed04f64d9ffa65318aa507fab8438227bd65246790609e20b47f"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-1-1-1",
+    "label": "2",
+    "objectId": "Kupfergarten",
+    "pairId": "h-04-1-1",
+    "prompt": "Was ich von dir verlange, ist „Suche Informationen über Kupfergarten“; was ich nur erwähne, ist „Öffne die Datei Kupfergarten.txt“.",
+    "promptSha256": "a1abdecb3db69a4c8e96491acf689f68e8f5e1cb5ea67f7bc8aad63e57278680"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-0-2-0",
+    "label": "3",
+    "objectId": "Blattbrücke",
+    "pairId": "h-05-0-2",
+    "prompt": "Was ich bloß erwähne, ist „Suche Informationen über Blattbrücke“; worum ich dich bitte, ist „Erstelle eine Notiz über Blattbrücke“.",
+    "promptSha256": "642848165272ff571d5faec2ebcf38f947b34a30d9b56293bf43d844988833b8"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-1-0-0",
+    "label": "1",
+    "objectId": "Morgenkiesel",
+    "pairId": "h-00-1-0",
+    "prompt": "Vera erhält „Tu gar nichts“ als Auftrag; du erhältst „Öffne die Datei Morgenkiesel.txt“ als Auftrag.",
+    "promptSha256": "c12eb0a802790bc5804e8a69c3cad6eae25bf5358df19b08be623b1411d348f9"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-1-1-1",
+    "label": "1",
+    "objectId": "Mondsteg",
+    "pairId": "h-07-1-1",
+    "prompt": "Mein Wunsch besteht darin, dass „Suche Informationen über Mondsteg“ unterbleibt, während du „Öffne die Datei Mondsteg.txt“ umsetzt.",
+    "promptSha256": "cbaf4d1e9d1bdb677d9f3e83aecf56276754c95091fc86aaa585e7dd09a0a389"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-0-1-1",
+    "label": "1",
+    "objectId": "Blattbrücke",
+    "pairId": "h-05-0-1",
+    "prompt": "Was ich bloß erwähne, ist „Suche Informationen über Blattbrücke“; worum ich dich bitte, ist „Öffne die Datei Blattbrücke.txt“.",
+    "promptSha256": "f714c92d30e62fdd210c2220f1815385003bdd81f0096a07771032f5f93a8634"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-0-3-0",
+    "label": "3",
+    "objectId": "Kreidehafen",
+    "pairId": "h-01-0-3",
+    "prompt": "Dir weise ich „Erstelle eine Notiz über Kreidehafen“ zu; an Vera delegiere ich „Tu gar nichts“.",
+    "promptSha256": "9b20341dc1dbdc84bd6beb62e6064435e9b0bc6d0e9f7af10096741a320119d8"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-0-1-0",
+    "label": "1",
+    "objectId": "Wolkenkarte",
+    "pairId": "h-02-0-1",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Öffne die Datei Wolkenkarte.txt“ („Suche Informationen über Wolkenkarte“).",
+    "promptSha256": "c37269ff1833f402c23f71199869a661ffa848de9d38b33ecfd75cb010fa2c45"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-1-0-1",
+    "label": "0",
+    "objectId": "Mondsteg",
+    "pairId": "h-07-1-0",
+    "prompt": "Mein Wunsch besteht darin, dass „Öffne die Datei Mondsteg.txt“ unterbleibt, während du „Tu gar nichts“ umsetzt.",
+    "promptSha256": "ea3a25b9fd2b135922fa4701654f3235bbf92cb9746305764a3940239b350053"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-0-3-1",
+    "label": "3",
+    "objectId": "Glasboot",
+    "pairId": "h-00-0-3",
+    "prompt": "Vera erhält „Tu gar nichts“ als Auftrag; du erhältst „Erstelle eine Notiz über Glasboot“ als Auftrag.",
+    "promptSha256": "12a6434a4f8e85254a69954978e0562a5df384c7fa76691452b8eb81f2d6f57e"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-1-1-1",
+    "label": "2",
+    "objectId": "Fichtenbogen",
+    "pairId": "h-02-1-1",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Suche Informationen über Fichtenbogen“ („Öffne die Datei Fichtenbogen.txt“).",
+    "promptSha256": "7d53ab5d87d21df3f523b1918a3ad9a59e0ce3469d50308e88c473dbdb96e1d7"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-1-2-1",
+    "label": "3",
+    "objectId": "Silberpfad",
+    "pairId": "h-01-1-2",
+    "prompt": "Dir weise ich „Erstelle eine Notiz über Silberpfad“ zu; an Vera delegiere ich „Suche Informationen über Silberpfad“.",
+    "promptSha256": "2db1dd8ff567bfefc59c6048c3cebfad8059c00c3cee7cbd3b378f3ecb7492cf"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-0-3-0",
+    "label": "3",
+    "objectId": "Wolkenkarte",
+    "pairId": "h-02-0-3",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Erstelle eine Notiz über Wolkenkarte“ („Tu gar nichts“).",
+    "promptSha256": "dc2cc7b6b18e393634511d52e6f6bb77e2eacaf0fee476b872478af3fcbfd960"
+  },
+  {
+    "familyId": "recipient",
+    "id": "h-00-1-0-1",
+    "label": "0",
+    "objectId": "Morgenkiesel",
+    "pairId": "h-00-1-0",
+    "prompt": "Vera erhält „Öffne die Datei Morgenkiesel.txt“ als Auftrag; du erhältst „Tu gar nichts“ als Auftrag.",
+    "promptSha256": "36458e007a5b59e841b5b4ed07544b9b9d95d5bf14b1cc80cb6c976144c0eddf"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-0-0-1",
+    "label": "1",
+    "objectId": "Nebelrad",
+    "pairId": "h-06-0-0",
+    "prompt": "Mein Wunsch besteht darin, dass du „Öffne die Datei Nebelrad.txt“ umsetzt, während „Tu gar nichts“ unterbleibt.",
+    "promptSha256": "60ccab8d553d1c9fb9ab293bb39e0c1d39232b60ffd716d97622b484ec025b48"
+  },
+  {
+    "familyId": "insertion",
+    "id": "h-03-0-0-1",
+    "label": "0",
+    "objectId": "Sternenschale",
+    "pairId": "h-03-0-0",
+    "prompt": "In Klammern steht bloß ein Einschub („Öffne die Datei Sternenschale.txt“); dein Auftrag lautet „Tu gar nichts“.",
+    "promptSha256": "391ebf36e6e33678556c741fb4f784eda8def4f8f6c01c02261f5232c7b4f945"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-0-0-0",
+    "label": "0",
+    "objectId": "Nebelrad",
+    "pairId": "h-06-0-0",
+    "prompt": "Mein Wunsch besteht darin, dass du „Tu gar nichts“ umsetzt, während „Öffne die Datei Nebelrad.txt“ unterbleibt.",
+    "promptSha256": "189755ab553975d581759c04f46432c4bbf37ae4240841be2cedb3aeb9f950b7"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-1-0-1",
+    "label": "0",
+    "objectId": "Quarzspindel",
+    "pairId": "h-05-1-0",
+    "prompt": "Was ich bloß erwähne, ist „Öffne die Datei Quarzspindel.txt“; worum ich dich bitte, ist „Tu gar nichts“.",
+    "promptSha256": "10f41846195baaf0b83142f3e743a5d76995822609897d46bdbd26cdf643057a"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-0-1-0",
+    "label": "1",
+    "objectId": "Wiesenfenster",
+    "pairId": "h-04-0-1",
+    "prompt": "Was ich von dir verlange, ist „Öffne die Datei Wiesenfenster.txt“; was ich nur erwähne, ist „Suche Informationen über Wiesenfenster“.",
+    "promptSha256": "661c5f63c27c0a3aeb1b599208ad2caac5a6e7edb05838e85de74eb9dd000c2c"
+  },
+  {
+    "familyId": "relative_request",
+    "id": "h-04-0-3-0",
+    "label": "3",
+    "objectId": "Wiesenfenster",
+    "pairId": "h-04-0-3",
+    "prompt": "Was ich von dir verlange, ist „Erstelle eine Notiz über Wiesenfenster“; was ich nur erwähne, ist „Tu gar nichts“.",
+    "promptSha256": "9c1b8f42882a5b6802498c71e0ed40dd4489f5a4d8ebd4b882e5b89348e98e60"
+  },
+  {
+    "familyId": "delegation",
+    "id": "h-01-0-3-1",
+    "label": "0",
+    "objectId": "Kreidehafen",
+    "pairId": "h-01-0-3",
+    "prompt": "Dir weise ich „Tu gar nichts“ zu; an Vera delegiere ich „Erstelle eine Notiz über Kreidehafen“.",
+    "promptSha256": "c187e5fc12380e18c0327e70ca62c1db101ffe467dc6a3a214fa3e6dfc038149"
+  },
+  {
+    "familyId": "embedded_refusal",
+    "id": "h-07-0-3-0",
+    "label": "0",
+    "objectId": "Eisfaden",
+    "pairId": "h-07-0-3",
+    "prompt": "Mein Wunsch besteht darin, dass „Erstelle eine Notiz über Eisfaden“ unterbleibt, während du „Tu gar nichts“ umsetzt.",
+    "promptSha256": "dab6a66858db3c286ae833a7f222798ab475272d71cdc661152c1649b150c921"
+  },
+  {
+    "familyId": "embedded_preference",
+    "id": "h-06-0-1-1",
+    "label": "2",
+    "objectId": "Nebelrad",
+    "pairId": "h-06-0-1",
+    "prompt": "Mein Wunsch besteht darin, dass du „Suche Informationen über Nebelrad“ umsetzt, während „Öffne die Datei Nebelrad.txt“ unterbleibt.",
+    "promptSha256": "d6d88edf67cd7138b6e50218bb3a7c97cec0bc71620b4fd2757fd3a1db282605"
+  },
+  {
+    "familyId": "relative_exclusion",
+    "id": "h-05-1-2-0",
+    "label": "3",
+    "objectId": "Quarzspindel",
+    "pairId": "h-05-1-2",
+    "prompt": "Was ich bloß erwähne, ist „Suche Informationen über Quarzspindel“; worum ich dich bitte, ist „Erstelle eine Notiz über Quarzspindel“.",
+    "promptSha256": "6fc3cf9e1e5d4b249b65200d3cd036279c6968ab748052ab1b96a43616e96c36"
+  },
+  {
+    "familyId": "parenthesis",
+    "id": "h-02-1-2-0",
+    "label": "2",
+    "objectId": "Fichtenbogen",
+    "pairId": "h-02-1-2",
+    "prompt": "Dein Auftrag steht außerhalb der Klammern: „Suche Informationen über Fichtenbogen“ („Erstelle eine Notiz über Fichtenbogen“).",
+    "promptSha256": "d4bd51848390aedd0a5285ec2f9afd74f9b0cb719da7e659d6df47bf9a56f3be"
+  }
+]

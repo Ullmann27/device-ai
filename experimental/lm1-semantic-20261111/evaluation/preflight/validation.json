@@ -1,0 +1,10 @@
+{
+  "nativeTokenizerLengthParityRows": 224,
+  "pythonTokenizerSourceSha256": "548f3a3398c18a9c6a79727d82ff5fdb4429fa40e632ac37454e669f12a0d6c1",
+  "contextOverflowRows": 0,
+  "semanticPrefixTokenMin": 65,
+  "semanticPrefixTokenMax": 95,
+  "all64PairTokenLengthsEqual": true,
+  "parameterUpdates": 0,
+  "modelInference": 0
+}

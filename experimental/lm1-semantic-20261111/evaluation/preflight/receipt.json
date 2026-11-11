@@ -1,0 +1,21 @@
+{
+  "command": [
+    "java",
+    "-Xmx768m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/c054784f52c4/lm1-evaluator-build/experiment.jar:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmSemanticEvaluator",
+    "inspect",
+    "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp",
+    "/workspace/scratch/c054784f52c4/lm1-evaluator/experimental/lm1-semantic-20261111/evaluation/frozen-holdout",
+    "/workspace/scratch/c054784f52c4/lm1-evaluator/experimental/weight-space-20261110/data"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 0.41176164600074117,
+  "modelInference": false,
+  "optimizerUpdates": 0,
+  "stdoutSha256": "a5e33d23bef272b891e3bf8ebdeda20181fdde77210435b8c052f0d83f8a53ed",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
