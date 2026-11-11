@@ -44,3 +44,35 @@ Training/inspection uses the same entry with seven arguments:
 Remote first checkpoint `433b1f7696b8fcbdf665075255f6752f1ee3982e`, Draft
 PR #754. Normal git push lacked HTTPS credentials; authorized GitHub connector
 published the exact local tree, with independent remote commit identity.
+
+## Two experiments completed and stopped
+
+Both registered arms finished with 128 updates each, exit 0, input identities
+unchanged. No third candidate or duplicate run. Exact source/data/evaluation
+freeze and all resources are in `training/RESULT.md`; real model bytes are
+under `training/artifacts`, raw logs/receipts under `training/runs`.
+
+Final model SHA-256 values:
+
+- balanced-replay: `e1e231cc2b30f2c8a36af0b0b9c7edcfbc13a19ae6e73faee501448d43f511fe`
+- balanced-preserve: `4d0cb91226970737bd3413736b66d8688714f2c65ae0e383501aadd6bd5f763f`
+
+Bot 3 received both immutable artifacts before its independent test inference.
+The trainer has not read independent holdout cases or outputs. All quality
+claims remain pending that separate judgment. No active app model changes.
+
+The pre-run protocol and registration remain byte-identical because their
+hashes are frozen inputs; read this handoff and RESULT for subsequent status.
+
+## Final quality disposition: REJECTED
+
+After both artifact hashes were frozen, Bot 3 reported both candidates rejected:
+exact17/64 vs original0 reflects format learning; restricted17/64 vs16,
+complete pairs1/32, identical-word-bag pairs0/17. Historical retention32/64
+fell to18/64 or25/64; outputs shortened, and each arm added16 valid forbidden
+action proxy errors in offline tests. No action ran on a device.
+
+No further experiment is authorized or performed in this round. Preserve
+source, raw logs, registration and real model bytes for reproducibility;
+exclude both weight artifacts from all production/APK integration. See
+`training/RESULT.md` and independent PR #755 for the precise quality boundary.

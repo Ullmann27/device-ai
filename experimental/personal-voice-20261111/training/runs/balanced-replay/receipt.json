@@ -1,0 +1,44 @@
+{
+  "schema": "continuum-personal-voice-run-v1",
+  "arm": "balanced-replay",
+  "registrationSha256": "462d26942583a8c0d0f7cabe68b213ae22d77a8d4d52dbd6b9ff4d79790a133a",
+  "command": [
+    "/usr/bin/java",
+    "-Xmx768m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/aba242c65e85/voice-native-build/experiment.jar:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmPersonalVoicePilot",
+    "balanced-replay",
+    "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp",
+    "/workspace/scratch/aba242c65e85/device-ai/.worktrees/voice-data/experimental/personal-voice-20261111/data/v1/train.tsv",
+    "/workspace/scratch/aba242c65e85/device-ai/.worktrees/voice-data/experimental/personal-voice-20261111/data/v1/supervised_replay.tsv",
+    "/workspace/scratch/aba242c65e85/voice-training/experimental/weight-space-20261110/data/replay.txt",
+    "/workspace/scratch/aba242c65e85/voice-training/experimental/personal-voice-20261111/training/artifacts/balanced-replay"
+  ],
+  "startedUtc": "2026-11-11T07:41:37.135730+00:00",
+  "finishedUtc": "2026-11-11T07:42:03.312662+00:00",
+  "exitCode": 0,
+  "timedOut": false,
+  "elapsedSeconds": 26.176933992001068,
+  "childUserCpuSeconds": 27.718781,
+  "childSystemCpuSeconds": 0.48815000000000003,
+  "maxChildRssKiB": 119768,
+  "resourceScope": "Linux x86_64 JVM process, not Fold7; no GPU/thermal/energy measurement",
+  "observedUpdates": 128,
+  "complete": true,
+  "inputsUnchanged": true,
+  "stdoutSha256": "0b75a6acc3479a8af986af7c8d9338433dc9ab97e8654dc4ddbfc65b0b77bde4",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "artifacts": {
+    "final.lm1": {
+      "sha256": "e1e231cc2b30f2c8a36af0b0b9c7edcfbc13a19ae6e73faee501448d43f511fe",
+      "bytes": 529634
+    }
+  },
+  "qualityAcceptance": "REQUIRES_INDEPENDENT_EVALUATION",
+  "productionPromotion": false,
+  "gpuJobs": 0,
+  "externalModelCalls": 0
+}
