@@ -4,7 +4,7 @@ Canonical target: `integration/continuum-final-visibility-20261111`, PR #747.
 Starting remote source: `fd1de22cf3f6ed159601c9b944cc25c86f0fc221`.
 This is the continuation of the existing Cinema/Maya candidate, not a new runtime.
 
-## Active corrected freeze — 2026-11-11 09:13 UTC
+## Verified corrected APK and QA — 2026-11-11
 
 - Runtime: `050a57cb019dcc1b7fe6cfa2fb5c11176b048e05`.
 - Tree: `539ea3aac0af04644a015b3fb69ba865af80d1a8`.
@@ -14,19 +14,41 @@ This is the continuation of the existing Cinema/Maya candidate, not a new runtim
 - New required preflight runs both Maya settings cases and preserves their XML
   before the unchanged full Android suite. The existing capture init forces the
   full test task to rerun; its minimum count and 29 required classes remain.
-- Source/ICU/full Node/critical, backend, rendering and SDK gates PASS.
-  Maya lifecycle preflight PASS at 08:23:50 UTC: both expected cases,
-  zero failures/errors/skips. Full Android suite and configured NewApi lint
-  PASS at 09:13:16 UTC, including the minimum-count and 29-class gates.
-  Unsigned APK assembly and package validation are IN_PROGRESS; artifact and
-  complete-run acceptance remain PENDING. Exact final XML totals follow from
-  the current run's artifacts. Read this exact run before restarting anything.
+- Complete run, unsigned APK assembly and package validation PASS. Both
+  uploaded ZIPs were downloaded, SHA-256/byte-verified and safely extracted.
+- Final full suite: 804 XML files, 4,668 tests = 4,651 PASS /0 FAIL /0 ERROR
+  /17 SKIP. All 29 required classes contain 168 PASS /0 FAIL /0 SKIP.
+  The Maya settings preflight is separately 2/2 PASS, not added to 4,668.
+- Critical: 136 PASS /0 FAIL /0 SKIP. Full Node: 2,458 PASS /0 FAIL /37 SKIP.
+  Both reports have `sourceUnchanged=true` and the exact `050a57cb` commit.
+  Native ICU: 22 patterns PASS. The configured **NewApi-only** lint XML has
+  zero issues; this is not a claim about a broader lint scope.
+- APK: 102,701,335 bytes; SHA-256
+  `28153df1b4e6f0d97a8f625a7f444248efc6ee09436e7e77c5aab4e3aaaa9c0e`.
+  It matches `SHA256SUMS.txt` and the validated report's hash and byte count.
+  Identity: `at.heinz.deviceai.continuumlocal`, versionCode 53,
+  versionName `0.3.52`, ARM64, minSdk 26, targetSdk 36, not debuggable.
+- APK artifact `13842542249`: 73,412,550 ZIP bytes, SHA-256
+  `083c2df520fb5356d8d6357cbb0d7eb57b6aa279fd57db7ec2c0ac2d9a1573ee`.
+  QA artifact `13842736860`: 426,597,327 ZIP bytes, SHA-256
+  `a08c090d94ec63edf7ca08b36fda00ff286fa7eb9b0e42b6ad226e679098708e`.
+- Actual report path inside the QA artifact:
+  `_temp/code53-package/RESULT.json`; report SHA-256
+  `fb9a78ec26af6dec2f4b983cb62cbf3691785d1f1763f6f615e6f917952cf496`.
+  Validator SHA-256:
+  `2a0aeaef48bb5482f0da304ee24e3a69a66d3fa2a86c81885436d28b7c8a535f`.
+  Source commit/tree are identical and clean before/after validation.
+  Both `BUILD-INFO.txt` copies bind the exact source and workflow above.
+
+Portable complete evidence, including the 29 class totals and artifact-relative
+report paths: `docs/evidence/final-visibility-20261111/code53-050a57cb-verified.json`.
 
 Only the settings test and technical evidence changed after the failed app
-source. The production runtime remains unchanged. The signer prep must bind the
-new identities above, not the failed `fd86f11a` run. Its final artifact binding
-remains absent until verified success. Later documentation commits do not change
-the fixed source/workflow identity of this running job.
+source. The production runtime remains unchanged. The completed signer binding
+uses the verified identities above; the failed `fd86f11a` run is superseded.
+Later documentation commits do not change this completed run's fixed source or
+workflow identity. The APK remains unsigned until the authorized original-signing
+continuation completes; physical-device acceptance remains separate.
 
 The superseded run `42984950999` was cancelled before an Android result.
 An isolated Gradle 8.11.1 reproduction showed that the CLI `--tests` argument
@@ -35,7 +57,7 @@ The corrected workflow applies the same exact class filter through a temporary
 init script; the task allowlist is unchanged. The subsequent full invocation
 does not load that filter and still reruns all tests.
 
-## Last completed frozen QA — 2026-11-11 08:04 UTC
+## Superseded failed frozen QA — 2026-11-11 08:04 UTC
 
 - App source: `fd86f11a4a822ee4805f4c462791baeb1d741db4`.
 - App tree: `21e5603d2a3f20c840bc3c2ba7836be408dbb5ad`.
@@ -66,9 +88,9 @@ current source/tree constants. Original avatar, package, ABI, unsigned, all asse
 hashes and clean-source checks remain active. Wrong SHA, wrong tree and dirty
 source still reject; the original fixed a980 comparison was reproduced as rejecting.
 
-## Prepared original-signing continuation
+## Original-signing continuation — activated, not dispatched
 
-Draft https://github.com/Ullmann27/device-ai/pull/752 preserves the actual signer
+PR https://github.com/Ullmann27/device-ai/pull/752 records the original signer
 base `0199741efba0a90e20684520762c7d8ded0fcfc8` on
 `chatgpt/code52-owner-signing-20261109`. Initial remote checkpoint:
 `cf5658b056d21ba0c0ac5b0ec6d60420ef6f2f01`, tree
@@ -78,25 +100,64 @@ It reuses the registered Code52 workflow and shared signer/draft body, with an
 exactly separate Code53 evidence profile. Independent review found no remaining
 concrete defect in this WIP production delta. Current published Latest was checked
 as `continuum-local-code51-6c23d295e2fca2d4e5950a866547733ec5ff22b0`, so its strict
-existing baseline gate remains valid. The protected signer branch is unchanged.
+existing baseline gate remains valid. At that historical checkpoint the protected
+signer branch was unchanged.
 
-Updated prep checkpoint: `77e23d3ee58d8e0c8795bca01dd6fe80e20678c1`,
+Superseded prep checkpoint: `77e23d3ee58d8e0c8795bca01dd6fe80e20678c1`,
 tree `6976321e709ed21fbe966befcc59baa5818a69a0`. It binds the active corrected
 050a57cb/07efc776 run above and rejects both superseded attempts. Independent
 review confirmed the exact pins and required Maya preflight.
 
-Code53 remains NOT_READY_FOR_SIGNING: its production binding file intentionally
-does not exist until the actual complete run and artifacts are verified. Four
-legacy contracts and fifteen new data/archive/workflow cases pass; the sixteenth
-production-binding case is still red. This is not a total passing signer result.
+At that earlier checkpoint the production binding intentionally remained absent
+and its sixteenth data/archive/workflow case was red. That incomplete state is
+superseded by the real artifact binding below; it was never a passing signer result.
 
-Next: complete the active frozen Android/APK run; verify both artifact API IDs/digests and
-downloaded ZIP bytes, actual APK SHA/size, exact validator-report path, source/tree,
-workflow receipt, JUnit totals and all 29 required classes. Then fill the real
-Code53 binding, run all signer contracts and its secrets-free check on the one
-prep branch. Exact-source owner approval and the existing protected environment
-remain the final signing gates. No main merge, signer activation or installation
-has been performed. Keep physical Fold7/audio/GPU/thermal acceptance NOT_RUN.
+Final binding checkpoint: `25a2f53c9e15ac45df487a53414c154ce80b6631`, tree
+`420888da86f10fe54719d1a7781fc03614d48fc2`, on
+`prep/code53-original-signer-20261111`. The unchanged production verifier accepted
+the actual downloaded APK/QA ZIPs and complete GitHub metadata. Hosted workflow
+`continuum-code52-owner-signing-check.yml`, run
+https://github.com/Ullmann27/device-ai/actions/runs/42994732638, attempt 1,
+job `130435861017`, checked exactly that commit: **20/20 PASS**
+(4 Node contracts and 16 Python contracts, no failures or skips).
+
+The owner has explicitly authorized original signing of this built Code53 APK.
+The narrow shared-signer draft-release-ID HTTP 404 correction is now published
+on the prep branch at `9eb70e1d4737e7dfd1d30f65c3d1d6ab4f9f9d94`, tree
+`9d82191671827d9593bb3b5492b55f5926f49344`. Hosted run
+https://github.com/Ullmann27/device-ai/actions/runs/42997317251, attempt 1,
+job `130444533336`, checked exactly `9eb70e1d`: **28/28 PASS**
+(12 Node contracts and 16 Python contracts, zero failures/skips/cancellations).
+The earlier 20/20 result remains bound to `25a2f53c`. GitHub now reports
+PR #752 merged into the existing signer branch; the app main branch is unchanged.
+The existing signer branch `chatgpt/code52-owner-signing-20261109` is now
+activated at exactly `9eb70e1d`: GitHub `update_ref` succeeded with
+`force:false` and expected previous commit
+`0199741efba0a90e20684520762c7d8ded0fcfc8`. A separate GET of the branch ref
+confirmed the exact activated commit. Its automatic protected-branch contract
+run https://github.com/Ullmann27/device-ai/actions/runs/42997592914 also
+completed successfully on this same commit.
+
+The manual signing workflow has **not been dispatched**. The APK remains
+unsigned; this checkpoint contains no signing or installation receipt. No key
+is exported. Keep the existing protected signing gates. Published Latest remains
+the Code51 tag above; this checkpoint does not publish Code53 or install anything.
+Physical Fold7/audio/GPU/thermal acceptance remains NOT_RUN.
+
+The existing manual workflow is
+https://github.com/Ullmann27/device-ai/actions/workflows/continuum-code52-sign-release.yml.
+Dispatch only on `chatgpt/code52-owner-signing-20261109`, with these exact inputs:
+
+| Input | Value |
+| --- | --- |
+| `source_sha` | `050a57cb019dcc1b7fe6cfa2fb5c11176b048e05` |
+| `qa_run_id` | `42985335421` |
+| `owner_approved_sha` | `050a57cb019dcc1b7fe6cfa2fb5c11176b048e05` |
+
+Retain the existing `continuum-original-signing` environment owner review.
+The expected output is a verified original-signed unpublished draft, its actual
+response URL, APK SHA-256 and byte count. Record the real signing run and receipt
+before changing this document's unsigned status.
 
 ## Build failures and repairs
 
@@ -121,7 +182,8 @@ No production dialog behavior or existing assertion was removed. Invalid-key
 checks additionally require Maya to remain disabled and its credential absent.
 The corrected workflow runs both settings tests first, preserving their XML
 separately, then reruns the unchanged full suite. Both focused cases passed in
-run `42985335421`; the complete Android/APK result remains pending.
+run `42985335421`, followed by the complete Android/APK PASS recorded above.
+The earlier queued-dialog failure is superseded.
 
 ## Coordinated repairs
 
@@ -159,7 +221,7 @@ callbacks -> original avatar. No extra model, memory store, renderer or bus.
   `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`.
 - Provider timing/alignment component suite: 24 host tests PASS. Android API36
   compilation PASS for production provider classes and HTTP/UI test bodies;
-  full Robolectric execution remains a combined CI gate.
+  full Robolectric execution was then a combined CI gate, now passed above.
 - Activity/avatar timing chain: 21 composed JVM checks and 10 Node wiring
   checks PASS. Existing utterance/foreground checks and German viseme
   approximation remain in use.
@@ -172,15 +234,37 @@ callbacks -> original avatar. No extra model, memory store, renderer or bus.
   compiles all 22 current policy expressions; 25 Maya/alignment/policy JVM
   checks PASS. The frozen workflow also runs this real ICU compatibility gate.
 
-These are component/host results, not a green combined Android build. The
-frozen-source workflow must compile all Android sources, run its full suite and
-required Maya/gaze regressions, run configured lint, and validate the unsigned
-ARM64 APK's package/version/assets. Workflow commit and tested source commit
-remain explicitly separate.
+These were component/host results before the combined gate. The completed frozen
+workflow now also compiled all Android sources, passed its full suite and required
+Maya/gaze regressions, passed configured NewApi lint, and validated the unsigned
+ARM64 APK's package/version/assets. Workflow and tested-source commits remain
+explicitly separate; a hosted PASS is not physical-device acceptance.
+
+## Current-source visual review
+
+The verified current QA artifact contains 596 PNGs, including 67 explicitly
+declared native-Canvas host images. Forty-three have sidecars with the exact
+`050a57cb` source; all 22 `native-*.json` declared PNG hashes match their images.
+The remaining native sequence includes 24 frames with its own host-capture
+manifest at `_temp/code53-ui/fullstage-native-activity/capture.json`.
+
+The visual reviewer opened exactly eight current original PNGs: cover and inner
+`work-2100ms`, `returned`, `aborted-return`, and system `diagnosis`. STOP/close
+controls are readable and unobstructed; the avatar is present; completion and
+abort return to the cockpit without a retained work window. System diagnosis is
+readable and visibly marked as synthetic data. No new concrete deviation was
+found in these eight images compared with the previous diagnosis.
+
+The 200% font limitation below was observed in the superseded `fd86f11a` artifact.
+The current 200% frames were **not reopened**. Production code is unchanged
+between `fd86f11a` and `050a57cb`; retain the limitation, but do not represent it as
+a new current-source 200% visual inspection. These captures use Robolectric API28
+native Canvas and the existing 2D avatar fallback, not physical Fold7 or Filament
+GPU rendering. Audible lip timing remains NOT_RUN.
 
 ## Prior-run visual diagnosis
 
-While the corrected suite runs, artifact `13839285568` from completed run
+During the corrected suite, artifact `13839285568` from completed run
 `42977884118` was downloaded and verified locally: 426,536,310 bytes, ZIP SHA-256
 `93276da1c35fb9e9e211efb9efbfb61a4e409fce73ae49256378350babbc58ea`.
 All 2,452 archive names were safe and unique; 67 original PNGs and selected
@@ -242,8 +326,13 @@ subjective audible or Fold7 acceptance.
 
 EXP-05/12/14 boundaries remain; research flags/weights are unchanged. Preserve
 package `at.heinz.deviceai.continuumlocal`, Code53 and the original signer.
-No main merge, signing, publication or installation is performed by these
-repairs. Prepare exact-source evidence before any owner signing decision.
+The exact-source APK/QA evidence is complete and original signing is explicitly
+authorized. The published shared-signer correction passed its exact hosted
+contract check and the existing signer branch is activated at that commit.
+Manual signing dispatch is still NOT_TRIGGERED; the APK remains unsigned.
+The integrator owns the existing protected signing gates. This checkpoint
+contains no main merge, signing, publication or installation receipt; published
+Latest remains Code51.
 
 Rollback: revert the scoped fixes together with their regressions; Maya can
 also be disabled through the existing voice picker. Preserve donor worktrees

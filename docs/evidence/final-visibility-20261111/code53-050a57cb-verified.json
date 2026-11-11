@@ -1,0 +1,479 @@
+{
+  "schemaVersion": 1,
+  "kind": "CODE53_FROZEN_QA_VERIFICATION",
+  "status": "VERIFIED_UNSIGNED_APK",
+  "verifiedOn": "2026-11-11",
+  "repository": "Ullmann27/device-ai",
+  "source": {
+    "commit": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+    "tree": "539ea3aac0af04644a015b3fb69ba865af80d1a8",
+    "beforeAfterIdenticalAndClean": true,
+    "originalAvatarGitBlob": "3498c003a8bf186a8abb47048e2d36be4810b88c"
+  },
+  "workflow": {
+    "commit": "07efc77652638cfa40a67270475aa2c08ded5c76",
+    "path": ".github/workflows/continuum-code53-frozen-qa.yml",
+    "runId": 42985335421,
+    "attempt": 1,
+    "jobId": 130405169817,
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/Ullmann27/device-ai/actions/runs/42985335421"
+  },
+  "artifacts": [
+    {
+      "role": "apk",
+      "id": 13842542249,
+      "name": "Code53-050a57cb-UNSIGNED-NOT-INSTALLABLE",
+      "bytes": 73412550,
+      "apiDigest": "sha256:083c2df520fb5356d8d6357cbb0d7eb57b6aa279fd57db7ec2c0ac2d9a1573ee",
+      "downloadedZipSha256": "083c2df520fb5356d8d6357cbb0d7eb57b6aa279fd57db7ec2c0ac2d9a1573ee",
+      "downloadedZipBytesVerified": true,
+      "downloadedZipDigestVerified": true,
+      "safeExtractionVerified": true,
+      "entries": 5,
+      "extractedBytes": 102701821,
+      "apiUrl": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/13842542249"
+    },
+    {
+      "role": "qa",
+      "id": 13842736860,
+      "name": "Code53-050a57cb-QA-Evidence",
+      "bytes": 426597327,
+      "apiDigest": "sha256:a08c090d94ec63edf7ca08b36fda00ff286fa7eb9b0e42b6ad226e679098708e",
+      "downloadedZipSha256": "a08c090d94ec63edf7ca08b36fda00ff286fa7eb9b0e42b6ad226e679098708e",
+      "downloadedZipBytesVerified": true,
+      "downloadedZipDigestVerified": true,
+      "safeExtractionVerified": true,
+      "entries": 2465,
+      "extractedBytes": 436772172,
+      "apiUrl": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/13842736860"
+    }
+  ],
+  "apk": {
+    "artifactId": 13842542249,
+    "artifactPath": "Continuum-Code53-UNSIGNED-NOT-INSTALLABLE.apk",
+    "sha256": "28153df1b4e6f0d97a8f625a7f444248efc6ee09436e7e77c5aab4e3aaaa9c0e",
+    "bytes": 102701335,
+    "identity": {
+      "package": "at.heinz.deviceai.continuumlocal",
+      "versionCode": 53,
+      "versionName": "0.3.52",
+      "abi": "arm64-v8a",
+      "minSdk": 26,
+      "targetSdk": 36,
+      "debuggable": false
+    },
+    "sha256sumsArtifactPath": "SHA256SUMS.txt",
+    "sha256sumsMatch": true,
+    "resultHashAndBytesMatch": true,
+    "artifactStatus": "UNSIGNED_NOT_INSTALLABLE",
+    "signing": "NOT_USED",
+    "installation": "NOT_RUN"
+  },
+  "validator": {
+    "status": "PASS",
+    "sha256": "2a0aeaef48bb5482f0da304ee24e3a69a66d3fa2a86c81885436d28b7c8a535f",
+    "qaArtifactId": 13842736860,
+    "qaArtifactPath": "_temp/code53-package/RESULT.json",
+    "reportSha256": "fb9a78ec26af6dec2f4b983cb62cbf3691785d1f1763f6f615e6f917952cf496",
+    "expectedSource": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+    "expectedTree": "539ea3aac0af04644a015b3fb69ba865af80d1a8",
+    "sourceBefore": {
+      "commit": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+      "tree": "539ea3aac0af04644a015b3fb69ba865af80d1a8",
+      "status": "",
+      "original_avatar_git_blob": "3498c003a8bf186a8abb47048e2d36be4810b88c"
+    },
+    "sourceAfter": {
+      "commit": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+      "tree": "539ea3aac0af04644a015b3fb69ba865af80d1a8",
+      "status": "",
+      "original_avatar_git_blob": "3498c003a8bf186a8abb47048e2d36be4810b88c"
+    },
+    "zipCrc": "PASS",
+    "archiveEntryCount": 80,
+    "assetFilesCompared": 37,
+    "apkSigningBlock": false,
+    "zipalign16KiB": "PASS",
+    "unsignedDiagnostic": "EXPECTED_MISSING_SIGNATURE"
+  },
+  "buildInfo": {
+    "apkArtifactPath": "BUILD-INFO.txt",
+    "qaArtifactPath": "_temp/code53-unsigned/BUILD-INFO.txt",
+    "copiesIdentical": true,
+    "source_sha": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+    "workflow_sha": "07efc77652638cfa40a67270475aa2c08ded5c76",
+    "Fold7": "NOT_RUN",
+    "original_signature": "NOT_USED"
+  },
+  "tests": {
+    "fullAndroid": {
+      "status": "PASS",
+      "qaArtifactXmlDirectory": "device-ai/device-ai/source/app/build/test-results/testDebugUnitTest",
+      "xmlFiles": 804,
+      "tests": 4668,
+      "passed": 4651,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 17,
+      "xmlCountsAndUniqueCaseIdentitiesVerified": true,
+      "junitSummaryArtifactPath": "JUNIT.txt",
+      "junitSummaryMatchesXml": true,
+      "requiredClassCount": 29,
+      "requiredTestCount": 168,
+      "requiredPassed": 168,
+      "requiredFailures": 0,
+      "requiredErrors": 0,
+      "requiredSkipped": 0,
+      "requiredClasses": {
+        "AvatarSpeechReattachmentUiTest": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "AvatarTtsLiveConnectionUiTest": {
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "CinemaNativeSequenceUiTest": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "CloudSpeechTurnConstraintTest": {
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "ContinuousConversationModeTest": {
+          "tests": 16,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "ContinuumAvatar3dLifecycleUiTest": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "ContinuumOfflineVoiceRecoveryUiTest": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "ContinuumTaskEffectsCallerUiTest": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "ContinuumUiFeedbackTest": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "ConversationSpeechIntegrationRegressionTest": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "ElevenLabsPcmRequestUiTest": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "HollywoodFuiWindowUiTest": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "HollywoodFuiWorkActivityTest": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "JarvisFluidLightTest": {
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "JarvisLiveAvatarWiringUiTest": {
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "JarvisRenderQualityAdaptiveTest": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "JarvisRenderQualityTest": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "LuxuryHoloButtonRendererTest": {
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "MayaAvatarTimingIntegrationTest": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "MayaConversationInterruptionTest": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "MayaPcmPlayerUiTest": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "MayaSpeechAlignmentTest": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "MayaSpeechTest": {
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "MayaSpeechTimingTest": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "MayaVoiceSettingsUiTest": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "PerimeterWingChoreographerTest": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "SpatialWindowLightTest": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "TtsHologramSignalTest": {
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "UiFeedbackPcmTest": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      }
+    },
+    "mayaSettingsPreflight": {
+      "status": "PASS",
+      "qaArtifactXmlPath": "_temp/code53-preflight/TEST-at.heinz.deviceai.MayaVoiceSettingsUiTest.xml",
+      "tests": 2,
+      "passed": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "countedSeparatelyFromFullSuite": true,
+      "methods": [
+        "savedPreferenceNeverOverridesInternetRestrictionsOrMissingCredential",
+        "mayaSetupIsReachableWithoutAndroidTtsAndNeverAutoGeneratesASample"
+      ]
+    },
+    "hostProfiles": {
+      "critical": {
+        "status": "PASS",
+        "sourceUnchanged": true,
+        "sourceCommit": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+        "totals": {
+          "total": 136,
+          "passed": 136,
+          "failed": 0,
+          "skipped": 0,
+          "executed": 136
+        },
+        "qaArtifactPath": "_temp/code53-critical/report.json"
+      },
+      "full-node": {
+        "status": "PASS",
+        "sourceUnchanged": true,
+        "sourceCommit": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+        "totals": {
+          "total": 2495,
+          "passed": 2458,
+          "failed": 0,
+          "skipped": 37,
+          "executed": 2458
+        },
+        "qaArtifactPath": "_temp/code53-full-node/report.json"
+      }
+    },
+    "configuredLint": {
+      "status": "PASS",
+      "scope": "NewApi only; no broader lint acceptance claimed",
+      "qaArtifactXmlPath": "device-ai/device-ai/source/app/build/reports/lint-results-debug.xml",
+      "issues": 0,
+      "errors": 0
+    },
+    "nativeIcu": {
+      "status": "PASS",
+      "patterns": 22,
+      "negativeControlIcuError": 66315,
+      "apkArtifactPath": "ICU-REGEX.json",
+      "qaArtifactPath": "_temp/code53-unsigned/ICU-REGEX.json",
+      "sourceSha256": "c552f6156e59bbbe261049b1066de0ae5c9673822a88eed5551cc4cf4f0766fe"
+    }
+  },
+  "visualEvidence": {
+    "qaArtifactDirectory": "_temp/code53-ui",
+    "pngFiles": 596,
+    "declaredNativeCanvasPngs": 67,
+    "nativePngsWithVerifiedSourceSidecar": 43,
+    "nativePngsWithVerifiedDeclaredSha256": 22,
+    "nativeSequenceFrames": 24,
+    "sequenceManifestArtifactPath": "_temp/code53-ui/fullstage-native-activity/capture.json",
+    "backend": "Robolectric API28 native Canvas host; existing 2D avatar fallback",
+    "currentOriginalImagesReviewed": 8,
+    "currentReviewedArtifactPaths": [
+      "_temp/code53-ui/native-cover-work-2100ms.png",
+      "_temp/code53-ui/native-inner-work-2100ms.png",
+      "_temp/code53-ui/native-cover-returned.png",
+      "_temp/code53-ui/native-inner-returned.png",
+      "_temp/code53-ui/native-cover-aborted-return.png",
+      "_temp/code53-ui/native-inner-aborted-return.png",
+      "_temp/code53-ui/system-cover-diagnosis.png",
+      "_temp/code53-ui/system-inner-diagnosis.png"
+    ],
+    "currentReview": "STOP/close controls readable and unobstructed; avatar present; cockpit returns after completion and abort without a retained work window; system diagnosis readable with visible synthetic-data labeling; no new concrete deviation in these eight images.",
+    "font200Limit": {
+      "observedInRun": 42977884118,
+      "observedSource": "fd86f11a4a822ee4805f4c462791baeb1d741db4",
+      "observation": "Decorative Continuum title clipped at the right and compact tile labels shortened; scrolled action navigation remains visible.",
+      "currentFont200ImagesReopened": false,
+      "currentProductionCodeUnchangedFromObservedSource": true,
+      "status": "ACKNOWLEDGED_LIMIT; not a new current 200-percent visual acceptance"
+    },
+    "physicalFold7": "NOT_RUN",
+    "filamentGpu": "NOT_RUN",
+    "audibleLipTiming": "NOT_RUN"
+  },
+  "originalSigning": {
+    "ownerAuthorization": "EXPLICITLY_AUTHORIZED_FOR_THIS_BUILT_CODE53_APK",
+    "status": "AUTHORIZED_SIGNER_ACTIVATED_APK_UNSIGNED",
+    "keyExported": false,
+    "bindingCheckpoint": {
+      "branch": "prep/code53-original-signer-20261111",
+      "commit": "25a2f53c9e15ac45df487a53414c154ce80b6631",
+      "tree": "420888da86f10fe54719d1a7781fc03614d48fc2"
+    },
+    "hostedContracts": {
+      "workflowPath": ".github/workflows/continuum-code52-owner-signing-check.yml",
+      "runId": 42997317251,
+      "attempt": 1,
+      "jobId": 130444533336,
+      "checkedCommit": "9eb70e1d4737e7dfd1d30f65c3d1d6ab4f9f9d94",
+      "conclusion": "success",
+      "nodePassed": 12,
+      "pythonPassed": 16,
+      "totalPassed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "url": "https://github.com/Ullmann27/device-ai/actions/runs/42997317251"
+    },
+    "remainingWork": "Original signing is authorized and the existing signer branch is activated at the hosted-verified commit. The manual signing workflow has not been dispatched; the APK remains unsigned. The main integrator owns the existing protected signing gates. No key export or installation.",
+    "publishedLatestUnchanged": "continuum-local-code51-6c23d295e2fca2d4e5950a866547733ec5ff22b0",
+    "sharedSignerFixCheckpoint": {
+      "branch": "prep/code53-original-signer-20261111",
+      "commit": "9eb70e1d4737e7dfd1d30f65c3d1d6ab4f9f9d94",
+      "tree": "9d82191671827d9593bb3b5492b55f5926f49344",
+      "status": "HOSTED_CONTRACTS_PASS"
+    },
+    "bindingCheckpointHostedContracts": {
+      "workflowPath": ".github/workflows/continuum-code52-owner-signing-check.yml",
+      "runId": 42994732638,
+      "attempt": 1,
+      "jobId": 130435861017,
+      "conclusion": "success",
+      "nodePassed": 4,
+      "pythonPassed": 16,
+      "totalPassed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "url": "https://github.com/Ullmann27/device-ai/actions/runs/42994732638"
+    },
+    "activation": {
+      "status": "REF_READBACK_VERIFIED",
+      "branch": "chatgpt/code52-owner-signing-20261109",
+      "previousCommit": "0199741efba0a90e20684520762c7d8ded0fcfc8",
+      "activatedCommit": "9eb70e1d4737e7dfd1d30f65c3d1d6ab4f9f9d94",
+      "fastForwardOnly": true,
+      "expectedPreviousCommitChecked": true,
+      "manualSigningWorkflowDispatch": "NOT_TRIGGERED",
+      "readbackCommit": "9eb70e1d4737e7dfd1d30f65c3d1d6ab4f9f9d94",
+      "pullRequest": 752,
+      "pullRequestMerged": true,
+      "protectedBranchCheckRunId": 42997592914,
+      "protectedBranchCheckConclusion": "success"
+    },
+    "manualDispatch": {
+      "status": "NOT_TRIGGERED",
+      "workflowPath": ".github/workflows/continuum-code52-sign-release.yml",
+      "url": "https://github.com/Ullmann27/device-ai/actions/workflows/continuum-code52-sign-release.yml",
+      "ref": "chatgpt/code52-owner-signing-20261109",
+      "inputs": {
+        "source_sha": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+        "qa_run_id": "42985335421",
+        "owner_approved_sha": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05"
+      },
+      "environment": "continuum-original-signing",
+      "expectedOutput": "ORIGINAL_SIGNED_VERIFIED_UNPUBLISHED_DRAFT"
+    }
+  },
+  "deviceAcceptance": {
+    "Fold7": "NOT_RUN",
+    "microphone": "NOT_RUN",
+    "audibleMaya": "NOT_RUN",
+    "liveLipAndCamera": "NOT_RUN",
+    "filamentGpu": "NOT_RUN",
+    "thermal": "NOT_RUN",
+    "installation": "NOT_RUN"
+  }
+}
