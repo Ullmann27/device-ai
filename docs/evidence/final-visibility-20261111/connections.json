@@ -1,0 +1,77 @@
+{
+  "sourceBaseline": "e23506188fdb6454c244847083c60ae42189ee05",
+  "scope": "Initial connection matrix; historical evidence is not new acceptance",
+  "rows": [
+    {
+      "component": "Cinema budget",
+      "caller": "ContinuumHologramView.renderBudget \u2192 JarvisRenderQuality.adaptiveAnimation",
+      "activation": "ACTIVE",
+      "testedEffect": "9 JVM tests PASS; 2 regressions RED before fix",
+      "visibleResult": "Cool inference retains illumination; frame and particle caps remain",
+      "remainingGap": "Hardware visual acceptance NOT_RUN"
+    },
+    {
+      "component": "Renderer",
+      "caller": "AgentActivity.buildHome \u2192 ContinuumHomeView.setJarvisShellStage(true); ContinuumHologramView.update3d \u2192 FilamentAvatarRenderer.create",
+      "activation": "PREFERENCE_AND_SURFACE_GATED",
+      "testedEffect": "Prior source tests only",
+      "visibleResult": "Filament when surface succeeds; labelled 2D fallback otherwise",
+      "remainingGap": "Live Filament/Fold7 NOT_RUN"
+    },
+    {
+      "component": "Dialogue",
+      "caller": "AgentActivity.sendCurrentInput \u2192 runLocal \u2192 LocalConversationContext",
+      "activation": "ACTIVE",
+      "testedEffect": "Prior #740 host evidence; no new end-to-end run",
+      "visibleResult": "Existing answer and speech path",
+      "remainingGap": "Real model NOT_RUN"
+    },
+    {
+      "component": "Memory and learning",
+      "caller": "BoundedAgent \u2192 experienceStore \u2192 checkpointContinuumAsync \u2192 AgentExperienceRecall",
+      "activation": "QUALIFIED_PATH_ONLY",
+      "testedEffect": "Prior #740 receipt/restart evidence",
+      "visibleResult": "Historical experience in later context",
+      "remainingGap": "New natural-model transfer NOT_RUN"
+    },
+    {
+      "component": "System tools",
+      "caller": "dispatchSystemTool \u2192 createToolGate \u2192 DeviceToolExecutor",
+      "activation": "OWNER_SCOPED",
+      "testedEffect": "Prior #740 host tests",
+      "visibleResult": "System report and cockpit events",
+      "remainingGap": "Real Shizuku NOT_RUN"
+    },
+    {
+      "component": "Documents and web",
+      "caller": "AgentActivity document flow / runResearch \u2192 scoped approval",
+      "activation": "PERMISSION_GATED",
+      "testedEffect": "Prior #740 host tests",
+      "visibleResult": "Document and research windows",
+      "remainingGap": "Live external providers NOT_RUN"
+    },
+    {
+      "component": "Speech and avatar",
+      "caller": "refreshHologramState \u2192 AvatarDirector / ContinuumHologramView",
+      "activation": "PREFERENCE_GATED",
+      "testedEffect": "Prior simulated TTS tests only",
+      "visibleResult": "Listening, speaking and work pose",
+      "remainingGap": "Real microphone/TTS/visemes NOT_RUN"
+    },
+    {
+      "component": "STOP and recovery",
+      "caller": "Existing cancellation tokens, generations, ToolGate.cancel and turn lifecycle",
+      "activation": "ACTIVE",
+      "testedEffect": "Prior #740 STOP tests",
+      "visibleResult": "Controlled window return; stale callbacks rejected",
+      "remainingGap": "Hardware interruption/restart NOT_RUN"
+    }
+  ],
+  "rejectedExperiments": "OMEGA721 and weights728 not activated; CTX3 OFF/shadow",
+  "donors": {
+    "715": "c972f56ccc4caa2f1807bcaf1d4665347c66c629",
+    "739": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "746": "67bf048a7d50a78b027da27a6b9814cbd2457372",
+    "claude/cinema2-depth-light-20261111": "e23506188fdb6454c244847083c60ae42189ee05"
+  }
+}
