@@ -1,0 +1,16 @@
+CHECK	name=finite_difference	passed=true	maxAbsoluteError=4.0233135E-6	absTolerance=2.0E-4	relTolerance=0.003	epsilon=0.001
+CHECK	name=identical_zero_kl	passed=true
+CHECK	name=logit_shift_invariance	passed=true
+CHECK	name=one_hot_equivalence	passed=true
+CHECK	name=mixed_objective_adds_gradients	passed=true
+CHECK	name=external_gradient_accumulates	passed=true
+CHECK	name=upstream_scale_applied	passed=true
+CHECK	name=duplicate_mean_invariance	passed=true
+CHECK	name=normalizer_scaling	passed=true
+CHECK	name=teacher_not_mutated	passed=true
+CHECK	name=negative_teacher_rejected	passed=true
+CHECK	name=teacher_mass_rejected	passed=true
+CHECK	name=zero_normalizer_rejected	passed=true
+CHECK	name=nonfinite_logits_rejected	passed=true
+CHECK	name=extreme_logits_finite	passed=true
+RESULT	checks=15	modelUpdates=0	passed=true

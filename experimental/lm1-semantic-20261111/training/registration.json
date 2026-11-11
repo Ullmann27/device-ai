@@ -1,0 +1,117 @@
+{
+  "schema": "lm1-semantic-native-registration-v1",
+  "status": "FROZEN_NOT_RUN_ROOT_GATE_REQUIRED",
+  "baseCommit": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+  "candidateCount": 2,
+  "maximumUpdatesPerCandidate": 128,
+  "architectureChanged": false,
+  "optimizerFreshPerCandidate": true,
+  "seed": 20261111,
+  "sourceBindingSha256": "9e72be063fbfd82000b569498fb6ab38d6747ec82f8c7ebae9e246b8d5fdd973",
+  "jarSha256": "92c7795fe5e869b254ca986c7cb9f41a9da417dea7b333bb444f0a918c8f56cc",
+  "compilerJarSha256": "66e73eacd619c9beb7c22042117af36b443529c4d80237ee82cc4b2acb6f3d0b",
+  "stdlibSha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+  "javaPath": "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+  "javaVersion": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)\n",
+  "runnerSha256": "25eefe15c19950f046b727389515495a852336ccaa578470bc2843225417e440",
+  "inputSha256": {
+    "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "/workspace/scratch/c054784f52c4/lm1-data/experimental/lm1-semantic-20261111/data/pilot-v1/train.tsv": "de702b80266c6046a2414a267991379367aebd28586f6e59d6bff02ceeca2a5b",
+    "/workspace/scratch/c054784f52c4/lm1-semantic-native/experiment.jar": "92c7795fe5e869b254ca986c7cb9f41a9da417dea7b333bb444f0a918c8f56cc",
+    "/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+    "/workspace/scratch/c054784f52c4/lm1-semantic-native/build.json": "470c4ecf1e54475b8ec383146d1b0a39178445a345e677e4058f237961cf1a7e",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/LmSemanticPilot.kt": "fd755f8b04ba1bfe917beaac9a891f8696528fcfa8e7dab71815978da30679c1",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/LmSemanticChecks.kt": "0382e532965c29e6db1a24a8d09c87bdcd3835cf431bb1cf8662311d5627f549",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/run_semantic.py": "25eefe15c19950f046b727389515495a852336ccaa578470bc2843225417e440",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/PROPOSAL.md": "6a3b97bd0e1271463930af0f5acd1a4b16218d81cc0caf2e05dd16ab7dbe596a",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared/anchors.tsv": "fea4a7b4a11e6eb22f3dfbce699962224346517fa60c9675070fb4eac3697d99",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared/rollouts.tsv": "36ccf15a5a54f054968fff5cd9a7bf1a20def2a50614cbdb099b58f7547a9e8c",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared/manifest.json": "5437a071e66a8a429366613d3139c52b358a78d31bbbf3bdd828acc53ddd8cc5",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared/token-parity.json": "022ca1648fd6fddfe64723bb6ec9e5318c10a29d4fc58a18dd0d36545ea31828",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/fixtures/manifest.json": "e6486a0721679ffdad17907d0348495ee0d62332a1a9128d1617be35581bd340",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/fixtures/retention-candidates.tsv": "7b91f08eb67767c3b37498a5f068f34c6ade265bf2318ea37f3dae29e3313d4c",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/fixtures/continuation-prefixes.tsv": "f6c868ec8d3ba32a9acfd8503e4031ed9880622e7feceb6ce63b8b75ec16622f",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/weight-space-20261110/training/distill-v1/LmSoftTargetKl.kt": "a0584ecea66b458555da0964cf24371043886de952d7059de117e62bd652d9ce",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/weight-space-20261110/training/build_experiment.py": "b0562b82f6fc7117fbff1b5c7c0afa14ec115927b15726ba906cb86d94e199d4"
+  },
+  "trainingDataSha256": "de702b80266c6046a2414a267991379367aebd28586f6e59d6bff02ceeca2a5b",
+  "trainingDataRows": 192,
+  "labelBatchCounts": {
+    "0": 1,
+    "1": 1,
+    "2": 1,
+    "3": 1
+  },
+  "loss": {
+    "A": "mean label CE + 0.25 mean EOS CE",
+    "B": "A + 0.5 mean verified-anchor label CE + 1.0 mean original-rollout full-vocabulary KL"
+  },
+  "preservationAnchorsPerClass": 8,
+  "preservationRollouts": 8,
+  "earlyStop": {
+    "checksAtSteps": [
+      32,
+      64,
+      96,
+      128
+    ],
+    "instructionSentinels": "First2 TRAIN rows of each class;8 fixed cases",
+    "firstEosThreshold": 7,
+    "continuationSentinels": "First4 prepared original rollouts",
+    "lengthThresholdAllBelow": 4,
+    "numeric": "Reject nonfinite values before applying optimizer update",
+    "timeLimitNativeSeconds": 600,
+    "timeLimitProcessSeconds": 660,
+    "noRestart": true
+  },
+  "resume": {
+    "atStep": 64,
+    "operation": "save/load/serialize-identical state; continue same candidate",
+    "additionalUpdates": 0
+  },
+  "executionLedger": "/workspace/scratch/c054784f52c4/lm1-semantic-execution-ledger",
+  "arms": {
+    "A": {
+      "command": [
+        "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "-Xmx768m",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/c054784f52c4/lm1-semantic-native/experiment.jar:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+        "at.heinz.deviceai.learning.lm.LmSemanticPilot",
+        "A",
+        "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1",
+        "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp",
+        "/workspace/scratch/c054784f52c4/lm1-data/experimental/lm1-semantic-20261111/data/pilot-v1/train.tsv",
+        "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared",
+        "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/artifacts/candidate-A",
+        "9e72be063fbfd82000b569498fb6ab38d6747ec82f8c7ebae9e246b8d5fdd973"
+      ],
+      "outputDirectory": "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/artifacts/candidate-A",
+      "receiptDirectory": "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/results-A"
+    },
+    "B": {
+      "command": [
+        "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "-Xmx768m",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/c054784f52c4/lm1-semantic-native/experiment.jar:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+        "at.heinz.deviceai.learning.lm.LmSemanticPilot",
+        "B",
+        "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1",
+        "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp",
+        "/workspace/scratch/c054784f52c4/lm1-data/experimental/lm1-semantic-20261111/data/pilot-v1/train.tsv",
+        "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared",
+        "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/artifacts/candidate-B",
+        "9e72be063fbfd82000b569498fb6ab38d6747ec82f8c7ebae9e246b8d5fdd973"
+      ],
+      "outputDirectory": "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/artifacts/candidate-B",
+      "receiptDirectory": "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/results-B"
+    }
+  },
+  "holdoutRead": false,
+  "promotion": "FORBIDDEN_AUTOMATICALLY",
+  "scope": "EXP-05/EXP-12 isolated CPU experiment"
+}

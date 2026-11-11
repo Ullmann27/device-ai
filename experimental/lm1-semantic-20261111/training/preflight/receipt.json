@@ -1,0 +1,21 @@
+{
+  "command": [
+    "java",
+    "-Xmx768m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/c054784f52c4/lm1-semantic-native/experiment.jar:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmSemanticPilot",
+    "prepare",
+    "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp",
+    "/workspace/scratch/c054784f52c4/lm1-data/experimental/lm1-semantic-20261111/data/pilot-v1/train.tsv",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/fixtures",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared",
+    "9e72be063fbfd82000b569498fb6ab38d6747ec82f8c7ebae9e246b8d5fdd973"
+  ],
+  "exitCode": 0,
+  "wallSeconds": 2.218560068999068,
+  "peakRssKiB": 96320,
+  "modelUpdates": 0
+}

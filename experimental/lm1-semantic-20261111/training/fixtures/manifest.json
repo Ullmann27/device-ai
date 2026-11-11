@@ -1,0 +1,21 @@
+{
+  "schema": "lm1-preservation-fixtures-v1",
+  "origin": "Bot2-authored synthetic training-only anchors, before any new-model training",
+  "historicalTemplates": "Open/search template forms deliberately based on historical retention TRAIN formats; objects/topics are new. These are NOT independent tests.",
+  "trainingAllowed": true,
+  "independentEvaluation": false,
+  "selection": "Original inference only. Retain first up to eight correct rows per class, minimum two each. Select first up to eight original rollouts reaching at least24 tokens, minimum two; no candidate-dependent choice.",
+  "candidateRows": 64,
+  "continuationPrefixes": 16,
+  "frozenBeforeOriginalInference": true,
+  "files": {
+    "continuation-prefixes.tsv": {
+      "sha256": "f6c868ec8d3ba32a9acfd8503e4031ed9880622e7feceb6ce63b8b75ec16622f",
+      "bytes": 575
+    },
+    "retention-candidates.tsv": {
+      "sha256": "7b91f08eb67767c3b37498a5f068f34c6ade265bf2318ea37f3dae29e3313d4c",
+      "bytes": 3868
+    }
+  }
+}

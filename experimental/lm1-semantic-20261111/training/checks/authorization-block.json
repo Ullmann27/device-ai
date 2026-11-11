@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "check": "Missing root authorization is rejected before any native run or ledger mutation",
+  "exitCode": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/run_semantic.py\", line 104, in <module>\n    main()\n  File \"/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/run_semantic.py\", line 41, in main\n    assert args.gate is not None, \"root gate is required\"\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError: root gate is required\n",
+  "modelUpdates": 0
+}
