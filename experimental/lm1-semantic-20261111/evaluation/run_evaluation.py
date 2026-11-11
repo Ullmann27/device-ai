@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import resource
 import subprocess
 import sys
 import time
@@ -55,25 +56,23 @@ def tensor_sha(model):
 
 def run_native(command, directory):
     directory.mkdir(exist_ok=False)
-    cpu_command = ["/usr/bin/time", "-f", '{"userSeconds":%U,"systemSeconds":%S,"maximumRssKiB":%M}',
-                   "-o", str(directory / "resources.json"), *command]
+    before = resource.getrusage(resource.RUSAGE_CHILDREN)
     started = time.perf_counter()
     timeout = False
     try:
-        completed = subprocess.run(cpu_command, capture_output=True, timeout=180)
+        completed = subprocess.run(command, capture_output=True, timeout=180)
         stdout, stderr, code = completed.stdout, completed.stderr, completed.returncode
     except subprocess.TimeoutExpired as error:
         stdout, stderr, code = error.stdout or b"", error.stderr or b"", None
         timeout = True
     (directory / "stdout.tsv").write_bytes(stdout)
     (directory / "stderr.txt").write_bytes(stderr)
-    resources = None
-    if (directory / "resources.json").exists():
-        try:
-            resources = json.loads((directory / "resources.json").read_text())
-        except json.JSONDecodeError:
-            pass
-    receipt = {"command": command, "measurementCommand": cpu_command,
+    after = resource.getrusage(resource.RUSAGE_CHILDREN)
+    resources = {"userSeconds": after.ru_utime - before.ru_utime,
+                 "systemSeconds": after.ru_stime - before.ru_stime,
+                 "maximumChildRssSoFarKiB": after.ru_maxrss,
+                 "rssScope": "maximum across this evaluator process's completed children, not per-model isolated RSS"}
+    receipt = {"command": command,
         "exitCode": code, "timedOut": timeout, "wallSeconds": time.perf_counter() - started,
         "resources": resources, "stdoutSha256": sha(directory / "stdout.tsv"),
         "stderrSha256": sha(directory / "stderr.txt"), "optimizerUpdates": 0}
@@ -119,8 +118,8 @@ def main():
     tokenizer_module = module(data / "frozen_tokenizer.py", "independent_tok")
     tokenizer = tokenizer_module.Tokenizer(args.tokenizer.read_bytes())
     reader = module(old / "evaluation/audit_lm1_weights.py", "lm1_reader")
-    train = read_rows(data / "pilot/train.tsv")
-    dev = read_rows(data / "pilot/dev.tsv")
+    train = read_rows(data / "pilot-v1/train.tsv")
+    dev = read_rows(data / "pilot-v1/dev.tsv")
     sets = {"semantic": read_rows(holdout / "semantic.tsv"),
             "legacyRetention": read_rows(old / "data/retention.tsv"),
             "novelRetention": read_rows(holdout / "novel-retention.tsv")}
@@ -147,7 +146,7 @@ def main():
         identities[name] = {"checkpointSha256": model["sha256"], "tensorSha256": tensor_sha(model),
                             "config": model["config"], "tokenizerSha256": model["tokenizer"], **delta}
     files = list(holdout.glob("*")) + list(evaluation.glob("*.py")) + [evaluation / "PROTOCOL.md", evaluation / "LmSemanticEvaluator.kt",
-            args.models, args.tokenizer, args.build, jar, data / "pilot/train.tsv", data / "pilot/dev.tsv", data / "frozen_tokenizer.py",
+            args.models, args.tokenizer, args.build, jar, data / "pilot-v1/train.tsv", data / "pilot-v1/dev.tsv", data / "frozen_tokenizer.py",
             old / "data/retention.tsv", old / "data/retention_text.txt"] + [Path(entry["path"]) for entry in paths.values()]
     hashes = {str(file.resolve()): sha(file) for file in files if file.is_file()}
     registration = {"schema": "lm1-independent-native-evaluation-registration-v1",
