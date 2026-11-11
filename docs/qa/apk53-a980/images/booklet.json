@@ -37,6 +37,24 @@
       "phase": "work-1180ms"
     }
   ],
+  "avatarFrames": [
+    {
+      "file": "Continuum-Code53-Originalavatar-Ruhe-CPU.png",
+      "manifestFile": "ruhe.png",
+      "sha256": "32e4db3ee127451e2177e884a5356a1fa3f8e2ebbfd8291c0c30ee953101f0e9"
+    },
+    {
+      "file": "Continuum-Code53-Originalavatar-Fensterblick-CPU.png",
+      "manifestFile": "fensterblick.png",
+      "sha256": "b393d69b40011ea102eab801f43f8e2b794fc754f1364b3f7b58b2d696a0d88e"
+    },
+    {
+      "file": "Continuum-Code53-Originalavatar-Sprechen-CPU.png",
+      "manifestFile": "sprechen-geskriptet.png",
+      "sha256": "ab565ecbeba6334e92198b390fa4d2ebefc5d830213df4387a498bf5d836d394"
+    }
+  ],
+  "avatarManifestSha256": "79516e94a2ceb82422ef5ccd64345519907a2fe6c0ec770b3668b9e95bf27f79",
   "Fold7": "NOT_RUN",
   "Filament": "NOT_RUN"
 }

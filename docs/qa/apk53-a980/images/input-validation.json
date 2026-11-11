@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "case": "three original avatar inputs",
+      "result": "PASS"
+    },
+    {
+      "case": "six original native inputs",
+      "result": "PASS"
+    },
+    {
+      "case": "substituted avatar PNG rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "altered manifest rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "substituted native PNG rejected",
+      "result": "PASS"
+    }
+  ],
+  "scriptSha256": "604201ff0f3dec1de1b4e5213ac66bf64d3708c820a9cd40742a5fce5272f05f"
+}

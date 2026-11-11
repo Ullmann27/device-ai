@@ -142,3 +142,14 @@ matches all seven visually inspected pages. File hash and size are in
 [images/booklet.json](images/booklet.json); the generator accepts an artifact
 root containing the delivered `apk53-a980-delivery` PNGs. The Android source and
 running CI are unchanged.
+
+## Image evidence review repairs
+
+All eight unchanged CPU PNGs are now committed next to the original-avatar
+manifest; all six selected unchanged native Canvas PNGs are committed under
+[images/native](images/native). Their Git blob identities and SHA-256 values
+were verified before publication. Reviewers can inspect actual bytes directly.
+The booklet now rejects substituted avatar/native inputs and an altered pose
+manifest before authoring. Five focused positive/negative checks pass; the
+published PDF bytes remain unchanged. The original omission concerned GitHub
+image availability: the download package already contained the actual PNGs.

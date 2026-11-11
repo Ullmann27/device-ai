@@ -7,3 +7,7 @@ Studio-Licht und Glow sind kein Filament-Pixelnachweis. Keine neue Avatar-Geomet
 Mikrofon, Kamera, TTS-Wortbereiche und Arbeitsereignisse sind geskriptete Testeingaben, keine echten Audio-/Kameraaufnahmen. Fold7/Filament/GPU/Thermik/FPS: NOT_RUN.
 Reproduktion: bash replay-original-avatar.sh /path/to/exact-a980-repository /path/to/this-directory /path/to/new-output
 Die benoetigte Renderimplementierung ist im Repository unter tools/avatar-3d/reference-atlas/render-production-poses.py bereits enthalten. Keine APK-/App-Aenderung fuer diesen Nachweis.
+
+All eight original PNGs are committed alongside pose-replay-manifest.json.
+Each PNG must match its frame imageSha256. These are Blender CPU renders,
+not Filament/device acceptance. The owner download package is an additional copy.

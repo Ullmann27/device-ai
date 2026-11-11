@@ -1186,7 +1186,12 @@
     "inputScope": "Scripted command/reasoning lifecycle, existing 2D fallback, no model inference",
     "hardwareAGSL": "NOT_RUN",
     "nativeFilament": "NOT_RUN",
-    "physicalFold7": "NOT_RUN"
+    "physicalFold7": "NOT_RUN",
+    "trackedImages": {
+      "directory": "images/native",
+      "count": 6,
+      "hashesVerified": true
+    }
   },
   "githubEvidence": {
     "sourceBoundActionsQa": "IN_PROGRESS",
@@ -1278,7 +1283,13 @@
     "browserAttempt": "Chromium blocked by socket EPERM; no browser render produced. Used existing CPU renderer instead.",
     "Fold7": "NOT_RUN",
     "Filament": "NOT_RUN",
-    "reproduction": "original-avatar/replay-original-avatar.sh"
+    "reproduction": "original-avatar/replay-original-avatar.sh",
+    "trackedImages": {
+      "directory": "original-avatar",
+      "count": 8,
+      "manifest": "original-avatar/pose-replay-manifest.json",
+      "hashesVerified": true
+    }
   },
   "imageBooklet": {
     "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
@@ -1322,6 +1333,51 @@
     "Fold7": "NOT_RUN",
     "Filament": "NOT_RUN",
     "pdfVisualReview": "PASS: all 7 pages inspected, final raster output identical",
-    "scope": "Original source PNGs embedded with aspect ratio preserved; no generated or retouched app screenshots"
+    "scope": "Original source PNGs embedded with aspect ratio preserved; no generated or retouched app screenshots",
+    "avatarFrames": [
+      {
+        "file": "Continuum-Code53-Originalavatar-Ruhe-CPU.png",
+        "manifestFile": "ruhe.png",
+        "sha256": "32e4db3ee127451e2177e884a5356a1fa3f8e2ebbfd8291c0c30ee953101f0e9"
+      },
+      {
+        "file": "Continuum-Code53-Originalavatar-Fensterblick-CPU.png",
+        "manifestFile": "fensterblick.png",
+        "sha256": "b393d69b40011ea102eab801f43f8e2b794fc754f1364b3f7b58b2d696a0d88e"
+      },
+      {
+        "file": "Continuum-Code53-Originalavatar-Sprechen-CPU.png",
+        "manifestFile": "sprechen-geskriptet.png",
+        "sha256": "ab565ecbeba6334e92198b390fa4d2ebefc5d830213df4387a498bf5d836d394"
+      }
+    ],
+    "avatarManifestSha256": "79516e94a2ceb82422ef5ccd64345519907a2fe6c0ec770b3668b9e95bf27f79",
+    "inputValidation": {
+      "status": "PASS",
+      "checks": [
+        {
+          "case": "three original avatar inputs",
+          "result": "PASS"
+        },
+        {
+          "case": "six original native inputs",
+          "result": "PASS"
+        },
+        {
+          "case": "substituted avatar PNG rejected",
+          "result": "PASS"
+        },
+        {
+          "case": "altered manifest rejected",
+          "result": "PASS"
+        },
+        {
+          "case": "substituted native PNG rejected",
+          "result": "PASS"
+        }
+      ],
+      "scriptSha256": "604201ff0f3dec1de1b4e5213ac66bf64d3708c820a9cd40742a5fce5272f05f"
+    },
+    "trackedInputImages": true
   }
 }

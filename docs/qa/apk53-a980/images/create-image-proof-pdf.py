@@ -10,10 +10,47 @@ from reportlab.lib.utils import ImageReader
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--artifact-root', required=True, type=Path)
-ROOT = parser.parse_args().artifact_root.resolve()
+parser.add_argument('--avatar-manifest', type=Path)
+args = parser.parse_args()
+ROOT = args.artifact_root.resolve()
 DELIVERY = ROOT / 'apk53-a980-delivery'
 OUT = DELIVERY / 'Continuum-Code53-Originalbilder-und-Herkunft.pdf'
 SOURCE = 'a980a19ed3ab44323009ae27eb299d322ff11679'
+MANIFEST_SHA = '79516e94a2ceb82422ef5ccd64345519907a2fe6c0ec770b3668b9e95bf27f79'
+MANIFEST = args.avatar_manifest or ROOT / 'apk53-a980-original-avatar/blender-images/pose-replay-manifest.json'
+AVATAR_SPEC = [('Ruhe', 'Ruhe', 'ruhe.png'),
+               ('Fensterblick', 'Fensterblick', 'fensterblick.png'),
+               ('Sprechpose', 'Sprechen', 'sprechen-geskriptet.png')]
+NATIVE_EXPECTED = {
+    'Continuum-Code53-a980-Ruhebild.png': 'b111077257f093ed687b00f098803332637b886d4de160c55b3feb9d6a0d0f52',
+    'Continuum-Code53-a980-Lichtfluss-280ms.png': '95749cc20bca20df4b05017a51e644d73539d7b841b6b4390327f8261779ab94',
+    'Continuum-Code53-a980-Fensteraufbau-650ms.png': '1ee358f71572320f750c4c9531fc49734b48876cfa777b69ed54dfa39eb1be56',
+    'Continuum-Code53-a980-Arbeitsfenster.png': '6024495eb3c028a13db6020a7c35a0864e8cbced9e6bf698fc8c7e425d93fee9',
+    'Continuum-Code53-a980-Rueckkehr.png': 'f7e26eb7b3c32f4de037c22858c358cf5374c7ce566ee4555cca0fa32763cbc5',
+    'Continuum-Code53-a980-Cover-Arbeitsfenster.png': '11f6fe13fc6889d9f6f32527f452a7cfd647ec8efb1ceeb15fa30117713a6f3a',
+}
+
+def validate_native_inputs(delivery):
+    for filename, expected in NATIVE_EXPECTED.items():
+        if sha256((delivery / filename).read_bytes()).hexdigest() != expected:
+            raise ValueError(f'{filename} differs from frozen capture')
+
+def validate_avatar_inputs(delivery, manifest_path):
+    raw = manifest_path.read_bytes()
+    if sha256(raw).hexdigest() != MANIFEST_SHA:
+        raise ValueError('Unexpected pose manifest')
+    expected = {row['file']: row['imageSha256'] for row in json.loads(raw)['frames']}
+    result = []
+    for label, suffix, original in AVATAR_SPEC:
+        path = delivery / f'Continuum-Code53-Originalavatar-{suffix}-CPU.png'
+        digest = sha256(path.read_bytes()).hexdigest()
+        if digest != expected.get(original):
+            raise ValueError(f'{path.name} differs from pose manifest')
+        result.append({'file': path.name, 'manifestFile': original, 'sha256': digest})
+    return result
+
+avatar_frames = validate_avatar_inputs(DELIVERY, MANIFEST)
+validate_native_inputs(DELIVERY)
 FONT = Path('/usr/share/fonts/truetype/dejavu')
 pdfmetrics.registerFont(TTFont('Body', str(FONT / 'DejaVuSans.ttf')))
 pdfmetrics.registerFont(TTFont('Bold', str(FONT / 'DejaVuSans-Bold.ttf')))
@@ -55,8 +92,7 @@ def picture(path, box):
                 width=dw, height=dh, mask='auto')
 
 header(1, 'Der unveränderte Originalavatar', 'Blender 4.3.2 / Cycles CPU / exportierte Animation aus a980a19')
-names = [('Ruhe', 'Ruhe'), ('Fensterblick', 'Fensterblick'), ('Sprechpose', 'Sprechen')]
-for i, (label, suffix) in enumerate(names):
+for i, (label, suffix, original) in enumerate(AVATAR_SPEC):
     x = 38 + i * 176
     text(x, 696, label, 11, True)
     picture(DELIVERY / f'Continuum-Code53-Originalavatar-{suffix}-CPU.png', (x, 468, 166, 208))
@@ -119,6 +155,8 @@ c.save()
 receipt = {'source': SOURCE, 'pages': 7, 'file': OUT.name,
            'sha256': sha256(OUT.read_bytes()).hexdigest(), 'bytes': OUT.stat().st_size,
            'imageHandling': 'Unchanged original PNGs embedded with preserved aspect ratio',
-           'nativeFrames': receipts, 'Fold7': 'NOT_RUN', 'Filament': 'NOT_RUN'}
+           'nativeFrames': receipts, 'avatarFrames': avatar_frames,
+           'avatarManifestSha256': MANIFEST_SHA,
+           'Fold7': 'NOT_RUN', 'Filament': 'NOT_RUN'}
 (DELIVERY / 'image-proof-pdf.json').write_text(json.dumps(receipt, indent=2) + '\n')
 print(json.dumps(receipt, indent=2))
