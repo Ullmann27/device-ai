@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - chatgpt/code52-owner-signing-20261109
+      - prep/code53-original-signer-20261111
     paths:
       - '.github/workflows/continuum-code52-owner-signing-check.yml'
       - '.github/workflows/continuum-code52-sign-release.yml'

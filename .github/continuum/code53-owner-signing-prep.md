@@ -1,7 +1,7 @@
-# Code53-Signer: lokaler Prüfstand
+# Code53-Signer: Bindung und Prüfnachweis
 
-Status: **WIP / NOT_READY_FOR_SIGNING**.
-Ein veröffentlichter Prep-PR ändert diese Signiersperre nicht.
+Status: **PRODUCTION_BINDING_VERIFIED / LOCAL_CONTRACTS_PASS**.
+Gehosteter Contract-Check und Originalsignierung werden separat nachgewiesen.
 
 Basis ist der tatsächlich gelesene geschützte Zweig
 `chatgpt/code52-owner-signing-20261109` bei
@@ -30,25 +30,40 @@ Der Zwischenlauf `42984950999` wurde abgebrochen und sein Workflow ersetzt,
 damit der gezielte Testfilter die bestehende Gradle-Task-Schranke einhält.
 Auch dieser Run und seine frühere Workflow-SHA werden ausdrücklich abgewiesen.
 
-## Absichtlich noch geschlossen
+## Tatsächlich geprüfte Produktionsbindung
 
-`.github/continuum/code53-owner-signing-binding.json` fehlt absichtlich,
-solange der echte Lauf und seine Artefakte noch nicht vollständig geprüft sind.
-Keine erfundenen IDs, Digests oder Erfolgswerte werden eingesetzt.
-Der Code53-Pfad bricht deshalb vor dem Signieren ab; der Produktionsbindungs-Test
-ist entsprechend **rot**. Dieser Stand ist **kein Gesamt-PASS**.
+Der [QA-Lauf 42985335421](https://github.com/Ullmann27/device-ai/actions/runs/42985335421)
+und Job `130405169817` sind vollständig erfolgreich abgeschlossen.
+Die Datei `.github/continuum/code53-owner-signing-binding.json` enthält ausschließlich
+die tatsächlichen Metadaten und unabhängig nachgerechneten Download-Hashes.
 
-Noch einzusetzen: tatsächlich erfolgreiche Run-Metadaten, beide Artefakt-IDs,
-ZIP-Digests und ZIP-Größen, APK-SHA256/Bytes sowie exakter Pfad des
-Paketvalidator-Reports. Danach alle bestehenden und neuen Contracts erneut ausführen.
+| Artefakt | ID | ZIP-Bytes | ZIP-SHA256 |
+| --- | --- | ---: | --- |
+| Code53-050a57cb-UNSIGNED-NOT-INSTALLABLE | 13842542249 | 73412550 | 083c2df520fb5356d8d6357cbb0d7eb57b6aa279fd57db7ec2c0ac2d9a1573ee |
+| Code53-050a57cb-QA-Evidence | 13842736860 | 426597327 | a08c090d94ec63edf7ca08b36fda00ff286fa7eb9b0e42b6ad226e679098708e |
 
-## Bereits geprüft
+APK: `Continuum-Code53-UNSIGNED-NOT-INSTALLABLE.apk`, `102701335` Bytes,
+SHA256 `28153df1b4e6f0d97a8f625a7f444248efc6ee09436e7e77c5aab4e3aaaa9c0e`.
+Report im Evidence-ZIP: `_temp/code53-package/RESULT.json`.
+Paket, Version, Quellbaum, saubere Quelle vor/nach Prüfung, unbenutzte Signierung,
+16-KiB-Ausrichtung und unveränderte APK stimmen mit dem Validatorbericht überein.
+
+## Ausgeführte Prüfung
 
 - `bash -n scripts/continuum-code52-github-signer.sh`: PASS.
 - Vier bestehende Code52-Contracts: PASS.
-- Fünfzehn neue reine Daten-/Archiv-/Workflow-Tests: PASS.
-- Produktionsbindung: FAIL, weil der reale Abschlussbeleg noch fehlt.
+- Alle 16 Code53-Contracts einschließlich Produktionsbindung: PASS.
+- Produktions-Verifier gegen originale REST-Metadaten: `CODE53_METADATA_VERIFIED`.
+- Derselbe Verifier gegen beide echten ZIP-Dateien: `CODE53_ARCHIVES_VERIFIED`.
+
+Der vorhandene secrets-freie Contract-Workflow prüft zusätzlich ausschließlich
+den Prep-Zweig `prep/code53-original-signer-20261111`.
+Die Branchgrenze des manuellen Signierworkflows bleibt unverändert auf
+`chatgpt/code52-owner-signing-20261109` beschränkt.
 
 Die Tests importieren ausschließlich den reinen Belegprüfer. Sie starten weder
 Signer noch Netzwerkaufrufe und lesen keine Environment- oder Secret-Inhalte.
-Ein Prep-Patch ist keine Signierfreigabe, kein Merge und keine Veröffentlichung.
+Auch die lokale Prüfung der tatsächlichen Metadaten und Archive hat keinen
+Signer gestartet. Originalsignatur und unveröffentlichter Release-Entwurf
+werden erst im bestehenden geschützten Ablauf erzeugt und separat überprüft.
+Fold7-Installation und Gerätetest bleiben `NOT_RUN`.

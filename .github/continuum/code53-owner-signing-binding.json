@@ -1,0 +1,23 @@
+{
+  "source_sha": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+  "source_tree": "539ea3aac0af04644a015b3fb69ba865af80d1a8",
+  "workflow_sha": "07efc77652638cfa40a67270475aa2c08ded5c76",
+  "qa_run_id": 42985335421,
+  "qa_run_attempt": 1,
+  "qa_job_id": 130405169817,
+  "apk_sha256": "28153df1b4e6f0d97a8f625a7f444248efc6ee09436e7e77c5aab4e3aaaa9c0e",
+  "apk_bytes": 102701335,
+  "validator_result_path": "_temp/code53-package/RESULT.json",
+  "unsigned": {
+    "id": 13842542249,
+    "name": "Code53-050a57cb-UNSIGNED-NOT-INSTALLABLE",
+    "bytes": 73412550,
+    "digest": "sha256:083c2df520fb5356d8d6357cbb0d7eb57b6aa279fd57db7ec2c0ac2d9a1573ee"
+  },
+  "evidence": {
+    "id": 13842736860,
+    "name": "Code53-050a57cb-QA-Evidence",
+    "bytes": 426597327,
+    "digest": "sha256:a08c090d94ec63edf7ca08b36fda00ff286fa7eb9b0e42b6ad226e679098708e"
+  }
+}
