@@ -14,7 +14,7 @@ reported requests correctly avoid deterministic recall but therefore reach the
 model without their retained history. `zuvor` already works through
 `Mode.PREVIOUS`; this follow-up protects that behavior explicitly.
 
-Ten new pure Kotlin regression cases cover the three reports, inflections,
+Twelve new pure Kotlin regression cases cover the three reports, inflections,
 past correction/change requests, previously supported recall, compact normal
 and future tasks, unrelated objects, uncertainty, unresolved references and
 history truncation. A fourth real Activity case sends the three requests through
@@ -25,11 +25,19 @@ No Kotlin/Node/Gradle execution before root releases the shared QA slot. Pure
 Kotlin runs will use `flock /tmp/continuum-omega-gradle.lock`; the root integrator
 alone owns the later Activity/Gradle run. No APK, device, signing or release claim.
 
-Planned minimal repair: select retained history for clear retrospective wording;
+Prepared repair: select retained history for clear retrospective wording;
 keep planned corrections, future changes, current-value tasks and old-object
 adjectives compact. Preserve full internal evidence, uncertainties, truncation
 markers and existing budget gates. Do not map ambiguous `vorhin` onto an invented
 single previous value or broaden deterministic answer authority.
+
+The independent review added explicit old/current comparisons, past-state
+questions before a correction, and descriptions of the state after a correction.
+Old-attribute and before-correction references take precedence over the compact
+current-value view. A bare after-correction phrase does not turn a current-state
+description into a history request. `answer()`, owner-event acquisition, the full
+renderer and prompt budget gates remain unchanged. Root released the shared lock
+after its Node run; the first source-pinned RED probe is now queued/running.
 
 Acceptance: same new tests RED on the frozen production source, then GREEN with
 the patch and existing memory/budget neighbors; Activity regression remains

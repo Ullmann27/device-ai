@@ -588,12 +588,42 @@ internal class OwnerObjectStateLedger {
         val view = copy().also { it.observeOwnerTurn(request) }
         if (view.items.isEmpty()) return ""
         if (!view.relevantTo(request) && view.fingerprint() == fingerprint()) return ""
-        val includeHistory = mode(request) != Mode.CURRENT || historicalRequest.containsMatchIn(request)
+        val includeHistory = mode(request) != Mode.CURRENT || historicalRequest.containsMatchIn(request) ||
+            sentences(request).any(::asksForChangeHistory)
         return view.render(includeHistory)
     }
 
     private val historicalRequest = Regex(
-        """(?iu)(?<!\p{L})(?:früher\p{L}*|vorher\p{L}*|damals|gestern|ursprünglich\p{L}*|anfangs|anfänglich\p{L}*|historie|historisch\p{L}*|verläuf\p{L}*)(?!\p{L})""")
+        """(?iu)(?<!\p{L})(?:früher\p{L}*|vorher\p{L}*|vorhin|damals|gestern|ursprünglich\p{L}*|anfangs|anfänglich\p{L}*|historie|historisch\p{L}*|verlaufs|verlaufes|verläuf\p{L}*)(?!\p{L})""")
+
+    private val historyReadCommand = Regex(
+        """(?iu)^(?:bitte\s+)?(?:fasse?|beschreibe?|erkläre?|zeige?|liste|nenne|vergleiche?)(?!\p{L})""")
+    private val changeHistoryQuestion = Regex(
+        """(?iu)^(?:(?:was|wie)(?!\p{L}).*?(?<!\p{L})(?:hat|habe|haben|hatte|hatten|wurde|wurden|war|waren)(?!\p{L})|welche[nmrs]?\s+(?:korrektur(?:en)?|änderung(?:en)?|veränderung(?:en)?)(?!\p{L}))""")
+    private val changeHistoryTopic = Regex(
+        """(?iu)(?<!\p{L})(?:korrektur(?:en)?|änderung(?:en)?|veränderung(?:en)?|korrigiert\p{L}*|geändert\p{L}*|verändert\p{L}*)(?!\p{L})""")
+    private val prospectiveChange = Regex(
+        """(?iu)(?<!\p{L})(?:geplant\p{L}*|möglich\p{L}*|künftig\p{L}*|zukünftig\p{L}*|morgen|demnächst|könnte\p{L}*|würde\p{L}*|soll\p{L}*|möchte\p{L}*|(?:ideen|vorschläge|tipps|anleitungen)\s+(?:für|zu|zur|zum))(?!\p{L})""")
+    private val currentValueRequest = Regex(
+        """(?iu)(?<!\p{L})(?:aktuell\p{L}*|jetzig\p{L}*|heutig\p{L}*)\s+(?:angaben|werte|farbe|anzahl|zahl|ort|standort)(?!\p{L})""")
+    private val oldAttribute = Regex(
+        """(?iu)(?<!\p{L})alte[nrsm]?\s+(?:farbe|anzahl|zahl|ort|standort|wert(?:e[nrs]?)?|angabe[n]?)(?!\p{L})""")
+    private val beforeCorrection = Regex(
+        """(?iu)(?<!\p{L})vor\s+(?:(?:der|dem|meiner|meinem|deiner|deinem)\s+)?(?:(?:letzten|vorigen|vorherigen)\s+)?(?:korrektur|änderung|veränderung)(?!\p{L})""")
+    private val afterCorrection = Regex(
+        """(?iu)(?<!\p{L})nach\s+(?:(?:der|den|meiner|meinen|deiner|deinen|allen)\s+)?(?:(?:letzten|vorigen|vorherigen)\s+)?(?:korrektur(?:en)?|änderung(?:en)?|veränderung(?:en)?)(?!\p{L})""")
+    private val pastStateQuestion = Regex(
+        """(?iu)^(?:war|waren|hatte|hatten|stand|standen|lag|lagen|befand|befanden)(?!\p{L})""")
+
+    private fun asksForChangeHistory(sentence: String): Boolean {
+        if (prospectiveChange.containsMatchIn(sentence)) return false
+        val command = historyReadCommand.containsMatchIn(sentence)
+        val recall = command || questionStart.containsMatchIn(sentence) || pastStateQuestion.containsMatchIn(sentence)
+        if (recall && (oldAttribute.containsMatchIn(sentence) || beforeCorrection.containsMatchIn(sentence))) return true
+        if (currentValueRequest.containsMatchIn(sentence)) return false
+        return changeHistoryTopic.containsMatchIn(afterCorrection.replace(sentence, "")) &&
+            (command || changeHistoryQuestion.containsMatchIn(sentence))
+    }
 
     private fun relevantTo(request: String): Boolean {
         val low = request.lowercase(Locale.GERMAN)

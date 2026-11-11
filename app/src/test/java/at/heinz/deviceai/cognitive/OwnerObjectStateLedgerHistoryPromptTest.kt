@@ -67,6 +67,17 @@ class OwnerObjectStateLedgerHistoryPromptTest {
             .contains("Anzahl Schrauben: 21"))
     }
 
+    @Test fun comparisonsWithOldValuesKeepBothStates() {
+        assertHistory("Vergleiche die aktuellen Werte der Werkzeugkiste mit den alten Werten.")
+    }
+
+    @Test fun pastStateBeforeACorrectionKeepsEvidenceWithoutGuessingAnAnswer() {
+        val request = "War die Farbe der Werkzeugkiste vor meiner letzten Korrektur blau?"
+        assertNull(ledger().answer(request))
+        assertHistory(request)
+        assertHistory("Welche Farbe hatte die Werkzeugkiste vor meiner letzten Korrektur?")
+    }
+
     @Test fun planningAndCurrentStateTasksStayCompact() {
         val state = ledger()
         val before = state.render()
@@ -80,6 +91,8 @@ class OwnerObjectStateLedgerHistoryPromptTest {
             "Erkläre, wie ich die Farbe der Werkzeugkiste ändern kann.",
             "Nenne die aktuellen Werte nach meinen Korrekturen an der Werkzeugkiste.",
             "Fasse die aktuellen Angaben zur Werkzeugkiste zusammen.",
+            "Beschreibe die Werkzeugkiste nach der Korrektur.",
+            "Fasse den Zustand der Werkzeugkiste nach meiner letzten Korrektur zusammen.",
             "Nenne drei Ideen für meine alte Werkzeugkiste.",
             "Korrigiere die Anzahl in der Werkzeugkiste auf 22 Schrauben."
         )) {
