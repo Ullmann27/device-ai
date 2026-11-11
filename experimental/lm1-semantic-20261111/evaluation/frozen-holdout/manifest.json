@@ -1,0 +1,54 @@
+{
+  "schema": "lm1-independent-holdout-v1",
+  "seed": 2026111103,
+  "basisCommit": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+  "labelMap": {
+    "0": "no_action",
+    "1": "open",
+    "2": "search",
+    "3": "note"
+  },
+  "semanticRows": 128,
+  "contrastPairs": 64,
+  "syntaxFamilies": 8,
+  "classCounts": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+  },
+  "novelRetentionRows": 32,
+  "novelTextRows": 8,
+  "files": {
+    "semantic.tsv": {
+      "sha256": "bff9ce85f84adb9b4d93849e3984efb1fcaebea57564594359fe6d8c8ace141f",
+      "bytes": 18216
+    },
+    "novel-retention.tsv": {
+      "sha256": "03a4f13b8b39e754d7eea811cc297d9de80aecefeca1ed9eeae10431c5cb1180",
+      "bytes": 2108
+    },
+    "novel-text.txt": {
+      "sha256": "d6391dc20d7e3dbc75f0f61e1967d547ed58808db984b56afb4893c41f635d50",
+      "bytes": 804
+    },
+    "metadata.json": {
+      "sha256": "f2e6a6aacec1854727088c78de55997d1fecd5823807d44fe4ae61de5df95c36",
+      "bytes": 47947
+    }
+  },
+  "generatorSha256": "587926a8a819f016b4aeb2ad781d221c99e46184edf0a5ec5044978a94e598de",
+  "origin": "Separately authored synthetic German instructions by evaluator agent",
+  "status": "FROZEN_BEFORE_MODEL_EVALUATION",
+  "blindness": "Organizational; shared filesystem and Git are not access-isolated",
+  "pairedWordMultisetsEqual": true,
+  "pairedUtf8ByteLengthsEqual": true,
+  "scope": "Unseen syntactic templates and object names; shared semantic primitives",
+  "limitations": [
+    "Eight syntax families include paired variants of four broader constructions.",
+    "These are controlled synthetic instructions, not population-sampled language.",
+    "Quoted imperatives simplify label assignment and do not test free conversation.",
+    "No held-out model result has been used to change these examples.",
+    "Native token-length checks and train-overlap audit are still required."
+  ]
+}

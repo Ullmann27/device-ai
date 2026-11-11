@@ -1,0 +1,33 @@
+id	label	prompt
+r-open-0-0	1	Bitte zeige den Inhalt der Datei Küstenarchiv.txt.
+r-open-0-1	1	Ich möchte Küstenarchiv.txt als Dokument geöffnet haben.
+r-search-0-0	2	Bitte ermittle Informationen zum Thema Küstenarchiv.
+r-search-0-1	2	Ich möchte eine Recherche über Küstenarchiv.
+r-open-1-0	1	Bitte zeige den Inhalt der Datei Tannenufer.txt.
+r-open-1-1	1	Ich möchte Tannenufer.txt als Dokument geöffnet haben.
+r-search-1-0	2	Bitte ermittle Informationen zum Thema Tannenufer.
+r-search-1-1	2	Ich möchte eine Recherche über Tannenufer.
+r-open-2-0	1	Bitte zeige den Inhalt der Datei Seidenrampe.txt.
+r-open-2-1	1	Ich möchte Seidenrampe.txt als Dokument geöffnet haben.
+r-search-2-0	2	Bitte ermittle Informationen zum Thema Seidenrampe.
+r-search-2-1	2	Ich möchte eine Recherche über Seidenrampe.
+r-open-3-0	1	Bitte zeige den Inhalt der Datei Lehmstern.txt.
+r-open-3-1	1	Ich möchte Lehmstern.txt als Dokument geöffnet haben.
+r-search-3-0	2	Bitte ermittle Informationen zum Thema Lehmstern.
+r-search-3-1	2	Ich möchte eine Recherche über Lehmstern.
+r-open-4-0	1	Bitte zeige den Inhalt der Datei Wasserfibel.txt.
+r-open-4-1	1	Ich möchte Wasserfibel.txt als Dokument geöffnet haben.
+r-search-4-0	2	Bitte ermittle Informationen zum Thema Wasserfibel.
+r-search-4-1	2	Ich möchte eine Recherche über Wasserfibel.
+r-open-5-0	1	Bitte zeige den Inhalt der Datei Bucheninsel.txt.
+r-open-5-1	1	Ich möchte Bucheninsel.txt als Dokument geöffnet haben.
+r-search-5-0	2	Bitte ermittle Informationen zum Thema Bucheninsel.
+r-search-5-1	2	Ich möchte eine Recherche über Bucheninsel.
+r-open-6-0	1	Bitte zeige den Inhalt der Datei Kieselkranz.txt.
+r-open-6-1	1	Ich möchte Kieselkranz.txt als Dokument geöffnet haben.
+r-search-6-0	2	Bitte ermittle Informationen zum Thema Kieselkranz.
+r-search-6-1	2	Ich möchte eine Recherche über Kieselkranz.
+r-open-7-0	1	Bitte zeige den Inhalt der Datei Kupferbogen.txt.
+r-open-7-1	1	Ich möchte Kupferbogen.txt als Dokument geöffnet haben.
+r-search-7-0	2	Bitte ermittle Informationen zum Thema Kupferbogen.
+r-search-7-1	2	Ich möchte eine Recherche über Kupferbogen.

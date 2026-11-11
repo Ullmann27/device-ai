@@ -1,0 +1,8 @@
+Eine Schublade lässt sich öffnen und schließen. Ihr Inhalt bleibt beim Schließen im Schrank.
+Ein Kompass zeigt eine Richtung an. Die Himmelsrichtungen helfen dabei, Wege zu beschreiben.
+Ein Kalender ordnet Tage zu Wochen und Monaten. Termine können einem bestimmten Tag zugeordnet werden.
+Eine Waage dient dazu, eine Masse zu bestimmen. Das Messergebnis wird mit einer Einheit angegeben.
+Ein Schlüssel passt zu einem bestimmten Schloss. Ein anderer Schlüssel muss dieses Schloss nicht öffnen.
+Eine Linie verbindet zwei Punkte. Mehrere Linien können zusammen eine geschlossene Figur bilden.
+Ein Inhaltsverzeichnis nennt die Abschnitte eines Textes. Die Seitenangaben erleichtern das Auffinden.
+Ein Echo ist ein zurückgeworfener Schall. Zwischen dem ursprünglichen Laut und dem Echo liegt Zeit.
