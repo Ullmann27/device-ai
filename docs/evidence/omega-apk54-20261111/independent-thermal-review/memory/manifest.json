@@ -1,0 +1,25 @@
+{
+  "reviewer": "omega-memory",
+  "review_type": "read-only source review",
+  "baseline": "9a6de6c4547feb62c9822520596e786a852ed83b",
+  "candidate": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+  "verdict": "REVIEW_OK_NARROW_SCOPE",
+  "new_execution": "NOT_RUN",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt": "b3935907cb6a38d558d56c56857c3d5ec8734427161da21a866eb02088583052",
+    "app/src/main/java/at/heinz/deviceai/learning/TrainableSubwordEncoder.kt": "557a97d43655e06fd7f8f498a7a8007b255364b9eaa2a89be2697a291ab9f1ff",
+    "app/src/main/java/at/heinz/deviceai/learning/LearningSnapshot.kt": "602c3ec18c710ad2d52074241712d94ee6dcacc5a3f471e1be92d3f68a58143a",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt": "b37ce85fbb9597df7eb787c925d804d89ea122e4a196119c88a1f4a9df5500e2",
+    "app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusReuseTest.kt": "1a3dc9d275ae66a4000725d3085b3107903c1d399e9ef1dd54bfae11617c12c2",
+    "app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusCacheReviewTest.kt": "0d8bdc4306b4b17bfe68fa0cf12dc50fcfab68440ba2df098a97243867f88e3f",
+    "docs/research/omega/THERMAL-BACKGROUND-HANDOFF-20261111.md": "7ea91875af4aa595971cff1381eb5e6febae081d6696898fdac90a5aaa80e4ef",
+    "docs/evidence/thermal-background-20261111/RESULT.json": "9f5889d5634375a0fdc984c1835ce0a262290e28d0e8e79429c9927ef101d672"
+  },
+  "upstream_test_evidence": {
+    "focused_suite_pass": 27,
+    "separate_review_pass": 5,
+    "rerun_by_this_reviewer": false,
+    "production_source_hash_matches_candidate": true
+  },
+  "existing_limit": "File.readBytes precedes the 65536-byte decoder limit; retained cache is bounded, transient file-read allocation is not."
+}

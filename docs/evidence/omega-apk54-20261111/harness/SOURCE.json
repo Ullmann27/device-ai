@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "origin": {
+    "test-memory.gradle": "Code53 frozen QA harness: commit 67bf048a7d50a78b027da27a6b9814cbd2457372, blob c88000f50c5fff16025229d651f426f3bc7a49f5",
+    "journal": "Adapted existing tools/pdf-scene-review/focused.init.gradle; full run has no class filters; focused scope lists 25 classes. Source identity before and after is journaled even on failure."
+  },
+  "hashes": {
+    "full-journal.init.gradle": "c3b915a79acd5cbb8e99323de59e37c229637e544298484cb35c8ad5a2d967c4",
+    "omega-focused.init.gradle": "1403f14c953b81eb89c43f242c36e1ccc89b377e04d84d11c295811de417dc05",
+    "test-memory.gradle": "9541dfeedd3520e03317d8ef37461062a00432d4d1e7d9c064eebde1795d90c5"
+  },
+  "strict_pdf_allowance": "NOT_SET",
+  "assertion_changes": false
+}

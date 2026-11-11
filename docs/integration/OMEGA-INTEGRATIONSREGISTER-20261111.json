@@ -174,25 +174,46 @@
         775,
         777
       ],
-      "commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+      "commit": "8decff576dc05ed3cdb0b8ded680b6098a1d8537",
       "tested_local_source": "b1d7e7df90e56e0b4db2c131041fb9e6a7c16174",
       "tested_tree": "903bca2e718caabe2846bfa76493493cedf10dc3",
       "target_branch": "integrate/omega-apk54-20261111",
       "source_branch": "fix/thermal-root-20261111",
       "target_included": "c02930f104e106cd8cba4ff8f6ecc1ad9fcee04f",
       "tests": "94/94 combined JVM; 34/34 Node; 72 identical draw traces; independent 5-file review; Android tests/lint RUNNING",
-      "status": "HOST_VERIFIED_ANDROID_RUNNING",
+      "status": "INTEGRATED_PENDING_COMMON_ANDROID_QA",
       "device_check": "NOT_RUN",
-      "integration": "Thermal PR ready for canonical integration; source and policy hashes unchanged by latest target merge",
+      "integration": "Integrated into canonical #769; three independent root helper reviews found no new blocker. Reviewed production/tests identical to 1ba7b9458. Common Android and physical Fold7 acceptance remain pending.",
       "evidence": "docs/evidence/thermal-root-20261111/SUMMARY.json",
       "handoff": "docs/research/omega/THERMAL-ROOT-HANDOFF-20261111.md"
+    },
+    {
+      "issue": "761-core-confirmation-complete",
+      "origin_pr": 768,
+      "commit": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "Complete 98:97 PASS/1 strict native host FAIL/0 SKIP. All 30 document-flow and six PDF-scene cases PASS. Clean source unchanged.",
+      "status": "HOST_COMPLETE_STRICT_PDF_BLOCKED",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-apk54-20261111/baseline-core-summary.json"
     }
   ],
   "parent_pr": 768,
   "execution_plan": {
     "reason": "Complete the unchanged inherited core first. Run the full Android suite, visual cases and lint on the combined candidate to avoid duplicating expensive full runs before and after the same repairs. No assertion, test or strict native decoder gate is removed. Reproduce any unexpected combined failure on its relevant baseline before attributing it.",
     "baseline_source": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
-    "inherited_core": "RUNNING; compilation complete, tests in progress on unchanged 3cb8df27",
+    "inherited_core": {
+      "source": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
+      "tests": 98,
+      "pass": 97,
+      "fail": 1,
+      "skip": 0,
+      "complete": true,
+      "source_unchanged": true,
+      "failed_case": "PdfIntakeNativeDecodeProbeUiTest.actualProviderReadRendersAndExtractsSyntheticPdf",
+      "failure": "NoSuchMethodError: java.io.FileDescriptor.getOwnerId$()",
+      "evidence": "docs/evidence/omega-apk54-20261111/baseline-core-summary.json"
+    },
     "baseline_node": {
       "source": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
       "tests": 1634,
@@ -208,7 +229,7 @@
       "fail": 0,
       "skip": 0
     },
-    "heavy_gradle": "One serialized process",
+    "heavy_gradle": "One serialized process; final Node uses the same lock to avoid overlapping heavy builds.",
     "candidate_version": {
       "code": 54,
       "name": "0.3.53",

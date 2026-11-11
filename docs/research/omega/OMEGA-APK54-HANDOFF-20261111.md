@@ -32,7 +32,8 @@ The current host uses an unprivileged user, unlike the prior root baseline.
 The previous 26 environment-dependent Node failures must therefore be measured
 again, neither inherited as current failures nor declared fixed by code changes.
 Backend: 64 PASS, 0 FAIL, 0 SKIP on the inherited source.
-Core is in progress on the unchanged source. The complete Node baseline is
+The complete inherited core is 97 PASS / 1 FAIL / 0 SKIP (98 total), with only
+the strict native PDF host failure. The complete Node baseline is
 1,612 PASS / 3 FAIL / 19 SKIP (1,634 total); no full PASS is claimed.
 The strict PDF decoder stays strict. Physical Fold7/GPU/audio/thermal
 verification remains NOT_RUN.
@@ -72,8 +73,9 @@ They remain NOT_RUN until the integrator executes them. Source review includes
 negation scope, foreign app intents, role checks before correction/bot entry,
 session/revision invalidation, no UNKNOWN retry, and existing consent paths.
 
-The inherited core remains frozen at `3cb8df27` in a separate worktree.
-Then run focused combined Activity/Canvas checks and the required full Android,
+The inherited core completed on clean `3cb8df27` without source changes. Its full
+journal, XML archive and log are preserved in the common evidence directory.
+Next run focused combined Activity/Canvas checks and the required full Android,
 visual and configured NewApi lint gates on the actual published source.
 This recorded sequencing avoids two redundant full-suite runs; it removes no
 assertion, strict PDF probe or acceptance gate.
@@ -107,3 +109,26 @@ GREEN 83/83. The real Activity class now has three cases, including this boundar
 Combined Android execution remains pending; this is not a release candidate.
 P4–P6 device/account/team/thermal work is still open. Physical Fold7, native PDF,
 GPU, audible speech and thermal acceptance remain NOT_RUN.
+
+## Thermal integration and final candidate preparation
+
+Thermal PR #773 `8decff576dc05ed3cdb0b8ded680b6098a1d8537` is integrated into
+the common candidate, retaining #776 and the existing worker ancestry. All five
+thermal production files, four new tests and the model-load Node contract are
+byte-identical to the independently reviewed `1ba7b9458` version. Current-value
+memory follow-up is retained exactly. Its coordinator reports 94/94 combined
+JVM and 34/34 neighboring Node tests; those are bounded source checks, not the
+new common Android or physical Fold7 acceptance.
+
+Three independent integration reviews found no new blocker in single model
+verification per load, exact-byte SWB1 status reuse or static/light-path work
+reuse. Every load still hashes every model byte; owner statistics/audit remain
+fresh. Light cadence and quality, model/thermal settings, weights and guards
+are unchanged. The existing large-corrupt-file allocation before SWB1 decoding
+is not repaired or introduced here. The 72 exact draw-command comparisons
+cover `JarvisEnergyFlows`, not complete frames, GPUs or measured heat.
+
+The external thermal coordinator's Android/lint run uses the shared heavy lock.
+Canonical final Node, 25-class focused Android, full Android/visual and configured
+NewApi lint will run on the published common source with no competing heavy
+build. No original-signing or device gate is implied by source integration.
