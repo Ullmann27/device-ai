@@ -126,6 +126,23 @@ object HollywoodFuiCinematics {
         return Beam(originX, originY, originX + (endX - originX) * p, originY + (endY - originY) * p)
     }
 
+    // ---- Cinema 2.0: focus depth (pure) ------------------------------------------------
+
+    /** Dim of the deck plane just below a constructed window's top edge and at the bottom of the deck. */
+    const val FOCUS_DIM_NEAR = .30f
+    const val FOCUS_DIM_FAR = .52f
+    private const val FOCUS_FADE_IN_DP = 56f
+
+    /**
+     * Focus pull 0..1: once the glass of a work window exists and the window has arrived ([openness]), the deck plane
+     * behind it steps back; it returns with the glass on close. Derived from the construct's own frame – no clock.
+     */
+    fun focusDepth(frame: HollywoodFuiConstruct.Frame, openness: Float): Float {
+        if (!openness.isFinite() || openness <= 0f) return 0f
+        val arrived = openness.coerceIn(0f, 1f).let { it * it * (3f - 2f * it) }
+        return (frame.glass * frame.closeGlass * arrived).coerceIn(0f, 1f)
+    }
+
     // ---- drawing -------------------------------------------------------------------------------------------------
 
     class Painterly(private val accent: Int) {
@@ -207,6 +224,59 @@ object HollywoodFuiCinematics {
                 p.drawLine(m.width, m.height * .62f, m.width, m.height - radius, 1f, violet, .5f * a)
                 p.restore()
             }
+        }
+
+        private var focusShade: Fill.Linear? = null
+        private var focusKey: Box? = null
+        private val deckShade = Fill.Solid(JarvisDesign.Colors.background)
+
+        /**
+         * Focus depth: the deck plane at and below the window steps back – softly from the window's top edge, deeper
+         * towards the bottom – and the window casts a contact shadow, so the glass stands in front instead of lying
+         * flat on half-covered labels. The row above the window (avatar, orb) is never shaded, so their protected
+         * cut-outs leave no visible box. [strength] 0..1.
+         */
+        fun drawFocusDepth(p: ContinuumPainter, viewport: Box, window: Box, strength: Float, radius: Float) {
+            if (!strength.isFinite() || strength <= .01f || viewport.width <= 0f || viewport.height <= 0f ||
+                window.width <= 0f || window.height <= 0f || window.top >= viewport.bottom - 1f) return
+            val s = strength.coerceIn(0f, 1f)
+            val shade = focusShade?.takeIf { focusKey == window } ?: run {
+                val span = (viewport.bottom - window.top).coerceAtLeast(1f)
+                Fill.Linear(0f, window.top, 0f, viewport.bottom,
+                    intArrayOf(Argb.withAlpha(JarvisDesign.Colors.background, 0f),
+                        Argb.withAlpha(JarvisDesign.Colors.background, FOCUS_DIM_NEAR),
+                        Argb.withAlpha(JarvisDesign.Colors.background, FOCUS_DIM_FAR)),
+                    floatArrayOf(0f, (FOCUS_FADE_IN_DP / span).coerceIn(.02f, .5f), 1f)).also { focusShade = it; focusKey = window }
+            }
+            p.fillRect(viewport.left, window.top, viewport.right, viewport.bottom, shade, s)
+            // Contact shadow: three widening, fading rings slightly below the glass.
+            val drop = 5f
+            p.strokeRoundRect(window.left, window.top + drop, window.right, window.bottom + drop, radius + 6f, 26f, deckShade, .10f * s)
+            p.strokeRoundRect(window.left, window.top + drop, window.right, window.bottom + drop, radius + 3f, 14f, deckShade, .16f * s)
+            p.strokeRoundRect(window.left, window.top + drop * .5f, window.right, window.bottom + drop * .5f, radius, 6f, deckShade, .24f * s)
+        }
+
+        /**
+         * The holographic raster under the vacant part of the glass (below [vacantTop]): it stays at structural
+         * strength there because no text stands on it, with a horizon line where the dense sheet ends.
+         */
+        fun drawVacantRaster(p: ContinuumPainter, box: Box, vacantTop: Float, strength: Float, bloom: Boolean) {
+            if (!strength.isFinite() || strength <= .01f || !vacantTop.isFinite() ||
+                vacantTop >= box.bottom - 8f || vacantTop <= box.top) return
+            val s = strength.coerceIn(0f, 1f)
+            val step = 24f
+            var x = box.left + step
+            while (x < box.right) {
+                p.drawLine(x, vacantTop, x, box.bottom, .7f, accentFill, .20f * s)
+                x += step
+            }
+            var y = box.top + step
+            while (y < box.bottom) {
+                if (y > vacantTop) p.drawLine(box.left, y, box.right, y, .7f, accentFill, .20f * s)
+                y += step
+            }
+            if (bloom) p.drawLine(box.left + 10f, vacantTop, box.right - 10f, vacantTop, 4f, violet, .10f * s)
+            p.drawLine(box.left + 10f, vacantTop, box.right - 10f, vacantTop, .9f, accentFill, .46f * s)
         }
 
         /** Dust along the rim and, while the task really works, a breathing energy rim. */

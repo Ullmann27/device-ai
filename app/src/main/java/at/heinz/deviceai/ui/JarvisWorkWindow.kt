@@ -56,6 +56,8 @@ private val CRYSTAL_RIM_FILL = Fill.Linear(-CRYSTAL_W, -CRYSTAL_H, CRYSTAL_W, CR
  */
 private val WINDOW_BACKING_FILL = Fill.Solid(Colors.background)
 private const val WINDOW_BACKING_ALPHA = .7f
+private val VACANT_RIM_FILL = Fill.Solid(Colors.panelRim)
+private const val VACANT_STOPS = 7
 /** Rear sheets and the receding document plane (JarvisWorkWindowDepth): dark glass, a Fresnel rim, a top-edge glint. */
 private val DEPTH_GLASS_FILL = Fill.Solid(Colors.background)
 private val DEPTH_GLINT_FILL = Fill.Solid(Colors.cyanSoft)
@@ -98,11 +100,23 @@ class JarvisWorkWindow(
         }
     internal var onCinematicFrame: ((Long, Long, Boolean, Float) -> Boolean)? = null
     internal var onPresentedCenter: ((Float, Float) -> Unit)? = null
+    internal var onDocumentStageGeometryChanged: (() -> Unit)? = null
+    internal var onDocumentStageReadyChanged: ((Boolean) -> Unit)? = null
+
+    /** Dp below the window's top edge where its dense glass ends; NaN while content fills the sheet. */
+    internal fun glassVacantTopDp(): Float = panel.vacancy()?.denseBottomDp ?: Float.NaN
     private val projectedCenter = FloatArray(2)
+    private val stagePageRect = RectF()
+    private val stagePagePath = android.graphics.Path()
+    private var stagePage: android.widget.ImageView? = null
+    private var stagePageAlpha = 255
+    internal var documentStageReady = false
+        private set
     internal var cinematicEffectsEnabled = true
         set(value) {
             if (field == value) return
             field = value
+            if (!value) setDocumentStageReady(null, false)
             // A live fallback change settles the same content; it must not replay work or tear down its lease.
             if (phase == Phase.OPENING) {
                 openness = 1f
@@ -133,6 +147,7 @@ class JarvisWorkWindow(
     private var lastFrameTime: Long? = null
     private var openness = 0f
     private var opacity = 0f
+    private var stageOpacity = 0f
     private var closeFrom = 0f
     private var closeAlpha = 0f
     private var trailProgress = 0f
@@ -163,6 +178,9 @@ class JarvisWorkWindow(
     private val pageRect = RectF()
     private val protectedDepthRect = RectF()
     private val painter = AndroidContinuumPainter(context.assets)
+    /** Cinema 2.0: how far the deck plane has stepped back behind this window, 0..1; follows the construct frame. */
+    private var focusDepth = 0f
+    private val focusCinematics = HollywoodFuiCinematics.Painterly(Colors.cyan)
     private val opening = JarvisMotion.Presets.widget(JarvisMotion.Direction.DEPTH)
         .copy(distanceDp = 0f, fromScale = 0f)
     private val closing = JarvisMotion.FlyIn(JarvisMotion.Direction.DEPTH, 0f, 0f,
@@ -208,6 +226,7 @@ class JarvisWorkWindow(
         tag = "jarvis-work-window:scroll"
         isFillViewport = false
         clipToPadding = true
+        setOnScrollChangeListener { _, _, _, _, _ -> notifyDocumentStageGeometry() }
     }
     private val panel = GlassPanel(context).apply {
         tag = "jarvis-work-window:panel"
@@ -228,6 +247,82 @@ class JarvisWorkWindow(
     }
 
     val isShowing: Boolean get() = phase != Phase.CLOSED
+
+    /** Runs once after actual arrival. */
+    fun doOnPresented(action: () -> Unit): Boolean {
+        if (disposed) return false
+        return when (phase) {
+            Phase.OPEN -> { deliverPresented(generation, action); true }
+            Phase.OPENING -> {
+                val previous = onOpened
+                val token = generation
+                onOpened = {
+                    previous()
+                    deliverPresented(token, action)
+                }
+                true
+            }
+            Phase.CLOSED, Phase.CLOSING -> false
+        }
+    }
+
+    private fun deliverPresented(token: Long, action: () -> Unit) {
+        val deliver = Runnable {
+            if (token == generation && phase == Phase.OPEN && !disposed && isAttachedToWindow && isShown) action()
+        }
+        if (deliveringFrame || isInLayout) post(deliver) else deliver.run()
+    }
+
+    /** Same transform, same shell frame. */
+    internal fun documentStageFrame(windowId: String, result: Boolean, page: android.widget.ImageView? = null):
+        at.heinz.deviceai.avatar3d.DocumentStageFrame? {
+        if (!isShowing || width <= 0 || height <= 0) return null
+        val params = panel.layoutParams as? LayoutParams ?: return null
+        val pageReady = page != null && DocumentStagePageGeometry.fittedRect(page, panel, stagePageRect)
+        return at.heinz.deviceai.avatar3d.DocumentStageFrame(
+            windowId = windowId,
+            viewportWidth = width,
+            viewportHeight = height,
+            left = params.leftMargin + panel.translationX,
+            top = params.topMargin + panel.translationY,
+            width = params.width * panel.scaleX,
+            height = params.height * panel.scaleY,
+            yawDegrees = panel.rotationY,
+            pitchDegrees = panel.rotationX,
+            opacity = if (cinematicEffectsEnabled) stageOpacity else 0f,
+            result = result,
+            cameraDistance = panel.cameraDistance,
+            pageLeft = if (pageReady) stagePageRect.left else 0f,
+            pageTop = if (pageReady) stagePageRect.top else 0f,
+            pageWidth = if (pageReady) stagePageRect.width() else 0f,
+            pageHeight = if (pageReady) stagePageRect.height() else 0f,
+            pageRectValid = pageReady
+        )
+    }
+
+    /** Pixels only; native semantics remain. */
+    internal fun setDocumentStageReady(page: android.widget.ImageView?, ready: Boolean): Boolean {
+        val accepted = ready && !disposed && isShowing && phase != Phase.CLOSING && cinematicEffectsEnabled &&
+            page != null && DocumentStagePageGeometry.fittedRect(page, panel, stagePageRect)
+        if (accepted && documentStageReady && stagePage === page) return true
+        if (!accepted && !documentStageReady && stagePage == null) return false
+        val changed = documentStageReady != accepted
+        stagePage?.imageAlpha = stagePageAlpha
+        stagePage = null
+        documentStageReady = accepted
+        if (accepted) {
+            stagePage = page
+            stagePageAlpha = requireNotNull(page).imageAlpha
+            page.imageAlpha = 0
+        }
+        if (changed) onDocumentStageReadyChanged?.invoke(accepted)
+        invalidate()
+        return accepted
+    }
+
+    private fun notifyDocumentStageGeometry() {
+        if (!disposed && isShowing) onDocumentStageGeometryChanged?.invoke()
+    }
 
     internal fun projectedMotionPhase(): at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase = when (phase) {
         Phase.OPENING -> at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.FLYING
@@ -263,6 +358,7 @@ class JarvisWorkWindow(
     ): Boolean {
         if (disposed || !isShowing || deliveringFrame || isInLayout) return false
         if (body.parent != null && body.parent !== scroll) return false
+        setDocumentStageReady(null, false)
         generation++
         pendingCleanup?.let { removeCallbacks(it) }
         pendingCleanup = null
@@ -349,6 +445,7 @@ class JarvisWorkWindow(
         phaseTiltDegrees = HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES
         openness = 0f
         opacity = 0f
+        stageOpacity = 0f
         trailProgress = 0f
         trailAlpha = 0f
         visibility = VISIBLE
@@ -440,6 +537,7 @@ class JarvisWorkWindow(
         RectF(0f, 0f, width.toFloat(), height.toFloat()), protectedBounds, density)?.let { Plan(RectF(origin), it, protectedBounds) }
 
     fun close(immediate: Boolean = false) {
+        setDocumentStageReady(null, false)
         if (!isShowing) {
             if (immediate && !deliveringFrame && !isInLayout) pendingCleanup?.run()
             return
@@ -477,6 +575,8 @@ class JarvisWorkWindow(
         val normalized = if (reduced) HollywoodFuiConstruct.DATA_END_MS else (elapsed / animatorScale).toLong()
         if (phase == Phase.OPEN) {
             constructionElapsedMs = maxOf(constructionElapsedMs, normalized, HollywoodFuiConstruct.DATA_END_MS)
+            focusDepth = if (cinematicEffectsEnabled) 1f else 0f
+            stageOpacity = 1f
             return onCinematicFrame?.invoke(constructionElapsedMs, -1L, reduced, 1f) == true
         }
         if (cinematicEffectsEnabled) {
@@ -491,9 +591,11 @@ class JarvisWorkWindow(
             openness = if (isClosing) closeFrom * frame.closeFrame
                 else if (reduced) 1f else HollywoodFuiConstruct.flight(normalized)
             opacity = if (isClosing) closeAlpha * frame.closeData else frame.data
+            stageOpacity = frame.brackets * frame.closeFrame
             trailProgress = frame.anchor
             trailAlpha = (1f - frame.brackets) * frame.closeFrame
             panel.edgeFlash = frame.pulse * .35f
+            focusDepth = HollywoodFuiCinematics.focusDepth(frame, openness)
             applyFrame()
             val live = onCinematicFrame?.invoke(constructionElapsedMs, closingTime, reduced, openness) == true
             if (isClosing && frame.closeFactor <= 0f) { finishClose(); return false }
@@ -507,6 +609,8 @@ class JarvisWorkWindow(
             }
             return phase == Phase.OPENING || phase == Phase.CLOSING || live
         }
+        focusDepth = 0f
+        stageOpacity = 0f
         val state = JarvisMotion.frame(if (phase == Phase.CLOSING) closing else opening, elapsed, animatorScale)
         if (phase == Phase.CLOSING) {
             openness = closeFrom * (1f - state.scale)
@@ -583,6 +687,7 @@ class JarvisWorkWindow(
 
     private fun finishClose() {
         phase = Phase.CLOSED
+        focusDepth = 0f
         val handle = subscription
         subscription = null
         handle?.close()
@@ -593,6 +698,7 @@ class JarvisWorkWindow(
         depthLayers = 0
         openness = 0f
         opacity = 0f
+        stageOpacity = 0f
         trailAlpha = 0f
         startedAt = null
         lastFrameTime = null
@@ -630,6 +736,11 @@ class JarvisWorkWindow(
         }
     }
 
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        notifyDocumentStageGeometry()
+    }
+
     override fun onDetachedFromWindow() {
         close(immediate = true)
         super.onDetachedFromWindow()
@@ -644,11 +755,35 @@ class JarvisWorkWindow(
 
     override fun dispatchDraw(canvas: Canvas) {
         if (!isShowing) return
+        notifyDocumentStageGeometry()
         val save = canvas.save()
         protectedBounds.forEach { canvas.clipOutRect(it) }
+        val decorationSave = canvas.save()
+        if (documentStageReady) {
+            val page = stagePage
+            if (page != null && DocumentStagePageGeometry.fittedRect(page, panel, stagePageRect)) {
+                stagePagePath.rewind()
+                stagePagePath.addRect(stagePageRect.left * panel.width, stagePageRect.top * panel.height,
+                    stagePageRect.right * panel.width, stagePageRect.bottom * panel.height, android.graphics.Path.Direction.CW)
+                stagePagePath.transform(panel.matrix)
+                stagePagePath.offset(panel.left.toFloat(), panel.top.toFloat())
+                canvas.clipOutPath(stagePagePath)
+            } else setDocumentStageReady(null, false)
+        }
+        if (focusDepth > 0f && JarvisWorkWindowGeometry.valid(destination)) {
+            // Cinema 2.0 focus depth: the deck steps back behind the constructed window; avatar, orb, dialog stay lit.
+            val focusSave = canvas.save()
+            canvas.scale(density, density)
+            painter.begin(canvas)
+            focusCinematics.drawFocusDepth(painter, HollywoodFuiCinematics.Box(0f, 0f, width / density, height / density),
+                HollywoodFuiCinematics.Box(destination.left / density, destination.top / density,
+                    destination.right / density, destination.bottom / density), focusDepth, 14f)
+            canvas.restoreToCount(focusSave)
+        }
         drawTrail(canvas)
         drawDepth(canvas)
-        if (panel.visibility == VISIBLE && panel.alpha > 0f) {
+        canvas.restoreToCount(decorationSave)
+        if (!documentStageReady && panel.visibility == VISIBLE && panel.alpha > 0f) {
             val glassSave = canvas.save()
             canvas.translate(panel.left.toFloat(), panel.top.toFloat())
             canvas.concat(panel.matrix)
@@ -699,7 +834,8 @@ class JarvisWorkWindow(
             drawSheet(planeRect, JarvisWorkWindowDepth.planeAlpha(progress) * glassAlpha)
         }
         canvas.restoreToCount(save)
-        if (recession != null && !handedOver && !closing) drawRecedingPage(canvas, recession, progress)
+        if (recession != null && !handedOver && !closing && !documentStageReady)
+            drawRecedingPage(canvas, recession, progress)
     }
 
     /** One glass sheet in dp: dark glass, Fresnel rim along the window's own light gradient, a glint on its top edge. */
@@ -866,12 +1002,43 @@ class JarvisWorkWindow(
                 }
             }
         }
+        private var vacantFill: Fill.Linear? = null
+        private var vacantKey = Float.NaN
+
+        /** Where real content ends on this sheet (dp from its top), or null while content fills or scrolls. */
+        fun vacancy(): JarvisWorkWindowDepth.GlassVacancy? {
+            val body = scroll.getChildAt(0) ?: return null
+            if (height <= 0 || scroll.height <= 0 || body.height <= 0) return null
+            val contentBottom = scroll.top + scroll.paddingTop + minOf(body.height, scroll.height)
+            return JarvisWorkWindowDepth.glassVacancy(height / density, contentBottom / density)
+        }
+
         fun drawSurface(canvas: Canvas) {
             val save = canvas.save()
             canvas.scale(density, density)
             glass.begin(canvas)
             val right = width / density - 1f
             val bottom = height / density - 1f
+            val vacancy = vacancy()
+            if (vacancy != null) {
+                // Cinema 2.0: dense glass only behind real content; below it the sheet clears to smoke, so the
+                // hologram raster and the deck's depth show through instead of an empty slab.
+                val smoke = vacantFill?.takeIf { vacantKey == vacancy.denseBottomDp } ?: Fill.Linear(
+                    0f, vacancy.denseBottomDp, 0f, vacancy.fadeEndDp,
+                    // The painted ramp is the tested rule itself: GlassVacancy.density sampled into the stops. It
+                    // starts opaque because the dense sheet above (backing + surface body) is opaque.
+                    IntArray(VACANT_STOPS) { Argb.withAlpha(Argb.rgb(2, 6, 14), vacancy.density(
+                        vacancy.denseBottomDp + JarvisWorkWindowDepth.GLASS_FADE_DP * it / (VACANT_STOPS - 1f))) },
+                    FloatArray(VACANT_STOPS) { it / (VACANT_STOPS - 1f) }
+                ).also { vacantFill = it; vacantKey = vacancy.denseBottomDp }
+                val lower = canvas.save()
+                canvas.clipRect(0f, vacancy.denseBottomDp, right + 1f, bottom + 1f)
+                glass.fillRoundRect(1f, 1f, right, bottom, 14f, smoke, 1f)
+                glass.strokeRoundRect(1.6f, 1.6f, right - .6f, bottom - .6f, 13.4f, 1.2f, VACANT_RIM_FILL, .55f)
+                canvas.restoreToCount(lower)
+                // The surface keeps its own rim and lower thickness; only the vacant interior is left to the smoke.
+                canvas.clipOutRect(2f, vacancy.denseBottomDp, right - 1f, bottom - 1f)
+            }
             glass.fillRoundRect(1f, 1f, right, bottom, 14f, WINDOW_BACKING_FILL, WINDOW_BACKING_ALPHA)
             JarvisReferenceHud.surface(glass, JarvisShellLayout.Box(1f, 1f, right, bottom), 14f,
                 Colors.panelRim, Colors.violetSoft)

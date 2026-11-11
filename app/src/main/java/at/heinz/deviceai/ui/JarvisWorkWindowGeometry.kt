@@ -7,6 +7,19 @@ import kotlin.math.hypot
 
 /** Free space in overlay pixels. */
 object JarvisWorkWindowGeometry {
+    /** Seed beyond the visible edge. */
+    fun edgeOrigin(viewport: RectF, destination: RectF, density: Float,
+                   side: JarvisActionScenes.EdgeSide): RectF? {
+        if (!valid(viewport) || !valid(destination) || !density.isFinite() || density <= 0f) return null
+        val width = destination.width() * .78f
+        val height = destination.height() * .78f
+        val gap = 12f * density
+        val left = if (side == JarvisActionScenes.EdgeSide.LEFT) viewport.left - gap - width
+            else viewport.right + gap
+        val top = destination.centerY() - height * .5f
+        return RectF(left, top, left + width, top + height)
+    }
+
     fun destination(viewport: RectF, protectedBounds: List<RectF>, density: Float = 1f): RectF? {
         if (!valid(viewport) || !density.isFinite() || density <= 0f ||
             protectedBounds.any { !finite(it) }) return null
@@ -44,9 +57,11 @@ object JarvisWorkWindowGeometry {
     /** Shortest visible corner route. */
     internal fun route(origin: RectF, destination: RectF, viewport: RectF,
                        protectedBounds: List<RectF>, clearance: Float): List<PointF> {
-        if (!valid(viewport)) return emptyList()
+        if (!valid(viewport) || !valid(origin) || !valid(destination) ||
+            !clearance.isFinite() || clearance < 0f) return emptyList()
         val blocked = protectedBounds.filter(::valid).map { RectF(it).apply { inset(-clearance, -clearance) } }
-        val start = PointF(origin.centerX(), origin.centerY())
+        val start = PointF(origin.centerX().coerceIn(viewport.left, viewport.right),
+            origin.centerY().coerceIn(viewport.top, viewport.bottom))
         val end = PointF(destination.centerX(), destination.centerY())
         fun allowed(p: PointF) = p.x in viewport.left..viewport.right && p.y in viewport.top..viewport.bottom &&
             blocked.none { inside(p, it) }

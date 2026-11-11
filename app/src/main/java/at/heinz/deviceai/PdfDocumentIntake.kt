@@ -9,6 +9,7 @@ import android.os.Build
 import android.provider.OpenableColumns
 import androidx.annotation.RequiresApi
 import java.io.IOException
+import java.io.InterruptedIOException
 import kotlin.math.roundToInt
 
 /**
@@ -31,17 +32,32 @@ class PdfDocumentIntake(private val resolver: ContentResolver) {
         val textPages: Int
     )
 
-    fun read(uri: Uri, pageWidthPx: Int): Document {
+    @JvmOverloads
+    fun read(uri: Uri, pageWidthPx: Int, isCancelled: () -> Boolean = { false }): Document {
+        fun checkCancelled() {
+            if (isCancelled() || Thread.currentThread().isInterrupted) throw InterruptedIOException("PDF_READ_CANCELLED")
+        }
+        checkCancelled()
         val (name, size) = meta(uri)
+        checkCancelled()
         val descriptor = resolver.openFileDescriptor(uri, "r") ?: throw IOException("Die Datei lässt sich nicht öffnen.")
         descriptor.use { fd ->
+            checkCancelled()
             PdfRenderer(fd).use { pdf ->
                 val count = pdf.pageCount
+                checkCancelled()
                 val first = if (count > 0) pdf.openPage(0).use { render(it, pageWidthPx) } else null
-                if (Build.VERSION.SDK_INT < 35) return Document(name, size, count, first, "", TextState.NEEDS_ANDROID_15, 0)
-                val (text, pages) = extract(pdf)
-                return Document(name, size, count, first, text,
-                    if (text.isBlank()) TextState.NO_TEXT_LAYER else TextState.EXTRACTED, pages)
+                try {
+                    checkCancelled()
+                    if (Build.VERSION.SDK_INT < 35) return Document(name, size, count, first, "", TextState.NEEDS_ANDROID_15, 0)
+                    val (text, pages) = extract(pdf, ::checkCancelled)
+                    checkCancelled()
+                    return Document(name, size, count, first, text,
+                        if (text.isBlank()) TextState.NO_TEXT_LAYER else TextState.EXTRACTED, pages)
+                } catch (failure: Throwable) {
+                    first?.recycle()
+                    throw failure
+                }
             }
         }
     }
@@ -66,17 +82,23 @@ class PdfDocumentIntake(private val resolver: ContentResolver) {
         val w = widthPx.coerceIn(64, MAX_PAGE_WIDTH_PX)
         val h = (w.toFloat() * page.height / page.width.coerceAtLeast(1)).roundToInt().coerceIn(64, MAX_PAGE_HEIGHT_PX)
         // PDF pages are transparent where nothing is printed; paper is white.
-        return Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also {
-            it.eraseColor(Color.WHITE)
-            page.render(it, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        try {
+            bitmap.eraseColor(Color.WHITE)
+            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+            return bitmap
+        } catch (failure: Throwable) {
+            bitmap.recycle()
+            throw failure
         }
     }
 
     @RequiresApi(35)
-    private fun extract(pdf: PdfRenderer): Pair<String, Int> {
+    private fun extract(pdf: PdfRenderer, checkCancelled: () -> Unit): Pair<String, Int> {
         var pages = 0
         val text = boundedText(sequence {
             for (index in 0 until minOf(pdf.pageCount, MAX_TEXT_PAGES)) {
+                checkCancelled()
                 val pageText = pdf.openPage(index).use { page -> page.textContents.joinToString("\n") { it.text } }
                 pages = index + 1
                 yield(pageText)

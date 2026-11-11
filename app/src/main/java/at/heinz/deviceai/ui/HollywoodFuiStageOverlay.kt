@@ -30,11 +30,15 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val source = RectF()
     private val energySource = RectF()
     private var protectedBounds = emptyList<RectF>()
+    /** Dp below the stage top where the window's dense glass ends (Cinema 2.0); NaN = one dense sheet. */
+    internal var vacantTopDp = Float.NaN
     internal var cinematicArcEnabled = false
     internal var workPulseEnabled = false
     internal var prismRimEnabled = false
     internal var rimIsolationEnabled = false
     internal var zSliceEnabled = false
+    internal var documentStageReady = false
+        set(value) { if (field != value) { field = value; invalidate() } }
     private var lastPulseKey: String? = null
     private var pulseAtElapsedMs = -1L
     private var pulsePending = false
@@ -287,7 +291,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             HollywoodFuiConstruct.layerShiftDp(tilt, -24f, true), 0f)
         if (!reducedMotion && active) canvas.translate(parallaxX * 5f, parallaxY * 3.5f)
         val radiusDp = 6f
-        cinematics.drawGlassLayers(painter, boxDp, frame, radiusDp, budget.glassLayers)
+        if (!documentStageReady)
+            cinematics.drawGlassLayers(painter, boxDp, frame, radiusDp, budget.glassLayers)
         canvas.restore()
 
         // Profile data stays on the proven Canvas path, scaled with the close choreography (data leaves first).
@@ -301,6 +306,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             frame.copy(scanEnabled = frame.scanEnabled && !reducedMotion)
         else frame.copy(grid = raster, scanEnabled = frame.scanEnabled && !reducedMotion)
         cinematics.drawGridAndScan(painter, boxDp, scanFrame, bloom, innerRasterAlpha = raster)
+        if (!vacantTopDp.isNaN()) cinematics.drawVacantRaster(painter, boxDp, boxDp.top + vacantTopDp,
+            frame.grid * frame.closeFrame * openness.coerceIn(0f, 1f), bloom)
         canvas.restore()
         // The native accessible body takes over. Never keep a second text plane behind its labels.
         val dataAlpha = frame.data * (1f - frame.data) * frame.closeData

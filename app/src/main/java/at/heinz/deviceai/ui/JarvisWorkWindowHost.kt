@@ -18,6 +18,7 @@ class JarvisWorkWindowHost(
 ) {
     private var current: JarvisWorkWindow? = null
     private var currentFui: HollywoodFuiStageOverlay? = null
+    private var currentDocumentStage: DocumentStageView? = null
     private var cameraHome: ContinuumHomeView? = null
     private var serial = 0L
     private var back: android.window.OnBackInvokedCallback? = null
@@ -100,6 +101,7 @@ class JarvisWorkWindowHost(
 
     fun close(immediate: Boolean = false) {
         currentId?.let { cameraHome?.jarvisShell?.closeProjectedWindow(it, android.os.SystemClock.uptimeMillis()) }
+        if (immediate) currentDocumentStage?.close()
         if (immediate) cameraHome?.hologram?.setWorkWindowCamera(false, immediate = true)
         currentFui?.close(immediate)
         current?.close(immediate)
@@ -129,6 +131,13 @@ class JarvisWorkWindowHost(
                 crystal = crystal,
                 depthLayers = depthLayers
             )) return null
+        currentDocumentStage?.let { stage ->
+            stage.close()
+            (stage.parent as? ViewGroup)?.removeView(stage)
+        }
+        currentDocumentStage = null
+        window.onDocumentStageGeometryChanged = null
+        window.onDocumentStageReadyChanged = null
         currentClientClosed = onClosed
         morphPresentation(home, scene)
         return window
@@ -155,7 +164,7 @@ class JarvisWorkWindowHost(
             parent = parent.parent
         }
         // A result that comes out of the window on screen (document → draft) unfolds from where that window is.
-        val previous = if (fromCurrent) current?.shownBounds()?.let { shown ->
+        val previous = if (fromCurrent && scene.origin !is JarvisActionScenes.Origin.Edge) current?.shownBounds()?.let { shown ->
             // The result grows out of the middle of that window (its document), not from a tile across the cockpit.
             val w = shown.width() * .3f; val h = shown.height() * .3f
             RectF(shown.centerX() - w / 2f, shown.centerY() - h / 2f, shown.centerX() + w / 2f, shown.centerY() + h / 2f)
@@ -182,6 +191,40 @@ class JarvisWorkWindowHost(
         val id = "work-window-${++serial}"
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
         val fui = HollywoodFuiStageOverlay(activity)
+        val sourcePage = handover ?: body.findViewWithTag<android.widget.ImageView>(DOCUMENT_PAGE_TAG)
+        val pageBitmap = (sourcePage?.drawable as? android.graphics.drawable.BitmapDrawable)?.bitmap
+        val documentScene = scene.kind == JarvisActionScenes.Kind.FILES &&
+            scene.fuiProfile == JarvisActionScenes.FuiProfile.DOCUMENT_BLUEPRINT &&
+            scene.origin is JarvisActionScenes.Origin.Edge && pageBitmap != null && !pageBitmap.isRecycled
+        val documentStage = if (documentScene) DocumentStageView(activity, home.hologram, id) else null
+        val resultStage = (scene.origin as? JarvisActionScenes.Origin.Edge)?.side == JarvisActionScenes.EdgeSide.RIGHT
+        var renderedDocumentStage = false
+        var documentFrame: at.heinz.deviceai.avatar3d.DocumentStageFrame? = null
+        fun updateDocumentPixels() {
+            val ready = renderedDocumentStage && current === window && currentDocumentStage === documentStage &&
+                documentFrame?.pageRectValid == true && (documentFrame?.opacity ?: 0f) > 0f &&
+                pageBitmap != null && !pageBitmap.isRecycled
+            val accepted = window.setDocumentStageReady(sourcePage, ready)
+            fui.documentStageReady = accepted
+            documentStage?.presentationEnabled = accepted
+        }
+        fun presentDocumentFrame() {
+            if (current !== window || currentDocumentStage !== documentStage || documentStage == null) return
+            documentFrame = window.documentStageFrame(id, resultStage, sourcePage)
+            documentFrame?.let { documentStage.present(it, pageBitmap) }
+            updateDocumentPixels()
+        }
+        documentStage?.onReadyChanged = { ready ->
+            renderedDocumentStage = ready
+            updateDocumentPixels()
+        }
+        if (documentStage != null) {
+            window.onDocumentStageGeometryChanged = ::presentDocumentFrame
+            window.onDocumentStageReadyChanged = { ready ->
+                fui.documentStageReady = ready
+                documentStage.presentationEnabled = ready && current === window && currentDocumentStage === documentStage
+            }
+        }
         var framing = first
         window.onPresentedCenter = { x, y ->
             if (current === window) {
@@ -212,7 +255,9 @@ class JarvisWorkWindowHost(
         }
         fui.requestFrame = { shell.invalidate() }
         window.onCinematicFrame = { elapsed, closing, reduced, open ->
+            presentDocumentFrame()
             fui.setParallax(shell.spatialTiltX, shell.spatialTiltY)
+            fui.vacantTopDp = window.glassVacantTopDp()
             fui.present(elapsed, closing, reduced, open)
         }
         val presentation = JarvisCinematicSettings.preferences(activity)
@@ -247,6 +292,7 @@ class JarvisWorkWindowHost(
         val budgetSubscription = runCatching {
             home.hologram.observePresentationBudget { fui.setRenderBudget(home.hologram.presentationRenderBudget()) }
         }.getOrNull()
+        documentStage?.let { container.addView(it, ViewGroup.LayoutParams(-1, -1)) }
         container.addView(fui, ViewGroup.LayoutParams(-1, -1))
         container.addView(window, ViewGroup.LayoutParams(-1, -1))
         // A first layout at another size (rotation/fold/keyboard still pending) plans again on the real size.
@@ -265,13 +311,18 @@ class JarvisWorkWindowHost(
             accent = scene.accent, emblem = emblem, refit = refit, crystal = crystal, depthLayers = inheritedLayers,
             recession = recession, onClosed = {
             releaseGeometry()
+            documentStage?.close()
+            window.onDocumentStageGeometryChanged = null
+            window.onDocumentStageReadyChanged = null
             presentation.unregisterOnSharedPreferenceChangeListener(preferenceListener)
             runCatching { budgetSubscription?.close() }
             (window.parent as? ViewGroup)?.removeView(window)
             (fui.parent as? ViewGroup)?.removeView(fui)
+            (documentStage?.parent as? ViewGroup)?.removeView(documentStage)
             director.windowClosed(id)
             if (workingId == id) { workingId = null; emphasizedWork = false }
             if (currentFui === fui) currentFui = null
+            if (currentDocumentStage === documentStage) currentDocumentStage = null
             if (current === window) {
                 val clientClosed = currentClientClosed
                 current = null
@@ -288,16 +339,19 @@ class JarvisWorkWindowHost(
             }
         })
         if (!accepted) {
+            documentStage?.close()
             presentation.unregisterOnSharedPreferenceChangeListener(preferenceListener)
             runCatching { budgetSubscription?.close() }
             window.dispose()
             container.removeView(window)
             container.removeView(fui)
+            documentStage?.let(container::removeView)
             return null
         }
         currentClientClosed = onClosed
         current = window
         currentFui = fui
+        currentDocumentStage = documentStage
         currentId = id
         val initialGaze = gaze(first, first.plan.origin.centerX(), first.plan.origin.centerY())
         currentGaze = initialGaze
@@ -383,7 +437,10 @@ class JarvisWorkWindowHost(
                 it.viewport == viewport && it.sourceBounds == localBounds(it.view, container) &&
                 (exactOrigin != null || home.controlHiddenForWork(it.view))
         }?.origin
-        val origin = stableOrigin ?: exactOrigin ?: navigation?.let { visibleBounds(it, container) }
+        val edgeOrigin = (scene.origin as? JarvisActionScenes.Origin.Edge)?.let {
+            JarvisWorkWindowGeometry.edgeOrigin(viewport, destination, density, it.side)
+        }
+        val origin = edgeOrigin ?: stableOrigin ?: exactOrigin ?: navigation?.let { visibleBounds(it, container) }
             ?: besideFace(face, viewport, density)
         return Planned(JarvisWorkWindow.Plan(origin, destination, withOrb), face, viewport, orb)
     }

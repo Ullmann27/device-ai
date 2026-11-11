@@ -1,0 +1,17 @@
+{
+  "source_commit": "8f54643b277fafa13c394e254f67de7190f20e3c",
+  "source_tree": "63c94c5cc0a64bb66d76347fa56a3ecb211c6272",
+  "remote_commit": "d9960b8618d864b0360cffb3c25f35f0d7c667e7",
+  "recorded_at_utc": "2026-11-11T13:10:01.293515+00:00",
+  "exit_code": 1,
+  "main_kotlin_compilation": "PASS",
+  "main_java_compilation": "PASS",
+  "test_compilation": "FAIL",
+  "ui_test_execution": "NOT_RUN",
+  "errors": [
+    "e: file:///workspace/scratch/6139925ecf70/device-ai/app/src/uiTest/java/at/heinz/deviceai/PdfIntakeNativeDecodeProbeUiTest.kt:89:21 Type argument for reified type parameter 'T' was inferred to the intersection of ['Comparable<*>?' & 'Serializable?']. Reification of an intersection type results in the common supertype being used. This may lead to subtle issues and an explicit type argument is encouraged.",
+    "e: file:///workspace/scratch/6139925ecf70/device-ai/app/src/uiTest/java/at/heinz/deviceai/ui/DocumentStagePageGeometryUiTest.kt:10:22 Unresolved reference 'core'.",
+    "e: file:///workspace/scratch/6139925ecf70/device-ai/app/src/uiTest/java/at/heinz/deviceai/ui/DocumentStagePageGeometryUiTest.kt:21:31 Unresolved reference 'ApplicationProvider'."
+  ],
+  "raw_log": "qa-android-focused-8f54643b.log"
+}

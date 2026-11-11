@@ -246,6 +246,23 @@ class ContinuumDocumentFlowUiTest {
         .filterIsInstance<TextView>().count { it.text.toString() == "Entwurf mit STOP abgebrochen – nichts gespeichert." }
     private fun context(activity: AgentActivity) = field(activity, "localConversationContext") as
         at.heinz.deviceai.cognitive.LocalConversationContext
+
+    private fun enableLocalSpeech(activity: AgentActivity): android.speech.tts.TextToSpeech {
+        val engine = field(activity, "voiceEngine") as android.speech.tts.TextToSpeech
+        engine.setVoice(android.speech.tts.Voice("de-de-local", java.util.Locale.GERMANY,
+            android.speech.tts.Voice.QUALITY_HIGH, android.speech.tts.Voice.LATENCY_NORMAL, false, emptySet()))
+        for (name in listOf("voiceEnabled", "voiceReady")) {
+            AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }.set(activity, true)
+        }
+        call(activity, "installVoiceProgressListener")
+        return engine
+    }
+
+    private fun offers(activity: AgentActivity) = descendants(field(activity, "chatContainer") as View)
+        .filterIsInstance<TextView>().map { it.text.toString() }.filter {
+            it.startsWith("Dein Entwurf steht bereit.") ||
+                it.startsWith("Dein Entwurf aus dem begrenzten Textauszug steht bereit.")
+        }
     private fun experiences(activity: AgentActivity) =
         (field(activity, "experienceStore") as at.heinz.deviceai.cognitive.ExperienceStore).all()
     private fun ownerRequest(activity: AgentActivity, root: View, runtime: Runtime, request: String) {
@@ -304,9 +321,8 @@ class ContinuumDocumentFlowUiTest {
         assertFalse("the reading ends with the work", reading(activity))
         val draftWindow = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
         val from = field(draftWindow, "origin") as android.graphics.RectF
-        assertEquals("the draft grows out of the document window", documentBox.centerX(), from.centerX(), 1f)
-        assertEquals(documentBox.centerY(), from.centerY(), 1f)
-        assertTrue("…from inside it", documentBox.contains(from))
+        assertTrue("the result arrives from beyond the right edge", from.left >= root.width)
+        assertTrue("the source document remains inside the viewport", documentBox.right <= root.width)
         val source = descendants(draftWindow).single { it.tag == "jarvis-draft-source-page" } as android.widget.ImageView
         assertTrue("the document stays behind the result as its own first page",
             (source.drawable as android.graphics.drawable.BitmapDrawable).bitmap === scene.doc.firstPage)
@@ -332,6 +348,56 @@ class ContinuumDocumentFlowUiTest {
         assertEquals("no stale draft turn is left", null, field(activity, "documentDraftTurn"))
         assertTrue("the owner can start it again", descendants(root).single { it.tag == "jarvis-document-start-draft" }.isEnabled)
         capture(root, "flow-4-failed-draft-says-so")
+    }
+
+    @Test fun personalOfferWaitsForResultArrivalAndSpeaksOnce() = withFlow { activity, root, runtime ->
+        startDraft(activity, root, runtime, "Synthetischer-Bericht.pdf", "Der Bericht enthält drei Prüfaufgaben.")
+        val engine = enableLocalSpeech(activity)
+        val response = "Drei Prüfaufgaben: Inhalt lesen, Quelle prüfen und den Entwurf bearbeiten."
+        runtime.answer(response)
+        until(root, "the result starts arriving") { descendants(root).any { it.tag == "jarvis-draft" && it.isShown } }
+        val window = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
+        assertEquals("OPENING", field(window, "phase").toString())
+        assertTrue("No offer before arrival", offers(activity).isEmpty())
+        assertTrue("The full draft stays silent", shadowOf(engine).spokenTextList.isEmpty())
+        val rememberedResult = field(activity, "lastLocalReply")
+        advance(1_600L); measure(root); draw(root)
+        assertEquals("OPEN", field(window, "phase").toString())
+        val offer = offers(activity).single()
+        assertEquals(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(offer).pieces,
+            shadowOf(engine).spokenTextList)
+        assertEquals("The model result remains available", rememberedResult, field(activity, "lastLocalReply"))
+        advance(1_600L); measure(root); draw(root)
+        assertEquals("Later frames cannot repeat the offer", listOf(offer), offers(activity))
+        assertEquals(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(offer).pieces,
+            shadowOf(engine).spokenTextList)
+    }
+
+    @Test fun stopBeforeResultArrivalSuppressesItsPersonalOffer() = withFlow { activity, root, runtime ->
+        startDraft(activity, root, runtime, "Synthetische-Notizen.pdf", "Eine lokale Notiz für den Test.")
+        val engine = enableLocalSpeech(activity)
+        runtime.answer("Zusammenfassung der lokalen Testnotiz.")
+        until(root, "the result starts arriving") { descendants(root).any { it.tag == "jarvis-draft" && it.isShown } }
+        call(activity, "cancelLocalRequest")
+        advance(1_600L); measure(root); draw(root)
+        assertTrue("No stale personal offer", offers(activity).isEmpty())
+        assertTrue(shadowOf(engine).spokenTextList.none { it.startsWith("Dein Entwurf") })
+        assertFalse(descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+    }
+
+    @Test fun backgroundingDuringResultArrivalSuppressesItsPersonalOffer() = withFlowLifecycle { activity, root, runtime, controller ->
+        startDraft(activity, root, runtime, "Synthetischer-Plan.pdf", "Der Plan bleibt ein Entwurf.")
+        val engine = enableLocalSpeech(activity)
+        runtime.answer("Der Plan ist noch nicht freigegeben.")
+        until(root, "the result starts arriving") { descendants(root).any { it.tag == "jarvis-draft" && it.isShown } }
+        controller.pause()
+        advance(1_600L)
+        assertTrue(offers(activity).isEmpty())
+        assertTrue(shadowOf(engine).spokenTextList.none { it.startsWith("Dein Entwurf") })
+        controller.resume()
+        advance(1_600L); measure(root); draw(root)
+        assertTrue("Resume cannot revive a stale offer", offers(activity).isEmpty())
+        assertTrue(shadowOf(engine).spokenTextList.none { it.startsWith("Dein Entwurf") })
     }
 
     @Test fun stopDuringTheDraftEndsReadingWindowAndRunAsAborted() = withFlow { activity, root, runtime ->
@@ -698,19 +764,187 @@ class ContinuumDocumentFlowUiTest {
         call(activity, "addUserMessage", "Danach besprechen wir den Kalender.", true)
     }
 
-    private fun assertQueuedPdfFailureDelivered(interrupt: (AgentActivity,
-        org.robolectric.android.controller.ActivityController<AgentActivity>) -> Unit) =
+    private class MissingPdfProvider : android.content.ContentProvider() {
+        val queries = java.util.concurrent.atomic.AtomicInteger()
+        val opens = java.util.concurrent.atomic.AtomicInteger()
+        override fun onCreate() = true
+        override fun getType(uri: android.net.Uri) = "application/pdf"
+        override fun query(uri: android.net.Uri, projection: Array<out String>?, selection: String?,
+            selectionArgs: Array<out String>?, sortOrder: String?): android.database.Cursor {
+            queries.incrementAndGet()
+            return android.database.MatrixCursor(arrayOf(android.provider.OpenableColumns.DISPLAY_NAME,
+                android.provider.OpenableColumns.SIZE)).apply { addRow(arrayOf<Any?>("Verschoben.pdf", 100L)) }
+        }
+        override fun openFile(uri: android.net.Uri, mode: String): android.os.ParcelFileDescriptor {
+            check(mode == "r")
+            opens.incrementAndGet()
+            throw java.io.FileNotFoundException("Synthetic missing PDF")
+        }
+        override fun insert(uri: android.net.Uri, values: android.content.ContentValues?): android.net.Uri? =
+            throw UnsupportedOperationException()
+        override fun delete(uri: android.net.Uri, selection: String?, selectionArgs: Array<out String>?): Int =
+            throw UnsupportedOperationException()
+        override fun update(uri: android.net.Uri, values: android.content.ContentValues?, selection: String?,
+            selectionArgs: Array<out String>?): Int = throw UnsupportedOperationException()
+    }
+
+    private fun missingPdf(activity: AgentActivity): Pair<android.net.Uri, MissingPdfProvider> {
+        val uri = android.net.Uri.parse("content://at.heinz.test.queued.failure/document/missing")
+        val provider = MissingPdfProvider()
+        provider.attachInfo(activity, android.content.pm.ProviderInfo().apply { authority = uri.authority })
+        org.robolectric.shadows.ShadowContentResolver.registerProviderInternal(requireNotNull(uri.authority), provider)
+        return uri to provider
+    }
+
+    private fun completePdfFailure(activity: AgentActivity): Pair<CockpitWorkJournal, MissingPdfProvider> {
+        val (uri, provider) = missingPdf(activity)
+        val journal = CockpitWorkJournal(activity.filesDir)
+        val episode = journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Letzte PDF öffnen",
+            CockpitWorkJournal.State.READ, "Verschoben.pdf", documentUri = uri.toString())
+        call(activity, "readPdfDocument", uri, episode)
+        val lane = field(activity, "documentIoExecutor") as java.util.concurrent.ExecutorService
+        lane.submit {}.get(10, TimeUnit.SECONDS)
+        assertEquals("The provider actually rejected access", 1, provider.opens.get())
+        assertNull("The UI delivery is still queued", shadowOf(activity).nextStartedActivityForResult)
+        assertEquals(1, journal.all().size)
+        return journal to provider
+    }
+
+    @Test fun anObservedPdfFailureWaitsInBackgroundWithoutRepeatingTheRead() =
         withFlowLifecycle { activity, root, runtime, controller ->
+            val (journal, provider) = completePdfFailure(activity)
+            controller.pause()
+            advance(128L)
+            assertNull("No picker while paused", shadowOf(activity).nextStartedActivityForResult)
+            assertEquals("No background recovery record", 1, journal.all().size)
+            controller.resume()
+            val lane = field(activity, "documentIoExecutor") as java.util.concurrent.ExecutorService
+            lane.submit {}.get(10, TimeUnit.SECONDS)
+            advance(128L); measure(root); draw(root)
+            assertTrue("Recovery is delivered on resume", shadowOf(activity).nextStartedActivityForResult != null)
+            assertEquals("No repeated URI access", 1, provider.opens.get())
+            assertEquals(2, journal.all().size)
+            assertTrue(runtime.prompts.isEmpty())
+        }
+
+    @Test fun aNewPickerRejectsAnAlreadyObservedPdfFailure() = withFlow { activity, root, runtime ->
+        val (journal, provider) = completePdfFailure(activity)
+        call(activity, "openPdfDocumentPicker", false, "Öffne eine andere PDF.")
+        val current = shadowOf(activity).nextStartedActivityForResult
+        assertEquals(android.content.Intent.ACTION_OPEN_DOCUMENT, current?.intent?.action)
+        advance(128L); measure(root); draw(root)
+        assertNull("Old failure cannot open another picker", shadowOf(activity).nextStartedActivityForResult)
+        assertEquals("New selection stays pending", "Öffne eine andere PDF.", field(activity, "pendingDocumentRequest"))
+        assertEquals(1, journal.all().size)
+        assertEquals(1, provider.opens.get())
+        assertTrue(runtime.prompts.isEmpty())
+    }
+
+    @Test fun stopRejectsAnAlreadyObservedPdfFailure() = withFlow { activity, root, runtime ->
+        val (journal, provider) = completePdfFailure(activity)
+        call(activity, "cancelLocalRequest")
+        advance(128L); measure(root); draw(root)
+        assertNull("STOP discards the queued recovery", shadowOf(activity).nextStartedActivityForResult)
+        assertEquals(1, journal.all().size)
+        assertEquals(1, provider.opens.get())
+        assertTrue(runtime.prompts.isEmpty())
+    }
+
+    @Test fun aNewReadRejectsAnAlreadyObservedPdfFailure() = withFlow { activity, root, runtime ->
+        val (journal, provider) = completePdfFailure(activity)
+        call(activity, "readPdfDocument", android.net.Uri.parse("content://at.heinz.test.queued.failure/document/new"))
+        val lane = field(activity, "documentIoExecutor") as java.util.concurrent.ExecutorService
+        lane.submit {}.get(10, TimeUnit.SECONDS)
+        advance(128L); measure(root); draw(root)
+        val messages = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>()
+            .map { it.text.toString() }
+        assertEquals("Only the current read reports its failure", 1,
+            messages.count { it.startsWith("Die PDF ließ sich nicht lesen (") })
+        assertFalse("No stale remembered-file recovery", messages.any { it.contains("Die zuletzt verwendete PDF") })
+        assertNull(shadowOf(activity).nextStartedActivityForResult)
+        assertEquals(1, journal.all().size)
+        assertEquals(2, provider.opens.get())
+        assertTrue(runtime.prompts.isEmpty())
+    }
+
+    @Test fun anotherStartedTaskRejectsAnAlreadyObservedPdfFailure() = withFlow { activity, root, runtime ->
+        val (journal, provider) = completePdfFailure(activity)
+        (field(activity, "input") as android.widget.EditText).setText("Erkläre die Funktion einer Feder.")
+        call(activity, "sendCurrentInput", false)
+        until(root, "the new model task starts") { runtime.running }
+        assertNull("The old recovery cannot interrupt the new task", shadowOf(activity).nextStartedActivityForResult)
+        assertEquals(1, journal.all().size)
+        assertEquals(1, provider.opens.get())
+        assertEquals(1, runtime.prompts.size)
+        runtime.answer("Eine Feder speichert elastische Energie.")
+        until(root, "the new task finishes") { !(field(activity, "busy") as Boolean) }
+    }
+
+    @Test fun pauseBeforePdfAccessCancelsWithoutInventingAFileFailure() = assertUnreadPdfIsCancelled { _, controller ->
+        controller.pause().resume()
+    }
+
+    @Test fun aNewOwnerMessageBeforePdfAccessCancelsWithoutInventingAFileFailure() =
+        assertUnreadPdfIsCancelled { activity, _ ->
+            call(activity, "addUserMessage", "Danach besprechen wir den Kalender.", true)
+        }
+
+    @Test fun pauseCancelsAQueuedRememberedPdfLookupBeforeItCanStartARead() =
+        withFlowLifecycle { activity, root, runtime, controller ->
+            val (uri, provider) = missingPdf(activity)
+            activity.contentResolver.takePersistableUriPermission(uri, android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
             val journal = CockpitWorkJournal(activity.filesDir)
-            val episode = journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Letzte PDF öffnen",
-                CockpitWorkJournal.State.READ, "Verschoben.pdf", documentUri = "content://missing/document/test")
+            journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Letzte PDF öffnen",
+                CockpitWorkJournal.State.READ, "Verschoben.pdf", documentUri = uri.toString())
             val lane = field(activity, "documentIoExecutor") as java.util.concurrent.ExecutorService
             val gate = java.util.concurrent.CountDownLatch(1)
             lane.execute { gate.await(10, TimeUnit.SECONDS) }
             try {
-                call(activity, "readPdfDocument", android.net.Uri.parse(episode.documentUri), episode)
+                (field(activity, "input") as android.widget.EditText).setText("Öffne die letzte PDF.")
+                call(activity, "sendCurrentInput", false)
+                controller.pause().resume()
+            } finally { gate.countDown() }
+            repeat(2) {
+                lane.submit {}.get(10, TimeUnit.SECONDS)
+                advance(128L)
+            }
+            measure(root); draw(root)
+            assertEquals("A stale journal callback cannot query the file", 0, provider.queries.get())
+            assertEquals("A stale journal callback cannot open the file", 0, provider.opens.get())
+            assertNull(shadowOf(activity).nextStartedActivityForResult)
+            assertEquals(1, journal.all().size)
+            assertTrue(runtime.prompts.isEmpty())
+        }
+
+    private fun assertUnreadPdfIsCancelled(interrupt: (AgentActivity,
+        org.robolectric.android.controller.ActivityController<AgentActivity>) -> Unit) =
+        withFlowLifecycle { activity, root, runtime, controller ->
+            val (uri, provider) = missingPdf(activity)
+            val journal = CockpitWorkJournal(activity.filesDir)
+            val episode = journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Letzte PDF öffnen",
+                CockpitWorkJournal.State.READ, "Verschoben.pdf", documentUri = uri.toString())
+            val lane = field(activity, "documentIoExecutor") as java.util.concurrent.ExecutorService
+            val gate = java.util.concurrent.CountDownLatch(1)
+            lane.execute { gate.await(10, TimeUnit.SECONDS) }
+            try {
+                call(activity, "readPdfDocument", uri, episode)
                 interrupt(activity, controller)
             } finally { gate.countDown() }
+            lane.submit {}.get(10, TimeUnit.SECONDS)
+            advance(128L); measure(root); draw(root)
+            assertEquals("No metadata access after cancellation", 0, provider.queries.get())
+            assertEquals("No file access after cancellation", 0, provider.opens.get())
+            assertNull("No recovery for an unobserved failure", shadowOf(activity).nextStartedActivityForResult)
+            assertEquals("No invented failure record", 1, journal.all().size)
+            assertTrue(runtime.prompts.isEmpty())
+        }
+
+    private fun assertQueuedPdfFailureDelivered(interrupt: (AgentActivity,
+        org.robolectric.android.controller.ActivityController<AgentActivity>) -> Unit) =
+        withFlowLifecycle { activity, root, runtime, controller ->
+            val (journal, provider) = completePdfFailure(activity)
+            val lane = field(activity, "documentIoExecutor") as java.util.concurrent.ExecutorService
+            interrupt(activity, controller)
             lane.submit {}.get(10, TimeUnit.SECONDS)
             advance(128L); measure(root); draw(root)
             lane.submit {}.get(10, TimeUnit.SECONDS)
@@ -718,5 +952,6 @@ class ContinuumDocumentFlowUiTest {
             assertTrue("PDF failure offers the requested recovery", shadowOf(activity).nextStartedActivityForResult != null)
             assertTrue("missing PDF performs no inference", runtime.prompts.isEmpty())
             assertEquals("failure remains in the journal", 2, journal.all().size)
+            assertEquals("Recovery never repeats file access", 1, provider.opens.get())
         }
 }

@@ -1,0 +1,160 @@
+{
+  "source": "f0349f4cbe4474e6df07ddf4685463688abb6ef2",
+  "backend": "Robolectric API 28 native Canvas",
+  "inputs": "scripted generic cinema and STOP sequences",
+  "filament_gpu": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "note": "25 original host frames existed at pause. One representative frame is committed; remaining frames are inventoried by hash and require regeneration if the temporary workspace is unavailable. No PDF-specific final-source screenshot was produced before the stop.",
+  "frames": [
+    {
+      "name": "native-cover-aborted-return.png",
+      "bytes": 573101,
+      "sha256": "97c744647615b63249310cc8bab08b9d28a8a119aa1f703d3af789af4d48585b",
+      "committed_sample": false
+    },
+    {
+      "name": "native-cover-idle.png",
+      "bytes": 564932,
+      "sha256": "53996f5c9784e0f06183b6665a4f8a646df806e259ee326cd16516c5374210f8",
+      "committed_sample": false
+    },
+    {
+      "name": "native-cover-result-140ms.png",
+      "bytes": 504287,
+      "sha256": "5f642d7beea0e897337c18e7a246df8030e0703db7e7ed99099549bfb0be62c7",
+      "committed_sample": false
+    },
+    {
+      "name": "native-cover-result-900ms.png",
+      "bytes": 503975,
+      "sha256": "4c7d537f3c811bfed658ff3ab1b8a9d235af028231e796414dae1e9669f11bc8",
+      "committed_sample": false
+    },
+    {
+      "name": "native-cover-return-650ms.png",
+      "bytes": 594075,
+      "sha256": "78e3c30d7a101fa06e46a572e54c1ba6a3c78b4e3f13a4c8536b899216bb1687",
+      "committed_sample": false
+    },
+    {
+      "name": "native-cover-returned.png",
+      "bytes": 576023,
+      "sha256": "846da7eecbafd56ef87df556205a006b3656e19bffd6a9af7f61cc031b3a04fe",
+      "committed_sample": false
+    },
+    {
+      "name": "native-cover-work-1180ms.png",
+      "bytes": 499205,
+      "sha256": "5b2712f993119c20bc3e5aa2f6f0847395344aad575a4a70b902b82dd3714d94",
+      "committed_sample": false
+    },
+    {
+      "name": "native-cover-work-140ms.png",
+      "bytes": 597720,
+      "sha256": "abd7f3f081f8b16d3ba5b138b1b6627c8d442896f8207189f52ee1bdb4c77ea8",
+      "committed_sample": false
+    },
+    {
+      "name": "native-cover-work-2100ms.png",
+      "bytes": 501260,
+      "sha256": "df97f28d06914e696f1f8a2ea32a6bec638bfec1852c900ff1b0573ddd638ee0",
+      "committed_sample": false
+    },
+    {
+      "name": "native-cover-work-280ms.png",
+      "bytes": 601005,
+      "sha256": "ca1b8ac3663979e4edd01cfe8038f6bd72780827e9b23d85c1715b0785d6a79e",
+      "committed_sample": false
+    },
+    {
+      "name": "native-cover-work-650ms.png",
+      "bytes": 562795,
+      "sha256": "c2a7a3ac2ab366eb73788d34de29e4f83dc109185437b9556eec814d9ea65d12",
+      "committed_sample": false
+    },
+    {
+      "name": "native-inner-aborted-return.png",
+      "bytes": 821503,
+      "sha256": "059230f57409c166515059f741b6344a36d3ea959404d5329e20d0aa5987eef8",
+      "committed_sample": false
+    },
+    {
+      "name": "native-inner-idle.png",
+      "bytes": 812908,
+      "sha256": "859e052af4e4b562d79a81a1704920df8a9e30494c7cbba6054a8ff6c6dd38fc",
+      "committed_sample": false
+    },
+    {
+      "name": "native-inner-result-140ms.png",
+      "bytes": 775951,
+      "sha256": "680502f6472f23411bebe336d47c8a92fa4c513eebfe5ce5ea9f6b1f6de32bc4",
+      "committed_sample": false
+    },
+    {
+      "name": "native-inner-result-900ms.png",
+      "bytes": 775176,
+      "sha256": "d3a973ac30ec16d64d6087011670735512474619158a4c5cec962ef76fdfe14d",
+      "committed_sample": true
+    },
+    {
+      "name": "native-inner-return-650ms.png",
+      "bytes": 856340,
+      "sha256": "5c348a8f63afc978f0a2972b83f6772a67759974c5c5c55ddda43291489548cd",
+      "committed_sample": false
+    },
+    {
+      "name": "native-inner-returned.png",
+      "bytes": 826600,
+      "sha256": "6e3054613b43a500dc66f8ce0c09701a7836e1de35e22414c9c857740772d9a7",
+      "committed_sample": false
+    },
+    {
+      "name": "native-inner-work-1180ms.png",
+      "bytes": 775422,
+      "sha256": "669a8063d562eaf02302e7c02ea1bfb0f69a9ebc9ba1b437f72e70901f73962a",
+      "committed_sample": false
+    },
+    {
+      "name": "native-inner-work-140ms.png",
+      "bytes": 856687,
+      "sha256": "0874813b4a832e5b1cd1f8a7541e855f1b797bbf22d9da835742b2f932d21f6b",
+      "committed_sample": false
+    },
+    {
+      "name": "native-inner-work-2100ms.png",
+      "bytes": 769526,
+      "sha256": "8329e54770b7cbe90817f1d263b7317257d7e884c00ed21b696ad8427a266cb8",
+      "committed_sample": false
+    },
+    {
+      "name": "native-inner-work-280ms.png",
+      "bytes": 861290,
+      "sha256": "9c5d87179bd78d95050f093bd369110fe3148a0678721f4e2a851bce60a1243f",
+      "committed_sample": false
+    },
+    {
+      "name": "native-inner-work-650ms.png",
+      "bytes": 848589,
+      "sha256": "049909a4cea4b6d4518f56b03804e85f3520c860e68cad90b0b5cf992f3fc1c0",
+      "committed_sample": false
+    },
+    {
+      "name": "stop-32ms.png",
+      "bytes": 802243,
+      "sha256": "935de388a3cf61054cad74edab99739fe4c3af0c28ad76be884422b08ab91f89",
+      "committed_sample": false
+    },
+    {
+      "name": "stop-352ms.png",
+      "bytes": 842825,
+      "sha256": "7e84038787e6a2f924b6a4c6f534bcf4e414d1673117f208f159b456855b7e38",
+      "committed_sample": false
+    },
+    {
+      "name": "stop-returned.png",
+      "bytes": 821449,
+      "sha256": "5ee07b1b697c3ebb1238a9c23633d8b29a10f5e521c196e2791f056605881d58",
+      "committed_sample": false
+    }
+  ]
+}
