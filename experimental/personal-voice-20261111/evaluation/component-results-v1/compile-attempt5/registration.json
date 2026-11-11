@@ -1,0 +1,262 @@
+{
+  "command": [
+    "/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/bin/kotlinc",
+    "-jvm-target",
+    "17",
+    "-classpath",
+    "/workspace/scratch/aba242c65e85/voice-context-deps/android-all-15-robolectric-12650502.jar:/workspace/scratch/aba242c65e85/voice-context-deps/json-20240303.jar:/workspace/scratch/aba242c65e85/voice-context-deps/okhttp-4.12.0.jar:/workspace/scratch/aba242c65e85/voice-context-deps/okio-jvm-3.6.0.jar",
+    "-d",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/classes",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/LocalConversationContext.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/MemoryEcology.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchDialogueHandoff.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/FreshKnowledgeNeed.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/InternetConsentPolicy.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchEngine.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/BoundedResearchTextSanitizer.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/JarvisUnifiedEvidenceContract.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchQuestionFocus.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchNegationSignals.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/Research.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PinnedResearchHttpsConnection.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ContinuumState.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ComputeFabric.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ContinuumSeed.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ProofCarryingMemory.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/SelfModel.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PersonalVoiceCorrectionBridge.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/LocalConversationVoiceAdapter.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ContextCorrectionEvaluation.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/NetworkTurnConstraint.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PublicKnowledgeTopicRouter.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/CognitiveCore.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/CognitiveGenome.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/IdentityState.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/BehaviorProfile.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/BehaviorUpdate.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/IdentityUpdateValidator.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/IdentityDrift.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AdaptiveIdentity.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AgentToolLayer.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ToolRegistry.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AgentProtocol.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ToolExecutionReceiptStore.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ToolExecutionStartLatch.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/CommandInterpreter.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/OwnerChatIntentRouter.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/LocalClockIntent.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PersonalVoiceLearningStore.kt",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AndroidPersonalVoiceStore.kt"
+  ],
+  "sources": {
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/LocalConversationContext.kt": "578c34d169b8f04fb77c874f31fb0618fa7646de7403e5336f80cf7f1fc4c463",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/MemoryEcology.kt": "0226d435ebab3fa4b1f8e135520bfbe283fb532dd89076cad7700e5bcb6426c2",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchDialogueHandoff.kt": "b585f65bc269ef9fa5cb2ad9f2b65a9f74b071a74a0e4563ca03d972b1814249",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/FreshKnowledgeNeed.kt": "69344260426c04543621c3feaba9726c2744370d1888a9d69ff08dae7bfea77c",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/InternetConsentPolicy.kt": "30b9d4cf451898330fb7a15e856b7189a8c90c9a9f57e4e28900bfe8bec15ab3",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchEngine.kt": "b51c363635aa829f9f8bd7c1443524957ea902cf520b07ffec84ac517515b2c6",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/BoundedResearchTextSanitizer.kt": "c4347827b9992a1c8b1602be2e7762243dd879536eff33d9dbb5e95d8c91e782",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/JarvisUnifiedEvidenceContract.kt": "4425c1cc2012e868e9d7283d5a65f88482fbc0eac9b8fa8edb5a16238b90a6cd",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchQuestionFocus.kt": "2f44244e91634d21777980634604439a937512fbb6da707abc197a1591e21f33",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchNegationSignals.kt": "ae054a494fb39cc2225c65d290f732e3bc9e9cdcc23971acc91a5540654a3429",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/Research.kt": "94c789a97ae6e3100800c447033074a6031cbf2550f67710a5e675cb31e0a2de",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PinnedResearchHttpsConnection.kt": "05da98f3003916f1313d601412b64851f307ba1becd58b57a2de5ea731ea26f5",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ContinuumState.kt": "6e3694bb3a27c307d10f84d6e21ec469a0575517feab05dee4d1a86d061f1713",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ComputeFabric.kt": "500b752e7e8f7b70ac97d8dbdc685ee32589301178738a3d3150d0a58979718b",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ContinuumSeed.kt": "567eca9ee9748ec70aee2064d0a3057af006ecc196065585be1718287708c110",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ProofCarryingMemory.kt": "f5157358d4771dd91918efbae8801f15db1a801d972e64c94e929920beaf67d2",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/SelfModel.kt": "adaadaf521a798ce52443e5f56e45d35b57555b2171f16e415eab376e2a416c9",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PersonalVoiceCorrectionBridge.kt": "9666fa501ef0b7a0ed014af04aa4bfb1fe3254a320e789ce49129c2ecb7ffbff",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/LocalConversationVoiceAdapter.kt": "e6e65252d876d5c2a73e21d939d9800da46b06ad1cafbeacdc9a6caf100bac08",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ContextCorrectionEvaluation.kt": "284bc49d4bb7905f3d1195b5201aa6e9418db036064f76c2a2918a900581000b",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/NetworkTurnConstraint.kt": "6a89f0074c302bcc255370b1805b2a7e661e2059e3e5d2ec61ada6c451161eca",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PublicKnowledgeTopicRouter.kt": "c6c85d573913a18d40d0929cf537c017184711a968f6631c0f2158be606a8a95",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/CognitiveCore.kt": "7794948f987870937687bca3483cc7a7bcbd15631e74f165b045499a7c240a66",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/CognitiveGenome.kt": "aaaa99327cf947513968c574bdebe2aa350d251862f17a45f2ccf4c730a6ad21",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/IdentityState.kt": "46a5c3c0380bed0087986e7e91d0d4622b9ebb61f5e9681908315ea43b3ed90a",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/BehaviorProfile.kt": "c932d9ca53b7b0268c64c2b173153302a9fdd24f7fce5bd275a55eadf148e823",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/BehaviorUpdate.kt": "fb21b884d5ddbb86775df18947f5388db301806b365328679b894e035d6a53b5",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/IdentityUpdateValidator.kt": "953fcbb585819745c731baa52f1d7052a7ebbe0e9a686c4b47175c7ea507afb3",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/IdentityDrift.kt": "4287c290808b018acadb42a8dbcb55071151f20191581836a72049fda110a325",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AdaptiveIdentity.kt": "828158ee17f0bf92e0ce4a6cb0e3ce8e6749ecef3d359bb37b1faaed95bfc454",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AgentToolLayer.kt": "3219cd7af419534b78d0b9c62a15175a11c69f6929275a3b97af61212e60e24c",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ToolRegistry.kt": "b4f91fa645787d3312953305f9f46a737f2cb6e2cd93ea69830f93c103ab2b8b",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AgentProtocol.kt": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ToolExecutionReceiptStore.kt": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ToolExecutionStartLatch.kt": "c25335de38195ed0636ed94d64045be01e72a0864d1291ba5c8788c3d46cd561",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/CommandInterpreter.kt": "74c48a28e1db7cfa3f39fe547a15295c566d00c7784f65b1c69651f19731e851",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/OwnerChatIntentRouter.kt": "aa7829ff15c1194c7832d83971c0ac58c0bef3c5e20a75b4d73060dece22124d",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/LocalClockIntent.kt": "85db929f317255cf38c694ce9496f3f65d3af0076d9cd08ef3b954cdd45315e9",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PersonalVoiceLearningStore.kt": "ad973100396872dddc55e21fcf454d4832a7f1d745c30373ca493449363c87f7",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AndroidPersonalVoiceStore.kt": "02c01aa7a328815fc9b530b4f066aea944b4831df7a056d3c76e2035eee5e4bc"
+  },
+  "original_source_mapping": {
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/LocalConversationContext.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+      "sha256": "578c34d169b8f04fb77c874f31fb0618fa7646de7403e5336f80cf7f1fc4c463"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/MemoryEcology.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
+      "sha256": "0226d435ebab3fa4b1f8e135520bfbe283fb532dd89076cad7700e5bcb6426c2"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchDialogueHandoff.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/ResearchDialogueHandoff.kt",
+      "sha256": "b585f65bc269ef9fa5cb2ad9f2b65a9f74b071a74a0e4563ca03d972b1814249"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/FreshKnowledgeNeed.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/FreshKnowledgeNeed.kt",
+      "sha256": "69344260426c04543621c3feaba9726c2744370d1888a9d69ff08dae7bfea77c"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/InternetConsentPolicy.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt",
+      "sha256": "30b9d4cf451898330fb7a15e856b7189a8c90c9a9f57e4e28900bfe8bec15ab3"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchEngine.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt",
+      "sha256": "b51c363635aa829f9f8bd7c1443524957ea902cf520b07ffec84ac517515b2c6"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/BoundedResearchTextSanitizer.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/BoundedResearchTextSanitizer.kt",
+      "sha256": "c4347827b9992a1c8b1602be2e7762243dd879536eff33d9dbb5e95d8c91e782"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/JarvisUnifiedEvidenceContract.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/JarvisUnifiedEvidenceContract.kt",
+      "sha256": "4425c1cc2012e868e9d7283d5a65f88482fbc0eac9b8fa8edb5a16238b90a6cd"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchQuestionFocus.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/ResearchQuestionFocus.kt",
+      "sha256": "2f44244e91634d21777980634604439a937512fbb6da707abc197a1591e21f33"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ResearchNegationSignals.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/ResearchNegationSignals.kt",
+      "sha256": "ae054a494fb39cc2225c65d290f732e3bc9e9cdcc23971acc91a5540654a3429"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/Research.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/Research.kt",
+      "sha256": "94c789a97ae6e3100800c447033074a6031cbf2550f67710a5e675cb31e0a2de"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PinnedResearchHttpsConnection.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt",
+      "sha256": "05da98f3003916f1313d601412b64851f307ba1becd58b57a2de5ea731ea26f5"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ContinuumState.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt",
+      "sha256": "6e3694bb3a27c307d10f84d6e21ec469a0575517feab05dee4d1a86d061f1713"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ComputeFabric.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/ComputeFabric.kt",
+      "sha256": "500b752e7e8f7b70ac97d8dbdc685ee32589301178738a3d3150d0a58979718b"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ContinuumSeed.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeed.kt",
+      "sha256": "567eca9ee9748ec70aee2064d0a3057af006ecc196065585be1718287708c110"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ProofCarryingMemory.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
+      "sha256": "f5157358d4771dd91918efbae8801f15db1a801d972e64c94e929920beaf67d2"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/SelfModel.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+      "sha256": "adaadaf521a798ce52443e5f56e45d35b57555b2171f16e415eab376e2a416c9"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PersonalVoiceCorrectionBridge.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/device-ai/experimental/personal-voice-20261111/native/PersonalVoiceCorrectionBridge.kt",
+      "sha256": "9666fa501ef0b7a0ed014af04aa4bfb1fe3254a320e789ce49129c2ecb7ffbff"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/LocalConversationVoiceAdapter.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/device-ai/experimental/personal-voice-20261111/native/LocalConversationVoiceAdapter.kt",
+      "sha256": "e6e65252d876d5c2a73e21d939d9800da46b06ad1cafbeacdc9a6caf100bac08"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ContextCorrectionEvaluation.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/experimental/personal-voice-20261111/evaluation/ContextCorrectionEvaluation.kt",
+      "sha256": "284bc49d4bb7905f3d1195b5201aa6e9418db036064f76c2a2918a900581000b"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/NetworkTurnConstraint.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/NetworkTurnConstraint.kt",
+      "sha256": "6a89f0074c302bcc255370b1805b2a7e661e2059e3e5d2ec61ada6c451161eca"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PublicKnowledgeTopicRouter.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt",
+      "sha256": "c6c85d573913a18d40d0929cf537c017184711a968f6631c0f2158be606a8a95"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/CognitiveCore.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/CognitiveCore.kt",
+      "sha256": "7794948f987870937687bca3483cc7a7bcbd15631e74f165b045499a7c240a66"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/CognitiveGenome.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/CognitiveGenome.kt",
+      "sha256": "aaaa99327cf947513968c574bdebe2aa350d251862f17a45f2ccf4c730a6ad21"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/IdentityState.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/IdentityState.kt",
+      "sha256": "46a5c3c0380bed0087986e7e91d0d4622b9ebb61f5e9681908315ea43b3ed90a"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/BehaviorProfile.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/BehaviorProfile.kt",
+      "sha256": "c932d9ca53b7b0268c64c2b173153302a9fdd24f7fce5bd275a55eadf148e823"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/BehaviorUpdate.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/BehaviorUpdate.kt",
+      "sha256": "fb21b884d5ddbb86775df18947f5388db301806b365328679b894e035d6a53b5"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/IdentityUpdateValidator.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/IdentityUpdateValidator.kt",
+      "sha256": "953fcbb585819745c731baa52f1d7052a7ebbe0e9a686c4b47175c7ea507afb3"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/IdentityDrift.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/IdentityDrift.kt",
+      "sha256": "4287c290808b018acadb42a8dbcb55071151f20191581836a72049fda110a325"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AdaptiveIdentity.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/AdaptiveIdentity.kt",
+      "sha256": "828158ee17f0bf92e0ce4a6cb0e3ce8e6749ecef3d359bb37b1faaed95bfc454"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AgentToolLayer.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt",
+      "sha256": "3219cd7af419534b78d0b9c62a15175a11c69f6929275a3b97af61212e60e24c"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ToolRegistry.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
+      "sha256": "b4f91fa645787d3312953305f9f46a737f2cb6e2cd93ea69830f93c103ab2b8b"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AgentProtocol.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/AgentProtocol.kt",
+      "sha256": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ToolExecutionReceiptStore.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt",
+      "sha256": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/ToolExecutionStartLatch.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/ToolExecutionStartLatch.kt",
+      "sha256": "c25335de38195ed0636ed94d64045be01e72a0864d1291ba5c8788c3d46cd561"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/CommandInterpreter.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt",
+      "sha256": "74c48a28e1db7cfa3f39fe547a15295c566d00c7784f65b1c69651f19731e851"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/OwnerChatIntentRouter.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/OwnerChatIntentRouter.kt",
+      "sha256": "aa7829ff15c1194c7832d83971c0ac58c0bef3c5e20a75b4d73060dece22124d"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/LocalClockIntent.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/LocalClockIntent.kt",
+      "sha256": "85db929f317255cf38c694ce9496f3f65d3af0076d9cd08ef3b954cdd45315e9"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/PersonalVoiceLearningStore.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/device-ai/experimental/personal-voice-20261111/native/PersonalVoiceLearningStore.kt",
+      "sha256": "ad973100396872dddc55e21fcf454d4832a7f1d745c30373ca493449363c87f7"
+    },
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/sources/AndroidPersonalVoiceStore.kt": {
+      "original_path": "/workspace/scratch/aba242c65e85/device-ai/experimental/personal-voice-20261111/native/AndroidPersonalVoiceStore.kt",
+      "sha256": "02c01aa7a328815fc9b530b4f066aea944b4831df7a056d3c76e2035eee5e4bc"
+    }
+  },
+  "dependencies": {
+    "/workspace/scratch/aba242c65e85/voice-context-deps/android-all-15-robolectric-12650502.jar": "6c0670454f6fcee9f1b17aa393e81d71bf26e7e6ae7c5777ed3924b062191d5b",
+    "/workspace/scratch/aba242c65e85/voice-context-deps/json-20240303.jar": "3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed",
+    "/workspace/scratch/aba242c65e85/voice-context-deps/okhttp-4.12.0.jar": "b1050081b14bb7a3a7e55a4d3ef01b5dcfabc453b4573a4fc019767191d5f4e0",
+    "/workspace/scratch/aba242c65e85/voice-context-deps/okio-jvm-3.6.0.jar": "67543f0736fc422ae927ed0e504b98bc5e269fda0d3500579337cb713da28412"
+  },
+  "execution_note": "Attempt4 compile passed, but pre-evaluation source gate detected concurrent unused store source edit; no component results were evaluated. Attempt5 compiles immutable byte snapshots of all actual repository sources."
+}
