@@ -5,6 +5,18 @@ Experiment EXP-05 / EXP-12, research only.
 Base: `1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667` (PR #728).
 Branch: `research/continuum-lm1-semantic-data-20261111`.
 
+## Confirmed remote publication
+
+Draft PR: https://github.com/Ullmann27/device-ai/pull/749
+
+Start checkpoint: local `23872f1a949b2cfc9eb776beb8290fa61b6fd795` maps to
+published `d7bd614cbf273d74b246f876f33f30860cbd5696`.
+Completed data checkpoint: local `193faa4c21bc2340e4c4cce5fa922513006b10b8`
+maps to published `d7b948830607a087d84b6f492143354ab28d14a5`.
+The coordinator verified identical Git trees for each local/remote pair.
+Direct Git authentication was unavailable; publication used the authorized
+GitHub connector without force-push or any protected-branch change.
+
 ## Scope
 
 New files only under `experimental/lm1-semantic-20261111/data/` and this handoff.
@@ -50,6 +62,10 @@ only if independent protocol and training implementation gates also pass.
 Bot2 consumes the frozen TRAIN rows; DEV remains openly inspected diagnostics.
 Bot3 holds an independently authored confirmation set. Do not tune these
 sources against any future holdout result or enlarge the experiment.
+After the coordinator explicitly confirms candidate freeze, Bot1 may inspect
+the holdout solely for an independent semantic-label audit and final raw-result
+comparison. Before that explicit handoff the holdout remains unread. Any
+ambiguity found afterward must be reported, not silently corrected or removed.
 
 ## Checks and rollback
 
