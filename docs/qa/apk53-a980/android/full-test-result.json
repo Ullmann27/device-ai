@@ -1,0 +1,36 @@
+{
+  "phase": "full-test",
+  "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "sourceTree": "a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e",
+  "sourceStatus": "",
+  "command": [
+    "/tmp/continuum-toolchain/gradle-8.11.1/bin/gradle",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=1",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1100m -XX:MaxMetaspaceSize=512m -XX:+UseSerialGC -XX:ActiveProcessorCount=2",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerArm64=true",
+    "-PcontinuumStandaloneVersionCode=53",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumUiEvidenceDir=/workspace/scratch/5900afa6af29/apk53-a980-android/full-test/images",
+    "-I",
+    "/workspace/scratch/5900afa6af29/apk53-a980-android/apk53-test-memory.gradle",
+    ":app:testDebugUnitTest",
+    "-I",
+    "/workspace/scratch/5900afa6af29/apk53-a980-android/force_capture.gradle"
+  ],
+  "started": 1794354803.970932,
+  "exit": 0,
+  "finished": 1794357399.489682,
+  "endSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "endStatus": "",
+  "junit": {
+    "total": 4481,
+    "failed": 0,
+    "skipped": 17
+  }
+}

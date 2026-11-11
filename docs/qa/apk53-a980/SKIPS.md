@@ -1,6 +1,8 @@
-# Node skips — frozen a980a19
+# Skips — frozen a980a19
 
-31 skipped cases from `apk53-a980-host/full-node/full-node.xml`.
+**31 Node skips + 17 Android skips** are listed separately; neither group is passed.
+
+The Node entries come from `apk53-a980-host/full-node/full-node.xml`.
 These are not passes. Names/reasons below are technical test metadata, not
 fixture input/output. Repeated reasons are listed once.
 
@@ -56,3 +58,30 @@ fixture input/output. Repeated reasons are listed once.
 | 29 | `scripts/continuum-local-model-observation.test.mjs` | process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind | S11 |
 | 30 | `scripts/continuum-local-model-observation.test.mjs` | invalid model JSON retains authenticated process observation without a candidate | S11 |
 | 31 | `scripts/continuum-local-model-observation.test.mjs` | provider retains authenticated rejected-response observation and consumed durable budget | S11 |
+
+## Android skips — 17 cases
+
+Full Android result: 4481 total, 4464 passed, 17 skipped, 0 failures.
+All entries below have the XML reason **"JUnit skipped; no reason in XML"**.
+No reason is inferred from names. All five test-class blobs are identical
+to protected Code52; exact bindings remain in `QA.json`.
+
+| # | Class | Test |
+|---:|---|---|
+| 1 | `at.heinz.deviceai.chief.ChiefPatternE2ETest` | `s7_pending_agentMessagesUrgentWakesInfoWaits` |
+| 2 | `at.heinz.deviceai.chief.ChiefPatternE2ETest` | `s4b_pending_profileDiarySharedLayers` |
+| 3 | `at.heinz.deviceai.chief.ChiefPatternE2ETest` | `s8d_pending_limitGuardIsWiredBeforeWorkerStart` |
+| 4 | `at.heinz.deviceai.chief.ChiefPatternE2ETest` | `s5b_pending_textFileSkillLibraryLoadedOnDemand` |
+| 5 | `at.heinz.deviceai.chief.ChiefPatternE2ETest` | `s6_pending_routineReportsOnlyWhenSomethingIsNew` |
+| 6 | `at.heinz.deviceai.chief.ChiefPatternE2ETest` | `s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack` |
+| 7 | `at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest` | `actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations` |
+| 8 | `at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest` | `cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox` |
+| 9 | `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` | `schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert` |
+| 10 | `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` | `schritt1b_ziel_turnLifecycleQuittiertGenauEinmal` |
+| 11 | `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` | `schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope` |
+| 12 | `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` | `schritt6b_lernen_hypotheseUndTagebuchEintrag` |
+| 13 | `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` | `schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch` |
+| 14 | `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` | `schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen` |
+| 15 | `at.heinz.deviceai.learning.ContinuumContrastiveParityTest` | `actualNodeKotlinNodeTrainingParity` |
+| 16 | `at.heinz.deviceai.learning.ContinuumContrastiveParityTest` | `actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds` |
+| 17 | `at.heinz.deviceai.learning.Cre1InferenceEncoderTest` | `trainedNodeCheckpointMatchesKotlinFeaturesAndScores` |

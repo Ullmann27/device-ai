@@ -86,7 +86,8 @@ def check_badging(text: str) -> dict:
     require(rows == [(EXPECTED_PACKAGE, "53", "0.3.52")], "APK package/version mismatch")
     require(re.findall(r"^native-code: (.+)$", text, re.M) == ["'arm64-v8a'"],
             "APK native-code must be exactly arm64-v8a")
-    require(re.findall(r"^sdkVersion:'([^']+)'$", text, re.M) == ["26"], "Unexpected minSdk")
+    require(re.findall(r"^(?:minSdkVersion|sdkVersion):'([^']+)'$", text, re.M) == ["26"],
+            "Unexpected minSdk")
     require(re.findall(r"^targetSdkVersion:'([^']+)'$", text, re.M) == ["36"], "Unexpected targetSdk")
     require(not re.search(r"^application-debuggable(?:\s|$)", text, re.M), "Release APK is debuggable")
     return {"package": rows[0][0], "versionCode": 53, "versionName": "0.3.52",

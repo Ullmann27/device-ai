@@ -1,0 +1,143 @@
+{
+  "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "suiteXmlFiles": 783,
+  "tests": 4481,
+  "passed": 4464,
+  "failed": 0,
+  "skipped": [
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s7_pending_agentMessagesUrgentWakesInfoWaits",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s4b_pending_profileDiarySharedLayers",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s5b_pending_textFileSkillLibraryLoadedOnDemand",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s6_pending_routineReportsOnlyWhenSomethingIsNew",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "name": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "name": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt6b_lernen_hypotheseUndTagebuchEintrag",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "name": "actualNodeKotlinNodeTrainingParity",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "name": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+      "reason": "JUnit skipped; no reason in XML"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+      "name": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+      "reason": "JUnit skipped; no reason in XML"
+    }
+  ],
+  "requiredCinemaClasses": {
+    "LuxuryHoloButtonRendererTest": 7,
+    "PerimeterWingChoreographerTest": 2,
+    "SpatialWindowLightTest": 8,
+    "HollywoodFuiWorkActivityTest": 5,
+    "JarvisRenderQualityTest": 7,
+    "TtsHologramSignalTest": 11
+  },
+  "requiredGate": "tests=4481\nfailures=0\nerrors=0\nskipped=17\n",
+  "runLogSha256": "e1f8a8e69f5ae85bf90d7223374f8059c3dfc0356dfa0a61056db674463c3df7",
+  "fullUnfiltered": true,
+  "deviceAcceptance": "NOT_RUN",
+  "skipSourceBindings": [
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+      "candidateBlob": "4daa63e9a5790ad2ddd518abc483a2aac8a9de58",
+      "code52Blob": "4daa63e9a5790ad2ddd518abc483a2aac8a9de58",
+      "unchangedSinceCode52": true
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringHostTest.kt",
+      "candidateBlob": "ceba627d0809e39bd846ffd94386f7aa66159ce5",
+      "code52Blob": "ceba627d0809e39bd846ffd94386f7aa66159ce5",
+      "unchangedSinceCode52": true
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "path": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+      "candidateBlob": "e7930d853d308bb266163dbf4d569a7d169d366b",
+      "code52Blob": "e7930d853d308bb266163dbf4d569a7d169d366b",
+      "unchangedSinceCode52": true
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumContrastiveParityTest.kt",
+      "candidateBlob": "fcb92a24a05f8275c1037be364da57ffab9d0306",
+      "code52Blob": "fcb92a24a05f8275c1037be364da57ffab9d0306",
+      "unchangedSinceCode52": true
+    },
+    {
+      "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+      "path": "app/src/test/java/at/heinz/deviceai/learning/Cre1InferenceEncoderTest.kt",
+      "candidateBlob": "568aeac31a767a1d9636489698707d8ae102a5dc",
+      "code52Blob": "568aeac31a767a1d9636489698707d8ae102a5dc",
+      "unchangedSinceCode52": true
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "candidateSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "candidatePackage": "at.heinz.deviceai.continuumlocal",
+  "candidateVersionCode": 53,
+  "candidateVersionName": "0.3.52",
+  "originalSigning": "NOT_RUN",
+  "publication": "NOT_RUN",
+  "secretAccess": "NOT_PERFORMED",
+  "protectedSigner": {
+    "branch": "chatgpt/code52-owner-signing-20261109",
+    "observedHead": "0199741efba0a90e20684520762c7d8ded0fcfc8",
+    "file": "scripts/continuum-code52-github-signer.sh",
+    "fileBlob": "8a15f1031069ccf616b4d69dc8279f592c9b52d1",
+    "boundVersionCode": 52,
+    "boundQaBranch": "code52/grok-release-candidate-0351-20261110",
+    "qaWorkflow": ".github/workflows/continuum-code52-cinematic-qa.yml",
+    "qaEvent": "push",
+    "requiredJob": "validate-source-and-build",
+    "environment": "continuum-original-signing",
+    "requiredReviewer": "Ullmann27",
+    "expectedCertificateSha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+    "modified": false
+  },
+  "nextProtectedStep": {
+    "status": "OWNER_APPROVAL_AND_CODE53_BINDING_REQUIRED",
+    "requirements": [
+      "Owner approval of exact candidate source and signing channel",
+      "Retain original certificate, required owner reviewer and branch policy",
+      "Bind Code53 source, QA evidence and artifact names explicitly; do not bypass Code52 guards",
+      "Recheck installed/published version before signing; no main merge or publication without approval"
+    ]
+  },
+  "ownerLocalAlternative": {
+    "script": "scripts/continuum-fold7-standalone-apk.sh",
+    "supportsVersion53InSource": true,
+    "execution": "NOT_RUN",
+    "deviceToolchainAndKeyAvailability": "NOT_VERIFIED",
+    "scope": "Owner-local full build with existing original key; does not install"
+  },
+  "legacyMentorHelper": "scripts/continuum-local-owner-apk.sh targets mentorpaired and is not the candidate path"
+}

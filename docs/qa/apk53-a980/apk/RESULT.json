@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "started": 1794357908.4513073,
+  "apk": "/workspace/scratch/5900afa6af29/device-ai/app/build/outputs/apk/release/app-release-unsigned.apk",
+  "expectedSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "expectedTree": "a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e",
+  "validatorSha256": "2a0aeaef48bb5482f0da304ee24e3a69a66d3fa2a86c81885436d28b7c8a535f",
+  "signing": "NOT_USED",
+  "installation": "NOT_RUN",
+  "Fold7": "NOT_RUN",
+  "GPU": "NOT_RUN",
+  "sourceBefore": {
+    "commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "tree": "a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e",
+    "status": "",
+    "original_avatar_git_blob": "3498c003a8bf186a8abb47048e2d36be4810b88c"
+  },
+  "bytes": 102588096,
+  "sha256": "f138b92a99ea9aab67103490f0a249fd14adbc84c3c5346cd2169f36a40f1921",
+  "archive": {
+    "zipCrc": "PASS",
+    "entryCount": 77,
+    "assetFilesCompared": 34,
+    "nativeLibraries": [
+      "lib/arm64-v8a/libc++_shared.so",
+      "lib/arm64-v8a/libfilament-jni.so",
+      "lib/arm64-v8a/libgltfio-jni.so",
+      "lib/arm64-v8a/liblitertlm_jni.so",
+      "lib/arm64-v8a/libopencv_java4.so"
+    ],
+    "jarSignatureFiles": [],
+    "apkSigningBlock": false
+  },
+  "identity": {
+    "package": "at.heinz.deviceai.continuumlocal",
+    "versionCode": 53,
+    "versionName": "0.3.52",
+    "abi": "arm64-v8a",
+    "minSdk": 26,
+    "targetSdk": 36,
+    "debuggable": false
+  },
+  "zipalign16KiB": "PASS",
+  "unsignedDiagnostic": "EXPECTED_MISSING_SIGNATURE",
+  "sourceAfter": {
+    "commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "tree": "a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e",
+    "status": "",
+    "original_avatar_git_blob": "3498c003a8bf186a8abb47048e2d36be4810b88c"
+  },
+  "artifactStatus": "UNSIGNED_NOT_INSTALLABLE",
+  "finished": 1794357909.5800924
+}

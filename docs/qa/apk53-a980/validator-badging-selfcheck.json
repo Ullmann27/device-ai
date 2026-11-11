@@ -1,0 +1,51 @@
+{
+  "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "validatorSha256": "2a0aeaef48bb5482f0da304ee24e3a69a66d3fa2a86c81885436d28b7c8a535f",
+  "basis": "Actual aapt2 35 output uses minSdkVersion; app minSdk remains26",
+  "tests": [
+    {
+      "case": "actual-aapt2-minSdkVersion",
+      "accepted": true,
+      "expected": true,
+      "status": "PASS"
+    },
+    {
+      "case": "legacy-sdkVersion",
+      "accepted": true,
+      "expected": true,
+      "status": "PASS"
+    },
+    {
+      "case": "wrong-minsdk",
+      "accepted": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "case": "duplicate-minsdk",
+      "accepted": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "case": "missing-minsdk",
+      "accepted": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "case": "wrong-package",
+      "accepted": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "case": "wrong-code",
+      "accepted": false,
+      "expected": false,
+      "status": "PASS"
+    }
+  ],
+  "passed": 7,
+  "failed": 0
+}

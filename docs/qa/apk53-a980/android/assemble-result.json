@@ -1,0 +1,25 @@
+{
+  "phase": "assemble",
+  "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "sourceTree": "a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e",
+  "sourceStatus": "",
+  "command": [
+    "/tmp/continuum-toolchain/gradle-8.11.1/bin/gradle",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=1",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx2200m -XX:MaxMetaspaceSize=512m -XX:+UseSerialGC -XX:ActiveProcessorCount=2",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerArm64=true",
+    "-PcontinuumStandaloneVersionCode=53",
+    "-PcontinuumLocalRenderUnsigned=true",
+    ":app:assembleRelease"
+  ],
+  "started": 1794357518.1362724,
+  "exit": 0,
+  "finished": 1794357669.2405784,
+  "endSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "endStatus": ""
+}
