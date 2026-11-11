@@ -4,7 +4,7 @@ Canonical target: `integration/continuum-final-visibility-20261111`, PR #747.
 Starting remote source: `fd1de22cf3f6ed159601c9b944cc25c86f0fc221`.
 This is the continuation of the existing Cinema/Maya candidate, not a new runtime.
 
-## Active corrected freeze — 2026-11-11 08:39 UTC
+## Active corrected freeze — 2026-11-11 08:51 UTC
 
 - Runtime: `050a57cb019dcc1b7fe6cfa2fb5c11176b048e05`.
 - Tree: `539ea3aac0af04644a015b3fb69ba865af80d1a8`.
@@ -17,7 +17,7 @@ This is the continuation of the existing Cinema/Maya candidate, not a new runtim
 - Source/ICU/full Node/critical, backend, rendering and SDK gates PASS.
   Maya lifecycle preflight PASS at 08:23:50 UTC: both expected cases,
   zero failures/errors/skips. Full Android suite/NewApi lint IN_PROGRESS.
-  Latest observed status at 08:38:53 UTC remains the same active Android step.
+  Latest observed status at 08:51:12 UTC remains the same active Android step.
   APK and complete-run success remain PENDING. Read this exact run before
   changing or restarting anything.
 
