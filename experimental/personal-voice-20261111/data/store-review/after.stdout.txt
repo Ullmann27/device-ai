@@ -1,0 +1,5 @@
+PASS consent_revocation_shared_across_instances
+PASS deleted_record_rejects_previous_approval
+PASS replacement_at_capacity_preserves_total_256
+PASS old_review_form_cannot_issue_new_approval
+INDEPENDENT_STORE_FIX_CHECKS 4 passed

@@ -1,0 +1,65 @@
+id	label	prompt
+voice-test-01-a	0	Nur lesen darfst du „die Galerie öffnen“; wirklich öffnen darfst du sie nicht. Tu genau das Erlaubte.
+voice-test-01-b	1	Nur lesen darfst du „die Galerie nicht öffnen“; wirklich öffnen darfst du sie. Tu genau das Erlaubte.
+voice-test-02-a	0	Untersagt ist das Öffnen von Kiesel; erlaubt ist das Lesen des Namens. Erledige jetzt die erlaubte Handlung.
+voice-test-02-b	1	Erlaubt ist das Öffnen von Kiesel; untersagt ist das Lesen des Namens. Erledige jetzt die erlaubte Handlung.
+voice-test-03-a	0	„Öffne Mohn“ ist der zitierte Vorschlag; „Tu nichts“ ist mein jetziger Auftrag.
+voice-test-03-b	1	„Tu nichts“ ist der zitierte Vorschlag; „Öffne Mohn“ ist mein jetziger Auftrag.
+voice-test-04-a	0	Öffne den Kalender. Halt, korrigiere das: Lass den Kalender zu.
+voice-test-04-b	1	Lass den Kalender zu. Halt, korrigiere das: Öffne den Kalender.
+voice-test-05-a	0	Würde sich die Galerie öffnen, wenn ich den Knopf drücke? Ich möchte das nur wissen.
+voice-test-05-b	1	Die Galerie soll sich jetzt öffnen. Drücke bitte den passenden Knopf.
+voice-test-06-a	0	Geh, lass den Rechner noch zu, i frag nur, ob der überhaupt da is.
+voice-test-06-b	1	Geh, mach ma den Rechner auf, den brauch i jetzt zum Zusammenzählen.
+voice-test-07-a	0	Du kennst zwei Ordner. Öffne den anderen, aber ich sage noch nicht, welchen ich meine.
+voice-test-07-b	1	Du kennst zwei Ordner. Mit dem anderen meine ich den zweiten: Öffne Ordner Flieder.
+voice-test-08-a	0	Mein Satz war „Öffne Notizen“, aber das war ein Versprecher. Bitte warte.
+voice-test-08-b	1	Mein Satz war „Bitte warte“, aber das war ein Versprecher. Öffne Notizen.
+voice-test-09-a	1	Öffne Kiesel, suche nicht nach Mohn.
+voice-test-09-b	2	Suche nach Mohn, öffne Kiesel nicht.
+voice-test-10-a	1	Statt nach Karten zu suchen, öffne den Kalender.
+voice-test-10-b	2	Statt den Kalender zu öffnen, suche nach Karten.
+voice-test-11-a	1	„Suche Atlas“ war nur ein Beispiel; „Öffne Atlas“ ist der Auftrag.
+voice-test-11-b	2	„Öffne Atlas“ war nur ein Beispiel; „Suche Atlas“ ist der Auftrag.
+voice-test-12-a	1	Suche nach den Zeichnungen. Nein, ändere den Auftrag: Öffne die Galerie.
+voice-test-12-b	2	Öffne die Galerie. Nein, ändere den Auftrag: Suche nach den Zeichnungen.
+voice-test-13-a	1	Geplant war Öffnen von Mohn, verworfen wurde Suchen nach Mohn. Führe die geplante Handlung aus.
+voice-test-13-b	2	Geplant war Suchen nach Mohn, verworfen wurde Öffnen von Mohn. Führe die geplante Handlung aus.
+voice-test-14-a	1	Na geh, nix nachschauen im Netz; mach ma bitte die Karten-App auf.
+voice-test-14-b	2	Na geh, die Karten-App lass zu; schau ma bitte nach dem Wanderweg im Netz.
+voice-test-15-a	1	Erkannt wurde „suche Wolke“. Meine Wortlautkorrektur lautet: „Öffne Wolke“.
+voice-test-15-b	2	Erkannt wurde „Öffne Wolke“. Meine Wortlautkorrektur lautet: „suche Wolke“.
+voice-test-16-a	1	Also, äh, die Suche lassen wir. Was ich brauche, ist die offene Galerie, jetzt bitte.
+voice-test-16-b	2	Also, äh, die Galerie lassen wir. Was ich brauche, ist eine Suche nach Kiesel, jetzt bitte.
+voice-test-17-a	2	Suche nach der Nummer sieben, merke sie dir nicht.
+voice-test-17-b	3	Merke dir die Nummer sieben, suche nicht nach ihr.
+voice-test-18-a	2	„Merke den Namen Mohn“ ist nur das Beispiel. Mein Auftrag heißt „Suche den Namen Mohn“.
+voice-test-18-b	3	„Suche den Namen Mohn“ ist nur das Beispiel. Mein Auftrag heißt „Merke den Namen Mohn“.
+voice-test-19-a	2	Merke dir: Testfarbe Ocker. Nein, zurück: Suche nach dem Wort Ocker.
+voice-test-19-b	3	Suche nach dem Wort Ocker. Nein, zurück: Merke dir: Testfarbe Ocker.
+voice-test-20-a	2	Erlaubt ist die Suche nach Mohn; untersagt ist das Speichern des Namens. Erledige jetzt die erlaubte Handlung.
+voice-test-20-b	3	Untersagt ist die Suche nach Mohn; erlaubt ist das Speichern des Namens. Erledige jetzt die erlaubte Handlung.
+voice-test-21-a	2	Suche den Begriff Kranich; speichere keine Notiz dazu.
+voice-test-21-b	3	Speichere eine Notiz zum Begriff Kranich; führe keine Suche dazu aus.
+voice-test-22-a	2	Schau ma nach, was das Wort Zunder bedeutet; ins Gedächtnis brauchst das ned nehmen.
+voice-test-22-b	3	Nimm ma ins Gedächtnis: Das Testwort ist Nebelrose. Nachschauen brauchst ned.
+voice-test-23-a	2	Die Suche nach Zirbe ist bestätigt, die Notiz „Testwort Zirbe“ ist zurückgezogen. Erledige das Bestätigte.
+voice-test-23-b	3	Die Notiz „Testwort Zirbe“ ist bestätigt, die Suche nach Zirbe ist zurückgezogen. Erledige das Bestätigte.
+voice-test-24-a	2	Ich wollte das merken, also nein, ich fang noch mal an: Such nach der Bedeutung von Kobalt.
+voice-test-24-b	3	Ich wollte das suchen, also nein, ich fang noch mal an: Merk dir das Testwort Kobalt.
+voice-test-25-a	3	„Speichere Testwort Hasel“ ist mein Auftrag. „Bitte nichts tun“ war nur das Zitat.
+voice-test-25-b	0	„Bitte nichts tun“ ist mein Auftrag. „Speichere Testwort Hasel“ war nur das Zitat.
+voice-test-26-a	3	Erlaubt ist das Speichern der Testfarbe Bernstein; untersagt ist das bloße Erwähnen. Erledige jetzt die erlaubte Handlung.
+voice-test-26-b	0	Untersagt ist das Speichern der Testfarbe Bernstein; erlaubt ist das bloße Erwähnen. Erledige jetzt die erlaubte Handlung.
+voice-test-27-a	3	Speichere nichts. Ich korrigiere mich: Merke dir das Wort Zeder.
+voice-test-27-b	0	Merke dir das Wort Zeder. Ich korrigiere mich: Speichere nichts.
+voice-test-28-a	3	Merke dir „nicht speichern“ als Testwort. Das ist mein Auftrag.
+voice-test-28-b	0	„Merke dir das Testwort“ ist nicht mein Auftrag. Speichern sollst du nichts.
+voice-test-29-a	3	Die Erkennung schrieb „nicht merken“. Ich bestätige die Korrektur: Merke dir Testzahl sieben.
+voice-test-29-b	0	Die Erkennung schrieb „merken“ oder „nicht merken“. Ohne geklärten Wortlaut bitte erst nachfragen.
+voice-test-30-a	3	Das merkst da bitte: Unser erfundenes Testwort is Gänseblume.
+voice-test-30-b	0	Das merkst da bitte ned; Gänseblume war bloß a Beispiel, koa Auftrag.
+voice-test-31-a	3	Ich gebe dir jetzt den Auftrag, die Testfarbe Aprikose zu notieren.
+voice-test-31-b	0	Ich erzähle dir nur, dass ich die Testfarbe Aprikose gestern notiert habe.
+voice-test-32-a	3	Mit dem zweiten Wort meine ich ausdrücklich Zimt. Merke dir dieses Wort.
+voice-test-32-b	0	Merke dir das zweite Wort, aber weder die Liste noch der Bezug sind hier bekannt.

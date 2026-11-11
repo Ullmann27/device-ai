@@ -6,6 +6,9 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.channels.FileChannel
+import java.nio.file.StandardOpenOption
+import java.util.concurrent.ConcurrentHashMap
 import java.nio.file.Files
 import java.nio.file.LinkOption
 import java.nio.file.StandardCopyOption
@@ -44,7 +47,10 @@ class PersonalVoiceExample(
 }
 
 /** Content-bound approval is issued only by an explicit review action, not model output. */
-class VoiceTrainingApproval(val exampleDigest: String, val approvedByOwner: Boolean)
+class VoiceTrainingApproval internal constructor(
+    val exampleDigest: String, internal val storeIdentity: String, internal val revision: Long
+)
+class VoiceReviewSnapshot(val example: PersonalVoiceExample, val reviewRevision: Long)
 enum class VoiceStageResult { STORED, DUPLICATE, CONSENT_REQUIRED, REVIEW_REQUIRED, INVALID, CAPACITY_REACHED }
 
 /**
@@ -54,32 +60,123 @@ enum class VoiceStageResult { STORED, DUPLICATE, CONSENT_REQUIRED, REVIEW_REQUIR
  * and a no-backup app-private directory through AndroidPersonalVoiceStore.
  */
 class PersonalVoiceLearningStore(private val directory: File, private val key: SecretKey) {
-    private var consent = VoiceLearningConsent()
+    private data class Policy(val consent: VoiceLearningConsent = VoiceLearningConsent(), val revision: Long = 0)
+    private val identity = VoiceDigests.text(directory.canonicalPath)
+    private val mutex = LOCKS.computeIfAbsent(directory.canonicalPath) { Any() }
 
-    @Synchronized fun setConsent(value: VoiceLearningConsent) { consent = value }
-    @Synchronized fun consent(): VoiceLearningConsent = consent.copy()
+    /** Every instance/process reads the same authenticated policy under the same file lock. */
+    fun setConsent(value: VoiceLearningConsent) = locked {
+        val previous = readPolicy()
+        writePolicy(Policy(value, Math.addExact(previous.revision, 1L)))
+    }
+    fun consent(): VoiceLearningConsent = locked { readPolicy().consent }
+    fun reviewRevision(): Long = locked { readPolicy().revision }
 
-    @Synchronized fun stage(example: PersonalVoiceExample, approval: VoiceTrainingApproval): VoiceStageResult {
-        if (!consent.textTraining) return VoiceStageResult.CONSENT_REQUIRED
+    /** Call only from an explicit owner review action. Neither this nor consent starts training. */
+    fun approveForTraining(example: PersonalVoiceExample, ownerConfirmed: Boolean,
+                           expectedReviewRevision: Long): VoiceTrainingApproval = locked {
+        require(ownerConfirmed) { "VOICE_OWNER_REVIEW_REQUIRED" }
+        val revision = readPolicy().revision
+        check(revision == expectedReviewRevision) { "VOICE_REVIEW_EXPIRED" }
+        VoiceTrainingApproval(example.digest, identity, revision)
+    }
+
+    fun stage(example: PersonalVoiceExample, approval: VoiceTrainingApproval): VoiceStageResult = locked {
+        stageUnlocked(example, approval)
+    }
+    private fun stageUnlocked(example: PersonalVoiceExample, approval: VoiceTrainingApproval,
+                              replacingId: String? = null): VoiceStageResult {
+        val policy = readPolicy()
+        if (!policy.consent.textTraining) return VoiceStageResult.CONSENT_REQUIRED
         if (!valid(example)) return VoiceStageResult.INVALID
         if (!example.meaningConfirmed || !example.ownerOnly || !example.sensitiveContentReviewed ||
-            !example.sensitiveContentApproved || !approval.approvedByOwner || approval.exampleDigest != example.digest)
+            !example.sensitiveContentApproved || approval.exampleDigest != example.digest ||
+            approval.storeIdentity != identity || approval.revision != policy.revision)
             return VoiceStageResult.REVIEW_REQUIRED
         val id = example.digest
-        ensureDirectory()
         val target = file(id)
         check(!Files.isSymbolicLink(target.toPath())) { "VOICE_STORE_INVALID_FILE" }
         if (target.exists()) {
-            // Do not hide corruption by treating an unauthenticated file as a duplicate.
-            check(inspect(id).digest == id) { "VOICE_STORE_INTEGRITY" }
+            check(inspectUnlocked(id).digest == id) { "VOICE_STORE_INTEGRITY" }
             return VoiceStageResult.DUPLICATE
         }
-        if (ids().size >= MAX_RECORDS) return VoiceStageResult.CAPACITY_REACHED
-        val encoded = encode(example)
+        if (idsUnlocked().count { it != replacingId } >= MAX_RECORDS) return VoiceStageResult.CAPACITY_REACHED
+        writeEncrypted(target, encode(example), id)
+        return VoiceStageResult.STORED
+    }
+
+    fun ids(): List<String> = locked { idsUnlocked() }
+    private fun idsUnlocked(): List<String> = directory.listFiles().orEmpty()
+        .filter { it.name.matches(FILE_ID) }.map { it.name.removeSuffix(".pv1") }.sorted().also {
+            // A crash between replacement write and old-record removal may leave one recovery record.
+            // Never silently delete either version. Batch retrieval refuses this pending-review state.
+            check(it.size <= MAX_RECORDS + 1) { "VOICE_STORE_CAPACITY" }
+        }
+
+    fun inspect(id: String): PersonalVoiceExample = locked { inspectUnlocked(id) }
+    fun inspectForReview(id: String): VoiceReviewSnapshot = locked {
+        VoiceReviewSnapshot(inspectUnlocked(id), readPolicy().revision)
+    }
+    private fun inspectUnlocked(id: String): PersonalVoiceExample = try {
+        decode(readEncrypted(file(id), id)).also { check(valid(it) && it.digest == id) }
+    } catch (_: Exception) { throw IllegalStateException("VOICE_STORE_INTEGRITY") }
+
+    /** Invalidates every earlier approval, including queued callbacks for the deleted example. */
+    fun delete(id: String): Boolean = locked {
+        val target = file(id)
+        val policy = readPolicy()
+        writePolicy(policy.copy(revision = Math.addExact(policy.revision, 1L)))
+        Files.deleteIfExists(target.toPath())
+    }
+
+    fun replace(id: String, revised: PersonalVoiceExample, approval: VoiceTrainingApproval): VoiceStageResult = locked {
+        inspectUnlocked(id)
+        val status = stageUnlocked(revised, approval, replacingId = id)
+        if ((status == VoiceStageResult.STORED || status == VoiceStageResult.DUPLICATE) && revised.digest != id) {
+            val policy = readPolicy()
+            writePolicy(policy.copy(revision = Math.addExact(policy.revision, 1L)))
+            Files.delete(file(id).toPath())
+        }
+        status
+    }
+
+    /** A later local trainer must recheck consent before consuming a batch; no scheduler is included. */
+    fun reviewedBatch(minimumExamples: Int = 32): List<PersonalVoiceExample> = locked {
+        require(minimumExamples in 2..MAX_RECORDS)
+        if (!readPolicy().consent.textTraining) return@locked emptyList()
+        val ids = idsUnlocked()
+        if (ids.size < minimumExamples || ids.size > MAX_RECORDS) return@locked emptyList()
+        ids.map(::inspectUnlocked).filter {
+            it.meaningConfirmed && it.ownerOnly && it.sensitiveContentReviewed && it.sensitiveContentApproved
+        }
+    }
+
+    private fun readPolicy(): Policy {
+        val path = File(directory, "policy.pv1")
+        if (!Files.exists(path.toPath(), LinkOption.NOFOLLOW_LINKS)) return Policy()
+        try {
+            val input = DataInputStream(ByteArrayInputStream(readEncrypted(path, POLICY_AAD)))
+            check(input.readInt() == VERSION)
+            val policy = Policy(VoiceLearningConsent(input.readBoolean(), input.readBoolean()), input.readLong())
+            check(policy.revision >= 0 && input.available() == 0)
+            return policy
+        } catch (_: Exception) { throw IllegalStateException("VOICE_POLICY_INTEGRITY") }
+    }
+    private fun writePolicy(policy: Policy) {
+        val payload = ByteArrayOutputStream()
+        DataOutputStream(payload).use { out ->
+            out.writeInt(VERSION); out.writeBoolean(policy.consent.textTraining)
+            out.writeBoolean(policy.consent.audioRetention); out.writeLong(policy.revision)
+        }
+        writeEncrypted(File(directory, "policy.pv1"), payload.toByteArray(), POLICY_AAD)
+    }
+
+    private fun writeEncrypted(target: File, bytes: ByteArray, aad: String) {
+        check(!Files.isSymbolicLink(target.toPath())) { "VOICE_STORE_INVALID_FILE" }
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(Cipher.ENCRYPT_MODE, key)
-        cipher.updateAAD(id.toByteArray(Charsets.US_ASCII))
-        val encrypted = cipher.doFinal(encoded)
+        cipher.updateAAD((identity + ":" + aad).toByteArray(Charsets.US_ASCII))
+        val encrypted = cipher.doFinal(bytes)
         val envelope = ByteArrayOutputStream()
         DataOutputStream(envelope).use { out ->
             out.writeInt(MAGIC); out.writeInt(VERSION); out.writeInt(cipher.iv.size)
@@ -90,62 +187,32 @@ class PersonalVoiceLearningStore(private val directory: File, private val key: S
             FileOutputStream(temporary).use { out -> out.write(envelope.toByteArray()); out.fd.sync() }
             check(temporary.setReadable(false, false) && temporary.setWritable(false, false) &&
                 temporary.setReadable(true, true) && temporary.setWritable(true, true)) { "VOICE_STORE_PERMISSIONS" }
-            Files.move(temporary.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE)
+            Files.move(temporary.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
         } finally { temporary.delete() }
-        return VoiceStageResult.STORED
     }
-
-    /** A UI may show these local entries, edit one, obtain fresh approval, and replace it. */
-    @Synchronized fun ids(): List<String> {
-        if (!directory.exists()) return emptyList()
-        ensureDirectory()
-        return directory.listFiles().orEmpty().filter { it.name.matches(FILE_ID) }
-            .map { it.name.removeSuffix(".pv1") }.sorted().also {
-                check(it.size <= MAX_RECORDS) { "VOICE_STORE_CAPACITY" }
-            }
-    }
-
-    @Synchronized fun inspect(id: String): PersonalVoiceExample {
-        val target = file(id)
-        ensureDirectory()
+    private fun readEncrypted(target: File, aad: String): ByteArray {
         check(Files.isRegularFile(target.toPath(), LinkOption.NOFOLLOW_LINKS) && target.length() in 1..MAX_FILE_BYTES)
             { "VOICE_STORE_INVALID_FILE" }
-        try {
-            val input = DataInputStream(ByteArrayInputStream(target.readBytes()))
-            check(input.readInt() == MAGIC && input.readInt() == VERSION)
-            val ivSize = input.readInt(); check(ivSize == 12)
-            val iv = ByteArray(ivSize).also(input::readFully)
-            val size = input.readInt(); check(size in 16..MAX_FILE_BYTES && size == input.available())
-            val encrypted = ByteArray(size).also(input::readFully)
-            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-            cipher.init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(128, iv))
-            cipher.updateAAD(id.toByteArray(Charsets.US_ASCII))
-            return decode(cipher.doFinal(encrypted)).also { check(valid(it) && it.digest == id) }
-        } catch (_: Exception) { throw IllegalStateException("VOICE_STORE_INTEGRITY") }
+        val input = DataInputStream(ByteArrayInputStream(target.readBytes()))
+        check(input.readInt() == MAGIC && input.readInt() == VERSION)
+        val ivSize = input.readInt(); check(ivSize == 12)
+        val iv = ByteArray(ivSize).also(input::readFully)
+        val size = input.readInt(); check(size in 16..MAX_FILE_BYTES && size == input.available())
+        val encrypted = ByteArray(size).also(input::readFully)
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(128, iv))
+        cipher.updateAAD((identity + ":" + aad).toByteArray(Charsets.US_ASCII))
+        return cipher.doFinal(encrypted)
     }
 
-    /** Explicit UI deletion only; deleting data does not unlearn an already trained model. */
-    @Synchronized fun delete(id: String): Boolean {
+    private fun <T> locked(block: () -> T): T = synchronized(mutex) {
         ensureDirectory()
-        return Files.deleteIfExists(file(id).toPath())
+        val lock = File(directory, ".voice.lock").toPath()
+        check(!Files.isSymbolicLink(lock)) { "VOICE_STORE_LOCK" }
+        FileChannel.open(lock, StandardOpenOption.CREATE, StandardOpenOption.WRITE, LinkOption.NOFOLLOW_LINKS).use { channel ->
+            channel.lock().use { block() }
+        }
     }
-
-    @Synchronized fun replace(id: String, revised: PersonalVoiceExample, approval: VoiceTrainingApproval): VoiceStageResult {
-        inspect(id)
-        val status = stage(revised, approval)
-        if ((status == VoiceStageResult.STORED || status == VoiceStageResult.DUPLICATE) && revised.digest != id) delete(id)
-        return status
-    }
-
-    /** A snapshot is for a later controlled LOCAL training batch; never an automatic update. */
-    @Synchronized fun reviewedBatch(minimumExamples: Int = 32): List<PersonalVoiceExample> {
-        require(minimumExamples in 2..MAX_RECORDS)
-        if (!consent.textTraining) return emptyList()
-        val examples = ids().map(::inspect)
-        if (examples.size < minimumExamples) return emptyList()
-        return examples.filter { it.meaningConfirmed && it.ownerOnly && it.sensitiveContentReviewed && it.sensitiveContentApproved }
-    }
-
     private fun file(id: String): File {
         require(id.matches(DIGEST)) { "VOICE_STORE_INVALID_ID" }
         return File(directory, "$id.pv1")
@@ -196,7 +263,9 @@ class PersonalVoiceLearningStore(private val directory: File, private val key: S
         private const val MAGIC = 0x50564c31
         private const val VERSION = 1
         private const val MAX_FILE_BYTES = 65536L
+        private const val POLICY_AAD = "VOICE_CONSENT_POLICY_V1"
+        private val LOCKS = ConcurrentHashMap<String, Any>()
         private val DIGEST = Regex("[a-f0-9]{64}")
-        private val FILE_ID = Regex("[a-f0-9]{64}\\.pv1")
+        private val FILE_ID = Regex("[a-f0-9]{64}[.]pv1")
     }
 }

@@ -15,10 +15,10 @@ object PersonalVoicePrivacyChecks {
             PersonalVoiceExample("synthetic-session", text, corrected, transcript, "Prüfe Testzweig B.", meaning,
                 context, listOf("synthetic-task-1"), "Prüfbericht", listOf("Kein Merge"),
                 "synthetic-local-test", owner, reviewed, approved)
-        fun grant(e: PersonalVoiceExample) = VoiceTrainingApproval(e.digest, true)
         val key = KeyGenerator.getInstance("AES").apply { init(256) }.generateKey()
         val folder = Files.createTempDirectory("voice-privacy-check-")
         val store = PersonalVoiceLearningStore(folder.toFile(), key)
+        fun grant(e: PersonalVoiceExample) = store.approveForTraining(e, true, store.reviewRevision())
         val original = example()
         test("default_off_no_file") {
             check(store.stage(original, grant(original)) == VoiceStageResult.CONSENT_REQUIRED)
@@ -52,7 +52,7 @@ object PersonalVoicePrivacyChecks {
         }
         test("owner_approval_content_bound") {
             check(store.stage(example("Abweichender Inhalt"), grant(original)) == VoiceStageResult.REVIEW_REQUIRED)
-            check(store.stage(original, VoiceTrainingApproval(original.digest, false)) == VoiceStageResult.REVIEW_REQUIRED)
+            fails { store.approveForTraining(original, false, store.reviewRevision()) }
         }
         test("context_is_defensively_copied") {
             val supplied = mutableListOf("synthetischer Kontext")
@@ -104,6 +104,74 @@ object PersonalVoicePrivacyChecks {
         test("default_logging_does_not_contain_private_content") {
             check(!original.toString().contains("Testzweig"))
             check(!grant(original).toString().contains(original.digest))
+        }
+
+
+        test("consent_revocation_applies_to_all_store_instances") {
+            val d = Files.createTempDirectory("voice-shared-consent-").toFile()
+            val first = PersonalVoiceLearningStore(d, key); val second = PersonalVoiceLearningStore(d, key)
+            first.setConsent(VoiceLearningConsent(textTraining = true))
+            val a = example("shared example one"); val b = example("shared example two")
+            check(first.stage(a, first.approveForTraining(a, true, first.reviewRevision())) == VoiceStageResult.STORED)
+            check(second.stage(b, second.approveForTraining(b, true, second.reviewRevision())) == VoiceStageResult.STORED)
+            check(second.reviewedBatch(2).size == 2)
+            first.setConsent(VoiceLearningConsent())
+            check(!second.consent().textTraining && second.reviewedBatch(2).isEmpty())
+            check(second.stage(a, second.approveForTraining(a, true, second.reviewRevision())) == VoiceStageResult.CONSENT_REQUIRED)
+        }
+        test("deletion_and_consent_change_invalidate_queued_approvals") {
+            val d = Files.createTempDirectory("voice-revocation-").toFile()
+            val st = PersonalVoiceLearningStore(d, key)
+            st.setConsent(VoiceLearningConsent(textTraining = true))
+            val a = example(); val old = st.approveForTraining(a, true, st.reviewRevision())
+            check(st.stage(a, old) == VoiceStageResult.STORED)
+            check(st.delete(a.digest))
+            check(st.stage(a, old) == VoiceStageResult.REVIEW_REQUIRED)
+            val current = st.approveForTraining(a, true, st.reviewRevision())
+            st.setConsent(VoiceLearningConsent())
+            st.setConsent(VoiceLearningConsent(textTraining = true))
+            check(st.stage(a, current) == VoiceStageResult.REVIEW_REQUIRED)
+            check(st.stage(a, st.approveForTraining(a, true, st.reviewRevision())) == VoiceStageResult.STORED)
+        }
+        test("full_store_still_allows_reviewed_replacement") {
+            val d = Files.createTempDirectory("voice-capacity-").toFile()
+            val st = PersonalVoiceLearningStore(d, key)
+            st.setConsent(VoiceLearningConsent(textTraining = true))
+            val first = example("capacity 0")
+            for (i in 0 until PersonalVoiceLearningStore.MAX_RECORDS) {
+                val e = example("capacity $i")
+                check(st.stage(e, st.approveForTraining(e, true, st.reviewRevision())) == VoiceStageResult.STORED)
+            }
+            val extra = example("capacity replacement")
+            check(st.stage(extra, st.approveForTraining(extra, true, st.reviewRevision())) == VoiceStageResult.CAPACITY_REACHED)
+            check(st.replace(first.digest, extra, st.approveForTraining(extra, true, st.reviewRevision())) == VoiceStageResult.STORED)
+            check(st.ids().size == 256 && first.digest !in st.ids() && extra.digest in st.ids())
+        }
+        test("approval_cannot_cross_store_boundaries") {
+            val other = PersonalVoiceLearningStore(Files.createTempDirectory("voice-other-store-").toFile(), key)
+            other.setConsent(VoiceLearningConsent(textTraining = true))
+            store.setConsent(VoiceLearningConsent(textTraining = true))
+            check(other.stage(original, grant(original)) == VoiceStageResult.REVIEW_REQUIRED)
+        }
+        test("policy_modification_fails_closed") {
+            val d = Files.createTempDirectory("voice-policy-integrity-").toFile()
+            val st = PersonalVoiceLearningStore(d, key)
+            st.setConsent(VoiceLearningConsent(textTraining = true))
+            val path = d.toPath().resolve("policy.pv1"); val data = Files.readAllBytes(path)
+            data[data.lastIndex] = (data.last().toInt() xor 1).toByte(); Files.write(path, data)
+            fails { st.consent() }; fails { st.reviewedBatch(2) }
+        }
+
+        test("stale_review_form_cannot_issue_fresh_approval") {
+            val d = Files.createTempDirectory("voice-stale-form-").toFile()
+            val st = PersonalVoiceLearningStore(d, key)
+            st.setConsent(VoiceLearningConsent(textTraining = true))
+            val e = example(); val approval = st.approveForTraining(e, true, st.reviewRevision())
+            check(st.stage(e, approval) == VoiceStageResult.STORED)
+            val form = st.inspectForReview(e.digest)
+            st.setConsent(VoiceLearningConsent())
+            st.setConsent(VoiceLearningConsent(textTraining = true))
+            fails { st.approveForTraining(form.example, true, form.reviewRevision) }
         }
 
         // This port is a test double ONLY for review binding and safe dispatch properties.

@@ -1,0 +1,8 @@
+consent_revoked_on_first=true
+first_batch_after_revoke=0
+second_batch_after_revoke=2
+second_stage_after_revoke=STORED
+replayed_approval_after_delete=STORED
+records_at_capacity=256
+replace_at_capacity=CAPACITY_REACHED
+original_survives_capacity_failure=true

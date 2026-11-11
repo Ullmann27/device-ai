@@ -1,0 +1,26 @@
+{
+  "created_before_execution": true,
+  "input_hashes": {
+    "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "/workspace/scratch/aba242c65e85/voice-training/experimental/personal-voice-20261111/training/artifacts/balanced-replay/final.lm1": "e1e231cc2b30f2c8a36af0b0b9c7edcfbc13a19ae6e73faee501448d43f511fe",
+    "/workspace/scratch/aba242c65e85/voice-training/experimental/personal-voice-20261111/training/artifacts/balanced-preserve/final.lm1": "4d0cb91226970737bd3413736b66d8688714f2c65ae0e383501aadd6bd5f763f",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "/workspace/scratch/aba242c65e85/voice-eval/experimental/personal-voice-20261111/evaluation/results-v1/combined-evaluation.tsv": "fe2808c8d922af53e59e7a02805b7e638b773d95807459956ba04d55432a6c90",
+    "/workspace/scratch/aba242c65e85/voice-eval/experimental/weight-space-20261110/data/retention_text.txt": "699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019"
+  },
+  "frozen_manifest_sha256": "4049234fd376ccbf9a0f54508f2ebd110e31e875ff4beb8d67badc536f150f0b",
+  "classpath_hashes": {
+    "/workspace/scratch/aba242c65e85/voice-native-build/experiment.jar": "3b36cd35f665bc53e376add26543904a01250bd03823900084200aef8e7e15a7",
+    "/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c"
+  },
+  "evaluator_sha256": "08e5e9a140b553388bfbe9d0b74b620f283a22d1828cc2390948dc906be56e0f",
+  "timeout_seconds_per_model": 180,
+  "models": [
+    "original",
+    "candidate1",
+    "candidate2"
+  ],
+  "test_cases": 64,
+  "retention_cases": 64,
+  "scope": "native LM1 only; ASR/full-app/Fold7 NOT_RUN"
+}

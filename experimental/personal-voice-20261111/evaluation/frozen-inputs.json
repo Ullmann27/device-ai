@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "scope": "independent_synthetic_lm1_holdout",
+  "status_at_freeze": "NOT_RUN",
+  "frozen_at_utc": "2026-11-11T07:36:12.857566+00:00",
+  "source_base": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+  "cases": 64,
+  "pairs": 32,
+  "wordbag_identical_pairs": 17,
+  "per_class": 16,
+  "test_results_seen": false,
+  "train_examples_seen": false,
+  "hashes": {
+    "experimental/personal-voice-20261111/evaluation/PROTOCOL.md": "3249e2331a7603cb3104c8d5d8eaee9fc685ccde989a32146d9f509dcc4ff688",
+    "experimental/personal-voice-20261111/evaluation/make_holdout.py": "546de39ce5de679135ff95715d25452ed8b856797be75aded7c8d7fedd23c644",
+    "experimental/personal-voice-20261111/evaluation/holdout/test.tsv": "523bd4969c1e99e78477426d48a3e594dabc3ead932e124d5dbfcf8e047585bb",
+    "experimental/personal-voice-20261111/evaluation/holdout/test-metadata.json": "6018ec015c7fba2fcef92e49517590df9249b5e403aff9b3459c19d0bee4f54b",
+    "experimental/weight-space-20261110/data/retention.tsv": "dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a",
+    "experimental/weight-space-20261110/data/retention_text.txt": "699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "original_parameters": 132160,
+  "original_sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+  "tokenizer_sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+  "original_config": [
+    1,
+    512,
+    64,
+    2,
+    4,
+    256,
+    256
+  ],
+  "overlap_audit": {
+    "train": {
+      "exact_prompt_overlap": 0,
+      "wordbag_overlap": 0
+    },
+    "dev": {
+      "exact_prompt_overlap": 0,
+      "wordbag_overlap": 0
+    },
+    "supervised_replay": {
+      "exact_prompt_overlap": 0,
+      "wordbag_overlap": 0
+    }
+  },
+  "weights": {
+    "balanced-replay": {
+      "parameters": 132160,
+      "changedFloat32Bits": 132160,
+      "changedNumericWeights": 132160,
+      "maximumAbsoluteDelta": 0.004294231534004211
+    },
+    "balanced-preserve": {
+      "parameters": 132160,
+      "changedFloat32Bits": 132160,
+      "changedNumericWeights": 132160,
+      "maximumAbsoluteDelta": 0.004302293062210083
+    }
+  },
+  "training_schedule": {
+    "balanced-replay": {
+      "schedule_matches_independent_java_rng": true,
+      "schedule_count": 128,
+      "updates_exactly_1_through_128": true,
+      "result_updates": "128",
+      "input_unchanged": "true",
+      "model_record_sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "candidate_sha256_matches_log": true,
+      "teacher_unchanged": null
+    },
+    "balanced-preserve": {
+      "schedule_matches_independent_java_rng": true,
+      "schedule_count": 128,
+      "updates_exactly_1_through_128": true,
+      "result_updates": "128",
+      "input_unchanged": "true",
+      "model_record_sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "candidate_sha256_matches_log": true,
+      "teacher_unchanged": true
+    }
+  },
+  "all_audits_passed": true
+}
