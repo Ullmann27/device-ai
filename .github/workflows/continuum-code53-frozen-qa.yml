@@ -82,6 +82,18 @@ jobs:
         run: |
           set -euo pipefail
           unset CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD
+          cat > "$RUNNER_TEMP/code53-maya-filter.gradle" <<'GRADLE'
+          gradle.projectsEvaluated {
+              gradle.rootProject.allprojects { project ->
+                  project.tasks.withType(org.gradle.api.tasks.testing.Test).configureEach { task ->
+                      if (task.path == ':app:testDebugUnitTest') {
+                          task.filter.includeTestsMatching('at.heinz.deviceai.MayaVoiceSettingsUiTest')
+                          task.filter.failOnNoMatchingTests = true
+                      }
+                  }
+              }
+          }
+          GRADLE
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process \
@@ -90,7 +102,8 @@ jobs:
             -PcontinuumUiWidgetTests=true -PcontinuumUiEvidenceDir="$RUNNER_TEMP/code53-ui" \
             -I "$GITHUB_WORKSPACE/qa-harness/docs/qa/apk53-a980/apk53-test-memory.gradle" \
             -I tools/capture/force_capture.gradle \
-            :app:testDebugUnitTest --tests at.heinz.deviceai.MayaVoiceSettingsUiTest
+            -I "$RUNNER_TEMP/code53-maya-filter.gradle" \
+            :app:testDebugUnitTest
           mkdir -p "$RUNNER_TEMP/code53-preflight"
           cp app/build/test-results/testDebugUnitTest/TEST-at.heinz.deviceai.MayaVoiceSettingsUiTest.xml "$RUNNER_TEMP/code53-preflight/"
           python3 - <<'PY'
