@@ -10,11 +10,12 @@ permissions:
 
 concurrency:
   group: continuum-code53-final-visibility-unsigned-qa
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   CONTINUUM_SOURCE_SHA: fd86f11a4a822ee4805f4c462791baeb1d741db4
   CONTINUUM_CAPTURE_SOURCE_COMMIT: fd86f11a4a822ee4805f4c462791baeb1d741db4
+  CONTINUUM_SOURCE_TREE: 21e5603d2a3f20c840bc3c2ba7836be408dbb5ad
 
 jobs:
   validate-frozen-source:
@@ -42,7 +43,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$CONTINUUM_SOURCE_SHA"
-          test "$(git rev-parse HEAD^{tree})" = 21e5603d2a3f20c840bc3c2ba7836be408dbb5ad
+          test "$(git rev-parse HEAD^{tree})" = "$CONTINUUM_SOURCE_TREE"
           test -z "$(git status --porcelain --untracked-files=normal)"
           mkdir -p "$RUNNER_TEMP/code53-unsigned"
           printf 'source_sha=%s\nworkflow_sha=%s\nFold7=NOT_RUN\noriginal_signature=NOT_USED\n' "$CONTINUUM_SOURCE_SHA" "$GITHUB_SHA" > "$RUNNER_TEMP/code53-unsigned/BUILD-INFO.txt"
@@ -119,8 +120,24 @@ jobs:
             :app:assembleRelease
           validator="$GITHUB_WORKSPACE/qa-harness/docs/qa/apk53-a980/validate-unsigned-apk.py"
           printf '%s  %s\n' 2a0aeaef48bb5482f0da304ee24e3a69a66d3fa2a86c81885436d28b7c8a535f "$validator" | sha256sum -c -
-          python3 "$validator" app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/code53-package" \
-            --repo "$PWD" --build-tools "$ANDROID_HOME/build-tools/35.0.0" --java-home "$JAVA_HOME"
+          python3 -I - "$validator" "$CONTINUUM_SOURCE_SHA" "$CONTINUUM_SOURCE_TREE" \
+            app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/code53-package" \
+            --repo "$PWD" --build-tools "$ANDROID_HOME/build-tools/35.0.0" --java-home "$JAVA_HOME" <<'PY'
+          import importlib.util
+          import re
+          import sys
+          path, source_sha, source_tree, *arguments = sys.argv[1:]
+          assert re.fullmatch(r'[0-9a-f]{40}', source_sha)
+          assert re.fullmatch(r'[0-9a-f]{40}', source_tree)
+          spec = importlib.util.spec_from_file_location('code53_validator', path)
+          assert spec is not None and spec.loader is not None
+          validator = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(validator)
+          validator.EXPECTED_SOURCE = source_sha
+          validator.EXPECTED_TREE = source_tree
+          sys.argv = [path, *arguments]
+          raise SystemExit(validator.main())
+          PY
           cp app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/code53-unsigned/Continuum-Code53-UNSIGNED-NOT-INSTALLABLE.apk"
           cd "$RUNNER_TEMP/code53-unsigned"
           sha256sum *.apk > SHA256SUMS.txt
