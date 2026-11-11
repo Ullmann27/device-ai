@@ -13,9 +13,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CONTINUUM_SOURCE_SHA: fd86f11a4a822ee4805f4c462791baeb1d741db4
-  CONTINUUM_CAPTURE_SOURCE_COMMIT: fd86f11a4a822ee4805f4c462791baeb1d741db4
-  CONTINUUM_SOURCE_TREE: 21e5603d2a3f20c840bc3c2ba7836be408dbb5ad
+  CONTINUUM_SOURCE_SHA: 050a57cb019dcc1b7fe6cfa2fb5c11176b048e05
+  CONTINUUM_CAPTURE_SOURCE_COMMIT: 050a57cb019dcc1b7fe6cfa2fb5c11176b048e05
+  CONTINUUM_SOURCE_TREE: 539ea3aac0af04644a015b3fb69ba865af80d1a8
 
 jobs:
   validate-frozen-source:
@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fd86f11a4a822ee4805f4c462791baeb1d741db4
+          ref: 050a57cb019dcc1b7fe6cfa2fb5c11176b048e05
           path: source
           fetch-depth: 0
           persist-credentials: false
@@ -72,12 +72,38 @@ jobs:
           npm --prefix backend ci --ignore-scripts --no-audit --no-fund
           npm --prefix backend run check
           npm --prefix backend test
-          bash scripts/hollywood-fui-reference-fidelity.sh "$RUNNER_TEMP/code53-fidelity" CODE53-fd86f11a
+          bash scripts/hollywood-fui-reference-fidelity.sh "$RUNNER_TEMP/code53-fidelity" CODE53-050a57cb
           bash scripts/hollywood-fui-cinematics-preview.sh "$RUNNER_TEMP/code53-preview"
       - name: Install official Android SDK
         run: |
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Maya settings lifecycle preflight
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=53 -PcontinuumLocalStandaloneQa=true \
+            -PcontinuumUiWidgetTests=true -PcontinuumUiEvidenceDir="$RUNNER_TEMP/code53-ui" \
+            -I "$GITHUB_WORKSPACE/qa-harness/docs/qa/apk53-a980/apk53-test-memory.gradle" \
+            -I tools/capture/force_capture.gradle \
+            :app:testDebugUnitTest --tests at.heinz.deviceai.MayaVoiceSettingsUiTest
+          mkdir -p "$RUNNER_TEMP/code53-preflight"
+          cp app/build/test-results/testDebugUnitTest/TEST-at.heinz.deviceai.MayaVoiceSettingsUiTest.xml "$RUNNER_TEMP/code53-preflight/"
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          root = ET.parse('app/build/test-results/testDebugUnitTest/TEST-at.heinz.deviceai.MayaVoiceSettingsUiTest.xml').getroot()
+          assert int(root.get('tests', '0')) == 2
+          assert all(int(root.get(k, '0')) == 0 for k in ('failures', 'errors', 'skipped'))
+          assert {case.get('name') for case in root.findall('testcase')} == {
+              'savedPreferenceNeverOverridesInternetRestrictionsOrMissingCredential',
+              'mayaSetupIsReachableWithoutAndroidTtsAndNeverAutoGeneratesASample',
+          }
+          print('MAYA_SETTINGS_LIFECYCLE_PREFLIGHT_PASS')
+          PY
       - name: Full Android suite and configured NewApi lint
         run: |
           set -euo pipefail
@@ -145,7 +171,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Code53-fd86f11a-UNSIGNED-NOT-INSTALLABLE
+          name: Code53-050a57cb-UNSIGNED-NOT-INSTALLABLE
           path: ${{ runner.temp }}/code53-unsigned/
           retention-days: 14
           if-no-files-found: error
@@ -153,13 +179,14 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Code53-fd86f11a-QA-Evidence
+          name: Code53-050a57cb-QA-Evidence
           path: |
             ${{ runner.temp }}/code53-critical/
             ${{ runner.temp }}/code53-full-node/
             ${{ runner.temp }}/code53-fidelity/
             ${{ runner.temp }}/code53-preview/
             ${{ runner.temp }}/code53-ui/
+            ${{ runner.temp }}/code53-preflight/
             ${{ runner.temp }}/code53-package/
             ${{ runner.temp }}/code53-unsigned/BUILD-INFO.txt
             ${{ runner.temp }}/code53-unsigned/JUNIT.txt
