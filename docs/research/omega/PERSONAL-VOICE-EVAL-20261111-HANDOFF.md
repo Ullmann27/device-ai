@@ -60,5 +60,16 @@ Full application A/B/C, true WER/CER, natural spoken responses, Android Keystore
 runtime, phone temperature/energy and physical Fold7 remain NOT_RUN. Never infer
 those outcomes from the synthetic native component tests.
 
+## Additional UI privacy review
+
+After the bounded language evaluation, review of Bot 1's optional Android dialog
+identified two stale-consent interleavings. Both were reproduced on the actual
+historical encrypted store: a queued old grant re-enables text learning after a
+newer revoke; a read/copy/write callback can restore a revoked audio-retention
+flag. See `evaluation/UI-CONSENT-RACE.md` and `ui-consent-race-before/`.
+Root/Bot 1 implement and independently test an atomic revision-bound text-consent
+API and UI binding. Their post-fix receipts are separate. No language-case,
+trained weight, frozen threshold or original runtime result is amended here.
+
 Rollback: omit isolated evaluation directory. No app, model selection, checkpoint,
 Gemma, main, signing, release or existing evidence was changed.
