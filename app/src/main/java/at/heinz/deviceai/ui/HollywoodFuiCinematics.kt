@@ -126,7 +126,7 @@ object HollywoodFuiCinematics {
         return Beam(originX, originY, originX + (endX - originX) * p, originY + (endY - originY) * p)
     }
 
-    // ---- Cinema 2.0: focus depth and the orb's energy band (pure) ------------------------------------------------
+    // ---- Cinema 2.0: focus depth (pure) ------------------------------------------------
 
     /** Dim of the deck plane right beside a constructed window and at the far corners (share of black). */
     const val FOCUS_DIM_NEAR = .26f
@@ -140,31 +140,6 @@ object HollywoodFuiCinematics {
         if (!openness.isFinite() || openness <= 0f) return 0f
         val arrived = openness.coerceIn(0f, 1f).let { it * it * (3f - 2f * it) }
         return (frame.glass * frame.closeGlass * arrived).coerceIn(0f, 1f)
-    }
-
-    /** The energy band's two ends: from the edge of the original orb to the rim of the window. */
-    data class Bridge(val x0: Float, val y0: Float, val x1: Float, val y1: Float) {
-        val length: Float get() = hypot(x1 - x0, y1 - y0)
-    }
-
-    /**
-     * Path of the band from [orb] to [window]: straight out of the orb's side that faces the window, into the rim
-     * clear of the rounded corners. Null when the window overlaps the orb's row and column or leaves no real gap –
-     * then there is no honest path and nothing is drawn.
-     */
-    fun energyBridge(orb: Box, window: Box, minGapDp: Float = 6f, cornerDp: Float = 18f): Bridge? {
-        val values = floatArrayOf(orb.left, orb.top, orb.right, orb.bottom, window.left, window.top, window.right, window.bottom)
-        if (values.any { !it.isFinite() } || orb.width <= 0f || orb.height <= 0f ||
-            window.width <= 2f * cornerDp || window.height <= 2f * cornerDp) return null
-        fun alongX(x: Float) = x.coerceIn(window.left + cornerDp, window.right - cornerDp)
-        fun alongY(y: Float) = y.coerceIn(window.top + cornerDp, window.bottom - cornerDp)
-        return when {
-            window.top - orb.bottom >= minGapDp -> Bridge(orb.centerX, orb.bottom, alongX(orb.centerX), window.top)
-            orb.top - window.bottom >= minGapDp -> Bridge(orb.centerX, orb.top, alongX(orb.centerX), window.bottom)
-            orb.left - window.right >= minGapDp -> Bridge(orb.left, orb.centerY, window.right, alongY(orb.centerY))
-            window.left - orb.right >= minGapDp -> Bridge(orb.right, orb.centerY, window.left, alongY(orb.centerY))
-            else -> null
-        }
     }
 
     // ---- drawing -------------------------------------------------------------------------------------------------
@@ -304,19 +279,6 @@ object HollywoodFuiCinematics {
             }
             if (bloom) p.drawLine(box.left + 10f, vacantTop, box.right - 10f, vacantTop, 4f, violet, .10f * s)
             p.drawLine(box.left + 10f, vacantTop, box.right - 10f, vacantTop, .9f, accentFill, .46f * s)
-        }
-
-        /** Where the orb's band enters the rim: a short hot stretch of the edge and a small halo. */
-        fun drawEnergyInlet(p: ContinuumPainter, bridge: Bridge, horizontalRim: Boolean, energy: Float, bloom: Boolean) {
-            if (!energy.isFinite() || energy <= .01f) return
-            val e = energy.coerceIn(0f, 1f)
-            val reach = 26f
-            if (bloom) p.setAdditive(true)
-            if (bloom) drawHalo(p, bridge.x1, bridge.y1, 14f, .55f * e)
-            if (horizontalRim) p.drawLine(bridge.x1 - reach, bridge.y1, bridge.x1 + reach, bridge.y1, 2.2f, glint, .85f * e)
-            else p.drawLine(bridge.x1, bridge.y1 - reach, bridge.x1, bridge.y1 + reach, 2.2f, glint, .85f * e)
-            p.fillCircle(bridge.x1, bridge.y1, 2.6f, glint, e)
-            if (bloom) p.setAdditive(false)
         }
 
         /** Dust along the rim and, while the task really works, a breathing energy rim. */

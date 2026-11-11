@@ -213,6 +213,7 @@ class JarvisWorkWindowHost(
         fui.requestFrame = { shell.invalidate() }
         window.onCinematicFrame = { elapsed, closing, reduced, open ->
             fui.setParallax(shell.spatialTiltX, shell.spatialTiltY)
+            fui.vacantTopDp = window.glassVacantTopDp()
             fui.present(elapsed, closing, reduced, open)
         }
         val presentation = JarvisCinematicSettings.preferences(activity)
