@@ -1,0 +1,2 @@
+[0.002s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/19 because it is locked by another process (errno = 11)
+{"status_reads":1000,"unique_intent_measurements":1,"checksum":1386.1569216690825,"batches":[{"cpu_ns":419507634,"wall_ns":435187709},{"cpu_ns":189009440,"wall_ns":190093613},{"cpu_ns":374381806,"wall_ns":1209839111},{"cpu_ns":275449182,"wall_ns":295552391},{"cpu_ns":270272730,"wall_ns":272184954}]}

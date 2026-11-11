@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "baseline_commit": "f88d7d1936b9c0d53c176a0af31108fb863199e6",
+  "code_commit": "1785a9a1b169e3f49a725f5cb75bc9c0759f4842",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt": "b3935907cb6a38d558d56c56857c3d5ec8734427161da21a866eb02088583052",
+    "app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusReuseTest.kt": "1a3dc9d275ae66a4000725d3085b3107903c1d399e9ef1dd54bfae11617c12c2"
+  },
+  "red": {
+    "tests": 5,
+    "pass": 3,
+    "fail": 2,
+    "skip": 0
+  },
+  "final_green": {
+    "tests": 27,
+    "pass": 27,
+    "fail": 0,
+    "skip": 0
+  },
+  "measurements": {
+    "exact-baseline": {
+      "status_reads": 1000,
+      "unique_intent_measurements": 1000,
+      "checksum": 1386.1569216690825,
+      "batches": [
+        {
+          "cpu_ns": 710557337,
+          "wall_ns": 788190683
+        },
+        {
+          "cpu_ns": 709326717,
+          "wall_ns": 814008146
+        },
+        {
+          "cpu_ns": 397230385,
+          "wall_ns": 418119893
+        },
+        {
+          "cpu_ns": 245779401,
+          "wall_ns": 255930127
+        },
+        {
+          "cpu_ns": 232481923,
+          "wall_ns": 266629611
+        }
+      ],
+      "total_cpu_ns": 2295375763,
+      "total_wall_ns": 2542878460
+    },
+    "exact-fixed": {
+      "status_reads": 1000,
+      "unique_intent_measurements": 1,
+      "checksum": 1386.1569216690825,
+      "batches": [
+        {
+          "cpu_ns": 419507634,
+          "wall_ns": 435187709
+        },
+        {
+          "cpu_ns": 189009440,
+          "wall_ns": 190093613
+        },
+        {
+          "cpu_ns": 374381806,
+          "wall_ns": 1209839111
+        },
+        {
+          "cpu_ns": 275449182,
+          "wall_ns": 295552391
+        },
+        {
+          "cpu_ns": 270272730,
+          "wall_ns": 272184954
+        }
+      ],
+      "total_cpu_ns": 1528620792,
+      "total_wall_ns": 2402857778
+    },
+    "exact-baseline-repeat": {
+      "status_reads": 1000,
+      "unique_intent_measurements": 1000,
+      "checksum": 1386.1569216690825,
+      "batches": [
+        {
+          "cpu_ns": 538018057,
+          "wall_ns": 2020224230
+        },
+        {
+          "cpu_ns": 328709125,
+          "wall_ns": 364574240
+        },
+        {
+          "cpu_ns": 256434526,
+          "wall_ns": 295151566
+        },
+        {
+          "cpu_ns": 275119889,
+          "wall_ns": 296515753
+        },
+        {
+          "cpu_ns": 227576917,
+          "wall_ns": 255027120
+        }
+      ],
+      "total_cpu_ns": 1625858514,
+      "total_wall_ns": 3231492909
+    },
+    "exact-fixed-repeat": {
+      "status_reads": 1000,
+      "unique_intent_measurements": 1,
+      "checksum": 1386.1569216690825,
+      "batches": [
+        {
+          "cpu_ns": 806177933,
+          "wall_ns": 809579355
+        },
+        {
+          "cpu_ns": 128184650,
+          "wall_ns": 130777222
+        },
+        {
+          "cpu_ns": 79438607,
+          "wall_ns": 124579155
+        },
+        {
+          "cpu_ns": 51118849,
+          "wall_ns": 52961683
+        },
+        {
+          "cpu_ns": 42640715,
+          "wall_ns": 43581285
+        }
+      ],
+      "total_cpu_ns": 1107560754,
+      "total_wall_ns": 1161478700
+    }
+  },
+  "limits": [
+    "Focused Kotlin 2.4.0 compilation of current production source against cached real app dependencies; not a complete Android build.",
+    "Host benchmark samples include JIT/OS variability and are not battery/energy/GPU measurements.",
+    "The first serialization-heavy prototype was rejected as inconclusive; its logs remain labeled without exact-.",
+    "No Fold7 or actual inference performance/temperature measurements; this small recurring telemetry waste is not established as the cause of extreme heat."
+  ],
+  "independent_review": {
+    "tests": 5,
+    "pass": 5,
+    "fail": 0,
+    "skip": 0,
+    "production_sha256": "b3935907cb6a38d558d56c56857c3d5ec8734427161da21a866eb02088583052",
+    "compiled_production_commit": "1785a9a1b169e3f49a725f5cb75bc9c0759f4842",
+    "reviewer": "thermal_inference",
+    "same_run_as_27_test_suite": false
+  }
+}

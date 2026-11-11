@@ -816,15 +816,32 @@ class ContinuumLearningCore private constructor(
     }
 
     fun status():ContinuumLearningStatus=synchronized(CORE_LOCK) {
-        val model=loadModel()
+        val holdouts=statusHoldouts()
         ContinuumLearningStatus(
             experiences=store.stats(),
-            modelUpdates=model.updates,
-            parameters=model.parameterCount,
-            intentHoldout=model.evaluateIntent(INTENT_HOLDOUT),
-            semanticHoldout=model.evaluateSemantic(SEMANTIC_HOLDOUT),
+            modelUpdates=holdouts.updates,
+            parameters=holdouts.parameters,
+            intentHoldout=holdouts.intent,
+            semanticHoldout=holdouts.semantic,
             lastAudit=store.all().lastOrNull { it.type==LearningExperienceType.TRAINING_AUDIT }?.content
         )
+    }
+
+    private fun statusHoldouts():StatusHoldouts {
+        val checkpoint=if(modelFile.exists())modelFile.readBytes() else null
+        val intents=INTENT_HOLDOUT.toList()
+        val semantics=SEMANTIC_HOLDOUT.toList()
+        cachedStatusHoldouts?.let { cached ->
+            val sameCheckpoint=if(checkpoint==null)cached.checkpoint==null
+                else cached.checkpoint?.contentEquals(checkpoint)==true
+            if(sameCheckpoint && cached.intentExamples==intents &&
+                cached.semanticExamples==semantics)return cached
+        }
+        val model=loadModel(checkpoint)
+        return StatusHoldouts(if(checkpoint==null)null else model.save(),intents,semantics,
+            model.updates,model.parameterCount,
+            model.evaluateIntent(intents),model.evaluateSemantic(semantics))
+            .also { cachedStatusHoldouts=it }
     }
 
     /** Experimental decoder: uses the exact active encoder snapshot, never private
@@ -1129,9 +1146,8 @@ class ContinuumLearningCore private constructor(
      * subword-v1.bin.corrupt-<time>, the copy becomes active again and the
      * recovery is audited, so it is visible instead of silently repeated.
      */
-    private fun loadModel():TrainableSubwordEncoder {
-        if(!modelFile.exists())return TrainableSubwordEncoder()
-        val bytes=modelFile.readBytes()
+    private fun loadModel(bytes:ByteArray?=if(modelFile.exists())modelFile.readBytes() else null):TrainableSubwordEncoder {
+        if(bytes==null)return TrainableSubwordEncoder()
         return try { TrainableSubwordEncoder.restore(bytes) } catch (damaged:IllegalArgumentException) {
             if(!modelBackup.exists())throw damaged
             val backupBytes=modelBackup.readBytes()
@@ -1220,6 +1236,18 @@ class ContinuumLearningCore private constructor(
         internal fun ledgerViewCacheStats():Pair<Long,Long> = viewCacheHits.get() to viewCacheMisses.get()
 
         private val CORE_LOCK=Any()
+
+        private data class StatusHoldouts(
+            val checkpoint:ByteArray?,
+            val intentExamples:List<SubwordIntentExample>,
+            val semanticExamples:List<SubwordSemanticExample>,
+            val updates:Int,
+            val parameters:Int,
+            val intent:SubwordEvaluation,
+            val semantic:SubwordEvaluation
+        )
+        // One checkpoint; CORE_LOCK guards access.
+        private var cachedStatusHoldouts:StatusHoldouts?=null
 
         val INTENT_BOOTSTRAP=listOf(
             SubwordIntentExample("hallo",0),SubwordIntentExample("servus miteinander",0),
