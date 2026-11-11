@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Code 52 (0.3.51 / versionCode 52), exact owner approval required.
-# Standalone owner signer; never modifies the tested Code52 application source.
+# Code52 and frozen Code53.
+# Exact owner approval remains mandatory.
 # Modi: preflight (ohne Geheimnisse) | sign (nur im geschützten Environment).
 # Signing material is used only inside the protected job and never printed or exported.
 set -Eeuo pipefail
 set +x
 umask 077
-fail() { printf '::error::CODE52_SIGN_%s\n' "$1" >&2; exit 69; }
+fail() { printf '::error::CODE%s_SIGN_%s\n' "${code:-52}" "$1" >&2; exit 69; }
 
 mode="${1:-}"
 [[ "$mode" == preflight || "$mode" == sign ]] || fail BAD_MODE
@@ -27,6 +27,17 @@ unsigned_name="Continuum-Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE.apk"
 source_sha="${SOURCE_SHA:-}"
 qa_run="${QA_RUN_ID:-}"
 approved_sha="${OWNER_APPROVED_SHA:-}"
+profile="code52"
+if [[ "$source_sha" == fd86f11a4a822ee4805f4c462791baeb1d741db4 ]]; then
+  profile="code53"
+  code="53"
+  name_version="0.3.52"
+  artifact="Code53-fd86f11a-UNSIGNED-NOT-INSTALLABLE"
+  unsigned_name="Continuum-Code53-UNSIGNED-NOT-INSTALLABLE.apk"
+  binding=".github/continuum/code53-owner-signing-binding.json"
+  test -s "$binding" || fail CODE53_BINDING_MISSING
+  command -v python3 >/dev/null || fail CODE53_PYTHON_MISSING
+fi
 
 [[ "${GITHUB_REPOSITORY:-}" == "$repo" ]] || fail WRONG_REPOSITORY
 [[ "${GITHUB_REF:-}" == "refs/heads/$branch" ]] || fail WRONG_BRANCH
@@ -53,8 +64,25 @@ policies="$(gh api "repos/$repo/environments/$environment_name/deployment-branch
 jq -e --arg b "$branch" '.branch_policies | length==1 and .[0].type=="branch" and .[0].name==$b' <<< "$policies" >/dev/null || fail ENVIRONMENT_BRANCH_POLICY_NOT_EXACT
 echo CHECKPOINT=ENVIRONMENT_OWNER_REVIEWER_AND_EXACT_BRANCH_POLICY_VERIFIED
 
-# 2. Proven Code52 source on its own branch, from successful push-initiated QA.
+# 2. Source-bound QA.
 run="$(gh api "repos/$repo/actions/runs/$qa_run")" || fail QA_RUN_UNREADABLE
+if [[ "$profile" == code53 ]]; then
+  printf '%s\n' "$run" > "$tmp/run.json"
+  unset run
+  gh api "repos/$repo/actions/runs/$qa_run/jobs?per_page=100" > "$tmp/jobs.json" || fail QA_JOBS_UNREADABLE
+  gh api "repos/$repo/actions/runs/$qa_run/artifacts?per_page=100" > "$tmp/artifacts.json" || fail QA_ARTIFACTS_UNREADABLE
+  gh api "repos/$repo/git/commits/$source_sha" > "$tmp/source.json" || fail SOURCE_COMMIT_UNREADABLE
+  python3 -I scripts/continuum-code53-signing-evidence.py metadata "$binding" \
+    "$source_sha" "$approved_sha" "$qa_run" "$tmp/run.json" "$tmp/jobs.json" \
+    "$tmp/artifacts.json" "$tmp/source.json" || fail CODE53_METADATA_MISMATCH
+  for kind in unsigned evidence; do
+    artifact_id="$(jq -er --arg kind "$kind" '.[$kind].id' "$binding")"
+    gh api "repos/$repo/actions/artifacts/$artifact_id/zip" > "$tmp/$kind.zip" || fail CODE53_ARCHIVE_DOWNLOAD_FAILED
+  done
+  python3 -I scripts/continuum-code53-signing-evidence.py archives "$binding" \
+    "$tmp/unsigned.zip" "$tmp/evidence.zip" "$tmp/unsigned" || fail CODE53_ARCHIVE_MISMATCH
+  lifecycle="PASS_IN_CODE53_ANDROID_HOST"
+else
 jq -e --arg sha "$source_sha" --arg b "$qa_branch" --arg path "$qa_workflow_path" '
   .head_sha==$sha and .head_branch==$b and .event=="push" and .status=="completed"
   and .conclusion=="success" and (.path==$path or (.path|startswith($path+"@")))
@@ -64,6 +92,7 @@ jobs="$(gh api "repos/$repo/actions/runs/$qa_run/jobs?per_page=100")" || fail QA
 jq -e '[.jobs[] | select(.name=="validate-source-and-build" and .conclusion=="success")] | length==1' <<< "$jobs" >/dev/null || fail CODE52_QA_NOT_GREEN
 lifecycle="PASS_IN_CODE52_ANDROID_HOST"
 unset jobs
+fi
 echo CHECKPOINT=EXACT_SOURCE_QA_RUN_GREEN
 echo "INFO=lifecycle_jdk21_job=$lifecycle"
 
@@ -78,6 +107,9 @@ echo CHECKPOINT=RELEASE_PREFLIGHT_VALID
 
 # 4. Ungesignierte QA-APK aus genau diesem Lauf prüfen.
 [[ -n "${ANDROID_HOME:-}" ]] || fail ANDROID_HOME_MISSING
+if [[ "$profile" == code53 ]]; then
+  unsigned="$tmp/unsigned/$unsigned_name"
+else
 mkdir "$tmp/unsigned"
 gh run download "$qa_run" --repo "$repo" --name "$artifact" --dir "$tmp/unsigned" >/dev/null || fail APK_ARTIFACT_DOWNLOAD_FAILED
 unsigned="$tmp/unsigned/$unsigned_name"
@@ -90,6 +122,7 @@ test -s "$receipt" || fail QA_RECEIPT_MISSING
 for field in "release_state=UNSIGNED_QA_ONLY" "source_sha=$source_sha" "package=$pkg" "versionCode=$code" "versionName=$name_version" "original_signature=NOT_USED" "fold7=NOT_RUN"; do
   grep -Fxq "$field" "$receipt" || fail QA_RECEIPT_MISMATCH
 done
+fi
 tools="$ANDROID_HOME/build-tools/35.0.0"
 test -x "$tools/apksigner" && test -x "$tools/aapt2" && test -x "$tools/zipalign" || fail ANDROID_SIGN_TOOLS_MISSING
 badging="$("$tools/aapt2" dump badging "$unsigned")" || fail UNSIGNED_BADGING_FAILED
@@ -116,7 +149,11 @@ test "$fp" = "$fingerprint" || fail ORIGINAL_CERTIFICATE_MISMATCH
 echo CHECKPOINT=ORIGINAL_P12_CERTIFICATE_VERIFIED
 
 # 6. Ausrichten, signieren, unabhängig prüfen.
-"$tools/zipalign" -p -f 4 "$unsigned" "$tmp/aligned.apk" >/dev/null || fail APK_ZIPALIGN_FAILED
+if [[ "$profile" == code53 ]]; then
+  "$tools/zipalign" -P 16 -f 4 "$unsigned" "$tmp/aligned.apk" >/dev/null || fail APK_ZIPALIGN_FAILED
+else
+  "$tools/zipalign" -p -f 4 "$unsigned" "$tmp/aligned.apk" >/dev/null || fail APK_ZIPALIGN_FAILED
+fi
 if ! "$tools/apksigner" sign --ks "$tmp/original.p12" --ks-type PKCS12 --ks-key-alias continuum-local --ks-pass env:SIGN_PASS --key-pass env:SIGN_PASS --out "$tmp/signed.apk" "$tmp/aligned.apk" 2>/dev/null; then
   fail ORIGINAL_APK_SIGNING_FAILED
 fi
@@ -126,6 +163,9 @@ verified="$("$tools/apksigner" verify --verbose --print-certs "$tmp/signed.apk")
 grep -Fq 'Verified using v2 scheme (APK Signature Scheme v2): true' <<< "$verified" || fail SIGNED_APK_V2_MISSING
 actual="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' <<< "$verified" | head -n1 | tr '[:upper:]' '[:lower:]')"
 test "$actual" = "$fingerprint" || fail SIGNED_APK_CERTIFICATE_MISMATCH
+if [[ "$profile" == code53 ]]; then
+  "$tools/zipalign" -c -P 16 -v 4 "$tmp/signed.apk" >/dev/null || fail SIGNED_APK_ALIGNMENT_MISMATCH
+fi
 signed_badging="$("$tools/aapt2" dump badging "$tmp/signed.apk")" || fail SIGNED_APK_BADGING_FAILED
 grep -Fq "package: name='$pkg' versionCode='$code' versionName='$name_version'" <<< "$signed_badging" || fail SIGNED_PACKAGE_MISMATCH
 size="$(stat -c %s "$tmp/signed.apk")"
@@ -135,6 +175,13 @@ name="Continuum-Lokal-$digest.apk"
 mv "$tmp/signed.apk" "$tmp/$name"
 printf 'source_sha=%s\npackage=%s\nversion_code=%s\nversion_name=%s\nsigner_sha256=%s\napk_sha256=%s\napk_bytes=%s\nqa_run_id=%s\nlifecycle_jdk21_job=%s\nfold7_test=NOT_RUN\nstatus=ORIGINAL_SIGNED_VERIFIED\n' \
   "$source_sha" "$pkg" "$code" "$name_version" "$fingerprint" "$digest" "$size" "$qa_run" "$lifecycle" > "$tmp/BUILD-INFO.txt"
+if [[ "$profile" == code53 ]]; then
+  jq -r '"source_tree=\(.source_tree)", "qa_workflow_sha=\(.workflow_sha)",
+    "qa_job_id=\(.qa_job_id)", "unsigned_apk_sha256=\(.apk_sha256)",
+    "unsigned_artifact_id=\(.unsigned.id)", "unsigned_artifact_digest=\(.unsigned.digest)",
+    "evidence_artifact_id=\(.evidence.id)", "evidence_artifact_digest=\(.evidence.digest)"' \
+    "$binding" >> "$tmp/BUILD-INFO.txt"
+fi
 echo CHECKPOINT=SIGNED_APK_CERTIFICATE_PACKAGE_AND_HASH_VERIFIED
 
 # 7. Signierte APK ausschließlich als unveröffentlichten GitHub-Entwurf anlegen und prüfen.
@@ -148,7 +195,7 @@ Größe in Bytes: $size
 QA-Lauf (GitHub, exakt dieser Commit): https://github.com/$repo/actions/runs/$qa_run
 JDK-21-Lifecycle: $lifecycle (required, included in the fully green Android suite).
 Echte Fold7-Geräteprüfung (Thermik, Sprache, Avatar, PDF, Rotation, Update): NICHT AUSGEFÜHRT.
-Code51-to-Code52: original package and signing certificate, higher versionCode. Exact Fold7 update/data preservation still NOT_RUN. Install only as an update; never uninstall or clear existing app data.
+Code51-to-Code$code: original package and signing certificate, higher versionCode. Exact Fold7 update/data preservation still NOT_RUN. Install only as an update; never uninstall or clear existing app data.
 EOF
 gh release create "$tag" "$tmp/$name" "$tmp/BUILD-INFO.txt" --repo "$repo" --target "$source_sha" --title "Continuum Lokal $name_version (Code $code)" --notes-file "$tmp/notes.txt" --draft --latest=false >/dev/null || fail GITHUB_DRAFT_CREATE_FAILED
 mkdir "$tmp/readback"

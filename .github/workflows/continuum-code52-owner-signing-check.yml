@@ -8,6 +8,9 @@ on:
       - '.github/workflows/continuum-code52-sign-release.yml'
       - 'scripts/continuum-code52-github-signer.sh'
       - '.github/continuum/code52-owner-signing-contract.test.mjs'
+      - '.github/continuum/code53-owner-signing-binding.json'
+      - '.github/continuum/code53-owner-signing-contract.test.py'
+      - 'scripts/continuum-code53-signing-evidence.py'
 permissions:
   contents: read
 jobs:
@@ -28,3 +31,4 @@ jobs:
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           bash -n scripts/continuum-code52-github-signer.sh
           node --test .github/continuum/code52-owner-signing-contract.test.mjs
+          python3 -I .github/continuum/code53-owner-signing-contract.test.py
