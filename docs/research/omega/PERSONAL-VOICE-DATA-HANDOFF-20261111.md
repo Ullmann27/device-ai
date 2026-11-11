@@ -51,3 +51,14 @@ Standalone Git push lacked credentials. Initial remote checkpoint was published
 through the authorized GitHub connector as d3db049cd13d4d8dc42bc1ba7aeada1250422710,
 Draft PR #756; local initial commit6968566 has the same file content, not the
 same commit identity. Subsequent data snapshot is published by Git-tree update.
+
+## Current-source correction to the initial baseline map
+
+Read experimental/personal-voice-20261111/data/CURRENT-SPEECH-SOURCE-AUDIT.md
+before any later integration. Current PR #747 (23146e7f) already has warm ASR
+recovery, opt-in hands-free Send, persistent bounded chat context, topic-return
+hints and specialized PDF/draft corrections. Existing synthetic ResearchFeedback
+also has explicit review/revoke logic. The initial PR #728 map is a historical
+research baseline, not the full current APK behavior. Four core files were
+matched by exact Git blob identity against Code53 source. No runtime or ASR
+accuracy result is inferred from this source audit. Frozen data files unchanged.
