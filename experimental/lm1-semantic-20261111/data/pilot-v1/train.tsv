@@ -1,0 +1,193 @@
+id	label	prompt
+semantic-train-0001	0	Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen. «die Datei „nicht Bernstein“ öffnen» ist nur ein Beispiel.
+semantic-train-0002	2	«nichts tun» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nach „Weide“ suchen» nicht auszuführen.
+semantic-train-0003	1	Gewünscht ist «die Datei „kein Leinen“ öffnen». Nicht «nichts tun», sondern der gewünschte Auftrag gilt.
+semantic-train-0004	1	Mein alter Auftrag «„nicht Bernstein“ als Notiz speichern» ist aufgehoben. Mein neuer Auftrag: «die Datei „nicht Bernstein“ öffnen».
+semantic-train-0005	3	Es ist nicht erlaubt, den Auftrag «„Ton am Ufer“ als Notiz speichern» nicht auszuführen. «nach „Ton am Ufer“ suchen» ist nur ein Beispiel.
+semantic-train-0006	3	Gewünscht ist «„Ton am Ufer“ als Notiz speichern». Nicht «nichts tun», sondern der gewünschte Auftrag gilt.
+semantic-train-0007	2	Gewünscht ist «nach „nicht Bernstein“ suchen». Nicht «die Datei „nicht Bernstein“ öffnen», sondern der gewünschte Auftrag gilt.
+semantic-train-0008	3	Nicht «nichts tun», sondern der gewünschte Auftrag gilt. Gewünscht ist «„nicht Bernstein“ als Notiz speichern».
+semantic-train-0009	1	Nicht «„Weide“ als Notiz speichern», sondern der gewünschte Auftrag gilt. Gewünscht ist «die Datei „Weide“ öffnen».
+semantic-train-0010	2	Mein alter Auftrag «nichts tun» ist aufgehoben. Mein neuer Auftrag: «nach „kein Leinen“ suchen».
+semantic-train-0011	2	Mein neuer Auftrag: «nach „Weide“ suchen». Mein alter Auftrag «nichts tun» ist aufgehoben.
+semantic-train-0012	2	Es ist nicht erlaubt, den Auftrag «nach „Ton am Ufer“ suchen» nicht auszuführen. «„Ton am Ufer“ als Notiz speichern» ist nur ein Beispiel.
+semantic-train-0013	0	«„kein Leinen“ als Notiz speichern» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen.
+semantic-train-0014	3	Nur ein Zitat, kein Auftrag: «nichts tun». Führe aus: «„Ton am Ufer“ als Notiz speichern».
+semantic-train-0015	2	Nicht «die Datei „kein Leinen“ öffnen», sondern der gewünschte Auftrag gilt. Gewünscht ist «nach „kein Leinen“ suchen».
+semantic-train-0016	0	Nicht «die Datei „nicht Bernstein“ öffnen», sondern der gewünschte Auftrag gilt. Gewünscht ist «nichts tun».
+semantic-train-0017	0	Mein alter Auftrag «„Weide“ als Notiz speichern» ist aufgehoben. Mein neuer Auftrag: «nichts tun».
+semantic-train-0018	1	Nur ein Zitat, kein Auftrag: «nach „Weide“ suchen». Führe aus: «die Datei „Weide“ öffnen».
+semantic-train-0019	1	Es ist nicht erlaubt, den Auftrag «die Datei „kein Leinen“ öffnen» nicht auszuführen. «nach „kein Leinen“ suchen» ist nur ein Beispiel.
+semantic-train-0020	1	«nichts tun» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «die Datei „kein Leinen“ öffnen» nicht auszuführen.
+semantic-train-0021	1	Nicht «nach „Ton am Ufer“ suchen», sondern der gewünschte Auftrag gilt. Gewünscht ist «die Datei „Ton am Ufer“ öffnen».
+semantic-train-0022	0	Führe aus: «nichts tun». Nur ein Zitat, kein Auftrag: «„Weide“ als Notiz speichern».
+semantic-train-0023	1	Führe aus: «die Datei „kein Leinen“ öffnen». Nur ein Zitat, kein Auftrag: «nach „kein Leinen“ suchen».
+semantic-train-0024	1	Mein neuer Auftrag: «die Datei „kein Leinen“ öffnen». Mein alter Auftrag «nichts tun» ist aufgehoben.
+semantic-train-0025	3	Mein neuer Auftrag: «„Ton am Ufer“ als Notiz speichern». Mein alter Auftrag «die Datei „Ton am Ufer“ öffnen» ist aufgehoben.
+semantic-train-0026	2	Es ist nicht erlaubt, den Auftrag «nach „Ton am Ufer“ suchen» nicht auszuführen. «nichts tun» ist nur ein Beispiel.
+semantic-train-0027	0	Führe aus: «nichts tun». Nur ein Zitat, kein Auftrag: «nach „Ton am Ufer“ suchen».
+semantic-train-0028	3	Mein alter Auftrag «die Datei „Weide“ öffnen» ist aufgehoben. Mein neuer Auftrag: «„Weide“ als Notiz speichern».
+semantic-train-0029	0	Mein alter Auftrag «„nicht Bernstein“ als Notiz speichern» ist aufgehoben. Mein neuer Auftrag: «nichts tun».
+semantic-train-0030	1	Mein alter Auftrag «nach „Ton am Ufer“ suchen» ist aufgehoben. Mein neuer Auftrag: «die Datei „Ton am Ufer“ öffnen».
+semantic-train-0031	3	Führe aus: «„nicht Bernstein“ als Notiz speichern». Nur ein Zitat, kein Auftrag: «nichts tun».
+semantic-train-0032	2	Nicht «„Ton am Ufer“ als Notiz speichern», sondern der gewünschte Auftrag gilt. Gewünscht ist «nach „Ton am Ufer“ suchen».
+semantic-train-0033	2	Nicht «nichts tun», sondern der gewünschte Auftrag gilt. Gewünscht ist «nach „Ton am Ufer“ suchen».
+semantic-train-0034	0	Mein alter Auftrag «die Datei „Weide“ öffnen» ist aufgehoben. Mein neuer Auftrag: «nichts tun».
+semantic-train-0035	2	Mein neuer Auftrag: «nach „Weide“ suchen». Mein alter Auftrag «„Weide“ als Notiz speichern» ist aufgehoben.
+semantic-train-0036	3	Es ist nicht erlaubt, den Auftrag «„Weide“ als Notiz speichern» nicht auszuführen. «nichts tun» ist nur ein Beispiel.
+semantic-train-0037	1	Führe aus: «die Datei „Weide“ öffnen». Nur ein Zitat, kein Auftrag: «„Weide“ als Notiz speichern».
+semantic-train-0038	1	«nach „Weide“ suchen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «die Datei „Weide“ öffnen» nicht auszuführen.
+semantic-train-0039	0	Mein alter Auftrag «nach „Ton am Ufer“ suchen» ist aufgehoben. Mein neuer Auftrag: «nichts tun».
+semantic-train-0040	3	«nach „Weide“ suchen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «„Weide“ als Notiz speichern» nicht auszuführen.
+semantic-train-0041	2	Gewünscht ist «nach „Weide“ suchen». Nicht «„Weide“ als Notiz speichern», sondern der gewünschte Auftrag gilt.
+semantic-train-0042	1	Führe aus: «die Datei „Weide“ öffnen». Nur ein Zitat, kein Auftrag: «nichts tun».
+semantic-train-0043	2	Mein alter Auftrag «die Datei „Ton am Ufer“ öffnen» ist aufgehoben. Mein neuer Auftrag: «nach „Ton am Ufer“ suchen».
+semantic-train-0044	0	«die Datei „kein Leinen“ öffnen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen.
+semantic-train-0045	0	«nach „Weide“ suchen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen.
+semantic-train-0046	0	Nur ein Zitat, kein Auftrag: «„kein Leinen“ als Notiz speichern». Führe aus: «nichts tun».
+semantic-train-0047	0	Führe aus: «nichts tun». Nur ein Zitat, kein Auftrag: «„nicht Bernstein“ als Notiz speichern».
+semantic-train-0048	1	Mein alter Auftrag «nichts tun» ist aufgehoben. Mein neuer Auftrag: «die Datei „nicht Bernstein“ öffnen».
+semantic-train-0049	3	Mein alter Auftrag «nach „Ton am Ufer“ suchen» ist aufgehoben. Mein neuer Auftrag: «„Ton am Ufer“ als Notiz speichern».
+semantic-train-0050	1	Gewünscht ist «die Datei „nicht Bernstein“ öffnen». Nicht «nach „nicht Bernstein“ suchen», sondern der gewünschte Auftrag gilt.
+semantic-train-0051	0	Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen. «nach „kein Leinen“ suchen» ist nur ein Beispiel.
+semantic-train-0052	1	«„kein Leinen“ als Notiz speichern» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «die Datei „kein Leinen“ öffnen» nicht auszuführen.
+semantic-train-0053	1	Nur ein Zitat, kein Auftrag: «nichts tun». Führe aus: «die Datei „Ton am Ufer“ öffnen».
+semantic-train-0054	0	Nicht «nach „Ton am Ufer“ suchen», sondern der gewünschte Auftrag gilt. Gewünscht ist «nichts tun».
+semantic-train-0055	1	Es ist nicht erlaubt, den Auftrag «die Datei „nicht Bernstein“ öffnen» nicht auszuführen. «„nicht Bernstein“ als Notiz speichern» ist nur ein Beispiel.
+semantic-train-0056	2	Mein alter Auftrag «nichts tun» ist aufgehoben. Mein neuer Auftrag: «nach „Ton am Ufer“ suchen».
+semantic-train-0057	0	Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen. «„Weide“ als Notiz speichern» ist nur ein Beispiel.
+semantic-train-0058	3	Nur ein Zitat, kein Auftrag: «die Datei „Ton am Ufer“ öffnen». Führe aus: «„Ton am Ufer“ als Notiz speichern».
+semantic-train-0059	2	Es ist nicht erlaubt, den Auftrag «nach „kein Leinen“ suchen» nicht auszuführen. «nichts tun» ist nur ein Beispiel.
+semantic-train-0060	3	Nur ein Zitat, kein Auftrag: «nach „nicht Bernstein“ suchen». Führe aus: «„nicht Bernstein“ als Notiz speichern».
+semantic-train-0061	1	Es ist nicht erlaubt, den Auftrag «die Datei „nicht Bernstein“ öffnen» nicht auszuführen. «nichts tun» ist nur ein Beispiel.
+semantic-train-0062	3	Mein alter Auftrag «nichts tun» ist aufgehoben. Mein neuer Auftrag: «„nicht Bernstein“ als Notiz speichern».
+semantic-train-0063	2	Nur ein Zitat, kein Auftrag: «„nicht Bernstein“ als Notiz speichern». Führe aus: «nach „nicht Bernstein“ suchen».
+semantic-train-0064	0	Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen. «nach „Ton am Ufer“ suchen» ist nur ein Beispiel.
+semantic-train-0065	3	Nur ein Zitat, kein Auftrag: «nach „Weide“ suchen». Führe aus: «„Weide“ als Notiz speichern».
+semantic-train-0066	0	«„Ton am Ufer“ als Notiz speichern» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen.
+semantic-train-0067	2	Nur ein Zitat, kein Auftrag: «nichts tun». Führe aus: «nach „Weide“ suchen».
+semantic-train-0068	3	Gewünscht ist «„Ton am Ufer“ als Notiz speichern». Nicht «die Datei „Ton am Ufer“ öffnen», sondern der gewünschte Auftrag gilt.
+semantic-train-0069	1	Mein neuer Auftrag: «die Datei „Ton am Ufer“ öffnen». Mein alter Auftrag «nichts tun» ist aufgehoben.
+semantic-train-0070	2	Nur ein Zitat, kein Auftrag: «„Weide“ als Notiz speichern». Führe aus: «nach „Weide“ suchen».
+semantic-train-0071	1	Gewünscht ist «die Datei „Ton am Ufer“ öffnen». Nicht «„Ton am Ufer“ als Notiz speichern», sondern der gewünschte Auftrag gilt.
+semantic-train-0072	0	«die Datei „Ton am Ufer“ öffnen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen.
+semantic-train-0073	3	Nicht «nach „Ton am Ufer“ suchen», sondern der gewünschte Auftrag gilt. Gewünscht ist «„Ton am Ufer“ als Notiz speichern».
+semantic-train-0074	3	Gewünscht ist «„Weide“ als Notiz speichern». Nicht «nach „Weide“ suchen», sondern der gewünschte Auftrag gilt.
+semantic-train-0075	2	Mein alter Auftrag «die Datei „kein Leinen“ öffnen» ist aufgehoben. Mein neuer Auftrag: «nach „kein Leinen“ suchen».
+semantic-train-0076	0	Mein neuer Auftrag: «nichts tun». Mein alter Auftrag «„kein Leinen“ als Notiz speichern» ist aufgehoben.
+semantic-train-0077	3	Mein alter Auftrag «die Datei „nicht Bernstein“ öffnen» ist aufgehoben. Mein neuer Auftrag: «„nicht Bernstein“ als Notiz speichern».
+semantic-train-0078	3	Führe aus: «„Ton am Ufer“ als Notiz speichern». Nur ein Zitat, kein Auftrag: «nach „Ton am Ufer“ suchen».
+semantic-train-0079	0	Gewünscht ist «nichts tun». Nicht «nach „nicht Bernstein“ suchen», sondern der gewünschte Auftrag gilt.
+semantic-train-0080	3	Gewünscht ist «„nicht Bernstein“ als Notiz speichern». Nicht «nach „nicht Bernstein“ suchen», sondern der gewünschte Auftrag gilt.
+semantic-train-0081	1	Führe aus: «die Datei „Ton am Ufer“ öffnen». Nur ein Zitat, kein Auftrag: «nach „Ton am Ufer“ suchen».
+semantic-train-0082	3	Führe aus: «„Weide“ als Notiz speichern». Nur ein Zitat, kein Auftrag: «die Datei „Weide“ öffnen».
+semantic-train-0083	0	Mein alter Auftrag «nach „kein Leinen“ suchen» ist aufgehoben. Mein neuer Auftrag: «nichts tun».
+semantic-train-0084	2	Führe aus: «nach „kein Leinen“ suchen». Nur ein Zitat, kein Auftrag: «nichts tun».
+semantic-train-0085	1	Nicht «nach „kein Leinen“ suchen», sondern der gewünschte Auftrag gilt. Gewünscht ist «die Datei „kein Leinen“ öffnen».
+semantic-train-0086	0	Gewünscht ist «nichts tun». Nicht «„kein Leinen“ als Notiz speichern», sondern der gewünschte Auftrag gilt.
+semantic-train-0087	0	Nicht «die Datei „Weide“ öffnen», sondern der gewünschte Auftrag gilt. Gewünscht ist «nichts tun».
+semantic-train-0088	2	Mein neuer Auftrag: «nach „Weide“ suchen». Mein alter Auftrag «die Datei „Weide“ öffnen» ist aufgehoben.
+semantic-train-0089	0	Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen. «„nicht Bernstein“ als Notiz speichern» ist nur ein Beispiel.
+semantic-train-0090	0	Führe aus: «nichts tun». Nur ein Zitat, kein Auftrag: «die Datei „nicht Bernstein“ öffnen».
+semantic-train-0091	1	Mein neuer Auftrag: «die Datei „Ton am Ufer“ öffnen». Mein alter Auftrag «„Ton am Ufer“ als Notiz speichern» ist aufgehoben.
+semantic-train-0092	3	«die Datei „kein Leinen“ öffnen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «„kein Leinen“ als Notiz speichern» nicht auszuführen.
+semantic-train-0093	1	Führe aus: «die Datei „nicht Bernstein“ öffnen». Nur ein Zitat, kein Auftrag: «„nicht Bernstein“ als Notiz speichern».
+semantic-train-0094	3	Mein neuer Auftrag: «„kein Leinen“ als Notiz speichern». Mein alter Auftrag «nichts tun» ist aufgehoben.
+semantic-train-0095	0	Nicht «„Weide“ als Notiz speichern», sondern der gewünschte Auftrag gilt. Gewünscht ist «nichts tun».
+semantic-train-0096	1	Es ist nicht erlaubt, den Auftrag «die Datei „Ton am Ufer“ öffnen» nicht auszuführen. «nach „Ton am Ufer“ suchen» ist nur ein Beispiel.
+semantic-train-0097	3	Es ist nicht erlaubt, den Auftrag «„kein Leinen“ als Notiz speichern» nicht auszuführen. «nach „kein Leinen“ suchen» ist nur ein Beispiel.
+semantic-train-0098	0	Gewünscht ist «nichts tun». Nicht «die Datei „Ton am Ufer“ öffnen», sondern der gewünschte Auftrag gilt.
+semantic-train-0099	2	«die Datei „Weide“ öffnen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nach „Weide“ suchen» nicht auszuführen.
+semantic-train-0100	2	Nicht «die Datei „Ton am Ufer“ öffnen», sondern der gewünschte Auftrag gilt. Gewünscht ist «nach „Ton am Ufer“ suchen».
+semantic-train-0101	2	Es ist nicht erlaubt, den Auftrag «nach „kein Leinen“ suchen» nicht auszuführen. «die Datei „kein Leinen“ öffnen» ist nur ein Beispiel.
+semantic-train-0102	1	Nicht «nichts tun», sondern der gewünschte Auftrag gilt. Gewünscht ist «die Datei „Weide“ öffnen».
+semantic-train-0103	3	Gewünscht ist «„kein Leinen“ als Notiz speichern». Nicht «die Datei „kein Leinen“ öffnen», sondern der gewünschte Auftrag gilt.
+semantic-train-0104	1	Mein neuer Auftrag: «die Datei „Weide“ öffnen». Mein alter Auftrag «nach „Weide“ suchen» ist aufgehoben.
+semantic-train-0105	1	Gewünscht ist «die Datei „Ton am Ufer“ öffnen». Nicht «nichts tun», sondern der gewünschte Auftrag gilt.
+semantic-train-0106	1	Es ist nicht erlaubt, den Auftrag «die Datei „Weide“ öffnen» nicht auszuführen. «„Weide“ als Notiz speichern» ist nur ein Beispiel.
+semantic-train-0107	3	Mein neuer Auftrag: «„Ton am Ufer“ als Notiz speichern». Mein alter Auftrag «nichts tun» ist aufgehoben.
+semantic-train-0108	0	Nur ein Zitat, kein Auftrag: «„Ton am Ufer“ als Notiz speichern». Führe aus: «nichts tun».
+semantic-train-0109	1	«nichts tun» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «die Datei „Ton am Ufer“ öffnen» nicht auszuführen.
+semantic-train-0110	3	Nicht «nach „kein Leinen“ suchen», sondern der gewünschte Auftrag gilt. Gewünscht ist «„kein Leinen“ als Notiz speichern».
+semantic-train-0111	1	«„Ton am Ufer“ als Notiz speichern» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «die Datei „Ton am Ufer“ öffnen» nicht auszuführen.
+semantic-train-0112	0	Nicht «nach „kein Leinen“ suchen», sondern der gewünschte Auftrag gilt. Gewünscht ist «nichts tun».
+semantic-train-0113	3	Nicht «die Datei „nicht Bernstein“ öffnen», sondern der gewünschte Auftrag gilt. Gewünscht ist «„nicht Bernstein“ als Notiz speichern».
+semantic-train-0114	0	Gewünscht ist «nichts tun». Nicht «nach „Weide“ suchen», sondern der gewünschte Auftrag gilt.
+semantic-train-0115	3	Es ist nicht erlaubt, den Auftrag «„nicht Bernstein“ als Notiz speichern» nicht auszuführen. «die Datei „nicht Bernstein“ öffnen» ist nur ein Beispiel.
+semantic-train-0116	0	Nur ein Zitat, kein Auftrag: «die Datei „Ton am Ufer“ öffnen». Führe aus: «nichts tun».
+semantic-train-0117	1	Mein neuer Auftrag: «die Datei „kein Leinen“ öffnen». Mein alter Auftrag «„kein Leinen“ als Notiz speichern» ist aufgehoben.
+semantic-train-0118	2	Mein neuer Auftrag: «nach „nicht Bernstein“ suchen». Mein alter Auftrag «nichts tun» ist aufgehoben.
+semantic-train-0119	1	«nach „nicht Bernstein“ suchen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «die Datei „nicht Bernstein“ öffnen» nicht auszuführen.
+semantic-train-0120	3	Nicht «die Datei „Weide“ öffnen», sondern der gewünschte Auftrag gilt. Gewünscht ist «„Weide“ als Notiz speichern».
+semantic-train-0121	0	Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen. «die Datei „Weide“ öffnen» ist nur ein Beispiel.
+semantic-train-0122	1	Mein neuer Auftrag: «die Datei „nicht Bernstein“ öffnen». Mein alter Auftrag «nach „nicht Bernstein“ suchen» ist aufgehoben.
+semantic-train-0123	2	Mein alter Auftrag «„kein Leinen“ als Notiz speichern» ist aufgehoben. Mein neuer Auftrag: «nach „kein Leinen“ suchen».
+semantic-train-0124	3	Gewünscht ist «„kein Leinen“ als Notiz speichern». Nicht «nichts tun», sondern der gewünschte Auftrag gilt.
+semantic-train-0125	2	Führe aus: «nach „Ton am Ufer“ suchen». Nur ein Zitat, kein Auftrag: «„Ton am Ufer“ als Notiz speichern».
+semantic-train-0126	3	Führe aus: «„kein Leinen“ als Notiz speichern». Nur ein Zitat, kein Auftrag: «nach „kein Leinen“ suchen».
+semantic-train-0127	3	«nichts tun» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «„Ton am Ufer“ als Notiz speichern» nicht auszuführen.
+semantic-train-0128	2	Nicht «nichts tun», sondern der gewünschte Auftrag gilt. Gewünscht ist «nach „kein Leinen“ suchen».
+semantic-train-0129	2	Gewünscht ist «nach „nicht Bernstein“ suchen». Nicht «nichts tun», sondern der gewünschte Auftrag gilt.
+semantic-train-0130	2	Nicht «„kein Leinen“ als Notiz speichern», sondern der gewünschte Auftrag gilt. Gewünscht ist «nach „kein Leinen“ suchen».
+semantic-train-0131	3	Mein alter Auftrag «nach „kein Leinen“ suchen» ist aufgehoben. Mein neuer Auftrag: «„kein Leinen“ als Notiz speichern».
+semantic-train-0132	0	«nach „nicht Bernstein“ suchen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nichts tun» nicht auszuführen.
+semantic-train-0133	2	Gewünscht ist «nach „Weide“ suchen». Nicht «nichts tun», sondern der gewünschte Auftrag gilt.
+semantic-train-0134	0	Mein neuer Auftrag: «nichts tun». Mein alter Auftrag «die Datei „kein Leinen“ öffnen» ist aufgehoben.
+semantic-train-0135	2	Gewünscht ist «nach „nicht Bernstein“ suchen». Nicht «„nicht Bernstein“ als Notiz speichern», sondern der gewünschte Auftrag gilt.
+semantic-train-0136	1	Führe aus: «die Datei „nicht Bernstein“ öffnen». Nur ein Zitat, kein Auftrag: «nichts tun».
+semantic-train-0137	2	Führe aus: «nach „kein Leinen“ suchen». Nur ein Zitat, kein Auftrag: «„kein Leinen“ als Notiz speichern».
+semantic-train-0138	1	Nur ein Zitat, kein Auftrag: «„Ton am Ufer“ als Notiz speichern». Führe aus: «die Datei „Ton am Ufer“ öffnen».
+semantic-train-0139	3	Mein neuer Auftrag: «„kein Leinen“ als Notiz speichern». Mein alter Auftrag «die Datei „kein Leinen“ öffnen» ist aufgehoben.
+semantic-train-0140	2	«nichts tun» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nach „nicht Bernstein“ suchen» nicht auszuführen.
+semantic-train-0141	0	Mein neuer Auftrag: «nichts tun». Mein alter Auftrag «nach „Weide“ suchen» ist aufgehoben.
+semantic-train-0142	3	Es ist nicht erlaubt, den Auftrag «„nicht Bernstein“ als Notiz speichern» nicht auszuführen. «nichts tun» ist nur ein Beispiel.
+semantic-train-0143	1	Nur ein Zitat, kein Auftrag: «„kein Leinen“ als Notiz speichern». Führe aus: «die Datei „kein Leinen“ öffnen».
+semantic-train-0144	3	Nur ein Zitat, kein Auftrag: «die Datei „kein Leinen“ öffnen». Führe aus: «„kein Leinen“ als Notiz speichern».
+semantic-train-0145	3	Führe aus: «„Weide“ als Notiz speichern». Nur ein Zitat, kein Auftrag: «nichts tun».
+semantic-train-0146	0	Nur ein Zitat, kein Auftrag: «nach „nicht Bernstein“ suchen». Führe aus: «nichts tun».
+semantic-train-0147	3	Führe aus: «„nicht Bernstein“ als Notiz speichern». Nur ein Zitat, kein Auftrag: «die Datei „nicht Bernstein“ öffnen».
+semantic-train-0148	1	Mein alter Auftrag «nach „kein Leinen“ suchen» ist aufgehoben. Mein neuer Auftrag: «die Datei „kein Leinen“ öffnen».
+semantic-train-0149	3	Es ist nicht erlaubt, den Auftrag «„Weide“ als Notiz speichern» nicht auszuführen. «die Datei „Weide“ öffnen» ist nur ein Beispiel.
+semantic-train-0150	3	Nicht «nichts tun», sondern der gewünschte Auftrag gilt. Gewünscht ist «„Weide“ als Notiz speichern».
+semantic-train-0151	3	Mein neuer Auftrag: «„nicht Bernstein“ als Notiz speichern». Mein alter Auftrag «nach „nicht Bernstein“ suchen» ist aufgehoben.
+semantic-train-0152	3	Mein neuer Auftrag: «„Weide“ als Notiz speichern». Mein alter Auftrag «nach „Weide“ suchen» ist aufgehoben.
+semantic-train-0153	0	Nur ein Zitat, kein Auftrag: «die Datei „kein Leinen“ öffnen». Führe aus: «nichts tun».
+semantic-train-0154	0	Führe aus: «nichts tun». Nur ein Zitat, kein Auftrag: «nach „kein Leinen“ suchen».
+semantic-train-0155	1	Es ist nicht erlaubt, den Auftrag «die Datei „Weide“ öffnen» nicht auszuführen. «nichts tun» ist nur ein Beispiel.
+semantic-train-0156	2	«„Weide“ als Notiz speichern» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nach „Weide“ suchen» nicht auszuführen.
+semantic-train-0157	1	Nur ein Zitat, kein Auftrag: «nach „nicht Bernstein“ suchen». Führe aus: «die Datei „nicht Bernstein“ öffnen».
+semantic-train-0158	1	Nicht «„nicht Bernstein“ als Notiz speichern», sondern der gewünschte Auftrag gilt. Gewünscht ist «die Datei „nicht Bernstein“ öffnen».
+semantic-train-0159	1	Mein alter Auftrag «nichts tun» ist aufgehoben. Mein neuer Auftrag: «die Datei „Weide“ öffnen».
+semantic-train-0160	0	Mein neuer Auftrag: «nichts tun». Mein alter Auftrag «nach „nicht Bernstein“ suchen» ist aufgehoben.
+semantic-train-0161	2	«die Datei „nicht Bernstein“ öffnen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nach „nicht Bernstein“ suchen» nicht auszuführen.
+semantic-train-0162	1	Mein alter Auftrag «„Weide“ als Notiz speichern» ist aufgehoben. Mein neuer Auftrag: «die Datei „Weide“ öffnen».
+semantic-train-0163	3	Nur ein Zitat, kein Auftrag: «nichts tun». Führe aus: «„kein Leinen“ als Notiz speichern».
+semantic-train-0164	0	Gewünscht ist «nichts tun». Nicht «die Datei „kein Leinen“ öffnen», sondern der gewünschte Auftrag gilt.
+semantic-train-0165	3	«die Datei „Ton am Ufer“ öffnen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «„Ton am Ufer“ als Notiz speichern» nicht auszuführen.
+semantic-train-0166	1	Gewünscht ist «die Datei „kein Leinen“ öffnen». Nicht «„kein Leinen“ als Notiz speichern», sondern der gewünschte Auftrag gilt.
+semantic-train-0167	3	«nichts tun» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «„kein Leinen“ als Notiz speichern» nicht auszuführen.
+semantic-train-0168	2	«„nicht Bernstein“ als Notiz speichern» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «nach „nicht Bernstein“ suchen» nicht auszuführen.
+semantic-train-0169	2	Führe aus: «nach „kein Leinen“ suchen». Nur ein Zitat, kein Auftrag: «die Datei „kein Leinen“ öffnen».
+semantic-train-0170	1	Nur ein Zitat, kein Auftrag: «nichts tun». Führe aus: «die Datei „kein Leinen“ öffnen».
+semantic-train-0171	2	Führe aus: «nach „Ton am Ufer“ suchen». Nur ein Zitat, kein Auftrag: «nichts tun».
+semantic-train-0172	3	«nach „nicht Bernstein“ suchen» ist nur ein Beispiel. Es ist nicht erlaubt, den Auftrag «„nicht Bernstein“ als Notiz speichern» nicht auszuführen.
+semantic-train-0173	1	Nicht «nichts tun», sondern der gewünschte Auftrag gilt. Gewünscht ist «die Datei „nicht Bernstein“ öffnen».
+semantic-train-0174	3	Mein alter Auftrag «nichts tun» ist aufgehoben. Mein neuer Auftrag: «„Weide“ als Notiz speichern».
+semantic-train-0175	2	Führe aus: «nach „Ton am Ufer“ suchen». Nur ein Zitat, kein Auftrag: «die Datei „Ton am Ufer“ öffnen».
+semantic-train-0176	2	Nur ein Zitat, kein Auftrag: «die Datei „Weide“ öffnen». Führe aus: «nach „Weide“ suchen».
+semantic-train-0177	2	Mein neuer Auftrag: «nach „nicht Bernstein“ suchen». Mein alter Auftrag «die Datei „nicht Bernstein“ öffnen» ist aufgehoben.
+semantic-train-0178	2	Es ist nicht erlaubt, den Auftrag «nach „kein Leinen“ suchen» nicht auszuführen. «„kein Leinen“ als Notiz speichern» ist nur ein Beispiel.
+semantic-train-0179	0	Mein alter Auftrag «die Datei „nicht Bernstein“ öffnen» ist aufgehoben. Mein neuer Auftrag: «nichts tun».
+semantic-train-0180	2	Es ist nicht erlaubt, den Auftrag «nach „Ton am Ufer“ suchen» nicht auszuführen. «die Datei „Ton am Ufer“ öffnen» ist nur ein Beispiel.
+semantic-train-0181	0	Mein neuer Auftrag: «nichts tun». Mein alter Auftrag «„Ton am Ufer“ als Notiz speichern» ist aufgehoben.
+semantic-train-0182	2	Nur ein Zitat, kein Auftrag: «nichts tun». Führe aus: «nach „nicht Bernstein“ suchen».
+semantic-train-0183	0	Nicht «„nicht Bernstein“ als Notiz speichern», sondern der gewünschte Auftrag gilt. Gewünscht ist «nichts tun».
+semantic-train-0184	0	Gewünscht ist «nichts tun». Nicht «„Ton am Ufer“ als Notiz speichern», sondern der gewünschte Auftrag gilt.
+semantic-train-0185	1	Gewünscht ist «die Datei „Weide“ öffnen». Nicht «nach „Weide“ suchen», sondern der gewünschte Auftrag gilt.
+semantic-train-0186	0	Mein neuer Auftrag: «nichts tun». Mein alter Auftrag «die Datei „Ton am Ufer“ öffnen» ist aufgehoben.
+semantic-train-0187	2	Nur ein Zitat, kein Auftrag: «die Datei „nicht Bernstein“ öffnen». Führe aus: «nach „nicht Bernstein“ suchen».
+semantic-train-0188	0	Führe aus: «nichts tun». Nur ein Zitat, kein Auftrag: «die Datei „Weide“ öffnen».
+semantic-train-0189	0	Nur ein Zitat, kein Auftrag: «nach „Weide“ suchen». Führe aus: «nichts tun».
+semantic-train-0190	2	Mein neuer Auftrag: «nach „nicht Bernstein“ suchen». Mein alter Auftrag «„nicht Bernstein“ als Notiz speichern» ist aufgehoben.
+semantic-train-0191	2	Mein alter Auftrag «„Ton am Ufer“ als Notiz speichern» ist aufgehoben. Mein neuer Auftrag: «nach „Ton am Ufer“ suchen».
+semantic-train-0192	2	Gewünscht ist «nach „Weide“ suchen». Nicht «die Datei „Weide“ öffnen», sondern der gewünschte Auftrag gilt.
