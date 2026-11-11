@@ -24,7 +24,7 @@ Der Prüfauftrag im Fenster ist ein skriptierter Testauftrag der Sequenz, keine 
 
 1. **Fokus-Tiefe:** Sobald das Glas des Arbeitsfensters steht, tritt das Deck ab der Fensteroberkante abwärts
    zurück (weich einsetzend, nach unten tiefer) und das Fenster wirft einen Kontaktschatten. Die Zeile mit
-   Originalavatar und Originalkugel wird nicht abgedunkelt. Folgt dem Aufbau-/Schließbild des Fensters, keine
+   Originalavatar und Originalkugel wird nicht abgedunkelt. Gezeichnet in der Tiefenebene des Fensters (nicht im FUI-Overlay). Folgt dem Aufbau-/Schließbild des Fensters, keine
    eigene Uhr, keine zusätzlichen Bilder pro Sekunde.
 2. **Tiefenglas:** Das Fensterglas ist nur dort dicht, wo wirklich Inhalt steht. Endet der Inhalt mindestens
    56 dp über dem unteren Rand, klärt die Fläche darunter zu Rauchglas (Dichte 0,46) mit erhaltenem Rahmen; das
@@ -36,7 +36,9 @@ dafür wurde in diesem Zweig wieder entfernt.
 ## Geprüft (HOST)
 
 `Cinema2DepthLightTest` (2 Fälle: Fokus-Tiefe folgt dem Glas und geht mit ihm; Glas nur hinter Inhalt dicht) und
-`CinemaNativeSequenceUiTest` grün. Umfang der weiteren Regression: siehe PR-Beschreibung.
+`CinemaNativeSequenceUiTest` grün; dazu alle Klassen `*Cinema*`, `*HollywoodFui*`, `*JarvisWorkWindow*`,
+`*JarvisFluidLight*`, `*JarvisRenderQuality*`: **170 Tests, 0 Fehler** (Quellstand `907553f8`, Bilder von diesem Stand).
+Die komplette Android-Suite (≈4 670 Tests) wurde für diesen Zweig **nicht** ausgeführt.
 
 ## Bekannte Grenzen / offen
 
