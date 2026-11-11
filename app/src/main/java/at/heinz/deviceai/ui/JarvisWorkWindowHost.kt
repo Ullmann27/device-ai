@@ -267,6 +267,8 @@ class JarvisWorkWindowHost(
                 JarvisCinematicSettings.Experiment.EXP_04_FOLDER_FLIGHT)
             fui.cinematicEffectsEnabled = enabled
             fui.cinematicArcEnabled = arc
+            fui.orbLinkEnabled = JarvisCinematicSettings.experimentEnabled(activity,
+                JarvisCinematicSettings.Experiment.EXP_11_ORB_LINK)
             fui.workPulseEnabled = JarvisCinematicSettings.experimentEnabled(activity,
                 JarvisCinematicSettings.Experiment.EXP_12_RECEIPTS)
             fui.prismRimEnabled = JarvisCinematicSettings.experimentEnabled(activity,

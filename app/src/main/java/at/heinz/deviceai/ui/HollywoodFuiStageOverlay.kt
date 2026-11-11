@@ -35,6 +35,13 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     internal var vacantTopDp = Float.NaN
     internal var cinematicArcEnabled = false
     internal var workPulseEnabled = false
+    internal var orbLinkEnabled = true
+        set(value) {
+            if (field == value) return
+            field = value
+            invalidate()
+            requestFrame()
+        }
     internal var prismRimEnabled = false
     internal var rimIsolationEnabled = false
     internal var zSliceEnabled = false
@@ -270,9 +277,9 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         val sink = HollywoodFuiCinematics.anchorBeam(transferSource.centerX() / density,
             transferSource.centerY() / density, boxDp, 1f)
         // Cinema 2.0 connection: a verified tool receipt travels back along the working band to the orb.
-        val receipt = if (workingFluid.energy > 0f && workPulseEnabled && pulseAtElapsedMs >= 0L && !reducedMotion)
+        val receipt = if (orbLinkEnabled && workingFluid.energy > 0f && workPulseEnabled && pulseAtElapsedMs >= 0L && !reducedMotion)
             HollywoodFuiCinematics.receiptTravel(elapsedMs - pulseAtElapsedMs) else -1f
-        if (fluid.energy > 0f) JarvisFluidLight.drawTransfer(painter,
+        if (orbLinkEnabled && fluid.energy > 0f) JarvisFluidLight.drawTransfer(painter,
             JarvisShellLayout.Box(transferSource.left / density, transferSource.top / density,
                 transferSource.right / density, transferSource.bottom / density),
             if (workingFluid.energy > 0f) sink.x1 else fluidBox.centerX,
