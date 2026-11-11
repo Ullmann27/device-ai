@@ -90,3 +90,17 @@ new unsigned APK and Fold7 hardware acceptance remain open. No original assets,
 experimental model weights, signing, main, installation or release changed.
 Rollback: revert the scoped flow patch; the previous construction path remains
 in JarvisFluidLight.sample. Compatible with EXP-05/11/12; no research promoted.
+
+## Voice playback follow-up
+
+Review found a real static AudioTrack initialization error: MODE_STATIC begins
+in STATE_NO_STATIC_DATA and reaches STATE_INITIALIZED only after its first write.
+The provider now accepts that initial state, writes PCM, then checks readiness.
+MayaPcmPlayerUiTest reproduces this ordering through Android/Robolectric; execution
+is pending the new pinned full QA. Audio focus loss stops playback.
+https://developer.android.com/reference/android/media/AudioTrack#STATE_NO_STATIC_DATA
+
+Latest executed additional check: 4 existing coding-agent speech-wiring Node
+checks PASS. A local full-Node run overlaps checkpoint writes, so it cannot be
+an exact-source release receipt even if individual tests pass. Hosted frozen QA
+is authoritative for the full candidate. No live speech generation performed.

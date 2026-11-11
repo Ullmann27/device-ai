@@ -81,8 +81,9 @@ internal class MayaPcmPlayer(context: Context) : MayaSpeech.Player {
                 .setTransferMode(AudioTrack.MODE_STATIC).setBufferSizeInBytes(pcm.size).build().also { track = it }
         }
         synchronized(this) {
-            check(!closed && allowed() && audio.state == AudioTrack.STATE_INITIALIZED)
+            check(!closed && allowed() && audio.state != AudioTrack.STATE_UNINITIALIZED)
             check(audio.write(pcm, 0, pcm.size) == pcm.size)
+            check(audio.state == AudioTrack.STATE_INITIALIZED)
             audio.play()
             started()
         }
