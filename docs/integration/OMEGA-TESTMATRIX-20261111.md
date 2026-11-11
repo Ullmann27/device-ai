@@ -154,3 +154,16 @@ oder rückwirkend behoben. Der neue Lauf wird ausdrücklich getrennt ausgewiesen
 ## Gemeinsamer vollständiger Node-Lauf – äußerlich seriell
 
 Exakter sauberer Source `5b935b4feaf960bb6973dd4d630f02744e41913f`: **2.498 Fälle, 2.455 PASS, 6 FAIL, 37 SKIP**; vollständiger Abschluss, Quelle unverändert, Prozessende bestätigt. Identische 354 Dateien/Reihenfolge, unveränderte Assertions und 30-Minuten-Grenze. Die Variante mit äußerer Parallelität 1 ist ebenfalls FAIL; der frühere Parallel-Lauf bleibt dokumentiert. Konkrete Fehler in `node-serial-5b935b4f/failures.json`; Ursachen werden getrennt geprüft. Android/Lint auf diesem Source läuft, APK noch nicht gebaut.
+
+## Vollständiger Android-Befund und integrierte Reparaturen
+
+| Prüfung | Ergebnis | Quelle |
+|---|---|---|
+| Gemeinsame27 Android-Klassen | 205:198 PASS/7 FAIL/0 SKIP; vollständig, Quelle unverändert |5b935b4f|
+| Konfigurierter NewApi-Lint | PASS,0Issues |5b935b4f|
+| Voller Android-Lauf | NOT_RUN; Voraussetzung vor Gradle abgewiesen |5b935b4f|
+| Kollektivdialog/Sicherheitsregressionen |101/101 reine Kotlin-Tests,21/21 integrierte Quellhashes gleich; unabhängiger Review OK |#781,32f21748|
+| STOP-/Planning-/Memory-Testaufbau |3 vollständige UI-Klassen repariert, alle fachlichen Assertions erhalten; gemeinsamer Retest offen |#781+#782|
+| Vollständiger PDF-Gate | Full-PASS verlangt echten nativen Prüffall exakt einmal SUCCESS; SKIP genügt nicht |neuer quellgebundener Starter|
+
+Die vier Memory-Fehler entstanden vor der Wartebedingung im eifrigen Diagnoseausdruck. STOP hatte die beabsichtigte Invalidierung vorzeitig in den Lookup-Zähler aufgenommen; Planning navigierte erneut über die bereits verborgene Startansicht. Der Pluraldialog deckte zusätzlich einen echten Produktionsfehler der Safety-Klassifizierung auf; dieser ist mit engen Negativfällen repariert. Native Geräteabnahme bleibt NOT_RUN.

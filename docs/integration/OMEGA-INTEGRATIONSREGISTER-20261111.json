@@ -224,6 +224,33 @@
       "tests": "2498 total:2455 PASS/6 FAIL/37 SKIP; same354files/order; outerconcurrency1; sourceUnchangedtrue; terminationConfirmedtrue; complete evidence; unchanged30min bound",
       "device_check": "NOT_RUN",
       "evidence": "docs/evidence/omega-apk54-20261111/node-serial-5b935b4f/SUMMARY.json"
+    },
+    {
+      "issue": "apk54-first-common-android",
+      "origin_pr": 769,
+      "commit": "5b935b4feaf960bb6973dd4d630f02744e41913f",
+      "status": "COMPLETE_FAIL",
+      "tests": "205 total:198 PASS/7 FAIL/0 SKIP; all27 classes; source unchanged. Configured NewApi lint PASS/0issues. Full prerequisite rejected before Gradle: NOT_RUN.",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-apk54-20261111/android-focused-5b935b4f/SUMMARY.json"
+    },
+    {
+      "issue": "collective-start-safety-and-ui-fixtures",
+      "origin_pr": 781,
+      "commit": "32f217480915f45fb48c0d3952bcff117c5788d6",
+      "status": "INTEGRATED_PENDING_COMMON_UI_RECHECK",
+      "tests": "101/101 pure Kotlin cases;21/21 inputs match integrated files; final Safety97121251 reviewed. STOP generation and Planning chat-entry fixtures preserve behavioral assertions. Android NOT_RUN on repaired source.",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-collective-start-20261111/"
+    },
+    {
+      "issue": "memory-ui-fixture",
+      "origin_pr": 782,
+      "commit": "69cd1cb66ef1d48d7fb867ec12b1b9efd2472413",
+      "status": "INTEGRATED_PENDING_COMMON_UI_RECHECK",
+      "tests": "Preserved four original failure receipts. Deferred diagnostic and conditional CHAT entry independently reviewed; assertions and10-second wait unchanged. Android NOT_RUN on repaired source.",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-memory-ui-20261111/baseline-failures.json"
     }
   ],
   "parent_pr": 768,
@@ -278,7 +305,7 @@
       "source_unchanged": true,
       "evidence": "docs/evidence/omega-apk54-20261111/node-combined-c36258a8/SUMMARY.json"
     },
-    "android_focused": "Queued c362 scope explicitly superseded before Gradle start for two new confirmed source-review fixes. Replacement scope: 27 classes; execution NOT_RUN.",
+    "android_focused": "Completed5b:205total/198PASS/7FAIL/0SKIP,27classes; source unchanged; NewApi lintPASS. Reviewed #781/#782 now integrated, exact-source3-class recheck then full unfiltered Android pending.",
     "review_followups": {
       "app_verb_final": {
         "pr": 778,
@@ -300,7 +327,7 @@
       "source_unchanged": true,
       "durationSeconds": 56.02
     },
-    "common_qa_source": "5b935b4feaf960bb6973dd4d630f02744e41913f",
-    "common_android": "27-class focused Android and NewApi lint RUNNING; unfiltered Android queued and requires focused PASS"
+    "common_qa_source": "NEXT_FREEZE_PENDING; historical completed source5b935b4feaf960bb6973dd4d630f02744e41913f",
+    "common_android": "Three full affected UI classes plus NewApi lint on the next frozen candidate; full same-source unfiltered Android requires UI PASS; strict native PDF SUCCESS additionally mandatory for full PASS."
   }
 }

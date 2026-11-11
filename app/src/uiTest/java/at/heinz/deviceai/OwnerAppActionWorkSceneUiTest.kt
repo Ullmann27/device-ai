@@ -205,9 +205,14 @@ class OwnerAppActionWorkSceneUiTest {
             if (cancel) AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest")
                 .apply { isAccessible = true }.invoke(a)
             else submit(a, "Gedächtniszentrum", chat = false)
+            val afterInvalidation = lookupGeneration(a)
+            assertEquals("Only STOP advances the invalidation generation", before + (if (cancel) 1L else 0L),
+                afterInvalidation)
             submit(a, "Signal", chat = false)
             await { get(a, "busy") == false && get(a, "botLookupPending") == false }
-            assertEquals("Unrelated turn invalidates the question", before, lookupGeneration(a))
+            assertEquals("Name after invalidation starts no lookup", afterInvalidation, lookupGeneration(a))
+            assertNull(get(a, "activeOwnerAppFlow"))
+            assertEquals(false, get(a, "appLookupActive"))
             assertEquals(0, port.calls.get())
             assertFalse(ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
         }

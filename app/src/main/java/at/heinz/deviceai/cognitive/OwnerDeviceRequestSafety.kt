@@ -4,7 +4,7 @@ import java.util.Locale
 
 /** Classifies intent, never grants permission. */
 internal object OwnerDeviceRequestSafety {
-    enum class Category { READ_ONLY, PROPOSAL, DEFERRED_CHANGE, NEGATED_CHANGE, CHANGE, ROLE_MANIPULATION }
+    enum class Category { READ_ONLY, PROPOSAL, DEFERRED_CHANGE, NEGATED_CHANGE, CHANGE, ROLE_MANIPULATION, CONVERSATION }
     data class Assessment(val categories: Set<Category>, val readOnlyText: String) {
         val blocked: Boolean get() = Category.ROLE_MANIPULATION in categories || Category.CHANGE in categories
         val roleManipulation: Boolean get() = Category.ROLE_MANIPULATION in categories
@@ -57,11 +57,22 @@ internal object OwnerDeviceRequestSafety {
     private val readOnlyStart = Regex("(?iu)^(?:bitte\\s+)?starte\\s+(?:bitte\\s+)?" +
         "(?:(?:eine|die)\\s+)?(?:systemdiagnose|handyanalyse|geräteanalyse|geraeteanalyse|" +
         "analyse\\s+(?:meines|des)\\s+(?:handys|geräts|geraets|smartphones))$")
+    private const val collectiveTime = "(?:heute|morgen|jetzt|bald|später|gleich)"
+    private const val collectiveObject = "(?:das|die|den|ein|eine|einen|unser(?:e|en|es)?)" +
+        "\\s+[\\p{L}\\p{N}][\\p{L}\\p{N}-]{0,63}"
+    private const val collectiveDetail = "(?:\\s+$collectiveTime)?(?:\\s+$collectiveObject)?(?:\\s+$collectiveTime)?"
+    private val collectiveStart = Regex("(?iu)^(?:wir\\s+starten$collectiveDetail|" +
+        "(?:lass(?:t)?\\s+uns|wir\\s+(?:wollen|möchten|werden|können)|" +
+        "ihr\\s+(?:wollt|möchtet|werdet|könnt)|" +
+        "$collectiveTime\\s+(?:(?:wollen|möchten|werden|können)\\s+wir|" +
+        "(?:wollt|möchtet|werdet|könnt)\\s+ihr))$collectiveDetail\\s+starten)$")
+    private val directedStart = words("du|dich|dir|dein\\p{L}*|sie|ihnen|dass|damit")
 
     fun inspect(text: String): Assessment {
         if (roleHeader.containsMatchIn(text) || ruleOverride.containsMatchIn(text) || roleTakeover.containsMatchIn(text))
             return Assessment(setOf(Category.ROLE_MANIPULATION), "")
         val normalized = text.trim().lowercase(Locale.ROOT)
+        val completeClause = normalized.trimEnd('.', '!', '?').trim()
         val categories = linkedSetOf<Category>()
         val readable = ArrayList<String>()
         normalized.split(Regex("[.;!?\\n]+" )).forEach { sentence ->
@@ -86,6 +97,9 @@ internal object OwnerDeviceRequestSafety {
                 proposalSubject.containsMatchIn(clause) && proposalModal.containsMatchIn(clause) &&
                     proposalQuestion.containsMatchIn(clause) -> Category.PROPOSAL
                 changes.singleOrNull()?.let { negatesAction(clause, it) } == true -> Category.NEGATED_CHANGE
+                changes.singleOrNull()?.value == "starten" && !improvements.containsMatchIn(clause) &&
+                    clause == completeClause && collectiveStart.matches(clause) &&
+                    !directedStart.containsMatchIn(clause) -> Category.CONVERSATION
                 else -> Category.CHANGE
             }
             categories += category

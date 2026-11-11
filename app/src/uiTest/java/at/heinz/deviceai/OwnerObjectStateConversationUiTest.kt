@@ -96,10 +96,11 @@ class OwnerObjectStateConversationUiTest {
     private fun context(activity: AgentActivity) = field(activity, "localConversationContext") as LocalConversationContext
     private fun session(activity: AgentActivity) = field(activity, "sessionId") as String
     private fun advance() = shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
-    private fun until(label: String, condition: () -> Boolean) {
+    private fun until(label: String, failureDetails: () -> String = { "" }, condition: () -> Boolean) {
         val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
         while (!condition() && System.nanoTime() < deadline) { advance(); Thread.sleep(5) }
-        assertTrue(label, condition())
+        val complete = condition()
+        assertTrue(if (complete) label else label + failureDetails(), complete)
     }
     private fun withActivity(runtime: Runtime = Runtime(), body: (AgentActivity, Runtime) -> Unit) {
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
@@ -121,9 +122,13 @@ class OwnerObjectStateConversationUiTest {
         }
     }
     private fun submit(activity: AgentActivity, request: String) {
-        val chat = JarvisHomeTestRoutes.destination(activity.window.decorView, "chat")
-        assertNotNull("Chat entry exists", chat)
-        JarvisHomeTestRoutes.touch(activity.window.decorView, chat)
+        if (field(activity, "activeWorkArea") != ContinuumWorkArea.CHAT) {
+            val chat = JarvisHomeTestRoutes.destination(activity.window.decorView, "chat")
+            assertNotNull("Chat entry exists", chat)
+            JarvisHomeTestRoutes.touch(activity.window.decorView, chat)
+        }
+        assertEquals("Chat selected", ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
+        assertEquals("Conversation active", true, field(activity, "conversationActive"))
         (field(activity, "input") as EditText).setText(request)
         assertTrue((field(activity, "sendButton") as Button).performClick())
     }
@@ -138,7 +143,10 @@ class OwnerObjectStateConversationUiTest {
     }
     private fun modelTurn(activity: AgentActivity, runtime: Runtime, request: String, answer: String): String {
         submit(activity, request)
-        until("model received: $request; visible=${visibleReply(activity)}") { runtime.running }
+        until("model received: $request", failureDetails = {
+            "; visible=" + runCatching { visibleReply(activity) }
+                .getOrElse { "<unavailable: ${it.javaClass.simpleName}>" }
+        }) { runtime.running }
         val prompt = runtime.prompts.last()
         runtime.answer(answer)
         until("model turn completed") { !(field(activity, "busy") as Boolean) }
