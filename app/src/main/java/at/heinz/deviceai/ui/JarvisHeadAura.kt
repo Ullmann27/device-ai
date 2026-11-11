@@ -13,6 +13,20 @@ import kotlin.math.sin
  * with reduced motion the caller passes a constant time and nothing moves.
  */
 object JarvisHeadAura {
+    private class LightStreams(val width: Float, val height: Float) {
+        val fill = Fill.Linear(0f, 0f, width, 0f,
+            intArrayOf(Argb.withAlpha(Colors.violet, 0f), Colors.violetRim, Colors.cyan,
+                Argb.withAlpha(Colors.cyan, 0f)))
+        val paths = arrayOf(
+            VectorPath().moveTo(-width * .05f, height * .93f)
+                .cubicTo(width * .30f, height * .80f, width * .62f, height * .99f, width * 1.05f, height * .84f),
+            VectorPath().moveTo(-width * .05f, height * .86f)
+                .cubicTo(width * .36f, height * .97f, width * .70f, height * .78f, width * 1.05f, height * .92f)
+        )
+    }
+
+    private var lightStreams: LightStreams? = null
+
     /**
      * Approximate face centre of the anchored close-up framing inside the head stage. [headScale] is the live 3D
      * window's head size relative to the calibrated close-up (AvatarFraming); the crown margin is fixed, so the face
@@ -83,14 +97,12 @@ object JarvisHeadAura {
      */
     fun drawLightStreams(p: ContinuumPainter, w: Float, h: Float) {
         if (w <= 8f || h <= 8f) return
+        val streams = lightStreams?.takeIf { it.width == w && it.height == h }
+            ?: LightStreams(w, h).also { lightStreams = it }
         p.setAdditive(true)
-        val stream = Fill.Linear(0f, 0f, w, 0f, intArrayOf(Argb.withAlpha(Colors.violet, 0f), Colors.violetRim, Colors.cyan,
-            Argb.withAlpha(Colors.cyan, 0f)))
-        val a = VectorPath().moveTo(-w * .05f, h * .93f).cubicTo(w * .30f, h * .80f, w * .62f, h * .99f, w * 1.05f, h * .84f)
-        val b = VectorPath().moveTo(-w * .05f, h * .86f).cubicTo(w * .36f, h * .97f, w * .70f, h * .78f, w * 1.05f, h * .92f)
-        for (path in listOf(a, b)) {
-            p.strokePath(path, 6f, stream, .10f)
-            p.strokePath(path, 1.2f, stream, .85f)
+        for (path in streams.paths) {
+            p.strokePath(path, 6f, streams.fill, .10f)
+            p.strokePath(path, 1.2f, streams.fill, .85f)
         }
         p.setAdditive(false)
     }
