@@ -1,0 +1,17 @@
+{
+  "experiment": "LM1-SEMANTIC-20261111",
+  "scope": "EXP-05 / EXP-12; RESEARCH_SHADOW",
+  "role": "Bot 1: data architecture and shortcut audit",
+  "status": "WIP_UNVERIFIED",
+  "baseCommit": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+  "branch": "research/continuum-lm1-semantic-data-20261111",
+  "labelMap": {"0": "no action", "1": "open", "2": "search", "3": "note"},
+  "modelInput": "BOS + encode('Auftrag: ' + prompt + '\n')",
+  "target": "single existing label token then actual EOS",
+  "plannedData": "new open TRAIN/DEV; four balanced classes; contrasting semantic instructions",
+  "pilotGate": "reject when any declared trivial baseline reaches 90 percent DEV accuracy",
+  "holdoutAccess": "prohibited for this bot before candidate freeze",
+  "modelUpdates": 0,
+  "tests": "NOT_RUN",
+  "protectedPathsModified": false
+}

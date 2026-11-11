@@ -1,0 +1,4614 @@
+{
+  "dev": [
+    {
+      "expected": "2",
+      "id": "semantic-dev-0001",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0002",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0003",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0004",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0005",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0006",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0007",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0008",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0009",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0010",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0011",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0012",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0013",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0014",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0015",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0016",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0017",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0018",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0019",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0020",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0021",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0022",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0023",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0024",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0025",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0026",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0027",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0028",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0029",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0030",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0031",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0032",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0033",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0034",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0035",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0036",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0037",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0038",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0039",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0040",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0041",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0042",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0043",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0044",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0045",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0046",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0047",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0048",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0049",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0050",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0051",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0052",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0053",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0054",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0055",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0056",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0057",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0058",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0059",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0060",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0061",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0062",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0063",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0064",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0065",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0066",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0067",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0068",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0069",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0070",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0071",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0072",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0073",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0074",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0075",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0076",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0077",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0078",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0079",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0080",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-dev-0081",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0082",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0083",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0084",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0085",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0086",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0087",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0088",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0089",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0090",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0091",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0092",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0093",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-dev-0094",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-dev-0095",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-dev-0096",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    }
+  ],
+  "train": [
+    {
+      "expected": "0",
+      "id": "semantic-train-0001",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0002",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0003",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0004",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0005",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0006",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0007",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0008",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0009",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0010",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0011",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0012",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0013",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0014",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0015",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0016",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0017",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0018",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0019",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0020",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0021",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0022",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0023",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0024",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0025",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0026",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0027",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0028",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0029",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0030",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0031",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0032",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0033",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0034",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0035",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0036",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0037",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0038",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0039",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0040",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0041",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0042",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0043",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0044",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0045",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0046",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0047",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0048",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0049",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0050",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0051",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0052",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0053",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0054",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0055",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0056",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0057",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0058",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0059",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0060",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0061",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0062",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0063",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0064",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0065",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0066",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0067",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0068",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0069",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0070",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0071",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0072",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0073",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0074",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0075",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0076",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0077",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0078",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0079",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0080",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0081",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0082",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0083",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0084",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0085",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0086",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0087",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0088",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0089",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0090",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0091",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0092",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0093",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0094",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0095",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0096",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0097",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0098",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0099",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0100",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0101",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0102",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0103",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0104",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0105",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0106",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0107",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0108",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0109",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0110",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0111",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0112",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0113",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0114",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0115",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0116",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0117",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0118",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0119",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0120",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0121",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0122",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0123",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0124",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0125",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0126",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0127",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0128",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0129",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0130",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0131",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0132",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0133",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0134",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0135",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0136",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0137",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0138",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0139",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0140",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0141",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0142",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0143",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0144",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0145",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0146",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0147",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0148",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0149",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0150",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0151",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0152",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0153",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0154",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0155",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0156",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0157",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0158",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0159",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0160",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0161",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0162",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "3",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0163",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0164",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0165",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0166",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0167",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0168",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0169",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0170",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0171",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0172",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0173",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "3",
+      "id": "semantic-train-0174",
+      "predictions": {
+        "char_ngram_logistic": "3",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "3",
+        "word_bigram_naive_bayes": "3",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0175",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0176",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0177",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0178",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0179",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "1",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0180",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0181",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0182",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "0",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "2"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0183",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "3",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0184",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "1",
+      "id": "semantic-train-0185",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "1",
+        "word_bigram_naive_bayes": "1",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0186",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0187",
+      "predictions": {
+        "char_ngram_logistic": "1",
+        "first_action": "1",
+        "last_action": "2",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "1",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0188",
+      "predictions": {
+        "char_ngram_logistic": "0",
+        "first_action": "0",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "0",
+      "id": "semantic-train-0189",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "0",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "0",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "0",
+        "word_bigram_naive_bayes": "0",
+        "word_unigram_logistic": "0"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0190",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "3",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0191",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "3",
+        "last_action": "2",
+        "legacy_nicht_filter": "3",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "3",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "3"
+      }
+    },
+    {
+      "expected": "2",
+      "id": "semantic-train-0192",
+      "predictions": {
+        "char_ngram_logistic": "2",
+        "first_action": "2",
+        "last_action": "1",
+        "legacy_nicht_filter": "0",
+        "length_depth3_tree": "2",
+        "majority": "0",
+        "negation_parity": "0",
+        "word_bigram_logistic": "2",
+        "word_bigram_naive_bayes": "2",
+        "word_unigram_logistic": "1"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "allInputsUnchanged": true,
+  "compileCommand": [
+    "/workspace/scratch/c054784f52c4/toolchain/kotlinc/bin/kotlinc",
+    "/workspace/scratch/c054784f52c4/lm1-data/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+    "/workspace/scratch/c054784f52c4/lm1-data/experimental/lm1-semantic-20261111/data/LmSemanticTokenizerAudit.kt",
+    "-include-runtime",
+    "-d",
+    "/workspace/scratch/c054784f52c4/lm1-data-native/tokenizer-audit.jar"
+  ],
+  "compileExit": 0,
+  "compilerVersion": "info: kotlinc-jvm 2.0.20 (JRE 21.0.13+9-1-deb13u2-Debian)\n",
+  "elapsedSeconds": 12.884133759000179,
+  "inputHashes": {
+    "/workspace/scratch/c054784f52c4/lm1-data/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "/workspace/scratch/c054784f52c4/lm1-data/experimental/lm1-semantic-20261111/data/LmSemanticTokenizerAudit.kt": "23b6cd252cc1830fa0138b0f4e0f34b0338e2e5fd357c533b6a124e73ad1f0b8",
+    "/workspace/scratch/c054784f52c4/lm1-data/experimental/lm1-semantic-20261111/data/run_tokenizer_parity.py": "3e7a8fa7be37c7338ab9885de7236dbcbb93c6e9d72a52e30daf7cc2140df44b",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "experimental/lm1-semantic-20261111/data/native-tokenizer-v1/inputs.tsv": "f3fbbfab3cdc41da1651c16131bddee471178f431ac6538848c2e2b1c26164f2"
+  },
+  "jarSha256": "8adac09b4d161739d31eb1e7b900cabefd4f2f3cdffc70b13da3d63fd3264f64",
+  "modelInference": 0,
+  "modelUpdates": 0,
+  "nativeCommand": [
+    "java",
+    "-Xmx256m",
+    "-cp",
+    "/workspace/scratch/c054784f52c4/lm1-data-native/tokenizer-audit.jar",
+    "at.heinz.deviceai.learning.lm.LmSemanticTokenizerAudit",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp",
+    "experimental/lm1-semantic-20261111/data/native-tokenizer-v1/inputs.tsv"
+  ],
+  "nativeExit": 0,
+  "nativeRows": 288,
+  "schema": "lm1-semantic-native-tokenizer-parity-v1",
+  "status": "PASS",
+  "stdoutSha256": "863a1b8ce994433b2221c34c45aaae7ba6fc5bacd3e32a048315bf0021353733"
+}

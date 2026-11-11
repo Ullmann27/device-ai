@@ -1,0 +1,279 @@
+{
+  "allHistoricalSourcesUnchanged": true,
+  "baseCommit": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+  "files": [
+    {
+      "baseByteIdentical": true,
+      "bytes": 1361,
+      "lines": 28,
+      "path": "experimental/weight-space-20261110/data/HISTORICAL-DATA-AUDIT.md",
+      "sha256": "c3ce43d11353cdf8a5b8f0ba6f53c0170ada29fd968868b34e2499387a4fcef7"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 2253,
+      "lines": 41,
+      "path": "experimental/weight-space-20261110/data/README.md",
+      "sha256": "20637f8036a19d05569861f257d25ac51446593fee7ba41373f4df43714d6db7"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 6166,
+      "lines": 133,
+      "path": "experimental/weight-space-20261110/data/audit_data_package.py",
+      "sha256": "06d28e26b9d7d1ddbd6a7da264c6c28cba47ccdb4a24f957f40a882a58e5cf32"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 2536,
+      "lines": 51,
+      "path": "experimental/weight-space-20261110/data/contrast-pair-audit-v1/README.md",
+      "sha256": "f0e3189fb9b042cd07e122088138de7758b04832f0329d37363c2b3a80eae9f5"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 1326,
+      "lines": 28,
+      "path": "experimental/weight-space-20261110/data/contrast-pair-audit-v1/REPLAY-COMPARISON.md",
+      "sha256": "3e5ae748441c7cd44e299fb2242cb00971106740d14d8a19009a17c003a5e53d"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 9014,
+      "lines": 193,
+      "path": "experimental/weight-space-20261110/data/contrast-pair-audit-v1/analyze_contrast_pairs.py",
+      "sha256": "f94c81cad16409824fc6293704aac2bec32597bc8fe8ea819120fbaa2c4d34bd"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 9017,
+      "lines": 382,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/contrast-pair-audit-v1/answer-pair-audit.json",
+      "sha256": "bfbd9b6fbcbfc5a56e43f7ad97a69809f009c610ff9889e58b1dc6af4c555e2b"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 5456,
+      "lines": 245,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/contrast-pair-audit-v1/replay-comparison.json",
+      "sha256": "aa1d8fd06508e0fac045e0e1d197c6d553a32e0201bd873873d32497984ccda6"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 9011,
+      "lines": 382,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/contrast-pair-audit-v1/replay-pair-audit.json",
+      "sha256": "a81a1c070ec17d94171ac7bc5d219c70f95395034b19d53eef31fb1c7ed86be5"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 723,
+      "lines": 21,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/contrast-pair-audit-v1/test-receipt.json",
+      "sha256": "5c120eb034d66b878eb78f2095d6ce523f421375d305e8bde5c4b89c310c2b76"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 3603,
+      "lines": 79,
+      "path": "experimental/weight-space-20261110/data/contrast-pair-audit-v1/test_contrast_pairs.py",
+      "sha256": "dd36d22ed128bb9e6bd6de6a98d4247c9b85374fe4c76b8879658584ddb02c3d"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 1062,
+      "lines": 14,
+      "path": "experimental/weight-space-20261110/data/contrast-pair-audit-v1/tests.stderr.txt",
+      "sha256": "82c2ef55cf6adbae2e08a3d3b6ac10e6e79e2d2852473dda33ec8a407a5c410e"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 0,
+      "lines": 0,
+      "path": "experimental/weight-space-20261110/data/contrast-pair-audit-v1/tests.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 2262,
+      "lines": 40,
+      "path": "experimental/weight-space-20261110/data/distill-v1/DISTILL-COMPARISON.md",
+      "sha256": "21391d92c4f956b6a01d8e40049e781e7a0a81a271e1e48b7f27150973a4d1fb"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 9011,
+      "lines": 382,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/distill-v1/distill-pair-audit.json",
+      "sha256": "3c10d8fafdea3a7375f1738d4a509e97393eae5551db2f4f2952c1b9daad9f97"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 5828,
+      "lines": 103,
+      "path": "experimental/weight-space-20261110/data/distill-v1/distill-plan.md",
+      "sha256": "2fd7193f3649d3007452c8ec3370dd1d72293b93808d2c8392733b9082d56406"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 2019,
+      "lines": 59,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/distill-v1/distill-runtime-dataflow.json",
+      "sha256": "cd82a2bb0983729c63951162adef8ca5d97f9f64e35a10db0f5be878cf4a1c6e"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 1093,
+      "lines": 27,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/distill-v1/distill-source-review.json",
+      "sha256": "62053b8646465ba1bd0fa04b7d6dc493bf181b06aa2cfe73ea89ab315b817dda"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 713,
+      "lines": 21,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/generator-test-result.json",
+      "sha256": "79a1e98800a4894dc6797358b784784aad993d5bc5227257198835d2c80fd2be"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 2312,
+      "lines": 108,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/historical-length-audit.json",
+      "sha256": "4c6c69bfbae6b9e91b17baafae6d68a266ee51ce03afc36c60e8daf8d181ee5f"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 755,
+      "lines": 17,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/historical-source-identity.json",
+      "sha256": "e6c88604659d7513451b82fa19a2ff38fccbe2fd93682b90edc917829fe37432"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 10439,
+      "lines": 197,
+      "path": "experimental/weight-space-20261110/data/make_note_contrasts.py",
+      "sha256": "85a62a87477c8b371d175ae03b994d1f2b700c797c36787df338ea6ec807fb3e"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 5408,
+      "labelCounts": {
+        "0": 32,
+        "3": 32
+      },
+      "lines": 65,
+      "path": "experimental/weight-space-20261110/data/note-contrasts-v1/dev.tsv",
+      "rows": 64,
+      "sha256": "057dac485d2d4d39ebcfcdc7de3fe15c9c6c4bebd2bea888b4db303949798935"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 2998,
+      "lines": 102,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/note-contrasts-v1/manifest.json",
+      "sha256": "25d43ea5ff6a60ed8657fee88a700412a29c499516cd82857140b4dd41d25cbe"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 54723,
+      "lines": 1926,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/note-contrasts-v1/row-metadata.json",
+      "sha256": "de9d9fbef1e27cdc8a16e2687fab1d77c80aca3f9e09210b7d742b5d82328155"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 10176,
+      "labelCounts": {
+        "0": 64,
+        "3": 64
+      },
+      "lines": 129,
+      "path": "experimental/weight-space-20261110/data/note-contrasts-v1/train.tsv",
+      "rows": 128,
+      "sha256": "3666036e3b63db7738bebc391bd9058ca63bb0d1ea01b240726223c2ddc9039c"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 1937,
+      "lines": 85,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/package-audit.json",
+      "sha256": "6c2e9691fb5021bc1cbf34fe784c8ae0c16587bfb10c4462bdd12fa0a4a39c62"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 6984,
+      "lines": 130,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/pilot-data-review.json",
+      "sha256": "0ef8a7ff7c18fe5996d916975fcf6c0734476adcf68cbdf6dd69990a23b97680"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 1690,
+      "lines": 16,
+      "path": "experimental/weight-space-20261110/data/replay.txt",
+      "sha256": "b5fdd3c9528fe5a0f7a1dbc24db9e7169f0a00f9b31a211aff4ca8c6c97553c1"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 1751,
+      "lines": 81,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/retention-provenance.json",
+      "sha256": "2c6b1c596c2a62d1cc548d8cbb3fd9822e9a7f70f9aca74ef6d1876af85b7324"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 5110,
+      "labelCounts": {
+        "1": 32,
+        "2": 32
+      },
+      "lines": 65,
+      "path": "experimental/weight-space-20261110/data/retention.tsv",
+      "rows": 64,
+      "sha256": "dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 861,
+      "lines": 8,
+      "path": "experimental/weight-space-20261110/data/retention_text.txt",
+      "sha256": "699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 2862,
+      "lines": 65,
+      "path": "experimental/weight-space-20261110/data/test_note_contrasts.py",
+      "sha256": "4ece1d0d88cfb72c2e1a7eefb80619b566cabbea3f932a156631ff48c0e6c822"
+    },
+    {
+      "baseByteIdentical": true,
+      "bytes": 1665,
+      "lines": 81,
+      "parsedType": "dict",
+      "path": "experimental/weight-space-20261110/data/token-length-diagnostic.json",
+      "sha256": "5df4d969c988512b2c3bb433410fd687d4be1120f6a5d9a46db65efb5561e8a3"
+    }
+  ],
+  "modelInference": 0,
+  "modelUpdates": 0,
+  "schema": "lm1-historical-data-source-inventory-v1",
+  "scope": "complete byte reads and structured parsing; source-level findings documented separately"
+}

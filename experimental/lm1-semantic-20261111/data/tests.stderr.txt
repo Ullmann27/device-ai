@@ -1,0 +1,13 @@
+test_action_order_controls (test_semantic_pilot.SemanticPilotChecks.test_action_order_controls) ... ok
+test_one_class_collapse_is_not_pair_success (test_semantic_pilot.SemanticPilotChecks.test_one_class_collapse_is_not_pair_success) ... ok
+test_opposing_pairs_defeat_bag_or_length_oracles (test_semantic_pilot.SemanticPilotChecks.test_opposing_pairs_defeat_bag_or_length_oracles) ... ok
+test_refuse_existing_destination (test_semantic_pilot.SemanticPilotChecks.test_refuse_existing_destination) ... ok
+test_reproducibility_balance_and_disjointness (test_semantic_pilot.SemanticPilotChecks.test_reproducibility_balance_and_disjointness) ... ok
+test_shared_families_rejected (test_semantic_pilot.SemanticPilotChecks.test_shared_families_rejected) ... ok
+test_shared_objects_rejected (test_semantic_pilot.SemanticPilotChecks.test_shared_objects_rejected) ... ok
+test_wrong_tokenizer_rejected (test_semantic_pilot.SemanticPilotChecks.test_wrong_tokenizer_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.344s
+
+OK
