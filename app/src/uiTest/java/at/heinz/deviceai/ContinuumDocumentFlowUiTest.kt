@@ -304,9 +304,8 @@ class ContinuumDocumentFlowUiTest {
         assertFalse("the reading ends with the work", reading(activity))
         val draftWindow = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
         val from = field(draftWindow, "origin") as android.graphics.RectF
-        assertEquals("the draft grows out of the document window", documentBox.centerX(), from.centerX(), 1f)
-        assertEquals(documentBox.centerY(), from.centerY(), 1f)
-        assertTrue("…from inside it", documentBox.contains(from))
+        assertTrue("the result arrives from beyond the right edge", from.left >= root.width)
+        assertTrue("the source document remains inside the viewport", documentBox.right <= root.width)
         val source = descendants(draftWindow).single { it.tag == "jarvis-draft-source-page" } as android.widget.ImageView
         assertTrue("the document stays behind the result as its own first page",
             (source.drawable as android.graphics.drawable.BitmapDrawable).bitmap === scene.doc.firstPage)
