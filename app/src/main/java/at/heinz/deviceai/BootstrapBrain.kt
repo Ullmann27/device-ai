@@ -263,7 +263,9 @@ object BootstrapBrain {
             return BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = name,
                 arguments = if (name == "list_files") mapOf("path" to "/sdcard/Download") else emptyMap())
         }
-        val readText = carryContrastVerb(safety.readOnlyText)
+        // Carry the contrast verb before clause splitting: readOnlyText joins clauses with ". ", which would cut
+        // "prüf nicht X" off from "sondern Y" (M3EvalGapsTest). The safety decision above stays on the raw text.
+        val readText = at.heinz.deviceai.cognitive.OwnerDeviceRequestSafety.inspect(low).readOnlyText
         if (affirmativeClause(readText) { "downloads" in it || "download-ordner" in it }) return tool("list_files",
             mapOf("path" to "/sdcard/Download"))
         val wantsStorageInspection = isStorageReadRequest(readText) ||
