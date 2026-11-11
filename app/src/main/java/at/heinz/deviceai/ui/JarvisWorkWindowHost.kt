@@ -260,6 +260,7 @@ class JarvisWorkWindowHost(
                     profile = cameraProfile(currentFootprint))
                 fui.retarget(it.plan.destination, it.plan.origin, it.plan.protectedBounds)
                 fui.setEnergySource(it.orb)
+                fui.setAttentionSource(it.face)
             }?.plan else null
         }
         val accepted = window.open(body, first.plan.origin, first.plan.destination, title, first.plan.protectedBounds,
@@ -305,6 +306,7 @@ class JarvisWorkWindowHost(
         // The light anchor stands where the window really comes from (avatar core or the tapped control, #643 C).
         fui.open(first.plan.destination, scene, first.plan.origin, first.plan.protectedBounds)
         fui.setEnergySource(first.orb)
+        fui.setAttentionSource(first.face)
         // Airbus deck: footprint controls how much of the cockpit physically clears for this real window.
         currentFootprint = scene.footprint
         home.setWorkspaceFootprint(currentFootprint)
