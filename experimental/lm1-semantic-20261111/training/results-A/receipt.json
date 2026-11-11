@@ -1,0 +1,81 @@
+{
+  "schema": "lm1-semantic-execution-receipt-v1",
+  "arm": "A",
+  "startedUtc": "2026-11-11T07:18:58.075346+00:00",
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx768m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/c054784f52c4/lm1-semantic-native/experiment.jar:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmSemanticPilot",
+    "A",
+    "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp",
+    "/workspace/scratch/c054784f52c4/lm1-data/experimental/lm1-semantic-20261111/data/pilot-v1/train.tsv",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared",
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/artifacts/candidate-A",
+    "9e72be063fbfd82000b569498fb6ab38d6747ec82f8c7ebae9e246b8d5fdd973"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "wallSeconds": 28.763501995001207,
+  "cpuUserSeconds": 33.98503,
+  "cpuSystemSeconds": 1.236424,
+  "peakRssKiB": 137216,
+  "updatesObserved": 128,
+  "finalRecords": [
+    "RESULT\tstatus=COMPLETED_NOT_PROMOTED\tupdates=128\tinputUnchanged=true\tfirstNonzero=132160\tsecondNonzero=132160\telapsedMillis=24430"
+  ],
+  "inputsUnchanged": {
+    "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1": true,
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp": true,
+    "/workspace/scratch/c054784f52c4/lm1-data/experimental/lm1-semantic-20261111/data/pilot-v1/train.tsv": true,
+    "/workspace/scratch/c054784f52c4/lm1-semantic-native/experiment.jar": true,
+    "/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar": true,
+    "/workspace/scratch/c054784f52c4/lm1-semantic-native/build.json": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/LmSemanticPilot.kt": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/LmSemanticChecks.kt": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/run_semantic.py": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/PROPOSAL.md": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared/anchors.tsv": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared/rollouts.tsv": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared/manifest.json": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/prepared/token-parity.json": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/fixtures/manifest.json": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/fixtures/retention-candidates.tsv": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/lm1-semantic-20261111/training/fixtures/continuation-prefixes.tsv": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/weight-space-20261110/training/distill-v1/LmSoftTargetKl.kt": true,
+    "/workspace/scratch/c054784f52c4/lm1-training/experimental/weight-space-20261110/training/build_experiment.py": true
+  },
+  "registrationSha256": "a8bcee2af29cb8161a4571cc2b3664375fe7e05a6021dd7eb2f7cc8072a84c90",
+  "gateSha256": "0aefdf780da0fb1c64ca4c22267011eae4bc3075f92a6e63abaeb15d65197bc7",
+  "runnerSha256": "25eefe15c19950f046b727389515495a852336ccaa578470bc2843225417e440",
+  "stdoutSha256": "b2f3f86787386a4c82ee853f31e5358f007a773ddc154e3596d748d05b0c7363",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "artifacts": {
+    "roundtrip/205bf1c989651dc074a52e03a774f98dbf522af4d85750a20b2f57c0f1393d63.lmtrain": {
+      "sha256": "205bf1c989651dc074a52e03a774f98dbf522af4d85750a20b2f57c0f1393d63",
+      "bytes": 1586890
+    },
+    "states/205bf1c989651dc074a52e03a774f98dbf522af4d85750a20b2f57c0f1393d63.lmtrain": {
+      "sha256": "205bf1c989651dc074a52e03a774f98dbf522af4d85750a20b2f57c0f1393d63",
+      "bytes": 1586890
+    },
+    "states/4e4dec0739fc4d51f7ab59f0b3b12ff40c4e1d18efeeff40ab337eff8e344ae1.lmtrain": {
+      "sha256": "4e4dec0739fc4d51f7ab59f0b3b12ff40c4e1d18efeeff40ab337eff8e344ae1",
+      "bytes": 1586890
+    },
+    "step-128.lm1": {
+      "sha256": "ef6f4e656cd01e2ae63d4e1b9ec9b5f6e8102d47ab6b747684688e15b9a6ec44",
+      "bytes": 529601
+    },
+    "step-64.lm1": {
+      "sha256": "ae9f6dd9876d4c0fb12ee22219114b92132d31b184228f51dc8d0e0688b441dc",
+      "bytes": 529600
+    }
+  },
+  "additionalCloudGpuJobs": 0,
+  "creditUsage": "UNAVAILABLE_NOT_ESTIMATED",
+  "scope": "CPU research candidate only; not application or phone verification"
+}

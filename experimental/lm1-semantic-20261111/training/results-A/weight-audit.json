@@ -1,0 +1,43 @@
+{
+  "schema": "lm1-semantic-candidate-weight-audit-v1",
+  "arm": "A",
+  "status": "PASS",
+  "baseline": {
+    "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "bytes": 529297,
+    "config": [
+      1,
+      512,
+      64,
+      2,
+      4,
+      256,
+      256
+    ],
+    "tokenizer": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "parameters": 132160
+  },
+  "candidate": {
+    "sha256": "ef6f4e656cd01e2ae63d4e1b9ec9b5f6e8102d47ab6b747684688e15b9a6ec44",
+    "bytes": 529601,
+    "config": [
+      1,
+      512,
+      64,
+      2,
+      4,
+      256,
+      256
+    ],
+    "tokenizer": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "parameters": 132160
+  },
+  "delta": {
+    "parameters": 132160,
+    "changedFloat32Bits": 132160,
+    "changedNumericWeights": 132160,
+    "maximumAbsoluteDelta": 0.008374683558940887
+  },
+  "historicalAuditorSha256": "4915e1a4f90f0ed1ba4aa25d76adf0271b32681d1eba9e9389060c81570315ab",
+  "scope": "Independent binary parser identity/delta audit, not a generalization result; no optimizer updates"
+}
