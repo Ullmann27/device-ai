@@ -1,0 +1,40 @@
+// Explicit PDF-scene host scope.
+gradle.projectsEvaluated {
+    gradle.rootProject.project(':app').tasks.withType(org.gradle.api.tasks.testing.Test).configureEach { task ->
+        if (task.name == 'testDebugUnitTest') {
+            task.maxParallelForks = 1
+            task.filter {
+                [
+                    'at.heinz.deviceai.ContinuumDocumentFlowUiTest',
+                    'at.heinz.deviceai.ContinuumDocumentSceneUiTest',
+                    'at.heinz.deviceai.ContinuumPdfSceneAcceptanceUiTest',
+                    'at.heinz.deviceai.PdfIntakeCancellationUiTest',
+                    'at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest',
+                    'at.heinz.deviceai.PdfDocumentIntakeTextTest',
+                    'at.heinz.deviceai.ui.JarvisPdfWindowPresentationUiTest',
+                    'at.heinz.deviceai.ui.DocumentStagePageGeometryUiTest',
+                    'at.heinz.deviceai.avatar3d.DocumentStageFrameTest',
+                    'at.heinz.deviceai.ui.Cinema2DepthLightTest',
+                    'at.heinz.deviceai.ui.JarvisWorkWindowDepthTest',
+                    'at.heinz.deviceai.avatar.CinemaWindowGazeBridgeTest',
+                    'at.heinz.deviceai.ui.JarvisWindowGazeTest',
+                    'at.heinz.deviceai.CinemaNativeSequenceUiTest',
+                    'at.heinz.deviceai.CinemaStopReturnUiTest',
+                    'at.heinz.deviceai.JarvisWorkWindowUiTest',
+                    'at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest',
+                    'at.heinz.deviceai.JarvisWorkWindowHostViewportUiTest',
+                    'at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest',
+                    'at.heinz.deviceai.cognitive.OwnerDocumentPresentationIntentTest',
+                    'at.heinz.deviceai.cognitive.OwnerDocumentIntentTest',
+                    'at.heinz.deviceai.cognitive.OwnerDocumentPoliteIntentTest',
+                    'at.heinz.deviceai.cognitive.OwnerDocumentAddressTest',
+                    'at.heinz.deviceai.cognitive.DocumentDraftPromptTest'
+                ].each { includeTestsMatching(it) }
+                failOnNoMatchingTests = true
+            }
+            if (gradle.rootProject.providers.gradleProperty('continuumPdfAllowMissingHostNative').orNull == 'true') {
+                task.systemProperty('continuum.pdf.allowMissingHostNative', 'true')
+            }
+        }
+    }
+}
