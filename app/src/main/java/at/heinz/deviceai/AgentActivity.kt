@@ -6554,6 +6554,13 @@ class AgentActivity : Activity() {
             } else acknowledge()
             return
         }
+        localConversationContext.objectStateAnswer(sessionId, request)?.let { answer ->
+            input.text.clear()
+            addUserMessage(request)
+            addNonModelReply(request, answer, at.heinz.deviceai.cognitive.NonModelReplyKind.OBJECT_STATE_RECALL)
+            addToolActivity("GESPRÄCHSSTAND · eigene Angaben · keine Modell- oder Webanfrage")
+            return
+        }
         // Optional zero-token reflex; a recognized but unproven source request is terminal.
         // Keep rule/verifier abstention separate from "no supported evidence route" so that
         // negation, conflict or unclear time never falls through to model or web guesses.
@@ -10689,6 +10696,8 @@ class AgentActivity : Activity() {
         // mutate the situation focus a second time. This carries no facts or tool authority.
         val situationHint = if (botTask == null && codingPlanning == null)
             localConversationContext.situationHint(localSessionId, text) else ""
+        val ownerObjectState = if (botTask == null && codingPlanning == null)
+            localConversationContext.objectStateBlock(localSessionId, text) else ""
         val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task
         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
@@ -10817,11 +10826,12 @@ class AgentActivity : Activity() {
                     // A deliberately narrow research-only temporal projection. The
                     // session's owner sentences stay unverified and ephemeral. Model
                     // replies, persistent owner memories and external data are never parsed.
-                    if (requiresPriorDialogue && priorOwnerEvidence != null) {
+                    if (requiresPriorDialogue && priorOwnerEvidence != null && ownerObjectState.isBlank()) {
                         // M2: domain-neutral successor of TaskScopedRingStateProjector.
                         at.heinz.deviceai.cognitive.OwnerStatementTimeline
                             .project(priorOwnerEvidence, text)?.let { append(it.render()) }
                     }
+                    if (ownerObjectState.isNotBlank()) append(ownerObjectState)
                     if (situationHint.isNotBlank()) append(situationHint)
                     // Current task and retrieval precede optional compiled/history data.
                     // A long request must never disappear behind the512-char memory lookup.

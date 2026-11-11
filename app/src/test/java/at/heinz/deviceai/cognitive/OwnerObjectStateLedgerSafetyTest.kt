@@ -71,4 +71,43 @@ class OwnerObjectStateLedgerSafetyTest {
         assertFalse(answer.contains("keine dauerhaft gespeicherte Erinnerung"))
         assertFalse(state.promptBlock("Welche Farbe hat meine Werkzeugkiste?").contains("nicht gespeichert"))
     }
+    @Test fun tentativeQuestionsAndConditionalPronounsKeepTheLastAssertion() {
+        assertOriginal(ledger("Ist die Kiste vielleicht grün?"))
+        assertOriginal(ledger("Wenn sie rot wäre, hätte sie neun Schrauben."))
+        assertOriginal(ledger("Meine Schwester hat ihre Werkzeugkiste rot gestrichen."))
+    }
+
+    @Test fun contrastBetweenTwoSameNamedObjectsNeverBecomesAColorCorrection() {
+        val state = ledger("Nicht die rote, sondern die blaue Werkzeugkiste.")
+        assertNull(state.answer("Welche Farbe hat die Werkzeugkiste?"))
+        assertFalse(state.promptBlock("Wo steht die Werkzeugkiste?").contains("Ort in der Garage"))
+    }
+
+    @Test fun actualSessionExitForgetsTheObjectState() {
+        val context = LocalConversationContext()
+        context.record("session", initial, "Rot, sieben, Garten.")
+        assertTrue(context.objectStateAnswer("session", "Welche Farbe hat die Werkzeugkiste?")!!.contains("Farbe: blau"))
+        context.forgetForExit()
+        assertNull(context.objectStateAnswer("session", "Welche Farbe hat die Werkzeugkiste?"))
+        context.record("session", "Hallo", "Hallo!")
+        assertNull(context.objectStateAnswer("session", "Welche Farbe hat die Werkzeugkiste?"))
+    }
+
+    @Test fun objectAndRevisionLimitsFailClosed() {
+        val state = ledger()
+        for (noun in listOf("Tasche", "Box", "Truhe", "Mappe", "Dose", "Koffer", "Rucksack"))
+            state.observeOwnerTurn("Ich habe eine rote $noun im Garten.")
+        assertNull(state.answer("Welche Farbe hat die Werkzeugkiste?"))
+        assertTrue(state.render().contains("unvollständig oder mehrdeutig"))
+        assertTrue(state.render().length < 500)
+    }
+
+    @Test fun replacementWithDifferentUnitDoesNotChangeAnotherObject() {
+        val state = ledger("Ich habe eine rote Tasche mit drei Ringen im Keller.",
+            "Nicht zwölf, sondern sieben Ringe.")
+        val bag = state.answer("Wie viele Ringe sind in der Tasche?")!!
+        assertTrue(bag, bag.contains("Anzahl Ringen: 3"))
+        assertFalse(bag, bag.contains("Anzahl Ringen: 7"))
+    }
+
 }

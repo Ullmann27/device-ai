@@ -31,8 +31,16 @@ internal class OwnerObjectStateLedger {
         var current: String? = null
         var uncertain: String? = null
         var lastPair: List<String> = emptyList()
+        var historyTruncated = false
         fun copy() = Slot(attr, unit).also {
             it.events += events; it.current = current; it.uncertain = uncertain; it.lastPair = lastPair
+            it.historyTruncated = historyTruncated
+        }
+        fun trimHistory() {
+            while (events.size > MAX_EVENTS) {
+                events.removeAt(0)
+                historyTruncated = true
+            }
         }
         /** Distinct accepted values in their temporal order (rejected intermediates excluded). */
         fun accepted(): List<String> = events.filter { it.kind == Kind.STATED || it.kind == Kind.CORRECTED }
@@ -64,7 +72,7 @@ internal class OwnerObjectStateLedger {
 
     private fun fingerprint(): String = items.values.joinToString("|") { item ->
         item.noun + ":" + item.slots.entries.joinToString(",") { (k, s) -> "$k=${s.current}/${s.uncertain}/${s.events.size}" }
-    } + "#" + unresolved.size
+    } + "#" + unresolved.joinToString() + "#" + incomplete
 
     // ---------------------------------------------------------------- tokens
 
@@ -103,10 +111,48 @@ internal class OwnerObjectStateLedger {
         var index = 0
         for (match in Regex("""[^.!?;\n]*[.!?;\n]?""").findAll(text)) {
             if (match.value.isEmpty()) continue
-            if (match.value.trimEnd().endsWith("?")) result += index
+            val sentence = match.value.trim()
+            if (sentence.endsWith("?") || questionStart.containsMatchIn(sentence)) result += index
             index++
         }
         return result
+    }
+
+    private val questionStart = Regex(
+        """(?iu)^(?:und\s+|aber\s+)?(?:welche\p{L}*|wie|wieviele|wo|wohin|woher|was|wer|warum|wieso|wann|ist|sind|hat|haben|steht|stehen|liegt|liegen|in\s+welcher)(?!\p{L})""")
+    private val quotedOrReported = Regex(
+        """(?iu)[„“«»"]|^(?:schreib\p{L}*|erzähl\p{L}*|übersetz\p{L}*|zeig\p{L}*|suche?|finde?|lies|erkläre?)\s|(?<!\p{L})(?:beispiel|zitat|im\s+(?:buch|text)|sagt|sagte|behauptet|behauptete)(?!\p{L})""")
+    private val acquisition = Regex(
+        """(?iu)^(?:ich\s+(?:habe|besitze)|wir\s+(?:haben|besitzen))\s+(?:(?:noch|jetzt)\s+)?""")
+    private val unsupportedChange = setOf("verkauft", "verschenkt", "verloren", "entsorgt", "weggeworfen",
+        "geliehen", "verliehen", "gestohlen", "leer", "umgestellt", "verschoben", "verlegt", "abgeholt")
+    private val consumption = setOf("getrunken", "gegessen", "verbraucht", "gelesen", "geschlafen", "gewartet")
+
+    private fun supportedStatement(list: List<Tok>): Boolean {
+        val text = list.joinToString(" ") { it.low }
+        val owned = acquisition.find(text)
+        if (owned != null) {
+            val next = text.substring(owned.range.last + 1).substringBefore(' ')
+            return (next in articles || GermanNumberWords.parse(next) != null) &&
+                list.none { it.low in consumption }
+        }
+        val named = list.indexOfFirst { resolveItemName(it.low) != null }
+        if (named in 0..4 && list.take(named).all {
+                it.low in articles + setOf("in", "im", "auf", "unter", "neben") || color(it.low) != null
+            }) return true
+        if (Regex("""^(?:nein\s+)?nicht\s|^(?:es|sie|er)\s+(?:ist|sind|steht|stehen|liegt|liegen)\s|^(?:korrigiere|ändere)\s+(?:die\s+)?(?:anzahl|zahl|farbe|ort|standort)\s""")
+                .containsMatchIn(text)) return true
+        val firstValue = list.dropWhile { it.low in setOf("nein", "doch", "ach") }.firstOrNull()
+        if (firstValue != null && number(firstValue) != null &&
+            list.any { it.low in negators + replacing + setOf("falsch") }) return true
+        if (list.first().low in setOf("farbe", "anzahl", "zahl", "ort", "standort", "rest", "alles")) return true
+        if (list.first().low in setOf("im", "in", "auf", "unter", "neben") && list.any { it.low in replacing + negators }) return true
+        return previousRef.containsMatchIn(text) || otherRef.containsMatchIn(text)
+    }
+
+    private fun rememberUnresolved(value: String) {
+        unresolved += value
+        while (unresolved.size > MAX_UNRESOLVED) unresolved.removeAt(0)
     }
 
     // ---------------------------------------------------------------- vocabulary
@@ -155,7 +201,7 @@ internal class OwnerObjectStateLedger {
         listOf("vor", "der"), listOf("bei", "der"), listOf("bei", "dem"), listOf("im"), listOf("am"), listOf("beim"),
         listOf("ins"), listOf("unterm"), listOf("hinterm"), listOf("auf"), listOf("in"))
 
-    private fun isNounToken(t: Tok) = t.raw.length >= 3 && t.raw[0].isUpperCase() && t.raw.all { it.isLetter() || it == '-' }
+    private fun isNounToken(t: Tok) = t.raw.length in 3..48 && t.raw[0].isUpperCase() && t.raw.all { it.isLetter() || it == '-' }
     private fun number(t: Tok): Int? = if (t.low in setOf("ein", "eine", "einen", "einem", "einer", "eines")) null
         else GermanNumberWords.parse(t.low)
     private fun unitKey(unit: String) = unit.lowercase(Locale.GERMAN).replace(Regex("(?:en|e|n|s)$"), "")
@@ -276,9 +322,21 @@ internal class OwnerObjectStateLedger {
         val clean = text.trim()
         if (clean.isEmpty()) return
         if (clean.length > 4_000 || clean.any { it.isISOControl() && it != '\n' }) { incomplete = true; return }
+        if (quotedOrReported.containsMatchIn(clean)) return
         message++
         val toks = tokens(clean)
-        val questions = questionSentences(clean)
+        if (toks.isEmpty()) return
+        val questions = questionSentences(clean).toMutableSet()
+        toks.groupBy { it.sentence }.forEach { (sentence, list) ->
+            if (list.any { it.low in conditionals } || !supportedStatement(list)) questions += sentence
+            if (sentence !in questions && list.any { resolveItemName(it.low) != null } &&
+                list.any { it.low in unsupportedChange }) incomplete = true
+        }
+        val activeText = toks.filter { it.sentence !in questions }.joinToString(" ") { it.low }
+        val ambiguousObject = Regex("""(?iu)(?:noch\s+ein|weiter|zweit|ander)\p{L}*\s+(?:\p{L}+\s+)?(\p{L}+)|nicht\s+(?:die|der|das|den)\s+(\p{L}+)[^.!?]{0,80}sondern\s+(?:die|der|das|den)\s+(\p{L}+)""")
+        if (ambiguousObject.findAll(activeText).any { match ->
+                match.groupValues.drop(1).any { resolveItemName(it) != null || color(it) != null } }) incomplete = true
+        if (incomplete) return
         // New objects: article [+ colour] + noun in a statement, with an attribute in the same sentence.
         val introduced = mutableMapOf<Int, String>()
         for (k in toks.indices) {
@@ -301,22 +359,44 @@ internal class OwnerObjectStateLedger {
                 sameSentence.any { color(it.low) != null } && sameSentence.any { it.low in setOf("ist", "sind") }
             if (attributeNearby) introduced[k] = noun.raw
         }
+        val newNames = introduced.values.map { it.lowercase(Locale.GERMAN) }.distinct().count { it !in items }
+        if (items.size + newNames > MAX_ITEMS) { incomplete = true; return }
         introduced.values.forEach { noun -> items.getOrPut(noun.lowercase(Locale.GERMAN)) { Item(noun) } }
-        if (items.size > MAX_ITEMS) { incomplete = true; return }
 
         val found = mentions(toks, questions, items, introduced)
         val namedItems = toks.filter { it.sentence !in questions }.mapNotNull { resolveItemName(it.low) }.distinct()
         val byItem = mutableMapOf<Pair<Item, String>, MutableList<Mention>>()
+        val anchors = mutableMapOf<Attr, Pair<Item, String>>()
         for (m in found) {
-            val item = bind(m, toks, introduced, namedItems) ?: run {
-                if (m.explicitItem == null) unresolved += "„${m.value}“ (Nachricht $message) ohne eindeutigen Gegenstand"
+            val previousAnchor = anchors[m.attr]
+            val explicitSubject = toks.take(m.index).any {
+                it.sentence == m.sentence && resolveItemName(it.low) != null
+            }
+            if (m.attr == Attr.COUNT && previousAnchor != null && m.unit != null &&
+                previousAnchor.second != "anzahl|" + unitKey(m.unit) && !explicitSubject) {
+                rememberUnresolved("Zahl ${m.value} (Nachricht $message) mit abweichender Einheit")
                 continue
             }
-            val key = slotKey(m, item) ?: run {
-                unresolved += "Zahl ${m.value} (Nachricht $message) ohne eindeutige Einheit"
+            val anchor = anchors[m.attr]?.takeIf { (item, key) ->
+                m.unit == null || key == "anzahl|" + unitKey(m.unit) ||
+                    item.slots[key]?.unit?.let { unitKey(it) == unitKey(m.unit) } == true
+            }
+            val item = bind(m, toks, introduced, namedItems) ?: anchor?.first ?: run {
+                if (m.explicitItem == null) rememberUnresolved("„${m.value}“ (Nachricht $message) ohne eindeutigen Gegenstand")
                 continue
             }
-            byItem.getOrPut(item to key) { mutableListOf() } += m
+            val key = slotKey(m, item) ?: anchor?.takeIf { it.first === item }?.second ?: run {
+                rememberUnresolved("Zahl ${m.value} (Nachricht $message) ohne eindeutige Einheit")
+                continue
+            }
+            val target = item to key
+            if (key !in item.slots && byItem.keys.none { it == target } &&
+                item.slots.size + byItem.keys.count { it.first === item && it.second !in item.slots } >= MAX_SLOTS) {
+                incomplete = true
+                continue
+            }
+            byItem.getOrPut(target) { mutableListOf() } += m
+            anchors[m.attr] = target
         }
         for ((target, list) in byItem) {
             val (item, key) = target
@@ -351,7 +431,10 @@ internal class OwnerObjectStateLedger {
             items.values.firstOrNull { unitKey(it.noun) == unit }?.let { return it }
             val owners = items.values.filter { it.countSlots().any { s -> s.unit != null && unitKey(s.unit) == unit } }
             owners.singleOrNull()?.let { return it }
-            if (owners.isEmpty() && named.isEmpty()) return items.getOrPut(m.unit.lowercase(Locale.GERMAN)) { Item(m.unit) }
+            if (owners.isEmpty() && named.isEmpty()) {
+                if (items.size >= MAX_ITEMS) { incomplete = true; return null }
+                return items.getOrPut(m.unit.lowercase(Locale.GERMAN)) { Item(m.unit) }
+            }
         }
         if (named.size == 1) return named.single()
         val candidates = items.values.filter { item -> item.slots.values.any { it.attr == m.attr } }
@@ -359,6 +442,8 @@ internal class OwnerObjectStateLedger {
             candidates.filter { item -> item.slots.values.any { s -> s.attr == m.attr && s.current == m.value } }
                 .singleOrNull()?.let { return it }
         }
+        if (m.attr == Attr.COUNT && m.unit != null && candidates.any { item ->
+                item.countSlots().any { it.unit != null && unitKey(it.unit) != unitKey(m.unit) } }) return null
         if (candidates.size == 1) return candidates.single()
         if (candidates.isEmpty() && items.size == 1) return items.values.single()
         return null
@@ -368,6 +453,9 @@ internal class OwnerObjectStateLedger {
         Attr.COLOR -> "farbe"
         Attr.PLACE -> "ort"
         Attr.COUNT -> {
+            if (m.unit == null && m.polarity != Polarity.ASSERT) item.slots.entries.singleOrNull {
+                it.value.attr == Attr.COUNT && it.value.current == m.value
+            }?.let { return it.key }
             val unit = m.unit ?: item.countSlots().singleOrNull()?.unit
                 ?: item.countSlots().singleOrNull()?.let { return "anzahl|" }
             when {
@@ -402,7 +490,7 @@ internal class OwnerObjectStateLedger {
                 slot.uncertain = "zuletzt verneint, ohne neuen Wert"
             }
         }
-        while (slot.events.size > MAX_EVENTS) slot.events.removeAt(0)
+        slot.trimHistory()
     }
 
     private val unchanged = Regex("""(?iu)(?<!\p{L})(?:unverändert|bleib(?:t|en)\s+(?:gleich|so|unverändert|wie\s+(?:vorher|gehabt|bisher))|gleich\s+geblieben|wie\s+gehabt|stimm(?:t|en)\s+(?:noch|weiterhin))(?!\p{L})""")
@@ -422,6 +510,7 @@ internal class OwnerObjectStateLedger {
             for (item in targets) for ((key, slot) in item.slots) {
                 if (slot.attr !in attrs || (item to key) in changed || slot.current == null) continue
                 slot.events += Event(slot.current, Kind.CONFIRMED, message)
+                slot.trimHistory()
             }
         }
     }
@@ -449,7 +538,7 @@ internal class OwnerObjectStateLedger {
             ?.takeIf { best -> slots.count { s -> s.events.lastOrNull { it.kind == Kind.CORRECTED }?.message ==
                 best.events.lastOrNull { it.kind == Kind.CORRECTED }?.message } == 1 }
         if (slot == null || slot.current == null) {
-            unresolved += "Rückbezug „${match.value}“ (Nachricht $message) ohne eindeutiges Merkmal"
+            rememberUnresolved("Rückbezug „${match.value}“ (Nachricht $message) ohne eindeutiges Merkmal")
             return
         }
         val target = if (match === previous) {
@@ -460,11 +549,12 @@ internal class OwnerObjectStateLedger {
                 ?: slot.accepted().distinct().takeIf { it.size == 2 }?.first { it != slot.current }
         }
         if (target == null) {
-            unresolved += "Rückbezug „${match.value}“ (Nachricht $message) ohne eindeutigen früheren Wert"
+            rememberUnresolved("Rückbezug „${match.value}“ (Nachricht $message) ohne eindeutigen früheren Wert")
             slot.uncertain = "Rückbezug unklar"
             return
         }
         slot.events += Event(target, Kind.CORRECTED, message)
+        slot.trimHistory()
         slot.current = target
         slot.uncertain = null
     }
@@ -485,7 +575,8 @@ internal class OwnerObjectStateLedger {
             Kind.RETRACTED -> parts += "${e.value} verneint"
             Kind.CONFIRMED -> Unit
         }
-        return parts.joinToString(" → ")
+        return (if (slot.historyTruncated) "früherer Verlauf nicht mehr vollständig → " else "") +
+            parts.joinToString(" → ")
     }
 
     private fun currentText(slot: Slot): String = slot.current?.let { value ->
@@ -523,7 +614,7 @@ internal class OwnerObjectStateLedger {
         "hab", "über", "zu", "zum", "am", "im", "in", "mein", "meine", "meiner", "meinem", "unser", "unserem",
         "gespräch", "diesem", "dieser", "bisherigen", "bisher", "inzwischen", "mittlerweile", "gezählt", "weißt",
         "gemerkt", "continuum", "jarvis", "drinnen", "enthalten", "enthält", "befanden", "befand", "ein", "eine",
-        "einer", "erste", "angabe", "vorige", "vorherige", "vorigen", "vorherigen", "wert", "werte", "gilt")
+        "einer", "erste", "angabe", "vorige", "vorherige", "vorigen", "vorherigen", "wert", "werte", "gilt", "korrigiert")
 
     /** Words of a question that are neither question filler nor a tracked object/unit. */
     private fun contentWords(words: List<String>): List<String> = words.filter { w ->
@@ -533,8 +624,13 @@ internal class OwnerObjectStateLedger {
     }
 
     fun render(): String = buildString {
-        append("\nGESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; flüchtig, ")
-        append("nicht gespeichert; spätere Angaben ersetzen frühere):\n")
+        append("\nGESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; ")
+        append("abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):\n")
+        if (incomplete) {
+            append("Der Gesprächsstand ist unvollständig oder mehrdeutig. Frage nach dem gemeinten Gegenstand und aktuellen Angaben.\n")
+            append("Frühere Werte dürfen nicht als aktueller Stand ausgegeben werden.\n")
+            return@buildString
+        }
         items.values.forEach { item ->
             append("- ").append(item.noun).append(": ")
             append(item.slots.values.joinToString(" · ") { slot ->
@@ -544,7 +640,7 @@ internal class OwnerObjectStateLedger {
             })
             append('\n')
         }
-        if (incomplete) append("Hinweis: Eine Nachricht des Nutzers war nicht vollständig lesbar; fehlende Angaben nicht ergänzen.\n")
+
         unresolved.takeLast(3).forEach { append("Ungeklärt: ").append(it).append('\n') }
         append("Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. ")
         append("Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. ")
@@ -609,7 +705,7 @@ internal class OwnerObjectStateLedger {
             for (clause in clauses) {
                 if (clause.isBlank()) continue
                 if (metaSentence.any { it.matches(clause.trim()) }) continue
-                if (!Regex("""(?iu)^(?:und\s+)?(?:welche[rsnm]?|wie|wo|was|sag|nenne|wiederhole|hat|ist|sind|steht|stehen)(?!\p{L})""").containsMatchIn(clause.trim()))
+                if (!Regex("""(?iu)^(?:und\s+)?(?:in\s+welcher|welche[rsnm]?|wie|wo|was|sag|nenne|wiederhole|hat|ist|sind|steht|stehen)(?!\p{L})""").containsMatchIn(clause.trim()))
                     return null
                 if (Regex("""(?iu)(?<!\p{L})(?:öffne|starte|lösche|sende|schick|recherchier\p{L}*|such\p{L}*|miss|messe|erkläre|warum|wieso|weshalb|vergleich\p{L}*|plane|schreib\p{L}*)(?!\p{L})""").containsMatchIn(clause))
                     return null
@@ -626,14 +722,15 @@ internal class OwnerObjectStateLedger {
             val slots = item.slots.values.filter { it.attr == attr }
             if (slots.isEmpty()) {
                 lines += when (attr) {
-                    Attr.COLOR -> "Farbe: hast du in diesem Gespräch nicht genannt"
-                    Attr.PLACE -> "Ort: hast du in diesem Gespräch nicht genannt"
-                    Attr.COUNT -> "Anzahl: hast du in diesem Gespräch nicht genannt"
+                    Attr.COLOR -> "Farbe: im verfügbaren Gesprächsstand nicht eindeutig genannt"
+                    Attr.PLACE -> "Ort: im verfügbaren Gesprächsstand nicht eindeutig genannt"
+                    Attr.COUNT -> "Anzahl: im verfügbaren Gesprächsstand nicht eindeutig genannt"
                 }
                 continue
             }
             for (slot in slots) {
                 val name = slotName(slot)
+                if (mode != Mode.CURRENT && slot.historyTruncated) return null
                 val accepted = slot.accepted()
                 val text = when (mode) {
                     Mode.CURRENT -> currentText(slot)
@@ -647,7 +744,7 @@ internal class OwnerObjectStateLedger {
                 val line = "$name: $text"
                 if (line !in lines) lines += line
                 if (mode == Mode.CURRENT) history(slot).takeIf { it.contains("→") }?.let { notes += "$name $it" }
-                if (mode == Mode.CURRENT && slot.events.size > 1 && slot.events.all { it.kind != Kind.CORRECTED && it.kind != Kind.REJECTED })
+                if (mode == Mode.CURRENT && !slot.historyTruncated && slot.events.size > 1 && slot.events.all { it.kind != Kind.CORRECTED && it.kind != Kind.REJECTED })
                     notes += "$name seit deiner ersten Angabe unverändert"
             }
         }
@@ -656,8 +753,7 @@ internal class OwnerObjectStateLedger {
             lines.forEach { append("• ").append(it).append('\n') }
             if (notes.isNotEmpty()) append("Verlauf: ").append(notes.distinct().joinToString("; ")).append('\n')
             if (unresolved.isNotEmpty()) append("Nicht zugeordnet: ").append(unresolved.last()).append('\n')
-            append("(Gesprächsstand aus deinen eigenen Nachrichten – keine externe Prüfung der Wirklichkeit und ")
-            append("keine dauerhaft gespeicherte Erinnerung.)")
+            append("(Gesprächsstand aus deinen eigenen Nachrichten – keine externe Prüfung der Wirklichkeit.)")
         }
     }
 
@@ -666,7 +762,7 @@ internal class OwnerObjectStateLedger {
     private fun resolveQuestionItem(q: String): Item? {
         val words = Regex("""[\p{L}\p{N}-]+""").findAll(q).map { it.value.lowercase(Locale.GERMAN) }.toList()
         // „Wo ist mein Handy?“ names something this conversation never described: no answer from another object.
-        if (contentWords(words).isNotEmpty()) return null
+        if (contentWords(words).isNotEmpty() || words.any { color(it) != null || GermanNumberWords.parse(it) != null }) return null
         val named = words.mapNotNull { resolveItemName(it) }.distinct()
         if (named.size == 1) return named.single()
         if (named.size > 1) {
@@ -683,5 +779,7 @@ internal class OwnerObjectStateLedger {
     private companion object {
         const val MAX_ITEMS = 6
         const val MAX_EVENTS = 24
+        const val MAX_SLOTS = 6
+        const val MAX_UNRESOLVED = 3
     }
 }

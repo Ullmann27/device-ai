@@ -291,7 +291,7 @@ object HybridMemoryRetriever {
         "do", "does", "for", "from", "has", "have", "how", "i", "in", "is", "it",
         "me", "my", "of", "on", "or", "please", "that", "the", "their", "this", "to",
         "was", "were", "what", "when", "where", "which", "who", "why", "with", "you", "your",
-        "aber", "als", "am", "auf", "aus", "bei", "bin", "bitte", "das", "dass", "dem",
+        "aber", "alles", "als", "am", "auf", "aus", "bei", "bin", "bitte", "danke", "das", "dass", "dem",
         "den", "der", "des", "die", "dir", "du", "ein", "eine", "einem", "einen", "einer",
         "eines", "er", "es", "für", "hat", "haben", "ich", "ihm", "ihn", "ihr", "im", "ist",
         "kann", "kannst", "mein", "meine", "meiner", "mir", "mit", "oder", "sein", "seine",
