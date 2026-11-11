@@ -48,9 +48,14 @@ class JarvisRenderQualityAdaptiveTest {
             true, false, 0, false, true, cinemaOptIn = true, experimentEnabled = true)
         assertEquals(JarvisRenderQuality.Tier.MEDIUM, inference.tier)
         assertTrue(inference.animate)
-        assertTrue(inference.reducedBloom)
+        assertFalse(inference.reducedBloom)
+        assertTrue(inference.coolInferenceLighting)
         assertTrue(inference.frameDelayMillis >= 50L)
         assertTrue(inference.particleCount <= 12)
+        val warm = JarvisRenderQuality.adaptiveAnimation(
+            true, false, 1, false, true, cinemaOptIn = true, experimentEnabled = true)
+        assertTrue(warm.reducedBloom)
+        assertFalse(warm.coolInferenceLighting)
         val severe = JarvisRenderQuality.adaptiveAnimation(
             true, false, 3, false, true, cinemaOptIn = true, experimentEnabled = false)
         assertEquals(JarvisRenderQuality.Tier.LOW, severe.tier)

@@ -104,3 +104,23 @@ Latest executed additional check: 4 existing coding-agent speech-wiring Node
 checks PASS. A local full-Node run overlaps checkpoint writes, so it cannot be
 an exact-source release receipt even if individual tests pass. Hosted frozen QA
 is authoritative for the full candidate. No live speech generation performed.
+
+## Full baseline Android result and contract corrections
+
+Run 42966389910 completed Android compilation and 4,619 tests on baseline
+43b8d9f4: 4,601 passed, 1 failed, 17 skipped. The sole failure was the old
+JarvisRenderQualityAdaptiveTest assertion that cool inference disables bloom,
+which contradicts the approved #747 lighting correction. The test now requires
+cool lighting to remain on while preserving warm-device dimming, frame/particle
+limits and severe-heat hard stops. Lint/APK were not reached after test failure.
+Evidence: https://github.com/Ullmann27/device-ai/actions/runs/42966389910/artifacts/13833716793
+
+The local full-Node diagnostic found 2,454 passing, 2 failing, 37 skipped tests.
+Both failures assumed the old Android-only speech caller shape. Contracts now
+follow speakBootstrap -> speakReply and assert microphone exclusion before either
+provider, successful scheduling before hands-free binding, central internet mode
+and revision, and Maya cancellation. Ten affected Node checks PASS after correction.
+The failure receipt is preserved in maya-node-red.json; no disabled tests.
+Backend syntax checks and 64 tests also PASS. Full source-bound Android/Node/lint
+qualification for the combined Maya candidate remains pending; baseline results
+must not be attributed to Maya.
