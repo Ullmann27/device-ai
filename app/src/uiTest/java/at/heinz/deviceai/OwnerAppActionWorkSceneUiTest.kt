@@ -156,6 +156,16 @@ class OwnerAppActionWorkSceneUiTest {
     private fun pose(a: AgentActivity) = (get(get(a, "hologramView")!!, "avatarPose") as AvatarPoseReducer)
         .pose(android.os.SystemClock.elapsedRealtime())
 
+    @Test fun installedVerbFinalNameUsesExistingConsentBeforeLaunch() = withActivity { a, port, _ ->
+        submit(a, "Signal öffnen", chat = false)
+        await { ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
+        assertEquals("Recognized name grants no launch", 0, port.calls.get())
+        approve(port)
+        assertEquals(1, port.calls.get())
+        port.release.countDown()
+        await { get(a, "busy") == false }
+    }
+
     @Test fun missingAppNameReplyUsesLookupAndStillRequiresConsent() = withActivity { a, port, _ ->
         val before = lookupGeneration(a)
         submit(a, "Öffne eine App", chat = false)

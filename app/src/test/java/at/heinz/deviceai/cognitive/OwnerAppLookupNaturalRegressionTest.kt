@@ -17,6 +17,7 @@ class OwnerAppLookupNaturalRegressionTest {
         mapOf(
             "Kannst du mir bitte WhatsApp öffnen?" to "WhatsApp",
             "Würdest du bitte Kalender starten?" to "Kalender",
+            "Könntest du bitte Microsoft Teams öffnen?" to "Microsoft Teams",
             "Mach bitte die App Signal auf." to "Signal",
             "Öffne bitte für mich den Kalender." to "Kalender"
         ).forEach { (input, app) -> assertEquals(input, app, OwnerAppLookupIntent.parse(input)) }
