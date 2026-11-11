@@ -1,0 +1,22 @@
+test_changed_context_invalidates_old_consent (test_voice_data.VoiceDataTests.test_changed_context_invalidates_old_consent) ... ok
+test_changed_meaning_invalidates_old_consent (test_voice_data.VoiceDataTests.test_changed_meaning_invalidates_old_consent) ... ok
+test_confirmed_wording_does_not_confirm_meaning (test_voice_data.VoiceDataTests.test_confirmed_wording_does_not_confirm_meaning) ... ok
+test_family_split_leak_is_detected (test_voice_data.VoiceDataTests.test_family_split_leak_is_detected) ... ok
+test_generation_reproducible_and_existing_destination_preserved (test_voice_data.VoiceDataTests.test_generation_reproducible_and_existing_destination_preserved) ... ok
+test_multi_action_and_ambiguous_execution_rejected (test_voice_data.VoiceDataTests.test_multi_action_and_ambiguous_execution_rejected) ... ok
+test_pair_split_leak_is_detected (test_voice_data.VoiceDataTests.test_pair_split_leak_is_detected) ... ok
+test_pipeline_diagnostics_cannot_enter_lm1_tsv_as_single_labels (test_voice_data.VoiceDataTests.test_pipeline_diagnostics_cannot_enter_lm1_tsv_as_single_labels) ... ok
+test_private_record_cannot_be_published_even_with_cloud_flag (test_voice_data.VoiceDataTests.test_private_record_cannot_be_published_even_with_cloud_flag) ... ok
+test_registered_balanced_contrasts_and_bow_bound (test_voice_data.VoiceDataTests.test_registered_balanced_contrasts_and_bow_bound) ... ok
+test_replay_retention_leak_rejected (test_voice_data.VoiceDataTests.test_replay_retention_leak_rejected) ... ok
+test_single_label_marker_is_detected (test_voice_data.VoiceDataTests.test_single_label_marker_is_detected) ... ok
+test_text_consent_does_not_authorize_audio (test_voice_data.VoiceDataTests.test_text_consent_does_not_authorize_audio) ... ok
+test_text_training_needs_separate_opt_in (test_voice_data.VoiceDataTests.test_text_training_needs_separate_opt_in) ... ok
+test_third_party_audio_needs_own_permission (test_voice_data.VoiceDataTests.test_third_party_audio_needs_own_permission) ... ok
+test_unconfirmed_asr_edit_cannot_be_truth (test_voice_data.VoiceDataTests.test_unconfirmed_asr_edit_cannot_be_truth) ... ok
+test_unreviewed_sensitive_content_is_not_trainable (test_voice_data.VoiceDataTests.test_unreviewed_sensitive_content_is_not_trainable) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.132s
+
+OK

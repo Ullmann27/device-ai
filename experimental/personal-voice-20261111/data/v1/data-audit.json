@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "status": "DATA_GATE_PASSED_PENDING_NATIVE_TOKEN_CHECK",
+  "total_public_synthetic_records": 204,
+  "contrast_pairs": 80,
+  "metrics": {
+    "train": {
+      "rows": 128,
+      "labels": {
+        "0": 32,
+        "1": 32,
+        "2": 32,
+        "3": 32
+      },
+      "max_characters": 103,
+      "max_utf8_bytes": 113,
+      "families": [
+        "live_vs_quote",
+        "negated_alternative",
+        "rejected_tail",
+        "spoken_repair"
+      ],
+      "bow_oracle_accuracy_ceiling": 0.5,
+      "byte_length_oracle_accuracy": 0.3984375,
+      "character_length_oracle_accuracy": 0.4140625
+    },
+    "dev": {
+      "rows": 32,
+      "labels": {
+        "0": 8,
+        "1": 8,
+        "2": 8,
+        "3": 8
+      },
+      "max_characters": 112,
+      "max_utf8_bytes": 117,
+      "families": [
+        "permission_and_discussion",
+        "retrospective_revision"
+      ],
+      "bow_oracle_accuracy_ceiling": 0.5,
+      "byte_length_oracle_accuracy": 0.4375,
+      "character_length_oracle_accuracy": 0.40625
+    },
+    "replay": {
+      "rows": 32,
+      "labels": {
+        "1": 16,
+        "2": 16
+      },
+      "max_characters": 38,
+      "max_utf8_bytes": 40,
+      "families": [
+        "simple-1-0",
+        "simple-1-1",
+        "simple-2-0",
+        "simple-2-1"
+      ],
+      "bow_oracle_accuracy_ceiling": 1.0,
+      "byte_length_oracle_accuracy": 0.875,
+      "character_length_oracle_accuracy": 0.96875
+    }
+  },
+  "private_records": 0,
+  "real_audio_records": 0,
+  "asr_accuracy": "NOT_MEASURABLE_WITHOUT_AUDIO_AND_CONFIRMED_TRANSCRIPT",
+  "shortcut_claim": "Full order-insensitive word-bag oracle is capped at 50% on paired contrasts. Position/template rules remain possible; no general-language claim.",
+  "split_claim": "Full authored surface-template families and exact prompts are disjoint. Intended task semantics are shared; independent evaluator owns confirmation.",
+  "native_token_budget": "PENDING_NATIVE_PREFLIGHT_PREFIX_PLUS_4_LE_CONTEXT256",
+  "historical_retention": {
+    "sha256": "dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a",
+    "exact_normalized_overlap": 0,
+    "role": "audit_only_not_training_input"
+  }
+}

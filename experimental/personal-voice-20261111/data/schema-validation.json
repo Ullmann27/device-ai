@@ -1,0 +1,6 @@
+{
+  "records_validated": 204,
+  "schema_sha256": "19756c58d213ea945b33fc3b6607b039b002f39d81c4f4bc88afc23fa3118fbf",
+  "status": "PASS",
+  "scope": "structure only; behavioral privacy validator still required"
+}

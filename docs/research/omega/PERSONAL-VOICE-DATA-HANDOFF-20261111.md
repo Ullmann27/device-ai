@@ -29,3 +29,25 @@ No real owner audio/transcript pair is available or used. ASR accuracy and Fold7
 ## Next step and rollback
 
 Implement reproducible public synthetic corpus, schema, validator and shortcut tests. At most 128 training and 32 open-development rows, family and pair groups separated. Independent evaluator owns fresh frozen holdouts. Publish validated data before native training. Rollback is excluding these research files; original model and app stay unchanged.
+
+## Data checkpoint
+
+Public corpus implemented at experimental/personal-voice-20261111/data/v1:
+128 four-class TRAIN contrasts, 32 family-separated open DEV contrasts, 32 newly
+authored simple open/search replay rows and 12 rich pipeline diagnostics.
+All 80 contrast pairs have equal word multisets and opposing labels, bounding
+any order-insensitive keyword/word-bag classifier to 50%. Four train surface
+families and two development families are intentionally a small diagnostic
+scope, not proof of broad speech understanding. Historical retention overlap=0.
+
+17 host Python tests passed, including deliberately invalid consent, stale
+context/meaning, unconfirmed word correction, audio/third-party grants, private
+publication attempts, split leakage and deterministic generation. The initial
+ID-normalization failure and pre-training replay grammar review are recorded in
+test-receipt.json. Numeric native token validation belongs to Bot2. No real ASR,
+Android, Fold7 or owner-learning outcome is claimed.
+
+Standalone Git push lacked credentials. Initial remote checkpoint was published
+through the authorized GitHub connector as d3db049cd13d4d8dc42bc1ba7aeada1250422710,
+Draft PR #756; local initial commit6968566 has the same file content, not the
+same commit identity. Subsequent data snapshot is published by Git-tree update.

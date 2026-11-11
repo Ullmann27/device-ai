@@ -1,0 +1,25 @@
+{
+  "command": [
+    "python",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "experimental/personal-voice-20261111/data",
+    "-p",
+    "test_voice_data.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "tests_passed": 17,
+  "elapsed_seconds": 0.284293,
+  "python_version": "3.12.14",
+  "executed_at_utc": "2026-11-11T07:40:02.373852+00:00",
+  "source_sha256": {
+    "voice_data.py": "8bfec1c41be10dff4217378339560cb8b8e6aa20419b30c8a234f92afa826910",
+    "test_voice_data.py": "4c1878266242f52098e3db8bb96fbd8e4d43e45c5c25870a635f78fc8be33f25"
+  },
+  "earlier_development_failure": "First invocation failed on underscore-containing synthetic IDs (13 failures,3 errors,1 pass). Fixed ID canonicalization before generating frozen v1; no model process ran.",
+  "pre_training_review_fix": "Four dative forms in simple search replay corrected before data freeze; contrast TRAIN and DEV unchanged. Python cache files excluded.",
+  "scope": "host Python data admission, split/shortcut mutation and reproducibility tests; Android/ASR/device NOT_RUN"
+}
