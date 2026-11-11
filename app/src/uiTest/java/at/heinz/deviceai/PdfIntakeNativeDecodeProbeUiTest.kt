@@ -40,12 +40,16 @@ class PdfIntakeNativeDecodeProbeUiTest {
         try {
             val document = try {
                 PdfDocumentIntake(app.contentResolver).read(uri, 360)
-            } catch (failure: UnsatisfiedLinkError) {
+            } catch (failure: NoSuchMethodError) {
                 assertEquals("The actual provider was queried", 1, provider.queries)
                 assertEquals("The actual descriptor was opened", 1, provider.opens)
-                if (System.getProperty("continuum.pdf.allowMissingHostNative") != "true") throw failure
+                val missingHostDescriptor = failure.message == "'long java.io.FileDescriptor.getOwnerId\$()'" &&
+                    failure.stackTrace.any { it.className == "libcore.io.IoUtils" && it.methodName == "acquireRawFd" } &&
+                    failure.stackTrace.any { it.className == "android.graphics.pdf.PdfProcessor" && it.methodName == "create" }
+                if (System.getProperty("continuum.pdf.allowMissingHostNative") != "true" || !missingHostDescriptor)
+                    throw failure
                 failure.printStackTrace()
-                throw AssumptionViolatedException("HOST_PDF_DECODE_UNSUPPORTED: ${failure.message}", failure)
+                throw AssumptionViolatedException("HOST_PDF_DESCRIPTOR_UNSUPPORTED: ${failure.message}", failure)
             }
             try {
                 assertEquals(1, provider.queries)

@@ -27,6 +27,29 @@ merge, installation or release is included.
 
 ## Verification checkpoint
 
+### Strict native decode probe
+
+The isolated actual-PDF probe ran on local
+`b1b79435835ee57c68a5477fc823dc2417e03e4f`, remote
+`3554271e17cfdd1a97c177f17d8e017e81ad7697`, identical tree
+`115fe4376c2073ec0bdf98a117a6525dd19eb7a1`.
+Result: **1 executed, 0 passed, 1 failed, 0 skipped**, Gradle exit 1.
+Android's `libcore.io.IoUtils.acquireRawFd` calls
+`java.io.FileDescriptor.getOwnerId$()` while `PdfProcessor.create` detaches the
+real descriptor. The host JDK lacks that Android method and raises
+`NoSuchMethodError`. The decoder never reached page rendering or extraction.
+
+Original JUnit, immediate progress journal, raw log and exact-source receipt
+are retained in `docs/evidence/pdf-scene-20261111/native-strict/`.
+The optional host skip is now restricted to that exact error message **and**
+both observed Android stack frames, after asserting one real provider query
+and one real descriptor open. Other linkage failures remain failures. Strict
+execution remains the default. An explicit
+`-PcontinuumPdfAllowMissingHostNative=true` records this case as **SKIPPED**,
+never as a successful decode. Physical PDF decoding remains unverified.
+
+### Earlier compilation and run history
+
 `PORTIERT`: yes, connected to the real Android call paths.
 
 `VERIFIZIERT`: partial. Main Kotlin, main Java and all test sources compiled on
