@@ -46,5 +46,24 @@
     "kotlin_compile": "kotlinc AvatarCoreLighting.kt SpatialWindowLight.kt CinemaWindowLightState.kt SpatialWindowLightTest.kt CinemaWindowLightGateTest.kt -cp junit.jar:hamcrest.jar -include-runtime -d light-tests.jar",
     "junit": "java -cp light-tests.jar:junit.jar:hamcrest.jar org.junit.runner.JUnitCore at.heinz.deviceai.avatar3d.CinemaWindowLightGateTest at.heinz.deviceai.avatar3d.SpatialWindowLightTest"
   },
-  "device_check": "NOT_RUN"
+  "device_check": "NOT_RUN",
+  "neighbor_contract_followup": {
+    "before": {
+      "pass": 1,
+      "fail": 2,
+      "reason": "Radiance source contract pinned old in-renderer expressions"
+    },
+    "after": {
+      "pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "files": [
+        ".github/continuum/omega-cinema-switches.test.mjs",
+        ".github/continuum/code52-cinema-source-contract.test.mjs",
+        ".github/continuum/avatar-surface-radiance-wiring.test.mjs"
+      ]
+    },
+    "mutations": "Existing accent fallback/closed-source cases retained; projected fallback, disabled EXP06 and closed physical-window variants added",
+    "production_change": false
+  }
 }

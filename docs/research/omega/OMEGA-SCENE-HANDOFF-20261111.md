@@ -60,3 +60,11 @@ renderer or unused default-off scaffolding is introduced by the switch repair.
 
 Rollback: revert the switch repair commit; original assets and application data
 are unchanged. Device/GPU/thermal acceptance remains `NOT_RUN`.
+
+### Neighbor contract follow-up
+
+The existing radiance source contract pinned the former inline resolver (1 PASS,
+2 FAIL after the fix). It now follows the same accent fallback through the
+production resolver. All former fallback/closed-source mutations remain and
+three new resolver-gate mutations were added. The combined three-file Node
+scope passes 13/13. Production files are unchanged by this follow-up.
