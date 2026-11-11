@@ -135,6 +135,11 @@ class OwnerAppActionWorkSceneUiTest {
     private fun lookupGeneration(a: AgentActivity): Long =
         (get(a, "appLookupGeneration") as Number).toLong()
 
+    private fun pendingAppName(a: AgentActivity): Any? {
+        val question = requireNotNull(get(a, "appNameClarification"))
+        return question.javaClass.getDeclaredField("pending").apply { isAccessible = true }.get(question)
+    }
+
     private fun submit(a: AgentActivity, request: String, chat: Boolean = true) {
         if (chat) {
             val target = JarvisHomeTestRoutes.destination(a.window.decorView, "chat")
@@ -201,6 +206,7 @@ class OwnerAppActionWorkSceneUiTest {
     @Test fun stopAndIndependentNavigationInvalidateAppNameQuestions() = withActivity { a, port, _ ->
         for (cancel in listOf(true, false)) {
             submit(a, "Öffne eine App", chat = false)
+            assertNotNull("App-name question is armed", pendingAppName(a))
             val before = lookupGeneration(a)
             if (cancel) AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest")
                 .apply { isAccessible = true }.invoke(a)
@@ -208,13 +214,27 @@ class OwnerAppActionWorkSceneUiTest {
             val afterInvalidation = lookupGeneration(a)
             assertEquals("Only STOP advances the invalidation generation", before + (if (cancel) 1L else 0L),
                 afterInvalidation)
+            assertNull("STOP/navigation clears the question before any dialog closes", pendingAppName(a))
+            if (!cancel) {
+                val center = get(a, "centerDialog") as? AlertDialog
+                assertNotNull("Independent navigation opens its center", center)
+                val dialog = requireNotNull(center)
+                assertTrue("Memory center is showing", dialog.isShowing)
+                assertSame("Navigation did not open an app dialog", dialog, ShadowAlertDialog.getLatestAlertDialog())
+                val views = descendants(requireNotNull(dialog.window).decorView).filterIsInstance<TextView>()
+                assertTrue("Expected memory center", views.any { it.text.toString() == "Gedächtniszentrum" })
+                val close = views.single { it.text.toString() == "SCHLIESSEN" }
+                assertTrue("Owner closes the memory center", close.performClick())
+                await { !dialog.isShowing && get(a, "centerDialog") == null }
+            }
             submit(a, "Signal", chat = false)
             await { get(a, "busy") == false && get(a, "botLookupPending") == false }
             assertEquals("Name after invalidation starts no lookup", afterInvalidation, lookupGeneration(a))
             assertNull(get(a, "activeOwnerAppFlow"))
             assertEquals(false, get(a, "appLookupActive"))
             assertEquals(0, port.calls.get())
-            assertFalse(ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
+            assertFalse("No dialog after ${if (cancel) "STOP" else "independent navigation"}",
+                ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
         }
     }
 

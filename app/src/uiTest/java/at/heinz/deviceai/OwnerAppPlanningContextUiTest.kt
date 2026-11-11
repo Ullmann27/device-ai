@@ -120,6 +120,10 @@ class OwnerAppPlanningContextUiTest {
             val chat = JarvisHomeTestRoutes.destination(activity.window.decorView, "chat")
             assertNotNull("Chat entry exists", chat)
             JarvisHomeTestRoutes.touch(activity.window.decorView, chat)
+            until("Chat transition completed") {
+                field(activity, "activeWorkArea") == ContinuumWorkArea.CHAT &&
+                    field(activity, "conversationActive") == true
+            }
         }
         assertEquals("Chat selected", ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
         assertEquals("Conversation active", true, field(activity, "conversationActive"))

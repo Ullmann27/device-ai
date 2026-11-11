@@ -1,0 +1,38 @@
+  private final boolean $$robo$$android_view_View$onTouchEvent(android.view.MotionEvent);
+     311: fload_3
+     312: invokespecial #4466               // Method setPressed:(ZFF)V
+     315: aload_0
+     316: getfield      #3610               // Field mHasPerformedLongPress:Z
+     319: ifne          374
+     322: aload_0
+     323: getfield      #4471               // Field mIgnoreNextUpEvent:Z
+     326: ifne          374
+     329: aload_0
+     330: invokespecial #3613               // Method removeLongPressCallback:()V
+     333: iload         8
+     335: ifne          374
+     338: aload_0
+     339: getfield      #4760               // Field mPerformClick:Landroid/view/View$PerformClick;
+     342: ifnonnull     358
+     345: aload_0
+     346: new           #84                 // class android/view/View$PerformClick
+     349: dup
+     350: aload_0
+     351: aconst_null
+     352: invokespecial #4763               // Method android/view/View$PerformClick."<init>":(Landroid/view/View;Landroid/view/View$1;)V
+     355: putfield      #4760               // Field mPerformClick:Landroid/view/View$PerformClick;
+     358: aload_0
+     359: aload_0
+     360: getfield      #4760               // Field mPerformClick:Landroid/view/View$PerformClick;
+     363: invokevirtual #4767               // Method post:(Ljava/lang/Runnable;)Z
+     366: ifne          374
+     369: aload_0
+     370: invokespecial #4216               // Method performClickInternal:()Z
+     373: pop
+     374: aload_0
+     375: getfield      #4769               // Field mUnsetPressedState:Landroid/view/View$UnsetPressedState;
+     378: ifnonnull     394
+     381: aload_0
+     382: new           #39                 // class android/view/View$UnsetPressedState
+     385: dup
+     386: aload_0
