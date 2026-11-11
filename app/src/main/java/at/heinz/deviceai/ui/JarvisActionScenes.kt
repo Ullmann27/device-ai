@@ -42,6 +42,7 @@ object JarvisActionScenes {
     /** Centre title → kind and the START tile that opens it (null: no tile, the window emerges beside the face). */
     private val centres = mapOf(
         "Systemstatus" to (Kind.STATUS to "system"),
+        "Systemdiagnose" to (Kind.STATUS to "system"),
         "Gedächtniszentrum" to (Kind.MEMORY to "memory"),
         "Logik und Planung" to (Kind.PLANNING to "logic"),
         "Web und Quellen" to (Kind.WEB to "web"),
@@ -80,6 +81,8 @@ object JarvisActionScenes {
         "list_files", "find_files", "get_large_files", "move_file", "delete_file" -> Kind.FILES
         "take_screenshot", "record_screen" -> Kind.SCREEN
         "get_battery_info", "get_device_info", "get_network_summary", "get_storage_info", "list_processes",
+        "diagnose_device", "get_system_capabilities", "preview_own_cache", "cleanup_own_cache",
+        "restore_own_cache", "analyze_granted_storage", "save_system_snapshot",
         "open_android_settings" -> Kind.STATUS
         "read_logcat" -> Kind.DEVELOPMENT
         "web_search", "web_read" -> Kind.WEB

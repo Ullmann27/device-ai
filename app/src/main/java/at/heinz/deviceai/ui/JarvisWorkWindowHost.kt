@@ -434,6 +434,7 @@ class JarvisWorkWindowHost(
                     at.heinz.deviceai.cockpit.StepState.DONE -> step.label
                     at.heinz.deviceai.cockpit.StepState.FAILED -> "${step.label} fehlgeschlagen"
                     at.heinz.deviceai.cockpit.StepState.BLOCKED -> "${step.label} blockiert"
+                    at.heinz.deviceai.cockpit.StepState.UNVERIFIED -> "${step.label} · nicht geprüft"
                 }
             }
         }

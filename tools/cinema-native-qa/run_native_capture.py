@@ -102,8 +102,8 @@ def stop(process):
 def main():
     args = arguments()
     validate(args)
-    if git(args.repo, 'status', '--porcelain', '--untracked-files=no'):
-        raise ValueError('Commit tracked source changes before capture')
+    if git(args.repo, 'status', '--porcelain', '--untracked-files=all'):
+        raise ValueError('Commit tracked and untracked source changes before capture')
     source = git(args.repo, 'rev-parse', 'HEAD')
     main_tree = git(args.repo, 'rev-parse', 'HEAD:app/src/main')
     command = [args.gradle, '--no-daemon', '--max-workers=1', '--console=plain',
@@ -165,7 +165,7 @@ def main():
         if any(int(row.get(key) or 0) for row in tests for key in ('failures', 'errors', 'skipped')):
             errors.append('Fresh JUnit failures/errors/skips retained')
         after = git(args.repo, 'rev-parse', 'HEAD')
-        dirty = git(args.repo, 'status', '--porcelain', '--untracked-files=no')
+        dirty = git(args.repo, 'status', '--porcelain', '--untracked-files=all')
         if after != source or dirty:
             errors.append('Source changed during capture')
         exit_code = code if code != 0 else (2 if errors else 0)

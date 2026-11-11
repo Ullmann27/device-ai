@@ -260,7 +260,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         mapper.applyDiagnosticBlink(diagnosticBlink)
         applyGlow(if (motion) pose.speakEnergy else 0f)
         val flyIn = CinemaWindowLightState.snapshot
-        val accent = if (flyIn.open) flyIn.accentArgb else windowAccentArgb
+        val accent = flyIn.accentOr(windowAccentArgb)
         val open = windowOpen || flyIn.open
         // Light follows glass, not eyes.
         val side = if (flyIn.open) flyIn.gazeX else if (pose.gazeDirected) pose.gazeX else 0f

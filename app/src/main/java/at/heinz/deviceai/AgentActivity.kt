@@ -1,5 +1,7 @@
 package at.heinz.deviceai
 
+import at.heinz.deviceai.systemintelligence.*
+
 import at.heinz.deviceai.chief.ChiefBotPersonas
 import at.heinz.deviceai.chief.ChiefBotTaskIntake
 import at.heinz.deviceai.chief.ChiefBotTaskMode
@@ -178,6 +180,7 @@ class AgentActivity : Activity() {
         /** Drafts changed before this moment belong to an earlier app process. */
         private val PROCESS_STARTED_AT = System.currentTimeMillis()
         private const val DRAFT_SAVE_REQUEST = 2246
+        private const val SYSTEM_FILES_REQUEST = 2247
         /** Characters of the document's own text shown in its work window; the full bounded text stays for drafting. */
         private const val DOCUMENT_EXCERPT_CHARS = 700
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
@@ -210,6 +213,12 @@ class AgentActivity : Activity() {
     private lateinit var bridge: ShizukuBridge
     private var shizukuConnectionDialog: ShizukuConnectionDialog? = null
     private lateinit var executor: DeviceToolExecutor
+    private var activeSystemGate: ToolGate? = null
+    private var systemGeneration = 0L
+    private var systemPickerSession: String? = null
+    private var systemReport = "Noch keine Diagnose ausgeführt."
+    private var systemBaseline: SystemPerformanceCapture? = null
+    private var systemConfirmationDialog: AlertDialog? = null
     private lateinit var backend: AgentBackendClient
     private lateinit var modelCatalog: LocalModelCatalog
     private lateinit var localRuntime: LocalModelRuntime
@@ -467,6 +476,13 @@ class AgentActivity : Activity() {
     private var activeLocalRequest = false
     private val internetConsent = at.heinz.deviceai.cognitive.InternetConsentPolicy()
     private val webToolGate = at.heinz.deviceai.cognitive.ApprovedWebToolGate(internetConsent)
+    private data class PendingResearchChatApproval(
+        val approval: at.heinz.deviceai.cognitive.WebToolApproval,
+        val respond: (Boolean) -> Unit,
+        val invalidate: () -> Unit
+    )
+    private var pendingResearchChatApproval: PendingResearchChatApproval? = null
+    private var researchApprovalPresentationRevision = 0L
     private val approvedModelWebSession = java.util.concurrent.atomic.AtomicReference<at.heinz.deviceai.cognitive.ApprovedWebResearchSession?>()
     private var activeWebResearchSession:at.heinz.deviceai.cognitive.ApprovedWebResearchSession?=null
     private var researchArmed = false
@@ -753,6 +769,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        cancelSystemDiagnosis()
         botTeam?.invalidate()
         if (botTeamOwnsLane && ::localRuntime.isInitialized) localRuntime.cancel()
         airbusCockpitOrchestrator?.setForeground(false)
@@ -3739,7 +3756,11 @@ class AgentActivity : Activity() {
         liveHardwareGauges = null
         val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
         val box = cockpit.panel(this, "DEVICE AI · DEIN BEREICH", title, intro)
-        box.addView(cockpit.section(this, "LIVE-STATUS · ECHTE GERÄTEDATEN"), matchWidth(top = 12))
+        if (title == "Systemdiagnose") {
+            box.addView(at.heinz.deviceai.ui.SystemDiagnosisHologramView(this, executor.lastDiagnosis), matchWidth(top = 8))
+        }
+        box.addView(cockpit.section(this, if (title == "Systemdiagnose") "MESSSTATUS · LOKALE MOMENTAUFNAHME"
+            else "LIVE-STATUS · ECHTE GERÄTEDATEN"), matchWidth(top = 12))
         val statusGrid = cockpit.statusPane(this)
         cockpit.updateStatus(statusGrid, "Status wird gelesen …")
         box.addView(statusGrid, matchWidth(top = 3))
@@ -4338,6 +4359,8 @@ class AgentActivity : Activity() {
         "Dienste, Hintergrundjobs und Freigaben. Internet und Cloud nur nach ausdrücklicher Freigabe.",
         learningIoStatus { systemCenterStatus() },
         listOf(
+            CenterAction("HANDY ANALYSIEREN", accent = true) { runSystemTool(SystemIntelligenceCommands.DIAGNOSE) },
+            CenterAction("DIAGNOSE & BEREINIGUNG") { showSystemIntelligence() },
             CenterAction("MEHR · ARBEITSBEREICHE") { showMoreWorkAreas() },
             CenterAction("SHIZUKU · VERBINDEN") { showShizukuConnectionDialog() },
             CenterAction("WHATSAPP · NACHRICHT ENTWERFEN") { showWhatsAppDraftDialog() },
@@ -4362,6 +4385,182 @@ class AgentActivity : Activity() {
             CenterAction("HOLOGRAMM · LIVE-FRAMES PRÜFEN", accent = true) { showHologramMotionAudit() }
         )
     )
+
+    private fun showSystemIntelligence(): Unit = showCenter(
+        "Systemdiagnose", "Lokale Messungen und ausdrücklich freigegebene Schritte. Root bleibt deaktiviert.",
+        { done -> done(systemReport) },
+        listOf(
+            CenterAction("JETZT ANALYSIEREN", accent = true) { runSystemTool(SystemIntelligenceCommands.DIAGNOSE) },
+            CenterAction("VORHER-MESSUNG MERKEN") {
+                val current = executor.lastDiagnosis
+                if (current != null) {
+                    systemBaseline = systemPerformanceCapture(current)
+                    systemReport = "Momentaufnahme als Vorher-Wert gemerkt. Warmzustand und Hintergrundlast sind unkontrolliert.\n" + current.report()
+                    showSystemIntelligence()
+                }
+            },
+            CenterAction("MESSBERICHT LOKAL SPEICHERN") {
+                executor.lastDiagnosis?.let { snapshot ->
+                    val call = ToolCallRequest(UUID.randomUUID().toString(), SystemIntelligenceCommands.SAVE,
+                        mapOf("snapshotId" to snapshot.observedAtMillis.toString()))
+                    confirmSystemChange(call, "Diese gemessenen technischen Zahlen lokal speichern?\n${snapshot.report()}", false)
+                }
+            },
+            CenterAction("DATEIEN AUSWÄHLEN & PRÜFEN") { selectSystemFiles() },
+            CenterAction("CACHE-VORSCHAU") { runSystemTool(SystemIntelligenceCommands.PREVIEW) },
+            CenterAction("VORSCHAU FREIGEBEN") { confirmSystemCleanup() },
+            CenterAction("BEREINIGUNG ZURÜCKNEHMEN") {
+                executor.lastCleanupUndoId?.let { undoId ->
+                    val call = ToolCallRequest(UUID.randomUUID().toString(), SystemIntelligenceCommands.RESTORE, mapOf("undoId" to undoId))
+                    confirmSystemChange(call, "Die zuletzt entfernten technischen Diagnoseberichte wiederherstellen?", false)
+                }
+            },
+            CenterAction("SHIZUKU-ZUGRIFF PRÜFEN") { runSystemTool(SystemIntelligenceCommands.CAPABILITIES) },
+            CenterAction("SHIZUKU VERBINDEN") { showShizukuConnectionDialog() },
+            CenterAction("DATEIAUSWAHL WIDERRUFEN") {
+                systemPickerSession = null
+                executor.clearStorageSelection()
+                systemReport = "Dateiauswahl widerrufen. Keine dauerhafte Dateifreigabe gespeichert."
+                showSystemIntelligence()
+            }
+        )
+    )
+
+    private fun runSystemTool(name: String, arguments: Map<String, Any?> = emptyMap(), ownerRequest: String? = null) {
+        require(name in SystemIntelligenceCommands.localTools && ToolRegistry.risk(name) == Risk.READ_ONLY)
+        dispatchSystemTool(ToolCallRequest(UUID.randomUUID().toString(), name, arguments), false, false, ownerRequest)
+    }
+
+    private fun dispatchSystemTool(call: ToolCallRequest, confirmed: Boolean, destructive: Boolean, ownerRequest: String? = null) {
+        if (busy || !foregroundLearningActive || isFinishing || isDestroyed) return
+        centerDialog?.dismiss(); centerDialog = null
+        val generation = ++systemGeneration
+        val ownerSession = sessionId
+        val turn = at.heinz.deviceai.chief.TurnLifecycle(call.callId)
+        activeChiefTurn = turn
+        turn.acknowledge()?.let {
+            cockpitTriggers.commandAcknowledged(turn.turnId, ownerRequest ?: ToolRegistry.label(call.name))
+        }
+        activeLocalRequest = true
+        setBusy(true)
+        val gate = createToolGate(ownerTurn = ownerRequest ?: "Lokaler Systemauftrag", systemCallId = call.callId)
+        activeSystemGate = gate
+        executeToolResult(call, confirmed, destructive, gate) { result ->
+            if (generation != systemGeneration || ownerSession != sessionId || !foregroundLearningActive || isFinishing || isDestroyed)
+                return@executeToolResult
+            activeSystemGate = null
+            activeLocalRequest = false
+            val delivered = result.record.status == ToolExecutionStatus.SUCCEEDED && !result.record.outcomeUncertain
+            if (turn.deliver()) cockpitTriggers.turnEnded(turn.turnId, delivered = delivered, outcomeVerified = false)
+            setBusy(false)
+            systemReport = result.output ?: "Schritt nicht erfolgreich: ${result.record.status}. Keine Verbesserung bestätigt."
+            if (call.name == SystemIntelligenceCommands.FILES && result.record.status == ToolExecutionStatus.SUCCEEDED)
+                executor.lastStorageAnalysis?.let { systemReport += "\n\n" + it.localPreview() }
+            if (call.name in setOf(SystemIntelligenceCommands.CLEANUP, SystemIntelligenceCommands.RESTORE)) {
+                executor.lastCleanupResult?.takeIf { it.first == call.callId }?.second?.let {
+                    systemReport += "\nBereinigungsstatus: ${it.status}; entfernte Berichte: ${it.removedFiles}." +
+                        "\nRücknahme verfügbar: ${executor.lastCleanupUndoId != null}."
+                    it.quarantineId?.let { id -> systemReport += "\nZur Prüfung erhalten: $id. Nicht als bereinigt gewertet." }
+                }
+            }
+            if (call.name == SystemIntelligenceCommands.CAPABILITIES && result.record.status != ToolExecutionStatus.SUCCEEDED)
+                systemReport += "\n${bridge.statusDetail()}\nNormale Android-Diagnose benötigt Shizuku nicht."
+            if (call.name == SystemIntelligenceCommands.DIAGNOSE && result.record.status == ToolExecutionStatus.SUCCEEDED) {
+                executor.lastDiagnosis?.let { current ->
+                    systemBaseline?.let { baseline ->
+                        val comparison = SystemPerformanceEvaluator.compare(baseline, systemPerformanceCapture(current))
+                        systemReport += "\n\nVorher/Nachher: ${comparison.summaryGerman()}"
+                        comparison.metrics[SystemPerformanceMetric.AVAILABLE_STORAGE_BYTES]?.medianDelta?.let {
+                            systemReport += "\nBeobachtete Platzänderung: ${it.toLong()} Byte (keine Ursachenzuordnung)."
+                        }
+                    }
+                }
+            }
+            if (ownerRequest != null) {
+                if (delivered && !result.replayed)
+                    localConversationContext.recordToolResult(ownerSession, ownerRequest, call.name, systemReport)
+                else localConversationContext.recordUnanswered(ownerSession, ownerRequest)
+                addAssistantMessage(systemReport, preserveLocalContext = true, keepCockpit = true)
+            }
+            showSystemIntelligence()
+        }
+    }
+
+    private fun confirmSystemCleanup() {
+        val preview = executor.lastCachePreview ?: return
+        if (busy || !preview.complete || preview.entries.isEmpty()) {
+            systemReport = "Keine vollständig geprüfte Bereinigungsvorschau vorhanden."
+            showSystemIntelligence()
+            return
+        }
+        val call = ToolCallRequest(UUID.randomUUID().toString(), SystemIntelligenceCommands.CLEANUP,
+            mapOf("previewId" to preview.previewId, "planDigest" to preview.planDigest))
+        confirmSystemChange(call, "Nur regenerierbare technische Momentaufnahmen. Persönliche Daten, Modellgewichte und APKs bleiben geschützt. " +
+                "Rücknahme ist 10 Minuten im laufenden App-Prozess möglich; nach App-Ende nicht mehr. Nur diese technischen Berichte werden gelöscht.\n\n" +
+                preview.entries.joinToString("\n") { "${it.id}: ${it.bytes} Byte" } +
+                "\n\nGesamt: ${preview.eligibleBytes} Byte. Kein schnelleres Gerät versprochen.", true)
+    }
+
+    private fun confirmSystemChange(call: ToolCallRequest, message: String, destructive: Boolean) {
+        if (busy || !foregroundLearningActive || isFinishing || isDestroyed) return
+        val ownerSession = sessionId
+        val generation = systemGeneration
+        systemConfirmationDialog?.dismiss()
+        val dialog = AlertDialog.Builder(this).setTitle(ToolRegistry.label(call.name)).setMessage(message)
+            .setNegativeButton("Abbrechen", null)
+            .setPositiveButton(if (destructive) "Diese Berichte entfernen" else "Freigeben") { _, _ ->
+                if (ownerSession == sessionId && generation == systemGeneration && foregroundLearningActive)
+                    dispatchSystemTool(call, true, destructive)
+            }.create()
+        systemConfirmationDialog = dialog
+        dialog.setOnDismissListener { if (systemConfirmationDialog === dialog) systemConfirmationDialog = null }
+        dialog.show()
+    }
+
+    private fun selectSystemFiles() {
+        if (busy) return
+        systemPickerSession = sessionId
+        startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }, SYSTEM_FILES_REQUEST)
+    }
+
+    private fun systemPerformanceCapture(sample: SystemDiagnosis): SystemPerformanceCapture {
+        val display = resources.displayMetrics
+        val conditions = SystemPerformanceConditions(
+            "${android.os.Build.MANUFACTURER}/${android.os.Build.MODEL}",
+            "", "system-snapshot-v1", "idle-observation",
+            "${display.widthPixels}x${display.heightPixels}/${display.densityDpi}",
+            batteryPercent = sample.batteryPercent, charging = sample.charging,
+            batteryTemperatureC = sample.batteryTemperatureC, thermalStatus = sample.thermalStatus)
+        val metrics = mutableMapOf<SystemPerformanceMetric, List<Double>>()
+        sample.storageAvailableBytes?.let { metrics[SystemPerformanceMetric.AVAILABLE_STORAGE_BYTES] = listOf(it.toDouble()) }
+        sample.ownPssBytes?.let { metrics[SystemPerformanceMetric.OWN_PSS_BYTES] = listOf(it.toDouble()) }
+        return SystemPerformanceCapture("snapshot-${sample.observedAtMillis}", sample.observedAtMillis, conditions, metrics,
+            mapOf(SystemPerformanceMetric.APP_START_MILLIS to "NOT_MEASURED",
+                SystemPerformanceMetric.UI_REACTION_MILLIS to "NOT_MEASURED", SystemPerformanceMetric.FRAME_MILLIS to "NOT_MEASURED",
+                SystemPerformanceMetric.MODEL_TASK_MILLIS to "NOT_MEASURED"))
+    }
+
+    private fun cancelSystemDiagnosis() {
+        systemGeneration++
+        systemConfirmationDialog?.dismiss()
+        systemConfirmationDialog = null
+        activeSystemGate?.cancel()
+        if (activeSystemGate != null) {
+            activeChiefTurn?.let { turn ->
+                if (turn.deliver()) cockpitTriggers.turnEnded(turn.turnId, delivered = false)
+            }
+            activeSystemGate = null
+            activeLocalRequest = false
+            setBusy(false)
+        }
+        if (::executor.isInitialized) executor.clearStorageSelection()
+    }
 
     /** Cinema 52 is the standard release profile; no legacy master OFF switch. */
     private fun showCinemaDepthExperiment() {
@@ -5367,6 +5566,11 @@ class AgentActivity : Activity() {
             setPadding(dp(12), dp(9), dp(10), dp(9))
             at.heinz.deviceai.ui.ContinuumControls.feedback(this, 18f)
         }
+        input.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+            override fun afterTextChanged(s: android.text.Editable?) { refreshSendButtonPresentation() }
+        })
         inputRow.addView(input, LinearLayout.LayoutParams(0,
             LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
             marginStart = if (stackedComposer) 0 else dp(7)
@@ -5450,6 +5654,7 @@ class AgentActivity : Activity() {
             textSize = 21f
             contentDescription = "Nachricht senden"
             setOnClickListener {
+                if (consumePendingResearchChatReply()) return@setOnClickListener
                 val chiefStatus = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
                     ContinuumWorkerChatCommand.ChiefStatus
                 if (busy && activeLocalRequest && !chiefStatus) cancelLocalRequest()
@@ -5633,6 +5838,7 @@ class AgentActivity : Activity() {
     }
 
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
+        if (consumePendingResearchChatReply()) return
         // Exact status submissions stay read-only even while a model/bot is busy. The
         // Send button's explicit Stop/cancel behavior remains in its existing click handler.
         if (at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(input.text.toString(), neuralCoach.isActive()) ==
@@ -5672,6 +5878,12 @@ class AgentActivity : Activity() {
             return
         }
         if (!botRoutingChecked && routeBotInput(input.text.toString())) return
+        if (SystemIntelligenceCommands.isDiagnosisRequest(request)) {
+            input.text.clear()
+            addUserMessage(request, keepCockpit = true)
+            runSystemTool(SystemIntelligenceCommands.DIAGNOSE, ownerRequest = request)
+            return
+        }
         // Prior measurement requests never start a new tool, model or network call.
         if (!neuralCoach.isActive() &&
             at.heinz.deviceai.cognitive.OwnerPreviousBatteryIntent.isPreviousReadingRequest(request)) {
@@ -5935,7 +6147,7 @@ class AgentActivity : Activity() {
                     } else {
                         val researchSession = sessionId
                         confirmWebRequest(at.heinz.deviceai.cognitive.WebToolRequest.Search(command.topic),
-                            researchMode) { session ->
+                            researchMode, requireIdle = true) { session ->
                             if (session != null && !busy && sessionId == researchSession && foregroundLearningActive &&
                                 !isFinishing && !isDestroyed) runResearch(session)
                             else {
@@ -6117,10 +6329,10 @@ class AgentActivity : Activity() {
             at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
         if (publicTopic != null && !researchArmed) {
             val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(publicTopic)
-            confirmWebRequest(call, ResearchMode.STANDARD) { session ->
+            input.text.clear()
+            addUserMessage(request)
+            confirmWebRequest(call, ResearchMode.STANDARD, requireIdle = true) { session ->
                 if (session != null && !busy) {
-                    input.text.clear()
-                    addUserMessage(request)
                     runResearch(session)
                 } else session?.cancel()
             }
@@ -6141,10 +6353,10 @@ class AgentActivity : Activity() {
             if (topic != null) {
                 if (staleResearch != null) addToolActivity("AKTUALITÄT · Recherchestand ${staleResearch.status.name.lowercase()} · ${staleResearch.reason}")
                 val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(topic)
-                confirmWebRequest(call, ResearchMode.STANDARD) { session ->
+                input.text.clear()
+                addUserMessage(request)
+                confirmWebRequest(call, ResearchMode.STANDARD, requireIdle = true) { session ->
                     if (busy) { session?.cancel(); return@confirmWebRequest }
-                    input.text.clear()
-                    addUserMessage(request)
                     if (session != null) runResearch(session)
                     else {
                         addToolActivity("WEB · nicht freigegeben · lokale Antwort ohne aktuelle Quellen")
@@ -6169,9 +6381,11 @@ class AgentActivity : Activity() {
         val webRequest=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(request,researchArmed)
         if(webRequest!=null) {
             researchArmed=false
-            confirmWebRequest(webRequest,researchMode) { session ->
+            input.text.clear()
+            addUserMessage(request)
+            confirmWebRequest(webRequest,researchMode, requireIdle = true) { session ->
                 if(session!=null && !busy) {
-                    input.text.clear();addUserMessage(request);runResearch(session)
+                    runResearch(session)
                 } else session?.cancel()
             }
             return
@@ -9324,8 +9538,9 @@ class AgentActivity : Activity() {
 
     private fun confirmInternetResearch(question:String,selectedMode:ResearchMode,mentorArea:String?=null) {
         val call=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(question,true)?:return
-        confirmWebRequest(call,selectedMode) { session ->
-            if(session!=null && !busy){addUserMessage(question);runResearch(session,mentorArea)} else session?.cancel()
+        addUserMessage(question)
+        confirmWebRequest(call,selectedMode, requireIdle = true) { session ->
+            if(session!=null && !busy){runResearch(session,mentorArea)} else session?.cancel()
         }
     }
 
@@ -9333,31 +9548,89 @@ class AgentActivity : Activity() {
      * grant. Both paths mint the same bounded, revocable ToolGate capability. */
     private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
         invalidated:()->Unit = {},
+        completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) =
+        confirmWebRequest(call, mode, false, invalidated, completed)
+
+    private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
+        requireIdle: Boolean,
+        invalidated:()->Unit = {},
         completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) {
-        if (!foregroundLearningActive || isFinishing || isDestroyed) { invalidated(); return }
+        val presentationRevision = ++researchApprovalPresentationRevision
+        val presentationSession = sessionId
+        var noticeEmitted = false
+        fun notExecuted(message: String = "Recherche nicht ausgeführt: Es liegt keine aktuelle Freigabe für diese Anfrage vor.") {
+            if (noticeEmitted || sessionId != presentationSession ||
+                researchApprovalPresentationRevision != presentationRevision ||
+                isFinishing || isDestroyed) return
+            noticeEmitted = true
+            addAssistantMessage(message, preserveLocalContext = true)
+        }
+        fun complete(session: at.heinz.deviceai.cognitive.ApprovedWebResearchSession?) {
+            if (session != null && requireIdle) {
+                val blocked = when {
+                    busy -> "Recherche nicht ausgeführt: Ein anderer Auftrag läuft bereits."
+                    localAgentExecutor.isShutdown ->
+                        "Recherche nicht ausgeführt: Die lokale Verarbeitung ist derzeit nicht verfügbar."
+                    else -> null
+                }
+                if (blocked != null) {
+                    session.cancel()
+                    notExecuted(blocked)
+                    return
+                }
+            }
+            completed(session)
+        }
+        pendingResearchChatApproval?.invalidate?.invoke()
+        pendingResearchChatApproval = null
+        if (!foregroundLearningActive || isFinishing || isDestroyed) {
+            invalidated()
+            notExecuted()
+            return
+        }
         restoreInternetMode()
         if(internetConsent.mode==at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
-            completed(webToolGate.authorizeAlwaysOn(call,mode))
+            val session = webToolGate.authorizeAlwaysOn(call,mode)
+            if (session == null) notExecuted()
+            complete(session)
             return
         }
         val approval=webToolGate.prepare(call)
         if(approval==null){
-            addAssistantMessage("Kein Internetzugriff: Modus AUS oder ungültige Webanfrage. Öffentliche HTTPS-Quellen sind erforderlich.")
-            completed(null);return
+            notExecuted("Kein Internetzugriff: Modus AUS oder ungültige Webanfrage. Öffentliche HTTPS-Quellen sind erforderlich.")
+            complete(null);return
         }
         val approvalSession = sessionId
         var responded = false
+        var approvalDialog: AlertDialog? = null
         fun respond(accepted: Boolean) {
             if (responded) return
             responded = true
+            approvalDialog?.dismiss()
+            approvalDialog = null
+            if (pendingResearchChatApproval?.approval === approval) pendingResearchChatApproval = null
+            refreshSendButtonPresentation()
             val current = sessionId == approvalSession && foregroundLearningActive && !isFinishing && !isDestroyed
-            if (!current || !webToolGate.completeApproval(approval, mode, accepted, completed)) {
+            if (!current || !webToolGate.completeApproval(approval, mode, accepted) { session ->
+                    if (session == null) notExecuted()
+                    complete(session)
+                }) {
                 invalidated()
-                if (!isFinishing && !isDestroyed)
-                    addToolActivity("WEB · veraltete Freigabe verworfen · kein neuer Auftrag")
+                notExecuted()
             }
         }
-        AlertDialog.Builder(this)
+        pendingResearchChatApproval = PendingResearchChatApproval(approval, ::respond) {
+            if (!responded) {
+                responded = true
+                approvalDialog?.dismiss()
+                approvalDialog = null
+                if (pendingResearchChatApproval?.approval === approval) pendingResearchChatApproval = null
+                refreshSendButtonPresentation()
+                invalidated()
+                notExecuted()
+            }
+        }
+        approvalDialog = AlertDialog.Builder(this)
             .setTitle("Internetzugriff einmal erlauben?")
             .setMessage((if(call is at.heinz.deviceai.cognitive.WebToolRequest.Search)
                 "Diese Suchfrage wird an öffentliche Suchanbieter übertragen. Externe Webquellen werden unabhängig geprüft. "
@@ -9365,8 +9638,36 @@ class AgentActivity : Activity() {
                 "Gilt nur für diese Anfrage, ohne Gerätefreigabe oder automatische Folgeaufträge.\n\n"+call.question)
             .setNegativeButton("Ablehnen") { _,_->respond(false) }
             .setOnCancelListener { respond(false) }
+            .setNeutralButton("Im Chat antworten") { _, _ ->
+                if (pendingResearchChatApproval?.approval !== approval || sessionId != approvalSession ||
+                    !foregroundLearningActive || isFinishing || isDestroyed) respond(false)
+                else {
+                    input.text.clear()
+                    addAssistantMessage("Soll ich diese Recherche einmal ausführen?\n\n${call.question}\n\n" +
+                        "Antworte mit „Ja, mach“ oder „Nein“. Die Freigabe gilt nur für diese Anfrage.",
+                        preserveLocalContext = true)
+                }
+            }
             .setPositiveButton("Einmal erlauben") { _,_->respond(true) }
             .show()
+    }
+
+    private fun consumePendingResearchChatReply(): Boolean {
+        val pending = pendingResearchChatApproval ?: return false
+        val request = input.text.toString().trim()
+        if (request.isEmpty()) return false
+        val accepted = at.heinz.deviceai.cognitive.ResearchConsentReply.parse(request)
+        if (accepted == null) {
+            pending.invalidate()
+            webToolGate.cancel()
+            return false
+        }
+        voiceEngine?.stop()
+        stopVoiceAnimation()
+        input.text.clear()
+        addUserMessage(request)
+        pending.respond(accepted)
+        return true
     }
 
     private fun runResearch(session:at.heinz.deviceai.cognitive.ApprovedWebResearchSession,mentorArea:String?=null) {
@@ -9569,7 +9870,6 @@ class AgentActivity : Activity() {
         backend.send(
             sessionId = sessionId,
             message = message,
-            shizukuReady = bridge.isReady(),
             toolOutputs = outputs
         ) { result ->
             result.onFailure { error ->
@@ -9604,6 +9904,11 @@ class AgentActivity : Activity() {
         }
 
         val call = calls[index]
+        if (!SystemIntelligenceCommands.cloudMayDispatch(call.name)) {
+            outputs += ToolOutput(call.callId, "LOCAL_ONLY_TOOL: im lokalen Gerätebereich ausführen; keine Freigabe zur Systemdatenübertragung.")
+            executeCloudCalls(calls, index + 1, outputs)
+            return
+        }
         val validationError = ToolRegistry.validate(call)
         if (validationError != null) {
             outputs += ToolOutput(call.callId, "TOOL_VALIDATION_ERROR: $validationError")
@@ -9706,11 +10011,12 @@ class AgentActivity : Activity() {
 
     private fun createToolGate(ownerTurn: String? = null, consentRevisionAtTurnStart: Long? = null,
                                ephemeralScreenContext:()->Boolean = {false},
-                               botTask: ChiefBotTaskTicket? = null): ToolGate {
+                               botTask: ChiefBotTaskTicket? = null, systemCallId: String? = null): ToolGate {
         // Capture at gate creation: a late old runner cannot borrow a subsequent turn's scope.
         val effectContext = currentTaskEffectContext
         val presentationGeneration = workPresentationGeneration
-        val cockpitTurn = activeChiefTurn?.takeIf { it.phase != at.heinz.deviceai.chief.TurnPhase.ENDED }?.turnId
+        val cockpitLifecycle = activeChiefTurn?.takeIf { it.phase != at.heinz.deviceai.chief.TurnPhase.ENDED }
+        val cockpitTurn = cockpitLifecycle?.turnId
         return ToolGate(
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
@@ -9721,6 +10027,8 @@ class AgentActivity : Activity() {
             }
             fun actualStart() {
                 effectStarted = true
+                cockpitLifecycle?.milestone(at.heinz.deviceai.chief.TurnMilestone.TOOL_STARTED,
+                    ToolRegistry.label(request.name))
                 cockpitTurn?.let { cockpitTriggers.toolStarted(it, request.callId, request.name) }
                 val startedAt = android.os.SystemClock.uptimeMillis()
                 runOnUiThread {
@@ -9740,6 +10048,9 @@ class AgentActivity : Activity() {
                 }
             }
             try {
+            check(request.name !in SystemIntelligenceCommands.localTools || request.callId == systemCallId) {
+                "SYSTEM_TOOLS_REQUIRE_EXPLICIT_LOCAL_ACTION"
+            }
             botTask?.let(::requireBotTaskCurrent)
             check(!ephemeralScreenContext() || at.heinz.deviceai.cognitive.ScreenObservationPrompt.allowsTool(request.name)) {
                 "SCREEN_DATA_CANNOT_AUTHORIZE_NETWORK_OR_SENSITIVE_ACTIONS"
@@ -9844,6 +10155,8 @@ class AgentActivity : Activity() {
         destructive: Boolean,
         onDecision: (Boolean) -> Unit
     ) {
+        if (proposal.toolName !in setOf("web_search", "web_read"))
+            pendingResearchChatApproval?.invalidate?.invoke()
         avatarAwaitingApproval = true
         refreshHologramState()
         val callback: (Boolean) -> Unit = { approved ->
@@ -10470,7 +10783,13 @@ class AgentActivity : Activity() {
                         addToolActivity("CHIEF · " + line)
                     }
                 }
-            }),
+            }).let { observer ->
+                { event: at.heinz.deviceai.cognitive.AgentCognitiveEvent ->
+                    // Final result resolves ambiguous BLOCKED.
+                    if (event.state != at.heinz.deviceai.cognitive.CognitiveWorkState.BLOCKED)
+                        observer(event)
+                }
+            },
             onToolStarted = { callId, toolName ->
                 if (botTask == null && codingPlanning == null)
                     recordToolStarted(startedToolCalls, callId, toolName)
@@ -10502,13 +10821,12 @@ class AgentActivity : Activity() {
                     at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuard(
                         cancellation, localSessionId, imported).isCurrent(
                         activeChatCancellation, this@AgentActivity.sessionId, localRuntime.loadedModel)
-                cockpitTriggers.turnEnded(chiefTurn.turnId, chiefTurn.deliver())
-                finishLocalReasoningWorkScene(chiefTurn.turnId)
                 activeChatCancellation = null
                 activeOrchestrator = null
                 activeLocalRequest = false
                 planCard.visibility = View.GONE
                 if (!ownerDeliveryCurrent) {
+                    finishLocalConversationTurn(chiefTurn)
                     if (botTask == null && codingPlanning == null && sessionId == localSessionId &&
                         !ephemeralScreenRun.get()) {
                         lastLocalReply = null
@@ -10522,6 +10840,7 @@ class AgentActivity : Activity() {
                         sessionId != localSessionId ||
                         runCatching { cancellation.throwIfCancelled() }.isFailure ||
                         !LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel))) {
+                    finishLocalConversationTurn(chiefTurn)
                     finishBotTask(botTask, "Abgebrochen oder veraltet · mögliche Werkzeugwirkung prüfen")
                     addToolActivity("Bot-Auftrag beendet · veraltete Antwort verworfen; bereits gestartete Wirkungen können bestehen")
                     setBusy(false)
@@ -10532,6 +10851,7 @@ class AgentActivity : Activity() {
                     if(codingPlanning != null) {
                         val draft = if(planningDeliveryCurrent && run.blocker == null)
                             codingPlanning.decode(run.response) else null
+                        finishLocalConversationTurn(chiefTurn, run.takeIf { draft != null })
                         if(draft != null) showCodingTaskDraftDialog(draft)
                         addToolActivity(if(draft != null) "Coding-Entwurf bereit · vollständig prüfen; nichts übergeben oder gestartet"
                             else "Coding-Entwurf verworfen · keine gültige aktuelle Modellantwort")
@@ -10541,6 +10861,7 @@ class AgentActivity : Activity() {
                             internetConsent.revision() != internetRevisionAtTurnStart,
                             modelWebCalls, modelWebSessions.isNotEmpty(),
                             onlineResearchFrameUsed.get())) {
+                        finishLocalConversationTurn(chiefTurn)
                         lastLocalReply = null // Revoked turn cannot leave an old apparent-answer anchor.
                         if (botTask == null && sessionId == localSessionId && !ephemeralScreenRun.get())
                             localConversationContext.recordUnanswered(localSessionId, text)
@@ -10549,6 +10870,7 @@ class AgentActivity : Activity() {
                         return@onSuccess
                     }
                     if (modelWebSessions.any { !it.isAuthorized() }) {
+                        finishLocalConversationTurn(chiefTurn)
                         lastLocalReply = null
                         if (botTask == null && sessionId == localSessionId && !ephemeralScreenRun.get())
                             localConversationContext.recordUnanswered(localSessionId, text)
@@ -10557,11 +10879,13 @@ class AgentActivity : Activity() {
                         return@onSuccess
                     }
                     if(!at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {
+                        finishLocalConversationTurn(chiefTurn)
                         lastLocalReply = null
                         addToolActivity("Bildschirmfreigabe geändert: Antwort verworfen.")
                         botTask?.let { finishBotTask(it, "Bildschirmfreigabe geändert · Antwort verworfen") }
                         setBusy(false);return@onSuccess
                     }
+                    finishLocalConversationTurn(chiefTurn, run)
                     val hasPartialResponse = !run.responseComplete && run.response.isNotBlank()
                     val successful = run.responseComplete && run.blocker == null && run.response.isNotBlank()
                     val answerVerificationShadow = if (
@@ -10636,6 +10960,7 @@ class AgentActivity : Activity() {
                     refreshHologramState()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
                 }.onFailure { error ->
+                    finishLocalConversationTurn(chiefTurn)
                     if(codingPlanning != null) {
                         addToolActivity("Coding-Entwurf fehlgeschlagen · nichts übergeben oder gestartet")
                         return@onFailure
@@ -10694,6 +11019,19 @@ class AgentActivity : Activity() {
             }
             runOnUiThread { deliverResult() }
         }
+    }
+
+    private fun finishLocalConversationTurn(
+        turn: at.heinz.deviceai.chief.TurnLifecycle,
+        run: at.heinz.deviceai.cognitive.AgentRunResult? = null
+    ) {
+        if (!turn.deliver()) return
+        val accepted = run != null && run.responseComplete &&
+            run.blocker == null && run.response.isNotBlank()
+        val evidence = run?.taskEvidence
+        cockpitTriggers.turnEnded(turn.turnId, delivered = accepted,
+            outcomeVerified = accepted && evidence?.taskId == turn.turnId && evidence.outcomeVerified)
+        finishLocalReasoningWorkScene(turn.turnId)
     }
 
     /** Owner-local metadata only; telemetry is never memory or execution authority. */
@@ -11326,6 +11664,11 @@ class AgentActivity : Activity() {
             return
         }
         appLookupGeneration++
+        if (activeSystemGate != null) {
+            cancelSystemDiagnosis()
+            addToolActivity("Systemdiagnose abgebrochen; spätes Ergebnis wird verworfen")
+            return
+        }
         if (appLookupActive) {
             activeOwnerAppGate?.cancel()
             activeOwnerAppGate = null
@@ -12810,14 +13153,17 @@ class AgentActivity : Activity() {
     private fun refreshSendButtonPresentation() {
         if (!::sendButton.isInitialized) return
         sendButton.isEnabled = true
+        val researchReply = pendingResearchChatApproval != null &&
+            at.heinz.deviceai.cognitive.ResearchConsentReply.parse(input.text.toString()) != null
         // The compact 48dp row cannot fit a four-letter STOP label at 200% text.
         // Preserve the cancellation action and spoken label with a standard stop icon.
-        sendButton.text = if (busy && activeLocalRequest) {
+        sendButton.text = if (researchReply) "➤" else if (busy && activeLocalRequest) {
             if (usesStackedComposer()) "■" else "STOP"
         } else if (busy) "…" else "➤"
-        sendButton.contentDescription = if (busy && activeLocalRequest) "Lokale Anfrage abbrechen"
+        sendButton.contentDescription = if (researchReply) "Recherchefreigabe senden"
+            else if (busy && activeLocalRequest) "Lokale Anfrage abbrechen"
             else if (busy) "Device AI arbeitet" else "Nachricht senden"
-        sendButton.alpha = if (busy && !activeLocalRequest) 0.65f else 1f
+        sendButton.alpha = if (!researchReply && busy && !activeLocalRequest) 0.65f else 1f
     }
 
     /** UI thread. One bounded visual scope for existing owner work, never a scheduler. */
@@ -13114,6 +13460,7 @@ class AgentActivity : Activity() {
         stopVoiceAnimation()
         val scopeGeneration=++speechScopeGeneration
         val scopeSession=sessionId
+        val scopeResearchApproval=pendingResearchChatApproval?.approval
         val scopeDialog=devDialog
         val readinessScope = if (requestCode == READINESS_SPEECH_REQUEST) readinessDialog else null
         // Non-null only while the owner deliberately started hands-free mode; dictation stays a draft.
@@ -13140,7 +13487,11 @@ class AgentActivity : Activity() {
                 onText={spoken->if(speechScopeGeneration==scopeGeneration&&sessionId==scopeSession&&
                     (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog) &&
                     (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true)){
-                    if(conversationTurn!=null)applyConversationSpeech(conversationTurn,spoken) else applyLocalSpeechText(requestCode,spoken)}},
+                    val currentResearchApproval = pendingResearchChatApproval?.approval
+                    if (requestCode == SPEECH_REQUEST && currentResearchApproval != null &&
+                        currentResearchApproval !== scopeResearchApproval)
+                        endContinuousConversation("Recherchefreigabe geändert. Bitte erneut sprechen.")
+                    else if(conversationTurn!=null)applyConversationSpeech(conversationTurn,spoken) else applyLocalSpeechText(requestCode,spoken)}},
                 onFailure={failure->
                     if (conversationTurn != null && speechScopeGeneration == scopeGeneration && sessionId == scopeSession &&
                         !isFinishing && !isDestroyed) onConversationListenFailed(conversationTurn, failure)
@@ -13223,6 +13574,23 @@ class AgentActivity : Activity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
+            SYSTEM_FILES_REQUEST -> {
+                val expectedSession = systemPickerSession
+                systemPickerSession = null
+                if (resultCode == RESULT_OK && expectedSession == sessionId && data != null && !busy) {
+                    val uris = buildList {
+                        data.data?.let(::add)
+                        data.clipData?.let { clips ->
+                            for (i in 0 until minOf(clips.itemCount, 65)) add(clips.getItemAt(i).uri)
+                        }
+                    }.distinct()
+                    if (uris.size in 1..64) {
+                        val token = executor.selectStorage(uris)
+                        mainHandler.post { if (foregroundLearningActive && sessionId == expectedSession)
+                            runSystemTool(SystemIntelligenceCommands.FILES, mapOf("scopeToken" to token)) }
+                    }
+                }
+            }
             CONTINUUM_PACKAGE_MODEL_REQUEST -> {
                 pendingContinuumPackageModel=null
                 val modelUri=data?.data

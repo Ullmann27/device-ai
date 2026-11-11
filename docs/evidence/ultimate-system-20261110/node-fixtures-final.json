@@ -1,0 +1,16 @@
+{
+  "profile": "full-node",
+  "status": "PASS",
+  "sourceUnchanged": true,
+  "startedAt": "2026-11-10T23:51:47.553Z",
+  "finishedAt": "2026-11-10T23:54:12.843Z",
+  "source": "55e031769e12dda32b67f94f821c03d4eabb92b4",
+  "remoteSource": "2d946d4b2acbbddf5eef66bf56f5d26ba89dee9b",
+  "counts": {
+    "total": 2493,
+    "passed": 2456,
+    "failed": 0,
+    "skipped": 37
+  },
+  "junitSha256": "5f4f9a175a82a3ba5bacdaa1e6e55cf9e9f61fe627e812ab9585ac6c8b8b5670"
+}

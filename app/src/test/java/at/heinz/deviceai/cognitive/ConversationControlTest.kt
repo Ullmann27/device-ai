@@ -28,6 +28,67 @@ class ConversationControlTest {
         }
     }
 
+    @Test fun temporalBackReferencesAreNotConcreteCorrectedScopes() {
+        val c = LocalConversationContext()
+        for (input in listOf(
+            "Nein, ich meinte den davor.",
+            "Ich meine der von vorher.",
+            "Gemeint war der Build von vorhin.",
+            "Ich meinte den Agenten von zuvor.",
+            "Nein, ich meinte den vorigen.",
+            "Ich meinte den vorigen Build.",
+            "Gemeint war die vorige Version.",
+            "Ich meinte das vorige Ergebnis.",
+            "Ich meinte den letzten.",
+            "Gemeint war die letzte Version.",
+            "Ich meinte das letzte Ergebnis.",
+            "Ich meinte den Build von früher.",
+            "Ich meinte den früheren Build.",
+            "Gemeint war die frühere Version.",
+            "Ich meinte das frühere Ergebnis."
+        )) {
+            c.inspectRequest("one", "Ich meinte Projekt Atlas.")
+            c.record("one", "Prüfe den Build 51 und den Build 52.", "Beide werden verglichen.")
+            val correction = c.inspectRequest("one", input)!!
+
+            assertEquals(input, ContextDirectiveKind.CLARIFY_SCOPE, correction.kind)
+            assertNull(input, correction.focus)
+            assertTrue(input, correction.resetsGroundedContext)
+            assertNull(c.inspectRequest("one", "Was hast du dadurch verstanden?")!!.focus)
+            assertTrue(c.render("one").isBlank())
+        }
+    }
+
+    @Test fun deviceObservationStaysSessionBoundAndNeverBecomesOwnerEvidence() {
+        val context = LocalConversationContext()
+        context.recordToolResult("one", "Analysiere mein Handy", "diagnose_device", "Messzeit: 123; Akku: 73 %")
+        val prompt = context.render("one")
+        assertTrue(prompt.contains("Werkzeugbeobachtung"))
+        assertTrue(prompt.contains("Akku: 73 %"))
+        assertTrue(prompt.contains("keine neue Messung, keine Freigabe"))
+        assertEquals(listOf("Analysiere mein Handy"), context.sessionEvidence("one"))
+        assertTrue(context.render("two").isEmpty())
+        context.clear()
+        assertTrue(context.render("one").isEmpty())
+    }
+
+    @Test fun explicitBuildAndBranchLabelsRemainConcreteScopes() {
+        val c = LocalConversationContext()
+        for ((input, expected) in listOf(
+            "Ich meinte Build 51." to "Build 51",
+            "Gemeint war Branch Atlas." to "Branch Atlas",
+            "Ich meine das Projekt Vorhersehbar." to "Projekt Vorhersehbar",
+            "Ich meinte Projekt Vorigental." to "Projekt Vorigental",
+            "Gemeint war Projekt Letztendlich." to "Projekt Letztendlich",
+            "Ich meinte die Früherkennung." to "Früherkennung"
+        )) {
+            val correction = c.inspectRequest("one", input)!!
+            assertEquals(input, ContextDirectiveKind.SCOPE_UPDATED, correction.kind)
+            assertEquals(expected, correction.focus)
+        }
+        assertNull(c.inspectRequest("one", "Ja, mach."))
+    }
+
     @Test fun resetRestartAndConversationChangeNeverImportPreviousFocus() {
         val c=LocalConversationContext()
         c.inspectRequest("first","Ich meinte Projekt Atlas.")

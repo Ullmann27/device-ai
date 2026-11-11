@@ -1,0 +1,3 @@
+JAVA_HOME=/tmp/continuum-toolchain/jdk ANDROID_HOME=/tmp/continuum-toolchain/android-sdk ANDROID_SDK_ROOT=/tmp/continuum-toolchain/android-sdk GRADLE_USER_HOME=/workspace/scratch/5900afa6af29/qa-gradle-home /tmp/continuum-toolchain/gradle-8.11.1/bin/gradle --offline --no-daemon --max-workers=1 -Dorg.gradle.java.installations.paths=/tmp/continuum-toolchain/jdk '-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8' -Dorg.gradle.vfs.watch=false -Pkotlin.compiler.execution.strategy=in-process -PcontinuumUiWidgetTests=true :app:compileDebugKotlin
+
+Exit 1: Gradle daemon disappeared. Cause not established. Initial attempt used repository default -Xmx2g, same disappearance. Two attempts preserved; no confirmed full Android compile for this patch.

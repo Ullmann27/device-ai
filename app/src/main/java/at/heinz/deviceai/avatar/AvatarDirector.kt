@@ -121,12 +121,16 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
      * Peek for cinema fly-in samples: [windowOpened] would otherwise retire the window id
      * while speech is held ([utterance] set) even before [onRuntime] marks SPEAKING.
      */
-    @Synchronized fun canAdmitWindowGlance(): Boolean =
-        state != AvatarState.LISTENING && state != AvatarState.SPEAKING && utterance == null
+    @Synchronized fun canAdmitWindowGlance(): Boolean {
+        expireAnimationIntents(clock())
+        return workIntent == null && state != AvatarState.LISTENING &&
+            state != AvatarState.SPEAKING && utterance == null
+    }
 
     private fun requestWindow(windowId: String, target: GazeTarget, durationMs: Long, yieldsToObservedGaze: Boolean = false): Boolean {
         val at = clock()
         expireAnimationIntents(at)
+        if (workIntent != null) return false
         if (windowId.isBlank() || windowId == windowIntent?.id || windowId in retiredWindows) return false
         if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) {
             remember(retiredWindows, windowId)
@@ -257,6 +261,10 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     }
 
     private fun expireAnimationIntents(at: Long) {
+        workIntent?.let {
+            val age = at.toDouble() - it.atMillis.toDouble()
+            if (age < 0 || age >= it.durationMs) workIntent = null
+        }
         windowIntent?.let {
             val age = at.toDouble() - it.atMillis.toDouble()
             if (age < 0 || age >= it.durationMs) {

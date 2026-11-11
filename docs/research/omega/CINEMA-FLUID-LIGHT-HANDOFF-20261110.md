@@ -29,8 +29,8 @@ Earlier owner reference directory was located through the existing project dossi
 
 - Initial exact candidate host law: 31/31 Kotlin/JUnit PASS (27 existing +4 fluid/abort tests).
 - Avatar: two real failing regression probes on base, 19/19 final host tests; see committed avatar logs.
-- Current targeted Node contracts: 20/20 PASS.
-- PNG-only production-painter preview: PASS, 32 PNG stills, 0 video frames. This is a host preview, not a device test.
+- Historical targeted Node contracts: 18/18 PASS at `e2fb22d`, per `qa-receipt.json`; not a claim about later source.
+- PNG-only production-painter preview: 32 PNG stills and 0 video frames were reported, but its later helper/source receipt is missing (`SOURCE_UNBOUND`). The original input hashes bind only the earlier preview, not this check or a device result.
 - Embedded shader: 8/8 actual Skia RuntimeEffect software-raster tests, including compilation, premultiplication, transparent content area, deterministic replay and disjoint-strip equality.
 - Targeted Android SDK36 compilation of native painter/glass/overlay paths: PASS, no GPU execution.
 - Complete Gradle app compile (`:app:compileDebugKotlin`): PASS.

@@ -4,6 +4,37 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class SpatialWindowLightTest {
+    @Test fun openWindowWithoutAccentRetainsExistingSceneLight() {
+        val sceneAccent = 0xFFAA40FF.toInt()
+        CinemaWindowLightState.apply(null, .7f, true, -.4f)
+        try {
+            val window = CinemaWindowLightState.snapshot
+            val actual = SpatialWindowLight.tint(window.accentOr(sceneAccent), .75f,
+                window.open, true, window.gazeX, window.gazeY)
+            val expected = SpatialWindowLight.tint(sceneAccent, .75f, true, true, .7f, -.4f)
+            assertEquals("Projected geometry retains the available scene tint", expected, actual)
+        } finally { CinemaWindowLightState.reset() }
+    }
+
+    @Test fun explicitProjectedAccentWinsOnlyWhileOpen() {
+        val sceneAccent = 0xFFAA40FF.toInt()
+        val projectedAccent = 0xFFFFAA20.toInt()
+        val window = CinemaWindowLightState.Snapshot(projectedAccent, .7f, -.4f, true)
+        assertEquals(projectedAccent, window.accentOr(sceneAccent))
+        assertEquals(projectedAccent, window.accentOr(null))
+        assertEquals(sceneAccent, window.copy(open = false).accentOr(sceneAccent))
+        assertNull(window.copy(open = false).accentOr(null))
+    }
+
+    @Test fun absentAccentsRetainNeutralSpatialLight() {
+        val window = CinemaWindowLightState.Snapshot(gazeX = -.8f, gazeY = .6f, open = true)
+        val actual = SpatialWindowLight.tint(window.accentOr(null), .5f,
+            window.open, true, window.gazeX, window.gazeY)
+        assertEquals(SpatialWindowLight.tint(null, .5f, true, true, -.8f, .6f), actual)
+        assertEquals(SpatialWindowLight.REST_X - .8f * SpatialWindowLight.SIDE_SPAN,
+            actual.positionX, 0f)
+    }
+
     @Test fun verifiedWindowAccentTintsExistingLightWithoutChangingFaceGeometry() {
         val base = SpatialWindowLight.tint(null, .75f, false, true)
         val window = SpatialWindowLight.tint(0xFFAA40FF.toInt(), .75f, true, true)

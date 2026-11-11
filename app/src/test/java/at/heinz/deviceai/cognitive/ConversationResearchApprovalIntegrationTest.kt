@@ -6,6 +6,35 @@ import org.junit.Test
 
 /** Real gate and engine; controlled source boundary, not a live internet acceptance. */
 class ConversationResearchApprovalIntegrationTest {
+    @Test fun unboundYesCannotGrantResearchOrReviveAStaleApproval() {
+        val consent = InternetConsentPolicy(InternetAccessMode.ASK)
+        val web = ApprovedWebToolGate(consent)
+        val call = WebToolRequest.Search("Photosynthese")
+        val stale = web.prepare(call)!!
+        val current = web.prepare(call)!!
+        val context = LocalConversationContext()
+        context.record("s", "Recherchiere Photosynthese.", "Die Internetfreigabe steht noch aus.")
+
+        assertNull(context.inspectRequest("s", "Ja, mach."))
+        assertNull(WebToolRequest.fromChat("Ja, mach.", false))
+        var effects = 0
+        val toolGate = ToolGate(ToolPolicy(), ToolRunner { effects++; "unreachable" })
+        assertEquals(ToolExecutionStatus.REJECTED,
+            toolGate.execute(call.proposal().invocation("unbound-yes")).record.status)
+        assertEquals(0, effects)
+        assertFalse(web.completeApproval(stale, ResearchMode.QUICK, true) { fail("Stale approval") })
+
+        var callbacks = 0
+        assertTrue(web.completeApproval(current, ResearchMode.QUICK, true) { session ->
+            callbacks++
+            assertNotNull(session)
+            assertEquals(call, session!!.call)
+        })
+        assertFalse(web.completeApproval(current, ResearchMode.QUICK, true) { callbacks++ })
+        assertEquals(1, callbacks)
+        assertEquals(0, effects)
+    }
+
     @Test fun naturalConversationUsesTheExistingRevocableGateForAllInternetModes() {
         for (mode in InternetAccessMode.entries) {
             val consent = InternetConsentPolicy()

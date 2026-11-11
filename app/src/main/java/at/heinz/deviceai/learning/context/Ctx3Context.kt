@@ -52,7 +52,7 @@ class Ctx3Context {
    selectedFocusIndex=selectedId?.let { id->focus.indexOfFirst { it.id==id } } ?: -1
   }
   val covered=hits.flatMap { (it.start until it.end).toList() }.toSet()
-  val ordinary=setOf("wer","was","wie","wo","und","ich","nicht","nein","erzähl","erzähle","kannst","kann","bitte","servus","hallo","farbe","alter","name","jahre","hilfe","text","app","gerät","projekt","datei","notizen","zähler","montag","dienstag","mittwoch","donnerstag","freitag","samstag","sonntag","sie","er","es","nimm","meine","meinte","gemeint","der","die","das","davor","andere","anderen","anderes","anderer","erste","ersten","erstes","erster","zweite","zweiten","zweites","zweiter","variante","option")
+  val ordinary=setOf("wer","was","wie","wo","warum","geht","startet","und","ich","nicht","nein","erzähl","erzähle","kannst","kann","bitte","servus","hallo","farbe","alter","name","jahre","hilfe","text","app","gerät","projekt","datei","notizen","zähler","montag","dienstag","mittwoch","donnerstag","freitag","samstag","sonntag","sie","er","es","nimm","meine","meinte","gemeint","der","die","das","davor","andere","anderen","anderes","anderer","erste","ersten","erstes","erster","zweite","zweiten","zweites","zweiter","variante","option")
   val unknown=Regex("[\\p{L}\\p{N}]+").findAll(input).map { it.value }.withIndex().any {
    it.index !in covered&&it.value.first().isUpperCase()&&it.value.lowercase(Locale.ROOT) !in ordinary
   }
@@ -69,20 +69,41 @@ class Ctx3Context {
 
   // Ordered deictic selectors are deterministic only inside an already established candidate set.
   // They never invent a new entity and fail closed when no unique position exists.
-  val deictic=resolveOrderedDeictic(words)
-  if(deictic!=null) {
-   if(focus.size<2)return Ctx3Decision.Clarify("NO_ORDERED_ALTERNATIVES")
-   val targetIndex=when(deictic) {
+  val selectors=orderedDeictics(input)
+  if(selectors.isNotEmpty()) {
+   val accepted=selectors.filterNot {
+    val before=tokens(input.substring(0,it.range.first))
+    val after=tokens(input.substring(it.range.last+1))
+    val predicates=setOf("startet","geht")
+    val predicateNegation=(before.lastOrNull() in predicates&&after==listOf("nicht"))||
+     (after.size==2&&after[0] in predicates&&after[1]=="nicht")
+    // Unknown negations remain rejected.
+    negative(before.size)||(words.lastOrNull()=="nicht"&&!predicateNegation)
+   }
+   val contrast=selectors.size==2&&accepted.size==1&&accepted.single()==selectors.last()&&
+    selectors.all { it.kind=="FIRST"||it.kind=="SECOND" }&&selectors.first().kind!=selectors.last().kind&&
+    Regex("(?iu)\\bsondern\\b").containsMatchIn(input.substring(selectors.first().range.last+1,selectors.last().range.first))
+   if(accepted.size!=1||(selectors.size>1&&!contrast)) {
+    focus=emptyList();selectedFocusIndex=-1
+    return Ctx3Decision.Clarify("NO_UNIQUE_POSITIVE_ORDERED_REFERENT")
+   }
+   val deictic=accepted.single()
+   fun unresolved(reason:String):Ctx3Decision.Clarify {
+    if(selectors.size>accepted.size){focus=emptyList();selectedFocusIndex=-1}
+    return Ctx3Decision.Clarify(reason)
+   }
+   if(focus.size<2)return unresolved("NO_ORDERED_ALTERNATIVES")
+   val targetIndex=when(deictic.kind) {
     "FIRST"->0
     "SECOND"->1
     "PREVIOUS"->if(selectedFocusIndex>0)selectedFocusIndex-1 else -1
     "OTHER"->if(focus.size==2&&selectedFocusIndex in focus.indices)1-selectedFocusIndex else -1
     else->-1
    }
-   if(targetIndex !in focus.indices)return Ctx3Decision.Clarify("NO_UNIQUE_ORDERED_REFERENT")
+   if(targetIndex !in focus.indices)return unresolved("NO_UNIQUE_ORDERED_REFERENT")
    val target=focus[targetIndex]
    selectedFocusIndex=targetIndex;age=0
-   return Ctx3Decision.Query(rewriteDeictic(input,target.label),target.sourceIds)
+   return Ctx3Decision.Query(input.replaceRange(deictic.range,target.label),target.sourceIds)
   }
 
   val ref=words.withIndex().firstOrNull { it.value in setOf("er","ihn","ihm","sie","es","damit","dazu","darüber","des") }
@@ -112,31 +133,21 @@ class Ctx3Context {
   }
  }
 
- private fun resolveOrderedDeictic(words:List<String>):String? {
-  fun has(vararg terms:String)=terms.all { it in words }
-  return when {
-   has("davor") && words.any { it in setOf("der","die","das","variante","option") } -> "PREVIOUS"
-   words.any { it in setOf("andere","anderen","anderes","anderer") } &&
-    words.any { it in setOf("der","die","das","variante","option") } -> "OTHER"
-   words.any { it in setOf("erste","ersten","erstes","erster") } -> "FIRST"
-   words.any { it in setOf("zweite","zweiten","zweites","zweiter") } -> "SECOND"
-   else -> null
-  }
- }
+ private data class Deictic(val kind:String,val range:IntRange)
 
- private fun rewriteDeictic(input:String,label:String):String {
-  val patterns=listOf(
-   "(?iu)\\b(?:der|die|das)\\s+davor\\b",
-   "(?iu)\\b(?:der|die|das)\\s+ander(?:e|en|es|er)\\b",
-   "(?iu)\\b(?:die\\s+)?erste(?:n|s|r)?(?:\\s+variante|\\s+option)?\\b",
-   "(?iu)\\b(?:die\\s+)?zweite(?:n|s|r)?(?:\\s+variante|\\s+option)?\\b"
-  )
-  var out=input
-  for(pattern in patterns)out=out.replace(Regex(pattern),Regex.escapeReplacement(label))
-  return out
- }
+ private fun orderedDeictics(input:String):List<Deictic> = ORDERED_PATTERNS.flatMap { (kind,pattern)->
+  pattern.findAll(input).map { Deictic(kind,it.range) }.toList()
+ }.sortedBy { it.range.first }
 
- companion object { fun tokens(text:String)=Regex("[\\p{L}\\p{N}]+",RegexOption.IGNORE_CASE).findAll(text).map { it.value.lowercase(Locale.ROOT) }.toList() }
+ companion object {
+  private val ORDERED_PATTERNS=listOf(
+   "PREVIOUS" to "(?iu)\\b(?:der|die|das|variante|option)\\s+davor\\b",
+   "OTHER" to "(?iu)\\b(?:der|die|das)\\s+ander(?:e|en|es|er)\\b",
+   "FIRST" to "(?iu)\\b(?:die\\s+)?erste(?:n|s|r)?(?:\\s+variante|\\s+option)?\\b",
+   "SECOND" to "(?iu)\\b(?:die\\s+)?zweite(?:n|s|r)?(?:\\s+variante|\\s+option)?\\b"
+  ).map { (kind,pattern)->kind to Regex(pattern) }
+  fun tokens(text:String)=Regex("[\\p{L}\\p{N}]+",RegexOption.IGNORE_CASE).findAll(text).map { it.value.lowercase(Locale.ROOT) }.toList()
+ }
 }
 
 /** Conservative surface reader; unsupported fact grammar stays unsupported. No truth inferred from a turn. */

@@ -13,17 +13,22 @@ class ConsequentialActionApprovalTest {
     private val sample = mapOf(
         "packageOrName" to "com.example.app", "path" to "/storage/emulated/0/Download/x.apk",
         "source" to "/storage/emulated/0/Download/a.txt", "destination" to "/storage/emulated/0/Documents/a.txt",
-        "query" to "wetter wien", "url" to "https://example.org/", "page" to "wifi", "seconds" to 5
+        "query" to "wetter wien", "url" to "https://example.org/", "page" to "wifi", "seconds" to 5,
+        "snapshotId" to "snapshot-fixture", "previewId" to "preview-fixture",
+        "planDigest" to "0".repeat(64), "undoId" to "undo-fixture"
     )
 
-    private fun proposalFor(spec: ToolSpec): ToolProposal? =
-        ToolProposal(spec.name, spec.required.associateWith { sample.getValue(it) }).takeIf { it.validate() == null }
+    private fun proposalFor(spec: ToolSpec): ToolProposal {
+        val proposal = ToolProposal(spec.name, spec.required.associateWith { sample.getValue(it) })
+        assertNull("Valid fixture for ${spec.name}", proposal.validate())
+        return proposal
+    }
 
     @Test fun everyConsequentialRegistryToolIsRefusedWithoutAnExplicitOwnerYes() {
         val consequential = ToolRegistry.all().filter { it.risk != Risk.READ_ONLY }
         val checked = mutableListOf<String>()
         consequential.forEach { spec ->
-            val proposal = proposalFor(spec) ?: return@forEach
+            val proposal = proposalFor(spec)
             var effects = 0
             val gate = ToolGate(ToolPolicy(readOnlyEnabled = true, destructiveEnabled = true), ToolRunner { effects++; "done" })
             val result = gate.execute(proposal.invocation("no-yes-${spec.name}"))
@@ -31,13 +36,12 @@ class ConsequentialActionApprovalTest {
             assertEquals(spec.name, 0, effects)
             checked += spec.name
         }
-        assertTrue(checked.toString(), checked.containsAll(listOf("delete_file", "uninstall_app", "install_apk",
-            "move_file", "stop_app", "web_search", "web_read")))
+        assertEquals(consequential.map { it.name }.toSet(), checked.toSet())
     }
 
     @Test fun destructiveToolsNeedTheStrongSecondConfirmationAndOperatorPolicy() {
-        listOf("delete_file", "uninstall_app").forEach { name ->
-            val proposal = proposalFor(ToolRegistry.get(name)!!)!!
+        listOf("delete_file", "uninstall_app", "cleanup_own_cache").forEach { name ->
+            val proposal = proposalFor(ToolRegistry.get(name)!!)
             var effects = 0
             val runner = ToolRunner { effects++; "done" }
             assertEquals(ToolExecutionStatus.REJECTED, ToolGate(ToolPolicy(destructiveEnabled = true), runner)

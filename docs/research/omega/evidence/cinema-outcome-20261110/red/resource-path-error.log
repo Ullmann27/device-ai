@@ -1,0 +1,123 @@
+JUnit version 4.13.2
+WARNING: No manifest file found at build/intermediates/packaged_manifests/debug/processDebugManifestForPackage/AndroidManifest.xml.
+Falling back to the Android OS resources only.
+To remove this warning, annotate your test class with @Config(manifest=Config.NONE).
+If you're using Android Gradle Plugin, add testOptions.unitTests.includeAndroidResources = true to your build.gradle
+....E.....E....Failed to open APK '/workspace/scratch/006ff0a2565d/cinema-outcome-support/app/build/intermediates/apk_for_local_test/debugUnitTest/packageDebugUnitTestForUnitTest/apk-for-local-test.ap_' Error -2147483643
+E.Failed to open APK '/workspace/scratch/006ff0a2565d/cinema-outcome-support/app/build/intermediates/apk_for_local_test/debugUnitTest/packageDebugUnitTestForUnitTest/apk-for-local-test.ap_' Error -2147483643
+E.Failed to open APK '/workspace/scratch/006ff0a2565d/cinema-outcome-support/app/build/intermediates/apk_for_local_test/debugUnitTest/packageDebugUnitTestForUnitTest/apk-for-local-test.ap_' Error -2147483643
+E
+Time: 1.895
+There were 5 failures:
+1) deliveredReplyCannotApproveWaitingStep(at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest)
+java.lang.AssertionError: expected:<BLOCKED> but was:<DONE>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest.deliveredReplyCannotApproveWaitingStep(CockpitAnimationTriggersTest.kt:78)
+2) deliveryAloneDoesNotConfirmWorkOrToolOutcome(at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest)
+org.junit.ComparisonFailure: expected:<[UNVERIFIED]> but was:<[DONE]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest.deliveryAloneDoesNotConfirmWorkOrToolOutcome(CockpitAnimationTriggersTest.kt:70)
+3) acceptedAnswerIsNotVerifiedTaskSuccess(at.heinz.deviceai.LocalTurnOutcomeUiTest)
+java.lang.RuntimeException: android.content.pm.PackageParser$PackageParserException: Failed to parse /workspace/scratch/006ff0a2565d/cinema-outcome-support/app/build/intermediates/apk_for_local_test/debugUnitTest/packageDebugUnitTestForUnitTest/apk-for-local-test.ap_
+	at org.robolectric.shadows.ShadowPackageParser.callParsePackage(ShadowPackageParser.java:57)
+	at org.robolectric.android.internal.AndroidTestEnvironment.loadAppPackage_measured(AndroidTestEnvironment.java:404)
+	at org.robolectric.android.internal.AndroidTestEnvironment.lambda$loadAppPackage$3(AndroidTestEnvironment.java:393)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:51)
+	at org.robolectric.android.internal.AndroidTestEnvironment.loadAppPackage(AndroidTestEnvironment.java:393)
+	at org.robolectric.android.internal.AndroidTestEnvironment.installAndCreateApplication(AndroidTestEnvironment.java:286)
+	at org.robolectric.android.internal.AndroidTestEnvironment.lambda$createApplicationSupplier$0(AndroidTestEnvironment.java:262)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:51)
+	at org.robolectric.android.internal.AndroidTestEnvironment.lambda$createApplicationSupplier$1(AndroidTestEnvironment.java:259)
+	at com.google.common.base.Suppliers$NonSerializableMemoizingSupplier.get(Suppliers.java:200)
+	at org.robolectric.RuntimeEnvironment.lambda$getApplication$0(RuntimeEnvironment.java:71)
+	at org.robolectric.shadows.ShadowInstrumentation.runOnMainSyncNoIdle(ShadowInstrumentation.java:1190)
+	at org.robolectric.RuntimeEnvironment.getApplication(RuntimeEnvironment.java:71)
+	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:230)
+	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: android.content.pm.PackageParser$PackageParserException: Failed to parse /workspace/scratch/006ff0a2565d/cinema-outcome-support/app/build/intermediates/apk_for_local_test/debugUnitTest/packageDebugUnitTestForUnitTest/apk-for-local-test.ap_
+	at android.content.pm.PackageParser.parseApkLiteInner(PackageParser.java:1590)
+	at android.content.pm.PackageParser.parseApkLite(PackageParser.java:1561)
+	at android.content.pm.PackageParser.parseMonolithicPackageLite(PackageParser.java:899)
+	at android.content.pm.PackageParser.parseMonolithicPackage(PackageParser.java:1289)
+	at android.content.pm.PackageParser.parsePackage(PackageParser.java:1022)
+	at android.content.pm.PackageParser.parsePackage(PackageParser.java:1042)
+	at org.robolectric.shadows.ShadowPackageParser.callParsePackage(ShadowPackageParser.java:42)
+	... 20 more
+4) replacedSessionCannotReportSuccess(at.heinz.deviceai.LocalTurnOutcomeUiTest)
+java.lang.RuntimeException: android.content.pm.PackageParser$PackageParserException: Failed to parse /workspace/scratch/006ff0a2565d/cinema-outcome-support/app/build/intermediates/apk_for_local_test/debugUnitTest/packageDebugUnitTestForUnitTest/apk-for-local-test.ap_
+	at org.robolectric.shadows.ShadowPackageParser.callParsePackage(ShadowPackageParser.java:57)
+	at org.robolectric.android.internal.AndroidTestEnvironment.loadAppPackage_measured(AndroidTestEnvironment.java:404)
+	at org.robolectric.android.internal.AndroidTestEnvironment.lambda$loadAppPackage$3(AndroidTestEnvironment.java:393)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:51)
+	at org.robolectric.android.internal.AndroidTestEnvironment.loadAppPackage(AndroidTestEnvironment.java:393)
+	at org.robolectric.android.internal.AndroidTestEnvironment.installAndCreateApplication(AndroidTestEnvironment.java:286)
+	at org.robolectric.android.internal.AndroidTestEnvironment.lambda$createApplicationSupplier$0(AndroidTestEnvironment.java:262)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:51)
+	at org.robolectric.android.internal.AndroidTestEnvironment.lambda$createApplicationSupplier$1(AndroidTestEnvironment.java:259)
+	at com.google.common.base.Suppliers$NonSerializableMemoizingSupplier.get(Suppliers.java:200)
+	at org.robolectric.RuntimeEnvironment.lambda$getApplication$0(RuntimeEnvironment.java:71)
+	at org.robolectric.shadows.ShadowInstrumentation.runOnMainSyncNoIdle(ShadowInstrumentation.java:1190)
+	at org.robolectric.RuntimeEnvironment.getApplication(RuntimeEnvironment.java:71)
+	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:230)
+	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: android.content.pm.PackageParser$PackageParserException: Failed to parse /workspace/scratch/006ff0a2565d/cinema-outcome-support/app/build/intermediates/apk_for_local_test/debugUnitTest/packageDebugUnitTestForUnitTest/apk-for-local-test.ap_
+	at android.content.pm.PackageParser.parseApkLiteInner(PackageParser.java:1590)
+	at android.content.pm.PackageParser.parseApkLite(PackageParser.java:1561)
+	at android.content.pm.PackageParser.parseMonolithicPackageLite(PackageParser.java:899)
+	at android.content.pm.PackageParser.parseMonolithicPackage(PackageParser.java:1289)
+	at android.content.pm.PackageParser.parsePackage(PackageParser.java:1022)
+	at android.content.pm.PackageParser.parsePackage(PackageParser.java:1042)
+	at org.robolectric.shadows.ShadowPackageParser.callParsePackage(ShadowPackageParser.java:42)
+	... 20 more
+5) failedModelCannotMarkWorkDone(at.heinz.deviceai.LocalTurnOutcomeUiTest)
+java.lang.RuntimeException: android.content.pm.PackageParser$PackageParserException: Failed to parse /workspace/scratch/006ff0a2565d/cinema-outcome-support/app/build/intermediates/apk_for_local_test/debugUnitTest/packageDebugUnitTestForUnitTest/apk-for-local-test.ap_
+	at org.robolectric.shadows.ShadowPackageParser.callParsePackage(ShadowPackageParser.java:57)
+	at org.robolectric.android.internal.AndroidTestEnvironment.loadAppPackage_measured(AndroidTestEnvironment.java:404)
+	at org.robolectric.android.internal.AndroidTestEnvironment.lambda$loadAppPackage$3(AndroidTestEnvironment.java:393)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:51)
+	at org.robolectric.android.internal.AndroidTestEnvironment.loadAppPackage(AndroidTestEnvironment.java:393)
+	at org.robolectric.android.internal.AndroidTestEnvironment.installAndCreateApplication(AndroidTestEnvironment.java:286)
+	at org.robolectric.android.internal.AndroidTestEnvironment.lambda$createApplicationSupplier$0(AndroidTestEnvironment.java:262)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:51)
+	at org.robolectric.android.internal.AndroidTestEnvironment.lambda$createApplicationSupplier$1(AndroidTestEnvironment.java:259)
+	at com.google.common.base.Suppliers$NonSerializableMemoizingSupplier.get(Suppliers.java:200)
+	at org.robolectric.RuntimeEnvironment.lambda$getApplication$0(RuntimeEnvironment.java:71)
+	at org.robolectric.shadows.ShadowInstrumentation.runOnMainSyncNoIdle(ShadowInstrumentation.java:1190)
+	at org.robolectric.RuntimeEnvironment.getApplication(RuntimeEnvironment.java:71)
+	at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:230)
+	at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: android.content.pm.PackageParser$PackageParserException: Failed to parse /workspace/scratch/006ff0a2565d/cinema-outcome-support/app/build/intermediates/apk_for_local_test/debugUnitTest/packageDebugUnitTestForUnitTest/apk-for-local-test.ap_
+	at android.content.pm.PackageParser.parseApkLiteInner(PackageParser.java:1590)
+	at android.content.pm.PackageParser.parseApkLite(PackageParser.java:1561)
+	at android.content.pm.PackageParser.parseMonolithicPackageLite(PackageParser.java:899)
+	at android.content.pm.PackageParser.parseMonolithicPackage(PackageParser.java:1289)
+	at android.content.pm.PackageParser.parsePackage(PackageParser.java:1022)
+	at android.content.pm.PackageParser.parsePackage(PackageParser.java:1042)
+	at org.robolectric.shadows.ShadowPackageParser.callParsePackage(ShadowPackageParser.java:42)
+	... 20 more
+
+FAILURES!!!
+Tests run: 15,  Failures: 5
+

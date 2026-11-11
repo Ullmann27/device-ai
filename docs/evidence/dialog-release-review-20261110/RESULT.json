@@ -1,0 +1,31 @@
+{
+  "status": "WIP_ANDROID_NOT_RUN",
+  "base": "a07b183b67b9c00192bb96b61a0002f74e23372b",
+  "context_host": {
+    "baseline": {
+      "tests": 6,
+      "failures": 1
+    },
+    "candidate": {
+      "tests": 6,
+      "failures": 0
+    },
+    "heap_mb": 256,
+    "dependencies": "Previously Android-compiled cognitive-memory-qa snapshot 25766f72, actual classes; no stubs"
+  },
+  "android_regressions": {
+    "suite": "at.heinz.deviceai.ResearchChatApprovalUiTest",
+    "existing_tests": 10,
+    "added_tests": 5,
+    "status": "NOT_RUN"
+  },
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "ba6ba70e50802a2d2ac58667e14f318f9b0602e368eefcf52cd20c15259b9e7f",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "62bd5d0e4302a1b0ce463275ed34b209ddbc603be2e6ffaede54c10b924764c6",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ConversationControlTest.kt": "4524c2a4ce0b402db86f50ea846b609f03c9a5a13df0e3e4cafb9372e3c8024d",
+    "app/src/uiTest/java/at/heinz/deviceai/ResearchChatApprovalUiTest.kt": "b6c3d53e583c2e7cce052659026668122c4da4e1566657a0230e4bf4a2fcaae7"
+  },
+  "network_dispatch": "NOT_RUN",
+  "model_inference": "NOT_RUN",
+  "physical_ASR": "NOT_RUN"
+}
