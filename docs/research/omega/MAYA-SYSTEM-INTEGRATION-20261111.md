@@ -4,6 +4,25 @@ Canonical target: `integration/continuum-final-visibility-20261111`, PR #747.
 Starting remote source: `fd1de22cf3f6ed159601c9b944cc25c86f0fc221`.
 This is the continuation of the existing Cinema/Maya candidate, not a new runtime.
 
+## Active corrected freeze — 2026-11-11 08:11 UTC
+
+- Runtime: `050a57cb019dcc1b7fe6cfa2fb5c11176b048e05`.
+- Tree: `539ea3aac0af04644a015b3fb69ba865af80d1a8`.
+- Workflow: `212171d362a60e18747a80ec3d270155da969eba`.
+- Run: https://github.com/Ullmann27/device-ai/actions/runs/42984950999
+  / attempt `1` / job `130403794846`.
+- New required preflight runs both Maya settings cases and preserves their XML
+  before the unchanged full Android suite. The existing capture init forces the
+  full test task to rerun; its minimum count and 29 required classes remain.
+- Started, final results PENDING. APK, lint and complete-run success are not
+  confirmed. Read this exact run before changing or restarting anything.
+
+Only the settings test and technical evidence changed after the failed app
+source. The production runtime remains unchanged. The signer prep must bind the
+new identities above, not the failed `fd86f11a` run. Its final artifact binding
+remains absent until verified success. Later documentation commits do not change
+the fixed source/workflow identity of this running job.
+
 ## Last completed frozen QA — 2026-11-11 08:04 UTC
 
 - App source: `fd86f11a4a822ee4805f4c462791baeb1d741db4`.
