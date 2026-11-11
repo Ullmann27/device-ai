@@ -126,6 +126,47 @@ object HollywoodFuiCinematics {
         return Beam(originX, originY, originX + (endX - originX) * p, originY + (endY - originY) * p)
     }
 
+    // ---- Cinema 2.0: focus depth and the orb's energy band (pure) ------------------------------------------------
+
+    /** Dim of the deck plane right beside a constructed window and at the far corners (share of black). */
+    const val FOCUS_DIM_NEAR = .26f
+    const val FOCUS_DIM_FAR = .52f
+
+    /**
+     * Focus pull 0..1: once the glass of a work window exists and the window has arrived ([openness]), the deck plane
+     * behind it steps back; it returns with the glass on close. Derived from the construct's own frame – no clock.
+     */
+    fun focusDepth(frame: HollywoodFuiConstruct.Frame, openness: Float): Float {
+        if (!openness.isFinite() || openness <= 0f) return 0f
+        val arrived = openness.coerceIn(0f, 1f).let { it * it * (3f - 2f * it) }
+        return (frame.glass * frame.closeGlass * arrived).coerceIn(0f, 1f)
+    }
+
+    /** The energy band's two ends: from the edge of the original orb to the rim of the window. */
+    data class Bridge(val x0: Float, val y0: Float, val x1: Float, val y1: Float) {
+        val length: Float get() = hypot(x1 - x0, y1 - y0)
+    }
+
+    /**
+     * Path of the band from [orb] to [window]: straight out of the orb's side that faces the window, into the rim
+     * clear of the rounded corners. Null when the window overlaps the orb's row and column or leaves no real gap –
+     * then there is no honest path and nothing is drawn.
+     */
+    fun energyBridge(orb: Box, window: Box, minGapDp: Float = 6f, cornerDp: Float = 18f): Bridge? {
+        val values = floatArrayOf(orb.left, orb.top, orb.right, orb.bottom, window.left, window.top, window.right, window.bottom)
+        if (values.any { !it.isFinite() } || orb.width <= 0f || orb.height <= 0f ||
+            window.width <= 2f * cornerDp || window.height <= 2f * cornerDp) return null
+        fun alongX(x: Float) = x.coerceIn(window.left + cornerDp, window.right - cornerDp)
+        fun alongY(y: Float) = y.coerceIn(window.top + cornerDp, window.bottom - cornerDp)
+        return when {
+            window.top - orb.bottom >= minGapDp -> Bridge(orb.centerX, orb.bottom, alongX(orb.centerX), window.top)
+            orb.top - window.bottom >= minGapDp -> Bridge(orb.centerX, orb.top, alongX(orb.centerX), window.bottom)
+            orb.left - window.right >= minGapDp -> Bridge(orb.left, orb.centerY, window.right, alongY(orb.centerY))
+            window.left - orb.right >= minGapDp -> Bridge(orb.right, orb.centerY, window.left, alongY(orb.centerY))
+            else -> null
+        }
+    }
+
     // ---- drawing -------------------------------------------------------------------------------------------------
 
     class Painterly(private val accent: Int) {
@@ -207,6 +248,75 @@ object HollywoodFuiCinematics {
                 p.drawLine(m.width, m.height * .62f, m.width, m.height - radius, 1f, violet, .5f * a)
                 p.restore()
             }
+        }
+
+        private var focusVignette: Fill.Radial? = null
+        private var focusKey: Box? = null
+        private val deckShade = Fill.Solid(JarvisDesign.Colors.background)
+
+        /**
+         * Focus depth: the deck plane behind the window steps back – evenly near the window, deeper towards the far
+         * corners – and the window casts a soft contact shadow, so the glass stands in front instead of lying flat on
+         * half-covered labels. The caller clips the avatar, the orb and the dialog out; [strength] 0..1.
+         */
+        fun drawFocusDepth(p: ContinuumPainter, viewport: Box, window: Box, strength: Float, radius: Float) {
+            if (!strength.isFinite() || strength <= .01f || viewport.width <= 0f || viewport.height <= 0f ||
+                window.width <= 0f || window.height <= 0f) return
+            val s = strength.coerceIn(0f, 1f)
+            p.fillRect(viewport.left, viewport.top, viewport.right, viewport.bottom, deckShade, FOCUS_DIM_NEAR * s)
+            val vignette = focusVignette?.takeIf { focusKey == window } ?: run {
+                val reach = max(max(hypot(window.centerX - viewport.left, window.centerY - viewport.top),
+                    hypot(viewport.right - window.centerX, window.centerY - viewport.top)),
+                    max(hypot(window.centerX - viewport.left, viewport.bottom - window.centerY),
+                        hypot(viewport.right - window.centerX, viewport.bottom - window.centerY))).coerceAtLeast(1f)
+                Fill.Radial(window.centerX, window.centerY, reach,
+                    intArrayOf(Argb.withAlpha(JarvisDesign.Colors.background, 0f),
+                        Argb.withAlpha(JarvisDesign.Colors.background, 0f),
+                        Argb.withAlpha(JarvisDesign.Colors.background, FOCUS_DIM_FAR - FOCUS_DIM_NEAR)),
+                    floatArrayOf(0f, .42f, 1f)).also { focusVignette = it; focusKey = window }
+            }
+            p.fillRect(viewport.left, viewport.top, viewport.right, viewport.bottom, vignette, s)
+            // Contact shadow: three widening, fading rings slightly below the glass.
+            val drop = 5f
+            p.strokeRoundRect(window.left, window.top + drop, window.right, window.bottom + drop, radius + 6f, 26f, deckShade, .10f * s)
+            p.strokeRoundRect(window.left, window.top + drop, window.right, window.bottom + drop, radius + 3f, 14f, deckShade, .16f * s)
+            p.strokeRoundRect(window.left, window.top + drop * .5f, window.right, window.bottom + drop * .5f, radius, 6f, deckShade, .24f * s)
+        }
+
+        /**
+         * The holographic raster under the vacant part of the glass (below [vacantTop]): it stays at structural
+         * strength there because no text stands on it, with a horizon line where the dense sheet ends.
+         */
+        fun drawVacantRaster(p: ContinuumPainter, box: Box, vacantTop: Float, strength: Float, bloom: Boolean) {
+            if (!strength.isFinite() || strength <= .01f || !vacantTop.isFinite() ||
+                vacantTop >= box.bottom - 8f || vacantTop <= box.top) return
+            val s = strength.coerceIn(0f, 1f)
+            val step = 24f
+            var x = box.left + step
+            while (x < box.right) {
+                p.drawLine(x, vacantTop, x, box.bottom, .7f, accentFill, .20f * s)
+                x += step
+            }
+            var y = box.top + step
+            while (y < box.bottom) {
+                if (y > vacantTop) p.drawLine(box.left, y, box.right, y, .7f, accentFill, .20f * s)
+                y += step
+            }
+            if (bloom) p.drawLine(box.left + 10f, vacantTop, box.right - 10f, vacantTop, 4f, violet, .10f * s)
+            p.drawLine(box.left + 10f, vacantTop, box.right - 10f, vacantTop, .9f, accentFill, .46f * s)
+        }
+
+        /** Where the orb's band enters the rim: a short hot stretch of the edge and a small halo. */
+        fun drawEnergyInlet(p: ContinuumPainter, bridge: Bridge, horizontalRim: Boolean, energy: Float, bloom: Boolean) {
+            if (!energy.isFinite() || energy <= .01f) return
+            val e = energy.coerceIn(0f, 1f)
+            val reach = 26f
+            if (bloom) p.setAdditive(true)
+            if (bloom) drawHalo(p, bridge.x1, bridge.y1, 14f, .55f * e)
+            if (horizontalRim) p.drawLine(bridge.x1 - reach, bridge.y1, bridge.x1 + reach, bridge.y1, 2.2f, glint, .85f * e)
+            else p.drawLine(bridge.x1, bridge.y1 - reach, bridge.x1, bridge.y1 + reach, 2.2f, glint, .85f * e)
+            p.fillCircle(bridge.x1, bridge.y1, 2.6f, glint, e)
+            if (bloom) p.setAdditive(false)
         }
 
         /** Dust along the rim and, while the task really works, a breathing energy rim. */

@@ -26,6 +26,40 @@ object JarvisWorkWindowDepth {
     /** The receding page stays fully visible until here, then hands over to the real page view. */
     private const val HANDOVER_FROM = .72f
 
+    // ---- Cinema 2.0: the front glass is dense only where real content stands --------------------------------------
+
+    /** Dense glass continues this far below the last content pixel (dp). */
+    const val GLASS_CONTENT_MARGIN_DP = 12f
+    /** Height over which the dense glass thins out into the vacant smoke (dp). */
+    const val GLASS_FADE_DP = 64f
+    /** Density of the vacant glass relative to the dense sheet: smoke, never fully clear. */
+    const val GLASS_VACANT_DENSITY = .34f
+    private const val GLASS_MIN_VACANT_DP = 56f
+
+    /** Where the dense sheet ends in a panel whose content does not fill it. */
+    class GlassVacancy(val denseBottomDp: Float) {
+        val fadeEndDp: Float get() = denseBottomDp + GLASS_FADE_DP
+        /** Glass density at [yDp] (panel coordinates): 1 behind content, falling smoothly to the smoke floor. */
+        fun density(yDp: Float): Float {
+            if (!yDp.isFinite() || yDp <= denseBottomDp) return 1f
+            val t = ((yDp - denseBottomDp) / GLASS_FADE_DP).coerceIn(0f, 1f)
+            val eased = t * t * (3f - 2f * t)
+            return 1f - (1f - GLASS_VACANT_DENSITY) * eased
+        }
+    }
+
+    /**
+     * A work window whose content ends well above its bottom no longer stands there as one opaque slab: below the
+     * content the glass clears to smoke and the holographic stage stays visible. Null keeps the single dense sheet –
+     * for content that fills or scrolls the panel and for every non-finite input. Text never stands on clear glass.
+     */
+    fun glassVacancy(panelHeightDp: Float, contentBottomDp: Float): GlassVacancy? {
+        if (!panelHeightDp.isFinite() || !contentBottomDp.isFinite() || panelHeightDp <= 0f || contentBottomDp < 0f)
+            return null
+        val dense = contentBottomDp + GLASS_CONTENT_MARGIN_DP
+        return if (panelHeightDp - dense < GLASS_MIN_VACANT_DP) null else GlassVacancy(dense)
+    }
+
     /** Rear sheets for a document of [pageCount] pages: its further pages, capped. */
     fun layers(pageCount: Int): Int = (pageCount - 1).coerceIn(0, MAX_LAYERS)
 

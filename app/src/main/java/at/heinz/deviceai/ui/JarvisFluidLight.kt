@@ -93,6 +93,77 @@ object JarvisFluidLight {
         } finally { p.setAdditive(false) }
     }
 
+    /**
+     * Cinema 2.0: the living band between the original orb and a window on which real work runs. Viscous strands flow
+     * from ([x0], [y0]) to ([x1], [y1]); [seconds] comes from the window's own clock and enters only smooth functions,
+     * so the band has no phase jump. [pulse] 0..1 sends one bright packet along it (a verified step), −1 none.
+     * Reuses the batches of [drawTransfer]; nothing is allocated. No energy, a refused budget or a non-finite input
+     * draws nothing.
+     */
+    fun drawBridge(p: ContinuumPainter, x0: Float, y0: Float, x1: Float, y1: Float, seconds: Float,
+                   energy: Float, pulse: Float, budget: JarvisRenderQuality.Budget?) {
+        val strands = strandCount(budget).coerceAtMost(3)
+        if (strands == 0 || !energy.isFinite() || energy <= .001f || !seconds.isFinite() ||
+            !x0.isFinite() || !y0.isFinite() || !x1.isFinite() || !y1.isFinite()) return
+        val dxAll = x1 - x0
+        val dyAll = y1 - y0
+        val length = sqrt(dxAll * dxAll + dyAll * dyAll)
+        if (length < 4f) return
+        val nx = -dyAll / length
+        val ny = dxAll / length
+        val e = energy.coerceIn(0f, 1f)
+        val sway = minOf(7f, length * .14f)
+        val spread = minOf(9f, length * .2f)
+        var count = 0
+        var highlightCount = 0
+        var packetX = Float.NaN
+        var packetY = Float.NaN
+        repeat(strands) { strand ->
+            val lane = strand - (strands - 1) / 2f
+            for (step in 0..STEPS) {
+                val t = step / STEPS.toFloat()
+                val bend = sin(PI.toFloat() * t)
+                // Strands leave the orb side by side and gather where they enter the rim.
+                val offset = lane * spread * (1f - t) * (1f - t) +
+                    sin(t * 6.3f - seconds * 2.6f + strand * 2.1f) * sway * bend
+                xPoints[step] = x0 + dxAll * t + nx * offset
+                yPoints[step] = y0 + dyAll * t + ny * offset
+                val swell = .5f + .5f * sin(t * 9f - seconds * 5.2f + strand * 1.3f)
+                ribbonWidths[step] = bend * (.5f + 1.5f * swell * swell)
+            }
+            if (strand == 0 && pulse.isFinite() && pulse in 0f..1f) {
+                val index = (pulse * STEPS).toInt().coerceIn(0, STEPS)
+                packetX = xPoints[index]
+                packetY = yPoints[index]
+            }
+            for (step in 1..STEPS) {
+                for (side in -1..1) {
+                    val w0 = ribbonWidths[step - 1] * side
+                    val w1 = ribbonWidths[step] * side
+                    segments[count++] = xPoints[step - 1] + nx * w0
+                    segments[count++] = yPoints[step - 1] + ny * w0
+                    segments[count++] = xPoints[step] + nx * w1
+                    segments[count++] = yPoints[step] + ny * w1
+                }
+                highlights[highlightCount++] = xPoints[step - 1]
+                highlights[highlightCount++] = yPoints[step - 1]
+                highlights[highlightCount++] = xPoints[step]
+                highlights[highlightCount++] = yPoints[step]
+            }
+        }
+        p.setAdditive(true)
+        try {
+            if (budget?.reducedBloom != true) p.strokeSegments(segments, count, 7f, violet, .05f * e)
+            p.strokeSegments(segments, count, 2.8f, cyan, .20f * e)
+            p.strokeSegments(highlights, highlightCount, 1.1f, glint, .62f * e)
+            if (packetX.isFinite() && packetY.isFinite()) {
+                val fade = sin(PI.toFloat() * pulse.coerceIn(0f, 1f)).coerceIn(0f, 1f)
+                p.fillOval(packetX - 8f, packetY - 8f, packetX + 8f, packetY + 8f, violet, .22f * e * fade)
+                p.fillOval(packetX - 2.6f, packetY - 2.6f, packetX + 2.6f, packetY + 2.6f, glint, .95f * e * fade)
+            }
+        } finally { p.setAdditive(false) }
+    }
+
     /** Portable edge fallback; centre stays clear. */
     fun drawEdge(p: ContinuumPainter, box: Box, sample: Sample) {
         if (sample.energy <= .001f) return
