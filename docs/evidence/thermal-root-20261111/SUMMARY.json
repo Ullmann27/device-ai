@@ -19,7 +19,12 @@
     "source_head": "b1d7e7df90e56e0b4db2c131041fb9e6a7c16174",
     "source_tree": "903bca2e718caabe2846bfa76493493cedf10dc3",
     "source_changes_after_latest_target_merge": [],
-    "scope": "Actual changed production sources and neighbors; cached real dependencies; host JVM only"
+    "scope": "Actual changed production sources and neighbors; cached real dependencies; host JVM only",
+    "later_test_fixture_change": {
+      "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelLoadSourceTest.kt",
+      "change": "Provider version string to double 1.0 for Android API; assertions unchanged",
+      "validation": "Subsequent regular Android test run: 182/182 PASS"
+    }
   },
   "draw_probe": {
     "scenarios": 72,
@@ -89,13 +94,39 @@
     "blocking_findings": 0
   },
   "android_gradle": {
-    "status": "RUNNING",
+    "status": "TESTS_PASS_LINT_PENDING",
     "tasks": [
       ":app:testDebugUnitTest",
       ":app:lintDebug"
     ],
     "source_head": "18e16d5ad5ca7005bba2b8bcfd494ccd1475a18d",
-    "lock": "/tmp/continuum-omega-gradle.lock"
+    "lock": "/tmp/continuum-omega-gradle.lock",
+    "initial_attempt": {
+      "exit_code": 1,
+      "production_compilation": "PASS",
+      "test_compilation": "FAIL",
+      "reason": "New test observer used JDK String-version Provider constructor; Android compile API requires Double version",
+      "location": "LocalModelLoadSourceTest.kt:79",
+      "correction": "Test constructor version argument changed from string to double 1.0; no assertions or production behavior changed"
+    },
+    "recheck_test_sha256": "b0aa7c3f1347c4fe2188727b0635737fa7b5e1d5f9374b1c34bb36fbbcffb0e9",
+    "source_commit": "308bccfd7932f0519a6cede78a20b88f36e839b1",
+    "source_tree": "7096b9fb76ac6d18056f972ffd0037308611c2c0",
+    "tests": {
+      "suites": 31,
+      "tests": 182,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "production_compilation": "PASS",
+    "test_compilation": "PASS",
+    "recheck_exit_code": 1,
+    "lint": {
+      "status": "RUNNING",
+      "artifact": "com.android.tools.lint:lint-gradle:31.10.0",
+      "normal_fetch": "Official Google Maven POM fetched successfully with inherited proxy; HTTP 200. Separate Gradle lint run queued."
+    }
   },
   "fold7": {
     "thermal": "NOT_RUN",
@@ -104,5 +135,12 @@
     "native_model": "NOT_RUN"
   },
   "apk": "NOT_BUILT",
-  "integration": "PUBLISHED_REPAIR_PR_PENDING_CANONICAL_MERGE"
+  "integration": "PRODUCTION_AND_TESTS_IN_CANONICAL; ANDROID_EVIDENCE_FOLLOWUP",
+  "canonical_integration": {
+    "head": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+    "app_source_tree": "9299568f4aa98a563347adb5e377878a7a00a658",
+    "tested_source_commit": "308bccfd7932f0519a6cede78a20b88f36e839b1",
+    "tested_app_source_tree_matches": true,
+    "pr773_merged": true
+  }
 }

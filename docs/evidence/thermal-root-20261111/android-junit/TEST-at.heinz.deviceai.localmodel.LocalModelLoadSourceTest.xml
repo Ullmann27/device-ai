@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.localmodel.LocalModelLoadSourceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-11T16:22:28" hostname="35a0f840332e" time="0.078">
+  <properties/>
+  <testcase name="missingOrTruncatedModelHasNoLoadSource" classname="at.heinz.deviceai.localmodel.LocalModelLoadSourceTest" time="0.023"/>
+  <testcase name="wrongIdentityCannotResolveAnotherModel" classname="at.heinz.deviceai.localmodel.LocalModelLoadSourceTest" time="0.007"/>
+  <testcase name="loadSourceHashesCompleteModelExactlyOnce" classname="at.heinz.deviceai.localmodel.LocalModelLoadSourceTest" time="0.019"/>
+  <testcase name="sameLengthTamperingIsRejectedWithoutMetadataChanges" classname="at.heinz.deviceai.localmodel.LocalModelLoadSourceTest" time="0.018"/>
+  <testcase name="laterLoadsStillVerifyEveryModelByte" classname="at.heinz.deviceai.localmodel.LocalModelLoadSourceTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

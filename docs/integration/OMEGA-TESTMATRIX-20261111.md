@@ -103,7 +103,9 @@ Leistungs-/Qualitätsvorgaben blieben dabei unverändert.
 | Gemeinsamer Kotlin/JVM-Lauf | 94 PASS / 0 FAIL / 0 SKIP; tatsächliche Produktionsquellen mit Cache-Abhängigkeiten | HOST_VERIFIZIERT |
 | Sechs Node-Vertragsdateien | 34 PASS / 0 FAIL / 0 SKIP; sechs negative Integritätsmutanten abgewiesen | HOST_VERIFIZIERT |
 | Unabhängiger finaler Review | fünf geänderte Produktionsdateien; keine blockierenden Befunde | geprüft |
-| Android-Prüfung und Lint | gemeinsamer lokaler Gradle-Lauf, bestehende exklusive Build-Sperre | RUNNING |
+| Android-Produktion und sämtliche Testquellen | regulärer Gradle-Compile; Test-Provider auf Android-kompatiblen Double-Konstruktor korrigiert | PASS |
+| Gezielte Android-Unit-Tests | 182 PASS / 0 FAIL / 0 ERROR / 0 SKIP, 31 Klassen; Quelle `308bccfd`; gesamter app/src-Baum identisch zu kanonischem `c36258a8` | PASS |
+| NewApi-Lint | fehlende Offline-Abhängigkeit; regulärer Google-Maven-Abruf möglich; separater regulärer Lauf analysiert jetzt | RUNNING |
 | Native Modellantwort, Wärme, Energie, Geschwindigkeit auf Fold7 | kein verfügbarer Gerätekanal; keine Abkühlung oder Leistungssteigerung behauptet | NOT_RUN |
 
 Ziel bleibt #769. Keine Modell-, Thread-, Kontext-, Grafik- oder Schutzvorgabe wurde
@@ -126,3 +128,8 @@ Die fünf Produktionsdateien und zugehörigen neuen Tests sind byte-identisch zu
 unabhängig geprüften `1ba7b9458`; keine neue Blockade in den drei Gegenprüfungen.
 JVM 94/94 und Node 34/34 sind übernommene quellgebundene Thermik-Belege.
 Gemeinsame Android-/Visual-/Lint-Abnahme und echte Fold7-Thermik bleiben offen.
+
+Thermischer Android-Nachweis: `docs/evidence/thermal-root-20261111/android-tests.json`.
+Der vollständige `app/src`-Baum `9299568f4aa98a563347adb5e377878a7a00a658`
+ist im geprüften Stand und kanonischen `c36258a8` identisch. Dies ist eine gezielte
+182-Fälle-Abnahme, keine vollständige Gesamt-App- oder physische Geräteabnahme.

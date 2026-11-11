@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.localmodel.LocalModelLifecycleFakeRuntimeTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-11T16:22:28" hostname="35a0f840332e" time="0.008">
+  <properties/>
+  <testcase name="fakeRuntimeExposesLoadGenerateCancelAndUnloadStates" classname="at.heinz.deviceai.localmodel.LocalModelLifecycleFakeRuntimeTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
