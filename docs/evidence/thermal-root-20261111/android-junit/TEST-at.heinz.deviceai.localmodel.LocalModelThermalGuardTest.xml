@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.localmodel.LocalModelThermalGuardTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-11T16:22:28" hostname="35a0f840332e" time="0.011">
+  <properties/>
+  <testcase name="coolDeviceAndUnknownStatusKeepTheNormalPath" classname="at.heinz.deviceai.localmodel.LocalModelThermalGuardTest" time="0.006"/>
+  <testcase name="rejectedSecondStartKeepsTheHeatReasonForTheRunningAnswer" classname="at.heinz.deviceai.localmodel.LocalModelThermalGuardTest" time="0.002"/>
+  <testcase name="generationDoesNotStartWhileAndroidReportsSevereHeat" classname="at.heinz.deviceai.localmodel.LocalModelThermalGuardTest" time="0.002"/>
+  <testcase name="runningGenerationStopsWhenAndroidReportsSevereHeat" classname="at.heinz.deviceai.localmodel.LocalModelThermalGuardTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

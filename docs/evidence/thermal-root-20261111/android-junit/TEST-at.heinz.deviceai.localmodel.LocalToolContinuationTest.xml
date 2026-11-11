@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.localmodel.LocalToolContinuationTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-11T16:22:28" hostname="35a0f840332e" time="0.073">
+  <properties/>
+  <testcase name="smallContinuationUsesNativeToolChannelAndKeepsTheCompleteCorrection" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.013"/>
+  <testcase name="escapedOutputIsRefusedWholeWithoutAConstructorException" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.005"/>
+  <testcase name="optionalMetadataCannotDisableAFullBudgetFreshChat" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.001"/>
+  <testcase name="defaultAdapterKeepsLateNegationInACompleteSmallResponse" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.002"/>
+  <testcase name="freshScreenTurnDoesNotEncodeAnUnusedOversizedToolResponse" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.036"/>
+  <testcase name="turnWithoutNewObservationsStreamsTheCompletePrompt" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.001"/>
+  <testcase name="cumulativeNativeContextAndOutputReserveAreMandatory" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.0"/>
+  <testcase name="serializedObservationKeepsCompleteLateMultilingualCorrection" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.004"/>
+  <testcase name="defaultAdapterRejectsAnOversizedBatchBeforeCallingAnEngine" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.002"/>
+  <testcase name="defaultAdapterRejectsWholeUtf8OverflowBeforeCallingAnEngine" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.002"/>
+  <testcase name="completeOutputGateRejectsAPrefixOrAChangedLateNegation" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.001"/>
+  <testcase name="actualContinuationStillRejectsOversizedEscapedOutputBeforeEngineSubmission" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.004"/>
+  <testcase name="completeOutputGateRejectsUnquotedAndDoubleEncodedFrames" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.0"/>
+  <testcase name="hostileObservationRoleHeadersRemainQuotedDataOnRetries" classname="at.heinz.deviceai.localmodel.LocalToolContinuationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

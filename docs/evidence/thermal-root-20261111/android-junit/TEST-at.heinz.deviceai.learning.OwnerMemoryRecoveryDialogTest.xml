@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.OwnerMemoryRecoveryDialogTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-11T16:21:44" hostname="35a0f840332e" time="42.045">
+  <properties/>
+  <testcase name="aChangedReviewCannotActivateItsOldSelectionOrDisplaySuccess" classname="at.heinz.deviceai.learning.OwnerMemoryRecoveryDialogTest" time="35.724"/>
+  <testcase name="closingDuringLoadSuppressesLateDialogsAndCreatesNoConsent" classname="at.heinz.deviceai.learning.OwnerMemoryRecoveryDialogTest" time="0.328"/>
+  <testcase name="failedDurableConfirmationNeverDisplaysSuccess" classname="at.heinz.deviceai.learning.OwnerMemoryRecoveryDialogTest" time="1.602"/>
+  <testcase name="finishingActivityDoesNotReceiveLateReviewResults" classname="at.heinz.deviceai.learning.OwnerMemoryRecoveryDialogTest" time="1.886"/>
+  <testcase name="reviewShowsTheExactUnselectedFactsAndCancelNeverChangesConsent" classname="at.heinz.deviceai.learning.OwnerMemoryRecoveryDialogTest" time="1.428"/>
+  <testcase name="onlyThePositiveButtonSchedulesTheExactSelectedConfirmation" classname="at.heinz.deviceai.learning.OwnerMemoryRecoveryDialogTest" time="1.063"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

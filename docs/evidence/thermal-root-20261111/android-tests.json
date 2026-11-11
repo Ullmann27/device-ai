@@ -1,0 +1,273 @@
+{
+  "source_commit": "308bccfd7932f0519a6cede78a20b88f36e839b1",
+  "source_tree": "7096b9fb76ac6d18056f972ffd0037308611c2c0",
+  "local_source": "3919b3ac2117e2365c376d7853386a0f0e5f270c",
+  "task": ":app:testDebugUnitTest",
+  "suites": 31,
+  "totals": {
+    "tests": 182,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "classes": [
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumLearningCoreTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "07910412c315938da5ce8b36bb0bfb034c1301cd1709669364d1884c2f5a1cba"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumLearningStatusCacheReviewTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "5584b30648c882ed9b0d52d8d8970be5c315becbbeaa1756b5edc5ba8e14b60c"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumLearningStatusReuseTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "cb7f11444ce5f5b0bf7bc8e331dcc3f89b893aacf1ba4443b43dee37e4816599"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ModelCheckpointStoreTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "5b431bff2979d77e8b99b29e44867613d94f82223e0cbe42fc19da633a301be6"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.OwnerMemoryRecoveryDialogTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "0068b316f697252ce922c3413daff79d9dcb399009a62d8dfe4fdfd8ebaccc90"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.OwnerMemoryRecoverySafetyTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "6fd6c475d8010a76bcd10d30416e475442dffbfec2fe42160eb9770bb4c95d06"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.OwnerMemoryRecoveryTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "d0d496249090e8b9fe911cfc93bf66e7e54cfdb4ae6fa712bf5789679e514204"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.TrainableSubwordEncoderTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "75f92264beae3d7d6ba292e050f08c883ff6b520bf18094dddcdb2f3355294e8"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalConversationBoundaryTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "f6643f8f63adcdd481d4c05f1e869981540f293f8e8341fb1e4cf7de40c052c7"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalInferenceDeliveryTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "44f71abad9e6f0700614f3738e8788dbca2a4b12379afc8689f9cb3ec4c3b635"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalInferenceProfileTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "d3dcbebe0da93fe5a382c4fe767654fa71597895585d09eec9a0cb28334bd55a"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelCatalogTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "8a32e5eae555c529408469c78fa2e4de82875a5c92a3e6e45bf5aaf8bb9269ea"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelComputeBudgetTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "2a51c331c611c277d6341d76333d84d36f49ff894ed5fcc5b96206ccfe6268ff"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelGenerationPolicyTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "5e3876f9bd56cdb4d674f21b80d256e243cf5b0549319477b6540a4081eb5e84"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelImportCoordinatorTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "d64e8834c87fb025fd19d5321da5204f717bc789e4901dee4a73118405e59919"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelImportProgressTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "165b6dd19ae51582c32c9f6f268b0a16bd09c495a5657cebdf3b68cbc2c8d230"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelImportStreamTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "2a6fe6a75293a755ba69debef9fe679668dd2b90b0d58e3efbce214429561fca"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelLifecycleFakeRuntimeTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "0f94576af37cdf63aa89374934827b9e4429585fa47c47a4f14df0a9e10eb8ae"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "3d6744236182c76f91d4e5d551c0473e3b23ed9a254aa83275a65cb9108fc45c"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelLoadSourceTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "3fcf57a0c9f52abde661195f3e439f3a5e46ac9d91341d10e0bb97a7bf872a66"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "b20b2402aefd5ef9c9efe3d12c07e275d040363c9b7dfd8c94c3c9927fc46dc9"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelThermalGuardTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "1e658a86f4b677cb382f228cf1f5dea0378b25206873181532c8721807403ca3"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalQwenPromptPolicyTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "5e01efd91cfdc41d2e1ce0d3dbb4c93b685d13c2ec8cab0e93f36b8f6705f9eb"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalToolContinuationTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "c9c04aed993b60f41a40f02b509f7a07033a931d3ecf914a39e01d58267fbe1b"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalToolTurnGateTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "8fcf12bc55d62e02a81ad8a58efcdf91da2f9bb7e5abbe75bc5120bcaa4735bc"
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalTurnModelBindingTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "c8c132e668690c90975abecb79b10776716d91f90b0c36fad126eebc2a042a90"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisLightStreamReuseTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "54d24e4317a28f566c172a7222e95df78d6541fc88804b0368508dd86d839344"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisLivingSceneTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "62421280b3fc35eb2eadd19d9ee7488d6b2696b69dca7517e3e901a208479e80"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisRenderQualityAdaptiveTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "cd2eba6d92b4a5ee8aaf38a05ed7f514318a6e0644dcc94e834e8cb8419ab078"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisRenderQualityTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "03d7016bf99728bd1988ede35bce0be0c0f50d62e069f10efee87ad259a38073"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisThermalVisualContractTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "526ca4faf3c933c640c78c3a787f3a8f53437772f86e9c9852b6e05e50ef7638"
+    }
+  ],
+  "scope": "Focused Android Gradle unit-test selection on host JVM, all production/test sources compiled. No native Gemma or Fold7 execution.",
+  "lint": "BLOCKED_MISSING_OFFLINE_DEPENDENCY",
+  "combined_gradle_exit": 1,
+  "canonical_equivalence": {
+    "head": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+    "app_source_tree": "9299568f4aa98a563347adb5e377878a7a00a658",
+    "tested_source_commit": "308bccfd7932f0519a6cede78a20b88f36e839b1",
+    "tested_app_source_tree_matches": true,
+    "pr773_merged": true
+  }
+}

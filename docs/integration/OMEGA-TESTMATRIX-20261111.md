@@ -64,7 +64,7 @@ Rohzusammenfassung: `docs/evidence/omega-20261111/test-summary.json`.
 | #767/#759/#765 Routing | #772 `e20ca3a5`; 94/94 JVM, 7 neue Activity-Fälle; unabhängiger Review | integriert; Android NOT_RUN |
 | EXP06/EXP11 | #771 `965ad4c5`; 13/13 JVM + 13/13 Node; 2 neue Canvas-Fälle | integriert; Android NOT_RUN |
 | Masterprotokoll #747 | `c00326ced`, nur 145 Zeilen Dokumentation zusätzlich | integriert |
-| Core-Ausgangslauf | unverändert `3cb8df27`, Kompilierung abgeschlossen | RUNNING; kein vollständiger PASS |
+| Core-Ausgangslauf | unverändert `3cb8df27`, vollständiger Lauf mit 98 Fällen | 97 PASS / 1 strikter nativer PDF-Hostfehler / 0 SKIP |
 | Node-Ausgangslauf | `3cb8df27`, uid1000; 1634 Fälle | 1612 PASS / 3 FAIL / 19 SKIP |
 | Backend-Ausgangslauf | `3cb8df27` | 64 PASS / 0 FAIL / 0 SKIP |
 | Drei Node-Prozessfälle isoliert | unverändert `3cb8df27` | 3 PASS; ursprüngliche Ursachen nicht bewiesen |
@@ -103,7 +103,9 @@ Leistungs-/Qualitätsvorgaben blieben dabei unverändert.
 | Gemeinsamer Kotlin/JVM-Lauf | 94 PASS / 0 FAIL / 0 SKIP; tatsächliche Produktionsquellen mit Cache-Abhängigkeiten | HOST_VERIFIZIERT |
 | Sechs Node-Vertragsdateien | 34 PASS / 0 FAIL / 0 SKIP; sechs negative Integritätsmutanten abgewiesen | HOST_VERIFIZIERT |
 | Unabhängiger finaler Review | fünf geänderte Produktionsdateien; keine blockierenden Befunde | geprüft |
-| Android-Prüfung und Lint | gemeinsamer lokaler Gradle-Lauf, bestehende exklusive Build-Sperre | RUNNING |
+| Android-Produktion und sämtliche Testquellen | regulärer Gradle-Compile; Test-Provider auf Android-kompatiblen Double-Konstruktor korrigiert | PASS |
+| Gezielte Android-Unit-Tests | 182 PASS / 0 FAIL / 0 ERROR / 0 SKIP, 31 Klassen; Quelle `308bccfd`; gesamter app/src-Baum identisch zu kanonischem `c36258a8` | PASS |
+| NewApi-Lint | fehlende Offline-Abhängigkeit; regulärer Google-Maven-Abruf möglich; separater regulärer Lauf analysiert jetzt | RUNNING |
 | Native Modellantwort, Wärme, Energie, Geschwindigkeit auf Fold7 | kein verfügbarer Gerätekanal; keine Abkühlung oder Leistungssteigerung behauptet | NOT_RUN |
 
 Ziel bleibt #769. Keine Modell-, Thread-, Kontext-, Grafik- oder Schutzvorgabe wurde
@@ -111,3 +113,23 @@ durch den Hitzefix reduziert. Die drei nachgewiesenen Einsparungen beweisen noch
 nicht die Hauptursache der starken Erwärmung während bereits geladener Inferenz.
 Belege: `docs/evidence/thermal-root-20261111/SUMMARY.json`; Übergabe:
 `docs/research/omega/THERMAL-ROOT-HANDOFF-20261111.md`.
+
+### Vollständige Core-Bestätigung und Thermik-Übernahme
+
+Der geerbte Core-Lauf ist vollständig abgeschlossen: **97 PASS / 1 FAIL / 0 SKIP**
+auf sauberem `3cb8df27`. Alle 30 Dokumentfluss- und sechs PDF-Szenenfälle bestanden.
+Die einzige verbleibende Niederlage ist `FileDescriptor.getOwnerId$()` im strikten
+PDF-Dekoder der Host-Laufzeit. Vollständiges Journal, XML, Log und Quellidentität:
+`docs/evidence/omega-apk54-20261111/baseline-core-summary.json`.
+
+#773 `8decff576` ist in den gemeinsamen Kandidaten übernommen. Seine drei kleinen
+Reparaturen entfernen doppelte Modellprüfung und unveränderte Status-/Lichtarbeit.
+Die fünf Produktionsdateien und zugehörigen neuen Tests sind byte-identisch zum
+unabhängig geprüften `1ba7b9458`; keine neue Blockade in den drei Gegenprüfungen.
+JVM 94/94 und Node 34/34 sind übernommene quellgebundene Thermik-Belege.
+Gemeinsame Android-/Visual-/Lint-Abnahme und echte Fold7-Thermik bleiben offen.
+
+Thermischer Android-Nachweis: `docs/evidence/thermal-root-20261111/android-tests.json`.
+Der vollständige `app/src`-Baum `9299568f4aa98a563347adb5e377878a7a00a658`
+ist im geprüften Stand und kanonischen `c36258a8` identisch. Dies ist eine gezielte
+182-Fälle-Abnahme, keine vollständige Gesamt-App- oder physische Geräteabnahme.

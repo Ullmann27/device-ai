@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.localmodel.LocalModelImportCoordinatorTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-11T16:22:28" hostname="35a0f840332e" time="0.062">
+  <properties/>
+  <testcase name="rejectedExecutorBecomesVisibleTerminalFailureAndDoesNotOpenInput" classname="at.heinz.deviceai.localmodel.LocalModelImportCoordinatorTest" time="0.003"/>
+  <testcase name="rejectedDataAndMissingNativeRuntimeUseStableNonSecretDiagnosticCodes" classname="at.heinz.deviceai.localmodel.LocalModelImportCoordinatorTest" time="0.033"/>
+  <testcase name="importSurvivesOldObserverDetachingAndNewActivityReattachesWithoutDuplicateCopy" classname="at.heinz.deviceai.localmodel.LocalModelImportCoordinatorTest" time="0.019"/>
+  <testcase name="sourceFailureIsBoundedAndReplayedWithoutRetainingPrivateUriOrBlockingRetry" classname="at.heinz.deviceai.localmodel.LocalModelImportCoordinatorTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

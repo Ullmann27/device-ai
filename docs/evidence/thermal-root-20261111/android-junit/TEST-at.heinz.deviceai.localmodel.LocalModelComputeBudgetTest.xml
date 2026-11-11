@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.localmodel.LocalModelComputeBudgetTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-11T16:22:28" hostname="35a0f840332e" time="0.013">
+  <properties/>
+  <testcase name="alreadyWarmDeviceLoadsWithAtMostTwoThreads" classname="at.heinz.deviceai.localmodel.LocalModelComputeBudgetTest" time="0.001"/>
+  <testcase name="fold7EightCoresUseFourThreadsBalancedAndTwoInCoolMode" classname="at.heinz.deviceai.localmodel.LocalModelComputeBudgetTest" time="0.0"/>
+  <testcase name="preferenceParsingIsLenientAndDefaultsToBalanced" classname="at.heinz.deviceai.localmodel.LocalModelComputeBudgetTest" time="0.001"/>
+  <testcase name="missingThermalStatusIsNotTreatedAsCoolButKeepsTheBalancedDefault" classname="at.heinz.deviceai.localmodel.LocalModelComputeBudgetTest" time="0.0"/>
+  <testcase name="neverZeroAndNeverMoreThanHalfTheCores" classname="at.heinz.deviceai.localmodel.LocalModelComputeBudgetTest" time="0.009"/>
+  <testcase name="fold7UsesCoolDefaultButOtherDevicesRemainBalanced" classname="at.heinz.deviceai.localmodel.LocalModelComputeBudgetTest" time="0.0"/>
+  <testcase name="fold7CoolDefaultLimitsCpuWorkersEvenBeforeThermalWarning" classname="at.heinz.deviceai.localmodel.LocalModelComputeBudgetTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

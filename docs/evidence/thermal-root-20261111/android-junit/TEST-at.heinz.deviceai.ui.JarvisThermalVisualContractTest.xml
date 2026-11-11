@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.JarvisThermalVisualContractTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-11T16:22:28" hostname="35a0f840332e" time="0.23">
+  <properties/>
+  <testcase name="actualShellContactRemainsStaticAcrossHardFloorsAndPhases" classname="at.heinz.deviceai.ui.JarvisThermalVisualContractTest" time="0.219"/>
+  <testcase name="essentialFaceEligibilityDoesNotRestartDecorativeMotion" classname="at.heinz.deviceai.ui.JarvisThermalVisualContractTest" time="0.005"/>
+  <testcase name="warmWorkRetainsConstructionBeforeHardStopSettlesEveryWindow" classname="at.heinz.deviceai.ui.JarvisThermalVisualContractTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

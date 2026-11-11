@@ -11,7 +11,7 @@
     ".github/continuum/continuum-owner-mainapp-quality.test.mjs"
   ],
   "exit_code": 0,
-  "source_head": "18e16d5ad5ca7005bba2b8bcfd494ccd1475a18d",
+  "source_head": "9db24e4821372506f05d67cfd83b41039c9178cb",
   "sources": {
     ".github/continuum/gemma-reopen-lifecycle.test.mjs": "517d005f84aafb087831464a03e7f487a883446d04ba84c4c0a61b18a42fb90c",
     ".github/continuum/continuum-hologram-context-wiring.test.mjs": "6840456f3dbfffe0fdd3900ebd2f18dc99a9ad5027be14f1779b00db2b2e7ac5",
@@ -19,5 +19,7 @@
     ".github/continuum/avatar-surface-radiance-wiring.test.mjs": "f21d41970a1fc1f423d263ffad98544954af1e54ebb9715010affb780e2ee6b9",
     ".github/continuum/code52-final-swarm-avatar-cinema-merge.test.mjs": "c156b6b5f456d669d0443e856aaa2af253e4ed373308e4b52e77e206b1d1d4e8",
     ".github/continuum/continuum-owner-mainapp-quality.test.mjs": "e2bcc0bf711908e7e8c23764428aa138a5cac5025408e4fb5dccba24af4cfaa0"
-  }
+  },
+  "canonical_equivalent": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+  "app_source_tree": "9299568f4aa98a563347adb5e377878a7a00a658"
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.JarvisRenderQualityTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-11T16:22:28" hostname="35a0f840332e" time="0.006">
+  <properties/>
+  <testcase name="reducedMotionAndPowerSavingSuppressAnimationEvenDuringInference" classname="at.heinz.deviceai.ui.JarvisRenderQualityTest" time="0.0"/>
+  <testcase name="inferenceOnAWarmDeviceGetsTheSmallestAnimatedBudget" classname="at.heinz.deviceai.ui.JarvisRenderQualityTest" time="0.0"/>
+  <testcase name="activeInferenceReservesCapacityWhileNormalForegroundKeepsFullQuality" classname="at.heinz.deviceai.ui.JarvisRenderQualityTest" time="0.0"/>
+  <testcase name="moderateHeatReducesFrameWorkBeforeSevereWithoutDroppingAnimation" classname="at.heinz.deviceai.ui.JarvisRenderQualityTest" time="0.0"/>
+  <testcase name="cinemaAdaptationRetainsCoolInferenceLighting" classname="at.heinz.deviceai.ui.JarvisRenderQualityTest" time="0.0"/>
+  <testcase name="thermalPressureNeverIncreasesRenderWork" classname="at.heinz.deviceai.ui.JarvisRenderQualityTest" time="0.0"/>
+  <testcase name="explicitlyCoolInferencePreservesLightingWithoutDefeatingWarmThrottling" classname="at.heinz.deviceai.ui.JarvisRenderQualityTest" time="0.0"/>
+  <testcase name="cinemaLightingCannotOverrideSafetySignals" classname="at.heinz.deviceai.ui.JarvisRenderQualityTest" time="0.0"/>
+  <testcase name="hiddenScenesSuspendForEveryDeviceAndInferenceState" classname="at.heinz.deviceai.ui.JarvisRenderQualityTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

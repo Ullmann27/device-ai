@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumLearningStatusCacheReviewTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-11T16:21:43" hostname="35a0f840332e" time="0.11">
+  <properties/>
+  <testcase name="deletedCheckpointDoesNotKeepPreviousScores" classname="at.heinz.deviceai.learning.ContinuumLearningStatusCacheReviewTest" time="0.01"/>
+  <testcase name="invalidBackupStillFailsAfterWarmValidCache" classname="at.heinz.deviceai.learning.ContinuumLearningStatusCacheReviewTest" time="0.012"/>
+  <testcase name="equalWeightsAcrossDirectoriesNeverShareOwnerStatistics" classname="at.heinz.deviceai.learning.ContinuumLearningStatusCacheReviewTest" time="0.023"/>
+  <testcase name="warmCacheCannotHideRecoveryAndItsFreshAudit" classname="at.heinz.deviceai.learning.ContinuumLearningStatusCacheReviewTest" time="0.03"/>
+  <testcase name="concurrentColdReadersPublishOnlyOneMeasurement" classname="at.heinz.deviceai.learning.ContinuumLearningStatusCacheReviewTest" time="0.034"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -10,8 +10,9 @@ throughput and visible rendering. Existing Android thermal protection stays inta
 - Owner of integration: thermal coordinator, PR #773.
 - Canonical target: `integrate/omega-apk54-20261111`, PR #769.
 - Starting baseline: `f88d7d1936b9c0d53c176a0af31108fb863199e6`.
-- Current target included: `c02930f104e106cd8cba4ff8f6ecc1ad9fcee04f`.
-- Local combined source: `18e16d5ad5ca7005bba2b8bcfd494ccd1475a18d`.
+- Canonical target with integrated repair: `c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14`.
+- Android-tested published source: `308bccfd7932f0519a6cede78a20b88f36e839b1`.
+- Complete `app/src` tree in tested and canonical source: `9299568f4aa98a563347adb5e377878a7a00a658`.
 - Thermal branch: `fix/thermal-root-20261111`.
 - Installed Code53 source reported in #670:
   `050a57cb019dcc1b7fe6cfa2fb5c11176b048e05`.
@@ -81,7 +82,9 @@ No color, opacity, path, pulse, resolution or frame-rate setting was reduced.
 | Combined production drawing probe | 72 scenarios; maximum 70 sin calls; baseline digest matches |
 | Six neighboring Node source-contract files | 34/34 pass |
 | Independent final five-file production review | no blocking findings |
-| Android `testDebugUnitTest` and `lintDebug` | RUNNING; no result claimed yet |
+| Android production and all test-source compilation | PASS |
+| Focused Android `testDebugUnitTest` | 182/182 pass; 31 classes, zero failures/errors/skips |
+| Configured NewApi `lintDebug` | separate run executing; offline dependency failure retained |
 | Native Gemma/Fold7 temperature, energy, latency and visual acceptance | NOT_RUN |
 
 The old Node load contract expected direct `catalog.get()` in the runtime. Its
@@ -93,7 +96,12 @@ The first Android run compiled production successfully but rejected the new test
 observer's JDK-only string-version `Provider` constructor. Its version argument is
 now the Android-compatible double `1.0`. This is a one-line test helper correction,
 with no assertion or production change. The original failed log is preserved as
-`android-initial.log`; the regular Android recheck is running.
+`android-initial.log`. The regular Android recheck passed all 182 selected tests.
+Its subsequent lint phase stopped because `lint-gradle:31.10.0` was absent from the
+offline cache. The official Google Maven POM is reachable through normal inherited
+proxy settings. A separate online lint run is executing under the same build lock.
+Raw XML and the complete recheck log are preserved; the combined command exited
+with code 1 for the lint dependency failure, not for failed tests.
 
 Combined JVM source identity was `b1d7e7df90e56e0b4db2c131041fb9e6a7c16174`, tree
 `903bca2e718caabe2846bfa76493493cedf10dc3`. The subsequent target merge changed none
@@ -150,3 +158,12 @@ separate from this source repair; no installation or device PASS is claimed.
 Rollback: revert the five-file thermal production delta together with its source
 contract update. No user-data or model migration is required. Preserve the raw
 regression evidence and keep Android thermal guards enabled.
+
+## Canonical equivalence after Android execution
+
+PR #773 was merged into #769 while the thermal tests ran. Canonical `c36258a8`
+also contains the identical Android-compatible test constructor. All `app/src`
+bytes (production and tests) match the tested public source `308bccfd`; the source
+subtree SHA is recorded above and in `android-tests.json`. No new production or
+test change is included in the evidence follow-up. The focused 182-case result
+does not replace the wider integrator suite or physical Fold7 acceptance.

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-11T16:22:28" hostname="35a0f840332e" time="0.005">
+  <properties/>
+  <testcase name="androidLowMemoryStateRefusesNativeLoad" classname="at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest" time="0.003"/>
+  <testcase name="healthyFold7ClassDeviceStillLoadsTheOriginalGemma" classname="at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest" time="0.001"/>
+  <testcase name="missingTelemetryFailsClosedInsteadOfGuessing" classname="at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest" time="0.0"/>
+  <testcase name="modelThatCannotStayResidentInPhysicalRamIsRefused" classname="at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest" time="0.0"/>
+  <testcase name="unknownThermalOnOldAndroidDoesNotBlockButMemoryStillChecked" classname="at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest" time="0.001"/>
+  <testcase name="severeThermalStateRefusesNativeLoad" classname="at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

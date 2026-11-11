@@ -1,0 +1,594 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+WARNING: platform-tools package is not installed.
+
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:64:44 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:71:82 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:72:82 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:78:86 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:79:86 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:86:86 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/MayaSpeechTest.kt:130:64 The corresponding parameter in the supertype 'Source' is named 'allowed'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/OwnerFacePolicyTest.kt:31:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'OwnerFaceProfile'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/OwnerFaceProfileStoreTest.kt:88:25 Unnecessary non-null assertion (!!) on a non-null receiver of type 'OwnerFaceProfile'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/OwnerFaceProfileStoreTest.kt:89:28 Unnecessary non-null assertion (!!) on a non-null receiver of type 'OwnerFaceProfile'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt:145:40 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventSourceTest.kt:74:39 'val production: MemoryEventSource?' is deprecated. Use forApp(appDirectory) to bind the existing per-application event hub.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentOutcomeEvidenceTest.kt:47:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentOutcomeEvidenceTest.kt:67:43 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/CloudSpeechTurnConstraintTest.kt:95:13 'when' expression over a subject of type 'Any?' is not exhaustive. Add a 'null' or 'else' branch.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/DeviceDevelopmentBacklogTest.kt:131:53 Unnecessary non-null assertion (!!) on a non-null receiver of type 'DevelopmentBacklogStore.Recovery'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:87:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:112:43 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/ResearchEngineTest.kt:163:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:41:100 Expression is unused.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:92:50 Expression is unused.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/UnknownOutcomeSafetyTest.kt:36:43 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/UnknownOutcomeSafetyTest.kt:37:72 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:47:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:48:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:49:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:50:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:51:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WorkDecisionRecallTest.kt:90:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkDecisionRecall.Focus'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WorkDecisionRecallTest.kt:90:62 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkDecisionRecall.Focus'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WorkDecisionRecallTest.kt:90:82 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkDecisionRecall.Focus'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdateCatalogTest.kt:85:47 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/intelligence/maxultra/Ctx1Experiment.kt:105:115 No cast needed.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusCacheReviewTest.kt:14:20 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusCacheReviewTest.kt:28:35 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusCacheReviewTest.kt:39:24 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusCacheReviewTest.kt:57:20 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusCacheReviewTest.kt:79:20 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusCacheReviewTest.kt:93:20 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusReuseTest.kt:39:20 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusReuseTest.kt:39:48 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusReuseTest.kt:58:20 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusReuseTest.kt:58:48 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusReuseTest.kt:67:20 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusReuseTest.kt:67:48 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:66:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:107:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:148:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceRoundJournalTest.kt:66:9 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceRoundJournalTest.kt:84:9 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/Lex3LearningExperienceStoreTest.kt:237:46 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/Lex3LearningExperienceStoreTest.kt:255:36 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/NeuralLearningCoachTest.kt:15:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NeuralCommand'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/NeuralLearningCoachTest.kt:16:66 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NeuralCommand'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/lm/LmBaselines.kt:126:66 Redundant call of conversion method.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/nf/NfExperiment.kt:89:33 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/learning/nf/NfStream.kt:91:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NfTrainer'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/systemintelligence/OwnDiagnosticCacheTest.kt:27:53 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/systemintelligence/StorageScanLaneTest.kt:27:29 Expression is unused.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/systemintelligence/StorageScanLaneTest.kt:35:109 Expression is unused.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/ContinuumTaskEffectsTest.kt:14:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:35:66 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:36:108 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:42:48 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisCockpitGrid.Grid'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:71:69 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:72:48 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:72:67 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitFidelityTest.kt:73:79 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisMemoryActivityPanelTest.kt:34:66 Unnecessary non-null assertion (!!) on a non-null receiver of type 'IntArray'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:57:92 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:57:111 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:147:76 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:148:48 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:148:67 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:149:79 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:151:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:152:32 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisShellLayoutTest.kt:53:57 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisShellLayoutTest.kt:104:57 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/test/java/at/heinz/deviceai/ui/JarvisShellLayoutTest.kt:106:31 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentFlowUiTest.kt:109:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Class<*>'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentFlowUiTest.kt:560:109 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ContinuumOfflineVoiceRecoveryUiTest.kt:36:21 'constructor(p0: String!, p1: String!): Locale' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt:117:61 No cast needed.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt:134:61 No cast needed.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsUiTest.kt:55:13 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ContinuumUiFeedbackTest.kt:33:17 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ContinuumUiFeedbackTest.kt:49:24 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/JarvisLiveTabsUiTest.kt:208:30 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/JarvisPhoneWorkWindowDensityUiTest.kt:113:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Bitmap'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/LocalReasoningWorkSceneUiTest.kt:86:94 This class is not recommended for use in Kotlin. Use 'kotlin.collections.Map' instead.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:28:101 'static fun obtain(p0: AccessibilityNodeInfo!): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:34:61 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:50:115 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:60:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:63:63 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:119:56 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:120:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:128:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:129:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:143:72 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:144:97 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:152:56 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:153:89 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:155:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:156:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:162:61 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:163:89 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:170:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:171:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:179:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:180:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:187:44 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:188:71 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:190:43 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:191:69 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt:107:38 'fun addResolveInfoForIntent(p0: Intent!, p1: ResolveInfo!): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:29:52 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:34:40 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:36:68 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:64:52 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:65:81 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:78:40 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:79:69 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ShizukuBridgeLifecycleTest.kt:322:27 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Result<ShizukuCapabilities>'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/SystemIntelligenceUiTest.kt:52:26 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Result<String>'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/SystemIntelligenceUiTest.kt:63:26 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Result<String>'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:39:17 'fun sendStickyBroadcast(p0: Intent!): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:49:26 Java type mismatch: inferred type is 'Any?', but 'Any' was expected.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:53:30 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:54:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:54:71 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:57:100 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:58:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:64:56 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:82:23 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:99:17 'fun sendStickyBroadcast(p0: Intent!): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:124:17 'fun sendStickyBroadcast(p0: Intent!): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:131:26 Java type mismatch: inferred type is 'Any?', but 'Any' was expected.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:136:30 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:137:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:137:71 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:141:58 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:142:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:150:31 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:163:23 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/524e6ad8c911/device-ai/app/src/uiTest/java/at/heinz/deviceai/ui/ContinuumControlsTest.kt:82:18 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:prepareUiTestSdk
+> Task :app:processDebugJavaRes
+> Task :app:processDebugUnitTestJavaRes
+
+> Task :app:testDebugUnitTest
+
+ContinuumLearningCoreTest > ownerCorrectionSupersedesConflictingIntentAndSurvivesRestart PASSED
+
+ContinuumLearningCoreTest > ownerCanExplicitlyRestoreAnEarlierIntentLabelWithoutReplayingItsReplacement PASSED
+
+ContinuumLearningCoreTest > confirmedIntentUsesReplayHoldoutAndPersistsOnlyAcceptedCandidate PASSED
+
+ContinuumLearningCoreTest > modelAndExperienceStateSurviveFreshCoordinatorInstance PASSED
+
+ContinuumLearningCoreTest > reconfirmedOldIntentParticipatesInBoundedReplay PASSED
+
+ContinuumLearningCoreTest > invalidIntentTextCannotPoisonPersistentReplay PASSED
+
+ContinuumLearningCoreTest > offlineBootstrapNeedsNoOwnerLessonsAndRunsOnlyOnce PASSED
+
+ContinuumLearningCoreTest > interruptedOfflineStagesAreRetriedInsteadOfCountedAsDone PASSED
+
+ContinuumLearningCoreTest > offlineBootstrapDoesNotModifyOwnerData PASSED
+
+ContinuumLearningCoreTest > sourceTrainingIsSkippedWhenTheOwnerLedgerHasNoObservationCapacity PASSED
+
+ContinuumLearningCoreTest > bothOfflineStagesRunWithoutUserTrainingAndDoNotRepeat PASSED
+
+ContinuumLearningCoreTest > damagedActiveWeightsAreRestoredFromLastKnownGoodOnceAndAudited PASSED
+
+ContinuumLearningCoreTest > sourceObservationsTrainRepresentationWithoutOwnerTrustOrIntentAuthority PASSED
+
+ContinuumLearningCoreTest > semanticBootstrapIsAuditedIdempotentAndProtectsIntent PASSED
+
+ContinuumLearningCoreTest > ownerFactsAndCommandsAreAuditableAndRevocableWithoutTrainingAuthority PASSED
+
+ContinuumLearningCoreTest > cancelledRoundRollsBackWeightsButKeepsApprovedLessonForReplay PASSED
+
+ContinuumLearningStatusCacheReviewTest > deletedCheckpointDoesNotKeepPreviousScores PASSED
+
+ContinuumLearningStatusCacheReviewTest > invalidBackupStillFailsAfterWarmValidCache PASSED
+
+ContinuumLearningStatusCacheReviewTest > equalWeightsAcrossDirectoriesNeverShareOwnerStatistics PASSED
+
+ContinuumLearningStatusCacheReviewTest > warmCacheCannotHideRecoveryAndItsFreshAudit PASSED
+
+ContinuumLearningStatusCacheReviewTest > concurrentColdReadersPublishOnlyOneMeasurement PASSED
+
+ContinuumLearningStatusReuseTest > restoredCheckpointImmediatelyMatchesOriginalMeasurements PASSED
+
+ContinuumLearningStatusReuseTest > evaluationCorpusIsPartOfTheReuseKey PASSED
+
+ContinuumLearningStatusReuseTest > ownerStateRemainsFreshWhileWeightsStayUnchanged PASSED
+
+ContinuumLearningStatusReuseTest > changedBytesInvalidateEvenWithEqualLengthTimeAndUpdateCount PASSED
+
+ContinuumLearningStatusReuseTest > simultaneousTelemetrySharesMeasurements PASSED
+
+ContinuumLearningStatusReuseTest > corruptCheckpointCannotReusePreviousMeasurements PASSED
+
+ContinuumLearningStatusReuseTest > unchangedTelemetryReusesMeasuredHoldoutsAcrossCollectors PASSED
+
+ModelCheckpointStoreTest > historyIsBoundedAndPrunedFilesAreRemoved PASSED
+
+ModelCheckpointStoreTest > tamperedOrUnknownCheckpointsAreRejected PASSED
+
+ModelCheckpointStoreTest > rollbackWithoutHistoryOrToActiveStateChangesNothing PASSED
+
+ModelCheckpointStoreTest > archiveIsContentAddressedVerifiedAndIdempotent PASSED
+
+ModelCheckpointStoreTest > invalidModelsAreNeverArchived PASSED
+
+ModelCheckpointStoreTest > modelIsNotChangedWhenTheRecoveryPointCannotBeWritten PASSED
+
+ModelCheckpointStoreTest > rearchivingActiveWeightsRepairsMissingOrDamagedRecoveryPoint PASSED
+
+ModelCheckpointStoreTest > damagedIndexFailsClosedInsteadOfForgettingHistory PASSED
+
+ModelCheckpointStoreTest > everyAcceptedModelChangeIsReversible PASSED
+
+OwnerMemoryRecoveryDialogTest > aChangedReviewCannotActivateItsOldSelectionOrDisplaySuccess PASSED
+
+OwnerMemoryRecoveryDialogTest > closingDuringLoadSuppressesLateDialogsAndCreatesNoConsent PASSED
+
+OwnerMemoryRecoveryDialogTest > failedDurableConfirmationNeverDisplaysSuccess PASSED
+
+OwnerMemoryRecoveryDialogTest > finishingActivityDoesNotReceiveLateReviewResults PASSED
+
+OwnerMemoryRecoveryDialogTest > reviewShowsTheExactUnselectedFactsAndCancelNeverChangesConsent PASSED
+
+OwnerMemoryRecoveryDialogTest > onlyThePositiveButtonSchedulesTheExactSelectedConfirmation PASSED
+
+OwnerMemoryRecoverySafetyTest > segmentedRecoveryUsesVerifiedSegmentsAndPreservesVersionOne PASSED
+
+OwnerMemoryRecoverySafetyTest > verifiedRevocationsCannotBeReconfirmedThroughRecovery PASSED
+
+OwnerMemoryRecoverySafetyTest > unsupportedNewerLedgerVersionIsNeverDowngradedByRecovery PASSED
+
+OwnerMemoryRecoverySafetyTest > absentEmptyTruncatedOrTamperedMarkerNeverMeansUnrestricted PASSED
+
+OwnerMemoryRecoverySafetyTest > noVerifiedSourceCannotBeReplacedWithAnEmptyLedger PASSED
+
+OwnerMemoryRecoverySafetyTest > pendingWriteFailureCannotPublishARecoveredPrimary PASSED
+
+OwnerMemoryRecoverySafetyTest > primaryPublicationFailureLeavesADurableConsentBarrier PASSED
+
+OwnerMemoryRecoverySafetyTest > temporalCacheTracksPendingEvenWhenRecoveryRestoresItsExactOldLedgerBytes PASSED
+
+OwnerMemoryRecoverySafetyTest > ownerDecisionReconfirmsOnlyTheConcreteDisplayedSubset PASSED
+
+OwnerMemoryRecoverySafetyTest > noDeniedForeignOrUnboundDecisionCanReconfirm PASSED
+
+OwnerMemoryRecoverySafetyTest > markerSymlinkCannotReadOrChangeAnotherFile PASSED
+
+OwnerMemoryRecoverySafetyTest > failedReconfirmationDoesNotReturnSuccessOrEmitActivation PASSED
+
+OwnerMemoryRecoverySafetyTest > changedLedgerInvalidatesAnOutstandingOwnerReview PASSED
+
+OwnerMemoryRecoveryTest > automaticRecoveryHoldsRestoredFactsAcrossFreshCoreInstances PASSED
+
+OwnerMemoryRecoveryTest > corruptedRevocationIdentityCannotBecomeOwnerConfirmation PASSED
+
+TrainableSubwordEncoderTest > snapshotIsDeterministicAndTamperEvident PASSED
+
+TrainableSubwordEncoderTest > characterSubwordsShareFeaturesAcrossUnseenVariants PASSED
+
+TrainableSubwordEncoderTest > semanticTrainingPullsRelatedTextTogetherAndSeparatesNegativePair PASSED
+
+TrainableSubwordEncoderTest > intentTrainingChangesSharedLearnedRepresentation PASSED
+
+LocalConversationBoundaryTest > absentContinuationAndFailedReleaseCannotUseStaleConversation PASSED
+
+LocalConversationBoundaryTest > startupConversationCanBeUsedForExactlyOneFreshOwnerTurnWithoutNativeReallocation PASSED
+
+LocalConversationBoundaryTest > pristineReuseWithoutAnActualConversationMustFailInsteadOfCreatingHiddenSession PASSED
+
+LocalConversationBoundaryTest > newPromptDropsNativeHistoryButToolContinuationKeepsCurrentTurn PASSED
+
+LocalInferenceDeliveryTest > concurrentDrainersDoNotHoldAQueueMonitorAcrossCallerCode PASSED
+
+LocalInferenceDeliveryTest > reentrantCancellationSuppressesQueuedTextWithoutHoldingAMonitor PASSED
+
+LocalInferenceProfileTest > unavailableHeapAndClockRegressionAreReportedWithoutFabricatedDurations PASSED
+
+LocalInferenceProfileTest > textCountsAreNumericAndDoNotInventAFirstTokenOrPrefillMeasurement PASSED
+
+LocalInferenceProfileTest > countersSaturateInsteadOfWrappingAndSummaryRemainsBounded PASSED
+
+LocalInferenceProfileTest > snapshotsStayBoundedAndLateOldCallbacksCannotOverwriteANewerRun PASSED
+
+LocalInferenceProfileTest > cancellationNativeTerminalAndRuntimeDeliveryRemainSeparateMeasurements PASSED
+
+LocalInferenceProfileTest > measuredFailurePropagatesAndStillRecordsTheRealExitBoundary PASSED
+
+LocalInferenceProfileTest > dispatchAndCallbackTimingsUseTheirActualMonotonicOrder PASSED
+
+LocalModelCatalogTest > importCatalogAndIntegrityChecksAreBoundedAndVersioned PASSED
+
+LocalModelCatalogTest > mismatchingOrphanIsPreservedAndCannotAcquireVerifiedMetadata PASSED
+
+LocalModelCatalogTest > explicitRetryRecoversMatchingOrphanBytesAfterMetadataCommitWasInterrupted PASSED
+
+LocalModelCatalogTest > importRejectsBadHashesOversizedAndUnsupportedModelsWithoutCataloging PASSED
+
+LocalModelCatalogTest > failedNewImportReportsBothHashesAndPreservesPreviouslyVerifiedModel PASSED
+
+LocalModelComputeBudgetTest > alreadyWarmDeviceLoadsWithAtMostTwoThreads PASSED
+
+LocalModelComputeBudgetTest > fold7EightCoresUseFourThreadsBalancedAndTwoInCoolMode PASSED
+
+LocalModelComputeBudgetTest > preferenceParsingIsLenientAndDefaultsToBalanced PASSED
+
+LocalModelComputeBudgetTest > missingThermalStatusIsNotTreatedAsCoolButKeepsTheBalancedDefault PASSED
+
+LocalModelComputeBudgetTest > neverZeroAndNeverMoreThanHalfTheCores PASSED
+
+LocalModelComputeBudgetTest > fold7UsesCoolDefaultButOtherDevicesRemainBalanced PASSED
+
+LocalModelComputeBudgetTest > fold7CoolDefaultLimitsCpuWorkersEvenBeforeThermalWarning PASSED
+
+LocalModelGenerationPolicyTest > machineLocaleDoesNotChangeFamilyDetection PASSED
+
+LocalModelGenerationPolicyTest > unknownAndNonGemma4FamiliesKeepConservativeBudget PASSED
+
+LocalModelGenerationPolicyTest > gemma4E4bOnDeviceCatalogHasExtendedButBoundedBudget PASSED
+
+LocalModelImportCoordinatorTest > rejectedExecutorBecomesVisibleTerminalFailureAndDoesNotOpenInput PASSED
+
+LocalModelImportCoordinatorTest > rejectedDataAndMissingNativeRuntimeUseStableNonSecretDiagnosticCodes PASSED
+
+LocalModelImportCoordinatorTest > importSurvivesOldObserverDetachingAndNewActivityReattachesWithoutDuplicateCopy PASSED
+
+LocalModelImportCoordinatorTest > sourceFailureIsBoundedAndReplayedWithoutRetainingPrivateUriOrBlockingRetry PASSED
+
+LocalModelImportProgressTest > clockReversalCannotCreateNegativeElapsedTime PASSED
+
+LocalModelImportProgressTest > successIsTerminalAndCannotBeRewrittenAsFailure PASSED
+
+LocalModelImportProgressTest > validImportHasOrderedStagesAndBoundedElapsedTime PASSED
+
+LocalModelImportProgressTest > emptyModelMayNotBeMarkedHashed PASSED
+
+LocalModelImportProgressTest > failureIsTerminalAndAllowsNoSubsequentSuccess PASSED
+
+LocalModelImportProgressTest > repeatedCopyUpdatesAreAllowedAndNeverDecrement PASSED
+
+LocalModelImportProgressTest > noFileUriCredentialOrPayloadFieldsAreStored PASSED
+
+LocalModelImportProgressTest > cannotSkipHashVerificationOrInspect PASSED
+
+LocalModelImportProgressTest > invalidNegativeAndOversizedCountersNeverReplaceLastProof PASSED
+
+LocalModelImportStreamTest > cancelledBeforeReadPreservesInterruptAndDoesNotInspect PASSED
+
+LocalModelImportStreamTest > providerReadFailurePropagatesAndCleansUp PASSED
+
+LocalModelImportStreamTest > stalledProviderFailsBeforeInspectionAndCleansTemporaryFile PASSED
+
+LocalModelImportStreamTest > interruptedReadCannotCommitEvenIfItReturnsValidBytes PASSED
+
+LocalModelImportStreamTest > interruptedNativeInspectionNeverPublishesModel PASSED
+
+LocalModelImportStreamTest > progressResetsConsecutiveEmptyReadCounter PASSED
+
+LocalModelImportStreamTest > emptyFileStillFailsWithoutInspectionOrCommit PASSED
+
+LocalModelImportStreamTest > transientEmptyReadsAreToleratedAndHashIsPreserved PASSED
+
+LocalModelImportStreamTest > failedImportPreservesPreviouslyImportedRecordAndBytes PASSED
+
+LocalModelLifecycleFakeRuntimeTest > fakeRuntimeExposesLoadGenerateCancelAndUnloadStates PASSED
+
+LocalModelLoadAdmissionTest > androidLowMemoryStateRefusesNativeLoad PASSED
+
+LocalModelLoadAdmissionTest > healthyFold7ClassDeviceStillLoadsTheOriginalGemma PASSED
+
+LocalModelLoadAdmissionTest > missingTelemetryFailsClosedInsteadOfGuessing PASSED
+
+LocalModelLoadAdmissionTest > modelThatCannotStayResidentInPhysicalRamIsRefused PASSED
+
+LocalModelLoadAdmissionTest > unknownThermalOnOldAndroidDoesNotBlockButMemoryStillChecked PASSED
+
+LocalModelLoadAdmissionTest > severeThermalStateRefusesNativeLoad PASSED
+
+LocalModelLoadSourceTest > missingOrTruncatedModelHasNoLoadSource PASSED
+
+LocalModelLoadSourceTest > wrongIdentityCannotResolveAnotherModel PASSED
+
+LocalModelLoadSourceTest > loadSourceHashesCompleteModelExactlyOnce PASSED
+
+LocalModelLoadSourceTest > sameLengthTamperingIsRejectedWithoutMetadataChanges PASSED
+
+LocalModelLoadSourceTest > laterLoadsStillVerifyEveryModelByte PASSED
+
+LocalModelReloadLifecycleTest > failureBeforeAnyModelWasLoadedCanRetryWithoutUnload PASSED
+
+LocalModelReloadLifecycleTest > failedRuntimeWithRetainedModelRefusesReloadUntilExplicitUnload PASSED
+
+LocalModelThermalGuardTest > coolDeviceAndUnknownStatusKeepTheNormalPath PASSED
+
+LocalModelThermalGuardTest > rejectedSecondStartKeepsTheHeatReasonForTheRunningAnswer PASSED
+
+LocalModelThermalGuardTest > generationDoesNotStartWhileAndroidReportsSevereHeat PASSED
+
+LocalModelThermalGuardTest > runningGenerationStopsWhenAndroidReportsSevereHeat PASSED
+
+LocalQwenPromptPolicyTest > originalPromptNeverReceivesSyntheticRoleOrToolDelimiters PASSED
+
+LocalQwenPromptPolicyTest > rejectInvalidPromptOrBudgetInsteadOfTruncating PASSED
+
+LocalQwenPromptPolicyTest > explicitUserSwitchPreservedWithoutDuplicateInjection PASSED
+
+LocalQwenPromptPolicyTest > gemmaAndUnknownModelReceiveOriginalPrompt PASSED
+
+LocalQwenPromptPolicyTest > qwen3DirectPromptNoLongerDisablesThinkingWithoutUserChoice PASSED
+
+LocalToolContinuationTest > smallContinuationUsesNativeToolChannelAndKeepsTheCompleteCorrection PASSED
+
+LocalToolContinuationTest > escapedOutputIsRefusedWholeWithoutAConstructorException PASSED
+
+LocalToolContinuationTest > optionalMetadataCannotDisableAFullBudgetFreshChat PASSED
+
+LocalToolContinuationTest > defaultAdapterKeepsLateNegationInACompleteSmallResponse PASSED
+
+LocalToolContinuationTest > freshScreenTurnDoesNotEncodeAnUnusedOversizedToolResponse PASSED
+
+LocalToolContinuationTest > turnWithoutNewObservationsStreamsTheCompletePrompt PASSED
+
+LocalToolContinuationTest > cumulativeNativeContextAndOutputReserveAreMandatory PASSED
+
+LocalToolContinuationTest > serializedObservationKeepsCompleteLateMultilingualCorrection PASSED
+
+LocalToolContinuationTest > defaultAdapterRejectsAnOversizedBatchBeforeCallingAnEngine PASSED
+
+LocalToolContinuationTest > defaultAdapterRejectsWholeUtf8OverflowBeforeCallingAnEngine PASSED
+
+LocalToolContinuationTest > completeOutputGateRejectsAPrefixOrAChangedLateNegation PASSED
+
+LocalToolContinuationTest > actualContinuationStillRejectsOversizedEscapedOutputBeforeEngineSubmission PASSED
+
+LocalToolContinuationTest > completeOutputGateRejectsUnquotedAndDoubleEncodedFrames PASSED
+
+LocalToolContinuationTest > hostileObservationRoleHeadersRemainQuotedDataOnRetries PASSED
+
+LocalToolTurnGateTest > sameChunkMultipleProposalsFailClosed PASSED
+
+LocalToolTurnGateTest > racingChunksCannotBothBeAuthorized PASSED
+
+LocalToolTurnGateTest > independentTurnsHaveIndependentLimits PASSED
+
+LocalToolTurnGateTest > oneProposalAcrossChunksOnly PASSED
+
+LocalTurnModelBindingTest > unloadedOrSwappedModelBreaksTheTurn PASSED
+
+LocalTurnModelBindingTest > sameLoadedModelStaysBound PASSED
+
+JarvisLightStreamReuseTest > foldedAndUnfoldedStagesNeverRetainStalePaths PASSED
+
+JarvisLightStreamReuseTest > nonDrawableSizesProduceNoCommands PASSED
+
+JarvisLightStreamReuseTest > fractionalResizeKeepsExactAuthoredGeometry PASSED
+
+JarvisLightStreamReuseTest > unchangedFramesReusePathsAndGradient PASSED
+
+JarvisLivingSceneTest > drawCostPerFrameIsBoundedAndIndependentOfTime PASSED
+
+JarvisLivingSceneTest > headStageCentersTheFaceBesideTheLiveCard PASSED
+
+JarvisLivingSceneTest > huesCycleSmoothlyThroughTheNeonPalette PASSED
+
+JarvisLivingSceneTest > reducedMotionTimeIsStableAndDisabledLayersDrawNothing PASSED
+
+JarvisLivingSceneTest > realPulseAndProcessingBrightenTheOrbCore PASSED
+
+JarvisLivingSceneTest > motionIsContinuousWithoutJumps PASSED
+
+JarvisRenderQualityAdaptiveTest > cinemaOnOffNeverBypassesModerateThermalFloor PASSED
+
+JarvisRenderQualityAdaptiveTest > hardSafetyFloorsRemainWhenTheExperimentIsOff PASSED
+
+JarvisRenderQualityAdaptiveTest > productionWithoutCinemaKeepsThermalBudget PASSED
+
+JarvisRenderQualityAdaptiveTest > exp15NeverIncreasesRenderWorkAcrossHeatAndInference PASSED
+
+JarvisRenderQualityAdaptiveTest > exp15ReducesDecorationsDuringInferenceAndPreservesHardStops PASSED
+
+JarvisRenderQualityTest > reducedMotionAndPowerSavingSuppressAnimationEvenDuringInference PASSED
+
+JarvisRenderQualityTest > inferenceOnAWarmDeviceGetsTheSmallestAnimatedBudget PASSED
+
+JarvisRenderQualityTest > activeInferenceReservesCapacityWhileNormalForegroundKeepsFullQuality PASSED
+
+JarvisRenderQualityTest > moderateHeatReducesFrameWorkBeforeSevereWithoutDroppingAnimation PASSED
+
+JarvisRenderQualityTest > cinemaAdaptationRetainsCoolInferenceLighting PASSED
+
+JarvisRenderQualityTest > thermalPressureNeverIncreasesRenderWork PASSED
+
+JarvisRenderQualityTest > explicitlyCoolInferencePreservesLightingWithoutDefeatingWarmThrottling PASSED
+
+JarvisRenderQualityTest > cinemaLightingCannotOverrideSafetySignals PASSED
+
+JarvisRenderQualityTest > hiddenScenesSuspendForEveryDeviceAndInferenceState PASSED
+
+JarvisThermalVisualContractTest > actualShellContactRemainsStaticAcrossHardFloorsAndPhases PASSED
+
+JarvisThermalVisualContractTest > essentialFaceEligibilityDoesNotRestartDecorativeMotion PASSED
+
+JarvisThermalVisualContractTest > warmWorkRetainsConstructionBeforeHardStopSettlesEveryWindow PASSED
+
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:extractProguardFiles
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebug FAILED
+[Incubating] Problems report is available at: file:///workspace/scratch/524e6ad8c911/device-ai/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:lintAnalyzeDebug'.
+> Could not resolve all files for configuration ':app:detachedConfiguration1'.
+   > Could not resolve com.android.tools.lint:lint-gradle:31.10.0.
+     Required by:
+         project :app
+      > No cached version of com.android.tools.lint:lint-gradle:31.10.0 available for offline mode.
+      > No cached version of com.android.tools.lint:lint-gradle:31.10.0 available for offline mode.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 7m 55s
+37 actionable tasks: 16 executed, 21 up-to-date
