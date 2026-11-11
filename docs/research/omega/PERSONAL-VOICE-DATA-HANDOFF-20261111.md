@@ -1,6 +1,7 @@
 # Personal Voice Learning — data handoff
 
-Status: WIP / UNVERIFIED. Initial checkpoint, no new training or quality claim.
+Status: Data frozen and validated; source audit and protected-store review completed.
+Isolated Android review UI compiles; no owner-speech or device-quality claim.
 Research source: PR #728, 1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667.
 Agent branch: research/continuum-personal-voice-data-20261111.
 Integration: research/continuum-personal-voice-integration-20261111.
@@ -12,7 +13,7 @@ Synthetic text data, provenance/consent contract, public-only export gate, group
 
 Native contract: TSV id / label / prompt, labels 0 no side effect, 1 open, 2 search, 3 remember. Existing wrapper `Auftrag: {prompt}\n`; unchanged tokenizer. Prefix including BOS must fit 252 BPE tokens in context256, verified by native preflight. Question/statement distinction, parameters and multi-action tasks stay explicit in rich records and pipeline probes, not falsely claimed as extra native output classes.
 
-## Existing code read
+## Initial PR #728 code read
 
 - AndroidOnDeviceSpeechInput: local de-AT free-form Android recognition, first result only, no buffer retention, 30-second bounded session through LocalSpeechSession.
 - AgentActivity.startVoiceInput/applyLocalSpeechText: transcript enters owner-editable composer; explicit send gesture remains separate.
@@ -26,9 +27,9 @@ Native contract: TSV id / label / prompt, labels 0 no side effect, 1 open, 2 sea
 
 No real owner audio/transcript pair is available or used. ASR accuracy and Fold7 runtime remain NOT_RUN. Newly authored Austrian/German examples are synthetic diagnostics, not personal speech recordings. No generated example grants tool rights or facts to memory.
 
-## Next step and rollback
+## Initial bounded plan and rollback
 
-Implement reproducible public synthetic corpus, schema, validator and shortcut tests. At most 128 training and 32 open-development rows, family and pair groups separated. Independent evaluator owns fresh frozen holdouts. Publish validated data before native training. Rollback is excluding these research files; original model and app stay unchanged.
+The planned public synthetic corpus, schema, validator and shortcut tests are now complete. The budget was 128 training and 32 open-development rows, with family and pair groups separated; 32 new simple replay rows were approved before training. The independent evaluator owns the frozen holdouts. Validated data were published before native training. Rollback is excluding these research files; original model and app stay unchanged.
 
 ## Data checkpoint
 
@@ -77,3 +78,14 @@ content-specific owner and sensitivity confirmation, and deletion. No microphone
 cloud or model update is wired. The real Android API compiler check passed;
 Activity integration, Android view runtime and physical Fold7 remain NOT_RUN.
 Frozen model-training data are unchanged.
+
+## Follow-up consent race review
+
+Bot 3 then demonstrated two actual stale-consent races in the initial UI toggle.
+The coordinator added an atomic consent/revision snapshot and a revision-checked
+text-only consent setter. The UI uses that snapshot, captures revision at the
+owner's click, never copies an entire old policy, and rejects queued work from
+dismissed forms before it starts. Three independent native adversarial-order
+checks now pass, with compiler and runtime receipts under ui/. The original red
+evidence remains on the evaluation branch. No Android event-loop or physical
+device result is inferred from these host checks. All frozen data stay unchanged.

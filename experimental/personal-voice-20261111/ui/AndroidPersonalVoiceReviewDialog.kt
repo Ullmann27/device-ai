@@ -14,6 +14,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import java.util.concurrent.Executor
+import java.util.concurrent.atomic.AtomicLong
 
 /**
  * Isolated research UI over the existing personal-voice staging contract.
@@ -27,10 +28,10 @@ class AndroidPersonalVoiceReviewDialog(
 ) {
     private val main = Handler(Looper.getMainLooper())
     private var visible: AlertDialog? = null
-    private var generation = 0L
+    private val generation = AtomicLong(0L)
 
     private data class ListedExample(val id: String, val label: String)
-    private data class Overview(val consent: VoiceLearningConsent, val records: List<ListedExample>)
+    private data class Overview(val policy: VoiceConsentSnapshot, val records: List<ListedExample>)
     private data class ReviewSnapshot(val example: PersonalVoiceExample, val revision: Long)
 
     /** Explicit entry point; opening this screen does not enable collection. */
@@ -57,7 +58,7 @@ class AndroidPersonalVoiceReviewDialog(
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener { showList(records) }
         background(dialog, {
-            val chosen = store.consent()
+            val chosen = store.consentForReview()
             val entries = store.ids().mapIndexed { index, id ->
                 val e = store.inspect(id)
                 ListedExample(id, "${index + 1}. ${preview(e.intendedInstruction)}")
@@ -66,30 +67,31 @@ class AndroidPersonalVoiceReviewDialog(
         }) { result ->
             result.fold(onSuccess = { overview ->
                 records = overview.records
-                consentBox.isChecked = overview.consent.textTraining
+                consentBox.isChecked = overview.policy.consent.textTraining
+                var displayedRevision = overview.policy.reviewRevision
                 consentBox.isEnabled = true
                 status.text = "${records.size} gespeicherte Beispiele. Prüfen und Löschen ist auch bei ausgeschaltetem Lernen möglich."
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = records.isNotEmpty()
                 consentBox.setOnCheckedChangeListener { _, wanted ->
                     consentBox.isEnabled = false
+                    val acceptedRevision = displayedRevision
                     background(dialog, {
-                        val current = store.consent()
-                        store.setConsent(current.copy(textTraining = wanted))
-                        store.consent()
+                        store.setTextTrainingConsent(wanted, expectedReviewRevision = acceptedRevision)
                     }) { changed ->
                         changed.fold(onSuccess = { state ->
+                            displayedRevision = state.reviewRevision
                             // Assigning the same requested value does not retrigger this listener.
-                            if (consentBox.isChecked != state.textTraining) {
+                            if (consentBox.isChecked != state.consent.textTraining) {
                                 // Concurrent changes are shown by a fresh screen, never hidden by a new grant.
                                 show()
                             } else {
                                 consentBox.isEnabled = true
-                                status.text = if (state.textTraining)
+                                status.text = if (state.consent.textTraining)
                                     "Textlernen erlaubt. Jedes Beispiel braucht weiterhin deine eigene Bestätigung."
                                 else "Textlernen ausgeschaltet. Vorhandene Beispiele kannst du prüfen oder löschen."
                             }
                         }, onFailure = {
-                            notice("Die Einstellung konnte nicht gespeichert werden.")
+                            notice("Die Freigabe hat sich geändert oder konnte nicht gespeichert werden. Bitte prüfe die aktuelle Einstellung erneut.")
                             show()
                         })
                     }
@@ -108,7 +110,7 @@ class AndroidPersonalVoiceReviewDialog(
 
     fun dismiss() {
         requireMainThread()
-        generation++
+        generation.incrementAndGet()
         visible?.setOnDismissListener(null)
         visible?.dismiss()
         visible = null
@@ -303,14 +305,14 @@ class AndroidPersonalVoiceReviewDialog(
 
     private fun display(dialog: AlertDialog) {
         requireMainThread()
-        generation++
+        generation.incrementAndGet()
         visible?.setOnDismissListener(null)
         visible?.dismiss()
         visible = dialog
-        val shownGeneration = generation
+        val shownGeneration = generation.get()
         dialog.setOnDismissListener {
-            if (visible === dialog && generation == shownGeneration) {
-                generation++
+            if (visible === dialog && generation.get() == shownGeneration) {
+                generation.incrementAndGet()
                 visible = null
             }
         }
@@ -318,14 +320,18 @@ class AndroidPersonalVoiceReviewDialog(
     }
 
     private fun <T> background(dialog: AlertDialog, task: () -> T, completed: (Result<T>) -> Unit) {
-        val acceptedGeneration = generation
+        val acceptedGeneration = generation.get()
         val deliver: (Result<T>) -> Unit = { result ->
             main.post {
-                if (visible === dialog && generation == acceptedGeneration && dialog.isShowing &&
+                if (visible === dialog && generation.get() == acceptedGeneration && dialog.isShowing &&
                     !activity.isFinishing && !activity.isDestroyed) completed(result)
             }
         }
-        try { io.execute { deliver(runCatching(task)) } }
+        try { io.execute {
+            // Discard queued work from a dismissed form before any store mutation starts.
+            // A mutation already running remains protected by the store's revision check.
+            if (generation.get() == acceptedGeneration) deliver(runCatching(task))
+        } }
         catch (_: RuntimeException) { deliver(Result.failure(IllegalStateException("VOICE_REVIEW_UNAVAILABLE"))) }
     }
 

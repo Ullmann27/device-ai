@@ -44,3 +44,13 @@ replacement succeeds while remaining at 256 records, and an old form cannot
 issue a fresh approval after policy revision. Exact output and jar/source hashes
 are recorded beside this file. This is host-JVM verification, not Android UI,
 Keystore hardware or physical Fold7 verification.
+
+## Separate UI consent race review
+
+The evaluator subsequently found two races in the initial UI consent toggle,
+which are separate from the three store defects above. The original red
+observations are preserved under evaluation/ui-consent-race-before on PR #755.
+The coordinator added consentForReview and setTextTrainingConsent with mandatory
+expected revision. The revised UI and three passing native-store interleaving
+checks are under ../../ui/. Compilation against Android API classes passed;
+Android event-loop and hardware tests remain NOT_RUN.
