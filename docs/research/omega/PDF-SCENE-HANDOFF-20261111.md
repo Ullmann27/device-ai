@@ -1,5 +1,11 @@
 # PDF work scene: integration and verification
 
+> PAUSED BY OWNER, 11.11.2026. Development and tests stopped. The authoritative
+> continuation is [the Claude handoff](CLAUDE-PDF-SZENE-UEBERGABE-20261111.md)
+> and `PDF-SCENE-PAUSE-STATE-20261111.json`. Latest core execution ended with
+> exit 130 after 11 passing cases and one explicit host skip, without suite end.
+> Statements below describing an active run are historical checkpoints.
+
 Canonical target: `work/pdf-scene-20261111`, PR #761.
 Integration baseline: #747 plus #757. Flow and review contributions are linked
 through #763 and #762; their source changes are in the canonical target.

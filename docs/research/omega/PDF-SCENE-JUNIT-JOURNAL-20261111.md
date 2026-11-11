@@ -1,5 +1,10 @@
 # PDF JUnit progress checkpoint
 
+> Pause checkpoint: the corrected listener ran successfully and preserved
+> source metadata plus 12 completed case results (11 PASS, one host SKIP)
+> before the owner stopped the core run. No suite_end was produced; the scope
+> remains incomplete. See `CLAUDE-PDF-SZENE-UEBERGABE-20261111.md`.
+
 Base: `f0349f4cbe4474e6df07ddf4685463688abb6ef2`.
 Integration owner: `work/pdf-scene-20261111`, PR761.
 Status: source checks PASS; Gradle/listener execution NOT_RUN.

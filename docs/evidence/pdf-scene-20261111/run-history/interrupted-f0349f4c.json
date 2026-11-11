@@ -1,0 +1,17 @@
+{
+  "source_commit": "f0349f4cbe4474e6df07ddf4685463688abb6ef2",
+  "source_tree": "c778f73d7f2e1f79535f4d5af4875ec5cbdf56a1",
+  "outcome": "INTERRUPTED_AT_CONFIGURED_1800_SECOND_LIMIT",
+  "process_exit_code": "NOT_RETAINED",
+  "completed_junit_xml": 0,
+  "observed_failures": [
+    "ContinuumDocumentFlowUiTest > aNormalPauseKeepsQueuedPdfFailureVisible FAILED",
+    "ContinuumDocumentFlowUiTest > aNewOwnerMessageKeepsQueuedPdfFailureVisible FAILED"
+  ],
+  "passed_count": "UNKNOWN_NO_COMPLETE_REPORT",
+  "captures": 25,
+  "log_sha256": "81fe57320f23bbe0e1609492961ce99c00231ad161a4211cb6ef75d6991bb06e",
+  "log": "qa-android-focused-f0349f4c.log",
+  "device": "NOT_RUN",
+  "filament_gpu": "NOT_RUN"
+}
