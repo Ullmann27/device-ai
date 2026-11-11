@@ -112,9 +112,11 @@ test('offline owner turns retain their speech veto across delayed model replies'
   assert.match(bot, /NetworkTurnConstraint\.forbidsExternalSpeech\(request\)/);
   assert.match(bot, /finishBotDialogue\(cancellation, profile, turnSession, result, allowMaya\)/);
   assert.match(body('private fun finishBotDialogue('), /speakReply\(answer, allowMaya\)/);
+  // #761 defers speech until a document/result window has arrived (speakNow); the veto must travel with it.
   assert.match(body('private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,'),
-    /addHomeGreeting\(value, allowMaya = allowMaya\)/);
+    /addHomeGreeting\(value, allowMaya = allowMaya(?:, speakNow = speakNow)?\)/);
   assert.match(body('private fun addHomeGreeting('), /speakReply\(value, allowMaya\)/);
+  assert.match(body('private fun offerDocumentNextSteps('), /addHomeGreeting\(message, allowMaya = allowMaya\)/);
 });
 
 test('pure policy and its JVM regressions cover turns, stale callbacks, pause, stop and approvals', () => {
