@@ -85,6 +85,37 @@ test('ending the recognition scope (pause, new chat, bot switch) ends hands-free
   assert.match(body('override fun onPause('), /cancelSpeechInputScope\(\)/);
 });
 
+test('explicit voice stops notify hands-free without depending on provider callbacks', () => {
+  const stop = body('private fun interruptReplySpeech(');
+  assert.match(stop, /continuousConversation\.stopAssistantSpeech\s*\{/);
+  assert.match(stop, /voiceEngine\?\.stop\(\)/);
+  assert.match(stop, /stopVoiceAnimation\(\)/);
+  assert.match(stop, /pauseContinuousConversationNotice\(/);
+  assert.match(body('private fun showVoicePicker('), /interruptReplySpeech\(\)/);
+  assert.equal((body('private fun showMayaVoiceSettings(').match(/interruptReplySpeech\(\)/g) || []).length, 2);
+  assert.match(body('private fun setInternetMode('), /if \(speechUsesMaya\) interruptReplySpeech\(\)/);
+  assert.match(activity, /else \{ interruptReplySpeech\(\) \}/);
+  assert.doesNotMatch(body('private fun speakReply('), /interruptReplySpeech\(/);
+  assert.doesNotMatch(body('private fun continueSpokenReply('), /interruptReplySpeech\(/);
+});
+
+test('offline owner turns retain their speech veto across delayed model replies', () => {
+  const owner = body('private fun addUserMessage(value: String, keepCockpit: Boolean)');
+  assert.match(owner, /NetworkTurnConstraint\.forbidsExternalSpeech\(value\)/);
+  assert.match(owner, /ownerReplyAllowsMaya = allowsMaya && \(!busy \|\| ownerReplyAllowsMaya\)/);
+  assert.match(body('private fun speakReply('), /allowMaya && ownerReplyAllowsMaya && mayaAvailable\(\)/);
+  const local = body('private fun runLocal(');
+  assert.match(local, /val allowMaya = !at\.heinz\.deviceai\.cognitive\.NetworkTurnConstraint\.forbidsExternalSpeech\(text\)/);
+  assert.match(local, /addAssistantMessage\(visibleAnswer,[\s\S]*?allowMaya = allowMaya\)/);
+  const bot = body('private fun runBotDialogue(');
+  assert.match(bot, /NetworkTurnConstraint\.forbidsExternalSpeech\(request\)/);
+  assert.match(bot, /finishBotDialogue\(cancellation, profile, turnSession, result, allowMaya\)/);
+  assert.match(body('private fun finishBotDialogue('), /speakReply\(answer, allowMaya\)/);
+  assert.match(body('private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,'),
+    /addHomeGreeting\(value, allowMaya = allowMaya\)/);
+  assert.match(body('private fun addHomeGreeting('), /speakReply\(value, allowMaya\)/);
+});
+
 test('pure policy and its JVM regressions cover turns, stale callbacks, pause, stop and approvals', () => {
   assert.doesNotMatch(policy, /^import android\./m);
   for (const name of ['severalGermanTurnsIncludingFollowUpRunWithoutNewGesture', 'lateRecognizerResultOfAnOldTurnIsIgnored',

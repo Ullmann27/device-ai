@@ -2,6 +2,7 @@ package at.heinz.deviceai
 
 import at.heinz.deviceai.cognitive.ApprovedSpeechChunkQueue
 import at.heinz.deviceai.cognitive.JarvisVoiceProfile
+import at.heinz.deviceai.cognitive.NetworkTurnConstraint
 import org.junit.Assert.*
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
@@ -36,6 +37,39 @@ class MayaSpeechTest {
             assertFalse(it.speak("a", "Hallo", "bad\nkey") { true })
             assertFalse(it.speak("a", "a".repeat(801), key) { true })
             assertEquals(0, requests.get())
+        }
+    }
+
+    @Test fun offlineOwnerTurnNeverCreatesCloudRequestEvenWhenGloballyOnline() {
+        val requests = AtomicInteger()
+        MayaSpeech({ requests.incrementAndGet(); Source() }, ::Output, { it() }, Events()).use { speech ->
+            for (turn in listOf("Antworte offline.", "Ohne Internet.", "Bitte ohne Cloud.")) {
+                assertFalse(speech.speak("offline", "Freigegebene Antwort", key) {
+                    !NetworkTurnConstraint.forbidsExternalSpeech(turn)
+                })
+            }
+            assertEquals(0, requests.get())
+        }
+    }
+
+    @Test fun laterUnrestrictedTurnUsesSelectedVoiceWithoutCarryingPriorVeto() {
+        val sent = CopyOnWriteArrayList<String>()
+        val events = Events()
+        MayaSpeech({ object : Source() {
+            override fun synthesize(text: String, key: String, allowed: () -> Boolean): ByteArray {
+                sent += text
+                return super.synthesize(text, key, allowed)
+            }
+        } }, ::Output, { it() }, events).use { speech ->
+            assertFalse(speech.speak("private", "Lokale Antwort", key) {
+                !NetworkTurnConstraint.forbidsExternalSpeech("Ohne Cloud.")
+            })
+            assertTrue(speech.speak("next", "Neue freigegebene Antwort", key) {
+                !NetworkTurnConstraint.forbidsExternalSpeech("Was ist Photosynthese?")
+            })
+            await(events.done)
+            assertEquals(listOf("Neue freigegebene Antwort"), sent)
+            assertEquals(listOf("start:next", "done:next"), events.events)
         }
     }
 

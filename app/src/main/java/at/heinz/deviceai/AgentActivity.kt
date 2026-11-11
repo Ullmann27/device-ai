@@ -341,6 +341,7 @@ class AgentActivity : Activity() {
     private var voiceInitialized = false
     private var voiceEnabled = false
     private var mayaSpeech: MayaSpeech? = null
+    private var ownerReplyAllowsMaya = true
     private var speechUsesMaya = false
     private var speechInternetRevision = -1L
     private var voiceProgressListener: android.speech.tts.UtteranceProgressListener? = null
@@ -3125,6 +3126,8 @@ class AgentActivity : Activity() {
 
     private fun runBotDialogue(profile: at.heinz.deviceai.chief.ChiefBotProfile, request: String) {
         if (busy || localAgentExecutor.isShutdown) return
+        val allowMaya = !at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalSpeech(request)
+        ownerReplyAllowsMaya = allowMaya
         if (at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum.requestsKotlinRepairPractice(request)) {
             submitBotTask(ChiefBotTaskRequest(profile.agentId, profile.profileVersion, request, ChiefBotTaskMode.PRIVATE_REPLY))
             return
@@ -3167,19 +3170,20 @@ class AgentActivity : Activity() {
                 if (practiceFeedback == null) generated.response
                 else generated.response + "\n\nProgrammauswertung\n" + practiceFeedback
             }
-            runOnUiThread { finishBotDialogue(cancellation, profile, turnSession, result) }
+            runOnUiThread { finishBotDialogue(cancellation, profile, turnSession, result, allowMaya) }
         } } catch (_: java.util.concurrent.RejectedExecutionException) {
-            finishBotDialogue(cancellation, profile, turnSession, Result.failure(IllegalStateException("BOT_EXECUTOR_CLOSED")))
+            finishBotDialogue(cancellation, profile, turnSession,
+                Result.failure(IllegalStateException("BOT_EXECUTOR_CLOSED")), allowMaya)
         }
     }
 
     private fun finishBotDialogue(cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation,
                                   profile: at.heinz.deviceai.chief.ChiefBotProfile, turnSession: String,
-                                  result: Result<String>) {
+                                  result: Result<String>, allowMaya: Boolean) {
         if (isFinishing || isDestroyed || activeChatCancellation !== cancellation) return
         // Cancellation is not native termination. Keep the shared lane occupied until it really ends.
         if (localRuntime.state == LocalModelState.GENERATING) {
-            mainHandler.postDelayed({ finishBotDialogue(cancellation, profile, turnSession, result) }, 250L)
+            mainHandler.postDelayed({ finishBotDialogue(cancellation, profile, turnSession, result, allowMaya) }, 250L)
             return
         }
         val uncancelled = runCatching { cancellation.throwIfCancelled() }.isSuccess
@@ -3193,7 +3197,7 @@ class AgentActivity : Activity() {
         result.fold({ answer ->
             rememberBotTaskStatus(profile.agentId, "Private Antwort gespeichert")
             addBubble("${profile.displayName} · $answer", false)
-            speakBootstrap(answer)
+            speakReply(answer, allowMaya)
             addToolActivity("${profile.displayName} · Modellantwort gespeichert; keine unabhängig geprüfte Werkzeugleistung")
         }, {
             rememberBotTaskStatus(profile.agentId, "Privater Dialog nicht abgeschlossen")
@@ -5154,8 +5158,7 @@ class AgentActivity : Activity() {
                 "Android · Offline-Stimme"
             )) { _, choice ->
                 if (choice == 0) showMayaVoiceSettings() else {
-                    stopVoiceAnimation()
-                    voiceEngine?.stop()
+                    interruptReplySpeech()
                     getSharedPreferences("continuum-voice", MODE_PRIVATE).edit()
                         .putBoolean("maya_enabled", false).commit()
                     showOfflineVoicePicker()
@@ -5181,8 +5184,7 @@ class AgentActivity : Activity() {
                 "Maya ist eine englische Originalstimme; ihre deutsche Aussprache ist noch am Gerät zu prüfen.")
             .setView(field).setNegativeButton("Abbrechen", null)
             .setNeutralButton("Deaktivieren / Schlüssel löschen") { _, _ ->
-                voiceEngine?.stop()
-                stopVoiceAnimation()
+                interruptReplySpeech()
                 getSharedPreferences("continuum-voice", MODE_PRIVATE).edit().putBoolean("maya_enabled", false).commit()
                 runCatching { SecureTokenStore.clearElevenLabsToken(this) }.onFailure {
                     Toast.makeText(this, "Schlüssel konnte nicht gelöscht werden.", Toast.LENGTH_LONG).show()
@@ -5201,8 +5203,7 @@ class AgentActivity : Activity() {
                     check(getSharedPreferences("continuum-voice", MODE_PRIVATE).edit()
                         .putBoolean("maya_enabled", true).commit())
                 }.fold(onSuccess = {
-                    voiceEngine?.stop()
-                    stopVoiceAnimation()
+                    interruptReplySpeech()
                     voiceEnabled = true
                     bootstrapMemory.voiceEnabled = true
                     voiceButton?.text = "TON AN"
@@ -5731,7 +5732,7 @@ class AgentActivity : Activity() {
                 if (replyVoiceReady()) speakBootstrap("Hallo! Meine Stimme ist eingeschaltet.")
                 else Toast.makeText(this@AgentActivity,
                     "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show()
-            } else { voiceEngine?.stop(); stopVoiceAnimation() }
+            } else { interruptReplySpeech() }
         }
         voiceButton?.setOnLongClickListener { showVoicePicker(); true }
         actions.addView(voiceButton,
@@ -5919,7 +5920,8 @@ class AgentActivity : Activity() {
         if (spokenHome) {
             recordCockpitDialog(true, request)
             recordCockpitDialog(false, reply)
-            speakBootstrap(reply)
+            speakReply(reply, allowMaya =
+                !at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalSpeech(request))
         }
         addToolActivity("GERÄTESTATUS · nur öffentliche Betriebsdaten · kein Modell- oder Werkzeugaufruf")
     }
@@ -9117,6 +9119,15 @@ class AgentActivity : Activity() {
             awaitingApproval = avatarAwaitingApproval, blocked = avatarBlocked))
     }
 
+    private fun interruptReplySpeech() {
+        val decision = continuousConversation.stopAssistantSpeech {
+            voiceEngine?.stop()
+            stopVoiceAnimation()
+        }
+        if (decision == at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.PAUSE)
+            pauseContinuousConversationNotice("Die Antwort wurde unterbrochen.")
+    }
+
     private fun stopVoiceAnimation() = stopVoiceAnimation(true)
 
     private fun stopVoiceAnimation(interrupted: Boolean) {
@@ -9199,7 +9210,7 @@ class AgentActivity : Activity() {
 
     private fun speakReply(message: String, allowMaya: Boolean) {
         if (!voiceEnabled || !replyVoiceReady() || !foregroundLearningActive || voiceListening) return
-        val useMaya = allowMaya && mayaAvailable()
+        val useMaya = allowMaya && ownerReplyAllowsMaya && mayaAvailable()
         if (!useMaya && !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(
                 voiceEngine?.voice?.isNetworkConnectionRequired)) return
         voiceEngine?.stop()
@@ -9481,11 +9492,7 @@ class AgentActivity : Activity() {
     }
 
     private fun setInternetMode(value: at.heinz.deviceai.cognitive.InternetAccessMode) {
-        if (speechUsesMaya) {
-            val interruptedId = voiceUtteranceId
-            stopVoiceAnimation()
-            interruptedId?.let { onConversationSpeechFinished(it, interrupted = true) }
-        }
+        if (speechUsesMaya) interruptReplySpeech()
         webToolGate.cancel()
         approvedModelWebSession.getAndSet(null)?.cancel()
         activeWebResearchSession?.cancel()
@@ -10433,6 +10440,7 @@ class AgentActivity : Activity() {
                          codingPlanning: ContinuumCodingPlanning? = null,
                          botTask: ChiefBotTaskTicket? = null) {
         val localSessionId = sessionId
+        val allowMaya = !at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalSpeech(text)
         val planningEpoch = codingPlanningEpoch
         val internetModeAtTurnStart = internetConsent.mode
         val internetRevisionAtTurnStart = internetConsent.revision()
@@ -10444,7 +10452,8 @@ class AgentActivity : Activity() {
             publishCognitiveTrace(turnTrace,TraceOutcome.CLARIFY)
             setBusy(false)
             addAssistantMessage("Der Auftrag passt nicht vollständig in das lokale Aufgabenbudget. " +
-                "Bitte teile ihn in kürzere Schritte auf; ich führe keinen abgeschnittenen Auftrag aus.")
+                "Bitte teile ihn in kürzere Schritte auf; ich führe keinen abgeschnittenen Auftrag aus.",
+                preserveLocalContext = true, keepCockpit = false, allowMaya = allowMaya)
             botTask?.let { finishBotTask(it, "Auftrag zu groß · nicht gestartet") }
             return
         }
@@ -10458,7 +10467,7 @@ class AgentActivity : Activity() {
             val retainUnanswered = sessionId == localSessionId
             addAssistantMessage(groundedRecall?.failureAnswer() ?:
                 "Kein lokales Modell ist bereit. Importiere und lade zuerst eine kompatible .litertlm-Datei.",
-                preserveLocalContext = retainUnanswered)
+                preserveLocalContext = retainUnanswered, keepCockpit = false, allowMaya = allowMaya)
             if (retainUnanswered) localConversationContext.recordUnanswered(localSessionId, text)
             botTask?.let {
                 input.setText(text)
@@ -11047,7 +11056,7 @@ class AgentActivity : Activity() {
                         }
                         addAssistantMessage("${botTask.profile.displayName} · " + run.response.ifBlank {
                             "Das lokale Modell hat keine vollständige Antwort erzeugt."
-                        })
+                        }, preserveLocalContext = true, keepCockpit = false, allowMaya = allowMaya)
                         finishBotTask(botTask, status)
                         avatarBlocked = run.blocker != null
                         avatarAwaitingApproval = false
@@ -11074,7 +11083,8 @@ class AgentActivity : Activity() {
                     if (draftTurn != null) documentDraftTurn = null
                     val draftWindow = if (draftTurn != null) onDocumentDraftReply(draftTurn,
                         if (successful) run.response else "") else null
-                    addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession, keepCockpit = draftWindow != null)
+                    addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession,
+                        keepCockpit = draftWindow != null, allowMaya = allowMaya)
                     if(successful && groundedRecall!=null)addToolActivity(
                         "LOKALE MODELLSCHLUSSFOLGERUNG · ${imported.id}@${imported.version} · " +
                             "SHA-256 ${imported.sha256.take(16)} · nicht unabhängig bestätigt")
@@ -11101,7 +11111,8 @@ class AgentActivity : Activity() {
                         publishCognitiveTrace(turnTrace, TraceOutcome.FAILED)
                         finishBotTask(botTask, "Auftrag nicht abgeschlossen · Werkzeugprotokoll beachten")
                         addAssistantMessage("${botTask.profile.displayName} · Der Auftrag wurde nicht vollständig abgeschlossen. " +
-                            "Bereits gestartete Werkzeugaktionen können trotzdem gewirkt haben; bitte die Rückmeldungen prüfen.")
+                            "Bereits gestartete Werkzeugaktionen können trotzdem gewirkt haben; bitte die Rückmeldungen prüfen.",
+                            preserveLocalContext = true, keepCockpit = false, allowMaya = allowMaya)
                         addToolActivity("Bot-Auftrag beendet · ${error.message ?: error.javaClass.simpleName}")
                         return@onFailure
                     }
@@ -11140,7 +11151,7 @@ class AgentActivity : Activity() {
                         at.heinz.deviceai.localmodel.LocalModelThermalGuard.ownerMessage(error.message)
                     else groundedRecall?.failureAnswer() ?:
                         "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn,
-                        keepCockpit = failedDraft != null && workWindowHost.isShowing)
+                        keepCockpit = failedDraft != null && workWindowHost.isShowing, allowMaya = allowMaya)
                     if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)
                     addToolActivity(if (requiredContextOverflow)
                         "KONTEXT · vollständig erforderliche Belege passen nicht; keine Modellaktion"
@@ -13029,6 +13040,7 @@ class AgentActivity : Activity() {
                 return@onLearningIo
             }
             sessionId = UUID.randomUUID().toString()
+            ownerReplyAllowsMaya = true
             // The previous conversation stays stored; only the active pointer moves (#568).
             val newConversation = sessionId
             chatTranscriptIo.execute { runCatching { chatTranscripts.setActive(newConversation) } }
@@ -13052,6 +13064,8 @@ class AgentActivity : Activity() {
 
     /** [keepCockpit]: a cockpit work scene answers this request on START – record it without switching to the chat. */
     private fun addUserMessage(value: String, keepCockpit: Boolean) {
+        val allowsMaya = !at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalSpeech(value)
+        ownerReplyAllowsMaya = allowsMaya && (!busy || ownerReplyAllowsMaya)
         recordCockpitDialog(true, value)
         if (avatarBlocked) { avatarBlocked = false; refreshHologramState() }
         // Store only public, scrubbed topic labels when the owner has enabled
@@ -13114,7 +13128,8 @@ class AgentActivity : Activity() {
         addAssistantMessage(value, preserveLocalContext, keepCockpit = false)
 
     /** [keepCockpit]: the result is already shown in an open cockpit work window – record it without leaving START. */
-    private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean) {
+    private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,
+                                    allowMaya: Boolean = ownerReplyAllowsMaya) {
         recordCockpitDialog(false, value)
         // Rendering a normal assistant reply never owns session invalidation. Callers pass false only
         // after a semantic policy decided that older dialogue is stale (for example a confirmed memory change).
@@ -13132,14 +13147,14 @@ class AgentActivity : Activity() {
             refreshConversationLayout()
             (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         }
-        addHomeGreeting(value)
+        addHomeGreeting(value, allowMaya = allowMaya)
     }
 
     /** Startup/session greetings remain available in chat without taking space
      * from the home dashboard. Every actual action result opens the conversation. */
-    private fun addHomeGreeting(value: String, persist: Boolean = true) {
+    private fun addHomeGreeting(value: String, persist: Boolean = true, allowMaya: Boolean = ownerReplyAllowsMaya) {
         addBubble(value, user = false, persist = persist)
-        speakBootstrap(value)
+        speakReply(value, allowMaya)
     }
 
     /**

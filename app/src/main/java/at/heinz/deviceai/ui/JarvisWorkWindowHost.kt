@@ -174,7 +174,7 @@ class JarvisWorkWindowHost(
         }
         val planned = plan(home, container, scene, activatedControl) ?: return null
         val first = previous?.let { Planned(JarvisWorkWindow.Plan(it, planned.plan.destination, planned.plan.protectedBounds),
-            planned.face, planned.viewport) } ?: planned
+            planned.face, planned.viewport, planned.orb) } ?: planned
         val controlOrigin = activatedControl?.takeIf { previous == null }?.let {
             ControlOrigin(it, localBounds(it, container), RectF(planned.viewport), RectF(planned.plan.origin))
         }
