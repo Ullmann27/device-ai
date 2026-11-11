@@ -126,3 +126,15 @@ Die fünf Produktionsdateien und zugehörigen neuen Tests sind byte-identisch zu
 unabhängig geprüften `1ba7b9458`; keine neue Blockade in den drei Gegenprüfungen.
 JVM 94/94 und Node 34/34 sind übernommene quellgebundene Thermik-Belege.
 Gemeinsame Android-/Visual-/Lint-Abnahme und echte Fold7-Thermik bleiben offen.
+
+### Gemeinsamer Node-Stand c36258a8
+
+Vollständig: **2.456 PASS / 5 FAIL / 37 SKIP** von 2.498 Fällen, Quelle unverändert.
+Der Umfang enthält zusätzlich `scripts/*.test.mjs`; die Summen sind nicht direkt
+mit dem geerbten 1.634-Fall-Lauf vergleichbar. Backend 64/64 und Syntaxprüfung PASS.
+Fünf Prozess-Fixture-Fehler werden unverändert isoliert untersucht; kein grüner
+Gesamtnachweis. Belege: `node-combined-c36258a8/SUMMARY.json` im Evidenzverzeichnis.
+
+Zwei Review-Nachträge (Verb-am-Ende-App-Routing und historische Gedächtnisanfragen)
+sind in kleinen Helper-Reparaturen. Der alte Android-Aufruf wurde vor Gradle-Start
+aus der Reihenfolge genommen; der neue 27-Klassen-Lauf folgt auf gemeinsamem SHA.

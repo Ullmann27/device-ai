@@ -143,3 +143,37 @@ JVM proof. The exact compiler log is retained as
 of `"1.0"`; digest assertions, provider cleanup and production sources do not
 change. Canonical combined tests will execute the corrected helper. No Android
 PASS is inferred from its earlier JVM success.
+
+## Complete combined Node run and review follow-ups
+
+Exact clean `c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14` completed the full
+Node profile without concurrent heavy Gradle: **2,498 total; 2,456 PASS, 5 FAIL,
+37 SKIP**; complete evidence, process termination confirmed, source unchanged.
+This profile includes `scripts/*.test.mjs` in addition to the inherited baseline's
+`.github/continuum` files; different totals/skips are not a regression count.
+Backend check and 64 backend cases pass. Raw compressed report/XML, failure
+receipts, skipped-case reasons and command are under `node-combined-c36258a8/`.
+
+Four failures are in `local-worker-process.test.mjs` (idle lease/STOP, finite
+cycle, SIGTERM descendant restart, TIMEOUT descendant setup). The fifth is the
+unreadable-younger-process fixture in `continuum-owned-process.test.mjs`.
+The finite-cycle receipt proves TIMEOUT at its 1,000-ms fixture limit; this does
+not prove every other failure has the same cause. Root checks both unchanged
+files separately. No timeout, assertion or production guard has been relaxed.
+
+Two newly retrieved review findings are being repaired on helper follow-ups:
+
+- App verb-final matching misroutes plural conversational sentences such as
+  “Wir starten”; preserve explicit app commands and existing exact-installed
+  fallback/consent. Logic follow-up #778.
+- The compact ledger projection omits history for several past correction/change
+  phrasings; preserve compact current/planning tasks and explicit uncertainty.
+  Memory follow-up, with independent extension-agent counterexamples.
+
+The previously queued 25-class Android phase on c362 was explicitly superseded
+BEFORE it acquired the lock or started Gradle. Its evidence-directory guard
+prevents that obsolete phase from launching. No Android test was interrupted.
+The replacement common source will include both verified fixes and 27 selected
+classes (adding OwnerAppVerbFinalIntentTest and OwnerObjectStateLedgerHistoryPromptTest).
+Full Android/visual, NewApi lint, unsigned Code54 build and artifact verification
+remain to be executed on that actual published source.

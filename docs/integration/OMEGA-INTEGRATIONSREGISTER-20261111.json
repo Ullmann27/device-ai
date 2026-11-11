@@ -239,6 +239,21 @@
       "status": "DEFERRED_NOT_IMPLEMENTED",
       "reason": "Full shared scene requires HomeView viewport and avatar mask/origin changes as well as GPU acceptance. Preserve current working stage/fallback for the immediate candidate; no incomplete renderer is activated."
     },
-    "node_final": "Run without concurrent Gradle compilation; retain full fixture receipts on failure."
+    "node_final": "Run without concurrent Gradle compilation; retain full fixture receipts on failure.",
+    "combined_node_c36258a8": {
+      "source": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+      "total": 2498,
+      "pass": 2456,
+      "fail": 5,
+      "skip": 37,
+      "complete": true,
+      "source_unchanged": true,
+      "evidence": "docs/evidence/omega-apk54-20261111/node-combined-c36258a8/SUMMARY.json"
+    },
+    "android_focused": "Queued c362 scope explicitly superseded before Gradle start for two new confirmed source-review fixes. Replacement scope: 27 classes; execution NOT_RUN.",
+    "review_followups": {
+      "app_verb_final": "#778, source defect confirmed, RED/GREEN pending shared lock",
+      "memory_history": "Source defect confirmed; current/planning/history boundary regressions prepared; RED/GREEN pending shared lock"
+    }
   }
 }

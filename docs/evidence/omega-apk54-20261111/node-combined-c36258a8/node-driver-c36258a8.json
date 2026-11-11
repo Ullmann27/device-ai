@@ -1,0 +1,45 @@
+{
+  "source": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+  "records": [
+    {
+      "name": "backend-check",
+      "command": [
+        "npm",
+        "--prefix",
+        "backend",
+        "run",
+        "check"
+      ],
+      "exit": 0,
+      "elapsedSeconds": 2.544,
+      "log": "/workspace/scratch/2d62a799e417/qa/backend-check-c36258a8.log"
+    },
+    {
+      "name": "backend-test",
+      "command": [
+        "npm",
+        "--prefix",
+        "backend",
+        "test"
+      ],
+      "exit": 0,
+      "elapsedSeconds": 1.445,
+      "log": "/workspace/scratch/2d62a799e417/qa/backend-test-c36258a8.log"
+    },
+    {
+      "name": "full-node",
+      "command": [
+        "node",
+        "scripts/continuum-reliability-qa.mjs",
+        "full-node",
+        "--out",
+        "/workspace/scratch/2d62a799e417/qa/node-final-c36258a8"
+      ],
+      "exit": 1,
+      "elapsedSeconds": 597.793,
+      "log": "/workspace/scratch/2d62a799e417/qa/full-node-c36258a8.log"
+    }
+  ],
+  "sourceAfter": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+  "statusAfter": ""
+}
