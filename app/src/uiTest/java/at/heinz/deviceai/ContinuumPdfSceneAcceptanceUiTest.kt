@@ -216,24 +216,37 @@ class ContinuumPdfSceneAcceptanceUiTest {
         val request = picker(activity)
         framePump?.close()
         framePump = null
-        controller.recreate()
-        controller.windowFocusChanged(true)
-        val restored = controller.get()
-        val root = restored.window.decorView
-        framePump = CockpitHostFramePump { root }
-        (field(restored, "homeView") as ContinuumHomeView).setForegroundActive(true)
-        root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
-        root.layout(0, 0, 884, 760)
-        advance(320L)
-        deliver(restored, request, Activity.RESULT_OK, deniedSelection())
-        flushDocumentLane(restored)
-        val once = chat(restored)
-        assertEquals("The saved selection survives recreation", 1,
-            once.count { it.startsWith("Die PDF ließ sich nicht lesen (") })
-        deliver(restored, request, Activity.RESULT_OK, deniedSelection())
-        flushDocumentLane(restored)
-        assertEquals("Recreation does not duplicate the read", once, chat(restored))
-        assertNoWork(restored, root)
+        // Robolectric 4.14.1 ActivityController.recreate() calls visible() and windowFocusChanged(true) itself and fails
+        // there (checkNotNull of the view root). Same lifecycle by hand: the system saves the state, destroys the old
+        // instance and builds a new one from exactly that Bundle.
+        val saved = android.os.Bundle()
+        controller.saveInstanceState(saved)
+        controller.pause().stop().destroy()
+        val recreated = Robolectric.buildActivity(AgentActivity::class.java).setup(saved).visible()
+        try {
+            advance(32L)
+            recreated.windowFocusChanged(true)
+            val restored = recreated.get()
+            val root = restored.window.decorView
+            framePump = CockpitHostFramePump { root }
+            (field(restored, "homeView") as ContinuumHomeView).setForegroundActive(true)
+            root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
+            root.layout(0, 0, 884, 760)
+            advance(320L)
+            deliver(restored, request, Activity.RESULT_OK, deniedSelection())
+            flushDocumentLane(restored)
+            val once = chat(restored)
+            assertEquals("The saved selection survives recreation", 1,
+                once.count { it.startsWith("Die PDF ließ sich nicht lesen (") })
+            deliver(restored, request, Activity.RESULT_OK, deniedSelection())
+            flushDocumentLane(restored)
+            assertEquals("Recreation does not duplicate the read", once, chat(restored))
+            assertNoWork(restored, root)
+        } finally {
+            framePump?.close()
+            framePump = null
+            runCatching { recreated.pause().stop().destroy() }
+        }
     }
 }

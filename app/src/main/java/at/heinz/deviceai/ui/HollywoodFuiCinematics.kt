@@ -126,6 +126,37 @@ object HollywoodFuiCinematics {
         return Beam(originX, originY, originX + (endX - originX) * p, originY + (endY - originY) * p)
     }
 
+    // ---- Cinema 2.0: connections (pure) ----------------------------------------------------------------------------
+
+    /** Duration of one verified receipt's way back from the window rim to the orb (same as the rim pulse). */
+    const val RECEIPT_TRAVEL_MS = 380L
+
+    /** Travel 0..1 of a verified receipt [ageMs] after it was presented; −1 before, after or for a bad age. */
+    fun receiptTravel(ageMs: Long): Float =
+        if (ageMs < 0L || ageMs > RECEIPT_TRAVEL_MS) -1f else ageMs / RECEIPT_TRAVEL_MS.toFloat()
+
+    /**
+     * The avatar's reading thread: from the side of the face that looks at the window to the window rim, clear of the
+     * rounded corners. Null when face and window overlap or touch (no honest gap) or for bad geometry.
+     */
+    fun attentionLink(face: Box, window: Box, minGapDp: Float = 6f, cornerDp: Float = 18f): Beam? {
+        val values = floatArrayOf(face.left, face.top, face.right, face.bottom,
+            window.left, window.top, window.right, window.bottom)
+        if (values.any { !it.isFinite() } || face.width <= 0f || face.height <= 0f ||
+            window.width <= 2f * cornerDp || window.height <= 2f * cornerDp) return null
+        // The eyes sit in the upper half of the face box; the thread leaves at eye height.
+        val eyeY = face.top + face.height * .42f
+        fun alongX(x: Float) = x.coerceIn(window.left + cornerDp, window.right - cornerDp)
+        fun alongY(y: Float) = y.coerceIn(window.top + cornerDp, window.bottom - cornerDp)
+        return when {
+            window.left - face.right >= minGapDp -> Beam(face.right, eyeY, window.left, alongY(eyeY))
+            face.left - window.right >= minGapDp -> Beam(face.left, eyeY, window.right, alongY(eyeY))
+            window.top - face.bottom >= minGapDp -> Beam(face.centerX, face.bottom, alongX(face.centerX), window.top)
+            face.top - window.bottom >= minGapDp -> Beam(face.centerX, face.top, alongX(face.centerX), window.bottom)
+            else -> null
+        }
+    }
+
     // ---- Cinema 2.0: focus depth (pure) ------------------------------------------------
 
     /** Dim of the deck plane just below a constructed window's top edge and at the bottom of the deck. */
@@ -277,6 +308,32 @@ object HollywoodFuiCinematics {
             }
             if (bloom) p.drawLine(box.left + 10f, vacantTop, box.right - 10f, vacantTop, 4f, violet, .10f * s)
             p.drawLine(box.left + 10f, vacantTop, box.right - 10f, vacantTop, .9f, accentFill, .46f * s)
+        }
+
+        /**
+         * The avatar's reading thread while real work runs: a hair-thin line from the face to the window with two
+         * sparks travelling towards the window on the window's own clock ([seconds]); continuous, no phase jump.
+         */
+        fun drawAttentionLink(p: ContinuumPainter, beam: Beam, seconds: Float, strength: Float, bloom: Boolean) {
+            if (!strength.isFinite() || strength <= .01f || !seconds.isFinite()) return
+            val s = strength.coerceIn(0f, 1f)
+            val dx = beam.x1 - beam.x0
+            val dy = beam.y1 - beam.y0
+            if (dx * dx + dy * dy < 16f) return
+            if (bloom) p.setAdditive(true)
+            try {
+                if (bloom) p.drawLine(beam.x0, beam.y0, beam.x1, beam.y1, 3.2f, violet, .07f * s)
+                p.drawLine(beam.x0, beam.y0, beam.x1, beam.y1, .7f, accentFill, .30f * s)
+                repeat(2) { k ->
+                    val t = ((seconds * .55f + k * .5f) % 1f + 1f) % 1f
+                    val fade = sin(PI.toFloat() * t)
+                    val x = beam.x0 + dx * t
+                    val y = beam.y0 + dy * t
+                    p.fillCircle(x, y, 2.4f, accentFill, .35f * s * fade)
+                    p.fillCircle(x, y, 1.1f, glint, .9f * s * fade)
+                }
+                p.fillCircle(beam.x1, beam.y1, 1.8f, glint, .6f * s)
+            } finally { if (bloom) p.setAdditive(false) }
         }
 
         /** Dust along the rim and, while the task really works, a breathing energy rim. */

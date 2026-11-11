@@ -1,0 +1,122 @@
+{
+ "schema": 1,
+ "updated": "2026-11-11",
+ "integration_branch": "claude/omega-integration-20261111",
+ "pr": 768,
+ "base": {
+  "pr761": "8505c8850",
+  "pr747": "c00326ced",
+  "pr757": "be33c2c97",
+  "code53_installed": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05"
+ },
+ "entries": [
+  {
+   "issue": "cinema-connections",
+   "origin_pr": 757,
+   "commit": "be33c2c97",
+   "target_branch": "claude/omega-integration-20261111",
+   "tests": "Agent A 115/0 on 6c538e2e; not re-run after merge",
+   "status": "INTEGRIERT",
+   "device_check": "NOT_RUN"
+  },
+  {
+   "issue": "761-fixtures+speech-veto-contract",
+   "origin_pr": 768,
+   "commit": "120572483",
+   "target_branch": "claude/omega-integration-20261111",
+   "tests": "Geometry 3/3, Acceptance 6/6, node wiring 7/7",
+   "status": "GETESTET",
+   "device_check": "NOT_RUN"
+  },
+  {
+   "issue": "761-core-scope",
+   "origin_pr": 761,
+   "commit": "6c538e2ef",
+   "target_branch": "claude/omega-integration-20261111",
+   "tests": "98: 94 PASS / 4 FAIL (3 fixtures fixed, 1 strict host decode)",
+   "status": "GETESTET",
+   "device_check": "NOT_RUN"
+  },
+  {
+   "issue": "761-strict-pdf-decode",
+   "origin_pr": 761,
+   "commit": "a39089fe8",
+   "target_branch": "work/pdf-scene-20261111",
+   "tests": "0/1 host (NoSuchMethodError getOwnerId$)",
+   "status": "BLOCKIERT",
+   "device_check": "NOT_RUN"
+  },
+  {
+   "issue": "761-visual-scope",
+   "origin_pr": 761,
+   "commit": null,
+   "target_branch": "claude/omega-integration-20261111",
+   "tests": "NOT_RUN",
+   "status": "NOT_RUN",
+   "device_check": "NOT_RUN"
+  },
+  {
+   "issue": "cinema-matrix+engine-decision",
+   "origin_pr": null,
+   "commit": "999f268c1",
+   "target_branch": "claude/omega-integration-20261111",
+   "tests": "docs",
+   "status": "INTEGRIERT",
+   "device_check": "NOT_RUN"
+  },
+  {
+   "issue": "767/759/765-routing",
+   "origin_pr": null,
+   "commit": "231b8bad2",
+   "target_branch": "claude/omega-agent-b-routing-20261111",
+   "tests": "13 tests, 9 RED (reproduction), no fix",
+   "status": "WIP",
+   "device_check": "NOT_RUN"
+  },
+  {
+   "issue": "758-memory+context-window",
+   "origin_pr": null,
+   "commit": "02d9260c9",
+   "target_branch": "claude/omega-agent-c-memory-20261111",
+   "tests": "16 written, never compiled",
+   "status": "WIP",
+   "device_check": "NOT_RUN"
+  },
+  {
+   "issue": "node-regression",
+   "origin_pr": null,
+   "commit": "6c538e2ef",
+   "target_branch": "-",
+   "tests": "backend 64/64; contracts 1584 PASS/27 FAIL/23 SKIP, 26 baseline (= Code53), 1 fixed",
+   "status": "GETESTET",
+   "device_check": "-"
+  },
+  {
+   "issue": "lint+full-android-suite",
+   "origin_pr": null,
+   "commit": null,
+   "target_branch": "-",
+   "tests": "NOT_RUN",
+   "status": "NOT_RUN",
+   "device_check": "NOT_RUN"
+  },
+  {
+   "issue": "unified-filament-scene (P3)",
+   "origin_pr": null,
+   "commit": null,
+   "target_branch": "-",
+   "tests": "-",
+   "status": "NOT_RUN",
+   "device_check": "NOT_RUN"
+  },
+  {
+   "issue": "569/764/team/accounts/cleaner",
+   "origin_pr": null,
+   "commit": null,
+   "target_branch": "-",
+   "tests": "-",
+   "status": "OFFEN",
+   "device_check": "NOT_RUN"
+  }
+ ]
+}

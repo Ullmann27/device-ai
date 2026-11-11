@@ -1,0 +1,116 @@
+{
+ "core_run_1": {
+  "source_head": "6c538e2ef785ec4e0e159993eeeca7a82464d77b",
+  "source_tree": "f85348c1abf63ced36c2efc4fda5e29471bbaddc",
+  "scope": "core",
+  "classes": [
+   "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+   "at.heinz.deviceai.ContinuumPdfSceneAcceptanceUiTest",
+   "at.heinz.deviceai.PdfIntakeCancellationUiTest",
+   "at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest",
+   "at.heinz.deviceai.PdfDocumentIntakeTextTest",
+   "at.heinz.deviceai.ui.JarvisPdfWindowPresentationUiTest",
+   "at.heinz.deviceai.ui.DocumentStagePageGeometryUiTest",
+   "at.heinz.deviceai.ui.DocumentStageFrameRefreshUiTest",
+   "at.heinz.deviceai.avatar3d.DocumentStageFrameTest",
+   "at.heinz.deviceai.ui.Cinema2DepthLightTest",
+   "at.heinz.deviceai.ui.JarvisWorkWindowDepthTest",
+   "at.heinz.deviceai.avatar.CinemaWindowGazeBridgeTest",
+   "at.heinz.deviceai.ui.JarvisWindowGazeTest",
+   "at.heinz.deviceai.cognitive.OwnerDocumentPresentationIntentTest",
+   "at.heinz.deviceai.cognitive.OwnerDocumentIntentTest",
+   "at.heinz.deviceai.cognitive.OwnerDocumentPoliteIntentTest",
+   "at.heinz.deviceai.cognitive.OwnerDocumentAddressTest",
+   "at.heinz.deviceai.cognitive.DocumentDraftPromptTest"
+  ],
+  "completed": 98,
+  "by_result": {
+   "SUCCESS": 94,
+   "FAILURE": 4
+  },
+  "suite_complete": true,
+  "failures": [
+   {
+    "class": "at.heinz.deviceai.ContinuumPdfSceneAcceptanceUiTest",
+    "name": "pendingPickerSurvivesActivityRecreationWithoutDuplicateConsumption",
+    "exception": "java.lang.NullPointerException",
+    "message": ""
+   },
+   {
+    "class": "at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest",
+    "name": "actualProviderReadRendersAndExtractsSyntheticPdf",
+    "exception": "java.lang.NoSuchMethodError",
+    "message": "'long java.io.FileDescriptor.getOwnerId$()'"
+   },
+   {
+    "class": "at.heinz.deviceai.ui.DocumentStagePageGeometryUiTest",
+    "name": "resultSourceUsesIts44By58SlotAndScrollPosition",
+    "exception": "java.lang.AssertionError",
+    "message": "expected:<0.2> but was:<0.22857143>"
+   },
+   {
+    "class": "at.heinz.deviceai.ui.DocumentStagePageGeometryUiTest",
+    "name": "clippedOrUnrelatedPageCannotEscapeNativeContent",
+    "exception": "java.lang.AssertionError",
+    "message": "expected null, but was:<RectF(0.036742423, 0.22857143, 0.102651514, 0.43571427)>"
+   }
+  ]
+ },
+ "core_run_2_confirmation": {
+  "source_head": "1205724833f9894a1f42499ffb7ac0812aed5daf",
+  "source_tree": "8199da6bf8950f8f61bbe8c159a49c9e69bf196a",
+  "scope": "core",
+  "classes": [
+   "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+   "at.heinz.deviceai.ContinuumPdfSceneAcceptanceUiTest",
+   "at.heinz.deviceai.PdfIntakeCancellationUiTest",
+   "at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest",
+   "at.heinz.deviceai.PdfDocumentIntakeTextTest",
+   "at.heinz.deviceai.ui.JarvisPdfWindowPresentationUiTest",
+   "at.heinz.deviceai.ui.DocumentStagePageGeometryUiTest",
+   "at.heinz.deviceai.ui.DocumentStageFrameRefreshUiTest",
+   "at.heinz.deviceai.avatar3d.DocumentStageFrameTest",
+   "at.heinz.deviceai.ui.Cinema2DepthLightTest",
+   "at.heinz.deviceai.ui.JarvisWorkWindowDepthTest",
+   "at.heinz.deviceai.avatar.CinemaWindowGazeBridgeTest",
+   "at.heinz.deviceai.ui.JarvisWindowGazeTest",
+   "at.heinz.deviceai.cognitive.OwnerDocumentPresentationIntentTest",
+   "at.heinz.deviceai.cognitive.OwnerDocumentIntentTest",
+   "at.heinz.deviceai.cognitive.OwnerDocumentPoliteIntentTest",
+   "at.heinz.deviceai.cognitive.OwnerDocumentAddressTest",
+   "at.heinz.deviceai.cognitive.DocumentDraftPromptTest"
+  ],
+  "completed": 29,
+  "by_result": {
+   "SUCCESS": 28,
+   "SKIPPED": 1
+  },
+  "suite_complete": false,
+  "failures": [
+   {
+    "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+    "name": "aLateAnswerAfterStopChangesNothingAndALaterFailureKeepsItsCause",
+    "exception": null,
+    "message": ""
+   }
+  ]
+ },
+ "node": {
+  "source": "6c538e2ef",
+  "backend": {
+   "tests": 64,
+   "pass": 64,
+   "fail": 0
+  },
+  "contracts": {
+   "files": 252,
+   "tests": 1634,
+   "pass": 1584,
+   "fail": 27,
+   "skipped": 23,
+   "baseline_check": "26 of 27 failures reproduce identically on installed Code53 source 050a57cb in this environment (uid 0 -> ISOLATION_UNPRIVILEGED_UID_REQUIRED; ccc1-redgreen-verifier; momega1 symlinked TMPDIR) = BASELINE, not new",
+   "new_failure": "continuous-conversation-wiring 'offline owner turns retain their speech veto' (regex outdated by #761 speakNow) -> fixed in 120572483, file 7/7"
+  }
+ },
+ "note": "core_run_2 was stopped by the integrator at session end (owner budget) - INCOMPLETE, not a pass. visual scope NOT_RUN. lint NOT_RUN. full Android suite NOT_RUN."
+}
