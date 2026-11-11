@@ -1260,5 +1260,24 @@
     "preFixFailures": 6,
     "receipt": "qa-proxy-selfcheck.json",
     "scope": "Evidence reproduction script only"
+  },
+  "originalAvatarPoseReplay": {
+    "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "status": "PASS",
+    "poseSamplesUnchanged": 8,
+    "timelineSha256": "71162b59ec9c6faf4d165665a4b635a9b04dff828580e5268bfcccb9f22ab89c",
+    "sourceFiles": {
+      "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt": "ac91fa438d4fbd2cac99e0577d507064bb56938bbd38debcc4ceb0b2e1fadf03",
+      "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "9e7a109a6d2148627ef8a0f69f65e51d511a65b8bd8df55a35dd82fa5fc74644",
+      "tools/avatar-3d/reference-atlas/render-production-poses.py": "c5c653f0bec450ea5c63cf95cc8935fec1f36510b7d21ede2eac373142feff67"
+    },
+    "manifestSha256": "79516e94a2ceb82422ef5ccd64345519907a2fe6c0ec770b3668b9e95bf27f79",
+    "backend": "Blender 4.3.2 Cycles CPU",
+    "maxSkinErrorMetres": 7.811592775628497e-8,
+    "maxControlError": 1.862645149230957e-7,
+    "browserAttempt": "Chromium blocked by socket EPERM; no browser render produced. Used existing CPU renderer instead.",
+    "Fold7": "NOT_RUN",
+    "Filament": "NOT_RUN",
+    "reproduction": "original-avatar/replay-original-avatar.sh"
   }
 }

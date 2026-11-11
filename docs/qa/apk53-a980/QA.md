@@ -117,3 +117,18 @@ configuration falls back to HTTP, default ports are explicit, and credentials
 are not emitted. Eight targeted checks pass (six failed before the repair).
 This changes the evidence runner only; the app and the running CI's build
 commands are unchanged. The stale documentation-preparation block was removed.
+
+## Original GLB pose replay
+
+Eight selected poses from the passing a980 `AvatarMotionEvidenceTest` were
+replayed on the unchanged original GLB with the existing repository Blender
+renderer. All21 morph weights and head/neck/eye/jaw values match the exported
+timeline. Canonical glTF skinning/control comparisons passed. See
+[original-avatar/receipt.json](original-avatar/receipt.json) and the pinned
+[reproduction command](original-avatar/replay-original-avatar.sh).
+
+**Blender4.3.2 Cycles CPU,512×640,16samples,one thread.** Studio lighting/glow
+is separate from Android/Filament. Scripted camera/TTS-word events are not live
+perception or audio. No original asset or app source was changed. A Chromium
+attempt failed at the host socket permission boundary; no browser-render pass
+is claimed. The existing CPU renderer supplied the actual eight PNGs.

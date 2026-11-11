@@ -1,0 +1,704 @@
+{
+  "schema": "continuum-exact-production-pose-host-replay-v1",
+  "status": "PASS",
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "assetSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "poseExportSha256": "5d28d8d6759bf7c15ed6f0d3782f114aa2b071016a586228a217134d388f7ee3",
+  "renderScriptSha256": "c5c653f0bec450ea5c63cf95cc8935fec1f36510b7d21ede2eac373142feff67",
+  "mapperSourceCommit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "mapperSourceHashes": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": "a4236dd37074c601ab94df68f2bbdb9c510a43ef167cc445d510130e627e01f6",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "8e9747b26fc6924fa926ba64b937a24de0fec77bd1debd7f92db863640651fb4",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt": "a8bcb17382b2e326ecc3d7aabf5ca3b91630d7c9d0046889bde3f29fa3bba333",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt": "86df1b2d4b1cccef6e3bf911a11b548ec708b3d85064dae946a08f98e14a13b3",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "61db876a606701efaa50c5555909c96696bba95322665918625f88bbb1e3cc3c",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "4f7bfd666634ff68ee75a98ee73197827aa34390b38c1b6d311971983113c7ed",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "f35000922c9fbb0a377b60c631fd0608e54facef7599a042af60922dc328d832",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "9e7a109a6d2148627ef8a0f69f65e51d511a65b8bd8df55a35dd82fa5fc74644"
+  },
+  "backend": "Blender 4.3.2 Cycles CPU",
+  "cpuThreads": 1,
+  "hiddenNodes": [
+    "ToothLower0",
+    "ToothLower1",
+    "ToothLower2",
+    "ToothLower3",
+    "ToothLower4",
+    "ToothLower5",
+    "ToothLower6",
+    "ToothLower7",
+    "ToothUpper0",
+    "ToothUpper1",
+    "ToothUpper2",
+    "ToothUpper3",
+    "ToothUpper4",
+    "ToothUpper5",
+    "ToothUpper6",
+    "ToothUpper7"
+  ],
+  "jointPolicy": "production Neck plus residual Head",
+  "pixels": [
+    512,
+    640
+  ],
+  "samples": 16,
+  "denoising": false,
+  "rendered": true,
+  "frames": [
+    {
+      "name": "ruhe",
+      "actualMapperPose": {
+        "name": "ruhe",
+        "seconds": 0.99,
+        "jawPitch": 0,
+        "neckPitch": 1.0201256275177002,
+        "neckYaw": 1.1342289447784424,
+        "headPitch": 1.5694241523742676,
+        "headYaw": 1.7449676990509033,
+        "eyePitch": -0.3765999972820282,
+        "eyeYaw": 0.6299999952316284,
+        "motion": false,
+        "weights": {
+          "SIL": 0,
+          "PP": 0,
+          "FF": 0,
+          "TH": 0,
+          "DD": 0,
+          "KK": 0,
+          "CH": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "E": 0,
+          "I": 0,
+          "O": 0,
+          "U": 0,
+          "BlinkLeft": 0,
+          "BlinkRight": 0,
+          "BrowUp": 0,
+          "BrowDown": 0,
+          "Smile": 0,
+          "JawOpen": 0
+        },
+        "input": {
+          "origin": "HOST_SCRIPTED_DIRECTOR_EVENTS",
+          "state": "IDLE",
+          "phase": "ruhe",
+          "viseme": "SIL",
+          "timelineFrameIndex": 30
+        }
+      },
+      "maximumControlMatrixError": 1.73225998878479e-07,
+      "maximumFaceSkinPositionErrorMetres": 3.5398863149565224e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9995363354682922,
+          0.000644304440356791,
+          0.030442968010902405,
+          0.0007186675793491304
+        ],
+        [
+          0.00018977397121489048,
+          0.9996249079704285,
+          -0.027387235313653946,
+          0.2663741707801819
+        ],
+        [
+          -0.030449192970991135,
+          0.027380313724279404,
+          0.9991613030433655,
+          0.03749708831310272
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.2471020519733429,
+        2.064140558242798
+      ],
+      "file": "ruhe.png",
+      "imageSha256": "32e4db3ee127451e2177e884a5356a1fa3f8e2ebbfd8291c0c30ee953101f0e9"
+    },
+    {
+      "name": "zuhoeren",
+      "actualMapperPose": {
+        "name": "zuhoeren",
+        "seconds": 4.488,
+        "jawPitch": 0,
+        "neckPitch": -0.7673923373222351,
+        "neckYaw": -12.445788383483887,
+        "headPitch": -1.1806036233901978,
+        "headYaw": -19.147367477416992,
+        "eyePitch": -0.795888364315033,
+        "eyeYaw": -9.676126480102539,
+        "motion": false,
+        "weights": {
+          "SIL": 0,
+          "PP": 0,
+          "FF": 0,
+          "TH": 0,
+          "DD": 0,
+          "KK": 0,
+          "CH": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "E": 0,
+          "I": 0,
+          "O": 0,
+          "U": 0,
+          "BlinkLeft": 0.8246819972991943,
+          "BlinkRight": 0.8246819972991943,
+          "BrowUp": 0.20000000298023224,
+          "BrowDown": 0,
+          "Smile": 0,
+          "JawOpen": 0
+        },
+        "input": {
+          "origin": "HOST_SCRIPTED_DIRECTOR_EVENTS",
+          "state": "LISTENING",
+          "phase": "zuhoeren",
+          "viseme": "SIL",
+          "timelineFrameIndex": 136
+        }
+      },
+      "maximumControlMatrixError": 1.6763806343078613e-07,
+      "maximumFaceSkinPositionErrorMetres": 4.597022044063416e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9446803331375122,
+          0.005251725669950247,
+          -0.32795050740242004,
+          -0.0067582279443740845
+        ],
+        [
+          0.0015629653353244066,
+          0.9997884035110474,
+          0.020512599498033524,
+          0.2674329876899719
+        ],
+        [
+          0.32798880338668823,
+          -0.019890422001481056,
+          0.9444721937179565,
+          0.03217970207333565
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.2471020519733429,
+        2.064140558242798
+      ],
+      "file": "zuhoeren.png",
+      "imageSha256": "5c9993ca65389ffcb4ffe354dc087a21b0c2560200378112e506e878e2d03d4d"
+    },
+    {
+      "name": "denken",
+      "actualMapperPose": {
+        "name": "denken",
+        "seconds": 6.501,
+        "jawPitch": 0,
+        "neckPitch": -1.7598363161087036,
+        "neckYaw": 5.282618999481201,
+        "headPitch": -2.7074406147003174,
+        "headYaw": 8.127106666564941,
+        "eyePitch": -2.293368339538574,
+        "eyeYaw": 5.014358043670654,
+        "motion": false,
+        "weights": {
+          "SIL": 0,
+          "PP": 0,
+          "FF": 0,
+          "TH": 0,
+          "DD": 0,
+          "KK": 0,
+          "CH": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "E": 0,
+          "I": 0,
+          "O": 0,
+          "U": 0,
+          "BlinkLeft": 0,
+          "BlinkRight": 0,
+          "BrowUp": 0,
+          "BrowDown": 0.18000000715255737,
+          "Smile": 0,
+          "JawOpen": 0
+        },
+        "input": {
+          "origin": "HOST_SCRIPTED_DIRECTOR_EVENTS",
+          "state": "THINKING",
+          "phase": "denken",
+          "viseme": "SIL",
+          "timelineFrameIndex": 197
+        }
+      },
+      "maximumControlMatrixError": 1.6763806343078613e-07,
+      "maximumFaceSkinPositionErrorMetres": 7.811592775628497e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9899590611457825,
+          -0.005164319649338722,
+          0.14126011729240417,
+          0.002652944764122367
+        ],
+        [
+          -0.0015239999629557133,
+          0.998884379863739,
+          0.04719842970371246,
+          0.2679474353790283
+        ],
+        [
+          -0.141346275806427,
+          -0.04693979397416115,
+          0.9888467788696289,
+          0.03049151599407196
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.2471020519733429,
+        2.064140558242798
+      ],
+      "file": "denken.png",
+      "imageSha256": "9dd3ed6d2d1f88663bc46959a05ea86e05c2bce45f55bdd5ddd3660b77c44817"
+    },
+    {
+      "name": "fensterblick",
+      "actualMapperPose": {
+        "name": "fensterblick",
+        "seconds": 8.184,
+        "jawPitch": 0,
+        "neckPitch": 1.2831913232803345,
+        "neckYaw": 8.525943756103516,
+        "headPitch": 1.9741405248641968,
+        "headYaw": 13.116836547851562,
+        "eyePitch": 1.6759003400802612,
+        "eyeYaw": 6.513947486877441,
+        "motion": false,
+        "weights": {
+          "SIL": 0,
+          "PP": 0,
+          "FF": 0,
+          "TH": 0,
+          "DD": 0,
+          "KK": 0,
+          "CH": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "E": 0,
+          "I": 0,
+          "O": 0,
+          "U": 0,
+          "BlinkLeft": 0,
+          "BlinkRight": 0,
+          "BrowUp": 0,
+          "BrowDown": 0,
+          "Smile": 0,
+          "JawOpen": 0
+        },
+        "input": {
+          "origin": "HOST_SCRIPTED_DIRECTOR_EVENTS",
+          "state": "IDLE",
+          "phase": "fensterblick",
+          "viseme": "SIL",
+          "timelineFrameIndex": 248
+        }
+      },
+      "maximumControlMatrixError": 1.6763806343078613e-07,
+      "maximumFaceSkinPositionErrorMetres": 4.309964281952492e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.973912239074707,
+          0.006056058686226606,
+          0.22684404253959656,
+          0.005474637728184462
+        ],
+        [
+          0.001792426803149283,
+          0.9994073510169983,
+          -0.03437663987278938,
+          0.26620447635650635
+        ],
+        [
+          -0.2269177883863449,
+          0.03388642892241478,
+          0.973324179649353,
+          0.03764520213007927
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.2471020519733429,
+        2.064140558242798
+      ],
+      "file": "fensterblick.png",
+      "imageSha256": "b393d69b40011ea102eab801f43f8e2b794fc754f1364b3f7b58b2d696a0d88e"
+    },
+    {
+      "name": "bestaetigung",
+      "actualMapperPose": {
+        "name": "bestaetigung",
+        "seconds": 8.91,
+        "jawPitch": 0,
+        "neckPitch": 3.2765440940856934,
+        "neckYaw": 8.59304428100586,
+        "headPitch": 5.040837287902832,
+        "headYaw": 13.220067977905273,
+        "eyePitch": -1.4408371448516846,
+        "eyeYaw": 6.597104072570801,
+        "motion": false,
+        "weights": {
+          "SIL": 0,
+          "PP": 0,
+          "FF": 0,
+          "TH": 0,
+          "DD": 0,
+          "KK": 0,
+          "CH": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "E": 0,
+          "I": 0,
+          "O": 0,
+          "U": 0,
+          "BlinkLeft": 0,
+          "BlinkRight": 0,
+          "BrowUp": 0,
+          "BrowDown": 0,
+          "Smile": 0,
+          "JawOpen": 0
+        },
+        "input": {
+          "origin": "HOST_SCRIPTED_DIRECTOR_EVENTS",
+          "state": "IDLE",
+          "phase": "bestaetigung",
+          "viseme": "SIL",
+          "timelineFrameIndex": 270
+        }
+      },
+      "maximumControlMatrixError": 1.862645149230957e-07,
+      "maximumFaceSkinPositionErrorMetres": 7.115097356096904e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9735185503959656,
+          0.01556925568729639,
+          0.22807735204696655,
+          0.00630469573661685
+        ],
+        [
+          0.004610661417245865,
+          0.9961380958557129,
+          -0.08767944574356079,
+          0.26479464769363403
+        ],
+        [
+          -0.2285616099834442,
+          0.08640915155410767,
+          0.9696871042251587,
+          0.042415913194417953
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.2471020519733429,
+        2.064140558242798
+      ],
+      "file": "bestaetigung.png",
+      "imageSha256": "74a1d8ca9ebf5d707673914c6594a6abbaa1431201dfdcf0696f66f744ffff8a"
+    },
+    {
+      "name": "sprechen-geskriptet",
+      "actualMapperPose": {
+        "name": "sprechen-geskriptet",
+        "seconds": 11.187,
+        "jawPitch": 12.187499046325684,
+        "neckPitch": 0.2477462887763977,
+        "neckYaw": -1.2479883432388306,
+        "headPitch": 0.38114815950393677,
+        "headYaw": -1.9199821949005127,
+        "eyePitch": -0.3507482707500458,
+        "eyeYaw": 1.9320416450500488,
+        "motion": false,
+        "weights": {
+          "SIL": 0,
+          "PP": 0,
+          "FF": 0,
+          "TH": 0,
+          "DD": 0,
+          "KK": 0,
+          "CH": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 1,
+          "E": 0,
+          "I": 0,
+          "O": 0,
+          "U": 0,
+          "BlinkLeft": 0,
+          "BlinkRight": 0,
+          "BrowUp": 0.03752186894416809,
+          "BrowDown": 0,
+          "Smile": 0,
+          "JawOpen": 0
+        },
+        "input": {
+          "origin": "HOST_SCRIPTED_DIRECTOR_EVENTS",
+          "state": "SPEAKING",
+          "phase": "sprechen",
+          "viseme": "AA",
+          "timelineFrameIndex": 339
+        }
+      },
+      "maximumControlMatrixError": 1.7881393432617188e-07,
+      "maximumFaceSkinPositionErrorMetres": 6.460429661767424e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9994385242462158,
+          -0.007241214159876108,
+          -0.03271174058318138,
+          -0.0007457748288288713
+        ],
+        [
+          -5.071234409115277e-05,
+          0.976036012172699,
+          -0.21760903298854828,
+          0.2668531537055969
+        ],
+        [
+          0.033503588289022446,
+          0.21748851239681244,
+          0.9754877686500549,
+          0.035599734634160995
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.2471020519733429,
+        2.064140558242798
+      ],
+      "file": "sprechen-geskriptet.png",
+      "imageSha256": "ab565ecbeba6334e92198b390fa4d2ebefc5d830213df4387a498bf5d836d394"
+    },
+    {
+      "name": "stop",
+      "actualMapperPose": {
+        "name": "stop",
+        "seconds": 16.995,
+        "jawPitch": 0,
+        "neckPitch": 0.5347278118133545,
+        "neckYaw": 0.5016962885856628,
+        "headPitch": 0.8226581811904907,
+        "headYaw": 0.771840512752533,
+        "eyePitch": -0.4851343035697937,
+        "eyeYaw": -2.385538101196289,
+        "motion": false,
+        "weights": {
+          "SIL": 0,
+          "PP": 0,
+          "FF": 0,
+          "TH": 0,
+          "DD": 0,
+          "KK": 0,
+          "CH": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "E": 0,
+          "I": 0,
+          "O": 0,
+          "U": 0,
+          "BlinkLeft": 0,
+          "BlinkRight": 0,
+          "BrowUp": 0.00018709736468736082,
+          "BrowDown": 0,
+          "Smile": 0,
+          "JawOpen": 0
+        },
+        "input": {
+          "origin": "HOST_SCRIPTED_DIRECTOR_EVENTS",
+          "state": "IDLE",
+          "phase": "stop",
+          "viseme": "SIL",
+          "timelineFrameIndex": 515
+        }
+      },
+      "maximumControlMatrixError": 1.7043203115463257e-07,
+      "maximumFaceSkinPositionErrorMetres": 4.90179109127876e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9999092817306519,
+          0.00014940835535526276,
+          0.013469756580889225,
+          0.00030655815498903394
+        ],
+        [
+          4.4002357753925025e-05,
+          0.9998968839645386,
+          -0.014357447624206543,
+          0.26667892932891846
+        ],
+        [
+          -0.013470513746142387,
+          0.014356737025082111,
+          0.9998062252998352,
+          0.03631358966231346
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.2471020519733429,
+        2.064140558242798
+      ],
+      "file": "stop.png",
+      "imageSha256": "ee1e067a351af52ef9b56837299bdf13aff35805695dc377ff1494b81c68df1f"
+    },
+    {
+      "name": "ruhe-nach-stop",
+      "actualMapperPose": {
+        "name": "ruhe-nach-stop",
+        "seconds": 19.767,
+        "jawPitch": 0,
+        "neckPitch": 0.3311079144477844,
+        "neckYaw": 1.0993969440460205,
+        "headPitch": 0.5093967914581299,
+        "headYaw": 1.6913800239562988,
+        "eyePitch": -0.34724605083465576,
+        "eyeYaw": -3.0446159839630127,
+        "motion": false,
+        "weights": {
+          "SIL": 0,
+          "PP": 0,
+          "FF": 0,
+          "TH": 0,
+          "DD": 0,
+          "KK": 0,
+          "CH": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "E": 0,
+          "I": 0,
+          "O": 0,
+          "U": 0,
+          "BlinkLeft": 0,
+          "BlinkRight": 0,
+          "BrowUp": 1.6990594184304608e-17,
+          "BrowDown": 0,
+          "Smile": 0,
+          "JawOpen": 0
+        },
+        "input": {
+          "origin": "HOST_SCRIPTED_DIRECTOR_EVENTS",
+          "state": "IDLE",
+          "phase": "ruhe",
+          "viseme": "SIL",
+          "timelineFrameIndex": 599
+        }
+      },
+      "maximumControlMatrixError": 1.7043203115463257e-07,
+      "maximumFaceSkinPositionErrorMetres": 3.560094603270856e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9995643496513367,
+          0.00020272884285077453,
+          0.029515178874135017,
+          0.0006612838478758931
+        ],
+        [
+          5.9708145272452384e-05,
+          0.9999604821205139,
+          -0.008890441618859768,
+          0.26680299639701843
+        ],
+        [
+          -0.029515814036130905,
+          0.00888833124190569,
+          0.9995248317718506,
+          0.03580699488520622
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.2471020519733429,
+        2.064140558242798
+      ],
+      "file": "ruhe-nach-stop.png",
+      "imageSha256": "f6dace1e12fcf1a2c2eaa704349524e9fe905fb3fba988e925fe51d6253b9b76"
+    }
+  ],
+  "limitations": [
+    "Actual compiled mapper with synthetic inputs; no actual TTS/camera session",
+    "Blender materials, studio lights and glow are not native Filament pixel/performance evidence",
+    "Studio framing is not the adaptive app viewport",
+    "No app-driven smile exists in the exported contract; no smile is fabricated",
+    "Reference likeness still requires visual review"
+  ]
+}
