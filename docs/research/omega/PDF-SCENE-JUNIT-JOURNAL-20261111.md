@@ -10,6 +10,10 @@ nonvisual classes; `visual` selects exactly the seven existing document-scene,
 native-sequence, STOP and window UI classes requested by the coordinator.
 Unknown scope values fail. No test cases or assertions change.
 
+`decode` is a one-class diagnostic for the existing actual-PDF native probe.
+It does not replace that probe in `core` or change the all/core/visual sets.
+Run it strictly before any explicit, precisely identified host-native skip.
+
 With the existing `-PcontinuumUiEvidenceDir`, the same Test task appends to
 `junit-progress.ndjson`. Every invocation has a unique runId and one run_start
 record containing actual Git HEAD/tree/status/diff hash, selected scope/classes
@@ -26,6 +30,11 @@ new runIds rather than replacing prior evidence.
 Source verification: Groovy3.0.22 parser PASS; static comparison to the base
 confirmed the identical25-class list, core18/visual7 disjointness and exact
 union. `git diff --check` PASS. No Gradle build or test process was started.
+
+Direct file-output verification found Groovy's `output.fd` property invalid
+(`MissingPropertyException`, available property `FD`). The explicit JDK call
+`output.getFD().sync()` passed with the same Groovy 3.0.22 runtime. The canonical
+listener uses that explicit call; the initial run history remains separate.
 
 Next: integrate this one commit and use the same established Android command,
 adding the desired scope property. Root keeps the running checkout unchanged.

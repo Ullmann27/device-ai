@@ -44,11 +44,12 @@ gradle.projectsEvaluated {
                 'at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest'
             ]
             def scope = gradle.rootProject.providers.gradleProperty('continuumPdfQaScope').getOrElse('all')
-            if (!(scope in ['all', 'core', 'visual'])) {
-                throw new GradleException("Unknown continuumPdfQaScope: ${scope}; expected all, core or visual")
+            if (!(scope in ['all', 'core', 'visual', 'decode'])) {
+                throw new GradleException("Unknown continuumPdfQaScope: ${scope}; expected all, core, visual or decode")
             }
             def selectedClasses = scope == 'all' ? allClasses : allClasses.findAll {
-                scope == 'visual' ? visualClasses.contains(it) : !visualClasses.contains(it)
+                scope == 'decode' ? it == 'at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest' :
+                    scope == 'visual' ? visualClasses.contains(it) : !visualClasses.contains(it)
             }
             task.filter {
                 selectedClasses.each { includeTestsMatching(it) }
@@ -87,7 +88,7 @@ gradle.projectsEvaluated {
                         new FileOutputStream(journal, true).withCloseable { output ->
                             output.write(line.getBytes(StandardCharsets.UTF_8))
                             output.flush()
-                            output.fd.sync()
+                            output.getFD().sync()
                         }
                     }
                 }
