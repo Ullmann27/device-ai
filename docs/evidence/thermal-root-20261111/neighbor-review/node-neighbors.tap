@@ -1,0 +1,281 @@
+✔ Face glow reuses original glTF emission (1.483064ms)
+✔ Face glow remains a safe optional layer (0.903305ms)
+✔ window accent contract rejects lost fallback or closed-window tint (6.934914ms)
+✔ original avatar bridge survives cinema branch integration (18.73637ms)
+✔ real PCM anticipation and existing Filament light remain wired (1.974997ms)
+✔ thermal and document protections must survive visual branch merges (1.944233ms)
+✔ real drawn Canvas frames are counted separately from animation callbacks (2.550632ms)
+✔ Fold7 owner can run a 1.6s diagnostic without changing animation preferences (2.923275ms)
+✔ single hologram frame callback advances phase independently of Canvas onDraw (2.636563ms)
+✔ Android window visibility and focus can restore orbital clock without cached view visibility (0.399573ms)
+✔ foreground lifecycle explicitly pauses, cancels, and resumes hologram while low budgets preserve only essential motion (0.999582ms)
+✔ local model prompt never reads a profile-wide old dialogue after session change (0.360094ms)
+✔ each AgentActivity chat turn captures only its session-scoped local-model topic plus bounded state telegram (3.301103ms)
+✔ living hologram schedules subsequent visible frames, preserves essential avatar motion and stops callbacks on detach (1.504493ms)
+✔ orbital rings use visible phase movement, not the old near-static factor (0.356444ms)
+✔ header and the six orbital text labels are fitted to their real drawing boxes (0.462092ms)
+✔ battery, app CPU, RAM and GPU measurements remain honestly distinguished (0.325992ms)
+✔ CCC1 integrated in same owner-app source without changing private app identity (0.746163ms)
+✔ existing on-device learning state and protected independent training are never reset by launch (3.095398ms)
+✔ Gemma restoration is scheduled once on Activity creation, not on every onResume (1.949868ms)
+✔ restore is not a separate worker, timer or background service (0.741207ms)
+✔ only owner-selected original SHA and version can be restored (0.191275ms)
+✔ restart cannot start a second engine while loading, generating or unloading (0.256766ms)
+✔ owner manual unload disables restoration immediately (0.195204ms)
+✔ a verified successful original load alone enables future restore (0.125303ms)
+✔ a failed load stops repeated startup retries (0.187324ms)
+✔ process-wide loaded Gemma is intentionally retained at Activity finish (0.355108ms)
+✖ a cold restart verifies the stored file SHA-256 before initializing the engine (2.5477ms)
+✔ successful native unload clears model identity and its thread diagnostic together (0.609984ms)
+✔ the old model download is never required on restart (0.442821ms)
+✔ a fresh restoration does not invent a successful local answer (0.648835ms)
+✔ original 3.66 GB model import remains separate and SHA-verified (3.356329ms)
+✔ regression suite covers correct original, opt-out, foreign SHA, busy engine (0.435855ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 32
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2199.825148
+
+✖ failing tests:
+
+test at .github/continuum/gemma-reopen-lifecycle.test.mjs:68:1
+✖ a cold restart verifies the stored file SHA-256 before initializing the engine (2.5477ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /catalog\.get\(id, version\)/. Input:
+  
+  'package at.heinz.deviceai.localmodel\n' +
+    '\n' +
+    'import at.heinz.deviceai.ToolProposal\n' +
+    'import at.heinz.deviceai.ToolRegistry\n' +
+    'import at.heinz.deviceai.ToolSpec\n' +
+    'import at.heinz.deviceai.ToolExecutionStartLatch\n' +
+    'import com.google.ai.edge.litertlm.Backend\n' +
+    'import com.google.ai.edge.litertlm.Content\n' +
+    'import com.google.ai.edge.litertlm.Contents\n' +
+    'import com.google.ai.edge.litertlm.Conversation\n' +
+    'import com.google.ai.edge.litertlm.ConversationConfig\n' +
+    'import com.google.ai.edge.litertlm.Engine\n' +
+    'import com.google.ai.edge.litertlm.EngineConfig\n' +
+    'import com.google.ai.edge.litertlm.Message\n' +
+    'import com.google.ai.edge.litertlm.MessageCallback\n' +
+    'import com.google.ai.edge.litertlm.OpenApiTool\n' +
+    'import com.google.ai.edge.litertlm.tool\n' +
+    'import org.json.JSONArray\n' +
+    'import org.json.JSONObject\n' +
+    'import java.io.File\n' +
+    'import java.util.concurrent.CancellationException\n' +
+    'import java.util.concurrent.Executors\n' +
+    'import java.util.concurrent.atomic.AtomicBoolean\n' +
+    '\n' +
+    'enum class LocalModelState { EMPTY, LOADING, READY, GENERATING, UNLOADING, FAILED }\n' +
+    '\n' +
+    'data class LocalInferenceMetrics(\n' +
+    '    val promptCharacters: Int,\n' +
+    '    val responseCharacters: Int,\n' +
+    '    val streamedChunks: Int,\n' +
+    '    val inputTokens: Int?,\n' +
+    '    val outputTokens: Int?,\n' +
+    '    val firstTokenLatencyMillis: Long?,\n' +
+    '    val totalLatencyMillis: Long\n' +
+    ')\n' +
+    '\n' +
+    'sealed interface LocalInferenceEvent {\n' +
+    '    data class TextDelta(val text: String) : LocalInferenceEvent\n' +
+    '    data class ToolProposal(val proposal: at.heinz.deviceai.ToolProposal) : LocalInferenceEvent\n' +
+    '    data class ToolProposalRejected(\n' +
+    '        val name: String,\n' +
+    '        val reason: String,\n' +
+    '        val arguments: Map<String, Any?> = emptyMap()\n' +
+    '    ) : LocalInferenceEvent\n' +
+    '    data class ToolBatchRejected(val responses: List<LocalToolResponse>) : LocalInferenceEvent\n' +
+    '    data class Completed(val metrics: LocalInferenceMetrics) : LocalInferenceEvent\n' +
+    '    data object Cancelled : LocalInferenceEvent\n' +
+    '    data class Failed(val message: String) : LocalInferenceEvent\n' +
+    '}\n' +
+    '\n' +
+    'fun interface LocalInferenceCallback {\n' +
+    '    fun onEvent(event: LocalInferenceEvent)\n' +
+    '}\n' +
+    '\n' +
+    'data class LocalToolResponse(val toolName: String, val response: String) {\n' +
+    '    init {\n' +
+    '        require(toolName.isNotBlank() && toolName.length <= 128)\n' +
+    '        require(response.length <= 8_000)\n' +
+    '    }\n' +
+    '}\n' +
+    '\n' +
+    'interface LocalModelRuntime {\n' +
+    '    val state: LocalModelState\n' +
+    '    val loadedModel: ImportedLocalModel?\n' +
+    '    /** Bounded numeric diagnostics; no native model/request/response data. */\n' +
+    '    val inferenceProfiles: List<LocalInferenceProfile> get() = emptyList()\n' +
+    '    /** CPU threads the loaded engine was configured with; null when unknown or not loaded. */\n' +
+    '    val computeThreads: Int? get() = null\n' +
+    '    fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)\n' +
+    '    fun unload(callback: (Result<Unit>) -> Unit = {})\n' +
+    '    fun stream(prompt: String, callback: LocalInferenceCallback)\n' +
+    '    fun streamThinking(prompt: String, callback: LocalInferenceCallback) {\n' +
+    '        error("This runtime does not provide isolated tool-free thinking.")\n' +
+    '    }\n' +
+    '    fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) {\n' +
+    '        val continuation = LocalToolContinuation.text(responses) ?: run {\n' +
+    '            callback.onEvent(LocalInferenceEvent.Failed("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET"))\n' +
+    '            return\n' +
+    '        }\n' +
+    '        stream(continuation, callback)\n' +
+    '    }\n' +
+    '    fun cancel()\n' +
+    '}\n' +
+    '\n' +
+    'class LiteRtLmLocalModelRuntime(\n' +
+    '    private val catalog: LocalModelCatalog,\n' +
+    '    private val cacheDirectory: File,\n' +
+    '    private val systemPrompt: String = "You are Device AI, an on-device assistant.",\n' +
+    '    /** Evaluated at load time (thermal budget, owner cooling mode); null keeps the LiteRT-LM default (all cores). */\n' +
+    '    private val cpuThreadCount: () -> Int? = { null }\n' +
+    ') : LocalModelRuntime {\n' +
+    '    private val background = Executors.newSingleThreadExecutor { runnable ->\n' +
+    '        Thread(runnable, "device-ai-local-model").apply { isDaemon = true }\n' +
+    '    }\n' +
+    '    private val lock = Any()\n' +
+    '    private val inferenceProfiler = LocalInferenceProfiles()\n' +
+    '    override val inferenceProfiles: List<LocalInferenceProfile>\n' +
+    '        get() = inferenceProfiler.snapshots()\n' +
+    '\n' +
+    '    @Volatile\n' +
+    '    override var state: LocalModelState = LocalModelState.EMPTY\n' +
+    '        private set\n' +
+    '\n' +
+    '    @Volatile\n' +
+    '    override var loadedModel: ImportedLocalModel? = null\n' +
+    '        private set\n' +
+    '\n' +
+    '    @Volatile\n' +
+    '    override var computeThreads: Int? = null\n' +
+    '        private set\n' +
+    '\n' +
+    '    private var engine: Engine? = null\n' +
+    '    private var conversation: Conversation? = null\n' +
+    '    // Only the freshly initialized, never-dispatched chat conversation is reusable.\n' +
+    '    // Consumed exactly once; subsequent full prompts always start fresh.\n' +
+    '    private var startupConversationUnused = false\n' +
+    '    private var inferenceConversation: Conversation? = null\n' +
+    '    private var inferenceActive = false\n' +
+    '    private var activeInferenceProfile: LocalInferenceProfileRecorder? = null\n' +
+    '    private var pendingUnload: ((Result<Unit>) -> Unit)? = null\n' +
+    '    private var activeCancellation: AtomicBoolean? = null\n' +
+    '    private var activeStart: ToolExecutionStartLatch? = null\n' +
+    '\n' +
+    '    init { require(systemPrompt.isNotBlank() && systemPrompt.length <= 4_096) }\n' +
+    '\n' +
+    '    override fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit) {\n' +
+    '        val retainedResources = synchronized(lock) {\n' +
+    '            check(state == LocalModelState.EMPTY || state == LocalModelState.FAILED) {\n' +
+    '                "A local model is already loaded or loading."\n' +
+    '            }\n' +
+    '            // FAILED can also mean that a conversation could not be released.\n' +
+    '            // Do not replace its engine with another multi-GB allocation. Only a\n' +
+    '            // successful explicit unload establishes that the old handles are gone.\n' +
+    '            val retained = engine != null || conversation != null || inferenceConversation != null ||\n' +
+    '                loadedModel != null || inferenceActive\n' +
+    '            if (!retained) state = LocalModelState.LOADING\n' +
+    '            retained\n' +
+    '        }\n' +
+    '        if (retainedResources) {\n' +
+    '            callback(Result.failure(IllegalStateException("LOCAL_MODEL_UNLOAD_REQUIRED")))\n' +
+    '            return\n' +
+    '        }\n' +
+    '        background.execute {\n' +
+    '            val result = runCatching {\n' +
+    '                val (model, file) = catalog.sourceForLoad(id, version)\n' +
+    '                    ?: error("Imported model is missing or failed its integrity check.")\n' +
+    '                val capabilities = NativeLiteRtModelInspector().inspect(file)\n' +
+    '                require(capabilities == model.capabilities) {\n' +
+    '                    "Model capability metadata changed after import."\n' +
+    '                }\n' +
+    '                require(LocalModelBackend.CPU in capabilities.supportedBackends) {\n' +
+    '                    "This runtime currently requires CPU support."\n' +
+    '                }\n' +
+    '                if (!cacheDirectory.exists() && !cacheDirectory.mkdirs()) {\n' +
+    '                    error("Cannot create LiteRT-LM cache directory.")\n' +
+    '                }\n' +
+    '                val threads = runCatching(cpuThreadCount).getOrNull()?.takeIf { it > 0 }\n' +
+    '                val newEngine = Engine(\n' +
+    '                    EngineConfig(\n' +
+    '                        modelPath = file.absolutePath,\n' +
+    '                        backend = Backend.CPU(threadCount = threads),\n' +
+    '                        cacheDir = cacheDirectory.absolutePath\n' +
+    '                    )\n' +
+    '                )\n' +
+    '                try {\n' +
+    '                    newEngine.initialize()\n' +
+    '                    val newConversation = newEngine.createConversation(\n' +
+    '                        ConversationConfig(\n' +
+    '                            systemInstruction = Contents.of(systemPrompt),\n' +
+    '                            tools = ToolRegistry.all().map(::registeredToolProvider),\n' +
+    '                            automaticToolCalling = false,\n' +
+    '                            maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)\n' +
+    '                        )\n' +
+    '                    )\n' +
+    '                    synchronized(lock) {\n' +
+    '                        engine = newEngine\n' +
+    '                        conversation = newConversation\n' +
+    '                        startupConversationUnused = true\n' +
+    '                        loadedModel = model\n' +
+    '                        computeThreads = threads\n' +
+    '                        state = LocalModelState.READY\n' +
+    '                    }\n' +
+    '                } catch (failure: Throwable) {\n' +
+    '                    runCatching { if (newEngine.isInitialized()) newEngine.close() }\n' +
+    '                    throw failure\n' +
+    '                }\n' +
+    '                model\n' +
+    '            }\n' +
+    '            if (result.isFailure) {\n' +
+    '                synchronized(lock) { state = LocalModelState.FAILED }\n' +
+    '            }\n' +
+    '            callback(result)\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun stream(prompt: String, callback: LocalInferenceCallback) {\n' +
+    '        require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS &&\n' +
+    '            prompt.toByteArray(Charsets.UTF_8).size <= LocalToolContinuation.MAX_INPUT_BYTES)\n' +
+    '        // Qwen3 soft switch is for direct owner messages only, not reasoning\n' +
+    '        // workers or tool responses. Loaded model ID is already verified by catalog.\n' +
+    '        val effectivePrompt = LocalQwenPromptPolicy.directUserPrompt(\n' +
+    '            loadedModel?.id, prompt, MAX_PROMPT_CHARACTERS\n' +
+    '        )\n' +
+    '        streamMessage(Message.user(Contents.of(effectivePrompt)), effectivePrompt.length, callback, false,\n' +
+    '            freshPrompt = true, payloadBytes = effectivePrompt.toByteArray(Charsets.UTF_8).size)\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun streamThinking(prompt: String, callback: LocalInferenceCallback) {\n' +
+    '        require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS &&\n' +
+    '            prompt.toByteArray(Charsets.UTF_8).size <= LocalToolContinuation.MAX_INPUT_BYTES)\n' +
+    '        streamMessage(Message.user(Contents.of(prompt)), prompt.length, callback, true,\n' +
+    '            payloadBytes = prompt.toByteArray(Charsets.UTF_8).size)\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) {\n' +
+    '        val payload = LocalToolContinuation.text(responses) ?: run {\n' +
+    '            deliver(callback, LocalInferenceEvent.Failed("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET"))\n' +
+    '            '... 22159 more characters
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/524e6ad8c911/device-ai/.github/continuum/gemma-reopen-lifecycle.test.mjs:69:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'package at.heinz.deviceai.localmodel\n\nimport at.heinz.deviceai.ToolProposal\nimport at.heinz.deviceai.ToolRegistry\nimport at.heinz.deviceai.ToolSpec\nimport at.heinz.deviceai.ToolExecutionStartLatch\nimport com.google.ai.edge.litertlm.Backend\nimport com.google.ai.edge.litertlm.Content\nimport com.google.ai.edge.litertlm.Contents\nimport com.google.ai.edge.litertlm.Conversation\nimport com.google.ai.edge.litertlm.ConversationConfig\nimport com.google.ai.edge.litertlm.Engine\nimport com.google.ai.edge.litertlm.EngineConfig\nimport com.google.ai.edge.litertlm.Message\nimport com.google.ai.edge.litertlm.MessageCallback\nimport com.google.ai.edge.litertlm.OpenApiTool\nimport com.google.ai.edge.litertlm.tool\nimport org.json.JSONArray\nimport org.json.JSONObject\nimport java.io.File\nimport java.util.concurrent.CancellationException\nimport java.util.concurrent.Executors\nimport java.util.concurrent.atomic.AtomicBoolean\n\nenum class LocalModelState { EMPTY, LOADING, READY, GENERATING, UNLOADING, FAILED }\n\ndata class LocalInferenceMetrics(\n    val promptCharacters: Int,\n    val responseCharacters: Int,\n    val streamedChunks: Int,\n    val inputTokens: Int?,\n    val outputTokens: Int?,\n    val firstTokenLatencyMillis: Long?,\n    val totalLatencyMillis: Long\n)\n\nsealed interface LocalInferenceEvent {\n    data class TextDelta(val text: String) : LocalInferenceEvent\n    data class ToolProposal(val proposal: at.heinz.deviceai.ToolProposal) : LocalInferenceEvent\n    data class ToolProposalRejected(\n        val name: String,\n        val reason: String,\n        val arguments: Map<String, Any?> = emptyMap()\n    ) : LocalInferenceEvent\n    data class ToolBatchRejected(val responses: List<LocalToolResponse>) : LocalInferenceEvent\n    data class Completed(val metrics: LocalInferenceMetrics) : LocalInferenceEvent\n    data object Cancelled : LocalInferenceEvent\n    data class Failed(val message: String) : LocalInferenceEvent\n}\n\nfun interface LocalInferenceCallback {\n    fun onEvent(event: LocalInferenceEvent)\n}\n\ndata class LocalToolResponse(val toolName: String, val response: String) {\n    init {\n        require(toolName.isNotBlank() && toolName.length <= 128)\n        require(response.length <= 8_000)\n    }\n}\n\ninterface LocalModelRuntime {\n    val state: LocalModelState\n    val loadedModel: ImportedLocalModel?\n    /** Bounded numeric diagnostics; no native model/request/response data. */\n    val inferenceProfiles: List<LocalInferenceProfile> get() = emptyList()\n    /** CPU threads the loaded engine was configured with; null when unknown or not loaded. */\n    val computeThreads: Int? get() = null\n    fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)\n    fun unload(callback: (Result<Unit>) -> Unit = {})\n    fun stream(prompt: String, callback: LocalInferenceCallback)\n    fun streamThinking(prompt: String, callback: LocalInferenceCallback) {\n        error("This runtime does not provide isolated tool-free thinking.")\n    }\n    fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) {\n        val continuation = LocalToolContinuation.text(responses) ?: run {\n            callback.onEvent(LocalInferenceEvent.Failed("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET"))\n            return\n        }\n        stream(continuation, callback)\n    }\n    fun cancel()\n}\n\nclass LiteRtLmLocalModelRuntime(\n    private val catalog: LocalModelCatalog,\n    private val cacheDirectory: File,\n    private val systemPrompt: String = "You are Device AI, an on-device assistant.",\n    /** Evaluated at load time (thermal budget, owner cooling mode); null keeps the LiteRT-LM default (all cores). */\n    private val cpuThreadCount: () -> Int? = { null }\n) : LocalModelRuntime {\n    private val background = Executors.newSingleThreadExecutor { runnable ->\n        Thread(runnable, "device-ai-local-model").apply { isDaemon = true }\n    }\n    private val lock = Any()\n    private val inferenceProfiler = LocalInferenceProfiles()\n    override val inferenceProfiles: List<LocalInferenceProfile>\n        get() = inferenceProfiler.snapshots()\n\n    @Volatile\n    override var state: LocalModelState = LocalModelState.EMPTY\n        private set\n\n    @Volatile\n    override var loadedModel: ImportedLocalModel? = null\n        private set\n\n    @Volatile\n    override var computeThreads: Int? = null\n        private set\n\n    private var engine: Engine? = null\n    private var conversation: Conversation? = null\n    // Only the freshly initialized, never-dispatched chat conversation is reusable.\n    // Consumed exactly once; subsequent full prompts always start fresh.\n    private var startupConversationUnused = false\n    private var inferenceConversation: Conversation? = null\n    private var inferenceActive = false\n    private var activeInferenceProfile: LocalInferenceProfileRecorder? = null\n    private var pendingUnload: ((Result<Unit>) -> Unit)? = null\n    private var activeCancellation: AtomicBoolean? = null\n    private var activeStart: ToolExecutionStartLatch? = null\n\n    init { require(systemPrompt.isNotBlank() && systemPrompt.length <= 4_096) }\n\n    override fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit) {\n        val retainedResources = synchronized(lock) {\n            check(state == LocalModelState.EMPTY || state == LocalModelState.FAILED) {\n                "A local model is already loaded or loading."\n            }\n            // FAILED can also mean that a conversation could not be released.\n            // Do not replace its engine with another multi-GB allocation. Only a\n            // successful explicit unload establishes that the old handles are gone.\n            val retained = engine != null || conversation != null || inferenceConversation != null ||\n                loadedModel != null || inferenceActive\n            if (!retained) state = LocalModelState.LOADING\n            retained\n        }\n        if (retainedResources) {\n            callback(Result.failure(IllegalStateException("LOCAL_MODEL_UNLOAD_REQUIRED")))\n            return\n        }\n        background.execute {\n            val result = runCatching {\n                val (model, file) = catalog.sourceForLoad(id, version)\n                    ?: error("Imported model is missing or failed its integrity check.")\n                val capabilities = NativeLiteRtModelInspector().inspect(file)\n                require(capabilities == model.capabilities) {\n                    "Model capability metadata changed after import."\n                }\n                require(LocalModelBackend.CPU in capabilities.supportedBackends) {\n                    "This runtime currently requires CPU support."\n                }\n                if (!cacheDirectory.exists() && !cacheDirectory.mkdirs()) {\n                    error("Cannot create LiteRT-LM cache directory.")\n                }\n                val threads = runCatching(cpuThreadCount).getOrNull()?.takeIf { it > 0 }\n                val newEngine = Engine(\n                    EngineConfig(\n                        modelPath = file.absolutePath,\n                        backend = Backend.CPU(threadCount = threads),\n                        cacheDir = cacheDirectory.absolutePath\n                    )\n                )\n                try {\n                    newEngine.initialize()\n                    val newConversation = newEngine.createConversation(\n                        ConversationConfig(\n                            systemInstruction = Contents.of(systemPrompt),\n                            tools = ToolRegistry.all().map(::registeredToolProvider),\n                            automaticToolCalling = false,\n                            maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)\n                        )\n                    )\n                    synchronized(lock) {\n                        engine = newEngine\n                        conversation = newConversation\n                        startupConversationUnused = true\n                        loadedModel = model\n                        computeThreads = threads\n                        state = LocalModelState.READY\n                    }\n                } catch (failure: Throwable) {\n                    runCatching { if (newEngine.isInitialized()) newEngine.close() }\n                    throw failure\n                }\n                model\n            }\n            if (result.isFailure) {\n                synchronized(lock) { state = LocalModelState.FAILED }\n            }\n            callback(result)\n        }\n    }\n\n    override fun stream(prompt: String, callback: LocalInferenceCallback) {\n        require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS &&\n            prompt.toByteArray(Charsets.UTF_8).size <= LocalToolContinuation.MAX_INPUT_BYTES)\n        // Qwen3 soft switch is for direct owner messages only, not reasoning\n        // workers or tool responses. Loaded model ID is already verified by catalog.\n        val effectivePrompt = LocalQwenPromptPolicy.directUserPrompt(\n            loadedModel?.id, prompt, MAX_PROMPT_CHARACTERS\n        )\n        streamMessage(Message.user(Contents.of(effectivePrompt)), effectivePrompt.length, callback, false,\n            freshPrompt = true, payloadBytes = effectivePrompt.toByteArray(Charsets.UTF_8).size)\n    }\n\n    override fun streamThinking(prompt: String, callback: LocalInferenceCallback) {\n        require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS &&\n            prompt.toByteArray(Charsets.UTF_8).size <= LocalToolContinuation.MAX_INPUT_BYTES)\n        streamMessage(Message.user(Contents.of(prompt)), prompt.length, callback, true,\n            payloadBytes = prompt.toByteArray(Charsets.UTF_8).size)\n    }\n\n    override fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) {\n        val payload = LocalToolContinuation.text(responses) ?: run {\n            deliver(callback, LocalInferenceEvent.Failed("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET"))\n            '... 22159 more characters,
+    expected: /catalog\.get\(id, version\)/,
+    operator: 'match',
+    diff: 'simple'
+  }

@@ -62,7 +62,7 @@ Merged without conflicts into the common candidate:
 
 | Stream | Exact remote source | Verified worker evidence |
 |---|---|---|
-| Memory #770 | `f5ed3a17724d8943dfad51894f0e09b29d551060` | 78/78 Kotlin/JUnit; Android pending |
+| Memory #770 | `dd0eda082bfcce624ecee9eb14a327d43d51b66d` (#776 follow-up) | 83/83 Kotlin/JUnit; Android pending |
 | Logic #772 | `e20ca3a5656f4ccd81625d8e930e2fea85f48eed` | 94/94 Kotlin/JUnit; Android pending |
 | Cinema #771 | `965ad4c51ec4c5a90fdb25ce8fc09d1d1f65202e` | 13/13 Kotlin/JUnit + 13/13 Node; Android pending |
 | Master #747 | `c00326cedc6b697d5634dbc33de9ffcdd29fe58c` | Document-only delta reviewed |
@@ -98,10 +98,12 @@ requires HomeView viewport, avatar mask and coordinate-origin changes. Existing
 stage/native fallback stays intact. No unfinished renderer is enabled.
 General prompt-budget adaptation is not claimed fixed; direct diagnosis/app
 routes and object recall now avoid needless model entry in their supported cases.
-A synthetic ledger boundary case now reproduces a new required-prompt overflow:
-six objects with six attributes and 24 corrections yield 16,221 UTF-8 bytes for
-an ordinary related request. Memory is preparing a bounded prompt representation
-while preserving the internal history and explicit uncertainty. This checkpoint
-is WIP, not a release candidate; the follow-up must land before Android QA.
+The reproduced ledger boundary overflow is repaired in #776 `dd0eda082`:
+six objects with six attributes and 24 corrections now yield 1,595 instead of
+16,221 UTF-8 bytes for an ordinary related request. Only prompt representation
+changed: current values and uncertainty stay visible, omitted history is named,
+internal history and historical replies remain intact. RED 2 PASS/3 FAIL;
+GREEN 83/83. The real Activity class now has three cases, including this boundary.
+Combined Android execution remains pending; this is not a release candidate.
 P4–P6 device/account/team/thermal work is still open. Physical Fold7, native PDF,
 GPU, audible speech and thermal acceptance remain NOT_RUN.

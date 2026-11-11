@@ -60,7 +60,7 @@ Rohzusammenfassung: `docs/evidence/omega-20261111/test-summary.json`.
 
 | Gegenstand | Quelle / Nachweis | Aktueller Stand |
 |---|---|---|
-| #758 Gesprächsgedächtnis | #770 `f5ed3a17`; 78/78 JVM, 2 neue Activity-Fälle | integriert; Android NOT_RUN |
+| #758 Gesprächsgedächtnis | #770 + #776 `dd0eda082`; 83/83 JVM, 3 neue Activity-Fälle | integriert; Android NOT_RUN |
 | #767/#759/#765 Routing | #772 `e20ca3a5`; 94/94 JVM, 7 neue Activity-Fälle; unabhängiger Review | integriert; Android NOT_RUN |
 | EXP06/EXP11 | #771 `965ad4c5`; 13/13 JVM + 13/13 Node; 2 neue Canvas-Fälle | integriert; Android NOT_RUN |
 | Masterprotokoll #747 | `c00326ced`, nur 145 Zeilen Dokumentation zusätzlich | integriert |
@@ -76,3 +76,38 @@ Rohzusammenfassung: `docs/evidence/omega-20261111/test-summary.json`.
 
 Belege: `docs/evidence/omega-apk54-20261111/`. Kein Gerätebefund wird aus
 Hosttests abgeleitet; strikter PDF-Test und alle Sicherheitsprüfungen bleiben bestehen.
+
+### P2-Budgetnachtrag
+
+#776 `dd0eda082` repariert den neu reproduzierten Ledger-Pflichtblock:
+16.221 → 1.595 UTF-8-Bytes bei einer normalen objektbezogenen Aufgabe nach
+24 Korrekturrunden für sechs Gegenstände. Aktuelle Werte und Unsicherheiten
+bleiben im Prompt, ausgelassene Verlaufsdarstellung ist ausdrücklich benannt;
+interne Historie und historische Antworten sind unverändert. Neue Regression
+zuerst 2 PASS/3 FAIL, anschließend gesamte fokussierte Bestätigung 83/83.
+Dritter Activity-Fall ist integriert, Android-Ausführung noch NOT_RUN.
+Die Ursache der ursprünglichen kurzen Fold7-Kontextmeldung bleibt davon getrennt.
+
+## #569 — thermische Doppelarbeit, PR #773
+
+Quelle der thermischen Reparaturen: `1ba7b9458fd47184cedaed18e94e9aae1bd76c39`,
+Tree `903bca2e718caabe2846bfa76493493cedf10dc3`. Der spätere Zielstand `c02930f10`
+ist im Prüfzweig enthalten; alle kompilierten Thermikquellen und neun geprüfte
+Leistungs-/Qualitätsvorgaben blieben dabei unverändert.
+
+| Gegenstand | Beleg | Stand |
+|---|---|---|
+| Modellprüfung beim Laden | zwei vollständige SHA-256-Durchläufe → einer; jedes neue Laden weiter vollständig geprüft | behoben; #774 |
+| Unveränderter Lernstatus | redundantes Dekodieren und 14 Holdout-Beispiele entfallen bei identischen Bytes/Korpora; Statistiken frisch | behoben; #777 |
+| Lichtberechnungen | 1.526 → 70 Sinusaufrufe in diesem Helfer; 72 Draw-Traces bitgleich; statische Pfade wiederverwendet | behoben; #775 |
+| Gemeinsamer Kotlin/JVM-Lauf | 94 PASS / 0 FAIL / 0 SKIP; tatsächliche Produktionsquellen mit Cache-Abhängigkeiten | HOST_VERIFIZIERT |
+| Sechs Node-Vertragsdateien | 34 PASS / 0 FAIL / 0 SKIP; sechs negative Integritätsmutanten abgewiesen | HOST_VERIFIZIERT |
+| Unabhängiger finaler Review | fünf geänderte Produktionsdateien; keine blockierenden Befunde | geprüft |
+| Android-Prüfung und Lint | gemeinsamer lokaler Gradle-Lauf, bestehende exklusive Build-Sperre | RUNNING |
+| Native Modellantwort, Wärme, Energie, Geschwindigkeit auf Fold7 | kein verfügbarer Gerätekanal; keine Abkühlung oder Leistungssteigerung behauptet | NOT_RUN |
+
+Ziel bleibt #769. Keine Modell-, Thread-, Kontext-, Grafik- oder Schutzvorgabe wurde
+durch den Hitzefix reduziert. Die drei nachgewiesenen Einsparungen beweisen noch
+nicht die Hauptursache der starken Erwärmung während bereits geladener Inferenz.
+Belege: `docs/evidence/thermal-root-20261111/SUMMARY.json`; Übergabe:
+`docs/research/omega/THERMAL-ROOT-HANDOFF-20261111.md`.

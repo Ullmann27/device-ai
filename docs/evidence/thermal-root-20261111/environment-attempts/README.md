@@ -1,0 +1,1 @@
+The wrapper attempt lacked its offline Gradle distribution. The subsequent installed-Gradle launch was stopped before compilation to use the existing shared build lock. Neither is an application test result. The shared-lock replacement is recorded separately.
