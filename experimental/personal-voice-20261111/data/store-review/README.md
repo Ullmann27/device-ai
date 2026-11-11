@@ -31,3 +31,16 @@ java -Xmx256m -cp review.jar:privacy-checks.jar IndependentStoreReview
 
 The consent/API contract may change during repair; a revised probe must describe
 that change and retain this pre-fix source rather than erasing the red evidence.
+
+## Independent verification after repair
+
+The coordinator introduced one authenticated file-backed policy/revision shared
+across instances and processes, content/store/revision-bound approvals, atomic
+inspectForReview snapshots and a replacement-aware capacity calculation.
+`IndependentStoreReviewAfterFix.kt` uses the new three-argument approval API.
+All four independent assertions passed against the rebuilt actual classes:
+revocation blocks both instances, deleted data rejects a previous approval,
+replacement succeeds while remaining at 256 records, and an old form cannot
+issue a fresh approval after policy revision. Exact output and jar/source hashes
+are recorded beside this file. This is host-JVM verification, not Android UI,
+Keystore hardware or physical Fold7 verification.

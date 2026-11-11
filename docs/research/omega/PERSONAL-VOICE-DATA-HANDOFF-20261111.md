@@ -62,3 +62,18 @@ also has explicit review/revoke logic. The initial PR #728 map is a historical
 research baseline, not the full current APK behavior. Four core files were
 matched by exact Git blob identity against Code53 source. No runtime or ASR
 accuracy result is inferred from this source audit. Frozen data files unchanged.
+
+## Protected store review and isolated control screen
+
+Three actual coordinator-store defects were independently reproduced: consent
+revocation did not reach another store instance, old approvals survived deletion,
+and full-capacity replacement failed. Root repaired the store; four independent
+JVM checks now pass, including stale-form review rejection. Red and green probe
+sources, outputs and receipts are preserved under data/store-review.
+
+The isolated ui/AndroidPersonalVoiceReviewDialog.kt implements explicit local
+text opt-in, reviewing/editing word correction separately from intended meaning,
+content-specific owner and sensitivity confirmation, and deletion. No microphone,
+cloud or model update is wired. The real Android API compiler check passed;
+Activity integration, Android view runtime and physical Fold7 remain NOT_RUN.
+Frozen model-training data are unchanged.

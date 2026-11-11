@@ -1,0 +1,30 @@
+{
+  "status": "COMPILE_PASS",
+  "exit_code": 0,
+  "compiler": "Existing Kotlin 2.4.0 toolchain, -jvm-target 17",
+  "android_api_jar_name": "android-all-15-robolectric-12650502.jar",
+  "android_api_jar_sha256": "6c0670454f6fcee9f1b17aa393e81d71bf26e7e6ae7c5777ed3924b062191d5b",
+  "source_sha256": {
+    "AndroidPersonalVoiceReviewDialog.kt": "ed07b61b9b5f284d726435966100c70ac7cdd9c3cd469306b31ed0c14878c50c",
+    "PersonalVoiceCorrectionBridge.kt": "9666fa501ef0b7a0ed014af04aa4bfb1fe3254a320e789ce49129c2ecb7ffbff",
+    "PersonalVoiceLearningStore.kt": "ad973100396872dddc55e21fcf454d4832a7f1d745c30373ca493449363c87f7",
+    "AndroidPersonalVoiceStore.kt": "02c01aa7a328815fc9b530b4f066aea944b4831df7a056d3c76e2035eee5e4bc"
+  },
+  "compiled_output_sha256": "7fd79481cdefc06e8561446f12d745beb7f153b55415689bbab3a8437edd4fd7",
+  "android_runtime": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "activity_integration": "NOT_CONNECTED_RESEARCH_ONLY",
+  "command_shape": [
+    "kotlinc",
+    "ui/AndroidPersonalVoiceReviewDialog.kt",
+    "native/PersonalVoiceCorrectionBridge.kt",
+    "native/PersonalVoiceLearningStore.kt",
+    "native/AndroidPersonalVoiceStore.kt",
+    "-cp",
+    "android-all-15-robolectric-12650502.jar",
+    "-jvm-target",
+    "17",
+    "-d",
+    "android-review-dialog.jar"
+  ]
+}
