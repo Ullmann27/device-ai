@@ -1,0 +1,104 @@
+{
+  "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "scope": "Robolectric API28 native Canvas; existing2D fallback; scripted lifecycle",
+  "fullSuiteStatus": "RUNNING",
+  "sceneCaseLogEvents": [
+    "CinemaNativeSequenceUiTest > innerSequence PASSED",
+    "CinemaNativeSequenceUiTest > coverSequence PASSED"
+  ],
+  "images": [
+    {
+      "capture": {
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "work-280ms",
+        "sha256": "95749cc20bca20df4b05017a51e644d73539d7b841b6b4390327f8261779ab94",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "file": "Continuum-Code53-a980-Lichtfluss-280ms.png"
+    },
+    {
+      "capture": {
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "work-650ms",
+        "sha256": "1ee358f71572320f750c4c9531fc49734b48876cfa777b69ed54dfa39eb1be56",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "file": "Continuum-Code53-a980-Fensteraufbau-650ms.png"
+    },
+    {
+      "capture": {
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "work-1180ms",
+        "sha256": "6024495eb3c028a13db6020a7c35a0864e8cbced9e6bf698fc8c7e425d93fee9",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "file": "Continuum-Code53-a980-Arbeitsfenster.png"
+    },
+    {
+      "capture": {
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "idle",
+        "sha256": "b111077257f093ed687b00f098803332637b886d4de160c55b3feb9d6a0d0f52",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "file": "Continuum-Code53-a980-Ruhebild.png"
+    },
+    {
+      "capture": {
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "returned",
+        "sha256": "f7e26eb7b3c32f4de037c22858c358cf5374c7ce566ee4555cca0fa32763cbc5",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "file": "Continuum-Code53-a980-Rueckkehr.png"
+    },
+    {
+      "capture": {
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "work-1180ms",
+        "sha256": "11f6fe13fc6889d9f6f32527f452a7cfd647ec8efb1ceeb15fa30117713a6f3a",
+        "width": 412,
+        "height": 915,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "file": "Continuum-Code53-a980-Cover-Arbeitsfenster.png"
+    }
+  ],
+  "Fold7": "NOT_RUN",
+  "FilamentGpu": "NOT_RUN",
+  "modelInference": "NOT_RUN"
+}

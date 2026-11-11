@@ -1,0 +1,1539 @@
+{
+  "schema": "apk53-frozen-local-qa-evidence-v2",
+  "recordedAtUtc": "2026-11-11T00:49:00.598471+00:00",
+  "status": "LOCAL_AND_GITHUB_QA_UNSIGNED_APK_VERIFIED_SIGNING_PENDING",
+  "source": {
+    "commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "gitTree": "a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e",
+    "integrationPr": 739,
+    "integrationBranch": "integration/continuum-cinema-apk53-20261110",
+    "reportSourceDigest": "e20b19ce1d0e0ed5725022dbb756f34fda173321a729c6f9d48dfdffc6e2ca69",
+    "reportSourceDigestKind": "reliability-report digest, not Git tree SHA",
+    "hostReceiptStartEndMatch": true,
+    "hostReceiptEndWorktreeClean": true,
+    "publication": "PUBLISHED",
+    "commitUrl": "https://github.com/Ullmann27/device-ai/commit/a980a19ed3ab44323009ae27eb299d322ff11679"
+  },
+  "environment": {
+    "node": "24.22.1",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "hostGateSummary": {
+    "passed": 7,
+    "total": 7,
+    "checks": [
+      {
+        "id": "critical",
+        "exitCode": 0
+      },
+      {
+        "id": "full-node",
+        "exitCode": 0
+      },
+      {
+        "id": "backend-check",
+        "exitCode": 0
+      },
+      {
+        "id": "backend-test",
+        "exitCode": 0
+      },
+      {
+        "id": "source-safety",
+        "exitCode": 0
+      },
+      {
+        "id": "fidelity",
+        "exitCode": 0
+      },
+      {
+        "id": "preview",
+        "exitCode": 0
+      }
+    ]
+  },
+  "hostTests": {
+    "fullNode": {
+      "status": "PASS",
+      "counts": {
+        "total": 2493,
+        "executed": 2462,
+        "passed": 2462,
+        "failed": 0,
+        "skipped": 31,
+        "placeholders": 0,
+        "evidenceComplete": true
+      },
+      "scope": "Node source/contracts and host tests; 31 skipped cases are not passed",
+      "receipt": "full-node/report.json",
+      "skippedCases": [
+        {
+          "id": 1,
+          "file": ".github/continuum/ccc1-bot-workspace-host.test.mjs",
+          "name": "HOST SOFTWARE CONTRACT: real persisted Forge/Lint profiles receive distinct observed containers for builder and both verifier sites",
+          "reasonId": "S01"
+        },
+        {
+          "id": 2,
+          "file": ".github/continuum/ccc1-workspace-host.test.mjs",
+          "name": "HOST_INTEGRATION: two canonical worker jobs run in separate confined Docker workspaces",
+          "reasonId": "S01"
+        },
+        {
+          "id": 3,
+          "file": ".github/continuum/ccc1-workspace-lifecycle-host.test.mjs",
+          "name": "HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs",
+          "reasonId": "S01"
+        },
+        {
+          "id": 4,
+          "file": ".github/continuum/ccc1-workspace-lifecycle-host.test.mjs",
+          "name": "HOST_INTEGRATION: live canonical lease clamps the real Docker timeout",
+          "reasonId": "S01"
+        },
+        {
+          "id": 5,
+          "file": ".github/continuum/ccc1-workspace-lifecycle-host.test.mjs",
+          "name": "HOST_INTEGRATION: in-flight owner revocation suppresses the completed profile result at checkpoint",
+          "reasonId": "S01"
+        },
+        {
+          "id": 6,
+          "file": ".github/continuum/cognitive-action-integration.test.mjs",
+          "name": "actual Android shell adapters compile against official APIs and the unchanged Binder contract",
+          "reasonId": "S02"
+        },
+        {
+          "id": 7,
+          "file": ".github/continuum/cognitive-action-integration.test.mjs",
+          "name": "native natural request → actual tool → receipt → persisted episode, with negative regressions",
+          "reasonId": "S03"
+        },
+        {
+          "id": 8,
+          "file": ".github/continuum/cognitive-action-integration.test.mjs",
+          "name": "actual memory, CRE1 and CTX3 graph preserves provenance and emits content-free traces",
+          "reasonId": "S04"
+        },
+        {
+          "id": 9,
+          "file": ".github/continuum/compute-fabric-model-adapter.test.mjs",
+          "name": "native JVM export feeds Node byte-for-byte when cross-language runner is configured",
+          "reasonId": "S05"
+        },
+        {
+          "id": 10,
+          "file": ".github/continuum/harness-coding-provider.test.mjs",
+          "name": "real Harness service preserves the existing strict wire schema without mounting tools",
+          "reasonId": "S06"
+        },
+        {
+          "id": 11,
+          "file": ".github/continuum/harness-coding-provider.test.mjs",
+          "name": "authority smuggling, no-op and HTTP failure remain rejected without hidden retries",
+          "reasonId": "S07"
+        },
+        {
+          "id": 12,
+          "file": ".github/continuum/isolated-report-cap.test.mjs",
+          "name": "fixed isolated Android runner rejects 401 reports instead of returning a green subset",
+          "reasonId": "S08"
+        },
+        {
+          "id": 13,
+          "file": ".github/continuum/momega1-typed-workspace-host.test.mjs",
+          "name": "HOST_INTEGRATION: typed dispatch binds actual canonical repair containers and refuses replay",
+          "reasonId": "S01"
+        },
+        {
+          "id": 14,
+          "file": "scripts/continuum-local-model-7b.test.mjs",
+          "name": "fixed Docker CLI transport rejects mismatched weights before native launch, with no observation",
+          "reasonId": "S09"
+        },
+        {
+          "id": 15,
+          "file": "scripts/continuum-local-model-cpu.test.mjs",
+          "name": "actual launcher gives exact private 7B profile two CPU seconds per remaining wall second",
+          "reasonId": "S10"
+        },
+        {
+          "id": 16,
+          "file": "scripts/continuum-local-model-cpu.test.mjs",
+          "name": "two-thread CPU allowance leaves the existing wall cancellation deadline unchanged",
+          "reasonId": "S10"
+        },
+        {
+          "id": 17,
+          "file": "scripts/continuum-local-model-cpu.test.mjs",
+          "name": "actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit",
+          "reasonId": "S10"
+        },
+        {
+          "id": 18,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "actual namespace binds admitted descriptors and fixture output; never inference evidence",
+          "reasonId": "S11"
+        },
+        {
+          "id": 19,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "deadline cancels actual isolated process with bounded return",
+          "reasonId": "S11"
+        },
+        {
+          "id": 20,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "STOP cancels actual isolated process and leaves no trusted observation",
+          "reasonId": "S11"
+        },
+        {
+          "id": 21,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "malformed/oversized output and missing generation counters are rejected",
+          "reasonId": "S11"
+        },
+        {
+          "id": 22,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "actual FD mount retains selected inode across model path replacement",
+          "reasonId": "S12"
+        },
+        {
+          "id": 23,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "prompt evaluation counter alone cannot masquerade as output generation",
+          "reasonId": "S11"
+        },
+        {
+          "id": 24,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "inference sandbox denies host files, external interfaces, secrets and writable model",
+          "reasonId": "S11"
+        },
+        {
+          "id": 25,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "seccomp denies fork and rlimits bound native memory/descriptor budgets",
+          "reasonId": "S11"
+        },
+        {
+          "id": 26,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "changing model during actual execution invalidates otherwise valid output",
+          "reasonId": "S11"
+        },
+        {
+          "id": 27,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "production provider rejects synthetic fixture receipt even when transport MAC is valid",
+          "reasonId": "S11"
+        },
+        {
+          "id": 28,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "native worker threads remain permitted while process creation stays denied",
+          "reasonId": "S11"
+        },
+        {
+          "id": 29,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind",
+          "reasonId": "S11"
+        },
+        {
+          "id": 30,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "invalid model JSON retains authenticated process observation without a candidate",
+          "reasonId": "S11"
+        },
+        {
+          "id": 31,
+          "file": "scripts/continuum-local-model-observation.test.mjs",
+          "name": "provider retains authenticated rejected-response observation and consumed durable budget",
+          "reasonId": "S11"
+        }
+      ],
+      "skipReasons": [
+        {
+          "id": "S01",
+          "count": 6,
+          "xmlReason": "true",
+          "sourceCondition": "skip: process.env.CONTINUUM_WORKSPACE_HOST_PROOF !== '1'; verified at the frozen source. XML records only true."
+        },
+        {
+          "id": "S02",
+          "count": 1,
+          "xmlReason": "NOT_RUN: configure official Kotlin and Shizuku/annotation jars"
+        },
+        {
+          "id": "S03",
+          "count": 1,
+          "xmlReason": "NOT_RUN: set CONTINUUM_FABRIC_JVM_DEPS to run the real Kotlin graph"
+        },
+        {
+          "id": "S04",
+          "count": 1,
+          "xmlReason": "NOT_RUN: configure official Kotlin/JUnit jars"
+        },
+        {
+          "id": "S05",
+          "count": 1,
+          "xmlReason": "Run scripts/continuum-fabric-jvm-check.sh for the actual JVM→Node test"
+        },
+        {
+          "id": "S06",
+          "count": 1,
+          "xmlReason": "NOT_RUN: configure actual reviewed Harness SDK"
+        },
+        {
+          "id": "S07",
+          "count": 1,
+          "xmlReason": "NOT_RUN: actual SDK required"
+        },
+        {
+          "id": "S08",
+          "count": 1,
+          "xmlReason": "Requires explicitly configured Docker; synthetic Gradle reports, not an Android build"
+        },
+        {
+          "id": "S09",
+          "count": 1,
+          "xmlReason": "HOST_DOCKER_PROOF_NOT_RUN: fixed Docker client unavailable"
+        },
+        {
+          "id": "S10",
+          "count": 3,
+          "xmlReason": "HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"
+        },
+        {
+          "id": "S11",
+          "count": 13,
+          "xmlReason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+        },
+        {
+          "id": "S12",
+          "count": 1,
+          "xmlReason": "HOST_ISOLATION_PROOF_NOT_RUN: bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+        }
+      ],
+      "skipScope": "31 technical test names/reasons extracted from exact-source JUnit XML; skips remain unexecuted"
+    },
+    "critical": {
+      "status": "PASS",
+      "counts": {
+        "total": 136,
+        "executed": 136,
+        "passed": 136,
+        "failed": 0,
+        "skipped": 0,
+        "placeholders": 0,
+        "evidenceComplete": true
+      },
+      "groups": [
+        {
+          "id": "process",
+          "counts": {
+            "total": 37,
+            "executed": 37,
+            "passed": 37,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "evidenceComplete": true
+          }
+        },
+        {
+          "id": "storage-agent",
+          "counts": {
+            "total": 32,
+            "executed": 32,
+            "passed": 32,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "evidenceComplete": true
+          }
+        },
+        {
+          "id": "android-source-contracts",
+          "counts": {
+            "total": 65,
+            "executed": 65,
+            "passed": 65,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "evidenceComplete": true
+          }
+        },
+        {
+          "id": "host-checker",
+          "counts": {
+            "total": 2,
+            "executed": 2,
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "evidenceComplete": true
+          }
+        }
+      ],
+      "subsetOfFullNode": true,
+      "subsetVerification": "All 136 executed critical case hashes occur in full-node executed hashes; hashes omitted from this export",
+      "additive": false,
+      "receipt": "critical/report.json"
+    },
+    "backendSyntax": {
+      "status": "PASS",
+      "exitCode": 0,
+      "receipt": "backend-check.log"
+    },
+    "backendTests": {
+      "status": "PASS",
+      "counts": {
+        "total": 64,
+        "passed": 64,
+        "failed": 0,
+        "skipped": 0
+      },
+      "receipt": "backend-test.log"
+    },
+    "targetedKotlin": {
+      "status": "PASS",
+      "counts": {
+        "passed": 12,
+        "failed": 0,
+        "total": 12
+      },
+      "scope": "Existing source-safety host gate; not full Android compilation",
+      "receipt": "source-safety.log"
+    },
+    "countingRule": "No cross-suite grand total. Critical136 is a verified subset of full Node. Focused Android11 and required Cinema classes are subsets of Android4481; neither is added. Upstream donor counts are not added."
+  },
+  "hostRender": {
+    "status": "HOST_ONLY_PASS",
+    "renderer": "Java2D stand-in",
+    "pngFiles": 46,
+    "groups": {
+      "constructPreview": {
+        "pngFiles": 40
+      },
+      "referenceFidelity": {
+        "pngFiles": 6,
+        "candidateProbeFrames": 4,
+        "negativeControlImage": 1,
+        "contactSheet": 1
+      }
+    },
+    "referenceMetric": {
+      "gate": "PASS",
+      "selectedGateProbes": 2,
+      "observedProbes": 4,
+      "allObservedProbesWithinMetric": true,
+      "negativeControls": 2,
+      "negativeControlsFailAsExpected": true
+    },
+    "nativeAndroidCapture": "NOT_RUN_IN_THIS_HOST_BATCH",
+    "physicalDevice": "NOT_RUN",
+    "hardwareAGSL": "NOT_RUN",
+    "nativeFilament": "NOT_RUN",
+    "performance": "No device FPS, GPU, thermal, energy or quality claim; 46 files are not 46 independent acceptance tests"
+  },
+  "originalAvatar": {
+    "asset": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+    "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+    "gitBlob": "3498c003a8bf186a8abb47048e2d36be4810b88c",
+    "morphCount": 21,
+    "unchangedAgainst": "17491f4d8103f0e55836369333fab07e80e6e9c2",
+    "byteIdentityVerified": true,
+    "runtimeFilamentVerification": "NOT_RUN"
+  },
+  "donors": [
+    {
+      "pr": 715,
+      "url": "https://github.com/Ullmann27/device-ai/pull/715",
+      "sourceCommit": "c972f56ccc4caa2f1807bcaf1d4665347c66c629",
+      "incorporation": "ANCESTOR_VERIFIED"
+    },
+    {
+      "pr": 725,
+      "url": "https://github.com/Ullmann27/device-ai/pull/725",
+      "sourceCommit": "b0a1635b77f568692ac6ff6b662f52d6b6eb7231",
+      "incorporation": "ANCESTOR_VERIFIED"
+    },
+    {
+      "pr": 741,
+      "url": "https://github.com/Ullmann27/device-ai/pull/741",
+      "sourceCommit": "e3ed6e984acb75b46c8646203cdf4c9b3f052623",
+      "incorporation": "ANCESTOR_VERIFIED"
+    },
+    {
+      "pr": 742,
+      "url": "https://github.com/Ullmann27/device-ai/pull/742",
+      "sourceCommit": "0160da525f5de5a3763f67cb9f71e5c28db4543a",
+      "incorporation": "ANCESTOR_VERIFIED"
+    },
+    {
+      "pr": 743,
+      "url": "https://github.com/Ullmann27/device-ai/pull/743",
+      "sourceCommit": "e739f45bc87d90058c10ea6ca5d2f1d81c2930ce",
+      "incorporation": "SCOPED_FILES_BYTE_IDENTICAL",
+      "verifiedFiles": [
+        ".github/continuum/avatar-surface-radiance-wiring.test.mjs"
+      ]
+    },
+    {
+      "pr": 744,
+      "url": "https://github.com/Ullmann27/device-ai/pull/744",
+      "sourceCommit": "59ee7593c012c6f54501e2f86a1db5b5b06fa258",
+      "incorporation": "SCOPED_FILES_BYTE_IDENTICAL",
+      "verifiedFiles": [
+        "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar/CinemaWindowGazeBridgeTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentFlowUiTest.kt"
+      ]
+    },
+    {
+      "pr": 745,
+      "url": "https://github.com/Ullmann27/device-ai/pull/745",
+      "sourceCommit": "bbcab4d0a603c8f801c394cd7e0b70c05682cc01",
+      "incorporation": "SCOPED_FILES_BYTE_IDENTICAL",
+      "verifiedFiles": [
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCameraMotionTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt"
+      ]
+    }
+  ],
+  "scopedDonorFileBindings": [
+    {
+      "pr": 743,
+      "ref": "e739f45bc87d90058c10ea6ca5d2f1d81c2930ce",
+      "path": ".github/continuum/avatar-surface-radiance-wiring.test.mjs",
+      "blob": "f42228d693899d7211c0204e1c4106263f6a79f2",
+      "frozenSourceBlob": "f42228d693899d7211c0204e1c4106263f6a79f2",
+      "byteIdentical": true
+    },
+    {
+      "pr": 744,
+      "ref": "59ee7593c012c6f54501e2f86a1db5b5b06fa258",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+      "blob": "edcad27f0a6111e1d9c628b99225334c1c910055",
+      "frozenSourceBlob": "edcad27f0a6111e1d9c628b99225334c1c910055",
+      "byteIdentical": true
+    },
+    {
+      "pr": 744,
+      "ref": "59ee7593c012c6f54501e2f86a1db5b5b06fa258",
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/CinemaWindowGazeBridgeTest.kt",
+      "blob": "a4792dda93728e2e34cafafcee5154adf0b0204d",
+      "frozenSourceBlob": "a4792dda93728e2e34cafafcee5154adf0b0204d",
+      "byteIdentical": true
+    },
+    {
+      "pr": 744,
+      "ref": "59ee7593c012c6f54501e2f86a1db5b5b06fa258",
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentFlowUiTest.kt",
+      "blob": "ecb4a823bad2816f13a7281939773f4378026694",
+      "frozenSourceBlob": "ecb4a823bad2816f13a7281939773f4378026694",
+      "byteIdentical": true
+    },
+    {
+      "pr": 745,
+      "ref": "bbcab4d0a603c8f801c394cd7e0b70c05682cc01",
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCameraMotionTest.kt",
+      "blob": "a5a1178dc27ca5f8cc88b0d2dd0bfb6b3a5fccaf",
+      "frozenSourceBlob": "a5a1178dc27ca5f8cc88b0d2dd0bfb6b3a5fccaf",
+      "byteIdentical": true
+    },
+    {
+      "pr": 745,
+      "ref": "bbcab4d0a603c8f801c394cd7e0b70c05682cc01",
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt",
+      "blob": "290fbbda7ea74abeb00c257cb62098f36aa2ee01",
+      "frozenSourceBlob": "290fbbda7ea74abeb00c257cb62098f36aa2ee01",
+      "byteIdentical": true
+    }
+  ],
+  "scopedFixes": [
+    {
+      "commit": "3908ec1a0bb595207bd8c8ec093e9434a6ee568f",
+      "scope": "Temporal-reference ambiguity, consent transcript order and resolved-ticket speech handling; integrated by c7a8b7f415f738993df2f26b1d2b589ef90ea885"
+    },
+    {
+      "commit": "0e8f6c75eb667abb3b2c23e52c59bacbdfa59a47",
+      "scope": "Document-reading priority, declined/unavailable consent feedback, current avatar contract and controlled STOP assertions"
+    },
+    {
+      "commit": "7322436a35eeefa768cb71788b4aed26056f1dcf",
+      "scope": "Explicit accepted-research-not-started feedback and regression assertions"
+    },
+    {
+      "commit": "f495fd633509e11a52519a0bd89d96b22cb91b3b",
+      "scope": "Test-only lazy work-window host lookup"
+    },
+    {
+      "commit": "e730f962eee68f327a5cd8fcd2bc09d5c9db088c",
+      "scope": "Test-only camera return deadline from actual window closure; exact-zero and lifecycle assertions retained"
+    }
+  ],
+  "pending": {
+    "sourceBoundGitHubActionsQa": "IN_PROGRESS",
+    "code53SignerBinding": "PENDING",
+    "exactSourceOwnerSigningApproval": "PENDING",
+    "originalSigning": "NOT_RUN",
+    "releasePublication": "NOT_RUN",
+    "installation": "NOT_RUN",
+    "physicalFold7": "NOT_RUN",
+    "hardwareFilament": "NOT_RUN",
+    "hardwareAGSL": "NOT_RUN",
+    "liveMicrophoneSpeech": "NOT_RUN",
+    "GemmaInference": "NOT_RUN",
+    "deviceThermalPerformance": "NOT_RUN",
+    "sourceChangeRule": "Runtime source a980a19 remains frozen. Changed product source requires new exact-source acceptance."
+  },
+  "receiptHashes": [
+    {
+      "path": "apk53-a980-host/result.json",
+      "sha256": "1823ff8b306813aa85d9b52b4060cf01105b8ea36d9d475da6cd9bce8026dbe1",
+      "bytes": 1612
+    },
+    {
+      "path": "apk53-a980-host/full-node/report.json",
+      "sha256": "de2f092998108b2509c7da719e2cbfe810ab383583e147a8ba565c56b3857a4d",
+      "bytes": 2664755
+    },
+    {
+      "path": "apk53-a980-host/critical/report.json",
+      "sha256": "793ae887f515aa3555fe7a67f2f66df3b40cf04fb9024fb48f6086428e12bef8",
+      "bytes": 2464026
+    },
+    {
+      "path": "apk53-a980-host/backend-check.log",
+      "sha256": "d8a9e8ae142dc0661a5f3391428034fae092bff80d2da574884a4a5f67a0e7e1",
+      "bytes": 565
+    },
+    {
+      "path": "apk53-a980-host/backend-test.log",
+      "sha256": "67376430622268b7a77e7050de06d90ff47f574042a5b6d5884da13ee981e7c0",
+      "bytes": 5674
+    },
+    {
+      "path": "apk53-a980-host/source-safety.log",
+      "sha256": "75d63aef7b89426ff7792e60e09bd2541a1d1db66c4114e4ac04a0cef3d188ff",
+      "bytes": 53
+    },
+    {
+      "path": "apk53-a980-host/fidelity/CODE53-a980-fidelity.json",
+      "sha256": "803b360b7bf826773f1ffdba40f39b359c273bf0cfdd9f881b49ece80491368f",
+      "bytes": 4413
+    },
+    {
+      "path": "apk53-a980-host/fidelity/CODE53-a980-provenance.txt",
+      "sha256": "83c1316113edd6e7eaed21894c729a1e60407bfcfe395b9978d56deb41061024",
+      "bytes": 2772
+    },
+    {
+      "path": "apk53-a980-host/preview.log",
+      "sha256": "5290dd5ef6c2c21a4db41fbcf8e0ad05b20a6456bd3d4622b1b84a1ec2441acc",
+      "bytes": 307
+    },
+    {
+      "path": "apk53-a980-host/original-avatar.json",
+      "sha256": "76251f9a0de1e0165cf6623e7ff21f8919a791475d23147096cfb7e0b9700721",
+      "bytes": 555
+    },
+    {
+      "path": "apk53-pr-inventory.json",
+      "sha256": "2b7fe987cedc269e3d9e97542e14324a5b555a601f6067e05cd08c148ed02ca0",
+      "bytes": 5141
+    },
+    {
+      "path": "apk53-a980-host/full-node/full-node.xml",
+      "sha256": "5ab9344a3af559e3381f2177675741f21f269bce08d09d7f55b9d49aa8a2053f",
+      "bytes": 562136
+    },
+    {
+      "path": "apk53-a980-android/pipeline-result.json",
+      "sha256": "0e4b945bac1e54570641f496343c8895c3e5f986d9b03bf2fe2efa48b0a03ee3",
+      "bytes": 6319
+    },
+    {
+      "path": "apk53-a980-android/full-test/summary.json",
+      "sha256": "87ea8d1c1f3ebda5a900573adbbd44d4f164640019e16f060dffce497382d2b2",
+      "bytes": 5720
+    },
+    {
+      "path": "apk53-a980-package-validation/RESULT.json",
+      "sha256": "566da2a7721b822b4a6bed5a717f4d4974267f0147dcbbe8fbf46e653a6202a7",
+      "bytes": 1275
+    },
+    {
+      "path": "apk53-a980-package-verified/RESULT.json",
+      "sha256": "d34ebfe28f20c3cfc444ae37282a730b0db81ac1ff4c7df496537a0c3e5e7c20",
+      "bytes": 1804
+    },
+    {
+      "path": "apk53-a980-delivery/image-provenance.json",
+      "sha256": "44c96c09296d0b836ac580eb583b1f2b075d967d5f2dff590b390cf140ed6fde",
+      "bytes": 3520
+    },
+    {
+      "path": "apk53-a980-signing-preparation.json",
+      "sha256": "8ba32d2412bb33746063c2c341d6e6a86c2ae8ce9859650b098510e889e82964",
+      "bytes": 1889
+    }
+  ],
+  "exportBoundary": {
+    "rawLogsCopied": false,
+    "testcaseNamesCopied": true,
+    "fixtureTextCopied": false,
+    "caseHashArraysCopied": false,
+    "selection": "Whitelisted aggregates, technical paths, commit/blob IDs, receipt digests, plus exactly 31 skipped technical test names and deduplicated reasons",
+    "technicalSkipReasonsCopied": true,
+    "scope": "Whitelisted aggregates, source/blob/receipt hashes, 31 Node and 17 Android skipped technical names/reasons, technical APK identity and PNG provenance; no fixture payloads, source comments, raw logs or secrets.",
+    "sourceCodeCommentsCopied": false
+  },
+  "prInventory": [
+    {
+      "number": 715,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "cinema/fluid-light-stage-20261110",
+      "head": "c972f56ccc4caa2f1807bcaf1d4665347c66c629",
+      "url": "https://github.com/Ullmann27/device-ai/pull/715"
+    },
+    {
+      "number": 720,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "fix/dialog-context-reference-20261110",
+      "head": "de831d06034c46c6ae039a6df32d52a4392a3521",
+      "url": "https://github.com/Ullmann27/device-ai/pull/720"
+    },
+    {
+      "number": 724,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "fix/cinema-queued-result-support-20261110",
+      "head": "e61458f4c46f7af118614d01e71060b73a0c5521",
+      "url": "https://github.com/Ullmann27/device-ai/pull/724"
+    },
+    {
+      "number": 725,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "support/cinema-dialog-integration-20261110",
+      "head": "b0a1635b77f568692ac6ff6b662f52d6b6eb7231",
+      "url": "https://github.com/Ullmann27/device-ai/pull/725"
+    },
+    {
+      "number": 726,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "support/cinema-outcome-evidence-20261110",
+      "head": "d3185e72967832c7e0a5aee4a1b77ddad522caec",
+      "url": "https://github.com/Ullmann27/device-ai/pull/726"
+    },
+    {
+      "number": 730,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "qa/avatar-state-render-20261110",
+      "head": "0ed9c0e186249d1486c87605803959f08b663331",
+      "url": "https://github.com/Ullmann27/device-ai/pull/730"
+    },
+    {
+      "number": 731,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "fix/cinema-compact-modules-20261110",
+      "head": "59a1dfd8973c9fb88e1e94f14ef05a8a99e8ba08",
+      "url": "https://github.com/Ullmann27/device-ai/pull/731"
+    },
+    {
+      "number": 732,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "qa/cinema-render-coverage-20261110",
+      "head": "6234c9b41db6bb41efd42dbc9aa4a7a50af33698",
+      "url": "https://github.com/Ullmann27/device-ai/pull/732"
+    },
+    {
+      "number": 733,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "qa/cinema-thermal-visual-20261110",
+      "head": "5dfb7d298343cb12763a78eb57a35d5bc042f997",
+      "url": "https://github.com/Ullmann27/device-ai/pull/733"
+    },
+    {
+      "number": 734,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "fix/cinema-settled-result-20261110",
+      "head": "19c07ed57ff0a1adf203f229972375108313004b",
+      "url": "https://github.com/Ullmann27/device-ai/pull/734"
+    },
+    {
+      "number": 741,
+      "state": "closed",
+      "merged": true,
+      "draft": true,
+      "branch": "fix/avatar-window-accent-fallback-20261110",
+      "head": "e3ed6e984acb75b46c8646203cdf4c9b3f052623",
+      "url": "https://github.com/Ullmann27/device-ai/pull/741"
+    },
+    {
+      "number": 742,
+      "state": "closed",
+      "merged": true,
+      "draft": true,
+      "branch": "fix/cinema-preview-provenance-20261110",
+      "head": "0160da525f5de5a3763f67cb9f71e5c28db4543a",
+      "url": "https://github.com/Ullmann27/device-ai/pull/742"
+    },
+    {
+      "number": 743,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "fix/cinema-preview-provenance-20261110",
+      "head": "e739f45bc87d90058c10ea6ca5d2f1d81c2930ce",
+      "url": "https://github.com/Ullmann27/device-ai/pull/743"
+    },
+    {
+      "number": 744,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "fix/avatar-document-reading-priority-20261111",
+      "head": "59ee7593c012c6f54501e2f86a1db5b5b06fa258",
+      "url": "https://github.com/Ullmann27/device-ai/pull/744"
+    },
+    {
+      "number": 745,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "branch": "fix/camera-return-deadline-20261111",
+      "head": "bbcab4d0a603c8f801c394cd7e0b70c05682cc01",
+      "url": "https://github.com/Ullmann27/device-ai/pull/745"
+    }
+  ],
+  "prInventoryBoundary": {
+    "source": "apk53-pr-inventory.json",
+    "closedMerged": [
+      741,
+      742
+    ],
+    "remainingOpen": 13,
+    "donorBranchesRetained": true,
+    "mainMerged": false,
+    "note": "741/742 auto-closed as merged through earlier parent ancestry; other listed PRs remain open. Branch-retention/no-main-merge status supplied by the integrator."
+  },
+  "evidencePublication": {
+    "branch": "qa/apk53-a980-evidence-20261111",
+    "kind": "LOCAL_UNSIGNED_CANDIDATE_VERIFIED_REMOTE_CI_PENDING",
+    "testedSourceUnchanged": true,
+    "workflow": ".github/workflows/continuum-code53-frozen-qa.yml",
+    "workflowSource": "a980a19ed3ab44323009ae27eb299d322ff11679"
+  },
+  "android": {
+    "status": "PASS",
+    "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "gitTree": "a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e",
+    "phases": [
+      {
+        "phase": "compile",
+        "exitCode": 0,
+        "sourceBound": true,
+        "startEndClean": true
+      },
+      {
+        "phase": "targeted",
+        "exitCode": 0,
+        "sourceBound": true,
+        "startEndClean": true
+      },
+      {
+        "phase": "full-test",
+        "exitCode": 0,
+        "sourceBound": true,
+        "startEndClean": true
+      },
+      {
+        "phase": "lint",
+        "exitCode": 0,
+        "sourceBound": true,
+        "startEndClean": true
+      },
+      {
+        "phase": "assemble",
+        "exitCode": 0,
+        "sourceBound": true,
+        "startEndClean": true
+      }
+    ],
+    "focused": {
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "subsetOfFullSuite": true,
+      "subsetVerifiedFromXml": true,
+      "additive": false
+    },
+    "fullSuite": {
+      "status": "PASS",
+      "suiteXmlFiles": 783,
+      "fullUnfiltered": true,
+      "total": 4481,
+      "passed": 4464,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 17,
+      "skippedCases": [
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s7_pending_agentMessagesUrgentWakesInfoWaits",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s4b_pending_profileDiarySharedLayers",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s5b_pending_textFileSkillLibraryLoadedOnDemand",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s6_pending_routineReportsOnlyWhenSomethingIsNew",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+          "name": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+          "name": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt6b_lernen_hypotheseUndTagebuchEintrag",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+          "name": "actualNodeKotlinNodeTrainingParity",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+          "name": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+          "name": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+          "reason": "JUnit skipped; no reason in XML"
+        }
+      ],
+      "requiredCinemaClasses": {
+        "LuxuryHoloButtonRendererTest": 7,
+        "PerimeterWingChoreographerTest": 2,
+        "SpatialWindowLightTest": 8,
+        "HollywoodFuiWorkActivityTest": 5,
+        "JarvisRenderQualityTest": 7,
+        "TtsHologramSignalTest": 11
+      },
+      "requiredClassesSkipped": 0
+    },
+    "skipSourceBindings": [
+      {
+        "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+        "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+        "candidateBlob": "4daa63e9a5790ad2ddd518abc483a2aac8a9de58",
+        "code52Blob": "4daa63e9a5790ad2ddd518abc483a2aac8a9de58",
+        "unchangedSinceCode52": true
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+        "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringHostTest.kt",
+        "candidateBlob": "ceba627d0809e39bd846ffd94386f7aa66159ce5",
+        "code52Blob": "ceba627d0809e39bd846ffd94386f7aa66159ce5",
+        "unchangedSinceCode52": true
+      },
+      {
+        "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+        "path": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+        "candidateBlob": "e7930d853d308bb266163dbf4d569a7d169d366b",
+        "code52Blob": "e7930d853d308bb266163dbf4d569a7d169d366b",
+        "unchangedSinceCode52": true
+      },
+      {
+        "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+        "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumContrastiveParityTest.kt",
+        "candidateBlob": "fcb92a24a05f8275c1037be364da57ffab9d0306",
+        "code52Blob": "fcb92a24a05f8275c1037be364da57ffab9d0306",
+        "unchangedSinceCode52": true
+      },
+      {
+        "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+        "path": "app/src/test/java/at/heinz/deviceai/learning/Cre1InferenceEncoderTest.kt",
+        "candidateBlob": "568aeac31a767a1d9636489698707d8ae102a5dc",
+        "code52Blob": "568aeac31a767a1d9636489698707d8ae102a5dc",
+        "unchangedSinceCode52": true
+      }
+    ],
+    "skipBoundary": "Five skipped test classes are byte-identical to Code52. XML gives no skip reason; no reason is inferred from method names. Skips are not passes.",
+    "lint": {
+      "status": "PASS",
+      "enabledChecks": [
+        "NewApi"
+      ],
+      "issues": 0,
+      "fullLintCoverageClaimed": false
+    },
+    "runtimeBoundary": "Android JVM/Robolectric host tests; not physical-device or native Filament GPU acceptance"
+  },
+  "unsignedApk": {
+    "status": "PASS",
+    "artifactStatus": "UNSIGNED_NOT_INSTALLABLE",
+    "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "gitTree": "a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e",
+    "bytes": 102588096,
+    "sha256": "f138b92a99ea9aab67103490f0a249fd14adbc84c3c5346cd2169f36a40f1921",
+    "identity": {
+      "package": "at.heinz.deviceai.continuumlocal",
+      "versionCode": 53,
+      "versionName": "0.3.52",
+      "abi": "arm64-v8a",
+      "minSdk": 26,
+      "targetSdk": 36,
+      "debuggable": false
+    },
+    "archive": {
+      "zipCrc": "PASS",
+      "entryCount": 77,
+      "assetFilesCompared": 34,
+      "nativeLibraries": [
+        "lib/arm64-v8a/libc++_shared.so",
+        "lib/arm64-v8a/libfilament-jni.so",
+        "lib/arm64-v8a/libgltfio-jni.so",
+        "lib/arm64-v8a/liblitertlm_jni.so",
+        "lib/arm64-v8a/libopencv_java4.so"
+      ],
+      "nativeLibraryCount": 5,
+      "jarSignatureFiles": [],
+      "apkSigningBlock": false
+    },
+    "zipalign16KiB": "PASS",
+    "unsignedDiagnostic": "EXPECTED_MISSING_SIGNATURE",
+    "sourceBeforeAfterUnchanged": true,
+    "validatorSha256": "2a0aeaef48bb5482f0da304ee24e3a69a66d3fa2a86c81885436d28b7c8a535f"
+  },
+  "validatorHistory": {
+    "sameApkBytesAndDigest": true,
+    "applicationSourceChanged": false,
+    "attempts": [
+      {
+        "status": "FAIL",
+        "validatorSha256": "e4f8ed4213b80564fe7ee7e4b04959ef7cd5caa10b59c4a03e081ed2fad48028",
+        "failure": "Unexpected minSdk",
+        "cause": "Validator used the wrong minSdk badging key; parser corrected, app unchanged",
+        "receipt": "apk53-a980-package-validation/RESULT.json"
+      },
+      {
+        "status": "PASS",
+        "validatorSha256": "2a0aeaef48bb5482f0da304ee24e3a69a66d3fa2a86c81885436d28b7c8a535f",
+        "receipt": "apk53-a980-package-verified/RESULT.json"
+      }
+    ],
+    "earlierSelfcheckBoundary": "Existing validator-selfcheck.json records 25 checks for the earlier e4f8ed42 validator; it is not a selfcheck of the corrected validator."
+  },
+  "nativeImageEvidence": {
+    "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "selectedPngs": 6,
+    "hashesVerified": true,
+    "captures": [
+      {
+        "file": "Continuum-Code53-a980-Lichtfluss-280ms.png",
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "work-280ms",
+        "sha256": "95749cc20bca20df4b05017a51e644d73539d7b841b6b4390327f8261779ab94",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      {
+        "file": "Continuum-Code53-a980-Fensteraufbau-650ms.png",
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "work-650ms",
+        "sha256": "1ee358f71572320f750c4c9531fc49734b48876cfa777b69ed54dfa39eb1be56",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      {
+        "file": "Continuum-Code53-a980-Arbeitsfenster.png",
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "work-1180ms",
+        "sha256": "6024495eb3c028a13db6020a7c35a0864e8cbced9e6bf698fc8c7e425d93fee9",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      {
+        "file": "Continuum-Code53-a980-Ruhebild.png",
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "idle",
+        "sha256": "b111077257f093ed687b00f098803332637b886d4de160c55b3feb9d6a0d0f52",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      {
+        "file": "Continuum-Code53-a980-Rueckkehr.png",
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "returned",
+        "sha256": "f7e26eb7b3c32f4de037c22858c358cf5374c7ce566ee4555cca0fa32763cbc5",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      {
+        "file": "Continuum-Code53-a980-Cover-Arbeitsfenster.png",
+        "source_commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+        "phase": "work-1180ms",
+        "sha256": "11f6fe13fc6889d9f6f32527f452a7cfd647ec8efb1ceeb15fa30117713a6f3a",
+        "width": 412,
+        "height": 915,
+        "backend": "Robolectric API28 native Canvas",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      }
+    ],
+    "inputScope": "Scripted command/reasoning lifecycle, existing 2D fallback, no model inference",
+    "hardwareAGSL": "NOT_RUN",
+    "nativeFilament": "NOT_RUN",
+    "physicalFold7": "NOT_RUN",
+    "trackedImages": {
+      "directory": "images/native",
+      "count": 6,
+      "hashesVerified": true
+    }
+  },
+  "githubEvidence": {
+    "sourceBoundActionsQa": "PASS",
+    "runId": 42934541308,
+    "runUrl": "https://github.com/Ullmann27/device-ai/actions/runs/42934541308",
+    "workflowCommit": "edff51d7c124e0a036c5b4a2abb23625c102cf4b",
+    "runtimeSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "jobId": 130241223709,
+    "completedAt": "2026-11-11T01:47:52Z",
+    "conclusion": "success",
+    "fullAndroid": {
+      "status": "PASS",
+      "total": 4481,
+      "passed": 4464,
+      "skipped": 17,
+      "failed": 0,
+      "errors": 0,
+      "explicitPassedLinesInJobLog": 4464,
+      "skippedCasesMatchLocalExactly": true,
+      "skippedCases": [
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s7_pending_agentMessagesUrgentWakesInfoWaits",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s4b_pending_profileDiarySharedLayers",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s5b_pending_textFileSkillLibraryLoadedOnDemand",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s6_pending_routineReportsOnlyWhenSomethingIsNew",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+          "name": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+          "name": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt6b_lernen_hypotheseUndTagebuchEintrag",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+          "name": "actualNodeKotlinNodeTrainingParity",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+          "name": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+          "name": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+          "reason": "JUnit skipped; no reason in XML"
+        }
+      ],
+      "requiredCinemaClassesPassed": {
+        "LuxuryHoloButtonRendererTest": 7,
+        "PerimeterWingChoreographerTest": 2,
+        "SpatialWindowLightTest": 8,
+        "HollywoodFuiWorkActivityTest": 5,
+        "JarvisRenderQualityTest": 7,
+        "TtsHologramSignalTest": 11
+      }
+    },
+    "nodeFull": {
+      "status": "PASS",
+      "exactSourceCheck": "PASS",
+      "countsReadback": "Not printed in job log; report.json retained in CI evidence artifact. Local counts are documented separately."
+    },
+    "nodeCritical": {
+      "status": "PASS",
+      "exactSourceCheck": "PASS",
+      "subsetOfFullNode": true
+    },
+    "backend": {
+      "syntax": "PASS",
+      "total": 64,
+      "passed": 64,
+      "skipped": 0,
+      "failed": 0
+    },
+    "artifacts": [
+      {
+        "id": 13820816734,
+        "name": "Code53-a980-UNSIGNED-NOT-INSTALLABLE",
+        "bytes": 73299437,
+        "digest": "sha256:33fd4578bcf561bac68b3566fbd98d9ee0da9f99585517d3204cb846def870d7",
+        "expiresAt": "2026-11-25T01:47:26Z",
+        "url": "https://github.com/Ullmann27/device-ai/actions/runs/42934541308/artifacts/13820816734"
+      },
+      {
+        "id": 13820732031,
+        "name": "Code53-a980-QA-Evidence",
+        "bytes": 423301506,
+        "digest": "sha256:a110b3ef28370951c99de304cfdeb7b3d20c2fc84ffec6d8d381c93a68c26265",
+        "expiresAt": "2026-11-25T01:47:30Z",
+        "url": "https://github.com/Ullmann27/device-ai/actions/runs/42934541308/artifacts/13820732031"
+      }
+    ],
+    "apkSha256": "f138b92a99ea9aab67103490f0a249fd14adbc84c3c5346cd2169f36a40f1921",
+    "apkSha256MatchesLocal": true,
+    "readback": {
+      "method": "Completed GitHub job log, run/job metadata and artifact API",
+      "apkDigestObservedInIndependentRunnerLog": true,
+      "localReExtractionOfCiArchive": "NOT_RUN: workspace became unavailable after CI completed; connector returned the archive, local transfer could not start",
+      "nodeCountsNotInLogWereNotAssumed": true
+    },
+    "reviewChecks": {
+      "integrationKnownThreadsResolved": 1,
+      "evidenceKnownThreadsResolved": 4,
+      "reviewIsNotBuildAcceptance": true
+    }
+  },
+  "signingPreparation": {
+    "status": "OWNER_APPROVAL_AND_CODE53_BINDING_REQUIRED",
+    "candidateSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "protectedSigner": {
+      "branch": "chatgpt/code52-owner-signing-20261109",
+      "observedHead": "0199741efba0a90e20684520762c7d8ded0fcfc8",
+      "file": "scripts/continuum-code52-github-signer.sh",
+      "fileBlob": "8a15f1031069ccf616b4d69dc8279f592c9b52d1",
+      "boundVersionCode": 52,
+      "boundQaBranch": "code52/grok-release-candidate-0351-20261110",
+      "qaWorkflow": ".github/workflows/continuum-code52-cinematic-qa.yml",
+      "qaEvent": "push",
+      "requiredJob": "validate-source-and-build",
+      "environment": "continuum-original-signing",
+      "requiredReviewer": "Ullmann27",
+      "modified": false
+    },
+    "code53Binding": "PENDING",
+    "exactSourceOwnerApproval": "PENDING",
+    "originalSigning": "NOT_RUN",
+    "secretAccess": "NOT_PERFORMED",
+    "boundary": "Code52 signer guards remain intact; Code53 requires explicit source/QA/artifact binding plus owner approval. No bypass or automatic publication."
+  },
+  "artifactDelivery": {
+    "local_path": "/workspace/scratch/5900afa6af29/apk53-a980-delivery/Continuum-Code53-UNSIGNED-NOT-INSTALLABLE.apk",
+    "library_file_id": "libfile_3445c9403bc08191ac029770cfffac77",
+    "sha256": "f138b92a99ea9aab67103490f0a249fd14adbc84c3c5346cd2169f36a40f1921",
+    "bytes": 102588096
+  },
+  "evidenceScope": {
+    "runtimeSourceEdited": false,
+    "runtimeSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "completedLocalBuild": true,
+    "completedLocalTests": true,
+    "completedLocalRenders": true,
+    "evidenceValidatorAndWorkflowEdited": true,
+    "checkpoint": "edff51d7c124e0a036c5b4a2abb23625c102cf4b",
+    "description": "Completed local receipts are preserved. Documentation preparation is not a separate build/test run. The QA reproduction helper was subsequently repaired for hosts without a proxy; Android application source remains frozen.",
+    "completedGithubBuild": true,
+    "completedGithubTests": true
+  },
+  "artifactEvidenceBundle": {
+    "local_path": "/workspace/scratch/5900afa6af29/apk53-a980-delivery/Continuum-Code53-a980-Renderbilder-und-Pruefnachweise.zip",
+    "purpose": "create_library_file",
+    "status": "succeeded",
+    "file_id": "file_0000000078348212b5199a3c39282f6c",
+    "library_file_id": "libfile_ac7320301ff0819195c6fa053040f7b1",
+    "file_name": "Continuum-Code53-a980-Renderbilder-und-Pruefnachweise.zip",
+    "local_metadata_applied": true,
+    "path": "/Continuum-Code53-a980-Renderbilder-und-Pruefnachweise.zip",
+    "current_version_number": 0,
+    "sha256": "dc093525128b8f890657c41a02f19abd82eb08ae48b78b7925a52b0fb8401966",
+    "bytes": 410119199
+  },
+  "qaRunnerProxyFix": {
+    "cases": 8,
+    "passed": 8,
+    "preFixFailures": 6,
+    "receipt": "qa-proxy-selfcheck.json",
+    "scope": "Evidence reproduction script only"
+  },
+  "originalAvatarPoseReplay": {
+    "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "status": "PASS",
+    "poseSamplesUnchanged": 8,
+    "timelineSha256": "71162b59ec9c6faf4d165665a4b635a9b04dff828580e5268bfcccb9f22ab89c",
+    "sourceFiles": {
+      "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt": "ac91fa438d4fbd2cac99e0577d507064bb56938bbd38debcc4ceb0b2e1fadf03",
+      "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "9e7a109a6d2148627ef8a0f69f65e51d511a65b8bd8df55a35dd82fa5fc74644",
+      "tools/avatar-3d/reference-atlas/render-production-poses.py": "c5c653f0bec450ea5c63cf95cc8935fec1f36510b7d21ede2eac373142feff67"
+    },
+    "manifestSha256": "79516e94a2ceb82422ef5ccd64345519907a2fe6c0ec770b3668b9e95bf27f79",
+    "backend": "Blender 4.3.2 Cycles CPU",
+    "maxSkinErrorMetres": 7.811592775628497e-8,
+    "maxControlError": 1.862645149230957e-7,
+    "browserAttempt": "Chromium blocked by socket EPERM; no browser render produced. Used existing CPU renderer instead.",
+    "Fold7": "NOT_RUN",
+    "Filament": "NOT_RUN",
+    "reproduction": "original-avatar/replay-original-avatar.sh",
+    "trackedImages": {
+      "directory": "original-avatar",
+      "count": 8,
+      "manifest": "original-avatar/pose-replay-manifest.json",
+      "hashesVerified": true
+    }
+  },
+  "imageBooklet": {
+    "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "pages": 7,
+    "file": "Continuum-Code53-Originalbilder-und-Herkunft.pdf",
+    "sha256": "e9255cfb14e275867e1e1fab05fd949a0a9740ebac55f15951283440f8e5f16b",
+    "bytes": 8893876,
+    "imageHandling": "Unchanged original PNGs embedded with preserved aspect ratio",
+    "nativeFrames": [
+      {
+        "file": "Continuum-Code53-a980-Ruhebild.png",
+        "sha256": "b111077257f093ed687b00f098803332637b886d4de160c55b3feb9d6a0d0f52",
+        "phase": "idle"
+      },
+      {
+        "file": "Continuum-Code53-a980-Lichtfluss-280ms.png",
+        "sha256": "95749cc20bca20df4b05017a51e644d73539d7b841b6b4390327f8261779ab94",
+        "phase": "work-280ms"
+      },
+      {
+        "file": "Continuum-Code53-a980-Fensteraufbau-650ms.png",
+        "sha256": "1ee358f71572320f750c4c9531fc49734b48876cfa777b69ed54dfa39eb1be56",
+        "phase": "work-650ms"
+      },
+      {
+        "file": "Continuum-Code53-a980-Arbeitsfenster.png",
+        "sha256": "6024495eb3c028a13db6020a7c35a0864e8cbced9e6bf698fc8c7e425d93fee9",
+        "phase": "work-1180ms"
+      },
+      {
+        "file": "Continuum-Code53-a980-Rueckkehr.png",
+        "sha256": "f7e26eb7b3c32f4de037c22858c358cf5374c7ce566ee4555cca0fa32763cbc5",
+        "phase": "returned"
+      },
+      {
+        "file": "Continuum-Code53-a980-Cover-Arbeitsfenster.png",
+        "sha256": "11f6fe13fc6889d9f6f32527f452a7cfd647ec8efb1ceeb15fa30117713a6f3a",
+        "phase": "work-1180ms"
+      }
+    ],
+    "Fold7": "NOT_RUN",
+    "Filament": "NOT_RUN",
+    "pdfVisualReview": "PASS: all 7 pages inspected, final raster output identical",
+    "scope": "Original source PNGs embedded with aspect ratio preserved; no generated or retouched app screenshots",
+    "avatarFrames": [
+      {
+        "file": "Continuum-Code53-Originalavatar-Ruhe-CPU.png",
+        "manifestFile": "ruhe.png",
+        "sha256": "32e4db3ee127451e2177e884a5356a1fa3f8e2ebbfd8291c0c30ee953101f0e9"
+      },
+      {
+        "file": "Continuum-Code53-Originalavatar-Fensterblick-CPU.png",
+        "manifestFile": "fensterblick.png",
+        "sha256": "b393d69b40011ea102eab801f43f8e2b794fc754f1364b3f7b58b2d696a0d88e"
+      },
+      {
+        "file": "Continuum-Code53-Originalavatar-Sprechen-CPU.png",
+        "manifestFile": "sprechen-geskriptet.png",
+        "sha256": "ab565ecbeba6334e92198b390fa4d2ebefc5d830213df4387a498bf5d836d394"
+      }
+    ],
+    "avatarManifestSha256": "79516e94a2ceb82422ef5ccd64345519907a2fe6c0ec770b3668b9e95bf27f79",
+    "inputValidation": {
+      "status": "PASS",
+      "checks": [
+        {
+          "case": "three original avatar inputs",
+          "result": "PASS"
+        },
+        {
+          "case": "six original native inputs",
+          "result": "PASS"
+        },
+        {
+          "case": "substituted avatar PNG rejected",
+          "result": "PASS"
+        },
+        {
+          "case": "altered manifest rejected",
+          "result": "PASS"
+        },
+        {
+          "case": "substituted native PNG rejected",
+          "result": "PASS"
+        }
+      ],
+      "scriptSha256": "604201ff0f3dec1de1b4e5213ac66bf64d3708c820a9cd40742a5fce5272f05f"
+    },
+    "trackedInputImages": true
+  },
+  "workspaceAvailability": {
+    "status": "UNAVAILABLE_AFTER_COMPLETED_LOCAL_AND_REMOTE_QA",
+    "preserved": "All source changes and original selected PNGs are committed; owner APK, PDF and full image/proof bundles were durably saved before the interruption.",
+    "remainingLocalArchiveReadback": "NOT_RUN"
+  }
+}

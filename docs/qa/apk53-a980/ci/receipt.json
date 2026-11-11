@@ -1,0 +1,205 @@
+{
+  "schema": "continuum-code53-frozen-source-ci-v1",
+  "status": "PASS",
+  "source": {
+    "commit": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "tree": "a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e",
+    "integrationPr": 739
+  },
+  "workflow": {
+    "commit": "edff51d7c124e0a036c5b4a2abb23625c102cf4b",
+    "path": ".github/workflows/continuum-code53-frozen-qa.yml",
+    "event": "push",
+    "branch": "qa/apk53-a980-evidence-20261111",
+    "runId": 42934541308,
+    "attempt": 1,
+    "jobId": 130241223709,
+    "jobName": "validate-frozen-source",
+    "startedAt": "2026-11-11T00:50:56Z",
+    "completedAt": "2026-11-11T01:47:52Z",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/Ullmann27/device-ai/actions/runs/42934541308"
+  },
+  "checks": {
+    "fullAndroid": {
+      "status": "PASS",
+      "total": 4481,
+      "passed": 4464,
+      "skipped": 17,
+      "failed": 0,
+      "errors": 0,
+      "explicitPassedLinesInJobLog": 4464,
+      "skippedCasesMatchLocalExactly": true,
+      "skippedCases": [
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s7_pending_agentMessagesUrgentWakesInfoWaits",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s4b_pending_profileDiarySharedLayers",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s5b_pending_textFileSkillLibraryLoadedOnDemand",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s6_pending_routineReportsOnlyWhenSomethingIsNew",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+          "name": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+          "name": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+          "name": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt6b_lernen_hypotheseUndTagebuchEintrag",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+          "name": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+          "name": "actualNodeKotlinNodeTrainingParity",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+          "name": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+          "reason": "JUnit skipped; no reason in XML"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+          "name": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+          "reason": "JUnit skipped; no reason in XML"
+        }
+      ],
+      "requiredCinemaClassesPassed": {
+        "LuxuryHoloButtonRendererTest": 7,
+        "PerimeterWingChoreographerTest": 2,
+        "SpatialWindowLightTest": 8,
+        "HollywoodFuiWorkActivityTest": 5,
+        "JarvisRenderQualityTest": 7,
+        "TtsHologramSignalTest": 11
+      }
+    },
+    "nodeFull": {
+      "status": "PASS",
+      "exactSourceCheck": "PASS",
+      "countsReadback": "Not printed in job log; report.json retained in CI evidence artifact. Local counts are documented separately."
+    },
+    "nodeCritical": {
+      "status": "PASS",
+      "exactSourceCheck": "PASS",
+      "subsetOfFullNode": true
+    },
+    "backend": {
+      "syntax": "PASS",
+      "total": 64,
+      "passed": 64,
+      "skipped": 0,
+      "failed": 0
+    },
+    "targetedKotlin": {
+      "passed": 12,
+      "failed": 0
+    },
+    "configuredLint": {
+      "status": "PASS",
+      "scope": "NewApi only; not full lint coverage"
+    },
+    "java2dRendering": {
+      "status": "PASS",
+      "scope": "Host software rendering, not GPU or Fold7"
+    },
+    "releaseAssembly": {
+      "status": "PASS",
+      "durationFromLog": "2m 47s"
+    },
+    "pinnedPackageValidator": {
+      "status": "PASS",
+      "validatorSha256": "2a0aeaef48bb5482f0da304ee24e3a69a66d3fa2a86c81885436d28b7c8a535f",
+      "artifactStatus": "UNSIGNED_NOT_INSTALLABLE",
+      "apkSha256": "f138b92a99ea9aab67103490f0a249fd14adbc84c3c5346cd2169f36a40f1921",
+      "sha256MatchesLocalPackage": true
+    }
+  },
+  "artifacts": [
+    {
+      "id": 13820816734,
+      "name": "Code53-a980-UNSIGNED-NOT-INSTALLABLE",
+      "bytes": 73299437,
+      "digest": "sha256:33fd4578bcf561bac68b3566fbd98d9ee0da9f99585517d3204cb846def870d7",
+      "expiresAt": "2026-11-25T01:47:26Z",
+      "url": "https://github.com/Ullmann27/device-ai/actions/runs/42934541308/artifacts/13820816734"
+    },
+    {
+      "id": 13820732031,
+      "name": "Code53-a980-QA-Evidence",
+      "bytes": 423301506,
+      "digest": "sha256:a110b3ef28370951c99de304cfdeb7b3d20c2fc84ffec6d8d381c93a68c26265",
+      "expiresAt": "2026-11-25T01:47:30Z",
+      "url": "https://github.com/Ullmann27/device-ai/actions/runs/42934541308/artifacts/13820732031"
+    }
+  ],
+  "readback": {
+    "method": "Completed GitHub job log, run/job metadata and artifact API",
+    "apkDigestObservedInIndependentRunnerLog": true,
+    "localReExtractionOfCiArchive": "NOT_RUN: workspace became unavailable after CI completed; connector returned the archive, local transfer could not start",
+    "nodeCountsNotInLogWereNotAssumed": true
+  },
+  "boundaries": {
+    "hardwareFold7": "NOT_RUN",
+    "nativeFilamentAgslGpu": "NOT_RUN",
+    "liveAudioAndModel": "NOT_RUN",
+    "deviceThermalFrameTiming": "NOT_RUN",
+    "originalSigning": "NOT_RUN",
+    "publication": "NOT_RUN",
+    "installation": "NOT_RUN",
+    "code53ProtectedSignerBinding": "PENDING_OWNER_REVIEW"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "pages": 7,
+  "file": "Continuum-Code53-Originalbilder-und-Herkunft.pdf",
+  "sha256": "e9255cfb14e275867e1e1fab05fd949a0a9740ebac55f15951283440f8e5f16b",
+  "bytes": 8893876,
+  "imageHandling": "Unchanged original PNGs embedded with preserved aspect ratio",
+  "nativeFrames": [
+    {
+      "file": "Continuum-Code53-a980-Ruhebild.png",
+      "sha256": "b111077257f093ed687b00f098803332637b886d4de160c55b3feb9d6a0d0f52",
+      "phase": "idle"
+    },
+    {
+      "file": "Continuum-Code53-a980-Lichtfluss-280ms.png",
+      "sha256": "95749cc20bca20df4b05017a51e644d73539d7b841b6b4390327f8261779ab94",
+      "phase": "work-280ms"
+    },
+    {
+      "file": "Continuum-Code53-a980-Fensteraufbau-650ms.png",
+      "sha256": "1ee358f71572320f750c4c9531fc49734b48876cfa777b69ed54dfa39eb1be56",
+      "phase": "work-650ms"
+    },
+    {
+      "file": "Continuum-Code53-a980-Arbeitsfenster.png",
+      "sha256": "6024495eb3c028a13db6020a7c35a0864e8cbced9e6bf698fc8c7e425d93fee9",
+      "phase": "work-1180ms"
+    },
+    {
+      "file": "Continuum-Code53-a980-Rueckkehr.png",
+      "sha256": "f7e26eb7b3c32f4de037c22858c358cf5374c7ce566ee4555cca0fa32763cbc5",
+      "phase": "returned"
+    },
+    {
+      "file": "Continuum-Code53-a980-Cover-Arbeitsfenster.png",
+      "sha256": "11f6fe13fc6889d9f6f32527f452a7cfd647ec8efb1ceeb15fa30117713a6f3a",
+      "phase": "work-1180ms"
+    }
+  ],
+  "avatarFrames": [
+    {
+      "file": "Continuum-Code53-Originalavatar-Ruhe-CPU.png",
+      "manifestFile": "ruhe.png",
+      "sha256": "32e4db3ee127451e2177e884a5356a1fa3f8e2ebbfd8291c0c30ee953101f0e9"
+    },
+    {
+      "file": "Continuum-Code53-Originalavatar-Fensterblick-CPU.png",
+      "manifestFile": "fensterblick.png",
+      "sha256": "b393d69b40011ea102eab801f43f8e2b794fc754f1364b3f7b58b2d696a0d88e"
+    },
+    {
+      "file": "Continuum-Code53-Originalavatar-Sprechen-CPU.png",
+      "manifestFile": "sprechen-geskriptet.png",
+      "sha256": "ab565ecbeba6334e92198b390fa4d2ebefc5d830213df4387a498bf5d836d394"
+    }
+  ],
+  "avatarManifestSha256": "79516e94a2ceb82422ef5ccd64345519907a2fe6c0ec770b3668b9e95bf27f79",
+  "Fold7": "NOT_RUN",
+  "Filament": "NOT_RUN"
+}

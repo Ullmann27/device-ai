@@ -1,0 +1,30 @@
+{
+  "source": "a980a19ed3ab44323009ae27eb299d322ff11679",
+  "protectedBaseline": "17491f4d8103f0e55836369333fab07e80e6e9c2",
+  "asset": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+  "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "sameAsCode52": true,
+  "morphNames": [
+    "AA",
+    "BlinkLeft",
+    "BlinkRight",
+    "BrowDown",
+    "BrowUp",
+    "CH",
+    "DD",
+    "E",
+    "FF",
+    "I",
+    "JawOpen",
+    "KK",
+    "NN",
+    "O",
+    "PP",
+    "RR",
+    "SIL",
+    "SS",
+    "Smile",
+    "TH",
+    "U"
+  ]
+}

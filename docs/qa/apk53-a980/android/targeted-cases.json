@@ -1,0 +1,57 @@
+[
+  {
+    "name": "cameraReturnsAfterStopAndDoesNotReplayAfterLifecycleBoundaries",
+    "classname": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+    "time": "88.753"
+  },
+  {
+    "name": "speakingInsideAnOpenWindowKeepsTheCameraAndStopReturnsItAfterSpeechEnds",
+    "classname": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+    "time": "22.893"
+  },
+  {
+    "name": "cancelledMotionCannotReplayAfterResume",
+    "classname": "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+    "time": "0.001"
+  },
+  {
+    "name": "reversalStartsAtTheCurrentProjection",
+    "classname": "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+    "time": "0.0"
+  },
+  {
+    "name": "systemDurationScaleIsHonoured",
+    "classname": "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+    "time": "0.0"
+  },
+  {
+    "name": "delayedWindowClosureStartsItsOwnFullReturnDuration",
+    "classname": "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+    "time": "0.0"
+  },
+  {
+    "name": "opensAndClosesWithoutOvershoot",
+    "classname": "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+    "time": "0.0"
+  },
+  {
+    "name": "repeatedRequestsDoNotRestartTheFlight",
+    "classname": "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+    "time": "0.0"
+  },
+  {
+    "name": "resetImmediatelyRestoresTheRestProjection",
+    "classname": "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+    "time": "0.0"
+  },
+  {
+    "name": "disabledAndInvalidDurationScalesCancel",
+    "classname": "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+    "time": "0.0"
+  },
+  {
+    "name": "backwardsDuplicateAndDelayedFramesStayBounded",
+    "classname": "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+    "time": "0.0"
+  }
+]
