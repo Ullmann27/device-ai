@@ -1,0 +1,8 @@
+MODEL	sha256=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd	tokenizerSha256=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f	parameters=132160	mode=inspect	sourceScope=RESEARCH_SHADOW
+INPUT	file=baseline.lm1	sha256=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd
+INPUT	file=tokenizer.lmbp	sha256=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f
+INPUT	file=train.tsv	sha256=f943537483232c4cae902fc5cbf906db03c4ff11944a4b5f3a8633e242d281a4
+INPUT	file=supervised_replay.tsv	sha256=366af4665184489973f8140692435334659dd5b2f93062e3deca0401c38d29c7
+INPUT	file=replay.txt	sha256=b5fdd3c9528fe5a0f7a1dbc24db9e7169f0a00f9b31a211aff4ca8c6c97553c1
+CONFIG	mode=inspect	steps=128	seed=20261111	rate=5.0E-5	answerBatch=8	supervisedReplayWithinAnswerBatch=2	replayBatch=2	replayWeight=0.25	teacherWeight=0	answerTargetsPerBatch=16	weightDecay=0.01	clip=1	warmup=4
+INSPECT	train=128	supervisedReplay=32	replayTexts=16	maximumPrefixTokens=68	updates=0

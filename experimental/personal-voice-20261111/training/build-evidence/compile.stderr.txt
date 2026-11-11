@@ -1,0 +1,6 @@
+/workspace/scratch/aba242c65e85/voice-native-build/LmPersonalVoicePilot.kt:242:83: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+            emit("TEACHER", "phase" to "after", "parameterSha256" to teacherBefore!!, "cacheSha256" to cacheBefore!!, "unchanged" to true)
+                                                                                  ^^
+/workspace/scratch/aba242c65e85/voice-native-build/LmPersonalVoicePilot.kt:242:115: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+            emit("TEACHER", "phase" to "after", "parameterSha256" to teacherBefore!!, "cacheSha256" to cacheBefore!!, "unchanged" to true)
+                                                                                                                  ^^
