@@ -90,7 +90,7 @@ class ContinuumOfflineVoiceRecoveryUiTest {
 
     @Test fun selectingAWorkingVoiceWhileMutedDoesNotReportFailure() =
         withEngine(null, emptySet()) { activity, engine ->
-            call(activity, "showVoicePicker")
+            call(activity, "showOfflineVoicePicker")
             val dialog = ShadowAlertDialog.getLatestAlertDialog()
             dialog.listView.performItemClick(null, 1, 1L)
             assertEquals("preferred", engine.voice?.name)

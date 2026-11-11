@@ -29,19 +29,45 @@ orb refit and work cancellation; Android execution remains pending here.
 The existing Java2D preview compiled successfully; it does not exercise this
 Android overlay connection and is not claimed as its visual proof.
 
-## Voice request
+## Maya general response voice — source integrated, Android QA pending
 
-The connected ElevenLabs workspace was inspected without speech generation.
-The current Android path is AgentActivity -> ApprovedSpeechChunkQueue ->
-Android TextToSpeech, with utterance-bound avatar callbacks. It contains no
-ElevenLabs runtime adapter or configured ElevenLabs voice ID. The owner subsequently clarified: create a new female voice, natural and human,
-in standard German with no dialect. Do not use the owner's cloned voice.
-The available design connector requires owner-supplied preview text and creates
-three previews; the owner requested no preview. No synthesis was submitted.
-The ChatGPT connector is not an Android runtime credential. No personal voice
-identifier, account data, key or sample was added to the public repository.
-Voice creation under that preview constraint and a secure runtime credential path remain unresolved;
-existing offline speech and internet restrictions are preserved.
+The later owner decision selects the existing public voice Maya – Warm Californian,
+voice ID `ii0s2u4R3UFnxKL6DOrz`, for all normal Continuum answers. It supersedes
+new-voice design. No owner clone, preview synthesis or sample audio is used.
+
+AgentActivity -> existing ApprovedSpeechChunkQueue -> optional MayaSpeech provider
+-> ElevenLabs PCM -> the existing utterance listener, TtsHologramSignal and avatar.
+The local model, memory and sole reply queue remain unchanged. Only approved final
+reply chunks leave the device after explicit opt-in and key entry in the app.
+
+Long press TON -> Maya -> enter key -> Maya aktivieren. This stores a separate
+Android Keystore AES-GCM encrypted token, with screenshot/autofill/state saving
+blocked for the field. No generation on setup. Key deletion and offline selection
+are reachable in the same picker. Global internet OFF/ASK never become ALWAYS_ON;
+Maya only uses ALWAYS_ON with the turn's current central consent revision.
+Other modes retain the offline voice and display a fallback notice. STOP, new
+reply, pause, provider change, internet mode change and destruction cancel the
+provider; delayed callbacks cannot resume an obsolete utterance. Network/audio
+failure leaves the text intact, reports failure and does not retry billable calls.
+
+The official API contract used is
+https://elevenlabs.io/docs/api-reference/text-to-speech/stream
+with multilingual_v2, the selected voice and PCM 24kHz mono. Each existing bounded
+reply chunk is downloaded before playback; this is sequential chunk playback,
+not low-latency incremental PCM streaming. PCM amplitude feeds the existing avatar;
+no new phoneme alignment or voice clone is claimed. Maya is originally English:
+standard-German pronunciation/naturalness remains a real listening acceptance item.
+
+11 isolated JVM tests PASS: provider lifecycle/permission/error races and existing
+long-answer chunking. Provider + Android audio + secure-token classes compile
+against Android API36. Full AgentActivity compilation and Robolectric settings
+regressions are pending hosted QA, not covered by that partial compile.
+Fold7 playback, key persistence, live ElevenLabs response and avatar lip-sync:
+NOT_RUN. No account key, credits or paid generation were used for development.
+
+Compatibility: existing voice/EXP-05/12 contracts remain; no experimental model or
+learning switch changes. Rollback: choose Android Offline in the picker or revert
+this voice patch. Existing offline voice preferences and original assets remain.
 
 ## Existing glass depth made drawable — Android QA pending
 

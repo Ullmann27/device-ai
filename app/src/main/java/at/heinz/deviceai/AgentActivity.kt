@@ -340,6 +340,17 @@ class AgentActivity : Activity() {
     private var voiceReady = false
     private var voiceInitialized = false
     private var voiceEnabled = false
+    private var mayaSpeech: MayaSpeech? = null
+    private var speechUsesMaya = false
+    private var speechInternetRevision = -1L
+    private var voiceProgressListener: android.speech.tts.UtteranceProgressListener? = null
+    private fun mayaSelected() = getSharedPreferences("continuum-voice", MODE_PRIVATE)
+        .getBoolean("maya_enabled", false)
+    private fun mayaAvailable() = mayaSelected() &&
+        internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
+        SecureTokenStore.loadElevenLabsToken(this) != null
+    private fun replyVoiceReady() = voiceReady || mayaAvailable()
+
     private var voiceButton: Button? = null
     private var cameraButton: Button? = null
     private var cameraSessionStopButton: Button? = null
@@ -618,6 +629,7 @@ class AgentActivity : Activity() {
 
         bootstrapMemory = BootstrapMemoryStore(this)
         voiceEnabled = bootstrapMemory.voiceEnabled
+        installVoiceProgressListener()
         restoreInternetMode()
         val regularVoiceGreeting = savedInstanceState == null &&
             getSharedPreferences("continuum-readiness", MODE_PRIVATE).getBoolean("introduced", false)
@@ -919,6 +931,8 @@ class AgentActivity : Activity() {
         shizukuConnectionDialog?.dismiss()
         shizukuConnectionDialog = null
         voiceEngine?.stop()
+        mayaSpeech?.close()
+        mayaSpeech = null
         voiceEngine?.shutdown()
         voiceEngine = null
         if (::bridge.isInitialized) bridge.stop()
@@ -5134,6 +5148,78 @@ class AgentActivity : Activity() {
      * pick is remembered by engine voice name. Android exposes no gender, so the owner hears and decides.
      */
     private fun showVoicePicker() {
+        AlertDialog.Builder(this).setTitle("Continuum · Stimme")
+            .setItems(arrayOf(
+                (if (mayaSelected()) "● " else "") + MayaSpeech.VOICE_NAME + " · ElevenLabs",
+                "Android · Offline-Stimme"
+            )) { _, choice ->
+                if (choice == 0) showMayaVoiceSettings() else {
+                    stopVoiceAnimation()
+                    voiceEngine?.stop()
+                    getSharedPreferences("continuum-voice", MODE_PRIVATE).edit()
+                        .putBoolean("maya_enabled", false).commit()
+                    showOfflineVoicePicker()
+                }
+            }.setNegativeButton("Schließen", null).show()
+    }
+
+    private fun showMayaVoiceSettings() {
+        val field = EditText(this).apply {
+            hint = if (SecureTokenStore.loadElevenLabsToken(this@AgentActivity) != null)
+                "Schlüssel gespeichert · leer lassen zum Behalten" else "ElevenLabs API-Schlüssel"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            importantForAutofill = android.view.View.IMPORTANT_FOR_AUTOFILL_NO
+            isSaveEnabled = false
+            setSingleLine(true)
+        }
+        val dialog = AlertDialog.Builder(this).setTitle(MayaSpeech.VOICE_NAME)
+            .setMessage("Maya spricht alle normalen Antworten, nicht nur einen Beispieltext. " +
+                "Die Antworttexte werden zur Spracherzeugung an ElevenLabs gesendet und verbrauchen Credits. " +
+                "Der Schlüssel bleibt mit Android Keystore verschlüsselt auf diesem Gerät. " +
+                "Maya verwendet deinen Internetmodus: nur bei ‚Immer an‘. Bei ‚Aus‘ oder ‚Nachfragen‘ " +
+                "bleibt die Android-Offline-Stimme aktiv. Der Internetmodus wird hier nicht verändert. " +
+                "Maya ist eine englische Originalstimme; ihre deutsche Aussprache ist noch am Gerät zu prüfen.")
+            .setView(field).setNegativeButton("Abbrechen", null)
+            .setNeutralButton("Deaktivieren / Schlüssel löschen") { _, _ ->
+                stopVoiceAnimation()
+                getSharedPreferences("continuum-voice", MODE_PRIVATE).edit().putBoolean("maya_enabled", false).commit()
+                runCatching { SecureTokenStore.clearElevenLabsToken(this) }.onFailure {
+                    Toast.makeText(this, "Schlüssel konnte nicht gelöscht werden.", Toast.LENGTH_LONG).show()
+                }
+            }.setPositiveButton("Maya aktivieren", null).create()
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val entered = field.text.toString().trim()
+                val key = entered.ifBlank { SecureTokenStore.loadElevenLabsToken(this).orEmpty() }
+                if (!MayaSpeech.validKey(key)) {
+                    field.error = "Vollständigen ElevenLabs-Schlüssel eingeben."
+                    return@setOnClickListener
+                }
+                runCatching {
+                    if (entered.isNotBlank()) SecureTokenStore.saveElevenLabsToken(this, key)
+                    check(getSharedPreferences("continuum-voice", MODE_PRIVATE).edit()
+                        .putBoolean("maya_enabled", true).commit())
+                }.fold(onSuccess = {
+                    voiceEngine?.stop()
+                    stopVoiceAnimation()
+                    voiceEnabled = true
+                    bootstrapMemory.voiceEnabled = true
+                    voiceButton?.text = "TON AN"
+                    field.text.clear()
+                    dialog.dismiss()
+                    Toast.makeText(this, if (mayaAvailable()) "Maya ist für die nächsten Antworten ausgewählt."
+                        else "Maya gespeichert. Für Maya muss Internet auf ‚Immer an‘ stehen.", Toast.LENGTH_LONG).show()
+                }, onFailure = {
+                    field.error = "Schlüssel konnte nicht sicher gespeichert werden."
+                })
+            }
+        }
+        dialog.setOnDismissListener { field.text.clear() }
+        dialog.show()
+        dialog.window?.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
+    }
+
+    private fun showOfflineVoicePicker() {
         val engine = voiceEngine
         if (engine == null || !voiceInitialized) {
             Toast.makeText(this, "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show(); return
@@ -5641,7 +5727,7 @@ class AgentActivity : Activity() {
             bootstrapMemory.voiceEnabled = voiceEnabled
             voiceButton?.text = if (voiceEnabled) "TON AN" else "TON AUS"
             if (voiceEnabled) {
-                if (voiceReady) speakBootstrap("Hallo! Meine Stimme ist eingeschaltet.")
+                if (replyVoiceReady()) speakBootstrap("Hallo! Meine Stimme ist eingeschaltet.")
                 else Toast.makeText(this@AgentActivity,
                     "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show()
             } else { voiceEngine?.stop(); stopVoiceAnimation() }
@@ -9033,6 +9119,9 @@ class AgentActivity : Activity() {
     private fun stopVoiceAnimation() = stopVoiceAnimation(true)
 
     private fun stopVoiceAnimation(interrupted: Boolean) {
+        mayaSpeech?.stop()
+        speechUsesMaya = false
+        speechInternetRevision = -1L
         // Any end of speech (STOP, error, new reply, pause) discards the unspoken rest of the reply.
         speechTurnId?.let { speechChunks.stop(it) }
         speechTurnId = null
@@ -9048,7 +9137,7 @@ class AgentActivity : Activity() {
     }
 
     private fun installVoiceProgressListener() {
-        voiceEngine?.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
+        voiceProgressListener = object : android.speech.tts.UtteranceProgressListener() {
             override fun onStart(utteranceId: String?) {
                 runOnUiThread {
                     if(utteranceId == null || utteranceId != voiceUtteranceId || !foregroundLearningActive) return@runOnUiThread
@@ -9101,14 +9190,21 @@ class AgentActivity : Activity() {
                     if (id != null) onConversationSpeechFinished(id, interrupted)
                 }
             }
-        })
+        }
+        voiceEngine?.setOnUtteranceProgressListener(voiceProgressListener)
     }
 
     private fun speakBootstrap(message: String) {
-        if (!voiceEnabled || !voiceReady || !foregroundLearningActive ||
-            !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired,
-                microphoneActive = voiceListening)) return
+        if (!voiceEnabled || !replyVoiceReady() || !foregroundLearningActive || voiceListening) return
+        val useMaya = mayaAvailable()
+        if (!useMaya && !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(
+                voiceEngine?.voice?.isNetworkConnectionRequired)) return
+        voiceEngine?.stop()
         stopVoiceAnimation()
+        speechUsesMaya = useMaya
+        speechInternetRevision = internetConsent.revision()
+        if (mayaSelected() && !useMaya) Toast.makeText(this,
+            "Maya nicht verfügbar: Android-Offline-Stimme wird verwendet.", Toast.LENGTH_SHORT).show()
         // Read substantially beyond the former 15-chunk ceiling while keeping a hard bounded queue.
         val chunks = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(
             message, maxChunks = SPEECH_CONTENT_MAX_CHUNKS)
@@ -9137,7 +9233,35 @@ class AgentActivity : Activity() {
         updateUiFeedbackPolicy() // Pending synthesis already owns the voice channel.
         voiceSignal.activate(id)
         voiceAvatarText = chunk.approvedText
-        if (voiceEngine?.speak(chunk.approvedText, queueMode, null, id) != TextToSpeech.SUCCESS) return false
+        if (speechUsesMaya) {
+            val key = SecureTokenStore.loadElevenLabsToken(this) ?: return false
+            val revision = speechInternetRevision
+            val engine = mayaSpeech ?: MayaSpeech(::ElevenLabsPcmRequest, { MayaPcmPlayer(this) },
+                { action -> mainHandler.post { action() } }, object : MayaSpeech.Listener {
+                    override fun started(id: String, pcm: ByteArray) {
+                        voiceProgressListener?.onBeginSynthesis(id, MayaSpeech.SAMPLE_RATE,
+                            android.media.AudioFormat.ENCODING_PCM_16BIT, 1)
+                        var offset = 0
+                        while (offset < pcm.size) {
+                            val end = (offset + 1920).coerceAtMost(pcm.size)
+                            voiceProgressListener?.onAudioAvailable(id, pcm.copyOfRange(offset, end))
+                            offset = end
+                        }
+                        voiceProgressListener?.onStart(id)
+                    }
+                    override fun finished(id: String) { voiceProgressListener?.onDone(id) }
+                    override fun failed(id: String) {
+                        Toast.makeText(this@AgentActivity,
+                            "Maya konnte nicht sprechen. Die Antwort bleibt im Chat. Prüfe Schlüssel, Credits und Internet.",
+                            Toast.LENGTH_LONG).show()
+                        voiceProgressListener?.onError(id, TextToSpeech.ERROR_NETWORK)
+                    }
+                }).also { mayaSpeech = it }
+            if (!engine.speak(id, chunk.approvedText, key) {
+                internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
+                    internetConsent.revision() == revision
+            }) return false
+        } else if (voiceEngine?.speak(chunk.approvedText, queueMode, null, id) != TextToSpeech.SUCCESS) return false
         // Rebinding keeps hands-free listening closed until the last piece of this reply has finished.
         continuousConversation.assistantSpeechQueued(id)
         return true
@@ -9354,6 +9478,7 @@ class AgentActivity : Activity() {
     }
 
     private fun setInternetMode(value: at.heinz.deviceai.cognitive.InternetAccessMode) {
+        if (speechUsesMaya) stopVoiceAnimation()
         webToolGate.cancel()
         approvedModelWebSession.getAndSet(null)?.cancel()
         activeWebResearchSession?.cancel()
