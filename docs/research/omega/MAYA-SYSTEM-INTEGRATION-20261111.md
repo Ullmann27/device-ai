@@ -4,6 +4,59 @@ Canonical target: `integration/continuum-final-visibility-20261111`, PR #747.
 Starting remote source: `fd1de22cf3f6ed159601c9b944cc25c86f0fc221`.
 This is the continuation of the existing Cinema/Maya candidate, not a new runtime.
 
+## Active frozen QA — continuation checkpoint, 2026-11-11 07:45 UTC
+
+- App source: `fd86f11a4a822ee4805f4c462791baeb1d741db4`.
+- App tree: `21e5603d2a3f20c840bc3c2ba7836be408dbb5ad`.
+- Workflow: `23146e7f817b825e48a2b086f73da5cf28e0a274`.
+- Active run: https://github.com/Ullmann27/device-ai/actions/runs/42977884118
+  / job `130381258271`.
+- Source/ICU/critical/full-Node, backend/software rendering and SDK steps PASS.
+  Full Android/Robolectric/configured NewApi lint is IN_PROGRESS. APK, package
+  validation and complete-run success remain PENDING, not passed.
+
+Later documentation commits do not change these frozen runtime/workflow identities.
+Read the actual run before starting any replacement. A previous successful full
+Android step took 48m44s (run `42934541308`); the more recent failing baseline
+completed 4,619 cases in 43m20s (run `42966389910`). These are comparison timings,
+not a completion promise. Running job logs returned BlobNotFound before completion.
+
+Run `42977222214` was superseded and cancelled after its completed Node gates.
+Its exact-source reports record 136 critical PASS, 2458 full-Node PASS /37 SKIP
+/0 FAIL, with sourceUnchanged=true. They do not supply an Android result.
+The replacement corrects a historical harness binding: the same SHA-256-checked
+APK validator is imported with isolated Python and receives only the fixed
+current source/tree constants. Original avatar, package, ABI, unsigned, all asset
+hashes and clean-source checks remain active. Wrong SHA, wrong tree and dirty
+source still reject; the original fixed a980 comparison was reproduced as rejecting.
+
+## Prepared original-signing continuation
+
+Draft https://github.com/Ullmann27/device-ai/pull/752 preserves the actual signer
+base `0199741efba0a90e20684520762c7d8ded0fcfc8` on
+`chatgpt/code52-owner-signing-20261109`. Initial remote checkpoint:
+`cf5658b056d21ba0c0ac5b0ec6d60420ef6f2f01`, tree
+`e9f376edba48b72b49c3f3c7d7c6d9c6f6dff51b`.
+
+It reuses the registered Code52 workflow and shared signer/draft body, with an
+exactly separate Code53 evidence profile. Independent review found no remaining
+concrete defect in this WIP production delta. Current published Latest was checked
+as `continuum-local-code51-6c23d295e2fca2d4e5950a866547733ec5ff22b0`, so its strict
+existing baseline gate remains valid. The protected signer branch is unchanged.
+
+Code53 remains NOT_READY_FOR_SIGNING: its production binding file intentionally
+does not exist until the actual complete run and artifacts are verified. Four
+legacy contracts and twelve new data/archive/workflow cases pass; the thirteenth
+production-binding case is still red. This is not a total passing signer result.
+
+Next: finish the active Android/APK run; verify both artifact API IDs/digests and
+downloaded ZIP bytes, actual APK SHA/size, exact validator-report path, source/tree,
+workflow receipt, JUnit totals and all 29 required classes. Then fill the real
+Code53 binding, run all signer contracts and its secrets-free check on the one
+prep branch. Exact-source owner approval and the existing protected environment
+remain the final signing gates. No main merge, signer activation or installation
+has been performed. Keep physical Fold7/audio/GPU/thermal acceptance NOT_RUN.
+
 ## Build failures and repairs
 
 Run https://github.com/Ullmann27/device-ai/actions/runs/42972659558
