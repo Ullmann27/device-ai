@@ -1,0 +1,611 @@
+{
+  "schema": "lm1-semantic-training-start-v1",
+  "status": "WIP_NOT_RUN",
+  "startedUtc": "2026-11-11T07:05:16.578367+00:00",
+  "baseCommit": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+  "branch": "research/continuum-lm1-semantic-training-20261111",
+  "parameterCount": 132160,
+  "candidateLimit": 2,
+  "updatesPerCandidateMaximum": 128,
+  "trainingUpdatesExecuted": 0,
+  "requiresRootGate": true,
+  "holdoutAccess": "FORBIDDEN_UNTIL_WEIGHTS_FREEZE",
+  "historicalFileIdentities": {
+    "experimental/weight-space-20261110/APK-ISOLATION.md": {
+      "sha256": "f64fa59a467e0fe0283857427b7f85ee4af12a5ac70435e8d20ecdb7abc44bd7",
+      "bytes": 2973
+    },
+    "experimental/weight-space-20261110/RESULT-20261110.md": {
+      "sha256": "0ab3f3c5cc24a3782d36d506e6f44cfd0fbc243f9f1706bad8504e1da43f47ec",
+      "bytes": 5577
+    },
+    "experimental/weight-space-20261110/artifacts/README.md": {
+      "sha256": "463bb6cfb33c35698396b4bd32dac1614039b32b98cfdf77e7c6a41b4b9bc41d",
+      "bytes": 1904
+    },
+    "experimental/weight-space-20261110/artifacts/contrast-answer-128.lm1": {
+      "sha256": "3820d1596dee43a675305645feece6d46b2711f8a03db0be8171055ee45128ed",
+      "bytes": 529532
+    },
+    "experimental/weight-space-20261110/artifacts/contrast-replay-128.lm1": {
+      "sha256": "4b4c15535b8b13c9660f3a26b8393a84b595f6ece7f2d47ddb5844f81ff0d39e",
+      "bytes": 529532
+    },
+    "experimental/weight-space-20261110/artifacts/distill-128.lm1": {
+      "sha256": "e6b8c2853319d7265bd50e79a3e8ece4b95ff25a3ac8822d1b1b4f0127102069",
+      "bytes": 529624
+    },
+    "experimental/weight-space-20261110/artifacts/resume-checkpoints.manifest.json": {
+      "sha256": "88fda18640982a501090cb0e6dbf628f6611bda357394568a48cd05d390bc1dc",
+      "bytes": 2875
+    },
+    "experimental/weight-space-20261110/artifacts/resume-checkpoints.zip": {
+      "sha256": "33ee25d9f5b8135c2279e27076499c46addf9a0d1c639ea6a9887e632875320f",
+      "bytes": 4535845
+    },
+    "experimental/weight-space-20261110/data/HISTORICAL-DATA-AUDIT.md": {
+      "sha256": "c3ce43d11353cdf8a5b8f0ba6f53c0170ada29fd968868b34e2499387a4fcef7",
+      "bytes": 1361
+    },
+    "experimental/weight-space-20261110/data/README.md": {
+      "sha256": "20637f8036a19d05569861f257d25ac51446593fee7ba41373f4df43714d6db7",
+      "bytes": 2253
+    },
+    "experimental/weight-space-20261110/data/audit_data_package.py": {
+      "sha256": "06d28e26b9d7d1ddbd6a7da264c6c28cba47ccdb4a24f957f40a882a58e5cf32",
+      "bytes": 6166
+    },
+    "experimental/weight-space-20261110/data/contrast-pair-audit-v1/README.md": {
+      "sha256": "f0e3189fb9b042cd07e122088138de7758b04832f0329d37363c2b3a80eae9f5",
+      "bytes": 2536
+    },
+    "experimental/weight-space-20261110/data/contrast-pair-audit-v1/REPLAY-COMPARISON.md": {
+      "sha256": "3e5ae748441c7cd44e299fb2242cb00971106740d14d8a19009a17c003a5e53d",
+      "bytes": 1326
+    },
+    "experimental/weight-space-20261110/data/contrast-pair-audit-v1/analyze_contrast_pairs.py": {
+      "sha256": "f94c81cad16409824fc6293704aac2bec32597bc8fe8ea819120fbaa2c4d34bd",
+      "bytes": 9014
+    },
+    "experimental/weight-space-20261110/data/contrast-pair-audit-v1/answer-pair-audit.json": {
+      "sha256": "bfbd9b6fbcbfc5a56e43f7ad97a69809f009c610ff9889e58b1dc6af4c555e2b",
+      "bytes": 9017
+    },
+    "experimental/weight-space-20261110/data/contrast-pair-audit-v1/replay-comparison.json": {
+      "sha256": "aa1d8fd06508e0fac045e0e1d197c6d553a32e0201bd873873d32497984ccda6",
+      "bytes": 5456
+    },
+    "experimental/weight-space-20261110/data/contrast-pair-audit-v1/replay-pair-audit.json": {
+      "sha256": "a81a1c070ec17d94171ac7bc5d219c70f95395034b19d53eef31fb1c7ed86be5",
+      "bytes": 9011
+    },
+    "experimental/weight-space-20261110/data/contrast-pair-audit-v1/test-receipt.json": {
+      "sha256": "5c120eb034d66b878eb78f2095d6ce523f421375d305e8bde5c4b89c310c2b76",
+      "bytes": 723
+    },
+    "experimental/weight-space-20261110/data/contrast-pair-audit-v1/test_contrast_pairs.py": {
+      "sha256": "dd36d22ed128bb9e6bd6de6a98d4247c9b85374fe4c76b8879658584ddb02c3d",
+      "bytes": 3603
+    },
+    "experimental/weight-space-20261110/data/contrast-pair-audit-v1/tests.stderr.txt": {
+      "sha256": "82c2ef55cf6adbae2e08a3d3b6ac10e6e79e2d2852473dda33ec8a407a5c410e",
+      "bytes": 1062
+    },
+    "experimental/weight-space-20261110/data/contrast-pair-audit-v1/tests.stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/data/distill-v1/DISTILL-COMPARISON.md": {
+      "sha256": "21391d92c4f956b6a01d8e40049e781e7a0a81a271e1e48b7f27150973a4d1fb",
+      "bytes": 2262
+    },
+    "experimental/weight-space-20261110/data/distill-v1/distill-pair-audit.json": {
+      "sha256": "3c10d8fafdea3a7375f1738d4a509e97393eae5551db2f4f2952c1b9daad9f97",
+      "bytes": 9011
+    },
+    "experimental/weight-space-20261110/data/distill-v1/distill-plan.md": {
+      "sha256": "2fd7193f3649d3007452c8ec3370dd1d72293b93808d2c8392733b9082d56406",
+      "bytes": 5828
+    },
+    "experimental/weight-space-20261110/data/distill-v1/distill-runtime-dataflow.json": {
+      "sha256": "cd82a2bb0983729c63951162adef8ca5d97f9f64e35a10db0f5be878cf4a1c6e",
+      "bytes": 2019
+    },
+    "experimental/weight-space-20261110/data/distill-v1/distill-source-review.json": {
+      "sha256": "62053b8646465ba1bd0fa04b7d6dc493bf181b06aa2cfe73ea89ab315b817dda",
+      "bytes": 1093
+    },
+    "experimental/weight-space-20261110/data/generator-test-result.json": {
+      "sha256": "79a1e98800a4894dc6797358b784784aad993d5bc5227257198835d2c80fd2be",
+      "bytes": 713
+    },
+    "experimental/weight-space-20261110/data/historical-length-audit.json": {
+      "sha256": "4c6c69bfbae6b9e91b17baafae6d68a266ee51ce03afc36c60e8daf8d181ee5f",
+      "bytes": 2312
+    },
+    "experimental/weight-space-20261110/data/historical-source-identity.json": {
+      "sha256": "e6c88604659d7513451b82fa19a2ff38fccbe2fd93682b90edc917829fe37432",
+      "bytes": 755
+    },
+    "experimental/weight-space-20261110/data/make_note_contrasts.py": {
+      "sha256": "85a62a87477c8b371d175ae03b994d1f2b700c797c36787df338ea6ec807fb3e",
+      "bytes": 10439
+    },
+    "experimental/weight-space-20261110/data/note-contrasts-v1/dev.tsv": {
+      "sha256": "057dac485d2d4d39ebcfcdc7de3fe15c9c6c4bebd2bea888b4db303949798935",
+      "bytes": 5408
+    },
+    "experimental/weight-space-20261110/data/note-contrasts-v1/manifest.json": {
+      "sha256": "25d43ea5ff6a60ed8657fee88a700412a29c499516cd82857140b4dd41d25cbe",
+      "bytes": 2998
+    },
+    "experimental/weight-space-20261110/data/note-contrasts-v1/row-metadata.json": {
+      "sha256": "de9d9fbef1e27cdc8a16e2687fab1d77c80aca3f9e09210b7d742b5d82328155",
+      "bytes": 54723
+    },
+    "experimental/weight-space-20261110/data/note-contrasts-v1/train.tsv": {
+      "sha256": "3666036e3b63db7738bebc391bd9058ca63bb0d1ea01b240726223c2ddc9039c",
+      "bytes": 10176
+    },
+    "experimental/weight-space-20261110/data/package-audit.json": {
+      "sha256": "6c2e9691fb5021bc1cbf34fe784c8ae0c16587bfb10c4462bdd12fa0a4a39c62",
+      "bytes": 1937
+    },
+    "experimental/weight-space-20261110/data/pilot-data-review.json": {
+      "sha256": "0ef8a7ff7c18fe5996d916975fcf6c0734476adcf68cbdf6dd69990a23b97680",
+      "bytes": 6984
+    },
+    "experimental/weight-space-20261110/data/replay.txt": {
+      "sha256": "b5fdd3c9528fe5a0f7a1dbc24db9e7169f0a00f9b31a211aff4ca8c6c97553c1",
+      "bytes": 1690
+    },
+    "experimental/weight-space-20261110/data/retention-provenance.json": {
+      "sha256": "2c6b1c596c2a62d1cc548d8cbb3fd9822e9a7f70f9aca74ef6d1876af85b7324",
+      "bytes": 1751
+    },
+    "experimental/weight-space-20261110/data/retention.tsv": {
+      "sha256": "dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a",
+      "bytes": 5110
+    },
+    "experimental/weight-space-20261110/data/retention_text.txt": {
+      "sha256": "699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019",
+      "bytes": 861
+    },
+    "experimental/weight-space-20261110/data/test_note_contrasts.py": {
+      "sha256": "4ece1d0d88cfb72c2e1a7eefb80619b566cabbea3f932a156631ff48c0e6c822",
+      "bytes": 2862
+    },
+    "experimental/weight-space-20261110/data/token-length-diagnostic.json": {
+      "sha256": "5df4d969c988512b2c3bb433410fd687d4be1120f6a5d9a46db65efb5561e8a3",
+      "bytes": 1665
+    },
+    "experimental/weight-space-20261110/evaluation/LmWeightIdentityChecks.kt": {
+      "sha256": "9f980e53bcdc8c409e588d22048a195bc62a3bc7f1aeac279866187d290091c3",
+      "bytes": 7976
+    },
+    "experimental/weight-space-20261110/evaluation/PROTOCOL.md": {
+      "sha256": "8d7efedbeef61c98d95d9b43e47dceb25208f9a4ea8ee1850d9b29e2b8799bdb",
+      "bytes": 3138
+    },
+    "experimental/weight-space-20261110/evaluation/audit_lm1_weights.py": {
+      "sha256": "4915e1a4f90f0ed1ba4aa25d76adf0271b32681d1eba9e9389060c81570315ab",
+      "bytes": 6663
+    },
+    "experimental/weight-space-20261110/evaluation/auditor-selftest.json": {
+      "sha256": "9bf4ccc85912157446cee8919059d1f3ab75e18d01806d65423e862a3a42fcbd",
+      "bytes": 786
+    },
+    "experimental/weight-space-20261110/evaluation/auditor-selftest.stderr.txt": {
+      "sha256": "232a019f1f1e6c35dc2802e1b79586a29b0038f4001e9e910c87a9a294b908c1",
+      "bytes": 788
+    },
+    "experimental/weight-space-20261110/evaluation/auditor-selftest.stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/evaluation/build-registration.json": {
+      "sha256": "22b477bd0418830b759b03e14acca8b9ecee06a187a121c5ef8166c8cba483fe",
+      "bytes": 4730
+    },
+    "experimental/weight-space-20261110/evaluation/compile.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/evaluation/compile.stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-analysis-v1/ANSWER.md": {
+      "sha256": "71c4bbd2bf8d4a1be4f42ca8a86348a2e6cfdac3839bc9baec31e3c57655cf9a",
+      "bytes": 1448
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-analysis-v1/answer-analysis-v1.json": {
+      "sha256": "6414133d76be0fead56a29e2622e8ee72253a404ace8637bed7469659bc70b3b",
+      "bytes": 4632
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-analysis-v1/answer-weight-audit.json": {
+      "sha256": "56603edcf85e1c0987d456bbf96d4bf367c72ddf346b13140c0755a01c533fb4",
+      "bytes": 1017
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-audit-v1/README.md": {
+      "sha256": "bdbc7053b17dda55c447f48ba7dafbf567707bc479e3705205bc1a866cfeb67c",
+      "bytes": 2316
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-audit-v1/analyze_contrast.py": {
+      "sha256": "816fe2fb8edb921230bb73318e3c7654479ae6e4661499c855b23aa5fa9321e6",
+      "bytes": 14680
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-audit-v1/answer-analysis-v1.json": {
+      "sha256": "6414133d76be0fead56a29e2622e8ee72253a404ace8637bed7469659bc70b3b",
+      "bytes": 4632
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-audit-v1/answer-weight-audit.json": {
+      "sha256": "56603edcf85e1c0987d456bbf96d4bf367c72ddf346b13140c0755a01c533fb4",
+      "bytes": 1017
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-audit-v1/baseline-identity.json": {
+      "sha256": "51627437f0c8901375cf5b65ecfef8eee966b1ef36cc86e52af3aeb49010a2ed",
+      "bytes": 338
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-audit-v1/replay-analysis-v1.json": {
+      "sha256": "6005f987cac192cd341dba5921165f88ba8e73e817b5d164d52e18af82357701",
+      "bytes": 4629
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-audit-v1/replay-weight-audit.json": {
+      "sha256": "5bb4d6c655e9995a64dc63c4f83c4a0475e1a04b66240fa084d2524264b44acd",
+      "bytes": 1017
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-audit-v1/test_analyze_contrast.py": {
+      "sha256": "dc55bff0b77a5f05563384b522d1dc96b1a0bcfd21868932c21d057bf6f8e5b6",
+      "bytes": 4722
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-audit-v1/tests.stderr.txt": {
+      "sha256": "453334d71c8f88c9751f1b648a90075ea0a924d3eb5631d516ba2381f3e634c4",
+      "bytes": 1337
+    },
+    "experimental/weight-space-20261110/evaluation/contrast-audit-v1/tests.stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/AUDIT-PLAN.md": {
+      "sha256": "047316be16620912c66c24480f0a950a3b7c7bc9459bde624a54b66ed2eeec19",
+      "bytes": 2931
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/STATUS.md": {
+      "sha256": "f9f9f5162488103c0d518762d93789e327ad72fb46a75d3bc2a7505f30ea0064",
+      "bytes": 750
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/analyze_distill.py": {
+      "sha256": "76c8f59b200b33d91a2cdc67716f909d61d183865c93e2e9f54874aed354eb8b",
+      "bytes": 13517
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/results-v1/analysis.json": {
+      "sha256": "62e8a7e43ae62b6ec1d74c73ffbf8e0069dc5290dcd4e797e7d8dc48ed1aa787",
+      "bytes": 5845
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/results-v1/receipt.json": {
+      "sha256": "cda873a57bcc03aff696e7563ccba3aa56ff751a064797454ce2d6f157248769",
+      "bytes": 1616
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/results-v1/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/results-v1/stdout.txt": {
+      "sha256": "25589accf5e36636059af270dfe876c721d75ec8c9b056671369afc6efc5631f",
+      "bytes": 97
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/rng-reference/RngReference.java": {
+      "sha256": "00ee5586b541fc3c13e49a6082f96671477aceb51e24fc58a63d39d918ef0442",
+      "bytes": 242
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/rng-reference/receipt.json": {
+      "sha256": "99510c5660c69cecb25be3a2afceecf8e55b765f7416522f239adc39133dcdb7",
+      "bytes": 738
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/rng-reference/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/rng-reference/stdout.txt": {
+      "sha256": "bf48b0ba48dc9e30843c46c0099255751e1b22145c19cf64f09ffaba7d512a90",
+      "bytes": 34
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/source-review.json": {
+      "sha256": "547bee475bf2fdb1b9bd1de6b5a81ab35d7f7e2db7ede3d88cc8360db7199e44",
+      "bytes": 2113
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/test_analyze_distill.py": {
+      "sha256": "43fdb4c9d8201558deb7a34aa4d8b5a9f9bdbb390e3a1dd9d0bc0e9b5712b448",
+      "bytes": 6139
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/tests.stderr.txt": {
+      "sha256": "956ca0f706af889ca228cf5b1b574946f070feab68bcd4ff28ceae03c4054649",
+      "bytes": 1514
+    },
+    "experimental/weight-space-20261110/evaluation/distill-v1/tests.stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/evaluation/original132k-audit.json": {
+      "sha256": "a89f1f7dcdbc2a4cbe42da8e45d1a64e1c5b1445d0cfe77c3cf58c33ae991e72",
+      "bytes": 1724
+    },
+    "experimental/weight-space-20261110/evaluation/original132k-state-identity.json": {
+      "sha256": "75eb4c880b964edeacfba272f8b977efb2bcf2adb5a1426960bdcb22ee250fb2",
+      "bytes": 656
+    },
+    "experimental/weight-space-20261110/evaluation/patch.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/evaluation/patch.stdout.txt": {
+      "sha256": "2305fe33adc196083be5be95d5dad3459ba5f29a1c08ae2830cbaeca08dcb168",
+      "bytes": 73
+    },
+    "experimental/weight-space-20261110/evaluation/results-v1/README.md": {
+      "sha256": "fbfcc522db6b58b55ef592a649720a0abc2a4f56c061df9b52947b4339c06bd6",
+      "bytes": 1954
+    },
+    "experimental/weight-space-20261110/evaluation/results-v1/receipt.json": {
+      "sha256": "f156a47d55faf2b1abde03dec8a39a4b68f166d1948af429853ab09d3ee49fa7",
+      "bytes": 2278
+    },
+    "experimental/weight-space-20261110/evaluation/results-v1/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/evaluation/results-v1/stdout.txt": {
+      "sha256": "0c8e73eabe15fd37e81e3dd24b85e68e14e61d6daf4285f38377eee9dde107c2",
+      "bytes": 6894
+    },
+    "experimental/weight-space-20261110/evaluation/test_weight_auditor.py": {
+      "sha256": "14c8818514f18925eac5dd305553f933ba203275ecb315b41e0b7ad772f8aec0",
+      "bytes": 2433
+    },
+    "experimental/weight-space-20261110/final-integrity.json": {
+      "sha256": "f8a48195bcbcc896cad2495c68c47d39024a6b0a63ac81348b683093f1f7917c",
+      "bytes": 987
+    },
+    "experimental/weight-space-20261110/training/CONTRAST-PROTOCOL.md": {
+      "sha256": "0000978b8d82d83f2294e29a24dd6721c466f21cdddb67bfc35ba875d24be44b",
+      "bytes": 2569
+    },
+    "experimental/weight-space-20261110/training/LmContrastPilot.kt": {
+      "sha256": "e4af24197f081c08584b01617eda8602313e517485c0d4c0c3b0a5dffb8bdf7f",
+      "bytes": 11128
+    },
+    "experimental/weight-space-20261110/training/LmOriginalResumeExperiment.kt": {
+      "sha256": "6cbb27c9b73a9e9701c46d5f2dfb38d263ac6261b30901eeee30d82a3e3c0eda",
+      "bytes": 6064
+    },
+    "experimental/weight-space-20261110/training/PLAN.md": {
+      "sha256": "467559195a02b7a6d3b950de576584671567e9717e63eafcdfab4490e525b891",
+      "bytes": 2356
+    },
+    "experimental/weight-space-20261110/training/README.md": {
+      "sha256": "25fa557ad7f7d672506479a6915615dbac29abcf97f9fdf11818fe87892198d4",
+      "bytes": 2664
+    },
+    "experimental/weight-space-20261110/training/build_experiment.py": {
+      "sha256": "b0562b82f6fc7117fbff1b5c7c0afa14ec115927b15726ba906cb86d94e199d4",
+      "bytes": 4804
+    },
+    "experimental/weight-space-20261110/training/continuation-20261110/FINDINGS.md": {
+      "sha256": "47be4bc275418b5f15cdfcef06538af7442b8e602c080ba5aa247c1fcaf77fbd",
+      "bytes": 2980
+    },
+    "experimental/weight-space-20261110/training/continuation-20261110/STATUS.md": {
+      "sha256": "67af6252fa0a5ef9c4830fcb08229a73e6ed0d72f02f9f91f71c4c4f81d27e1b",
+      "bytes": 1123
+    },
+    "experimental/weight-space-20261110/training/continuation-20261110/frozen-preflight.json": {
+      "sha256": "02c1b42a79d91dddb7cbcd99a7002e9cc7e749ac302d3f080f42a1fde7fc4f26",
+      "bytes": 5109
+    },
+    "experimental/weight-space-20261110/training/contrast-answer-results-v1/receipt.json": {
+      "sha256": "2ffa158e57eed5711c15b8de413c4426e2facf76ac5ff90711e28a6c703ec94d",
+      "bytes": 1421
+    },
+    "experimental/weight-space-20261110/training/contrast-answer-results-v1/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/contrast-answer-results-v1/stdout.tsv": {
+      "sha256": "0a4e8985c0cb8ed3f9868cc0b037878ebf7991bf0a7e65601b38d59f17db3076",
+      "bytes": 50505
+    },
+    "experimental/weight-space-20261110/training/contrast-registration/build.json": {
+      "sha256": "e636a4bcc8bdc879fab411f6ff4d518cc8c2b91d7f95180152ba429e99af2279",
+      "bytes": 3046
+    },
+    "experimental/weight-space-20261110/training/contrast-registration/compile.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/contrast-registration/compile.stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/contrast-registration/inspect.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/contrast-registration/inspect.stdout.txt": {
+      "sha256": "2002200c9927dc4ac6cd9dc60ea4d3d81b995436f4a8809d2c31479853b12907",
+      "bytes": 838
+    },
+    "experimental/weight-space-20261110/training/contrast-registration/patch.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/contrast-registration/patch.stdout.txt": {
+      "sha256": "2305fe33adc196083be5be95d5dad3459ba5f29a1c08ae2830cbaeca08dcb168",
+      "bytes": 73
+    },
+    "experimental/weight-space-20261110/training/contrast-registration/registration.json": {
+      "sha256": "349099d814832bb384c103afde8cdba59ee2ffe310eb1c157af009c620d1bdf6",
+      "bytes": 8248
+    },
+    "experimental/weight-space-20261110/training/contrast-replay-results-v1/receipt.json": {
+      "sha256": "e7c4261a9832fd6be4cf8d2b4630279b6105210086bb68190a613a17b7e8720a",
+      "bytes": 1422
+    },
+    "experimental/weight-space-20261110/training/contrast-replay-results-v1/replay-weight-audit.json": {
+      "sha256": "5bb4d6c655e9995a64dc63c4f83c4a0475e1a04b66240fa084d2524264b44acd",
+      "bytes": 1017
+    },
+    "experimental/weight-space-20261110/training/contrast-replay-results-v1/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/contrast-replay-results-v1/stdout.tsv": {
+      "sha256": "872bacc3de67f3faea406d4176e6721cb5c362f037afc29d017ec6ca9d3023ae",
+      "bytes": 52482
+    },
+    "experimental/weight-space-20261110/training/distill-v1/LmDistillChecks.kt": {
+      "sha256": "58634aad5f126c78ee2b38b0981a1a302907115e9750d782a0273694b39bff4a",
+      "bytes": 5664
+    },
+    "experimental/weight-space-20261110/training/distill-v1/LmDistillPilot.kt": {
+      "sha256": "24a79ea89e2a57ae5cbb1bf6aff7a5a0c94465d3db55a8fbc4c62dd5b6f338b1",
+      "bytes": 14632
+    },
+    "experimental/weight-space-20261110/training/distill-v1/LmSoftTargetKl.kt": {
+      "sha256": "a0584ecea66b458555da0964cf24371043886de952d7059de117e62bd652d9ce",
+      "bytes": 1453
+    },
+    "experimental/weight-space-20261110/training/distill-v1/PROPOSAL.md": {
+      "sha256": "29757754af378489375e525d143f158da9bf21daf2417b5f409e854460cb8134",
+      "bytes": 6287
+    },
+    "experimental/weight-space-20261110/training/distill-v1/PROTOCOL.md": {
+      "sha256": "2db651db565d309b4b12b3723a1cc8b2392f18f750fb5305488f60099f444d9d",
+      "bytes": 4612
+    },
+    "experimental/weight-space-20261110/training/distill-v1/build.json": {
+      "sha256": "906dccc660a566d686d55f96220f7a78cfabf297316a344dbe018c875f1f6344",
+      "bytes": 3299
+    },
+    "experimental/weight-space-20261110/training/distill-v1/compile.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/distill-v1/compile.stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/distill-v1/controls.json": {
+      "sha256": "62d0221cf576c7a533bfdebdd3d6ce7d0be722700dee2b6e02da7f5607f89b0d",
+      "bytes": 1208
+    },
+    "experimental/weight-space-20261110/training/distill-v1/inspect.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/distill-v1/inspect.stdout.txt": {
+      "sha256": "1fecc2e1ab85fe7b2f5d45d6ae4c44bd6fafce8ede3a539a38ad12ecda7b28d7",
+      "bytes": 903
+    },
+    "experimental/weight-space-20261110/training/distill-v1/patch.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/distill-v1/patch.stdout.txt": {
+      "sha256": "2305fe33adc196083be5be95d5dad3459ba5f29a1c08ae2830cbaeca08dcb168",
+      "bytes": 73
+    },
+    "experimental/weight-space-20261110/training/distill-v1/preflight-results.json": {
+      "sha256": "550d8457f563f77c275383f5bded88046655793e2bf032a6b394cb5d9c972f7f",
+      "bytes": 1501
+    },
+    "experimental/weight-space-20261110/training/distill-v1/registration.json": {
+      "sha256": "30ff3daadb9e292f96eb9f538b9c37a537e1fd0e2db2a9c107336084ade0fa72",
+      "bytes": 10806
+    },
+    "experimental/weight-space-20261110/training/distill-v1/results-v1/receipt.json": {
+      "sha256": "5bdb5bdae83cf851b05075e37c2241964eda24d21028ded00e65e78e75ff3f75",
+      "bytes": 1431
+    },
+    "experimental/weight-space-20261110/training/distill-v1/results-v1/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/distill-v1/results-v1/stdout.tsv": {
+      "sha256": "ba103d25c525045fe55723dd4c4c7f01790fd8deb7195da58c7dc72a7e7cbf36",
+      "bytes": 71243
+    },
+    "experimental/weight-space-20261110/training/distill-v1/run_registered.py": {
+      "sha256": "73cb1f2324675a984620ad8764fd84431e13cfe7c62636f8d69583b7f4354c8d",
+      "bytes": 3397
+    },
+    "experimental/weight-space-20261110/training/distill-v1/selftest.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/distill-v1/selftest.stdout.txt": {
+      "sha256": "c9e65f0a47507fbb34f72991ff9c9fa923bcaabc6f485bb5b119b974cf90b7d9",
+      "bytes": 821
+    },
+    "experimental/weight-space-20261110/training/resume-registration/build.json": {
+      "sha256": "bfd247ef836f6737e5bf3d47ae56078ec18fb6107ece58a3be728be969e2f2b5",
+      "bytes": 3050
+    },
+    "experimental/weight-space-20261110/training/resume-registration/compile.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/resume-registration/compile.stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/resume-registration/java-version.txt": {
+      "sha256": "0fc83381287ccbc8623d257bce2b0d03997ba0e85ff4492d38b409aea37a8aa9",
+      "bytes": 181
+    },
+    "experimental/weight-space-20261110/training/resume-registration/patch.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/resume-registration/patch.stdout.txt": {
+      "sha256": "2305fe33adc196083be5be95d5dad3459ba5f29a1c08ae2830cbaeca08dcb168",
+      "bytes": 73
+    },
+    "experimental/weight-space-20261110/training/resume-registration/registration.json": {
+      "sha256": "e01b440f62be9ababb7dc5cab2b7a4d03a746d7999da072fcd324795fde6a248",
+      "bytes": 2973
+    },
+    "experimental/weight-space-20261110/training/resume-registration/run-command.json": {
+      "sha256": "87d27ecb9ae5119c52abd32e6c66c2c91a3bc37a5ef672618bbbc9bda8970619",
+      "bytes": 656
+    },
+    "experimental/weight-space-20261110/training/resume-results-v1/README.md": {
+      "sha256": "14f1cb1d3696d33feef39506ce9e22d8c733942e3292cf6f5e63e664bfad5d90",
+      "bytes": 1942
+    },
+    "experimental/weight-space-20261110/training/resume-results-v1/receipt.json": {
+      "sha256": "2a0e1e688f067674fcb2ab558751ae225671c55306ea2424c8f2e04eb47a7084",
+      "bytes": 2584
+    },
+    "experimental/weight-space-20261110/training/resume-results-v1/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "experimental/weight-space-20261110/training/resume-results-v1/stdout.tsv": {
+      "sha256": "44b1d4840cc0133e711d02c4744307f6b6ac54a652beb69a603d6454d94545e0",
+      "bytes": 1469
+    },
+    "experimental/weight-space-20261110/training/run_contrast.py": {
+      "sha256": "6575c2a40568af4c7091587bd6a40352339f3949bd194b263ad4f68b932ec114",
+      "bytes": 2737
+    }
+  },
+  "originalCheckpointSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+  "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+  "scope": "EXP-05/EXP-12 research only; no application, model-choice, APK, signing or production changes",
+  "initialBlockers": [
+    "Native Kotlin compiler path unconfirmed",
+    "Original baseline/tokenizer local paths unconfirmed",
+    "Data pilot and independent protocol gates not yet frozen"
+  ]
+}
