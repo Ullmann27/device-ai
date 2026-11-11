@@ -128,9 +128,10 @@ object HollywoodFuiCinematics {
 
     // ---- Cinema 2.0: focus depth (pure) ------------------------------------------------
 
-    /** Dim of the deck plane right beside a constructed window and at the far corners (share of black). */
-    const val FOCUS_DIM_NEAR = .26f
+    /** Dim of the deck plane just below a constructed window's top edge and at the bottom of the deck. */
+    const val FOCUS_DIM_NEAR = .30f
     const val FOCUS_DIM_FAR = .52f
+    private const val FOCUS_FADE_IN_DP = 56f
 
     /**
      * Focus pull 0..1: once the glass of a work window exists and the window has arrived ([openness]), the deck plane
@@ -225,32 +226,29 @@ object HollywoodFuiCinematics {
             }
         }
 
-        private var focusVignette: Fill.Radial? = null
+        private var focusShade: Fill.Linear? = null
         private var focusKey: Box? = null
         private val deckShade = Fill.Solid(JarvisDesign.Colors.background)
 
         /**
-         * Focus depth: the deck plane behind the window steps back – evenly near the window, deeper towards the far
-         * corners – and the window casts a soft contact shadow, so the glass stands in front instead of lying flat on
-         * half-covered labels. The caller clips the avatar, the orb and the dialog out; [strength] 0..1.
+         * Focus depth: the deck plane at and below the window steps back – softly from the window's top edge, deeper
+         * towards the bottom – and the window casts a contact shadow, so the glass stands in front instead of lying
+         * flat on half-covered labels. The row above the window (avatar, orb) is never shaded, so their protected
+         * cut-outs leave no visible box. [strength] 0..1.
          */
         fun drawFocusDepth(p: ContinuumPainter, viewport: Box, window: Box, strength: Float, radius: Float) {
             if (!strength.isFinite() || strength <= .01f || viewport.width <= 0f || viewport.height <= 0f ||
-                window.width <= 0f || window.height <= 0f) return
+                window.width <= 0f || window.height <= 0f || window.top >= viewport.bottom - 1f) return
             val s = strength.coerceIn(0f, 1f)
-            p.fillRect(viewport.left, viewport.top, viewport.right, viewport.bottom, deckShade, FOCUS_DIM_NEAR * s)
-            val vignette = focusVignette?.takeIf { focusKey == window } ?: run {
-                val reach = max(max(hypot(window.centerX - viewport.left, window.centerY - viewport.top),
-                    hypot(viewport.right - window.centerX, window.centerY - viewport.top)),
-                    max(hypot(window.centerX - viewport.left, viewport.bottom - window.centerY),
-                        hypot(viewport.right - window.centerX, viewport.bottom - window.centerY))).coerceAtLeast(1f)
-                Fill.Radial(window.centerX, window.centerY, reach,
+            val shade = focusShade?.takeIf { focusKey == window } ?: run {
+                val span = (viewport.bottom - window.top).coerceAtLeast(1f)
+                Fill.Linear(0f, window.top, 0f, viewport.bottom,
                     intArrayOf(Argb.withAlpha(JarvisDesign.Colors.background, 0f),
-                        Argb.withAlpha(JarvisDesign.Colors.background, 0f),
-                        Argb.withAlpha(JarvisDesign.Colors.background, FOCUS_DIM_FAR - FOCUS_DIM_NEAR)),
-                    floatArrayOf(0f, .42f, 1f)).also { focusVignette = it; focusKey = window }
+                        Argb.withAlpha(JarvisDesign.Colors.background, FOCUS_DIM_NEAR),
+                        Argb.withAlpha(JarvisDesign.Colors.background, FOCUS_DIM_FAR)),
+                    floatArrayOf(0f, (FOCUS_FADE_IN_DP / span).coerceIn(.02f, .5f), 1f)).also { focusShade = it; focusKey = window }
             }
-            p.fillRect(viewport.left, viewport.top, viewport.right, viewport.bottom, vignette, s)
+            p.fillRect(viewport.left, window.top, viewport.right, viewport.bottom, shade, s)
             // Contact shadow: three widening, fading rings slightly below the glass.
             val drop = 5f
             p.strokeRoundRect(window.left, window.top + drop, window.right, window.bottom + drop, radius + 6f, 26f, deckShade, .10f * s)

@@ -33,7 +33,7 @@ object JarvisWorkWindowDepth {
     /** Height over which the dense glass thins out into the vacant smoke (dp). */
     const val GLASS_FADE_DP = 64f
     /** Density of the vacant glass relative to the dense sheet: smoke, never fully clear. */
-    const val GLASS_VACANT_DENSITY = .34f
+    const val GLASS_VACANT_DENSITY = .46f
     private const val GLASS_MIN_VACANT_DP = 56f
 
     /** Where the dense sheet ends in a panel whose content does not fill it. */
