@@ -1,0 +1,37 @@
+{
+  "schema": "lm1-semantic-coordination-v1",
+  "status": "PREPARATION_NO_NEW_UPDATES",
+  "base_commit": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+  "base_pr": 728,
+  "repository": "Ullmann27/device-ai",
+  "experiment_ids": [
+    "EXP-05",
+    "EXP-12"
+  ],
+  "verified_remote_pr_head": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+  "parameters": 132160,
+  "classes": {
+    "0": "no-action",
+    "1": "open",
+    "2": "search",
+    "3": "note"
+  },
+  "original_sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+  "tokenizer_sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+  "max_new_candidates": 2,
+  "max_updates_per_candidate": 128,
+  "agents": {
+    "data": "research/continuum-lm1-semantic-data-20261111",
+    "training": "research/continuum-lm1-semantic-training-20261111",
+    "evaluator": "research/continuum-lm1-semantic-evaluator-20261111"
+  },
+  "no_further_agents": true,
+  "protection": {
+    "existing_files_immutable": true,
+    "product_mutations": false,
+    "model_promotion": false,
+    "paid_gpu": false,
+    "main_merge": false
+  },
+  "blindness": "Organizational only: shared filesystem and public branches; trainers instructed not to inspect evaluator holdout."
+}
