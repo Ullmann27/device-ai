@@ -1,0 +1,201 @@
+name: Continuum Code54 - strict Android QA and unsigned ARM64 transport
+
+# Branch-only QA. No signing secrets, installation, release or main merge.
+on:
+  push:
+    branches:
+      - integrate/omega-apk54-20261111
+    paths:
+      - .github/workflows/continuum-code54-qa.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-code54-qa-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  android-gates:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/integrate/omega-apk54-20261111'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Verify immutable source
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_SHA" =~ ^[a-f0-9]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          printf 'source_sha=%s\nsource_tree=%s\nqa_only=true\noriginal_signer=NOT_USED\nFold7=NOT_RUN\n' "$GITHUB_SHA" "$(git rev-parse HEAD^{tree})" > "$RUNNER_TEMP/CODE54-SOURCE.txt"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install official Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: All three real UI classes, unchanged assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          mkdir -p "$RUNNER_TEMP/code54-ui"
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=54 -PcontinuumLocalStandaloneQa=true \
+            -PcontinuumUiWidgetTests=true -PcontinuumUiEvidenceDir="$RUNNER_TEMP/code54-ui" \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            -I tools/capture/force_capture.gradle \
+            -I docs/evidence/omega-apk54-20261111/harness/omega-ui-recheck.init.gradle \
+            :app:testDebugUnitTest
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'code54-ui'
+          data=[json.loads(x) for x in (root/'junit-progress.ndjson').read_text().splitlines()]
+          starts=[x for x in data if x.get('type')=='run_start']
+          ends=[x for x in data if x.get('type')=='suite_end']
+          cases=[x for x in data if x.get('type')=='test_result']
+          target={'at.heinz.deviceai.OwnerAppActionWorkSceneUiTest','at.heinz.deviceai.OwnerAppPlanningContextUiTest','at.heinz.deviceai.OwnerObjectStateConversationUiTest'}
+          assert len(starts)==len(ends)==1
+          assert {x.get('class') for x in cases}==target
+          assert cases and not any(x.get('result')!='SUCCESS' for x in cases)
+          assert ends[0]['sourceUnchanged'] and ends[0]['sourceEnd']['head']==os.environ['GITHUB_SHA']
+          assert starts[0]['environment']['projectProperties']['continuumPdfAllowMissingHostNative'] is None
+          print('EXACT_SOURCE_THREE_UI_CLASSES_PASS',len(cases))
+          PY
+      - name: Configured NewApi lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=54 -PcontinuumLocalStandaloneQa=true \
+            -PcontinuumUiWidgetTests=true :app:lintDebug
+      - name: Full unfiltered Android, native PDF strict
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/code54-full"
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain --rerun-tasks \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=54 -PcontinuumLocalStandaloneQa=true \
+            -PcontinuumUiWidgetTests=true -PcontinuumUiEvidenceDir="$RUNNER_TEMP/code54-full" \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            -I tools/capture/force_capture.gradle \
+            -I docs/evidence/omega-apk54-20261111/harness/full-journal.init.gradle \
+            :app:testDebugUnitTest
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])/'code54-full'/'junit-progress.ndjson'
+          data=[json.loads(x) for x in p.read_text().splitlines()]
+          starts=[x for x in data if x.get('type')=='run_start']
+          ends=[x for x in data if x.get('type')=='suite_end']
+          cases=[x for x in data if x.get('type')=='test_result']
+          native=[x for x in cases if x.get('class')=='at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest' and x.get('name')=='actualProviderReadRendersAndExtractsSyntheticPdf']
+          assert len(starts)==len(ends)==1 and cases
+          assert not starts[0]['environment']['projectProperties']['continuumPdfAllowMissingHostNative']
+          assert not starts[0]['environment']['includePatterns'] and not starts[0]['environment']['excludePatterns']
+          assert len(native)==1 and native[0]['result']=='SUCCESS', 'STRICT_NATIVE_PDF_REQUIRED'
+          assert all(c.get('result')=='SUCCESS' for c in cases)
+          assert ends[0]['sourceUnchanged'] and ends[0]['sourceEnd']['head']==os.environ['GITHUB_SHA']
+          print('CODE54_FULL_ANDROID_PASS',len(cases))
+          PY
+      - name: Preserve actual Android receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code54-Android-Source-QA-Receipts
+          path: |
+            ${{ runner.temp }}/CODE54-SOURCE.txt
+            ${{ runner.temp }}/code54-ui/
+            ${{ runner.temp }}/code54-full/
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/lint-results-debug.*
+          if-no-files-found: warn
+          retention-days: 14
+
+  unsigned-arm64-transport:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/integrate/omega-apk54-20261111'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install official Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Build original-package ARM64 unsigned transport (not a release)
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=54 -PcontinuumLocalRenderUnsigned=true \
+            :app:assembleRelease
+          apk=app/build/outputs/apk/release/app-release-unsigned.apk
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging "$apk" > "$RUNNER_TEMP/code54-badging.txt"
+          grep -F "package: name='at.heinz.deviceai.continuumlocal' versionCode='54' versionName='0.3.53'" "$RUNNER_TEMP/code54-badging.txt"
+          grep -Fx "native-code: 'arm64-v8a'" "$RUNNER_TEMP/code54-badging.txt"
+          if "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify "$apk" >/dev/null 2>&1; then
+            echo 'Unexpectedly signed APK; rejecting QA transport'
+            exit 69
+          fi
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          mkdir -p "$RUNNER_TEMP/code54-transport"
+          cp "$apk" "$RUNNER_TEMP/code54-transport/Continuum-Code54-UNSIGNED-NOT-INSTALLABLE.apk"
+          (cd "$RUNNER_TEMP/code54-transport" && sha256sum *.apk > SHA256SUMS.txt)
+          printf 'status=UNSIGNED_QA_NOT_INSTALLABLE\nsource=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=54\nversionName=0.3.53\noriginalSigner=NOT_USED\nfold7=NOT_RUN\nqualityGates=INDEPENDENT_NOT_IMPLIED\n' "$GITHUB_SHA" > "$RUNNER_TEMP/code54-transport/BUILD-INFO.txt"
+          cp "$RUNNER_TEMP/code54-badging.txt" "$RUNNER_TEMP/code54-transport/BADGING.txt"
+      - name: Upload strictly unsigned APK with provenance
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code54-UNSIGNED-NOT-INSTALLABLE
+          path: ${{ runner.temp }}/code54-transport/
+          if-no-files-found: error
+          retention-days: 14
