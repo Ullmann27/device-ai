@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "CODE53_FROZEN_QA_VERIFICATION",
-  "status": "VERIFIED_UNSIGNED_APK",
+  "status": "VERIFIED_ORIGINAL_SIGNED_DRAFT",
   "verifiedOn": "2026-11-11",
   "repository": "Ullmann27/device-ai",
   "source": {
@@ -69,7 +69,8 @@
     "resultHashAndBytesMatch": true,
     "artifactStatus": "UNSIGNED_NOT_INSTALLABLE",
     "signing": "NOT_USED",
-    "installation": "NOT_RUN"
+    "installation": "NOT_RUN",
+    "role": "UNSIGNED_QA_INPUT_PRE_SIGNING"
   },
   "validator": {
     "status": "PASS",
@@ -96,7 +97,8 @@
     "assetFilesCompared": 37,
     "apkSigningBlock": false,
     "zipalign16KiB": "PASS",
-    "unsignedDiagnostic": "EXPECTED_MISSING_SIGNATURE"
+    "unsignedDiagnostic": "EXPECTED_MISSING_SIGNATURE",
+    "validates": "UNSIGNED_QA_INPUT_PRE_SIGNING"
   },
   "buildInfo": {
     "apkArtifactPath": "BUILD-INFO.txt",
@@ -105,7 +107,8 @@
     "source_sha": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
     "workflow_sha": "07efc77652638cfa40a67270475aa2c08ded5c76",
     "Fold7": "NOT_RUN",
-    "original_signature": "NOT_USED"
+    "original_signature": "NOT_USED",
+    "role": "UNSIGNED_QA_BUILD_INFO"
   },
   "tests": {
     "fullAndroid": {
@@ -396,7 +399,7 @@
   },
   "originalSigning": {
     "ownerAuthorization": "EXPLICITLY_AUTHORIZED_FOR_THIS_BUILT_CODE53_APK",
-    "status": "AUTHORIZED_SIGNER_ACTIVATED_APK_UNSIGNED",
+    "status": "SIGNED_DRAFT_VERIFIED_NOT_PUBLISHED",
     "keyExported": false,
     "bindingCheckpoint": {
       "branch": "prep/code53-original-signer-20261111",
@@ -418,7 +421,7 @@
       "cancelled": 0,
       "url": "https://github.com/Ullmann27/device-ai/actions/runs/42997317251"
     },
-    "remainingWork": "Original signing is authorized and the existing signer branch is activated at the hosted-verified commit. The manual signing workflow has not been dispatched; the APK remains unsigned. The main integrator owns the existing protected signing gates. No key export or installation.",
+    "remainingWork": "The original-signed Code53 APK exists in an unpublished draft. Publication and physical-device installation/acceptance remain separate; published Latest is still Code51. No key export.",
     "publishedLatestUnchanged": "continuum-local-code51-6c23d295e2fca2d4e5950a866547733ec5ff22b0",
     "sharedSignerFixCheckpoint": {
       "branch": "prep/code53-original-signer-20261111",
@@ -446,7 +449,7 @@
       "activatedCommit": "9eb70e1d4737e7dfd1d30f65c3d1d6ab4f9f9d94",
       "fastForwardOnly": true,
       "expectedPreviousCommitChecked": true,
-      "manualSigningWorkflowDispatch": "NOT_TRIGGERED",
+      "manualSigningWorkflowDispatch": "COMPLETED_SUCCESS",
       "readbackCommit": "9eb70e1d4737e7dfd1d30f65c3d1d6ab4f9f9d94",
       "pullRequest": 752,
       "pullRequestMerged": true,
@@ -454,7 +457,7 @@
       "protectedBranchCheckConclusion": "success"
     },
     "manualDispatch": {
-      "status": "NOT_TRIGGERED",
+      "status": "COMPLETED_SUCCESS",
       "workflowPath": ".github/workflows/continuum-code52-sign-release.yml",
       "url": "https://github.com/Ullmann27/device-ai/actions/workflows/continuum-code52-sign-release.yml",
       "ref": "chatgpt/code52-owner-signing-20261109",
@@ -464,7 +467,90 @@
         "owner_approved_sha": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05"
       },
       "environment": "continuum-original-signing",
-      "expectedOutput": "ORIGINAL_SIGNED_VERIFIED_UNPUBLISHED_DRAFT"
+      "expectedOutput": "ORIGINAL_SIGNED_VERIFIED_UNPUBLISHED_DRAFT",
+      "runId": 43001264061,
+      "conclusion": "success",
+      "completedAt": "2026-11-11T10:11:59Z",
+      "actualOutput": "ORIGINAL_SIGNED_VERIFIED_UNPUBLISHED_DRAFT"
+    },
+    "publishedLatestReleaseId": 438986340,
+    "signedDraft": {
+      "status": "SIGNED_DRAFT_VERIFIED_NOT_PUBLISHED",
+      "sourceCommit": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+      "sourceTree": "539ea3aac0af04644a015b3fb69ba865af80d1a8",
+      "qaRunId": 42985335421,
+      "workflowPath": ".github/workflows/continuum-code52-sign-release.yml",
+      "workflowCommit": "9eb70e1d4737e7dfd1d30f65c3d1d6ab4f9f9d94",
+      "workflowRef": "chatgpt/code52-owner-signing-20261109",
+      "runId": 43001264061,
+      "runUrl": "https://github.com/Ullmann27/device-ai/actions/runs/43001264061",
+      "conclusion": "success",
+      "completedAt": "2026-11-11T10:11:59Z",
+      "jobs": [
+        {
+          "id": 130457698399,
+          "name": "preflight",
+          "conclusion": "success"
+        },
+        {
+          "id": 130457958455,
+          "name": "sign-draft-original",
+          "conclusion": "success"
+        }
+      ],
+      "release": {
+        "id": 441524840,
+        "url": "https://github.com/Ullmann27/device-ai/releases/tag/untagged-6cb310026635b6d33f5f",
+        "targetCommit": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+        "draft": true,
+        "prerelease": false,
+        "publishedAt": null
+      },
+      "identity": {
+        "package": "at.heinz.deviceai.continuumlocal",
+        "versionCode": 53,
+        "versionName": "0.3.52",
+        "originalCertificateSha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23"
+      },
+      "apkAsset": {
+        "id": 735048782,
+        "state": "uploaded",
+        "sha256": "a4a806769ccdffcddc7c5e0b5762671983378c9edb8caa7f207430c7a235aa5f",
+        "bytes": 102717942,
+        "apiDigest": "sha256:a4a806769ccdffcddc7c5e0b5762671983378c9edb8caa7f207430c7a235aa5f"
+      },
+      "buildInfoAsset": {
+        "id": 735048778,
+        "state": "uploaded",
+        "bytes": 903,
+        "apiDigest": "sha256:654ae6b97c9080426c0f8c2e8587f2e139347157d57b404130a6401c8c697c08"
+      },
+      "verification": {
+        "releaseApiIndependentlyConfirmed": true,
+        "releaseBodyOriginalCertificateConfirmed": true,
+        "uploadedAssetDigestsAndSizesConfirmed": true,
+        "newLocalSignedApkDownloadPerformed": false,
+        "basis": "Successful hosted source/archive/original-certificate/package/hash/draft-readback checkpoints plus independently checked authenticated release metadata and body.",
+        "signingJobLogsConfirmed": true,
+        "signingLogStatus": "SIGNED_DRAFT_VERIFIED_NOT_PUBLISHED",
+        "signingLogPublished": false,
+        "hostedCertificateChecksAgainstPinnedFingerprintPassed": true,
+        "certificateFingerprintLiteralInLog": false,
+        "hostedSignedApkHashAndSizeConfirmed": true,
+        "hostedSignedDraftReadbackVerified": true,
+        "buildInfoDigestVerification": "Authenticated GitHub release-asset API metadata only; no new local content download",
+        "checkpoints": [
+          "CODE53_METADATA_VERIFIED",
+          "CODE53_ARCHIVES_VERIFIED",
+          "EXACT_SOURCE_QA_RUN_GREEN",
+          "ORIGINAL_P12_CERTIFICATE_VERIFIED",
+          "SIGNED_APK_CERTIFICATE_PACKAGE_AND_HASH_VERIFIED",
+          "DRAFT_RELEASE_READBACK_VERIFIED",
+          "SIGNED_DRAFT_READBACK_VERIFIED"
+        ]
+      },
+      "installation": "NOT_RUN",
+      "physicalFold7Acceptance": "NOT_RUN"
     }
   },
   "deviceAcceptance": {

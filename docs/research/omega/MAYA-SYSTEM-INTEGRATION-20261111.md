@@ -4,7 +4,42 @@ Canonical target: `integration/continuum-final-visibility-20261111`, PR #747.
 Starting remote source: `fd1de22cf3f6ed159601c9b944cc25c86f0fc221`.
 This is the continuation of the existing Cinema/Maya candidate, not a new runtime.
 
-## Verified corrected APK and QA — 2026-11-11
+## Verified original-signed Code53 draft — 2026-11-11
+
+Original signing completed successfully at **2026-11-11 10:11:59 UTC**.
+The completed run is https://github.com/Ullmann27/device-ai/actions/runs/43001264061,
+with signer commit `9eb70e1d4737e7dfd1d30f65c3d1d6ab4f9f9d94`.
+Preflight job `130457698399` and signing job `130457958455` both PASS.
+The signed source is exactly `050a57cb019dcc1b7fe6cfa2fb5c11176b048e05`,
+using the verified unsigned QA run `42985335421`.
+
+- Verified unpublished draft: release ID `441524840`,
+  https://github.com/Ullmann27/device-ai/releases/tag/untagged-6cb310026635b6d33f5f.
+  Actual release metadata has `draft=true`, `prerelease=false`, `published_at=null`.
+- Signed APK asset `735048782`: **102,717,942 bytes**, SHA-256
+  `a4a806769ccdffcddc7c5e0b5762671983378c9edb8caa7f207430c7a235aa5f`.
+- Original certificate SHA-256:
+  `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`.
+  Package remains `at.heinz.deviceai.continuumlocal`, Code53 / `0.3.52`.
+- Signed build-info asset `735048778`: 903 bytes, API SHA-256 digest
+  `654ae6b97c9080426c0f8c2e8587f2e139347157d57b404130a6401c8c697c08`.
+
+Completed signing logs confirm exact-source metadata/archives, original-key
+certificate checks, signed APK certificate/package/hash, and draft/asset readback.
+Final status is `SIGNED_DRAFT_VERIFIED_NOT_PUBLISHED`, with `PUBLISHED=false`.
+The certificate checks use the pinned fingerprint; the fingerprint itself was
+not printed literally in the signing log. Independent release API/body review
+confirmed the source, certificate, identity, uploaded asset digests/sizes and
+unpublished status. No new local signed-APK download is claimed. The build-info
+asset digest is verified from API metadata, not a new local content download.
+
+Published Latest remains Code51, release ID `438986340`. Code53 is signed and
+available as the draft above; it has not been published or installed. Physical
+Fold7, microphone, audible Maya, live lip/camera, Filament GPU and thermal
+acceptance remain NOT_RUN. The unsigned input and its original hash below remain
+part of the signing evidence, separate from the signed output.
+
+## Verified unsigned QA input — 2026-11-11
 
 - Runtime: `050a57cb019dcc1b7fe6cfa2fb5c11176b048e05`.
 - Tree: `539ea3aac0af04644a015b3fb69ba865af80d1a8`.
@@ -23,7 +58,7 @@ This is the continuation of the existing Cinema/Maya candidate, not a new runtim
   Both reports have `sourceUnchanged=true` and the exact `050a57cb` commit.
   Native ICU: 22 patterns PASS. The configured **NewApi-only** lint XML has
   zero issues; this is not a claim about a broader lint scope.
-- APK: 102,701,335 bytes; SHA-256
+- Unsigned QA APK: 102,701,335 bytes; SHA-256
   `28153df1b4e6f0d97a8f625a7f444248efc6ee09436e7e77c5aab4e3aaaa9c0e`.
   It matches `SHA256SUMS.txt` and the validated report's hash and byte count.
   Identity: `at.heinz.deviceai.continuumlocal`, versionCode 53,
@@ -47,8 +82,8 @@ Only the settings test and technical evidence changed after the failed app
 source. The production runtime remains unchanged. The completed signer binding
 uses the verified identities above; the failed `fd86f11a` run is superseded.
 Later documentation commits do not change this completed run's fixed source or
-workflow identity. The APK remains unsigned until the authorized original-signing
-continuation completes; physical-device acceptance remains separate.
+workflow identity. Original signing has completed as recorded above. The
+unsigned QA input is retained unchanged; physical-device acceptance remains separate.
 
 The superseded run `42984950999` was cancelled before an Android result.
 An isolated Gradle 8.11.1 reproduction showed that the CLI `--tests` argument
@@ -88,7 +123,7 @@ current source/tree constants. Original avatar, package, ABI, unsigned, all asse
 hashes and clean-source checks remain active. Wrong SHA, wrong tree and dirty
 source still reject; the original fixed a980 comparison was reproduced as rejecting.
 
-## Original-signing continuation — activated, not dispatched
+## Original-signing history and completed draft
 
 PR https://github.com/Ullmann27/device-ai/pull/752 records the original signer
 base `0199741efba0a90e20684520762c7d8ded0fcfc8` on
@@ -138,15 +173,15 @@ confirmed the exact activated commit. Its automatic protected-branch contract
 run https://github.com/Ullmann27/device-ai/actions/runs/42997592914 also
 completed successfully on this same commit.
 
-The manual signing workflow has **not been dispatched**. The APK remains
-unsigned; this checkpoint contains no signing or installation receipt. No key
-is exported. Keep the existing protected signing gates. Published Latest remains
-the Code51 tag above; this checkpoint does not publish Code53 or install anything.
-Physical Fold7/audio/GPU/thermal acceptance remains NOT_RUN.
+The authorized manual signing workflow completed successfully as run
+`43001264061`, producing the verified original-signed unpublished draft recorded
+above. No key is exported. Published Latest remains the Code51 tag above;
+Code53 publication and installation have not occurred. Physical Fold7/audio/GPU/
+thermal acceptance remains NOT_RUN.
 
-The existing manual workflow is
+The existing workflow is
 https://github.com/Ullmann27/device-ai/actions/workflows/continuum-code52-sign-release.yml.
-Dispatch only on `chatgpt/code52-owner-signing-20261109`, with these exact inputs:
+The completed dispatch used `chatgpt/code52-owner-signing-20261109` and these exact inputs:
 
 | Input | Value |
 | --- | --- |
@@ -154,10 +189,10 @@ Dispatch only on `chatgpt/code52-owner-signing-20261109`, with these exact input
 | `qa_run_id` | `42985335421` |
 | `owner_approved_sha` | `050a57cb019dcc1b7fe6cfa2fb5c11176b048e05` |
 
-Retain the existing `continuum-original-signing` environment owner review.
-The expected output is a verified original-signed unpublished draft, its actual
-response URL, APK SHA-256 and byte count. Record the real signing run and receipt
-before changing this document's unsigned status.
+The existing `continuum-original-signing` protection remained in place. The
+actual signed-draft receipt above records the completed run, real draft URL,
+original certificate, signed APK SHA-256/bytes and uploaded build-info metadata.
+The historical unsigned QA artifact is preserved as the input receipt.
 
 ## Build failures and repairs
 
@@ -326,13 +361,12 @@ subjective audible or Fold7 acceptance.
 
 EXP-05/12/14 boundaries remain; research flags/weights are unchanged. Preserve
 package `at.heinz.deviceai.continuumlocal`, Code53 and the original signer.
-The exact-source APK/QA evidence is complete and original signing is explicitly
-authorized. The published shared-signer correction passed its exact hosted
-contract check and the existing signer branch is activated at that commit.
-Manual signing dispatch is still NOT_TRIGGERED; the APK remains unsigned.
-The integrator owns the existing protected signing gates. This checkpoint
-contains no main merge, signing, publication or installation receipt; published
-Latest remains Code51.
+The exact-source APK/QA evidence and original signing are complete. The shared
+signer correction passed its exact hosted contract check, and the activated
+signer produced the verified Code53 draft in run `43001264061`. This checkpoint
+contains the signing receipt; it does not record an app-main merge, Code53
+publication or installation. Published Latest remains Code51. Publication and
+physical-device acceptance remain separate owner gates.
 
 Rollback: revert the scoped fixes together with their regressions; Maya can
 also be disabled through the existing voice picker. Preserve donor worktrees
