@@ -150,3 +150,7 @@ Prozess-Einzelprüfung auf unverändertem c362: **37/37 PASS,0SKIP**. Finale vol
 Node-Menge bleibt354Dateien; äußere Parallelität1, innere Nebenläufigkeit und alle
 Fristen/Assertions bleiben unverändert. Frühere5 Fehler sind dadurch nicht erklärt
 oder rückwirkend behoben. Der neue Lauf wird ausdrücklich getrennt ausgewiesen.
+
+## Gemeinsamer vollständiger Node-Lauf – äußerlich seriell
+
+Exakter sauberer Source `5b935b4feaf960bb6973dd4d630f02744e41913f`: **2.498 Fälle, 2.455 PASS, 6 FAIL, 37 SKIP**; vollständiger Abschluss, Quelle unverändert, Prozessende bestätigt. Identische 354 Dateien/Reihenfolge, unveränderte Assertions und 30-Minuten-Grenze. Die Variante mit äußerer Parallelität 1 ist ebenfalls FAIL; der frühere Parallel-Lauf bleibt dokumentiert. Konkrete Fehler in `node-serial-5b935b4f/failures.json`; Ursachen werden getrennt geprüft. Android/Lint auf diesem Source läuft, APK noch nicht gebaut.

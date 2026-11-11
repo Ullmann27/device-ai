@@ -203,3 +203,9 @@ outcome evaluator, inner worker concurrency, every assertion and every timeout
 instead of two. `harness/full-node-serial.mjs` checks the exact file inventory
 and sources before/after and labels that execution variant explicitly. The
 previous concurrency-two FAIL remains part of the evidence, not retroactively green.
+
+## Complete final serial Node result / common Android started
+
+Frozen common source `5b935b4feaf960bb6973dd4d630f02744e41913f`, tree `246ff9ffbbb3d17e59147806c90bb0b47a7743ef`. Full 354-file ordered Node profile completed at 17:14 UTC: **2455 PASS / 6 FAIL / 37 SKIP (2498 total)**. Source unchanged, not cancelled, termination confirmed, evidence complete. Backend check and64cases pass. Serialization did not fix the complete gate; previous five-failure concurrency-two evidence remains. Six current failures cover typed observation/code-index CLI output, overlapping MCP reads, and three process-start/cleanup fixtures. Root requested source-bound read-only triage; no common-cause assumption or test weakening. Evidence: `docs/evidence/omega-apk54-20261111/node-serial-5b935b4f/`.
+
+Focused 27-class Android plus NewApi lint started at 17:14:02 UTC on this exact source; full unfiltered Android is queued behind it and requires focused PASS. No APK has been produced at this checkpoint. The unsigned build runner/validator passed independent source review including final artifact/build-output hash equality; this is preparation, not a build, install, device or release result.

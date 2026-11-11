@@ -214,6 +214,16 @@
       "tests": "RED12:3PASS/9FAIL; GREEN95/95; one actual Activity case pending",
       "status": "INTEGRATED_PENDING_ANDROID_QA",
       "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "apk54-full-node-serial",
+      "origin_pr": 769,
+      "commit": "5b935b4feaf960bb6973dd4d630f02744e41913f",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "status": "FAIL",
+      "tests": "2498 total:2455 PASS/6 FAIL/37 SKIP; same354files/order; outerconcurrency1; sourceUnchangedtrue; terminationConfirmedtrue; complete evidence; unchanged30min bound",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-apk54-20261111/node-serial-5b935b4f/SUMMARY.json"
     }
   ],
   "parent_pr": 768,
@@ -289,6 +299,8 @@
       "skip": 0,
       "source_unchanged": true,
       "durationSeconds": 56.02
-    }
+    },
+    "common_qa_source": "5b935b4feaf960bb6973dd4d630f02744e41913f",
+    "common_android": "27-class focused Android and NewApi lint RUNNING; unfiltered Android queued and requires focused PASS"
   }
 }

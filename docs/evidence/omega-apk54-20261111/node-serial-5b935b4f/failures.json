@@ -1,0 +1,68 @@
+[
+  {
+    "case": {
+      "name": "observations are typed and printed text cannot pass as one",
+      "time": "7.119783",
+      "classname": "test",
+      "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/behaviour-disambiguation.test.mjs",
+      "failure": "o.get(...).map is not a function"
+    },
+    "type": "failure",
+    "detail": "\n[Error [ERR_TEST_FAILURE]: o.get(...).map is not a function] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: TypeError [Error]: o.get(...).map is not a function\n      at TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/device-ai/.github/continuum/behaviour-disambiguation.test.mjs:59:72)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1402:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n      at Test.postRun (node:internal/test_runner/test:1542:19)\n      at Test.run (node:internal/test_runner/test:1467:12)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n}\n\t\t"
+  },
+  {
+    "case": {
+      "name": "the CLI keeps the index outside the repository",
+      "time": "7.670854",
+      "classname": "test",
+      "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/code-index.test.mjs",
+      "failure": "The expression evaluated to a falsy value:\n\n  assert.ok(lines.some(l=>l.startsWith('near ')))\n"
+    },
+    "type": "failure",
+    "detail": "\n[Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:\n\n  assert.ok(lines.some(l=>l.startsWith('near ')))\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n  \n    assert.ok(lines.some(l=>l.startsWith('near ')))\n  \n      at TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/device-ai/.github/continuum/code-index.test.mjs:104:9)\n      at async Test.run (node:internal/test_runner/test:1409:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t"
+  },
+  {
+    "case": {
+      "name": "timeouts, oversized results/body and per-session parallel reads fail closed",
+      "time": "0.193457",
+      "classname": "test",
+      "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/coding-mcp.test.mjs",
+      "failure": "Expected values to be strictly equal:\n\n200 !== 429\n"
+    },
+    "type": "failure",
+    "detail": "\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 429\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 429\n  \n      at TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/device-ai/.github/continuum/coding-mcp.test.mjs:138:10)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1409:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 429,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t"
+  },
+  {
+    "case": {
+      "name": "TIMEOUT removes a descendant that ignores SIGTERM before restart",
+      "time": "5.068003",
+      "classname": "test",
+      "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs",
+      "failure": "condition timeout"
+    },
+    "type": "failure",
+    "detail": "\n[Error [ERR_TEST_FAILURE]: condition timeout] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: Error: condition timeout\n      at waitFor (file:///workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs:19:108)\n      at async TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs:139:3)\n      at async Test.run (node:internal/test_runner/test:1409:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n}\n\t\t"
+  },
+  {
+    "case": {
+      "name": "cancellation also stops a child that detached like the Gradle daemon",
+      "time": "2.992162",
+      "classname": "test",
+      "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-owned-process.test.mjs",
+      "failure": "The expression evaluated to a falsy value:\n\n  assert.ok(Number.isSafeInteger(pid)&&pid>1)\n"
+    },
+    "type": "failure",
+    "detail": "\n[Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:\n\n  assert.ok(Number.isSafeInteger(pid)&&pid>1)\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n  \n    assert.ok(Number.isSafeInteger(pid)&&pid>1)\n  \n      at TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/device-ai/scripts/continuum-owned-process.test.mjs:46:10)\n      at async Test.run (node:internal/test_runner/test:1409:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t"
+  },
+  {
+    "case": {
+      "name": "an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup",
+      "time": "2.389237",
+      "classname": "test",
+      "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-owned-process.test.mjs",
+      "failure": "Expected values to be strictly equal:\n\nfalse !== true\n"
+    },
+    "type": "failure",
+    "detail": "\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nfalse !== true\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  false !== true\n  \n      at TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/device-ai/scripts/continuum-owned-process.test.mjs:79:10)\n      at async Test.run (node:internal/test_runner/test:1409:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t"
+  }
+]

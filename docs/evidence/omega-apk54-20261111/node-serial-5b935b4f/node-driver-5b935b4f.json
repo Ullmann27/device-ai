@@ -1,0 +1,61 @@
+{
+  "source": "5b935b4feaf960bb6973dd4d630f02744e41913f",
+  "tree": "246ff9ffbbb3d17e59147806c90bb0b47a7743ef",
+  "startedAt": "2026-11-11T16:54:20.498838+00:00",
+  "records": [
+    {
+      "name": "backend-check",
+      "command": [
+        "npm",
+        "--prefix",
+        "backend",
+        "run",
+        "check"
+      ],
+      "startedAt": "2026-11-11T16:54:20.503361+00:00",
+      "finishedAt": "2026-11-11T16:54:24.550245+00:00",
+      "exit": 0,
+      "elapsedSeconds": 4.047,
+      "log": "/workspace/scratch/2d62a799e417/qa/backend-check-5b935b4f.log",
+      "logSha256": "d8a9e8ae142dc0661a5f3391428034fae092bff80d2da574884a4a5f67a0e7e1"
+    },
+    {
+      "name": "backend-test",
+      "command": [
+        "npm",
+        "--prefix",
+        "backend",
+        "test"
+      ],
+      "startedAt": "2026-11-11T16:54:24.552152+00:00",
+      "finishedAt": "2026-11-11T16:54:28.258197+00:00",
+      "exit": 0,
+      "elapsedSeconds": 3.707,
+      "log": "/workspace/scratch/2d62a799e417/qa/backend-test-5b935b4f.log",
+      "logSha256": "a95a713c700b1eee4fef043cf80a521968f05651d4e6e5aa2a3ad2616eacf21f"
+    },
+    {
+      "name": "full-node-serial",
+      "command": [
+        "node",
+        "docs/evidence/omega-apk54-20261111/harness/full-node-serial.mjs",
+        "--repo",
+        "/workspace/scratch/2d62a799e417/device-ai",
+        "--expected-sha",
+        "5b935b4feaf960bb6973dd4d630f02744e41913f",
+        "--out",
+        "/workspace/scratch/2d62a799e417/qa/node-serial-5b935b4f"
+      ],
+      "startedAt": "2026-11-11T16:54:28.261949+00:00",
+      "finishedAt": "2026-11-11T17:14:02.125637+00:00",
+      "exit": 1,
+      "elapsedSeconds": 1173.864,
+      "log": "/workspace/scratch/2d62a799e417/qa/full-node-serial-5b935b4f.log",
+      "logSha256": "32e09ad38764da9c9e25f5d05981c1711aae8e5ab2123531dd1f263ba1fafb99"
+    }
+  ],
+  "sourceAfter": "5b935b4feaf960bb6973dd4d630f02744e41913f",
+  "statusAfter": "",
+  "finishedAt": "2026-11-11T17:14:02.206717+00:00",
+  "sourceUnchanged": true
+}
