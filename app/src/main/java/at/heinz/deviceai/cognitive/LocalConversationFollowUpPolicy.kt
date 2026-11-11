@@ -42,7 +42,7 @@ internal object LocalConversationFollowUpPolicy {
         """(?iu)(?<!\p{L})(?:hieß|hiess|heißt|sagtest|sagte|meintest|erwähnt\p{L}*)(?!\p{L})[^.!?\n]{0,40}(?<!\p{L})(?:nochmal|noch\s+einmal)(?!\p{L})[^.!?\n]{0,40}\?""")
 
     private val conversationState = Regex(
-        """(?iu)(?<!\p{L})(?:nach\s+(?:allen|den)\s+korrekturen|unser\p{L}*\s+(?:bisherige\p{L}*\s+)?gespräch|(?:laut|nach)\s+(?:meinen|deinen)\s+angaben)(?!\p{L})""")
+        """(?iu)(?<!\p{L})(?:nach\s+(?:allen|den)\s+korrekturen|unser\p{L}*\s+(?:bisherige\p{L}*|frühere\p{L}*|letzte\p{L}*)\s+gespräch|(?:laut|nach)\s+(?:meinen|deinen)\s+angaben)(?!\p{L})""")
 
     fun requiresPreviousOwnerTurn(request: String): Boolean {
         val text = request.trim()

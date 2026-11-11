@@ -155,7 +155,9 @@ class OwnerObjectStateConversationUiTest {
         }) { runtime.running }
         val prompt = runtime.prompts.last()
         runtime.answer(answer)
-        until("model turn completed") { !(field(activity, "busy") as Boolean) }
+        until("model turn completed: $request", failureDetails = {
+            "; busy=${field(activity, "busy")}; running=${runtime.running}; state=${runtime.state}; prompts=${runtime.prompts.size}"
+        }) { !(field(activity, "busy") as Boolean) }
         return prompt
     }
     private fun recall(activity: AgentActivity, runtime: Runtime, question: String, expected: String) {

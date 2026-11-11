@@ -7,6 +7,7 @@ on:
       - integrate/omega-apk54-20261111
     paths:
       - .github/workflows/continuum-code54-qa.yml
+      - app/**
 
 permissions:
   contents: read
@@ -117,7 +118,7 @@ jobs:
           native=[x for x in cases if x.get('class')=='at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest' and x.get('name')=='actualProviderReadRendersAndExtractsSyntheticPdf']
           assert len(starts)==len(ends)==1 and cases
           assert not starts[0]['environment']['projectProperties']['continuumPdfAllowMissingHostNative']
-          assert not starts[0]['environment']['includePatterns'] and not starts[0]['environment']['excludePatterns']
+          assert not starts[0]['includePatterns'] and not starts[0]['excludePatterns']
           assert len(native)==1 and native[0]['result']=='SUCCESS', 'STRICT_NATIVE_PDF_REQUIRED'
           assert all(c.get('result')=='SUCCESS' for c in cases)
           assert ends[0]['sourceUnchanged'] and ends[0]['sourceEnd']['head']==os.environ['GITHUB_SHA']

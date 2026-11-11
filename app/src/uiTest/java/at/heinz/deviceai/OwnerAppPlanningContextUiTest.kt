@@ -91,10 +91,11 @@ class OwnerAppPlanningContextUiTest {
     private fun context(activity: AgentActivity) = field(activity, "localConversationContext") as LocalConversationContext
     private fun session(activity: AgentActivity) = field(activity, "sessionId") as String
     private fun advance() = shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
-    private fun until(label: String, condition: () -> Boolean) {
+    private fun until(label: String, details: () -> String = { "" }, condition: () -> Boolean) {
         val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
         while (!condition() && System.nanoTime() < deadline) { advance(); Thread.sleep(5) }
-        assertTrue(label, condition())
+        val complete = condition()
+        assertTrue(if (complete) label else label + details(), complete)
     }
     private fun withActivity(runtime: Runtime = Runtime(), body: (AgentActivity, Runtime) -> Unit) {
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
@@ -145,7 +146,9 @@ class OwnerAppPlanningContextUiTest {
             assertTrue(runtime.prompts.last().contains(request))
             assertNull(field(activity, "activeOwnerAppFlow"))
             runtime.answer("Wir können den nächsten Schritt besprechen.")
-            until("Conversation completed") { field(activity, "busy") == false }
+            until("Conversation completed: $request", details = {
+                "; busy=${field(activity, "busy")}; running=${runtime.running}; state=${runtime.state}; prompts=${runtime.prompts.size}"
+            }) { field(activity, "busy") == false }
         }
     }
 
