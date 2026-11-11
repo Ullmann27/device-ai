@@ -1,0 +1,97 @@
+id	label	prompt
+semantic-dev-0001	2	Ich beschreibe lediglich die Möglichkeit: «nichts tun». Ich beauftrage dich damit: «nach „Ahorn am Teich“ suchen».
+semantic-dev-0002	0	Zur Auswahl stehen zuerst «nichts tun», danach «nach „nicht Koralle“ suchen». Führe nur Ersteres aus.
+semantic-dev-0003	3	Ich beschreibe lediglich die Möglichkeit: «die Datei „nicht Koralle“ öffnen». Ich beauftrage dich damit: «„nicht Koralle“ als Notiz speichern».
+semantic-dev-0004	2	Ich beauftrage dich damit: «nach „nicht Koralle“ suchen». Ich beschreibe lediglich die Möglichkeit: «die Datei „nicht Koralle“ öffnen».
+semantic-dev-0005	3	Die Bedingung gilt. Falls sie gilt: «„Ahorn am Teich“ als Notiz speichern»; sonst: «nach „Ahorn am Teich“ suchen».
+semantic-dev-0006	3	Zur Auswahl stehen zuerst «„nicht Koralle“ als Notiz speichern», danach «nach „nicht Koralle“ suchen». Führe nur Ersteres aus.
+semantic-dev-0007	3	Verboten ist «nach „nicht Koralle“ suchen». Zugelassen ist «„nicht Koralle“ als Notiz speichern». Erledige genau das Zugelassene.
+semantic-dev-0008	0	Ich beschreibe lediglich die Möglichkeit: «„nicht Koralle“ als Notiz speichern». Ich beauftrage dich damit: «nichts tun».
+semantic-dev-0009	2	Die Bedingung gilt nicht. Falls sie gilt: «nichts tun»; sonst: «nach „nicht Koralle“ suchen».
+semantic-dev-0010	3	Zur Auswahl stehen zuerst «nichts tun», danach «„nicht Koralle“ als Notiz speichern». Führe nur Letzteres aus.
+semantic-dev-0011	1	Die Bedingung gilt nicht. Falls sie gilt: «nach „nicht Koralle“ suchen»; sonst: «die Datei „nicht Koralle“ öffnen».
+semantic-dev-0012	0	Die Bedingung gilt. Falls sie gilt: «nichts tun»; sonst: «nach „Ahorn am Teich“ suchen».
+semantic-dev-0013	1	Zur Auswahl stehen zuerst «die Datei „Ahorn am Teich“ öffnen», danach «„Ahorn am Teich“ als Notiz speichern». Führe nur Ersteres aus.
+semantic-dev-0014	1	Die Bedingung gilt. Falls sie gilt: «die Datei „nicht Koralle“ öffnen»; sonst: «nichts tun».
+semantic-dev-0015	3	Die Bedingung gilt nicht. Falls sie gilt: «nach „nicht Koralle“ suchen»; sonst: «„nicht Koralle“ als Notiz speichern».
+semantic-dev-0016	2	Zur Auswahl stehen zuerst «„Ahorn am Teich“ als Notiz speichern», danach «nach „Ahorn am Teich“ suchen». Führe nur Letzteres aus.
+semantic-dev-0017	0	Verboten ist «„Ahorn am Teich“ als Notiz speichern». Zugelassen ist «nichts tun». Erledige genau das Zugelassene.
+semantic-dev-0018	3	Zur Auswahl stehen zuerst «nach „Ahorn am Teich“ suchen», danach «„Ahorn am Teich“ als Notiz speichern». Führe nur Letzteres aus.
+semantic-dev-0019	0	Die Bedingung gilt nicht. Falls sie gilt: «„Ahorn am Teich“ als Notiz speichern»; sonst: «nichts tun».
+semantic-dev-0020	0	Zur Auswahl stehen zuerst «die Datei „nicht Koralle“ öffnen», danach «nichts tun». Führe nur Letzteres aus.
+semantic-dev-0021	2	Zugelassen ist «nach „Ahorn am Teich“ suchen». Verboten ist «die Datei „Ahorn am Teich“ öffnen». Erledige genau das Zugelassene.
+semantic-dev-0022	2	Zugelassen ist «nach „Ahorn am Teich“ suchen». Verboten ist «nichts tun». Erledige genau das Zugelassene.
+semantic-dev-0023	0	Die Bedingung gilt. Falls sie gilt: «nichts tun»; sonst: «die Datei „nicht Koralle“ öffnen».
+semantic-dev-0024	3	Die Bedingung gilt nicht. Falls sie gilt: «die Datei „Ahorn am Teich“ öffnen»; sonst: «„Ahorn am Teich“ als Notiz speichern».
+semantic-dev-0025	2	Zur Auswahl stehen zuerst «nach „nicht Koralle“ suchen», danach «nichts tun». Führe nur Ersteres aus.
+semantic-dev-0026	0	Die Bedingung gilt nicht. Falls sie gilt: «nach „nicht Koralle“ suchen»; sonst: «nichts tun».
+semantic-dev-0027	1	Verboten ist «nichts tun». Zugelassen ist «die Datei „Ahorn am Teich“ öffnen». Erledige genau das Zugelassene.
+semantic-dev-0028	3	Verboten ist «nichts tun». Zugelassen ist «„Ahorn am Teich“ als Notiz speichern». Erledige genau das Zugelassene.
+semantic-dev-0029	1	Zugelassen ist «die Datei „Ahorn am Teich“ öffnen». Verboten ist «nach „Ahorn am Teich“ suchen». Erledige genau das Zugelassene.
+semantic-dev-0030	1	Verboten ist «nach „nicht Koralle“ suchen». Zugelassen ist «die Datei „nicht Koralle“ öffnen». Erledige genau das Zugelassene.
+semantic-dev-0031	0	Verboten ist «nach „nicht Koralle“ suchen». Zugelassen ist «nichts tun». Erledige genau das Zugelassene.
+semantic-dev-0032	0	Zur Auswahl stehen zuerst «nach „Ahorn am Teich“ suchen», danach «nichts tun». Führe nur Letzteres aus.
+semantic-dev-0033	2	Zur Auswahl stehen zuerst «nach „nicht Koralle“ suchen», danach «die Datei „nicht Koralle“ öffnen». Führe nur Ersteres aus.
+semantic-dev-0034	1	Zur Auswahl stehen zuerst «nichts tun», danach «die Datei „nicht Koralle“ öffnen». Führe nur Letzteres aus.
+semantic-dev-0035	1	Ich beschreibe lediglich die Möglichkeit: «nichts tun». Ich beauftrage dich damit: «die Datei „nicht Koralle“ öffnen».
+semantic-dev-0036	3	Verboten ist «die Datei „Ahorn am Teich“ öffnen». Zugelassen ist «„Ahorn am Teich“ als Notiz speichern». Erledige genau das Zugelassene.
+semantic-dev-0037	0	Ich beschreibe lediglich die Möglichkeit: «nach „Ahorn am Teich“ suchen». Ich beauftrage dich damit: «nichts tun».
+semantic-dev-0038	2	Die Bedingung gilt nicht. Falls sie gilt: «die Datei „nicht Koralle“ öffnen»; sonst: «nach „nicht Koralle“ suchen».
+semantic-dev-0039	3	Die Bedingung gilt. Falls sie gilt: «„nicht Koralle“ als Notiz speichern»; sonst: «nichts tun».
+semantic-dev-0040	0	Ich beauftrage dich damit: «nichts tun». Ich beschreibe lediglich die Möglichkeit: «nach „nicht Koralle“ suchen».
+semantic-dev-0041	1	Die Bedingung gilt nicht. Falls sie gilt: «„Ahorn am Teich“ als Notiz speichern»; sonst: «die Datei „Ahorn am Teich“ öffnen».
+semantic-dev-0042	1	Zur Auswahl stehen zuerst «die Datei „nicht Koralle“ öffnen», danach «nach „nicht Koralle“ suchen». Führe nur Ersteres aus.
+semantic-dev-0043	1	Zugelassen ist «die Datei „nicht Koralle“ öffnen». Verboten ist «„nicht Koralle“ als Notiz speichern». Erledige genau das Zugelassene.
+semantic-dev-0044	2	Zur Auswahl stehen zuerst «nichts tun», danach «nach „Ahorn am Teich“ suchen». Führe nur Letzteres aus.
+semantic-dev-0045	1	Zur Auswahl stehen zuerst «nach „Ahorn am Teich“ suchen», danach «die Datei „Ahorn am Teich“ öffnen». Führe nur Letzteres aus.
+semantic-dev-0046	3	Zugelassen ist «„Ahorn am Teich“ als Notiz speichern». Verboten ist «nach „Ahorn am Teich“ suchen». Erledige genau das Zugelassene.
+semantic-dev-0047	2	Zur Auswahl stehen zuerst «nach „nicht Koralle“ suchen», danach «„nicht Koralle“ als Notiz speichern». Führe nur Ersteres aus.
+semantic-dev-0048	0	Zur Auswahl stehen zuerst «nichts tun», danach «„Ahorn am Teich“ als Notiz speichern». Führe nur Ersteres aus.
+semantic-dev-0049	2	Die Bedingung gilt. Falls sie gilt: «nach „Ahorn am Teich“ suchen»; sonst: «nichts tun».
+semantic-dev-0050	0	Ich beschreibe lediglich die Möglichkeit: «die Datei „nicht Koralle“ öffnen». Ich beauftrage dich damit: «nichts tun».
+semantic-dev-0051	2	Zur Auswahl stehen zuerst «die Datei „Ahorn am Teich“ öffnen», danach «nach „Ahorn am Teich“ suchen». Führe nur Letzteres aus.
+semantic-dev-0052	3	Die Bedingung gilt nicht. Falls sie gilt: «nichts tun»; sonst: «„Ahorn am Teich“ als Notiz speichern».
+semantic-dev-0053	0	Verboten ist «die Datei „Ahorn am Teich“ öffnen». Zugelassen ist «nichts tun». Erledige genau das Zugelassene.
+semantic-dev-0054	1	Die Bedingung gilt. Falls sie gilt: «die Datei „nicht Koralle“ öffnen»; sonst: «„nicht Koralle“ als Notiz speichern».
+semantic-dev-0055	2	Die Bedingung gilt. Falls sie gilt: «nach „Ahorn am Teich“ suchen»; sonst: «„Ahorn am Teich“ als Notiz speichern».
+semantic-dev-0056	2	Verboten ist «„nicht Koralle“ als Notiz speichern». Zugelassen ist «nach „nicht Koralle“ suchen». Erledige genau das Zugelassene.
+semantic-dev-0057	3	Zugelassen ist «„nicht Koralle“ als Notiz speichern». Verboten ist «die Datei „nicht Koralle“ öffnen». Erledige genau das Zugelassene.
+semantic-dev-0058	1	Verboten ist «„Ahorn am Teich“ als Notiz speichern». Zugelassen ist «die Datei „Ahorn am Teich“ öffnen». Erledige genau das Zugelassene.
+semantic-dev-0059	2	Verboten ist «die Datei „nicht Koralle“ öffnen». Zugelassen ist «nach „nicht Koralle“ suchen». Erledige genau das Zugelassene.
+semantic-dev-0060	0	Zugelassen ist «nichts tun». Verboten ist «die Datei „nicht Koralle“ öffnen». Erledige genau das Zugelassene.
+semantic-dev-0061	3	Ich beauftrage dich damit: «„nicht Koralle“ als Notiz speichern». Ich beschreibe lediglich die Möglichkeit: «nach „nicht Koralle“ suchen».
+semantic-dev-0062	1	Ich beauftrage dich damit: «die Datei „Ahorn am Teich“ öffnen». Ich beschreibe lediglich die Möglichkeit: «„Ahorn am Teich“ als Notiz speichern».
+semantic-dev-0063	1	Ich beauftrage dich damit: «die Datei „nicht Koralle“ öffnen». Ich beschreibe lediglich die Möglichkeit: «nach „nicht Koralle“ suchen».
+semantic-dev-0064	2	Die Bedingung gilt. Falls sie gilt: «nach „Ahorn am Teich“ suchen»; sonst: «die Datei „Ahorn am Teich“ öffnen».
+semantic-dev-0065	1	Zur Auswahl stehen zuerst «„nicht Koralle“ als Notiz speichern», danach «die Datei „nicht Koralle“ öffnen». Führe nur Letzteres aus.
+semantic-dev-0066	2	Verboten ist «nichts tun». Zugelassen ist «nach „nicht Koralle“ suchen». Erledige genau das Zugelassene.
+semantic-dev-0067	0	Zugelassen ist «nichts tun». Verboten ist «„nicht Koralle“ als Notiz speichern». Erledige genau das Zugelassene.
+semantic-dev-0068	3	Zur Auswahl stehen zuerst «die Datei „nicht Koralle“ öffnen», danach «„nicht Koralle“ als Notiz speichern». Führe nur Letzteres aus.
+semantic-dev-0069	2	Die Bedingung gilt nicht. Falls sie gilt: «„nicht Koralle“ als Notiz speichern»; sonst: «nach „nicht Koralle“ suchen».
+semantic-dev-0070	2	Ich beschreibe lediglich die Möglichkeit: «„Ahorn am Teich“ als Notiz speichern». Ich beauftrage dich damit: «nach „Ahorn am Teich“ suchen».
+semantic-dev-0071	3	Ich beschreibe lediglich die Möglichkeit: «nichts tun». Ich beauftrage dich damit: «„nicht Koralle“ als Notiz speichern».
+semantic-dev-0072	0	Ich beauftrage dich damit: «nichts tun». Ich beschreibe lediglich die Möglichkeit: «„Ahorn am Teich“ als Notiz speichern».
+semantic-dev-0073	3	Ich beauftrage dich damit: «„Ahorn am Teich“ als Notiz speichern». Ich beschreibe lediglich die Möglichkeit: «nichts tun».
+semantic-dev-0074	1	Ich beschreibe lediglich die Möglichkeit: «„nicht Koralle“ als Notiz speichern». Ich beauftrage dich damit: «die Datei „nicht Koralle“ öffnen».
+semantic-dev-0075	2	Ich beauftrage dich damit: «nach „nicht Koralle“ suchen». Ich beschreibe lediglich die Möglichkeit: «„nicht Koralle“ als Notiz speichern».
+semantic-dev-0076	3	Zur Auswahl stehen zuerst «„Ahorn am Teich“ als Notiz speichern», danach «die Datei „Ahorn am Teich“ öffnen». Führe nur Ersteres aus.
+semantic-dev-0077	3	Zugelassen ist «„nicht Koralle“ als Notiz speichern». Verboten ist «nichts tun». Erledige genau das Zugelassene.
+semantic-dev-0078	3	Ich beschreibe lediglich die Möglichkeit: «nach „Ahorn am Teich“ suchen». Ich beauftrage dich damit: «„Ahorn am Teich“ als Notiz speichern».
+semantic-dev-0079	2	Ich beschreibe lediglich die Möglichkeit: «die Datei „Ahorn am Teich“ öffnen». Ich beauftrage dich damit: «nach „Ahorn am Teich“ suchen».
+semantic-dev-0080	2	Ich beauftrage dich damit: «nach „nicht Koralle“ suchen». Ich beschreibe lediglich die Möglichkeit: «nichts tun».
+semantic-dev-0081	2	Zugelassen ist «nach „Ahorn am Teich“ suchen». Verboten ist «„Ahorn am Teich“ als Notiz speichern». Erledige genau das Zugelassene.
+semantic-dev-0082	0	Zur Auswahl stehen zuerst «nichts tun», danach «die Datei „Ahorn am Teich“ öffnen». Führe nur Ersteres aus.
+semantic-dev-0083	1	Ich beauftrage dich damit: «die Datei „Ahorn am Teich“ öffnen». Ich beschreibe lediglich die Möglichkeit: «nichts tun».
+semantic-dev-0084	3	Ich beauftrage dich damit: «„Ahorn am Teich“ als Notiz speichern». Ich beschreibe lediglich die Möglichkeit: «die Datei „Ahorn am Teich“ öffnen».
+semantic-dev-0085	1	Zugelassen ist «die Datei „nicht Koralle“ öffnen». Verboten ist «nichts tun». Erledige genau das Zugelassene.
+semantic-dev-0086	0	Zur Auswahl stehen zuerst «„nicht Koralle“ als Notiz speichern», danach «nichts tun». Führe nur Letzteres aus.
+semantic-dev-0087	0	Die Bedingung gilt. Falls sie gilt: «nichts tun»; sonst: «„nicht Koralle“ als Notiz speichern».
+semantic-dev-0088	1	Die Bedingung gilt nicht. Falls sie gilt: «nichts tun»; sonst: «die Datei „Ahorn am Teich“ öffnen».
+semantic-dev-0089	1	Die Bedingung gilt. Falls sie gilt: «die Datei „Ahorn am Teich“ öffnen»; sonst: «nach „Ahorn am Teich“ suchen».
+semantic-dev-0090	0	Die Bedingung gilt nicht. Falls sie gilt: «die Datei „Ahorn am Teich“ öffnen»; sonst: «nichts tun».
+semantic-dev-0091	3	Zur Auswahl stehen zuerst «„Ahorn am Teich“ als Notiz speichern», danach «nichts tun». Führe nur Ersteres aus.
+semantic-dev-0092	1	Zur Auswahl stehen zuerst «die Datei „Ahorn am Teich“ öffnen», danach «nichts tun». Führe nur Ersteres aus.
+semantic-dev-0093	0	Zugelassen ist «nichts tun». Verboten ist «nach „Ahorn am Teich“ suchen». Erledige genau das Zugelassene.
+semantic-dev-0094	0	Ich beauftrage dich damit: «nichts tun». Ich beschreibe lediglich die Möglichkeit: «die Datei „Ahorn am Teich“ öffnen».
+semantic-dev-0095	3	Die Bedingung gilt. Falls sie gilt: «„nicht Koralle“ als Notiz speichern»; sonst: «die Datei „nicht Koralle“ öffnen».
+semantic-dev-0096	1	Ich beschreibe lediglich die Möglichkeit: «nach „Ahorn am Teich“ suchen». Ich beauftrage dich damit: «die Datei „Ahorn am Teich“ öffnen».

@@ -1,0 +1,21 @@
+{
+  "additionalIndependentTests": 0,
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "experimental/lm1-semantic-20261111/data",
+    "-p",
+    "test_semantic_pilot.py",
+    "-v"
+  ],
+  "elapsedSeconds": 2.3175052360002155,
+  "executedTests": 8,
+  "exitCode": 0,
+  "sameTestsRepeatedForExitReceipt": true,
+  "status": "PASS",
+  "stderrSha256": "6857030fdf91e6a1ab543f4381f675ff5e494a3f6c8153a64e374286826f2a4e",
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
