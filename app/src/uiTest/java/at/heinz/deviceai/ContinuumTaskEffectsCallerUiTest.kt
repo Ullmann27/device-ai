@@ -116,10 +116,10 @@ class ContinuumTaskEffectsCallerUiTest {
         call(a,"setBusy",true);advance()
         val gate=call(a,"createToolGate",null,null,({false} as ()->Boolean),null,null) as ToolGate
         val result=AtomicReference<ToolExecutionResult>()
-        val t=Thread {result.set(gate.execute(ToolProposal("get_device_info",emptyMap()).invocation("actual-device-read")))}
+        val t=Thread {result.set(gate.execute(ToolProposal("list_processes",emptyMap()).invocation("actual-device-read")))}
         t.start()
         try {
-            assertTrue(started.await(2,TimeUnit.SECONDS));advanceFrames(16)
+            assertTrue("Bridge tool never started: ${result.get()}",started.await(2,TimeUnit.SECONDS));advanceFrames(16)
             assertTrue("A real authorized backend entry has no arrival",pulses(h).any {field(it!!,"type")==0})
             finish.get()!!(Result.success("synthetic injected device result"));t.join(2000);advanceFrames(16)
             assertFalse(t.isAlive);assertEquals(ToolExecutionStatus.SUCCEEDED,result.get().record.status)

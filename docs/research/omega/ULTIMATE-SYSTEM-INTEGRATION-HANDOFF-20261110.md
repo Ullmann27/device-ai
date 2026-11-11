@@ -135,3 +135,9 @@ Physischer Fold7, echtes Gemma, Mikrofon/TTS, Filament-GPU, Geräte-Thermik:
 **NOT_RUN**. Main-Merge, Originalsignierung, Installation und Veröffentlichung
 bleiben ohne ausdrückliche Besitzerfreigabe gesperrt. Rücknahme von Quelländerungen
 nur über nachvollziehbare Revert-Commits, keine Force-Pushes oder Branch-Löschungen.
+
+## Final caller fixture correction — 2026-11-11
+
+The first nine-case regression on local `55e031769e12dda32b67f94f821c03d4eabb92b4` / remote `2d946d4b2acbbddf5eef66bf56f5d26ba89dee9b` passed eight cases. The remaining authorized-runner test waited for an injected Shizuku callback from `get_device_info`; the integrated executor now reads that tool directly from Android Build APIs and therefore correctly never invokes Shizuku. The fixture now uses the existing read-only `list_processes` bridge tool. Arrival, departure, successful ToolGate outcome and absence of document-read effects remain asserted unchanged. No production code or permission gate was modified.
+
+Status at this checkpoint: WIP / targeted regression pending. Reproduce with `:app:testDebugUnitTest --tests at.heinz.deviceai.ConsequentialActionApprovalTest --tests at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest` under the existing UI widget QA profile. Preserve the original full-run and first-regression failures. EXP-11 compatibility unchanged; rollback is this test-only commit. Fold7 remains NOT_RUN.
