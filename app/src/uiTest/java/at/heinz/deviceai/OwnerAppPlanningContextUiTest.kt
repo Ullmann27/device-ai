@@ -139,13 +139,17 @@ class OwnerAppPlanningContextUiTest {
 
     @Test fun pluralStatementsReachConversationWithoutAppLookup() = withActivity { activity, runtime ->
         val generation = field(activity, "appLookupGeneration")
-        for (request in listOf("Wir starten", "Lass uns jetzt starten", "Morgen wollen wir das Projekt starten")) {
+        for ((request, reply) in listOf(
+            "Wir starten" to "Wir können die nächsten Schritte besprechen.",
+            "Lass uns jetzt starten" to "Was möchtest du zuerst erledigen?",
+            "Morgen wollen wir das Projekt starten" to "Morgen können wir mit der Aufgabenplanung beginnen."
+        )) {
             submit(activity, request)
             until("Ordinary statement reaches inference: $request") { runtime.running }
             assertEquals(request, generation, field(activity, "appLookupGeneration"))
             assertTrue(runtime.prompts.last().contains(request))
             assertNull(field(activity, "activeOwnerAppFlow"))
-            runtime.answer("Wir können den nächsten Schritt besprechen.")
+            runtime.answer(reply)
             until("Conversation completed: $request", details = {
                 "; busy=${field(activity, "busy")}; running=${runtime.running}; state=${runtime.state}; prompts=${runtime.prompts.size}"
             }) { field(activity, "busy") == false }

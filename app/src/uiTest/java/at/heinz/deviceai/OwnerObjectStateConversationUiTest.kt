@@ -242,12 +242,15 @@ class OwnerObjectStateConversationUiTest {
         assertFalse(context.sessionEvidence(session)!!.contains(FIRST))
         val memory = field(activity, "memoryStore") as InMemoryMemoryStore
         val priorMemories = memory.all()
-        for (request in listOf(
-            "Fasse meine Korrekturen an der Werkzeugkiste zusammen.",
-            "Was hat sich an der Werkzeugkiste geändert?",
-            "Wie viele Schrauben waren es vorhin?"
+        for ((request, reply) in listOf(
+            "Fasse meine Korrekturen an der Werkzeugkiste zusammen." to
+                "Die Schraubenzahl ging von zwölf über siebzehn auf einundzwanzig.",
+            "Was hat sich an der Werkzeugkiste geändert?" to
+                "Standort und Schraubenzahl wurden geändert; die Farbe blieb blau.",
+            "Wie viele Schrauben waren es vorhin?" to
+                "Zuerst waren es zwölf Schrauben, danach siebzehn."
         )) {
-            val prompt = modelTurn(activity, runtime, request, "Die angegebenen Änderungen sind berücksichtigt.")
+            val prompt = modelTurn(activity, runtime, request, reply)
             assertTrue("Complete owner request", prompt.contains(request))
             assertTrue(prompt, prompt.contains("12 → 17 → 21"))
             assertTrue(prompt, prompt.contains("in der Garage → im Keller"))
