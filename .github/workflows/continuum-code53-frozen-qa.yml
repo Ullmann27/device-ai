@@ -1,0 +1,152 @@
+name: Continuum Code53 frozen-source QA (unsigned)
+
+on:
+  push:
+    branches: [integration/continuum-final-visibility-20261111]
+    paths: [.github/workflows/continuum-code53-frozen-qa.yml]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-code53-final-visibility-unsigned-qa
+  cancel-in-progress: false
+
+env:
+  CONTINUUM_SOURCE_SHA: 43b8d9f4f7bfb7bef9714ba28efde5bb9622d482
+  CONTINUUM_CAPTURE_SOURCE_COMMIT: 43b8d9f4f7bfb7bef9714ba28efde5bb9622d482
+
+jobs:
+  validate-frozen-source:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/integration/continuum-final-visibility-20261111'
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    defaults:
+      run:
+        shell: bash
+        working-directory: source
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 43b8d9f4f7bfb7bef9714ba28efde5bb9622d482
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 67bf048a7d50a78b027da27a6b9814cbd2457372
+          path: qa-harness
+          sparse-checkout: docs/qa/apk53-a980
+          persist-credentials: false
+      - name: Bind source and separate workflow identity
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CONTINUUM_SOURCE_SHA"
+          test "$(git rev-parse HEAD^{tree})" = b6528e44d7ea7f376ccfe1b14b536f60c5efa914
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          mkdir -p "$RUNNER_TEMP/code53-unsigned"
+          printf 'source_sha=%s\nworkflow_sha=%s\nFold7=NOT_RUN\noriginal_signature=NOT_USED\n' "$CONTINUUM_SOURCE_SHA" "$GITHUB_SHA" > "$RUNNER_TEMP/code53-unsigned/BUILD-INFO.txt"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.1'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Source safety, full Node and critical subset
+        run: |
+          set -euo pipefail
+          command -v kotlinc
+          bash scripts/code52-targeted-kotlin-check.sh
+          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code53-critical"
+          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code53-full-node"
+          node -e "for(const n of ['code53-critical','code53-full-node']){const r=require(process.env.RUNNER_TEMP+'/'+n+'/report.json');if(r.status!=='PASS'||r.source.commit!==process.env.CONTINUUM_SOURCE_SHA||!r.sourceUnchanged)process.exit(69);console.log(n+' EXACT_SOURCE_PASS')}"
+      - name: Backend and software rendering gates
+        run: |
+          set -euo pipefail
+          npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+          npm --prefix backend run check
+          npm --prefix backend test
+          bash scripts/hollywood-fui-reference-fidelity.sh "$RUNNER_TEMP/code53-fidelity" CODE53-43b8d9f4
+          bash scripts/hollywood-fui-cinematics-preview.sh "$RUNNER_TEMP/code53-preview"
+      - name: Install official Android SDK
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Full Android suite and configured NewApi lint
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=53 -PcontinuumLocalStandaloneQa=true \
+            -PcontinuumUiWidgetTests=true -PcontinuumUiEvidenceDir="$RUNNER_TEMP/code53-ui" \
+            -I "$GITHUB_WORKSPACE/qa-harness/docs/qa/apk53-a980/apk53-test-memory.gradle" \
+            -I tools/capture/force_capture.gradle \
+            :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
+          python3 scripts/continuum-code52-junit-check.py app/build/test-results/testDebugUnitTest "$RUNNER_TEMP/code53-unsigned/JUNIT.txt"
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          required = {'LuxuryHoloButtonRendererTest','PerimeterWingChoreographerTest','SpatialWindowLightTest','HollywoodFuiWorkActivityTest','JarvisRenderQualityTest','TtsHologramSignalTest'}
+          found = set()
+          for path in Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'):
+              for case in ET.parse(path).getroot().iter('testcase'):
+                  name = case.get('classname','').split('.')[-1]
+                  if name in required:
+                      assert not any(case.find(k) is not None for k in ('failure','error','skipped')), (name,case.get('name'))
+                      found.add(name)
+          assert found == required, required - found
+          print('CINEMA_SOURCE_EXACT_JUNIT_PASS', sorted(found))
+          PY
+          test "$(git rev-parse HEAD)" = "$CONTINUUM_SOURCE_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - name: Build and validate unsigned original-package Code53
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=53 -PcontinuumLocalRenderUnsigned=true \
+            :app:assembleRelease
+          validator="$GITHUB_WORKSPACE/qa-harness/docs/qa/apk53-a980/validate-unsigned-apk.py"
+          printf '%s  %s\n' 2a0aeaef48bb5482f0da304ee24e3a69a66d3fa2a86c81885436d28b7c8a535f "$validator" | sha256sum -c -
+          python3 "$validator" app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/code53-package" \
+            --repo "$PWD" --build-tools "$ANDROID_HOME/build-tools/35.0.0" --java-home "$JAVA_HOME"
+          cp app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/code53-unsigned/Continuum-Code53-UNSIGNED-NOT-INSTALLABLE.apk"
+          cd "$RUNNER_TEMP/code53-unsigned"
+          sha256sum *.apk > SHA256SUMS.txt
+      - name: Preserve validated unsigned candidate
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code53-43b8d9f4-UNSIGNED-NOT-INSTALLABLE
+          path: ${{ runner.temp }}/code53-unsigned/
+          retention-days: 14
+          if-no-files-found: error
+      - name: Preserve source-bound evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code53-43b8d9f4-QA-Evidence
+          path: |
+            ${{ runner.temp }}/code53-critical/
+            ${{ runner.temp }}/code53-full-node/
+            ${{ runner.temp }}/code53-fidelity/
+            ${{ runner.temp }}/code53-preview/
+            ${{ runner.temp }}/code53-ui/
+            ${{ runner.temp }}/code53-package/
+            ${{ runner.temp }}/code53-unsigned/BUILD-INFO.txt
+            ${{ runner.temp }}/code53-unsigned/JUNIT.txt
+            source/app/build/test-results/testDebugUnitTest/
+            source/app/build/reports/
+          retention-days: 14
+          if-no-files-found: warn
+
