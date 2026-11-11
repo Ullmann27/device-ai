@@ -156,6 +156,67 @@ class OwnerAppActionWorkSceneUiTest {
     private fun pose(a: AgentActivity) = (get(get(a, "hologramView")!!, "avatarPose") as AvatarPoseReducer)
         .pose(android.os.SystemClock.elapsedRealtime())
 
+    @Test fun missingAppNameReplyUsesLookupAndStillRequiresConsent() = withActivity { a, port, _ ->
+        val before = lookupGeneration(a)
+        submit(a, "Öffne eine App", chat = false)
+        assertEquals("No lookup without the name", before, lookupGeneration(a))
+        assertTrue(descendants(a.window.decorView).filterIsInstance<TextView>()
+            .any { it.text.contains("Welche App meinst du genau") })
+        submit(a, "Jarvis, Signal", chat = false)
+        await { lookupGeneration(a) > before && ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
+        assertEquals("A name grants no launch", 0, port.calls.get())
+        approve(port)
+        assertEquals(1, port.calls.get())
+        port.release.countDown()
+        await { get(a, "busy") == false }
+    }
+
+    @Test fun anUnmatchedExplicitAppQuestionAcceptsOneCorrectedName() = withActivity { a, port, _ ->
+        submit(a, "Öffne Nichtinstalliert", chat = false)
+        await { get(a, "busy") == false }
+        val before = lookupGeneration(a)
+        assertEquals(0, port.calls.get())
+        submit(a, "Signal", chat = false)
+        await { lookupGeneration(a) > before && ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
+        assertEquals(0, port.calls.get())
+        ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+        await { get(a, "busy") == false }
+        val after = lookupGeneration(a)
+        submit(a, "Signal", chat = false)
+        advance(100)
+        assertEquals("Consumed answer cannot replay a launch", after, lookupGeneration(a))
+        assertEquals(0, port.calls.get())
+    }
+
+    @Test fun stopAndIndependentNavigationInvalidateAppNameQuestions() = withActivity { a, port, _ ->
+        for (cancel in listOf(true, false)) {
+            submit(a, "Öffne eine App", chat = false)
+            val before = lookupGeneration(a)
+            if (cancel) AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest")
+                .apply { isAccessible = true }.invoke(a)
+            else submit(a, "Gedächtniszentrum", chat = false)
+            submit(a, "Signal", chat = false)
+            await { get(a, "busy") == false && get(a, "botLookupPending") == false }
+            assertEquals("Unrelated turn invalidates the question", before, lookupGeneration(a))
+            assertEquals(0, port.calls.get())
+            assertFalse(ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
+        }
+    }
+
+    @Test fun diagnosisKeepsPriorityOverPendingAppName() = withActivity { a, port, _ ->
+        submit(a, "Öffne eine App", chat = false)
+        val before = lookupGeneration(a)
+        submit(a, "Systemdiagnose", chat = false)
+        await { get(a, "busy") == false }
+        assertNotNull((get(a, "executor") as DeviceToolExecutor).lastDiagnosis)
+        assertEquals("Diagnosis is an independent command", before, lookupGeneration(a))
+        assertEquals(0, port.calls.get())
+        submit(a, "Signal", chat = false)
+        advance(100)
+        assertEquals("Diagnosis consumed the older question", before, lookupGeneration(a))
+        assertEquals(0, port.calls.get())
+    }
+
     @Test fun chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult() = withActivity { a, port, _ ->
         submit(a, "Jarvis kannst du mir bitte Signal öffnen?")
         assertEquals(0, port.calls.get())

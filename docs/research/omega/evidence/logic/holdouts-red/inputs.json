@@ -1,0 +1,16 @@
+{
+  "source_head": "b1e9d59fff0d0e9cf2afee9c46da573169c6addc",
+  "cached_dependencies": "/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug",
+  "test_classes": [
+    "at.heinz.deviceai.cognitive.OwnerDeviceRequestSafetyTest",
+    "at.heinz.deviceai.cognitive.OwnerAppOpenRoutingTest"
+  ],
+  "source_sha256": {
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafetyTest.kt": "6eb0e3bb6e83c2048a1fa5ec3b65e10397c00ef821b70eb4ac2a66805b5aa641",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppOpenRoutingTest.kt": "b3268015556ded721fdfa173fba84ff69de16dd09426ac74882c80473f99b979",
+    "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt": "9ea8e28fee18b433b649d10d6c7029eb3fd95604b2aca2057a98130b93b614c6",
+    "app/src/main/java/at/heinz/deviceai/systemintelligence/SystemDiagnosis.kt": "1072e49288fbc9781b36eb1f404d9bc5cd733d628190519648ebaec3c91cb000",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt": "d1821ceec9dae06a7c0630e42a15523c06eccd0e3227a97c806b93b32d61bf69",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt": "9937e7d559a352517846674d0bc788d99070e74a73ce9b796c16877f0277c449"
+  }
+}

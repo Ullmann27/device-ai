@@ -77,7 +77,9 @@ class OwnerAppOpenRoutingTest {
             "WhatsApp nicht öffnen",
             "WhatsApp öffnen und Nachricht senden",
             "Downloads öffnen",
-            "Ich weiß nicht, wie man WhatsApp öffnen soll"
+            "Ich weiß nicht, wie man WhatsApp öffnen soll",
+            "Meine Frau will WhatsApp öffnen", "Bob möchte WhatsApp öffnen", "Max soll Chrome starten",
+            "Kann ich WhatsApp öffnen?", "Soll ich Chrome starten?"
         ).forEach { request ->
             val intake = OwnerAppLookupIntent.inspect(request)
             assertFalse("launch from: $request -> $intake",
