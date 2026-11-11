@@ -12,9 +12,13 @@ import java.io.ByteArrayOutputStream
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
-internal class ElevenLabsPcmRequest : MayaSpeech.Request {
-    private val connection = URL("https://api.elevenlabs.io/v1/text-to-speech/" +
-        MayaSpeech.VOICE_ID + "/stream?output_format=pcm_24000").openConnection() as HttpsURLConnection
+internal class ElevenLabsPcmRequest(
+    private val connection: HttpsURLConnection = URL(ENDPOINT).openConnection() as HttpsURLConnection
+) : MayaSpeech.Request {
+    companion object {
+        const val ENDPOINT = "https://api.elevenlabs.io/v1/text-to-speech/" +
+            MayaSpeech.VOICE_ID + "/stream?output_format=pcm_24000"
+    }
     @Volatile private var closed = false
 
     override fun synthesize(text: String, key: String, allowed: () -> Boolean): ByteArray {
@@ -36,6 +40,8 @@ internal class ElevenLabsPcmRequest : MayaSpeech.Request {
         check(!closed && allowed())
         connection.outputStream.use { check(!closed && allowed()); it.write(body) }
         check(connection.responseCode == 200) { "ELEVENLABS_UNAVAILABLE" }
+        check(connection.contentType?.substringBefore(';')?.trim()?.lowercase() in
+            setOf("audio/pcm", "audio/x-pcm", "audio/raw", "application/octet-stream"))
         val deadline = SystemClock.elapsedRealtime() + 45_000
         return connection.inputStream.use { input ->
             val output = ByteArrayOutputStream()

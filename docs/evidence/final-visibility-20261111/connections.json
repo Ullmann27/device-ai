@@ -92,18 +92,21 @@
     },
     {
       "component": "Speech and avatar",
-      "caller": "AgentActivity.speakBootstrap -> ApprovedSpeechChunkQueue -> speakNextChunk -> Android TextToSpeech -> utterance callbacks -> TtsHologramSignal + AvatarDirector",
-      "activation": "PREFERENCE_GATED",
-      "testedEffect": "Prior simulated TTS tests only",
+      "caller": "AgentActivity.speakBootstrap -> speakReply -> ApprovedSpeechChunkQueue -> speakNextChunk -> Android TTS or optional MayaSpeech -> shared utterance listener -> TtsHologramSignal + AvatarDirector",
+      "activation": "OWNER_OPT_IN_KEY_AND_CENTRAL_INTERNET_GATED",
+      "testedEffect": "11 host JVM tests PASS; Android provider/storage classes compiled against API36; full Android/UI tests pending",
       "visibleResult": "Listening, speaking and work pose",
-      "remainingGap": "New female standard-German ElevenLabs voice requested, no dialect or owner clone. Design tool requires user preview text; no-preview constraint unresolved. Secure app credentials and runtime adapter absent; no synthesis performed.",
+      "remainingGap": "Public Maya selected. Encrypted key entry and runtime adapter connected. Live credentials, pronunciation, playback and lip-sync Fold7 NOT_RUN. Per-chunk buffered playback, no phoneme timestamps.",
       "present": true,
       "regressionFiles": [
         "app/src/uiTest/java/at/heinz/deviceai/ContinuumLongReplySpeechUiTest.kt",
-        "app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt"
+        "app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt",
+        "app/src/test/java/at/heinz/deviceai/MayaSpeechTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/MayaVoiceSettingsUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ElevenLabsPcmRequestUiTest.kt"
       ],
       "deviceAcceptance": "NOT_RUN",
-      "hostQualification": "PENDING_SOURCE_BOUND_CI"
+      "hostQualification": "PARTIAL_HOST_ONLY"
     },
     {
       "component": "STOP and recovery",
@@ -173,5 +176,6 @@
     "claude/cinema2-depth-light-20261111": "e23506188fdb6454c244847083c60ae42189ee05"
   },
   "auditedRuntimeSource": "c57c6c2253bbcaa4a28deffec74fe689ab9ceab2",
-  "fullQualification": "PENDING_SOURCE_BOUND_CI"
+  "fullQualification": "PENDING_SOURCE_BOUND_CI",
+  "voiceRuntimeSource": "57d262c8df99399452252ba58bfbd8afe3b3d6a9 plus current follow-up patch"
 }

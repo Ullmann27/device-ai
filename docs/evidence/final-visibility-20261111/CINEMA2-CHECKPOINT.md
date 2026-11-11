@@ -45,6 +45,7 @@ Android Keystore AES-GCM encrypted token, with screenshot/autofill/state saving
 blocked for the field. No generation on setup. Key deletion and offline selection
 are reachable in the same picker. Global internet OFF/ASK never become ALWAYS_ON;
 Maya only uses ALWAYS_ON with the turn's current central consent revision.
+The explicit offline readiness hearing test stays local even when Maya is selected.
 Other modes retain the offline voice and display a fallback notice. STOP, new
 reply, pause, provider change, internet mode change and destruction cancel the
 provider; delayed callbacks cannot resume an obsolete utterance. Network/audio
@@ -61,7 +62,7 @@ standard-German pronunciation/naturalness remains a real listening acceptance it
 11 isolated JVM tests PASS: provider lifecycle/permission/error races and existing
 long-answer chunking. Provider + Android audio + secure-token classes compile
 against Android API36. Full AgentActivity compilation and Robolectric settings
-regressions are pending hosted QA, not covered by that partial compile.
+and mock-HTTP protocol regressions are pending hosted QA, not covered by that partial compile.
 Fold7 playback, key persistence, live ElevenLabs response and avatar lip-sync:
 NOT_RUN. No account key, credits or paid generation were used for development.
 

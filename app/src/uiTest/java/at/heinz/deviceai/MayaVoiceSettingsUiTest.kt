@@ -26,6 +26,23 @@ class MayaVoiceSettingsUiTest {
         else -> null
     }
 
+    @Test fun savedPreferenceNeverOverridesInternetRestrictionsOrMissingCredential() {
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        val activity = controller.get()
+        activity.getSharedPreferences("continuum-voice", Context.MODE_PRIVATE).edit()
+            .putBoolean("maya_enabled", true).commit()
+        activity.getSharedPreferences("device_ai_secure", Context.MODE_PRIVATE).edit().clear().commit()
+        val policy = AgentActivity::class.java.getDeclaredField("internetConsent").apply { isAccessible = true }
+            .get(activity) as at.heinz.deviceai.cognitive.InternetConsentPolicy
+        try {
+            for (mode in at.heinz.deviceai.cognitive.InternetAccessMode.entries) {
+                policy.setMode(mode)
+                assertEquals(false, call(activity, "mayaAvailable"))
+                assertEquals(mode, policy.mode)
+            }
+        } finally { runCatching { controller.close() } }
+    }
+
     @Test fun mayaSetupIsReachableWithoutAndroidTtsAndNeverAutoGeneratesASample() {
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         val activity = controller.get()
