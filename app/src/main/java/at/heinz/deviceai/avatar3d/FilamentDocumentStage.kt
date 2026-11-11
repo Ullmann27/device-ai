@@ -28,6 +28,7 @@ internal class FilamentDocumentStage(
     private var pageMaterial: MaterialInstance? = null
     private var bitmap: Bitmap? = null
     private var pageVisible = false
+    private var pageShown = false
     private var resultVisible: Boolean? = null
     private val matrix = FloatArray(16)
     private val pageMatrix = FloatArray(16)
@@ -80,6 +81,12 @@ internal class FilamentDocumentStage(
             resultVisible = frame.result
         }
         updatePage(page)
+        val showPage = pageVisible && frame.pageRectValid
+        if (showPage != pageShown) {
+            if (showPage) scene!!.addEntity(nodes.getValue("pdf-page"))
+            else scene!!.removeEntity(nodes.getValue("pdf-page"))
+            pageShown = showPage
+        }
         view!!.viewport = Viewport(0, 0, bufferWidth, bufferHeight)
         val distance = maxOf(frame.cameraDistance.toDouble(), maxOf(frame.width, frame.height).toDouble() * 2.0)
         val near = 1.0
@@ -91,20 +98,17 @@ internal class FilamentDocumentStage(
         Matrix.setIdentityM(matrix, 0)
         Matrix.rotateM(matrix, 0, -frame.yawDegrees, 0f, 1f, 0f)
         Matrix.rotateM(matrix, 0, frame.pitchDegrees, 1f, 0f, 0f)
-        Matrix.translateM(matrix, 0, frame.width * .5f, -frame.height * .5f, 0f)
+        Matrix.translateM(matrix, 0, frame.width * .5f, -frame.height * .5f,
+            -.045f * minOf(frame.width, frame.height))
         Matrix.scaleM(matrix, 0, frame.width, frame.height, minOf(frame.width, frame.height))
         val transforms = engine.transformManager
         for (name in listOf("document-glass", "document-rim", "result-glass", "result-rim"))
             transforms.setTransform(transforms.getInstance(nodes.getValue(name)), matrix)
-        if (pageVisible && bitmap != null) {
+        if (showPage) {
             System.arraycopy(matrix, 0, pageMatrix, 0, 16)
-            val aspect = bitmap!!.width.toFloat() / bitmap!!.height
-            val usableWidth = frame.width * .82f
-            val usableHeight = frame.height * .68f
-            val pageHeight = minOf(usableHeight, usableWidth / aspect)
-            val pageWidth = pageHeight * aspect
-            Matrix.translateM(pageMatrix, 0, 0f, -.025f, .045f)
-            Matrix.scaleM(pageMatrix, 0, pageWidth / frame.width, pageHeight / frame.height, 1f)
+            Matrix.translateM(pageMatrix, 0, frame.pageLeft + frame.pageWidth * .5f - .5f,
+                .5f - frame.pageTop - frame.pageHeight * .5f, .045f)
+            Matrix.scaleM(pageMatrix, 0, frame.pageWidth, frame.pageHeight, 1f)
             transforms.setTransform(transforms.getInstance(nodes.getValue("pdf-page")), pageMatrix)
         }
         if (!renderer.beginFrame(swapChain!!, System.nanoTime())) return false
@@ -118,6 +122,7 @@ internal class FilamentDocumentStage(
         bitmap = null
         scene?.removeEntity(nodes.getValue("pdf-page"))
         pageVisible = false
+        pageShown = false
         if (valid == null) return
         val maxEdge = maxOf(valid.width, valid.height)
         val scaled = if (maxEdge > 1024) Bitmap.createScaledBitmap(valid,
@@ -132,7 +137,6 @@ internal class FilamentDocumentStage(
             old?.let(engine::destroyTexture)
             bitmap = valid
             pageVisible = true
-            scene!!.addEntity(nodes.getValue("pdf-page"))
         } catch (failure: Throwable) {
             engine.destroyTexture(candidate)
             throw failure

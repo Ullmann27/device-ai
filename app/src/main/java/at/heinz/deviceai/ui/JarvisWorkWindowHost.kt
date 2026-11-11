@@ -131,6 +131,11 @@ class JarvisWorkWindowHost(
                 crystal = crystal,
                 depthLayers = depthLayers
             )) return null
+        currentDocumentStage?.let { stage ->
+            stage.close()
+            (stage.parent as? ViewGroup)?.removeView(stage)
+        }
+        currentDocumentStage = null
         currentClientClosed = onClosed
         morphPresentation(home, scene)
         return window
@@ -222,7 +227,7 @@ class JarvisWorkWindowHost(
         fui.requestFrame = { shell.invalidate() }
         window.onCinematicFrame = { elapsed, closing, reduced, open ->
             if (current === window && documentStage != null)
-                window.documentStageFrame(id, resultStage)?.let { documentStage.present(it, pageBitmap) }
+                window.documentStageFrame(id, resultStage, sourcePage)?.let { documentStage.present(it, pageBitmap) }
             fui.setParallax(shell.spatialTiltX, shell.spatialTiltY)
             fui.vacantTopDp = window.glassVacantTopDp()
             fui.present(elapsed, closing, reduced, open)

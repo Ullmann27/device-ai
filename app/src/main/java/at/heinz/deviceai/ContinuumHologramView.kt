@@ -567,6 +567,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                 override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) { invalidate() }
                 override fun onSurfaceTextureUpdated(surface: SurfaceTexture) = Unit
                 override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                    documentStageBinding?.report(false)
                     native3d?.close(); native3d = null
                     nativeSurface?.release(); nativeSurface = null
                     native3dDrawn = false

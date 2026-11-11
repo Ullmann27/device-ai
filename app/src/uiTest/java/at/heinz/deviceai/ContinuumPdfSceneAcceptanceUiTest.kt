@@ -180,6 +180,20 @@ class ContinuumPdfSceneAcceptanceUiTest {
         assertNoWork(activity, root)
     }
 
+    @Test fun anOldPickerResultCannotConsumeTheNewerSelection() = withCockpit { _, activity, root ->
+        val earlier = picker(activity)
+        val current = picker(activity, "Öffne eine andere PDF.")
+        val beforeOldResult = chat(activity)
+        deliver(activity, earlier, Activity.RESULT_CANCELED, null)
+        flushDocumentLane(activity)
+        assertEquals("The old cancellation cannot cancel the new picker", beforeOldResult, chat(activity))
+        deliver(activity, current, Activity.RESULT_OK, deniedSelection())
+        flushDocumentLane(activity)
+        assertEquals("The current selection is still handled", 1,
+            chat(activity).count { it.startsWith("Die PDF ließ sich nicht lesen (") })
+        assertNoWork(activity, root)
+    }
+
     @Test fun pausedPickerResultWaitsForResumeAndDeniedReadNeverClaimsSuccess() = withCockpit { controller, activity, root ->
         val request = picker(activity)
         controller.pause()

@@ -104,6 +104,7 @@ class JarvisWorkWindow(
     /** Dp below the window's top edge where its dense glass ends; NaN while content fills the sheet. */
     internal fun glassVacantTopDp(): Float = panel.vacancy()?.denseBottomDp ?: Float.NaN
     private val projectedCenter = FloatArray(2)
+    private val stagePageRect = RectF()
     internal var cinematicEffectsEnabled = true
         set(value) {
             if (field == value) return
@@ -264,10 +265,11 @@ class JarvisWorkWindow(
     }
 
     /** Same transform, same shell frame. */
-    internal fun documentStageFrame(windowId: String, result: Boolean):
+    internal fun documentStageFrame(windowId: String, result: Boolean, page: android.widget.ImageView? = null):
         at.heinz.deviceai.avatar3d.DocumentStageFrame? {
         if (!isShowing || width <= 0 || height <= 0) return null
         val params = panel.layoutParams as? LayoutParams ?: return null
+        val pageReady = page != null && DocumentStagePageGeometry.fittedRect(page, panel, stagePageRect)
         return at.heinz.deviceai.avatar3d.DocumentStageFrame(
             windowId = windowId,
             viewportWidth = width,
@@ -280,7 +282,12 @@ class JarvisWorkWindow(
             pitchDegrees = panel.rotationX,
             opacity = if (cinematicEffectsEnabled) stageOpacity else 0f,
             result = result,
-            cameraDistance = panel.cameraDistance
+            cameraDistance = panel.cameraDistance,
+            pageLeft = if (pageReady) stagePageRect.left else 0f,
+            pageTop = if (pageReady) stagePageRect.top else 0f,
+            pageWidth = if (pageReady) stagePageRect.width() else 0f,
+            pageHeight = if (pageReady) stagePageRect.height() else 0f,
+            pageRectValid = pageReady
         )
     }
 

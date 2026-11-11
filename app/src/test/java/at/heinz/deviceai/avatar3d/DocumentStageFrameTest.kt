@@ -33,4 +33,15 @@ class DocumentStageFrameTest {
             assertEquals(width.toDouble() / height, w.toDouble() / h, .003)
         }
     }
+
+    @Test fun acceptsOnlyBoundedNativePageRectangles() {
+        val page = frame.copy(pageLeft = .1f, pageTop = .2f, pageWidth = .4f, pageHeight = .7f,
+            pageRectValid = true)
+        assertTrue(page.valid())
+        assertFalse(page.copy(pageWidth = 0f).valid())
+        assertFalse(page.copy(pageLeft = -.1f).valid())
+        assertFalse(page.copy(pageTop = .8f).valid())
+        assertFalse(page.copy(pageHeight = Float.NaN).valid())
+        assertTrue(frame.copy(pageRectValid = false).valid())
+    }
 }
