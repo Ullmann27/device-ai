@@ -245,9 +245,6 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         canvas.scale(density, density)
         val boxDp = HollywoodFuiCinematics.Box(stage.left / density, stage.top / density,
             stage.right / density, stage.bottom / density)
-        // Cinema 2.0 focus depth: the deck steps back behind a constructed window; face, orb and dialog stay lit.
-        cinematics.drawFocusDepth(painter, HollywoodFuiCinematics.Box(0f, 0f, width / density, height / density),
-            boxDp, HollywoodFuiCinematics.focusDepth(frame, openness), 14f)
         val fluidTime = if (closingElapsedMs >= 0L) closingElapsedMs + HollywoodFuiConstruct.ANCHOR_END_MS
             else elapsedMs + JarvisCinemaEntrance.DEPART_MS
         val motionScale = if (reducedMotion || !budget.animate) 0f else 1f

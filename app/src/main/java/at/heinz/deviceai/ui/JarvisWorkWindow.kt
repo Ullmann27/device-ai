@@ -167,6 +167,9 @@ class JarvisWorkWindow(
     private val pageRect = RectF()
     private val protectedDepthRect = RectF()
     private val painter = AndroidContinuumPainter(context.assets)
+    /** Cinema 2.0: how far the deck plane has stepped back behind this window, 0..1; follows the construct frame. */
+    private var focusDepth = 0f
+    private val focusCinematics = HollywoodFuiCinematics.Painterly(Colors.cyan)
     private val opening = JarvisMotion.Presets.widget(JarvisMotion.Direction.DEPTH)
         .copy(distanceDp = 0f, fromScale = 0f)
     private val closing = JarvisMotion.FlyIn(JarvisMotion.Direction.DEPTH, 0f, 0f,
@@ -481,6 +484,7 @@ class JarvisWorkWindow(
         val normalized = if (reduced) HollywoodFuiConstruct.DATA_END_MS else (elapsed / animatorScale).toLong()
         if (phase == Phase.OPEN) {
             constructionElapsedMs = maxOf(constructionElapsedMs, normalized, HollywoodFuiConstruct.DATA_END_MS)
+            focusDepth = if (cinematicEffectsEnabled) 1f else 0f
             return onCinematicFrame?.invoke(constructionElapsedMs, -1L, reduced, 1f) == true
         }
         if (cinematicEffectsEnabled) {
@@ -498,6 +502,7 @@ class JarvisWorkWindow(
             trailProgress = frame.anchor
             trailAlpha = (1f - frame.brackets) * frame.closeFrame
             panel.edgeFlash = frame.pulse * .35f
+            focusDepth = HollywoodFuiCinematics.focusDepth(frame, openness)
             applyFrame()
             val live = onCinematicFrame?.invoke(constructionElapsedMs, closingTime, reduced, openness) == true
             if (isClosing && frame.closeFactor <= 0f) { finishClose(); return false }
@@ -511,6 +516,7 @@ class JarvisWorkWindow(
             }
             return phase == Phase.OPENING || phase == Phase.CLOSING || live
         }
+        focusDepth = 0f
         val state = JarvisMotion.frame(if (phase == Phase.CLOSING) closing else opening, elapsed, animatorScale)
         if (phase == Phase.CLOSING) {
             openness = closeFrom * (1f - state.scale)
@@ -587,6 +593,7 @@ class JarvisWorkWindow(
 
     private fun finishClose() {
         phase = Phase.CLOSED
+        focusDepth = 0f
         val handle = subscription
         subscription = null
         handle?.close()
@@ -650,6 +657,16 @@ class JarvisWorkWindow(
         if (!isShowing) return
         val save = canvas.save()
         protectedBounds.forEach { canvas.clipOutRect(it) }
+        if (focusDepth > 0f && JarvisWorkWindowGeometry.valid(destination)) {
+            // Cinema 2.0 focus depth: the deck steps back behind the constructed window; avatar, orb, dialog stay lit.
+            val focusSave = canvas.save()
+            canvas.scale(density, density)
+            painter.begin(canvas)
+            focusCinematics.drawFocusDepth(painter, HollywoodFuiCinematics.Box(0f, 0f, width / density, height / density),
+                HollywoodFuiCinematics.Box(destination.left / density, destination.top / density,
+                    destination.right / density, destination.bottom / density), focusDepth, 14f)
+            canvas.restoreToCount(focusSave)
+        }
         drawTrail(canvas)
         drawDepth(canvas)
         if (panel.visibility == VISIBLE && panel.alpha > 0f) {
@@ -901,7 +918,8 @@ class JarvisWorkWindow(
                 glass.fillRoundRect(1f, 1f, right, bottom, 14f, smoke, 1f)
                 glass.strokeRoundRect(1.6f, 1.6f, right - .6f, bottom - .6f, 13.4f, 1.2f, VACANT_RIM_FILL, .55f)
                 canvas.restoreToCount(lower)
-                canvas.clipRect(0f, 0f, right + 1f, vacancy.denseBottomDp)
+                // The surface keeps its own rim and lower thickness; only the vacant interior is left to the smoke.
+                canvas.clipOutRect(2f, vacancy.denseBottomDp, right - 1f, bottom - 1f)
             }
             glass.fillRoundRect(1f, 1f, right, bottom, 14f, WINDOW_BACKING_FILL, WINDOW_BACKING_ALPHA)
             JarvisReferenceHud.surface(glass, JarvisShellLayout.Box(1f, 1f, right, bottom), 14f,
