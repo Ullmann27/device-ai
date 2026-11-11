@@ -1,0 +1,27 @@
+{
+  "source_head": "acf8c6390b0076b359d3f5284c2c8709b10a5a78",
+  "cached_dependencies": "/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug",
+  "test_classes": [
+    "at.heinz.deviceai.cognitive.OwnerAppVerbFinalIntentTest",
+    "at.heinz.deviceai.cognitive.OwnerAppOpenRoutingTest",
+    "at.heinz.deviceai.cognitive.OwnerAppLookupIntentTest",
+    "at.heinz.deviceai.cognitive.OwnerAppLookupNaturalRegressionTest",
+    "at.heinz.deviceai.cognitive.OwnerAppClarificationTest",
+    "at.heinz.deviceai.cognitive.OwnerAppActionFlowTest"
+  ],
+  "source_sha256": {
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppVerbFinalIntentTest.kt": "7f61c171b8cca3520b3d57fd8cc009bb51f77da5f87d0151ca091fb292d13a13",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppOpenRoutingTest.kt": "c26616a49a6fb86f0d3a500f067a8930e6919091af0394fe7a38be188fc08754",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntentTest.kt": "0a179b608dd84d37907998d426e81cfb10e2a049c706d81e89f945f36765cf53",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppLookupNaturalRegressionTest.kt": "e93ffea41033fa97c4d9bc1120aedc4b3ed4e5d9bbc48dd36203fa49d20baa8e",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppClarificationTest.kt": "61aaf6988c1a375bdc1161306cf87e6771f0d4316da53850b1e3a7fb3a4eedec",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppActionFlowTest.kt": "7cd8feddf9a9cc391adc08f522d6033dcf127aeebf31e4e2d6cfb84805ad25a8",
+    "app/src/main/java/at/heinz/deviceai/systemintelligence/SystemDiagnosis.kt": "1072e49288fbc9781b36eb1f404d9bc5cd733d628190519648ebaec3c91cb000",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt": "bdf6ed4af869f3d2a20906de6d6ce10d48bba403274cd062cd5ac9bde96688eb",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt": "f1569524035bf9c4520a261941b319ae03365f7a435be3326ae012ef08324a08",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppClarification.kt": "c5398ae4d0392b96ddc635f3fecc19281c6bbadc767add0eccb7a63efc4b8603",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppActionFlow.kt": "da1b17653eba41a6eba0fdae6d79136994c483f691ce83d841236e56420a5539",
+    "app/src/main/java/at/heinz/deviceai/cognitive/NativeAppLookup.kt": "1320ea3e28a0ce0e5c8b17af794b5755f89a1d1d194dd39c5372b3d7e203d730",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt": "a81c7a218124a4c38a82678739b35b7d9b9ba27f54e973462bf9f224991e9e78"
+  }
+}
