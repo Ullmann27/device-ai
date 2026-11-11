@@ -96,7 +96,7 @@
       "activation": "PREFERENCE_GATED",
       "testedEffect": "Prior simulated TTS tests only",
       "visibleResult": "Listening, speaking and work pose",
-      "remainingGap": "ElevenLabs runtime absent; intended voice and secure app credentials unresolved; no synthesis performed",
+      "remainingGap": "New female standard-German ElevenLabs voice requested, no dialect or owner clone. Design tool requires user preview text; no-preview constraint unresolved. Secure app credentials and runtime adapter absent; no synthesis performed.",
       "present": true,
       "regressionFiles": [
         "app/src/uiTest/java/at/heinz/deviceai/ContinuumLongReplySpeechUiTest.kt",

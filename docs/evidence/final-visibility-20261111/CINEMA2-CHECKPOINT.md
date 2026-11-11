@@ -34,11 +34,13 @@ Android overlay connection and is not claimed as its visual proof.
 The connected ElevenLabs workspace was inspected without speech generation.
 The current Android path is AgentActivity -> ApprovedSpeechChunkQueue ->
 Android TextToSpeech, with utterance-bound avatar callbacks. It contains no
-ElevenLabs runtime adapter or configured ElevenLabs voice ID. The intended
-same voice cannot yet be identified from the app source/workspace.
+ElevenLabs runtime adapter or configured ElevenLabs voice ID. The owner subsequently clarified: create a new female voice, natural and human,
+in standard German with no dialect. Do not use the owner's cloned voice.
+The available design connector requires owner-supplied preview text and creates
+three previews; the owner requested no preview. No synthesis was submitted.
 The ChatGPT connector is not an Android runtime credential. No personal voice
 identifier, account data, key or sample was added to the public repository.
-Voice selection and a secure runtime credential path remain unresolved;
+Voice creation under that preview constraint and a secure runtime credential path remain unresolved;
 existing offline speech and internet restrictions are preserved.
 
 ## Existing glass depth made drawable — Android QA pending
