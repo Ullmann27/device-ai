@@ -215,6 +215,32 @@ class OwnerObjectStateConversationUiTest {
             at.heinz.deviceai.cognitive.LocalChatPromptBudget.FULL_CHARACTERS)
     }
 
+    @Test fun historicalChangeRequestsReachModelWithRetainedHistory() = withActivity { activity, runtime ->
+        val context = context(activity)
+        val session = session(activity)
+        context.record(session, FIRST, "Gesprächsdaten erhalten.")
+        context.record(session, CORRECTION, "Korrektur erhalten.")
+        context.record(session, "Nicht siebzehn, sondern einundzwanzig; Farbe und Standort bleiben gleich.",
+            "Korrektur erhalten.")
+        repeat(6) { context.record(session, "Erkläre mir einen allgemeinen Begriff.", "Allgemeine Antwort.") }
+        assertFalse(context.sessionEvidence(session)!!.contains(FIRST))
+        val memory = field(activity, "memoryStore") as InMemoryMemoryStore
+        val priorMemories = memory.all()
+        for (request in listOf(
+            "Fasse meine Korrekturen an der Werkzeugkiste zusammen.",
+            "Was hat sich an der Werkzeugkiste geändert?",
+            "Wie viele Schrauben waren es vorhin?"
+        )) {
+            val prompt = modelTurn(activity, runtime, request, "Die angegebenen Änderungen sind berücksichtigt.")
+            assertTrue("Complete owner request", prompt.contains(request))
+            assertTrue(prompt, prompt.contains("12 → 17 → 21"))
+            assertTrue(prompt, prompt.contains("in der Garage → im Keller"))
+            assertFalse(prompt, prompt.contains("Änderungsverläufe für diese Anfrage ausgelassen"))
+        }
+        assertEquals(3, runtime.prompts.size)
+        assertEquals(priorMemories, memory.all())
+    }
+
     @Test fun actualNewSessionClearsThePreviousOwnerObjectState() = withActivity { activity, runtime ->
         modelTurn(activity, runtime, FIRST, "Deine Angaben sind im Gespräch verfügbar.")
         recall(activity, runtime, "Welche Farbe hat meine Werkzeugkiste?", "Farbe: blau")
