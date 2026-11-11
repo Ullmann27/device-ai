@@ -80,8 +80,13 @@ remain explicitly separate.
 The connected ElevenLabs account confirmed the selected public voice
 `ii0s2u4R3UFnxKL6DOrz`, Maya - Warm Californian. The implementation retains
 `eleven_multilingual_v2` and PCM24k. A short synthetic German connector probe
-started two takes, reported at 446 credits total. This is a connector generation,
-not Android playback or a subjective pronunciation acceptance.
+completed two MP3 takes (14.63 s and 14.02 s), reported at 446 credits total.
+One existing take was transcribed once with the connected `eleven_scribe_v1`
+tool: all 34 words and the full 223-character text matched exactly. The input
+was read back from the original flow node, rather than its truncated preview.
+Evidence: `docs/evidence/final-visibility-20261111/maya-german-roundtrip.json`.
+This verifies the short connector probe's intelligibility; it does not verify
+Android playback or subjective naturalness. The app's existing ASR is unchanged.
 
 The Android app uses its existing separate encrypted local ElevenLabs key
 setup. A ChatGPT connector connection does not install a credential on the
