@@ -37,6 +37,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     internal var prismRimEnabled = false
     internal var rimIsolationEnabled = false
     internal var zSliceEnabled = false
+    internal var documentStageReady = false
+        set(value) { if (field != value) { field = value; invalidate() } }
     private var lastPulseKey: String? = null
     private var pulseAtElapsedMs = -1L
     private var pulsePending = false
@@ -289,7 +291,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             HollywoodFuiConstruct.layerShiftDp(tilt, -24f, true), 0f)
         if (!reducedMotion && active) canvas.translate(parallaxX * 5f, parallaxY * 3.5f)
         val radiusDp = 6f
-        cinematics.drawGlassLayers(painter, boxDp, frame, radiusDp, budget.glassLayers)
+        if (!documentStageReady)
+            cinematics.drawGlassLayers(painter, boxDp, frame, radiusDp, budget.glassLayers)
         canvas.restore()
 
         // Profile data stays on the proven Canvas path, scaled with the close choreography (data leaves first).

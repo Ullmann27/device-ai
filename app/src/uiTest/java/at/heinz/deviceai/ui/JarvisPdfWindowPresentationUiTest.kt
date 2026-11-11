@@ -1,10 +1,12 @@
 package at.heinz.deviceai.ui
 
 import android.app.Activity
+import android.graphics.Bitmap
 import android.graphics.RectF
 import android.os.Looper
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import org.junit.Assert.*
 import org.junit.Test
@@ -84,8 +86,8 @@ class JarvisPdfWindowPresentationUiTest {
                 View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
             root.layout(0, 0, 884, 760)
         }
-        fun open(label: String = "Synthetischer Entwurf") {
-            assertTrue(window.open(TextView(activity).apply { text = label },
+        fun open(label: String = "Synthetischer Entwurf", body: View? = null) {
+            assertTrue(window.open(body ?: TextView(activity).apply { text = label },
                 RectF(900f, 450f, 1380f, 650f), RectF(160f, 420f, 820f, 700f), "ENTWURF"))
             layout()
         }
@@ -180,5 +182,76 @@ class JarvisPdfWindowPresentationUiTest {
         shadowOf(Looper.getMainLooper()).idle()
         assertEquals(0, delivered)
         assertFalse(f.window.isShowing)
+    }
+
+    private fun Fixture.pageBody(): Pair<FrameLayout, ImageView> {
+        val page = ImageView(activity).apply {
+            setImageBitmap(Bitmap.createBitmap(300, 400, Bitmap.Config.ARGB_8888))
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            imageAlpha = 197
+            contentDescription = "Synthetische PDF-Seite"
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+        }
+        val body = FrameLayout(activity).apply {
+            addView(page, FrameLayout.LayoutParams(44, 58))
+        }
+        return body to page
+    }
+
+    @Test fun readyMeshHidesOnlyNativePixelsAndRestoresThemOnLoss() = Fixture().use { f ->
+        val (body, page) = f.pageBody()
+        f.open(body = body)
+        f.frame(1_000)
+        f.frame(1_900)
+        val bounds = requireNotNull(f.window.shownBounds())
+        val drawable = page.drawable
+        assertFalse(f.window.setDocumentStageReady(page, false))
+        assertEquals(197, page.imageAlpha)
+        assertTrue(f.window.setDocumentStageReady(page, true))
+        assertTrue(f.window.documentStageReady)
+        assertEquals(0, page.imageAlpha)
+        assertEquals(View.VISIBLE, page.visibility)
+        assertEquals(1f, page.alpha, 0f)
+        assertEquals("Synthetische PDF-Seite", page.contentDescription)
+        assertEquals(View.IMPORTANT_FOR_ACCESSIBILITY_YES, page.importantForAccessibility)
+        assertSame(drawable, page.drawable)
+        assertEquals(bounds, f.window.shownBounds())
+        assertTrue(f.window.findViewWithTag<View>("jarvis-work-window:close").isClickable)
+        assertFalse(f.window.setDocumentStageReady(page, false))
+        assertEquals(197, page.imageAlpha)
+        page.translationY = 500f
+        assertFalse("clipped native page stays visible", f.window.setDocumentStageReady(page, true))
+        assertEquals(197, page.imageAlpha)
+    }
+
+    @Test fun closeReplacementAndDetachRestorePixelsBeforeContentLeaves() = Fixture().use { f ->
+        val (body, page) = f.pageBody()
+        f.open(body = body)
+        f.frame(1_000)
+        f.frame(1_900)
+        assertTrue(f.window.setDocumentStageReady(page, true))
+        f.window.close()
+        assertEquals(197, page.imageAlpha)
+        assertFalse("late ready cannot hide closing content", f.window.setDocumentStageReady(page, true))
+        f.window.close(immediate = true)
+        shadowOf(Looper.getMainLooper()).idle()
+        val (replacement, secondPage) = f.pageBody()
+        f.open(body = replacement)
+        f.frame(2_000)
+        f.frame(2_900)
+        assertTrue(f.window.setDocumentStageReady(secondPage, true))
+        assertTrue(f.window.replaceContent(TextView(f.activity).apply { text = "Anderer Inhalt" }, "NEU"))
+        assertEquals(197, secondPage.imageAlpha)
+        assertFalse(f.window.documentStageReady)
+        f.window.close(immediate = true)
+        shadowOf(Looper.getMainLooper()).idle()
+        val (lastBody, lastPage) = f.pageBody()
+        f.open(body = lastBody)
+        f.frame(3_000)
+        f.frame(3_900)
+        assertTrue(f.window.setDocumentStageReady(lastPage, true))
+        f.root.removeView(f.window)
+        assertEquals(197, lastPage.imageAlpha)
+        assertFalse(f.window.documentStageReady)
     }
 }

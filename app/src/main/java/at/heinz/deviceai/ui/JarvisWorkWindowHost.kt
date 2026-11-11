@@ -196,6 +196,18 @@ class JarvisWorkWindowHost(
             scene.origin is JarvisActionScenes.Origin.Edge && pageBitmap != null && !pageBitmap.isRecycled
         val documentStage = if (documentScene) DocumentStageView(activity, home.hologram, id) else null
         val resultStage = (scene.origin as? JarvisActionScenes.Origin.Edge)?.side == JarvisActionScenes.EdgeSide.RIGHT
+        var renderedDocumentStage = false
+        var documentFrame: at.heinz.deviceai.avatar3d.DocumentStageFrame? = null
+        fun updateDocumentPixels() {
+            val ready = renderedDocumentStage && current === window && currentDocumentStage === documentStage &&
+                documentFrame?.pageRectValid == true && (documentFrame?.opacity ?: 0f) > 0f &&
+                pageBitmap != null && !pageBitmap.isRecycled
+            fui.documentStageReady = window.setDocumentStageReady(sourcePage, ready)
+        }
+        documentStage?.onReadyChanged = { ready ->
+            renderedDocumentStage = ready
+            updateDocumentPixels()
+        }
         var framing = first
         window.onPresentedCenter = { x, y ->
             if (current === window) {
@@ -226,8 +238,11 @@ class JarvisWorkWindowHost(
         }
         fui.requestFrame = { shell.invalidate() }
         window.onCinematicFrame = { elapsed, closing, reduced, open ->
-            if (current === window && documentStage != null)
-                window.documentStageFrame(id, resultStage, sourcePage)?.let { documentStage.present(it, pageBitmap) }
+            if (current === window && currentDocumentStage === documentStage && documentStage != null) {
+                documentFrame = window.documentStageFrame(id, resultStage, sourcePage)
+                documentFrame?.let { documentStage.present(it, pageBitmap) }
+                updateDocumentPixels()
+            }
             fui.setParallax(shell.spatialTiltX, shell.spatialTiltY)
             fui.vacantTopDp = window.glassVacantTopDp()
             fui.present(elapsed, closing, reduced, open)

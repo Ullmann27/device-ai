@@ -47,7 +47,7 @@ class Cinema2DepthLightTest {
         val forming = HollywoodFuiConstruct.frame(HollywoodFuiConstruct.BRACKETS_END_MS)
         val settled = HollywoodFuiConstruct.frame(HollywoodFuiConstruct.DATA_END_MS)
         val closed = HollywoodFuiConstruct.frame(HollywoodFuiConstruct.DATA_END_MS, HollywoodFuiConstruct.CLOSE_END_MS)
-        assertEquals("no dim before the glass exists", 0f, HollywoodFuiCinematics.focusDepth(forming, 0f), 0f)
+        assertEquals("no dim before the glass exists", 0f, HollywoodFuiCinematics.focusDepth(forming, 1f), 0f)
         assertEquals("no dim before the window has arrived", 0f, HollywoodFuiCinematics.focusDepth(settled, 0f), 0f)
         assertEquals(1f, HollywoodFuiCinematics.focusDepth(settled, 1f), 1e-4f)
         assertEquals("the deck is fully back after the close", 0f, HollywoodFuiCinematics.focusDepth(closed, 1f), 1e-4f)

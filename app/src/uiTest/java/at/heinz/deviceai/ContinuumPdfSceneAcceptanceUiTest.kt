@@ -211,4 +211,29 @@ class ContinuumPdfSceneAcceptanceUiTest {
         flushDocumentLane(activity)
         assertEquals("The consumed URI is never read again", afterResume, chat(activity))
     }
+
+    @Test fun pendingPickerSurvivesActivityRecreationWithoutDuplicateConsumption() = withCockpit { controller, activity, _ ->
+        val request = picker(activity)
+        framePump?.close()
+        framePump = null
+        controller.recreate()
+        controller.windowFocusChanged(true)
+        val restored = controller.get()
+        val root = restored.window.decorView
+        framePump = CockpitHostFramePump { root }
+        (field(restored, "homeView") as ContinuumHomeView).setForegroundActive(true)
+        root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
+        root.layout(0, 0, 884, 760)
+        advance(320L)
+        deliver(restored, request, Activity.RESULT_OK, deniedSelection())
+        flushDocumentLane(restored)
+        val once = chat(restored)
+        assertEquals("The saved selection survives recreation", 1,
+            once.count { it.startsWith("Die PDF ließ sich nicht lesen (") })
+        deliver(restored, request, Activity.RESULT_OK, deniedSelection())
+        flushDocumentLane(restored)
+        assertEquals("Recreation does not duplicate the read", once, chat(restored))
+        assertNoWork(restored, root)
+    }
 }
