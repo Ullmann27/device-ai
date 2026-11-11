@@ -1,0 +1,17 @@
+{
+  "command": [
+    "java",
+    "-Xmx768m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/aba242c65e85/voice-native-build/experiment.jar:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmDistillChecks"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 0.2212921810005355,
+  "modelUpdates": 0,
+  "checks": 15,
+  "buildSha256": "f1cf3d0f70442bb0c405a1e801c76b55c3e92afd11bebe598269bed889938b60",
+  "stdoutSha256": "c9e65f0a47507fbb34f72991ff9c9fa923bcaabc6f485bb5b119b974cf90b7d9",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

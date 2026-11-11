@@ -1,0 +1,49 @@
+{
+  "schema": "continuum-weight-native-build-v1",
+  "historicalSourceRef": "4b8fa96effd5a390bd5fd83ed84b81ac850b1d5b",
+  "compileCommand": [
+    "/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/bin/kotlinc",
+    "-jvm-target",
+    "17",
+    "/workspace/scratch/aba242c65e85/voice-native-build/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+    "/workspace/scratch/aba242c65e85/voice-native-build/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+    "/workspace/scratch/aba242c65e85/voice-native-build/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+    "/workspace/scratch/aba242c65e85/voice-native-build/source/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+    "/workspace/scratch/aba242c65e85/voice-native-build/LmTrainingState.kt",
+    "/workspace/scratch/aba242c65e85/voice-native-build/LmTrainingFixture.kt",
+    "/workspace/scratch/aba242c65e85/voice-native-build/LmPersonalVoicePilot.kt",
+    "/workspace/scratch/aba242c65e85/voice-native-build/LmSoftTargetKl.kt",
+    "/workspace/scratch/aba242c65e85/voice-native-build/LmDistillChecks.kt",
+    "-d",
+    "/workspace/scratch/aba242c65e85/voice-native-build/experiment.jar"
+  ],
+  "compileExitCode": 0,
+  "originalSha256": {
+    "LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+  },
+  "patchedSha256": {
+    "LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "LmModel.kt": "effba147289041b068c94222c33ae9549c29f8b287fc45a861d1a0a373db3c53",
+    "LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+  },
+  "extraSha256": {
+    "LmTrainingState.kt": "e45eb6b39e2fbaeb07328b175ae118d2ea6f2d827d402b51f3275437d2a3fd10",
+    "LmTrainingFixture.kt": "adbb7a4bcafcf781618c5ff4392edd959bddb97d280c3f3a7da2402521725f56",
+    "LmPersonalVoicePilot.kt": "ace143f0ed829b0d500225120b7be4268618c961bb8afda5060cd81474103b5d",
+    "LmSoftTargetKl.kt": "a0584ecea66b458555da0964cf24371043886de952d7059de117e62bd652d9ce",
+    "LmDistillChecks.kt": "58634aad5f126c78ee2b38b0981a1a302907115e9750d782a0273694b39bff4a"
+  },
+  "patchSha256": "7deb89ca77f41b45babdf223ec5ce8e1f4771aaea0cbbd92bdfd27edbbc3abb8",
+  "compilerVersion": "info: kotlinc-jvm 2.4.0 (JRE 21.0.13+9-1-deb13u2-Debian)\n",
+  "compilerJarSha256": "66e73eacd619c9beb7c22042117af36b443529c4d80237ee82cc4b2acb6f3d0b",
+  "stdlibSha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+  "jarSha256": "3b36cd35f665bc53e376add26543904a01250bd03823900084200aef8e7e15a7",
+  "classpath": "/workspace/scratch/aba242c65e85/voice-native-build/experiment.jar:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+  "modelUpdates": 0,
+  "sourceBindingSha256": "0f499af4f7f7fe3280ce59d9b438a89ed25c76e44e471dcc6c63d386fef81a98",
+  "builderSha256": "b0562b82f6fc7117fbff1b5c7c0afa14ec115927b15726ba906cb86d94e199d4"
+}

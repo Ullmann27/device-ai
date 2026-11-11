@@ -1,6 +1,6 @@
 # Personal voice LM1: bounded native training protocol
 
-Status: WIP, NOT_RUN. EXP-05 / EXP-12; research only. No app integration.
+Status: native source COMPILED; training NOT_RUN. EXP-05 / EXP-12; research only. No app integration.
 
 ## Verified starting point
 
@@ -32,7 +32,7 @@ represent all those meanings, and success on this specialist task does not
 prove general speech understanding or acoustic ASR improvement.
 
 At most two candidates, each from unchanged original bytes and fresh AdamW
-moments. Provisional controls (await research-lead freeze): 128 updates,
+moments. Research-lead authorized controls (data/evaluation gates still required): 128 updates,
 seed 20261111, maximum learning rate 0.00005, four warmup steps and cosine decay,
 weight decay 0.01, gradient clip 1, one worker, Java heap 768 MiB, process
 deadline 600 seconds per candidate. No parameter search, external teacher,
@@ -72,3 +72,21 @@ independent unseen performance and retention gates can recommend later
 review. Original/Gemma/app selectors remain unchanged; rollback is keeping
 all candidate files outside the production package. No main write, APK,
 signing, release, installation or branch deletion.
+
+## Implemented sampling and compilation receipt
+
+The answer batch contains eight examples, exactly two per label. Labels 0/3
+each use two contrast-training examples. Labels 1/2 each use one contrast
+example and one newly authored simple supervised replay example. Historical
+`retention.tsv` contains all original open/search TRAIN rows, so none of those
+rows are used for new training. Full-text replay uses two original public
+`replay.txt` texts per step, weight 0.25. Both candidates have exactly the same
+seed and draw schedule; only original-model KL retention differs.
+
+`LmPersonalVoicePilot.kt` compiled with the pinned builder; source and compiler
+identities are in `build-evidence/build.json`. The existing 15 native KL checks
+passed with zero model updates, including numerical gradient and non-mutation
+checks (`build-evidence/kl-checks-receipt.json`). No DEV or test scores have
+been read or produced by the training agent. Training reads only explicit
+TRAIN, supervised replay and public text replay paths. The separate `eval`
+mode performs zero optimizer updates and records raw probabilities/outputs.

@@ -20,3 +20,27 @@ agent until both candidates are complete. No productive configuration changes.
 
 Commands and actual receipts will be appended once executed. No Android,
 Fold7, APK or general language-quality improvement is claimed.
+
+## Compiled source checkpoint
+
+Implemented `LmPersonalVoicePilot.kt` over the existing native model and a
+strict two-arm `run_registered.py`. Exact compiler/JAR/source evidence in
+`training/build-evidence`; 15 existing native KL checks passed. Weight updates
+still zero. No holdout files opened. Await training data quality and remote
+evaluation freeze, then inspect lengths and publish full run registration.
+
+Native evaluator (read-only):
+
+```text
+java -Xmx768m -XX:ActiveProcessorCount=1 -cp <recorded-classpath> \
+  at.heinz.deviceai.learning.lm.LmPersonalVoicePilot eval \
+  <checkpoint> <original-tokenizer> <cases.tsv> <retention_text.txt>
+```
+
+Training/inspection uses the same entry with seven arguments:
+`inspect|balanced-replay|balanced-preserve baseline tokenizer train.tsv
+ supervised_replay.tsv replay.txt outputDirectory`.
+
+Remote first checkpoint `433b1f7696b8fcbdf665075255f6752f1ee3982e`, Draft
+PR #754. Normal git push lacked HTTPS credentials; authorized GitHub connector
+published the exact local tree, with independent remote commit identity.
