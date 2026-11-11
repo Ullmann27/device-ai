@@ -1,4 +1,4 @@
-# APK53 — local QA and unsigned package verified
+# APK53 — local and GitHub QA passed; unsigned candidate verified
 
 Frozen runtime source: `a980a19ed3ab44323009ae27eb299d322ff11679`  
 Git tree: `a9d3da18e774ccc1d3c7cd61c493ad65928c4d2e`  
@@ -81,7 +81,7 @@ from actual window closure. The final Android results below come from this froze
 
 | Check / action | Status |
 |---|---|
-| Source-bound GitHub Actions QA | **IN_PROGRESS** — [run 42934541308](https://github.com/Ullmann27/device-ai/actions/runs/42934541308), workflow edff51d7; source a980a19 |
+| Source-bound GitHub Actions QA | **PASS** — [run 42934541308](https://github.com/Ullmann27/device-ai/actions/runs/42934541308), workflow edff51d7; exact app source a980a19 |
 | Gitar / CodeRabbit review checks | SUCCESS / SKIPPED (draft); one known thread resolved |
 | Code53 protected-signer binding and exact-source owner approval | **PENDING** |
 | Original signing, release publication, installation | **NOT_RUN** |
@@ -153,3 +153,27 @@ The booklet now rejects substituted avatar/native inputs and an altered pose
 manifest before authoring. Five focused positive/negative checks pass; the
 published PDF bytes remain unchanged. The original omission concerned GitHub
 image availability: the download package already contained the actual PNGs.
+
+## Final independent GitHub result
+
+The pinned-source job completed successfully at **2026-11-11 01:47:52 UTC**.
+It compiled a980, passed all **4,464 Android cases with 17 skips and zero
+failures/errors**, ran the configured NewApi lint, built Code53 and passed
+the pinned unsigned-package validator. The 17 skipped case names match local
+results exactly. Full Node and critical source-bound gates, backend64 and
+Kotlin safety12 also passed. Node counts were not printed in the CI log; local
+counts above are not silently attributed to the hosted run.
+
+The independent runner reports APK SHA-256
+`f138b92a99ea9aab67103490f0a249fd14adbc84c3c5346cd2169f36a40f1921`,
+**identical to the locally verified and already delivered package**.
+See [ci/receipt.json](ci/receipt.json), [ci/log-extract.txt](ci/log-extract.txt),
+[ci/job-steps.json](ci/job-steps.json), and [FINAL-HANDOFF.md](FINAL-HANDOFF.md).
+Artifact ZIP digests are separate from the inner APK digest.
+
+The local workspace became unavailable after CI completion. The connector
+returned the CI archive, but a local re-download/extraction could not start;
+that additional archive readback is NOT_RUN. The completed CI validator,
+job logs and artifact API are the hosted evidence. The source, selected PNGs,
+APK and owner proof downloads were secured beforehand. No signing or device
+acceptance is inferred from CI success.
