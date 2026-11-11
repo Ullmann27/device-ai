@@ -1,0 +1,8 @@
+{
+  "schema": "lm1-training-token-parity-v1",
+  "status": "PASS",
+  "rows": 192,
+  "comparison": "All native BOS+prefix token arrays equal Bot1 independently generated arrays",
+  "modelUpdates": 0,
+  "nativeSha256": "38014732e38f72e3b3df50ae26f93e23af3a4a18339e5274831f850a9396713d"
+}

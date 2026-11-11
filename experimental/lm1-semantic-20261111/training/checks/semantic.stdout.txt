@@ -1,0 +1,1 @@
+CHECKS	finiteDifferences=12	maskedPrefix=PASS	rowGradientSums=PASS	eosWeight=PASS	worstError=2.5376678E-5	modelUpdates=0

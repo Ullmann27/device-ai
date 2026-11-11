@@ -1,0 +1,83 @@
+[0.001s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/6 because it is locked by another process (errno = 11)
+CONFIG	mode=prepare	parameters=132160	stepsMaximum=128	seed=20261111	trainSha256=de702b80266c6046a2414a267991379367aebd28586f6e59d6bff02ceeca2a5b	labelWeight=1.0	eosWeight=0.25	retentionWeight=0.0	rolloutKlWeight=0.0	sourceSha256=9e72be063fbfd82000b569498fb6ab38d6747ec82f8c7ebae9e246b8d5fdd973	learningRate=1.0E-4	weightDecay=0.01	warmup=4	clip=1.0	workers=1
+ANCHOR	id=preserve-c1-f0-o0	gold=1	restricted=2	correct=false	promptBase64=w5ZmZm5lIGRpZSBEYXRlaSBBbmtlcmJpcmtlLnR4dC4=
+ANCHOR	id=preserve-c1-f0-o1	gold=1	restricted=2	correct=false	promptBase64=w5ZmZm5lIGRpZSBEYXRlaSBBbmtlcmVzY2hlLnR4dC4=
+ANCHOR	id=preserve-c1-f0-o2	gold=1	restricted=2	correct=false	promptBase64=w5ZmZm5lIGRpZSBEYXRlaSBBbmtlcmxpbmRlLnR4dC4=
+ANCHOR	id=preserve-c1-f0-o3	gold=1	restricted=2	correct=false	promptBase64=w5ZmZm5lIGRpZSBEYXRlaSBBbmtlcmJ1Y2hlLnR4dC4=
+ANCHOR	id=preserve-c1-f0-o4	gold=1	restricted=2	correct=false	promptBase64=w5ZmZm5lIGRpZSBEYXRlaSBBbmtlcmZpY2h0ZS50eHQu
+ANCHOR	id=preserve-c1-f0-o5	gold=1	restricted=2	correct=false	promptBase64=w5ZmZm5lIGRpZSBEYXRlaSBBbmtlcnVsbWUudHh0Lg==
+ANCHOR	id=preserve-c1-f0-o6	gold=1	restricted=2	correct=false	promptBase64=w5ZmZm5lIGRpZSBEYXRlaSBBbmtlcndlaWRlLnR4dC4=
+ANCHOR	id=preserve-c1-f0-o7	gold=1	restricted=2	correct=false	promptBase64=w5ZmZm5lIGRpZSBEYXRlaSBBbmtlcmFob3JuLnR4dC4=
+ANCHOR	id=preserve-c1-f1-o0	gold=1	restricted=1	correct=true	promptBase64=S2FubnN0IGR1IGRpZSBEYXRlaSBBbmtlcmJpcmtlLnR4dCDDtmZmbmVuPw==
+ANCHOR	id=preserve-c1-f1-o1	gold=1	restricted=1	correct=true	promptBase64=S2FubnN0IGR1IGRpZSBEYXRlaSBBbmtlcmVzY2hlLnR4dCDDtmZmbmVuPw==
+ANCHOR	id=preserve-c1-f1-o2	gold=1	restricted=1	correct=true	promptBase64=S2FubnN0IGR1IGRpZSBEYXRlaSBBbmtlcmxpbmRlLnR4dCDDtmZmbmVuPw==
+ANCHOR	id=preserve-c1-f1-o3	gold=1	restricted=1	correct=true	promptBase64=S2FubnN0IGR1IGRpZSBEYXRlaSBBbmtlcmJ1Y2hlLnR4dCDDtmZmbmVuPw==
+ANCHOR	id=preserve-c1-f1-o4	gold=1	restricted=1	correct=true	promptBase64=S2FubnN0IGR1IGRpZSBEYXRlaSBBbmtlcmZpY2h0ZS50eHQgw7ZmZm5lbj8=
+ANCHOR	id=preserve-c1-f1-o5	gold=1	restricted=1	correct=true	promptBase64=S2FubnN0IGR1IGRpZSBEYXRlaSBBbmtlcnVsbWUudHh0IMO2ZmZuZW4/
+ANCHOR	id=preserve-c1-f1-o6	gold=1	restricted=1	correct=true	promptBase64=S2FubnN0IGR1IGRpZSBEYXRlaSBBbmtlcndlaWRlLnR4dCDDtmZmbmVuPw==
+ANCHOR	id=preserve-c1-f1-o7	gold=1	restricted=1	correct=true	promptBase64=S2FubnN0IGR1IGRpZSBEYXRlaSBBbmtlcmFob3JuLnR4dCDDtmZmbmVuPw==
+ANCHOR	id=preserve-c1-f2-o0	gold=1	restricted=2	correct=false	promptBase64=WmVpZ2UgbWlyIGRpZSBEYXRlaSBBbmtlcmJpcmtlLnR4dC4=
+ANCHOR	id=preserve-c1-f2-o1	gold=1	restricted=2	correct=false	promptBase64=WmVpZ2UgbWlyIGRpZSBEYXRlaSBBbmtlcmVzY2hlLnR4dC4=
+ANCHOR	id=preserve-c1-f2-o2	gold=1	restricted=2	correct=false	promptBase64=WmVpZ2UgbWlyIGRpZSBEYXRlaSBBbmtlcmxpbmRlLnR4dC4=
+ANCHOR	id=preserve-c1-f2-o3	gold=1	restricted=2	correct=false	promptBase64=WmVpZ2UgbWlyIGRpZSBEYXRlaSBBbmtlcmJ1Y2hlLnR4dC4=
+ANCHOR	id=preserve-c1-f2-o4	gold=1	restricted=2	correct=false	promptBase64=WmVpZ2UgbWlyIGRpZSBEYXRlaSBBbmtlcmZpY2h0ZS50eHQu
+ANCHOR	id=preserve-c1-f2-o5	gold=1	restricted=2	correct=false	promptBase64=WmVpZ2UgbWlyIGRpZSBEYXRlaSBBbmtlcnVsbWUudHh0Lg==
+ANCHOR	id=preserve-c1-f2-o6	gold=1	restricted=2	correct=false	promptBase64=WmVpZ2UgbWlyIGRpZSBEYXRlaSBBbmtlcndlaWRlLnR4dC4=
+ANCHOR	id=preserve-c1-f2-o7	gold=1	restricted=2	correct=false	promptBase64=WmVpZ2UgbWlyIGRpZSBEYXRlaSBBbmtlcmFob3JuLnR4dC4=
+ANCHOR	id=preserve-c1-f3-o0	gold=1	restricted=2	correct=false	promptBase64=TWFjaCBiaXR0ZSBBbmtlcmJpcmtlLnR4dCBhdWYu
+ANCHOR	id=preserve-c1-f3-o1	gold=1	restricted=2	correct=false	promptBase64=TWFjaCBiaXR0ZSBBbmtlcmVzY2hlLnR4dCBhdWYu
+ANCHOR	id=preserve-c1-f3-o2	gold=1	restricted=2	correct=false	promptBase64=TWFjaCBiaXR0ZSBBbmtlcmxpbmRlLnR4dCBhdWYu
+ANCHOR	id=preserve-c1-f3-o3	gold=1	restricted=2	correct=false	promptBase64=TWFjaCBiaXR0ZSBBbmtlcmJ1Y2hlLnR4dCBhdWYu
+ANCHOR	id=preserve-c1-f3-o4	gold=1	restricted=2	correct=false	promptBase64=TWFjaCBiaXR0ZSBBbmtlcmZpY2h0ZS50eHQgYXVmLg==
+ANCHOR	id=preserve-c1-f3-o5	gold=1	restricted=2	correct=false	promptBase64=TWFjaCBiaXR0ZSBBbmtlcnVsbWUudHh0IGF1Zi4=
+ANCHOR	id=preserve-c1-f3-o6	gold=1	restricted=2	correct=false	promptBase64=TWFjaCBiaXR0ZSBBbmtlcndlaWRlLnR4dCBhdWYu
+ANCHOR	id=preserve-c1-f3-o7	gold=1	restricted=2	correct=false	promptBase64=TWFjaCBiaXR0ZSBBbmtlcmFob3JuLnR4dCBhdWYu
+ANCHOR	id=preserve-c2-f0-o0	gold=2	restricted=2	correct=true	promptBase64=U3VjaGUgSW5mb3JtYXRpb25lbiDDvGJlciBMZWluZW5wZmxlZ2Uu
+ANCHOR	id=preserve-c2-f0-o1	gold=2	restricted=2	correct=true	promptBase64=U3VjaGUgSW5mb3JtYXRpb25lbiDDvGJlciBSYWRsYWdlcndhcnR1bmcu
+ANCHOR	id=preserve-c2-f0-o2	gold=2	restricted=2	correct=true	promptBase64=U3VjaGUgSW5mb3JtYXRpb25lbiDDvGJlciBCcm90bGFnZXJ1bmcu
+ANCHOR	id=preserve-c2-f0-o3	gold=2	restricted=2	correct=true	promptBase64=U3VjaGUgSW5mb3JtYXRpb25lbiDDvGJlciBUb252ZXJhcmJlaXR1bmcu
+ANCHOR	id=preserve-c2-f0-o4	gold=2	restricted=2	correct=true	promptBase64=U3VjaGUgSW5mb3JtYXRpb25lbiDDvGJlciBQYXBpZXJmYWx0dW5nLg==
+ANCHOR	id=preserve-c2-f0-o5	gold=2	restricted=2	correct=true	promptBase64=U3VjaGUgSW5mb3JtYXRpb25lbiDDvGJlciBIb2x6dHJvY2tudW5nLg==
+ANCHOR	id=preserve-c2-f0-o6	gold=2	restricted=2	correct=true	promptBase64=U3VjaGUgSW5mb3JtYXRpb25lbiDDvGJlciBHbGFzcmVpbmlndW5nLg==
+ANCHOR	id=preserve-c2-f0-o7	gold=2	restricted=2	correct=true	promptBase64=U3VjaGUgSW5mb3JtYXRpb25lbiDDvGJlciBXb2xsYXVmYmV3YWhydW5nLg==
+ANCHOR	id=preserve-c2-f1-o0	gold=2	restricted=1	correct=false	promptBase64=S2FubnN0IGR1IEluZm9ybWF0aW9uZW4gw7xiZXIgTGVpbmVucGZsZWdlIHN1Y2hlbj8=
+ANCHOR	id=preserve-c2-f1-o1	gold=2	restricted=1	correct=false	promptBase64=S2FubnN0IGR1IEluZm9ybWF0aW9uZW4gw7xiZXIgUmFkbGFnZXJ3YXJ0dW5nIHN1Y2hlbj8=
+ANCHOR	id=preserve-c2-f1-o2	gold=2	restricted=1	correct=false	promptBase64=S2FubnN0IGR1IEluZm9ybWF0aW9uZW4gw7xiZXIgQnJvdGxhZ2VydW5nIHN1Y2hlbj8=
+ANCHOR	id=preserve-c2-f1-o3	gold=2	restricted=1	correct=false	promptBase64=S2FubnN0IGR1IEluZm9ybWF0aW9uZW4gw7xiZXIgVG9udmVyYXJiZWl0dW5nIHN1Y2hlbj8=
+ANCHOR	id=preserve-c2-f1-o4	gold=2	restricted=1	correct=false	promptBase64=S2FubnN0IGR1IEluZm9ybWF0aW9uZW4gw7xiZXIgUGFwaWVyZmFsdHVuZyBzdWNoZW4/
+ANCHOR	id=preserve-c2-f1-o5	gold=2	restricted=1	correct=false	promptBase64=S2FubnN0IGR1IEluZm9ybWF0aW9uZW4gw7xiZXIgSG9senRyb2NrbnVuZyBzdWNoZW4/
+ANCHOR	id=preserve-c2-f1-o6	gold=2	restricted=1	correct=false	promptBase64=S2FubnN0IGR1IEluZm9ybWF0aW9uZW4gw7xiZXIgR2xhc3JlaW5pZ3VuZyBzdWNoZW4/
+ANCHOR	id=preserve-c2-f1-o7	gold=2	restricted=1	correct=false	promptBase64=S2FubnN0IGR1IEluZm9ybWF0aW9uZW4gw7xiZXIgV29sbGF1ZmJld2FocnVuZyBzdWNoZW4/
+ANCHOR	id=preserve-c2-f2-o0	gold=2	restricted=2	correct=true	promptBase64=UmVjaGVyY2hpZXJlIGJpdHRlIHp1bSBUaGVtYSBMZWluZW5wZmxlZ2Uu
+ANCHOR	id=preserve-c2-f2-o1	gold=2	restricted=2	correct=true	promptBase64=UmVjaGVyY2hpZXJlIGJpdHRlIHp1bSBUaGVtYSBSYWRsYWdlcndhcnR1bmcu
+ANCHOR	id=preserve-c2-f2-o2	gold=2	restricted=2	correct=true	promptBase64=UmVjaGVyY2hpZXJlIGJpdHRlIHp1bSBUaGVtYSBCcm90bGFnZXJ1bmcu
+ANCHOR	id=preserve-c2-f2-o3	gold=2	restricted=2	correct=true	promptBase64=UmVjaGVyY2hpZXJlIGJpdHRlIHp1bSBUaGVtYSBUb252ZXJhcmJlaXR1bmcu
+ANCHOR	id=preserve-c2-f2-o4	gold=2	restricted=2	correct=true	promptBase64=UmVjaGVyY2hpZXJlIGJpdHRlIHp1bSBUaGVtYSBQYXBpZXJmYWx0dW5nLg==
+ANCHOR	id=preserve-c2-f2-o5	gold=2	restricted=2	correct=true	promptBase64=UmVjaGVyY2hpZXJlIGJpdHRlIHp1bSBUaGVtYSBIb2x6dHJvY2tudW5nLg==
+ANCHOR	id=preserve-c2-f2-o6	gold=2	restricted=2	correct=true	promptBase64=UmVjaGVyY2hpZXJlIGJpdHRlIHp1bSBUaGVtYSBHbGFzcmVpbmlndW5nLg==
+ANCHOR	id=preserve-c2-f2-o7	gold=2	restricted=2	correct=true	promptBase64=UmVjaGVyY2hpZXJlIGJpdHRlIHp1bSBUaGVtYSBXb2xsYXVmYmV3YWhydW5nLg==
+ANCHOR	id=preserve-c2-f3-o0	gold=2	restricted=2	correct=true	promptBase64=RmluZGUgV2lzc2VuIHp1bSBUaGVtYSBMZWluZW5wZmxlZ2Uu
+ANCHOR	id=preserve-c2-f3-o1	gold=2	restricted=2	correct=true	promptBase64=RmluZGUgV2lzc2VuIHp1bSBUaGVtYSBSYWRsYWdlcndhcnR1bmcu
+ANCHOR	id=preserve-c2-f3-o2	gold=2	restricted=2	correct=true	promptBase64=RmluZGUgV2lzc2VuIHp1bSBUaGVtYSBCcm90bGFnZXJ1bmcu
+ANCHOR	id=preserve-c2-f3-o3	gold=2	restricted=2	correct=true	promptBase64=RmluZGUgV2lzc2VuIHp1bSBUaGVtYSBUb252ZXJhcmJlaXR1bmcu
+ANCHOR	id=preserve-c2-f3-o4	gold=2	restricted=2	correct=true	promptBase64=RmluZGUgV2lzc2VuIHp1bSBUaGVtYSBQYXBpZXJmYWx0dW5nLg==
+ANCHOR	id=preserve-c2-f3-o5	gold=2	restricted=2	correct=true	promptBase64=RmluZGUgV2lzc2VuIHp1bSBUaGVtYSBIb2x6dHJvY2tudW5nLg==
+ANCHOR	id=preserve-c2-f3-o6	gold=2	restricted=2	correct=true	promptBase64=RmluZGUgV2lzc2VuIHp1bSBUaGVtYSBHbGFzcmVpbmlndW5nLg==
+ANCHOR	id=preserve-c2-f3-o7	gold=2	restricted=2	correct=true	promptBase64=RmluZGUgV2lzc2VuIHp1bSBUaGVtYSBXb2xsYXVmYmV3YWhydW5nLg==
+ORIGINAL_ROLLOUT	id=preserve-text-00	tokens=108,274,102,256,110,46,10,45,278,97,366,47,115,114,99,47,109,451,47,106,97,118,97,47,99,323,46,103,267,104,433,47	length=32	textBase64=bGllZmVybi4KLSBgYXBwL3NyYy9tYWluL2phdmEvY29tLmdpdGh1Yi8=
+ORIGINAL_ROLLOUT	id=preserve-text-01	tokens=497,115,112,114,481,257,32,497,115,112,114,481,257,32,497,115,112,114,481,257,32,497,115,112,114,481,257,32,497,115,112,114	length=32	textBase64=w7xiZXJzcHJ1bmdlbmVuIMO8YmVyc3BydW5nZW5lbiDDvGJlcnNwcnVuZ2VuZW4gw7xiZXJzcHJ1bmdlbmVuIMO8YmVyc3By
+ORIGINAL_ROLLOUT	id=preserve-text-02	tokens=81,499,257,46,10,45,337,258,32,81,499,257,46,10,45,337,258,32,81,499,257,46,10,45,337,258,32,81,499,257,46,10	length=32	textBase64=UXVlbGxlbi4KLSBFaW4gUXVlbGxlbi4KLSBFaW4gUXVlbGxlbi4KLSBFaW4gUXVlbGxlbi4K
+ORIGINAL_ROLLOUT	id=preserve-text-03	tokens=50,48,50,54,46,49,48,46,50,48,50,54,45,49,48,46,50,48,50,54,45,49,48,46,49,48,46,50,48,50,54,45	length=32	textBase64=MjAyNi4xMC4yMDI2LTEwLjIwMjYtMTAuMTAuMjAyNi0=
+ORIGINAL_ROLLOUT	id=preserve-text-04	tokens=81,499,257,46,10,45,337,258,32,81,499,257,46,10,45,337,258,32,81,499,257,46,10,45,337,258,32,81,499,257,46,10	length=32	textBase64=UXVlbGxlbi4KLSBFaW4gUXVlbGxlbi4KLSBFaW4gUXVlbGxlbi4KLSBFaW4gUXVlbGxlbi4K
+ORIGINAL_ROLLOUT	id=preserve-text-05	tokens=497,115,112,114,481,257,32,497,110,323,109,257,46	length=13	textBase64=w7xiZXJzcHJ1bmdlbmVuIMO8YmVybm9tbWVuLg==
+ORIGINAL_ROLLOUT	id=preserve-text-06	tokens=108,274,102,256,110,46,10,45,278,97,366,47,115,114,99,47,109,451,47,106,97,118,97,47,99,323,46,103,267,104,433,47	length=32	textBase64=bGllZmVybi4KLSBgYXBwL3NyYy9tYWluL2phdmEvY29tLmdpdGh1Yi8=
+ORIGINAL_ROLLOUT	id=preserve-text-07	tokens=50,48,50,54,46,49,48,46,50,48,50,54,45,49,48,46,50,48,50,54,45,49,48,46,50,48,50,54,45,49,48,46	length=32	textBase64=MjAyNi4xMC4yMDI2LTEwLjIwMjYtMTAuMjAyNi0xMC4=
+ORIGINAL_ROLLOUT	id=preserve-text-08	tokens=497,110,323,109,257,46	length=6	textBase64=w7xiZXJub21tZW4u
+ORIGINAL_ROLLOUT	id=preserve-text-09	tokens=497,112,390,98,97,265,297,116,291,299,108,256,107,257,110,292,46,10,45,278,60,104,498,62,96,58,32,50,48,50,54,46	length=32	textBase64=w7xiZXJwcsO8ZmJhcmUgU3RhdHVzbGVya2VubnVuZy4KLSBgPGhhc2g+YDogMjAyNi4=
+ORIGINAL_ROLLOUT	id=preserve-text-10	tokens=81,499,257,46,10,45,337,258,32,81,499,257,46,10,45,337,258,32,81,499,257,46,10,45,337,258,32,81,499,257,46,10	length=32	textBase64=UXVlbGxlbi4KLSBFaW4gUXVlbGxlbi4KLSBFaW4gUXVlbGxlbi4KLSBFaW4gUXVlbGxlbi4K
+ORIGINAL_ROLLOUT	id=preserve-text-11	tokens=50,48,46,50,48,50,54,46,49,48,46,49,48,46,50,48,50,54,45,49,48,46,50,48,50,54,45,49,48,46,49,48	length=32	textBase64=MjAuMjAyNi4xMC4xMC4yMDI2LTEwLjIwMjYtMTAuMTA=
+ORIGINAL_ROLLOUT	id=preserve-text-12	tokens=497,110,323,109,257,46	length=6	textBase64=w7xiZXJub21tZW4u
+ORIGINAL_ROLLOUT	id=preserve-text-13	tokens=497,115,112,114,481,257,32,497,115,112,114,481,257,32,497,115,112,114,481,257,32,497,115,112,114,481,257,32,497,115,112,114	length=32	textBase64=w7xiZXJzcHJ1bmdlbmVuIMO8YmVyc3BydW5nZW5lbiDDvGJlcnNwcnVuZ2VuZW4gw7xiZXJzcHJ1bmdlbmVuIMO8YmVyc3By
+ORIGINAL_ROLLOUT	id=preserve-text-14	tokens=497,110,323,109,257,46	length=6	textBase64=w7xiZXJub21tZW4u
+ORIGINAL_ROLLOUT	id=preserve-text-15	tokens=497,115,112,114,481,257,32,497,115,112,114,481,257,32,497,115,112,114,481,257,32,497,115,112,114,481,257,32,497,115,112,114	length=32	textBase64=w7xiZXJzcHJ1bmdlbmVuIMO8YmVyc3BydW5nZW5lbiDDvGJlcnNwcnVuZ2VuZW4gw7xiZXJzcHJ1bmdlbmVuIMO8YmVyc3By
+PREFLIGHT	status=PASS	originalCorrectOpen=8	originalCorrectSearch=24	selectedPerLabel=8	originalLongRollouts=12	selectedRollouts=8	trainRows=192	maxPrefixTokens=96	updates=0

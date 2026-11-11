@@ -1,0 +1,65 @@
+id	label	prompt
+preserve-c1-f0-o0	1	Öffne die Datei Ankerbirke.txt.
+preserve-c1-f0-o1	1	Öffne die Datei Ankeresche.txt.
+preserve-c1-f0-o2	1	Öffne die Datei Ankerlinde.txt.
+preserve-c1-f0-o3	1	Öffne die Datei Ankerbuche.txt.
+preserve-c1-f0-o4	1	Öffne die Datei Ankerfichte.txt.
+preserve-c1-f0-o5	1	Öffne die Datei Ankerulme.txt.
+preserve-c1-f0-o6	1	Öffne die Datei Ankerweide.txt.
+preserve-c1-f0-o7	1	Öffne die Datei Ankerahorn.txt.
+preserve-c1-f1-o0	1	Kannst du die Datei Ankerbirke.txt öffnen?
+preserve-c1-f1-o1	1	Kannst du die Datei Ankeresche.txt öffnen?
+preserve-c1-f1-o2	1	Kannst du die Datei Ankerlinde.txt öffnen?
+preserve-c1-f1-o3	1	Kannst du die Datei Ankerbuche.txt öffnen?
+preserve-c1-f1-o4	1	Kannst du die Datei Ankerfichte.txt öffnen?
+preserve-c1-f1-o5	1	Kannst du die Datei Ankerulme.txt öffnen?
+preserve-c1-f1-o6	1	Kannst du die Datei Ankerweide.txt öffnen?
+preserve-c1-f1-o7	1	Kannst du die Datei Ankerahorn.txt öffnen?
+preserve-c1-f2-o0	1	Zeige mir die Datei Ankerbirke.txt.
+preserve-c1-f2-o1	1	Zeige mir die Datei Ankeresche.txt.
+preserve-c1-f2-o2	1	Zeige mir die Datei Ankerlinde.txt.
+preserve-c1-f2-o3	1	Zeige mir die Datei Ankerbuche.txt.
+preserve-c1-f2-o4	1	Zeige mir die Datei Ankerfichte.txt.
+preserve-c1-f2-o5	1	Zeige mir die Datei Ankerulme.txt.
+preserve-c1-f2-o6	1	Zeige mir die Datei Ankerweide.txt.
+preserve-c1-f2-o7	1	Zeige mir die Datei Ankerahorn.txt.
+preserve-c1-f3-o0	1	Mach bitte Ankerbirke.txt auf.
+preserve-c1-f3-o1	1	Mach bitte Ankeresche.txt auf.
+preserve-c1-f3-o2	1	Mach bitte Ankerlinde.txt auf.
+preserve-c1-f3-o3	1	Mach bitte Ankerbuche.txt auf.
+preserve-c1-f3-o4	1	Mach bitte Ankerfichte.txt auf.
+preserve-c1-f3-o5	1	Mach bitte Ankerulme.txt auf.
+preserve-c1-f3-o6	1	Mach bitte Ankerweide.txt auf.
+preserve-c1-f3-o7	1	Mach bitte Ankerahorn.txt auf.
+preserve-c2-f0-o0	2	Suche Informationen über Leinenpflege.
+preserve-c2-f0-o1	2	Suche Informationen über Radlagerwartung.
+preserve-c2-f0-o2	2	Suche Informationen über Brotlagerung.
+preserve-c2-f0-o3	2	Suche Informationen über Tonverarbeitung.
+preserve-c2-f0-o4	2	Suche Informationen über Papierfaltung.
+preserve-c2-f0-o5	2	Suche Informationen über Holztrocknung.
+preserve-c2-f0-o6	2	Suche Informationen über Glasreinigung.
+preserve-c2-f0-o7	2	Suche Informationen über Wollaufbewahrung.
+preserve-c2-f1-o0	2	Kannst du Informationen über Leinenpflege suchen?
+preserve-c2-f1-o1	2	Kannst du Informationen über Radlagerwartung suchen?
+preserve-c2-f1-o2	2	Kannst du Informationen über Brotlagerung suchen?
+preserve-c2-f1-o3	2	Kannst du Informationen über Tonverarbeitung suchen?
+preserve-c2-f1-o4	2	Kannst du Informationen über Papierfaltung suchen?
+preserve-c2-f1-o5	2	Kannst du Informationen über Holztrocknung suchen?
+preserve-c2-f1-o6	2	Kannst du Informationen über Glasreinigung suchen?
+preserve-c2-f1-o7	2	Kannst du Informationen über Wollaufbewahrung suchen?
+preserve-c2-f2-o0	2	Recherchiere bitte zum Thema Leinenpflege.
+preserve-c2-f2-o1	2	Recherchiere bitte zum Thema Radlagerwartung.
+preserve-c2-f2-o2	2	Recherchiere bitte zum Thema Brotlagerung.
+preserve-c2-f2-o3	2	Recherchiere bitte zum Thema Tonverarbeitung.
+preserve-c2-f2-o4	2	Recherchiere bitte zum Thema Papierfaltung.
+preserve-c2-f2-o5	2	Recherchiere bitte zum Thema Holztrocknung.
+preserve-c2-f2-o6	2	Recherchiere bitte zum Thema Glasreinigung.
+preserve-c2-f2-o7	2	Recherchiere bitte zum Thema Wollaufbewahrung.
+preserve-c2-f3-o0	2	Finde Wissen zum Thema Leinenpflege.
+preserve-c2-f3-o1	2	Finde Wissen zum Thema Radlagerwartung.
+preserve-c2-f3-o2	2	Finde Wissen zum Thema Brotlagerung.
+preserve-c2-f3-o3	2	Finde Wissen zum Thema Tonverarbeitung.
+preserve-c2-f3-o4	2	Finde Wissen zum Thema Papierfaltung.
+preserve-c2-f3-o5	2	Finde Wissen zum Thema Holztrocknung.
+preserve-c2-f3-o6	2	Finde Wissen zum Thema Glasreinigung.
+preserve-c2-f3-o7	2	Finde Wissen zum Thema Wollaufbewahrung.

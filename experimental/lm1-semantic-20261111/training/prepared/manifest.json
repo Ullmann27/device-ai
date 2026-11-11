@@ -1,0 +1,38 @@
+{
+  "schema": "lm1-targeted-preservation-selection-v1",
+  "status": "PASS",
+  "origin": "Original-only inference on prospectively authored training fixtures",
+  "selectionRule": "First equal per-class correct anchors, max8/min2; first max8/min2 rollouts reaching at least24 tokens",
+  "verifiedCorrectByClass": {
+    "1": 8,
+    "2": 24
+  },
+  "selectedByClass": {
+    "1": 8,
+    "2": 8
+  },
+  "originalLongRollouts": 12,
+  "selectedRollouts": 8,
+  "selectionSawCandidateWeights": false,
+  "holdoutRead": false,
+  "nativeModelUpdates": 0,
+  "files": {
+    "prepared/anchors.tsv": {
+      "sha256": "fea4a7b4a11e6eb22f3dfbce699962224346517fa60c9675070fb4eac3697d99",
+      "bytes": 1021
+    },
+    "prepared/native-train-tokens.tsv": {
+      "sha256": "38014732e38f72e3b3df50ae26f93e23af3a4a18339e5274831f850a9396713d",
+      "bytes": 63808
+    },
+    "prepared/rollouts.tsv": {
+      "sha256": "36ccf15a5a54f054968fff5cd9a7bf1a20def2a50614cbdb099b58f7547a9e8c",
+      "bytes": 1228
+    },
+    "prepared/token-parity.json": {
+      "sha256": "022ca1648fd6fddfe64723bb6ec9e5318c10a29d4fc58a18dd0d36545ea31828",
+      "bytes": 285
+    }
+  },
+  "interpretation": "Anchor predictions protect weak restricted ranking; greedy rollouts include repetition and do not establish language coherence."
+}
