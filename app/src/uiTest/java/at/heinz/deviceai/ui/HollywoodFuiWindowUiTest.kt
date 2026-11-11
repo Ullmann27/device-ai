@@ -142,6 +142,37 @@ class HollywoodFuiWindowUiTest {
         assertTrue(f.listeners.isEmpty())
     }
 
+    @Test fun sustainedEnergyUsesOrbBoundsAndStopsWithActualWork() = fixture { f ->
+        f.overlay.setEnergySource(RectF(40f, 460f, 100f, 500f))
+        f.frame(1_000L)
+        fun corridorPixels(): Int {
+            val image = Bitmap.createBitmap(884, 760, Bitmap.Config.ARGB_8888)
+            return try {
+                f.overlay.draw(Canvas(image))
+                var visible = 0
+                for (y in 450 until 540) for (x in 105 until 350)
+                    if (Color.alpha(image.getPixel(x, y)) > 10) visible++
+                visible
+            } finally { image.recycle() }
+        }
+        f.frame(6_000L)
+        assertEquals(0, corridorPixels())
+        f.overlay.setWorkActive(true)
+        assertTrue(f.frame(6_000L))
+        assertTrue("orb-to-window flow survives construction", corridorPixels() > 100)
+        f.overlay.setEnergySource(RectF(40f, 560f, 100f, 600f))
+        f.frame(6_000L)
+        assertEquals("refit moves the energy origin", 0, corridorPixels())
+        f.overlay.setEnergySource(RectF(40f, 460f, 100f, 500f))
+        f.overlay.setWorkActive(false)
+        assertFalse(f.frame(6_000L))
+        assertEquals("result or STOP ends the flow", 0, corridorPixels())
+        f.overlay.setWorkActive(true)
+        f.window.close()
+        f.frame(6_001L)
+        assertEquals("closing cannot keep working light", 0, corridorPixels())
+    }
+
     @Test fun gazeTracksTheActualPerspectiveOnlyOnSuppliedFrames() = fixture { f ->
         val positions = mutableListOf<Pair<Float, Float>>()
         f.window.onPresentedCenter = { x, y -> positions += x to y }

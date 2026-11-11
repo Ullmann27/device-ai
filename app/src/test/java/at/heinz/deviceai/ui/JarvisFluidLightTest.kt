@@ -8,6 +8,38 @@ import kotlin.math.abs
 class JarvisFluidLightTest {
     private val high = JarvisRenderQuality.resolve(true, false, 0, false, false)
 
+    @Test fun realWorkKeepsFlowAfterConstructionAndStopsImmediately() {
+        for (elapsed in listOf(900L, 5_000L, 30_000L, 600_000L, Long.MAX_VALUE)) {
+            val sample = JarvisFluidLight.workingSample(elapsed, true, false, high)
+            assertTrue(sample.energy in .65f.. .81f)
+            assertTrue(sample.phase in 0f..1f)
+            assertEquals(JarvisFluidLight.OFF,
+                JarvisFluidLight.workingSample(elapsed, false, false, high))
+            assertEquals(JarvisFluidLight.OFF,
+                JarvisFluidLight.workingSample(elapsed, true, true, high))
+        }
+    }
+
+    @Test fun workFlowWrapsContinuouslyAndHonorsSafetyBudgets() {
+        for (time in listOf(3_200L, 6_400L, 600_000L)) {
+            val before = JarvisFluidLight.workingSample(time - 1, true, false, high)
+            val after = JarvisFluidLight.workingSample(time + 1, true, false, high)
+            assertEquals(before.phase, after.phase, .002f)
+            assertEquals(before.energy, after.energy, .002f)
+        }
+        for (budget in listOf(
+            JarvisRenderQuality.resolve(false, false, 0, false, false),
+            JarvisRenderQuality.resolve(true, false, 3, false, false),
+            JarvisRenderQuality.resolve(true, true, 0, false, false))) {
+            assertEquals(JarvisFluidLight.OFF,
+                JarvisFluidLight.workingSample(5_000, true, false, budget))
+        }
+        for (scale in listOf(0f, -1f, Float.NaN, Float.POSITIVE_INFINITY)) {
+            assertEquals(JarvisFluidLight.OFF,
+                JarvisFluidLight.workingSample(5_000, true, false, high, scale))
+        }
+    }
+
     @Test fun lightBridgesDepartureAndReconstruction() {
         assertEquals(JarvisFluidLight.OFF, JarvisFluidLight.sample(0))
         assertTrue(JarvisFluidLight.sample(280).energy > .3f)

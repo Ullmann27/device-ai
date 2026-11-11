@@ -258,6 +258,7 @@ class JarvisWorkWindowHost(
                 home.hologram.setWorkWindowCamera(true, currentCameraSide,
                     profile = cameraProfile(currentFootprint))
                 fui.retarget(it.plan.destination, it.plan.origin, it.plan.protectedBounds)
+                fui.setEnergySource(it.orb)
             }?.plan else null
         }
         val accepted = window.open(body, first.plan.origin, first.plan.destination, title, first.plan.protectedBounds,
@@ -302,6 +303,7 @@ class JarvisWorkWindowHost(
         currentGaze = initialGaze
         // The light anchor stands where the window really comes from (avatar core or the tapped control, #643 C).
         fui.open(first.plan.destination, scene, first.plan.origin, first.plan.protectedBounds)
+        fui.setEnergySource(first.orb)
         // Airbus deck: footprint controls how much of the cockpit physically clears for this real window.
         currentFootprint = scene.footprint
         home.setWorkspaceFootprint(currentFootprint)
@@ -332,7 +334,8 @@ class JarvisWorkWindowHost(
     private class ControlOrigin(val view: View, val sourceBounds: RectF,
                                 val viewport: RectF, val origin: RectF)
 
-    private class Planned(val plan: JarvisWorkWindow.Plan, val face: RectF?, val viewport: RectF)
+    private class Planned(val plan: JarvisWorkWindow.Plan, val face: RectF?, val viewport: RectF,
+                          val orb: RectF?)
 
     /** Projected panel and head use the same local overlay coordinates, including a refit after folding. */
     private fun gaze(planned: Planned, x: Float, y: Float): GazeTarget {
@@ -361,7 +364,8 @@ class JarvisWorkWindowHost(
             offset.top + box.bottom * density)
         val face = (geometry.headStage ?: geometry.headBounds)?.let(::local)
         val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
-        val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))
+        val orb = geometry.orbBounds?.let(::local)
+        val withOrb = protected + listOfNotNull(orb)
         val destination = JarvisWorkWindowGeometry.destination(viewport, withOrb, density) ?: return null
         val navigation = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let { tile ->
             val prefixes = when {
@@ -381,7 +385,7 @@ class JarvisWorkWindowHost(
         }?.origin
         val origin = stableOrigin ?: exactOrigin ?: navigation?.let { visibleBounds(it, container) }
             ?: besideFace(face, viewport, density)
-        return Planned(JarvisWorkWindow.Plan(origin, destination, withOrb), face, viewport)
+        return Planned(JarvisWorkWindow.Plan(origin, destination, withOrb), face, viewport, orb)
     }
 
     /**
