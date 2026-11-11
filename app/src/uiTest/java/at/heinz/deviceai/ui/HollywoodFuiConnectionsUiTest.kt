@@ -147,6 +147,71 @@ class HollywoodFuiConnectionsUiTest {
         assertEquals("suspended budget: no thread", 0, threadPixels(f.pixels()))
     }
 
+    @Test fun readingThreadSwitchRemovesOnlyTheThreadAndRestoresItLive() = fixture { f ->
+        f.overlay.setAttentionSource(f.face)
+        f.overlay.setEnergySource(f.orb)
+        f.overlay.setWorkActive(true)
+        f.frame(1_000L)
+        f.frame(6_000L)
+        assertTrue(threadPixels(f.pixels()) > 60)
+        val band = count(f.pixels(), 105..350, 450..560)
+        assertTrue("orb band runs", band > 100)
+        f.overlay.attentionLinkEnabled = false
+        val off = f.pixels()
+        assertEquals("EXP_06 OFF: no reading thread", 0, threadPixels(off))
+        assertEquals("the orb band is untouched", band, count(off, 105..350, 450..560))
+        assertFaceClear(off, f)
+        f.overlay.attentionLinkEnabled = true
+        assertTrue("live ON restores the thread", threadPixels(f.pixels()) > 60)
+    }
+
+    private fun windowPixels(f: Fixture): IntArray {
+        val image = Bitmap.createBitmap(W, H, Bitmap.Config.ARGB_8888)
+        return try {
+            f.window.draw(Canvas(image))
+            IntArray(W * H).also { image.getPixels(it, 0, W, 0, 0, W, H) }
+        } finally { image.recycle() }
+    }
+
+    /** Accent deck light of the flight contact: bright cyan pixels in a row band left of the destination. */
+    private fun deckLight(pixels: IntArray, xs: IntRange, ys: IntRange): Int {
+        var lit = 0
+        for (y in ys) for (x in xs) {
+            val c = pixels[y * W + x]
+            if (Color.alpha(c) > 60 && Color.blue(c) > 150 && Color.red(c) < 120) lit++
+        }
+        return lit
+    }
+
+    /**
+     * Flight at 400 ms: openness = 4·((400−140)/620)³ ≈ .295, footprint (335,458)–(502,646), so the deck light lies
+     * at y ≈ 651 from x ≈ 353 to 484 and the umbra covers the footprint 5 px lower.
+     */
+    @Test fun flyingConstructMarksItsFootprintOnTheDeckAndLandsClean() = fixture { f ->
+        f.frame(1_000L)
+        assertEquals("nothing before lift-off", 0, deckLight(windowPixels(f), 356..415, 646..656))
+        f.frame(1_400L)
+        val flying = windowPixels(f)
+        assertTrue("deck light under the flying glass (${deckLight(flying, 356..415, 646..656)})",
+            deckLight(flying, 356..415, 646..656) > 40)
+        for ((x, y) in listOf(380 to 520, 420 to 560, 460 to 600))
+            assertTrue("umbra on the footprint at ($x,$y): ${Color.alpha(flying[y * W + x])}",
+                Color.alpha(flying[y * W + x]) > 40)
+        for (pixel in listOf(f.face, f.orb).flatMap { r -> listOf(
+                (r.top.toInt() + 2) * W + r.left.toInt() + 2, (r.bottom.toInt() - 2) * W + r.right.toInt() - 2) })
+            assertEquals("protected bounds stay clear", Color.TRANSPARENT, flying[pixel])
+        f.frame(1_760L)
+        f.frame(3_000L)
+        assertEquals("landed: no flight light is left on the deck", 0,
+            deckLight(windowPixels(f), 356..415, 646..656))
+    }
+
+    @Test fun reducedMotionHasNoFlightContact() = fixture { f ->
+        f.frame(1_000L, 0f)
+        f.frame(1_400L, 0f)
+        assertEquals(0, deckLight(windowPixels(f), 356..415, 646..656))
+    }
+
     @Test fun closingTheWindowRemovesTheThread() = fixture { f ->
         f.overlay.setAttentionSource(f.face)
         f.overlay.setWorkActive(true)

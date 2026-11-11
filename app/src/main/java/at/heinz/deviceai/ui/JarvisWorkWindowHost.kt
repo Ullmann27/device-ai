@@ -269,6 +269,9 @@ class JarvisWorkWindowHost(
             fui.cinematicArcEnabled = arc
             fui.orbLinkEnabled = JarvisCinematicSettings.experimentEnabled(activity,
                 JarvisCinematicSettings.Experiment.EXP_11_ORB_LINK)
+            // The reading thread is light between window and face: it follows the owner's face-light switch.
+            fui.attentionLinkEnabled = JarvisCinematicSettings.experimentEnabled(activity,
+                JarvisCinematicSettings.Experiment.EXP_06_FACE_LIGHT)
             fui.workPulseEnabled = JarvisCinematicSettings.experimentEnabled(activity,
                 JarvisCinematicSettings.Experiment.EXP_12_RECEIPTS)
             fui.prismRimEnabled = JarvisCinematicSettings.experimentEnabled(activity,

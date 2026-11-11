@@ -181,6 +181,8 @@ class JarvisWorkWindow(
     /** Cinema 2.0: how far the deck plane has stepped back behind this window, 0..1; follows the construct frame. */
     private var focusDepth = 0f
     private val focusCinematics = HollywoodFuiCinematics.Painterly(Colors.cyan)
+    /** How strongly the flying construct marks its footprint on the deck, 0..1; 0 once landed. Same frame, no clock. */
+    private var flightContact = 0f
     private val opening = JarvisMotion.Presets.widget(JarvisMotion.Direction.DEPTH)
         .copy(distanceDp = 0f, fromScale = 0f)
     private val closing = JarvisMotion.FlyIn(JarvisMotion.Direction.DEPTH, 0f, 0f,
@@ -576,6 +578,7 @@ class JarvisWorkWindow(
         if (phase == Phase.OPEN) {
             constructionElapsedMs = maxOf(constructionElapsedMs, normalized, HollywoodFuiConstruct.DATA_END_MS)
             focusDepth = if (cinematicEffectsEnabled) 1f else 0f
+            flightContact = 0f
             stageOpacity = 1f
             return onCinematicFrame?.invoke(constructionElapsedMs, -1L, reduced, 1f) == true
         }
@@ -596,6 +599,7 @@ class JarvisWorkWindow(
             trailAlpha = (1f - frame.brackets) * frame.closeFrame
             panel.edgeFlash = frame.pulse * .35f
             focusDepth = HollywoodFuiCinematics.focusDepth(frame, openness)
+            flightContact = HollywoodFuiCinematics.flightContact(frame, openness)
             applyFrame()
             val live = onCinematicFrame?.invoke(constructionElapsedMs, closingTime, reduced, openness) == true
             if (isClosing && frame.closeFactor <= 0f) { finishClose(); return false }
@@ -610,6 +614,7 @@ class JarvisWorkWindow(
             return phase == Phase.OPENING || phase == Phase.CLOSING || live
         }
         focusDepth = 0f
+        flightContact = 0f
         stageOpacity = 0f
         val state = JarvisMotion.frame(if (phase == Phase.CLOSING) closing else opening, elapsed, animatorScale)
         if (phase == Phase.CLOSING) {
@@ -688,6 +693,7 @@ class JarvisWorkWindow(
     private fun finishClose() {
         phase = Phase.CLOSED
         focusDepth = 0f
+        flightContact = 0f
         val handle = subscription
         subscription = null
         handle?.close()
@@ -770,14 +776,23 @@ class JarvisWorkWindow(
                 canvas.clipOutPath(stagePagePath)
             } else setDocumentStageReady(null, false)
         }
-        if (focusDepth > 0f && JarvisWorkWindowGeometry.valid(destination)) {
+        if ((focusDepth > 0f || flightContact > 0f) && JarvisWorkWindowGeometry.valid(destination)) {
             // Cinema 2.0 focus depth: the deck steps back behind the constructed window; avatar, orb, dialog stay lit.
             val focusSave = canvas.save()
             canvas.scale(density, density)
             painter.begin(canvas)
-            focusCinematics.drawFocusDepth(painter, HollywoodFuiCinematics.Box(0f, 0f, width / density, height / density),
-                HollywoodFuiCinematics.Box(destination.left / density, destination.top / density,
-                    destination.right / density, destination.bottom / density), focusDepth, 14f)
+            val target = HollywoodFuiCinematics.Box(destination.left / density, destination.top / density,
+                destination.right / density, destination.bottom / density)
+            // The footprint of the glass in this frame: its straight path on the deck, without the arc lift.
+            val progress = openness.coerceIn(0f, 1f)
+            val ground = if (progress >= 1f) target else HollywoodFuiCinematics.Box(
+                (origin.left + (destination.left - origin.left) * progress) / density,
+                (origin.top + (destination.top - origin.top) * progress) / density,
+                (origin.right + (destination.right - origin.right) * progress) / density,
+                (origin.bottom + (destination.bottom - origin.bottom) * progress) / density)
+            if (focusDepth > 0f) focusCinematics.drawFocusDepth(painter,
+                HollywoodFuiCinematics.Box(0f, 0f, width / density, height / density), target, focusDepth, 14f, ground)
+            if (flightContact > 0f) focusCinematics.drawFlightContact(painter, ground, flightContact, 14f)
             canvas.restoreToCount(focusSave)
         }
         drawTrail(canvas)
