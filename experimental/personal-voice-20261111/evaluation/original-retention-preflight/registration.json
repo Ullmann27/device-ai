@@ -1,0 +1,24 @@
+{
+  "scope": "historical retention only before training, not fresh TEST",
+  "inputs": {
+    "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "experimental/weight-space-20261110/data/retention.tsv": "dad78e44b0bdefc006d8130d4d320a33eef245cca925671c3343e9da7e25a92a",
+    "experimental/weight-space-20261110/data/retention_text.txt": "699fe7bc86b5fb9b1de9dc765b2b732b390911b30178dc8012320e6989d17019",
+    "/workspace/scratch/aba242c65e85/voice-native-build/experiment.jar": "3b36cd35f665bc53e376add26543904a01250bd03823900084200aef8e7e15a7",
+    "/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c"
+  },
+  "command": [
+    "java",
+    "-Xmx768m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/aba242c65e85/voice-native-build/experiment.jar:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmPersonalVoicePilot",
+    "eval",
+    "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp",
+    "experimental/weight-space-20261110/data/retention.tsv",
+    "experimental/weight-space-20261110/data/retention_text.txt"
+  ]
+}

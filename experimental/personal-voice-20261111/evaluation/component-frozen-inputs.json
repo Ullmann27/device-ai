@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "frozen_at_utc": "2026-11-11T07:42:29.413944+00:00",
+  "status_at_freeze": "NOT_RUN",
+  "cases": 24,
+  "hashes": {
+    "experimental/personal-voice-20261111/evaluation/COMPONENT-PROTOCOL.md": "e53fb6e600403431a4ceb85dbf938a587cc8a6c5cff73fbc85df5b786b5967cf",
+    "experimental/personal-voice-20261111/evaluation/ContextCorrectionEvaluation.kt": "284bc49d4bb7905f3d1195b5201aa6e9418db036064f76c2a2918a900581000b"
+  },
+  "expected_non_advisory_invariance_labels": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "scope": "real native context components, not full app ABC"
+}
