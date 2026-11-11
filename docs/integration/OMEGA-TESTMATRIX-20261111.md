@@ -1,0 +1,53 @@
+# Continuum Omega – Test- und Reparaturmatrix (Stand 11.11.2026, Sitzungsende)
+
+Quelle der Beobachtungen: Issue #670 (Fold7-Prüfprotokoll, Code51 → Code53) und verlinkte Issues.
+Installierte Referenz: originalsigniertes Code53 / 0.3.52, Quelle `050a57cb`.
+Integrationszweig dieser Arbeit: `claude/omega-integration-20261111` (Basis #761 `8505c885`).
+
+**Legende Integration:** INTEGRIERT = im Integrationszweig gemergt · GETESTET = Host-Test grün auf genanntem SHA ·
+WIP = gesichert, nicht fertig · BLOCKIERT = Ursache außerhalb erreichbar · NOT_RUN = nicht ausgeführt.
+**Fold7-Abnahme** ist für jede Zeile NOT_RUN, außer wo eine Besitzer-Geräteabnahme in #670 dokumentiert ist.
+Ein Host-Test ersetzt nie die Geräteabnahme.
+
+| TEST | BEOBACHTUNG (#670) | URSACHE | FIX-COMMIT | REGRESSIONSTEST | INTEGRATION | FOLD7-ABNAHME |
+|---|---|---|---|---|---|---|
+| T1/T5 (Code51) Gerätefähigkeiten | Generierung brach vor Teiltext ab; Wiederholung mit Kühlmodus vollständig | Ursache nicht bewiesen (Thermik/Laufzeit) | #669 `29aa8c57` (Fehlergrund durchreichen, Fold7-Default COOL) | 7 Hosttests laut #670 | in Code53-Basis | T5 GRÜN (1 Wiederholung); Dauerlast NOT_RUN |
+| T6 Akku | echte Werte, aber Roh-`dumpsys` + `Broken pipe` | Shell-Pipeline statt Broadcast | `0252f63b` (#673-Linie, `DeviceBatteryProbe` Broadcast) | 5 Tests laut #670 | in Code53-Basis (#673 `9d7f0fc` ist Vorfahre) | NOT_RUN auf Code53; Rest-Pfad `CommandInterpreter.kt:70` nutzt noch `dumpsys battery` |
+| T7 „keine neue Messung“ | erneute Messung statt Vorwert | Negation/Sitzungswert fehlte | `004f6909` (#673, `PreviousBatteryObservation`) | deterministische Tests laut #670 | in Code53-Basis | NOT_RUN auf Code53 |
+| T17/T19/T20 ASR de-AT | „Mein“→„wenn“, „Continuum“→„contino“, „Básicamente“ | Android-Recognizer, 1 Kandidat | – | – | OFFEN | ROT (Code51), Code53 nicht erneut gemessen |
+| T20 (Code51) Internetfreigabe | „Lokaler Modellfehler: Internetfreigabe geändert“ | Revision bei internem Web-Cleanup | #673 (lokale Inferenz unabhängig von Web-Epoch) | laut #670 4 Helper-Tests | in Code53-Basis | NOT_RUN auf Code53 |
+| T23/T24 App-Suche mit Negation | Kontextfenster-Meldung statt `find_app`; „Welche davon…“ | negation-first-Guard in `OwnerAppLookupIntent` | #673 | 12/12 Host laut #670 | in Code53-Basis | NOT_RUN auf Code53 |
+| #758 Gedächtnis blau/21/Keller | am Ende falsch trotz zuvor korrekter Werte | offen – Agent C analysiert | WIP `0f2fa3f7a` (Zahlwort-Parser, Agentenzweig C) | NOT_RUN | WIP (nicht integriert) | NOT_RUN |
+| #759 Sprachauftrag Geräteanalyse | nur Speicherprobe, keine Arbeitsanimation | offen | – (Agent B ohne Commit) | NOT_RUN | OFFEN | NOT_RUN |
+| #767 / Test 22 Bootstrap-Ablehnung | Diagnose + spätere Löschentscheidung als „nachgeahmte Rolle“ abgelehnt | vermutet: `BootstrapBrain.unsafeControlText` matcht mutierende Verben zu breit (#767) | – (Agent B ohne Commit) | NOT_RUN | OFFEN | NOT_RUN |
+| Test 22 „Cache“→„Cage“ | Modell fragte nach „Cage“ | ASR-Fehlhörung | – | NOT_RUN | OFFEN | NOT_RUN |
+| #765 / Test 20 „Öffne WhatsApp“ | einmal Kontextfenster-Meldung; nach Freigabe der Bedienungshilfe **PASS** (Test 20F) | Routing/Kontext, Gerätebefund ohne ASR-Text | – / – | NOT_RUN | OFFEN | 20F **PASS** (App-Wechsel bestätigt) |
+| Kontextfenster bei einfachen Aufträgen | „…passen … nicht vollständig in das lokale Kontextfenster“ | offen (Kandidaten `LOCAL_FOLLOWUP_HISTORY_EXCEEDS_BUDGET` / `LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET`) | – | NOT_RUN | OFFEN | NOT_RUN |
+| #760 PDF „… und zeige mir jeden Arbeitsschritt“ | generisches `LOKALE KI · DENKEN` statt Dateiauswahl, danach Thermalstopp | Zweitimperativ verworfen | #761 (Präsentationszusatz) | `OwnerDocumentPresentationIntentTest` im Core-Scope grün (`6c538e2e`) | INTEGRIERT (#761 → #768) | NOT_RUN |
+| #761 PDF-Szene Core | Lauf am 11.11. abgebrochen (11 PASS, 1 SKIP) | – | 3 Fixture-Reparaturen `120572483` | Core 98 Fälle: 94 PASS / 4 FAIL auf `6c538e2e`; nach Fix Klassen 3/3 + 6/6; Bestätigungslauf läuft | INTEGRIERT (#768) | NOT_RUN |
+| #761 strikte PDF-Dekodierung | `NoSuchMethodError FileDescriptor.getOwnerId$()` | Host-JDK ohne Android-libcore-Methode | – (bewusst streng) | 0 PASS / 1 FAIL (Host) | BLOCKIERT (keine Android-Laufzeit hier) | NOT_RUN |
+| Stimm-Sperre bei verzögerter Antwort | Node-Vertrag rot nach #761 | `speakNow`-Parameter, Sperre selbst erhalten | `120572483` | Vertrag 7/7 | INTEGRIERT (#768) | NOT_RUN |
+| #569 Thermik | Android-Thermalguard-Stopp bei Gemma, Stufe 2, Kühlpack | Dauerinferenz; Konkurrenz Grafik/KI unbelegt | – | – | OFFEN | NOT_RUN (keine Last auf überhitztem Gerät) |
+| Team Iris/Archiv/Atlas | Lauf 1 CANCELLED; Lauf 2 FAILED, nur ANALYZE-Quittung | Ursache offen (`ChiefBotTeam.report`, Worker, Thermik?) | – | – | OFFEN | ANALYZE PASS, REVIEW NOT_VERIFIED |
+| Test 16 Maya | Stimme hörbar **PASS**; Kiefer abschnittsweise sehr schwach | PCM-RMS/Visem/Timing/Thermik – unbelegt (#764) | – | – | OFFEN | Stimme PASS, Lippen PARTIAL |
+| Test 18/19 „gerade Kurve“ | Rückfrage statt Erklärung; mit Anweisung besser, Ende unklar | Modellverhalten | – | – | OFFEN | PARTIAL |
+| Handyreiniger | nur eigene Diagnoseberichte bereinigbar | Umfang bewusst begrenzt | – | – | OFFEN (kein Dritt-App-Cleaner) | Vorschau NOT_RUN |
+| Hands-Free | Wiederaufnahme nach Antwort, Stille-Timeout **PASS**; kein Barge-in (#641) | half-duplex | – | – | – | PASS (Code53) |
+| 15 Cinema-Experimente | Holo-Audit 31 Callbacks / 33 Draws / 1,6 s | – | Matrix `420237ac4` (Agentenzweig A, `docs/architecture/CINEMA-EXPERIMENT-MATRIX-20261111.md`) | siehe Agent-A-Matrix | WIP (nicht integriert) | NOT_RUN (keine GPU-FPS) |
+| Lichtverbindungen (Paket, Lese-Faden) | – (neu) | – | `be33c2c97` | Tests `cc2163f6b`/`d7c826c80` auf Agentenzweig A (Ergebnis dort dokumentiert; vom Integrator nicht nachgeprüft) | WIP in #768 | NOT_RUN |
+
+## Testläufe dieser Sitzung (Host, exakte Quellen)
+
+Rohzusammenfassung: `docs/evidence/omega-20261111/test-summary.json`.
+
+| Lauf | Quelle | Ergebnis |
+|---|---|---|
+| #761 Core-Scope (18 Klassen) | `6c538e2ef` | **98 Fälle: 94 PASS, 4 FAIL, 0 SKIP**, vollständig (suite_end) |
+| Fixture-Reparatur | `120572483` | `DocumentStagePageGeometryUiTest` 3/3, `ContinuumPdfSceneAcceptanceUiTest` 6/6 |
+| #761 Core-Bestätigung | `120572483` | **UNVOLLSTÄNDIG**: 29 abgeschlossen (28 PASS, 1 SKIP), bei Sitzungsende gestoppt – kein Gesamtbeleg |
+| #761 Visual-Scope (7 Klassen) | – | **NOT_RUN** |
+| Node Backend | `6c538e2ef` | 64/64 PASS |
+| Node-Verträge (252 Dateien) | `6c538e2ef` | 1634: 1584 PASS, 27 FAIL, 23 SKIP; 26 FAIL = Baseline (identisch auf Code53 `050a57cb`, Umgebung uid 0); 1 neu → behoben in `120572483` |
+| Android-Lint (`:app:lintDebug`, NewApi) | – | **NOT_RUN** |
+| Vollständige Android-Suite (~4 670) | – | **NOT_RUN** |
+| Fold7 (alles) | – | **NOT_RUN** |
