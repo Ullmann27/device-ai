@@ -116,9 +116,13 @@ class OwnerAppPlanningContextUiTest {
         }
     }
     private fun submit(activity: AgentActivity, request: String) {
-        val chat = JarvisHomeTestRoutes.destination(activity.window.decorView, "chat")
-        assertNotNull("Chat entry exists", chat)
-        JarvisHomeTestRoutes.touch(activity.window.decorView, chat)
+        if (field(activity, "activeWorkArea") != ContinuumWorkArea.CHAT) {
+            val chat = JarvisHomeTestRoutes.destination(activity.window.decorView, "chat")
+            assertNotNull("Chat entry exists", chat)
+            JarvisHomeTestRoutes.touch(activity.window.decorView, chat)
+        }
+        assertEquals("Chat selected", ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
+        assertEquals("Conversation active", true, field(activity, "conversationActive"))
         (field(activity, "input") as EditText).setText(request)
         assertTrue((field(activity, "sendButton") as Button).performClick())
     }
@@ -132,7 +136,7 @@ class OwnerAppPlanningContextUiTest {
         val generation = field(activity, "appLookupGeneration")
         for (request in listOf("Wir starten", "Lass uns jetzt starten", "Morgen wollen wir das Projekt starten")) {
             submit(activity, request)
-            until("Ordinary statement reaches inference") { runtime.running }
+            until("Ordinary statement reaches inference: $request") { runtime.running }
             assertEquals(request, generation, field(activity, "appLookupGeneration"))
             assertTrue(runtime.prompts.last().contains(request))
             assertNull(field(activity, "activeOwnerAppFlow"))
