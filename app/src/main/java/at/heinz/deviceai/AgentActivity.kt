@@ -175,6 +175,8 @@ class AgentActivity : Activity() {
         private const val PERSONAL_LEARNING_EXPORT_REQUEST = 2231
         private const val PERSONAL_LEARNING_PREVIEW_REQUEST = 2232
         private const val PDF_DOCUMENT_REQUEST = 2245
+        private const val PDF_SELECTION_CODE_FIRST = 30_000
+        private const val PDF_SELECTION_CODE_LAST = 60_000
         /** The work journal's cut-off drafts of an earlier process are recovered once per process. */
         private val WORK_JOURNAL_RECOVERED = java.util.concurrent.atomic.AtomicBoolean(false)
         /** Drafts changed before this moment belong to an earlier app process. */
@@ -856,12 +858,14 @@ class AgentActivity : Activity() {
             if (conversationActive) ContinuumWorkArea.CHAT.name else ContinuumWorkArea.START.name
         )
         outState.putString("ctx3_chat_id_v1",sessionId)
+        outState.putInt("continuum_pdf_code_v1", nextDocumentRequestCode)
         pendingDocumentSelection?.takeIf(::currentDocumentSelection)?.let { selection ->
             outState.putBundle("continuum_pdf_selection_v1", Bundle().apply {
                 putString("session", selection.session)
                 putString("request", selection.request)
                 putBoolean("draft", selection.wantsDraft)
                 putBoolean("maya", selection.allowMaya)
+                putInt("code", selection.requestCode)
             })
         }
         super.onSaveInstanceState(outState)
@@ -1987,25 +1991,34 @@ class AgentActivity : Activity() {
         val replyRevision: Long,
         val request: String,
         val wantsDraft: Boolean,
-        val allowMaya: Boolean
+        val allowMaya: Boolean,
+        val requestCode: Int
     )
     private data class ReturnedDocument(val uri: android.net.Uri, val selection: DocumentSelection)
     private var pendingDocumentSelection: DocumentSelection? = null
     private var pendingReturnedDocument: ReturnedDocument? = null
     @Volatile private var documentReadGeneration = 0L
+    private var nextDocumentRequestCode = PDF_DOCUMENT_REQUEST
 
     private fun currentDocumentSelection(selection: DocumentSelection): Boolean =
         !isFinishing && !isDestroyed && sessionId == selection.session &&
             workPresentationGeneration == selection.generation && ownerReplyRevision == selection.replyRevision
 
     private fun restoreDocumentSelection(state: Bundle?) {
+        val next = state?.getInt("continuum_pdf_code_v1", PDF_DOCUMENT_REQUEST) ?: PDF_DOCUMENT_REQUEST
+        if (next == PDF_DOCUMENT_REQUEST || next in PDF_SELECTION_CODE_FIRST..PDF_SELECTION_CODE_LAST + 1)
+            nextDocumentRequestCode = next
         val saved = state?.getBundle("continuum_pdf_selection_v1") ?: return
         val request = saved.getString("request") ?: return
         if (saved.getString("session") != sessionId || request.length > 2_000 || request.any(Char::isISOControl)) return
+        val code = saved.getInt("code", -1)
+        if (code != PDF_DOCUMENT_REQUEST && code !in PDF_SELECTION_CODE_FIRST..PDF_SELECTION_CODE_LAST) return
+        nextDocumentRequestCode = maxOf(nextDocumentRequestCode,
+            if (code == PDF_DOCUMENT_REQUEST) PDF_SELECTION_CODE_FIRST else code + 1)
         val allowed = saved.getBoolean("maya", false) &&
             !at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalSpeech(request)
         pendingDocumentSelection = DocumentSelection(sessionId, workPresentationGeneration, ownerReplyRevision,
-            request, saved.getBoolean("draft", false), allowed)
+            request, saved.getBoolean("draft", false), allowed, code)
         pendingDocumentRequest = request
         pendingDocumentDraft = saved.getBoolean("draft", false)
         ownerReplyAllowsMaya = allowed
@@ -2596,17 +2609,23 @@ class AgentActivity : Activity() {
 
     private fun openPdfDocumentPicker(wantsDraft: Boolean, request: String = "") {
         if (pendingDocumentSelection?.let(::currentDocumentSelection) == true) return
+        val requestCode = nextDocumentRequestCode
+        if (requestCode > PDF_SELECTION_CODE_LAST) {
+            addAssistantMessage("Die Dateiauswahl ist für diese Sitzung nicht mehr verfügbar. Bitte öffne die App erneut.")
+            return
+        }
+        nextDocumentRequestCode = if (requestCode == PDF_DOCUMENT_REQUEST) PDF_SELECTION_CODE_FIRST else requestCode + 1
         pendingDocumentDraft = wantsDraft
         pendingDocumentRequest = request
         pendingDocumentSelection = DocumentSelection(sessionId, workPresentationGeneration, ownerReplyRevision,
-            request, wantsDraft, ownerReplyAllowsMaya)
+            request, wantsDraft, ownerReplyAllowsMaya, requestCode)
         val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/pdf"
             // Lets JARVIS reopen exactly this file later („die ausgewählte PDF“) – read only, revocable in Android.
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
         }
-        runCatching { startActivityForResult(picker, PDF_DOCUMENT_REQUEST) }.onFailure {
+        runCatching { startActivityForResult(picker, requestCode) }.onFailure {
             pendingDocumentSelection = null
             pendingDocumentDraft = false
             pendingDocumentRequest = ""
@@ -13912,10 +13931,11 @@ class AgentActivity : Activity() {
                     }
                 }
             }
-            PDF_DOCUMENT_REQUEST -> {
-                val selection = pendingDocumentSelection
+            PDF_DOCUMENT_REQUEST, in PDF_SELECTION_CODE_FIRST..PDF_SELECTION_CODE_LAST -> {
+                val selection = pendingDocumentSelection ?: return
+                if (selection.requestCode != requestCode) return
                 pendingDocumentSelection = null
-                if (selection == null || !currentDocumentSelection(selection)) return
+                if (!currentDocumentSelection(selection)) return
                 val uri = data?.data
                 if (resultCode == RESULT_OK && uri != null) {
                     val returned = ReturnedDocument(uri, selection)

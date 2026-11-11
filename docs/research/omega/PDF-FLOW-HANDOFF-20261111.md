@@ -24,7 +24,10 @@ The new four tests contain 19 inputs; this is not a live Android routing claim.
 - Picker callbacks consume an immutable request snapshot once. STOP, another
   owner message and a different session invalidate the old callback. A result
   delivered while paused waits for the existing `onResume`; a pending picker
-  restores its bounded request across activity recreation.
+  restores its bounded request across activity recreation. Every later picker
+  uses a different Android request code from a reserved bounded range: an old
+  picker callback cannot consume a newer selection. Codes and pending identity
+  survive activity recreation; exhaustion refuses another launch.
 - Background reads freeze request/draft/speech policy, drop stale completions,
   and observe cooperative cancellation before file access and between text
   pages. Pause, STOP and a newer request invalidate that work. Native rendering
@@ -44,6 +47,10 @@ Dependencies: graphics worker production commit
 Independent QA owns picker rejection/recreation/arrival tests and the changed
 result-origin assertion. Root must compile/test the combined source before
 accepting these Activity/renderer changes.
+
+Two existing Node message-routing/streaming files: 11 tests passed, no skips or
+failures, on local `fe9cf17c`. Raw output is preserved in the same evidence
+directory. This checks existing source contracts, not Android lifecycle runtime.
 
 Android compilation/UI execution, physical Fold7, actual PDF/native renderer,
 live model/audio, Filament GPU and thermals are NOT_RUN at this checkpoint.
