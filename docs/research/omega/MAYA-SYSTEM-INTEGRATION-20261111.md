@@ -4,16 +4,21 @@ Canonical target: `integration/continuum-final-visibility-20261111`, PR #747.
 Starting remote source: `fd1de22cf3f6ed159601c9b944cc25c86f0fc221`.
 This is the continuation of the existing Cinema/Maya candidate, not a new runtime.
 
-## Active frozen QA — continuation checkpoint, 2026-11-11 07:45 UTC
+## Last completed frozen QA — 2026-11-11 08:04 UTC
 
 - App source: `fd86f11a4a822ee4805f4c462791baeb1d741db4`.
 - App tree: `21e5603d2a3f20c840bc3c2ba7836be408dbb5ad`.
 - Workflow: `23146e7f817b825e48a2b086f73da5cf28e0a274`.
-- Active run: https://github.com/Ullmann27/device-ai/actions/runs/42977884118
+- Failed run: https://github.com/Ullmann27/device-ai/actions/runs/42977884118
   / job `130381258271`.
 - Source/ICU/critical/full-Node, backend/software rendering and SDK steps PASS.
-  Full Android/Robolectric/configured NewApi lint is IN_PROGRESS. APK, package
-  validation and complete-run success remain PENDING, not passed.
+  Android production/test compilation passed. Full Robolectric reports
+  4,650 PASS /1 FAIL /17 SKIP (4,668 total). The only failure is
+  `MayaVoiceSettingsUiTest.mayaSetupIsReachableWithoutAndroidTtsAndNeverAutoGeneratesASample`,
+  at `assertNotNull(input.error)`. All 29 required classes are present:
+  167 PASS /1 FAIL /0 SKIP; 28 classes are fully green. Configured NewApi lint
+  has no confirmed result; APK build and package validation were skipped.
+  Evidence: `docs/evidence/final-visibility-20261111/code53-fd86-hosted-test-summary.json`.
 
 Later documentation commits do not change these frozen runtime/workflow identities.
 Read the actual run before starting any replacement. A previous successful full
@@ -49,7 +54,8 @@ does not exist until the actual complete run and artifacts are verified. Four
 legacy contracts and twelve new data/archive/workflow cases pass; the thirteenth
 production-binding case is still red. This is not a total passing signer result.
 
-Next: finish the active Android/APK run; verify both artifact API IDs/digests and
+Next: repair and preflight the dialog lifecycle test, then complete the new
+frozen Android/APK run; verify both artifact API IDs/digests and
 downloaded ZIP bytes, actual APK SHA/size, exact validator-report path, source/tree,
 workflow receipt, JUnit totals and all 29 required classes. Then fill the real
 Code53 binding, run all signer contracts and its secrets-free check on the one
@@ -72,6 +78,14 @@ the targeted Kotlin gate passed. Full Node stopped on two old exact
 Android and APK stages did not run. Local replay: 2456 PASS, 2 FAIL, 37 SKIP,
 source unchanged. The two tests now accept the additional parameter while
 preserving all cockpit/navigation assertions: 7/7 focused checks PASS.
+
+The completed `42977884118` Android run found one queued-dialog test failure.
+The settings test now explicitly uses Robolectric's paused looper and delivers
+`onShow` before clicking, and `onDismiss` before asserting credential clearing.
+No production dialog behavior or existing assertion was removed. Invalid-key
+checks additionally require Maya to remain disabled and its credential absent.
+The next workflow runs both settings tests first, preserving their XML separately,
+then reruns the unchanged full suite. Runtime proof remains pending that run.
 
 ## Coordinated repairs
 

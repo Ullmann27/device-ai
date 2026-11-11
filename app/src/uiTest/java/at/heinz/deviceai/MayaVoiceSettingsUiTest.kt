@@ -2,6 +2,7 @@ package at.heinz.deviceai
 
 import android.app.AlertDialog
 import android.content.Context
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -11,14 +12,19 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowAlertDialog
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
+@LooperMode(LooperMode.Mode.PAUSED)
 class MayaVoiceSettingsUiTest {
     private fun call(activity: AgentActivity, name: String) =
         AgentActivity::class.java.getDeclaredMethod(name).apply { isAccessible = true }.invoke(activity)
+
+    private fun idle() = shadowOf(Looper.getMainLooper()).idle()
 
     private fun field(view: View): EditText? = when (view) {
         is EditText -> view
@@ -50,9 +56,11 @@ class MayaVoiceSettingsUiTest {
         activity.getSharedPreferences("device_ai_secure", Context.MODE_PRIVATE).edit().clear().commit()
         try {
             call(activity, "showVoicePicker")
+            idle()
             val picker = ShadowAlertDialog.getLatestAlertDialog()
             assertTrue(picker.listView.adapter.getItem(0).toString().contains("Maya"))
             picker.listView.performItemClick(null, 0, 0L)
+            idle()
             val settings = ShadowAlertDialog.getLatestAlertDialog()
             val input = field(settings.window!!.decorView)!!
             assertFalse(input.isSaveEnabled)
@@ -65,13 +73,19 @@ class MayaVoiceSettingsUiTest {
             assertNull(speech.get(activity))
             input.setText("invalid")
             settings.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            idle()
             assertTrue(settings.isShowing)
             assertNotNull(input.error)
+            assertFalse(activity.getSharedPreferences("continuum-voice", Context.MODE_PRIVATE)
+                .getBoolean("maya_enabled", false))
+            assertNull(SecureTokenStore.loadElevenLabsToken(activity))
             assertNull(speech.get(activity))
             settings.dismiss()
+            idle()
             assertEquals("", input.text.toString())
         } finally {
             ShadowAlertDialog.getLatestAlertDialog()?.dismiss()
+            idle()
             runCatching { controller.close() }
         }
     }
