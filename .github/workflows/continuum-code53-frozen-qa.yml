@@ -13,8 +13,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  CONTINUUM_SOURCE_SHA: 43b8d9f4f7bfb7bef9714ba28efde5bb9622d482
-  CONTINUUM_CAPTURE_SOURCE_COMMIT: 43b8d9f4f7bfb7bef9714ba28efde5bb9622d482
+  CONTINUUM_SOURCE_SHA: c57c6c2253bbcaa4a28deffec74fe689ab9ceab2
+  CONTINUUM_CAPTURE_SOURCE_COMMIT: c57c6c2253bbcaa4a28deffec74fe689ab9ceab2
 
 jobs:
   validate-frozen-source:
@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 43b8d9f4f7bfb7bef9714ba28efde5bb9622d482
+          ref: c57c6c2253bbcaa4a28deffec74fe689ab9ceab2
           path: source
           fetch-depth: 0
           persist-credentials: false
@@ -42,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$CONTINUUM_SOURCE_SHA"
-          test "$(git rev-parse HEAD^{tree})" = b6528e44d7ea7f376ccfe1b14b536f60c5efa914
+          test "$(git rev-parse HEAD^{tree})" = aa71c7704a4ac55fc1adcc4db5f1ba6bbebbc6a4
           test -z "$(git status --porcelain --untracked-files=normal)"
           mkdir -p "$RUNNER_TEMP/code53-unsigned"
           printf 'source_sha=%s\nworkflow_sha=%s\nFold7=NOT_RUN\noriginal_signature=NOT_USED\n' "$CONTINUUM_SOURCE_SHA" "$GITHUB_SHA" > "$RUNNER_TEMP/code53-unsigned/BUILD-INFO.txt"
@@ -70,7 +70,7 @@ jobs:
           npm --prefix backend ci --ignore-scripts --no-audit --no-fund
           npm --prefix backend run check
           npm --prefix backend test
-          bash scripts/hollywood-fui-reference-fidelity.sh "$RUNNER_TEMP/code53-fidelity" CODE53-43b8d9f4
+          bash scripts/hollywood-fui-reference-fidelity.sh "$RUNNER_TEMP/code53-fidelity" CODE53-c57c6c22
           bash scripts/hollywood-fui-cinematics-preview.sh "$RUNNER_TEMP/code53-preview"
       - name: Install official Android SDK
         run: |
@@ -93,7 +93,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import xml.etree.ElementTree as ET
-          required = {'LuxuryHoloButtonRendererTest','PerimeterWingChoreographerTest','SpatialWindowLightTest','HollywoodFuiWorkActivityTest','JarvisRenderQualityTest','TtsHologramSignalTest'}
+          required = {'LuxuryHoloButtonRendererTest','PerimeterWingChoreographerTest','SpatialWindowLightTest','HollywoodFuiWorkActivityTest','JarvisRenderQualityTest','TtsHologramSignalTest','JarvisFluidLightTest','HollywoodFuiWindowUiTest','CinemaNativeSequenceUiTest'}
           found = set()
           for path in Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'):
               for case in ET.parse(path).getroot().iter('testcase'):
@@ -127,7 +127,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Code53-43b8d9f4-UNSIGNED-NOT-INSTALLABLE
+          name: Code53-c57c6c22-UNSIGNED-NOT-INSTALLABLE
           path: ${{ runner.temp }}/code53-unsigned/
           retention-days: 14
           if-no-files-found: error
@@ -135,7 +135,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Code53-43b8d9f4-QA-Evidence
+          name: Code53-c57c6c22-QA-Evidence
           path: |
             ${{ runner.temp }}/code53-critical/
             ${{ runner.temp }}/code53-full-node/
