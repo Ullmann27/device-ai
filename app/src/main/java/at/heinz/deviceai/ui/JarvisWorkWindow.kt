@@ -100,6 +100,8 @@ class JarvisWorkWindow(
         }
     internal var onCinematicFrame: ((Long, Long, Boolean, Float) -> Boolean)? = null
     internal var onPresentedCenter: ((Float, Float) -> Unit)? = null
+    internal var onDocumentStageGeometryChanged: (() -> Unit)? = null
+    internal var onDocumentStageReadyChanged: ((Boolean) -> Unit)? = null
 
     /** Dp below the window's top edge where its dense glass ends; NaN while content fills the sheet. */
     internal fun glassVacantTopDp(): Float = panel.vacancy()?.denseBottomDp ?: Float.NaN
@@ -224,6 +226,7 @@ class JarvisWorkWindow(
         tag = "jarvis-work-window:scroll"
         isFillViewport = false
         clipToPadding = true
+        setOnScrollChangeListener { _, _, _, _, _ -> notifyDocumentStageGeometry() }
     }
     private val panel = GlassPanel(context).apply {
         tag = "jarvis-work-window:panel"
@@ -303,6 +306,7 @@ class JarvisWorkWindow(
             page != null && DocumentStagePageGeometry.fittedRect(page, panel, stagePageRect)
         if (accepted && documentStageReady && stagePage === page) return true
         if (!accepted && !documentStageReady && stagePage == null) return false
+        val changed = documentStageReady != accepted
         stagePage?.imageAlpha = stagePageAlpha
         stagePage = null
         documentStageReady = accepted
@@ -311,8 +315,13 @@ class JarvisWorkWindow(
             stagePageAlpha = requireNotNull(page).imageAlpha
             page.imageAlpha = 0
         }
+        if (changed) onDocumentStageReadyChanged?.invoke(accepted)
         invalidate()
         return accepted
+    }
+
+    private fun notifyDocumentStageGeometry() {
+        if (!disposed && isShowing) onDocumentStageGeometryChanged?.invoke()
     }
 
     internal fun projectedMotionPhase(): at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase = when (phase) {
@@ -727,6 +736,11 @@ class JarvisWorkWindow(
         }
     }
 
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        notifyDocumentStageGeometry()
+    }
+
     override fun onDetachedFromWindow() {
         close(immediate = true)
         super.onDetachedFromWindow()
@@ -741,6 +755,7 @@ class JarvisWorkWindow(
 
     override fun dispatchDraw(canvas: Canvas) {
         if (!isShowing) return
+        notifyDocumentStageGeometry()
         val save = canvas.save()
         protectedBounds.forEach { canvas.clipOutRect(it) }
         val decorationSave = canvas.save()

@@ -86,7 +86,7 @@ class PdfIntakeNativeDecodeProbeUiTest {
                     OpenableColumns.DISPLAY_NAME -> fixture.name
                     OpenableColumns.SIZE -> fixture.length()
                     else -> null
-                } }.toTypedArray())
+                } }.toTypedArray<Any?>())
             }
         }
         override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor {

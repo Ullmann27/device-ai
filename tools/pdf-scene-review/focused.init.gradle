@@ -13,6 +13,7 @@ gradle.projectsEvaluated {
                     'at.heinz.deviceai.PdfDocumentIntakeTextTest',
                     'at.heinz.deviceai.ui.JarvisPdfWindowPresentationUiTest',
                     'at.heinz.deviceai.ui.DocumentStagePageGeometryUiTest',
+                    'at.heinz.deviceai.ui.DocumentStageFrameRefreshUiTest',
                     'at.heinz.deviceai.avatar3d.DocumentStageFrameTest',
                     'at.heinz.deviceai.ui.Cinema2DepthLightTest',
                     'at.heinz.deviceai.ui.JarvisWorkWindowDepthTest',

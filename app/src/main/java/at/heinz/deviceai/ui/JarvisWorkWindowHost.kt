@@ -136,6 +136,8 @@ class JarvisWorkWindowHost(
             (stage.parent as? ViewGroup)?.removeView(stage)
         }
         currentDocumentStage = null
+        window.onDocumentStageGeometryChanged = null
+        window.onDocumentStageReadyChanged = null
         currentClientClosed = onClosed
         morphPresentation(home, scene)
         return window
@@ -202,11 +204,26 @@ class JarvisWorkWindowHost(
             val ready = renderedDocumentStage && current === window && currentDocumentStage === documentStage &&
                 documentFrame?.pageRectValid == true && (documentFrame?.opacity ?: 0f) > 0f &&
                 pageBitmap != null && !pageBitmap.isRecycled
-            fui.documentStageReady = window.setDocumentStageReady(sourcePage, ready)
+            val accepted = window.setDocumentStageReady(sourcePage, ready)
+            fui.documentStageReady = accepted
+            documentStage?.presentationEnabled = accepted
+        }
+        fun presentDocumentFrame() {
+            if (current !== window || currentDocumentStage !== documentStage || documentStage == null) return
+            documentFrame = window.documentStageFrame(id, resultStage, sourcePage)
+            documentFrame?.let { documentStage.present(it, pageBitmap) }
+            updateDocumentPixels()
         }
         documentStage?.onReadyChanged = { ready ->
             renderedDocumentStage = ready
             updateDocumentPixels()
+        }
+        if (documentStage != null) {
+            window.onDocumentStageGeometryChanged = ::presentDocumentFrame
+            window.onDocumentStageReadyChanged = { ready ->
+                fui.documentStageReady = ready
+                documentStage.presentationEnabled = ready && current === window && currentDocumentStage === documentStage
+            }
         }
         var framing = first
         window.onPresentedCenter = { x, y ->
@@ -238,11 +255,7 @@ class JarvisWorkWindowHost(
         }
         fui.requestFrame = { shell.invalidate() }
         window.onCinematicFrame = { elapsed, closing, reduced, open ->
-            if (current === window && currentDocumentStage === documentStage && documentStage != null) {
-                documentFrame = window.documentStageFrame(id, resultStage, sourcePage)
-                documentFrame?.let { documentStage.present(it, pageBitmap) }
-                updateDocumentPixels()
-            }
+            presentDocumentFrame()
             fui.setParallax(shell.spatialTiltX, shell.spatialTiltY)
             fui.vacantTopDp = window.glassVacantTopDp()
             fui.present(elapsed, closing, reduced, open)
@@ -299,6 +312,8 @@ class JarvisWorkWindowHost(
             recession = recession, onClosed = {
             releaseGeometry()
             documentStage?.close()
+            window.onDocumentStageGeometryChanged = null
+            window.onDocumentStageReadyChanged = null
             presentation.unregisterOnSharedPreferenceChangeListener(preferenceListener)
             runCatching { budgetSubscription?.close() }
             (window.parent as? ViewGroup)?.removeView(window)

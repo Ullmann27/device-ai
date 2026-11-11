@@ -602,11 +602,15 @@ class ContinuumHologramView @JvmOverloads constructor(
         val binding = documentStageBinding?.takeIf { it.id == frame.windowId } ?: return
         if (!frame.valid()) return
         val changedPage = binding.page !== page
+        val changedBuffer = binding.bufferWidth != bufferWidth || binding.bufferHeight != bufferHeight
+        val changed = changedPage || changedBuffer || binding.frame != frame
         binding.frame = frame
         binding.page = page
         binding.bufferWidth = bufferWidth
         binding.bufferHeight = bufferHeight
-        if (changedPage && canDisplay3d()) invalidate()
+        if (changedPage || changedBuffer || !frame.pageRectValid || frame.opacity <= 0f ||
+            page == null || page.isRecycled) binding.report(false)
+        if (changed && canDisplay3d()) invalidate()
     }
 
     internal fun detachDocumentStage(id: String) {
@@ -631,13 +635,18 @@ class ContinuumHologramView @JvmOverloads constructor(
             return
         }
         val frame = binding.frame ?: return
+        if (!frame.pageRectValid || frame.opacity <= 0f || binding.page?.isRecycled != false) {
+            binding.report(false)
+            return
+        }
         val bytes = documentStageBytes ?: return
         val native = native3d ?: return
         if (binding.bufferWidth <= 0 || binding.bufferHeight <= 0) return
         runCatching {
             native.renderDocumentStage(binding.surface, bytes, frame, binding.page,
                 binding.bufferWidth, binding.bufferHeight)
-        }.onSuccess { rendered -> if (rendered) binding.report(true) }
+        }.onSuccess { rendered -> if (rendered) binding.report(frame.pageRectValid && frame.opacity > 0f &&
+            binding.page?.isRecycled == false) }
             .onFailure {
                 binding.failed = true
                 binding.report(false)

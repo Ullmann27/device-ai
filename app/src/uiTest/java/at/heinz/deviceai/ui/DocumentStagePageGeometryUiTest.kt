@@ -7,18 +7,18 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ScrollView
-import androidx.test.core.app.ApplicationProvider
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28], qualifiers = "mdpi")
 class DocumentStagePageGeometryUiTest {
     private class Fixture(width: Int, height: Int, bitmapWidth: Int, bitmapHeight: Int) {
-        private val context = ApplicationProvider.getApplicationContext<Context>()
+        private val context: Context = RuntimeEnvironment.getApplication()
         val panel = FrameLayout(context)
         val scroll = ScrollView(context)
         private val body = FrameLayout(context)

@@ -15,6 +15,12 @@ class DocumentStageView(
     private val windowId: String
 ) : TextureView(context), TextureView.SurfaceTextureListener {
     var onReadyChanged: ((Boolean) -> Unit)? = null
+    internal var presentationEnabled = true
+        set(value) {
+            if (field == value) return
+            field = value
+            updateAlpha()
+        }
     private var ownedSurface: Surface? = null
     private var frame: DocumentStageFrame? = null
     private var page: Bitmap? = null
@@ -38,7 +44,11 @@ class DocumentStageView(
         page = bitmap?.takeUnless { it.isRecycled }
         resizeBuffer()
         hologram.presentDocumentStage(value, page, bufferWidth, bufferHeight)
-        alpha = if (ready) value.opacity else 0f
+        updateAlpha()
+    }
+
+    private fun updateAlpha() {
+        alpha = if (!closed && ready && presentationEnabled) frame?.opacity ?: 0f else 0f
     }
 
     private fun resizeBuffer() {
@@ -60,7 +70,7 @@ class DocumentStageView(
         hologram.attachDocumentStage(windowId, surface) { drawn ->
             if (!closed) {
                 if (ready != drawn) { ready = drawn; onReadyChanged?.invoke(drawn) }
-                alpha = if (drawn) frame?.opacity ?: 0f else 0f
+                updateAlpha()
             }
         }
         frame?.let { hologram.presentDocumentStage(it, page, bufferWidth, bufferHeight) }

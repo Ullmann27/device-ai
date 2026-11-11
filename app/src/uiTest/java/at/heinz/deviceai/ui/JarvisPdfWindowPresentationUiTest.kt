@@ -2,11 +2,13 @@ package at.heinz.deviceai.ui
 
 import android.app.Activity
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.RectF
 import android.os.Looper
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.TextView
 import org.junit.Assert.*
 import org.junit.Test
@@ -81,7 +83,7 @@ class JarvisPdfWindowPresentationUiTest {
             activity.setContentView(root)
             layout()
         }
-        private fun layout() {
+        fun layout() {
             root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
             root.layout(0, 0, 884, 760)
@@ -253,5 +255,65 @@ class JarvisPdfWindowPresentationUiTest {
         f.root.removeView(f.window)
         assertEquals(197, lastPage.imageAlpha)
         assertFalse(f.window.documentStageReady)
+    }
+
+    @Test fun settledNativeScrollLayoutAndDrawPublishFreshGeometryWithoutClockFrames() = Fixture().use { f ->
+        val (body, page) = f.pageBody()
+        body.minimumHeight = 600
+        (page.layoutParams as FrameLayout.LayoutParams).topMargin = 40
+        f.open(body = body)
+        f.frame(1_000)
+        f.frame(1_900)
+        assertTrue(f.window.setDocumentStageReady(page, true))
+        val published = mutableListOf<at.heinz.deviceai.avatar3d.DocumentStageFrame>()
+        f.window.onDocumentStageGeometryChanged = {
+            f.window.documentStageFrame("settled-page", false, page)?.let(published::add)
+        }
+        var clockFrames = 0
+        f.window.onCinematicFrame = { _, _, _, _ -> clockFrames++; false }
+        val first = requireNotNull(f.window.documentStageFrame("settled-page", false, page))
+        val scroll = f.window.findViewWithTag<ScrollView>("jarvis-work-window:scroll")
+        scroll.scrollTo(0, 8)
+        assertTrue(published.isNotEmpty())
+        assertTrue(published.last().pageRectValid)
+        assertEquals(first.pageTop - 8f / first.height, published.last().pageTop, .00001f)
+        assertTrue("valid movement keeps its renderer", f.window.documentStageReady)
+        assertEquals(0, page.imageAlpha)
+        published.clear()
+        (page.layoutParams as FrameLayout.LayoutParams).leftMargin = 12
+        page.requestLayout()
+        f.layout()
+        assertTrue("native layout publishes", published.isNotEmpty())
+        val laidOut = published.last()
+        published.clear()
+        page.translationX = 6f
+        val bitmap = Bitmap.createBitmap(884, 760, Bitmap.Config.ARGB_8888)
+        f.window.draw(Canvas(bitmap))
+        assertTrue("native draw publishes", published.isNotEmpty())
+        assertEquals(laidOut.pageLeft + 6f / laidOut.width, published.last().pageLeft, .00001f)
+        assertEquals(0, clockFrames)
+        bitmap.recycle()
+    }
+
+    @Test fun windowSideClippingAndEffectsOffPropagateFalseWhileSettled() = Fixture().use { f ->
+        val (body, page) = f.pageBody()
+        f.open(body = body)
+        f.frame(1_000)
+        f.frame(1_900)
+        val readiness = mutableListOf<Boolean>()
+        f.window.onDocumentStageReadyChanged = { readiness += it }
+        assertTrue(f.window.setDocumentStageReady(page, true))
+        page.translationY = 500f
+        val bitmap = Bitmap.createBitmap(884, 760, Bitmap.Config.ARGB_8888)
+        f.window.draw(Canvas(bitmap))
+        assertEquals(listOf(true, false), readiness)
+        assertEquals(197, page.imageAlpha)
+        page.translationY = 0f
+        assertTrue(f.window.setDocumentStageReady(page, true))
+        f.window.cinematicEffectsEnabled = false
+        assertEquals(listOf(true, false, true, false), readiness)
+        assertEquals(197, page.imageAlpha)
+        f.window.close(immediate = true)
+        bitmap.recycle()
     }
 }
