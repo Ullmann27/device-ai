@@ -1,0 +1,146 @@
+{
+  "source": "0d21f08466e1036346071536ac5eeec54f54efdc",
+  "skips": [
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "test": "actualNodeKotlinNodeTrainingParity",
+      "category": "MISSING_RESEARCH_PARITY_FIXTURE",
+      "reasonFromSource": "Separately generated Node training/parity fixtures were not supplied. No experimental weights were promoted."
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "test": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+      "category": "MISSING_RESEARCH_PARITY_FIXTURE",
+      "reasonFromSource": "Separately generated Node training/parity fixtures were not supplied. No experimental weights were promoted."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt6b_lernen_hypotheseUndTagebuchEintrag",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "test": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+      "category": "OPT_IN_HOST_WORKSPACE",
+      "reasonFromSource": "CONTINUUM_WORKSPACE_CHIEF_HOST_PROOF was not enabled; actual fixed external workspace containers were not run."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "test": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+      "category": "OPT_IN_HOST_WORKSPACE",
+      "reasonFromSource": "CONTINUUM_WORKSPACE_CHIEF_HOST_PROOF was not enabled; actual fixed external workspace containers were not run."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s7_pending_agentMessagesUrgentWakesInfoWaits",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s4b_pending_profileDiarySharedLayers",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s5b_pending_textFileSkillLibraryLoadedOnDemand",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s6_pending_routineReportsOnlyWhenSomethingIsNew",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+      "category": "HISTORICAL_PENDING_TEMPLATE",
+      "reasonFromSource": "Disabled @Ignore placeholder retained from older PR373/379-era coverage; its comments are not a current proof that the feature is absent."
+    },
+    {
+      "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+      "test": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+      "category": "MISSING_RESEARCH_PARITY_FIXTURE",
+      "reasonFromSource": "Separately generated Node training/parity fixtures were not supplied. No experimental weights were promoted."
+    }
+  ],
+  "currentRelatedComponentTests": [
+    {
+      "class": "at.heinz.deviceai.chief.TurnLifecycleTest",
+      "tests": 4,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkerPoolTest",
+      "tests": 9,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest",
+      "tests": 5,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest",
+      "tests": 6,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefMemoryAndJobTest",
+      "tests": 6,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ExternalContentInjectionGuardTest",
+      "tests": 6,
+      "failures": 0,
+      "skipped": 0
+    }
+  ],
+  "scope": "Related component tests do not substitute for the ignored full historical E2E workflows."
+}
