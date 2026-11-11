@@ -11,11 +11,11 @@ on:
   workflow_dispatch:
     inputs:
       source_sha:
-        description: "Exakter Code52-Quellcommit oder fest gebundene Code53-Quelle fd86f11a"
+        description: "Exakter Code52-Quellcommit oder fest gebundene Code53-Quelle 050a57cb"
         required: true
         type: string
       qa_run_id:
-        description: "Erfolgreicher QA-Lauf; Code53 ausschließlich gebundener Lauf 42977884118"
+        description: "Erfolgreicher QA-Lauf; Code53 ausschließlich gebundener Lauf 42985335421"
         required: true
         type: string
       owner_approved_sha:

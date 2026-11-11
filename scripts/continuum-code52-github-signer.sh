@@ -28,11 +28,11 @@ source_sha="${SOURCE_SHA:-}"
 qa_run="${QA_RUN_ID:-}"
 approved_sha="${OWNER_APPROVED_SHA:-}"
 profile="code52"
-if [[ "$source_sha" == fd86f11a4a822ee4805f4c462791baeb1d741db4 ]]; then
+if [[ "$source_sha" == 050a57cb019dcc1b7fe6cfa2fb5c11176b048e05 ]]; then
   profile="code53"
   code="53"
   name_version="0.3.52"
-  artifact="Code53-fd86f11a-UNSIGNED-NOT-INSTALLABLE"
+  artifact="Code53-050a57cb-UNSIGNED-NOT-INSTALLABLE"
   unsigned_name="Continuum-Code53-UNSIGNED-NOT-INSTALLABLE.apk"
   binding=".github/continuum/code53-owner-signing-binding.json"
   test -s "$binding" || fail CODE53_BINDING_MISSING

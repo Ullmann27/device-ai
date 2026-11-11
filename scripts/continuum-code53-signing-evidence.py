@@ -11,11 +11,11 @@ import stat
 import sys
 import zipfile
 
-SOURCE = "fd86f11a4a822ee4805f4c462791baeb1d741db4"
-TREE = "21e5603d2a3f20c840bc3c2ba7836be408dbb5ad"
-WORKFLOW = "23146e7f817b825e48a2b086f73da5cf28e0a274"
-RUN = 42977884118
-JOB = 130381258271
+SOURCE = "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05"
+TREE = "539ea3aac0af04644a015b3fb69ba865af80d1a8"
+WORKFLOW = "07efc77652638cfa40a67270475aa2c08ded5c76"
+RUN = 42985335421
+JOB = 130405169817
 REPOSITORY = "Ullmann27/device-ai"
 REPOSITORY_ID = 1415878393
 QA_BRANCH = "integration/continuum-final-visibility-20261111"
@@ -24,8 +24,8 @@ PACKAGE = "at.heinz.deviceai.continuumlocal"
 VALIDATOR = "2a0aeaef48bb5482f0da304ee24e3a69a66d3fa2a86c81885436d28b7c8a535f"
 APK_NAME = "Continuum-Code53-UNSIGNED-NOT-INSTALLABLE.apk"
 ARTIFACT_NAMES = {
-    "unsigned": "Code53-fd86f11a-UNSIGNED-NOT-INSTALLABLE",
-    "evidence": "Code53-fd86f11a-QA-Evidence",
+    "unsigned": "Code53-050a57cb-UNSIGNED-NOT-INSTALLABLE",
+    "evidence": "Code53-050a57cb-QA-Evidence",
 }
 IDENTITY = {"package": PACKAGE, "versionCode": 53, "versionName": "0.3.52",
             "abi": "arm64-v8a", "minSdk": 26, "targetSdk": 36, "debuggable": False}
@@ -33,6 +33,7 @@ REQUIRED_STEPS = {
     "Bind source and separate workflow identity",
     "Source safety, full Node and critical subset",
     "Backend and software rendering gates",
+    "Maya settings lifecycle preflight",
     "Full Android suite and configured NewApi lint",
     "Build and validate unsigned original-package Code53",
     "Preserve validated unsigned candidate",

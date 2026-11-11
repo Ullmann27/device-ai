@@ -66,6 +66,45 @@ class MetadataContracts(unittest.TestCase):
     def test_complete_exact_binding_passes(self):
         evidence.verify_metadata(**fixture())
 
+    def test_failed_previous_candidate_cannot_be_reused(self):
+        data = fixture()
+        data["source"] = data["approved"] = "fd86f11a4a822ee4805f4c462791baeb1d741db4"
+        with self.assertRaisesRegex(evidence.Rejected, "OWNER_SOURCE_APPROVAL"):
+            evidence.verify_metadata(**data)
+        data = fixture()
+        data["run"]["id"] = 42977884118
+        data["run"]["head_sha"] = "23146e7f817b825e48a2b086f73da5cf28e0a274"
+        data["jobs"]["jobs"][0]["id"] = 130381258271
+        with self.assertRaisesRegex(evidence.Rejected, "QA_RUN_ATTEMPT"):
+            evidence.verify_metadata(**data)
+
+    def test_maya_preflight_must_exist_and_succeed(self):
+        for result in ("missing", "skipped", "failure", "cancelled"):
+            with self.subTest(result=result):
+                data = fixture()
+                steps = data["jobs"]["jobs"][0]["steps"]
+                preflight = next(step for step in steps if step["name"] == "Maya settings lifecycle preflight")
+                if result == "missing":
+                    steps.remove(preflight)
+                else:
+                    preflight["conclusion"] = result
+                with self.assertRaisesRegex(evidence.Rejected, "QA_REQUIRED_STEP"):
+                    evidence.verify_metadata(**data)
+
+    def test_replaced_workflow_and_cancelled_run_are_rejected(self):
+        changes = [
+            (("run_id",), "42984950999", "RUN_INPUT"),
+            (("run", "id"), 42984950999, "QA_RUN_ATTEMPT"),
+            (("run", "head_sha"), "212171d362a60e18747a80ec3d270155da969eba", "QA_WORKFLOW_IDENTITY"),
+            (("jobs", "jobs", 0, "id"), 130403794846, "QA_JOB_IDENTITY"),
+        ]
+        for path, value, reason in changes:
+            with self.subTest(path=path):
+                data = fixture()
+                replace(data, path, value)
+                with self.assertRaisesRegex(evidence.Rejected, reason):
+                    evidence.verify_metadata(**data)
+
     def test_wrong_sources_runs_jobs_and_artifacts_fail_closed(self):
         changes = [
             (("source",), "d" * 40), (("approved",), "d" * 40), (("run_id",), "42977222214"),
