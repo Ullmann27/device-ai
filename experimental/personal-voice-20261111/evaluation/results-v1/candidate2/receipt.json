@@ -1,0 +1,21 @@
+{
+  "command": [
+    "java",
+    "-Xmx768m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/aba242c65e85/voice-native-build/experiment.jar:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmPersonalVoicePilot",
+    "eval",
+    "/workspace/scratch/aba242c65e85/voice-training/experimental/personal-voice-20261111/training/artifacts/balanced-preserve/final.lm1",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp",
+    "/workspace/scratch/aba242c65e85/voice-eval/experimental/personal-voice-20261111/evaluation/results-v1/combined-evaluation.tsv",
+    "/workspace/scratch/aba242c65e85/voice-eval/experimental/weight-space-20261110/data/retention_text.txt"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "wall_seconds": 3.246133275999455,
+  "model_sha256": "4d0cb91226970737bd3413736b66d8688714f2c65ae0e383501aadd6bd5f763f",
+  "stdout_sha256": "eec66fb0929ed062688f51be3f8aff886efa3069688c05fda4461d88ee2c2f13",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
