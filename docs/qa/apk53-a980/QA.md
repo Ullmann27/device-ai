@@ -132,3 +132,13 @@ is separate from Android/Filament. Scripted camera/TTS-word events are not live
 perception or audio. No original asset or app source was changed. A Chromium
 attempt failed at the host socket permission boundary; no browser-render pass
 is claimed. The existing CPU renderer supplied the actual eight PNGs.
+
+## Owner image booklet
+
+Seven reviewed PDF pages collect the six original Android Canvas screenshots and
+three original-avatar CPU poses. Every page identifies its backend and source;
+no images were retouched or presented as device acceptance. The final PDF raster
+matches all seven visually inspected pages. File hash and size are in
+[images/booklet.json](images/booklet.json); the generator accepts an artifact
+root containing the delivered `apk53-a980-delivery` PNGs. The Android source and
+running CI are unchanged.
