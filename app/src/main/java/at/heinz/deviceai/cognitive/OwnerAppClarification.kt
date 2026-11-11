@@ -25,7 +25,8 @@ internal class OwnerAppClarification {
         if (session != expected.session || revision != expected.revision) return null
         val value = OwnerAppLookupIntent.stripAddress(answer.trim(), assistantName).trimEnd('.', '!').trim()
         if (!name.matches(value) || value.contains("..") || value.contains(Regex("\\.\\s")) ||
-            independent.containsMatchIn(value) || OwnerAppLookupIntent.looksLikeFileTarget(value) ||
+            independent.containsMatchIn(value) || OwnerAppLookupIntent.hasNonCommandGrammar(value) ||
+            OwnerAppLookupIntent.looksLikeFileTarget(value) ||
             OwnerInternalNavigationIntent.resolve(value, assistantName) != null ||
             OwnerAppLookupIntent.isReference(value) || OwnerAppLookupIntent.inspect(value, assistantName) != null ||
             OwnerDeviceRequestSafety.inspect(value).blocked) return null

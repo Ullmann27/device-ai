@@ -1,6 +1,6 @@
 # App-Grammatik – Review-Fortsetzung 11.11.2026
 
-Status: **WIP / UNVERIFIED**. Produktionscode noch unverändert; Regressionsfälle vorbereitet.
+Status: **RED bestätigt / GREEN ausstehend**. Kleine Reparatur angewandt; Android weiterhin NOT_RUN.
 
 - Auftrag: PR #769, Review `discussion_r4539999051`.
 - Basis: `c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14`.
@@ -18,14 +18,18 @@ verbleibende mehrdeutige Namensformen fehlt außerdem `requireInstalledCandidate
 verifizierte Suche ohne exakten installierten Treffer kehrt zum Gespräch zurück.
 Dieser Pfad liegt vor der App-Namensrückfrage. Kein zweiter Router erforderlich.
 
-Geplant: belegte Nicht-Aufträge ausschließen und ausschließlich den tatsächlich
+Umgesetzt: belegte Nicht-Aufträge ausschließen und ausschließlich den tatsächlich
 gewählten Verb-am-Ende-Pfad an vorhandene exakte Installationsevidenz binden.
 Direkte/polite Öffnungsaufträge, Werkzeugfreigabe und UNKNOWN-Sperre bleiben erhalten.
-Eine bestehende Namensrückfrage muss bei einem neuen gewöhnlichen Satz verfallen.
+Die gemeinsame Subjekt-/Modalprüfung verwirft bei einer bestehenden Namensrückfrage
+auch einen neuen gewöhnlichen Satz. Kein zusätzlicher Activity-Produktionspfad.
 
 ## Prüfungen
 
-- Zehn neue reine Kotlin/JUnit-Fälle vorbereitet: **NOT_RUN**.
+- RED: **10 Fälle / 3 PASS / 7 FAIL / 0 SKIP**. Alle sieben kompilierten
+  Produktionsquellen stimmen bytegenau mit `c36258a8` überein. Quellhashes und
+  Rohlog: `docs/evidence/omega-app-grammar-20261111/red/`.
+- GREEN plus fünf bestehende App-/Freigabe-Nachbarklassen: ausstehend.
 - Drei echte Activity-Regressionen vorbereitet: **NOT_RUN**, kein eigener Gradle.
 - Pure Kotlin/Node ausschließlich unter `/tmp/continuum-omega-gradle.lock` nach
   dem gemeinsamen Node-Lauf. RED vor Produktionsänderung, danach GREEN plus Nachbarn.
