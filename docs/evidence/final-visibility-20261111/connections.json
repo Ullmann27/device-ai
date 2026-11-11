@@ -8,15 +8,17 @@
       "activation": "ACTIVE",
       "testedEffect": "9 JVM tests PASS; 2 regressions RED before fix",
       "visibleResult": "Cool inference retains illumination; frame and particle caps remain",
-      "remainingGap": "Hardware visual acceptance NOT_RUN"
+      "remainingGap": "Hardware visual acceptance NOT_RUN",
+      "present": true
     },
     {
       "component": "Renderer",
-      "caller": "AgentActivity.buildHome \u2192 ContinuumHomeView.setJarvisShellStage(true); ContinuumHologramView.update3d \u2192 FilamentAvatarRenderer.create",
+      "caller": "AgentActivity.buildConversationPane \u2192 ContinuumHomeView.setJarvisShellStage(true); ContinuumHologramView.update3d \u2192 FilamentAvatarRenderer.create",
       "activation": "PREFERENCE_AND_SURFACE_GATED",
       "testedEffect": "Prior source tests only",
       "visibleResult": "Filament when surface succeeds; labelled 2D fallback otherwise",
-      "remainingGap": "Live Filament/Fold7 NOT_RUN"
+      "remainingGap": "Live Filament/Fold7 NOT_RUN",
+      "present": true
     },
     {
       "component": "Dialogue",
@@ -24,7 +26,8 @@
       "activation": "ACTIVE",
       "testedEffect": "Prior #740 host evidence; no new end-to-end run",
       "visibleResult": "Existing answer and speech path",
-      "remainingGap": "Real model NOT_RUN"
+      "remainingGap": "Real model NOT_RUN",
+      "present": true
     },
     {
       "component": "Memory and learning",
@@ -32,7 +35,8 @@
       "activation": "QUALIFIED_PATH_ONLY",
       "testedEffect": "Prior #740 receipt/restart evidence",
       "visibleResult": "Historical experience in later context",
-      "remainingGap": "New natural-model transfer NOT_RUN"
+      "remainingGap": "New natural-model transfer NOT_RUN",
+      "present": true
     },
     {
       "component": "System tools",
@@ -40,7 +44,8 @@
       "activation": "OWNER_SCOPED",
       "testedEffect": "Prior #740 host tests",
       "visibleResult": "System report and cockpit events",
-      "remainingGap": "Real Shizuku NOT_RUN"
+      "remainingGap": "Real Shizuku NOT_RUN",
+      "present": true
     },
     {
       "component": "Documents and web",
@@ -48,7 +53,8 @@
       "activation": "PERMISSION_GATED",
       "testedEffect": "Prior #740 host tests",
       "visibleResult": "Document and research windows",
-      "remainingGap": "Live external providers NOT_RUN"
+      "remainingGap": "Live external providers NOT_RUN",
+      "present": true
     },
     {
       "component": "Speech and avatar",
@@ -56,7 +62,8 @@
       "activation": "PREFERENCE_GATED",
       "testedEffect": "Prior simulated TTS tests only",
       "visibleResult": "Listening, speaking and work pose",
-      "remainingGap": "Real microphone/TTS/visemes NOT_RUN"
+      "remainingGap": "Real microphone/TTS/visemes NOT_RUN",
+      "present": true
     },
     {
       "component": "STOP and recovery",
@@ -64,7 +71,8 @@
       "activation": "ACTIVE",
       "testedEffect": "Prior #740 STOP tests",
       "visibleResult": "Controlled window return; stale callbacks rejected",
-      "remainingGap": "Hardware interruption/restart NOT_RUN"
+      "remainingGap": "Hardware interruption/restart NOT_RUN",
+      "present": true
     }
   ],
   "rejectedExperiments": "OMEGA721 and weights728 not activated; CTX3 OFF/shadow",

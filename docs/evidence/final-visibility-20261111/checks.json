@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "source": "cb0827fd979b686beb1b2e0339572b873b8ca228",
+  "sourceUnchanged": true,
+  "node": {
+    "total": 2493,
+    "passed": 2456,
+    "failed": 0,
+    "skipped": 37
+  },
+  "junitSha256": "b7c4411b5a06b556850904838e88bbef20bb18b7302103e6c1d109192de5b939",
+  "backend": {
+    "passed": 64,
+    "failed": 0
+  },
+  "isolatedKotlin": {
+    "compiler": "2.2.21",
+    "tests": 9,
+    "baselineFailures": 2,
+    "patchedFailures": 0
+  },
+  "android": "BLOCKED: offline AGP 8.10.0 unavailable; Java wrapper network unreachable; explicit-proxy dependency attempt timed out at 90s before compilation",
+  "Fold7": "NOT_RUN",
+  "newApk": "NOT_BUILT",
+  "newBeforeAfterImages": "NOT_RUN",
+  "remoteSource": "d92f888520e66a896d6e383d6999bf06b21b5ab9",
+  "identicalTree": "77e8bd56f0ed2dfa2e2775e9da79f007f4e86bb0"
+}
