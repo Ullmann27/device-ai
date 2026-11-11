@@ -129,3 +129,12 @@ UTF-8 limit. All three `OwnerObjectStateConversationUiTest` cases remain
 **Android NOT_RUN here**; root owns the common serialized execution.
 No Activity production edit, event deletion, database or budget change in
 this follow-up.
+
+## Historical prompt follow-up — PR #779
+
+The later review found missing historical evidence for correction/change
+requests. The narrow follow-up has 12 new regressions (RED 3 PASS/9 FAIL),
+then 95/95 pure Kotlin checks green including the prior 83 neighbors;
+ordinary saturated projection remains 1,595 bytes. See
+[the source-bound follow-up handoff](OMEGA-MEMORY-HISTORY-HANDOFF-20261111.md).
+The fourth real Activity case remains NOT_RUN here for the common root gate.
