@@ -123,11 +123,12 @@
     {
       "issue": "758-continuation",
       "origin_pr": 770,
-      "commit": "f5ed3a17724d8943dfad51894f0e09b29d551060",
+      "commit": "dd0eda082bfcce624ecee9eb14a327d43d51b66d",
       "target_branch": "integrate/omega-apk54-20261111",
-      "tests": "78/78 focused Kotlin/JUnit PASS; two actual Activity regressions written, Android NOT_RUN",
+      "tests": "83/83 focused Kotlin/JUnit PASS; ledger required-block boundary 16221 -> 1595 UTF-8 bytes; three actual Activity cases written, Android NOT_RUN",
       "status": "INTEGRATED_PENDING_ANDROID_QA",
-      "device_check": "NOT_RUN"
+      "device_check": "NOT_RUN",
+      "followup_pr": 776
     },
     {
       "issue": "767/759/765-continuation",
@@ -154,6 +155,15 @@
       "target_branch": "integrate/omega-apk54-20261111",
       "tests": "Only the 145-line master protocol differs; no production delta. Reviewed and merged.",
       "status": "INTEGRIERT",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "758-ledger-prompt-budget",
+      "origin_pr": 776,
+      "commit": "dd0eda082bfcce624ecee9eb14a327d43d51b66d",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "New five-case RED:2PASS/3FAIL; full focused confirmation83PASS. Internal state/history and existing budget gates unchanged.",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
       "device_check": "NOT_RUN"
     }
   ],

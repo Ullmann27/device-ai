@@ -185,6 +185,36 @@ class OwnerObjectStateConversationUiTest {
         assertTrue(recorded.response.contains("eigene Angaben aus diesem Gespräch"))
     }
 
+    @Test fun ordinaryRelatedTaskReachesModelWithBoundedCurrentState() = withActivity { activity, runtime ->
+        val context = context(activity)
+        val session = session(activity)
+        val objects = listOf("Werkzeugkiste", "Reisetasche", "Vorratsdose", "Einkaufskorb", "Schublade", "Bücherregal")
+        for (noun in objects) context.record(session,
+            "Ich habe eine blaue $noun mit 10 Schrauben, 20 Muttern, 30 Ringen und 40 Kabeln im Keller.",
+            "Gesprächsdaten erhalten.")
+        for (turn in 1..24) for (noun in objects) {
+            val color = if (turn % 2 == 0) "dunkelblau" else "dunkelgrün"
+            val place = "Elektroinstallationsmateriallager" + ('A'.code + turn).toChar()
+            context.record(session, "Die $noun ist jetzt $color. Die $noun steht jetzt im $place. " +
+                "Die $noun hat jetzt ${100 + turn} Schrauben, ${200 + turn} Muttern, " +
+                "${300 + turn} Ringe und ${400 + turn} Kabel.", "Gesprächsdaten erhalten.")
+        }
+        context.record(session, "Die Werkzeugkiste enthält vielleicht 125 Schrauben.", "Die Zahl bleibt unsicher.")
+        val request = "Nenne drei Ideen für meine Werkzeugkiste."
+        val prompt = modelTurn(activity, runtime, request,
+            "Drei Ideen: Schrauben sortieren, Fächer beschriften und eine Bestandsliste führen.")
+        assertEquals(1, runtime.prompts.size)
+        assertTrue("Complete owner request", prompt.contains(request))
+        assertTrue(prompt, prompt.contains("Farbe dunkelblau"))
+        assertTrue(prompt, prompt.contains("Anzahl Schrauben 125 (unsicher: unsicher formuliert)"))
+        assertTrue(prompt, prompt.contains("Anzahl Muttern 224"))
+        assertTrue(prompt, prompt.contains("Ort im ElektroinstallationsmateriallagerY"))
+        assertTrue(prompt, prompt.contains("Änderungsverläufe für diese Anfrage ausgelassen"))
+        assertFalse(prompt.contains("früherer Verlauf nicht mehr vollständig →"))
+        assertTrue("UTF-8 budget", prompt.toByteArray(Charsets.UTF_8).size <=
+            at.heinz.deviceai.cognitive.LocalChatPromptBudget.FULL_CHARACTERS)
+    }
+
     @Test fun actualNewSessionClearsThePreviousOwnerObjectState() = withActivity { activity, runtime ->
         modelTurn(activity, runtime, FIRST, "Deine Angaben sind im Gespräch verfügbar.")
         recall(activity, runtime, "Welche Farbe hat meine Werkzeugkiste?", "Farbe: blau")

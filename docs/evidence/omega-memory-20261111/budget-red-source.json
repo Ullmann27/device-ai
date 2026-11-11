@@ -1,0 +1,21 @@
+{
+  "sourceCommit": "6b6dc69fa04bd8d8ebc9fa445279f4926413b5db",
+  "headAtStart": "69402b398f43dd30d94846517923747adbff9ff1",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/GermanNumberWords.kt": "8a8f528bb43a43b50dffaeea8c3f05627577a47ae0d07915eadeda730ed52e30",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedger.kt": "db64c4e5d03ac14018a05de6e50e60bc43f80a67eac881732bb10610ac013c74",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "332643aac7d0c5087253a00e63671fb8b1006a44fce85cddc6edb18a63cb8f1f",
+    "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt": "8f2d0e7f108aa751602574b57544c57eb9774afaa6a3985172b633ec823e9228",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt": "11c6f3d7af094104069a227375343d4eb77e5ee8d06ff93348108e2e11729d54",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalContextRetentionPolicy.kt": "6fbf305b24c8f1aeecabcd4d2b8f88182fcf11e0fead8a516d4e7d42d0d89add",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt": "07b6181f2954236b8a1eb5c597b804769da7e10cf2295e5ad96546058b94eaed",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalChatPromptBudget.kt": "09eeacb38b58b829598474c7d574e33a02da3a4544370a3868bf7f9736740452",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedgerPromptBudgetTest.kt": "c40034f45b26ad23363b984b40ad00fe4a5a08b3fb22e368302683e3f186333c"
+  },
+  "kind": "actual Kotlin/JUnit; changed sources and unchanged LocalPromptFrame/LocalChatPromptBudget freshly compiled against real cached remaining dependencies",
+  "tests": 5,
+  "passed": 2,
+  "failed": 3,
+  "skipped": 0,
+  "ordinaryRelatedLedgerUtf8Bytes": 16221
+}

@@ -60,7 +60,7 @@ Rohzusammenfassung: `docs/evidence/omega-20261111/test-summary.json`.
 
 | Gegenstand | Quelle / Nachweis | Aktueller Stand |
 |---|---|---|
-| #758 Gesprächsgedächtnis | #770 `f5ed3a17`; 78/78 JVM, 2 neue Activity-Fälle | integriert; Android NOT_RUN |
+| #758 Gesprächsgedächtnis | #770 + #776 `dd0eda082`; 83/83 JVM, 3 neue Activity-Fälle | integriert; Android NOT_RUN |
 | #767/#759/#765 Routing | #772 `e20ca3a5`; 94/94 JVM, 7 neue Activity-Fälle; unabhängiger Review | integriert; Android NOT_RUN |
 | EXP06/EXP11 | #771 `965ad4c5`; 13/13 JVM + 13/13 Node; 2 neue Canvas-Fälle | integriert; Android NOT_RUN |
 | Masterprotokoll #747 | `c00326ced`, nur 145 Zeilen Dokumentation zusätzlich | integriert |
@@ -76,3 +76,14 @@ Rohzusammenfassung: `docs/evidence/omega-20261111/test-summary.json`.
 
 Belege: `docs/evidence/omega-apk54-20261111/`. Kein Gerätebefund wird aus
 Hosttests abgeleitet; strikter PDF-Test und alle Sicherheitsprüfungen bleiben bestehen.
+
+### P2-Budgetnachtrag
+
+#776 `dd0eda082` repariert den neu reproduzierten Ledger-Pflichtblock:
+16.221 → 1.595 UTF-8-Bytes bei einer normalen objektbezogenen Aufgabe nach
+24 Korrekturrunden für sechs Gegenstände. Aktuelle Werte und Unsicherheiten
+bleiben im Prompt, ausgelassene Verlaufsdarstellung ist ausdrücklich benannt;
+interne Historie und historische Antworten sind unverändert. Neue Regression
+zuerst 2 PASS/3 FAIL, anschließend gesamte fokussierte Bestätigung 83/83.
+Dritter Activity-Fall ist integriert, Android-Ausführung noch NOT_RUN.
+Die Ursache der ursprünglichen kurzen Fold7-Kontextmeldung bleibt davon getrennt.

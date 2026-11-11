@@ -588,8 +588,12 @@ internal class OwnerObjectStateLedger {
         val view = copy().also { it.observeOwnerTurn(request) }
         if (view.items.isEmpty()) return ""
         if (!view.relevantTo(request) && view.fingerprint() == fingerprint()) return ""
-        return view.render()
+        val includeHistory = mode(request) != Mode.CURRENT || historicalRequest.containsMatchIn(request)
+        return view.render(includeHistory)
     }
+
+    private val historicalRequest = Regex(
+        """(?iu)(?<!\p{L})(?:früher\p{L}*|vorher\p{L}*|damals|gestern|ursprünglich\p{L}*|anfangs|anfänglich\p{L}*|historie|historisch\p{L}*|verläuf\p{L}*)(?!\p{L})""")
 
     private fun relevantTo(request: String): Boolean {
         val low = request.lowercase(Locale.GERMAN)
@@ -623,7 +627,9 @@ internal class OwnerObjectStateLedger {
                 s.unit != null && unitKey(w) == unitKey(s.unit) } }
     }
 
-    fun render(): String = buildString {
+    fun render(): String = render(includeHistory = true)
+
+    private fun render(includeHistory: Boolean): String = buildString {
         append("\nGESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; ")
         append("abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):\n")
         if (incomplete) {
@@ -634,13 +640,20 @@ internal class OwnerObjectStateLedger {
         items.values.forEach { item ->
             append("- ").append(item.noun).append(": ")
             append(item.slots.values.joinToString(" · ") { slot ->
-                val h = history(slot)
+                val h = if (includeHistory) history(slot) else ""
                 slotName(slot) + " " + currentText(slot) +
-                    (if (h.contains("→")) " (Verlauf: $h)" else if (slot.events.any { it.kind == Kind.CONFIRMED }) " (bestätigt unverändert)" else "")
+                    (if (h.contains("→")) " (Verlauf: $h)" else if (includeHistory &&
+                        slot.events.any { it.kind == Kind.CONFIRMED }) " (bestätigt unverändert)" else "")
             })
             append('\n')
         }
 
+        if (!includeHistory && items.values.any { item -> item.slots.values.any {
+                it.events.size > 1 || it.historyTruncated
+            } }) {
+            append("Änderungsverläufe für diese Anfrage ausgelassen; vorhandene begrenzte Ereignisse bleiben intern unverändert. ")
+            append("Historische Werte nicht aus dieser Kurzansicht ableiten.\n")
+        }
         unresolved.takeLast(3).forEach { append("Ungeklärt: ").append(it).append('\n') }
         append("Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. ")
         append("Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. ")
