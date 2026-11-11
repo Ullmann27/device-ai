@@ -1,0 +1,1090 @@
+[
+  {
+    "id": "voice-test-01-a",
+    "pair_id": "voice-test-01",
+    "label": 0,
+    "category": "quoted_negation",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-01-b",
+    "pair_id": "voice-test-01",
+    "label": 1,
+    "category": "quoted_negation",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-02-a",
+    "pair_id": "voice-test-02",
+    "label": 0,
+    "category": "permission_scope",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-02-b",
+    "pair_id": "voice-test-02",
+    "label": 1,
+    "category": "permission_scope",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-03-a",
+    "pair_id": "voice-test-03",
+    "label": 0,
+    "category": "quoted_instruction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-03-b",
+    "pair_id": "voice-test-03",
+    "label": 1,
+    "category": "quoted_instruction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-04-a",
+    "pair_id": "voice-test-04",
+    "label": 0,
+    "category": "late_correction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-04-b",
+    "pair_id": "voice-test-04",
+    "label": 1,
+    "category": "late_correction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-05-a",
+    "pair_id": "voice-test-05",
+    "label": 0,
+    "category": "speech_act",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-05-b",
+    "pair_id": "voice-test-05",
+    "label": 1,
+    "category": "speech_act",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-06-a",
+    "pair_id": "voice-test-06",
+    "label": 0,
+    "category": "austrian_colloquial",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-06-b",
+    "pair_id": "voice-test-06",
+    "label": 1,
+    "category": "austrian_colloquial",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-07-a",
+    "pair_id": "voice-test-07",
+    "label": 0,
+    "category": "ambiguous_reference",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": true,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-07-b",
+    "pair_id": "voice-test-07",
+    "label": 1,
+    "category": "ambiguous_reference",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-08-a",
+    "pair_id": "voice-test-08",
+    "label": 0,
+    "category": "repair_retraction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-08-b",
+    "pair_id": "voice-test-08",
+    "label": 1,
+    "category": "repair_retraction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-09-a",
+    "pair_id": "voice-test-09",
+    "label": 1,
+    "category": "negation_scope",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-09-b",
+    "pair_id": "voice-test-09",
+    "label": 2,
+    "category": "negation_scope",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-10-a",
+    "pair_id": "voice-test-10",
+    "label": 1,
+    "category": "alternative_clause",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-10-b",
+    "pair_id": "voice-test-10",
+    "label": 2,
+    "category": "alternative_clause",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-11-a",
+    "pair_id": "voice-test-11",
+    "label": 1,
+    "category": "quoted_instruction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-11-b",
+    "pair_id": "voice-test-11",
+    "label": 2,
+    "category": "quoted_instruction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-12-a",
+    "pair_id": "voice-test-12",
+    "label": 1,
+    "category": "late_correction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-12-b",
+    "pair_id": "voice-test-12",
+    "label": 2,
+    "category": "late_correction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-13-a",
+    "pair_id": "voice-test-13",
+    "label": 1,
+    "category": "reference_state",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-13-b",
+    "pair_id": "voice-test-13",
+    "label": 2,
+    "category": "reference_state",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-14-a",
+    "pair_id": "voice-test-14",
+    "label": 1,
+    "category": "austrian_colloquial",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-14-b",
+    "pair_id": "voice-test-14",
+    "label": 2,
+    "category": "austrian_colloquial",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-15-a",
+    "pair_id": "voice-test-15",
+    "label": 1,
+    "category": "transcript_repair",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-15-b",
+    "pair_id": "voice-test-15",
+    "label": 2,
+    "category": "transcript_repair",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-16-a",
+    "pair_id": "voice-test-16",
+    "label": 1,
+    "category": "spoken_disfluency",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-16-b",
+    "pair_id": "voice-test-16",
+    "label": 2,
+    "category": "spoken_disfluency",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-17-a",
+    "pair_id": "voice-test-17",
+    "label": 2,
+    "category": "negation_scope",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-17-b",
+    "pair_id": "voice-test-17",
+    "label": 3,
+    "category": "negation_scope",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-18-a",
+    "pair_id": "voice-test-18",
+    "label": 2,
+    "category": "quoted_instruction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-18-b",
+    "pair_id": "voice-test-18",
+    "label": 3,
+    "category": "quoted_instruction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-19-a",
+    "pair_id": "voice-test-19",
+    "label": 2,
+    "category": "late_correction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-19-b",
+    "pair_id": "voice-test-19",
+    "label": 3,
+    "category": "late_correction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-20-a",
+    "pair_id": "voice-test-20",
+    "label": 2,
+    "category": "permission_scope",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-20-b",
+    "pair_id": "voice-test-20",
+    "label": 3,
+    "category": "permission_scope",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-21-a",
+    "pair_id": "voice-test-21",
+    "label": 2,
+    "category": "restricted_alternative",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-21-b",
+    "pair_id": "voice-test-21",
+    "label": 3,
+    "category": "restricted_alternative",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-22-a",
+    "pair_id": "voice-test-22",
+    "label": 2,
+    "category": "austrian_colloquial",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-22-b",
+    "pair_id": "voice-test-22",
+    "label": 3,
+    "category": "austrian_colloquial",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-23-a",
+    "pair_id": "voice-test-23",
+    "label": 2,
+    "category": "reference_state",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-23-b",
+    "pair_id": "voice-test-23",
+    "label": 3,
+    "category": "reference_state",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-24-a",
+    "pair_id": "voice-test-24",
+    "label": 2,
+    "category": "spoken_disfluency",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-24-b",
+    "pair_id": "voice-test-24",
+    "label": 3,
+    "category": "spoken_disfluency",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-25-a",
+    "pair_id": "voice-test-25",
+    "label": 3,
+    "category": "quoted_instruction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-25-b",
+    "pair_id": "voice-test-25",
+    "label": 0,
+    "category": "quoted_instruction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-26-a",
+    "pair_id": "voice-test-26",
+    "label": 3,
+    "category": "permission_scope",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-26-b",
+    "pair_id": "voice-test-26",
+    "label": 0,
+    "category": "permission_scope",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-27-a",
+    "pair_id": "voice-test-27",
+    "label": 3,
+    "category": "late_correction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-27-b",
+    "pair_id": "voice-test-27",
+    "label": 0,
+    "category": "late_correction",
+    "wordbag_identical_pair": true,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-28-a",
+    "pair_id": "voice-test-28",
+    "label": 3,
+    "category": "quotation_scope",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-28-b",
+    "pair_id": "voice-test-28",
+    "label": 0,
+    "category": "quotation_scope",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-29-a",
+    "pair_id": "voice-test-29",
+    "label": 3,
+    "category": "transcript_uncertainty",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-29-b",
+    "pair_id": "voice-test-29",
+    "label": 0,
+    "category": "transcript_uncertainty",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": true,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-30-a",
+    "pair_id": "voice-test-30",
+    "label": 3,
+    "category": "austrian_colloquial",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-30-b",
+    "pair_id": "voice-test-30",
+    "label": 0,
+    "category": "austrian_colloquial",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-31-a",
+    "pair_id": "voice-test-31",
+    "label": 3,
+    "category": "speech_act",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-31-b",
+    "pair_id": "voice-test-31",
+    "label": 0,
+    "category": "speech_act",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-32-a",
+    "pair_id": "voice-test-32",
+    "label": 3,
+    "category": "ambiguous_reference",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": false,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  },
+  {
+    "id": "voice-test-32-b",
+    "pair_id": "voice-test-32",
+    "label": 0,
+    "category": "ambiguous_reference",
+    "wordbag_identical_pair": false,
+    "provenance": "independently_authored_synthetic_public_research",
+    "audio": null,
+    "owner_specific": false,
+    "requires_clarification": true,
+    "not_measured_by_label": [
+      "parameters",
+      "actual_action",
+      "ASR_accuracy",
+      "natural_response_quality"
+    ]
+  }
+]
