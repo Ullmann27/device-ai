@@ -4,7 +4,7 @@ Canonical target: `integration/continuum-final-visibility-20261111`, PR #747.
 Starting remote source: `fd1de22cf3f6ed159601c9b944cc25c86f0fc221`.
 This is the continuation of the existing Cinema/Maya candidate, not a new runtime.
 
-## Active corrected freeze — 2026-11-11 09:09 UTC
+## Active corrected freeze — 2026-11-11 09:13 UTC
 
 - Runtime: `050a57cb019dcc1b7fe6cfa2fb5c11176b048e05`.
 - Tree: `539ea3aac0af04644a015b3fb69ba865af80d1a8`.
@@ -16,10 +16,11 @@ This is the continuation of the existing Cinema/Maya candidate, not a new runtim
   full test task to rerun; its minimum count and 29 required classes remain.
 - Source/ICU/full Node/critical, backend, rendering and SDK gates PASS.
   Maya lifecycle preflight PASS at 08:23:50 UTC: both expected cases,
-  zero failures/errors/skips. Full Android suite/NewApi lint IN_PROGRESS.
-  Latest observed status at 09:09:05 UTC remains the same active Android step.
-  APK and complete-run success remain PENDING. Read this exact run before
-  changing or restarting anything.
+  zero failures/errors/skips. Full Android suite and configured NewApi lint
+  PASS at 09:13:16 UTC, including the minimum-count and 29-class gates.
+  Unsigned APK assembly and package validation are IN_PROGRESS; artifact and
+  complete-run acceptance remain PENDING. Exact final XML totals follow from
+  the current run's artifacts. Read this exact run before restarting anything.
 
 Only the settings test and technical evidence changed after the failed app
 source. The production runtime remains unchanged. The signer prep must bind the
