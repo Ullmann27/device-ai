@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "wall_seconds": 0.5163747250007873,
+  "user_seconds": 0.6491709999999999,
+  "system_seconds": 0.124522,
+  "max_rss_kib": 52088,
+  "input_hashes_unchanged": true,
+  "stdout_sha256": "cfbb9e12b02bd6fa2d11e442aa5d90af684d0c4a9ea365f7a642436e58cf445d",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

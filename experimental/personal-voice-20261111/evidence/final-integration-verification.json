@@ -1,0 +1,27 @@
+{
+  "evaluation/frozen-inputs.json": {
+    "all_hashes_unchanged": true,
+    "files": 6
+  },
+  "evaluation/component-frozen-inputs.json": {
+    "all_hashes_unchanged": true,
+    "files": 2
+  },
+  "final_ui_compilation": {
+    "source_bindings_match_integrated_files": true,
+    "files": 5,
+    "scope": "real Android API compile, not device runtime"
+  },
+  "candidate_artifacts": {
+    "exactly_two_registered_candidates": true,
+    "hashes_unchanged": true
+  },
+  "registered_training_inputs": {
+    "integrated_registered_files_unchanged": true,
+    "files": 12
+  },
+  "scope": {
+    "production_paths_changed": false,
+    "tracked_changed_paths_checked": 145
+  }
+}

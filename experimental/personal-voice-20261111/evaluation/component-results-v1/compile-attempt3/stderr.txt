@@ -1,0 +1,84 @@
+error: source file or directory not found: /workspace/scratch/aba242c65e85/voice-context-build-attempt3/classes
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:3:8: error: unresolved reference 'android'.
+import android.content.Context
+       ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:27:47: error: unresolved reference 'Context'.
+class CommandInterpreter(private val context: Context) {
+                                              ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:406:26: error: unresolved reference 'packageManager'.
+        val pm = context.packageManager
+                         ^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:408:27: error: cannot infer type for value parameter 'app'. Specify it explicitly.
+            .mapNotNull { app ->
+                          ^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:411:17: error: cannot infer type for type parameter 'A'. Specify it explicitly.
+                Triple(app.packageName, label, label.lowercase(Locale.GERMAN))
+                ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:411:28: error: unresolved reference 'packageName'.
+                Triple(app.packageName, label, label.lowercase(Locale.GERMAN))
+                           ^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:413:25: error: unresolved reference 'it'.
+            .sortedBy { it.second.length }
+                        ^^
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:414:28: error: cannot infer type for implicit value parameter 'it'. Specify it explicitly.
+            .firstOrNull { (pkg, _, labelLower) ->
+                           ^^^^^^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:414:28: error: operator call 'component1()' is ambiguous for destructuring of type '??? (Unknown type for value parameter <destruct>)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+            .firstOrNull { (pkg, _, labelLower) ->
+                           ^^^^^^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:414:28: error: operator call 'component2()' is ambiguous for destructuring of type '??? (Unknown type for value parameter <destruct>)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+            .firstOrNull { (pkg, _, labelLower) ->
+                           ^^^^^^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:414:28: error: operator call 'component3()' is ambiguous for destructuring of type '??? (Unknown type for value parameter <destruct>)'. Applicable candidates:
+fun <T> Array<out T>.component3(): T
+fun ByteArray.component3(): Byte
+fun ShortArray.component3(): Short
+fun IntArray.component3(): Int
+fun LongArray.component3(): Long
+fun FloatArray.component3(): Float
+fun DoubleArray.component3(): Double
+fun BooleanArray.component3(): Boolean
+fun CharArray.component3(): Char
+fun <T> List<T>.component3(): T
+fun UIntArray.component3(): UInt
+fun ULongArray.component3(): ULong
+fun UByteArray.component3(): UByte
+fun UShortArray.component3(): UShort
+            .firstOrNull { (pkg, _, labelLower) ->
+                           ^^^^^^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt:420:15: error: function invocation 'first()' expected.
+            ?.first
+              ^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/OwnerChatIntentRouter.kt:29:13: error: unresolved reference 'LocalClockIntent'.
+            LocalClockIntent.isClockQuestion(message) -> OwnerChatLocalIntent.CLOCK
+            ^^^^^^^^^^^^^^^^

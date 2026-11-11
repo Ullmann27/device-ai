@@ -51,6 +51,7 @@ class VoiceTrainingApproval internal constructor(
     val exampleDigest: String, internal val storeIdentity: String, internal val revision: Long
 )
 class VoiceReviewSnapshot(val example: PersonalVoiceExample, val reviewRevision: Long)
+class VoiceConsentSnapshot(val consent: VoiceLearningConsent, val reviewRevision: Long)
 enum class VoiceStageResult { STORED, DUPLICATE, CONSENT_REQUIRED, REVIEW_REQUIRED, INVALID, CAPACITY_REACHED }
 
 /**
@@ -71,6 +72,18 @@ class PersonalVoiceLearningStore(private val directory: File, private val key: S
     }
     fun consent(): VoiceLearningConsent = locked { readPolicy().consent }
     fun reviewRevision(): Long = locked { readPolicy().revision }
+    fun consentForReview(): VoiceConsentSnapshot = locked {
+        val policy = readPolicy()
+        VoiceConsentSnapshot(policy.consent, policy.revision)
+    }
+    /** A delayed UI enable cannot override a newer revocation or restore stale audio consent. */
+    fun setTextTrainingConsent(enabled: Boolean, expectedReviewRevision: Long): VoiceConsentSnapshot = locked {
+        val previous = readPolicy()
+        check(previous.revision == expectedReviewRevision) { "VOICE_REVIEW_EXPIRED" }
+        val next = Policy(previous.consent.copy(textTraining = enabled), Math.addExact(previous.revision, 1L))
+        writePolicy(next)
+        VoiceConsentSnapshot(next.consent, next.revision)
+    }
 
     /** Call only from an explicit owner review action. Neither this nor consent starts training. */
     fun approveForTraining(example: PersonalVoiceExample, ownerConfirmed: Boolean,

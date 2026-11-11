@@ -1,0 +1,14 @@
+{
+  "command": [
+    "java",
+    "-Xmx256m",
+    "-cp",
+    "/workspace/scratch/aba242c65e85/voice-data-review/android-review-dialog-fixed.jar",
+    "UiConsentRaceChecks"
+  ],
+  "exit_code": 0,
+  "checks_passed": 3,
+  "compiled_output_sha256": "9b7aec90d9cf1f00797554ff35c2bdbe53f9e130d79ed80671e6da23a76cc412",
+  "probe_source_sha256": "53eae00bbab57db8113158bb57521bd30ad9ff996f565d17e4993ad133ede55d",
+  "scope": "Actual native store, controlled adversarial call order, synthetic temporary data. Not Android UI execution."
+}

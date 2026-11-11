@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-11",
+  "status": "BOUNDED_RESEARCH_COMPLETE_BOTH_CANDIDATES_REJECTED",
+  "repository": "Ullmann27/device-ai",
+  "integration_branch": "research/continuum-personal-voice-integration-20261111",
+  "integration_pr": 753,
+  "research_base": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+  "agent_heads": {
+    "speech_data": {
+      "pr": 756,
+      "remote": "3a85bd3fea03e26d348386c61bdac8e7fe6bb8d5",
+      "local": "4ed8f4340b63979662e99ed6b47ef5b7bc95dfda"
+    },
+    "model_training": {
+      "pr": 754,
+      "remote": "756b361a9929ba7d3d99ad0caa132eeda39d55bc"
+    },
+    "independent_eval": {
+      "pr": 755,
+      "remote": "d1bfb901a1e76b80e754336e1b67687bb62aee7d",
+      "local": "ba649a1cb3623206bdd38d7445cec0162690ac18"
+    }
+  },
+  "originals": {
+    "checkpoint": {
+      "repository": "Ullmann27/device-ai",
+      "commit": "d2304a7658e1256b160c8012e1bac28268ff64a5",
+      "path": "checkpoints/7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd.lm1",
+      "git_blob": "401786ecae36b1c8bfda71a3bbc7106d48e6a2a9",
+      "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "bytes": 529297
+    },
+    "tokenizer": {
+      "repository": "Ullmann27/device-ai",
+      "commit": "d2304a7658e1256b160c8012e1bac28268ff64a5",
+      "path": "tokenizer/tokenizer-v512-94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f.lmbp",
+      "git_blob": "6720a6a9c8b4a14a408261e61df83a257fb93010",
+      "sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+      "bytes": 2040
+    }
+  },
+  "prospective_registrations": {
+    "training_remote": "e6dc45cd061a17ca5fa7409fa416ff6d2a61b7c2",
+    "weight_test_remote": "9deac1792e79736167c5169c916941d45c8f9a96",
+    "context_test_remote": "a7de009b0bb8c8b59e81771779830941cbdbb0a1"
+  },
+  "training": {
+    "candidates": 2,
+    "updates_each": 128,
+    "seed": 20261111,
+    "parameters": 132160,
+    "wall_seconds_total": 64.880326,
+    "peak_process_rss_kib": 126928,
+    "decision": "REJECT_BOTH",
+    "third_candidate_or_retraining": false
+  },
+  "context": {
+    "scope": "older research-base actual native LocalConversationContext, not full current app",
+    "automatic_A": {
+      "correct": 4,
+      "total": 10
+    },
+    "automatic_B": {
+      "correct": 8,
+      "total": 10
+    },
+    "human_confirmed_B": {
+      "correct": 3,
+      "total": 3
+    },
+    "all_component_A": {
+      "correct": 8,
+      "total": 24
+    },
+    "all_component_B": {
+      "correct": 22,
+      "total": 24
+    },
+    "advisory_label_invariance_checks": 96,
+    "model_weight_learning_claim": false
+  },
+  "verification": {
+    "data_tests": 17,
+    "evaluator_tests": 12,
+    "native_kl_checks": 15,
+    "coordinator_privacy_tests": 34,
+    "independent_store_fix_checks": 4,
+    "independent_consent_interleavings": 3,
+    "final_real_android_api_compile": "PASS",
+    "frozen_language_tests_unchanged": true,
+    "full_training_replication": "NOT_RUN"
+  },
+  "not_run": [
+    "genuine personal audio WER/CER",
+    "full current-app A/B/C",
+    "personal model adaptation",
+    "Gemma dialog evaluation",
+    "Android UI/Keystore runtime",
+    "Fold7 latency energy thermals",
+    "APK build signing installation release"
+  ],
+  "methodological_limits": [
+    "Context component comparison finished after the two training runs; planned pre-training end-to-end baseline not completed.",
+    "Independent test construction was organizational separation between agents sharing the repository, not cryptographic isolation.",
+    "New held-out tests are now consumed and may not be reused as unseen confirmation after tuning.",
+    "Published commands contain historical absolute paths; relocate invocation paths without changing pinned source/data/weights."
+  ],
+  "personal_data": {
+    "owner_recordings_used": 0,
+    "owner_transcripts_used": 0,
+    "public_data": "synthetic only",
+    "audio_writer_implemented": false,
+    "production_capture_connected": false
+  },
+  "artifact_sha256": {
+    "RESULT.md": "12ef340f024e928829d9196f729a241c2c82420a69f6dce0f8c9ba02a3e7c5d2",
+    "RESEARCH-PLAN.md": "d861b41d7cd33675fc8a40b8769a24edc6bc572ea28f64ff1a83300ff296f757",
+    "SCIENTIFIC-BASIS.md": "ead58d42416d738886e2286b89a6544c6111490804705f49d0110d043ab9c0e4",
+    "data/v1/manifest.json": "a1725c9d624bd4618e5277def3ca9f83b761c2fc70c48bc0294d144db434feda",
+    "data/v1/train.tsv": "f943537483232c4cae902fc5cbf906db03c4ff11944a4b5f3a8633e242d281a4",
+    "data/v1/dev.tsv": "f187dfe2b54ecdc61317aeaaf1303e6b85ae61500508fdcd0c6b9f1c2fb79cfe",
+    "data/v1/supervised_replay.tsv": "b81358b5f139bb6513c7c54032d418b0fadca3d05d00e3ef443f926fbf54c761",
+    "data/v1/pipeline-synthetic.jsonl": "ce8ff8d1ecc9bc59e78f76af83349030443960585824febb438b77c23f56e17f",
+    "data/voice-example.schema.json": "19756c58d213ea945b33fc3b6607b039b002f39d81c4f4bc88afc23fa3118fbf",
+    "data/CURRENT-SPEECH-SOURCE-AUDIT.md": "9e7c02948d49a82e756af81358532081a536f5e2a12d4c6add1431bbfbc6917d",
+    "data/test-receipt.json": "cbefe6aeb814b712b84e742628939c27f511ac77a49bbbbfcd05a53226864535",
+    "data/store-review/after-receipt.json": "5126e9f03d6036f743e441d58dc9de9d7eab44b755a83d34718ad6a950a9b71e",
+    "training/registration.json": "462d26942583a8c0d0f7cabe68b213ae22d77a8d4d52dbd6b9ff4d79790a133a",
+    "training/LmPersonalVoicePilot.kt": "ace143f0ed829b0d500225120b7be4268618c961bb8afda5060cd81474103b5d",
+    "training/build-evidence/build.json": "f1cf3d0f70442bb0c405a1e801c76b55c3e92afd11bebe598269bed889938b60",
+    "training/artifacts/balanced-replay/final.lm1": "e1e231cc2b30f2c8a36af0b0b9c7edcfbc13a19ae6e73faee501448d43f511fe",
+    "training/artifacts/balanced-preserve/final.lm1": "4d0cb91226970737bd3413736b66d8688714f2c65ae0e383501aadd6bd5f763f",
+    "training/runs/balanced-replay/receipt.json": "08b27b49917f6bae2e578df8eb19d30291d0227b903702dacc0e56c7bd39875f",
+    "training/runs/balanced-preserve/receipt.json": "cc618295646da7fe6e31dad14c41de8b3cb548cec71e7fed5494cd81ca4b7803",
+    "evaluation/frozen-inputs.json": "4049234fd376ccbf9a0f54508f2ebd110e31e875ff4beb8d67badc536f150f0b",
+    "evaluation/component-frozen-inputs.json": "d1834b98a4b21665493735803d44173c9a6dd5c54f39840ab4a4b6d15a19b175",
+    "evaluation/results-v1/analysis.json": "a1933ca04882e3f3769a3843ccf5aa8d33786890014635a3169543c49be7e777",
+    "evaluation/component-results-v1/analysis.json": "b34371d03d03f2524c775a4845c3e0093ed302bad5ef3616189142e7d673bb05",
+    "evaluation/UI-CONSENT-RACE.md": "534c41c00602ffa94f3501c3bed92a385067b604428852b80f00b6e0b3bc0e53",
+    "evidence/privacy-unit.json": "827fdb4c7900edad81853d889012c101f8c4f552f8b0fd4c69d149727902f9c5",
+    "evidence/privacy-unit.txt": "5016f5d64275ce61882c76bcc54f50e76309242904d11230156f35b592544b05",
+    "evidence/coordinator-weight-audit.json": "d122b02198775570fb27e2808f4b3ed3da733e5aca0ba0f26f7254d9c9d6ea55",
+    "evidence/coordinator-score-recheck.json": "d2ca49013346c1d595f6b50f88ffdb3ecb6a91d054270382f0542397d977da11",
+    "evidence/final-integration-verification.json": "45ede4670ce9d061f92b6e62483028556b874ae1e16d5bd3dd3757f29f0f03bb",
+    "ui/compile-receipt.json": "042d4eea71dbd8d693c13673c30fd6d9e3d1389bc017ea461e08fb79b25f2442",
+    "ui/consent-checks-receipt.json": "ee3354f2f59bb213c6b37cfe51ec153b7503697ddbeaa06e8a85cb2433331b00",
+    "native/AndroidPersonalVoiceStore.kt": "02c01aa7a328815fc9b530b4f066aea944b4831df7a056d3c76e2035eee5e4bc",
+    "native/LocalConversationVoiceAdapter.kt": "e6e65252d876d5c2a73e21d939d9800da46b06ad1cafbeacdc9a6caf100bac08",
+    "native/PersonalVoiceCorrectionBridge.kt": "9666fa501ef0b7a0ed014af04aa4bfb1fe3254a320e789ce49129c2ecb7ffbff",
+    "native/PersonalVoiceLearningStore.kt": "50c12b2cf2684fdd01427ea2b51f5516caba1f4c0c01485acf39acf69a64d5dd",
+    "native/PersonalVoicePrivacyChecks.kt": "99d4ee2495b440a6a18a862a17507416e2fc653996781a6ab51336ba4206ed93",
+    "ui/AndroidPersonalVoiceReviewDialog.kt": "fea7add26fc761153f8d903746f924739898cad38ccbe8bade356fd122b53dbc",
+    "ui/UiConsentRaceChecks.kt": "53eae00bbab57db8113158bb57521bd30ad9ff996f565d17e4993ad133ede55d"
+  }
+}

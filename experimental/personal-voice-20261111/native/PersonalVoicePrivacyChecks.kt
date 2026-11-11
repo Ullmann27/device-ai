@@ -174,6 +174,32 @@ object PersonalVoicePrivacyChecks {
             fails { st.approveForTraining(form.example, true, form.reviewRevision) }
         }
 
+        test("queued_text_enable_cannot_override_newer_revocation") {
+            val d = Files.createTempDirectory("voice-delayed-enable-").toFile()
+            val st = PersonalVoiceLearningStore(d, key)
+            st.setConsent(VoiceLearningConsent())
+            val oldView = st.consentForReview()
+            val other = PersonalVoiceLearningStore(d, key)
+            other.setConsent(VoiceLearningConsent())
+            fails { st.setTextTrainingConsent(true, oldView.reviewRevision) }
+            check(!st.consent().textTraining)
+        }
+        test("text_toggle_preserves_current_audio_consent") {
+            val d = Files.createTempDirectory("voice-separate-consent-").toFile()
+            val st = PersonalVoiceLearningStore(d, key)
+            st.setConsent(VoiceLearningConsent(audioRetention = true))
+            val form = st.consentForReview()
+            val enabled = st.setTextTrainingConsent(true, form.reviewRevision)
+            check(enabled.consent.textTraining && enabled.consent.audioRetention)
+            check(enabled.reviewRevision > form.reviewRevision)
+            st.setConsent(VoiceLearningConsent(textTraining = true, audioRetention = false))
+            fails { st.setTextTrainingConsent(false, enabled.reviewRevision) }
+            check(!st.consent().audioRetention)
+            val now = st.consentForReview()
+            val disabled = st.setTextTrainingConsent(false, now.reviewRevision)
+            check(!disabled.consent.textTraining && !disabled.consent.audioRetention)
+        }
+
         // This port is a test double ONLY for review binding and safe dispatch properties.
         val port = object : VoiceContextPort {
             override val mutex = Any()

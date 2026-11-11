@@ -1,6 +1,6 @@
 # Personal Voice Learning — bounded research registration
 
-Status: WIP / NO QUALITY CLAIM. Research only; EXP-05 and EXP-12.
+Status: bounded research completed, 2/2 registered candidates rejected. No production or general voice-understanding claim. Original scope and ceilings below remain unchanged; see RESULT.md and the completion notes. Research only; EXP-05 and EXP-12.
 
 ## Verified baseline
 
@@ -36,3 +36,11 @@ No personal recordings/transcripts are used or published in this run. Public exa
 Separate research integration and three agent branches. Checkpoint meaningful progress, no force pushes, main changes, signing, APK release, Gemma replacement, or changes to active Cinema/Avatar/APK branches. Rollback is exclusion of this research branch and selection of unchanged original weights.
 
 This initial registration fixes scope and resource ceilings; independent_eval owns immutable metric/holdout registration before training.
+
+## Completion notes — 2026-11-11
+
+Both registered 128-update runs were executed from the original checkpoint. Independent frozen evaluation rejected both. No third candidate, test-driven data revision, production integration or model adoption followed. The integrated report separates format learning, restricted-class decisions, retained skills, context rules and human-supplied corrections.
+
+The executed context comparison used the actual older research-base LocalConversationContext with 24 frozen component cases; it finished after the weight runs. This is a sequencing deviation from the intended pre-training end-to-end baseline, not evidence that the planned full A/B/C pipeline was completed. Full current-app/ASR/Gemma A/B/C, acoustic WER/CER, Android UI/Keystore runtime and Fold7 measurements remain NOT_RUN. The LM1 holdout and acceptance thresholds were prospectively frozen and were not altered by the later component or privacy work.
+
+Final privacy evidence: 34 coordinator JVM checks; four independent store-repair checks; three independent consent-interleaving checks. The final Android review dialog and native store compile against real Android API classes, with source hashes bound in ui/compile-receipt.json. These checks support isolated research components only.
