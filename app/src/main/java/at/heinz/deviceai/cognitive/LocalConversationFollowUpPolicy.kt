@@ -41,6 +41,9 @@ internal object LocalConversationFollowUpPolicy {
     private val again = Regex(
         """(?iu)(?<!\p{L})(?:hieß|hiess|heißt|sagtest|sagte|meintest|erwähnt\p{L}*)(?!\p{L})[^.!?\n]{0,40}(?<!\p{L})(?:nochmal|noch\s+einmal)(?!\p{L})[^.!?\n]{0,40}\?""")
 
+    private val conversationState = Regex(
+        """(?iu)(?<!\p{L})(?:nach\s+(?:allen|den)\s+korrekturen|unser\p{L}*\s+(?:bisherige\p{L}*\s+)?gespräch|(?:laut|nach)\s+(?:meinen|deinen)\s+angaben)(?!\p{L})""")
+
     fun requiresPreviousOwnerTurn(request: String): Boolean {
         val text = request.trim()
         if (text.isEmpty() || text.length > 1_000 || text.any { it.isISOControl() }) return false
@@ -48,7 +51,7 @@ internal object LocalConversationFollowUpPolicy {
         return requestsContinuation(text) || correction.containsMatchIn(text) || previous.containsMatchIn(text) ||
             replacement.containsMatchIn(text) || elliptical.containsMatchIn(text) ||
             contrastive.containsMatchIn(text) || anaphoric.containsMatchIn(text) || again.containsMatchIn(text) ||
-            consequence.containsMatchIn(text)
+            consequence.containsMatchIn(text) || conversationState.containsMatchIn(text)
     }
 
     // Softer back-references (owner brief 06.11.2026, Priorität 2). They are NOT enough to refuse a first message –

@@ -32,7 +32,8 @@ The current host uses an unprivileged user, unlike the prior root baseline.
 The previous 26 environment-dependent Node failures must therefore be measured
 again, neither inherited as current failures nor declared fixed by code changes.
 Backend: 64 PASS, 0 FAIL, 0 SKIP on the inherited source.
-Core and Node contract runs are in progress; no suite success is claimed.
+Core is in progress on the unchanged source. The complete Node baseline is
+1,612 PASS / 3 FAIL / 19 SKIP (1,634 total); no full PASS is claimed.
 The strict PDF decoder stays strict. Physical Fold7/GPU/audio/thermal
 verification remains NOT_RUN.
 
@@ -54,3 +55,53 @@ Record complete P1 results and exact commands; integrate independently passing
 helper changes; update the inherited matrix/register and this handoff.
 Do not describe an interrupted run as passed. Do not mark a real device issue
 fixed on the Fold7 without its new device result.
+
+## Integration checkpoint
+
+Merged without conflicts into the common candidate:
+
+| Stream | Exact remote source | Verified worker evidence |
+|---|---|---|
+| Memory #770 | `f5ed3a17724d8943dfad51894f0e09b29d551060` | 78/78 Kotlin/JUnit; Android pending |
+| Logic #772 | `e20ca3a5656f4ccd81625d8e930e2fea85f48eed` | 94/94 Kotlin/JUnit; Android pending |
+| Cinema #771 | `965ad4c51ec4c5a90fdb25ce8fc09d1d1f65202e` | 13/13 Kotlin/JUnit + 13/13 Node; Android pending |
+| Master #747 | `c00326cedc6b697d5634dbc33de9ffcdd29fe58c` | Document-only delta reviewed |
+
+The workers' real Activity/Canvas checks are now part of the common source.
+They remain NOT_RUN until the integrator executes them. Source review includes
+negation scope, foreign app intents, role checks before correction/bot entry,
+session/revision invalidation, no UNKNOWN retry, and existing consent paths.
+
+The inherited core remains frozen at `3cb8df27` in a separate worktree.
+Then run focused combined Activity/Canvas checks and the required full Android,
+visual and configured NewApi lint gates on the actual published source.
+This recorded sequencing avoids two redundant full-suite runs; it removes no
+assertion, strict PDF probe or acceptance gate.
+
+### Node failures and retained diagnostics
+
+The three complete-baseline failures concern two scheduler tests and the owner
+abort watchdog. All three pass unchanged in isolated reproduction. Their
+original cause is not proven. A new run with diagnostic assertion messages
+retained an actual `TIMEOUT` receipt from the finite scheduler's 1,000-ms fixture
+budget. Its other two cases passed. Only assertion messages changed; production,
+limits and expected results did not. Raw evidence is in
+`docs/evidence/omega-apk54-20261111/`.
+
+Final Node runs must avoid concurrent Gradle compilation. Do not erase the
+baseline failures or call them fixed because an isolated rerun passed.
+
+### Explicitly open scope
+
+P3 is deferred for this immediate candidate: a real common Filament scene also
+requires HomeView viewport, avatar mask and coordinate-origin changes. Existing
+stage/native fallback stays intact. No unfinished renderer is enabled.
+General prompt-budget adaptation is not claimed fixed; direct diagnosis/app
+routes and object recall now avoid needless model entry in their supported cases.
+A synthetic ledger boundary case now reproduces a new required-prompt overflow:
+six objects with six attributes and 24 corrections yield 16,221 UTF-8 bytes for
+an ordinary related request. Memory is preparing a bounded prompt representation
+while preserving the internal history and explicit uncertainty. This checkpoint
+is WIP, not a release candidate; the follow-up must land before Android QA.
+P4–P6 device/account/team/thermal work is still open. Physical Fold7, native PDF,
+GPU, audible speech and thermal acceptance remain NOT_RUN.

@@ -155,6 +155,17 @@ class HybridMemoryRetrieverTest {
         )
     }
 
+    @Test fun farewellDoesNotReadUnrelatedPrivateMemoryOrInvokeSemanticScoring() {
+        val record = memory("private", "Alles über die Familie bleibt privat.", DAY).copy(tags = emptyList())
+        var scored = false
+        val result = HybridMemoryRetriever.retrieve("Das war alles.", listOf(record), nowMillis = DAY,
+            semanticScorer = { _, _ -> scored = true; 1.0 })
+        assertTrue(result.isEmpty())
+        assertTrue("No content-bearing query", !scored)
+        assertEquals(listOf("private"), HybridMemoryRetriever.retrieve("Alles über die Familie?",
+            listOf(record), nowMillis = DAY).map { it.memory.id })
+    }
+
     private fun memory(
         id: String,
         content: String,

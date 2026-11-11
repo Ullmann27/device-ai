@@ -1146,7 +1146,8 @@ class ContinuumHologramView @JvmOverloads constructor(
                         coreEnergy = coreEnergy,
                         cinematicLighting = cinematicPrefs.getBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.KEY, true),
                         windowAccentArgb = workWindowAccentArgb,
-                        windowOpen = workWindowActive &&
+                        windowOpen = workWindowActive,
+                        windowLightEnabled =
                             at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(context,
                                 at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_06_FACE_LIGHT),
                         gazeBlinkEnabled = at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(context,

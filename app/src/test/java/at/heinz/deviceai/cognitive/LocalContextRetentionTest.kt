@@ -75,4 +75,17 @@ class LocalContextRetentionTest {
         LocalContextRetentionPolicy.apply(ctx, s, "Wie spät ist es?", NonModelReplyKind.DEVICE_CLOCK)
         assertEquals(listOf(t1, "Wie spät ist es?"), ctx.sessionEvidence(s))
     }
+    @Test fun ownerStateRecallKeepsContextWithoutClaimingPersistentMemory() {
+        val ctx = LocalConversationContext()
+        ctx.record(s, "Ich habe eine blaue Kiste im Keller.", "Rot.")
+        assertTrue(LocalContextRetentionPolicy.apply(ctx, s, "Welche Farbe hat die Kiste?",
+            NonModelReplyKind.OBJECT_STATE_RECALL))
+        assertTrue(ctx.objectStateAnswer(s, "Welche Farbe hat die Kiste?")!!.contains("Farbe: blau"))
+        val label = LocalContextRetentionPolicy.turnLabel(NonModelReplyKind.OBJECT_STATE_RECALL)
+        assertTrue(label.contains("eigene Angaben"))
+        assertFalse(label.contains("gespeicherte Erinnerung"))
+        LocalContextRetentionPolicy.apply(ctx, s, "Merke dir: Die Kiste ist grün", NonModelReplyKind.MEMORY_CHANGE)
+        assertEquals("", ctx.objectStateBlock(s, "Welche Farbe hat die Kiste?"))
+    }
+
 }

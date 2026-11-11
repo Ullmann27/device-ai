@@ -1,4 +1,7 @@
-# Continuum Omega – Test- und Reparaturmatrix (Stand 11.11.2026, Sitzungsende)
+# Continuum Omega – Test- und Reparaturmatrix (Fortsetzung 11.11.2026)
+
+Aktueller Integrationszweig: `integrate/omega-apk54-20261111`, Draft #769.
+Die folgende Ausgangsmatrix bleibt als Historie erhalten; aktueller Fortsetzungsstand unten.
 
 Quelle der Beobachtungen: Issue #670 (Fold7-Prüfprotokoll, Code51 → Code53) und verlinkte Issues.
 Installierte Referenz: originalsigniertes Code53 / 0.3.52, Quelle `050a57cb`.
@@ -51,3 +54,25 @@ Rohzusammenfassung: `docs/evidence/omega-20261111/test-summary.json`.
 | Android-Lint (`:app:lintDebug`, NewApi) | – | **NOT_RUN** |
 | Vollständige Android-Suite (~4 670) | – | **NOT_RUN** |
 | Fold7 (alles) | – | **NOT_RUN** |
+
+
+## Fortsetzung #769 — gemeinsamer Kandidat, Android-Abnahme offen
+
+| Gegenstand | Quelle / Nachweis | Aktueller Stand |
+|---|---|---|
+| #758 Gesprächsgedächtnis | #770 `f5ed3a17`; 78/78 JVM, 2 neue Activity-Fälle | integriert; Android NOT_RUN |
+| #767/#759/#765 Routing | #772 `e20ca3a5`; 94/94 JVM, 7 neue Activity-Fälle; unabhängiger Review | integriert; Android NOT_RUN |
+| EXP06/EXP11 | #771 `965ad4c5`; 13/13 JVM + 13/13 Node; 2 neue Canvas-Fälle | integriert; Android NOT_RUN |
+| Masterprotokoll #747 | `c00326ced`, nur 145 Zeilen Dokumentation zusätzlich | integriert |
+| Core-Ausgangslauf | unverändert `3cb8df27`, Kompilierung abgeschlossen | RUNNING; kein vollständiger PASS |
+| Node-Ausgangslauf | `3cb8df27`, uid1000; 1634 Fälle | 1612 PASS / 3 FAIL / 19 SKIP |
+| Backend-Ausgangslauf | `3cb8df27` | 64 PASS / 0 FAIL / 0 SKIP |
+| Drei Node-Prozessfälle isoliert | unverändert `3cb8df27` | 3 PASS; ursprüngliche Ursachen nicht bewiesen |
+| Zusätzliche Fehlerdiagnostik | Assertions unverändert; Quittungen jetzt im Fehlertext | 2 PASS / 1 FAIL; echter TIMEOUT im 1000-ms-Scheduler-Fixture nachgewiesen |
+| Vollständige Android-/Node-Prüfung, Visual, NewApi-Lint | auf gemeinsamem veröffentlichten Kandidaten geplant | NOT_RUN |
+| P3 gemeinsame Filament-Szene | braucht auch Viewport-/Masken-/Ursprungsumbau | ZURÜCKGESTELLT, nicht implementiert |
+| Allgemeine Kontextbudget-Anpassung | Direktrouten vermeiden Modellpfad in unterstützten Fällen | weiter OFFEN |
+| APK54 / 0.3.53 | Paket/ABI/Build/Signatur/Device-Gates getrennt | GEPLANT, NICHT GEBAUT, NICHT FREIGEGEBEN |
+
+Belege: `docs/evidence/omega-apk54-20261111/`. Kein Gerätebefund wird aus
+Hosttests abgeleitet; strikter PDF-Test und alle Sicherheitsprüfungen bleiben bestehen.

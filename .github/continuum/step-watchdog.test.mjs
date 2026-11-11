@@ -84,9 +84,11 @@ test('an owner abort ends a running step and its detached grandchild within seco
   const abortedAt=Number(fs.readFileSync(marker+'.aborted','utf8'));
   assert.ok(returned-abortedAt<6000,'stopped '+(returned-abortedAt)+' ms after the abort, not after 60 s');
   assert.equal(r.error,undefined,'not a timeout');assert.equal(r.status,1);
-  assert.deepEqual(Object.keys(JSON.parse(fs.readFileSync(b.receipt,'utf8'))).sort(),
+  const receipt=JSON.parse(fs.readFileSync(b.receipt,'utf8'));
+  assert.deepEqual(Object.keys(receipt).sort(),
     ['schemaVersion','stoppedAt','taskId','terminationConfirmed']);
-  assert.equal(JSON.parse(fs.readFileSync(b.receipt,'utf8')).terminationConfirmed,true);
+  assert.equal(receipt.terminationConfirmed,true,JSON.stringify({receipt,elapsedMs:returned-abortedAt,
+    commandState:state(pid),grandchildState:state(grandchild)}));
   assert.ok(gone(pid)&&gone(grandchild),'command and its detached grandchild are stopped');
 });
 

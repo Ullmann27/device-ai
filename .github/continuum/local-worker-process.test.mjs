@@ -82,7 +82,7 @@ test('the same live scheduler automatically continues from a failed cycle to a h
   const exitCode=await done;
   assert.equal(exitCode,1,'a later successful cycle must not conceal an earlier failure');
   const receipts=fs.readdirSync(path.join(f.out,'cycles')).filter(x=>x.endsWith('.json')).sort().map(x=>JSON.parse(fs.readFileSync(path.join(f.out,'cycles',x))));
-  assert.deepEqual(receipts.map(x=>x.status),['FAILED','ALL_EXECUTED_PASS']);assert.equal(receipts[0].sourceSha,receipts[1].sourceSha);assert.equal(receipts[0].inventoryHash,receipts[1].inventoryHash);
+  assert.deepEqual(receipts.map(x=>x.status),['FAILED','ALL_EXECUTED_PASS'],JSON.stringify(receipts));assert.equal(receipts[0].sourceSha,receipts[1].sourceSha);assert.equal(receipts[0].inventoryHash,receipts[1].inventoryHash);
  }finally{child?.kill('SIGKILL');fs.rmSync(f.top,{recursive:true,force:true});}
 });
 
@@ -97,7 +97,9 @@ test('finite scheduler returns zero only when its single full cycle passed',{tim
   assert.equal(failed.status,1,failed.stderr);
   assert.equal(JSON.parse(fs.readFileSync(path.join(f.out,'latest.json'),'utf8')).status,'FAILED');
   const passed=run('0');
-  assert.equal(passed.status,0,passed.stderr);
+  const receipt=path.join(f.out,'latest.json');
+  const diagnostic=fs.existsSync(receipt)?fs.readFileSync(receipt,'utf8'):'missing completion receipt';
+  assert.equal(passed.status,0,passed.stderr+'\n'+diagnostic);
   assert.equal(JSON.parse(fs.readFileSync(path.join(f.out,'latest.json'),'utf8')).status,'ALL_EXECUTED_PASS');
  }finally{fs.rmSync(f.top,{recursive:true,force:true});}
 });

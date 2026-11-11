@@ -1,0 +1,19 @@
+JUnit version 4.13.2
+...............................E....................E.........................
+Time: 1.617
+There were 2 failures:
+1) farewellDoesNotReadUnrelatedPrivateMemoryOrInvokeSemanticScoring(at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest.farewellDoesNotReadUnrelatedPrivateMemoryOrInvokeSemanticScoring(HybridMemoryRetrieverTest.kt:163)
+2) explicitConversationStateRequiresEarlierOwnerTurns(at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest)
+java.lang.AssertionError: Wie viele Schrauben sind nach allen Korrekturen darin?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.explicitConversationStateRequiresEarlierOwnerTurns(LocalConversationFollowUpPolicyTest.kt:13)
+
+FAILURES!!!
+Tests run: 76,  Failures: 2
+

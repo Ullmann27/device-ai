@@ -1,0 +1,18 @@
+{
+  "base": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
+  "changedAssertions": false,
+  "timeoutChanged": false,
+  "productionChanged": false,
+  "testSourceSha256": {
+    ".github/continuum/local-worker-process.test.mjs": "d3c877fe09f772f948c3aeab19f20053a7df57e2d675e8d6d78f94807a2af2cc",
+    ".github/continuum/step-watchdog.test.mjs": "4f1c720101fe8ca56cb46dc935b89dd44fdf95e2f0942c52810c50aab30084cc"
+  },
+  "run": {
+    "tests": 3,
+    "pass": 2,
+    "fail": 1,
+    "skip": 0,
+    "failure": "finite scheduler fixture: actual TIMEOUT with timeoutMs=1000; full receipt preserved"
+  },
+  "command": "node --test --test-concurrency=1 --test-name-pattern='^(the same live scheduler automatically continues|finite scheduler returns zero|an owner abort ends a running step)' .github/continuum/local-worker-process.test.mjs .github/continuum/step-watchdog.test.mjs"
+}
