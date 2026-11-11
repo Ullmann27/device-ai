@@ -786,6 +786,10 @@ class AgentActivity : Activity() {
             pendingReturnedDocument = null
             readSelectedDocument(returned)
         }
+        pendingDocumentFailure?.let { delivery ->
+            pendingDocumentFailure = null
+            delivery.run()
+        }
         mainHandler.post { maybeAskForConversationCamera() }
     }
 
@@ -872,6 +876,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        pendingDocumentFailure = null
         botTeam?.close()
         ownerRecoveryReview?.close()
         ownerRecoveryReview = null
@@ -1998,7 +2003,15 @@ class AgentActivity : Activity() {
     private var pendingDocumentSelection: DocumentSelection? = null
     private var pendingReturnedDocument: ReturnedDocument? = null
     @Volatile private var documentReadGeneration = 0L
+    private var documentRequestGeneration = 0L
+    private var pendingDocumentFailure: Runnable? = null
     private var nextDocumentRequestCode = PDF_DOCUMENT_REQUEST
+
+    private fun supersedeDocumentRequest() {
+        documentRequestGeneration++
+        documentReadGeneration++
+        pendingDocumentFailure = null
+    }
 
     private fun currentDocumentSelection(selection: DocumentSelection): Boolean =
         !isFinishing && !isDestroyed && sessionId == selection.session &&
@@ -2328,8 +2341,13 @@ class AgentActivity : Activity() {
 
     /** „die ausgewählte PDF“: the PDF chosen before, if Android still lets JARVIS read it; otherwise one short question. */
     private fun openOrReuseDocument(document: at.heinz.deviceai.cognitive.OwnerDocumentIntent.Request, request: String) {
+        supersedeDocumentRequest()
         if (!document.reuse) { openPdfDocumentPicker(document.wantsDraft, request); return }
+        val requestGeneration = documentRequestGeneration
+        val readGeneration = documentReadGeneration
         withWorkJournal { episodes ->
+            if (documentRequestGeneration != requestGeneration || documentReadGeneration != readGeneration)
+                return@withWorkJournal
             // Read grants are checked now, on the UI thread: a revoked grant means asking, never reading.
             val readable = runCatching {
                 contentResolver.persistedUriPermissions.filter { it.isReadPermission }.map { it.uri.toString() }.toSet()
@@ -2614,6 +2632,7 @@ class AgentActivity : Activity() {
             addAssistantMessage("Die Dateiauswahl ist für diese Sitzung nicht mehr verfügbar. Bitte öffne die App erneut.")
             return
         }
+        supersedeDocumentRequest()
         nextDocumentRequestCode = if (requestCode == PDF_DOCUMENT_REQUEST) PDF_SELECTION_CODE_FIRST else requestCode + 1
         pendingDocumentDraft = wantsDraft
         pendingDocumentRequest = request
@@ -2641,11 +2660,18 @@ class AgentActivity : Activity() {
      * offers Android's picker and keeps the cockpit – never a silent switch to the chat.
      */
     private fun readPdfDocument(uri: android.net.Uri, remembered: at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode?) {
+        if (!foregroundLearningActive || isFinishing || isDestroyed) return
+        supersedeDocumentRequest()
         val pageWidthPx = (resources.displayMetrics.density * 360f).toInt()
         val session = sessionId
         val generation = workPresentationGeneration
-        val readGeneration = ++documentReadGeneration
+        val readGeneration = documentReadGeneration
+        val requestGeneration = documentRequestGeneration
         val replyRevision = ownerReplyRevision
+        val startedWork = workStarted
+        val chiefTurn = activeChiefTurn
+        val effectContext = currentTaskEffectContext
+        val episodeId = workEpisodeId
         val wantsDraft = pendingDocumentDraft
         val request = pendingDocumentRequest
         val allowMaya = ownerReplyAllowsMaya
@@ -2655,12 +2681,27 @@ class AgentActivity : Activity() {
                     documentReadGeneration != readGeneration
                 }
             }
-            runOnUiThread {
-                if (isFinishing || isDestroyed || !foregroundLearningActive || sessionId != session ||
-                    workPresentationGeneration != generation || documentReadGeneration != readGeneration ||
-                    ownerReplyRevision != replyRevision) {
+            val observedFailure = remembered != null && result.isFailure &&
+                documentReadGeneration == readGeneration &&
+                result.exceptionOrNull()?.message != "PDF_READ_CANCELLED"
+            lateinit var delivery: Runnable
+            delivery = Runnable {
+                val superseded = isFinishing || isDestroyed || sessionId != session ||
+                    workPresentationGeneration != generation || documentRequestGeneration != requestGeneration
+                val conflictingWork = busy || workStarted != startedWork || activeChiefTurn !== chiefTurn ||
+                    currentTaskEffectContext?.let { it !== effectContext } == true || workEpisodeId != episodeId
+                if (superseded || observedFailure && conflictingWork) {
                     result.getOrNull()?.firstPage?.recycle()
-                    return@runOnUiThread
+                    return@Runnable
+                }
+                if (observedFailure && !foregroundLearningActive) {
+                    pendingDocumentFailure = delivery
+                    return@Runnable
+                }
+                if (!foregroundLearningActive || !observedFailure &&
+                    (documentReadGeneration != readGeneration || ownerReplyRevision != replyRevision)) {
+                    result.getOrNull()?.firstPage?.recycle()
+                    return@Runnable
                 }
                 pendingDocumentDraft = wantsDraft
                 pendingDocumentRequest = request
@@ -2677,7 +2718,8 @@ class AgentActivity : Activity() {
                     val name = remembered.source ?: "die zuletzt verwendete PDF"
                     addAssistantMessage("Die zuletzt verwendete PDF „$name“ lässt sich nicht mehr lesen – vermutlich " +
                         "verschoben oder gelöscht. An der Datei wurde nichts verändert. Ich zeige dir die Auswahl.",
-                        true, keepCockpit = stay)
+                        true, keepCockpit = stay, allowMaya = allowMaya && ownerReplyAllowsMaya,
+                        speakNow = ownerReplyRevision == replyRevision)
                     val attempt = workJournal.newEpisode(at.heinz.deviceai.cognitive.CockpitWorkJournal.Kind.DOCUMENT,
                         request.ifBlank { "Letzte PDF öffnen" }, at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED,
                         name, documentUri = uri.toString())
@@ -2686,6 +2728,7 @@ class AgentActivity : Activity() {
                     openPdfDocumentPicker(wantsDraft, request)
                 }
             }
+            runOnUiThread(delivery)
         }
     }
 
@@ -11888,6 +11931,7 @@ class AgentActivity : Activity() {
         documentReadGeneration++
         pendingDocumentSelection = null
         pendingReturnedDocument = null
+        pendingDocumentFailure = null
         pendingDocumentDraft = false
         pendingDocumentRequest = ""
         // STOP: a running document draft is recorded as aborted – never as done.

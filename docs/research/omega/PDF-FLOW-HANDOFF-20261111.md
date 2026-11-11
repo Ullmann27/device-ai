@@ -57,3 +57,39 @@ live model/audio, Filament GPU and thermals are NOT_RUN at this checkpoint.
 No APK/signing/release/version/main changes. No new research/model activation;
 existing EXP-05 model provider and EXP-11 orchestration remain unchanged.
 Rollback: revert the worker commits on the integration branch.
+
+## Observed-error delivery follow-up
+
+Base: integration `f0349f4cbe4474e6df07ddf4685463688abb6ef2`.
+The root Android/Robolectric run reported failures in
+`aNormalPauseKeepsQueuedPdfFailureVisible` and
+`aNewOwnerMessageKeepsQueuedPdfFailureVisible`. Their original helper blocked
+the I/O lane before file access, then expected a missing-file recovery after
+the new cancellation gate had legitimately revoked that unread request.
+
+Test-only commit `c5de77156` preserves the positive recovery assertions but
+uses a counted ContentProvider that actually throws FileNotFoundException.
+The file failure completes while the main looper remains paused; only then
+does the fixture pause/resume or add a benign follow-up comment. Seven new
+checks cover deferred foreground delivery without re-reading, superseding
+picker, superseding read, STOP, another real model task, and pause/message
+cancellation before any provider query or open.
+
+The production follow-up only preserves a remembered-file failure observed
+while the read was still current. Cancellation is never reported as a missing
+file. A single pending UI Runnable can wait for onResume; it cannot restart
+the read. Existing session/STOP and work identities still reject stale
+recovery. The small PDF request generation distinguishes new picker/read/reuse
+requests from a transient pause without changing WorkRecall's shared work
+generation. A newer owner comment suppresses speech of the older failure.
+
+Modified-source runtime status: UNVERIFIED. The worker did not compile or run
+Android tests while root held the build/runtime lease. `git diff --check`
+passed. Root must run the test-only commit for RED, then production for GREEN;
+neither the revised fixture nor this repair is claimed passing yet.
+
+A separate small follow-up also binds the earlier asynchronous reuse/journal
+lookup to the same read generation. A paused or superseded lookup cannot
+start a fresh read later. The reader rejects background entry directly.
+An eighth counted-provider check exercises this earlier boundary through the
+real owner-input route; it is also UNVERIFIED pending root's runtime lease.
