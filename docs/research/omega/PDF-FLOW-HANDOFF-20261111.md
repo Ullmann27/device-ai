@@ -19,14 +19,31 @@ presentation variants). Corrected run: 13 tests, zero failures. Raw logs:
 `docs/evidence/pdf-scene-20261111/flow/router-{red,green}.txt`.
 The new four tests contain 19 inputs; this is not a live Android routing claim.
 
-## Work in progress
+## Integrated source, Android acceptance pending
 
-The next checkpoint binds Android picker callbacks and asynchronous reads to
-the actual owner request, cancels stale/STOP/background work, and defers the
-personal next-step reply until the real result window arrives. It reuses the
-existing native picker, PDF renderer, document journal, model path and voice
-queue. Graphics dependency: `JarvisActionScenes.forDocumentResult()` and
-`JarvisWorkWindow.doOnPresented` from the graphics worker.
+- Picker callbacks consume an immutable request snapshot once. STOP, another
+  owner message and a different session invalidate the old callback. A result
+  delivered while paused waits for the existing `onResume`; a pending picker
+  restores its bounded request across activity recreation.
+- Background reads freeze request/draft/speech policy, drop stale completions,
+  and observe cooperative cancellation before file access and between text
+  pages. Pause, STOP and a newer request invalidate that work. Native rendering
+  already in progress is not claimed to stop mid-call. Failed/cancelled reads
+  release any first-page bitmap.
+- The full generated draft remains visible in the result and chat. A concise,
+  visible personal offer speaks only after the actual result window arrives;
+  edit/save are existing owner actions. Original per-request Maya restrictions
+  remain bound, and the existing voice toggle, foreground, microphone and
+  network checks apply. No extra inference is used for this follow-up.
+- The original last-model-reply anchor is preserved when the later offer is
+  shown, so presentation does not erase the conversation continuation state.
+
+Dependencies: graphics worker production commit
+`936a999e13fd1c1db3f8f0821c17a78e34c41782`,
+`JarvisActionScenes.forDocumentResult()` and `JarvisWorkWindow.doOnPresented`.
+Independent QA owns picker rejection/recreation/arrival tests and the changed
+result-origin assertion. Root must compile/test the combined source before
+accepting these Activity/renderer changes.
 
 Android compilation/UI execution, physical Fold7, actual PDF/native renderer,
 live model/audio, Filament GPU and thermals are NOT_RUN at this checkpoint.
