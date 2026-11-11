@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "checks_passed": 4,
+  "exit_code": 0,
+  "compiled_classes_jar_sha256": "4a377ffbae35aa25ddcfad5703b72270bfd35c085d065347259c4bbc154da662",
+  "probe_source_sha256": "ca9fd09162965f7847aab7cc7642f2b48fd205ce964bfc1b15caa36925982c86",
+  "stdout_sha256": "f17ab35b63fea2ebfc7d91f076682b61d8db672527d4ad4dc43f494773488bb1",
+  "scope": "Independent host-JVM red-to-green checks with synthetic temporary data; Android UI, Keystore hardware and Fold7 NOT_RUN"
+}

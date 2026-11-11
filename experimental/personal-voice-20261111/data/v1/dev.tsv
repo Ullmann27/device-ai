@@ -1,0 +1,33 @@
+id	label	prompt
+pv1-dev-retrospective-revision-01-00-0	1	erkläre nur das Wort Dateimanager war vor der Korrektur. Gültig bleibt jetzt: öffne die App Dateimanager.
+pv1-dev-retrospective-revision-01-00-1	0	öffne die App Dateimanager war vor der Korrektur. Gültig bleibt jetzt: erkläre nur das Wort Dateimanager.
+pv1-dev-retrospective-revision-01-01-0	1	erkläre nur das Wort Notizbuch war vor der Korrektur. Gültig bleibt jetzt: öffne die App Notizbuch.
+pv1-dev-retrospective-revision-01-01-1	0	öffne die App Notizbuch war vor der Korrektur. Gültig bleibt jetzt: erkläre nur das Wort Notizbuch.
+pv1-dev-retrospective-revision-12-00-0	2	öffne die App Dateimanager war vor der Korrektur. Gültig bleibt jetzt: suche nach dem Wort Dateimanager.
+pv1-dev-retrospective-revision-12-00-1	1	suche nach dem Wort Dateimanager war vor der Korrektur. Gültig bleibt jetzt: öffne die App Dateimanager.
+pv1-dev-retrospective-revision-12-01-0	2	öffne die App Notizbuch war vor der Korrektur. Gültig bleibt jetzt: suche nach dem Wort Notizbuch.
+pv1-dev-retrospective-revision-12-01-1	1	suche nach dem Wort Notizbuch war vor der Korrektur. Gültig bleibt jetzt: öffne die App Notizbuch.
+pv1-dev-retrospective-revision-23-00-0	3	suche nach dem Wort Dateimanager war vor der Korrektur. Gültig bleibt jetzt: merke dir das Wort Dateimanager.
+pv1-dev-retrospective-revision-23-00-1	2	merke dir das Wort Dateimanager war vor der Korrektur. Gültig bleibt jetzt: suche nach dem Wort Dateimanager.
+pv1-dev-retrospective-revision-23-01-0	3	suche nach dem Wort Notizbuch war vor der Korrektur. Gültig bleibt jetzt: merke dir das Wort Notizbuch.
+pv1-dev-retrospective-revision-23-01-1	2	merke dir das Wort Notizbuch war vor der Korrektur. Gültig bleibt jetzt: suche nach dem Wort Notizbuch.
+pv1-dev-retrospective-revision-30-00-0	0	merke dir das Wort Dateimanager war vor der Korrektur. Gültig bleibt jetzt: erkläre nur das Wort Dateimanager.
+pv1-dev-retrospective-revision-30-00-1	3	erkläre nur das Wort Dateimanager war vor der Korrektur. Gültig bleibt jetzt: merke dir das Wort Dateimanager.
+pv1-dev-retrospective-revision-30-01-0	0	merke dir das Wort Notizbuch war vor der Korrektur. Gültig bleibt jetzt: erkläre nur das Wort Notizbuch.
+pv1-dev-retrospective-revision-30-01-1	3	erkläre nur das Wort Notizbuch war vor der Korrektur. Gültig bleibt jetzt: merke dir das Wort Notizbuch.
+pv1-dev-permission-and-discussion-01-00-0	0	Freigegeben: erkläre nur das Wort Dateimanager. Bei „öffne die App Dateimanager“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-01-00-1	1	Freigegeben: öffne die App Dateimanager. Bei „erkläre nur das Wort Dateimanager“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-01-01-0	0	Freigegeben: erkläre nur das Wort Notizbuch. Bei „öffne die App Notizbuch“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-01-01-1	1	Freigegeben: öffne die App Notizbuch. Bei „erkläre nur das Wort Notizbuch“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-12-00-0	1	Freigegeben: öffne die App Dateimanager. Bei „suche nach dem Wort Dateimanager“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-12-00-1	2	Freigegeben: suche nach dem Wort Dateimanager. Bei „öffne die App Dateimanager“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-12-01-0	1	Freigegeben: öffne die App Notizbuch. Bei „suche nach dem Wort Notizbuch“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-12-01-1	2	Freigegeben: suche nach dem Wort Notizbuch. Bei „öffne die App Notizbuch“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-23-00-0	2	Freigegeben: suche nach dem Wort Dateimanager. Bei „merke dir das Wort Dateimanager“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-23-00-1	3	Freigegeben: merke dir das Wort Dateimanager. Bei „suche nach dem Wort Dateimanager“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-23-01-0	2	Freigegeben: suche nach dem Wort Notizbuch. Bei „merke dir das Wort Notizbuch“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-23-01-1	3	Freigegeben: merke dir das Wort Notizbuch. Bei „suche nach dem Wort Notizbuch“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-30-00-0	3	Freigegeben: merke dir das Wort Dateimanager. Bei „erkläre nur das Wort Dateimanager“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-30-00-1	0	Freigegeben: erkläre nur das Wort Dateimanager. Bei „merke dir das Wort Dateimanager“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-30-01-0	3	Freigegeben: merke dir das Wort Notizbuch. Bei „erkläre nur das Wort Notizbuch“ bleibt es beim Besprechen.
+pv1-dev-permission-and-discussion-30-01-1	0	Freigegeben: erkläre nur das Wort Notizbuch. Bei „merke dir das Wort Notizbuch“ bleibt es beim Besprechen.

@@ -1,0 +1,22 @@
+{
+  "scope": "actual pre-fix store calls matching old UI callback; no Android UI execution",
+  "harness_sha256": "b0de3c40e7dd509b0641d0ffd473f93e779e9c9a5b0c17882e7ccf81f4718312",
+  "pre_fix_store_source_sha256": "ad973100396872dddc55e21fcf454d4832a7f1d745c30373ca493449363c87f7",
+  "compile": [
+    "/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/bin/kotlinc",
+    "-classpath",
+    "/workspace/scratch/aba242c65e85/voice-context-build-attempt5/classes",
+    "-jvm-target",
+    "17",
+    "/workspace/scratch/aba242c65e85/voice-eval/experimental/personal-voice-20261111/evaluation/UiConsentRaceReproduction.kt",
+    "-d",
+    "/workspace/scratch/aba242c65e85/ui-consent-race.jar"
+  ],
+  "run": [
+    "java",
+    "-Xmx128m",
+    "-cp",
+    "/workspace/scratch/aba242c65e85/ui-consent-race.jar:/workspace/scratch/aba242c65e85/voice-context-build-attempt5/classes:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.research.voice.UiConsentRaceReproduction"
+  ]
+}

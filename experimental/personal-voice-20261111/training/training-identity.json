@@ -1,0 +1,65 @@
+{
+  "schema": "continuum-personal-voice-training-identity-v1",
+  "status": "PASS",
+  "scope": "trainer-side technical integrity only; independent quality evaluation still required",
+  "originalModelSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+  "registrationSha256": "462d26942583a8c0d0f7cabe68b213ae22d77a8d4d52dbd6b9ff4d79790a133a",
+  "models": {
+    "balanced-replay": {
+      "sha256": "e1e231cc2b30f2c8a36af0b0b9c7edcfbc13a19ae6e73faee501448d43f511fe",
+      "bytes": 529634,
+      "parameters": 132160,
+      "config": [
+        1,
+        512,
+        64,
+        2,
+        4,
+        256,
+        256
+      ],
+      "tokenizer": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+      "versusOriginal": {
+        "parameters": 132160,
+        "changedFloat32Bits": 132160,
+        "changedNumericWeights": 132160,
+        "maximumAbsoluteDelta": 0.004294231534004211
+      }
+    },
+    "balanced-preserve": {
+      "sha256": "4d0cb91226970737bd3413736b66d8688714f2c65ae0e383501aadd6bd5f763f",
+      "bytes": 529636,
+      "parameters": 132160,
+      "config": [
+        1,
+        512,
+        64,
+        2,
+        4,
+        256,
+        256
+      ],
+      "tokenizer": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+      "versusOriginal": {
+        "parameters": 132160,
+        "changedFloat32Bits": 132160,
+        "changedNumericWeights": 132160,
+        "maximumAbsoluteDelta": 0.004302293062210083
+      }
+    }
+  },
+  "identicalAnswerAndReplaySchedules": true,
+  "scheduleRowsPerArm": 128,
+  "totalUpdates": 256,
+  "allRegisteredInputsUnchanged": true,
+  "resourceTotals": {
+    "trainingWallSeconds": 64.88032591100091,
+    "childUserCpuSeconds": 69.039759,
+    "childSystemCpuSeconds": 0.9474560000000001,
+    "maximumSingleProcessRssKiB": 126928,
+    "gpuJobs": 0,
+    "experimentExternalModelCalls": 0,
+    "scope": "two training JVMs only; compilation/evaluation/assistant compute excluded"
+  },
+  "productionPromotion": false
+}

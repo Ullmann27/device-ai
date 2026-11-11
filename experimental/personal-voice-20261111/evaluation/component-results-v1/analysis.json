@@ -1,0 +1,51 @@
+{
+  "case_count": 24,
+  "Apass": 8,
+  "Bpass": 22,
+  "strata": {
+    "automatic_context": {
+      "cases": 10,
+      "Apass": 4,
+      "Bpass": 8
+    },
+    "review_integrity": {
+      "cases": 5,
+      "Apass": 0,
+      "Bpass": 5
+    },
+    "human_confirmed_repair": {
+      "cases": 3,
+      "Apass": 0,
+      "Bpass": 3
+    },
+    "preservation_only": {
+      "cases": 4,
+      "Apass": 4,
+      "Bpass": 4
+    },
+    "input_integrity": {
+      "cases": 2,
+      "Apass": 0,
+      "Bpass": 2
+    }
+  },
+  "regressions": [],
+  "remaining_failures": [
+    {
+      "id": "ctx-04",
+      "input": "Nein, das war anders gemeint. Ich bezog mich auf den Zweig Sand.",
+      "expected": "SCOPE_UPDATED",
+      "actual": "PASS_THROUGH"
+    },
+    {
+      "id": "ctx-05",
+      "input": "Na, so hab i des ned gmeint. I man den Zweig Sand.",
+      "expected": "SCOPE_UPDATED",
+      "actual": "PASS_THROUGH"
+    }
+  ],
+  "all_advisory_invariant": true,
+  "actual_tool_grants": 0,
+  "training_starts": 0,
+  "scope": "native components only; full app A/B/C ASR and Fold7 NOT_RUN"
+}

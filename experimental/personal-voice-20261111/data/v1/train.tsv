@@ -1,0 +1,129 @@
+id	label	prompt
+pv1-train-spoken-repair-01-00-0	1	erkläre nur das Wort Kamera. Äh nein, i mein: öffne die App Kamera. Genau so.
+pv1-train-spoken-repair-01-00-1	0	öffne die App Kamera. Äh nein, i mein: erkläre nur das Wort Kamera. Genau so.
+pv1-train-spoken-repair-01-01-0	1	erkläre nur das Wort Galerie. Äh nein, i mein: öffne die App Galerie. Genau so.
+pv1-train-spoken-repair-01-01-1	0	öffne die App Galerie. Äh nein, i mein: erkläre nur das Wort Galerie. Genau so.
+pv1-train-spoken-repair-01-02-0	1	erkläre nur das Wort Kalender. Äh nein, i mein: öffne die App Kalender. Genau so.
+pv1-train-spoken-repair-01-02-1	0	öffne die App Kalender. Äh nein, i mein: erkläre nur das Wort Kalender. Genau so.
+pv1-train-spoken-repair-01-03-0	1	erkläre nur das Wort Rechner. Äh nein, i mein: öffne die App Rechner. Genau so.
+pv1-train-spoken-repair-01-03-1	0	öffne die App Rechner. Äh nein, i mein: erkläre nur das Wort Rechner. Genau so.
+pv1-train-spoken-repair-12-00-0	2	öffne die App Kamera. Äh nein, i mein: suche nach dem Wort Kamera. Genau so.
+pv1-train-spoken-repair-12-00-1	1	suche nach dem Wort Kamera. Äh nein, i mein: öffne die App Kamera. Genau so.
+pv1-train-spoken-repair-12-01-0	2	öffne die App Galerie. Äh nein, i mein: suche nach dem Wort Galerie. Genau so.
+pv1-train-spoken-repair-12-01-1	1	suche nach dem Wort Galerie. Äh nein, i mein: öffne die App Galerie. Genau so.
+pv1-train-spoken-repair-12-02-0	2	öffne die App Kalender. Äh nein, i mein: suche nach dem Wort Kalender. Genau so.
+pv1-train-spoken-repair-12-02-1	1	suche nach dem Wort Kalender. Äh nein, i mein: öffne die App Kalender. Genau so.
+pv1-train-spoken-repair-12-03-0	2	öffne die App Rechner. Äh nein, i mein: suche nach dem Wort Rechner. Genau so.
+pv1-train-spoken-repair-12-03-1	1	suche nach dem Wort Rechner. Äh nein, i mein: öffne die App Rechner. Genau so.
+pv1-train-spoken-repair-23-00-0	3	suche nach dem Wort Kamera. Äh nein, i mein: merke dir das Wort Kamera. Genau so.
+pv1-train-spoken-repair-23-00-1	2	merke dir das Wort Kamera. Äh nein, i mein: suche nach dem Wort Kamera. Genau so.
+pv1-train-spoken-repair-23-01-0	3	suche nach dem Wort Galerie. Äh nein, i mein: merke dir das Wort Galerie. Genau so.
+pv1-train-spoken-repair-23-01-1	2	merke dir das Wort Galerie. Äh nein, i mein: suche nach dem Wort Galerie. Genau so.
+pv1-train-spoken-repair-23-02-0	3	suche nach dem Wort Kalender. Äh nein, i mein: merke dir das Wort Kalender. Genau so.
+pv1-train-spoken-repair-23-02-1	2	merke dir das Wort Kalender. Äh nein, i mein: suche nach dem Wort Kalender. Genau so.
+pv1-train-spoken-repair-23-03-0	3	suche nach dem Wort Rechner. Äh nein, i mein: merke dir das Wort Rechner. Genau so.
+pv1-train-spoken-repair-23-03-1	2	merke dir das Wort Rechner. Äh nein, i mein: suche nach dem Wort Rechner. Genau so.
+pv1-train-spoken-repair-30-00-0	0	merke dir das Wort Kamera. Äh nein, i mein: erkläre nur das Wort Kamera. Genau so.
+pv1-train-spoken-repair-30-00-1	3	erkläre nur das Wort Kamera. Äh nein, i mein: merke dir das Wort Kamera. Genau so.
+pv1-train-spoken-repair-30-01-0	0	merke dir das Wort Galerie. Äh nein, i mein: erkläre nur das Wort Galerie. Genau so.
+pv1-train-spoken-repair-30-01-1	3	erkläre nur das Wort Galerie. Äh nein, i mein: merke dir das Wort Galerie. Genau so.
+pv1-train-spoken-repair-30-02-0	0	merke dir das Wort Kalender. Äh nein, i mein: erkläre nur das Wort Kalender. Genau so.
+pv1-train-spoken-repair-30-02-1	3	erkläre nur das Wort Kalender. Äh nein, i mein: merke dir das Wort Kalender. Genau so.
+pv1-train-spoken-repair-30-03-0	0	merke dir das Wort Rechner. Äh nein, i mein: erkläre nur das Wort Rechner. Genau so.
+pv1-train-spoken-repair-30-03-1	3	erkläre nur das Wort Rechner. Äh nein, i mein: merke dir das Wort Rechner. Genau so.
+pv1-train-live-vs-quote-01-00-0	1	„öffne die App Kamera“ ist mein Auftrag. „erkläre nur das Wort Kamera“ war bloß ein Zitat.
+pv1-train-live-vs-quote-01-00-1	0	„erkläre nur das Wort Kamera“ ist mein Auftrag. „öffne die App Kamera“ war bloß ein Zitat.
+pv1-train-live-vs-quote-01-01-0	1	„öffne die App Galerie“ ist mein Auftrag. „erkläre nur das Wort Galerie“ war bloß ein Zitat.
+pv1-train-live-vs-quote-01-01-1	0	„erkläre nur das Wort Galerie“ ist mein Auftrag. „öffne die App Galerie“ war bloß ein Zitat.
+pv1-train-live-vs-quote-01-02-0	1	„öffne die App Kalender“ ist mein Auftrag. „erkläre nur das Wort Kalender“ war bloß ein Zitat.
+pv1-train-live-vs-quote-01-02-1	0	„erkläre nur das Wort Kalender“ ist mein Auftrag. „öffne die App Kalender“ war bloß ein Zitat.
+pv1-train-live-vs-quote-01-03-0	1	„öffne die App Rechner“ ist mein Auftrag. „erkläre nur das Wort Rechner“ war bloß ein Zitat.
+pv1-train-live-vs-quote-01-03-1	0	„erkläre nur das Wort Rechner“ ist mein Auftrag. „öffne die App Rechner“ war bloß ein Zitat.
+pv1-train-live-vs-quote-12-00-0	2	„suche nach dem Wort Kamera“ ist mein Auftrag. „öffne die App Kamera“ war bloß ein Zitat.
+pv1-train-live-vs-quote-12-00-1	1	„öffne die App Kamera“ ist mein Auftrag. „suche nach dem Wort Kamera“ war bloß ein Zitat.
+pv1-train-live-vs-quote-12-01-0	2	„suche nach dem Wort Galerie“ ist mein Auftrag. „öffne die App Galerie“ war bloß ein Zitat.
+pv1-train-live-vs-quote-12-01-1	1	„öffne die App Galerie“ ist mein Auftrag. „suche nach dem Wort Galerie“ war bloß ein Zitat.
+pv1-train-live-vs-quote-12-02-0	2	„suche nach dem Wort Kalender“ ist mein Auftrag. „öffne die App Kalender“ war bloß ein Zitat.
+pv1-train-live-vs-quote-12-02-1	1	„öffne die App Kalender“ ist mein Auftrag. „suche nach dem Wort Kalender“ war bloß ein Zitat.
+pv1-train-live-vs-quote-12-03-0	2	„suche nach dem Wort Rechner“ ist mein Auftrag. „öffne die App Rechner“ war bloß ein Zitat.
+pv1-train-live-vs-quote-12-03-1	1	„öffne die App Rechner“ ist mein Auftrag. „suche nach dem Wort Rechner“ war bloß ein Zitat.
+pv1-train-live-vs-quote-23-00-0	3	„merke dir das Wort Kamera“ ist mein Auftrag. „suche nach dem Wort Kamera“ war bloß ein Zitat.
+pv1-train-live-vs-quote-23-00-1	2	„suche nach dem Wort Kamera“ ist mein Auftrag. „merke dir das Wort Kamera“ war bloß ein Zitat.
+pv1-train-live-vs-quote-23-01-0	3	„merke dir das Wort Galerie“ ist mein Auftrag. „suche nach dem Wort Galerie“ war bloß ein Zitat.
+pv1-train-live-vs-quote-23-01-1	2	„suche nach dem Wort Galerie“ ist mein Auftrag. „merke dir das Wort Galerie“ war bloß ein Zitat.
+pv1-train-live-vs-quote-23-02-0	3	„merke dir das Wort Kalender“ ist mein Auftrag. „suche nach dem Wort Kalender“ war bloß ein Zitat.
+pv1-train-live-vs-quote-23-02-1	2	„suche nach dem Wort Kalender“ ist mein Auftrag. „merke dir das Wort Kalender“ war bloß ein Zitat.
+pv1-train-live-vs-quote-23-03-0	3	„merke dir das Wort Rechner“ ist mein Auftrag. „suche nach dem Wort Rechner“ war bloß ein Zitat.
+pv1-train-live-vs-quote-23-03-1	2	„suche nach dem Wort Rechner“ ist mein Auftrag. „merke dir das Wort Rechner“ war bloß ein Zitat.
+pv1-train-live-vs-quote-30-00-0	0	„erkläre nur das Wort Kamera“ ist mein Auftrag. „merke dir das Wort Kamera“ war bloß ein Zitat.
+pv1-train-live-vs-quote-30-00-1	3	„merke dir das Wort Kamera“ ist mein Auftrag. „erkläre nur das Wort Kamera“ war bloß ein Zitat.
+pv1-train-live-vs-quote-30-01-0	0	„erkläre nur das Wort Galerie“ ist mein Auftrag. „merke dir das Wort Galerie“ war bloß ein Zitat.
+pv1-train-live-vs-quote-30-01-1	3	„merke dir das Wort Galerie“ ist mein Auftrag. „erkläre nur das Wort Galerie“ war bloß ein Zitat.
+pv1-train-live-vs-quote-30-02-0	0	„erkläre nur das Wort Kalender“ ist mein Auftrag. „merke dir das Wort Kalender“ war bloß ein Zitat.
+pv1-train-live-vs-quote-30-02-1	3	„merke dir das Wort Kalender“ ist mein Auftrag. „erkläre nur das Wort Kalender“ war bloß ein Zitat.
+pv1-train-live-vs-quote-30-03-0	0	„erkläre nur das Wort Rechner“ ist mein Auftrag. „merke dir das Wort Rechner“ war bloß ein Zitat.
+pv1-train-live-vs-quote-30-03-1	3	„merke dir das Wort Rechner“ ist mein Auftrag. „erkläre nur das Wort Rechner“ war bloß ein Zitat.
+pv1-train-rejected-tail-01-00-0	0	Bitte erkläre nur das Wort Kamera. Den Vorschlag „öffne die App Kamera“ lehne ich ab.
+pv1-train-rejected-tail-01-00-1	1	Bitte öffne die App Kamera. Den Vorschlag „erkläre nur das Wort Kamera“ lehne ich ab.
+pv1-train-rejected-tail-01-01-0	0	Bitte erkläre nur das Wort Galerie. Den Vorschlag „öffne die App Galerie“ lehne ich ab.
+pv1-train-rejected-tail-01-01-1	1	Bitte öffne die App Galerie. Den Vorschlag „erkläre nur das Wort Galerie“ lehne ich ab.
+pv1-train-rejected-tail-01-02-0	0	Bitte erkläre nur das Wort Kalender. Den Vorschlag „öffne die App Kalender“ lehne ich ab.
+pv1-train-rejected-tail-01-02-1	1	Bitte öffne die App Kalender. Den Vorschlag „erkläre nur das Wort Kalender“ lehne ich ab.
+pv1-train-rejected-tail-01-03-0	0	Bitte erkläre nur das Wort Rechner. Den Vorschlag „öffne die App Rechner“ lehne ich ab.
+pv1-train-rejected-tail-01-03-1	1	Bitte öffne die App Rechner. Den Vorschlag „erkläre nur das Wort Rechner“ lehne ich ab.
+pv1-train-rejected-tail-12-00-0	1	Bitte öffne die App Kamera. Den Vorschlag „suche nach dem Wort Kamera“ lehne ich ab.
+pv1-train-rejected-tail-12-00-1	2	Bitte suche nach dem Wort Kamera. Den Vorschlag „öffne die App Kamera“ lehne ich ab.
+pv1-train-rejected-tail-12-01-0	1	Bitte öffne die App Galerie. Den Vorschlag „suche nach dem Wort Galerie“ lehne ich ab.
+pv1-train-rejected-tail-12-01-1	2	Bitte suche nach dem Wort Galerie. Den Vorschlag „öffne die App Galerie“ lehne ich ab.
+pv1-train-rejected-tail-12-02-0	1	Bitte öffne die App Kalender. Den Vorschlag „suche nach dem Wort Kalender“ lehne ich ab.
+pv1-train-rejected-tail-12-02-1	2	Bitte suche nach dem Wort Kalender. Den Vorschlag „öffne die App Kalender“ lehne ich ab.
+pv1-train-rejected-tail-12-03-0	1	Bitte öffne die App Rechner. Den Vorschlag „suche nach dem Wort Rechner“ lehne ich ab.
+pv1-train-rejected-tail-12-03-1	2	Bitte suche nach dem Wort Rechner. Den Vorschlag „öffne die App Rechner“ lehne ich ab.
+pv1-train-rejected-tail-23-00-0	2	Bitte suche nach dem Wort Kamera. Den Vorschlag „merke dir das Wort Kamera“ lehne ich ab.
+pv1-train-rejected-tail-23-00-1	3	Bitte merke dir das Wort Kamera. Den Vorschlag „suche nach dem Wort Kamera“ lehne ich ab.
+pv1-train-rejected-tail-23-01-0	2	Bitte suche nach dem Wort Galerie. Den Vorschlag „merke dir das Wort Galerie“ lehne ich ab.
+pv1-train-rejected-tail-23-01-1	3	Bitte merke dir das Wort Galerie. Den Vorschlag „suche nach dem Wort Galerie“ lehne ich ab.
+pv1-train-rejected-tail-23-02-0	2	Bitte suche nach dem Wort Kalender. Den Vorschlag „merke dir das Wort Kalender“ lehne ich ab.
+pv1-train-rejected-tail-23-02-1	3	Bitte merke dir das Wort Kalender. Den Vorschlag „suche nach dem Wort Kalender“ lehne ich ab.
+pv1-train-rejected-tail-23-03-0	2	Bitte suche nach dem Wort Rechner. Den Vorschlag „merke dir das Wort Rechner“ lehne ich ab.
+pv1-train-rejected-tail-23-03-1	3	Bitte merke dir das Wort Rechner. Den Vorschlag „suche nach dem Wort Rechner“ lehne ich ab.
+pv1-train-rejected-tail-30-00-0	3	Bitte merke dir das Wort Kamera. Den Vorschlag „erkläre nur das Wort Kamera“ lehne ich ab.
+pv1-train-rejected-tail-30-00-1	0	Bitte erkläre nur das Wort Kamera. Den Vorschlag „merke dir das Wort Kamera“ lehne ich ab.
+pv1-train-rejected-tail-30-01-0	3	Bitte merke dir das Wort Galerie. Den Vorschlag „erkläre nur das Wort Galerie“ lehne ich ab.
+pv1-train-rejected-tail-30-01-1	0	Bitte erkläre nur das Wort Galerie. Den Vorschlag „merke dir das Wort Galerie“ lehne ich ab.
+pv1-train-rejected-tail-30-02-0	3	Bitte merke dir das Wort Kalender. Den Vorschlag „erkläre nur das Wort Kalender“ lehne ich ab.
+pv1-train-rejected-tail-30-02-1	0	Bitte erkläre nur das Wort Kalender. Den Vorschlag „merke dir das Wort Kalender“ lehne ich ab.
+pv1-train-rejected-tail-30-03-0	3	Bitte merke dir das Wort Rechner. Den Vorschlag „erkläre nur das Wort Rechner“ lehne ich ab.
+pv1-train-rejected-tail-30-03-1	0	Bitte erkläre nur das Wort Rechner. Den Vorschlag „merke dir das Wort Rechner“ lehne ich ab.
+pv1-train-negated-alternative-01-00-0	1	Nicht „erkläre nur das Wort Kamera“, sondern „öffne die App Kamera“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-01-00-1	0	Nicht „öffne die App Kamera“, sondern „erkläre nur das Wort Kamera“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-01-01-0	1	Nicht „erkläre nur das Wort Galerie“, sondern „öffne die App Galerie“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-01-01-1	0	Nicht „öffne die App Galerie“, sondern „erkläre nur das Wort Galerie“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-01-02-0	1	Nicht „erkläre nur das Wort Kalender“, sondern „öffne die App Kalender“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-01-02-1	0	Nicht „öffne die App Kalender“, sondern „erkläre nur das Wort Kalender“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-01-03-0	1	Nicht „erkläre nur das Wort Rechner“, sondern „öffne die App Rechner“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-01-03-1	0	Nicht „öffne die App Rechner“, sondern „erkläre nur das Wort Rechner“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-12-00-0	2	Nicht „öffne die App Kamera“, sondern „suche nach dem Wort Kamera“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-12-00-1	1	Nicht „suche nach dem Wort Kamera“, sondern „öffne die App Kamera“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-12-01-0	2	Nicht „öffne die App Galerie“, sondern „suche nach dem Wort Galerie“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-12-01-1	1	Nicht „suche nach dem Wort Galerie“, sondern „öffne die App Galerie“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-12-02-0	2	Nicht „öffne die App Kalender“, sondern „suche nach dem Wort Kalender“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-12-02-1	1	Nicht „suche nach dem Wort Kalender“, sondern „öffne die App Kalender“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-12-03-0	2	Nicht „öffne die App Rechner“, sondern „suche nach dem Wort Rechner“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-12-03-1	1	Nicht „suche nach dem Wort Rechner“, sondern „öffne die App Rechner“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-23-00-0	3	Nicht „suche nach dem Wort Kamera“, sondern „merke dir das Wort Kamera“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-23-00-1	2	Nicht „merke dir das Wort Kamera“, sondern „suche nach dem Wort Kamera“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-23-01-0	3	Nicht „suche nach dem Wort Galerie“, sondern „merke dir das Wort Galerie“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-23-01-1	2	Nicht „merke dir das Wort Galerie“, sondern „suche nach dem Wort Galerie“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-23-02-0	3	Nicht „suche nach dem Wort Kalender“, sondern „merke dir das Wort Kalender“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-23-02-1	2	Nicht „merke dir das Wort Kalender“, sondern „suche nach dem Wort Kalender“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-23-03-0	3	Nicht „suche nach dem Wort Rechner“, sondern „merke dir das Wort Rechner“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-23-03-1	2	Nicht „merke dir das Wort Rechner“, sondern „suche nach dem Wort Rechner“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-30-00-0	0	Nicht „merke dir das Wort Kamera“, sondern „erkläre nur das Wort Kamera“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-30-00-1	3	Nicht „erkläre nur das Wort Kamera“, sondern „merke dir das Wort Kamera“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-30-01-0	0	Nicht „merke dir das Wort Galerie“, sondern „erkläre nur das Wort Galerie“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-30-01-1	3	Nicht „erkläre nur das Wort Galerie“, sondern „merke dir das Wort Galerie“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-30-02-0	0	Nicht „merke dir das Wort Kalender“, sondern „erkläre nur das Wort Kalender“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-30-02-1	3	Nicht „erkläre nur das Wort Kalender“, sondern „merke dir das Wort Kalender“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-30-03-0	0	Nicht „merke dir das Wort Rechner“, sondern „erkläre nur das Wort Rechner“, bitte. Nichts zusätzlich.
+pv1-train-negated-alternative-30-03-1	3	Nicht „erkläre nur das Wort Rechner“, sondern „merke dir das Wort Rechner“, bitte. Nichts zusätzlich.

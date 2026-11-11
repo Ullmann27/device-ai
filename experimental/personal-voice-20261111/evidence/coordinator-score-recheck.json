@@ -1,0 +1,11 @@
+{
+  "scope": "Coordinator reparse of stored raw outputs, no additional training or inference",
+  "all_three_summaries_and_two_gate_decisions_match": true,
+  "input_cases_per_model": 128,
+  "model_candidates_rejected": [
+    "candidate1",
+    "candidate2"
+  ],
+  "training_audit_passed": true,
+  "comparison_note": "JSON normalizes integer capacity-map keys to strings; normalize serialization when comparing to persisted JSON."
+}

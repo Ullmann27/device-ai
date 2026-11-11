@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "scope": "PUBLIC_SYNTHETIC_RESEARCH_ONLY",
+  "source_ref": "authored:continuum-personal-voice-20261111-v1",
+  "baseline_pr": 728,
+  "baseline_commit": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+  "label_contract": {
+    "0": "no_side_effect",
+    "1": "open",
+    "2": "search",
+    "3": "remember"
+  },
+  "input_wrapper": "Auftrag: {prompt}\n",
+  "native_target": "one existing label token plus actual EOS; do not supervise prompt tokens",
+  "lm1_training_inputs": [
+    "train.tsv",
+    "supervised_replay.tsv"
+  ],
+  "never_training_inputs": [
+    "dev.tsv",
+    "pipeline-synthetic.jsonl",
+    "historical retention.tsv",
+    "independent evaluator holdouts"
+  ],
+  "generator_sha256": "8bfec1c41be10dff4217378339560cb8b8e6aa20419b30c8a234f92afa826910",
+  "files": {
+    "data-audit.json": {
+      "sha256": "627a7cffc3b3c533ad9cb10c38e42d40bf5458b0775f378e76d6cb15957af6c2",
+      "bytes": 2207
+    },
+    "dev.tsv": {
+      "sha256": "f187dfe2b54ecdc61317aeaaf1303e6b85ae61500508fdcd0c6b9f1c2fb79cfe",
+      "bytes": 4880
+    },
+    "examples.jsonl": {
+      "sha256": "5c8080adf40975cd4d98860cfbbe9278c86f277ac32633ceb844e6c9ac44b6e9",
+      "bytes": 213832
+    },
+    "pipeline-synthetic.jsonl": {
+      "sha256": "ce8ff8d1ecc9bc59e78f76af83349030443960585824febb438b77c23f56e17f",
+      "bytes": 14944
+    },
+    "replay-examples.jsonl": {
+      "sha256": "4e2219ce092f70fd9ef22b0cc21704455d80f89452a4d2b3f2ddc211da7f9fe1",
+      "bytes": 35784
+    },
+    "supervised_replay.tsv": {
+      "sha256": "b81358b5f139bb6513c7c54032d418b0fadca3d05d00e3ef443f926fbf54c761",
+      "bytes": 1598
+    },
+    "train.tsv": {
+      "sha256": "f943537483232c4cae902fc5cbf906db03c4ff11944a4b5f3a8633e242d281a4",
+      "bytes": 17136
+    }
+  }
+}

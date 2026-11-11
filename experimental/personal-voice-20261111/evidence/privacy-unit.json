@@ -1,0 +1,22 @@
+{
+  "scope": "34 pure JVM privacy/review unit checks; initial 26 plus eight consent/revision/capacity/integrity regressions; independent real-context evaluation separate",
+  "result": "PASS",
+  "unique_test_cases": 34,
+  "device": "NOT_RUN",
+  "android_keystore": "NOT_RUN",
+  "source_sha256": {
+    "experimental/personal-voice-20261111/native/PersonalVoiceCorrectionBridge.kt": "9666fa501ef0b7a0ed014af04aa4bfb1fe3254a320e789ce49129c2ecb7ffbff",
+    "experimental/personal-voice-20261111/native/PersonalVoiceLearningStore.kt": "50c12b2cf2684fdd01427ea2b51f5516caba1f4c0c01485acf39acf69a64d5dd",
+    "experimental/personal-voice-20261111/native/PersonalVoicePrivacyChecks.kt": "99d4ee2495b440a6a18a862a17507416e2fc653996781a6ab51336ba4206ed93"
+  },
+  "java": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)\n",
+  "compiler": "Kotlin 2.4.0",
+  "command": "bash experimental/personal-voice-20261111/run-privacy-checks.sh /path/to/kotlinc /external/output",
+  "first_fix_compile": "Initial fix compilation failed on an escaped regex literal; replaced with equivalent explicit dot character class before successful 32-case compilation/run.",
+  "recorded_at_utc": "2026-11-11T08:10:28.086847+00:00",
+  "compiled_artifact_sha256": "2e463a9a2f808bc3b2962ff53cec8915526c4d3b53593cd05ffda8dc201fda1e",
+  "output_sha256": "5016f5d64275ce61882c76bcc54f50e76309242904d11230156f35b592544b05",
+  "final_command": "bash experimental/personal-voice-20261111/run-privacy-checks.sh /workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/bin/kotlinc /workspace/scratch/aba242c65e85/voice-privacy-cas",
+  "elapsed_seconds": null,
+  "runtime_measurement_note": "Not separately captured; no runtime total inferred."
+}

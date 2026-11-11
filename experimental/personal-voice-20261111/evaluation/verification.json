@@ -1,0 +1,10 @@
+{
+  "evaluator_tests": {
+    "passed": 12,
+    "failed": 0
+  },
+  "context_score_reconstruction_equal": true,
+  "training_audit_reconstruction_equal": true,
+  "all_scripts_parse": true,
+  "all_frozen_inputs_unchanged": true
+}

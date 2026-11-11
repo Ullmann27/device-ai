@@ -48,3 +48,6 @@ agent-kotlin-benchmark/
 /.continuum-render-build/
 /continuum-all-systems-logs/
 /continuum-all-systems-site/
+
+# Isolated research worktrees.
+/.worktrees/

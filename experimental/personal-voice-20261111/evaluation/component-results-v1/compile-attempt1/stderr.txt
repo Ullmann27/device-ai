@@ -1,0 +1,301 @@
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/FreshKnowledgeNeed.kt:52:10: error: unresolved reference 'NetworkTurnConstraint'.
+        !NetworkTurnConstraint.forbidsExternalResearch(message) &&
+         ^^^^^^^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/FreshKnowledgeNeed.kt:53:13: error: unresolved reference 'PublicKnowledgeTopicRouter'.
+            PublicKnowledgeTopicRouter.topic(message) != null &&
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:202:74: error: unresolved reference 'Experience'.
+    fun similar(taskType: String, request: String, limit: Int = 5): List<Experience>
+                                                                         ^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:205:33: error: unresolved reference 'ExperienceStore'.
+class InMemoryExperienceStore : ExperienceStore, ExperienceLookup {
+                                ^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:206:51: error: unresolved reference 'Experience'.
+    private val experiences = linkedMapOf<String, Experience>()
+                                                  ^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:208:41: error: unresolved reference 'Experience'.
+    @Synchronized override fun store(e: Experience) {
+                                        ^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:209:19: error: unresolved reference 'id'.
+        require(e.id !in experiences) { "experience id already exists: ${e.id}" }
+                  ^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:209:22: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        require(e.id !in experiences) { "experience id already exists: ${e.id}" }
+                     ^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:209:76: error: unresolved reference 'id'.
+        require(e.id !in experiences) { "experience id already exists: ${e.id}" }
+                                                                           ^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:210:9: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        experiences[e.id] = e.copy(
+        ^^^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:210:23: error: unresolved reference 'id'.
+        experiences[e.id] = e.copy(
+                      ^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:210:31: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        experiences[e.id] = e.copy(
+                              ^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:210:31: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        experiences[e.id] = e.copy(
+                              ^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:210:31: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        experiences[e.id] = e.copy(
+                              ^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:211:13: error: no parameter with name 'memoryIds' found.
+            memoryIds = e.memoryIds.toList(), modelIds = e.modelIds.toList(),
+            ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:211:27: error: unresolved reference 'memoryIds'.
+            memoryIds = e.memoryIds.toList(), modelIds = e.modelIds.toList(),
+                          ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:211:47: error: no parameter with name 'modelIds' found.
+            memoryIds = e.memoryIds.toList(), modelIds = e.modelIds.toList(),
+                                              ^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:211:60: error: unresolved reference 'modelIds'.
+            memoryIds = e.memoryIds.toList(), modelIds = e.modelIds.toList(),
+                                                           ^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:212:13: error: no parameter with name 'sourceIds' found.
+            sourceIds = e.sourceIds.toList(), toolIds = e.toolIds.toList(),
+            ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:212:27: error: unresolved reference 'sourceIds'.
+            sourceIds = e.sourceIds.toList(), toolIds = e.toolIds.toList(),
+                          ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:212:47: error: no parameter with name 'toolIds' found.
+            sourceIds = e.sourceIds.toList(), toolIds = e.toolIds.toList(),
+                                              ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:212:59: error: unresolved reference 'toolIds'.
+            sourceIds = e.sourceIds.toList(), toolIds = e.toolIds.toList(),
+                                                          ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:213:13: error: no parameter with name 'failures' found.
+            failures = e.failures.toList(), evaluatorScores = e.evaluatorScores.toMap()
+            ^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:213:26: error: unresolved reference 'failures'.
+            failures = e.failures.toList(), evaluatorScores = e.evaluatorScores.toMap()
+                         ^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:213:45: error: no parameter with name 'evaluatorScores' found.
+            failures = e.failures.toList(), evaluatorScores = e.evaluatorScores.toMap()
+                                            ^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:213:65: error: unresolved reference 'evaluatorScores'.
+            failures = e.failures.toList(), evaluatorScores = e.evaluatorScores.toMap()
+                                                                ^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:217:44: error: unresolved reference 'Experience'.
+    @Synchronized override fun all(): List<Experience> = experiences.values.toList()
+                                           ^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:217:77: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+    @Synchronized override fun all(): List<Experience> = experiences.values.toList()
+                                                                            ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:219:79: error: unresolved reference 'Experience'.
+    override fun similar(taskType: String, request: String, limit: Int): List<Experience> {
+                                                                              ^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:222:32: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        if (limit == 0) return emptyList()
+                               ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:223:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        return all().asSequence()
+                     ^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:223:22: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T> Iterable<T>.asSequence(): Sequence<T>
+        return all().asSequence()
+                     ^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:224:14: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            .filter { it.taskType.equals(taskType, ignoreCase = true) }
+             ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:224:21: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            .filter { it.taskType.equals(taskType, ignoreCase = true) }
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:224:26: error: unresolved reference 'taskType'.
+            .filter { it.taskType.equals(taskType, ignoreCase = true) }
+                         ^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:225:14: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            .map { it to jaccard(queryTerms, terms(it.requestSummary)) }
+             ^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:225:14: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            .map { it to jaccard(queryTerms, terms(it.requestSummary)) }
+             ^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:225:18: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            .map { it to jaccard(queryTerms, terms(it.requestSummary)) }
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:225:23: error: cannot infer type for type parameter 'A'. Specify it explicitly.
+            .map { it to jaccard(queryTerms, terms(it.requestSummary)) }
+                      ^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:225:55: error: unresolved reference 'requestSummary'.
+            .map { it to jaccard(queryTerms, terms(it.requestSummary)) }
+                                                      ^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:226:14: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            .filter { it.second > 0.0 || queryTerms.isEmpty() }
+             ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:226:21: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            .filter { it.second > 0.0 || queryTerms.isEmpty() }
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:226:26: error: unresolved reference 'second'.
+            .filter { it.second > 0.0 || queryTerms.isEmpty() }
+                         ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:227:50: error: unresolved reference 'Experience'.
+            .sortedWith(compareByDescending<Pair<Experience, Double>> { it.second }.thenBy { it.first.id })
+                                                 ^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:227:103: error: unresolved reference 'id'.
+            .sortedWith(compareByDescending<Pair<Experience, Double>> { it.second }.thenBy { it.first.id })
+                                                                                                      ^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:229:14: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            .map { it.first }
+             ^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:230:14: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            .toList()
+             ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:248:27: error: unresolved reference 'ModelRequest'.
+    fun generate(request: ModelRequest): Candidate
+                          ^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:248:42: error: unresolved reference 'Candidate'.
+    fun generate(request: ModelRequest): Candidate
+                                         ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:257:36: error: unresolved reference 'ModelRequest'.
+    override fun generate(request: ModelRequest) = Candidate(id, fixedText)
+                                   ^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:257:52: error: unresolved reference 'Candidate'.
+    override fun generate(request: ModelRequest) = Candidate(id, fixedText)
+                                                   ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:263:28: error: unresolved reference 'ModelRequest'.
+    private val response: (ModelRequest) -> String
+                           ^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:266:36: error: unresolved reference 'ModelRequest'.
+    override fun generate(request: ModelRequest) = Candidate(id, response(request))
+                                   ^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:266:52: error: unresolved reference 'Candidate'.
+    override fun generate(request: ModelRequest) = Candidate(id, response(request))
+                                                   ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt:498:44: error: unresolved reference 'sha256Hex'.
+fun contentHash(content: String): String = sha256Hex(content)
+                                           ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:9:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Call
+       ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:10:8: error: unresolved reference 'okhttp3'.
+import okhttp3.ConnectionPool
+       ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:11:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Dns
+       ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:12:8: error: unresolved reference 'okhttp3'.
+import okhttp3.OkHttpClient
+       ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:13:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Request
+       ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:14:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Response
+       ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:26:32: error: unresolved reference 'Call'.
+    @Volatile private var call:Call?=null
+                               ^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:27:36: error: unresolved reference 'Response'.
+    @Volatile private var response:Response?=null
+                                   ^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:30:27: error: unresolved reference 'OkHttpClient'.
+    internal fun client():OkHttpClient = OkHttpClient.Builder()
+                          ^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:30:42: error: unresolved reference 'OkHttpClient'.
+    internal fun client():OkHttpClient = OkHttpClient.Builder()
+                                         ^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:31:21: error: unresolved reference 'Dns'.
+        .dns(object:Dns {
+                    ^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:40:25: error: unresolved reference 'ConnectionPool'.
+        .connectionPool(ConnectionPool(0,1,TimeUnit.MILLISECONDS))
+                        ^^^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:50:21: error: unresolved reference 'Request'.
+        val builder=Request.Builder().url(url).get()
+                    ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:51:77: error: unresolved reference 'addHeader'.
+        requestProperties.forEach { (name,values)->values.forEach { builder.addHeader(name,it) } }
+                                                                            ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:52:30: error: unresolved reference 'newCall'.
+        val pending=client().newCall(builder.build())
+                             ^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:52:46: error: unresolved reference 'build'.
+        val pending=client().newCall(builder.build())
+                                             ^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:60:52: error: unresolved reference 'cancel'.
+    override fun disconnect() { stopped=true;call?.cancel();response?.close() }
+                                                   ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:60:71: error: unresolved reference 'close'.
+    override fun disconnect() { stopped=true;call?.cancel();response?.close() }
+                                                                      ^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:62:26: error: unresolved reference 'Response'.
+    private fun result():Response { connect();return checkNotNull(response) }
+                         ^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:62:54: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+    private fun result():Response { connect();return checkNotNull(response) }
+                                                     ^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:64:44: error: unresolved reference 'header'.
+    override fun getContentType()=result().header("Content-Type")
+                                           ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:65:50: error: unresolved reference 'body'.
+    override fun getContentLengthLong()=result().body?.contentLength()?:-1L
+                                                 ^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:66:55: error: unresolved reference 'header'.
+    override fun getHeaderField(name:String)=result().header(name)
+                                                      ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:67:35: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+    override fun getInputStream()=checkNotNull(result().body).byteStream()
+                                  ^^^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:67:57: error: unresolved reference 'body'.
+    override fun getInputStream()=checkNotNull(result().body).byteStream()
+                                                        ^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:67:63: error: unresolved reference 'byteStream'.
+    override fun getInputStream()=checkNotNull(result().body).byteStream()
+                                                              ^^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:68:44: error: unresolved reference 'handshake'.
+    override fun getCipherSuite()=result().handshake?.cipherSuite?.javaName?:""
+                                           ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:69:70: error: unresolved reference 'handshake'.
+    override fun getLocalCertificates():Array<Certificate>?=result().handshake?.localCertificates?.toTypedArray()
+                                                                     ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt:70:72: error: unresolved reference 'handshake'.
+    override fun getServerCertificates():Array<Certificate> = result().handshake?.peerCertificates?.toTypedArray()?:emptyArray()
+                                                                       ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/Research.kt:164:35: error: unresolved reference 'sha256Hex'.
+                    contentHash = sha256Hex(content),
+                                  ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/Research.kt:302:29: error: unresolved reference 'sha256Hex'.
+                    id = "${sha256Hex(document.url).take(12)}-$index",
+                            ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt:524:31: error: unresolved reference 'sha256Hex'.
+        val id = prior?.id ?: sha256Hex("$started|$question|${mode.name}").take(32)
+                              ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt:940:30: error: unresolved reference 'sha256Hex'.
+                        id = sha256Hex(text).take(24), text = text,
+                             ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt:961:22: error: unresolved reference 'sha256Hex'.
+                id = sha256Hex(normalized).take(24),
+                     ^^^^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt:30:28: error: unresolved reference 'isUnit'.
+        require(competence.isUnit() && calibrationError.isUnit() && evaluatedTaskCount >= 0)
+                           ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt:30:57: error: unresolved reference 'isUnit'.
+        require(competence.isUnit() && calibrationError.isUnit() && evaluatedTaskCount >= 0)
+                                                        ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt:53:39: error: unresolved reference 'isUnit'.
+        require(e.predictedConfidence.isUnit() && e.actualScore.isUnit()) { "scores must be finite within 0..1" }
+                                      ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt:53:65: error: unresolved reference 'isUnit'.
+        require(e.predictedConfidence.isUnit() && e.actualScore.isUnit()) { "scores must be finite within 0..1" }
+                                                                ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt:54:22: error: unresolved reference 'isUnit'.
+        require(rate.isUnit()) { "invalid rate" }
+                     ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt:68:23: error: unresolved reference 'canon'.
+        "${it.name}=${canon(s.competence)},${canon(s.calibrationError)},${s.evaluatedTaskCount},${s.knownLimitations.joinToString("/")}"
+                      ^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt:68:46: error: unresolved reference 'canon'.
+        "${it.name}=${canon(s.competence)},${canon(s.calibrationError)},${s.evaluatedTaskCount},${s.knownLimitations.joinToString("/")}"
+                                             ^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt:69:77: error: unresolved reference 'canon'.
+    } + "#" + log.joinToString(",") { "${it.taskId}:${it.capability.name}:${canon(it.predictedConfidence)}:${canon(it.actualScore)}:${it.evaluator}:${it.timestamp}" }
+                                                                            ^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt:69:110: error: unresolved reference 'canon'.
+    } + "#" + log.joinToString(",") { "${it.taskId}:${it.capability.name}:${canon(it.predictedConfidence)}:${canon(it.actualScore)}:${it.evaluator}:${it.timestamp}" }
+                                                                                                             ^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt:87:44: error: unresolved reference 'isUnit'.
+                    it.predictedConfidence.isUnit() && it.actualScore.isUnit()
+                                           ^^^^^^
+voice-eval/app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt:87:71: error: unresolved reference 'isUnit'.
+                    it.predictedConfidence.isUnit() && it.actualScore.isUnit()
+                                                                      ^^^^^^

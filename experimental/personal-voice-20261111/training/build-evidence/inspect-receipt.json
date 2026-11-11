@@ -1,0 +1,23 @@
+{
+  "command": [
+    "java",
+    "-Xmx768m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/aba242c65e85/voice-native-build/experiment.jar:/workspace/scratch/c054784f52c4/toolchain-2.4.0/kotlinc/lib/kotlin-stdlib.jar",
+    "at.heinz.deviceai.learning.lm.LmPersonalVoicePilot",
+    "inspect",
+    "/workspace/scratch/c054784f52c4/weights-inputs/baseline.lm1",
+    "/workspace/scratch/c054784f52c4/weights-inputs/tokenizer.lmbp",
+    "/workspace/scratch/aba242c65e85/device-ai/.worktrees/voice-data/experimental/personal-voice-20261111/data/v1/train.tsv",
+    "/workspace/scratch/aba242c65e85/device-ai/.worktrees/voice-data/experimental/personal-voice-20261111/data/v1/supervised_replay.tsv",
+    "/workspace/scratch/aba242c65e85/voice-training/experimental/weight-space-20261110/data/replay.txt",
+    "/workspace/scratch/aba242c65e85/voice-inspect-no-output"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 0.6563296009990154,
+  "modelUpdates": 0,
+  "buildSha256": "f1cf3d0f70442bb0c405a1e801c76b55c3e92afd11bebe598269bed889938b60",
+  "stdoutSha256": "b7901a31f36ff67a7309b77d0ea104edf172f86ceb0e332c18929f9b094eec9e",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
