@@ -84,7 +84,7 @@ No color, opacity, path, pulse, resolution or frame-rate setting was reduced.
 | Independent final five-file production review | no blocking findings |
 | Android production and all test-source compilation | PASS |
 | Focused Android `testDebugUnitTest` | 182/182 pass; 31 classes, zero failures/errors/skips |
-| Configured NewApi `lintDebug` | separate run executing; offline dependency failure retained |
+| Configured NewApi `lintDebug` | PASS, exit 0; XML/text report zero issues |
 | Native Gemma/Fold7 temperature, energy, latency and visual acceptance | NOT_RUN |
 
 The old Node load contract expected direct `catalog.get()` in the runtime. Its
@@ -99,7 +99,10 @@ with no assertion or production change. The original failed log is preserved as
 `android-initial.log`. The regular Android recheck passed all 182 selected tests.
 Its subsequent lint phase stopped because `lint-gradle:31.10.0` was absent from the
 offline cache. The official Google Maven POM is reachable through normal inherited
-proxy settings. A separate online lint run is executing under the same build lock.
+proxy settings. The separate regular online lint run subsequently succeeded under the same build
+lock: exit 0, no issues in its XML/text reports. No gate or access restriction was
+changed. `android-lint.log`, `android-lint.json` and the actual reports preserve this
+completion.
 Raw XML and the complete recheck log are preserved; the combined command exited
 with code 1 for the lint dependency failure, not for failed tests.
 
@@ -167,3 +170,15 @@ bytes (production and tests) match the tested public source `308bccfd`; the sour
 subtree SHA is recorded above and in `android-tests.json`. No new production or
 test change is included in the evidence follow-up. The focused 182-case result
 does not replace the wider integrator suite or physical Fold7 acceptance.
+
+## Final thermal software acceptance
+
+PR #780 preserves the final Android evidence for the already integrated production
+repair. Production and all Android test sources compile; 182 selected Android unit
+tests and 34 Node contracts pass; configured NewApi lint exits 0 with no issues.
+The five-file production delta, model settings and drawing-output proof did not
+change during validation. The initial test-constructor compile failure and offline
+lint failure remain preserved and are superseded by the verified later results.
+No full-suite, APK, native Gemma, physical heat, energy or Fold7 speed claim is made.
+The remaining thermal acceptance step is a controlled device comparison of cold
+load and already-loaded requests on the same original model and fixed prompts.

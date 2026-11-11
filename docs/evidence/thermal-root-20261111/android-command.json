@@ -26,5 +26,12 @@
   "combined_exit_code": 1,
   "combined_failure": "Lint dependency missing offline; separate regular online lint attempt queued",
   "apk_created": false,
-  "device_run": false
+  "device_run": false,
+  "subsequent_lint": {
+    "same_properties": true,
+    "offline": false,
+    "task": ":app:lintDebug",
+    "exit_code": 0,
+    "report": "lint-results-debug.xml"
+  }
 }

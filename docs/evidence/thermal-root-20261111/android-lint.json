@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "task": ":app:lintDebug",
+  "configured_checks": [
+    "NewApi"
+  ],
+  "exit_code": 0,
+  "issues": 0,
+  "report_sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+  "app_source_tree": "9299568f4aa98a563347adb5e377878a7a00a658",
+  "source_equivalent_to_canonical": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+  "dependency_recovery": "Normal inherited proxy / official Google Maven; no access-control or test-gate change",
+  "gradle": "8.11.1",
+  "java": "21.0.13+9",
+  "full_application_suite": "NOT_CLAIMED",
+  "physical_fold7": "NOT_RUN"
+}

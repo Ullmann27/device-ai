@@ -261,7 +261,7 @@
     }
   ],
   "scope": "Focused Android Gradle unit-test selection on host JVM, all production/test sources compiled. No native Gemma or Fold7 execution.",
-  "lint": "BLOCKED_MISSING_OFFLINE_DEPENDENCY",
+  "lint": "PASS_SEPARATE_REGULAR_RUN",
   "combined_gradle_exit": 1,
   "canonical_equivalence": {
     "head": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
@@ -269,5 +269,6 @@
     "tested_source_commit": "308bccfd7932f0519a6cede78a20b88f36e839b1",
     "tested_app_source_tree_matches": true,
     "pr773_merged": true
-  }
+  },
+  "combined_gradle_failure": "Original offline lint dependency failure; preserved. Subsequent separate NewApi lint exited 0 with no issues."
 }
