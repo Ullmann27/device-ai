@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "baseline_commit": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+  "candidate_local_commit": "99a015b5c29e1460af5c09c31be086956f28347b",
+  "candidate_remote_commit": "f1efba8f3ab0898fb5bb4a7da11c5dbbbd3eae76",
+  "candidate_tree": "73ba02654260267b7d3183bc78ca26d871e4e008",
+  "new_tests_local_commit": "b08e22882c56a90257cdd8434081fad6aaba2a08",
+  "new_tests_public_equivalent_commit": "f1efba8f3ab0898fb5bb4a7da11c5dbbbd3eae76",
+  "production_sha256": "80093b9f9edf658f5492c789a21341b90b2a466745b0e91e90dbc8469db91f22",
+  "new_tests_sha256": "e375364f61c5a046b8bfc557f73765c0a3dfef8a798061a753a24a63df9c382a",
+  "red": {
+    "run": 12,
+    "pass": 3,
+    "fail": 9,
+    "skip": 0,
+    "exit": 1
+  },
+  "green": {
+    "run": 95,
+    "pass": 95,
+    "fail": 0,
+    "skip": 0,
+    "exit": 0,
+    "new_cases": 12,
+    "existing_neighbor_cases": 83
+  },
+  "normal_saturated_prompt_utf8_bytes": 1595,
+  "execution": "Pure Kotlin 2.4.0 / JUnit 4.13.2 / JDK21, one CPU, flock /tmp/continuum-omega-gradle.lock",
+  "independent_source_review": {
+    "reviewer": "omega-extensions",
+    "verdict": "REVIEW_OK_NARROW_SCOPE",
+    "source_sha256": "80093b9f9edf658f5492c789a21341b90b2a466745b0e91e90dbc8469db91f22"
+  },
+  "activity": {
+    "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+    "new_test": "historicalChangeRequestsReachModelWithRetainedHistory",
+    "source_sha256": "14d78d65c3c3ccb6c26a9fc81f43b91b8cf2d4ca640b7823c4ea7e2689b93c2e",
+    "status": "NOT_RUN_HERE_ROOT_GATE_REQUIRED"
+  },
+  "gradle": "NOT_RUN_HERE",
+  "device": "NOT_RUN",
+  "signing": "NOT_USED",
+  "release": "NOT_RUN",
+  "limits": [
+    "Selected current sources freshly compiled against cached real app dependency classes; not a complete Android build.",
+    "harness-used.py records the exact host-specific harness and paths; manifests record full compiler/JUnit commands and selected source hashes.",
+    "No expansion of deterministic answer authority; ambiguous historical wording uses the existing model path with retained evidence.",
+    "Large historical projections still must satisfy unchanged prompt budget gates."
+  ]
+}

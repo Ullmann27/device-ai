@@ -196,6 +196,24 @@
       "status": "HOST_COMPLETE_STRICT_PDF_BLOCKED",
       "device_check": "NOT_RUN",
       "evidence": "docs/evidence/omega-apk54-20261111/baseline-core-summary.json"
+    },
+    {
+      "issue": "app-verb-final-review",
+      "origin_pr": 778,
+      "commit": "258639206227371271d324cd1e4c3c7a5a379a7a",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "RED10:3PASS/7FAIL; GREEN45/45; three actual Activity cases pending",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "memory-history-review",
+      "origin_pr": 779,
+      "commit": "4485ef71a3e00c93656dcede7788a7ad1af4e8a8",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "RED12:3PASS/9FAIL; GREEN95/95; one actual Activity case pending",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
+      "device_check": "NOT_RUN"
     }
   ],
   "parent_pr": 768,
@@ -239,7 +257,7 @@
       "status": "DEFERRED_NOT_IMPLEMENTED",
       "reason": "Full shared scene requires HomeView viewport and avatar mask/origin changes as well as GPU acceptance. Preserve current working stage/fallback for the immediate candidate; no incomplete renderer is activated."
     },
-    "node_final": "Run without concurrent Gradle compilation; retain full fixture receipts on failure.",
+    "node_final": "Full same 354-file inventory/order, outer test-file concurrency=1, same runOwnedCommand/assessNodeOutcome, unchanged 30-minute/inner-worker/test limits. Prior concurrency=2 FAIL remains recorded.",
     "combined_node_c36258a8": {
       "source": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
       "total": 2498,
@@ -252,8 +270,25 @@
     },
     "android_focused": "Queued c362 scope explicitly superseded before Gradle start for two new confirmed source-review fixes. Replacement scope: 27 classes; execution NOT_RUN.",
     "review_followups": {
-      "app_verb_final": "#778, source defect confirmed, RED/GREEN pending shared lock",
-      "memory_history": "Source defect confirmed; current/planning/history boundary regressions prepared; RED/GREEN pending shared lock"
+      "app_verb_final": {
+        "pr": 778,
+        "source": "258639206227371271d324cd1e4c3c7a5a379a7a",
+        "green": "45/45",
+        "status": "INTEGRATED_PENDING_ANDROID_QA"
+      },
+      "memory_history": {
+        "pr": 779,
+        "source": "4485ef71a3e00c93656dcede7788a7ad1af4e8a8",
+        "green": "95/95",
+        "status": "INTEGRATED_PENDING_ANDROID_QA"
+      }
+    },
+    "node_isolated_process_c36258a8": {
+      "pass": 37,
+      "fail": 0,
+      "skip": 0,
+      "source_unchanged": true,
+      "durationSeconds": 56.02
     }
   }
 }

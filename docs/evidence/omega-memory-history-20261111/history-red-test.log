@@ -1,0 +1,115 @@
+JUnit version 4.13.2
+.E..E..E.E.E.E..E.E.E
+Time: 0.379
+There were 9 failures:
+1) correctionSummaryKeepsHistoricalEvidence(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest)
+java.lang.AssertionError: Fasse meine Korrekturen an der Werkzeugkiste zusammen.
+
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau · Anzahl Schrauben 21 · Ort im Keller
+Änderungsverläufe für diese Anfrage ausgelassen; vorhandene begrenzte Ereignisse bleiben intern unverändert. Historische Werte nicht aus dieser Kurzansicht ableiten.
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.assertHistory(OwnerObjectStateLedgerHistoryPromptTest.kt:17)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.correctionSummaryKeepsHistoricalEvidence(OwnerObjectStateLedgerHistoryPromptTest.kt:26)
+2) historicalProjectionPreservesUncertaintyAndUnresolvedReferences(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest)
+java.lang.AssertionError: 
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau · Anzahl Schrauben 22 (unsicher: unsicher formuliert) · Ort im Keller
+- Tasche: Farbe rot · Anzahl Schrauben 3 · Ort im Flur
+Änderungsverläufe für diese Anfrage ausgelassen; vorhandene begrenzte Ereignisse bleiben intern unverändert. Historische Werte nicht aus dieser Kurzansicht ableiten.
+Ungeklärt: „2“ (Nachricht 6) ohne eindeutigen Gegenstand
+Ungeklärt: „6“ (Nachricht 6) ohne eindeutigen Gegenstand
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.historicalProjectionPreservesUncertaintyAndUnresolvedReferences(OwnerObjectStateLedgerHistoryPromptTest.kt:123)
+3) comparisonsWithOldValuesKeepBothStates(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest)
+java.lang.AssertionError: Vergleiche die aktuellen Werte der Werkzeugkiste mit den alten Werten.
+
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau · Anzahl Schrauben 21 · Ort im Keller
+Änderungsverläufe für diese Anfrage ausgelassen; vorhandene begrenzte Ereignisse bleiben intern unverändert. Historische Werte nicht aus dieser Kurzansicht ableiten.
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.assertHistory(OwnerObjectStateLedgerHistoryPromptTest.kt:17)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.comparisonsWithOldValuesKeepBothStates(OwnerObjectStateLedgerHistoryPromptTest.kt:71)
+4) pastStateBeforeACorrectionKeepsEvidenceWithoutGuessingAnAnswer(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest)
+java.lang.AssertionError: War die Farbe der Werkzeugkiste vor meiner letzten Korrektur blau?
+
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau · Anzahl Schrauben 21 · Ort im Keller
+Änderungsverläufe für diese Anfrage ausgelassen; vorhandene begrenzte Ereignisse bleiben intern unverändert. Historische Werte nicht aus dieser Kurzansicht ableiten.
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.assertHistory(OwnerObjectStateLedgerHistoryPromptTest.kt:17)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.pastStateBeforeACorrectionKeepsEvidenceWithoutGuessingAnAnswer(OwnerObjectStateLedgerHistoryPromptTest.kt:77)
+5) recentPastQuestionKeepsHistoricalEvidenceWithoutGuessingAPreviousValue(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest)
+java.lang.AssertionError: Wie viele Schrauben waren es vorhin?
+
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau · Anzahl Schrauben 21 · Ort im Keller
+Änderungsverläufe für diese Anfrage ausgelassen; vorhandene begrenzte Ereignisse bleiben intern unverändert. Historische Werte nicht aus dieser Kurzansicht ableiten.
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.assertHistory(OwnerObjectStateLedgerHistoryPromptTest.kt:17)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.recentPastQuestionKeepsHistoricalEvidenceWithoutGuessingAPreviousValue(OwnerObjectStateLedgerHistoryPromptTest.kt:38)
+6) historicalProjectionKeepsTruncationExplicit(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest)
+java.lang.AssertionError: 
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau · Anzahl Schrauben 59 · Ort im Keller
+Änderungsverläufe für diese Anfrage ausgelassen; vorhandene begrenzte Ereignisse bleiben intern unverändert. Historische Werte nicht aus dieser Kurzansicht ableiten.
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.historicalProjectionKeepsTruncationExplicit(OwnerObjectStateLedgerHistoryPromptTest.kt:135)
+7) inflectedHistoryNounsKeepHistoricalEvidence(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest)
+java.lang.AssertionError: Erkläre die Schritte des Verlaufs meiner Angaben zur Werkzeugkiste.
+
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau · Anzahl Schrauben 21 · Ort im Keller
+Änderungsverläufe für diese Anfrage ausgelassen; vorhandene begrenzte Ereignisse bleiben intern unverändert. Historische Werte nicht aus dieser Kurzansicht ableiten.
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.assertHistory(OwnerObjectStateLedgerHistoryPromptTest.kt:17)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.inflectedHistoryNounsKeepHistoricalEvidence(OwnerObjectStateLedgerHistoryPromptTest.kt:46)
+8) explicitChangeAndCorrectionRecallKeepsHistoricalEvidence(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest)
+java.lang.AssertionError: Welche Änderungen gab es an der Werkzeugkiste?
+
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau · Anzahl Schrauben 21 · Ort im Keller
+Änderungsverläufe für diese Anfrage ausgelassen; vorhandene begrenzte Ereignisse bleiben intern unverändert. Historische Werte nicht aus dieser Kurzansicht ableiten.
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.assertHistory(OwnerObjectStateLedgerHistoryPromptTest.kt:17)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.explicitChangeAndCorrectionRecallKeepsHistoricalEvidence(OwnerObjectStateLedgerHistoryPromptTest.kt:58)
+9) questionAboutPastChangesKeepsHistoricalEvidence(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest)
+java.lang.AssertionError: Was hat sich an der Werkzeugkiste geändert?
+
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau · Anzahl Schrauben 21 · Ort im Keller
+Änderungsverläufe für diese Anfrage ausgelassen; vorhandene begrenzte Ereignisse bleiben intern unverändert. Historische Werte nicht aus dieser Kurzansicht ableiten.
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.assertHistory(OwnerObjectStateLedgerHistoryPromptTest.kt:17)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest.questionAboutPastChangesKeepsHistoricalEvidence(OwnerObjectStateLedgerHistoryPromptTest.kt:32)
+
+FAILURES!!!
+Tests run: 12,  Failures: 9
+

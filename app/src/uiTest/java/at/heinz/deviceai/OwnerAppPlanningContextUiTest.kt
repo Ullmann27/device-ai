@@ -128,6 +128,38 @@ class OwnerAppPlanningContextUiTest {
     }
     private fun addPrior(activity: AgentActivity) = context(activity).record(session(activity), PRIOR, "Zwei Schritte sind vorgesehen.")
 
+    @Test fun pluralStatementsReachConversationWithoutAppLookup() = withActivity { activity, runtime ->
+        val generation = field(activity, "appLookupGeneration")
+        for (request in listOf("Wir starten", "Lass uns jetzt starten", "Morgen wollen wir das Projekt starten")) {
+            submit(activity, request)
+            until("Ordinary statement reaches inference") { runtime.running }
+            assertEquals(request, generation, field(activity, "appLookupGeneration"))
+            assertTrue(runtime.prompts.last().contains(request))
+            assertNull(field(activity, "activeOwnerAppFlow"))
+            runtime.answer("Wir können den nächsten Schritt besprechen.")
+            until("Conversation completed") { field(activity, "busy") == false }
+        }
+    }
+
+    @Test fun unmatchedVerbFinalReturnsToConversationWithoutArmingNameReply() = withActivity { activity, runtime ->
+        val before = (field(activity, "appLookupGeneration") as Number).toLong()
+        submit(activity, "Projekt starten")
+        until("Unmatched target returns to inference") { runtime.running }
+        val after = (field(activity, "appLookupGeneration") as Number).toLong()
+        assertTrue("Read-only app discovery ran", after > before)
+        assertNull(field(activity, "activeOwnerAppFlow"))
+        assertNull(field(activity, "appLookupContext"))
+        assertTrue(runtime.prompts.last().contains("Projekt starten"))
+        runtime.answer("Welches Projekt möchtest du besprechen?")
+        until("Fallback completed") { field(activity, "busy") == false }
+        submit(activity, "Signal")
+        until("Next name remains conversation") { runtime.running }
+        assertEquals("No speculative name question retained", after,
+            (field(activity, "appLookupGeneration") as Number).toLong())
+        runtime.answer("Was möchtest du über Signal wissen?")
+        until("Follow-up completed") { field(activity, "busy") == false }
+    }
+
     @Test fun roleHeadersCannotReachReadyInferenceOrTheCorrectionShortcut() = withActivity { activity, runtime ->
         val profiles = (field(activity, "botProfiles" + '$' + "delegate") as Lazy<*>).value
             as at.heinz.deviceai.chief.ChiefBotProfileStore

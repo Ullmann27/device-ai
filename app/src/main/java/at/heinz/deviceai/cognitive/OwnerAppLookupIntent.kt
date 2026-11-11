@@ -28,9 +28,10 @@ internal object OwnerAppLookupIntent {
     private val polite = Regex("(?iu)^(?:kannst|könntest|würdest|magst)\\s+du\\s+(.+?)\\s+(öffnen|starten|suchen|finden|zeigen)(?:\\s+bitte)?[.!?]*$")
     private val desire = Regex("(?iu)^ich\\s+(?:möchte|will|würde\\s+gern(?:e)?)\\s+(.+?)\\s+(öffnen|starten)[.!?]*$")
     private val verbFinal = Regex("(?iu)^(.+?)\\s+(öffnen|starten)(?:\\s+bitte)?[.!?]*$")
-    private val nonCommandSubject = Regex("(?iu)^(?:wie|warum|wo|wer|was|welche\\p{L}*|ich|du|er|sie|es|man)\\b")
-    private val indirectModal = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:kann|können|könnte|kannst|" +
-        "soll|sollte|will|wollte|möchte|möchten|muss|müsste|darf|dürfte)(?![\\p{L}\\p{N}_])")
+    private val nonCommandSubject = Regex("(?iu)^(?:wie|warum|wo|wer|was|welche\\p{L}*|ich|du|er|sie|es|man|wir|ihr|uns|euch|lass|lasst)(?![\\p{L}\\p{N}_])")
+    private val indirectModal = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:kann|können|könnt|könnte|könnten|kannst|" +
+        "soll|sollen|sollte|will|wollen|wollt|wollte|möchte|möchten|muss|müssen|müsst|müsste|müssten|" +
+        "darf|dürfen|dürft|dürfte|dürften|werden|werdet|wird|würde|würden)(?![\\p{L}\\p{N}_])")
     private val missingName = Regex("(?iu)^(?:(?:eine|irgendeine)\\s+)?app$")
     private val openUp = Regex("(?iu)^mach(?:e)?\\s+(.+?)\\s+auf[.!?]*$")
     private val needPrefix = Regex("(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\b")
@@ -68,6 +69,9 @@ internal object OwnerAppLookupIntent {
 
     /** A file, folder, document or path word: the file flow owns the request (shared with internal navigation). */
     fun looksLikeFileTarget(target: String): Boolean = fileTarget.containsMatchIn(target)
+
+    fun hasNonCommandGrammar(text: String): Boolean =
+        nonCommandSubject.containsMatchIn(text) || indirectModal.containsMatchIn(text)
 
     fun parse(utterance: String): String? = (inspect(utterance) as? Intake.Lookup)
         ?.takeUnless { it.requireInstalledCandidate }
@@ -126,21 +130,23 @@ internal object OwnerAppLookupIntent {
             }
         } else null
         val needTarget = explicitNeedTarget ?: implicitNeedTarget
-        val needRequiresInstalledCandidate = explicitNeedTarget == null && implicitNeedTarget != null
+        var requireInstalledCandidate = explicitNeedTarget == null && implicitNeedTarget != null
         val opening: Boolean
         val target: String
         val d = direct.matchEntire(text)
         val p = polite.matchEntire(text) ?: desire.matchEntire(text)
         val m = openUp.matchEntire(text)
         val finalVerb = verbFinal.matchEntire(text)?.takeUnless {
-            nonCommandSubject.containsMatchIn(it.groupValues[1]) || indirectModal.containsMatchIn(it.groupValues[1])
+            hasNonCommandGrammar(it.groupValues[1])
         }
         when {
             d != null -> { opening = d.groupValues[1].lowercase() in setOf("öffne", "starte"); target = d.groupValues[2] }
             p != null -> { opening = p.groupValues[2].lowercase() in setOf("öffnen", "starten"); target = p.groupValues[1] }
             m != null -> { opening = true; target = m.groupValues[1] }
             needTarget != null -> { opening = true; target = needTarget }
-            finalVerb != null -> { opening = true; target = finalVerb.groupValues[1] }
+            finalVerb != null -> {
+                opening = true; target = finalVerb.groupValues[1]; requireInstalledCandidate = true
+            }
             else -> return if (requestStart.containsMatchIn(text) && action.containsMatchIn(text)) planning(utterance) else null
         }
         if (!Regex("(?iu)\\bapp\\b").containsMatchIn(target) && fileTarget.containsMatchIn(target)) return null
@@ -148,7 +154,7 @@ internal object OwnerAppLookupIntent {
         var name = target.trim().trimEnd('.', '!', '?').trim()
         repeat(4) { name = name.replace(courtesy, "").replace(trailingCourtesy, "").trim() }
         if (missingName.matches(name)) return Intake.Clarify("App", opening)
-        if (isReference(name)) return Intake.Lookup(name, opening)
+        if (isReference(name)) return Intake.Lookup(name, opening, requireInstalledCandidate)
         name = name.replace(Regex("(?iu)^(?:die|den|das|meine|meinen)\\s+"), "")
             .replace(Regex("(?iu)^app\\s+"), "").replace(Regex("(?iu)\\s+app$"), "").trim()
         if (at.heinz.deviceai.systemintelligence.SystemIntelligenceCommands.isDiagnosisTarget(name)) return null
@@ -157,7 +163,7 @@ internal object OwnerAppLookupIntent {
         return Intake.Lookup(
             query = name,
             opening = opening,
-            requireInstalledCandidate = needRequiresInstalledCandidate
+            requireInstalledCandidate = requireInstalledCandidate
         )
     }
 

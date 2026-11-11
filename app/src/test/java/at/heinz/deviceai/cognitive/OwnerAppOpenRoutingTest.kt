@@ -66,7 +66,9 @@ class OwnerAppOpenRoutingTest {
             intake as OwnerAppLookupIntent.Intake.Lookup
             assertEquals(request, app, intake.query)
             assertTrue(request, intake.opening)
-            assertFalse(request, intake.requireInstalledCandidate)
+            assertEquals(request, request in setOf(
+                "WhatsApp öffnen", "WhatsApp öffnen bitte", "Bitte Chrome starten", "Die Einstellungen öffnen"
+            ), intake.requireInstalledCandidate)
         }
     }
 

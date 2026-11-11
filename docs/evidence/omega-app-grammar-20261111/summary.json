@@ -1,0 +1,48 @@
+{
+  "issue": "PR769 discussion_r4539999051",
+  "target_pr": 769,
+  "followup_pr": 778,
+  "base_commit": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+  "green_source_commit": "acf8c6390b0076b359d3f5284c2c8709b10a5a78",
+  "published_code_checkpoint": "a69a7fe1f0f798d68c5a9e5a247c66d132dcd849",
+  "published_checkpoint_tree": "03bcc745a6442c326d30c1278a21ea68f8a535b5",
+  "execution": "Pure Kotlin/JUnit, real listed production sources plus cached compiled dependencies; no Gradle",
+  "serialization_lock": "/tmp/continuum-omega-gradle.lock",
+  "red": {
+    "compile_exit": 0,
+    "junit_exit": 1,
+    "run": 10,
+    "passed": 3,
+    "failed": 7,
+    "skipped": 0,
+    "source_manifest": "red/inputs.json",
+    "production_files_identical_to_base": 7
+  },
+  "green": {
+    "compile_exit": 0,
+    "junit_exit": 0,
+    "run": 45,
+    "passed": 45,
+    "failed": 0,
+    "skipped": 0,
+    "source_manifest": "green/inputs.json",
+    "verified_source_hashes": 13,
+    "mismatches": 0
+  },
+  "independent_review": {
+    "reviewer": "/root/extensions",
+    "scope": "Read-only applied production diff and source hash binding",
+    "result": "OK, no additional finding",
+    "tests_rerun_by_reviewer": false
+  },
+  "android_activity_tests": {
+    "status": "NOT_RUN",
+    "new_cases": 3,
+    "source_sha256": {
+      "app/src/uiTest/java/at/heinz/deviceai/OwnerAppPlanningContextUiTest.kt": "50f7ebc314c2216cfe37400f9b402f7bbd90e164d6a456596eebdfedfb788090",
+      "app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt": "d742006414cb25119d2fe8da4929da627a42b057b6236a9214c7eddb739349b6"
+    }
+  },
+  "native_device": "NOT_RUN",
+  "signing_installation": "NOT_RUN"
+}

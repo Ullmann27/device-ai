@@ -138,3 +138,15 @@ Gesamtnachweis. Belege: `node-combined-c36258a8/SUMMARY.json` im Evidenzverzeich
 Zwei Review-Nachträge (Verb-am-Ende-App-Routing und historische Gedächtnisanfragen)
 sind in kleinen Helper-Reparaturen. Der alte Android-Aufruf wurde vor Gradle-Start
 aus der Reihenfolge genommen; der neue 27-Klassen-Lauf folgt auf gemeinsamem SHA.
+
+### Übernommene Review-Reparaturen
+
+#778 `258639206`: Verb-am-Ende-Routing RED3/7 → GREEN45/45.
+#779 `4485ef71`: historische Anfragen RED3/9 → GREEN95/95; normaler großer
+Pflichtblock weiter1.595Byte. Alle31 übernommenen Quellhashes passen zu den
+grünen Manifesten. Zusätzliche4 Activity-Fälle integriert, gemeinsamer Lauf offen.
+
+Prozess-Einzelprüfung auf unverändertem c362: **37/37 PASS,0SKIP**. Finale volle
+Node-Menge bleibt354Dateien; äußere Parallelität1, innere Nebenläufigkeit und alle
+Fristen/Assertions bleiben unverändert. Frühere5 Fehler sind dadurch nicht erklärt
+oder rückwirkend behoben. Der neue Lauf wird ausdrücklich getrennt ausgewiesen.

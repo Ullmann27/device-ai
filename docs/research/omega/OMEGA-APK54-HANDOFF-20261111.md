@@ -177,3 +177,29 @@ The replacement common source will include both verified fixes and 27 selected
 classes (adding OwnerAppVerbFinalIntentTest and OwnerObjectStateLedgerHistoryPromptTest).
 Full Android/visual, NewApi lint, unsigned Code54 build and artifact verification
 remain to be executed on that actual published source.
+
+## Reviewed follow-ups integrated before common Android QA
+
+- #778 `258639206227371271d324cd1e4c3c7a5a379a7a`: verb-final/plural app
+  routing. RED 10 cases: 3 PASS/7 FAIL on unchanged c362; GREEN 45/45 across
+  six app/consent classes. Only LookupIntent and Clarification production
+  files change; existing Activity fallback and action gates are reused.
+- #779 `4485ef71a3e00c93656dcede7788a7ad1af4e8a8`: historical prompt selection.
+  RED 12 cases: 3 PASS/9 FAIL; GREEN 95/95 including 83 memory/budget neighbors.
+  Large ordinary related prompt remains 1,595 UTF-8 bytes. Internal facts,
+  answer authority, uncertainty and truncation behavior are unchanged.
+
+Both follow-ups have independent source review. Integration compared all 31
+production/test input hashes against the green manifests: zero mismatches.
+Four additional actual Activity cases are included; common Android execution
+is still NOT_RUN. The focused harness now lists 27 mandatory classes.
+
+The two Node process files pass unchanged in isolation: **37 PASS, 0 FAIL,
+0 SKIP**, 56.02 seconds, exact clean c362 source unchanged. This does not prove
+a shared cause for the five full-run failures. The final full Node invocation
+will preserve all 354 files in the same order, the existing process supervisor,
+outcome evaluator, inner worker concurrency, every assertion and every timeout
+(including the 30-minute outer limit). Only outer test-file concurrency is one
+instead of two. `harness/full-node-serial.mjs` checks the exact file inventory
+and sources before/after and labels that execution variant explicitly. The
+previous concurrency-two FAIL remains part of the evidence, not retroactively green.
