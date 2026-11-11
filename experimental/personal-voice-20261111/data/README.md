@@ -108,3 +108,14 @@ Read `docs/research/omega/PERSONAL-VOICE-DATA-HANDOFF-20261111.md` for the actua
 Android speech → composer → local context paths and existing learning types.
 All code and data here remain research-only. Original Gemma/LM1 selection,
 ToolGate, app resources, APK, signing and releases are unchanged.
+
+## Public methodological references
+
+[Gardner et al. (2020), Evaluating Models' Local Decision Boundaries via Contrast
+Sets](https://aclanthology.org/2020.findings-emnlp.117/) motivates controlled
+meaning-changing contrast examples to expose dataset artifacts. [McCoy,
+Pavlick and Linzen (2019), Right for the Wrong Reasons](https://aclanthology.org/P19-1334/)
+uses controlled cases to diagnose lexical and syntactic shortcuts. The primary
+ACL abstracts and publication records were checked on 11 November 2026. Our
+bounded synthetic corpus applies this general testing rationale; it does not
+reuse their datasets and is not a replication or a claim of equal coverage.

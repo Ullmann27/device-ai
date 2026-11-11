@@ -1,0 +1,9 @@
+{
+  "status": "THREE_REPRODUCED_REVIEW_FINDINGS",
+  "compiled_classes_jar_sha256": "a2628e2030d785f3e5729dd919590d97a8af74fdd72b6f18d61efda1e0d0a691",
+  "probe_source_sha256": "8343a5416f2e24d5a34e60d2dbb778e2ec3289659bdba5152eff9131ea19f06b",
+  "probe_exit_code": 0,
+  "exit_semantics": "Probe prints observed behavior; zero exit is not a privacy-pass verdict.",
+  "stdout_origin": "Exact output observed from independent run before store fixes.",
+  "scope": "Synthetic host-JVM temporary records only; no Android or real owner data."
+}
