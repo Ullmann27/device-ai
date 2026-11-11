@@ -33,6 +33,13 @@ and accessible Git branches prevent technical blinding: separation is
 organizational and cannot prove absence of accidental access. Record any
 access breach; never call this a securely blinded clinical-style trial.
 
+Pre-training design clarification: the eight syntax templates are paired
+variants of **four broader constructions**, not eight independent semantic
+families. Report both eight-template and four-construction sensitivity,
+including leave-one-construction-out effects and bootstrap intervals. With
+only four broad clusters, interval calibration and general-language inference
+are especially weak. The primary preregistered paired analysis is unchanged.
+
 Historical 64 open/search cases remain an exposed retention diagnostic and
 are not training data. Add independently authored new open/search prompts.
 Report familiar and novel retention separately. New training retention anchors
