@@ -1,0 +1,56 @@
+{
+  "schema": "lm1-semantic-root-training-gate-v1",
+  "decision": "PASS_BOUNDED_TRAINING_ONLY",
+  "createdUtc": "2026-11-11T07:18:25.503009+00:00",
+  "basisCommit": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+  "registrationSha256": "a8bcee2af29cb8161a4571cc2b3664375fe7e05a6021dd7eb2f7cc8072a84c90",
+  "authorizedCandidates": [
+    "A",
+    "B"
+  ],
+  "maximumUpdatesPerCandidate": 128,
+  "maximumTotalNewUpdates": 256,
+  "dataPilotAccepted": true,
+  "independentProtocolFrozen": true,
+  "sourcePublished": true,
+  "rootAuthorizesTraining": true,
+  "publishedTrainingCommit": "dc3312e5cd732ebd07956406de5d5460b9c3e222",
+  "publishedDataCommit": "c5b92637ce1792e1dbb380b970a636da5694117c",
+  "publishedEvaluatorCommit": "067d5ba4cedcba68ed9c2d3e1d92b5e9368568fd",
+  "dataFreezeSha256": "9c7a6938fe2bf0734fc4c55750adc83e941f66a873b1c9dcbec8ba317d2d4aaf",
+  "holdoutManifestSha256": "e0e4283a643af0be806f0a2866bd7e6c959fcc7fd864e56bdcbff92a959c221d",
+  "holdoutManifestPath": "frozen-holdout/manifest.json",
+  "evaluationProtocolSha256": "32768b8cc04ec951b7fef7a11ac01faa9ac036cf1bad3b5cfdacfe8d4561f694",
+  "historicalFilesPreserved": true,
+  "dataFilesVerified": 34,
+  "trainingInputsVerified": 19,
+  "pilotChecks": {
+    "trainRows": 192,
+    "developmentRows": 96,
+    "nativeTokenizerParityRows": 288,
+    "bestTrivialRowAccuracy": 0.5104166666666666,
+    "bestTrivialPairAccuracy": 0.5,
+    "nativeGradientDimensions": 12,
+    "existingKlChecks": 15,
+    "balancedVerifiedRetentionAnchors": 16,
+    "qualifiedOriginalLongRollouts": 8
+  },
+  "holdoutDesignClarification": {
+    "unseenSyntaxTemplates": 8,
+    "broaderConstructionGroups": 4,
+    "semanticsRows": 128,
+    "contrastPairs": 64,
+    "scope": "synthetic template transfer; pair confidence intervals require four-construction sensitivity"
+  },
+  "sequence": "Run A once; publish A weights/state/raw output; run B once; freeze both before any holdout evaluation.",
+  "productPromotion": false,
+  "additionalPaidGpuCompute": false,
+  "rootReviewedHoldoutContentOrLabels": false,
+  "notes": [
+    "Same original MINGRU/tokenizer/native architecture.",
+    "Higher-level construction count transparently clarified before training; no thresholds changed.",
+    "A/B have matching semantic schedules; B has additional preservation compute.",
+    "Original correct rankings and long outputs are weak preserved behaviors, not proof of fluent understanding.",
+    "No additional trial if these two fail."
+  ]
+}

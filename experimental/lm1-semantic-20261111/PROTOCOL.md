@@ -18,10 +18,14 @@ Exactly three helpers: data, training, independent evaluation. Coordinator owns 
 
 ## Prospective minimum evidence
 
-Evaluator details and exact counts live in its committed protocol. Proposed fixed confirmatory set: 128 rows in 64 contrasting pairs, four equally frequent labels, at least eight syntax families with unseen objects. Primary restricted-choice semantic accuracy must be at least 60%; fully correct pairs at least 40%. Both must improve by at least ten percentage points versus original, best old candidate and best preregistered trivial control, with paired 97.5% bootstrap lower bounds greater than zero. Pair resampling is primary; family sensitivity exposes template correlation. Report free exact label+EOS separately, never equate restricted scores with usable free generation.
+Evaluator details and exact counts live in its committed protocol. Proposed fixed confirmatory set: 128 rows in 64 contrasting pairs, four equally frequent labels, eight unseen syntax templates across four broader construction groups with unseen objects. Primary restricted-choice semantic accuracy must be at least 60%; fully correct pairs at least 40%. Both must improve by at least ten percentage points versus original, best old candidate and best preregistered trivial control, with paired 97.5% bootstrap lower bounds greater than zero. Pair resampling is primary; family sensitivity exposes template correlation. Report free exact label+EOS separately, never equate restricted scores with usable free generation.
 
 Old open/search retention: at most five percentage points aggregate regression and at least 90% of originally correct individual cases retained. This old baseline is weak (32/64 restricted; 56 search and eight open predictions); it does not establish broad command understanding. Report class confusion and unseen retention separately. Continuation median length at least 90% of original, no systematic early-EOS increase, text bits/byte no more than 5% worse; individually track originally long continuation probes. Length alone does not establish coherent language. All integrity and product-protection checks are mandatory.
 
 ## Publication and rollback
 
 Each useful checkpoint is committed and immediately published to its assigned research branch. Native Git credential failure may be handled through the authorized GitHub Git-data connector with identical tree verification and explicit local-to-remote commit mapping. No force-push or unchecked merge. Final evidence aggregation is reviewed and restricted to new research paths. Rollback is to leave all research weights unselected; original sources/weights remain available.
+
+## Pre-training clarification
+
+The evaluator distinguishes eight syntax templates from four broader construction groups. These are not eight independent semantic populations. Additional four-construction sensitivity is required; thresholds remain unchanged. This clarification and the holdout identity were published before any A/B update or holdout inference. See ROOT-GATE.json for the precise source and data bindings.
