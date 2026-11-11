@@ -57,6 +57,7 @@ private val CRYSTAL_RIM_FILL = Fill.Linear(-CRYSTAL_W, -CRYSTAL_H, CRYSTAL_W, CR
 private val WINDOW_BACKING_FILL = Fill.Solid(Colors.background)
 private const val WINDOW_BACKING_ALPHA = .7f
 private val VACANT_RIM_FILL = Fill.Solid(Colors.panelRim)
+private const val VACANT_STOPS = 7
 /** Rear sheets and the receding document plane (JarvisWorkWindowDepth): dark glass, a Fresnel rim, a top-edge glint. */
 private val DEPTH_GLASS_FILL = Fill.Solid(Colors.background)
 private val DEPTH_GLINT_FILL = Fill.Solid(Colors.cyanSoft)
@@ -910,8 +911,11 @@ class JarvisWorkWindow(
                 // hologram raster and the deck's depth show through instead of an empty slab.
                 val smoke = vacantFill?.takeIf { vacantKey == vacancy.denseBottomDp } ?: Fill.Linear(
                     0f, vacancy.denseBottomDp, 0f, vacancy.fadeEndDp,
-                    intArrayOf(Argb.withAlpha(Argb.rgb(2, 6, 14), 1f),
-                        Argb.withAlpha(Argb.rgb(2, 6, 14), JarvisWorkWindowDepth.GLASS_VACANT_DENSITY))
+                    // The painted ramp is the tested rule itself: GlassVacancy.density sampled into the stops. It
+                    // starts opaque because the dense sheet above (backing + surface body) is opaque.
+                    IntArray(VACANT_STOPS) { Argb.withAlpha(Argb.rgb(2, 6, 14), vacancy.density(
+                        vacancy.denseBottomDp + JarvisWorkWindowDepth.GLASS_FADE_DP * it / (VACANT_STOPS - 1f))) },
+                    FloatArray(VACANT_STOPS) { it / (VACANT_STOPS - 1f) }
                 ).also { vacantFill = it; vacantKey = vacancy.denseBottomDp }
                 val lower = canvas.save()
                 canvas.clipRect(0f, vacancy.denseBottomDp, right + 1f, bottom + 1f)
