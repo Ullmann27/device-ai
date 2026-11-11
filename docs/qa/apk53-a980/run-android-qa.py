@@ -12,8 +12,21 @@ def source():
 source()
 env = os.environ.copy()
 env.update(JAVA_HOME='/tmp/continuum-toolchain/jdk', ANDROID_HOME='/tmp/continuum-toolchain/android-sdk', GRADLE_USER_HOME=str(repo.parent/'qa-gradle-home'))
-proxy = urllib.parse.urlparse(env.get('HTTPS_PROXY', env.get('HTTP_PROXY', '')))
-env['GRADLE_OPTS'] = f'-Dhttp.proxyHost={proxy.hostname} -Dhttp.proxyPort={proxy.port} -Dhttps.proxyHost={proxy.hostname} -Dhttps.proxyPort={proxy.port} -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts'
+def gradle_options(environment):
+    options = [environment.get('GRADLE_OPTS', '')]
+    configured = environment.get('HTTPS_PROXY') or environment.get('HTTP_PROXY')
+    if configured:
+        proxy = urllib.parse.urlparse(configured)
+        if proxy.scheme not in ('http', 'https') or not proxy.hostname:
+            raise ValueError('Expected HTTP(S) proxy URL')
+        port = proxy.port or (443 if proxy.scheme == 'https' else 80)
+        options.extend(f'-D{scheme}.proxy{key}={value}' for scheme in ('http', 'https')
+                       for key, value in [('Host', proxy.hostname), ('Port', port)])
+    trust = pathlib.Path('/etc/ssl/certs/java/cacerts')
+    if trust.is_file():
+        options.append(f'-Djavax.net.ssl.trustStore={trust}')
+    return ' '.join(option for option in options if option)
+env['GRADLE_OPTS'] = gradle_options(env)
 env['PATH'] = env['JAVA_HOME']+'/bin:'+env['PATH']
 env['CONTINUUM_CAPTURE_SOURCE_COMMIT'] = expected
 for key in ['CONTINUUM_MENTOR_SIGNING_FILE','CONTINUUM_MENTOR_SIGNING_PASSWORD','CONTINUUM_LOCAL_SIGNING_FILE','CONTINUUM_LOCAL_SIGNING_PASSWORD']:

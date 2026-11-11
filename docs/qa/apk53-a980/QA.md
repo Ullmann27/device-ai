@@ -81,7 +81,7 @@ from actual window closure. The final Android results below come from this froze
 
 | Check / action | Status |
 |---|---|
-| Source-bound GitHub Actions QA | **NOT_RUN**; separate workflow pinned to a980a19 is included; execution must be confirmed |
+| Source-bound GitHub Actions QA | **IN_PROGRESS** — [run 42934541308](https://github.com/Ullmann27/device-ai/actions/runs/42934541308), workflow edff51d7; source a980a19 |
 | Gitar / CodeRabbit review checks | SUCCESS / SKIPPED (draft); one known thread resolved |
 | Code53 protected-signer binding and exact-source owner approval | **PENDING** |
 | Original signing, release publication, installation | **NOT_RUN** |
@@ -108,3 +108,12 @@ open. Donor branches are retained and no main merge occurred, as reported
 by the integrator. `QA.json` retains the concise number/state/branch/head
 mapping and hashes the supplied snapshot; PR closure is not source proof.
 
+
+## Evidence-runner review fix
+
+The reproduction helper no longer writes a literal `None` proxy host/port when
+no proxy is configured. Existing Gradle options are retained; empty HTTPS
+configuration falls back to HTTP, default ports are explicit, and credentials
+are not emitted. Eight targeted checks pass (six failed before the repair).
+This changes the evidence runner only; the app and the running CI's build
+commands are unchanged. The stale documentation-preparation block was removed.

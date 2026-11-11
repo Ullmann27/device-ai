@@ -580,7 +580,7 @@
     }
   ],
   "pending": {
-    "sourceBoundGitHubActionsQa": "NOT_RUN",
+    "sourceBoundGitHubActionsQa": "IN_PROGRESS",
     "code53SignerBinding": "PENDING",
     "exactSourceOwnerSigningApproval": "PENDING",
     "originalSigning": "NOT_RUN",
@@ -695,18 +695,6 @@
     "technicalSkipReasonsCopied": true,
     "scope": "Whitelisted aggregates, source/blob/receipt hashes, 31 Node and 17 Android skipped technical names/reasons, technical APK identity and PNG provenance; no fixture payloads, source comments, raw logs or secrets.",
     "sourceCodeCommentsCopied": false
-  },
-  "preparedWithoutExecution": {
-    "newTests": false,
-    "newBuilds": false,
-    "newRenders": false,
-    "repositoryEdits": false,
-    "remoteWrites": false,
-    "filesChanged": [
-      "QA.md",
-      "QA.json",
-      "SKIPS.md"
-    ]
   },
   "prInventory": [
     {
@@ -1201,14 +1189,18 @@
     "physicalFold7": "NOT_RUN"
   },
   "githubEvidence": {
-    "sourceBoundActionsQa": "NOT_RUN",
-    "separatePinnedQaWorkflow": "PREPARATION_ONLY",
+    "sourceBoundActionsQa": "IN_PROGRESS",
+    "runId": 42934541308,
+    "runUrl": "https://github.com/Ullmann27/device-ai/actions/runs/42934541308",
+    "workflowCommit": "edff51d7c124e0a036c5b4a2abb23625c102cf4b",
+    "runtimeSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "currentStep": "Full Android suite and configured NewApi lint",
     "reviewChecks": {
       "Gitar": "SUCCESS",
       "CodeRabbit": "SKIPPED_DRAFT",
       "knownReviewThreadsResolved": 1
     },
-    "provenance": "Check statuses and workflow preparation reported by the coordinating integrator; review checks are not Android/build QA."
+    "provenance": "GitHub Actions jobs readback; completed host/backend/render steps, no final CI success claim."
   },
   "signingPreparation": {
     "status": "OWNER_APPROVAL_AND_CODE53_BINDING_REQUIRED",
@@ -1238,5 +1230,35 @@
     "library_file_id": "libfile_3445c9403bc08191ac029770cfffac77",
     "sha256": "f138b92a99ea9aab67103490f0a249fd14adbc84c3c5346cd2169f36a40f1921",
     "bytes": 102588096
+  },
+  "evidenceScope": {
+    "runtimeSourceEdited": false,
+    "runtimeSource": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "completedLocalBuild": true,
+    "completedLocalTests": true,
+    "completedLocalRenders": true,
+    "evidenceValidatorAndWorkflowEdited": true,
+    "checkpoint": "edff51d7c124e0a036c5b4a2abb23625c102cf4b",
+    "description": "Completed local receipts are preserved. Documentation preparation is not a separate build/test run. The QA reproduction helper was subsequently repaired for hosts without a proxy; Android application source remains frozen."
+  },
+  "artifactEvidenceBundle": {
+    "local_path": "/workspace/scratch/5900afa6af29/apk53-a980-delivery/Continuum-Code53-a980-Renderbilder-und-Pruefnachweise.zip",
+    "purpose": "create_library_file",
+    "status": "succeeded",
+    "file_id": "file_0000000078348212b5199a3c39282f6c",
+    "library_file_id": "libfile_ac7320301ff0819195c6fa053040f7b1",
+    "file_name": "Continuum-Code53-a980-Renderbilder-und-Pruefnachweise.zip",
+    "local_metadata_applied": true,
+    "path": "/Continuum-Code53-a980-Renderbilder-und-Pruefnachweise.zip",
+    "current_version_number": 0,
+    "sha256": "dc093525128b8f890657c41a02f19abd82eb08ae48b78b7925a52b0fb8401966",
+    "bytes": 410119199
+  },
+  "qaRunnerProxyFix": {
+    "cases": 8,
+    "passed": 8,
+    "preFixFailures": 6,
+    "receipt": "qa-proxy-selfcheck.json",
+    "scope": "Evidence reproduction script only"
   }
 }
