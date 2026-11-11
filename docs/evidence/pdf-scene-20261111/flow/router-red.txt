@@ -1,0 +1,21 @@
+JUnit version 4.13.2
+..E.E..........
+Time: 12.536
+There were 2 failures:
+1) boundedPresentationRequestsKeepDocumentMeaning(at.heinz.deviceai.cognitive.OwnerDocumentPresentationIntentTest)
+java.lang.AssertionError: Öffne meine PDF Argon 4 Forschungsexperiment und zeige mir jeden Arbeitsschritt. expected:<Request(wantsDraft=false, reuse=false)> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.OwnerDocumentPresentationIntentTest.boundedPresentationRequestsKeepDocumentMeaning(OwnerDocumentPresentationIntentTest.kt:21)
+2) fold7AsrOpensPdfWithoutDraftInference(at.heinz.deviceai.cognitive.OwnerDocumentPresentationIntentTest)
+java.lang.AssertionError: expected:<Request(wantsDraft=false, reuse=false)> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.OwnerDocumentPresentationIntentTest.fold7AsrOpensPdfWithoutDraftInference(OwnerDocumentPresentationIntentTest.kt:9)
+
+FAILURES!!!
+Tests run: 13,  Failures: 2
+
