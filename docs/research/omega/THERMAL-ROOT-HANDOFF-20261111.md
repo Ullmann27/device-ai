@@ -89,6 +89,12 @@ failure was reproduced, then updated to follow the actual verified resolver.
 Six negative mutants are rejected, including disabled byte verification and a
 reintroduced duplicate scan. No assertion or security gate was removed.
 
+The first Android run compiled production successfully but rejected the new test
+observer's JDK-only string-version `Provider` constructor. Its version argument is
+now the Android-compatible double `1.0`. This is a one-line test helper correction,
+with no assertion or production change. The original failed log is preserved as
+`android-initial.log`; the regular Android recheck is running.
+
 Combined JVM source identity was `b1d7e7df90e56e0b4db2c131041fb9e6a7c16174`, tree
 `903bca2e718caabe2846bfa76493493cedf10dc3`. The subsequent target merge changed none
 of those compiled source/test/probe bytes. The dependency cache is explicitly

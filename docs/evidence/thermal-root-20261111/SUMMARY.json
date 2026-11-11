@@ -89,13 +89,22 @@
     "blocking_findings": 0
   },
   "android_gradle": {
-    "status": "RUNNING",
+    "status": "RUNNING_RECHECK",
     "tasks": [
       ":app:testDebugUnitTest",
       ":app:lintDebug"
     ],
     "source_head": "18e16d5ad5ca7005bba2b8bcfd494ccd1475a18d",
-    "lock": "/tmp/continuum-omega-gradle.lock"
+    "lock": "/tmp/continuum-omega-gradle.lock",
+    "initial_attempt": {
+      "exit_code": 1,
+      "production_compilation": "PASS",
+      "test_compilation": "FAIL",
+      "reason": "New test observer used JDK String-version Provider constructor; Android compile API requires Double version",
+      "location": "LocalModelLoadSourceTest.kt:79",
+      "correction": "Test constructor version argument changed from string to double 1.0; no assertions or production behavior changed"
+    },
+    "recheck_test_sha256": "b0aa7c3f1347c4fe2188727b0635737fa7b5e1d5f9374b1c34bb36fbbcffb0e9"
   },
   "fold7": {
     "thermal": "NOT_RUN",

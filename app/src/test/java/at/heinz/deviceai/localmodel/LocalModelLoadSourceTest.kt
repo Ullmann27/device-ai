@@ -76,7 +76,7 @@ class LocalModelLoadSourceTest {
         val digests = mutableListOf<Long>()
         val thread = Thread.currentThread()
         val underlying = MessageDigest.getInstance("SHA-256").provider
-        val provider = object : Provider("ContinuumLoadHashObserver", "1.0", "Test digest observer") {
+        val provider = object : Provider("ContinuumLoadHashObserver", 1.0, "Test digest observer") {
             init {
                 putService(object : Service(this, "MessageDigest", "SHA-256",
                     DigestObserver::class.java.name, emptyList(), emptyMap()) {
