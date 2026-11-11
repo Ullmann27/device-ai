@@ -132,3 +132,14 @@ The external thermal coordinator's Android/lint run uses the shared heavy lock.
 Canonical final Node, 25-class focused Android, full Android/visual and configured
 NewApi lint will run on the published common source with no competing heavy
 build. No original-signing or device gate is implied by source integration.
+
+### Android test API compatibility correction
+
+The thermal coordinator's actual Android compile rejected the new
+`LocalModelLoadSourceTest` observer constructor: Android `Provider` accepts a
+`Double` version here, not the newer JDK `String` overload used by the isolated
+JVM proof. The exact compiler log is retained as
+`thermal-android-compile-red.log.gz`. The one-line correction uses `1.0` instead
+of `"1.0"`; digest assertions, provider cleanup and production sources do not
+change. Canonical combined tests will execute the corrected helper. No Android
+PASS is inferred from its earlier JVM success.
