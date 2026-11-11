@@ -56,8 +56,12 @@ test('voice input barge-in silences TTS engine and avatar mouth before the recog
 
 // M5 milestone 2: half-duplex echo guard – the assistant never talks into an open microphone.
 test('assistant TTS is refused while the on-device microphone turn is active',()=>{
-  const speak=body('private fun speakBootstrap(');
-  assert.match(speak,/LocalSpeechInputPolicy\.maySpeak\([^)]*microphoneActive\s*=\s*voiceListening/);
+  assert.match(body('private fun speakBootstrap('), /speakReply\(message, allowMaya = true\)/);
+  const speak=body('private fun speakReply(');
+  assert.match(speak,/if \([^\n]*\|\| voiceListening\) return/);
+  assert.ok(speak.indexOf('|| voiceListening) return') < speak.indexOf('val useMaya'),
+    'microphone exclusion applies before choosing either speech provider');
+  assert.match(speak,/!useMaya && !at\.heinz\.deviceai\.cognitive\.LocalSpeechInputPolicy\.maySpeak/);
 });
 
 // M5 milestone 3: speech -> composer handoff keeps the owner's typed draft.

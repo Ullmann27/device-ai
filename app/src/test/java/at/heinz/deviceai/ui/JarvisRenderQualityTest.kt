@@ -7,6 +7,29 @@ import org.junit.Test
 
 /** Battery/accessibility/foreground priorities must hold regardless of inference work. */
 class JarvisRenderQualityTest {
+    @Test fun cinemaAdaptationRetainsCoolInferenceLighting() {
+        val budget = JarvisRenderQuality.adaptiveAnimation(true, false, 0, false, true, true, true)
+        assertFalse("EXP15 must retain cool lighting", budget.reducedBloom)
+        assertTrue(budget.frameDelayMillis >= 50L)
+        assertTrue(budget.particleCount <= 12)
+        assertTrue(budget.orbitSegments <= 40)
+    }
+
+    @Test fun cinemaLightingCannotOverrideSafetySignals() {
+        for (thermal in listOf(null, 0, 1, 2, 3, 4, 5, 6)) {
+            for (powerSave in listOf(false, true)) for (reducedMotion in listOf(false, true)) {
+                for (foreground in listOf(false, true)) {
+                    val base = JarvisRenderQuality.resolve(foreground, powerSave, thermal, reducedMotion, true)
+                    val adapted = JarvisRenderQuality.adaptiveAnimation(
+                        foreground, powerSave, thermal, reducedMotion, true, true, true)
+                    assertEquals(base.reducedBloom, adapted.reducedBloom)
+                    assertEquals(base.animate, adapted.animate)
+                    assertTrue(adapted.frameDelayMillis >= base.frameDelayMillis)
+                    assertTrue(adapted.particleCount <= base.particleCount)
+                }
+            }
+        }
+    }
     @Test fun hiddenScenesSuspendForEveryDeviceAndInferenceState() {
         for (powerSave in listOf(false, true)) for (reducedMotion in listOf(false, true)) {
             for (thermal in listOf(null, 0, 1, 2, 3, 4, 5, 6)) for (inference in listOf(false, true)) {

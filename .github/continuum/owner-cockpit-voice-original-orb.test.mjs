@@ -24,7 +24,7 @@ test('home microphone retains the cockpit for continuous voice replies', () => {
     /addAssistantMessage\(value, preserveLocalContext, keepCockpit = false\)/);
   for (const signature of [
     'private fun addUserMessage(value: String, keepCockpit: Boolean)',
-    'private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean)',
+    'private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,',
   ]) {
     const body = activityMember(signature);
     assert.match(body, /if \(!keepCockpit && !handsFreeKeepsHome\(\) && !currentToolScene\(\)\) \{\s*conversationActive = true\s*activeWorkArea = ContinuumWorkArea\.CHAT\s*refreshWorkAreaSelection\(\)\s*refreshConversationLayout\(\)/);

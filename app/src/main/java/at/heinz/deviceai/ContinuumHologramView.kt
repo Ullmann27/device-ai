@@ -678,7 +678,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (!active) cancelAvatarProof()
         if (!active) synchronized(avatarPose) {
             avatarPose.clearSpeech()
-            avatarPose.clearObservedGaze(System.currentTimeMillis())
+            avatarPose.clearObservedGaze(SystemClock.elapsedRealtime())
         }
         updateMotionPolicy()
     }
@@ -795,7 +795,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         avatarInvalidationPending.set(false)
         synchronized(avatarPose) {
             avatarPose.clearSpeech()
-            avatarPose.clearObservedGaze(System.currentTimeMillis())
+            avatarPose.clearObservedGaze(SystemClock.elapsedRealtime())
         }
         removeCallbacks(drawFrame)
         framePending = false
@@ -914,7 +914,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             resetCamera()
             resetAvatarEntrance()
             clearTaskEffects()
-            synchronized(avatarPose) { avatarPose.clearObservedGaze(System.currentTimeMillis()) }
+            synchronized(avatarPose) { avatarPose.clearObservedGaze(SystemClock.elapsedRealtime()) }
             settleState()
             audio.reset()
             audioEnergy = 0f

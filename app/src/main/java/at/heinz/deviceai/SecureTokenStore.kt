@@ -57,6 +57,34 @@ object SecureTokenStore {
             .remove(KEY_OPENROUTER_IV).remove(KEY_OPENROUTER_DATA).commit()
     }
 
+    fun saveElevenLabsToken(context: Context, token: String) {
+        require(MayaSpeech.validKey(token))
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.ENCRYPT_MODE, getOrCreateKey())
+        val encrypted = cipher.doFinal(token.toByteArray(Charsets.UTF_8))
+        check(context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putString("elevenlabs_iv", Base64.encodeToString(cipher.iv, Base64.NO_WRAP))
+            .putString("elevenlabs_data", Base64.encodeToString(encrypted, Base64.NO_WRAP)).commit())
+    }
+
+    fun loadElevenLabsToken(context: Context): String? {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val iv = prefs.getString("elevenlabs_iv", null) ?: return null
+        val data = prefs.getString("elevenlabs_data", null) ?: return null
+        return runCatching {
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            cipher.init(Cipher.DECRYPT_MODE, getOrCreateKey(),
+                GCMParameterSpec(128, Base64.decode(iv, Base64.NO_WRAP)))
+            String(cipher.doFinal(Base64.decode(data, Base64.NO_WRAP)), Charsets.UTF_8)
+                .takeIf(MayaSpeech::validKey)
+        }.getOrNull()
+    }
+
+    fun clearElevenLabsToken(context: Context) {
+        check(context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .remove("elevenlabs_iv").remove("elevenlabs_data").commit())
+    }
+
     fun saveMentorToken(context: Context, token: String) {
         require(token.matches(Regex("[A-Za-z0-9_-]{43}"))) {
             "Ungültiger Mentor-Gerätetoken."

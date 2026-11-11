@@ -141,6 +141,14 @@ class ContinuousConversationMode {
         return Decision.LISTEN
     }
 
+    /** Owner stop; callback-independent cancellation. */
+    fun stopAssistantSpeech(stop: () -> Unit): Decision {
+        val utterance = replyUtterance
+        stop()
+        return if (utterance == null) Decision.IGNORE
+            else assistantSpeechFinished(utterance, interrupted = true)
+    }
+
     /** The reply was rendered without audible speech (voice output off or unavailable). */
     fun replyIdle(): Decision {
         if (state != State.THINKING) return Decision.IGNORE

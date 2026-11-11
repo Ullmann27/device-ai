@@ -52,7 +52,8 @@ test('owner decision: a microphone tap starts hands-free talk; long press keeps 
 });
 
 test('listening resumes only after the bound reply and never over dialogs or approvals', () => {
-  const bootstrap = body('private fun speakBootstrap(');
+  assert.match(activity, /private fun speakBootstrap\(message: String\) = speakReply\(message, allowMaya = true\)/);
+  const bootstrap = body('private fun speakReply(');
   assert.match(activity, /private const val SPEECH_QUEUE_MAX_CHUNKS = 32/);
   assert.match(activity, /private const val SPEECH_CONTENT_MAX_CHUNKS = SPEECH_QUEUE_MAX_CHUNKS - 1/);
   assert.match(bootstrap, /speakableChunks\(\s*message, maxChunks = SPEECH_CONTENT_MAX_CHUNKS\)/);
@@ -61,7 +62,12 @@ test('listening resumes only after the bound reply and never over dialogs or app
   assert.doesNotMatch(bootstrap, /assistantSpeechQueued\(/);
   const next = body('private fun speakNextChunk(').replace(/\/\/[^\n]*/g, '');
   assert.match(next, /val chunk = speechChunks\.takeNextReady\(turn\) \?: return false\s*val id = "device-ai-" \+ UUID\.randomUUID\(\)\s*voiceUtteranceId = id\s*speechChunkId = chunk\.chunkId/);
-  assert.match(next, /voiceSignal\.activate\(id\)\s*voiceAvatarText = chunk\.approvedText\s*if \(voiceEngine\?\.speak\(chunk\.approvedText, queueMode, null, id\) != TextToSpeech\.SUCCESS\) return false\s*continuousConversation\.assistantSpeechQueued\(id\)\s*return true/);
+  assert.match(next, /voiceSignal\.activate\(id\)\s*voiceAvatarText = chunk\.approvedText\s*if \(speechUsesMaya\)/);
+  assert.match(next, /override fun range\(id: String, start: Int, end: Int, frame: Int\)\s*\{\s*voiceProgressListener\?\.onRangeStart\(id, start, end, frame\)/);
+  assert.match(next, /if \(!engine\.speak\(id, chunk\.approvedText, key\) \{[\s\S]*?internetConsent\.mode == at\.heinz\.deviceai\.cognitive\.InternetAccessMode\.ALWAYS_ON &&\s*internetConsent\.revision\(\) == revision\s*\}\) return false/);
+  assert.match(next, /else if \(voiceEngine\?\.speak\(chunk\.approvedText, queueMode, null, id\) != TextToSpeech\.SUCCESS\) return false\s*continuousConversation\.assistantSpeechQueued\(id\)\s*return true/);
+  assert.equal((next.match(/continuousConversation\.assistantSpeechQueued\(id\)/g) || []).length, 1);
+  assert.match(body('private fun stopVoiceAnimation(interrupted: Boolean)'), /mayaSpeech\?\.stop\(\)/);
   const finish = body('private fun finish(id: String?, interrupted: Boolean = false, failed: Boolean = false)').replace(/\/\/[^\n]*/g, '');
   assert.match(finish, /if\s*\(id != null && id == voiceUtteranceId\)\s*\{\s*if \(!interrupted && !failed && continueSpokenReply\(\)\) return@runOnUiThread\s*stopVoiceAnimation\(interrupted \|\| failed\)\s*\}\s*if \(id != null\) onConversationSpeechFinished\(id, interrupted\)/);
   assert.match(body('private fun installVoiceProgressListener('), /if \(id != null\) onConversationSpeechFinished\(id, interrupted\)/);
@@ -78,6 +84,37 @@ test('ending the recognition scope (pause, new chat, bot switch) ends hands-free
   for (const callback of ['conversationListen', 'conversationResume', 'conversationIdleCheck'])
     assert.ok(stop.includes('mainHandler.removeCallbacks(' + callback + ')'));
   assert.match(body('override fun onPause('), /cancelSpeechInputScope\(\)/);
+});
+
+test('explicit voice stops notify hands-free without depending on provider callbacks', () => {
+  const stop = body('private fun interruptReplySpeech(');
+  assert.match(stop, /continuousConversation\.stopAssistantSpeech\s*\{/);
+  assert.match(stop, /voiceEngine\?\.stop\(\)/);
+  assert.match(stop, /stopVoiceAnimation\(\)/);
+  assert.match(stop, /pauseContinuousConversationNotice\(/);
+  assert.match(body('private fun showVoicePicker('), /interruptReplySpeech\(\)/);
+  assert.equal((body('private fun showMayaVoiceSettings(').match(/interruptReplySpeech\(\)/g) || []).length, 2);
+  assert.match(body('private fun setInternetMode('), /if \(speechUsesMaya\) interruptReplySpeech\(\)/);
+  assert.match(activity, /else \{ interruptReplySpeech\(\) \}/);
+  assert.doesNotMatch(body('private fun speakReply('), /interruptReplySpeech\(/);
+  assert.doesNotMatch(body('private fun continueSpokenReply('), /interruptReplySpeech\(/);
+});
+
+test('offline owner turns retain their speech veto across delayed model replies', () => {
+  const owner = body('private fun addUserMessage(value: String, keepCockpit: Boolean)');
+  assert.match(owner, /NetworkTurnConstraint\.forbidsExternalSpeech\(value\)/);
+  assert.match(owner, /ownerReplyAllowsMaya = allowsMaya && \(!busy \|\| ownerReplyAllowsMaya\)/);
+  assert.match(body('private fun speakReply('), /allowMaya && ownerReplyAllowsMaya && mayaAvailable\(\)/);
+  const local = body('private fun runLocal(');
+  assert.match(local, /val allowMaya = !at\.heinz\.deviceai\.cognitive\.NetworkTurnConstraint\.forbidsExternalSpeech\(text\)/);
+  assert.match(local, /addAssistantMessage\(visibleAnswer,[\s\S]*?allowMaya = allowMaya\)/);
+  const bot = body('private fun runBotDialogue(');
+  assert.match(bot, /NetworkTurnConstraint\.forbidsExternalSpeech\(request\)/);
+  assert.match(bot, /finishBotDialogue\(cancellation, profile, turnSession, result, allowMaya\)/);
+  assert.match(body('private fun finishBotDialogue('), /speakReply\(answer, allowMaya\)/);
+  assert.match(body('private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,'),
+    /addHomeGreeting\(value, allowMaya = allowMaya\)/);
+  assert.match(body('private fun addHomeGreeting('), /speakReply\(value, allowMaya\)/);
 });
 
 test('pure policy and its JVM regressions cover turns, stale callbacks, pause, stop and approvals', () => {

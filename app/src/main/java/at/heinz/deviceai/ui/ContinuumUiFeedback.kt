@@ -7,12 +7,16 @@ import android.media.AudioManager
 import android.media.AudioTrack
 import android.os.SystemClock
 import android.provider.Settings
+import java.io.InputStream
 import kotlin.math.PI
 import kotlin.math.sin
 
-/** UI-thread local sonification. No voice imitation, files, network, audio focus or device-volume changes. */
+/** Local cues; shared speech policy. */
 class ContinuumUiFeedback(context:Context):AutoCloseable {
-    enum class Cue { BUTTON, TASK_STARTED }
+    enum class Cue(val assetPath:String,val maxSamples:Int) {
+        BUTTON("audio/ui/continuum-button.pcm",2880),
+        TASK_STARTED("audio/ui/continuum-task-started.pcm",7200)
+    }
     private val app=context.applicationContext
     private val audio=app.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
     private var enabled=false
@@ -21,6 +25,7 @@ class ContinuumUiFeedback(context:Context):AutoCloseable {
     private var closed=false
     private var lastPlay=-1L
     private var track:AudioTrack?=null
+    private val sampleCache=mutableMapOf<Cue,ShortArray>()
 
     fun updatePolicy(enabled:Boolean,foreground:Boolean,voiceBusy:Boolean) {
         this.enabled=enabled;this.foreground=foreground;this.voiceBusy=voiceBusy
@@ -53,7 +58,10 @@ class ContinuumUiFeedback(context:Context):AutoCloseable {
             created.play();lastPlay=now;true
         }.getOrElse { release();false }
     }
-    private fun samples(cue:Cue):ShortArray {
+    private fun samples(cue:Cue):ShortArray=sampleCache.getOrPut(cue) {
+        UiFeedbackPcm.load(cue.maxSamples) { app.assets.open(cue.assetPath) } ?: fallbackSamples(cue)
+    }
+    private fun fallbackSamples(cue:Cue):ShortArray {
         val count=if(cue==Cue.BUTTON)640 else 960
         val start=if(cue==Cue.BUTTON)820.0 else 580.0
         val sweep=if(cue==Cue.BUTTON)0.0 else 240.0
@@ -68,5 +76,31 @@ class ContinuumUiFeedback(context:Context):AutoCloseable {
         track?.let { runCatching { it.stop() };runCatching { it.flush() };runCatching { it.release() } }
         track=null
     }
-    override fun close() { closed=true;release() }
+    override fun close() { closed=true;release();sampleCache.clear() }
+}
+
+/** Bounded mono PCM16 asset decoder. */
+internal object UiFeedbackPcm {
+    fun load(maxSamples:Int,open:()->InputStream):ShortArray? {
+        if(maxSamples !in 1..7200)return null
+        return runCatching {
+            open().use { input ->
+                val bytes=ByteArray(maxSamples*2+1)
+                var count=0
+                while(count<bytes.size) {
+                    val read=input.read(bytes,count,bytes.size-count)
+                    if(read<0)break
+                    if(read==0)return@use null
+                    count+=read
+                }
+                if(count==0 || count>maxSamples*2 || count%2!=0)return@use null
+                val pcm=ShortArray(count/2) { index ->
+                    ((bytes[index*2].toInt() and 255) or (bytes[index*2+1].toInt() shl 8)).toShort()
+                }
+                pcm.takeIf { it.first()==0.toShort() && it.last()==0.toShort() &&
+                    it.any { sample -> sample!=0.toShort() } &&
+                    it.all { sample -> kotlin.math.abs(sample.toInt())<=1500 } }
+            }
+        }.getOrNull()
+    }
 }
