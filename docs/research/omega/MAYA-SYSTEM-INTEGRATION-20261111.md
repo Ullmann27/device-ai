@@ -4,7 +4,7 @@ Canonical target: `integration/continuum-final-visibility-20261111`, PR #747.
 Starting remote source: `fd1de22cf3f6ed159601c9b944cc25c86f0fc221`.
 This is the continuation of the existing Cinema/Maya candidate, not a new runtime.
 
-## Active corrected freeze — 2026-11-11 08:15 UTC
+## Active corrected freeze — 2026-11-11 08:25 UTC
 
 - Runtime: `050a57cb019dcc1b7fe6cfa2fb5c11176b048e05`.
 - Tree: `539ea3aac0af04644a015b3fb69ba865af80d1a8`.
@@ -14,8 +14,11 @@ This is the continuation of the existing Cinema/Maya candidate, not a new runtim
 - New required preflight runs both Maya settings cases and preserves their XML
   before the unchanged full Android suite. The existing capture init forces the
   full test task to rerun; its minimum count and 29 required classes remain.
-- Started, final results PENDING. APK, lint and complete-run success are not
-  confirmed. Read this exact run before changing or restarting anything.
+- Source/ICU/full Node/critical, backend, rendering and SDK gates PASS.
+  Maya lifecycle preflight PASS at 08:23:50 UTC: both expected cases,
+  zero failures/errors/skips. Full Android suite/NewApi lint IN_PROGRESS.
+  APK and complete-run success remain PENDING. Read this exact run before
+  changing or restarting anything.
 
 Only the settings test and technical evidence changed after the failed app
 source. The production runtime remains unchanged. The signer prep must bind the
@@ -75,13 +78,17 @@ concrete defect in this WIP production delta. Current published Latest was check
 as `continuum-local-code51-6c23d295e2fca2d4e5950a866547733ec5ff22b0`, so its strict
 existing baseline gate remains valid. The protected signer branch is unchanged.
 
+Updated prep checkpoint: `77e23d3ee58d8e0c8795bca01dd6fe80e20678c1`,
+tree `6976321e709ed21fbe966befcc59baa5818a69a0`. It binds the active corrected
+050a57cb/07efc776 run above and rejects both superseded attempts. Independent
+review confirmed the exact pins and required Maya preflight.
+
 Code53 remains NOT_READY_FOR_SIGNING: its production binding file intentionally
 does not exist until the actual complete run and artifacts are verified. Four
-legacy contracts and twelve new data/archive/workflow cases pass; the thirteenth
+legacy contracts and fifteen new data/archive/workflow cases pass; the sixteenth
 production-binding case is still red. This is not a total passing signer result.
 
-Next: repair and preflight the dialog lifecycle test, then complete the new
-frozen Android/APK run; verify both artifact API IDs/digests and
+Next: complete the active frozen Android/APK run; verify both artifact API IDs/digests and
 downloaded ZIP bytes, actual APK SHA/size, exact validator-report path, source/tree,
 workflow receipt, JUnit totals and all 29 required classes. Then fill the real
 Code53 binding, run all signer contracts and its secrets-free check on the one
@@ -110,8 +117,9 @@ The settings test now explicitly uses Robolectric's paused looper and delivers
 `onShow` before clicking, and `onDismiss` before asserting credential clearing.
 No production dialog behavior or existing assertion was removed. Invalid-key
 checks additionally require Maya to remain disabled and its credential absent.
-The next workflow runs both settings tests first, preserving their XML separately,
-then reruns the unchanged full suite. Runtime proof remains pending that run.
+The corrected workflow runs both settings tests first, preserving their XML
+separately, then reruns the unchanged full suite. Both focused cases passed in
+run `42985335421`; the complete Android/APK result remains pending.
 
 ## Coordinated repairs
 
@@ -167,6 +175,30 @@ frozen-source workflow must compile all Android sources, run its full suite and
 required Maya/gaze regressions, run configured lint, and validate the unsigned
 ARM64 APK's package/version/assets. Workflow commit and tested source commit
 remain explicitly separate.
+
+## Prior-run visual diagnosis
+
+While the corrected suite runs, artifact `13839285568` from completed run
+`42977884118` was downloaded and verified locally: 426,536,310 bytes, ZIP SHA-256
+`93276da1c35fb9e9e211efb9efbfb61a4e409fce73ae49256378350babbc58ea`.
+All 2,452 archive names were safe and unique; 67 original PNGs and selected
+metadata were extracted. Twenty-two PNG hashes matched their individual
+manifests and `fd86f11a` source. The earlier log-summary JSON records its original
+not-downloaded state; this is the later separate archive verification.
+
+The visual reviewer inspected 29 original frames; the integrator independently
+opened eight. Standard phone/fold working windows, STOP/close controls and
+return/abort frames show no additional demonstrated operating blocker. Scripted
+mouth states and full-stage memory/orb transition frames remain visible. The
+`result-900ms` frame intentionally precedes task completion in the capture test;
+the later returned frame restores the cockpit.
+
+Known readability limit: at 200% font scale, the decorative Continuum title is
+clipped at the right and compact tile labels are shortened. The scrolled actions
+view retains navigation. Do not describe this as flawless enlarged-text layout.
+The capture manifest explicitly identifies Robolectric API28 native Canvas and
+the existing 2D fallback; Filament, physical Fold7 and audible lip timing remain
+NOT_RUN. This old-run review is diagnostic, not acceptance of the active source.
 
 ## ElevenLabs and device boundary
 
