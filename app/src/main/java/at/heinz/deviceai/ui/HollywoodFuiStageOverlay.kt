@@ -29,7 +29,10 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val stage = RectF()
     private val source = RectF()
     private val energySource = RectF()
+    private val attentionSource = RectF()
     private var protectedBounds = emptyList<RectF>()
+    /** Dp below the stage top where the window's dense glass ends (Cinema 2.0); NaN = one dense sheet. */
+    internal var vacantTopDp = Float.NaN
     internal var cinematicArcEnabled = false
     internal var workPulseEnabled = false
     internal var prismRimEnabled = false
@@ -88,6 +91,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         stage.set(bounds)
         source.set(origin)
         energySource.setEmpty()
+        attentionSource.setEmpty()
         protectedBounds = protected.map(::RectF)
         profile = scene.fuiProfile
         if (accent != scene.accent) cinematics = HollywoodFuiCinematics.Painterly(scene.accent)
@@ -124,6 +128,15 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             !listOf(bounds.left, bounds.top, bounds.right, bounds.bottom).all(Float::isFinite)) {
             energySource.setEmpty()
         } else energySource.set(bounds)
+        invalidate()
+    }
+
+    /** Actual face bounds of the avatar that reads this window, overlay coordinates; null clears the thread. */
+    fun setAttentionSource(bounds: RectF?) {
+        if (bounds == null || bounds.isEmpty ||
+            !listOf(bounds.left, bounds.top, bounds.right, bounds.bottom).all(Float::isFinite)) {
+            attentionSource.setEmpty()
+        } else attentionSource.set(bounds)
         invalidate()
     }
 
@@ -254,12 +267,24 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         val transferSource = if (workingFluid.energy > 0f) energySource else source
         val sink = HollywoodFuiCinematics.anchorBeam(transferSource.centerX() / density,
             transferSource.centerY() / density, boxDp, 1f)
+        // Cinema 2.0 connection: a verified tool receipt travels back along the working band to the orb.
+        val receipt = if (workingFluid.energy > 0f && workPulseEnabled && pulseAtElapsedMs >= 0L && !reducedMotion)
+            HollywoodFuiCinematics.receiptTravel(elapsedMs - pulseAtElapsedMs) else -1f
         if (fluid.energy > 0f) JarvisFluidLight.drawTransfer(painter,
             JarvisShellLayout.Box(transferSource.left / density, transferSource.top / density,
                 transferSource.right / density, transferSource.bottom / density),
             if (workingFluid.energy > 0f) sink.x1 else fluidBox.centerX,
             if (workingFluid.energy > 0f) sink.y1 else fluidBox.bottom,
-            fluid.copy(energy = fluid.energy * frame.closeFrame), renderBudget)
+            fluid.copy(energy = fluid.energy * frame.closeFrame), renderBudget, receipt)
+        // Cinema 2.0 connection: while real work runs, the avatar's reading thread joins face and window.
+        if (active && closingElapsedMs < 0L && !reducedMotion && budget.animate && !attentionSource.isEmpty) {
+            HollywoodFuiCinematics.attentionLink(
+                HollywoodFuiCinematics.Box(attentionSource.left / density, attentionSource.top / density,
+                    attentionSource.right / density, attentionSource.bottom / density), boxDp)?.let { link ->
+                cinematics.drawAttentionLink(painter, link, elapsedMs / 1000f,
+                    frame.brackets * frame.closeFrame * openness.coerceIn(0f, 1f), bloom)
+            }
+        }
         // The source is in screen space, never rotated with the arriving glass.
         cinematics.drawAnchor(painter, originX / density, originY / density, boxDp, frame, bloom)
         canvas.restore()
@@ -301,6 +326,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             frame.copy(scanEnabled = frame.scanEnabled && !reducedMotion)
         else frame.copy(grid = raster, scanEnabled = frame.scanEnabled && !reducedMotion)
         cinematics.drawGridAndScan(painter, boxDp, scanFrame, bloom, innerRasterAlpha = raster)
+        if (!vacantTopDp.isNaN()) cinematics.drawVacantRaster(painter, boxDp, boxDp.top + vacantTopDp,
+            frame.grid * frame.closeFrame * openness.coerceIn(0f, 1f), bloom)
         canvas.restore()
         // The native accessible body takes over. Never keep a second text plane behind its labels.
         val dataAlpha = frame.data * (1f - frame.data) * frame.closeData

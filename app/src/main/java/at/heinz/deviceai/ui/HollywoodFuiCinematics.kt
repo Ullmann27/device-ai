@@ -126,6 +126,54 @@ object HollywoodFuiCinematics {
         return Beam(originX, originY, originX + (endX - originX) * p, originY + (endY - originY) * p)
     }
 
+    // ---- Cinema 2.0: connections (pure) ----------------------------------------------------------------------------
+
+    /** Duration of one verified receipt's way back from the window rim to the orb (same as the rim pulse). */
+    const val RECEIPT_TRAVEL_MS = 380L
+
+    /** Travel 0..1 of a verified receipt [ageMs] after it was presented; −1 before, after or for a bad age. */
+    fun receiptTravel(ageMs: Long): Float =
+        if (ageMs < 0L || ageMs > RECEIPT_TRAVEL_MS) -1f else ageMs / RECEIPT_TRAVEL_MS.toFloat()
+
+    /**
+     * The avatar's reading thread: from the side of the face that looks at the window to the window rim, clear of the
+     * rounded corners. Null when face and window overlap or touch (no honest gap) or for bad geometry.
+     */
+    fun attentionLink(face: Box, window: Box, minGapDp: Float = 6f, cornerDp: Float = 18f): Beam? {
+        val values = floatArrayOf(face.left, face.top, face.right, face.bottom,
+            window.left, window.top, window.right, window.bottom)
+        if (values.any { !it.isFinite() } || face.width <= 0f || face.height <= 0f ||
+            window.width <= 2f * cornerDp || window.height <= 2f * cornerDp) return null
+        // The eyes sit in the upper half of the face box; the thread leaves at eye height.
+        val eyeY = face.top + face.height * .42f
+        fun alongX(x: Float) = x.coerceIn(window.left + cornerDp, window.right - cornerDp)
+        fun alongY(y: Float) = y.coerceIn(window.top + cornerDp, window.bottom - cornerDp)
+        return when {
+            window.left - face.right >= minGapDp -> Beam(face.right, eyeY, window.left, alongY(eyeY))
+            face.left - window.right >= minGapDp -> Beam(face.left, eyeY, window.right, alongY(eyeY))
+            window.top - face.bottom >= minGapDp -> Beam(face.centerX, face.bottom, alongX(face.centerX), window.top)
+            face.top - window.bottom >= minGapDp -> Beam(face.centerX, face.top, alongX(face.centerX), window.bottom)
+            else -> null
+        }
+    }
+
+    // ---- Cinema 2.0: focus depth (pure) ------------------------------------------------
+
+    /** Dim of the deck plane just below a constructed window's top edge and at the bottom of the deck. */
+    const val FOCUS_DIM_NEAR = .30f
+    const val FOCUS_DIM_FAR = .52f
+    private const val FOCUS_FADE_IN_DP = 56f
+
+    /**
+     * Focus pull 0..1: once the glass of a work window exists and the window has arrived ([openness]), the deck plane
+     * behind it steps back; it returns with the glass on close. Derived from the construct's own frame – no clock.
+     */
+    fun focusDepth(frame: HollywoodFuiConstruct.Frame, openness: Float): Float {
+        if (!openness.isFinite() || openness <= 0f) return 0f
+        val arrived = openness.coerceIn(0f, 1f).let { it * it * (3f - 2f * it) }
+        return (frame.glass * frame.closeGlass * arrived).coerceIn(0f, 1f)
+    }
+
     // ---- drawing -------------------------------------------------------------------------------------------------
 
     class Painterly(private val accent: Int) {
@@ -207,6 +255,85 @@ object HollywoodFuiCinematics {
                 p.drawLine(m.width, m.height * .62f, m.width, m.height - radius, 1f, violet, .5f * a)
                 p.restore()
             }
+        }
+
+        private var focusShade: Fill.Linear? = null
+        private var focusKey: Box? = null
+        private val deckShade = Fill.Solid(JarvisDesign.Colors.background)
+
+        /**
+         * Focus depth: the deck plane at and below the window steps back – softly from the window's top edge, deeper
+         * towards the bottom – and the window casts a contact shadow, so the glass stands in front instead of lying
+         * flat on half-covered labels. The row above the window (avatar, orb) is never shaded, so their protected
+         * cut-outs leave no visible box. [strength] 0..1.
+         */
+        fun drawFocusDepth(p: ContinuumPainter, viewport: Box, window: Box, strength: Float, radius: Float) {
+            if (!strength.isFinite() || strength <= .01f || viewport.width <= 0f || viewport.height <= 0f ||
+                window.width <= 0f || window.height <= 0f || window.top >= viewport.bottom - 1f) return
+            val s = strength.coerceIn(0f, 1f)
+            val shade = focusShade?.takeIf { focusKey == window } ?: run {
+                val span = (viewport.bottom - window.top).coerceAtLeast(1f)
+                Fill.Linear(0f, window.top, 0f, viewport.bottom,
+                    intArrayOf(Argb.withAlpha(JarvisDesign.Colors.background, 0f),
+                        Argb.withAlpha(JarvisDesign.Colors.background, FOCUS_DIM_NEAR),
+                        Argb.withAlpha(JarvisDesign.Colors.background, FOCUS_DIM_FAR)),
+                    floatArrayOf(0f, (FOCUS_FADE_IN_DP / span).coerceIn(.02f, .5f), 1f)).also { focusShade = it; focusKey = window }
+            }
+            p.fillRect(viewport.left, window.top, viewport.right, viewport.bottom, shade, s)
+            // Contact shadow: three widening, fading rings slightly below the glass.
+            val drop = 5f
+            p.strokeRoundRect(window.left, window.top + drop, window.right, window.bottom + drop, radius + 6f, 26f, deckShade, .10f * s)
+            p.strokeRoundRect(window.left, window.top + drop, window.right, window.bottom + drop, radius + 3f, 14f, deckShade, .16f * s)
+            p.strokeRoundRect(window.left, window.top + drop * .5f, window.right, window.bottom + drop * .5f, radius, 6f, deckShade, .24f * s)
+        }
+
+        /**
+         * The holographic raster under the vacant part of the glass (below [vacantTop]): it stays at structural
+         * strength there because no text stands on it, with a horizon line where the dense sheet ends.
+         */
+        fun drawVacantRaster(p: ContinuumPainter, box: Box, vacantTop: Float, strength: Float, bloom: Boolean) {
+            if (!strength.isFinite() || strength <= .01f || !vacantTop.isFinite() ||
+                vacantTop >= box.bottom - 8f || vacantTop <= box.top) return
+            val s = strength.coerceIn(0f, 1f)
+            val step = 24f
+            var x = box.left + step
+            while (x < box.right) {
+                p.drawLine(x, vacantTop, x, box.bottom, .7f, accentFill, .20f * s)
+                x += step
+            }
+            var y = box.top + step
+            while (y < box.bottom) {
+                if (y > vacantTop) p.drawLine(box.left, y, box.right, y, .7f, accentFill, .20f * s)
+                y += step
+            }
+            if (bloom) p.drawLine(box.left + 10f, vacantTop, box.right - 10f, vacantTop, 4f, violet, .10f * s)
+            p.drawLine(box.left + 10f, vacantTop, box.right - 10f, vacantTop, .9f, accentFill, .46f * s)
+        }
+
+        /**
+         * The avatar's reading thread while real work runs: a hair-thin line from the face to the window with two
+         * sparks travelling towards the window on the window's own clock ([seconds]); continuous, no phase jump.
+         */
+        fun drawAttentionLink(p: ContinuumPainter, beam: Beam, seconds: Float, strength: Float, bloom: Boolean) {
+            if (!strength.isFinite() || strength <= .01f || !seconds.isFinite()) return
+            val s = strength.coerceIn(0f, 1f)
+            val dx = beam.x1 - beam.x0
+            val dy = beam.y1 - beam.y0
+            if (dx * dx + dy * dy < 16f) return
+            if (bloom) p.setAdditive(true)
+            try {
+                if (bloom) p.drawLine(beam.x0, beam.y0, beam.x1, beam.y1, 3.2f, violet, .07f * s)
+                p.drawLine(beam.x0, beam.y0, beam.x1, beam.y1, .7f, accentFill, .30f * s)
+                repeat(2) { k ->
+                    val t = ((seconds * .55f + k * .5f) % 1f + 1f) % 1f
+                    val fade = sin(PI.toFloat() * t)
+                    val x = beam.x0 + dx * t
+                    val y = beam.y0 + dy * t
+                    p.fillCircle(x, y, 2.4f, accentFill, .35f * s * fade)
+                    p.fillCircle(x, y, 1.1f, glint, .9f * s * fade)
+                }
+                p.fillCircle(beam.x1, beam.y1, 1.8f, glint, .6f * s)
+            } finally { if (bloom) p.setAdditive(false) }
         }
 
         /** Dust along the rim and, while the task really works, a breathing energy rim. */
