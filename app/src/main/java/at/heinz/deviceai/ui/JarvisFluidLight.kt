@@ -49,9 +49,12 @@ object JarvisFluidLight {
         return Sample(phase, arrival * (.65f + .15f * phase), false)
     }
 
-    /** Connected ribbons; fixed reusable batches. */
+    /**
+     * Connected ribbons; fixed reusable batches. [receipt] 0..1 carries one verified tool receipt back along the band,
+     * from the window rim (0) to the orb (1); −1 none. It rides the same curve, so it never leaves the band.
+     */
     fun drawTransfer(p: ContinuumPainter, source: Box, sinkX: Float, sinkY: Float,
-                     sample: Sample, budget: JarvisRenderQuality.Budget?) {
+                     sample: Sample, budget: JarvisRenderQuality.Budget?, receipt: Float = -1f) {
         val strands = strandCount(budget)
         if (!sample.energy.isFinite() || !sample.phase.isFinite() || sample.energy <= .001f ||
             strands == 0 || !source.left.isFinite() || !source.top.isFinite() ||
@@ -59,6 +62,10 @@ object JarvisFluidLight {
             source.width <= 0f || source.height <= 0f || !sinkX.isFinite() || !sinkY.isFinite()) return
         var count = 0
         var highlightCount = 0
+        var packetX = Float.NaN
+        var packetY = Float.NaN
+        val packetIndex = if (receipt.isFinite() && receipt in 0f..1f)
+            ((1f - receipt) * STEPS).toInt().coerceIn(0, STEPS) else -1
         val phase = sample.phase.coerceIn(0f, 1f)
         val energy = sample.energy.coerceIn(0f, 1f)
         repeat(strands) { strand ->
@@ -75,6 +82,10 @@ object JarvisFluidLight {
                 yPoints[step] = y0 + (sinkY - y0) * t + bend * (10f + strand * 3f)
                 val swell = .5f + .5f * sin(t * 11f - phase * 18f + strand * 1.3f)
                 ribbonWidths[step] = bend * (.55f + 1.7f * swell * swell)
+            }
+            if (strand == 0 && packetIndex >= 0) {
+                packetX = xPoints[packetIndex]
+                packetY = yPoints[packetIndex]
             }
             for (step in 1..STEPS) {
                 val dx = xPoints[step] - xPoints[step - 1]
@@ -102,6 +113,12 @@ object JarvisFluidLight {
             p.strokeSegments(segments, count, 3.2f, cyan, .15f * energy)
             p.strokeSegments(highlights, highlightCount, 1.2f, cyan, .48f * energy)
             p.strokeSegments(highlights, highlightCount, .55f, glint, .48f * energy)
+            if (packetX.isFinite() && packetY.isFinite()) {
+                val fade = sin(PI.toFloat() * receipt).coerceIn(0f, 1f)
+                p.fillOval(packetX - 9f, packetY - 9f, packetX + 9f, packetY + 9f, violet, .24f * fade)
+                p.fillOval(packetX - 4f, packetY - 4f, packetX + 4f, packetY + 4f, cyan, .55f * fade)
+                p.fillOval(packetX - 2f, packetY - 2f, packetX + 2f, packetY + 2f, glint, .95f * fade)
+            }
         } finally { p.setAdditive(false) }
     }
 
