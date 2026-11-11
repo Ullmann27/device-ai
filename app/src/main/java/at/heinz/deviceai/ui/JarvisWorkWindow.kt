@@ -56,6 +56,8 @@ private val CRYSTAL_RIM_FILL = Fill.Linear(-CRYSTAL_W, -CRYSTAL_H, CRYSTAL_W, CR
  */
 private val WINDOW_BACKING_FILL = Fill.Solid(Colors.background)
 private const val WINDOW_BACKING_ALPHA = .7f
+private val VACANT_RIM_FILL = Fill.Solid(Colors.panelRim)
+private const val VACANT_STOPS = 7
 /** Rear sheets and the receding document plane (JarvisWorkWindowDepth): dark glass, a Fresnel rim, a top-edge glint. */
 private val DEPTH_GLASS_FILL = Fill.Solid(Colors.background)
 private val DEPTH_GLINT_FILL = Fill.Solid(Colors.cyanSoft)
@@ -98,6 +100,9 @@ class JarvisWorkWindow(
         }
     internal var onCinematicFrame: ((Long, Long, Boolean, Float) -> Boolean)? = null
     internal var onPresentedCenter: ((Float, Float) -> Unit)? = null
+
+    /** Dp below the window's top edge where its dense glass ends; NaN while content fills the sheet. */
+    internal fun glassVacantTopDp(): Float = panel.vacancy()?.denseBottomDp ?: Float.NaN
     private val projectedCenter = FloatArray(2)
     internal var cinematicEffectsEnabled = true
         set(value) {
@@ -163,6 +168,9 @@ class JarvisWorkWindow(
     private val pageRect = RectF()
     private val protectedDepthRect = RectF()
     private val painter = AndroidContinuumPainter(context.assets)
+    /** Cinema 2.0: how far the deck plane has stepped back behind this window, 0..1; follows the construct frame. */
+    private var focusDepth = 0f
+    private val focusCinematics = HollywoodFuiCinematics.Painterly(Colors.cyan)
     private val opening = JarvisMotion.Presets.widget(JarvisMotion.Direction.DEPTH)
         .copy(distanceDp = 0f, fromScale = 0f)
     private val closing = JarvisMotion.FlyIn(JarvisMotion.Direction.DEPTH, 0f, 0f,
@@ -477,6 +485,7 @@ class JarvisWorkWindow(
         val normalized = if (reduced) HollywoodFuiConstruct.DATA_END_MS else (elapsed / animatorScale).toLong()
         if (phase == Phase.OPEN) {
             constructionElapsedMs = maxOf(constructionElapsedMs, normalized, HollywoodFuiConstruct.DATA_END_MS)
+            focusDepth = if (cinematicEffectsEnabled) 1f else 0f
             return onCinematicFrame?.invoke(constructionElapsedMs, -1L, reduced, 1f) == true
         }
         if (cinematicEffectsEnabled) {
@@ -494,6 +503,7 @@ class JarvisWorkWindow(
             trailProgress = frame.anchor
             trailAlpha = (1f - frame.brackets) * frame.closeFrame
             panel.edgeFlash = frame.pulse * .35f
+            focusDepth = HollywoodFuiCinematics.focusDepth(frame, openness)
             applyFrame()
             val live = onCinematicFrame?.invoke(constructionElapsedMs, closingTime, reduced, openness) == true
             if (isClosing && frame.closeFactor <= 0f) { finishClose(); return false }
@@ -507,6 +517,7 @@ class JarvisWorkWindow(
             }
             return phase == Phase.OPENING || phase == Phase.CLOSING || live
         }
+        focusDepth = 0f
         val state = JarvisMotion.frame(if (phase == Phase.CLOSING) closing else opening, elapsed, animatorScale)
         if (phase == Phase.CLOSING) {
             openness = closeFrom * (1f - state.scale)
@@ -583,6 +594,7 @@ class JarvisWorkWindow(
 
     private fun finishClose() {
         phase = Phase.CLOSED
+        focusDepth = 0f
         val handle = subscription
         subscription = null
         handle?.close()
@@ -646,6 +658,16 @@ class JarvisWorkWindow(
         if (!isShowing) return
         val save = canvas.save()
         protectedBounds.forEach { canvas.clipOutRect(it) }
+        if (focusDepth > 0f && JarvisWorkWindowGeometry.valid(destination)) {
+            // Cinema 2.0 focus depth: the deck steps back behind the constructed window; avatar, orb, dialog stay lit.
+            val focusSave = canvas.save()
+            canvas.scale(density, density)
+            painter.begin(canvas)
+            focusCinematics.drawFocusDepth(painter, HollywoodFuiCinematics.Box(0f, 0f, width / density, height / density),
+                HollywoodFuiCinematics.Box(destination.left / density, destination.top / density,
+                    destination.right / density, destination.bottom / density), focusDepth, 14f)
+            canvas.restoreToCount(focusSave)
+        }
         drawTrail(canvas)
         drawDepth(canvas)
         if (panel.visibility == VISIBLE && panel.alpha > 0f) {
@@ -866,12 +888,43 @@ class JarvisWorkWindow(
                 }
             }
         }
+        private var vacantFill: Fill.Linear? = null
+        private var vacantKey = Float.NaN
+
+        /** Where real content ends on this sheet (dp from its top), or null while content fills or scrolls. */
+        fun vacancy(): JarvisWorkWindowDepth.GlassVacancy? {
+            val body = scroll.getChildAt(0) ?: return null
+            if (height <= 0 || scroll.height <= 0 || body.height <= 0) return null
+            val contentBottom = scroll.top + scroll.paddingTop + minOf(body.height, scroll.height)
+            return JarvisWorkWindowDepth.glassVacancy(height / density, contentBottom / density)
+        }
+
         fun drawSurface(canvas: Canvas) {
             val save = canvas.save()
             canvas.scale(density, density)
             glass.begin(canvas)
             val right = width / density - 1f
             val bottom = height / density - 1f
+            val vacancy = vacancy()
+            if (vacancy != null) {
+                // Cinema 2.0: dense glass only behind real content; below it the sheet clears to smoke, so the
+                // hologram raster and the deck's depth show through instead of an empty slab.
+                val smoke = vacantFill?.takeIf { vacantKey == vacancy.denseBottomDp } ?: Fill.Linear(
+                    0f, vacancy.denseBottomDp, 0f, vacancy.fadeEndDp,
+                    // The painted ramp is the tested rule itself: GlassVacancy.density sampled into the stops. It
+                    // starts opaque because the dense sheet above (backing + surface body) is opaque.
+                    IntArray(VACANT_STOPS) { Argb.withAlpha(Argb.rgb(2, 6, 14), vacancy.density(
+                        vacancy.denseBottomDp + JarvisWorkWindowDepth.GLASS_FADE_DP * it / (VACANT_STOPS - 1f))) },
+                    FloatArray(VACANT_STOPS) { it / (VACANT_STOPS - 1f) }
+                ).also { vacantFill = it; vacantKey = vacancy.denseBottomDp }
+                val lower = canvas.save()
+                canvas.clipRect(0f, vacancy.denseBottomDp, right + 1f, bottom + 1f)
+                glass.fillRoundRect(1f, 1f, right, bottom, 14f, smoke, 1f)
+                glass.strokeRoundRect(1.6f, 1.6f, right - .6f, bottom - .6f, 13.4f, 1.2f, VACANT_RIM_FILL, .55f)
+                canvas.restoreToCount(lower)
+                // The surface keeps its own rim and lower thickness; only the vacant interior is left to the smoke.
+                canvas.clipOutRect(2f, vacancy.denseBottomDp, right - 1f, bottom - 1f)
+            }
             glass.fillRoundRect(1f, 1f, right, bottom, 14f, WINDOW_BACKING_FILL, WINDOW_BACKING_ALPHA)
             JarvisReferenceHud.surface(glass, JarvisShellLayout.Box(1f, 1f, right, bottom), 14f,
                 Colors.panelRim, Colors.violetSoft)
