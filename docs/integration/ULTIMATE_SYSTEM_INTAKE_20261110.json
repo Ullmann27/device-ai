@@ -237,5 +237,41 @@
     "modelWeightsChanged": false,
     "originalAvatarChanged": false
   },
-  "recordedAtUtc": "2026-11-10T23:02:07.735956+00:00"
+  "recordedAtUtc": "2026-11-10T23:02:07.735956+00:00",
+  "finalQualification": {
+    "remoteSource": "3ae6e2252b00aa72ae42c9221cce648c8382ffbf",
+    "identicalGitTree": "b9a10f21e2c5768c4443d2126ce84fcf671a539b",
+    "androidHost": {
+      "tests": 4617,
+      "passed": 4600,
+      "skipped": 17,
+      "failures": 0,
+      "errors": 0
+    },
+    "androidMode": "FULL_SUITE_PLUS_CHANGED_TEST_REGRESSION",
+    "singleGreenFullRun": false,
+    "node": {
+      "total": 2493,
+      "passed": 2456,
+      "failed": 0,
+      "skipped": 37
+    },
+    "apk": {
+      "file": "Continuum_53_Ultimate_unsigned_3ae6e225.apk",
+      "bytes": 102670016,
+      "sha256": "435b3fd600bfa7d09a249bc12a8054d472d1d7e7eaf90cfa8ed6d1e93cfd6a6a",
+      "package": "at.heinz.deviceai.continuumlocal",
+      "versionCode": 53,
+      "versionName": "0.3.52",
+      "abis": [
+        "arm64-v8a"
+      ],
+      "signed": false,
+      "zipIntegrity": "PASS",
+      "zipAlignment16KiB": "PASS"
+    },
+    "Fold7": "NOT_RUN",
+    "latestDonorSourceEquivalence": "../evidence/ultimate-system-20261110/source-equivalence-final.json",
+    "historicalPriorityAudit": "../evidence/ultimate-system-20261110/historical-callsite-notes.md"
+  }
 }

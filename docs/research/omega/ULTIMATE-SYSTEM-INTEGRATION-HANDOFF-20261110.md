@@ -2,8 +2,8 @@
 
 Stand: 10.11.2026. Verantwortlich: root / [PR #740](https://github.com/Ullmann27/device-ai/pull/740).
 Branch: `integration/continuum-ultimate-system-20261110`.
-Status: **SOURCE_INTEGRATED; gemeinsame Android-Gesamtabnahme noch ausstehend**.
-Keine APK-, Fold7- oder Release-Freigabe aus Teilprüfungen ableiten.
+Status: **HOST_QA_QUALIFIED; unsigned APK 53 built; Fold7 NOT_RUN**.
+Die ursprüngliche rote Gesamtsuite und ihre grünen Gegenprüfungen bleiben getrennt dokumentiert. Keine Originalsignierung oder Gerätefreigabe.
 
 ## Quellen und Entscheidungen
 
@@ -15,7 +15,7 @@ Experimente stehen mit vollständigen SHA-Werten in
 Donor-PRs bleiben offen. Nur dieser Integrator verändert diesen gemeinsamen Branch.
 
 #717/#719 bleiben Forschung; #718/#721/#728 erhalten keine Produktivförderung.
-CTX3 bleibt am bestehenden, ausdrücklich eingeschalteten Shadow-Pfad.
+CTX3 bleibt standardmäßig OFF; der bestehende Shadow-Pfad erfordert ausdrückliche Aktivierung.
 Keine Modellgewichte, Originalavatar-Assets, Paketkonfiguration oder Nutzerdateien
 wurden durch diese Integration ersetzt. Kein neues Gedächtnis, kein zusätzlicher
 Animationsbus, kein zweiter Werkzeugexecutor.
@@ -141,3 +141,35 @@ nur über nachvollziehbare Revert-Commits, keine Force-Pushes oder Branch-Lösch
 The first nine-case regression on local `55e031769e12dda32b67f94f821c03d4eabb92b4` / remote `2d946d4b2acbbddf5eef66bf56f5d26ba89dee9b` passed eight cases. The remaining authorized-runner test waited for an injected Shizuku callback from `get_device_info`; the integrated executor now reads that tool directly from Android Build APIs and therefore correctly never invokes Shizuku. The fixture now uses the existing read-only `list_processes` bridge tool. Arrival, departure, successful ToolGate outcome and absence of document-read effects remain asserted unchanged. No production code or permission gate was modified.
 
 Status at this checkpoint: WIP / targeted regression pending. Reproduce with `:app:testDebugUnitTest --tests at.heinz.deviceai.ConsequentialActionApprovalTest --tests at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest` under the existing UI widget QA profile. Preserve the original full-run and first-regression failures. EXP-11 compatibility unchanged; rollback is this test-only commit. Fold7 remains NOT_RUN.
+
+## Abschluss 11.11.2026
+
+Gebaute GitHub-Quelle: `3ae6e2252b00aa72ae42c9221cce648c8382ffbf`; lokal `35dbef497efaf41cdcb3d37c83d5c00702c935cc`;
+identischer Git-Baum `b9a10f21e2c5768c4443d2126ce84fcf671a539b`. Nachfolgende Änderungen in dieser
+Übergabe betreffen ausschließlich Dokumentation und Prüfbelege.
+
+Android: 4600 bestanden, 17 übersprungen, null verbleibende Fehler
+in kombinierter Abdeckung. Der vollständige Lauf auf `0d21f084` hatte 4.617 Fälle,
+4.597 PASS / 3 FAIL / 17 SKIP. Nur zwei Testvorlagen wurden repariert und alle neun
+Tests dieser Klassen erneut mit Gradle bestanden. Produktiv-/Buildcode und übrige
+Tests blieben unverändert. **Kein einzelner grüner Gesamtlauf behauptet.**
+Node auf der gebauten Quelle: 2456 PASS / 37 SKIP / 0 FAIL.
+App-/JVM-/UI-/Instrumentierungs-Kompilierung sowie vorhandenes NewApi-Lint grün.
+
+APK: `Continuum_53_Ultimate_unsigned_3ae6e225.apk`, 102670016 Byte, Paket `at.heinz.deviceai.continuumlocal`,
+versionCode 53, versionName 0.3.52, ARM64, unsigniert.
+SHA-256: `435b3fd600bfa7d09a249bc12a8054d472d1d7e7eaf90cfa8ed6d1e93cfd6a6a`. ZIP-Integrität und ZIP-Ausrichtung geprüft.
+Keine Installation, Originalsignierung, Veröffentlichung oder Main-Änderung.
+
+Die zwölf älteren offenen Prioritätseinträge haben einen aktuellen Datei- und
+Aufruferabgleich in `historical-source-comparison.json` und
+`historical-callsite-notes.md`. Die neuesten Donor-HEADs #739 `a980a19` und #735
+`acca372` ändern gegenüber den integrierten Ständen nur Tests/Dokumentation;
+kein weiterer Produktivdiff. Historische Gesamtkataloge bleiben erhalten.
+
+Nächster erforderlicher Schritt ist die reale Geräteabnahme: Fold7, Gemma,
+Mikrofon/TTS, Filament, Offline-Diagnose/Freigaben/STOP und Thermik. Diese Punkte
+bleiben **NOT_RUN**; nicht durch Host-Renderbilder oder Mock-Antworten ersetzen.
+Details und genaue Prüfbefehle: `docs/evidence/ultimate-system-20261110/` sowie
+`Continuum_53_Pruefbelege.zip`. Originalgewichte und abgelehnte Experimente bleiben
+unverändert beziehungsweise deaktiviert.

@@ -1,0 +1,204 @@
+{
+  "status": "HOST_QA_AND_UNSIGNED_CANDIDATE_PASS",
+  "repository": "Ullmann27/device-ai",
+  "pr": 740,
+  "branch": "integration/continuum-ultimate-system-20261110",
+  "remoteSource": "3ae6e2252b00aa72ae42c9221cce648c8382ffbf",
+  "localSource": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+  "identicalGitTree": "b9a10f21e2c5768c4443d2126ce84fcf671a539b",
+  "apk": {
+    "file": "Continuum_53_Ultimate_unsigned_3ae6e225.apk",
+    "bytes": 102670016,
+    "sha256": "435b3fd600bfa7d09a249bc12a8054d472d1d7e7eaf90cfa8ed6d1e93cfd6a6a",
+    "package": "at.heinz.deviceai.continuumlocal",
+    "versionCode": 53,
+    "versionName": "0.3.52",
+    "abis": [
+      "arm64-v8a"
+    ],
+    "signed": false,
+    "zipIntegrity": "PASS",
+    "zipAlignment16KiB": "PASS"
+  },
+  "androidHostTests": {
+    "tests": 4617,
+    "passed": 4600,
+    "skipped": 17,
+    "failures": 0,
+    "errors": 0
+  },
+  "androidHostQualification": {
+    "status": "QUALIFIED_EXECUTED_HOST_TESTS",
+    "mode": "FULL_SUITE_PLUS_CHANGED_TEST_REGRESSION",
+    "singleFullRunPassed": false,
+    "source": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "productionUnchangedFromFullRun": true,
+    "sourceDiff": [
+      "app/src/test/java/at/heinz/deviceai/ConsequentialActionApprovalTest.kt",
+      "app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt",
+      "docs/evidence/ultimate-system-20261110/full-baseline-summary.json",
+      "docs/evidence/ultimate-system-20261110/historical-callsite-notes.md",
+      "docs/evidence/ultimate-system-20261110/historical-source-comparison.json",
+      "docs/evidence/ultimate-system-20261110/native-action-action-receipt.txt",
+      "docs/evidence/ultimate-system-20261110/native-action-actual-two-step.txt",
+      "docs/evidence/ultimate-system-20261110/native-action-invocation.json",
+      "docs/evidence/ultimate-system-20261110/native-action-run.log",
+      "docs/evidence/ultimate-system-20261110/node-fixtures-final.json",
+      "docs/evidence/ultimate-system-20261110/permission-fixture-green.json",
+      "docs/evidence/ultimate-system-20261110/permission-fixture-green.txt",
+      "docs/evidence/ultimate-system-20261110/skipped-node-tests.json",
+      "docs/evidence/ultimate-system-20261110/skipped-tests-explained.json",
+      "docs/evidence/ultimate-system-20261110/task-effects-fixture-WIP.md",
+      "docs/research/omega/ULTIMATE-SYSTEM-INTEGRATION-HANDOFF-20261110.md"
+    ],
+    "baselineFullRun": {
+      "source": "ff28ae74f18570daa6485fc6e885de360dd70e9f",
+      "exitCode": 1,
+      "tests": 4617,
+      "failures": [
+        {
+          "class": "at.heinz.deviceai.ConsequentialActionApprovalTest",
+          "test": "everyConsequentialRegistryToolIsRefusedWithoutAnExplicitOwnerYes"
+        },
+        {
+          "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+          "test": "authorizedRealRunnerEntryAndExitReachTheVisibleSurface"
+        },
+        {
+          "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+          "test": "deniedToolHasNoBackendAndNoArrival"
+        }
+      ],
+      "sourceUnchanged": true
+    },
+    "correctedRegression": {
+      "source": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+      "tests": 9,
+      "passed": 9,
+      "sourceUnchanged": true
+    },
+    "combinedUniqueCases": {
+      "tests": 4617,
+      "passed": 4600,
+      "skipped": 17,
+      "failures": 0,
+      "errors": 0
+    },
+    "caseStatusSha256": "a59d0afa1ef7b2149e84b80a470dbe7b11fe680a76520d3c3ac962543e6496ff",
+    "explanation": "The original full run remains recorded as failed. Only its two changed test classes are replaced by the green exact-source regression. All production/build sources and every other test file are unchanged. This is combined coverage, not a claimed green single full run.",
+    "Fold7": "NOT_RUN"
+  },
+  "baselineFullRunCounts": {
+    "tests": 4617,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 17
+  },
+  "androidHostSuites": 794,
+  "node": {
+    "total": 2493,
+    "passed": 2456,
+    "failed": 0,
+    "skipped": 37
+  },
+  "lintScope": "Configured NewApi gate; not all lint categories",
+  "Fold7": "NOT_RUN",
+  "realGemma": "NOT_RUN",
+  "physicalMicrophoneTts": "NOT_RUN",
+  "filamentGpu": "NOT_RUN",
+  "deviceThermal": "NOT_RUN",
+  "mainMerge": "NOT_AUTHORIZED",
+  "originalSigning": "NOT_AUTHORIZED",
+  "publication": "NOT_AUTHORIZED",
+  "installation": "NOT_RUN",
+  "scope": "Combined full host suite plus rerun of the two corrected test fixtures; production source unchanged across runs. Original full run remains recorded as failed. Unsigned build is not device acceptance or an installable original-signed update.",
+  "skippedAndroidCases": [
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s7_pending_agentMessagesUrgentWakesInfoWaits",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s4b_pending_profileDiarySharedLayers",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s5b_pending_textFileSkillLibraryLoadedOnDemand",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s6_pending_routineReportsOnlyWhenSomethingIsNew",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "test": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "test": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt6b_lernen_hypotheseUndTagebuchEintrag",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "test": "actualNodeKotlinNodeTrainingParity",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "test": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+      "reason": "No reason supplied by JUnit XML"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+      "test": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+      "reason": "No reason supplied by JUnit XML"
+    }
+  ],
+  "evidenceArchive": "Continuum_53_Pruefbelege.zip",
+  "evidenceArchiveSha256": "7852128c9576808578ae4d325eaca8f067d682f5f9099cc1f064007ed1093b3e"
+}

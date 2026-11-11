@@ -1,0 +1,29 @@
+{
+  "source": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+  "fullRunSource": "ff28ae74f18570daa6485fc6e885de360dd70e9f",
+  "unchangedScopes": {
+    "app/src/main": true,
+    "app/build.gradle.kts": true,
+    "app/src/androidTest": true,
+    "backend": true,
+    "scripts": true,
+    ".github/continuum": true
+  },
+  "latestDonors": [
+    {
+      "pr": 739,
+      "head": "a980a19ed3ab44323009ae27eb299d322ff11679",
+      "lastIntegratedSource": "f495fd633509e11a52519a0bd89d96b22cb91b3b",
+      "newMainSourceDiff": [],
+      "decision": "Additional camera-return test and fixture timing evidence only. Current integrated production is unchanged; our bounded terminal-frame tests passed in the full run."
+    },
+    {
+      "pr": 735,
+      "head": "acca372a49972e35c2d8d0377187793416fa5a4f",
+      "lastIntegratedSource": "1223dc82ab6c8482d3f5be44bf2863cd2425ee8e",
+      "newMainSourceDiff": [],
+      "decision": "Latest donor changes remain tests/docs; production source already integrated."
+    }
+  ],
+  "remoteSource": "3ae6e2252b00aa72ae42c9221cce648c8382ffbf"
+}
