@@ -10,7 +10,7 @@ internal object OwnerAppLookupIntent {
             val messagePlanningIfMatched: Boolean = false
         ) : Intake
         data class Planning(val original: String, val clarification: String? = null) : Intake
-        data class Clarify(val subject: String) : Intake
+        data class Clarify(val subject: String, val opening: Boolean? = null) : Intake
     }
 
     private val negation = Regex("(?iu)\\b(nicht|niemals|kein|keine|keinen|keinem|keiner|ohne)\\b")
@@ -27,6 +27,11 @@ internal object OwnerAppLookupIntent {
     private val direct = Regex("(?iu)^(öffne|starte|suche|finde|zeige)\\s+(.+?)[.!?]*$")
     private val polite = Regex("(?iu)^(?:kannst|könntest|würdest|magst)\\s+du\\s+(.+?)\\s+(öffnen|starten|suchen|finden|zeigen)(?:\\s+bitte)?[.!?]*$")
     private val desire = Regex("(?iu)^ich\\s+(?:möchte|will|würde\\s+gern(?:e)?)\\s+(.+?)\\s+(öffnen|starten)[.!?]*$")
+    private val verbFinal = Regex("(?iu)^(.+?)\\s+(öffnen|starten)(?:\\s+bitte)?[.!?]*$")
+    private val nonCommandSubject = Regex("(?iu)^(?:wie|warum|wo|wer|was|welche\\p{L}*|ich|du|er|sie|es|man)\\b")
+    private val indirectModal = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:kann|können|könnte|kannst|" +
+        "soll|sollte|will|wollte|möchte|möchten|muss|müsste|darf|dürfte)(?![\\p{L}\\p{N}_])")
+    private val missingName = Regex("(?iu)^(?:(?:eine|irgendeine)\\s+)?app$")
     private val openUp = Regex("(?iu)^mach(?:e)?\\s+(.+?)\\s+auf[.!?]*$")
     private val needPrefix = Regex("(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\b")
     private val needExplicitApp = Regex(
@@ -127,20 +132,26 @@ internal object OwnerAppLookupIntent {
         val d = direct.matchEntire(text)
         val p = polite.matchEntire(text) ?: desire.matchEntire(text)
         val m = openUp.matchEntire(text)
+        val finalVerb = verbFinal.matchEntire(text)?.takeUnless {
+            nonCommandSubject.containsMatchIn(it.groupValues[1]) || indirectModal.containsMatchIn(it.groupValues[1])
+        }
         when {
             d != null -> { opening = d.groupValues[1].lowercase() in setOf("öffne", "starte"); target = d.groupValues[2] }
             p != null -> { opening = p.groupValues[2].lowercase() in setOf("öffnen", "starten"); target = p.groupValues[1] }
             m != null -> { opening = true; target = m.groupValues[1] }
             needTarget != null -> { opening = true; target = needTarget }
+            finalVerb != null -> { opening = true; target = finalVerb.groupValues[1] }
             else -> return if (requestStart.containsMatchIn(text) && action.containsMatchIn(text)) planning(utterance) else null
         }
         if (!Regex("(?iu)\\bapp\\b").containsMatchIn(target) && fileTarget.containsMatchIn(target)) return null
         if (additional.containsMatchIn(target)) return planning(utterance)
         var name = target.trim().trimEnd('.', '!', '?').trim()
         repeat(4) { name = name.replace(courtesy, "").replace(trailingCourtesy, "").trim() }
+        if (missingName.matches(name)) return Intake.Clarify("App", opening)
         if (isReference(name)) return Intake.Lookup(name, opening)
         name = name.replace(Regex("(?iu)^(?:die|den|das|meine|meinen)\\s+"), "")
             .replace(Regex("(?iu)^app\\s+"), "").replace(Regex("(?iu)\\s+app$"), "").trim()
+        if (at.heinz.deviceai.systemintelligence.SystemIntelligenceCommands.isDiagnosisTarget(name)) return null
         if (!query.matches(name) || name.contains("..") || name.contains(Regex("(?iu)\\b(etwas|irgendwas|irgendetwas)\\b")))
             return planning(utterance)
         return Intake.Lookup(

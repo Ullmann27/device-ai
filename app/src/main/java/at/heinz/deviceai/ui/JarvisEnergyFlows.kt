@@ -14,7 +14,15 @@ import kotlin.math.sin
  * speech/work state) brightens the streams; it never invents activity.
  */
 object JarvisEnergyFlows {
-    private class Flow(val p: FloatArray, val depth: Int, val period: Float, val phase: Float, val pulseSpeed: Float)
+    private class Flow(val p: FloatArray, val depth: Int, val period: Float, val phase: Float, val pulseSpeed: Float) {
+        val controls = FloatArray(8)
+
+        fun updateControls(t: Float) {
+            val d = .022f + depth * .008f
+            val wave = 2f * PI.toFloat() * t / period + phase
+            for (i in controls.indices) controls[i] = p[i] + d * sin(wave + i * 1.7f)
+        }
+    }
 
     /** Normalised stage coordinates (x0,y0, c1x,c1y, c2x,c2y, x1,y1); depth 0 = far, 2 = near. */
     private val flows = listOf(
@@ -42,11 +50,9 @@ object JarvisEnergyFlows {
     private const val HUE_STEPS = 128
 
     /** Cubic Bézier point of [f] at [u] after drift, in stage pixels, written into [out] (no allocation). */
-    private fun point(f: Flow, w: Float, h: Float, t: Float, u: Float, out: FloatArray = scratch): FloatArray {
-        val d = .022f + f.depth * .008f
-        val wave = 2f * PI.toFloat() * t / f.period + f.phase
-        fun c(i: Int) = f.p[i] + d * sin(wave + i * 1.7f)
-        val x0 = c(0); val y0 = c(1); val x1 = c(2); val y1 = c(3); val x2 = c(4); val y2 = c(5); val x3 = c(6); val y3 = c(7)
+    private fun point(f: Flow, w: Float, h: Float, u: Float, out: FloatArray = scratch): FloatArray {
+        val c = f.controls
+        val x0 = c[0]; val y0 = c[1]; val x1 = c[2]; val y1 = c[3]; val x2 = c[4]; val y2 = c[5]; val x3 = c[6]; val y3 = c[7]
         val v = 1f - u
         val x = v * v * v * x0 + 3 * v * v * u * x1 + 3 * v * u * u * x2 + u * u * u * x3
         val y = v * v * v * y0 + 3 * v * v * u * y1 + 3 * v * u * u * y2 + u * u * u * y3
@@ -59,9 +65,10 @@ object JarvisEnergyFlows {
         val boost = 1f + .6f * energy.coerceIn(0f, 1f)
         p.setAdditive(true)
         for ((index, f) in flows.withIndex()) {
+            f.updateControls(t)
             path.reset()
             for (k in 0..24) {
-                val q = point(f, w, h, t, k / 24f)
+                val q = point(f, w, h, k / 24f)
                 if (k == 0) path.moveTo(q[0], q[1]) else path.lineTo(q[0], q[1])
             }
             // Gradient endpoints are the flow's static anchors; the hue advances in 1/128 cycle steps (≈0.2 s), so a
@@ -79,7 +86,7 @@ object JarvisEnergyFlows {
             // Two pulses glide along each stream.
             for (j in 0 until 2) {
                 val u = (((t * f.pulseSpeed + j * .5f + f.phase * .1f) % 1f) + 1f) % 1f
-                val q = point(f, w, h, t, u)
+                val q = point(f, w, h, u)
                 val glow = sin(PI.toFloat() * u)                 // fades in and out at the ends, no hard jump
                 val color = hue(shift + (u * 8f).toInt() / 16f)
                 JarvisSceneFills.halo(p, q[0], q[1], 9f + f.depth * 3f, color, .32f * glow * boost)

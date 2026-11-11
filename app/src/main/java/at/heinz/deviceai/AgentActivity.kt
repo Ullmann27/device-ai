@@ -32,6 +32,8 @@ import at.heinz.deviceai.cognitive.ContinuumReadinessGuide
 import at.heinz.deviceai.cognitive.CameraTrackingState
 import at.heinz.deviceai.cognitive.OwnerAppLookupIntent
 import at.heinz.deviceai.cognitive.OwnerAppActionFlow
+import at.heinz.deviceai.cognitive.OwnerAppClarification
+import at.heinz.deviceai.cognitive.OwnerDeviceRequestSafety
 import at.heinz.deviceai.cognitive.NativeAppCandidate
 import at.heinz.deviceai.ui.ToolWorkSceneLease
 import android.content.Intent
@@ -322,7 +324,9 @@ class AgentActivity : Activity() {
     @Volatile private var activeOwnerAppFlow: OwnerAppActionFlow? = null
     @Volatile private var activeOwnerAppGate: ToolGate? = null
     private var appLookupContext: Pair<String, List<NativeAppCandidate>>? = null
-    private data class AppActionReply(val session: String, val generation: Long, val request: String, val message: String)
+    private val appNameClarification = OwnerAppClarification()
+    private data class AppActionReply(val session: String, val generation: Long, val request: String,
+        val message: String, val nameOpening: Boolean? = null, val ownerRevision: Long = -1L)
     private var pendingAppActionReply: AppActionReply? = null
     private var pendingLocalSpeechRequest: Int? = null
     private var pendingLocalSpeechSession: String? = null
@@ -794,6 +798,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        appNameClarification.clear()
         documentReadGeneration++
         pendingReturnedDocument = null
         cancelSystemDiagnosis()
@@ -3051,6 +3056,7 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Ein Schritt läuft noch. Dein Auftrag bleibt im Entwurf.", Toast.LENGTH_LONG).show()
             return false
         }
+        if (request.mode == ChiefBotTaskMode.LOCAL_TOOLS && rejectOwnerRoleManipulation(request.text)) return true
         if (request.mode != ChiefBotTaskMode.CODING_DRAFT &&
             (!::localRuntime.isInitialized || localRuntime.loadedModel == null || localRuntime.state != LocalModelState.READY ||
                 (request.mode == ChiefBotTaskMode.PRIVATE_REPLY && continuumState == null))) {
@@ -3186,6 +3192,7 @@ class AgentActivity : Activity() {
     }
 
     private fun enterBotConversation(profile: at.heinz.deviceai.chief.ChiefBotProfile) {
+        appNameClarification.clear()
         cancelSpeechInputScope()
         voiceEngine?.stop(); stopVoiceAnimation()
         botConversation.select(profile.agentId)
@@ -3212,6 +3219,7 @@ class AgentActivity : Activity() {
     }
 
     private fun returnToJarvis() {
+        appNameClarification.clear()
         cancelSpeechInputScope()
         voiceEngine?.stop(); stopVoiceAnimation()
         botConversation.select(null)
@@ -3290,6 +3298,7 @@ class AgentActivity : Activity() {
 
     private fun runBotDialogue(profile: at.heinz.deviceai.chief.ChiefBotProfile, request: String) {
         if (busy || localAgentExecutor.isShutdown) return
+        if (rejectOwnerRoleManipulation(request)) return
         val allowMaya = !at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalSpeech(request)
         ownerReplyAllowsMaya = allowMaya
         if (at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum.requestsKotlinRepairPractice(request)) {
@@ -5946,10 +5955,12 @@ class AgentActivity : Activity() {
 
     private fun runExplicitAppLookup(request: String, intake: OwnerAppLookupIntent.Intake.Lookup) {
         val ownerSession = sessionId
+        val ownerRevision = ownerReplyRevision
         val contextual = appLookupContext?.takeIf { it.first == ownerSession }?.second.orEmpty()
         val query = OwnerAppLookupIntent.contextualTarget(intake.query, contextual)
         if (query == null) {
-            clarifyAppRequest(request, "Welche App meinst du genau? Bitte nenne den Namen oder wähle einen angezeigten Treffer.")
+            clarifyAppRequest(request, "Welche App meinst du genau? Bitte nenne den Namen oder wähle einen angezeigten Treffer.",
+                nameOpening = intake.opening)
             return
         }
         val generation = ++appLookupGeneration
@@ -6018,7 +6029,9 @@ class AgentActivity : Activity() {
                         clarifyMessage -> clarifyAppRequest(
                             request, OwnerAppLookupIntent.messageClarification())
                         else -> {
-                            val reply = AppActionReply(ownerSession, generation, request, step.message)
+                            val nameOpening = intake.opening.takeIf {
+                                flow.lookupVerified && flow.candidates.isEmpty() && !intake.requireInstalledCandidate }
+                            val reply = AppActionReply(ownerSession, generation, request, step.message, nameOpening, ownerRevision)
                             if (foregroundLearningActive) deliverAppActionReply(reply)
                             else pendingAppActionReply = reply
                         }
@@ -6035,17 +6048,32 @@ class AgentActivity : Activity() {
         localConversationContext.recordNonModel(reply.session, reply.request, "App-Auftrag · Werkzeugrückmeldung im Dialog")
         addAssistantMessage(reply.message, preserveLocalContext = true,
             keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+        if (ownerReplyRevision == reply.ownerRevision) reply.nameOpening?.let {
+            appNameClarification.requestName(reply.session, reply.ownerRevision, it)
+        }
     }
 
-    private fun clarifyAppRequest(request: String, question: String) {
+    private fun clarifyAppRequest(request: String, question: String, nameOpening: Boolean? = null) {
+        appNameClarification.clear()
         localConversationContext.recordUnanswered(sessionId, request)
         addAssistantMessage(question, preserveLocalContext = true,
             keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+        nameOpening?.let { appNameClarification.requestName(sessionId, ownerReplyRevision, it) }
+    }
+
+    private fun rejectOwnerRoleManipulation(request: String): Boolean {
+        if (!OwnerDeviceRequestSafety.inspect(request).roleManipulation) return false
+        input.text.clear()
+        addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+        addNonModelReply(request, BootstrapBrain.decide(request, emptyList()).message,
+            at.heinz.deviceai.cognitive.NonModelReplyKind.SAFETY_REFUSAL)
+        return true
     }
 
     /** Public status only: no collector invocation, disk scan, model call, bot seed, grant,
      * learning radar or memory/context mutation. Current runtime flags outrank cached telemetry. */
     private fun showCurrentAppCapabilities(request: String) {
+        appNameClarification.clear()
         val runtimeState = if (::localRuntime.isInitialized) when (localRuntime.state) {
             LocalModelState.EMPTY -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.NOT_LOADED
             LocalModelState.LOADING -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.LOADING
@@ -6091,7 +6119,7 @@ class AgentActivity : Activity() {
     }
 
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
-        if (consumePendingResearchChatReply()) return
+        if (consumePendingResearchChatReply()) { appNameClarification.clear(); return }
         // Exact status submissions stay read-only even while a model/bot is busy. The
         // Send button's explicit Stop/cancel behavior remains in its existing click handler.
         if (at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(input.text.toString(), neuralCoach.isActive()) ==
@@ -6099,6 +6127,7 @@ class AgentActivity : Activity() {
             showCurrentAppCapabilities(input.text.toString().trim())
             return
         }
+        if (rejectOwnerRoleManipulation(input.text.toString().trim())) return
         // A read-only Chief status question is allowed while Gemma is busy.
         // It must never cancel or queue behind the current model generation.
         val chiefStatusRequest = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
@@ -6122,6 +6151,9 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
+        val clarifiedAppName = appNameClarification.consume(sessionId, ownerReplyRevision, request,
+            at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+                continuumState?.archive?.identityState?.chosenName))
         if (chiefStatusRequest) {
             // This diagnostic does not select JARVIS or submit a private bot turn.
             // Keep the active bot's selection, cancellation and model lease intact.
@@ -6130,13 +6162,19 @@ class AgentActivity : Activity() {
             showChiefWorkerStatus()
             return
         }
-        if (!botRoutingChecked && routeBotInput(input.text.toString())) return
+        if (SystemIntelligenceCommands.isCachePreviewRequest(request)) {
+            input.text.clear()
+            addUserMessage(request, keepCockpit = true)
+            runSystemTool(SystemIntelligenceCommands.PREVIEW, ownerRequest = request)
+            return
+        }
         if (SystemIntelligenceCommands.isDiagnosisRequest(request)) {
             input.text.clear()
             addUserMessage(request, keepCockpit = true)
             runSystemTool(SystemIntelligenceCommands.DIAGNOSE, ownerRequest = request)
             return
         }
+        if (clarifiedAppName == null && !botRoutingChecked && routeBotInput(input.text.toString())) return
         // Prior measurement requests never start a new tool, model or network call.
         if (!neuralCoach.isActive() &&
             at.heinz.deviceai.cognitive.OwnerPreviousBatteryIntent.isPreviousReadingRequest(request)) {
@@ -6415,15 +6453,17 @@ class AgentActivity : Activity() {
             return
         }
         // Recognition grants no execution.
-        OwnerAppLookupIntent.inspect(request, at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
-            continuumState?.archive?.identityState?.chosenName))?.let { intake ->
+        (clarifiedAppName ?: OwnerAppLookupIntent.inspect(request, at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+            continuumState?.archive?.identityState?.chosenName)))?.let { intake ->
             webToolGate.cancel()
             approvedModelWebSession.getAndSet(null)?.cancel()
             input.text.clear()
             addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
             when (intake) {
                 is OwnerAppLookupIntent.Intake.Lookup -> runExplicitAppLookup(request, intake)
-                is OwnerAppLookupIntent.Intake.Clarify -> clarifyAppRequest(request,
+                is OwnerAppLookupIntent.Intake.Clarify -> if (intake.opening != null)
+                    clarifyAppRequest(request, "Welche App meinst du genau? Bitte nenne den Namen.", intake.opening)
+                else clarifyAppRequest(request,
                     "Was brauchst du aus ${intake.subject}: die App öffnen, etwas nachsehen oder einen Inhalt vorbereiten?")
                 is OwnerAppLookupIntent.Intake.Planning -> {
                     if (intake.clarification != null) clarifyAppRequest(request, intake.clarification)
@@ -6552,6 +6592,13 @@ class AgentActivity : Activity() {
                     }
                 }
             } else acknowledge()
+            return
+        }
+        localConversationContext.objectStateAnswer(sessionId, request)?.let { answer ->
+            input.text.clear()
+            addUserMessage(request)
+            addNonModelReply(request, answer, at.heinz.deviceai.cognitive.NonModelReplyKind.OBJECT_STATE_RECALL)
+            addToolActivity("GESPRÄCHSSTAND · eigene Angaben · keine Modell- oder Webanfrage")
             return
         }
         // Optional zero-token reflex; a recognized but unproven source request is terminal.
@@ -10689,6 +10736,8 @@ class AgentActivity : Activity() {
         // mutate the situation focus a second time. This carries no facts or tool authority.
         val situationHint = if (botTask == null && codingPlanning == null)
             localConversationContext.situationHint(localSessionId, text) else ""
+        val ownerObjectState = if (botTask == null && codingPlanning == null)
+            localConversationContext.objectStateBlock(localSessionId, text) else ""
         val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task
         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
@@ -10817,11 +10866,12 @@ class AgentActivity : Activity() {
                     // A deliberately narrow research-only temporal projection. The
                     // session's owner sentences stay unverified and ephemeral. Model
                     // replies, persistent owner memories and external data are never parsed.
-                    if (requiresPriorDialogue && priorOwnerEvidence != null) {
+                    if (requiresPriorDialogue && priorOwnerEvidence != null && ownerObjectState.isBlank()) {
                         // M2: domain-neutral successor of TaskScopedRingStateProjector.
                         at.heinz.deviceai.cognitive.OwnerStatementTimeline
                             .project(priorOwnerEvidence, text)?.let { append(it.render()) }
                     }
+                    if (ownerObjectState.isNotBlank()) append(ownerObjectState)
                     if (situationHint.isNotBlank()) append(situationHint)
                     // Current task and retrieval precede optional compiled/history data.
                     // A long request must never disappear behind the512-char memory lookup.
@@ -11927,6 +11977,7 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        appNameClarification.clear()
         workPresentationGeneration++
         documentReadGeneration++
         pendingDocumentSelection = null
@@ -13191,6 +13242,7 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
             return
         }
+        appNameClarification.clear()
         webToolGate.cancel()
         approvedModelWebSession.getAndSet(null)?.cancel()
         clearTaskEffects()
@@ -13244,6 +13296,7 @@ class AgentActivity : Activity() {
 
     /** [keepCockpit]: a cockpit work scene answers this request on START – record it without switching to the chat. */
     private fun addUserMessage(value: String, keepCockpit: Boolean) {
+        appNameClarification.clear()
         ownerReplyRevision++
         documentReadGeneration++
         val allowsMaya = !at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalSpeech(value)

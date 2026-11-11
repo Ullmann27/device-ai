@@ -1,0 +1,57 @@
+JUnit version 4.13.2
+....E.....E..E.E.E............
+Time: 2.1
+There were 5 failures:
+1) interruptionsNeitherChangeNorEvictTheState(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest)
+java.lang.AssertionError: Laut deinen Angaben in diesem Gespräch – Werkzeugkiste:
+• Farbe: blau
+• Anzahl Schrauben: 19
+• Ort: im Keller
+Verlauf: Farbe seit deiner ersten Angabe unverändert; Anzahl Schrauben 12 → 17 → 19; Ort in der Garage → im Keller
+(Gesprächsstand aus deinen eigenen Nachrichten – keine externe Prüfung der Wirklichkeit.)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest.assertFinal758(OwnerObjectStateLedgerTest.kt:38)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest.interruptionsNeitherChangeNorEvictTheState(OwnerObjectStateLedgerTest.kt:138)
+2) temporalOrderOfEarlierStatementsIsAnsweredFromTheTimeline(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest)
+java.lang.AssertionError: Laut deinen Angaben in diesem Gespräch – Werkzeugkiste:
+• Anzahl Schrauben: 12 → 17 → 19 · aktuell 19 · Änderungen: 2
+(Gesprächsstand aus deinen eigenen Nachrichten – keine externe Prüfung der Wirklichkeit.)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest.temporalOrderOfEarlierStatementsIsAnsweredFromTheTimeline(OwnerObjectStateLedgerTest.kt:147)
+3) issue758StepByStepAnswersMatchTheOwnersExpectation(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest)
+java.lang.AssertionError: Laut deinen Angaben in diesem Gespräch – Werkzeugkiste:
+• Farbe: blau
+• Anzahl Schrauben: 19
+• Ort: im Keller
+Verlauf: Farbe seit deiner ersten Angabe unverändert; Anzahl Schrauben 12 → 17 → 19; Ort in der Garage → im Keller
+(Gesprächsstand aus deinen eigenen Nachrichten – keine externe Prüfung der Wirklichkeit.)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest.assertFinal758(OwnerObjectStateLedgerTest.kt:38)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest.issue758StepByStepAnswersMatchTheOwnersExpectation(OwnerObjectStateLedgerTest.kt:75)
+4) modelPromptCarriesTheFinalStateForACorrectionTurn(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest)
+java.lang.AssertionError: 
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau (bestätigt unverändert) · Anzahl Schrauben 19 (Verlauf: 12 → 17 → 19) · Ort im Keller (Verlauf: in der Garage → im Keller)
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest.modelPromptCarriesTheFinalStateForACorrectionTurn(OwnerObjectStateLedgerTest.kt:84)
+5) issue758FiveStepFlowSurvivesTheFourTurnWindow(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest)
+java.lang.AssertionError: Laut deinen Angaben in diesem Gespräch – Werkzeugkiste:
+• Farbe: blau
+• Anzahl Schrauben: 19
+• Ort: im Keller
+Verlauf: Farbe seit deiner ersten Angabe unverändert; Anzahl Schrauben 12 → 17 → 19; Ort in der Garage → im Keller
+(Gesprächsstand aus deinen eigenen Nachrichten – keine externe Prüfung der Wirklichkeit.)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest.assertFinal758(OwnerObjectStateLedgerTest.kt:38)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest.issue758FiveStepFlowSurvivesTheFourTurnWindow(OwnerObjectStateLedgerTest.kt:57)
+
+FAILURES!!!
+Tests run: 25,  Failures: 5
+

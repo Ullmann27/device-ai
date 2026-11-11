@@ -1,0 +1,11 @@
+{
+  "sources": [
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt"
+  ],
+  "tests": [
+    "app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusReuseTest.kt",
+    "app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningCoreTest.kt",
+    "app/src/test/java/at/heinz/deviceai/learning/TrainableSubwordEncoderTest.kt",
+    "app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningStatusCacheReviewTest.kt"
+  ]
+}

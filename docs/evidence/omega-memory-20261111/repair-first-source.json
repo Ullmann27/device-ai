@@ -1,0 +1,11 @@
+{
+  "head": "64368dd3f48285a6512c6902ea978b8b2a9f05d1",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/GermanNumberWords.kt": "8a8f528bb43a43b50dffaeea8c3f05627577a47ae0d07915eadeda730ed52e30",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedger.kt": "23f3b346e71cac765acb0f39edafb1500677fd4eed2dec412b38f290f5a3d9bf",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "332643aac7d0c5087253a00e63671fb8b1006a44fce85cddc6edb18a63cb8f1f",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedgerTest.kt": "f10d312f9c09240c7258bbb96cd58270291ac58b41de42c272b1ce6e2a4ab361",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedgerSafetyTest.kt": "2972226d1ce1f6ee0cb3837df3500a2c0cd4d1a2b823e7dd94b0d02a6abdc828"
+  },
+  "kind": "focused Kotlin/JUnit; existing compiled dependencies, not full Android"
+}

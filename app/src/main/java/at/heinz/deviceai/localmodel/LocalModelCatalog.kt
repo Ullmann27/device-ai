@@ -252,6 +252,13 @@ class LocalModelCatalog(
     }
 
     @Synchronized
+    internal fun sourceForLoad(id: String, version: String): Pair<ImportedLocalModel, File>? {
+        val model = get(id, version) ?: return null
+        // Already verified under this monitor.
+        return model to modelFile(id, version)
+    }
+
+    @Synchronized
     fun delete(id: String, version: String): Boolean {
         require(isSafeIdentifier(id) && isSafeIdentifier(version))
         val model = modelFile(id, version)

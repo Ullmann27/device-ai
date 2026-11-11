@@ -84,7 +84,18 @@ class SystemIntelligenceUiTest {
     fun naturalRequestReachesDiagnosisContextAndSharedTurn() {
         render("system-dialog", 440, 956, diagnose = true)
     }
-    private fun render(label: String, width: Int, height: Int, diagnose: Boolean = false) {
+    @Test @Config(qualifiers = "w440dp-h956dp-port-mdpi")
+    fun shortSpokenDiagnosisUsesRealWorkSceneWithoutModelInference() {
+        render("system-short", 440, 956, diagnose = true,
+            spokenRequest = "Analysiere mein Handy und schlage mir Verbesserungen vor.", fromChat = true)
+    }
+    @Test @Config(qualifiers = "w440dp-h956dp-port-mdpi")
+    fun cageCleanupSpeechOnlyPreviewsOwnedCache() {
+        render("system-cage", 440, 956, diagnose = true,
+            spokenRequest = "bereinige bitte meinen Cage und sage mir wie viel du bereinigt hast", preview = true)
+    }
+    private fun render(label: String, width: Int, height: Int, diagnose: Boolean = false,
+                       spokenRequest: String? = null, fromChat: Boolean = false, preview: Boolean = false) {
         ShadowChoreographer.setPaused(true)
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
         val app = RuntimeEnvironment.getApplication()
@@ -118,29 +129,61 @@ class SystemIntelligenceUiTest {
             fun field(name: String) = AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }
             val executor = field("executor").get(activity) as DeviceToolExecutor
             if (diagnose) {
-                val request = "Continuum, schau dir bitte an, warum mein Handy so langsam geworden ist. " +
-                    "Prüf zuerst alles, sag mir, was du gefunden hast, und mach danach die Verbesserungen, die ich dir freigebe."
+                val request = spokenRequest ?: ("Continuum, schau dir bitte an, warum mein Handy so langsam geworden ist. " +
+                    "Prüf zuerst alles, sag mir, was du gefunden hast, und mach danach die Verbesserungen, die ich dir freigebe.")
+                val realRuntime = field("localRuntime").get(activity) as at.heinz.deviceai.localmodel.LocalModelRuntime
+                val modelCalls = java.util.concurrent.atomic.AtomicInteger()
+                val noInference = object : at.heinz.deviceai.localmodel.LocalModelRuntime by realRuntime {
+                    override fun stream(prompt: String, callback: at.heinz.deviceai.localmodel.LocalInferenceCallback) {
+                        modelCalls.incrementAndGet(); error("Diagnosis must not infer")
+                    }
+                    override fun streamThinking(prompt: String, callback: at.heinz.deviceai.localmodel.LocalInferenceCallback) {
+                        modelCalls.incrementAndGet(); error("Diagnosis must not infer")
+                    }
+                }
+                field("localRuntime").set(activity, noInference)
+                val storage = at.heinz.deviceai.systemintelligence.SystemStorageInspector(app)
+                val retained = if (preview) storage.retainDiagnosis(
+                    at.heinz.deviceai.systemintelligence.DiagnosticCacheRecord(1_000, 10_000, 2_000, 73, 0)) else null
+                val history = storage.diagnosisHistory()
+                if (fromChat) {
+                    val chat = JarvisHomeTestRoutes.destination(root, "chat")
+                    assertNotNull(chat)
+                    JarvisHomeTestRoutes.touch(root, chat)
+                }
                 val input = field("input").get(activity) as android.widget.EditText
                 input.setText(request)
                 (field("sendButton").get(activity) as android.widget.Button).performClick()
+                var sawWorkScene = false
                 val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
                 while ((field("botLookupPending").getBoolean(activity) || field("busy").getBoolean(activity)) &&
                     System.nanoTime() < deadline) {
                     Thread.sleep(10); shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
+                    measure(); framePump.drawRequestedFrame()
+                    sawWorkScene = sawWorkScene || descendants(root).any { it.tag == "jarvis-work-window" && it.isShown }
                 }
                 assertFalse("Address lookup completed", field("botLookupPending").getBoolean(activity))
                 assertFalse("Diagnosis completed", field("busy").getBoolean(activity))
                 val turn = field("activeChiefTurn").get(activity) as? at.heinz.deviceai.chief.TurnLifecycle
                 assertNotNull("Natural request reached the shared turn", turn)
-                assertNotNull(executor.lastDiagnosis)
+                if (preview) {
+                    assertNull(executor.lastDiagnosis)
+                    assertNotNull(executor.lastCachePreview)
+                    assertTrue(executor.lastCachePreview!!.entries.any { it.id == retained })
+                    assertEquals("Preview did not remove a report", history, storage.diagnosisHistory())
+                } else {
+                    assertNotNull(executor.lastDiagnosis)
+                    if (fromChat) assertTrue("Actual diagnosis entered existing work scene", sawWorkScene)
+                }
                 assertNull(executor.lastCleanupResult)
+                assertEquals("Direct local route never infers", 0, modelCalls.get())
                 assertEquals(at.heinz.deviceai.chief.TurnPhase.ENDED, turn!!.phase)
                 val context = field("localConversationContext").get(activity) as at.heinz.deviceai.cognitive.LocalConversationContext
                 val prompt = context.render(field("sessionId").get(activity) as String)
-                assertTrue(prompt, prompt.contains("diagnose_device"))
-                assertTrue(prompt, prompt.contains("Messzeit"))
+                assertTrue(prompt, prompt.contains(if (preview) "preview_own_cache" else "diagnose_device"))
+                assertTrue(prompt, prompt.contains(if (preview) "Noch nichts verändert" else "Messzeit"))
                 assertTrue(descendants(root).filterIsInstance<android.widget.TextView>().any {
-                    it.text.contains("Lokale Systemdiagnose") })
+                    it.text.contains(if (preview) "Bereinigungsvorschau" else "Lokale Systemdiagnose") })
                 return
             }
             val avatar = field("hologramView").get(activity) as ContinuumHologramView

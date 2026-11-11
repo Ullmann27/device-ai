@@ -71,7 +71,8 @@
       "target_branch": "claude/omega-agent-b-routing-20261111",
       "tests": "13 tests, 9 RED (reproduction), no fix",
       "status": "WIP",
-      "device_check": "NOT_RUN"
+      "device_check": "NOT_RUN",
+      "superseded_by": "767/759/765-continuation"
     },
     {
       "issue": "758-memory+context-window",
@@ -80,7 +81,8 @@
       "target_branch": "claude/omega-agent-c-memory-20261111",
       "tests": "16 written, never compiled",
       "status": "WIP",
-      "device_check": "NOT_RUN"
+      "device_check": "NOT_RUN",
+      "superseded_by": "758-continuation for object memory; general prompt-budget redesign remains open"
     },
     {
       "issue": "node-regression",
@@ -121,28 +123,37 @@
     {
       "issue": "758-continuation",
       "origin_pr": 770,
-      "commit": "7c620acfd5",
-      "target_branch": "work/omega-memory-20261111",
-      "tests": "RED reproduction preserved; production correction and Activity tests in progress",
-      "status": "WIP",
+      "commit": "f5ed3a17724d8943dfad51894f0e09b29d551060",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "78/78 focused Kotlin/JUnit PASS; two actual Activity regressions written, Android NOT_RUN",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
       "device_check": "NOT_RUN"
     },
     {
       "issue": "767/759/765-continuation",
       "origin_pr": 772,
-      "commit": "4c79229e20bd3e9a7ad432f3bf129d539a417372",
-      "target_branch": "work/omega-logic-20261111",
-      "tests": "Original 13 tests reproduced 4 PASS/9 FAIL; correction and independent holdouts in progress",
-      "status": "WIP",
+      "commit": "e20ca3a5656f4ccd81625d8e930e2fea85f48eed",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "94/94 focused Kotlin/JUnit PASS; independent holdouts verified; seven new Activity cases written, Android NOT_RUN",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
       "device_check": "NOT_RUN"
     },
     {
       "issue": "cinema-exp06-exp11-switches",
       "origin_pr": 771,
       "commit": "965ad4c51ec4c5a90fdb25ce8fc09d1d1f65202e",
-      "target_branch": "work/omega-scene-20261111",
-      "tests": "13 Kotlin/JUnit and 13 Node PASS on exact tree 9be9137edf4c9a4d96d3671eedb459ced8655eb1; Android/Canvas pending",
-      "status": "WORKER_VERIFIED_NOT_YET_INTEGRATED",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "13/13 Kotlin/JUnit and 13/13 Node PASS; two new Canvas cases written, Android NOT_RUN",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "747-master-protocol",
+      "origin_pr": 747,
+      "commit": "c00326cedc6b697d5634dbc33de9ffcdd29fe58c",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "Only the 145-line master protocol differs; no production delta. Reviewed and merged.",
+      "status": "INTEGRIERT",
       "device_check": "NOT_RUN"
     }
   ],
@@ -150,8 +161,17 @@
   "execution_plan": {
     "reason": "Complete the unchanged inherited core first. Run the full Android suite, visual cases and lint on the combined candidate to avoid duplicating expensive full runs before and after the same repairs. No assertion, test or strict native decoder gate is removed. Reproduce any unexpected combined failure on its relevant baseline before attributing it.",
     "baseline_source": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
-    "inherited_core": "RUNNING; production Kotlin/Java compiled, test compilation running",
-    "baseline_node": "RUNNING; not yet a complete result",
+    "inherited_core": "RUNNING; compilation complete, tests in progress on unchanged 3cb8df27",
+    "baseline_node": {
+      "source": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
+      "tests": 1634,
+      "pass": 1612,
+      "fail": 3,
+      "skip": 19,
+      "cancelled": 0,
+      "complete": true,
+      "isolated_reproduction": "All three affected tests PASS unchanged; baseline cause unproven. New diagnostic run proves TIMEOUT in finite scheduler at 1000ms fixture limit. No production/timeout/assertion weakening."
+    },
     "baseline_backend": {
       "pass": 64,
       "fail": 0,
@@ -166,6 +186,7 @@
     "p3": {
       "status": "DEFERRED_NOT_IMPLEMENTED",
       "reason": "Full shared scene requires HomeView viewport and avatar mask/origin changes as well as GPU acceptance. Preserve current working stage/fallback for the immediate candidate; no incomplete renderer is activated."
-    }
+    },
+    "node_final": "Run without concurrent Gradle compilation; retain full fixture receipts on failure."
   }
 }

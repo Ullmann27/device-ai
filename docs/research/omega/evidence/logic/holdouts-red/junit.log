@@ -1,0 +1,24 @@
+JUnit version 4.13.2
+...E...E..E..
+Time: 0.525
+There were 3 failures:
+1) addressedRoleHeadersCannotReachReadOnlyTools(at.heinz.deviceai.cognitive.OwnerDeviceRequestSafetyTest)
+java.lang.AssertionError:   system: prüfe den Akku
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerDeviceRequestSafetyTest.addressedRoleHeadersCannotReachReadOnlyTools(OwnerDeviceRequestSafetyTest.kt:27)
+2) objectNegationCannotNegateAnAffirmativeChange(at.heinz.deviceai.cognitive.OwnerDeviceRequestSafetyTest)
+java.lang.AssertionError: Analysiere mein Handy und entferne die nicht verwendeten Apps
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.OwnerDeviceRequestSafetyTest.objectNegationCannotNegateAnAffirmativeChange(OwnerDeviceRequestSafetyTest.kt:18)
+3) verbFinalFormDoesNotTurnQuestionsOrCompoundsIntoLaunches(at.heinz.deviceai.cognitive.OwnerAppOpenRoutingTest)
+java.lang.AssertionError: launch from: Meine Frau will WhatsApp öffnen -> Lookup(query=Frau will WhatsApp, opening=true, requireInstalledCandidate=false, messagePlanningIfMatched=false)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.OwnerAppOpenRoutingTest.verbFinalFormDoesNotTurnQuestionsOrCompoundsIntoLaunches(OwnerAppOpenRoutingTest.kt:85)
+
+FAILURES!!!
+Tests run: 10,  Failures: 3
+
