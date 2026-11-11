@@ -1,0 +1,46 @@
+--- a/app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt
++++ b/app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt
+@@ -4,7 +4,7 @@
+ 
+ /** Classifies intent, never grants permission. */
+ internal object OwnerDeviceRequestSafety {
+-    enum class Category { READ_ONLY, PROPOSAL, DEFERRED_CHANGE, NEGATED_CHANGE, CHANGE, ROLE_MANIPULATION }
++    enum class Category { READ_ONLY, PROPOSAL, DEFERRED_CHANGE, NEGATED_CHANGE, CHANGE, ROLE_MANIPULATION, CONVERSATION }
+     data class Assessment(val categories: Set<Category>, val readOnlyText: String) {
+         val blocked: Boolean get() = Category.ROLE_MANIPULATION in categories || Category.CHANGE in categories
+         val roleManipulation: Boolean get() = Category.ROLE_MANIPULATION in categories
+@@ -57,11 +57,23 @@
+     private val readOnlyStart = Regex("(?iu)^(?:bitte\\s+)?starte\\s+(?:bitte\\s+)?" +
+         "(?:(?:eine|die)\\s+)?(?:systemdiagnose|handyanalyse|geräteanalyse|geraeteanalyse|" +
+         "analyse\\s+(?:meines|des)\\s+(?:handys|geräts|geraets|smartphones))$")
++    private val collectiveStart = Regex("(?iu)^(?:wir\\s+starten(?:\\s+[\\p{L}\\p{N} -]+)?|" +
++        "(?:lass(?:t)?\\s+uns|wir\\s+(?:wollen|möchten|werden|können)|" +
++        "ihr\\s+(?:wollt|möchtet|werdet|könnt)|" +
++        "(?:heute|morgen|jetzt|bald|später)\\s+(?:(?:wollen|möchten|werden|können)\\s+wir|" +
++        "(?:wollt|möchtet|werdet|könnt)\\s+ihr))(?:\\s+[\\p{L}\\p{N} -]+)?\\s+starten)$")
++    private val directedStart = words("du|dich|dir|dein\\p{L}*|sie|ihnen|dass|damit")
++    private val additionalStartAction = words("und|oder|aber|sondern|sowie|" +
++        "öffn(?:e|en|est)?|oeffn(?:e|en|est)?|send(?:e|en|est)?|schick(?:e|en|st)?|" +
++        "verschick(?:e|en|st)?|versend(?:e|en|est)?|kauf(?:e|en|st)?|kopier(?:e|en|st)?|" +
++        "führ(?:e|en|st)?|fuehr(?:e|en|st)?|bestätig(?:e|en|st)?|bestaetig(?:e|en|st)?|" +
++        "veröffentlich(?:e|en|st)?|veroeffentlich(?:e|en|st)?")
+ 
+     fun inspect(text: String): Assessment {
+         if (roleHeader.containsMatchIn(text) || ruleOverride.containsMatchIn(text) || roleTakeover.containsMatchIn(text))
+             return Assessment(setOf(Category.ROLE_MANIPULATION), "")
+         val normalized = text.trim().lowercase(Locale.ROOT)
++        val completeClause = normalized.trimEnd('.', '!', '?').trim()
+         val categories = linkedSetOf<Category>()
+         val readable = ArrayList<String>()
+         normalized.split(Regex("[.;!?\\n]+" )).forEach { sentence ->
+@@ -86,6 +98,10 @@
+                 proposalSubject.containsMatchIn(clause) && proposalModal.containsMatchIn(clause) &&
+                     proposalQuestion.containsMatchIn(clause) -> Category.PROPOSAL
+                 changes.singleOrNull()?.let { negatesAction(clause, it) } == true -> Category.NEGATED_CHANGE
++                changes.singleOrNull()?.value == "starten" && !improvements.containsMatchIn(clause) &&
++                    clause == completeClause && collectiveStart.matches(clause) &&
++                    !directedStart.containsMatchIn(clause) && !additionalStartAction.containsMatchIn(clause) ->
++                    Category.CONVERSATION
+                 else -> Category.CHANGE
+             }
+             categories += category

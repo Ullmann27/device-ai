@@ -2,6 +2,11 @@
 
 **Status: belegter RED-Befund, Testkorrektur vorbereitet; erneuter Android-Lauf NOT_RUN.**
 
+Dieses Protokoll beschreibt ausschließlich den STOP-Fixture-Commit `f84433ea9`.
+Der spätere Planning-/Safety-Befund wird getrennt in
+`OMEGA-COLLECTIVE-START-REPAIR-20261111.md` fortgeführt. Die Aussagen über unveränderte
+Produktion hier beziehen sich auf diesen ursprünglichen STOP-Schritt.
+
 - Basis: `5b935b4feaf960bb6973dd4d630f02744e41913f`.
 - Branch: `work/omega-app-cancel-fixture-20261111`.
 - Integration: `/root`, Ziel `integrate/omega-apk54-20261111` / PR #769.
