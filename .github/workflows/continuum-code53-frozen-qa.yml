@@ -13,8 +13,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  CONTINUUM_SOURCE_SHA: f99082ea0d98d74eb52b28f01b74629676572081
-  CONTINUUM_CAPTURE_SOURCE_COMMIT: f99082ea0d98d74eb52b28f01b74629676572081
+  CONTINUUM_SOURCE_SHA: fd86f11a4a822ee4805f4c462791baeb1d741db4
+  CONTINUUM_CAPTURE_SOURCE_COMMIT: fd86f11a4a822ee4805f4c462791baeb1d741db4
 
 jobs:
   validate-frozen-source:
@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: f99082ea0d98d74eb52b28f01b74629676572081
+          ref: fd86f11a4a822ee4805f4c462791baeb1d741db4
           path: source
           fetch-depth: 0
           persist-credentials: false
@@ -42,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$CONTINUUM_SOURCE_SHA"
-          test "$(git rev-parse HEAD^{tree})" = af62ce806bb4e3d2ed7bd9dcadbff67cefdc3b23
+          test "$(git rev-parse HEAD^{tree})" = 21e5603d2a3f20c840bc3c2ba7836be408dbb5ad
           test -z "$(git status --porcelain --untracked-files=normal)"
           mkdir -p "$RUNNER_TEMP/code53-unsigned"
           printf 'source_sha=%s\nworkflow_sha=%s\nFold7=NOT_RUN\noriginal_signature=NOT_USED\n' "$CONTINUUM_SOURCE_SHA" "$GITHUB_SHA" > "$RUNNER_TEMP/code53-unsigned/BUILD-INFO.txt"
@@ -61,6 +61,7 @@ jobs:
           set -euo pipefail
           command -v kotlinc
           bash scripts/code52-targeted-kotlin-check.sh
+          python3 scripts/continuum-maya-icu-regex-check.py | tee "$RUNNER_TEMP/code53-unsigned/ICU-REGEX.json"
           node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code53-critical"
           node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code53-full-node"
           node -e "for(const n of ['code53-critical','code53-full-node']){const r=require(process.env.RUNNER_TEMP+'/'+n+'/report.json');if(r.status!=='PASS'||r.source.commit!==process.env.CONTINUUM_SOURCE_SHA||!r.sourceUnchanged)process.exit(69);console.log(n+' EXACT_SOURCE_PASS')}"
@@ -70,7 +71,7 @@ jobs:
           npm --prefix backend ci --ignore-scripts --no-audit --no-fund
           npm --prefix backend run check
           npm --prefix backend test
-          bash scripts/hollywood-fui-reference-fidelity.sh "$RUNNER_TEMP/code53-fidelity" CODE53-f99082ea
+          bash scripts/hollywood-fui-reference-fidelity.sh "$RUNNER_TEMP/code53-fidelity" CODE53-fd86f11a
           bash scripts/hollywood-fui-cinematics-preview.sh "$RUNNER_TEMP/code53-preview"
       - name: Install official Android SDK
         run: |
@@ -93,7 +94,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import xml.etree.ElementTree as ET
-          required = {'LuxuryHoloButtonRendererTest','PerimeterWingChoreographerTest','SpatialWindowLightTest','HollywoodFuiWorkActivityTest','JarvisRenderQualityTest','JarvisRenderQualityAdaptiveTest','TtsHologramSignalTest','JarvisFluidLightTest','HollywoodFuiWindowUiTest','CinemaNativeSequenceUiTest','MayaSpeechTest','MayaPcmPlayerUiTest','MayaVoiceSettingsUiTest','ElevenLabsPcmRequestUiTest','ContinuumOfflineVoiceRecoveryUiTest','MayaConversationInterruptionTest','CloudSpeechTurnConstraintTest','ContinuumAvatar3dLifecycleUiTest','AvatarTtsLiveConnectionUiTest','AvatarSpeechReattachmentUiTest'}
+          required = {'LuxuryHoloButtonRendererTest','PerimeterWingChoreographerTest','SpatialWindowLightTest','HollywoodFuiWorkActivityTest','JarvisRenderQualityTest','JarvisRenderQualityAdaptiveTest','TtsHologramSignalTest','JarvisFluidLightTest','HollywoodFuiWindowUiTest','CinemaNativeSequenceUiTest','MayaSpeechTest','MayaPcmPlayerUiTest','MayaVoiceSettingsUiTest','ElevenLabsPcmRequestUiTest','ContinuumOfflineVoiceRecoveryUiTest','MayaConversationInterruptionTest','CloudSpeechTurnConstraintTest','ContinuumAvatar3dLifecycleUiTest','AvatarTtsLiveConnectionUiTest','AvatarSpeechReattachmentUiTest','MayaSpeechAlignmentTest','MayaSpeechTimingTest','MayaAvatarTimingIntegrationTest','UiFeedbackPcmTest','ContinuumUiFeedbackTest','ContinuumTaskEffectsCallerUiTest','ContinuousConversationModeTest','ConversationSpeechIntegrationRegressionTest','JarvisLiveAvatarWiringUiTest'}
           found = set()
           for path in Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'):
               for case in ET.parse(path).getroot().iter('testcase'):
@@ -127,7 +128,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Code53-f99082ea-UNSIGNED-NOT-INSTALLABLE
+          name: Code53-fd86f11a-UNSIGNED-NOT-INSTALLABLE
           path: ${{ runner.temp }}/code53-unsigned/
           retention-days: 14
           if-no-files-found: error
@@ -135,7 +136,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Code53-f99082ea-QA-Evidence
+          name: Code53-fd86f11a-QA-Evidence
           path: |
             ${{ runner.temp }}/code53-critical/
             ${{ runner.temp }}/code53-full-node/
@@ -145,6 +146,7 @@ jobs:
             ${{ runner.temp }}/code53-package/
             ${{ runner.temp }}/code53-unsigned/BUILD-INFO.txt
             ${{ runner.temp }}/code53-unsigned/JUNIT.txt
+            ${{ runner.temp }}/code53-unsigned/ICU-REGEX.json
             source/app/build/test-results/testDebugUnitTest/
             source/app/build/reports/
           retention-days: 14
