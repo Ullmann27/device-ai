@@ -173,6 +173,22 @@ class HollywoodFuiWindowUiTest {
         assertEquals("closing cannot keep working light", 0, corridorPixels())
     }
 
+    @Test fun glassDepthSurvivesContentOutlineClipping() = fixture { f ->
+        f.frame(1_000L)
+        f.frame(1_900L)
+        assertTrue("native content keeps its outline", f.panel.clipToOutline)
+        val image = Bitmap.createBitmap(884, 760, Bitmap.Config.ARGB_8888)
+        try {
+            f.window.draw(Canvas(image))
+            var depthPixels = 0
+            for (y in 662 until 666) for (x in 480 until 780)
+                if (Color.alpha(image.getPixel(x, y)) > 10) depthPixels++
+            assertTrue("lower glass thickness remains visible", depthPixels > 300)
+            for (y in 30 until 410 step 13) for (x in 130 until 390 step 13)
+                assertEquals("protected face stays clear", Color.TRANSPARENT, image.getPixel(x, y))
+        } finally { image.recycle() }
+    }
+
     @Test fun gazeTracksTheActualPerspectiveOnlyOnSuppliedFrames() = fixture { f ->
         val positions = mutableListOf<Pair<Float, Float>>()
         f.window.onPresentedCenter = { x, y -> positions += x to y }

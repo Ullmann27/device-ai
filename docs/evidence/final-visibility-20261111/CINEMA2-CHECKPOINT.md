@@ -41,6 +41,18 @@ identifier, account data, key or sample was added to the public repository.
 Voice selection and a secure runtime credential path remain unresolved;
 existing offline speech and internet restrictions are preserved.
 
+## Existing glass depth made drawable — Android QA pending
+
+GlassPanel previously called JarvisReferenceHud.surface inside its own
+clipToOutline boundary. That surface already draws bottom/right thickness,
+rear glass and contact shadow outside its front rectangle. The child outline
+cut those existing pixels off. JarvisWorkWindow now draws that same surface
+once from its protected parent canvas, using the panel's actual native matrix
+and opacity. Child content remains clipped; face/orb/dialog exclusions remain.
+No new material, renderer, clock, asset or hitbox was introduced. A native
+Canvas regression checks the exposed lower glass strip and protected face.
+This new Android change is WIP until its source-bound hosted run completes.
+
 ## Remaining acceptance
 
 Full Android and native Canvas tests for the energy patch, identical before /
