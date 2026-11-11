@@ -1,0 +1,38 @@
+JUnit version 4.13.2
+..ordinary-related-ledger-bytes=16221
+E.E.E.
+Time: 0.78
+There were 3 failures:
+1) ordinaryRelatedTaskFitsWithSixFullyPopulatedObjects(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerPromptBudgetTest)
+java.lang.AssertionError: Mandatory frame failed at 16221 bytes
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerPromptBudgetTest.ordinaryRelatedTaskFitsWithSixFullyPopulatedObjects(OwnerObjectStateLedgerPromptBudgetTest.kt:32)
+2) compactProjectionKeepsUncertaintyAndUnresolvedCorrections(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerPromptBudgetTest)
+java.lang.AssertionError: 
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau (bestätigt unverändert) · Anzahl Schrauben 18 (unsicher: unsicher formuliert) (Verlauf: 12 → 17 → 18) · Ort im Keller (Verlauf: in der Garage → im Keller)
+- Tasche: Farbe rot · Anzahl Schrauben 3 · Ort im Flur
+Ungeklärt: „2“ (Nachricht 5) ohne eindeutigen Gegenstand
+Ungeklärt: „6“ (Nachricht 5) ohne eindeutigen Gegenstand
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerPromptBudgetTest.compactProjectionKeepsUncertaintyAndUnresolvedCorrections(OwnerObjectStateLedgerPromptBudgetTest.kt:53)
+3) pendingCorrectionUsesItsCurrentValuesWithoutMutatingTheLedger(at.heinz.deviceai.cognitive.OwnerObjectStateLedgerPromptBudgetTest)
+java.lang.AssertionError: 
+GESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):
+- Werkzeugkiste: Farbe blau (bestätigt unverändert) · Anzahl Schrauben 21 (Verlauf: 12 → 17 → 19 (in derselben Nachricht verworfen) → 21) · Ort im Keller (Verlauf: in der Garage → im Keller)
+Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. Ungeklärtes nennst du als ungeklärt.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.OwnerObjectStateLedgerPromptBudgetTest.pendingCorrectionUsesItsCurrentValuesWithoutMutatingTheLedger(OwnerObjectStateLedgerPromptBudgetTest.kt:92)
+
+FAILURES!!!
+Tests run: 5,  Failures: 3
+

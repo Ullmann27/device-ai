@@ -88,3 +88,44 @@ compilation. UI class: `at.heinz.deviceai.OwnerObjectStateConversationUiTest`
 Requires `-PcontinuumUiWidgetTests=true`; no custom production flags, no test
 skips or graphics downgrade. Add the class to the existing selective QA scope.
 UI/Android physical-device status remains **NOT_RUN** until the root's run.
+
+## P2 follow-up: proportional required prompt
+
+Logic's independent Java probe found a real supported-state boundary:
+six objects, each with six attributes and 24 successive revisions, produced
+**16,221 UTF-8 bytes** for the ordinary request
+`Nenne drei Ideen für meine Werkzeugkiste.`. The unchanged 15,500-byte
+`LocalPromptFrame` correctly refused this mandatory block. Unrelated
+photosynthesis requests already produced no object-state block.
+
+New regression source: `OwnerObjectStateLedgerPromptBudgetTest` (five tests).
+RED: **5 run / 2 PASS / 3 FAIL** on `6b6dc69fa04bd8d8ebc9fa445279f4926413b5db`.
+The actual failing assembly reports 16,221 bytes. Tests and production
+assertions were not weakened.
+
+The small rendering-only repair supplies current values and uncertainties
+for ordinary relevant tasks. It explicitly tells the model that historical
+values are omitted from this view and cannot be inferred from it. Existing
+bounded events, unresolved corrections and history-truncation markers are
+unchanged. Historical requests continue to receive the retained history;
+`answer()` and the full `render()` remain unchanged. A large historical request
+still must satisfy the existing prompt budget; no data or budget gate is
+silently bypassed.
+
+GREEN: **83 PASS / 0 FAIL / 0 SKIP**; identical ordinary block now **1,595 UTF-8
+bytes**, including the explicit omission note. The five new tests verify the
+real mandatory frame, uncertainties/unresolved corrections, unchanged
+historical answers and truncated-history status, prospective correction
+values and no ledger mutation. Existing 78 tests also pass. The unchanged
+`LocalPromptFrame` and `LocalChatPromptBudget` sources were freshly compiled
+in both runs. Logs and source hashes: `budget-red*`, `budget-green*` in the
+existing evidence directory.
+
+A **third** actual Activity test now populates a valid substantial session
+through `LocalConversationContext`, then submits the short owner request via
+`sendButton`. It checks a real model handoff, the complete request, current
+attributes plus uncertainty, explicit history omission and the existing
+UTF-8 limit. All three `OwnerObjectStateConversationUiTest` cases remain
+**Android NOT_RUN here**; root owns the common serialized execution.
+No Activity production edit, event deletion, database or budget change in
+this follow-up.
