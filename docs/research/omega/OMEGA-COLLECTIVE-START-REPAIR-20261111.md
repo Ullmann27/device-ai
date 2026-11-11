@@ -101,3 +101,7 @@ Quellstand. Diese erneute Android-Prüfung ist hier ausdrücklich **NOT_RUN**.
 
 Keine eigene Gradle-Runde, kein APK-Build, keine Signierung und keine Installation.
 Die getrennte MCP-Fixturearbeit bleibt pausiert.
+
+Nachtrag: Der tatsächliche UI-Nachlauf auf `c163641b` fand zwei weitere
+Fixture-Annahmen. Ursache und enger Folgepatch stehen in
+`OMEGA-UI-CLICK-FIXTURE-20261111.md`; die Safety-Produktion bleibt dabei unverändert.

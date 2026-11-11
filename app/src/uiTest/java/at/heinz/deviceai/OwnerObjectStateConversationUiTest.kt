@@ -126,6 +126,12 @@ class OwnerObjectStateConversationUiTest {
             val chat = JarvisHomeTestRoutes.destination(activity.window.decorView, "chat")
             assertNotNull("Chat entry exists", chat)
             JarvisHomeTestRoutes.touch(activity.window.decorView, chat)
+            until("Chat transition completed", failureDetails = {
+                "; area=${field(activity, "activeWorkArea")}; active=${field(activity, "conversationActive")}"
+            }) {
+                field(activity, "activeWorkArea") == ContinuumWorkArea.CHAT &&
+                    field(activity, "conversationActive") == true
+            }
         }
         assertEquals("Chat selected", ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
         assertEquals("Conversation active", true, field(activity, "conversationActive"))

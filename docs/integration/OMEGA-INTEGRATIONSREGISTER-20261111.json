@@ -251,6 +251,29 @@
       "tests": "Preserved four original failure receipts. Deferred diagnostic and conditional CHAT entry independently reviewed; assertions and10-second wait unchanged. Android NOT_RUN on repaired source.",
       "device_check": "NOT_RUN",
       "evidence": "docs/evidence/omega-memory-ui-20261111/baseline-failures.json"
+    },
+    {
+      "issue": "apk54-ui-recheck-c163",
+      "origin_pr": 769,
+      "commit": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+      "status": "COMPLETE_FAIL_FIXTURE_FOLLOWUP",
+      "tests": "25total:11PASS/14FAIL/0SKIP,source unchanged;13 posted-click precondition races and1 legitimate memory-center dialog. NewApi lint PASS, Gradle report UP-TO-DATE explicitly recorded. Full Android NOT_RUN after prerequisite rejection.",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-apk54-20261111/android-ui-recheck-c163641b/SUMMARY.json"
+    },
+    {
+      "issue": "ui-posted-click-and-center-dialog-followup",
+      "origin_prs": [
+        783,
+        784
+      ],
+      "commits": [
+        "724331330f7ee3f676357b449c888f506645b681",
+        "288a351e27c1dd91502bb8037cdcb19ca86db57f"
+      ],
+      "status": "INTEGRATED_PENDING_COMMON_RECHECK",
+      "tests": "All3UIfile hashes match independent review; no app/src/main delta fromc163;21/21 pure safety inputs unchanged. Actual3class Android recheck NOT_RUN.",
+      "device_check": "NOT_RUN"
     }
   ],
   "parent_pr": 768,
@@ -327,7 +350,7 @@
       "source_unchanged": true,
       "durationSeconds": 56.02
     },
-    "common_qa_source": "NEXT_FREEZE_PENDING; historical completed source5b935b4feaf960bb6973dd4d630f02744e41913f",
-    "common_android": "Three full affected UI classes plus NewApi lint on the next frozen candidate; full same-source unfiltered Android requires UI PASS; strict native PDF SUCCESS additionally mandatory for full PASS."
+    "common_qa_source": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+    "common_android": "Completed25case UI recheck11PASS/14FAIL; NewApi lintPASS. Next reviewed test-only follow-ups require same three full classes then unfiltered full Android. No native PDF allowance."
   }
 }

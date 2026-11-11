@@ -1,0 +1,8 @@
+{
+  "jar": "/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.robolectric/android-all-instrumented/9-robolectric-4913185-2-i7/62774277200aae1785bba84232aec389dc7a0953/android-all-instrumented-9-robolectric-4913185-2-i7.jar",
+  "android_sdk": 28,
+  "view_class_sha256": "ad4e0ef03f077bd6ccd47771c37c09ad984fbc4bf279e8302aa1123158c9d5c7",
+  "operation": "javap read-only disassembly; no tests or Android execution",
+  "jar_sha256": "dbb1c88987b54cef3132695a1b4d2f4851ba06286a6fa7d15772f98fd1f0cdf7",
+  "excerpt_sha256": "c2e412f4e92f24a8d976512be5b22092de9f2459b6037f1f1800619f2dbb9158"
+}

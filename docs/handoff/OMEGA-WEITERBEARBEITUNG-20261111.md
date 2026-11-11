@@ -1,4 +1,4 @@
-> **Fortsetzung 11.11.2026, PR #769:** Gemeinsamer Prüfstand `5b935b4feaf960bb6973dd4d630f02744e41913f`, Kandidat Code54/0.3.53. Aktueller Fortsetzungsbericht: [Omega APK54](../research/omega/OMEGA-APK54-HANDOFF-20261111.md). Testmatrix/Register enthalten die neuen Ergebnisse; die nachfolgenden Ausgangsangaben bleiben historisch erhalten. Noch keine neue APK und keine Signier-/Gerätefreigabe.
+> **Fortsetzung 11.11.2026, PR #769:** Letzter abgeschlossener Prüfstand `c163641b400f1fcdd02c1d2952fde1c8e76a0ad1` (UI25:11PASS/14FAIL, NewApi-LintPASS); geprüfte Testablaufkorrekturen folgen auf derselben Integrationslinie, Kandidat Code54/0.3.53. Aktueller Fortsetzungsbericht: [Omega APK54](../research/omega/OMEGA-APK54-HANDOFF-20261111.md). Testmatrix/Register enthalten die neuen Ergebnisse; die nachfolgenden Ausgangsangaben bleiben historisch erhalten. Noch keine neue APK und keine Signier-/Gerätefreigabe.
 
 # Continuum Omega – verbindlicher Weiterbearbeitungsauftrag (Übergabe 11.11.2026)
 

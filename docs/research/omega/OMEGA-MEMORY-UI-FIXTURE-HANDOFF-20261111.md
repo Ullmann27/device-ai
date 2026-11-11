@@ -32,3 +32,17 @@ Root muss dieselben vier Fälle unverändert im gemeinsamen Prüfstand ausführe
 - `historicalChangeRequestsReachModelWithRetainedHistory`
 
 Klasse: `at.heinz.deviceai.OwnerObjectStateConversationUiTest`. Weiterhin gelten die vorhandenen UI-Quellfilter und `-PcontinuumUiWidgetTests=true`. Es gibt keine neue Testklasse, keine deaktivierte Prüfung und keinen Geräte-, Installations- oder Release-Nachweis. Weitere Fehler nach dem reparierten Testeinstieg müssen anhand des nächsten realen Laufs getrennt untersucht werden.
+
+## Folgeschritt: echte Chat-Transition abwarten
+
+Basis: `c163641b400f1fcdd02c1d2952fde1c8e76a0ad1`, Tree `f2a1638d66c2d9486853010ac40e1513ac05c7e5`; Branch `work/omega-memory-chat-wait-20261111`. Dieser enge Folgepatch setzt #782 fort.
+
+Roots UI-Retest `1b8747f8-3a67-44c1-9be3-1f920a79c520` erreicht alle vier Memory-Fälle. Sie scheitern nun jeweils an der zusätzlich eingeführten sofortigen Prüfung `Chat selected expected:<CHAT> but was:<START>`, vor Eingabe und Sendeklick. Originaldatensätze: [chat-transition-baseline-c163.json](../../evidence/omega-memory-ui-20261111/chat-transition-baseline-c163.json). Diese Datensätze protokollieren nicht, wann der vorgemerkte Click-Callback ausgeführt wird.
+
+Der Quellpfad verlangt tatsächlich CHAT: `ContinuumHomeView.ShellActionView` → `openJarvisTarget` → `AgentActivity.navigateDashboardTargetNow` → `JarvisMenuNavigator.navigate` → `openHomeSlot` → `navigateWorkArea(CHAT)` → `focusChatComposer`. Letzterer setzt sowohl `activeWorkArea=CHAT` als auch `conversationActive=true`. Es gibt hier keinen eigenen START-Unterhaltungszustand, der die neue Assertion ersetzen müsste.
+
+`ShellActionView.onTouchEvent` delegiert an Androids `View.onTouchEvent`. `JarvisHomeTestRoutes.touch` verschickt echte DOWN/UP-Ereignisse, pumpt anschließend aber keinen Main-Looper. Der Test läuft mit `LooperMode.PAUSED`; der Klick und sein daraus folgender Zustand dürfen deshalb nicht als synchron abgeschlossen vorausgesetzt werden.
+
+Der Folgepatch fügt nur eine Warteprüfung unmittelbar nach dem echten Touch ein. Er verwendet den vorhandenen `until`-Helfer mit unveränderter Zehn-Sekunden-Grenze und wartet auf beide tatsächlichen Chat-Zustände. Danach bleiben beide strikten `assertEquals` sowie alle Eingabe-, Sendeklick-, Modell- und Gedächtnisprüfungen erhalten. Fehlerdetails nennen den zuletzt beobachteten Bereich und Aktivitätszustand. Es gibt keinen direkten Aufruf des Navigators, keine reflektierte Zustandsänderung und keinen Produktionspatch.
+
+Kandidat weiterhin **Android NOT_RUN**. Root führt erneut die drei vollständigen UI-Klassen im gemeinsamen Prüfstand aus. Während des noch laufenden Root-Lints wurden keine weiteren Test- oder Gradle-Läufe gestartet.

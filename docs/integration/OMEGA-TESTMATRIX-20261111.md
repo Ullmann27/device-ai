@@ -167,3 +167,9 @@ Exakter sauberer Source `5b935b4feaf960bb6973dd4d630f02744e41913f`: **2.498 Fäl
 | Vollständiger PDF-Gate | Full-PASS verlangt echten nativen Prüffall exakt einmal SUCCESS; SKIP genügt nicht |neuer quellgebundener Starter|
 
 Die vier Memory-Fehler entstanden vor der Wartebedingung im eifrigen Diagnoseausdruck. STOP hatte die beabsichtigte Invalidierung vorzeitig in den Lookup-Zähler aufgenommen; Planning navigierte erneut über die bereits verborgene Startansicht. Der Pluraldialog deckte zusätzlich einen echten Produktionsfehler der Safety-Klassifizierung auf; dieser ist mit engen Negativfällen repariert. Native Geräteabnahme bleibt NOT_RUN.
+
+## Abgeschlossener UI-Retest c163641b
+
+**25 Fälle:11PASS/14FAIL/0SKIP**, drei vollständige Klassen, Quelle unverändert. NewApi-LintPASS; Analyse ausgeführt, identische Berichte von Gradle ausdrücklich als UP-TO-DATE wiederverwendet. Voller Android-Lauf vor Gradle am UI-Gate abgewiesen: NOT_RUN.13 neue Sofortprüfungen liefen vor dem geposteten Klick, ein Fall ließ das erwartete Gedächtniszentrum offen. Die kleinen Folgekorrekturen warten mit bestehenden Grenzen und bewahren alle fachlichen Assertions; Android-Retest danach offen. Rohbelege: `android-ui-recheck-c163641b/`.
+
+Inhaltsübersicht mit48 geprüften Blob-Vergleichen: `contents-c163641b/`. Vorhandene Kühlsteuerung und neue Recheneinsparungen getrennt; keine gemessene Fold7-Abkühlung behauptet.

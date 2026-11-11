@@ -1,0 +1,500 @@
+{
+  "schema": 1,
+  "createdAt": "2026-11-11T18:09:44.860058+00:00",
+  "kind": "SOURCE_CONTENTS_ONLY",
+  "targetVersion": {
+    "versionCode": 54,
+    "versionName": "0.3.53",
+    "package": "at.heinz.deviceai.continuumlocal"
+  },
+  "source": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+  "tree": "f2a1638d66c2d9486853010ac40e1513ac05c7e5",
+  "reportedInstalledComparisonSource": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05",
+  "comparisonMethod": "Direct git object and source/call-path comparison; no new test or build execution.",
+  "features": [
+    {
+      "id": "session_memory",
+      "title": "Gedächtnis und Gesprächskorrekturen",
+      "classification": "NEW_VS_REPORTED_INSTALLED_SOURCE",
+      "ownerSummary": "Ein neuer sitzungsgebundener Objektstand hält Farbe, Anzahl und Ort sowie aufeinanderfolgende Korrekturen fest. Eindeutige Rückfragen können direkt aus den eigenen Angaben beantwortet werden, auch wenn die ursprüngliche Nachricht aus dem kurzen Dialogfenster gefallen ist. Unklare Zuordnungen und Unsicherheit bleiben sichtbar; eine neue Sitzung setzt diesen Stand zurück.",
+      "limits": [
+        "Keine neue permanente Gedächtnisdatenbank und keine zusätzliche Werkzeugfreigabe.",
+        "Begrenzt auf sechs Objekte, sechs Merkmale je Objekt und 24 Ereignisse je Merkmal; gekürzte Historie wird gekennzeichnet."
+      ],
+      "callPaths": [
+        "LocalConversationContext.append -> OwnerObjectStateLedger.observeOwnerTurn",
+        "AgentActivity.sendCurrentInput -> LocalConversationContext.objectStateAnswer -> OwnerObjectStateLedger.answer -> addNonModelReply(OBJECT_STATE_RECALL)",
+        "LocalConversationContext.switchTo/clear -> OwnerObjectStateLedger.reset"
+      ],
+      "sourceProofs": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedger.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedger.kt",
+          "installedBlob": null,
+          "candidateBlob": "52f5969e23ca1a1488b7334c6e8806e13ca01779",
+          "fileDelta": "ADDED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/GermanNumberWords.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/GermanNumberWords.kt",
+          "installedBlob": null,
+          "candidateBlob": "49212a54d09cb1ff3d885d98dd03f3867163e081",
+          "fileDelta": "ADDED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+          "installedBlob": "5cc0f2ba4771a7dd3ca9872f342eedd2e8fac5e8",
+          "candidateBlob": "9945a1e011a86b12390733f3ba007a40423b29c8",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalContextRetentionPolicy.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/LocalContextRetentionPolicy.kt",
+          "installedBlob": "78f55baf9d89a7a4893e6b1e67376db12daa1564",
+          "candidateBlob": "c4410f3ea9b19529b2d3b84de57b8a8173f237ac",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "installedBlob": "9357a6a813c0ffe689f30ae75aa10ffe2f348395",
+          "candidateBlob": "f50b7d90d27d0aae11425c07ab481953a977a57e",
+          "fileDelta": "MODIFIED"
+        }
+      ]
+    },
+    {
+      "id": "ordinary_context",
+      "title": "Normale Aufträge und passende Historie",
+      "classification": "IMPROVED_VS_REPORTED_INSTALLED_SOURCE",
+      "ownerSummary": "Normale objektbezogene Aufgaben erhalten einen kompakten aktuellen Stand einschließlich Unsicherheit und eines ausdrücklichen Hinweises auf den ausgelassenen Verlauf. Fragen nach früheren Angaben oder Korrekturen bekommen die noch vorhandene Historie. Unabhängige Themen erhalten keinen unpassenden Objektblock. Gesprächssätze wie „Wir starten“ werden eng von Gerätebefehlen getrennt.",
+      "limits": [
+        "Vorhandene Prompt- und Aufgabenbudgets bleiben Grenzen; keine Garantie, dass beliebig große Historien passen.",
+        "Historie bleibt begrenzt; fehlende frühere Werte werden nicht ergänzt."
+      ],
+      "callPaths": [
+        "AgentActivity.runLocal -> LocalConversationContext.objectStateBlock -> OwnerObjectStateLedger.promptBlock -> render(includeHistory)",
+        "AgentActivity.runLocal -> LocalChatPromptBudget/LocalPromptFrame",
+        "BootstrapBrain -> OwnerDeviceRequestSafety.inspect -> collectiveStart/CONVERSATION",
+        "LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn -> conversationState"
+      ],
+      "sourceProofs": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedger.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedger.kt",
+          "installedBlob": null,
+          "candidateBlob": "52f5969e23ca1a1488b7334c6e8806e13ca01779",
+          "fileDelta": "ADDED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+          "installedBlob": "5cc0f2ba4771a7dd3ca9872f342eedd2e8fac5e8",
+          "candidateBlob": "9945a1e011a86b12390733f3ba007a40423b29c8",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt",
+          "installedBlob": "ce11c6ac5f6ca2900b7a9147498997ca1b6f1137",
+          "candidateBlob": "ed2d7b3f84aa3f974641c05732747b1b1980cfe0",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt",
+          "installedBlob": "02de3fc59c7f7a31ee38cad7707437becde23891",
+          "candidateBlob": "02de3fc59c7f7a31ee38cad7707437becde23891",
+          "fileDelta": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalChatPromptBudget.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/LocalChatPromptBudget.kt",
+          "installedBlob": "f2157f3839a406e998e900c49e4a685be646a1c5",
+          "candidateBlob": "f2157f3839a406e998e900c49e4a685be646a1c5",
+          "fileDelta": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt",
+          "installedBlob": null,
+          "candidateBlob": "216cf0a4184b38a70ff6a5d4d40ee9b77dcad3b0",
+          "fileDelta": "ADDED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+          "installedBlob": "e62d878f5d17a9c7db85eb1904f7f9e00157094a",
+          "candidateBlob": "3d22318ad57e9846da91896191c1971dd8fd264b",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "installedBlob": "9357a6a813c0ffe689f30ae75aa10ffe2f348395",
+          "candidateBlob": "f50b7d90d27d0aae11425c07ab481953a977a57e",
+          "fileDelta": "MODIFIED"
+        }
+      ]
+    },
+    {
+      "id": "safe_routes",
+      "title": "App-Aufträge, Diagnose und Cache-Vorschau",
+      "classification": "IMPROVED_VS_REPORTED_INSTALLED_SOURCE",
+      "ownerSummary": "Natürlich formulierte Diagnoseaufträge gehen in den vorhandenen lesenden Gerätepfad. Eindeutige Cache-/Cage-Reinigungssprache öffnet zunächst die Vorschau des eigenen Diagnosecaches. Verb-Ende-Aufträge wie „WhatsApp öffnen“ und eine passende Antwort auf die App-Namensrückfrage benutzen die vorhandene App-Suche und deren Bestätigungsschritte. Vorschläge, verneinte Änderungen und Rollenmanipulation werden getrennt bewertet.",
+      "limits": [
+        "Der neue Sprachpfad ist keine pauschale Bereinigungs- oder Startfreigabe.",
+        "Eine App-Namensantwort gilt nur für die passende offene Rückfrage; Sitzungs-/Botwechsel, STOP oder andere akzeptierte Eingaben können sie verwerfen."
+      ],
+      "callPaths": [
+        "AgentActivity.sendCurrentInput -> SystemIntelligenceCommands.isDiagnosisRequest/isCachePreviewRequest -> runSystemTool(DIAGNOSE/PREVIEW)",
+        "AgentActivity.sendCurrentInput -> OwnerAppClarification.consume/OwnerAppLookupIntent.inspect -> runExplicitAppLookup -> OwnerAppActionFlow",
+        "AgentActivity.rejectOwnerRoleManipulation / BootstrapBrain -> OwnerDeviceRequestSafety.inspect"
+      ],
+      "sourceProofs": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "installedBlob": "9357a6a813c0ffe689f30ae75aa10ffe2f348395",
+          "candidateBlob": "f50b7d90d27d0aae11425c07ab481953a977a57e",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+          "installedBlob": "e62d878f5d17a9c7db85eb1904f7f9e00157094a",
+          "candidateBlob": "3d22318ad57e9846da91896191c1971dd8fd264b",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt",
+          "installedBlob": null,
+          "candidateBlob": "216cf0a4184b38a70ff6a5d4d40ee9b77dcad3b0",
+          "fileDelta": "ADDED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+          "installedBlob": "3e6485ae4af27812273a40b80fb6ea523d8ea87e",
+          "candidateBlob": "a73528a938e17aad9b48b12dc18765be7bd5d702",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppClarification.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppClarification.kt",
+          "installedBlob": null,
+          "candidateBlob": "e53653ba7140be50b5eaf211e2e4d62260064c04",
+          "fileDelta": "ADDED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppActionFlow.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppActionFlow.kt",
+          "installedBlob": "99eba8b27ccea8a8eb2f8cd8ced4119c7ab560c8",
+          "candidateBlob": "99eba8b27ccea8a8eb2f8cd8ced4119c7ab560c8",
+          "fileDelta": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/systemintelligence/SystemDiagnosis.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/systemintelligence/SystemDiagnosis.kt",
+          "installedBlob": "ad183658601bd54a97a3505b8002cc5150642387",
+          "candidateBlob": "27fbcca95c8c0528da42974979863fa7e3fff448",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/systemintelligence/OwnDiagnosticCache.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/systemintelligence/OwnDiagnosticCache.kt",
+          "installedBlob": "6b4cd0e71ad44d4c0dd138b14d2fd8f577b99027",
+          "candidateBlob": "6b4cd0e71ad44d4c0dd138b14d2fd8f577b99027",
+          "fileDelta": "IDENTICAL"
+        }
+      ]
+    },
+    {
+      "id": "pdf_scene",
+      "title": "PDF-Arbeitsfenster und Dokumentdarstellung",
+      "classification": "EXISTING_PDF_FLOW_WITH_NEW_STAGE_AND_LIFECYCLE_REPAIRS",
+      "ownerSummary": "Die vorhandene Android-PDF-Auswahl und das Lesen werden gegen überholte Auswahlantworten, Sitzungswechsel und Abbruch abgesichert. Neu ist ein angebundener Filament-Dokumentpfad für die echte erste PDF-Seite. Native Bedienelemente und Darstellung bleiben der Rückfallpfad, solange die 3D-Ausgabe nicht tatsächlich bereit ist.",
+      "limits": [
+        "Die neue Dokumentbühne ist nicht die zurückgestellte gemeinsame P3-Welt für Avatar und sämtliche Monitore.",
+        "Native PDF-Decodierung, tatsächliche GPU-Ausgabe und Fold7-Wirkung sind durch diese Inhaltsaufnahme nicht bestätigt."
+      ],
+      "callPaths": [
+        "AgentActivity.openPdfDocumentPicker -> readPdfDocument -> PdfDocumentIntake.read -> presentDocumentScene",
+        "JarvisWorkWindowHost -> DocumentStageView.present -> ContinuumHologramView.presentDocumentStage/renderDocumentStage -> FilamentAvatarRenderer.renderDocumentStage -> FilamentDocumentStage.render",
+        "JarvisWorkWindowHost.updateDocumentPixels -> JarvisWorkWindow.setDocumentStageReady"
+      ],
+      "sourceProofs": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "installedBlob": "9357a6a813c0ffe689f30ae75aa10ffe2f348395",
+          "candidateBlob": "f50b7d90d27d0aae11425c07ab481953a977a57e",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/PdfDocumentIntake.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/PdfDocumentIntake.kt",
+          "installedBlob": "dbfc7476bcf0ba88db94d4f1acfd4b58d2a5c71b",
+          "candidateBlob": "9172efda243f5159b556e9c5557fbe328927c40a",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/DocumentStageView.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/ui/DocumentStageView.kt",
+          "installedBlob": null,
+          "candidateBlob": "4a7adef00d8ed0d9fa1414b6a37affb9a37744b2",
+          "fileDelta": "ADDED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+          "installedBlob": "fe1f53f1104d53bfc42dd2637a14c31ed91421f8",
+          "candidateBlob": "3c2bb006d668815d47def2a28ad7330c6c5f7c7b",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt",
+          "installedBlob": "db122c90757eefdfd25b4298aeb448c0860e169d",
+          "candidateBlob": "0e3110406732d9a92a9c50b3446ff1340b59626e",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+          "installedBlob": "2163e640ae6b68f0911422537181496b5c741d99",
+          "candidateBlob": "7349c43dc31ccd789327342730455ec67b632c2a",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+          "installedBlob": "2bd54df38211b9a1f6811b38b6d8852c9e73bfce",
+          "candidateBlob": "9de8821e2e2c8fcc91f20b36d751e05065a95b3b",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentDocumentStage.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentDocumentStage.kt",
+          "installedBlob": null,
+          "candidateBlob": "5a4a85736185469327d19724c1d9afd82191f748",
+          "fileDelta": "ADDED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/avatar3d/DocumentStageFrame.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/avatar3d/DocumentStageFrame.kt",
+          "installedBlob": null,
+          "candidateBlob": "79f23dd8d2108fa0b4587b13094ca0f66698d254",
+          "fileDelta": "ADDED"
+        },
+        {
+          "path": "app/src/main/assets/cinema3d/document-workspace.glb",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/assets/cinema3d/document-workspace.glb",
+          "installedBlob": null,
+          "candidateBlob": "7942720eaec8edc6fa98d99cd6a6173c5f6e6f74",
+          "fileDelta": "ADDED"
+        }
+      ]
+    },
+    {
+      "id": "jarvis_connections",
+      "title": "JARVIS-Verbindungen und Schalter",
+      "classification": "NEW_CONNECTION_EFFECTS_AND_REPAIRED_EXISTING_GATES",
+      "ownerSummary": "Eine verifizierte Werkzeugrückmeldung kann als Lichtpaket vom Arbeitsfenster zur Kugel zurücklaufen. Während tatsächlicher Arbeit ist ein feiner Lesefaden zwischen Avatar und Fenster angebunden. EXP06 für Fensterlicht und EXP11 für die Kugelverbindung werden im vollständigen jeweiligen Zeichenpfad berücksichtigt.",
+      "limits": [
+        "Bewegung bleibt an Arbeitszustand, Reduced Motion und Renderbudget gebunden.",
+        "Keine Behauptung einer vollständig neuen gemeinsamen 3D-Szene oder einer Geräte-/GPU-Abnahme."
+      ],
+      "callPaths": [
+        "JarvisWorkWindowHost.verifiedStep -> HollywoodFuiStageOverlay.verifiedStep; HollywoodFuiStageOverlay.onDraw -> HollywoodFuiCinematics.receiptTravel/attentionLink/drawAttentionLink",
+        "JarvisWorkWindowHost -> orbLinkEnabled(EXP_11_ORB_LINK) -> HollywoodFuiStageOverlay transfer/receipt",
+        "FilamentAvatarRenderer -> CinemaWindowLightState.resolve(enabled, ...)"
+      ],
+      "sourceProofs": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt",
+          "installedBlob": "6d0c3d78bef65526cfad1bb18ae1f68b4de06924",
+          "candidateBlob": "76c56a13188380d3d44d95df97d8062a5d00c6c3",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiCinematics.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiCinematics.kt",
+          "installedBlob": "26b5b76c233a5c7f677a205db0d75e89d6dd392d",
+          "candidateBlob": "7763413ebee519e57f1ee28e39869e3c17903f64",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+          "installedBlob": "fe1f53f1104d53bfc42dd2637a14c31ed91421f8",
+          "candidateBlob": "3c2bb006d668815d47def2a28ad7330c6c5f7c7b",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/avatar3d/CinemaWindowLightState.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/avatar3d/CinemaWindowLightState.kt",
+          "installedBlob": "823495e4977ad5324b00d04383c871b7f57aca5c",
+          "candidateBlob": "be1b4ae038cddf242895ebb0df753f90704244de",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+          "installedBlob": "2bd54df38211b9a1f6811b38b6d8852c9e73bfce",
+          "candidateBlob": "9de8821e2e2c8fcc91f20b36d751e05065a95b3b",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "installedBlob": "9357a6a813c0ffe689f30ae75aa10ffe2f348395",
+          "candidateBlob": "f50b7d90d27d0aae11425c07ab481953a977a57e",
+          "fileDelta": "MODIFIED"
+        }
+      ]
+    },
+    {
+      "id": "existing_cooling",
+      "title": "Bereits vorhandener Kühlmodus und ThermalGuard",
+      "classification": "EXISTING_UNCHANGED_POLICY_VS_REPORTED_INSTALLED_SOURCE",
+      "ownerSummary": "Kühlmodus und ThermalGuard sind bereits im Vergleichsstand vorhanden. Die Kühlwahl beeinflusst das CPU-Threadbudget beim nächsten Modellladen. Der ThermalGuard verwendet Androids Wärmestufe; ab SEVERE blockiert er neue Generierung bzw. stoppt laufende Generierung und startet nicht selbstständig erneut.",
+      "limits": [
+        "Die drei Kernquellen sind byteidentisch zum Vergleichsstand.",
+        "Eine Wärmestufe ist keine gemessene CPU-/GPU-Temperatur in Grad Celsius.",
+        "Fold7-Wärmemessung: NOT_RUN."
+      ],
+      "callPaths": [
+        "AgentActivity cooling selection -> LocalModelHost.setCoolingMode -> LocalModelHost.inferenceThreads -> LocalModelComputeBudget.inferenceThreads (at load)",
+        "LocalModelHost.get -> thermallyGuarded -> LocalModelThermalGuard.wrap",
+        "PowerManager thermal listener -> LocalModelThermalGuard.onThermalStatus"
+      ],
+      "sourceProofs": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+          "installedBlob": "afcbe6e6d121aee6489b02b873c11165f4c6a7fe",
+          "candidateBlob": "afcbe6e6d121aee6489b02b873c11165f4c6a7fe",
+          "fileDelta": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelComputeBudget.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/localmodel/LocalModelComputeBudget.kt",
+          "installedBlob": "dcc4591c5f34f58d25727f8c039f83291b01ab1d",
+          "candidateBlob": "dcc4591c5f34f58d25727f8c039f83291b01ab1d",
+          "fileDelta": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelThermalGuard.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/localmodel/LocalModelThermalGuard.kt",
+          "installedBlob": "18a0377c8b593c53041c9b0b2a73109dd171937e",
+          "candidateBlob": "18a0377c8b593c53041c9b0b2a73109dd171937e",
+          "fileDelta": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "installedBlob": "9357a6a813c0ffe689f30ae75aa10ffe2f348395",
+          "candidateBlob": "f50b7d90d27d0aae11425c07ab481953a977a57e",
+          "fileDelta": "MODIFIED"
+        }
+      ]
+    },
+    {
+      "id": "duplicate_work",
+      "title": "Neu entfernte Doppelarbeit",
+      "classification": "NEW_OPTIMIZATION_VS_REPORTED_INSTALLED_SOURCE",
+      "ownerSummary": "Beim Modellladen entfällt der zweite identische vollständige Hashdurchlauf; jeder neue Ladevorgang prüft die Bytes weiterhin vollständig. Unveränderte Lernkern-Statusabfragen verwenden die gleichen Prüfwerte wieder, gebunden an exakte Checkpoint-Bytes und Prüfsätze; Besitzerstatistik und Audit bleiben frisch. Lichtlinien berechnen gleiche Kontrollpunkte einmal je Frame und verwenden statische Pfade bei unveränderter Größe wieder.",
+      "limits": [
+        "Keine gemessene Fold7-Temperatursenkung oder garantierte Laufzeit-/Akkueinsparung.",
+        "Kein Nachweis, dass das gesamte Hitzeproblem damit behoben ist.",
+        "Keine neue Reduktion von Modellqualität, Kontext-/Tokenbudget oder Grafikauflösung in diesem thermischen Delta."
+      ],
+      "callPaths": [
+        "LiteRtLmLocalModelRuntime.load -> LocalModelCatalog.sourceForLoad -> get(verifyBytes=true)",
+        "ContinuumDashboardCollector.collect -> ContinuumLearningCore.status -> statusHoldouts (exact bytes + corpora)",
+        "ContinuumHologramView.onDraw -> JarvisEnergyFlows.draw -> per-flow controls",
+        "ContinuumHologramView.dispatchDraw -> JarvisHeadAura.drawLightStreams -> size-bound lightStreams cache"
+      ],
+      "sourceProofs": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+          "installedBlob": "1ac0a4fe6c610d313b1b29bb6dd6beef288dea9f",
+          "candidateBlob": "a76f0498b2ffd463f3c216ff0c9236f14a94648a",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+          "installedBlob": "91a4eea632ab14bdc92e5f46f30e9617e0145fb4",
+          "candidateBlob": "7d4311ea69d162b8da60e8700169064b8b67dd3c",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+          "installedBlob": "e1505ee18ffbdf91257118d4b63b85d97f59d3e0",
+          "candidateBlob": "e1505ee18ffbdf91257118d4b63b85d97f59d3e0",
+          "fileDelta": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+          "installedBlob": "765235d5ad29a879ce020bb2179d6f9c1273d519",
+          "candidateBlob": "5a8fe41ff1898441f2f2397aa935998471a71901",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+          "installedBlob": "2163e640ae6b68f0911422537181496b5c741d99",
+          "candidateBlob": "7349c43dc31ccd789327342730455ec67b632c2a",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisEnergyFlows.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/ui/JarvisEnergyFlows.kt",
+          "installedBlob": "de043851749a223e3f440874902d4088147d32d0",
+          "candidateBlob": "7cc865ae79f0cf4f47c83fe8757120fce679ae93",
+          "fileDelta": "MODIFIED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisHeadAura.kt",
+          "callPathSourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/app/src/main/java/at/heinz/deviceai/ui/JarvisHeadAura.kt",
+          "installedBlob": "3b8f1496fc12b2bb737bc2106a7290012f104615",
+          "candidateBlob": "91b40ed975e9694955915383083192e4ea4c4d94",
+          "fileDelta": "MODIFIED"
+        }
+      ]
+    }
+  ],
+  "notDeliveredAsNewFeatures": [
+    {
+      "id": "P3",
+      "status": "EXPLICITLY_DEFERRED",
+      "description": "Durchgängige gemeinsame Filament-Szene mit passendem Home-Viewport, Kameraursprung, Kopfmaske und allen Monitoren; vorhandene PDF-Bühne bleibt aktiv.",
+      "sourcePath": "docs/research/omega/OMEGA-SCENE-HANDOFF-20261111.md",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/docs/research/omega/OMEGA-SCENE-HANDOFF-20261111.md"
+    },
+    {
+      "id": "P4_P6",
+      "status": "ROADMAP_NOT_CLAIMED_AS_DELIVERED_BY_THIS_DELTA",
+      "description": "Weiterer Ausbau derselben Welt mit realen Android-/WhatsApp-/Browserereignissen und vollständigen weiteren Konto-/Bank-/Werkzeugintegrationen wird nicht als abgeschlossene Code54-Neuerung ausgewiesen. Diese Aussage inventarisiert nicht jede bereits vorhandene Teilfunktion.",
+      "sourcePath": "docs/handoff/OMEGA-WEITERBEARBEITUNG-20261111.md",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/c163641b400f1fcdd02c1d2952fde1c8e76a0ad1/docs/handoff/OMEGA-WEITERBEARBEITUNG-20261111.md"
+    }
+  ],
+  "acceptance": {
+    "scope": "Contents at this exact source, not a claim that an APK was built or installed.",
+    "newTestsByReviewer": "NOT_RUN",
+    "Fold7ThermalMeasurement": "NOT_RUN",
+    "Fold7GpuAcceptance": "NOT_RUN",
+    "nativePdfDeviceAcceptance": "NOT_RUN",
+    "releaseOrInstallation": "NOT_PERFORMED_BY_REVIEWER"
+  },
+  "qaNote": "The c163 UI recheck exposed fixture failures at the immediate CHAT assertion. The later fixture-only follow-up #783 is outside this c163 contents snapshot; it changes no production feature."
+}
