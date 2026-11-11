@@ -30,10 +30,16 @@ internal object OwnerDocumentIntent {
     private val extraAction = Regex(
         "(?iu)(?:^|[.!?,;]\\s*|\\s+(?:und|danach|anschließend|dann)\\s+)" +
             "(?:(?:bitte|danach|anschließend|dann)\\s+)*" +
-            "(öffne|öffnen|starte|starten|zeige|zeigen|suche|suchen|finde|finden|" +
+            "(öffne|öffnen|starte|starten|zeig|zeige|zeigen|suche|suchen|finde|finden|" +
             "schreib|schreibe|schreiben|tippe|installiere|kaufe|bezahle|überweise)$END"
     )
     private val joinedObject = Regex("(?iu)\\s+(?:und|sowie|oder)\\s+")
+    // Presentation never authorizes another tool.
+    private val presentationTail = Regex(
+        "(?iu)(?:\\s+und\\s+|[.!?,;]\\s*)(?:bitte\\s+)?zeig(?:e)?\\s+(?:mir\\s+)?" +
+            "(?:jeden\\s+(?:einzelnen\\s+)?arbeitsschritt|(?:alle|die)\\s+(?:einzelnen\\s+)?arbeitsschritte)" +
+            "(?:\\s+bitte)?[.!?]*$"
+    )
     private val earlier = Regex(
         "(?iu)$START(ausgewählte|ausgewählten|letzte|letzten|gleiche|gleichen|dieselbe|selbe|selben|vorige|vorigen|gestrige|gestrigen)$END" +
             "\\s+$START(pdf|pdf-datei|pdf-dokument|dokument)$END"
@@ -46,10 +52,12 @@ internal object OwnerDocumentIntent {
     @JvmOverloads
     fun parse(utterance: String, assistantName: String? = null): Request? {
         if (utterance.length !in 8..160 || utterance.any { it.isISOControl() }) return null
-        val text = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName)
+        val original = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName)
             .replace(Regex("(?iu)^bitte\\s+"), "")
+        if (prohibited.containsMatchIn(original)) return null
+        val text = original.replace(presentationTail, "").trimEnd()
         val direct = read.find(text) ?: namedPdf.matchEntire(text)
-        if (prohibited.containsMatchIn(text) || (direct == null && !politeRead.matches(text))) return null
+        if (direct == null && !politeRead.matches(text)) return null
         if (direct != null && (joinedObject.containsMatchIn(direct.value) ||
                 extraAction.findAll(text).any { it.groups[1]!!.range.first != direct.range.first })) return null
         return Request(wantsDraft = draft.containsMatchIn(text), reuse = earlier.containsMatchIn(text))

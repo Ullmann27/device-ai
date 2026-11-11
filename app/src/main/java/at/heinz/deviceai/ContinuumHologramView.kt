@@ -78,6 +78,19 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var assetGeneration = 0
     private var native3dFailed = false
     private var native3dDrawn = false
+    private var documentStageBytes: ByteArray? = null
+    private class DocumentStageBinding(val id: String, val surface: Surface, val ready: (Boolean) -> Unit) {
+        var frame: at.heinz.deviceai.avatar3d.DocumentStageFrame? = null
+        var page: android.graphics.Bitmap? = null
+        var bufferWidth = 0
+        var bufferHeight = 0
+        var failed = false
+        var drawn = false
+        fun report(value: Boolean) {
+            if (drawn != value) { drawn = value; ready(value) }
+        }
+    }
+    private var documentStageBinding: DocumentStageBinding? = null
     private val avatarTrace = AvatarTraceRingBuffer()
     private val pendingAvatarTraceFlags = java.util.concurrent.atomic.AtomicInteger(0)
     private var avatarProofStartedAt = Long.MIN_VALUE
@@ -504,12 +517,36 @@ class ContinuumHologramView @JvmOverloads constructor(
                     val digest = java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
                         .joinToString("") { "%02x".format(it) }
                     require(digest == AvatarGlbContract.ASSET_SHA256) { "Packaged avatar revision mismatch" }
-                    bytes to AvatarGlbContract.validate(bytes)
+                    val documentBytes = runCatching {
+                        val contract = at.heinz.deviceai.avatar3d.FilamentDocumentStage
+                        val document = context.assets.open(contract.ASSET_PATH).use { stream ->
+                            val out = java.io.ByteArrayOutputStream()
+                            val part = ByteArray(8192)
+                            while (true) {
+                                val count = stream.read(part)
+                                if (count < 0) break
+                                require(out.size() + count <= contract.MAX_BYTES)
+                                out.write(part, 0, count)
+                            }
+                            out.toByteArray()
+                        }
+                        val sha = java.security.MessageDigest.getInstance("SHA-256").digest(document)
+                            .joinToString("") { "%02x".format(it) }
+                        require(sha == contract.ASSET_SHA256)
+                        document
+                    }.getOrNull()
+                    Triple(bytes, AvatarGlbContract.validate(bytes), documentBytes)
                 }
                 mainHandler.post {
                     assetLoading = false
                     if (generation != assetGeneration) { if (canDisplay3d()) update3d(); return@post }
-                    candidate.onSuccess { (bytes, metadata) -> assetBytes = bytes; assetMetadata = metadata; update3d(); invalidate() }
+                    candidate.onSuccess { (bytes, metadata, documentBytes) ->
+                        assetBytes = bytes
+                        assetMetadata = metadata
+                        documentStageBytes = documentBytes
+                        update3d()
+                        invalidate()
+                    }
                         .onFailure { fail3d() }
                 }
             }, "continuum-avatar-asset").start()
@@ -552,6 +589,61 @@ class ContinuumHologramView @JvmOverloads constructor(
             .onSuccess { native3d = it; it.setQuality(renderBudget().reducedBloom) }.onFailure { fail3d() }
     }
 
+    /** Presentation only; no document access. */
+    internal fun attachDocumentStage(id: String, surface: Surface, ready: (Boolean) -> Unit) {
+        documentStageBinding?.report(false)
+        native3d?.clearDocumentStage()
+        documentStageBinding = DocumentStageBinding(id, surface, ready)
+    }
+
+    internal fun presentDocumentStage(frame: at.heinz.deviceai.avatar3d.DocumentStageFrame,
+                                     page: android.graphics.Bitmap?, bufferWidth: Int, bufferHeight: Int) {
+        val binding = documentStageBinding?.takeIf { it.id == frame.windowId } ?: return
+        if (!frame.valid()) return
+        val changedPage = binding.page !== page
+        binding.frame = frame
+        binding.page = page
+        binding.bufferWidth = bufferWidth
+        binding.bufferHeight = bufferHeight
+        if (changedPage && canDisplay3d()) invalidate()
+    }
+
+    internal fun detachDocumentStage(id: String) {
+        val binding = documentStageBinding?.takeIf { it.id == id } ?: return
+        binding.report(false)
+        binding.page = null
+        binding.frame = null
+        documentStageBinding = null
+        native3d?.clearDocumentStage()
+    }
+
+    private fun renderDocumentStage() {
+        val binding = documentStageBinding ?: return
+        val budget = renderBudget()
+        val admitted = canDisplay3d() && budget.animate &&
+            budget.tier != at.heinz.deviceai.ui.JarvisRenderQuality.Tier.LOW &&
+            budget.tier != at.heinz.deviceai.ui.JarvisRenderQuality.Tier.SUSPENDED &&
+            at.heinz.deviceai.ui.JarvisCinematicSettings.enabled(context)
+        if (!admitted || binding.failed) {
+            binding.report(false)
+            native3d?.clearDocumentStage()
+            return
+        }
+        val frame = binding.frame ?: return
+        val bytes = documentStageBytes ?: return
+        val native = native3d ?: return
+        if (binding.bufferWidth <= 0 || binding.bufferHeight <= 0) return
+        runCatching {
+            native.renderDocumentStage(binding.surface, bytes, frame, binding.page,
+                binding.bufferWidth, binding.bufferHeight)
+        }.onSuccess { rendered -> if (rendered) binding.report(true) }
+            .onFailure {
+                binding.failed = true
+                binding.report(false)
+                native.clearDocumentStage()
+            }
+    }
+
     private fun fail3d() {
         native3dFailed = true
         release3d(clearAsset = true)
@@ -561,11 +653,12 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     private fun release3d(clearAsset: Boolean) {
+        documentStageBinding?.report(false)
         native3d?.close(); native3d = null; native3dDrawn = false
         nativeTexture?.let { texture -> texture.surfaceTextureListener = null; removeView(texture) }
         nativeTexture = null
         nativeSurface?.release(); nativeSurface = null
-        if (clearAsset) { assetGeneration++; assetBytes = null; assetMetadata = null }
+        if (clearAsset) { assetGeneration++; assetBytes = null; assetMetadata = null; documentStageBytes = null }
     }
 
     fun showAppearanceChooser() {
@@ -1059,6 +1152,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
                     .onFailure { fail3d() }
             }
+            renderDocumentStage()
             if (!native3dDrawn) {
                 val headCanvas = canvas.save()
                 transformHeadEntrance(canvas, density)

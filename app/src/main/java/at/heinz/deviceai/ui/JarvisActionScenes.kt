@@ -29,7 +29,10 @@ object JarvisActionScenes {
     sealed class Origin {
         data class Tile(val target: String) : Origin()
         object BesideFace : Origin()
+        data class Edge(val side: EdgeSide) : Origin()
     }
+
+    enum class EdgeSide { LEFT, RIGHT }
 
     data class Scene(
         val kind: Kind,
@@ -62,8 +65,11 @@ object JarvisActionScenes {
     /** Scene of a tool the runner actually started; unknown or future tools get the neutral scene. */
     fun forTool(toolName: String): Scene = toolKind(toolName).let { Scene(it, Origin.BesideFace, accent(it)) }
 
-    /** A document the owner picked: it arrives beside the face (no tile), in the files colour. */
-    fun forDocument(): Scene = Scene(Kind.FILES, Origin.BesideFace, accent(Kind.FILES))
+    /** Authentic document enters from left. */
+    fun forDocument(): Scene = Scene(Kind.FILES, Origin.Edge(EdgeSide.LEFT), accent(Kind.FILES))
+
+    /** Delivered draft enters from right. */
+    fun forDocumentResult(): Scene = Scene(Kind.FILES, Origin.Edge(EdgeSide.RIGHT), accent(Kind.FILES))
 
     /** Real calculation/score presentation; no tool authority is granted by this scene. */
     fun forCalculation(): Scene = Scene(

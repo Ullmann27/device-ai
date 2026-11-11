@@ -342,6 +342,7 @@ class AgentActivity : Activity() {
     private var voiceEnabled = false
     private var mayaSpeech: MayaSpeech? = null
     private var ownerReplyAllowsMaya = true
+    private var ownerReplyRevision = 0L
     private var speechUsesMaya = false
     private var speechInternetRevision = -1L
     private var voiceProgressListener: android.speech.tts.UtteranceProgressListener? = null
@@ -616,6 +617,7 @@ class AgentActivity : Activity() {
                     chatTranscripts.activeConversation { sessionId }
                 }).get(2, java.util.concurrent.TimeUnit.SECONDS)
             }.getOrNull()?.let { sessionId = it }
+        restoreDocumentSelection(savedInstanceState)
         // Only a recreated instance of the same chat restores its last local answer anchor.
         if (savedInstanceState != null) {
             at.heinz.deviceai.cognitive.LocalDialogueRetention.replyFor(sessionId)?.let {
@@ -778,10 +780,16 @@ class AgentActivity : Activity() {
             pendingAppActionReply = null
             deliverAppActionReply(reply)
         }
+        pendingReturnedDocument?.let { returned ->
+            pendingReturnedDocument = null
+            readSelectedDocument(returned)
+        }
         mainHandler.post { maybeAskForConversationCamera() }
     }
 
     override fun onPause() {
+        documentReadGeneration++
+        pendingReturnedDocument = null
         cancelSystemDiagnosis()
         botTeam?.invalidate()
         if (botTeamOwnsLane && ::localRuntime.isInitialized) localRuntime.cancel()
@@ -848,6 +856,14 @@ class AgentActivity : Activity() {
             if (conversationActive) ContinuumWorkArea.CHAT.name else ContinuumWorkArea.START.name
         )
         outState.putString("ctx3_chat_id_v1",sessionId)
+        pendingDocumentSelection?.takeIf(::currentDocumentSelection)?.let { selection ->
+            outState.putBundle("continuum_pdf_selection_v1", Bundle().apply {
+                putString("session", selection.session)
+                putString("request", selection.request)
+                putBoolean("draft", selection.wantsDraft)
+                putBoolean("maya", selection.allowMaya)
+            })
+        }
         super.onSaveInstanceState(outState)
     }
 
@@ -1965,6 +1981,45 @@ class AgentActivity : Activity() {
     private var pendingDocumentDraft = false
     /** The owner's words that started the document task (work journal). */
     private var pendingDocumentRequest = ""
+    private data class DocumentSelection(
+        val session: String,
+        val generation: Long,
+        val replyRevision: Long,
+        val request: String,
+        val wantsDraft: Boolean,
+        val allowMaya: Boolean
+    )
+    private data class ReturnedDocument(val uri: android.net.Uri, val selection: DocumentSelection)
+    private var pendingDocumentSelection: DocumentSelection? = null
+    private var pendingReturnedDocument: ReturnedDocument? = null
+    @Volatile private var documentReadGeneration = 0L
+
+    private fun currentDocumentSelection(selection: DocumentSelection): Boolean =
+        !isFinishing && !isDestroyed && sessionId == selection.session &&
+            workPresentationGeneration == selection.generation && ownerReplyRevision == selection.replyRevision
+
+    private fun restoreDocumentSelection(state: Bundle?) {
+        val saved = state?.getBundle("continuum_pdf_selection_v1") ?: return
+        val request = saved.getString("request") ?: return
+        if (saved.getString("session") != sessionId || request.length > 2_000 || request.any(Char::isISOControl)) return
+        val allowed = saved.getBoolean("maya", false) &&
+            !at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalSpeech(request)
+        pendingDocumentSelection = DocumentSelection(sessionId, workPresentationGeneration, ownerReplyRevision,
+            request, saved.getBoolean("draft", false), allowed)
+        pendingDocumentRequest = request
+        pendingDocumentDraft = saved.getBoolean("draft", false)
+        ownerReplyAllowsMaya = allowed
+    }
+
+    private fun readSelectedDocument(returned: ReturnedDocument) {
+        val selection = returned.selection
+        if (!foregroundLearningActive || !currentDocumentSelection(selection)) return
+        pendingDocumentRequest = selection.request
+        pendingDocumentDraft = selection.wantsDraft
+        ownerReplyAllowsMaya = ownerReplyAllowsMaya && selection.allowMaya
+        runCatching { contentResolver.takePersistableUriPermission(returned.uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
+        readPdfDocument(returned.uri)
+    }
     /** Work journal: what was asked, which source, which state was really reached (CockpitWorkJournal). */
     private val workJournal by lazy { at.heinz.deviceai.cognitive.CockpitWorkJournal(filesDir) }
 
@@ -2284,7 +2339,8 @@ class AgentActivity : Activity() {
                                     val name: String, val episodeId: String? = null,
                                     /** The document's own first page, carried into the result as its source card. */
                                     val page: android.graphics.Bitmap? = null,
-                                    val sessionId: String? = null)
+                                    val sessionId: String? = null,
+                                    val allowMaya: Boolean = true)
     /** Journal episode of the document task currently on screen. */
     private var workEpisodeId: String? = null
     /** The draft line of the open document window: always the state really reached, never „läuft“ after a failure. */
@@ -2332,7 +2388,8 @@ class AgentActivity : Activity() {
             else -> {
                 recordWork(workEpisodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING) }
                 showDocumentDraftStatus("Entwurf wird lokal erstellt …")
-                documentDraftTurn = DocumentDraftTurn(prompt, doc.name, workEpisodeId, doc.firstPage, sessionId)
+                documentDraftTurn = DocumentDraftTurn(prompt, doc.name, workEpisodeId, doc.firstPage, sessionId,
+                    ownerReplyAllowsMaya)
                 runLocal(prompt.request, resolvedQuestion = prompt.question)
                 // While the model really works on the document, JARVIS reads it in its window (ends with the work).
                 if (documentDraftTurn != null) {
@@ -2398,7 +2455,22 @@ class AgentActivity : Activity() {
         body.addView(cockpit.action(this, "ALS DATEI SPEICHERN", primary = true) { saveDraft(draft.text.toString(), turn.name) }
             .apply { tag = "jarvis-draft-save" }, matchWidth(top = 6))
         return workWindowHost.show(home, body, "ENTWURF · ${turn.name.take(40)}",
-            at.heinz.deviceai.ui.JarvisActionScenes.forDocument(), fromCurrent = true, handover = sourcePage) {}
+            at.heinz.deviceai.ui.JarvisActionScenes.forDocumentResult(), fromCurrent = true, handover = sourcePage) {}
+    }
+
+    private fun offerDocumentNextSteps(window: at.heinz.deviceai.ui.JarvisWorkWindow,
+                                       episodeId: String?, message: String, allowMaya: Boolean) {
+        val session = sessionId
+        val generation = workPresentationGeneration
+        val replyRevision = ownerReplyRevision
+        window.doOnPresented {
+            if (isFinishing || isDestroyed || !foregroundLearningActive || sessionId != session ||
+                generation != workPresentationGeneration || replyRevision != ownerReplyRevision ||
+                workEpisodeId != episodeId || documentDraftTurn != null ||
+                activeWorkArea != ContinuumWorkArea.START) return@doOnPresented
+            recordCockpitDialog(false, message)
+            addHomeGreeting(message, allowMaya = allowMaya)
+        }
     }
 
     /** The local model's reply to a document draft: journal state, then the result surface (null without a draft). */
@@ -2523,8 +2595,11 @@ class AgentActivity : Activity() {
     }
 
     private fun openPdfDocumentPicker(wantsDraft: Boolean, request: String = "") {
+        if (pendingDocumentSelection?.let(::currentDocumentSelection) == true) return
         pendingDocumentDraft = wantsDraft
         pendingDocumentRequest = request
+        pendingDocumentSelection = DocumentSelection(sessionId, workPresentationGeneration, ownerReplyRevision,
+            request, wantsDraft, ownerReplyAllowsMaya)
         val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/pdf"
@@ -2532,7 +2607,9 @@ class AgentActivity : Activity() {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
         }
         runCatching { startActivityForResult(picker, PDF_DOCUMENT_REQUEST) }.onFailure {
+            pendingDocumentSelection = null
             pendingDocumentDraft = false
+            pendingDocumentRequest = ""
             addAssistantMessage("Die Android-Dateiauswahl ist auf diesem Gerät nicht verfügbar – es wurde nichts gelesen.")
         }
     }
@@ -2548,17 +2625,30 @@ class AgentActivity : Activity() {
         val pageWidthPx = (resources.displayMetrics.density * 360f).toInt()
         val session = sessionId
         val generation = workPresentationGeneration
+        val readGeneration = ++documentReadGeneration
+        val replyRevision = ownerReplyRevision
+        val wantsDraft = pendingDocumentDraft
+        val request = pendingDocumentRequest
+        val allowMaya = ownerReplyAllowsMaya
         documentIoExecutor.execute {
-            val result = runCatching { PdfDocumentIntake(contentResolver).read(uri, pageWidthPx) }
+            val result = runCatching {
+                PdfDocumentIntake(contentResolver).read(uri, pageWidthPx) {
+                    documentReadGeneration != readGeneration
+                }
+            }
             runOnUiThread {
-                if (isFinishing || isDestroyed || sessionId != session || workPresentationGeneration != generation) {
+                if (isFinishing || isDestroyed || !foregroundLearningActive || sessionId != session ||
+                    workPresentationGeneration != generation || documentReadGeneration != readGeneration ||
+                    ownerReplyRevision != replyRevision) {
                     result.getOrNull()?.firstPage?.recycle()
                     return@runOnUiThread
                 }
+                pendingDocumentDraft = wantsDraft
+                pendingDocumentRequest = request
+                ownerReplyAllowsMaya = ownerReplyAllowsMaya && allowMaya
                 result.fold({ presentDocumentScene(it, uri.toString()) }) { failure ->
-                    val wantsDraft = pendingDocumentDraft
-                    val request = pendingDocumentRequest
                     pendingDocumentDraft = false
+                    pendingDocumentRequest = ""
                     val stay = activeWorkArea == ContinuumWorkArea.START
                     if (remembered == null) {
                         addAssistantMessage("Die PDF ließ sich nicht lesen (${failure.message ?: failure.javaClass.simpleName}). " +
@@ -2686,7 +2776,19 @@ class AgentActivity : Activity() {
             }
         }
         // The same facts in the conversation; with an open window the cockpit stays (no switch to the chat area).
-        addAssistantMessage(report, preserveLocalContext = true, keepCockpit = window != null)
+        addAssistantMessage(report, preserveLocalContext = true, keepCockpit = window != null,
+            speakNow = window == null)
+        if (window != null && (!wantsDraft || !hasText || !localModelReady())) {
+            val offer = when {
+                hasText && localModelReady() -> "Deine PDF ist geöffnet. Du kannst jetzt einen Entwurf aus dem gelesenen Text erstellen. " +
+                    "Was möchtest du als Nächstes damit machen?"
+                hasText -> "Deine PDF ist geöffnet. Den gelesenen Text kannst du dir ansehen. " +
+                    "Für einen Entwurf muss zuerst dein lokales Modell geladen sein."
+                else -> "Deine PDF ist geöffnet. Das Seitenbild ist sichtbar; für eine Zusammenfassung fehlt mir auslesbarer Text. " +
+                    "Möchtest du eine andere PDF auswählen?"
+            }
+            offerDocumentNextSteps(window, episode.id, offer, ownerReplyAllowsMaya)
+        }
         if (wantsDraft && hasText && localModelReady()) startDocumentDraft(doc)
     }
 
@@ -11086,8 +11188,17 @@ class AgentActivity : Activity() {
                     if (draftTurn != null) documentDraftTurn = null
                     val draftWindow = if (draftTurn != null) onDocumentDraftReply(draftTurn,
                         if (successful) run.response else "") else null
+                    val draftAllowsMaya = allowMaya && (draftTurn?.allowMaya ?: true)
                     addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession,
-                        keepCockpit = draftWindow != null, allowMaya = allowMaya)
+                        keepCockpit = draftWindow != null, allowMaya = draftAllowsMaya,
+                        speakNow = draftWindow == null)
+                    if (draftWindow != null && draftTurn != null) {
+                        val scope = if (draftTurn.prompt.complete) "Dein Entwurf steht bereit."
+                            else "Dein Entwurf aus dem begrenzten Textauszug steht bereit."
+                        offerDocumentNextSteps(draftWindow, draftTurn.episodeId,
+                            "$scope Du kannst ihn bearbeiten oder als Datei speichern. " +
+                                "Welche Stelle möchtest du zuerst gemeinsam mit mir prüfen?", draftAllowsMaya)
+                    }
                     if(successful && groundedRecall!=null)addToolActivity(
                         "LOKALE MODELLSCHLUSSFOLGERUNG · ${imported.id}@${imported.version} · " +
                             "SHA-256 ${imported.sha256.take(16)} · nicht unabhängig bestätigt")
@@ -11755,6 +11866,9 @@ class AgentActivity : Activity() {
 
     private fun cancelLocalRequest() {
         workPresentationGeneration++
+        documentReadGeneration++
+        pendingDocumentSelection = null
+        pendingReturnedDocument = null
         pendingDocumentDraft = false
         pendingDocumentRequest = ""
         // STOP: a running document draft is recorded as aborted – never as done.
@@ -13067,6 +13181,8 @@ class AgentActivity : Activity() {
 
     /** [keepCockpit]: a cockpit work scene answers this request on START – record it without switching to the chat. */
     private fun addUserMessage(value: String, keepCockpit: Boolean) {
+        ownerReplyRevision++
+        documentReadGeneration++
         val allowsMaya = !at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalSpeech(value)
         ownerReplyAllowsMaya = allowsMaya && (!busy || ownerReplyAllowsMaya)
         recordCockpitDialog(true, value)
@@ -13132,7 +13248,7 @@ class AgentActivity : Activity() {
 
     /** [keepCockpit]: the result is already shown in an open cockpit work window – record it without leaving START. */
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,
-                                    allowMaya: Boolean = ownerReplyAllowsMaya) {
+                                    allowMaya: Boolean = ownerReplyAllowsMaya, speakNow: Boolean = true) {
         recordCockpitDialog(false, value)
         // Rendering a normal assistant reply never owns session invalidation. Callers pass false only
         // after a semantic policy decided that older dialogue is stale (for example a confirmed memory change).
@@ -13150,14 +13266,15 @@ class AgentActivity : Activity() {
             refreshConversationLayout()
             (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         }
-        addHomeGreeting(value, allowMaya = allowMaya)
+        addHomeGreeting(value, allowMaya = allowMaya, speakNow = speakNow)
     }
 
     /** Startup/session greetings remain available in chat without taking space
      * from the home dashboard. Every actual action result opens the conversation. */
-    private fun addHomeGreeting(value: String, persist: Boolean = true, allowMaya: Boolean = ownerReplyAllowsMaya) {
+    private fun addHomeGreeting(value: String, persist: Boolean = true, allowMaya: Boolean = ownerReplyAllowsMaya,
+                                speakNow: Boolean = true) {
         addBubble(value, user = false, persist = persist)
-        speakReply(value, allowMaya)
+        if (speakNow) speakReply(value, allowMaya)
     }
 
     /**
@@ -13796,14 +13913,20 @@ class AgentActivity : Activity() {
                 }
             }
             PDF_DOCUMENT_REQUEST -> {
+                val selection = pendingDocumentSelection
+                pendingDocumentSelection = null
+                if (selection == null || !currentDocumentSelection(selection)) return
                 val uri = data?.data
                 if (resultCode == RESULT_OK && uri != null) {
-                    runCatching { contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
-                    readPdfDocument(uri)
+                    val returned = ReturnedDocument(uri, selection)
+                    if (foregroundLearningActive) readSelectedDocument(returned)
+                    else pendingReturnedDocument = returned
                 }
                 else {
                     pendingDocumentDraft = false
-                    addAssistantMessage("Keine PDF gewählt – es wurde nichts gelesen.")
+                    pendingDocumentRequest = ""
+                    addAssistantMessage("Keine PDF gewählt – es wurde nichts gelesen.", true,
+                        keepCockpit = activeWorkArea == ContinuumWorkArea.START, allowMaya = selection.allowMaya)
                 }
             }
             CONTINUUM_PACKAGE_MANIFEST_REQUEST -> {

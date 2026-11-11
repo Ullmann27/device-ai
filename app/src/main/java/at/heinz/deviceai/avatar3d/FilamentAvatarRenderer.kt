@@ -18,6 +18,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private var provider: UbershaderProvider? = null
     private var loader: AssetLoader? = null
     private var asset: FilamentAsset? = null
+    private var documentStage: FilamentDocumentStage? = null
+    private var documentStageId: String? = null
+    private var documentSurface: Surface? = null
     private var cameraEntity = 0
     private val lightEntities = mutableListOf<Int>()
     private var coreLightInstance = 0
@@ -305,8 +308,30 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         engine!!.transformManager.setTransform(joint.instance, transformed)
     }
 
+    /** Uses the existing render callback. */
+    fun renderDocumentStage(surface: Surface, bytes: ByteArray, frame: DocumentStageFrame,
+                            page: android.graphics.Bitmap?, bufferWidth: Int, bufferHeight: Int): Boolean {
+        val e = engine ?: return false
+        if (!frame.valid() || !surface.isValid) return false
+        if (documentStageId != frame.windowId || documentSurface !== surface) {
+            clearDocumentStage()
+            documentStage = FilamentDocumentStage(e, requireNotNull(renderer), requireNotNull(loader), surface, bytes)
+            documentStageId = frame.windowId
+            documentSurface = surface
+        }
+        return documentStage?.render(frame, page, bufferWidth, bufferHeight) == true
+    }
+
+    fun clearDocumentStage() {
+        documentStage?.close()
+        documentStage = null
+        documentStageId = null
+        documentSurface = null
+    }
+
     override fun close() {
         val e = engine ?: return
+        clearDocumentStage()
         faceMaterial = null
         faceEmission = null
         // Each release is independent so a lost surface cannot skip the remaining native cleanup.

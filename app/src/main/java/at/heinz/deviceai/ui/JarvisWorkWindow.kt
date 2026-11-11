@@ -138,6 +138,7 @@ class JarvisWorkWindow(
     private var lastFrameTime: Long? = null
     private var openness = 0f
     private var opacity = 0f
+    private var stageOpacity = 0f
     private var closeFrom = 0f
     private var closeAlpha = 0f
     private var trailProgress = 0f
@@ -236,6 +237,52 @@ class JarvisWorkWindow(
     }
 
     val isShowing: Boolean get() = phase != Phase.CLOSED
+
+    /** Runs once after actual arrival. */
+    fun doOnPresented(action: () -> Unit): Boolean {
+        if (disposed) return false
+        return when (phase) {
+            Phase.OPEN -> { deliverPresented(generation, action); true }
+            Phase.OPENING -> {
+                val previous = onOpened
+                val token = generation
+                onOpened = {
+                    previous()
+                    deliverPresented(token, action)
+                }
+                true
+            }
+            Phase.CLOSED, Phase.CLOSING -> false
+        }
+    }
+
+    private fun deliverPresented(token: Long, action: () -> Unit) {
+        val deliver = Runnable {
+            if (token == generation && phase == Phase.OPEN && !disposed && isAttachedToWindow && isShown) action()
+        }
+        if (deliveringFrame || isInLayout) post(deliver) else deliver.run()
+    }
+
+    /** Same transform, same shell frame. */
+    internal fun documentStageFrame(windowId: String, result: Boolean):
+        at.heinz.deviceai.avatar3d.DocumentStageFrame? {
+        if (!isShowing || width <= 0 || height <= 0) return null
+        val params = panel.layoutParams as? LayoutParams ?: return null
+        return at.heinz.deviceai.avatar3d.DocumentStageFrame(
+            windowId = windowId,
+            viewportWidth = width,
+            viewportHeight = height,
+            left = params.leftMargin + panel.translationX,
+            top = params.topMargin + panel.translationY,
+            width = params.width * panel.scaleX,
+            height = params.height * panel.scaleY,
+            yawDegrees = panel.rotationY,
+            pitchDegrees = panel.rotationX,
+            opacity = if (cinematicEffectsEnabled) stageOpacity else 0f,
+            result = result,
+            cameraDistance = panel.cameraDistance
+        )
+    }
 
     internal fun projectedMotionPhase(): at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase = when (phase) {
         Phase.OPENING -> at.heinz.deviceai.cockpit.WindowProjectedMotion.Phase.FLYING
@@ -357,6 +404,7 @@ class JarvisWorkWindow(
         phaseTiltDegrees = HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES
         openness = 0f
         opacity = 0f
+        stageOpacity = 0f
         trailProgress = 0f
         trailAlpha = 0f
         visibility = VISIBLE
@@ -486,6 +534,7 @@ class JarvisWorkWindow(
         if (phase == Phase.OPEN) {
             constructionElapsedMs = maxOf(constructionElapsedMs, normalized, HollywoodFuiConstruct.DATA_END_MS)
             focusDepth = if (cinematicEffectsEnabled) 1f else 0f
+            stageOpacity = 1f
             return onCinematicFrame?.invoke(constructionElapsedMs, -1L, reduced, 1f) == true
         }
         if (cinematicEffectsEnabled) {
@@ -500,6 +549,7 @@ class JarvisWorkWindow(
             openness = if (isClosing) closeFrom * frame.closeFrame
                 else if (reduced) 1f else HollywoodFuiConstruct.flight(normalized)
             opacity = if (isClosing) closeAlpha * frame.closeData else frame.data
+            stageOpacity = frame.brackets * frame.closeFrame
             trailProgress = frame.anchor
             trailAlpha = (1f - frame.brackets) * frame.closeFrame
             panel.edgeFlash = frame.pulse * .35f
@@ -518,6 +568,7 @@ class JarvisWorkWindow(
             return phase == Phase.OPENING || phase == Phase.CLOSING || live
         }
         focusDepth = 0f
+        stageOpacity = 0f
         val state = JarvisMotion.frame(if (phase == Phase.CLOSING) closing else opening, elapsed, animatorScale)
         if (phase == Phase.CLOSING) {
             openness = closeFrom * (1f - state.scale)
@@ -605,6 +656,7 @@ class JarvisWorkWindow(
         depthLayers = 0
         openness = 0f
         opacity = 0f
+        stageOpacity = 0f
         trailAlpha = 0f
         startedAt = null
         lastFrameTime = null

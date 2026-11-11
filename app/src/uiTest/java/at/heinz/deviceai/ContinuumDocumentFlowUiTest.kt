@@ -246,6 +246,23 @@ class ContinuumDocumentFlowUiTest {
         .filterIsInstance<TextView>().count { it.text.toString() == "Entwurf mit STOP abgebrochen – nichts gespeichert." }
     private fun context(activity: AgentActivity) = field(activity, "localConversationContext") as
         at.heinz.deviceai.cognitive.LocalConversationContext
+
+    private fun enableLocalSpeech(activity: AgentActivity): android.speech.tts.TextToSpeech {
+        val engine = field(activity, "voiceEngine") as android.speech.tts.TextToSpeech
+        engine.setVoice(android.speech.tts.Voice("de-de-local", java.util.Locale.GERMANY,
+            android.speech.tts.Voice.QUALITY_HIGH, android.speech.tts.Voice.LATENCY_NORMAL, false, emptySet()))
+        for (name in listOf("voiceEnabled", "voiceReady")) {
+            AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }.set(activity, true)
+        }
+        call(activity, "installVoiceProgressListener")
+        return engine
+    }
+
+    private fun offers(activity: AgentActivity) = descendants(field(activity, "chatContainer") as View)
+        .filterIsInstance<TextView>().map { it.text.toString() }.filter {
+            it.startsWith("Dein Entwurf steht bereit.") ||
+                it.startsWith("Dein Entwurf aus dem begrenzten Textauszug steht bereit.")
+        }
     private fun experiences(activity: AgentActivity) =
         (field(activity, "experienceStore") as at.heinz.deviceai.cognitive.ExperienceStore).all()
     private fun ownerRequest(activity: AgentActivity, root: View, runtime: Runtime, request: String) {
@@ -304,9 +321,8 @@ class ContinuumDocumentFlowUiTest {
         assertFalse("the reading ends with the work", reading(activity))
         val draftWindow = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
         val from = field(draftWindow, "origin") as android.graphics.RectF
-        assertEquals("the draft grows out of the document window", documentBox.centerX(), from.centerX(), 1f)
-        assertEquals(documentBox.centerY(), from.centerY(), 1f)
-        assertTrue("…from inside it", documentBox.contains(from))
+        assertTrue("the result arrives from beyond the right edge", from.left >= root.width)
+        assertTrue("the source document remains inside the viewport", documentBox.right <= root.width)
         val source = descendants(draftWindow).single { it.tag == "jarvis-draft-source-page" } as android.widget.ImageView
         assertTrue("the document stays behind the result as its own first page",
             (source.drawable as android.graphics.drawable.BitmapDrawable).bitmap === scene.doc.firstPage)
@@ -332,6 +348,56 @@ class ContinuumDocumentFlowUiTest {
         assertEquals("no stale draft turn is left", null, field(activity, "documentDraftTurn"))
         assertTrue("the owner can start it again", descendants(root).single { it.tag == "jarvis-document-start-draft" }.isEnabled)
         capture(root, "flow-4-failed-draft-says-so")
+    }
+
+    @Test fun personalOfferWaitsForResultArrivalAndSpeaksOnce() = withFlow { activity, root, runtime ->
+        startDraft(activity, root, runtime, "Synthetischer-Bericht.pdf", "Der Bericht enthält drei Prüfaufgaben.")
+        val engine = enableLocalSpeech(activity)
+        val response = "Drei Prüfaufgaben: Inhalt lesen, Quelle prüfen und den Entwurf bearbeiten."
+        runtime.answer(response)
+        until(root, "the result starts arriving") { descendants(root).any { it.tag == "jarvis-draft" && it.isShown } }
+        val window = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
+        assertEquals("OPENING", field(window, "phase").toString())
+        assertTrue("No offer before arrival", offers(activity).isEmpty())
+        assertTrue("The full draft stays silent", shadowOf(engine).spokenTextList.isEmpty())
+        val rememberedResult = field(activity, "lastLocalReply")
+        advance(1_600L); measure(root); draw(root)
+        assertEquals("OPEN", field(window, "phase").toString())
+        val offer = offers(activity).single()
+        assertEquals(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(offer).pieces,
+            shadowOf(engine).spokenTextList)
+        assertEquals("The model result remains available", rememberedResult, field(activity, "lastLocalReply"))
+        advance(1_600L); measure(root); draw(root)
+        assertEquals("Later frames cannot repeat the offer", listOf(offer), offers(activity))
+        assertEquals(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(offer).pieces,
+            shadowOf(engine).spokenTextList)
+    }
+
+    @Test fun stopBeforeResultArrivalSuppressesItsPersonalOffer() = withFlow { activity, root, runtime ->
+        startDraft(activity, root, runtime, "Synthetische-Notizen.pdf", "Eine lokale Notiz für den Test.")
+        val engine = enableLocalSpeech(activity)
+        runtime.answer("Zusammenfassung der lokalen Testnotiz.")
+        until(root, "the result starts arriving") { descendants(root).any { it.tag == "jarvis-draft" && it.isShown } }
+        call(activity, "cancelLocalRequest")
+        advance(1_600L); measure(root); draw(root)
+        assertTrue("No stale personal offer", offers(activity).isEmpty())
+        assertTrue(shadowOf(engine).spokenTextList.none { it.startsWith("Dein Entwurf") })
+        assertFalse(descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+    }
+
+    @Test fun backgroundingDuringResultArrivalSuppressesItsPersonalOffer() = withFlowLifecycle { activity, root, runtime, controller ->
+        startDraft(activity, root, runtime, "Synthetischer-Plan.pdf", "Der Plan bleibt ein Entwurf.")
+        val engine = enableLocalSpeech(activity)
+        runtime.answer("Der Plan ist noch nicht freigegeben.")
+        until(root, "the result starts arriving") { descendants(root).any { it.tag == "jarvis-draft" && it.isShown } }
+        controller.pause()
+        advance(1_600L)
+        assertTrue(offers(activity).isEmpty())
+        assertTrue(shadowOf(engine).spokenTextList.none { it.startsWith("Dein Entwurf") })
+        controller.resume()
+        advance(1_600L); measure(root); draw(root)
+        assertTrue("Resume cannot revive a stale offer", offers(activity).isEmpty())
+        assertTrue(shadowOf(engine).spokenTextList.none { it.startsWith("Dein Entwurf") })
     }
 
     @Test fun stopDuringTheDraftEndsReadingWindowAndRunAsAborted() = withFlow { activity, root, runtime ->
