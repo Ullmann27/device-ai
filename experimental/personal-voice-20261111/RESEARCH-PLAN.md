@@ -23,6 +23,10 @@ Exactly three agents: speech_data owns public synthetic data/schema and data aud
 7. Compare baseline A, reviewed-context B with unchanged weights, and identical B plus candidates C. Any unavailable Android/ASR/device arm is NOT_RUN, never simulated as a live result.
 8. Independent checks: unknown phrasing and word-order/scope contrasts, old-skill retention, unsafe-action errors, exact output and EOS/length, resource usage and reproducibility. Only extra benefit attributable to weights counts as weight learning.
 
+## Data gate
+
+128 balanced contrast TRAIN rows plus 32 newly authored simple open/search supervised replay rows; 32 disjoint-family DEV rows; 12 richer pipeline diagnostics excluded from single-label LM1 training. Historical retention stays evaluation-only. Bot1 mutation/privacy checks: 17 PASS, independently rerun by coordinator. Native token preflight: maximum 68 prompt tokens, below 252 limit. Independent evaluation committed remotely before training: 9deac1792e79736167c5169c916941d45c8f9a96, PR #755.
+
 ## Personal-data boundary
 
 No personal recordings/transcripts are used or published in this run. Public examples are synthetic and labelled as such. Text correction and intent correction remain separate. Audio retention and use for training need separate explicit grants. Production capture defaults off; no cloud export or direct tool execution. Corrections are reviewed and deduplicated before any later batch. Existing memory facts are not rewritten from model suggestions.

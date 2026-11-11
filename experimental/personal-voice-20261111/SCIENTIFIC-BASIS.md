@@ -1,0 +1,12 @@
+# Scientific basis and limits
+
+All links below were inspected on 2026-11-11. These support methods, not a claim of project success. No external dataset or teacher output is imported. Public fixtures are authored synthetic examples.
+
+1. Ouyang et al. (2022), Training language models to follow instructions with human feedback, https://arxiv.org/abs/2203.02155 . Demonstrations support supervised fine-tuning; preferences are distinct data. We use bounded native supervised updates, not a large RLHF pipeline. This paper documents InstructGPT, not undisclosed GPT-6 training internals.
+2. Ribeiro et al. (ACL 2020), Beyond Accuracy: Behavioral Testing of NLP Models with CheckList, https://aclanthology.org/2020.acl-main.442/ . Behavioral capabilities, contrast/invariance cases and directional expectations complement aggregate accuracy. We independently freeze tests and include same-word-bag meaning contrasts. Template/position shortcuts remain possible.
+3. Pekarek Rosin and Wermter (2023), Replay to Remember: Continual Layer-Specific Fine-tuning for German Speech Recognition, https://arxiv.org/abs/2307.07280 . Replay and selective freezing address retention during German ASR adaptation. That result cannot establish ASR improvement here; no personal audio/gold transcript pair is available.
+4. Hu et al. (2021/ICLR 2022), LoRA: Low-Rank Adaptation of Large Language Models, https://arxiv.org/abs/2106.09685 . Low-rank adaptation can reduce trainable parameters for supported architectures. The present native minGRU LM1 has no established LoRA runtime; no unsupported adapter is claimed. A future larger open model needs verified training-format, license, tokenizer, hardware and inference compatibility.
+5. Android SpeechRecognizer API: https://developer.android.com/reference/android/speech/SpeechRecognizer . Recognition hypotheses/confidence are evidence about ASR, not user-confirmed truth. Provider callbacks and actual device behavior require device validation.
+6. Android Keystore documentation: https://developer.android.com/privacy-and-security/keystore . Keys can remain non-exportable and restricted by purpose/mode. Our research factory uses a separate AES-GCM key and app no-backup directory; host encryption tests do not verify hardware backing, Android UI or physical device lifecycle.
+
+Original-checkpoint KL preservation is within-repository local teacher preservation, not external commercial-model knowledge distillation. It is measured as a separate arm; success is not assumed. No undocumented GPT-6 internal technique is asserted.

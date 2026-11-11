@@ -1,0 +1,15 @@
+{
+  "scope": "26 pure JVM privacy/review unit checks; fake context port for review-only tests; independent actual-context evaluation separate",
+  "result": "PASS",
+  "unique_test_cases": 26,
+  "device": "NOT_RUN",
+  "android_keystore": "NOT_RUN",
+  "source_sha256": {
+    "experimental/personal-voice-20261111/native/PersonalVoiceCorrectionBridge.kt": "9666fa501ef0b7a0ed014af04aa4bfb1fe3254a320e789ce49129c2ecb7ffbff",
+    "experimental/personal-voice-20261111/native/PersonalVoiceLearningStore.kt": "2e32aba98d77d7fa6abb88293cf1325026f8c2cf561d1c136854f3a59f1cfb98",
+    "experimental/personal-voice-20261111/native/PersonalVoicePrivacyChecks.kt": "7aa500a825c6a602ce039ca5014238fe89c31b7b657528e77ac6e83746afadb7"
+  },
+  "java": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)\n",
+  "compiler": "Kotlin 2.4.0",
+  "command": "bash experimental/personal-voice-20261111/run-privacy-checks.sh /path/to/kotlinc /external/output"
+}
