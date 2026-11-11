@@ -39,7 +39,7 @@ test('rendering a conversation updates the selected navigation destination', () 
   assert.match(activity, /private fun addAssistantMessage\(value: String, preserveLocalContext: Boolean = true\) =\s*addAssistantMessage\(value, preserveLocalContext, keepCockpit = false\)/);
   for (const signature of [
     'private fun addUserMessage(value: String, keepCockpit: Boolean)',
-    'private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean)',
+    'private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,',
   ]) {
     assert.ok(activity.includes(signature), 'Missing message implementation ' + signature);
     const method = activity.split(signature)[1].split('\n    private fun ')[0];

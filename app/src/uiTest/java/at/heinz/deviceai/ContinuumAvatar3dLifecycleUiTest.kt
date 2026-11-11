@@ -4,10 +4,13 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Looper
+import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
 import at.heinz.deviceai.avatar.AvatarEvent
+import at.heinz.deviceai.avatar.AvatarDirector
 import at.heinz.deviceai.avatar.AvatarPoseReducer
+import at.heinz.deviceai.avatar.AvatarSink
 import at.heinz.deviceai.avatar.GazeTarget
 import org.junit.Assert.*
 import org.junit.Before
@@ -148,7 +151,7 @@ class ContinuumAvatar3dLifecycleUiTest {
         } finally { view.setNativeHeadEnabled(false); controller.pause().stop().destroy() }
     }
 
-    @Test fun pauseAndReducedMotionClearObservedGazeAndRejectLateCameraSamples() {
+    @Test fun pauseMotionAndReattachmentResumeOnlyFreshMonotonicGaze() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val view = ContinuumHologramView(controller.get())
         try {
@@ -157,29 +160,38 @@ class ContinuumAvatar3dLifecycleUiTest {
             view.setForegroundActive(true)
             assertTrue("Observed gaze requires a live visible head", view.motionDiagnostics().contains("LIVE"))
             val reducer = field(view, "avatarPose") as AvatarPoseReducer
+            val director = AvatarDirector(AvatarSink(view::onAvatarEvent), SystemClock::elapsedRealtime)
             fun observe() {
-                // The View's clear uses wall time; virtual Looper idle need not advance that clock.
-                val cleared = AvatarPoseReducer::class.java.getDeclaredField("gazeClearedAtMillis")
-                    .apply { isAccessible = true }.getLong(reducer)
-                val deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(100)
-                while (System.currentTimeMillis() <= cleared && System.nanoTime() < deadline) Thread.sleep(1)
-                val now = System.currentTimeMillis()
-                assertTrue("Real wall time did not advance beyond the actual clear watermark within 100ms", now > cleared)
-                view.onAvatarEvent(AvatarEvent.GazeObserved(GazeTarget(.4f, -.2f), 80, now))
+                advanceFrames(16)
+                assertTrue(director.onObservedGaze(GazeTarget(.4f, -.2f), 80, 0))
             }
+            fun observed() = reducer.pose(SystemClock.elapsedRealtime()).gazeObserved
             observe()
-            assertTrue(reducer.pose(System.currentTimeMillis()).gazeObserved)
+            assertTrue("Initial camera gaze must reach the visible head", observed())
             view.setForegroundActive(false)
-            assertFalse(reducer.pose(System.currentTimeMillis()).gazeObserved)
+            assertFalse(observed())
             observe()
-            assertFalse(reducer.pose(System.currentTimeMillis()).gazeObserved)
+            assertFalse(observed())
             view.setForegroundActive(true)
             observe()
-            assertTrue(reducer.pose(System.currentTimeMillis()).gazeObserved)
+            assertTrue("Fresh camera gaze must resume after foreground return", observed())
             view.setAnimationsEnabled(false)
-            assertFalse(reducer.pose(System.currentTimeMillis()).gazeObserved)
+            assertFalse(observed())
             observe()
-            assertFalse(reducer.pose(System.currentTimeMillis()).gazeObserved)
+            assertFalse(observed())
+            view.setAnimationsEnabled(true)
+            observe()
+            assertTrue("Fresh gaze must resume after motion is re-enabled", observed())
+            val oldSampleAt = SystemClock.elapsedRealtime()
+            controller.get().setContentView(View(controller.get()))
+            advanceFrames(16)
+            assertFalse(view.isAttachedToWindow)
+            assertFalse(observed())
+            attachVisible(controller.get(), view)
+            view.onAvatarEvent(AvatarEvent.GazeObserved(GazeTarget(-.4f, .2f), 80, oldSampleAt))
+            assertFalse("Reattachment must still reject pre-detach samples", observed())
+            observe()
+            assertTrue("Fresh gaze must resume after view reattachment", observed())
         } finally { view.setNativeHeadEnabled(false); controller.pause().stop().destroy() }
     }
 }

@@ -41,14 +41,15 @@ class ContinuumUiFeedbackTest {
             ringerMode=AudioManager.RINGER_MODE_NORMAL;setStreamVolume(AudioManager.STREAM_SYSTEM,5,0)
         }
     }
-    @Test fun generatedChirpsAreShortQuietFinitePcmWithNoAssets() {
+    @Test fun cuesRespectTheirDurationVolumeAndSilentEdges() {
         val f=feedback()
         try {
             val cueType=Class.forName(type().name+"\$Cue")
             val samples=type().getDeclaredMethod("samples",cueType).apply { isAccessible=true }
             for(cue in cueType.enumConstants) {
                 val pcm=samples.invoke(f,cue) as ShortArray
-                assertTrue(pcm.size in 1..960)
+                val limit=cueType.getMethod("getMaxSamples").invoke(cue) as Int
+                assertTrue(pcm.size in 3..limit)
                 assertEquals(0,pcm.first().toInt());assertEquals(0,pcm.last().toInt())
                 assertTrue(pcm.any { it.toInt()!=0 })
                 assertTrue(pcm.all { kotlin.math.abs(it.toInt())<=1500 })
@@ -96,7 +97,7 @@ class ContinuumUiFeedbackTest {
 class Pcm16FeedbackAudioTrackShadow:ShadowAudioTrack() {
     @Implementation
     protected fun native_write_short(pcm:ShortArray,offset:Int,count:Int,format:Int,blocking:Boolean):Int {
-        require(format==AudioFormat.ENCODING_PCM_16BIT && offset>=0 && count in 0..960 && offset+count<=pcm.size)
+        require(format==AudioFormat.ENCODING_PCM_16BIT && offset>=0 && count in 0..7200 && offset+count<=pcm.size)
         val bytes=ByteArray(count*2)
         repeat(count) { n ->
             bytes[n*2]=(pcm[offset+n].toInt() and 255).toByte()

@@ -28,6 +28,7 @@ import kotlin.math.sin
 class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val stage = RectF()
     private val source = RectF()
+    private val energySource = RectF()
     private var protectedBounds = emptyList<RectF>()
     internal var cinematicArcEnabled = false
     internal var workPulseEnabled = false
@@ -86,6 +87,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
              protected: List<RectF> = emptyList()) {
         stage.set(bounds)
         source.set(origin)
+        energySource.setEmpty()
         protectedBounds = protected.map(::RectF)
         profile = scene.fuiProfile
         if (accent != scene.accent) cinematics = HollywoodFuiCinematics.Painterly(scene.accent)
@@ -113,6 +115,15 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         originX = source.centerX()
         originY = source.centerY()
         protectedBounds = protected.map(::RectF)
+        invalidate()
+    }
+
+    /** Actual orb bounds, overlay coordinates. */
+    fun setEnergySource(bounds: RectF?) {
+        if (bounds == null || bounds.isEmpty ||
+            !listOf(bounds.left, bounds.top, bounds.right, bounds.bottom).all(Float::isFinite)) {
+            energySource.setEmpty()
+        } else energySource.set(bounds)
         invalidate()
     }
 
@@ -234,13 +245,20 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             stage.right / density, stage.bottom / density)
         val fluidTime = if (closingElapsedMs >= 0L) closingElapsedMs + HollywoodFuiConstruct.ANCHOR_END_MS
             else elapsedMs + JarvisCinemaEntrance.DEPART_MS
-        val fluid = JarvisFluidLight.sample(fluidTime, budget = renderBudget,
-            animatorScale = if (reducedMotion || !budget.animate) 0f else 1f)
+        val motionScale = if (reducedMotion || !budget.animate) 0f else 1f
+        val workingFluid = JarvisFluidLight.workingSample(elapsedMs,
+            active && !energySource.isEmpty, closingElapsedMs >= 0L, renderBudget, motionScale)
+        val fluid = if (workingFluid.energy > 0f) workingFluid else
+            JarvisFluidLight.sample(fluidTime, budget = renderBudget, animatorScale = motionScale)
         val fluidBox = JarvisShellLayout.Box(boxDp.left, boxDp.top, boxDp.right, boxDp.bottom)
+        val transferSource = if (workingFluid.energy > 0f) energySource else source
+        val sink = HollywoodFuiCinematics.anchorBeam(transferSource.centerX() / density,
+            transferSource.centerY() / density, boxDp, 1f)
         if (fluid.energy > 0f) JarvisFluidLight.drawTransfer(painter,
-            JarvisShellLayout.Box(source.left / density, source.top / density,
-                source.right / density, source.bottom / density),
-            fluidBox.centerX, fluidBox.bottom,
+            JarvisShellLayout.Box(transferSource.left / density, transferSource.top / density,
+                transferSource.right / density, transferSource.bottom / density),
+            if (workingFluid.energy > 0f) sink.x1 else fluidBox.centerX,
+            if (workingFluid.energy > 0f) sink.y1 else fluidBox.bottom,
             fluid.copy(energy = fluid.energy * frame.closeFrame), renderBudget)
         // The source is in screen space, never rotated with the arriving glass.
         cinematics.drawAnchor(painter, originX / density, originY / density, boxDp, frame, bloom)

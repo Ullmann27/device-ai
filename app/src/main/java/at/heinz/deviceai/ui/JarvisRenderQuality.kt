@@ -38,8 +38,7 @@ object JarvisRenderQuality {
         return resolved.copy(
             frameDelayMillis = maxOf(resolved.frameDelayMillis, minimumFrameMs),
             particleCount = minOf(resolved.particleCount, 12),
-            orbitSegments = minOf(resolved.orbitSegments, 40),
-            coolInferenceLighting = false
+            orbitSegments = minOf(resolved.orbitSegments, 40)
         )
     }
 }

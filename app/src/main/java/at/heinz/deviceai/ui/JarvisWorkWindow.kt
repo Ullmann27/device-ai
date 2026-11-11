@@ -648,6 +648,18 @@ class JarvisWorkWindow(
         protectedBounds.forEach { canvas.clipOutRect(it) }
         drawTrail(canvas)
         drawDepth(canvas)
+        if (panel.visibility == VISIBLE && panel.alpha > 0f) {
+            val glassSave = canvas.save()
+            canvas.translate(panel.left.toFloat(), panel.top.toFloat())
+            canvas.concat(panel.matrix)
+            if (panel.alpha < 1f) {
+                val margin = dp(16f).toFloat()
+                canvas.saveLayerAlpha(-margin, -margin, panel.width + margin, panel.height + margin,
+                    (panel.alpha * 255f).roundToInt().coerceIn(0, 255))
+            }
+            panel.drawSurface(canvas)
+            canvas.restoreToCount(glassSave)
+        }
         super.dispatchDraw(canvas)
         canvas.restoreToCount(save)
     }
@@ -854,8 +866,7 @@ class JarvisWorkWindow(
                 }
             }
         }
-        override fun onDraw(canvas: Canvas) {
-            super.onDraw(canvas)
+        fun drawSurface(canvas: Canvas) {
             val save = canvas.save()
             canvas.scale(density, density)
             glass.begin(canvas)

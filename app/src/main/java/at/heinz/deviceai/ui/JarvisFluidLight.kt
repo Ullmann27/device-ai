@@ -2,6 +2,7 @@ package at.heinz.deviceai.ui
 
 import at.heinz.deviceai.ui.JarvisShellLayout.Box
 import kotlin.math.PI
+import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
@@ -35,6 +36,17 @@ object JarvisFluidLight {
         budget?.animate == false -> 0
         budget == null || budget.tier == JarvisRenderQuality.Tier.HIGH -> 4
         else -> 2
+    }
+
+    /** Real work, shared window clock. */
+    fun workingSample(elapsedMs: Long, active: Boolean, closing: Boolean,
+                      budget: JarvisRenderQuality.Budget?, animatorScale: Float = 1f): Sample {
+        if (!active || closing || elapsedMs < 0L || budget?.animate == false ||
+            !animatorScale.isFinite() || animatorScale <= 0f) return OFF
+        val cycle = (elapsedMs % 3_200L) / 3_200f
+        val phase = .5f - .5f * cos(2f * PI.toFloat() * cycle)
+        val arrival = (elapsedMs / HollywoodFuiConstruct.GLASS_END_MS.toFloat()).coerceIn(0f, 1f)
+        return Sample(phase, arrival * (.65f + .15f * phase), false)
     }
 
     /** Connected ribbons; fixed reusable batches. */
