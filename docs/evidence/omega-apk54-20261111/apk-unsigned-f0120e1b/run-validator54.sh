@@ -4,6 +4,8 @@
 # injected at runtime from the frozen checkout, so EXPECTED_SOURCE/EXPECTED_TREE in the file are only defaults.
 # Usage (repo root, clean checkout of the APK source): run-validator54.sh <validator.py> <apk> <out-dir> <build-tools> <java-home>
 set -euo pipefail
+# Same guard as the Code53 workflow: refuse a validator whose bytes differ from the recorded one.
+printf "%s  %s\n" e70a2470f95e0cca4fe25751cc67907fb4e08e4dbfd1bc1fc060b99606252be7 "$1" | sha256sum -c -
 SRC=$(git rev-parse HEAD); TREE=$(git rev-parse 'HEAD^{tree}')
 python3 -I - "$1" "$SRC" "$TREE" "$2" "$3" --repo "$PWD" --build-tools "$4" --java-home "$5" <<'PY'
 import importlib.util, sys
