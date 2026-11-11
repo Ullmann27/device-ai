@@ -2,27 +2,47 @@
   {
     "class": "test",
     "test": "HOST SOFTWARE CONTRACT: real persisted Forge/Lint profiles receive distinct observed containers for builder and both verifier sites",
-    "reason": "true"
+    "reason": "NOT_RUN: CONTINUUM_WORKSPACE_HOST_PROOF != '1'; the real Docker workspace proof was not enabled.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/ccc1-bot-workspace-host.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",
     "test": "HOST_INTEGRATION: two canonical worker jobs run in separate confined Docker workspaces",
-    "reason": "true"
+    "reason": "NOT_RUN: CONTINUUM_WORKSPACE_HOST_PROOF != '1'; the real Docker workspace proof was not enabled.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/ccc1-workspace-host.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",
     "test": "HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs",
-    "reason": "true"
+    "reason": "NOT_RUN: CONTINUUM_WORKSPACE_HOST_PROOF != '1'; the real Docker workspace proof was not enabled.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/ccc1-workspace-lifecycle-host.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",
     "test": "HOST_INTEGRATION: live canonical lease clamps the real Docker timeout",
-    "reason": "true"
+    "reason": "NOT_RUN: CONTINUUM_WORKSPACE_HOST_PROOF != '1'; the real Docker workspace proof was not enabled.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/ccc1-workspace-lifecycle-host.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",
     "test": "HOST_INTEGRATION: in-flight owner revocation suppresses the completed profile result at checkpoint",
-    "reason": "true"
+    "reason": "NOT_RUN: CONTINUUM_WORKSPACE_HOST_PROOF != '1'; the real Docker workspace proof was not enabled.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/ccc1-workspace-lifecycle-host.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",
@@ -62,37 +82,65 @@
   {
     "class": "test",
     "test": "generated Kotlin code must compile RED before and GREEN after, then compute two expected outputs",
-    "reason": "true"
+    "reason": "NOT_RUN: the test guard requires no CONTINUUM_REPAIR_DEPTH and a successful kotlinc -version CLI probe; at least one prerequisite was absent. Original JUnit does not distinguish the two.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/kotlin-delegate-acceptance.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",
     "test": "wrong independent expected output rejects a compiling patch",
-    "reason": "true"
+    "reason": "NOT_RUN: the test guard requires no CONTINUUM_REPAIR_DEPTH and a successful kotlinc -version CLI probe; at least one prerequisite was absent. Original JUnit does not distinguish the two.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/kotlin-delegate-acceptance.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",
     "test": "an arbitrary red baseline is never accepted as proof of the requested missing method",
-    "reason": "true"
+    "reason": "NOT_RUN: the test guard requires no CONTINUUM_REPAIR_DEPTH and a successful kotlinc -version CLI probe; at least one prerequisite was absent. Original JUnit does not distinguish the two.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/kotlin-delegate-acceptance.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",
     "test": "new method compiles and computes a nontrivial result with real kotlinc",
-    "reason": "true"
+    "reason": "NOT_RUN: the test guard requires no CONTINUUM_REPAIR_DEPTH and a successful kotlinc -version CLI probe; at least one prerequisite was absent. Original JUnit does not distinguish the two.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/kotlin-delegate-synthesizer.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",
     "test": "HOST_INTEGRATION: typed dispatch binds actual canonical repair containers and refuses replay",
-    "reason": "true"
+    "reason": "NOT_RUN: CONTINUUM_WORKSPACE_HOST_PROOF != '1'; the real Docker workspace proof was not enabled.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/momega1-typed-workspace-host.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",
     "test": "owner Kotlin IMPLEMENT generates real reviewable Git patch with two independent JVM oracles",
-    "reason": "true"
+    "reason": "NOT_RUN: the test guard requires no CONTINUUM_REPAIR_DEPTH and a successful kotlinc -version CLI probe; at least one prerequisite was absent. Original JUnit does not distinguish the two.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/owner-kotlin-preview.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",
     "test": "false owner output cannot create a verified Kotlin preview",
-    "reason": "true"
+    "reason": "NOT_RUN: the test guard requires no CONTINUUM_REPAIR_DEPTH and a successful kotlinc -version CLI probe; at least one prerequisite was absent. Original JUnit does not distinguish the two.",
+    "rawReason": "true",
+    "sourceFile": ".github/continuum/owner-kotlin-preview.test.mjs",
+    "sourceCommit": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "reasonBasis": "Verified source guard; not a claim that the skipped test ran"
   },
   {
     "class": "test",

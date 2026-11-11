@@ -173,3 +173,14 @@ bleiben **NOT_RUN**; nicht durch Host-Renderbilder oder Mock-Antworten ersetzen.
 Details und genaue Prüfbefehle: `docs/evidence/ultimate-system-20261110/` sowie
 `Continuum_53_Pruefbelege.zip`. Originalgewichte und abgelehnte Experimente bleiben
 unverändert beziehungsweise deaktiviert.
+
+## Belegkorrektur aus Abschlussreview
+
+Alle 37 Node-SKIP-Fälle wurden erneut aus dem finalen JUnit-XML extrahiert. Zwölf
+(nicht die im Review genannten dreizehn) enthielten nur `true`. Ihre Gründe sind
+jetzt aus den exakt gebauten Testquellen belegt: Docker-Host-Opt-in beziehungsweise
+Rekursionstiefe/Kotlin-CLI-Prüfung. Bei der disjunktiven Kotlin-Bedingung wird kein
+nicht aufgezeichneter Einzelgrund erfunden. Original-XML, Rohgrund, Quellpfad und
+Commit bleiben erhalten. `explain_node_skips.py` bricht bei fehlenden, unbekannten
+oder verbleibenden booleschen Gründen ab. Keine Tests, Produktivquellen oder APK
+geändert; dieselben 37 Fälle bleiben SKIP.
