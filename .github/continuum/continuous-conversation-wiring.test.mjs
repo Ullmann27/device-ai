@@ -63,6 +63,7 @@ test('listening resumes only after the bound reply and never over dialogs or app
   const next = body('private fun speakNextChunk(').replace(/\/\/[^\n]*/g, '');
   assert.match(next, /val chunk = speechChunks\.takeNextReady\(turn\) \?: return false\s*val id = "device-ai-" \+ UUID\.randomUUID\(\)\s*voiceUtteranceId = id\s*speechChunkId = chunk\.chunkId/);
   assert.match(next, /voiceSignal\.activate\(id\)\s*voiceAvatarText = chunk\.approvedText\s*if \(speechUsesMaya\)/);
+  assert.match(next, /override fun range\(id: String, start: Int, end: Int, frame: Int\)\s*\{\s*voiceProgressListener\?\.onRangeStart\(id, start, end, frame\)/);
   assert.match(next, /if \(!engine\.speak\(id, chunk\.approvedText, key\) \{[\s\S]*?internetConsent\.mode == at\.heinz\.deviceai\.cognitive\.InternetAccessMode\.ALWAYS_ON &&\s*internetConsent\.revision\(\) == revision\s*\}\) return false/);
   assert.match(next, /else if \(voiceEngine\?\.speak\(chunk\.approvedText, queueMode, null, id\) != TextToSpeech\.SUCCESS\) return false\s*continuousConversation\.assistantSpeechQueued\(id\)\s*return true/);
   assert.equal((next.match(/continuousConversation\.assistantSpeechQueued\(id\)/g) || []).length, 1);

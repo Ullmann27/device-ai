@@ -50,3 +50,24 @@ playback remain separate checks.
 Maya voice/model/settings are unchanged. No paid request, key access, model
 change, signing, publication, installation or main merge occurred. Rollback is
 the scoped policy/test commit together with its Activity caller patch.
+
+## Android ICU correction
+
+Android review found an unsupported embedded `U` flag in the new policy.
+The Java host accepted it; native ICU 76 rejected the actual flag combination
+with error **66315**, offset 5. Android documents that `UNICODE_CHARACTER_CLASS`
+is unsupported and Unicode classes are always used. The correction removes
+only the embedded `U` and makes the initial letter boundary explicit in the
+two patterns that can begin with an umlaut. Other policy semantics are retained.
+
+Official references:
+https://developer.android.com/reference/java/util/regex/Pattern#UNICODE_CHARACTER_CLASS
+https://unicode-org.github.io/icu/userguide/strings/regexp.html
+
+Reproduce with `python3 scripts/continuum-maya-icu-regex-check.py`. It loads
+native ICU, confirms rejection of the old embedded flag, then compiles all
+22 actual raw policy patterns. Current result: **22 PASS**, negative-control
+error 66315. Missing ICU fails explicitly; this is not a silent skipped gate.
+The companion JVM regression inspects every instantiated policy regex and
+rejects reintroduction of embedded `U`. The combined Maya/provider/timing/policy
+JVM run now has **25 PASS**. No full Android or physical Fold7 result is implied.

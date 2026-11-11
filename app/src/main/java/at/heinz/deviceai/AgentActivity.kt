@@ -9263,6 +9263,9 @@ class AgentActivity : Activity() {
                         }
                         voiceProgressListener?.onStart(id)
                     }
+                    override fun range(id: String, start: Int, end: Int, frame: Int) {
+                        voiceProgressListener?.onRangeStart(id, start, end, frame)
+                    }
                     override fun finished(id: String) { voiceProgressListener?.onDone(id) }
                     override fun failed(id: String) {
                         Toast.makeText(this@AgentActivity,

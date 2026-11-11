@@ -4,13 +4,21 @@ Canonical target: `integration/continuum-final-visibility-20261111`, PR #747.
 Starting remote source: `fd1de22cf3f6ed159601c9b944cc25c86f0fc221`.
 This is the continuation of the existing Cinema/Maya candidate, not a new runtime.
 
-## Current build blocker
+## Build failures and repairs
 
 Run https://github.com/Ullmann27/device-ai/actions/runs/42972659558
 validated source `d94b9b58dba5520cc4bffb02bf9a5cfc8bceb89e` through Node,
 backend and software-rendering checks. Android compilation failed at
 `JarvisWorkWindowHost.kt:177`: missing `orb` constructor argument. No APK was
 produced. The result-window plan now preserves the original orb geometry.
+
+The subsequent run https://github.com/Ullmann27/device-ai/actions/runs/42975411633
+tested source `f99082ea0d98d74eb52b28f01b74629676572081`. Critical Node and
+the targeted Kotlin gate passed. Full Node stopped on two old exact
+`addAssistantMessage` signatures after the captured speech permission was added;
+Android and APK stages did not run. Local replay: 2456 PASS, 2 FAIL, 37 SKIP,
+source unchanged. The two tests now accept the additional parameter while
+preserving all cockpit/navigation assertions: 7/7 focused checks PASS.
 
 ## Coordinated repairs
 
@@ -22,6 +30,14 @@ produced. The result-window plan now preserves the original orb geometry.
 - Avatar: foreground, detach and motion transitions use the same monotonic
   clock as camera observations; stale samples remain rejected.
 - Build: the original window-to-result path carries its existing orb bounds.
+- Speech timing: the existing Maya provider requests bounded PCM24k plus
+  original-text word alignment. AudioTrack playback positions drive range
+  callbacks into the existing avatar listener. Missing or invalid alignment
+  keeps PCM playback; stale/cancelled callbacks cannot animate another utterance.
+- UI sound: two bounded ElevenLabs-generated PCM16 assets replace the existing
+  button/task-start cue samples. Existing microphone, speech, foreground,
+  system-sound and ringer gates still control playback. Missing/invalid assets
+  use the previous synthesized cues.
 
 The common path stays ASR -> owner input -> existing context/model runtime ->
 approved reply queue -> Maya or local Android speech -> existing utterance
@@ -38,6 +54,20 @@ callbacks -> original avatar. No extra model, memory store, renderer or bus.
   avatar/reducer/gaze host checks PASS.
 - Original avatar GLB unchanged; SHA-256
   `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`.
+- Provider timing/alignment component suite: 24 host tests PASS. Android API36
+  compilation PASS for production provider classes and HTTP/UI test bodies;
+  full Robolectric execution remains a combined CI gate.
+- Activity/avatar timing chain: 21 composed JVM checks and 10 Node wiring
+  checks PASS. Existing utterance/foreground checks and German viseme
+  approximation remain in use.
+- Combined timing/context snapshot `cd5e3adbf626fb3b00aaa710953bfe2dd3d94131`:
+  23 source files compiled together, 48/48 JVM and 22/22 focused Node checks
+  PASS. Actual bundled cue decoding: 6/6 host checks PASS with pinned hashes.
+- Android runtime review found an unsupported embedded `U` regex flag in the
+  new transport-veto rules. The narrow correction retains Unicode umlaut
+  boundaries explicitly. Native ICU rejects the old negative control and
+  compiles all 22 current policy expressions; 25 Maya/alignment/policy JVM
+  checks PASS. The frozen workflow also runs this real ICU compatibility gate.
 
 These are component/host results, not a green combined Android build. The
 frozen-source workflow must compile all Android sources, run its full suite and
@@ -58,10 +88,23 @@ setup. A ChatGPT connector connection does not install a credential on the
 phone. Global OFF/ASK and per-turn offline constraints retain local speech.
 No credential is included in project source, evidence or the APK.
 
-Maya currently buffers each bounded reply chunk. PCM amplitude reaches the
-avatar; exact word/phoneme alignment is not implemented. Fold7 microphone,
+Maya buffers each bounded reply chunk. PCM amplitude and validated provider
+word timing reach the original avatar. Mouth shapes remain the existing
+German-text approximation; provider phoneme-perfect lip synchronization is
+not claimed. Android on-device ASR remains the established microphone path;
+no separate cloud recorder, transcription or model runtime is introduced.
+Fold7 microphone,
 audible Maya, live mouth/camera behavior, thermal behavior and installation
 remain NOT_RUN. The selected voice and standard-German preference are retained.
+
+The two bundled UI cues were selected from eight completed ElevenLabs
+`eleven_text_to_sound_v2` variants. The provider reported 13.3333 credits total
+for those variants. The selected files are mono PCM16/16 kHz, 160 ms and
+420 ms, peak amplitude 1200, with silent endpoints. Their measured bounds,
+generation identifiers, normalization recipe and SHA-256 values are recorded
+in `app/src/main/assets/audio/ui/provenance.json`. No provider credential or
+temporary download URL is bundled. This is measured asset validation, not a
+subjective audible or Fold7 acceptance.
 
 ## Compatibility and next gate
 

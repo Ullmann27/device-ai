@@ -88,4 +88,18 @@ class CloudSpeechTurnConstraintTest {
             "Zitiere den Satz ‚Nutze das Internet nicht‘."
         )) assertFalse(turn, NetworkTurnConstraint.forbidsExternalSpeech(turn))
     }
+
+    @Test fun androidPatternsNeverEmbedUnsupportedUnicodeClassFlag() {
+        val patterns = NetworkTurnConstraint::class.java.declaredFields.flatMap { field ->
+            field.isAccessible = true
+            when (val value = field.get(null)) {
+                is Regex -> listOf(value)
+                is Iterable<*> -> value.filterIsInstance<Regex>()
+                else -> emptyList()
+            }
+        }
+        assertTrue(patterns.isNotEmpty())
+        val unsupported = Regex("\\(\\?[A-Za-z-]*U")
+        patterns.forEach { assertFalse(it.pattern, unsupported.containsMatchIn(it.pattern)) }
+    }
 }

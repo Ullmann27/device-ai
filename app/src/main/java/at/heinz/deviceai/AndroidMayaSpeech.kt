@@ -10,6 +10,7 @@ import android.os.SystemClock
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.net.URL
+import java.util.Base64
 import javax.net.ssl.HttpsURLConnection
 
 internal class ElevenLabsPcmRequest(
@@ -17,11 +18,15 @@ internal class ElevenLabsPcmRequest(
 ) : MayaSpeech.Request {
     companion object {
         const val ENDPOINT = "https://api.elevenlabs.io/v1/text-to-speech/" +
-            MayaSpeech.VOICE_ID + "/stream?output_format=pcm_24000"
+            MayaSpeech.VOICE_ID + "/with-timestamps?output_format=pcm_24000"
+        const val MAX_JSON_BYTES = (MayaSpeech.MAX_PCM_BYTES + 2) / 3 * 4 + 128_000
     }
     @Volatile private var closed = false
 
-    override fun synthesize(text: String, key: String, allowed: () -> Boolean): ByteArray {
+    override fun synthesize(text: String, key: String, allowed: () -> Boolean): ByteArray =
+        synthesizeWithTiming(text, key, allowed).pcm
+
+    override fun synthesizeWithTiming(text: String, key: String, allowed: () -> Boolean): MayaSpeech.Synthesis {
         check(!closed && allowed())
         connection.apply {
             requestMethod = "POST"
@@ -31,7 +36,7 @@ internal class ElevenLabsPcmRequest(
             doOutput = true
             setRequestProperty("xi-api-key", key)
             setRequestProperty("Content-Type", "application/json")
-            setRequestProperty("Accept", "application/octet-stream")
+            setRequestProperty("Accept", "application/json")
         }
         val body = JSONObject().put("text", text).put("model_id", "eleven_multilingual_v2")
             .put("voice_settings", JSONObject().put("stability", 0.5).put("similarity_boost", 0.75)
@@ -40,8 +45,7 @@ internal class ElevenLabsPcmRequest(
         check(!closed && allowed())
         connection.outputStream.use { check(!closed && allowed()); it.write(body) }
         check(connection.responseCode == 200) { "ELEVENLABS_UNAVAILABLE" }
-        check(connection.contentType?.substringBefore(';')?.trim()?.lowercase() in
-            setOf("audio/pcm", "audio/x-pcm", "audio/raw", "application/octet-stream"))
+        check(connection.contentType?.substringBefore(';')?.trim()?.lowercase() == "application/json")
         val deadline = SystemClock.elapsedRealtime() + 45_000
         return connection.inputStream.use { input ->
             val output = ByteArrayOutputStream()
@@ -50,10 +54,29 @@ internal class ElevenLabsPcmRequest(
                 check(!closed && allowed() && SystemClock.elapsedRealtime() < deadline)
                 val count = input.read(buffer)
                 if (count < 0) break
-                check(output.size() + count <= MayaSpeech.MAX_PCM_BYTES)
+                check(output.size() + count <= MAX_JSON_BYTES)
                 output.write(buffer, 0, count)
             }
-            output.toByteArray()
+            check(!closed && allowed())
+            val json = JSONObject(output.toString("UTF-8"))
+            val encoded = json.getString("audio_base64")
+            check(encoded.length <= (MayaSpeech.MAX_PCM_BYTES + 2) / 3 * 4)
+            val pcm = Base64.getDecoder().decode(encoded)
+            check(pcm.isNotEmpty() && pcm.size <= MayaSpeech.MAX_PCM_BYTES && pcm.size % 2 == 0)
+            val ranges = runCatching {
+                val alignment = json.optJSONObject("alignment") ?: return@runCatching emptyList()
+                val characters = alignment.getJSONArray("characters")
+                val starts = alignment.getJSONArray("character_start_times_seconds")
+                val ends = alignment.getJSONArray("character_end_times_seconds")
+                check(characters.length() <= 800 && starts.length() == characters.length() &&
+                    ends.length() == characters.length())
+                MayaSpeechAlignment.ranges(text,
+                    (0 until characters.length()).map { characters.get(it) as String },
+                    (0 until starts.length()).map { (starts.get(it) as Number).toDouble() },
+                    (0 until ends.length()).map { (ends.get(it) as Number).toDouble() }, pcm.size / 2)
+            }.getOrDefault(emptyList())
+            check(!closed && allowed())
+            MayaSpeech.Synthesis(pcm, ranges)
         }
     }
     override fun close() { closed = true; connection.disconnect() }
@@ -70,7 +93,10 @@ internal class MayaPcmPlayer(context: Context) : MayaSpeech.Player {
     private var track: AudioTrack? = null
     private var closed = false
 
-    override fun play(pcm: ByteArray, allowed: () -> Boolean, started: () -> Unit) {
+    override fun play(pcm: ByteArray, allowed: () -> Boolean, started: () -> Unit) =
+        play(pcm, allowed, started) {}
+
+    override fun play(pcm: ByteArray, allowed: () -> Boolean, started: () -> Unit, progress: (Int) -> Unit) {
         val audio = synchronized(this) {
             check(!closed && allowed())
             check(manager.requestAudioFocus(focus) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
@@ -89,8 +115,9 @@ internal class MayaPcmPlayer(context: Context) : MayaSpeech.Player {
         }
         val deadline = SystemClock.elapsedRealtime() + pcm.size * 1000L / (MayaSpeech.SAMPLE_RATE * 2) + 5000
         while (allowed()) {
-            val finished = synchronized(this) { check(!closed); audio.playbackHeadPosition >= pcm.size / 2 }
-            if (finished) return
+            val frame = synchronized(this) { check(!closed); audio.playbackHeadPosition }
+            progress(frame)
+            if (frame >= pcm.size / 2) return
             check(SystemClock.elapsedRealtime() < deadline)
             Thread.sleep(20)
         }

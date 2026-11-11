@@ -12,14 +12,20 @@ internal class MayaSpeech(
     private val dispatch: (() -> Unit) -> Unit,
     private val listener: Listener
 ) : Closeable {
+    data class Synthesis(val pcm: ByteArray, val ranges: List<MayaSpeechAlignment.Range> = emptyList())
     interface Request : Closeable {
         fun synthesize(text: String, key: String, allowed: () -> Boolean): ByteArray
+        fun synthesizeWithTiming(text: String, key: String, allowed: () -> Boolean): Synthesis =
+            Synthesis(synthesize(text, key, allowed))
     }
     interface Player : Closeable {
         fun play(pcm: ByteArray, allowed: () -> Boolean, started: () -> Unit)
+        fun play(pcm: ByteArray, allowed: () -> Boolean, started: () -> Unit, progress: (Int) -> Unit) =
+            play(pcm, allowed, started)
     }
     interface Listener {
         fun started(id: String, pcm: ByteArray)
+        fun range(id: String, start: Int, end: Int, frame: Int) {}
         fun finished(id: String)
         fun failed(id: String)
     }
@@ -32,6 +38,7 @@ internal class MayaSpeech(
     }
     private class Job(val id: String, val allowed: () -> Boolean) {
         @Volatile var cancelled = false
+        @Volatile var playbackFrame = 0
         private var resource: Closeable? = null
         @Synchronized fun attach(value: Closeable): Boolean {
             if (cancelled) { value.close(); return false }
@@ -57,15 +64,27 @@ internal class MayaSpeech(
         worker.execute {
             try {
                 check(job.live())
-                val pcm = request().use { source ->
+                val synthesis = request().use { source ->
                     check(job.attach(source) && job.live())
-                    source.synthesize(text, key, job::live)
+                    source.synthesizeWithTiming(text, key, job::live)
                 }
+                val pcm = synthesis.pcm
                 check(pcm.isNotEmpty() && pcm.size <= MAX_PCM_BYTES && pcm.size % 2 == 0)
                 check(job.live())
+                val cursor = MayaSpeechAlignment.Cursor(
+                    MayaSpeechAlignment.validated(text, pcm.size / 2, synthesis.ranges))
                 player().use { output ->
                     check(job.attach(output) && job.live())
-                    output.play(pcm, job::live) { emit(job) { listener.started(id, pcm) } }
+                    output.play(pcm, job::live, { emit(job) { listener.started(id, pcm) } }) { frame ->
+                        if (frame >= job.playbackFrame) job.playbackFrame = frame
+                        cursor.advance(frame)?.let { range ->
+                            emit(job) {
+                                val currentFrame = job.playbackFrame
+                                if (currentFrame in range.startFrame until range.endFrame)
+                                    listener.range(id, range.start, range.end, currentFrame)
+                            }
+                        }
+                    }
                 }
                 finish(job, false)
             } catch (_: Exception) {

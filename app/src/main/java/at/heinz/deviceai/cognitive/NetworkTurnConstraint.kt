@@ -43,28 +43,28 @@ internal object NetworkTurnConstraint {
 
     private const val transport = "(?:internet(?:zugriff|verbindung)?|netz(?:werk)?(?:zugriff|verbindung)?|cloud(?:zugriff)?)"
     private val speechTransportVeto = listOf(
-        Regex("""(?iuU)(?<!nicht\s)(?<!niemals\s)(?<!keinesfalls\s)\bohne(?:\s+(?:jede|jegliche|jeglichen|eine|einen|externen|externe))?\s+$transport\b"""),
-        Regex("""(?iuU)\bkein(?:e|en|es|em|er)?\s+$transport\b"""),
-        Regex("""(?iuU)\b$transport\s+(?:(?:ist|bleibt)\s+)?(?:verboten|untersagt|gesperrt|deaktiviert)\b"""),
-        Regex("""(?iuU)\b(?:nutze|verwende|benutze|aktiviere)\s+(?:(?:bitte|jetzt|dabei)\s+)?nicht\s+(?:(?:im|ins|das|die|den|dem)\s+)?$transport\b"""),
-        Regex("""(?iuU)\b(?:nutze|verwende|benutze|aktiviere)\s+(?:(?:bitte|jetzt|dabei)\s+)?(?:(?:das|die|den|dem)\s+)?$transport\s+(?:(?:bitte|jetzt|dabei)\s+)?(?:nicht|niemals|keinesfalls)\b(?!\s+(?:nur|ausschließlich)\b)"""),
-        Regex("""(?iuU)(?:^|[.!?;,])\s*(?:bitte\s+)?(?:nicht|niemals|keinesfalls)\s+(?:(?:in\s+die|ins|im|auf|das)\s+)?$transport\b(?=\s*(?:$|[.!?,;]|(?:nutzen|verwenden|benutzen|gehen|verbinden|senden|schicken|übertragen)\b))"""),
-        Regex("""(?iuU)\b(?:sende|schicke|übertrage|übermittle|lade)\b[^.!?;]{0,64}\b(?:nicht|niemals|keinesfalls)\s+(?:(?:in\s+die|ins|im|auf|das)\s+)?$transport\b""")
+        Regex("""(?iu)(?<!nicht\s)(?<!niemals\s)(?<!keinesfalls\s)\bohne(?:\s+(?:jede|jegliche|jeglichen|eine|einen|externen|externe))?\s+$transport\b"""),
+        Regex("""(?iu)\bkein(?:e|en|es|em|er)?\s+$transport\b"""),
+        Regex("""(?iu)\b$transport\s+(?:(?:ist|bleibt)\s+)?(?:verboten|untersagt|gesperrt|deaktiviert)\b"""),
+        Regex("""(?iu)\b(?:nutze|verwende|benutze|aktiviere)\s+(?:(?:bitte|jetzt|dabei)\s+)?nicht\s+(?:(?:im|ins|das|die|den|dem)\s+)?$transport\b"""),
+        Regex("""(?iu)\b(?:nutze|verwende|benutze|aktiviere)\s+(?:(?:bitte|jetzt|dabei)\s+)?(?:(?:das|die|den|dem)\s+)?$transport\s+(?:(?:bitte|jetzt|dabei)\s+)?(?:nicht|niemals|keinesfalls)\b(?!\s+(?:nur|ausschließlich)\b)"""),
+        Regex("""(?iu)(?:^|[.!?;,])\s*(?:bitte\s+)?(?:nicht|niemals|keinesfalls)\s+(?:(?:in\s+die|ins|im|auf|das)\s+)?$transport\b(?=\s*(?:$|[.!?,;]|(?:nutzen|verwenden|benutzen|gehen|verbinden|senden|schicken|übertragen)\b))"""),
+        Regex("""(?iu)(?<![\p{L}\p{M}\p{N}_])(?:sende|schicke|übertrage|übermittle|lade)\b[^.!?;]{0,64}\b(?:nicht|niemals|keinesfalls)\s+(?:(?:in\s+die|ins|im|auf|das)\s+)?$transport\b""")
     )
     private val localSpeech = Regex(
-        """(?iuU)\b(?:antworte|beantworte|arbeite|bleib|bleibe|sprich|spreche|lies)\s+(?:bitte\s+)?(?:(?:nur|ausschließlich)\s+)?(?:offline|lokal|gerätelokal)\b"""
+        """(?iu)\b(?:antworte|beantworte|arbeite|bleib|bleibe|sprich|spreche|lies)\s+(?:bitte\s+)?(?:(?:nur|ausschließlich)\s+)?(?:offline|lokal|gerätelokal)\b"""
     )
     private val offlineSpeechAnswer = Regex(
-        """(?iuU)\b(?:antworte|beantworte|arbeite|erkläre|loese|löse|sprich|lies)\b(?:(?!\bnicht\b)[^.!?;]){0,48}\b(?:offline|gerätelokal)\b"""
+        """(?iu)\b(?:antworte|beantworte|arbeite|erkläre|loese|löse|sprich|lies)\b(?:(?!\bnicht\b)[^.!?;]){0,48}\b(?:offline|gerätelokal)\b"""
     )
     private val onlyLocalSpeech = Regex(
-        """(?iuU)(?:^|[.!?;,])\s*(?:bitte\s+)?(?:nur|ausschließlich)\s+(?:lokal|gerätelokal|offline)\b"""
+        """(?iu)(?:^|[.!?;,])\s*(?:bitte\s+)?(?:nur|ausschließlich)\s+(?:lokal|gerätelokal|offline)\b"""
     )
     private val offlineSpeechCorrection = Regex(
-        """(?iuU)\b(?:sondern|stattdessen)\s+(?:bitte\s+)?(?:(?:nur|ausschließlich)\s+)?(?:offline|gerätelokal)\b"""
+        """(?iu)\b(?:sondern|stattdessen)\s+(?:bitte\s+)?(?:(?:nur|ausschließlich)\s+)?(?:offline|gerätelokal)\b"""
     )
     private val quotedSpeechMention = Regex(
-        """(?iuU)\b(?:was\s+(?:bedeutet|heißt|heisst)|(?:erkläre|übersetze|zitiere)(?:\s+mir)?(?:\s+(?:den|das|die))?(?:\s+(?:ausdruck|begriff|satz|formulierung|wort))?)\s*(?:"[^"\r\n]{1,512}"|„[^“\r\n]{1,512}“|‚[^‘\r\n]{1,512}‘|'[^'\r\n]{1,512}')"""
+        """(?iu)(?<![\p{L}\p{M}\p{N}_])(?:was\s+(?:bedeutet|heißt|heisst)|(?:erkläre|übersetze|zitiere)(?:\s+mir)?(?:\s+(?:den|das|die))?(?:\s+(?:ausdruck|begriff|satz|formulierung|wort))?)\s*(?:"[^"\r\n]{1,512}"|„[^“\r\n]{1,512}“|‚[^‘\r\n]{1,512}‘|'[^'\r\n]{1,512}')"""
     )
 
     /** Explicit veto, never network permission. */
