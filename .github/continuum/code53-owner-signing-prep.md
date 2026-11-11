@@ -52,9 +52,31 @@ Paket, Version, Quellbaum, saubere Quelle vor/nach Prüfung, unbenutzte Signieru
 
 - `bash -n scripts/continuum-code52-github-signer.sh`: PASS.
 - Vier bestehende Code52-Contracts: PASS.
+- Acht zusätzliche gemeinsame Draft-Rückprüfungen: PASS.
 - Alle 16 Code53-Contracts einschließlich Produktionsbindung: PASS.
 - Produktions-Verifier gegen originale REST-Metadaten: `CODE53_METADATA_VERIFIED`.
 - Derselbe Verifier gegen beide echten ZIP-Dateien: `CODE53_ARCHIVES_VERIFIED`.
+
+## Gemeinsame Draft-Rückprüfung
+
+Der vorhandene [Signerlauf 42866830722](https://github.com/Ullmann27/device-ai/actions/runs/42866830722)
+scheiterte bei `DRAFT_READBACK_UNREADABLE` am Release-Tag-Endpunkt.
+Die [offizielle GitHub-API-Dokumentation](https://docs.github.com/en/rest/releases/releases#get-a-release-by-tag-name)
+beschreibt diesen Endpunkt für veröffentlichte Releases.
+Der gemeinsame Signer liest deshalb authentifiziert die paginierte Release-Liste,
+verlangt genau einen Treffer für Tag, Quelle und Draft-Zustand und ruft anschließend
+ausschließlich dessen geprüfte positive Release-ID ab.
+
+Auch der zweite Abruf muss ID, Tag, Quelle und Draft-Zustand bestätigen.
+Die ausgegebene Draft-URL stammt ausschließlich aus dessen `html_url`, muss
+das erwartete HTTPS-Repository-Präfix besitzen und darf keine Leerzeichen oder
+Steuerzeichen enthalten; es wird kein Tag-Link konstruiert.
+Genau eine APK, ihr erwarteter Name, Digest und Byteumfang bleiben verbindlich;
+zusätzliche APKs werden unabhängig von ihrem Dateinamen abgewiesen.
+Bestehende Download-, Zertifikats-, Paket- und Latest-Rückprüfungen bleiben erhalten.
+Die neuen Tests führen nur diese beiden reinen Produktions-Jq-Funktionen aus,
+einschließlich fehlender/mehrdeutiger Tags und falscher ID, Quelle, URL oder APK-Daten.
+Es gibt keinen Veröffentlichungs- oder Erfolgsfallback.
 
 Der vorhandene secrets-freie Contract-Workflow prüft zusätzlich ausschließlich
 den Prep-Zweig `prep/code53-original-signer-20261111`.

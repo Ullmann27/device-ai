@@ -212,14 +212,34 @@ echo CHECKPOINT=DRAFT_RELEASE_READBACK_VERIFIED
 # 8. Signierung und unabhängige Prüfung beenden diesen Workflow.
 # Das Release bleibt ausdrücklich ENTWURF. Veröffentlichung nur durch
 # separaten, ausdrücklichen Besitzerentscheid; kein automatisches Publish.
-draft_json="$(gh api "repos/$repo/releases/tags/$tag")" || fail DRAFT_READBACK_UNREADABLE
-jq -e --arg tag "$tag" --arg name "$name" --arg sha "sha256:$digest" --argjson size "$size" '
-  .tag_name==$tag and .draft==true and .prerelease==false
-  and ([.assets[] | select(.name|test("^Continuum-Lokal-[a-f0-9]{64}[.]apk$"))] | length==1)
-  and ([.assets[] | select(.name==$name and .digest==$sha and .size==$size)] | length==1)
-' <<< "$draft_json" >/dev/null || fail DRAFT_RELEASE_METADATA_MISMATCH
+select_exact_draft_id() {
+  jq -ers --arg tag "$1" --arg source "$2" '
+    [.[][] | select(.tag_name==$tag)] as $matches
+    | if ($matches|length)==1 and $matches[0].draft==true
+      and $matches[0].prerelease==false and $matches[0].target_commitish==$source
+      and ($matches[0].id | type=="number" and .>0 and .==floor)
+      then $matches[0].id else error("DRAFT_RELEASE_IDENTITY_MISMATCH") end
+  '
+}
+verify_exact_draft_metadata() {
+  jq -e --argjson id "$1" --arg tag "$2" --arg source "$3" --arg name "$4" \
+    --arg sha "sha256:$5" --argjson size "$6" --arg url_prefix "$7" '
+    .id==$id and .tag_name==$tag and .target_commitish==$source
+    and .draft==true and .prerelease==false
+    and (.html_url | type=="string" and startswith($url_prefix) and (test("[[:space:][:cntrl:]]")|not))
+    and ([.assets[] | select(.name|test("[.]apk$";"i"))] | length==1)
+    and ([.assets[] | select(.name==$name and .digest==$sha and .size==$size)] | length==1)
+  '
+}
+gh api --paginate "repos/$repo/releases?per_page=100" > "$tmp/releases.json" || fail DRAFT_READBACK_UNREADABLE
+draft_id="$(select_exact_draft_id "$tag" "$source_sha" < "$tmp/releases.json")" || fail DRAFT_RELEASE_IDENTITY_MISMATCH
+[[ "$draft_id" =~ ^[1-9][0-9]*$ ]] || fail DRAFT_RELEASE_IDENTITY_MISMATCH
+draft_json="$(gh api "repos/$repo/releases/$draft_id")" || fail DRAFT_READBACK_UNREADABLE
+verify_exact_draft_metadata "$draft_id" "$tag" "$source_sha" "$name" "$digest" "$size" "https://github.com/$repo/releases/" \
+  <<< "$draft_json" >/dev/null || fail DRAFT_RELEASE_METADATA_MISMATCH
+draft_url="$(jq -er '.html_url' <<< "$draft_json")" || fail DRAFT_RELEASE_URL_UNREADABLE
 latest_after="$(gh api "repos/$repo/releases/latest" --jq .tag_name)" || fail LATEST_AFTER_DRAFT_UNREADABLE
 [[ "$latest_after" == "$latest_tag" ]] || fail DRAFT_CHANGED_LATEST_RELEASE
 echo CHECKPOINT=SIGNED_DRAFT_READBACK_VERIFIED
 echo STATUS=SIGNED_DRAFT_VERIFIED_NOT_PUBLISHED
-printf 'DRAFT_RELEASE_URL=https://github.com/%s/releases/tag/%s\nAPK_SHA256=%s\nAPK_BYTES=%s\nPUBLISHED=false\n' "$repo" "$tag" "$digest" "$size"
+printf 'DRAFT_RELEASE_URL=%s\nAPK_SHA256=%s\nAPK_BYTES=%s\nPUBLISHED=false\n' "$draft_url" "$digest" "$size"

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {spawnSync} from 'node:child_process';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const script = fs.readFileSync(path.join(root, 'scripts/continuum-code52-github-signer.sh'), 'utf8');
@@ -70,4 +71,123 @@ test('signed APK never publishes automatically; owner retains a separate release
   assert.doesNotMatch(script, /--draft=false|--latest=true|gh release publish/);
   assert.match(workflow, /  sign-draft-original:/);
   assert.doesNotMatch(workflow, /  release-original-signed:/);
+});
+
+function pureDraftFunction(name) {
+  const start = script.indexOf(`${name}() {\n`);
+  assert.ok(start >= 0, `production function ${name} exists`);
+  const end = script.indexOf('\n}\n', start);
+  assert.ok(end > start, 'complete function body');
+  const body = script.slice(start, end + 2);
+  assert.doesNotMatch(body, /\bgh\b|ORIGINAL_|SIGN_PASS/);
+  return body;
+}
+
+function runDraftFunction(name, args, input) {
+  const result = spawnSync('bash', ['-c', `${pureDraftFunction(name)}\n${name} "$@"`, name, ...args], {
+    input, encoding: 'utf8', timeout: 10000,
+  });
+  assert.ifError(result.error);
+  assert.equal(result.signal, null);
+  return result;
+}
+
+const draftSource = '050a57cb019dcc1b7fe6cfa2fb5c11176b048e05';
+const draftTag = `continuum-local-code53-${draftSource}`;
+const draftDigest = 'a'.repeat(64);
+const draftName = `Continuum-Lokal-${draftDigest}.apk`;
+const draftSize = 102701335;
+const draftId = 531234567;
+const draftUrlPrefix = 'https://github.com/Ullmann27/device-ai/releases/';
+function draftFixture() {
+  return {id: draftId, tag_name: draftTag, target_commitish: draftSource,
+    html_url: `${draftUrlPrefix}tag/untagged-test-fixture`,
+    draft: true, prerelease: false, assets: [
+      {name: draftName, digest: `sha256:${draftDigest}`, size: draftSize},
+      {name: 'BUILD-INFO.txt', digest: `sha256:${'b'.repeat(64)}`, size: 500},
+    ]};
+}
+function selectDraft(pages) {
+  return runDraftFunction('select_exact_draft_id', [draftTag, draftSource], pages.map(p => JSON.stringify(p)).join('\n'));
+}
+function verifyDraft(draft) {
+  return runDraftFunction('verify_exact_draft_metadata',
+    [String(draftId), draftTag, draftSource, draftName, draftDigest, String(draftSize), draftUrlPrefix], JSON.stringify(draft));
+}
+
+test('draft readback uses authenticated pagination and the selected release id', () => {
+  assert.match(script, /gh api --paginate "repos\/\$repo\/releases\?per_page=100"/);
+  assert.match(script, /gh api "repos\/\$repo\/releases\/\$draft_id"/);
+  assert.doesNotMatch(script, /releases\/tags\/\$tag/);
+  assert.match(script, /select_exact_draft_id "\$tag" "\$source_sha"/);
+  assert.match(script, /verify_exact_draft_metadata "\$draft_id" "\$tag" "\$source_sha"/);
+  assert.match(script, /\[\[ "\$latest_after" == "\$latest_tag" \]\]/);
+  assert.ok(script.indexOf('GITHUB_READBACK_SIGNATURE_FAILED') < script.indexOf('gh api --paginate'));
+});
+
+test('exact draft is selected across pages and metadata verifies', () => {
+  const unrelated = {...draftFixture(), id: draftId - 1, tag_name: 'another-tag', draft: false};
+  const selected = selectDraft([[unrelated], [draftFixture()]]);
+  assert.equal(selected.status, 0, selected.stderr);
+  assert.equal(selected.stdout.trim(), String(draftId));
+  const verified = verifyDraft(draftFixture());
+  assert.equal(verified.status, 0, verified.stderr);
+});
+
+test('absent or duplicate tag never selects a draft', () => {
+  for (const pages of [[], [[]], [[{...draftFixture(), tag_name: 'another-tag'}]],
+    [[draftFixture()], [{...draftFixture(), id: draftId + 1}]]]) {
+    assert.notEqual(selectDraft(pages).status, 0);
+  }
+});
+
+test('published, prerelease and wrong-source releases are rejected during selection', () => {
+  for (const mutation of [{draft: false}, {prerelease: true}, {target_commitish: 'main'},
+    {target_commitish: 'd'.repeat(40)}, {id: null}, {id: '531234567'}, {id: 0}, {id: -1}, {id: 1.5}]) {
+    assert.notEqual(selectDraft([[{...draftFixture(), ...mutation}]]).status, 0, JSON.stringify(mutation));
+  }
+});
+
+test('release readback cannot substitute another id, tag, source or published state', () => {
+  for (const mutation of [{id: draftId + 1}, {tag_name: 'another-tag'}, {target_commitish: 'main'},
+    {target_commitish: 'd'.repeat(40)}, {draft: false}, {prerelease: true}]) {
+    assert.notEqual(verifyDraft({...draftFixture(), ...mutation}).status, 0, JSON.stringify(mutation));
+  }
+});
+
+test('release readback rejects altered APK digest, bytes or name', () => {
+  for (const mutation of [{digest: `sha256:${'d'.repeat(64)}`}, {digest: null},
+    {size: draftSize + 1}, {name: `Continuum-Lokal-${'c'.repeat(64)}.apk`}]) {
+    const draft = draftFixture();
+    Object.assign(draft.assets[0], mutation);
+    assert.notEqual(verifyDraft(draft).status, 0, JSON.stringify(mutation));
+  }
+});
+
+test('release readback requires exactly one APK including unexpected names', () => {
+  for (const extraName of [draftName, 'unexpected.apk', 'unexpected.APK']) {
+    const draft = draftFixture();
+    draft.assets.push({...draft.assets[0], name: extraName});
+    assert.notEqual(verifyDraft(draft).status, 0, extraName);
+  }
+  const withoutApk = draftFixture();
+  withoutApk.assets.shift();
+  assert.notEqual(verifyDraft(withoutApk).status, 0);
+});
+
+test('draft URL comes from validated HTTPS repository metadata', () => {
+  for (const html_url of [null, '', 12,
+    'http://github.com/Ullmann27/device-ai/releases/tag/untagged-test',
+    'https://github.com/another-owner/device-ai/releases/tag/untagged-test',
+    'https://github.com/Ullmann27/another-repo/releases/tag/untagged-test',
+    'https://github.com/Ullmann27/device-ai-extra/releases/tag/untagged-test',
+    `${draftUrlPrefix}tag/untagged-test\nPUBLISHED=true`,
+    `${draftUrlPrefix}tag/untagged-test\t`,
+    'https://github.com.evil.example/Ullmann27/device-ai/releases/tag/untagged-test']) {
+    assert.notEqual(verifyDraft({...draftFixture(), html_url}).status, 0, String(html_url));
+  }
+  assert.ok(script.includes('draft_url="$(jq -er \'.html_url\' <<< "$draft_json")"'));
+  assert.match(script, /verify_exact_draft_metadata[^\n]*"https:\/\/github\.com\/\$repo\/releases\/"/);
+  assert.match(script, /printf 'DRAFT_RELEASE_URL=%s\\n/);
+  assert.doesNotMatch(script, /DRAFT_RELEASE_URL=https:\/\/github\.com/);
 });
