@@ -4,6 +4,7 @@ on:
     branches:
       - chatgpt/code52-owner-signing-20261109
       - prep/code53-original-signer-20261111
+      - prep/code54-original-signer-20261112
     paths:
       - '.github/workflows/continuum-code52-owner-signing-check.yml'
       - '.github/workflows/continuum-code52-sign-release.yml'
@@ -12,6 +13,9 @@ on:
       - '.github/continuum/code53-owner-signing-binding.json'
       - '.github/continuum/code53-owner-signing-contract.test.py'
       - 'scripts/continuum-code53-signing-evidence.py'
+      - 'scripts/continuum-code54-signing-evidence.py'
+      - '.github/continuum/code54-owner-signing-binding.json'
+      - '.github/continuum/code54-owner-signing-contract.test.py'
 permissions:
   contents: read
 jobs:
@@ -33,3 +37,4 @@ jobs:
           bash -n scripts/continuum-code52-github-signer.sh
           node --test .github/continuum/code52-owner-signing-contract.test.mjs
           python3 -I .github/continuum/code53-owner-signing-contract.test.py
+          python3 -I .github/continuum/code54-owner-signing-contract.test.py
