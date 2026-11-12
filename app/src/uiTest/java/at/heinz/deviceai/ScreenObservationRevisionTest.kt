@@ -8,10 +8,12 @@ import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
 import org.robolectric.shadows.ShadowAccessibilityService
+import org.robolectric.shadows.ShadowAccessibilityNodeInfo
 
 /** Real service event/read code with synthetic framework nodes; no device or action authority. */
 @RunWith(RobolectricTestRunner::class)
@@ -22,6 +24,10 @@ class ScreenObservationRevisionTest {
         companion object { var root: AccessibilityNodeInfo? = null }
         @Implementation protected fun getRootInActiveWindow(): AccessibilityNodeInfo? = root
     }
+    @Implements(AccessibilityNodeInfo::class)
+    class BoundWindowNode : ShadowAccessibilityNodeInfo() {
+        @Implementation public override fun getWindowId() = 42
+    }
     private val service = ContinuumScreenObservationService()
     @After fun reset() { ScreenObservationBus.disconnect(service); RootedService.root = null }
     private fun prepare() {
@@ -30,9 +36,12 @@ class ScreenObservationRevisionTest {
             packageName = "com.android.settings"; text = "Akku 80 Prozent"; isVisibleToUser = true
         }
     }
-    private fun contentChanged(target: ContinuumScreenObservationService = service, pkg: String? = null) {
-        val event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+    private fun contentChanged(target: ContinuumScreenObservationService = service, pkg: String? = null,
+                               windowId: Int? = null,
+                               type: Int = AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+        val event = AccessibilityEvent.obtain(type)
         event.packageName = pkg
+        windowId?.let { shadowOf(event).setWindowId(it) }
         try { target.onAccessibilityEvent(event) } finally { event.recycle() }
     }
     @Test fun contentEventInvalidatesRevisionWithoutInventingFreshLaunchEvidence() {
@@ -100,6 +109,40 @@ class ScreenObservationRevisionTest {
             }
         }
         assertEquals(listOf("Akku 80 Prozent"), result.snapshot.texts)
+    }
+    @Test
+    @Config(shadows = [RootedService::class, BoundWindowNode::class])
+    fun samePackageOtherWindowCannotInvalidateBoundRead() {
+        for (type in listOf(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED,
+                AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED, AccessibilityEvent.TYPE_VIEW_SCROLLED)) {
+            prepare(); var checks = 0; var boundRevision = -1L
+            val result = ScreenObservationBus.read("com.android.settings") {
+                if (++checks == 3) {
+                    boundRevision = ScreenObservationBus.revision()
+                    contentChanged(pkg = "com.android.settings", windowId = 99, type = type)
+                }
+            }
+            assertTrue(result.snapshot.complete)
+            assertEquals(listOf("Akku 80 Prozent"), result.snapshot.texts)
+            assertTrue(boundRevision >= 0)
+            assertEquals(boundRevision, ScreenObservationBus.revision())
+        }
+    }
+    @Test
+    @Config(shadows = [RootedService::class, BoundWindowNode::class])
+    fun matchingAndUnknownWindowStillInvalidateBoundRead() {
+        for (window in listOf(42, -1)) {
+            for (type in listOf(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED,
+                    AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED, AccessibilityEvent.TYPE_VIEW_SCROLLED)) {
+                prepare(); var checks = 0
+                val failure = assertThrows(IllegalStateException::class.java) {
+                    ScreenObservationBus.read("com.android.settings") {
+                        if (++checks == 3) contentChanged(pkg = "com.android.settings", windowId = window, type = type)
+                    }
+                }
+                assertEquals("SCREEN_CHANGED_DURING_READ", failure.message)
+            }
+        }
     }
     @Test fun unrelatedThenTargetUpdateStillInvalidates() {
         prepare(); var delivered = false

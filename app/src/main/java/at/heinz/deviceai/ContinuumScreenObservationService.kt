@@ -21,7 +21,7 @@ class ContinuumScreenObservationService:AccessibilityService(){
         }
         if(event.eventType==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED ||
             event.eventType==AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED){
-            ScreenObservationBus.contentChanged(this,event.packageName?.toString())
+            ScreenObservationBus.contentChanged(this,event.packageName?.toString(),event.windowId)
             return // Invalidate an in-flight read; do not capture text or invent a launch observation.
         }
         if(event.eventType==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED||
@@ -122,7 +122,7 @@ internal object ScreenObservationBus:ForegroundEvents{
             else clickUncertain=true
         }
         sequence++;latest=if(pkg.isNotBlank())ForegroundWindow(pkg,sequence,epoch) else null;lock.notifyAll()}}
-    fun contentChanged(s:ContinuumScreenObservationService,pkg:String?)=synchronized(lock){if(service===s){
+    fun contentChanged(s:ContinuumScreenObservationService,pkg:String?,windowId:Int?=null)=synchronized(lock){if(service===s){
         // Only a well-formed OS event sender known to differ from the active read
         // can be ignored. Missing/malformed senders remain uncertainty, never success.
         val target=readingPackage
@@ -131,6 +131,8 @@ internal object ScreenObservationBus:ForegroundEvents{
         // operation has bound a concrete target window. Unknown stays closed.
         if(target!=null&&knownPackage!=null&&knownPackage!=target&&
             (!clickInProgress||operationWindowId!=null))return@synchronized
+        if(knownPackage==target&&operationWindowId!=null&&windowId!=null&&windowId>=0&&
+            windowId!=operationWindowId)return@synchronized
         if(clickInProgress){
             if(knownPackage==target&&operationWindowId!=null)clickTargetEvent=true else clickUncertain=true
         }
@@ -176,7 +178,7 @@ internal object ScreenObservationBus:ForegroundEvents{
         if(event.eventType!=AccessibilityEvent.TYPE_VIEW_SCROLLED)return
         val source=runCatching { event.source }.getOrNull()
         try { synchronized(lock) {
-            contentChanged(s,event.packageName?.toString())
+            contentChanged(s,event.packageName?.toString(),event.windowId)
             val watch=scrollWatch?:return@synchronized
             val initial=watch.dispatch.source
             val received=System.nanoTime()
@@ -185,8 +187,9 @@ internal object ScreenObservationBus:ForegroundEvents{
                 event.packageName?.toString()!=initial.packageName || source.packageName?.toString()!=initial.packageName ||
                 !source.isScrollable || !source.isEnabled || !source.isVisibleToUser || source.isPassword ||
                 event.eventTime<watch.dispatch.dispatchedAtUptimeMillis || event.eventTime<watch.lastEventTime ||
+                event.eventTime>android.os.SystemClock.uptimeMillis() ||
                 received<watch.dispatch.dispatchedAtNanos || sequence<=initial.revision) return@synchronized
-            fun offset(value:Int,max:Int)=value.takeIf { max>0 && it in 0..max }
+            fun offset(value:Int,max:Int)=value.takeIf { max>0 && it in 0..max && it!=Int.MAX_VALUE }
             val sample=LiveScrollSample(
                 if(android.os.Build.VERSION.SDK_INT>=30) event.scrollDeltaX else null,
                 if(android.os.Build.VERSION.SDK_INT>=30) event.scrollDeltaY else null,

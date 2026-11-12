@@ -125,6 +125,13 @@ class AndroidLiveScrollTest {
             execute { scrolled(index = 1, time = old); scrolled(index = 4, time = old); changed() }.verdict)
     }
 
+    @Test fun futureDatedEventsCannotSupplyScrollEvidence() {
+        val future = SystemClock.uptimeMillis() + 60_000L
+        assertEquals(EffectVerdict.UNCLEAR_EXPECTATION_NOT_MET,
+            execute { scrolled(index = 1, time = future); scrolled(index = 4, time = future); changed() }.verdict)
+        assertEquals(1, calls)
+    }
+
     @Test fun unchangedPositionDoesNotConfirm() {
         assertEquals(EffectVerdict.UNCLEAR_EXPECTATION_NOT_MET,
             execute { scrolled(index = 4); scrolled(index = 4); changed() }.verdict)

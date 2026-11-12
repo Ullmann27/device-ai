@@ -12,12 +12,15 @@ internal data class LiveScrollSample(
     val firstIndex: Int? = null, val itemCount: Int? = null
 ) {
     fun movementSince(previous: LiveScrollSample?): LiveScrollMotion? {
-        fun delta(value: Int?) = value?.takeUnless { it == -1 || it == Int.MIN_VALUE }?.toLong() ?: 0L
+        fun delta(value: Int?) = value?.takeUnless {
+            it == -1 || it == Int.MIN_VALUE || it == Int.MAX_VALUE
+        }?.toLong() ?: 0L
         val direct = LiveScrollMotion(delta(deltaX), delta(deltaY))
         if (direct.moved) return direct
         if (previous == null) return null
         fun difference(before: Int?, after: Int?) =
-            if (before != null && after != null && before >= 0 && after >= 0) after.toLong() - before else 0L
+            if (before != null && after != null && before in 0 until Int.MAX_VALUE &&
+                after in 0 until Int.MAX_VALUE) after.toLong() - before else 0L
         val offsets = LiveScrollMotion(difference(previous.offsetX, offsetX), difference(previous.offsetY, offsetY))
         if (offsets.moved) return offsets
         val index = if (itemCount != null && itemCount > 0 && itemCount == previous.itemCount &&

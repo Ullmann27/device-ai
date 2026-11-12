@@ -26,7 +26,10 @@ internal class FilamentCockpitStage(
     private var glowEntity = 0
     private var glowInstance = 0
     private val glow = CockpitMonitorGlow()
-    private val glowPosition = FloatArray(3) { Float.NaN }
+    private val glowTransform = CockpitMonitorLightTransform(
+        { x, y, z -> engine.lightManager.setPosition(glowInstance, x, y, z) },
+        { falloff -> engine.lightManager.setFalloff(glowInstance, falloff) }
+    )
     private var monitorInstance: MaterialInstance? = null
     private var pixels: CockpitLiveTexture? = null
     private var roomTransform = 0
@@ -107,16 +110,9 @@ internal class FilamentCockpitStage(
     }
 
     /** Position and strength follow the real monitor and the real frame state; uploads happen only on change. */
-    private fun updateGlow(frame: CockpitStageFrame, nowNanos: Long) {
+    private fun updateGlow(matrix: FloatArray, nowNanos: Long) {
         if (glowInstance == 0) return
-        val m = frame.monitorTransform()
-        val reach = maxOf(m[0], m[5])
-        val x = m[12]; val y = m[13] - m[5] * .30f; val z = m[14] + reach * .22f
-        if (glowPosition[0] != x || glowPosition[1] != y || glowPosition[2] != z) {
-            engine.lightManager.setPosition(glowInstance, x, y, z)
-            engine.lightManager.setFalloff(glowInstance, reach * 1.6f)
-            glowPosition[0] = x; glowPosition[1] = y; glowPosition[2] = z
-        }
+        glowTransform.update(matrix)
         glow.step(pixelsVisible, nowNanos)?.let { engine.lightManager.setIntensity(glowInstance, it) }
     }
 
@@ -144,7 +140,8 @@ internal class FilamentCockpitStage(
             transform[10] = 0f
         }
         transformUpdates.setTransform(sideMonitorTransform, transform)
-        transformUpdates.setTransform(monitorTransform, frame.monitorTransform())
+        val monitorMatrix = frame.monitorTransform()
+        transformUpdates.setTransform(monitorTransform, monitorMatrix)
         CockpitWorldTransforms.orb(frame, orbBounds.left, orbBounds.top, orbBounds.right, orbBounds.bottom, transform)
         transformUpdates.setTransform(orbTransform, transform)
         orbitTransforms.forEachIndexed { index, (instance, rest) ->
@@ -153,7 +150,7 @@ internal class FilamentCockpitStage(
         }
         val now = System.nanoTime()
         pixels?.update(frame, now)
-        updateGlow(frame, now)
+        updateGlow(monitorMatrix, now)
         label = pixels?.label ?: "3D-Bildquelle nicht verfügbar"
     }
 
@@ -173,7 +170,7 @@ internal class FilamentCockpitStage(
             scene.removeEntity(glowEntity); engine.lightManager.destroy(glowEntity)
             EntityManager.get().destroy(glowEntity)
         }
-        glowEntity = 0; glowInstance = 0; glow.reset(); glowPosition.fill(Float.NaN)
+        glowEntity = 0; glowInstance = 0; glow.reset(); glowTransform.clear()
         orbitTransforms.clear()
     }
 

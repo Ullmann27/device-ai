@@ -403,6 +403,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
                 .contrast(1f).saturation(1f).vibrance(1f).exposure(0f).build(e)
             view!!.colorGrading = worldColorGrading
             bloomSettings?.let { it.enabled = true; it.strength = .12f; view!!.bloomOptions = it }
+            lastGlow = -1f
         }
         cockpitFrame = frame
         cockpitHead.set(head)
@@ -437,10 +438,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         engine!!.transformManager.setTransform(avatarRoot, transformed)
         applyAvatarOpacity(at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY)
         cockpitStage?.update(frame, cockpitOrb, orbPhase, motion)
-        bloomSettings?.let { options ->
-            val enabled = cockpitStage?.pixelsVisible != true
-            if (options.enabled != enabled) { options.enabled = enabled; view!!.bloomOptions = options }
-        }
+        // SDR pixels stay below threshold.
     }
 
     fun clearCockpitStage() {
@@ -454,6 +452,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         }
         worldColorGrading = null
         bloomSettings?.let { it.enabled = true; it.strength = .35f; view?.bloomOptions = it }
+        lastGlow = -1f
         window = null
     }
 

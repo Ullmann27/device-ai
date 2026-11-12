@@ -67,7 +67,7 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
         val core=ContinuumLearningCore(filesDir).apply {
             observeTraining(phaseObserver)
         }
-        if(!DecoderGenerativeGate.hasControls(curriculum.audit)) {
+        if(!DecoderGenerativeGate.hasControls(curriculum.validationAudit)) {
             // A structurally ineligible validation cannot be fixed by retrying
             // gradients. Preserve the stage cursor and all model checkpoints.
             return@synchronized Round(index+1,curriculum.STAGES,false,0,
@@ -81,14 +81,14 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
         // Each experiment begins from the same persisted checkpoint if rejected;
         // the bridge commits ONLY after both frozen audit sets pass. No rewind.
         val first=core.trainExperimentalPairedDecoder(
-            training,curriculum.audit,
+            training,curriculum.validationAudit,
             steps=curriculum.TRAIN_STEPS,cancelled=cancelled,
             protectedAudits=listOf(protected))
         val retry=index>0 && !first.accepted &&
             first.generationGate!="INSUFFICIENT_VALIDATION" &&
             first.completedSteps==curriculum.TRAIN_STEPS && !cancelled()
         val second=if(retry)core.trainExperimentalPairedDecoder(
-            training,curriculum.audit,
+            training,curriculum.validationAudit,
             steps=curriculum.TRAIN_STEPS,cancelled=cancelled,
             protectedAudits=listOf(protected),learningRate=.012
         ) else null

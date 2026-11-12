@@ -57,6 +57,25 @@ object ContinuumCdxLargeCurriculum {
         DecoderEvidenceCorpus(unseen,DecoderSplit.AUDIT)
     }
 
+    /** Separate frozen missing-evidence controls. */
+    val missingEvidenceControls:List<DecoderEvidencePair> by lazy {
+        val questions = listOf(
+            "Wie schwer ist R91?",
+            "Wann wurde R92 gebaut?",
+            "Welche Seriennummer hat R93?",
+            "Wie groß ist R94?",
+            "Wer besitzt R95?"
+        )
+        (91..95).mapIndexed { index, id ->
+            DecoderEvidencePair(cases(id).first().evidence,questions[index],"unbekannt")
+        }
+    }
+
+    /** Original audit plus abstention controls. */
+    val validationAudit:DecoderEvidenceCorpus by lazy {
+        DecoderEvidenceCorpus(audit.pairs+missingEvidenceControls,DecoderSplit.AUDIT)
+    }
+
     val historicAudit:List<DecoderEvidencePair> = listOf(
         DecoderEvidencePair("Tim wohnt in Wien.","Wo wohnt Tim?","Tim wohnt in Wien."),
         DecoderEvidencePair("Eva ist Köchin.","Was arbeitet Eva?","Eva ist Köchin.")
@@ -126,6 +145,12 @@ object ContinuumCdxLargeCurriculum {
         val tests=protectedAudit().pairs.map { it.conditionerText() }
         require(training.size==TOTAL_TRAIN && training.toSet().size==training.size)
         require(tests.size==50 && tests.toSet().size==tests.size)
+        val validation=validationAudit.pairs.map { it.conditionerText() }
+        require(missingEvidenceControls.size==5 &&
+            missingEvidenceControls.all { it.answer=="unbekannt" } &&
+            DecoderGenerativeGate.hasControls(validationAudit))
+        require(validation.size==53 && validation.toSet().size==validation.size)
+        require(training.toSet().intersect(validation.toSet()).isEmpty())
         require(training.toSet().intersect(tests.toSet()).isEmpty())
         require((0 until STAGES).sumOf { trainingStage(it).pairs.size }==TOTAL_TRAIN)
         require(train.none { it.answer.contains("\n") })
