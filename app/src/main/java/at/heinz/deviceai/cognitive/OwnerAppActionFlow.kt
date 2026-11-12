@@ -31,6 +31,8 @@ internal class OwnerAppActionFlow(
         private set
     var lookupFinishedWithoutInteraction: Boolean = false
         private set
+    var launchedCandidate: NativeAppCandidate? = null
+        private set
     val canRetainAppLookupContext: Boolean get() = lookupVerified && candidates.isNotEmpty() &&
         (!requireExactInstalledCandidate || exactMatchVerified)
     val launching: Boolean get() = phase == Phase.LAUNCH
@@ -75,7 +77,7 @@ internal class OwnerAppActionFlow(
             "${it.label} (${it.packageName})"
         } + ". Es wurde nichts geöffnet.")
         phase = Phase.CHOOSE
-        return if (matches.exactLabel && matches.total == 1) choose(candidates.single())
+        return if (matches.total == 1 && candidates.size == 1) choose(candidates.single())
             else Step.Choose(candidates)
     }
 
@@ -108,6 +110,7 @@ internal class OwnerAppActionFlow(
                 obj.optString("action") == "LAUNCH_APP" && obj.optString("package") == app.packageName &&
                 obj.optString("status") == "VERIFIED_FOREGROUND" && obj.optLong("windowRevision") > 0L
         }.getOrDefault(false)
+        if (verified) launchedCandidate = app
         return done(when {
             verified -> "${app.label} wurde in einem neuen aktiven Fenster beobachtet. " +
                 "Der App-Inhalt wurde dabei nicht geprüft."

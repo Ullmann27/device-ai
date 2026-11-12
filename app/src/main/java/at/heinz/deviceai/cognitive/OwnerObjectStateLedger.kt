@@ -130,6 +130,7 @@ internal class OwnerObjectStateLedger {
 
     private fun supportedStatement(list: List<Tok>): Boolean {
         val text = list.joinToString(" ") { it.low }
+        if (countChangeSentence(list)) return true
         val owned = acquisition.find(text)
         if (owned != null) {
             val next = text.substring(owned.range.last + 1).substringBefore(' ')
@@ -147,7 +148,30 @@ internal class OwnerObjectStateLedger {
             list.any { it.low in negators + replacing + setOf("falsch") }) return true
         if (list.first().low in setOf("farbe", "anzahl", "zahl", "ort", "standort", "rest", "alles")) return true
         if (list.first().low in setOf("im", "in", "auf", "unter", "neben") && list.any { it.low in replacing + negators }) return true
+        if (ownObjectSubject(list)) return true
         return previousRef.containsMatchIn(text) || otherRef.containsMatchIn(text)
+    }
+
+    private val subjectDeterminers = setOf("mein", "meine", "unser", "unsere", "die", "der", "das")
+    private val stateVerbs = setOf("ist", "sind", "steht", "stehen", "liegt", "liegen", "befindet", "befinden")
+    private val containVerbs = setOf("enthält", "enthalten", "hat", "haben")
+
+    /**
+     * Code55 field bug D: „Meine Werkzeugkiste ist blau, steht im Keller und enthält zwölf Schrauben.“ – the owner's
+     * object as grammatical subject, introduced without „Ich habe …“. Only „mein/unser/der/die/das [colour] Noun“
+     * followed by a state verb, or by „enthält/hat“ plus a number, counts. „Mein Nachbar hat eine rote …“ (another
+     * person's possession) and „… hat ihre Werkzeugkiste rot gestrichen“ stay unsupported.
+     */
+    private fun ownObjectSubject(list: List<Tok>): Boolean {
+        if (list.size < 3 || list[0].low !in subjectDeterminers) return false
+        val nounAt = if (color(list[1].low) != null) 2 else 1
+        val noun = list.getOrNull(nounAt) ?: return false
+        if (!isNounToken(noun) || noun.low in nonItemNouns || noun.low in nonCountUnits || color(noun.low) != null) return false
+        val verb = list.getOrNull(nounAt + 1)?.takeIf { it.clause == noun.clause }?.low ?: return false
+        if (verb in stateVerbs) return true
+        if (verb !in containVerbs) return false
+        val counted = list.drop(nounAt + 2).dropWhile { it.low in presentMarkers + setOf("noch", "genau") }.firstOrNull()
+        return counted != null && number(counted) != null
     }
 
     private fun rememberUnresolved(value: String) {
@@ -330,7 +354,7 @@ internal class OwnerObjectStateLedger {
         toks.groupBy { it.sentence }.forEach { (sentence, list) ->
             if (list.any { it.low in conditionals } || !supportedStatement(list)) questions += sentence
             if (sentence !in questions && list.any { resolveItemName(it.low) != null } &&
-                list.any { it.low in unsupportedChange }) incomplete = true
+                list.any { it.low in unsupportedChange } && !countChangeSentence(list)) incomplete = true
         }
         val activeText = toks.filter { it.sentence !in questions }.joinToString(" ") { it.low }
         val ambiguousObject = Regex("""(?iu)(?:noch\s+ein|weiter|zweit|ander)\p{L}*\s+(?:\p{L}+\s+)?(\p{L}+)|nicht\s+(?:die|der|das|den)\s+(\p{L}+)[^.!?]{0,80}sondern\s+(?:die|der|das|den)\s+(\p{L}+)""")
@@ -363,7 +387,8 @@ internal class OwnerObjectStateLedger {
         if (items.size + newNames > MAX_ITEMS) { incomplete = true; return }
         introduced.values.forEach { noun -> items.getOrPut(noun.lowercase(Locale.GERMAN)) { Item(noun) } }
 
-        val found = mentions(toks, questions, items, introduced)
+        val split = splitCountChanges(toks, questions, mentions(toks, questions, items, introduced))
+        val found = split.absolute
         val namedItems = toks.filter { it.sentence !in questions }.mapNotNull { resolveItemName(it.low) }.distinct()
         val byItem = mutableMapOf<Pair<Item, String>, MutableList<Mention>>()
         val anchors = mutableMapOf<Attr, Pair<Item, String>>()
@@ -403,6 +428,7 @@ internal class OwnerObjectStateLedger {
             val slot = item.slots.getOrPut(key) { Slot(list.first().attr, list.firstOrNull { it.unit != null }?.unit) }
             fold(slot, list)
         }
+        applyCountChanges(split, toks, introduced, namedItems, byItem)
         applyUnchanged(toks, questions, namedItems, byItem.keys)
         applyReferences(clean, toks, questions, namedItems)
     }
@@ -515,6 +541,132 @@ internal class OwnerObjectStateLedger {
         }
     }
 
+    // ---------------------------------------------------------------- relative count changes (Code55)
+
+    private val additionMarkers = setOf("dazu", "dazubekommen", "dazugekauft", "dazugekommen", "dazugelegt", "hinzu",
+        "hinzugefügt", "hinzugekommen", "zusätzlich", "zusätzliche", "zusätzlichen", "weitere", "weiteren", "extra",
+        "nachgekauft")
+    private val removalMarkers = setOf("weniger", "weg", "weggenommen", "entnommen", "herausgenommen", "rausgenommen",
+        "abgegeben", "verbraucht", "verloren", "verschenkt", "verkauft", "weggeworfen", "entsorgt", "verliehen",
+        "ausgeliehen")
+    /** A change whose direction the words do not fix: „5 Schrauben bekommen“ may be a new total or an addition. */
+    private val undirectedChange = setOf("bekommen", "gekauft", "geschenkt", "gefunden", "erhalten", "besorgt")
+    private val totalMarkers = setOf("insgesamt", "gesamt", "zusammen")
+
+    /** A word naming a unit this conversation already counts („Schrauben“ after „17 Schrauben“). */
+    private fun trackedCount(low: String): Boolean = items.values.any { item ->
+        item.countSlots().any { s -> s.unit != null && unitKey(s.unit) == unitKey(low) }
+    }
+
+    /** „Ich habe 3 Schrauben verbraucht“, „5 Schrauben sind hinzugekommen“: number + counted unit + change word. */
+    private fun countChangeSentence(list: List<Tok>): Boolean =
+        list.any { it.low in additionMarkers || it.low in removalMarkers } && list.indices.any { k ->
+            number(list[k]) != null && list.getOrNull(k + 1)?.let { trackedCount(it.low) } == true
+        }
+
+    private class CountSplit(val absolute: List<Mention>, val relative: List<Mention>, val dropped: List<Mention>,
+                             val unitOnlyChanges: List<Pair<Int, String>>, val changeSentences: Set<Int>)
+
+    /**
+     * Code55 field evidence: „17 Schrauben … 5 Schrauben dazu bekommen, drei blaue und zwei rote“. A count in a clause
+     * with a change word is relative to an already stated count, never a new total; „drei blaue“ (number + colour,
+     * no noun) or „davon zwei rot“ describes a part, never the colour or total of the object; place and colour words
+     * of a change sentence belong to the changed part. Only the remaining mentions are folded as absolute values.
+     */
+    private fun splitCountChanges(toks: List<Tok>, questions: Set<Int>, found: List<Mention>): CountSplit {
+        fun clauseOf(m: Mention) = toks[m.index].clause
+        fun clauseWords(clause: Int) = toks.filter { it.clause == clause }.map { it.low }
+        val parts = mutableSetOf<Mention>()
+        for (c in found) {
+            if (c.attr != Attr.COLOR || c.explicitItem != null) continue
+            val count = found.firstOrNull { it.attr == Attr.COUNT && it.unit == null && it.index == c.index - 1 &&
+                clauseOf(it) == clauseOf(c) }
+            if (count == null && "davon" !in clauseWords(clauseOf(c))) continue
+            parts += c
+            count?.let { parts += it }
+            val phrase = listOfNotNull(count?.let { toks[it.index].raw }, toks[c.index].raw).joinToString(" ")
+            rememberUnresolved("Teilmenge „$phrase“ (Nachricht $message) nicht als Farbe oder Gesamtzahl übernommen")
+        }
+        val rest = found.filter { it !in parts }
+        fun changeClause(clause: Int): Boolean = clauseWords(clause).let { words ->
+            words.any { it in additionMarkers || it in removalMarkers || it in undirectedChange } &&
+                words.none { it in totalMarkers }
+        }
+        fun trackedBefore(m: Mention): Boolean = if (m.unit != null) items.values.any { item ->
+            item.countSlots().any { s -> s.current != null && s.unit != null && unitKey(s.unit) == unitKey(m.unit) }
+        } else items.values.flatMap { it.countSlots() }.count { it.current != null } == 1
+        val relative = rest.filter { m ->
+            m.attr == Attr.COUNT && changeClause(clauseOf(m)) && (trackedBefore(m) || rest.any { earlier ->
+                earlier.attr == Attr.COUNT && earlier.sentence < m.sentence && !changeClause(clauseOf(earlier)) &&
+                    (m.unit == null || earlier.unit != null && unitKey(earlier.unit) == unitKey(m.unit))
+            })
+        }
+        // „Ich habe ein paar Schrauben dazu bekommen“: a directed change of a counted unit without a number.
+        val unitOnly = mutableListOf<Pair<Int, String>>()
+        toks.groupBy { it.clause }.forEach { (clause, list) ->
+            if (list.first().sentence in questions || relative.any { clauseOf(it) == clause } ||
+                rest.any { it.attr == Attr.COUNT && clauseOf(it) == clause }) return@forEach
+            if (list.none { it.low in additionMarkers || it.low in removalMarkers }) return@forEach
+            list.firstOrNull { isNounToken(it) && trackedCount(it.low) }?.let { unitOnly += it.sentence to it.raw }
+        }
+        val changeSentences = (relative.map { it.sentence } + unitOnly.map { it.first }).toSet()
+        val dropped = rest.filter { m -> m !in relative && m.attr != Attr.COUNT && m.sentence in changeSentences }
+        dropped.forEach { m ->
+            rememberUnresolved("„${m.value}“ (Nachricht $message) gehört zu einem Zu- oder Abgang, nicht zum ganzen Gegenstand")
+        }
+        return CountSplit(rest.filter { it !in relative && it !in dropped }, relative, dropped, unitOnly, changeSentences)
+    }
+
+    /**
+     * Applies each relative change after the absolute fold: one clear number with a clear direction changes the stated
+     * count (17 + 5 = 22, 17 − 3 = 14). Anything else – no number, two numbers, an undirected verb, a place of the
+     * changed part, a result below zero – leaves the count unclear and asks for the current total; nothing is guessed.
+     * A later absolute total in the same message wins over the change.
+     */
+    private fun applyCountChanges(split: CountSplit, toks: List<Tok>, introduced: Map<Int, String>, named: List<Item>,
+                                  absolute: Map<Pair<Item, String>, List<Mention>>) {
+        for (sentence in split.changeSentences.sorted()) {
+            val ms = split.relative.filter { it.sentence == sentence }
+            val targets = if (ms.isNotEmpty()) ms.map { m -> bind(m, toks, introduced, named)?.let { item ->
+                slotKey(m, item)?.let { key -> item to key } } }.distinct()
+            else split.unitOnlyChanges.filter { it.first == sentence }.map { (_, unit) ->
+                items.values.flatMap { item -> item.slots.entries.filter { (_, s) ->
+                    s.attr == Attr.COUNT && s.unit != null && unitKey(s.unit) == unitKey(unit) }.map { item to it.key } }
+                    .singleOrNull() }.distinct()
+            val target = targets.singleOrNull()
+            val slot = target?.let { (item, key) -> item.slots[key] }
+            if (target == null || slot == null) {
+                rememberUnresolved("Zu- oder Abgang (Nachricht $message) ohne eindeutigen Gegenstand")
+                continue
+            }
+            if (absolute[target]?.any { it.sentence > sentence } == true) continue
+            val words = toks.filter { it.sentence == sentence && (ms.isEmpty() ||
+                ms.any { m -> toks[m.index].clause == it.clause }) }.map { it.low }
+            val adds = words.any { it in additionMarkers }
+            val removes = words.any { it in removalMarkers }
+            val amount = ms.singleOrNull()?.takeIf { it.polarity == Polarity.ASSERT && !it.hedged }?.value?.toIntOrNull()
+            val base = slot.current?.toIntOrNull()
+            // „… dazu bekommen, die liegen im Keller“: possibly another set at another place – not one total.
+            val partElsewhere = split.dropped.any { it.sentence == sentence && it.attr == Attr.PLACE }
+            val result = when {
+                amount == null || base == null || adds == removes || partElsewhere -> null
+                adds -> base + amount
+                base >= amount -> base - amount
+                else -> null
+            }
+            if (result != null) {
+                slot.events += Event(result.toString(), Kind.CORRECTED, message)
+                slot.current = result.toString()
+                slot.uncertain = null
+            } else {
+                slot.current = null
+                slot.uncertain = "Zu- oder Abgang genannt, aktuelle Gesamtzahl nicht eindeutig – bitte nenne die aktuelle Gesamtzahl"
+                rememberUnresolved("Zu- oder Abgang (Nachricht $message) ohne eindeutige neue Gesamtzahl")
+            }
+            slot.trimHistory()
+        }
+    }
+
     private val previousRef = Regex("""(?iu)(?<!\p{L})(?:(?:der|die|das|den)\s+(?:(wert|zahl|anzahl|ort|standort|farbe|angabe)\s+)?(?:davor|von\s+vorher)|(?:der|die|das|den)\s+vorherige[nrs]?\s+(wert|zahl|anzahl|ort|standort|farbe|angabe)|(?:der|die|das|den)\s+alte[nrs]?\s+(wert|zahl|anzahl|ort|standort|farbe|angabe))(?!\p{L})""")
     private val otherRef = Regex("""(?iu)(?<!\p{L})doch\s+(?:lieber\s+)?(?:der|die|das|den)\s+andere[nrs]?(?:\s+(wert|zahl|anzahl|ort|standort|farbe))?(?!\p{L})""")
 
@@ -590,7 +742,7 @@ internal class OwnerObjectStateLedger {
         if (!view.relevantTo(request) && view.fingerprint() == fingerprint()) return ""
         val includeHistory = mode(request) != Mode.CURRENT || historicalRequest.containsMatchIn(request) ||
             sentences(request).any(::asksForChangeHistory)
-        return view.render(includeHistory)
+        return view.render(includeHistory, statedNow = view.fingerprint() != fingerprint())
     }
 
     private val historicalRequest = Regex(
@@ -659,7 +811,7 @@ internal class OwnerObjectStateLedger {
 
     fun render(): String = render(includeHistory = true)
 
-    private fun render(includeHistory: Boolean): String = buildString {
+    private fun render(includeHistory: Boolean, statedNow: Boolean = false): String = buildString {
         append("\nGESPRÄCHSSTAND AUS DEN EIGENEN ANGABEN DES NUTZERS (nur dieses Gespräch; ")
         append("abgeleiteter Kontext, kein neuer Gedächtniseintrag; spätere Angaben ersetzen frühere):\n")
         if (incomplete) {
@@ -688,6 +840,9 @@ internal class OwnerObjectStateLedger {
         append("Fragen nach diesem Gesprächsstand beantwortest du direkt aus diesen Angaben mit „laut deinen Angaben …“. ")
         append("Das ist keine externe Wirklichkeitsprüfung: lehne sie nicht ab und behaupte nicht, dafür keinen Zugriff zu haben. ")
         append("Ungeklärtes nennst du als ungeklärt.\n")
+        // Code55 field bug D: a plain statement about the owner's own object was answered with „no tool to search it“.
+        if (statedNow) append("Die aktuelle Nachricht enthält neue eigene Angaben des Nutzers; nimm sie als Gesprächsstand an. " +
+            "Dafür brauchst du kein Werkzeug, keine Suche und keinen Gerätezugriff.\n")
     }
 
     // ---------------------------------------------------------------- deterministic recall
@@ -722,7 +877,9 @@ internal class OwnerObjectStateLedger {
         return when {
             Regex("""(?<!\p{L})(?:verlauf|reihenfolge|nacheinander|wie\s+oft|welche\s+korrekturen|alle\s+(?:angaben|werte|korrekturen))(?!\p{L})""").containsMatchIn(s) -> Mode.HISTORY
             Regex("""(?<!\p{L})(?:ursprünglich|zuerst|anfangs|am\s+anfang|als\s+erstes|erste\s+angabe)(?!\p{L})""").containsMatchIn(s) -> Mode.ORIGINAL
-            Regex("""(?<!\p{L})(?:davor|zuvor|vorige[nrs]?|vorherige[nrs]?)(?!\p{L})""").containsMatchIn(s) -> Mode.PREVIOUS
+            // Code55: „Was hatte ich vorher gesagt?“ asks for the owner's earlier statements – the correction history.
+            Regex("""(?<!\p{L})(?:was|welche\s+angaben)(?!\p{L}).*(?<!\p{L})(?:vorher|zuvor)(?!\p{L}).*(?<!\p{L})(?:gesagt|erzählt|genannt|angegeben)(?!\p{L})""").containsMatchIn(s) -> Mode.HISTORY
+            Regex("""(?<!\p{L})(?:davor|zuvor|vorher|vorige[nrs]?|vorherige[nrs]?)(?!\p{L})""").containsMatchIn(s) -> Mode.PREVIOUS
             else -> Mode.CURRENT
         }
     }

@@ -37,6 +37,7 @@ object ContinuumWorkAreaNavigationSpec {
         CategoryEntry("Recherche", "research"), CategoryEntry("Web", "web"),
         CategoryEntry("Gerätesteuerung", "device"))
     val moreEntries = listOf(
+        CategoryEntry("Denken und Planen", "logic"), CategoryEntry("Mein KI-Team", "agents"),
         CategoryEntry("Systemstatus", "system"), CategoryEntry("Diagnose", "notifications"),
         CategoryEntry("Einstellungen", "settings"), CategoryEntry("Datenschutz & Freigaben", "privacy"),
         CategoryEntry("Modellverwaltung", "model-management"),

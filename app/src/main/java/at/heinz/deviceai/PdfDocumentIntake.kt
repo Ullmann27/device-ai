@@ -29,7 +29,12 @@ class PdfDocumentIntake(private val resolver: ContentResolver) {
         /** Text of pages 1..[textPages], in page order, at most [MAX_TEXT_CHARS] characters. */
         val text: String,
         val textState: TextState,
-        val textPages: Int
+        val textPages: Int,
+        /**
+         * The same text kept per page: index i is page i+1 ("" = no text found on that page), at most [textPages]
+         * entries. Empty when no page attribution exists (no text layer, older Android, or a caller that has none).
+         */
+        val pageTexts: List<String> = emptyList()
     )
 
     @JvmOverloads
@@ -50,10 +55,11 @@ class PdfDocumentIntake(private val resolver: ContentResolver) {
                 try {
                     checkCancelled()
                     if (Build.VERSION.SDK_INT < 35) return Document(name, size, count, first, "", TextState.NEEDS_ANDROID_15, 0)
-                    val (text, pages) = extract(pdf, ::checkCancelled)
+                    val bounded = extract(pdf, ::checkCancelled)
                     checkCancelled()
-                    return Document(name, size, count, first, text,
-                        if (text.isBlank()) TextState.NO_TEXT_LAYER else TextState.EXTRACTED, pages)
+                    return Document(name, size, count, first, bounded.text,
+                        if (bounded.text.isBlank()) TextState.NO_TEXT_LAYER else TextState.EXTRACTED,
+                        bounded.pages.size, bounded.pages)
                 } catch (failure: Throwable) {
                     first?.recycle()
                     throw failure
@@ -94,18 +100,16 @@ class PdfDocumentIntake(private val resolver: ContentResolver) {
     }
 
     @RequiresApi(35)
-    private fun extract(pdf: PdfRenderer, checkCancelled: () -> Unit): Pair<String, Int> {
-        var pages = 0
-        val text = boundedText(sequence {
+    private fun extract(pdf: PdfRenderer, checkCancelled: () -> Unit): BoundedText =
+        boundedPages(sequence {
             for (index in 0 until minOf(pdf.pageCount, MAX_TEXT_PAGES)) {
                 checkCancelled()
-                val pageText = pdf.openPage(index).use { page -> page.textContents.joinToString("\n") { it.text } }
-                pages = index + 1
-                yield(pageText)
+                yield(pdf.openPage(index).use { page -> page.textContents.joinToString("\n") { it.text } })
             }
         }, MAX_TEXT_CHARS)
-        return text to pages
-    }
+
+    /** [text] exactly as [boundedText] gives it; [pages] the share of it on each page that was read (index = page - 1). */
+    class BoundedText(val text: String, val pages: List<String>)
 
     companion object {
         const val MAX_TEXT_CHARS = 12_000
@@ -117,20 +121,34 @@ class PdfDocumentIntake(private val resolver: ContentResolver) {
          * Page texts in order, blank runs collapsed, cut at [maxChars] on a word boundary. Stops reading pages once
          * the budget is reached. Pure: the same pages always give the same text.
          */
-        fun boundedText(pages: Sequence<String>, maxChars: Int): String {
+        fun boundedText(pages: Sequence<String>, maxChars: Int): String = boundedPages(pages, maxChars).text
+
+        /**
+         * [boundedText] with its page attribution kept: every page that was read gets its own share of the bounded
+         * text (blank pages and pages after the cut stay "" or absent). Pure, same budget, same cleaning.
+         */
+        fun boundedPages(pages: Sequence<String>, maxChars: Int): BoundedText {
             require(maxChars > 0)
             val out = StringBuilder()
+            val ranges = mutableListOf<IntRange?>()
             for (page in pages) {
                 val clean = page.replace(Regex("[\\t\\x0B\\f\\r ]+"), " ")
                     .replace(Regex(" *\\n[ \\n]*"), "\n").trim()
-                if (clean.isEmpty()) continue
+                if (clean.isEmpty()) { ranges.add(null); continue }
                 if (out.isNotEmpty()) out.append("\n\n")
+                val start = out.length
                 out.append(clean)
+                ranges.add(start until out.length)
                 if (out.length >= maxChars) break
             }
-            if (out.length <= maxChars) return out.toString()
+            if (out.length <= maxChars) return BoundedText(out.toString(), ranges.map { r -> r?.let { out.substring(it.first, it.last + 1) }.orEmpty() })
             val cut = out.lastIndexOf(' ', maxChars).takeIf { it >= maxChars * 3 / 4 } ?: maxChars
-            return out.substring(0, cut).trimEnd() + " …"
+            val kept = out.substring(0, cut).trimEnd()
+            return BoundedText("$kept …", ranges.map { range ->
+                if (range == null || range.first >= kept.length) "" else
+                    kept.substring(range.first, minOf(range.last + 1, kept.length)).trimEnd() +
+                        if (range.last + 1 > kept.length) " …" else ""
+            })
         }
     }
 }

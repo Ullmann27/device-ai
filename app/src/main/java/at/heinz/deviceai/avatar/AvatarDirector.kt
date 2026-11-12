@@ -37,6 +37,8 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     // An expired glance still needs one terminal event if the physical window closes afterwards.
     private val closedExpiredWindows = LinkedHashSet<String>()
     private val seenConfirmations = LinkedHashSet<String>()
+    private val seenWorkInputs = LinkedHashSet<String>()
+    private var workInput: AvatarEvent.WorkInput? = null
 
     @Synchronized fun attach(newSink: AvatarSink) {
         sink = newSink
@@ -57,9 +59,11 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
             expireAnimationIntents(at)
             publishAnimationIntents(at)
         }
+        workInput?.takeIf { clock() - it.atMillis in 0..420 }?.let(::emit)
     }
 
     @Synchronized fun onRuntime(signals: AvatarRuntimeSignals) {
+        if (signals.listening || signals.speaking || signals.blocked || signals.awaitingApproval) clearWorkInput()
         if ((signals.listening || signals.speaking) && windowIntent != null) {
             windowIntent?.let { remember(retiredWindows, it.id) }
             windowIntent = null
@@ -112,6 +116,22 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     }
 
     @Synchronized fun clearObservedGaze() = emit(AvatarEvent.GazeCleared(clock()))
+
+    @Synchronized fun workInputPerformed(actionId: String, kind: AvatarWorkInput, ageMillis: Long): Boolean {
+        if (actionId.isBlank() || actionId in seenWorkInputs || ageMillis !in 0..150 ||
+            state in setOf(AvatarState.LISTENING, AvatarState.SPEAKING, AvatarState.WAITING_FOR_APPROVAL,
+                AvatarState.BLOCKED) || utterance != null) return false
+        remember(seenWorkInputs, actionId)
+        workInput = AvatarEvent.WorkInput(actionId, kind, clock() - ageMillis)
+        emit(checkNotNull(workInput))
+        return true
+    }
+
+    @Synchronized fun clearWorkInput() {
+        if (workInput == null) return
+        workInput = null
+        emit(AvatarEvent.WorkInput(null, null, clock()))
+    }
 
     /** One glance per unique window. */
     @Synchronized fun windowOpened(windowId: String, target: GazeTarget = GazeTarget.WORK_WINDOW): Boolean =
@@ -247,6 +267,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     /** STOP/pause cancel presentation intents. */
     @Synchronized fun clearAnimationIntents() {
+        clearWorkInput()
         workIntent = null
         clearTransientIntents()
     }

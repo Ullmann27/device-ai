@@ -90,12 +90,14 @@ class ContinuousConversationMode {
      * recognizer recommended from the second attempt on; afterwards, and for any other error,
      * the mode pauses so the owner decides. The mode never loops without bound.
      */
-    fun listenFailed(turnToken: Long, sessionId: String, silence: Boolean, recoverable: Boolean = false): Decision {
+    fun listenFailed(turnToken: Long, sessionId: String, silence: Boolean, recoverable: Boolean = false,
+                     retryBudget: Int = MAX_RECOVERY_RETRIES): Decision {
         if (!current(turnToken, sessionId)) return Decision.IGNORE
         if (silence) return silence()
-        if (recoverable && recoveryAttempts < MAX_RECOVERY_RETRIES) {
+        if (recoverable && recoveryAttempts < retryBudget.coerceIn(0, MAX_RECOVERY_RETRIES)) {
             recoveryAttempts++
-            coldRecognizerRecommended = recoveryAttempts >= 2
+            // A single-shot budget (service failure) re-arms with a fresh native recognizer at once.
+            coldRecognizerRecommended = recoveryAttempts >= 2 || retryBudget <= 1
             turn++
             return Decision.RETRY_LISTEN
         }
@@ -104,6 +106,11 @@ class ContinuousConversationMode {
         if (recoverable) coldRecognizerRecommended = true
         return Decision.PAUSE
     }
+
+    /** Delay before the automatic re-arm of [failure]; a service failure waits for the rebinding. */
+    internal fun retryDelayMs(failure: LocalSpeechInputPolicy.Failure): Long =
+        if (failure == LocalSpeechInputPolicy.Failure.SERVICE_FAILURE) SERVICE_FAILURE_RETRY_DELAY_MS
+        else recoveryRetryDelayMs()
 
     /** Read after listenFailed increments the attempt: 800, 800, then 1600 ms. */
     fun recoveryRetryDelayMs(): Long = when (recoveryAttempts) {
@@ -217,6 +224,20 @@ class ContinuousConversationMode {
         /** Automatic retries after „Spracherkenner belegt“ before the owner is asked to tap. */
         const val MAX_RECOVERY_RETRIES = 3
 
+        /**
+         * Field P0 (Fold7, Code54): ERROR_SERVER / ERROR_SERVER_DISCONNECTED / unknown codes were
+         * re-armed three times, the first time on the same dead pooled recognizer, so the mode
+         * visibly switched itself on and off before pausing. A service failure now gets exactly
+         * one delayed re-arm with a fresh recognizer, then pauses for a one-tap owner resume.
+         */
+        const val SERVICE_FAILURE_RETRY_BUDGET = 1
+        const val SERVICE_FAILURE_RETRY_DELAY_MS = 1_500L
+
+        /** Automatic re-arms allowed for [failure] within one hands-free turn. */
+        internal fun recoveryBudget(failure: LocalSpeechInputPolicy.Failure): Int =
+            if (failure == LocalSpeechInputPolicy.Failure.SERVICE_FAILURE) SERVICE_FAILURE_RETRY_BUDGET
+            else if (isRecoverable(failure)) MAX_RECOVERY_RETRIES else 0
+
         /** Failures the on-device service typically clears by itself within seconds. */
         internal fun isRecoverable(failure: LocalSpeechInputPolicy.Failure): Boolean = when (failure) {
             LocalSpeechInputPolicy.Failure.BUSY, LocalSpeechInputPolicy.Failure.START_FAILED,
@@ -232,6 +253,8 @@ class ContinuousConversationMode {
 
         internal fun pauseReason(failure: LocalSpeechInputPolicy.Failure): String = when {
             isSilence(failure) -> "Ich habe nichts gehört."
+            failure == LocalSpeechInputPolicy.Failure.SERVICE_FAILURE -> LocalSpeechInputPolicy.message(failure) +
+                " Ein automatischer Versuch mit frischem Erkenner ist fehlgeschlagen; beim nächsten Start wird der Erkenner neu erstellt."
             isRecoverable(failure) -> LocalSpeechInputPolicy.message(failure) +
                 " Mehrere automatische Versuche sind fehlgeschlagen; beim nächsten Start wird der Erkenner neu erstellt."
             else -> LocalSpeechInputPolicy.message(failure)

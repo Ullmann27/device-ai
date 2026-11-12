@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="continuum_screen_observation_description">Optionale Bildschirmbeobachtung für Continuum. Prüft auf ausdrücklichen Auftrag das geöffnete App-Fenster oder liest einmalig sichtbaren Text. Keine automatischen Taps, keine Aufzeichnung, kein Versand. Aktivierung und Widerruf ausschließlich hier durch den Besitzer.</string>
+    <string name="continuum_screen_observation_description">Optionaler virtueller Computer für Continuum. Zeigt nach ausdrücklichem Start das ausgewählte App-Fenster live im Cockpit. Führt beauftragte Suche, Navigation und Texteingabe mit Ergebnisprüfung aus. Keine gespeicherten Bildschirmaufnahmen, keine Passworteingabe, kein automatischer Versand. Aktivierung und Widerruf ausschließlich hier durch den Besitzer.</string>
 </resources>
