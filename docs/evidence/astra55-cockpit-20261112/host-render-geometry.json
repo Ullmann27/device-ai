@@ -1,0 +1,71 @@
+{
+  "evidence": "HOST_CYCLES_ORIGINAL_ASSETS_NOT_ANDROID_FILAMENT_NOT_LIVE",
+  "avatarSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "roomSha256": "563d4ab95ce98d603bd48d68c48abf2d709748a604eea7cf8bfd9a43d06b2193",
+  "lighting": "Host Cycles studio lights; Android Filament parity not asserted",
+  "layoutSourceSha256": "311bef3070a55c8decc6cefa842b423460900ffdf86ede2b1208821bd439fa1c",
+  "cameraScale": 0.76,
+  "avatarOpacity": 0.62,
+  "records": [
+    {
+      "name": "fold",
+      "layout": {
+        "width": 852,
+        "height": 480,
+        "head": [
+          76.68,
+          0,
+          698.64,
+          336.0
+        ],
+        "orb": [
+          326.4096,
+          8.937600000000002,
+          199.18079999999998,
+          199.18079999999998
+        ],
+        "monitor": [
+          153.36,
+          259.20000000000005,
+          545.28,
+          212.8
+        ],
+        "fullWidth": 884,
+        "fullHeight": 760,
+        "margin": 16
+      },
+      "avatarProjectionHalfHeight": 0.21153982040819372,
+      "avatarCameraCenterY": 0.2103125182873324
+    },
+    {
+      "name": "phone",
+      "layout": {
+        "width": 388,
+        "height": 531,
+        "head": [
+          3.8799999999999955,
+          0,
+          380.24,
+          371.7
+        ],
+        "orb": [
+          83.82812,
+          9.887220000000001,
+          220.34376,
+          220.34376
+        ],
+        "monitor": [
+          0.0,
+          286.74,
+          388,
+          236.26000000000002
+        ],
+        "fullWidth": 412,
+        "fullHeight": 915,
+        "margin": 12
+      },
+      "avatarProjectionHalfHeight": 0.21153982040819372,
+      "avatarCameraCenterY": 0.2103125182873324
+    }
+  ]
+}

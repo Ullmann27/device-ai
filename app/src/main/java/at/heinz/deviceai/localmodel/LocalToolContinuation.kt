@@ -56,6 +56,5 @@ internal object LocalToolContinuation {
 
     fun allowsSubmission(payloadBytes: Int,existingTokens: Int?,contextTokens: Int,
                          outputReserve: Int,continuation: Boolean): Boolean =
-        payloadBytes in 1..MAX_INPUT_BYTES &&
-            (!continuation || fitsContext(payloadBytes,existingTokens,contextTokens,outputReserve))
+        fitsContext(payloadBytes,existingTokens,contextTokens,outputReserve)
 }

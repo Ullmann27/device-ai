@@ -88,7 +88,8 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                     // Fold7 (#641): a single warm retry was not enough after TTS released the audio
                     // path. Escalate warm → warm → cold inside this turn before giving up.
                     if (isWarmRetryableSpeechError(error) && recovery.recoverableError(failure)) return
-                    if (isWarmRetryableSpeechError(error)) destroyWarmRecognizer()
+                    if (error != SpeechRecognizer.ERROR_NO_MATCH &&
+                        error != SpeechRecognizer.ERROR_SPEECH_TIMEOUT) destroyWarmRecognizer()
                     callbacks.failed(failure)
                 }
                 override fun onResults(results: Bundle?) = callbacks.result(

@@ -76,6 +76,7 @@ class ContinuumUiFeedback(context:Context):AutoCloseable {
         track?.let { runCatching { it.stop() };runCatching { it.flush() };runCatching { it.release() } }
         track=null
     }
+    fun stop() = release()
     override fun close() { closed=true;release();sampleCache.clear() }
 }
 

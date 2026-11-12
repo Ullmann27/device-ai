@@ -11,9 +11,14 @@ import at.heinz.deviceai.ui.JarvisActionScenes
 import at.heinz.deviceai.ui.JarvisActionScenes.WorkspaceFootprint
 import at.heinz.deviceai.ui.JarvisShellLayout
 import org.junit.Assert.*
+import org.robolectric.shadows.ShadowAlertDialog
+import org.robolectric.Shadows.shadowOf
+import android.os.Looper
 
 internal object JarvisHomeTestRoutes {
     val features = listOf("chat", "memory", "logic", "research", "agents", "tasks", "web", "learning", "device", "system")
+    val dockTargets = listOf("home", "chat", "memory", "research", "tasks", "web", "learning", "device")
+    val moreTargets = listOf("logic", "agents", "system")
     private val rows = listOf("ROW_AGENTS", "ROW_TASKS", "ROW_MEMORY", "ROW_MODEL")
 
     private fun descendants(view: View): List<View> = listOf(view) + if (view is ViewGroup)
@@ -35,7 +40,6 @@ internal object JarvisHomeTestRoutes {
         val all = descendants(home)
         val cards = all.filter { it.tag?.toString()?.startsWith("jarvis-tile:") == true }
         val dock = all.filter { it.tag?.toString()?.startsWith("jarvis-bottom:") == true }
-            .filter { it.tag.toString().substringAfter(':') in features }
         val rails = all.filter { it.tag?.toString()?.startsWith("jarvis-rail:") == true }
         assertNull("Home has no fixed navigation rail", shell[JarvisShellLayout.Slot.NAV_RAIL])
         assertTrue("Home removes native rail duplicates", rails.isEmpty())
@@ -47,8 +51,15 @@ internal object JarvisHomeTestRoutes {
             cards
         } else {
             assertNotNull(shell[JarvisShellLayout.Slot.BOTTOM_NAV])
-            assertEquals("Packed cockpit reaches destinations through the tool dock", 10, dock.size)
-            assertEquals(features.map { "jarvis-bottom:$it" }, dock.map { it.tag })
+            assertEquals("Eight owner destinations retain their native dock order",
+                dockTargets.map { "jarvis-bottom:$it" }, dock.map { it.tag })
+            assertEquals("More preserves former destinations", features.toSet(),
+                (dockTargets.filterNot { it == "home" } + moreTargets).toSet())
+            assertTrue(ContinuumWorkAreaNavigationSpec.moreEntries.map { it.target }.containsAll(moreTargets))
+            val headerMore = all.singleOrNull { it.tag == "jarvis-header:more" }
+            if (shell.workstation) assertNotNull("New cockpit exposes More in its header", headerMore)
+            val more = headerMore ?: all.single { it.tag == "jarvis-panel:STATUS" }
+            assertTrue("More is reachable directly or through System", visibleWithinHome(more, home) && more.isClickable && more.isFocusable)
             dock
         }
         nav.forEach { view ->
@@ -60,14 +71,34 @@ internal object JarvisHomeTestRoutes {
         return nav
     }
 
-    fun destination(root: View, target: String): View = controls(root).single {
-        it.tag.toString().substringAfter(':') == target
+    fun destination(root: View, target: String): View {
+        controls(root).singleOrNull { it.tag.toString().substringAfter(':') == target }?.let { return it }
+        if (target == "system") return descendants(home(root)).single { it.tag == "jarvis-panel:STATUS" }
+        error("$target is in More; use navigate() for its two native actions")
     }
 
-    /** Packed dock: 10 destinations. Reflow: 10 cards plus the four diagnostic rows. */
+    fun expectedDirectTargets(root: View) = if (requireNotNull(home(root).jarvisShell.currentShell()).hasFeatureTiles)
+        features else dockTargets
+
+    fun navigate(root: View, target: String) {
+        if (target !in moreTargets) { touch(root, destination(root, target)); return }
+        val more = descendants(home(root)).single { it.tag == "jarvis-header:more" }
+        touch(root, more)
+        shadowOf(Looper.getMainLooper()).idle()
+        val dialog = requireNotNull(ShadowAlertDialog.getLatestAlertDialog())
+        assertTrue("The actual More dialog opens", dialog.isShowing)
+        val entries = ContinuumWorkAreaNavigationSpec.moreEntries
+        val list = dialog.listView
+        assertEquals(entries.map { it.title }, (0 until list.adapter.count).map { list.adapter.getItem(it).toString() })
+        val index = entries.indexOfFirst { it.target == target }
+        assertTrue(index >= 0)
+        assertTrue("The actual menu dispatches $target", list.performItemClick(null, index, list.adapter.getItemId(index)))
+    }
+
+    /** Eight dock destinations, legacy cards. */
     fun expectedDeckSize(root: View): Int {
         val shell = requireNotNull(home(root).jarvisShell.currentShell())
-        return if (shell.hasFeatureTiles) 14 else 10
+        return if (shell.hasFeatureTiles) 14 else dockTargets.size
     }
 
     fun deck(root: View): List<View> {
@@ -83,8 +114,7 @@ internal object JarvisHomeTestRoutes {
             return panels + cards
         }
         val dock = all.filter { it.tag?.toString()?.startsWith("jarvis-bottom:") == true }
-            .filter { it.tag.toString().substringAfter(':') in features }
-        assertEquals("Packed deck reaches destinations through the tool dock", 10, dock.size)
+        assertEquals("Packed deck retains the complete native dock", dockTargets.map { "jarvis-bottom:$it" }, dock.map { it.tag })
         return dock
     }
 

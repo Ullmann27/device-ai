@@ -26,6 +26,7 @@ internal class FilamentCockpitStage(
     private var lightEntity = 0
     private var roomInstance = 0
     private var monitorInstance = 0
+    private var sideMonitorInstance = 0
     private var lastFrame: CockpitStageFrame? = null
     private val transform = FloatArray(16)
 
@@ -55,6 +56,8 @@ internal class FilamentCockpitStage(
             try { resources.loadResources(loaded) } finally { resources.destroy() }
             roomInstance = engine.transformManager.getInstance(loaded.getFirstEntityByName("cockpit-room"))
             monitorInstance = engine.transformManager.getInstance(loaded.getFirstEntityByName("cockpit-monitor"))
+            val sideEntity = loaded.getFirstEntityByName("cockpit-side-monitors")
+            sideMonitorInstance = if (sideEntity == 0) 0 else engine.transformManager.getInstance(sideEntity)
             require(roomInstance != 0 && monitorInstance != 0)
             scene!!.addEntities(loaded.entities)
             lightEntity = EntityManager.get().create()
@@ -84,6 +87,13 @@ internal class FilamentCockpitStage(
             Matrix.setIdentityM(transform, 0)
             Matrix.scaleM(transform, 0, frame.width, frame.height, minOf(frame.width, frame.height))
             engine.transformManager.setTransform(roomInstance, transform)
+            if (sideMonitorInstance != 0) {
+                val visible = frame.monitorWidth / frame.width <= .70f
+                Matrix.setIdentityM(transform, 0)
+                if (visible) Matrix.scaleM(transform, 0, frame.width, frame.height, minOf(frame.width, frame.height))
+                else Matrix.scaleM(transform, 0, 0f, 0f, 0f)
+                engine.transformManager.setTransform(sideMonitorInstance, transform)
+            }
             Matrix.setIdentityM(transform, 0)
             Matrix.translateM(transform, 0,
                 (frame.monitorLeft + frame.monitorRight - frame.width) * .5f,
@@ -124,7 +134,7 @@ internal class FilamentCockpitStage(
 
     companion object {
         const val ASSET_PATH = "cinema3d/cockpit-workstation.glb"
-        const val ASSET_SHA256 = "3223168a58e5fa51c48bb56ba36aabbf0cdb936025a01d96d4b14e5e0fa023aa"
+        const val ASSET_SHA256 = "152669e9c7d8c5ea8627f09353fbd71bfca9ba93a6df6c751c7d44e2ea72de0d"
         const val MAX_BYTES = 32_768
     }
 }

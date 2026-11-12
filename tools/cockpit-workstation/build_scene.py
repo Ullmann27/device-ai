@@ -23,7 +23,56 @@ def cube():
   for v in corners: pos.extend(t*.5 for t in v);norm.extend(normal)
   ind.extend([start,start+1,start+2,start,start+2,start+3])
  return data(pos,3,5126),data(norm,3,5126),data(ind,1,5123)
-a,n,i=cube()
+
+def outline(bounds,radius,steps=4):
+ left,bottom,right,top=bounds
+ points=[]; normals=[]
+ for x,y,start in [(right-radius,top-radius,0),(left+radius,top-radius,90),
+                   (left+radius,bottom+radius,180),(right-radius,bottom+radius,270)]:
+  for step in range(steps+1):
+   angle=math.radians(start+90*step/steps)
+   nx,ny=math.cos(angle),math.sin(angle)
+   points.append((x+radius*nx,y+radius*ny));normals.append((nx,ny))
+ return points,normals
+
+def rounded_prism(radius):
+ points,edge_normals=outline((-.5,-.5,.5,.5),radius)
+ count=len(points);pos=[];norm=[];indices=[]
+ for side in [1,-1]:
+  first=len(pos)//3
+  for x,y in points: pos.extend((x,y,side*.5));norm.extend((0,0,side))
+  for index in range(1,count-1):
+   tri=[first,first+index,first+index+1]
+   indices.extend(tri if side>0 else tri[::-1])
+ first=len(pos)//3
+ for (x,y),(nx,ny) in zip(points,edge_normals):
+  for z in [-.5,.5]: pos.extend((x,y,z));norm.extend((nx,ny,0))
+ for index in range(count):
+  a=first+index*2;b=first+((index+1)%count)*2
+  indices.extend((a,b,b+1,a,b+1,a+1))
+ return data(pos,3,5126),data(norm,3,5126),data(indices,1,5123)
+
+def frame_ring(outer,inner,radii,split=False):
+ outside,_=outline(outer,radii[0]);inside,_=outline(inner,radii[1])
+ pos=[];norm=[];groups=[[],[]] if split else [[]]
+ for out,ins in zip(outside,inside):
+  for x,y in [out,ins]: pos.extend((x,y,0));norm.extend((0,0,1))
+ for index in range(len(outside)):
+  following=(index+1)%len(outside)
+  side=int(outside[index][0]+outside[following][0]>0) if split else 0
+  a=index*2;b=following*2
+  groups[side].extend((a,b,b+1,a,b+1,a+1))
+ return data(pos,3,5126),data(norm,3,5126),[data(group,1,5123) for group in groups]
+
+def mesh(name,geometry,material):
+ pa,na,indices=geometry
+ groups=indices if isinstance(indices,list) else [indices]
+ mats=material if isinstance(material,list) else [material]
+ index=len(meshes)
+ meshes.append({'name':name,'primitives':[
+  {'attributes':{'POSITION':pa,'NORMAL':na},'indices':ia,'material':ma}
+  for ia,ma in zip(groups,mats)]})
+ return index
 
 def bevelled_box(bevel=.07):
  pos=[];norm=[];ind=[]
@@ -61,69 +110,98 @@ def bevelled_box(bevel=.07):
   face(points,normal)
  return data(pos,3,5126),data(norm,3,5126),data(ind,1,5123)
 
-bevel_attributes=bevelled_box()
 materials=[
- {'name':'smoked-metal','pbrMetallicRoughness':{'baseColorFactor':[.025,.038,.064,1],'metallicFactor':.55,'roughnessFactor':.28}},
- {'name':'bevel-silver','pbrMetallicRoughness':{'baseColorFactor':[.15,.22,.30,1],'metallicFactor':.62,'roughnessFactor':.22}},
- {'name':'cyan-rim','pbrMetallicRoughness':{'baseColorFactor':[.04,.57,.8,1],'metallicFactor':.2,'roughnessFactor':.35},'emissiveFactor':[.02,.6,.95]},
- {'name':'violet-rim','pbrMetallicRoughness':{'baseColorFactor':[.32,.10,.8,1],'metallicFactor':.2,'roughnessFactor':.35},'emissiveFactor':[.32,.05,.75]},
+ {'name':'smoked-metal','pbrMetallicRoughness':{'baseColorFactor':[.026,.038,.058,1],'metallicFactor':.54,'roughnessFactor':.27}},
+ {'name':'brushed-edge','pbrMetallicRoughness':{'baseColorFactor':[.15,.21,.28,1],'metallicFactor':.65,'roughnessFactor':.24}},
+ {'name':'cyan-rim','pbrMetallicRoughness':{'baseColorFactor':[.025,.52,.70,1],'metallicFactor':.2,'roughnessFactor':.3},'emissiveFactor':[.015,.44,.65]},
+ {'name':'violet-rim','pbrMetallicRoughness':{'baseColorFactor':[.30,.09,.59,1],'metallicFactor':.2,'roughnessFactor':.3},'emissiveFactor':[.25,.045,.47]},
  {'name':'opaque-screen','pbrMetallicRoughness':{'baseColorFactor':[.002,.004,.009,1],'metallicFactor':0,'roughnessFactor':1}},
- {'name':'smoked-glass','alphaMode':'BLEND','doubleSided':True,'pbrMetallicRoughness':{'baseColorFactor':[.045,.13,.23,.18],'metallicFactor':.15,'roughnessFactor':.12}},
- {'name':'cyan-frost','alphaMode':'BLEND','doubleSided':True,'pbrMetallicRoughness':{'baseColorFactor':[.035,.28,.36,.065],'metallicFactor':.05,'roughnessFactor':.30},'emissiveFactor':[.002,.018,.026]},
- {'name':'violet-frost','alphaMode':'BLEND','doubleSided':True,'pbrMetallicRoughness':{'baseColorFactor':[.22,.10,.37,.065],'metallicFactor':.05,'roughnessFactor':.30},'emissiveFactor':[.015,.004,.025]},
- {'name':'prism-highlight','pbrMetallicRoughness':{'baseColorFactor':[.45,.69,.83,1],'metallicFactor':.3,'roughnessFactor':.18},'emissiveFactor':[.14,.24,.30]}
+ {'name':'smoked-glass','alphaMode':'BLEND','doubleSided':True,'pbrMetallicRoughness':{'baseColorFactor':[.048,.11,.18,.24],'metallicFactor':.12,'roughnessFactor':.13}},
+ {'name':'keycaps','pbrMetallicRoughness':{'baseColorFactor':[.13,.21,.28,1],'metallicFactor':.45,'roughnessFactor':.32}}
 ]
-for mat in range(len(materials)):
- pa,na,ia=bevel_attributes if mat in (0,1,5) else (a,n,i)
- meshes.append({'primitives':[{'attributes':{'POSITION':pa,'NORMAL':na},'indices':ia,'material':mat}]})
-def part(name,xyz,scale,mat,group):
- node={'name':name,'mesh':mat,'translation':xyz,'scale':scale};idx=len(nodes);nodes.append(node);group.append(idx)
-room=[];monitor=[]
-# Architectural depth, open central volume.
+bevel=bevelled_box()
+rounded=rounded_prism(.05)
+desktop=rounded_prism(.18)
+bevel_metal=mesh('bevel-metal',bevel,1)
+body_mesh=mesh('rounded-monitor-shell',rounded,0)
+back_mesh=mesh('rounded-rear-edge',rounded,1)
+desk_mesh=mesh('rounded-desk',desktop,0)
+desk_edge=mesh('rounded-desk-edge',desktop,1)
+desk_glass=mesh('rounded-smoked-glass',desktop,5)
+main_ring=frame_ring((-.5,-.5,.5,.5),(-.470,-.450,.470,.385),(.05,.004))
+main_bezel=mesh('monitor-metal-bezel',main_ring,1)
+main_glass=mesh('monitor-glass-bezel',main_ring,5)
+main_rim=mesh('monitor-light-rim',frame_ring((-.505,-.505,.505,.505),
+ (-.499,-.499,.499,.499),(.055,.049),True),[2,3])
+side_ring=frame_ring((-.537,-.527,.537,.527),(-.502,-.502,.502,.502),(.05,.001))
+side_bezel=mesh('side-metal-bezel',side_ring,1)
+side_glass=mesh('side-glass-bezel',side_ring,5)
+side_rim=mesh('side-light-rim',frame_ring((-.539,-.529,.539,.529),
+ (-.533,-.523,.533,.523),(.052,.046),True),[2,3])
+desk_rim=mesh('rounded-desk-light',frame_ring((-.5,-.5,.5,.5),
+ (-.497,-.497,.497,.497),(.18,.177),True),[2,3])
+
+def part(name,xyz,scale,mesh_index,group,rotation=None):
+ node={'name':name,'mesh':mesh_index,'translation':xyz,'scale':scale}
+ if rotation: node['rotation']=rotation
+ index=len(nodes);nodes.append(node);group.append(index)
+
+room=[];monitor=[];side_monitors=[]
+horizontal=[-.7071067812,0,0,.7071067812]
+# Backdrop stays beneath avatar.
+part('desk',[0,-.4515,.015],[.94,.32,.037],desk_mesh,room,horizontal)
+part('desk-bevel',[0,-.434,.015],[.946,.322,.006],desk_edge,room,horizontal)
+part('desk-glass',[0,-.4315,.015],[.94,.32,.003],desk_glass,room,horizontal)
+part('desk-rim',[0,-.42975,.015],[.942,.322,1],desk_rim,room,horizontal)
+part('keyboard-case',[0,-.427,.115],[.34,.080,.006],desk_mesh,room,horizontal)
+part('keyboard-rim',[0,-.4238,.115],[.336,.076,1],desk_rim,room,horizontal)
+
+# Shared key geometry, one draw.
+key_pos=[];key_norm=[];key_indices=[]
+def key(x,z,w,d):
+ first=len(key_pos)//3
+ for px,pz in [(x-w/2,z-d/2),(x-w/2,z+d/2),(x+w/2,z+d/2),(x+w/2,z-d/2)]:
+  key_pos.extend((px,-.4235,pz));key_norm.extend((0,1,0))
+ key_indices.extend((first,first+1,first+2,first,first+2,first+3))
+for row in range(3):
+ for column in range(11): key((column-5)*.027+(row%2)*.004,.093+row*.015,.021,.010)
+key(0,.139,.13,.010)
 for side in [-1,1]:
- for k in range(3):
-  x=side*(.45-k*.028);z=-.24-k*.11
-  part(f'arch-{side}-{k}',[x,.09,z],[.014,.76,.023],0,room)
-  part(f'arch-bevel-{side}-{k}',[x,.09,z+.010],[.009,.75,.008],1,room)
-  part(f'arch-light-{side}-{k}',[x-side*.008,.09,z+.013],[.0025,.68,.006],2 if side<0 else 3,room)
-  part(f'arch-cap-{side}-{k}',[x-side*.025,.448,z],[.05,.009,.023],1,room)
- part(f'ceiling-{side}',[side*.28,.46,-.40],[.40,.012,.035],1,room)
- part(f'ceiling-line-{side}',[side*.28,.45,-.38],[.38,.002,.006],2 if side<0 else 3,room)
- part(f'wing-{side}',[side*.36,-.28,-.03],[.22,.012,.30],5,room)
- part(f'wing-rear-{side}',[side*.36,-.302,-.06],[.20,.006,.26],6 if side<0 else 7,room)
- part(f'wing-edge-{side}',[side*.36,-.274,.12],[.22,.004,.005],2 if side<0 else 3,room)
- part(f'wing-inner-edge-{side}',[side*.25,-.279,-.03],[.004,.010,.30],8,room)
- part(f'glass-fin-{side}',[side*.445,.035,-.27],[.008,.56,.24],5,room)
- part(f'glass-fin-back-{side}',[side*.455,.035,-.31],[.004,.52,.22],6 if side<0 else 7,room)
- part(f'glass-fin-edge-{side}',[side*.445,.035,-.145],[.003,.56,.003],2 if side<0 else 3,room)
-# Raised console and underglow.
-part('desk',[0,-.48,.02],[.91,.035,.30],0,room)
-part('desk-bevel',[0,-.46,.17],[.91,.007,.012],1,room)
-part('desk-cyan',[0,-.472,.179],[.87,.003,.004],2,room)
-part('desk-glass',[0,-.4615,.02],[.89,.002,.28],5,room)
-part('desk-rear-light',[0,-.4605,-.12],[.78,.002,.003],3,room)
-for k in range(9):
- part(f'deck-key-{k}',[-.12+k*.03,-.4585,.08],[.022,.004,.028],1,room)
-# Monitor local front plane. Transform is native.
-part('screen-back',[0,0,-.008],[1,1,.035],0,monitor)
-part('screen-rear-bevel',[0,0,-.020],[1.018,1.018,.014],1,monitor)
-part('screen-black',[0,0,.012],[.95,.88,.009],4,monitor)
+ for column in range(2): key(side*(.095+column*.03),.139,.022,.010)
+keys=mesh('keyboard-keycaps',(data(key_pos,3,5126),data(key_norm,3,5126),data(key_indices,1,5123)),6)
+part('keyboard-keys',[0,0,0],[1,1,1],keys,room)
+
+# Native content stays unobstructed.
+part('screen-back',[0,0,-.008],[1.014,1.014,.04],body_mesh,monitor)
+part('screen-rear-bevel',[0,0,-.027],[1.026,1.026,.012],back_mesh,monitor)
+part('monitor-bezel',[0,0,.019],[1,1,1],main_bezel,monitor)
+part('monitor-glass',[0,0,.022],[1,1,1],main_glass,monitor)
+part('monitor-rim',[0,0,.027],[1,1,1],main_rim,monitor)
 for side in [-1,1]:
- part(f'monitor-side-{side}',[side*.4875,0,.014],[.025,1,.026],1,monitor)
- part(f'monitor-side-light-{side}',[side*.48,0,.029],[.003,.96,.003],2 if side<0 else 3,monitor)
- part(f'monitor-glass-side-{side}',[side*.476,0,.034],[.010,.965,.009],5,monitor)
- part(f'monitor-horizontal-{side}',[0,side*.4875,.014],[.95,.025,.026],1,monitor)
- part(f'monitor-horizontal-light-{side}',[0,side*.48,.029],[.95,.003,.003],2 if side>0 else 3,monitor)
  for end in [-1,1]:
-  part(f'corner-catchlight-{side}-{end}',[side*.480,end*.458,.036],[.003,.035,.002],8,monitor)
-  part(f'corner-prism-{side}-{end}',[side*.466,end*.479,.036],[.030,.003,.002],8,monitor)
-part('monitor-status-sill',[0,.435,.022],[.94,.07,.012],0,monitor)
-part('monitor-lower-lip',[0,-.47,.028],[.94,.012,.012],0,monitor)
-part('stand',[0,-.50175,-.11],[.035,.0235,.026],1,monitor)
-part('stand-foot',[0,-.5195,-.08],[.25,.012,.12],1,monitor)
-roomid=len(nodes);nodes.append({'name':'cockpit-room','children':room})
-monitorid=len(nodes);nodes.append({'name':'cockpit-monitor','children':monitor})
-root={'asset':{'version':'2.0','generator':'Continuum owned procedural cockpit 20261112'},'scene':0,'scenes':[{'nodes':[roomid,monitorid]}],'nodes':nodes,'meshes':meshes,'materials':materials,'buffers':[{'byteLength':len(blob)}],'bufferViews':views,'accessors':access}
+  part(f'monitor-fastener-{side}-{end}',[side*.483,end*.459,.024],[.007,.010,.006],bevel_metal,monitor)
+foot_bottom=(-.43+.215)/.35
+foot_height=.026
+foot_top=foot_bottom+foot_height
+part('stand',[0,(-.49+foot_top)*.5,-.08],[.055,-.49-foot_top,.042],bevel_metal,monitor)
+part('stand-foot',[0,foot_bottom+foot_height*.5,-.08],[.34,.16,foot_height],desk_edge,monitor,horizontal)
+
+# Front planes match native slots.
+for side in [-1,1]:
+ x=side*.38;y=-.22
+ part(f'side-{side}-back',[x,y,-.010],[.218,.321,.018],body_mesh,side_monitors)
+ part(f'side-{side}-bezel',[x,y,0],[.20,.30,1],side_bezel,side_monitors)
+ part(f'side-{side}-glass',[x,y,.0002],[.20,.30,1],side_glass,side_monitors)
+ part(f'side-{side}-rim',[x,y,.0004],[.20,.30,1],side_rim,side_monitors)
+ part(f'side-{side}-stand',[x,-.395,-.030],[.014,.046,.022],bevel_metal,side_monitors)
+ part(f'side-{side}-foot',[x,-.424,-.030],[.105,.09,.012],desk_edge,side_monitors,horizontal)
+
+root_ids=[]
+for name,children in [('cockpit-room',room),('cockpit-monitor',monitor),('cockpit-side-monitors',side_monitors)]:
+ root_ids.append(len(nodes));nodes.append({'name':name,'children':children})
+root={'asset':{'version':'2.0','generator':'Continuum owned procedural reference cockpit 20261112'},
+ 'scene':0,'scenes':[{'nodes':root_ids}],'nodes':nodes,'meshes':meshes,'materials':materials,
+ 'buffers':[{'byteLength':len(blob)}],'bufferViews':views,'accessors':access}
 js=json.dumps(root,separators=(',',':')).encode();js+=b' '*((-len(js))%4);blob+=b'\0'*((-len(blob))%4)
 out=struct.pack('<III',0x46546c67,2,12+8+len(js)+8+len(blob))+struct.pack('<II',len(js),0x4e4f534a)+js+struct.pack('<II',len(blob),0x004e4942)+blob
 assert len(out)<=32_768, 'Cockpit asset budget exceeded'

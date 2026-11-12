@@ -29,8 +29,8 @@ class ContinuumScreenObservationService:AccessibilityService(){
             finally{@Suppress("DEPRECATION") root.recycle()}
         }
     }
-    override fun onInterrupt(){ScreenObservationBus.interrupt(this)}
-    override fun onDestroy(){ScreenObservationBus.disconnect(this);super.onDestroy()}
+    override fun onInterrupt(){ScreenObservationBus.interrupt(this);AndroidLiveComputer.observationRevoked(this)}
+    override fun onDestroy(){ScreenObservationBus.disconnect(this);AndroidLiveComputer.observationRevoked(this);super.onDestroy()}
     internal fun readScreen(expectedPackage:String,checkActive:()->Unit,bindWindow:(Int)->Unit):ScreenTextSnapshot{
         checkActive()
         val root=rootInActiveWindow?:error("NO_ACTIVE_WINDOW")
@@ -53,21 +53,54 @@ class ContinuumScreenObservationService:AccessibilityService(){
 }
 
 internal data class ObservedAppScreen(val snapshot:ScreenTextSnapshot,val epoch:Long,val revision:Long,val observedAtMillis:Long)
+internal data class LiveObservationAccess(val service:ContinuumScreenObservationService,val epoch:Long)
 
 /** In-process, event-driven metadata only. No screen text cached on events. */
 internal object ScreenObservationBus:ForegroundEvents{
     private val lock=java.lang.Object();private var service:ContinuumScreenObservationService?=null
     private var epoch=0L;private var sequence=0L;private var wakeSequence=0L;private var latest:ForegroundWindow?=null
+    private var windowSequence=0L
     private var readingPackage:String?=null
     private var operationWindowId:Int?=null
     private var clickInProgress=false
     private var clickTargetEvent=false
     private var clickUncertain=false
     private val packageNamePattern=Regex("[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)+")
+    internal fun liveAccess():LiveObservationAccess?=synchronized(lock){service?.let{LiveObservationAccess(it,epoch)}}
+    internal fun liveRevision(access:LiveObservationAccess):Long=synchronized(lock){
+        check(service===access.service&&epoch==access.epoch){"OBSERVATION_PERMISSION_CHANGED"}
+        sequence
+    }
+    internal fun liveWindowRevision(access:LiveObservationAccess):Long=synchronized(lock){
+        check(service===access.service&&epoch==access.epoch){"OBSERVATION_PERMISSION_CHANGED"}
+        windowSequence
+    }
+    internal fun <T> withLiveOperation(pkg:String,body:(LiveObservationAccess)->T):T {
+        val access=synchronized(lock){
+            val connected=service?:error("ACCESSIBILITY_OBSERVATION_NOT_GRANTED")
+            check(readingPackage==null&&!clickInProgress){"ANOTHER_SCREEN_READ_ACTIVE"}
+            readingPackage=pkg;operationWindowId=null
+            LiveObservationAccess(connected,epoch)
+        }
+        try { return body(access) }
+        finally { synchronized(lock){readingPackage=null;operationWindowId=null;lock.notifyAll()} }
+    }
+    internal fun awaitLiveRevision(access:LiveObservationAccess,after:Long,deadlineNanos:Long,checkActive:()->Unit):Boolean {
+        synchronized(lock){
+            while(liveRevision(access)<=after){
+                val remaining=(deadlineNanos-System.nanoTime())/1_000_000
+                if(remaining<=0)return false
+                checkActive()
+                lock.wait(remaining.coerceAtMost(50).coerceAtLeast(1))
+            }
+            return true
+        }
+    }
     fun connect(s:ContinuumScreenObservationService)=synchronized(lock){service=s;epoch++;latest=null;lock.notifyAll()}
     fun disconnect(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){service=null;epoch++;latest=null;lock.notifyAll()}}
     fun interrupt(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){epoch++;latest=null;wakeSequence++;lock.notifyAll()}}
     fun observed(s:ContinuumScreenObservationService,pkg:String,eventSender:String?=null)=synchronized(lock){if(service===s){
+        windowSequence++
         if(clickInProgress){
             if(pkg==readingPackage && eventSender==readingPackage && operationWindowId!=null)clickTargetEvent=true
             else clickUncertain=true

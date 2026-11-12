@@ -4,6 +4,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import shutil
 import sys
 
 import bpy
@@ -102,6 +103,9 @@ def main():
         room_rest, monitor_rest = room.matrix_world.copy(), monitor.matrix_world.copy()
         room_matrix = Matrix.Diagonal((width, height, min(width, height), 1))
         room.matrix_world = conversion @ room_matrix @ conversion.inverted() @ room_rest
+        sides = bpy.data.objects.get('cockpit-side-monitors')
+        if sides:
+            sides.matrix_world = conversion @ room_matrix @ conversion.inverted() @ sides.matrix_world.copy()
         distance = group[0]['frame']['distance']
         cam = camera(scene, (0, 0, distance), (0, 0, 0))
         cam.data.sensor_fit = 'HORIZONTAL'
@@ -109,6 +113,7 @@ def main():
         cam.data.lens = 36 * distance / width
         cam.data.clip_start, cam.data.clip_end = 1, distance * 4
         light('HostKey', (.32, .55, 1), 4.5, (.62, .80, 1))
+        rendered_poses = {}
         for item in group:
             scene.cycles.samples = (args.video_samples or args.samples) if item['phase'].startswith('sequence-') else args.samples
             f = item['frame']
@@ -120,21 +125,33 @@ def main():
                      @ Matrix.Rotation(math.radians(f['pitchDegrees']), 4, 'X')
                      @ Matrix.Diagonal((mw, mh, min(mw, mh), 1)))
             monitor.matrix_world = conversion @ model @ conversion.inverted() @ monitor_rest
+            if sides:
+                for obj in [sides] + list(sides.children_recursive):
+                    obj.hide_render = mw / width > .70
             bpy.context.view_layer.update()
             projected = []
-            for u, v in ((.035, .12), (.965, .12), (.965, .945), (.035, .945)):
-                world = conversion @ model @ Vector((u - .5, .5 - v, .032, 1))
+            left, top, right, bottom = f['contentBounds']
+            for u, v in ((left, top), (right, top), (right, bottom), (left, bottom)):
+                world = conversion @ model @ Vector((u - .5, .5 - v, f['contentDepth'], 1))
                 clip = world_to_camera_view(scene, cam, world.to_3d())
                 projected.extend((clip.x * width, (1 - clip.y) * height))
             error = max(abs(a - b) for a, b in zip(projected, f['quad']))
             if error > .08:
                 raise ValueError(f'Projection mismatch: {item["key"]} {error:.4f}px')
             file = out / f'{item["key"]}-stage.png'
-            scene.render.filepath = str(file)
-            bpy.ops.render.render(write_still=True)
+            signature = json.dumps({'frame': f, 'samples': scene.cycles.samples}, sort_keys=True)
+            previous = rendered_poses.get(signature)
+            if previous:
+                shutil.copyfile(out / f'{previous}-stage.png', file)
+            else:
+                scene.render.filepath = str(file)
+                bpy.ops.render.render(write_still=True)
+                rendered_poses[signature] = item['key']
             record = {'key': item['key'], 'image': file.name, 'imageSha256': sha(file),
                       'samples': scene.cycles.samples,
                       'projectionMaxErrorPixels': error, 'projectedContentQuad': projected}
+            if previous:
+                record['renderReusedFrom'] = previous
             records.append(record)
             print('COCKPIT_HOST_FRAME', json.dumps(record), flush=True)
         head = layout['head']

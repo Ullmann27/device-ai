@@ -11,6 +11,7 @@ import at.heinz.deviceai.cognitive.CockpitWorkEvent
 import at.heinz.deviceai.cognitive.LiveFrameBinding
 import at.heinz.deviceai.cognitive.LiveMonitorFeed
 import at.heinz.deviceai.cognitive.LiveMonitorState
+import at.heinz.deviceai.cognitive.LiveTargetBounds
 
 /** Read-only display; actions use ToolGate. */
 internal class VirtualComputerMonitorView(context: Context) : View(context) {
@@ -19,6 +20,7 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
     private var sourceSequence = -1L
     private var sourceSession = -1L
     private var sourceBinding: LiveFrameBinding? = null
+    private var sourceViewport: LiveTargetBounds? = null
     private var importedAtNanos = 0L
     private var live = false
     private var status = "Keine Bildquelle verbunden"
@@ -32,19 +34,11 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
         set(value) { field = value; invalidate() }
     private val tick = object : Runnable {
         override fun run() {
-            if (!canRefresh()) return
+            if (!canPresent() || feed == null) return
             refresh()
             if (click != null) invalidate()
             postOnAnimation(this)
         }
-    }
-
-    private fun canRefresh() = foreground && isAttachedToWindow && isShown &&
-        windowVisibility == VISIBLE && feed != null
-
-    private fun updateTick() {
-        removeCallbacks(tick)
-        if (canRefresh()) post(tick)
     }
 
     init {
@@ -63,16 +57,39 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
         sourceSequence = -1
         sourceSession = -1
         sourceBinding = null
-        refresh()
-        invalidate()
-        updateTick()
+        sourceViewport = null
+        updatePlayback()
     }
 
     fun setForegroundActive(value: Boolean) {
         foreground = value
+        updatePlayback()
+    }
+
+    private fun canPresent() = foreground && isAttachedToWindow && windowVisibility == VISIBLE && isShown
+
+    private fun clearPixels() {
+        bitmap = null
+        click = null
+        sourceSequence = -1
+        sourceSession = -1
+        sourceBinding = null
+        sourceViewport = null
+        importedAtNanos = 0L
+        live = false
+    }
+
+    private fun updatePlayback() {
         removeCallbacks(tick)
-        if (!value) { bitmap = null; click = null; sourceSequence = -1; live = false; invalidate() }
-        else updateTick()
+        if (canPresent() && feed != null) {
+            refresh()
+            post(tick)
+        } else {
+            clearPixels()
+            status = feed?.status(System.nanoTime())?.label ?: "Keine Bildquelle verbunden"
+            contentDescription = "Virtueller Computer. $status"
+        }
+        invalidate()
     }
 
     fun workEvent(event: CockpitWorkEvent) {
@@ -93,7 +110,8 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
         val age = System.nanoTime() - event.occurredAtNanos
         if (event.stage == CockpitWorkEvent.Stage.DISPATCHED && event.action == CockpitWorkEvent.Action.CLICK &&
             event.target != null && age in 0..150_000_000L && event.frameSequence > 0 &&
-            state.state == LiveMonitorState.LIVE && event.frameSequence == sourceSequence && sourceBinding == binding) {
+            state.state == LiveMonitorState.LIVE && event.frameSequence == sourceSequence && sourceBinding == binding &&
+            sourceViewport?.let { event.target.x in it.left..it.right && event.target.y in it.top..it.bottom } == true) {
             click = event
             invalidate()
         }
@@ -113,6 +131,7 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
             sourceSequence = -1
             sourceSession = -1
             sourceBinding = null
+            sourceViewport = null
         } else if (sourceSequence != state.sequence || sourceSession != session) {
             val producer = source ?: return
             producer.acquire()?.use { lease ->
@@ -128,6 +147,7 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
                     sourceSequence = lease.sequence
                     sourceSession = lease.binding.captureSession
                     sourceBinding = lease.binding
+                    sourceViewport = lease.meta.sourceViewport
                     importedAtNanos = System.nanoTime()
                 } else { bitmap = null; live = false; status = "Bild kann nicht dargestellt werden" }
             }
@@ -147,7 +167,12 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
             val elapsed = System.nanoTime() - it.occurredAtNanos
             if (elapsed !in 0..220_000_000L || currentPixels == null || it.frameSequence != sourceSequence ||
                 current?.binding?.captureSession != it.sessionId) { click = null; null }
-            else it.target?.let { target -> CockpitMonitorPainter.Pointer(target.x, target.y, elapsed / 220_000_000f) }
+            else sourceViewport?.let { viewport -> it.target?.let { target ->
+                val x = (target.x - viewport.left) / (viewport.right - viewport.left)
+                val y = (target.y - viewport.top) / (viewport.bottom - viewport.top)
+                if (x in 0f..1f && y in 0f..1f) CockpitMonitorPainter.Pointer(x, y, elapsed / 220_000_000f)
+                else null
+            } }
         }
         painter.draw(canvas, geometry, currentPixels?.takeIf { canDraw }, current?.label ?: status,
             current?.state == LiveMonitorState.LIVE && canDraw, nativeFrameReady, resources.displayMetrics.density, pointer)
@@ -155,21 +180,19 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        updateTick()
+        updatePlayback()
     }
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
-        if (foreground) updateTick()
+        if (isAttachedToWindow) updatePlayback()
     }
     override fun onWindowVisibilityChanged(visibility: Int) {
         super.onWindowVisibilityChanged(visibility)
-        if (foreground) updateTick()
+        if (isAttachedToWindow) updatePlayback()
     }
     override fun onDetachedFromWindow() {
         removeCallbacks(tick)
-        bitmap = null
-        click = null
-        sourceSequence = -1
+        clearPixels()
         super.onDetachedFromWindow()
     }
 }

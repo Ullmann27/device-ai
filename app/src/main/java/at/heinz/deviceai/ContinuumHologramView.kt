@@ -385,7 +385,10 @@ class ContinuumHologramView @JvmOverloads constructor(
             cameraFraming = AvatarCameraFraming(focus, w.toDouble() / h,
                 headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut, cameraProfile)
         }
-        val targetWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection)
+        val targetWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection).let {
+            if (layeredCockpit) at.heinz.deviceai.avatar3d.AvatarFraming.pullBack(it,
+                at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_SCALE.toDouble()) else it
+        }
         val fromWindow = cameraProfileBlendFrom
         cameraWindow = if (fromWindow != null && cameraProfileBlendStartedAtMs >= 0L) {
             val raw = ((SystemClock.uptimeMillis() - cameraProfileBlendStartedAtMs) / 260f).coerceIn(0f, 1f)
@@ -1165,6 +1168,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         val coreEnergy = maxOf(renderFrame.energy, effects?.orbPulseLevel(nowMillis) ?: 0f,
             effects?.recallBrightness(nowMillis) ?: 0f, windowPulse)
         val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
+        renderer.showBrand = at.heinz.deviceai.ui.AvatarPresentation.showOrbBrand(layeredCockpit, headEnabled)
         if (memoryScene.isActive && (memorySceneHostReady?.invoke() != true ||
                 memoryScene.sample(memorySceneTime()) == null)) clearMemoryScene()
         resolveHeadBounds(width, height)
@@ -1252,6 +1256,16 @@ class ContinuumHologramView @JvmOverloads constructor(
                 }
                 canvas.restoreToCount(orbCanvas)
             }
+            if (cockpitHeadBounds != null) {
+                val overlayCanvas = canvas.save()
+                transformHeadEntrance(canvas, density)
+                at.heinz.deviceai.ui.AvatarPresentation.drawBack(painter,
+                    at.heinz.deviceai.ui.JarvisShellLayout.Box(
+                        headDrawBounds.left / density, headDrawBounds.top / density,
+                        headDrawBounds.right / density, headDrawBounds.bottom / density),
+                    avatarSeconds, renderFrame.energy, layeredCockpit)
+                canvas.restoreToCount(overlayCanvas)
+            }
             if (!native3dDrawn) {
                 val headCanvas = if (layeredCockpit) canvas.saveLayerAlpha(
                     headDrawBounds.left / density, headDrawBounds.top / density,
@@ -1292,13 +1306,11 @@ class ContinuumHologramView @JvmOverloads constructor(
             canvas.translate(headDrawBounds.left, headDrawBounds.top)
             canvas.scale(density, density)
             painter.begin(canvas)
-            at.heinz.deviceai.ui.JarvisHeadAura.drawLightStreams(painter, headDrawBounds.width() / density,
-                headDrawBounds.height() / density)
-            at.heinz.deviceai.ui.JarvisCinemaEntrance.drawHologramOverlay(
+            at.heinz.deviceai.ui.AvatarPresentation.drawFront(
                 painter,
                 at.heinz.deviceai.ui.JarvisShellLayout.Box(
                     0f, 0f, headDrawBounds.width() / density, headDrawBounds.height() / density),
-                avatarSeconds, renderFrame.energy)
+                avatarSeconds, renderFrame.energy, layeredCockpit)
             canvas.restoreToCount(streams)
         }
         if (!canAnimateFrame() || !renderBudget().animate) return

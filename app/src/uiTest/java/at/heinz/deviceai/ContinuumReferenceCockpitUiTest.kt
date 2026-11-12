@@ -276,6 +276,13 @@ class ContinuumReferenceCockpitUiTest {
             assertTrue("$target belongs to the current visible Home", it.isAttachedToWindow && it.isShown)
         }
 
+    private fun tapDestination(activity: AgentActivity, target: String) {
+        if (target in JarvisHomeTestRoutes.moreTargets) {
+            val label = ContinuumWorkAreaNavigationSpec.moreEntries.single { it.target == target }.title
+            tapDialogItem(openMoreThroughDecor(activity), label)
+        } else tap(activity.window.decorView, destination(activity, target))
+    }
+
     private fun shellControls(root: View): List<View> = descendants(root).filter { view ->
         val tag = view.tag as? String ?: return@filter false
         listOf("jarvis-tile:", "jarvis-dialog:", "jarvis-input:", "jarvis-camera:", "jarvis-panel:",
@@ -325,9 +332,10 @@ class ContinuumReferenceCockpitUiTest {
         }
         val dock = descendants(home).count {
             val tag = it.tag?.toString() ?: return@count false
-            tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.features
+            tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.dockTargets
         }
-        assertEquals("All ten feature controls remain in the hierarchy", 10, if (tiles > 0) tiles else dock)
+        assertEquals("Every direct destination remains in the hierarchy",
+            JarvisHomeTestRoutes.expectedDirectTargets(home).size, if (tiles > 0) tiles else dock)
     }
 
     private fun assertVisibleShellControlsDoNotOverlap(root: View) {
@@ -355,19 +363,26 @@ class ContinuumReferenceCockpitUiTest {
         val home = currentHome(activity)
         val targets = shellControls(home)
         val navigation = JarvisHomeTestRoutes.controls(home)
-        assertEquals("Every destination has exactly one feature card", tileTargets,
+        assertEquals("Every direct destination has exactly one native control", JarvisHomeTestRoutes.expectedDirectTargets(home),
             navigation.map { it.tag.toString().substringAfter(':') })
         val required = mutableListOf("jarvis-dialog:conversation", "jarvis-dialog:voice-input", "jarvis-dialog:send",
-            "jarvis-input:conversation", "jarvis-camera:settings", "jarvis-header:notifications", "jarvis-header:settings")
+            "jarvis-input:conversation", "jarvis-header:notifications", "jarvis-header:settings")
         val shell = requireNotNull(home.jarvisShell.currentShell())
+        if (shell[JarvisShellLayout.Slot.CAMERA_STATUS] != null) required += "jarvis-camera:settings"
+        else assertTrue("Phone keeps camera settings in More",
+            ContinuumWorkAreaNavigationSpec.moreEntries.any { it.target == "camera-settings" })
         if (shell.hasFeatureTiles) {
             required += listOf("jarvis-panel:ROW_AGENTS", "jarvis-panel:ROW_TASKS",
                 "jarvis-panel:ROW_MEMORY", "jarvis-panel:ROW_MODEL")
         } else {
-            required += listOf("jarvis-panel:COCKPIT_SECONDARY", "jarvis-panel:STATUS")
+            required += "jarvis-panel:STATUS"
+            if (shell[JarvisShellLayout.Slot.COCKPIT_SECONDARY] != null) required += "jarvis-panel:COCKPIT_SECONDARY"
         }
         for (tag in required) tagged(home, tag)
-        for (target in tileTargets) destination(activity, target)
+        for (target in JarvisHomeTestRoutes.expectedDirectTargets(home)) destination(activity, target)
+        assertTrue("All former destinations remain reachable",
+            (JarvisHomeTestRoutes.expectedDirectTargets(home) + ContinuumWorkAreaNavigationSpec.moreEntries.map { it.target })
+                .containsAll(tileTargets))
         targets.forEach { view ->
             val name = view.tag.toString()
             assertTrue("$name must be a real clickable, focusable control", view.isClickable && view.isFocusable)
@@ -754,11 +769,10 @@ class ContinuumReferenceCockpitUiTest {
                 "tasks" to "Entwicklungsaufgaben",
                 "device" to "Systemstatus"
             )) {
-                val control = if (target == "agents-panel") {
-                    descendants(home).singleOrNull { it.tag == "jarvis-panel:ROW_AGENTS" }
-                        ?: destination(activity, "agents")
-                } else destination(activity, target)
-                tap(activity.window.decorView, control)
+                val panel = if (target == "agents-panel")
+                    descendants(home).singleOrNull { it.tag == "jarvis-panel:ROW_AGENTS" } else null
+                if (panel != null) tap(activity.window.decorView, panel)
+                else tapDestination(activity, if (target == "agents-panel") "agents" else target)
                 when (title) {
                     "Systemstatus" -> closeSystemWorkWindow(activity)
                     "Gedächtniszentrum" -> closeCentreThroughDecor(activity, title)
@@ -1063,10 +1077,10 @@ class ContinuumReferenceCockpitUiTest {
         measure(root, 840, 320)
         assertSame("A height-only window change must not rebuild the avatar", avatar, field(activity, "hologramView"))
         val cards = JarvisHomeTestRoutes.controls(currentHome(activity))
-        assertEquals(tileTargets.map { "jarvis-tile:$it" }, cards.map { it.tag })
+        assertEquals(JarvisHomeTestRoutes.dockTargets.map { "jarvis-bottom:$it" }, cards.map { it.tag })
         assertTrue("Large cards use real scrolling content", currentHome(activity).height > 320)
         for (target in tileTargets) {
-            tap(activity.window.decorView, destination(activity, target))
+            tapDestination(activity, target)
             when (target) {
                 "chat" -> {
                     assertEquals(ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
