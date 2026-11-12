@@ -75,7 +75,11 @@ class Intelligence55ConversationTest {
             assertNull(it, BootstrapBrain.decide(it, emptyList()).tool)
         }
         listOf("Bei Android entfernt man jetzt alle Apps", "Man löscht sofort über die Einstellungen den Cache",
-            "Normalerweise löscht man alles").forEach {
+            "Normalerweise löscht man alles",
+            // Review #791: direct "ihr" commands and command adverbs stay blocked.
+            "Ihr entfernt WhatsApp über die Einstellungen", "Entfernt ihr den Cache in den Einstellungen",
+            "Man löscht einfach den Cache in den Einstellungen", "Ihr löscht dann mal die Fotos über die Einstellungen",
+            "Normalerweise löscht man dann den Cache").forEach {
             assertTrue(it, OwnerDeviceRequestSafety.inspect(it).blocked)
         }
     }

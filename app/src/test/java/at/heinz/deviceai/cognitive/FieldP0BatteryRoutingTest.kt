@@ -22,7 +22,10 @@ class FieldP0BatteryRoutingTest {
 
     @Test fun genuineResearchAboutBatteriesStaysResearch() {
         listOf("Recherchiere aktuelle Akku-Technologie", "Suche aktuelle Infos zu Akkus von Samsung",
-            "Suche im Internet nach dem aktuellen Akkustand-Rekord", "Prüfe aktuelle Informationen zur Inflation").forEach {
+            "Suche im Internet nach dem aktuellen Akkustand-Rekord", "Prüfe aktuelle Informationen zur Inflation",
+            // Review #791: a strong web/source marker keeps device research a search.
+            "Finde im Internet Infos über das Handy Pixel 9", "Prüfe online den Akku-Test des Galaxy S25",
+            "Suche aktuelle Infos zu dem Akku von Samsung").forEach {
             assertTrue(it, PublicKnowledgeTopicRouter.isResearchRequest(it))
         }
     }

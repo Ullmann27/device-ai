@@ -28,6 +28,8 @@ internal object PublicKnowledgeTopicRouter {
      * battery tool. A named state of the owner's own device keeps the weak verb+marker form local; explicit
      * research commands ("Recherchiere …", "Suche im Internet …") are unaffected.
      */
+    // Review #791: a strong web/source marker keeps explicit public research about devices a search.
+    private val strongResearchMarkers = Regex("(?iu)\\b(?:quellen?|informationen|infos|internet|web|online|ris)\\b")
     private val ownDeviceStatus = Regex(
         "(?iu)(?<![\\p{L}])(?:(?:den|der|dem|des|das|mein\\p{L}*|dein\\p{L}*)\\s+(?:aktuellen?\\s+)?" +
             "(?:akku|batterie|wlan|speicher|handy|gerät|geraet|smartphone|bluetooth)\\p{L}*|akkustand|akkuladung|" +
@@ -74,7 +76,7 @@ internal object PublicKnowledgeTopicRouter {
         val text = normalized(message)
         return researchCommand.matches(text) ||
             (researchVerb.containsMatchIn(text) && researchMarkers.containsMatchIn(text) &&
-                !ownDeviceStatus.containsMatchIn(text))
+                (strongResearchMarkers.containsMatchIn(text) || !ownDeviceStatus.containsMatchIn(text)))
     }
 
     fun explicitTopic(message: String): String? = if (isResearchRequest(message)) topic(message) else null
