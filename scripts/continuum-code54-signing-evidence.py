@@ -41,6 +41,42 @@ REQUIRED_UNSIGNED_STEPS = {
 }
 
 
+# A single, known host-only defect may be deferred to physical Fold7 testing.
+# This never marks the native PDF test green and never waives any other case.
+PDF_CASE = ("at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest",
+            "actualProviderReadRendersAndExtractsSyntheticPdf")
+ALLOWED_SKIPS = {
+    *(("at.heinz.deviceai.chief.ChiefPatternE2ETest", n) for n in (
+        "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+        "s4b_pending_profileDiarySharedLayers",
+        "s5b_pending_textFileSkillLibraryLoadedOnDemand",
+        "s6_pending_routineReportsOnlyWhenSomethingIsNew",
+        "s7_pending_agentMessagesUrgentWakesInfoWaits",
+        "s8d_pending_limitGuardIsWiredBeforeWorkerStart")),
+    *(("at.heinz.deviceai.chief.FirstThinkingRunE2ETest", n) for n in (
+        "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+        "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+        "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+        "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+        "schritt6b_lernen_hypotheseUndTagebuchEintrag",
+        "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen")),
+    ("at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+     "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations"),
+    ("at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+     "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox"),
+    ("at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+     "actualNodeKotlinNodeTrainingParity"),
+    ("at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+     "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds"),
+    ("at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+     "trainedNodeCheckpointMatchesKotlinFeaturesAndScores"),
+}
+assert len(ALLOWED_SKIPS) == 17
+DEVICE_TEST_EXCEPTION = "DEVICE_TEST_NATIVE_PDF_EXCEPTION_VERIFIED"
+OWNER_AUTH_ID = "OWNER_CHAT_APPROVAL_2026_11_12_CODE54_PDF_DEVICE_TEST_ONLY"
+EVIDENCE_NAME = "Code54-Android-Source-QA-Receipts"
+
+
 class Rejected(ValueError):
     pass
 
@@ -71,12 +107,34 @@ def digest_file(path):
 
 
 def verify_binding(binding):
-    # The committed binding is intentionally BLOCKED. Changing this field
-    # requires a separate reviewed owner decision and a new commit.
-    require(binding.get("release_gate") == "STRICT_NATIVE_PDF_PASS",
+    gate = binding.get("release_gate")
+    require(gate in ("STRICT_NATIVE_PDF_PASS", DEVICE_TEST_EXCEPTION),
             "RELEASE_GATE_BLOCKED")
-    require(binding.get("release_scope") == "UNPUBLISHED_DRAFT_ONLY",
-            "PUBLISH_SCOPE_FORBIDDEN")
+    if gate == DEVICE_TEST_EXCEPTION:
+        require(binding.get("release_scope") == "UNPUBLISHED_FOLD7_DEVICE_TEST_ONLY",
+                "DEVICE_TEST_SCOPE_REQUIRED")
+        exception = binding.get("owner_exception") or {}
+        require(exception.get("authorization_id") == OWNER_AUTH_ID and
+                exception.get("source_sha") == SOURCE and
+                exception.get("test_class") == PDF_CASE[0] and
+                exception.get("test_name") == PDF_CASE[1] and
+                exception.get("device_pdf_test_status") == "NOT_RUN" and
+                exception.get("publication") == "FORBIDDEN" and
+                exception.get("fold7_acceptance_required") is True,
+                "OWNER_PDF_EXCEPTION_SCOPE")
+        expected_evidence = binding.get("qa_evidence") or {}
+        require(expected_evidence.get("name") == EVIDENCE_NAME and
+                type(expected_evidence.get("id")) is int and
+                expected_evidence["id"] > 0 and
+                type(expected_evidence.get("bytes")) is int and
+                1000 <= expected_evidence["bytes"] < 1_000_000_000 and
+                isinstance(expected_evidence.get("digest"), str) and
+                re.fullmatch(r"sha256:[0-9a-f]{64}",
+                             expected_evidence["digest"]) is not None,
+                "DEVICE_TEST_QA_EVIDENCE_NOT_BOUND")
+    else:
+        require(binding.get("release_scope") == "UNPUBLISHED_DRAFT_ONLY",
+                "PUBLISH_SCOPE_FORBIDDEN")
     expected = {
         "source_sha": SOURCE, "source_tree": TREE,
         "workflow_blob_sha": WORKFLOW_BLOB,
@@ -107,8 +165,15 @@ def verify_metadata(binding, source, approved, run_id, run, jobs, artifacts, com
             run.get("event") == "push" and
             run.get("path", "").split("@", 1)[0] == QA_PATH,
             "QA_SOURCE_WORKFLOW")
-    require(run.get("status") == "completed" and
-            run.get("conclusion") == "success", "STRICT_ANDROID_QA_NOT_GREEN")
+    require(run.get("status") == "completed", "QA_RUN_INCOMPLETE")
+    device_exception = binding.get("release_gate") == DEVICE_TEST_EXCEPTION
+    if device_exception:
+        # This is an explicitly *failed* host run. It is NOT a full QA PASS.
+        require(run.get("conclusion") == "failure",
+                "DEVICE_TEST_EXPECTED_FAILED_HOST_RUN")
+    else:
+        require(run.get("conclusion") == "success",
+                "STRICT_ANDROID_QA_NOT_GREEN")
     for name in ("repository", "head_repository"):
         entry = run.get(name) or {}
         require(entry.get("id") == REPOSITORY_ID and
@@ -120,14 +185,23 @@ def verify_metadata(binding, source, approved, run_id, run, jobs, artifacts, com
         matches = [x for x in jobs.get("jobs", []) if x.get("name") == name]
         require(len(matches) == 1, "QA_JOB_COUNT")
         job = matches[0]
+        expected_job = ("failure" if device_exception and name == "android-gates"
+                        else "success")
         require(job.get("id") == job_id and job.get("run_id") == RUN and
                 job.get("head_sha") == SOURCE and
                 job.get("status") == "completed" and
-                job.get("conclusion") == "success", "QA_JOB_NOT_GREEN")
-        for step_name in required_steps:
+                job.get("conclusion") == expected_job, "QA_JOB_OUTCOME")
+        required = set(required_steps)
+        if device_exception and name == "android-gates":
+            required.add("Preserve actual Android receipts")
+        for step_name in required:
             hits = [x for x in job.get("steps", []) if x.get("name") == step_name]
+            expected_step = ("failure" if device_exception and
+                             step_name == "Full unfiltered Android, native PDF strict"
+                             else "success")
             require(len(hits) == 1 and hits[0].get("status") == "completed" and
-                    hits[0].get("conclusion") == "success", "QA_REQUIRED_STEP")
+                    hits[0].get("conclusion") == expected_step,
+                    "QA_REQUIRED_STEP")
     matches = [x for x in artifacts.get("artifacts", [])
                if x.get("name") == ARTIFACT_NAME]
     require(len(matches) == 1, "QA_ARTIFACT_COUNT")
@@ -136,6 +210,25 @@ def verify_metadata(binding, source, approved, run_id, run, jobs, artifacts, com
             artifact.get("size_in_bytes") == ARTIFACT_SIZE and
             artifact.get("digest") == ARTIFACT_DIGEST and
             artifact.get("expired") is False, "QA_ARTIFACT_IDENTITY")
+    if device_exception:
+        expected_evidence = binding["qa_evidence"]
+        matches = [x for x in artifacts.get("artifacts", [])
+                   if x.get("name") == EVIDENCE_NAME]
+        require(len(matches) == 1, "QA_EVIDENCE_COUNT")
+        proof = matches[0]
+        require(proof.get("id") == expected_evidence["id"] and
+                proof.get("size_in_bytes") == expected_evidence["bytes"] and
+                proof.get("digest") == expected_evidence["digest"] and
+                proof.get("expired") is False,
+                "QA_EVIDENCE_IDENTITY")
+        evidence_origin = proof.get("workflow_run") or {}
+        require(evidence_origin.get("id") == RUN and
+                evidence_origin.get("head_sha") == SOURCE and
+                evidence_origin.get("head_branch") == QA_BRANCH and
+                evidence_origin.get("repository_id") == REPOSITORY_ID and
+                evidence_origin.get("head_repository_id") == REPOSITORY_ID,
+                "QA_EVIDENCE_ORIGIN")
+
     origin = artifact.get("workflow_run") or {}
     require(origin.get("id") == RUN and origin.get("head_sha") == SOURCE and
             origin.get("head_branch") == QA_BRANCH and
@@ -144,9 +237,116 @@ def verify_metadata(binding, source, approved, run_id, run, jobs, artifacts, com
             "QA_ARTIFACT_ORIGIN")
 
 
-def verify_archives(binding, unsigned_path, output):
+
+def verify_pdf_only_host_exception(binding, evidence_zip):
+    """Check the actual complete Gradle journal; exactly one PDF host failure."""
+    require(binding.get("release_gate") == DEVICE_TEST_EXCEPTION,
+            "PDF_EXCEPTION_NOT_APPROVED")
+    require(evidence_zip is not None and evidence_zip.is_file() and
+            not evidence_zip.is_symlink(), "QA_EVIDENCE_ZIP_MISSING")
+    expected = binding["qa_evidence"]
+    require(evidence_zip.stat().st_size == expected["bytes"] and
+            "sha256:" + digest_file(evidence_zip) == expected["digest"],
+            "QA_EVIDENCE_ZIP_DIGEST")
+    with zipfile.ZipFile(evidence_zip) as archive:
+        infos = archive.infolist()
+        names = [item.filename for item in infos]
+        require(len(names) == len(set(names)), "QA_EVIDENCE_DUPLICATE_MEMBER")
+        require(len(infos) < 10000, "QA_EVIDENCE_TOO_MANY_FILES")
+        for item in infos:
+            part = PurePosixPath(item.filename)
+            require(not part.is_absolute() and ".." not in part.parts and
+                    "\\" not in item.filename and
+                    not stat.S_ISLNK(item.external_attr >> 16) and
+                    not item.flag_bits & 1, "QA_EVIDENCE_UNSAFE_MEMBER")
+        journals = [n for n in names if n == "code54-full/junit-progress.ndjson"]
+        require(len(journals) == 1, "FULL_ANDROID_JOURNAL_MISSING")
+        info = archive.getinfo(journals[0])
+        require(1_000_000 <= info.file_size <= 60_000_000,
+                "FULL_ANDROID_JOURNAL_SIZE")
+        journal = archive.read(journals[0])
+        data = [decode_json(line) for line in journal.splitlines() if line.strip()]
+        starts = [entry for entry in data if entry.get("type") == "run_start"]
+        ends = [entry for entry in data if entry.get("type") == "suite_end"]
+        cases = [entry for entry in data if entry.get("type") == "test_result"]
+        require(len(starts) == 1 and len(ends) == 1 and
+                4_800 <= len(cases) <= 6_000, "FULL_ANDROID_INCOMPLETE")
+        start, end = starts[0], ends[0]
+        source = start.get("source") or {}
+        end_source = end.get("sourceEnd") or {}
+        require(start.get("task") == ":app:testDebugUnitTest" and
+                start.get("includePatterns") == [] and
+                start.get("excludePatterns") == [] and
+                source.get("head") == SOURCE and source.get("tree") == TREE and
+                source.get("status") == "" and
+                end_source.get("head") == SOURCE and
+                end_source.get("tree") == TREE and
+                end_source.get("status") == "" and
+                end.get("sourceUnchanged") is True,
+                "FULL_ANDROID_SOURCE_OR_FILTER")
+        props = (start.get("environment") or {}).get("projectProperties") or {}
+        require(not props.get("continuumPdfAllowMissingHostNative"),
+                "NATIVE_PDF_WAS_BYPASSED")
+        seen, failed, skipped, passed = set(), [], set(), 0
+        for entry in cases:
+            ident = (entry.get("class"), entry.get("name"))
+            require(all(isinstance(x, str) and x for x in ident) and
+                    ident not in seen, "FULL_ANDROID_DUPLICATE_OR_UNKNOWN_CASE")
+            seen.add(ident)
+            result = entry.get("result")
+            if result == "SUCCESS":
+                passed += 1
+            elif result == "SKIPPED":
+                require(ident in ALLOWED_SKIPS, "UNAPPROVED_TEST_SKIP")
+                skipped.add(ident)
+            elif result == "FAILURE":
+                require(ident == PDF_CASE, "UNRELATED_ANDROID_TEST_FAILURE")
+                failed.append(entry)
+            else:
+                raise Rejected("UNRECOGNIZED_ANDROID_TEST_RESULT")
+        require(len(failed) == 1 and skipped == ALLOWED_SKIPS and
+                end.get("tests") == len(cases) and
+                end.get("passed") == passed and
+                end.get("failed") == 1 and
+                end.get("skipped") == 17 and
+                end.get("result") == "FAILURE",
+                "PDF_EXCEPTION_NOT_EXACTLY_ONE_FAILURE")
+        errors = failed[0].get("exceptions") or []
+        detail = "\n".join(str(item.get("type", "")) + "\n" +
+                           str(item.get("message", "")) + "\n" +
+                           str(item.get("stackTrace", "")) for item in errors)
+        require("NoSuchMethodError" in detail and
+                "java.io.FileDescriptor" in detail and
+                "getOwnerId" in detail and
+                ("IoUtils" in detail or "PdfProcessor" in detail),
+                "PDF_HOST_FAILURE_FINGERPRINT")
+        # Bind independent upload metadata, not just the Gradle test log.
+        source_receipt = [n for n in names if n == "CODE54-SOURCE.txt"]
+        require(len(source_receipt) == 1 and
+                archive.getinfo(source_receipt[0]).file_size <= 4096,
+                "QA_SOURCE_RECEIPT_MISSING")
+        receipt = archive.read(source_receipt[0]).decode("utf-8")
+        require(f"source_sha={SOURCE}" in receipt and
+                f"source_tree={TREE}" in receipt and
+                "original_signer=NOT_USED" in receipt,
+                "QA_SOURCE_RECEIPT_INVALID")
+    return {
+        "mode": "UNPUBLISHED_FOLD7_DEVICE_TEST_ONLY",
+        "source_sha": SOURCE,
+        "native_pdf_host_result": "FAILURE_HOST_ONLY",
+        "native_pdf_fold7_result": "NOT_RUN",
+        "full_suite_pass": False,
+        "total": len(cases), "passed": passed, "skipped": 17, "failed": 1,
+    }
+
+
+def verify_archives(binding, unsigned_path, output, evidence_path=None):
     verify_binding(binding)
     require(not output.exists(), "OUTPUT_ALREADY_EXISTS")
+    if binding.get("release_gate") == DEVICE_TEST_EXCEPTION:
+        verify_pdf_only_host_exception(binding, evidence_path)
+    else:
+        require(evidence_path is None, "STRICT_NO_EXCEPTION_EVIDENCE")
     require(unsigned_path.is_file() and not unsigned_path.is_symlink(),
             "UNSIGNED_ARCHIVE_MISSING")
     require(unsigned_path.stat().st_size == ARTIFACT_SIZE and
@@ -204,7 +404,7 @@ def main(arguments):
         source, approved, run_id, *documents = paths
         verify_metadata(binding, source, approved, run_id,
                         *(decode_json(Path(path).read_bytes()) for path in documents))
-    elif mode == "archives" and len(paths) == 2:
+    elif mode == "archives" and len(paths) in (2, 3):
         verify_archives(binding, *(Path(path) for path in paths))
     else:
         raise Rejected("ARGUMENTS")
