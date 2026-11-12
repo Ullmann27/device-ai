@@ -1,0 +1,19 @@
+{
+  "time_utc": "2026-11-12T11:52:50.336028+00:00",
+  "tested_snapshot_commit": "8a71c46a1aeecc76ab9bb97076a6e6a39c11545b",
+  "observed_head": "8a71c46a1aeecc76ab9bb97076a6e6a39c11545b",
+  "observed_status": "M app/src/main/AndroidManifest.xml\n M app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt\n M app/src/main/java/at/heinz/deviceai/AndroidLiveWindow.kt\n M app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt\n?? app/src/main/java/at/heinz/deviceai/AndroidGpuFrameCopier.kt\n?? app/src/main/java/at/heinz/deviceai/ContinuumLiveProjectionService.kt\n?? app/src/main/java/at/heinz/deviceai/cognitive/ProjectionCropGeometry.kt",
+  "worktree_sha256": {
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "15c347e47d063df922c6e6737ca1b652650dbbec527b63e910942cea6d147e65",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveNodePort.kt": "ea4397c2170ae5d8cbb37f2c0966ffc4c995b1467eb19277806d0bfb33a606ad",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveWindow.kt": "0fedbdc5cddbbd87db0ea38dbee8942dd48cff41c1bb205a00b985274a503fad",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowSafety.kt": "510f17c80bd109687fbb77c172dae3a56db21555f571a62d6d516a32de4c41a7",
+    "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt": "27431c7f2efe3c568b00b108b994d6afc4bad48a3991cfe049961e3827d28507",
+    "app/src/main/res/xml/continuum_screen_observation.xml": "fab796715be9cc7a8050b81f62a8b15e1b9afc7286dcd245f89029adfac753e7",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "6dae0181a4e61191c3f2b125b3083f735c2d3d140216d5cc67fa16073bcf0488"
+  },
+  "note": "Read-only final inventory; WIP is not an additional test subject",
+  "android": "NOT_RUN",
+  "fold7": "NOT_RUN"
+}

@@ -1,0 +1,40 @@
+--- a/app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt
++++ b/app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt
+@@ -60,7 +60,8 @@
+         accepted == false -> EffectVerdict.NOT_DISPATCHED
+         accepted == null -> EffectVerdict.UNCLEAR_DISPATCH
+         after == null -> EffectVerdict.UNCLEAR_NO_NEW_OBSERVATION
+-        after.taskId != before.taskId || after.epoch != before.epoch || after.packageName != before.packageName ->
++        after.taskId != before.taskId || after.epoch != before.epoch || after.packageName != before.packageName ||
++            after.windowId != before.windowId ->
+             EffectVerdict.UNCLEAR_CONTEXT_CHANGED
+         after.revision <= before.revision || after.observedAtNanos <= before.observedAtNanos ->
+             EffectVerdict.UNCLEAR_NO_NEW_OBSERVATION
+@@ -104,6 +105,7 @@
+     private val entries = ArrayDeque<Entry>()
+     private val unclearFingerprints = LinkedHashSet<String>()
+     private var lastUnclearRevision = Long.MIN_VALUE
++    private var uncertaintyCapacityExhausted = false
+     private var inFlight: String? = null
+ 
+     init { require(taskId.matches(ACTION_ID) && capacity in 1..256) }
+@@ -112,7 +114,7 @@
+         require(before.taskId == taskId) { "TASK_MISMATCH" }
+         return when {
+             inFlight != null -> Admission.IN_FLIGHT
+-            fingerprint in unclearFingerprints -> Admission.BLOCKED_AFTER_UNCLEAR
++            uncertaintyCapacityExhausted || fingerprint in unclearFingerprints -> Admission.BLOCKED_AFTER_UNCLEAR
+             before.revision <= lastUnclearRevision -> Admission.NEEDS_FRESH_OBSERVATION
+             entries.any { it.fingerprint == fingerprint && it.revision == before.revision && it.digest == before.digest } ->
+                 Admission.DUPLICATE_ON_SAME_OBSERVATION
+@@ -126,8 +128,8 @@
+         entries.addLast(Entry(fingerprint, before.revision, before.digest, verdict))
+         while (entries.size > capacity) entries.removeFirst()
+         if (verdict.unclear) {
+-            if (unclearFingerprints.size >= capacity) unclearFingerprints.remove(unclearFingerprints.first())
+-            unclearFingerprints += fingerprint
++            if (unclearFingerprints.size < capacity) unclearFingerprints += fingerprint
++            else uncertaintyCapacityExhausted = true
+             lastUnclearRevision = maxOf(lastUnclearRevision, before.revision, after?.revision ?: Long.MIN_VALUE)
+         }
+     }

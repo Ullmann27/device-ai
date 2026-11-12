@@ -1,0 +1,12 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt b/app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt
+--- a/app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt
++++ b/app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt
+@@ -23,7 +23,7 @@ object CinematicWorkstationLayout {
+         val statusH = 48f * font
+         val dialogH = if (wide) 0f else 48f * font
+         val reserved = headerH + inputH + dockH + statusH + dialogH + 6f * gap
+-        val sceneH = maxOf(if (wide) 310f else 320f, viewport - reserved)
++        val sceneH = maxOf(if (wide) 310f * font else 320f, viewport - reserved)
+         val sceneTop = gap + headerH + gap + dialogH
+         val scene = Box(margin, sceneTop, right, sceneTop + sceneH)
+         val headW = minOf(room * if (wide) .48f else .88f, sceneH * .92f)

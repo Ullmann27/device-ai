@@ -1,0 +1,17 @@
+{
+  "source_commit": "bf7a52ceaccc85ecc3ac5df8ed6b7af9af33b6a6",
+  "head_before": "bf7a52ceaccc85ecc3ac5df8ed6b7af9af33b6a6",
+  "head_after": "bf7a52ceaccc85ecc3ac5df8ed6b7af9af33b6a6",
+  "test_sha256": "e2ce7023ca71747244f5dd1a80db7f19f27727503d54a044a989cb4e76f37f7b",
+  "patch_sha256": "85f12fbd283ffc9740b12b571b7c13280ac1f926d95658f25b398e544514be9a",
+  "compiler": "Kotlin K2JVMCompiler 2.0.20",
+  "compiler_sha256": "a3604bf350c8bcce27102158bbb383fa4d1814bc486aaed59f278eada51ff6ad",
+  "max_heap_mb": 512,
+  "active_processors": 1,
+  "unmodified_declarations_extracted": 6,
+  "android_gradle": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "compile_exit": 0,
+  "existing_exit": 0,
+  "review_exit": 0
+}

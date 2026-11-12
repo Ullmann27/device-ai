@@ -1,0 +1,14 @@
+{
+  "source_commit": "080d7f4df9a7b355b1edbe5f876a35bc0d834338",
+  "comparison_commit": "228b6663776cee322f306fa3726c552b761b0e01",
+  "avatar_path": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+  "avatar_sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "avatar_unchanged": true,
+  "runtime_pin_matches": true,
+  "notice_matches": true,
+  "orb_renderer_path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+  "orb_renderer_sha256": "0dd2e9a54dc901035b31407f95dc3fcc5727cdd7c1f3b369e86ac5fec2b3a5a9",
+  "orb_renderer_unchanged": true,
+  "render": "NOT_RUN",
+  "device": "NOT_RUN"
+}

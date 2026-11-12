@@ -1,0 +1,48 @@
+{
+  "source_commit": "080d7f4df9a7b355b1edbe5f876a35bc0d834338",
+  "full_source_files": [
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt",
+    "app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt",
+    "app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt"
+  ],
+  "geometry_only_source_slices": {
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt": [
+      "NavItem",
+      "railNav",
+      "bottomNav",
+      "DOCK_EXTRA_ROW_DP",
+      "bottomNavColumns",
+      "bottomNavRows",
+      "bottomNavHeight",
+      "bottomNavItemBoxes"
+    ],
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitGlassButtons.kt": [
+      "Spec",
+      "buttons",
+      "MIN_BUTTON_WIDTH_DP",
+      "columns"
+    ]
+  },
+  "boundary_fixture": "Only Icon enum identity is replaced; extracted geometry methods and lists are unchanged. Painter methods are excluded.",
+  "sha256": {
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt": "6d2418e65df6d61e300187bf1f192968a33163c71a65766bcdc02443ca37860a",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt": "034ec53a6daa0ab471bcbb0453f8524680287b1dfdaeb4d76cb16254113b1a15",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt": "7a31a7298a7dabc156ab17fc85dca63bddd67ae341f8013bdce946c3ae9e583e",
+    "app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt": "41dbcb47691375c27ba831e6ece494b8c54b26fd5c2a268770689b908f5b4945",
+    "app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt": "bfd57a2d2c262baae51a1e517b9baf102810d223615da51e5c6376813499b8a3",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt": "439274446b93897b3e9bf009730b90e07e5cc62189a4fdd25ed4bcab6733a1fc",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitGlassButtons.kt": "01befd33ec60e15ff7df37480823da3a477e135e671ec3a46149eeac646fb19a"
+  },
+  "probe_sha256": "78c9eeed3842b7e2a69257924c44fb03891aa8b999919a623da96f2d0825f8d5",
+  "runner_sha256": "7f78c5b6890bbcfdba33abf216093b63d1a479965c4a5de7dc40f5a8d0f6b992",
+  "geometry_slice_sha256": "bbeb99bdc4063a2d8f2656deb7a3a02e0a5b9ba3ef3e8748e5929a599b270e79",
+  "limitations": [
+    "No Android View dispatch",
+    "No rendering",
+    "No Filament",
+    "No emulator",
+    "No physical Fold7"
+  ]
+}

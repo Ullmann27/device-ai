@@ -1,0 +1,27 @@
+JUnit version 4.13.2
+.E....E.E
+Time: 0.067
+There were 3 failures:
+1) unrelatedBadgeChangeDoesNotConfirmScroll(at.heinz.deviceai.cognitive.LiveSupportRegressionTest)
+java.lang.AssertionError: Unrelated badge changed; no scroll evidence
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.LiveSupportRegressionTest.unrelatedBadgeChangeDoesNotConfirmScroll(LiveSupportRegressionTest.kt:33)
+2) uncertainActionNeverBecomesRetryableThroughEviction(at.heinz.deviceai.cognitive.LiveSupportRegressionTest)
+java.lang.AssertionError: Uncertain action forgotten by eviction. Actual: ALLOWED
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failEquals(Assert.java:187)
+	at org.junit.Assert.assertNotEquals(Assert.java:163)
+	at at.heinz.deviceai.cognitive.LiveSupportRegressionTest.uncertainActionNeverBecomesRetryableThroughEviction(LiveSupportRegressionTest.kt:50)
+3) anotherWindowDoesNotConfirmSameTaskAction(at.heinz.deviceai.cognitive.LiveSupportRegressionTest)
+java.lang.AssertionError: expected:<UNCLEAR_CONTEXT_CHANGED> but was:<CONFIRMED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.LiveSupportRegressionTest.anotherWindowDoesNotConfirmSameTaskAction(LiveSupportRegressionTest.kt:39)
+
+FAILURES!!!
+Tests run: 6,  Failures: 3
+

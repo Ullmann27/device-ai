@@ -1,0 +1,147 @@
+{
+  "started_at_utc": "2026-11-12T11:51:11.701901+00:00",
+  "source_head_before": "8a71c46a1aeecc76ab9bb97076a6e6a39c11545b",
+  "source_branch": "work/astra55-live-20261112",
+  "source_status_before": "M app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt\n M app/src/main/java/at/heinz/deviceai/AndroidLiveWindow.kt\n M app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt\n?? app/src/main/java/at/heinz/deviceai/AndroidGpuFrameCopier.kt\n?? app/src/main/java/at/heinz/deviceai/cognitive/ProjectionCropGeometry.kt",
+  "snapshot_origin": "git:8a71c46a1aeecc76ab9bb97076a6e6a39c11545b",
+  "boundary": "Pure Kotlin copied production classes; no Android/device test",
+  "fold7": "NOT_RUN",
+  "gradle": "NOT_RUN",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": {
+      "sha256_before_copy": "291f5f48d43f7303d79984fc215529d7be211f3a5a97867d7efee87be6292356",
+      "sha256_snapshot": "291f5f48d43f7303d79984fc215529d7be211f3a5a97867d7efee87be6292356",
+      "sha256_after_copy": "291f5f48d43f7303d79984fc215529d7be211f3a5a97867d7efee87be6292356",
+      "worktree_sha256_before": "6dae0181a4e61191c3f2b125b3083f735c2d3d140216d5cc67fa16073bcf0488",
+      "sha256_after_run": "291f5f48d43f7303d79984fc215529d7be211f3a5a97867d7efee87be6292356",
+      "worktree_sha256_after": "6dae0181a4e61191c3f2b125b3083f735c2d3d140216d5cc67fa16073bcf0488"
+    },
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": {
+      "sha256_before_copy": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5",
+      "sha256_snapshot": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5",
+      "sha256_after_copy": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5",
+      "worktree_sha256_before": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5",
+      "sha256_after_run": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5",
+      "worktree_sha256_after": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5"
+    },
+    "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt": {
+      "sha256_before_copy": "02ecfcc3998a2999df8efd8bbd27ee2a8fb20ea810ea0ce6c7e5d8bce7d63d9d",
+      "sha256_snapshot": "02ecfcc3998a2999df8efd8bbd27ee2a8fb20ea810ea0ce6c7e5d8bce7d63d9d",
+      "sha256_after_copy": "02ecfcc3998a2999df8efd8bbd27ee2a8fb20ea810ea0ce6c7e5d8bce7d63d9d",
+      "worktree_sha256_before": "02ecfcc3998a2999df8efd8bbd27ee2a8fb20ea810ea0ce6c7e5d8bce7d63d9d",
+      "sha256_after_run": "02ecfcc3998a2999df8efd8bbd27ee2a8fb20ea810ea0ce6c7e5d8bce7d63d9d",
+      "worktree_sha256_after": "02ecfcc3998a2999df8efd8bbd27ee2a8fb20ea810ea0ce6c7e5d8bce7d63d9d"
+    },
+    "app/src/main/java/at/heinz/deviceai/AgentProtocol.kt": {
+      "sha256_before_copy": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+      "sha256_snapshot": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+      "sha256_after_copy": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+      "worktree_sha256_before": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+      "sha256_after_run": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+      "worktree_sha256_after": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20"
+    },
+    "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt": {
+      "sha256_before_copy": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+      "sha256_snapshot": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+      "sha256_after_copy": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+      "worktree_sha256_before": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+      "sha256_after_run": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+      "worktree_sha256_after": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df"
+    },
+    "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt": {
+      "sha256_before_copy": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+      "sha256_snapshot": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+      "sha256_after_copy": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+      "worktree_sha256_before": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+      "sha256_after_run": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+      "worktree_sha256_after": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1"
+    },
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerFramesTest.kt": {
+      "sha256_before_copy": "ae686cfdd5bb8ce6caf9ed31aa76cf400782a18469ca91fb1d8decc78c887285",
+      "sha256_snapshot": "ae686cfdd5bb8ce6caf9ed31aa76cf400782a18469ca91fb1d8decc78c887285",
+      "sha256_after_copy": "ae686cfdd5bb8ce6caf9ed31aa76cf400782a18469ca91fb1d8decc78c887285",
+      "worktree_sha256_before": "ae686cfdd5bb8ce6caf9ed31aa76cf400782a18469ca91fb1d8decc78c887285",
+      "sha256_after_run": "ae686cfdd5bb8ce6caf9ed31aa76cf400782a18469ca91fb1d8decc78c887285",
+      "worktree_sha256_after": "ae686cfdd5bb8ce6caf9ed31aa76cf400782a18469ca91fb1d8decc78c887285"
+    },
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerActionsTest.kt": {
+      "sha256_before_copy": "68183f4629a429b1eb3031fde0125e36b0e1bfd81454ec91b63a5f8b8647027b",
+      "sha256_snapshot": "68183f4629a429b1eb3031fde0125e36b0e1bfd81454ec91b63a5f8b8647027b",
+      "sha256_after_copy": "68183f4629a429b1eb3031fde0125e36b0e1bfd81454ec91b63a5f8b8647027b",
+      "worktree_sha256_before": "68183f4629a429b1eb3031fde0125e36b0e1bfd81454ec91b63a5f8b8647027b",
+      "sha256_after_run": "68183f4629a429b1eb3031fde0125e36b0e1bfd81454ec91b63a5f8b8647027b",
+      "worktree_sha256_after": "68183f4629a429b1eb3031fde0125e36b0e1bfd81454ec91b63a5f8b8647027b"
+    },
+    "app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt": {
+      "sha256_before_copy": "5489735afa3bf7e805b855dfc5276161ebda1a1f8da678ac1d41b0ad210a70a7",
+      "sha256_snapshot": "5489735afa3bf7e805b855dfc5276161ebda1a1f8da678ac1d41b0ad210a70a7",
+      "sha256_after_copy": "5489735afa3bf7e805b855dfc5276161ebda1a1f8da678ac1d41b0ad210a70a7",
+      "worktree_sha256_before": "5489735afa3bf7e805b855dfc5276161ebda1a1f8da678ac1d41b0ad210a70a7",
+      "sha256_after_run": "5489735afa3bf7e805b855dfc5276161ebda1a1f8da678ac1d41b0ad210a70a7",
+      "worktree_sha256_after": "5489735afa3bf7e805b855dfc5276161ebda1a1f8da678ac1d41b0ad210a70a7"
+    },
+    "app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt": {
+      "sha256_before_copy": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2",
+      "extract_sha256": "307f70238815e66da31b91c5c2da6dd71942386c270b1cd63275f6618fb42f00",
+      "sha256_after_copy": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2",
+      "compiled_excerpt": "Risk",
+      "worktree_sha256_before": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2",
+      "sha256_after_run": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2",
+      "worktree_sha256_after": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2"
+    },
+    "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt": {
+      "sha256_before_copy": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f",
+      "extract_sha256": "a472c8dd3a62ae6193fdfab0ce9494ffcd7c7cee5002d09ff07e4e44f1e2bdb6",
+      "sha256_after_copy": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f",
+      "compiled_excerpt": "ToolExecutionStatus",
+      "worktree_sha256_before": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f",
+      "sha256_after_run": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f",
+      "worktree_sha256_after": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f"
+    }
+  },
+  "dependencies": {
+    "kotlin-compiler-embeddable-2.0.20.jar": "a3604bf350c8bcce27102158bbb383fa4d1814bc486aaed59f278eada51ff6ad",
+    "kotlin-stdlib-2.0.20.jar": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006",
+    "kotlin-script-runtime-2.0.20.jar": "fe97002a6798f7207564648919d6eeccfb338b95dc04b48886d856655bc64a4e",
+    "kotlin-reflect-2.0.20.jar": "18f451e6b4b7bd1d1f9d60849c3cbf160e115302f97a2008c190d505c439c670",
+    "trove4j-1.0.20200330.jar": "c5fd725bffab51846bf3c77db1383c60aaaebfe1b7fe2f00d23fe1b7df0a439d",
+    "annotations-24.0.1.jar": "61666dbce7e42e6c85b43c04fcfb8293a21dcb55b3c80e869270ce42c01a6b35",
+    "kotlinx-coroutines-core-jvm-1.6.4.jar": "c24c8bb27bb320c4a93871501a7e5e0c61607638907b197aef675513d4c820be",
+    "junit-4.13.2.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "hamcrest-core-1.3.jar": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+  },
+  "support_script_sha256": "77ee363adab379174ca94dd1986ea17a1f6f937507f66f511bc2734ab90084d2",
+  "suite": "focused",
+  "neighbors": true,
+  "tests": {
+    "ReviewTestRunner.kt": "785d8b42fa7e1e918dc6cee016c263dc2ea4a0756fd396adbe427f68d8e0f180",
+    "LiveSupportRegressionTest.kt": "34b95b7a34767039e9e7c0b88ae64a6df51e04a84495ab53c4025c64f9579dd7"
+  },
+  "patch_sha256": "5a8d63b0b7232592cf7d8d3c2df589b6391fe1a6e5dbad095121742fb511d08a",
+  "patched_sources": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "291f5f48d43f7303d79984fc215529d7be211f3a5a97867d7efee87be6292356",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "de97bfc174bd60bef5070d757cb6b44215af1865cd548fef0b70490235df1ee6",
+    "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt": "02ecfcc3998a2999df8efd8bbd27ee2a8fb20ea810ea0ce6c7e5d8bce7d63d9d",
+    "app/src/main/java/at/heinz/deviceai/AgentProtocol.kt": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+    "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+    "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerFramesTest.kt": "ae686cfdd5bb8ce6caf9ed31aa76cf400782a18469ca91fb1d8decc78c887285",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerActionsTest.kt": "68183f4629a429b1eb3031fde0125e36b0e1bfd81454ec91b63a5f8b8647027b",
+    "app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt": "5489735afa3bf7e805b855dfc5276161ebda1a1f8da678ac1d41b0ad210a70a7"
+  },
+  "compile_exit": 0,
+  "selectors": [
+    "at.heinz.deviceai.cognitive.LiveSupportRegressionTest#anotherWindowDoesNotConfirmSameTaskAction",
+    "at.heinz.deviceai.cognitive.LiveSupportRegressionTest#uncertainActionNeverBecomesRetryableThroughEviction",
+    "at.heinz.deviceai.cognitive.LiveSupportRegressionTest#secureEvidenceStillCoversRateLimitedFrame",
+    "at.heinz.deviceai.cognitive.LiveSupportRegressionTest#pauseDoesNotForgetSessionTimestamp",
+    "at.heinz.deviceai.cognitive.LiveSupportRegressionTest#stopRetainsLeasedFrameUntilExactOnceRelease",
+    "at.heinz.deviceai.cognitive.LiveComputerFramesTest",
+    "at.heinz.deviceai.cognitive.LiveComputerActionsTest",
+    "at.heinz.deviceai.cognitive.VerifiedNodeClickTest"
+  ],
+  "junit_exit": 0,
+  "open_scroll_exit": 1,
+  "source_head_after": "8a71c46a1aeecc76ab9bb97076a6e6a39c11545b",
+  "finished_at_utc": "2026-11-12T11:51:20.671024+00:00"
+}

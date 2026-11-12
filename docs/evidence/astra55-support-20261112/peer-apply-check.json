@@ -1,0 +1,36 @@
+{
+  "timestamp_utc": "2026-11-12T11:49:55.808886+00:00",
+  "read_only": true,
+  "checks": [
+    {
+      "lane": "live",
+      "head": "8a71c46a1aeecc76ab9bb97076a6e6a39c11545b",
+      "file": "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt",
+      "target_hash_before": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5",
+      "target_hash_after": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5",
+      "apply_check_exit": 0,
+      "output": "",
+      "patch_hash": "5a8d63b0b7232592cf7d8d3c2df589b6391fe1a6e5dbad095121742fb511d08a"
+    },
+    {
+      "lane": "workflow",
+      "head": "bf7a52ceaccc85ecc3ac5df8ed6b7af9af33b6a6",
+      "file": "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt",
+      "target_hash_before": "b75237b3dad8fea47f2595160681674c658bbca57d1473412804608cb69388e5",
+      "target_hash_after": "b75237b3dad8fea47f2595160681674c658bbca57d1473412804608cb69388e5",
+      "apply_check_exit": 0,
+      "output": "",
+      "patch_hash": "85f12fbd283ffc9740b12b571b7c13280ac1f926d95658f25b398e544514be9a"
+    },
+    {
+      "lane": "scene",
+      "head": "080d7f4df9a7b355b1edbe5f876a35bc0d834338",
+      "file": "app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt",
+      "target_hash_before": "41dbcb47691375c27ba831e6ece494b8c54b26fd5c2a268770689b908f5b4945",
+      "target_hash_after": "41dbcb47691375c27ba831e6ece494b8c54b26fd5c2a268770689b908f5b4945",
+      "apply_check_exit": 0,
+      "output": "",
+      "patch_hash": "31dcdea0eadc1fe7f1618e5bc95cb2630abbe68690f838be7659e867f8f408dd"
+    }
+  ]
+}

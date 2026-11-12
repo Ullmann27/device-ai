@@ -1,0 +1,28 @@
+{
+  "checked_at_utc": "2026-11-12T11:49:09.007894+00:00",
+  "integration_head_before": "c2079299b0f04e523196bb08cca1e64a9e527828",
+  "integration_head_after": "c2079299b0f04e523196bb08cca1e64a9e527828",
+  "operation": "git apply --check only, no production edits",
+  "results": [
+    {
+      "lane": "live",
+      "patch_sha256": "5a8d63b0b7232592cf7d8d3c2df589b6391fe1a6e5dbad095121742fb511d08a",
+      "apply_check_exit": 0,
+      "output": "",
+      "target_before_sha256": "8e231aced849184439853fb2b9ca49738e18241717f789da462fe7cd7e92ad79",
+      "target_after_sha256": "8e231aced849184439853fb2b9ca49738e18241717f789da462fe7cd7e92ad79",
+      "source_unmodified": true
+    },
+    {
+      "lane": "workflow",
+      "patch_sha256": "85f12fbd283ffc9740b12b571b7c13280ac1f926d95658f25b398e544514be9a",
+      "apply_check_exit": 0,
+      "output": "",
+      "target_before_sha256": "b75237b3dad8fea47f2595160681674c658bbca57d1473412804608cb69388e5",
+      "target_after_sha256": "b75237b3dad8fea47f2595160681674c658bbca57d1473412804608cb69388e5",
+      "source_unmodified": true
+    }
+  ],
+  "android_gradle": "NOT_RUN",
+  "device": "NOT_RUN"
+}

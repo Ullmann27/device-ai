@@ -1,0 +1,10 @@
+{
+  "source_commit": "080d7f4df9a7b355b1edbe5f876a35bc0d834338",
+  "compiler": "K2JVMCompiler 2.0.20, max heap 512 MiB",
+  "compile_exit": 0,
+  "checks": "FAIL",
+  "render": "NOT_RUN",
+  "device": "NOT_RUN",
+  "run_exit": 1,
+  "observations_sha256": "64d54f5c685e33004f92cfeaee0cbc15c9bf82c177776c80946948e847c9ea85"
+}
