@@ -1,4 +1,4 @@
-name: "Continuum Code52/53 — Originalsignierung als unveröffentlichter Entwurf"
+name: "Continuum Code52/53/54 — Originalsignierung als unveröffentlichter Entwurf"
 
 # Code52 registration requires explicit owner review and protected branch activation.
 # Manual owner-only signing of a separately SHA-verified Code52 QA artifact:
@@ -11,11 +11,11 @@ on:
   workflow_dispatch:
     inputs:
       source_sha:
-        description: "Exakter Code52-Quellcommit oder fest gebundene Code53-Quelle 050a57cb"
+        description: "Exakter Code52-Quellcommit oder fest gebundene Code53/Code54-Quelle"
         required: true
         type: string
       qa_run_id:
-        description: "Erfolgreicher QA-Lauf; Code53 ausschließlich gebundener Lauf 42985335421"
+        description: "Exakter QA-Lauf; Code53/54 nur nach gebundenem Freigabe-Gate"
         required: true
         type: string
       owner_approved_sha:
