@@ -119,4 +119,14 @@ class OwnerDeviceRequestSafetyTest {
         }
         assertFalse(OwnerDeviceRequestSafety.inspect("Was könnte ich löschen?").blocked)
     }
+
+    @Test fun anImprovementsClauseWithoutAMutationVerbNeverThrowsAndStaysAChange() {
+        // Review #788: "Verbesserungen" is not a mutation verb, so the proposal branch saw an empty verb list.
+        listOf("Mach alle Verbesserungen, welche man machen könnte",
+            "Mach alle Verbesserungen, welche ich machen kann").forEach {
+            val assessment = OwnerDeviceRequestSafety.inspect(it)
+            assertTrue(it, assessment.blocked)
+            assertFalse(it, OwnerDeviceRequestSafety.Category.PROPOSAL in assessment.categories)
+        }
+    }
 }
