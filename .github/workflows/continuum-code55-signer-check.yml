@@ -32,6 +32,9 @@ jobs:
           from pathlib import Path
           s=Path('scripts/continuum-code55-original-signer.sh').read_text()
           y=Path('.github/workflows/continuum-code55-original-sign.yml').read_text()
+          legacy=Path('scripts/continuum-code52-github-signer.sh').read_text()
+          assert 'exec bash scripts/continuum-code55-original-signer.sh "$mode"' in legacy
+          assert 'head_branch=="integrate/code55-apk-fable-20261112"' in legacy
           assert 'continuum-original-signing' in s and 'continuum-original-signing' in y
           assert 'OWNER_APPROVED_SHA' in s and 'FULL_ANDROID_GATE' in s
           assert 'NATIVE_PDF_NOT_PASS' in s and 'ANDROID_CASES_NOT_FULL_GREEN' in s
@@ -47,6 +50,13 @@ jobs:
           assert 'ANDROID_CASES_NOT_FULL_GREEN' in embedded
           print('CODE55_SIGNER_STATIC_GATE_PASS_NO_SIGNING')
           PY
+      - name: Existing Code52/53/54 static compatibility tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test .github/continuum/code52-owner-signing-contract.test.mjs
+          python3 -I .github/continuum/code53-owner-signing-contract.test.py
+          python3 -I .github/continuum/code54-owner-signing-contract.test.py
       - name: Denied wrong owner SHA without secrets or network
         shell: bash
         run: |
