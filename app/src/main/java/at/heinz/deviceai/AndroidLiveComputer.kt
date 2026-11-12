@@ -124,7 +124,14 @@ internal object AndroidLiveComputer {
     }
     internal fun pauseProjection(sessionId: Long, reason: LiveMonitorReason) = frames.pause(reason, sessionId)
     internal fun wantsProjectionFrame(sessionId: Long) = frames.wantsFrame(sessionId)
-    internal fun offerProjection(meta: LiveFrameMeta, frame: AndroidLiveFrame) = frames.offer(meta, frame)
+    internal fun offerProjection(meta: LiveFrameMeta, frame: AndroidLiveFrame): LiveFrameOffer {
+        // Producer records local acquisition nanoTime.
+        val deliveredAtNanos = System.nanoTime()
+        val elapsedMillis = if (meta.frameTimeNanos <= 0 || deliveredAtNanos < meta.frameTimeNanos ||
+            meta.captureAgeMillis < 0) Long.MAX_VALUE else
+            (deliveredAtNanos - meta.frameTimeNanos) / 1_000_000L
+        return frames.offer(meta.copy(captureAgeMillis = maxOf(meta.captureAgeMillis, elapsedMillis)), frame)
+    }
 
     internal fun observationRevoked(service: ContinuumScreenObservationService) {
         if (active.get()?.access?.service === service) stop(LiveMonitorReason.PERMISSION_REVOKED)

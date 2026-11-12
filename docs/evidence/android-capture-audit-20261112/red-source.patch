@@ -1,0 +1,99 @@
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt
+index 6210425876..641ffb0373 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt
+@@ -10,11 +10,16 @@ import android.content.Intent
+ import android.content.ContextWrapper
+ import android.content.ComponentName
+ import android.content.pm.ServiceInfo
++import android.graphics.ColorSpace
++import android.hardware.HardwareBuffer
+ import android.hardware.display.VirtualDisplay
+ import android.media.projection.MediaProjection
+ import android.media.projection.MediaProjectionManager
+ import android.view.Surface
+ import at.heinz.deviceai.cognitive.LiveMonitorState
++import at.heinz.deviceai.cognitive.LiveFrameMeta
++import at.heinz.deviceai.cognitive.LiveFrameOffer
++import at.heinz.deviceai.cognitive.LiveMonitorReason
+ import org.junit.After
+ import org.junit.Assert.*
+ import org.junit.Before
+@@ -171,6 +176,77 @@ class ContinuumLiveProjectionServiceUiTest {
+         assertEquals(requested, stop.getLongExtra(ContinuumLiveProjectionService.SESSION, -1))
+     }
+ 
++    private fun offerFrame(session: Long, acquiredAtNanos: Long, captureAgeMillis: Long = 0):
++        Pair<LiveFrameOffer, HardwareBuffer> {
++        val buffer = HardwareBuffer.create(8, 8, HardwareBuffer.RGBA_8888, 1,
++            HardwareBuffer.USAGE_GPU_SAMPLED_IMAGE)
++        val frame = AndroidLiveFrame(buffer, ColorSpace.get(ColorSpace.Named.SRGB))
++        val meta = LiveFrameMeta(session, acquiredAtNanos, 8, 8, "com.whatsapp", 42,
++            ownWindowVisible = false, observationRevision = ScreenObservationBus.revision(),
++            captureAgeMillis = captureAgeMillis)
++        return AndroidLiveComputer.offerProjection(meta, frame) to buffer
++    }
++
++    @Test fun projectionDeliveryDoesNotRenewFrameFreshness() {
++        val intent = queuedCapture("delayed-delivery")
++        val session = intent.getLongExtra(ContinuumLiveProjectionService.SESSION, 0)
++        val (offer, _) = offerFrame(session, System.nanoTime() - 700_000_000L)
++        assertTrue(offer is LiveFrameOffer.Accepted)
++        val delivered = AndroidLiveComputer.feed.status(System.nanoTime())
++        assertTrue("Delivery delay belongs to frame age", delivered.meta!!.captureAgeMillis >= 700)
++        assertEquals(LiveMonitorState.PAUSED,
++            AndroidLiveComputer.feed.status(System.nanoTime() + 900_000_000L).state)
++    }
++
++    @Test fun alreadyStaleProjectionDeliveryReleasesBuffer() {
++        val intent = queuedCapture("stale-delivery")
++        val session = intent.getLongExtra(ContinuumLiveProjectionService.SESSION, 0)
++        val (offer, buffer) = offerFrame(session, System.nanoTime() - 1_501_000_000L)
++        assertTrue(offer is LiveFrameOffer.Refused)
++        assertTrue(buffer.isClosed)
++        assertNull(AndroidLiveComputer.feed.acquire())
++    }
++
++    @Test fun projectionDeliveryCannotReduceExistingCaptureAge() {
++        val intent = queuedCapture("older-capture")
++        val session = intent.getLongExtra(ContinuumLiveProjectionService.SESSION, 0)
++        val (offer, _) = offerFrame(session, System.nanoTime() - 100_000_000L, 900)
++        assertTrue(offer is LiveFrameOffer.Accepted)
++        assertTrue(AndroidLiveComputer.feed.status(System.nanoTime()).meta!!.captureAgeMillis >= 900)
++    }
++
++    @Test fun futureProjectionAcquisitionReleasesBuffer() {
++        val intent = queuedCapture("future-acquisition")
++        val session = intent.getLongExtra(ContinuumLiveProjectionService.SESSION, 0)
++        val (offer, buffer) = offerFrame(session, System.nanoTime() + 10_000_000_000L)
++        assertTrue(offer is LiveFrameOffer.Refused)
++        assertTrue(buffer.isClosed)
++    }
++
++    @Test fun observationInterruptEndsProjectionAndReleasesFrame() {
++        val intent = queuedCapture("observation-revoked")
++        val session = intent.getLongExtra(ContinuumLiveProjectionService.SESSION, 0)
++        val (_, buffer) = offerFrame(session, System.nanoTime())
++        observation.onInterrupt()
++        assertNull(AndroidLiveComputer.projectionAccess(session))
++        assertTrue(buffer.isClosed)
++        val status = AndroidLiveComputer.feed.status(System.nanoTime())
++        assertEquals(LiveMonitorState.ENDED, status.state)
++        assertEquals(LiveMonitorReason.PERMISSION_REVOKED, status.reason)
++    }
++
++    @Test fun projectionCallbackRevocationEndsSessionAndForeground() {
++        val intent = queuedCapture("projection-revoked")
++        val session = intent.getLongExtra(ContinuumLiveProjectionService.SESSION, 0)
++        ReflectionHelpers.setField(service, "sessionId", session)
++        val (_, buffer) = offerFrame(session, System.nanoTime())
++        ReflectionHelpers.getField<MediaProjection.Callback>(service, "callback").onStop()
++        assertNull(AndroidLiveComputer.projectionAccess(session))
++        assertTrue(buffer.isClosed)
++        assertTrue(shadowOf(service).isStoppedBySelf)
++        assertTrue(ServiceShadow.calls.contains("stopForeground:${Service.STOP_FOREGROUND_REMOVE}"))
++    }
++
+     @Test
+     fun staleStartPromotesBeforeStoppingWithoutProjection() {
+         val intent = Intent(application, ContinuumLiveProjectionService::class.java)

@@ -97,7 +97,7 @@ internal class OwnerComputerWorkflow(
                 ?: return ask("Welchen Text soll ich als Entwurf eintragen?")
             if (compose.textDigest == null) return pause("Der vorhandene Inhalt des Nachrichtenfeldes ist nicht prüfbar. Kein Text überschrieben.")
             if (compose.textDigest != liveSha256("") && compose.textDigest != liveSha256(draft)) {
-                return ask("Im Nachrichtenfeld steht bereits ein anderer Entwurf. Soll dieser erhalten bleiben oder ersetzt werden?")
+                return ask("Im Nachrichtenfeld steht bereits ein anderer Entwurf. Bitte prüfe oder ändere ihn direkt in der App und starte den Auftrag anschließend erneut.")
             }
             if (compose.textDigest != liveSha256(draft)) frame = setText(frame, compose, draft)
             val confirmed = frame.nodes.filter(LiveComposeSemantics::isField).singleOrNull()
