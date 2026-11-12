@@ -61,6 +61,7 @@ jobs:
             -Pkotlin.compiler.execution.strategy=in-process \
             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true \
+            -PcontinuumUiWidgetTests=true \
             -I .github/continuum/code55-voice-test-filter.init.gradle \
             :app:testDebugUnitTest
           python3 - <<'PY'
