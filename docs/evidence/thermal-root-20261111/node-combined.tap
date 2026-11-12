@@ -1,0 +1,42 @@
+✔ Face glow reuses original glTF emission (2.850554ms)
+✔ Face glow remains a safe optional layer (0.733891ms)
+✔ window accent contract rejects lost fallback or closed-window tint (4.878157ms)
+✔ original avatar bridge survives cinema branch integration (6.668734ms)
+✔ real PCM anticipation and existing Filament light remain wired (0.752333ms)
+✔ thermal and document protections must survive visual branch merges (0.475589ms)
+✔ real drawn Canvas frames are counted separately from animation callbacks (1.567741ms)
+✔ Fold7 owner can run a 1.6s diagnostic without changing animation preferences (1.653887ms)
+✔ single hologram frame callback advances phase independently of Canvas onDraw (2.063234ms)
+✔ Android window visibility and focus can restore orbital clock without cached view visibility (0.302467ms)
+✔ foreground lifecycle explicitly pauses, cancels, and resumes hologram while low budgets preserve only essential motion (0.712965ms)
+✔ local model prompt never reads a profile-wide old dialogue after session change (0.173986ms)
+✔ each AgentActivity chat turn captures only its session-scoped local-model topic plus bounded state telegram (1.091546ms)
+✔ living hologram schedules subsequent visible frames, preserves essential avatar motion and stops callbacks on detach (8.02552ms)
+✔ orbital rings use visible phase movement, not the old near-static factor (0.211613ms)
+✔ header and the six orbital text labels are fitted to their real drawing boxes (0.149331ms)
+✔ battery, app CPU, RAM and GPU measurements remain honestly distinguished (0.632553ms)
+✔ CCC1 integrated in same owner-app source without changing private app identity (1.811976ms)
+✔ existing on-device learning state and protected independent training are never reset by launch (0.291992ms)
+✔ Gemma restoration is scheduled once on Activity creation, not on every onResume (2.070083ms)
+✔ restore is not a separate worker, timer or background service (0.42123ms)
+✔ only owner-selected original SHA and version can be restored (0.174432ms)
+✔ restart cannot start a second engine while loading, generating or unloading (0.279393ms)
+✔ owner manual unload disables restoration immediately (0.218301ms)
+✔ a verified successful original load alone enables future restore (0.219619ms)
+✔ a failed load stops repeated startup retries (0.265476ms)
+✔ process-wide loaded Gemma is intentionally retained at Activity finish (0.42479ms)
+✔ a cold restart verifies the stored file SHA-256 before initializing the engine (0.67367ms)
+✔ cold-load integrity contract rejects bypassed verification and duplicate hashing (11.996691ms)
+✔ successful native unload clears model identity and its thread diagnostic together (0.372276ms)
+✔ the old model download is never required on restart (0.562185ms)
+✔ a fresh restoration does not invent a successful local answer (0.504659ms)
+✔ original 3.66 GB model import remains separate and SHA-verified (0.966913ms)
+✔ regression suite covers correct original, opt-out, foreign SHA, busy engine (0.702905ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1446.762892

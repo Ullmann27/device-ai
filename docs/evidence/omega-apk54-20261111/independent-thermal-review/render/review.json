@@ -1,0 +1,307 @@
+{
+  "schema": 1,
+  "review_date": "2026-11-11",
+  "review_status": "BOUNDED_SOURCE_REVIEW_OK",
+  "reviewed_diff": {
+    "base": "9a6de6c4547feb62c9822520596e786a852ed83b",
+    "candidate": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39"
+  },
+  "current_candidate": "8decff576dc05ed3cdb0b8ded680b6098a1d8537",
+  "review_scope": [
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisEnergyFlows.kt",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisHeadAura.kt",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisLightStreamReuseTest.kt",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisLivingSceneTest.kt",
+    "tools/thermal-render/FlowWorkProbe.kt",
+    "tools/thermal-render/run.py",
+    "docs/research/omega/THERMAL-RENDER-HANDOFF-20261111.md"
+  ],
+  "source_hashes": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisEnergyFlows.kt",
+      "reviewed_sha256": "8303d3709e293bb2b4f0bb2a2bde1ec08f48132233f2ba294e076c96199f31de",
+      "current_sha256": "8303d3709e293bb2b4f0bb2a2bde1ec08f48132233f2ba294e076c96199f31de",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "cd9d78e5ac2cd04c78e89c2be63e0603e749b9669cdc562744a6de0c77ed465c",
+      "baseline_matches_reviewed": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisHeadAura.kt",
+      "reviewed_sha256": "89a4991fed11057832f44ed1f80e45b8e52ca4b2a56f8eabeaa41574a701a5d9",
+      "current_sha256": "89a4991fed11057832f44ed1f80e45b8e52ca4b2a56f8eabeaa41574a701a5d9",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "3fc823a4a0da91632902dfe60386214016ecfa19176fd93110ea34ea2d3513b5",
+      "baseline_matches_reviewed": false
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisLightStreamReuseTest.kt",
+      "reviewed_sha256": "c92259c037e05d1336fef9239b7cf5651c47ada1ddce13b44517818dce85999e",
+      "current_sha256": "c92259c037e05d1336fef9239b7cf5651c47ada1ddce13b44517818dce85999e",
+      "current_matches_reviewed": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisLivingSceneTest.kt",
+      "reviewed_sha256": "dcdb3fe03c8f5a8cccea52575393aeb749f3d914f445a16db6b0544519783445",
+      "current_sha256": "dcdb3fe03c8f5a8cccea52575393aeb749f3d914f445a16db6b0544519783445",
+      "current_matches_reviewed": true
+    },
+    {
+      "path": "tools/thermal-render/FlowWorkProbe.kt",
+      "reviewed_sha256": "e908c8f63c11c7c89e3127e5dbfd1dfcefbec7901623efc0c647f3ae3aa67424",
+      "current_sha256": "e908c8f63c11c7c89e3127e5dbfd1dfcefbec7901623efc0c647f3ae3aa67424",
+      "current_matches_reviewed": true
+    },
+    {
+      "path": "tools/thermal-render/run.py",
+      "reviewed_sha256": "e5dc4ecf0e047346d10f176bde095f734d6d152b4738379f31f9143cdbf13d4a",
+      "current_sha256": "e5dc4ecf0e047346d10f176bde095f734d6d152b4738379f31f9143cdbf13d4a",
+      "current_matches_reviewed": true
+    },
+    {
+      "path": "docs/research/omega/THERMAL-RENDER-HANDOFF-20261111.md",
+      "reviewed_sha256": "d21aedc1a4d9401bb84a6409612aa7054f5374480349a6331d17c8cdb89ca51c",
+      "current_sha256": "d21aedc1a4d9401bb84a6409612aa7054f5374480349a6331d17c8cdb89ca51c",
+      "current_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "reviewed_sha256": "3cef9cc211471ee3ad99b211bc70dbff9d7d76db02893dbe207b5a9662401b1a",
+      "current_sha256": "3cef9cc211471ee3ad99b211bc70dbff9d7d76db02893dbe207b5a9662401b1a",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "3cef9cc211471ee3ad99b211bc70dbff9d7d76db02893dbe207b5a9662401b1a",
+      "baseline_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+      "reviewed_sha256": "a3a14e5777f3bccc0042f34116dda7521ef63d9d3b2e82367017aac326c08304",
+      "current_sha256": "a3a14e5777f3bccc0042f34116dda7521ef63d9d3b2e82367017aac326c08304",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "a3a14e5777f3bccc0042f34116dda7521ef63d9d3b2e82367017aac326c08304",
+      "baseline_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/CinemaWindowLightState.kt",
+      "reviewed_sha256": "83ba386b6a00f3c3b07f2b229192bf2ce0998aa1ea609efb29f47e9fbd2ad4b6",
+      "current_sha256": "83ba386b6a00f3c3b07f2b229192bf2ce0998aa1ea609efb29f47e9fbd2ad4b6",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "83ba386b6a00f3c3b07f2b229192bf2ce0998aa1ea609efb29f47e9fbd2ad4b6",
+      "baseline_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+      "reviewed_sha256": "f9e7e62196a6f142ad26a8292f7b2a2823a18afc23a1f2619fb0cb1eb43131a7",
+      "current_sha256": "f9e7e62196a6f142ad26a8292f7b2a2823a18afc23a1f2619fb0cb1eb43131a7",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "f9e7e62196a6f142ad26a8292f7b2a2823a18afc23a1f2619fb0cb1eb43131a7",
+      "baseline_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt",
+      "reviewed_sha256": "5ba470bc0cdc14ad4c459e2b3d22249fbf09cf525cae6e29e3f6241346ae9982",
+      "current_sha256": "5ba470bc0cdc14ad4c459e2b3d22249fbf09cf525cae6e29e3f6241346ae9982",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "5ba470bc0cdc14ad4c459e2b3d22249fbf09cf525cae6e29e3f6241346ae9982",
+      "baseline_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCinematicSettings.kt",
+      "reviewed_sha256": "c76dd4ac0ff091fac48824f12a2ce1950e1a025ae729e3a3e775c35be7322810",
+      "current_sha256": "c76dd4ac0ff091fac48824f12a2ce1950e1a025ae729e3a3e775c35be7322810",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "c76dd4ac0ff091fac48824f12a2ce1950e1a025ae729e3a3e775c35be7322810",
+      "baseline_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/AndroidContinuumPainter.kt",
+      "reviewed_sha256": "156889f9e9a6952578d8e326782b9d47c4b17a2f5153a9665a46a1afacc40e11",
+      "current_sha256": "156889f9e9a6952578d8e326782b9d47c4b17a2f5153a9665a46a1afacc40e11",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "156889f9e9a6952578d8e326782b9d47c4b17a2f5153a9665a46a1afacc40e11",
+      "baseline_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt",
+      "reviewed_sha256": "9f3d0b53d4c68581332be7ceb75bf9be0d7ebc41e3ae41a21ce21a2d7ae5164d",
+      "current_sha256": "9f3d0b53d4c68581332be7ceb75bf9be0d7ebc41e3ae41a21ce21a2d7ae5164d",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "9f3d0b53d4c68581332be7ceb75bf9be0d7ebc41e3ae41a21ce21a2d7ae5164d",
+      "baseline_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
+      "reviewed_sha256": "0f20bceefe13a6a0d135c6a4182a6f1e5f47d45e591801993aa4ca4825f854e2",
+      "current_sha256": "0f20bceefe13a6a0d135c6a4182a6f1e5f47d45e591801993aa4ca4825f854e2",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "0f20bceefe13a6a0d135c6a4182a6f1e5f47d45e591801993aa4ca4825f854e2",
+      "baseline_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSceneFills.kt",
+      "reviewed_sha256": "2c2f4fc578d6af6a6494e99fa0e2f710f63cd1ab2acf7048cef03da51fc1c887",
+      "current_sha256": "2c2f4fc578d6af6a6494e99fa0e2f710f63cd1ab2acf7048cef03da51fc1c887",
+      "current_matches_reviewed": true,
+      "baseline_sha256": "2c2f4fc578d6af6a6494e99fa0e2f710f63cd1ab2acf7048cef03da51fc1c887",
+      "baseline_matches_reviewed": true
+    }
+  ],
+  "manifest_checks": [
+    {
+      "label": "red",
+      "manifest_path": "docs/evidence/thermal-render-20261111/red/inputs.json",
+      "manifest_sha256": "0e6ce77fe2f597c27c67f6551cef2a1c965e131a538a9ea356bc5a89eb47d254",
+      "recorded_source_head": "f88d7d1936b9c0d53c176a0af31108fb863199e6",
+      "source_checks": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt",
+          "compared_commit": "9a6de6c4547feb62c9822520596e786a852ed83b",
+          "expected_sha256": "9f3d0b53d4c68581332be7ceb75bf9be0d7ebc41e3ae41a21ce21a2d7ae5164d",
+          "actual_sha256": "9f3d0b53d4c68581332be7ceb75bf9be0d7ebc41e3ae41a21ce21a2d7ae5164d",
+          "matches": true
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSceneFills.kt",
+          "compared_commit": "9a6de6c4547feb62c9822520596e786a852ed83b",
+          "expected_sha256": "2c2f4fc578d6af6a6494e99fa0e2f710f63cd1ab2acf7048cef03da51fc1c887",
+          "actual_sha256": "2c2f4fc578d6af6a6494e99fa0e2f710f63cd1ab2acf7048cef03da51fc1c887",
+          "matches": true
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisHeadAura.kt",
+          "compared_commit": "9a6de6c4547feb62c9822520596e786a852ed83b",
+          "expected_sha256": "3fc823a4a0da91632902dfe60386214016ecfa19176fd93110ea34ea2d3513b5",
+          "actual_sha256": "3fc823a4a0da91632902dfe60386214016ecfa19176fd93110ea34ea2d3513b5",
+          "matches": true
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisEnergyFlows.kt",
+          "compared_commit": "9a6de6c4547feb62c9822520596e786a852ed83b",
+          "expected_sha256": "cd9d78e5ac2cd04c78e89c2be63e0603e749b9669cdc562744a6de0c77ed465c",
+          "actual_sha256": "cd9d78e5ac2cd04c78e89c2be63e0603e749b9669cdc562744a6de0c77ed465c",
+          "matches": true
+        },
+        {
+          "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisLightStreamReuseTest.kt",
+          "compared_commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+          "expected_sha256": "c92259c037e05d1336fef9239b7cf5651c47ada1ddce13b44517818dce85999e",
+          "actual_sha256": "c92259c037e05d1336fef9239b7cf5651c47ada1ddce13b44517818dce85999e",
+          "matches": true
+        },
+        {
+          "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisLivingSceneTest.kt",
+          "compared_commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+          "expected_sha256": "dcdb3fe03c8f5a8cccea52575393aeb749f3d914f445a16db6b0544519783445",
+          "actual_sha256": "dcdb3fe03c8f5a8cccea52575393aeb749f3d914f445a16db6b0544519783445",
+          "matches": true
+        },
+        {
+          "path": "tools/thermal-render/FlowWorkProbe.kt",
+          "compared_commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+          "expected_sha256": "e908c8f63c11c7c89e3127e5dbfd1dfcefbec7901623efc0c647f3ae3aa67424",
+          "actual_sha256": "e908c8f63c11c7c89e3127e5dbfd1dfcefbec7901623efc0c647f3ae3aa67424",
+          "matches": true
+        }
+      ],
+      "draw_command_sha256": "33f640d7a6108c7245cf355eeb3e62131ad327d8fb11944e9ad2d73dd82dccd7",
+      "recorded_exit_codes": {
+        "compile": 0,
+        "junit": 1,
+        "work": 1
+      }
+    },
+    {
+      "label": "green",
+      "manifest_path": "docs/evidence/thermal-render-20261111/green/inputs.json",
+      "manifest_sha256": "b6888f6286deec31afa65cdac0d2589c0c978e539c81ce1da5c5a77595a02a20",
+      "recorded_source_head": "f88d7d1936b9c0d53c176a0af31108fb863199e6",
+      "source_checks": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt",
+          "compared_commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+          "expected_sha256": "9f3d0b53d4c68581332be7ceb75bf9be0d7ebc41e3ae41a21ce21a2d7ae5164d",
+          "actual_sha256": "9f3d0b53d4c68581332be7ceb75bf9be0d7ebc41e3ae41a21ce21a2d7ae5164d",
+          "matches": true
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSceneFills.kt",
+          "compared_commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+          "expected_sha256": "2c2f4fc578d6af6a6494e99fa0e2f710f63cd1ab2acf7048cef03da51fc1c887",
+          "actual_sha256": "2c2f4fc578d6af6a6494e99fa0e2f710f63cd1ab2acf7048cef03da51fc1c887",
+          "matches": true
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisHeadAura.kt",
+          "compared_commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+          "expected_sha256": "89a4991fed11057832f44ed1f80e45b8e52ca4b2a56f8eabeaa41574a701a5d9",
+          "actual_sha256": "89a4991fed11057832f44ed1f80e45b8e52ca4b2a56f8eabeaa41574a701a5d9",
+          "matches": true
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisEnergyFlows.kt",
+          "compared_commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+          "expected_sha256": "8303d3709e293bb2b4f0bb2a2bde1ec08f48132233f2ba294e076c96199f31de",
+          "actual_sha256": "8303d3709e293bb2b4f0bb2a2bde1ec08f48132233f2ba294e076c96199f31de",
+          "matches": true
+        },
+        {
+          "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisLightStreamReuseTest.kt",
+          "compared_commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+          "expected_sha256": "c92259c037e05d1336fef9239b7cf5651c47ada1ddce13b44517818dce85999e",
+          "actual_sha256": "c92259c037e05d1336fef9239b7cf5651c47ada1ddce13b44517818dce85999e",
+          "matches": true
+        },
+        {
+          "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisLivingSceneTest.kt",
+          "compared_commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+          "expected_sha256": "dcdb3fe03c8f5a8cccea52575393aeb749f3d914f445a16db6b0544519783445",
+          "actual_sha256": "dcdb3fe03c8f5a8cccea52575393aeb749f3d914f445a16db6b0544519783445",
+          "matches": true
+        },
+        {
+          "path": "tools/thermal-render/FlowWorkProbe.kt",
+          "compared_commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+          "expected_sha256": "e908c8f63c11c7c89e3127e5dbfd1dfcefbec7901623efc0c647f3ae3aa67424",
+          "actual_sha256": "e908c8f63c11c7c89e3127e5dbfd1dfcefbec7901623efc0c647f3ae3aa67424",
+          "matches": true
+        }
+      ],
+      "draw_command_sha256": "33f640d7a6108c7245cf355eeb3e62131ad327d8fb11944e9ad2d73dd82dccd7",
+      "recorded_exit_codes": {
+        "compile": 0,
+        "junit": 0,
+        "work": 0
+      }
+    }
+  ],
+  "new_tests_executed": false,
+  "gradle_executed": false,
+  "production_edits": false,
+  "findings": [],
+  "limits": [
+    "72 scenarios cover JarvisEnergyFlows painter command output on the host, not HeadAura or full-screen native pixels.",
+    "HeadAura static streams are covered by four new reuse/geometry tests and source comparison.",
+    "Recorded compiled app dependencies are identified by directory path, not individual class hashes.",
+    "Full integrated Android compilation/tests, visual acceptance, Filament GPU, Fold7 frame times, power and thermal impact remain outside this review."
+  ],
+  "checks": [
+    "Control expressions and float arithmetic order preserved; each flow updates all eight controls before use.",
+    "Bezier samples, pulse equations, palette, line widths, alpha and draw ordering unchanged.",
+    "LightStreams cache keys both exact float dimensions; cache contains geometry/fill only and stays one-entry bounded.",
+    "Native painter identity/version caches are compatible; caller transforms remain outside cached geometry.",
+    "Frame clock, scheduling, reduced motion and budget/lifecycle gates unchanged in the reviewed diff.",
+    "EXP06/11 settings/callers/renderer/overlay/host unchanged in the reviewed diff."
+  ],
+  "recorded_results": {
+    "red_junit": {
+      "passed": 9,
+      "failed": 1
+    },
+    "green_junit": {
+      "passed": 10,
+      "failed": 0
+    },
+    "flow_cases": 72,
+    "red_max_sin_calls": 1526,
+    "green_max_sin_calls": 70,
+    "same_command_digest": "33f640d7a6108c7245cf355eeb3e62131ad327d8fb11944e9ad2d73dd82dccd7"
+  }
+}

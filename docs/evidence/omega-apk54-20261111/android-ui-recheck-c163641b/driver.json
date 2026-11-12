@@ -1,0 +1,80 @@
+{
+  "source": {
+    "commit": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+    "tree": "f2a1638d66c2d9486853010ac40e1513ac05c7e5",
+    "branch": "integrate/omega-apk54-20261111",
+    "status": ""
+  },
+  "phase": "ui-recheck",
+  "command": [
+    "python",
+    "/workspace/scratch/6139925ecf70/toolchain/run_observed.py",
+    "--continue",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerArm64=true",
+    "-PcontinuumStandaloneVersionCode=54",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumUiEvidenceDir=/workspace/scratch/2d62a799e417/qa/android-ui-recheck-c163641b",
+    "-I",
+    "/workspace/scratch/2d62a799e417/device-ai/docs/evidence/omega-apk54-20261111/harness/test-memory.gradle",
+    "-I",
+    "tools/capture/force_capture.gradle",
+    "-I",
+    "/workspace/scratch/2d62a799e417/device-ai/docs/evidence/omega-apk54-20261111/harness/omega-ui-recheck.init.gradle",
+    ":app:testDebugUnitTest",
+    ":app:lintDebug"
+  ],
+  "cwd": "/workspace/scratch/2d62a799e417/device-ai",
+  "startedAt": "2026-11-11T17:57:35.330588+00:00",
+  "status": "FAIL",
+  "strictPdfAllowance": "NOT_SET",
+  "driverSha256": "0625970c4ee24fd88b26b547e8895093e08955084e19e10a012244ef0832fa11",
+  "exit": 1,
+  "suiteEnd": {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "suite_end",
+    "name": "Gradle Test Run :app:testDebugUnitTest",
+    "result": "FAILURE",
+    "start": 1794419994641,
+    "end": 1794420134908,
+    "tests": 25,
+    "passed": 11,
+    "failed": 14,
+    "skipped": 0,
+    "exceptions": [],
+    "sourceEnd": {
+      "head": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+      "tree": "f2a1638d66c2d9486853010ac40e1513ac05c7e5",
+      "branch": "integrate/omega-apk54-20261111",
+      "repository": "/workspace/scratch/2d62a799e417/device-ai",
+      "status": "",
+      "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "sourceUnchanged": true
+  },
+  "counts": {
+    "SUCCESS": 11,
+    "FAILURE": 14
+  },
+  "strictPdfNativeProbe": [],
+  "observedClasses": [
+    "at.heinz.deviceai.OwnerAppActionWorkSceneUiTest",
+    "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "at.heinz.deviceai.OwnerObjectStateConversationUiTest"
+  ],
+  "missingRequiredClasses": [],
+  "finishedAt": "2026-11-11T18:10:07.333513+00:00",
+  "elapsedSeconds": 752.003,
+  "sourceAfter": {
+    "commit": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+    "tree": "f2a1638d66c2d9486853010ac40e1513ac05c7e5",
+    "branch": "integrate/omega-apk54-20261111",
+    "status": ""
+  },
+  "logSha256": "198caaa3d41e93ce6264b7a481f42dda46c8e7694706712cbb4e0db52a3ed3b0",
+  "driverAfterSha256": "0625970c4ee24fd88b26b547e8895093e08955084e19e10a012244ef0832fa11",
+  "sourceUnchanged": true
+}

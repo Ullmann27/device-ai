@@ -65,10 +65,42 @@ test('process-wide loaded Gemma is intentionally retained at Activity finish',()
  assert.match(destroy,/!retainGemma/);
  assert.match(destroy,/localRuntime\.unload\(\)/);
 });
+function assertVerifiedLoadChain(runtimeSource,catalogSource){
+ const start=runtimeSource.indexOf('override fun load(');
+ const end=runtimeSource.indexOf('override fun stream(',start);
+ assert.ok(start>=0 && end>start,'load scope');
+ const loading=runtimeSource.slice(start,end).replace(/\/\/[^\n]*/g,'');
+ assert.match(loading,/val \(model, file\) = catalog\.sourceForLoad\(id, version\)\s*\?: error\("Imported model is missing or failed its integrity check\."\)/);
+ assert.equal((loading.match(/catalog\.sourceForLoad\(/g)||[]).length,1);
+ assert.doesNotMatch(loading,/catalog\.modelFile\(/);
+ assert.match(loading,/modelPath = file\.absolutePath/);
+ assert.ok(loading.indexOf('catalog.sourceForLoad(id, version)')<loading.indexOf('newEngine.initialize()'));
+ const resolver=catalogSource.match(/@Synchronized\s+internal fun sourceForLoad\(id: String, version: String\): Pair<ImportedLocalModel, File>\? \{([\s\S]*?)\n    \}/);
+ assert.ok(resolver,'synchronized verified resolver');
+ assert.match(resolver[1].replace(/\/\/[^\n]*/g,''),/^\s*val model = get\(id, version\) \?: return null\s*return model to modelFile\(id, version\)\s*$/);
+ assert.match(catalogSource,/@Synchronized\s+fun get\(id: String, version: String, verifyBytes: Boolean = true\)/);
+ assert.match(catalogSource,/if \(verifyBytes && sha256\(file\) != record\.sha256\) return null/);
+ assert.match(catalogSource,/private fun modelFile\(id: String, version: String\) =\s*File\(directory,/);
+}
+
 test('a cold restart verifies the stored file SHA-256 before initializing the engine',()=>{
- assert.match(runtime,/catalog\.get\(id, version\)/);
- assert.match(catalog,/if \(verifyBytes && sha256\(file\) != record\.sha256\) return null/);
- assert.match(runtime,/newEngine\.initialize\(\)/);
+ assertVerifiedLoadChain(runtime,catalog);
+});
+test('cold-load integrity contract rejects bypassed verification and duplicate hashing',()=>{
+ const mutations=[
+  ['catalog','val model = get(id, version) ?: return null','val model = get(id, version, verifyBytes = false) ?: return null'],
+  ['catalog','verifyBytes: Boolean = true','verifyBytes: Boolean = false'],
+  ['catalog','@Synchronized\n    internal fun sourceForLoad','internal fun sourceForLoad'],
+  ['catalog','return model to modelFile(id, version)','return model to modelFile(model)'],
+  ['catalog','if (verifyBytes && sha256(file) != record.sha256) return null','if (false) return null'],
+  ['runtime','catalog.sourceForLoad(id, version)','catalog.sourceForLoad(id, "other")']
+ ];
+ for(const [name,before,after] of mutations){
+  const inputs={runtime,catalog};
+  assert.ok(inputs[name].includes(before),before);
+  inputs[name]=inputs[name].replace(before,after);
+  assert.throws(()=>assertVerifiedLoadChain(inputs.runtime,inputs.catalog),assert.AssertionError);
+ }
 });
 test('successful native unload clears model identity and its thread diagnostic together',()=>{
  const close=runtime.slice(runtime.indexOf('private fun closeResources('),runtime.indexOf('private fun deliver('));

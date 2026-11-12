@@ -1,0 +1,31 @@
+{
+  "source_ref": "e80bb68a93218acac287213951550d81a84399ff",
+  "test_source": "worker updated existing contract",
+  "copied_git_paths": [
+    ".github/continuum/gemma-reopen-lifecycle.test.mjs",
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "app/src/main/java/at/heinz/deviceai/ContinuumGemmaRestorePolicy.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportCoordinator.kt",
+    "app/src/test/java/at/heinz/deviceai/ContinuumGemmaRestorePolicyTest.kt"
+  ],
+  "sha256": {
+    ".github/continuum/gemma-reopen-lifecycle.test.mjs": "517d005f84aafb087831464a03e7f487a883446d04ba84c4c0a61b18a42fb90c",
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "72cb6d84b028191e86e7dbbf748feaa6482cd31e952cc4e5854e844a635d209d",
+    "app/src/main/java/at/heinz/deviceai/ContinuumGemmaRestorePolicy.kt": "4fb2edc288a23a3c414988fc85981a5de45016d10b1388565f58c8b7c240d2a8",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt": "169e685b28b39392c33cd644362ddf58efeee98c3f4f806cf98a297bec579202",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt": "3c2b2864b3e51eda5a79ea3166b902a6e809493cb1fa910514de01b44779a029",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt": "b4916cad4259a6bf0ac929d7305999b5dfe045381315a4a918c51ba06aeb7235",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportCoordinator.kt": "d3c27e04ba81785c4cda6a7e1d81dd03e5e9fee8ba4f280730eb7f8f48fd68d4",
+    "app/src/test/java/at/heinz/deviceai/ContinuumGemmaRestorePolicyTest.kt": "6e070541a6c79a4a7b66109ac5fe9d52e83c342a78aff99594d764082358fbdc"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/gemma-reopen-lifecycle.test.mjs"
+  ],
+  "exit_code": 0
+}

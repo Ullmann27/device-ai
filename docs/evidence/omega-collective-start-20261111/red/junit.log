@@ -1,0 +1,43 @@
+JUnit version 4.13.2
+.E.E..E.....E.E.
+Time: 0.158
+There were 5 failures:
+1) collectiveConversationKeepsExplicitNegationAndDiagnosisSeparate(at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest)
+java.lang.AssertionError: false change veto: Wir starten. Lösche nichts, prüfe nur den Akku. -> Dieser Satz enthält einen verändernden oder ausführenden Geräteauftrag. Eine solche Änderung braucht eine eigene Bestätigung. Mit „Analysiere mein Handy“ kannst du zuerst eine nur lesende Diagnose anfordern.
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.assertNotVetoed(BootstrapBrainOwnerIntentSafetyTest.kt:26)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.collectiveConversationKeepsExplicitNegationAndDiagnosisSeparate(BootstrapBrainOwnerIntentSafetyTest.kt:87)
+2) pluralFutureStartIsConversation(at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest)
+java.lang.AssertionError: No device instruction: Morgen wollen wir das Projekt starten
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.assertConversation(BootstrapBrainOwnerIntentSafetyTest.kt:33)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.pluralFutureStartIsConversation(BootstrapBrainOwnerIntentSafetyTest.kt:45)
+3) ordinaryCollectiveStartsNeverBecomeReadOnlyToolRequests(at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest)
+java.lang.AssertionError: No device instruction: Ihr könnt morgen starten
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.assertConversation(BootstrapBrainOwnerIntentSafetyTest.kt:33)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.ordinaryCollectiveStartsNeverBecomeReadOnlyToolRequests(BootstrapBrainOwnerIntentSafetyTest.kt:55)
+4) collectiveStartProposalIsConversation(at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest)
+java.lang.AssertionError: No device instruction: Lass uns jetzt starten
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.assertConversation(BootstrapBrainOwnerIntentSafetyTest.kt:33)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.collectiveStartProposalIsConversation(BootstrapBrainOwnerIntentSafetyTest.kt:43)
+5) pluralPresentStartIsConversation(at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest)
+java.lang.AssertionError: No device instruction: Wir starten
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.assertConversation(BootstrapBrainOwnerIntentSafetyTest.kt:33)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.pluralPresentStartIsConversation(BootstrapBrainOwnerIntentSafetyTest.kt:41)
+
+FAILURES!!!
+Tests run: 11,  Failures: 5
+

@@ -121,21 +121,8 @@ object BootstrapBrain {
     private fun recallTokens(text: String) = Regex("[\\p{L}\\p{N}]{4,}").findAll(text.lowercase(Locale.ROOT))
         .map { it.value }.filter { it !in recallStopWords }.toSet()
 
-    /**
-     * A mutating verb that is itself negated („starte keine Internetrecherche“) is not a device order. Only the
-     * explicit kein/keine/nichts forms count, and never in a contrast („…, sondern lösche …“), so a real order stays
-     * blocked; „nicht“ is not exempted („Lösche nicht nur den Cache …“).
-     */
-    private val negatedMutation = Regex(
-        "(?iu)\\b(lösch\\w*|entfern\\w*|deinstallier\\w*|installier\\w*|verschieb\\w*|starte\\w*|stoppe?\\w*|überweis\\w*|bezahl\\w*)\\s+(keine|keinen|kein|keinerlei|nichts)\\b"
-    )
-    private val contrast = Regex("(?iu)\\b(sondern|stattdessen|außer|aber)\\b")
-
-    private fun unsafeControlText(text: String): Boolean {
-        val safetyText = if (contrast.containsMatchIn(text)) text else text.replace(negatedMutation, " ")
-        return Regex("""(?i)^(system|developer|assistant|tool)\s*:""").containsMatchIn(text) ||
-            Regex("""(?i)\b(lösch\w*|entfern\w*|deinstallier(?:e|en|st)?\b|installier(?:e|en|st)?\b|verschieb\w*|starte\w*|stoppe?\w*|überweis\w*|bezahl\w*)\b""").containsMatchIn(safetyText)
-    }
+    private fun unsafeControlText(text: String): Boolean =
+        at.heinz.deviceai.cognitive.OwnerDeviceRequestSafety.inspect(text).blocked
 
     private fun specialLongCommand(text: String): Boolean {
         val start = text.take(64).lowercase(Locale.ROOT)
@@ -159,16 +146,21 @@ object BootstrapBrain {
                 "Dieser Auftrag überschreitet seine zulässige Eingabegrenze. " +
                     "Bitte teile ihn in vollständige Schritte; nichts wurde ausgeführt oder gespeichert.")
         }
+        val safety = at.heinz.deviceai.cognitive.OwnerDeviceRequestSafety.inspect(text)
         val low = carryContrastVerb(text.lowercase(Locale.ROOT))
         // Explicit memory deletion stays available, but always requires an Android confirmation.
         if (low == "lösche meine erinnerungen" || low == "lernspeicher löschen")
             return BootstrapDecision(BootstrapKind.FORGET)
         // The deterministic intent recognizer must not mistake a dangerous mixed
         // request or forged role header for permission to run a harmless-looking tool.
-        if (unsafeControlText(text)) return BootstrapDecision(
+        if (safety.blocked) return BootstrapDecision(
             BootstrapKind.REPLY,
-            "Dieser Satz enthält eine nachgeahmte Rolle oder einen verändernden Geräteauftrag. " +
-                "Der eigene Startkern führt deshalb keinerlei Gerätewerkzeug aus."
+            if (safety.roleManipulation)
+                "Dieser Satz enthält eine nachgeahmte Rolle oder eine Aufforderung, Sicherheitsregeln zu umgehen. " +
+                    "Der Startkern führt daraus kein Gerätewerkzeug aus."
+            else "Dieser Satz enthält einen verändernden oder ausführenden Geräteauftrag. " +
+                "Eine solche Änderung braucht eine eigene Bestätigung. " +
+                "Mit „Analysiere mein Handy“ kannst du zuerst eine nur lesende Diagnose anfordern."
         )
         if (NeuralDialogue.accepts(text)) return BootstrapDecision(BootstrapKind.REPLY,
             "Neuronales Experiment: Öffne das Lernlabor. Neuron Demo · Neuron: Hallo")
@@ -271,11 +263,14 @@ object BootstrapBrain {
             return BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = name,
                 arguments = if (name == "list_files") mapOf("path" to "/sdcard/Download") else emptyMap())
         }
-        if (affirmativeClause(low) { "downloads" in it || "download-ordner" in it }) return tool("list_files",
+        // Carry the contrast verb before clause splitting: readOnlyText joins clauses with ". ", which would cut
+        // "prüf nicht X" off from "sondern Y" (M3EvalGapsTest). The safety decision above stays on the raw text.
+        val readText = at.heinz.deviceai.cognitive.OwnerDeviceRequestSafety.inspect(low).readOnlyText
+        if (affirmativeClause(readText) { "downloads" in it || "download-ordner" in it }) return tool("list_files",
             mapOf("path" to "/sdcard/Download"))
-        val wantsStorageInspection = isStorageReadRequest(low) ||
-            affirmativeClause(low) { "große dateien" in it }
-        val wantsBatteryInspection = isBatteryReadRequest(low)
+        val wantsStorageInspection = isStorageReadRequest(readText) ||
+            affirmativeClause(readText) { "große dateien" in it }
+        val wantsBatteryInspection = isBatteryReadRequest(readText)
         // A single read-only bootstrap action must not guess between two tools.
         if (wantsStorageInspection && wantsBatteryInspection) return BootstrapDecision(
             BootstrapKind.REPLY,
@@ -284,9 +279,9 @@ object BootstrapBrain {
         )
         if (wantsStorageInspection) return tool("get_storage_info")
         if (wantsBatteryInspection) return tool("get_battery_info")
-        if (affirmativeClause(low) { appsCue.containsMatchIn(it) && !appMutation.containsMatchIn(it) })
+        if (affirmativeClause(readText) { appsCue.containsMatchIn(it) && !appMutation.containsMatchIn(it) })
             return tool("list_installed_apps")
-        if (affirmativeClause(low) { "gerät" in it && ("info" in it || "prüf" in it) }) return tool("get_device_info")
+        if (affirmativeClause(readText) { "gerät" in it && ("info" in it || "prüf" in it) }) return tool("get_device_info")
         // An explicit offline instruction is neither a web-search request nor
         // a reason to withhold a local model attempt. The ToolGate applies the
         // independent hard veto to any network execution.
@@ -295,7 +290,7 @@ object BootstrapBrain {
                 "Ich beantworte diese Anfrage nur aus lokal verfügbaren Informationen. " +
                     "Falls dafür keine ausreichenden Belege vorliegen, sage ich das ausdrücklich.",
                 allowNeuralRecall = true)
-        if (affirmativeClause(low) { "netzwerk" in it || "internetverbindung" in it ||
+        if (affirmativeClause(readText) { "netzwerk" in it || "internetverbindung" in it ||
                 ("wlan" in it && wlanReadCue.containsMatchIn(it)) }) return tool("get_network_summary")
         if ("internet" in low || "recherch" in low) return BootstrapDecision(
             BootstrapKind.REPLY, "Internetrecherche ist nur nach deiner Freigabe aktiv. " +

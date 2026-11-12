@@ -1,0 +1,409 @@
+[
+  {
+    "name": "HOST SOFTWARE CONTRACT: real persisted Forge/Lint profiles receive distinct observed containers for builder and both verifier sites",
+    "time": "0.002374",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/ccc1-bot-workspace-host.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "HOST_INTEGRATION: two canonical worker jobs run in separate confined Docker workspaces",
+    "time": "0.001742",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/ccc1-workspace-host.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs",
+    "time": "0.001140",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/ccc1-workspace-lifecycle-host.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "HOST_INTEGRATION: live canonical lease clamps the real Docker timeout",
+    "time": "0.000196",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/ccc1-workspace-lifecycle-host.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "HOST_INTEGRATION: in-flight owner revocation suppresses the completed profile result at checkpoint",
+    "time": "0.000110",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/ccc1-workspace-lifecycle-host.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "actual Android shell adapters compile against official APIs and the unchanged Binder contract",
+    "time": "0.000696",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/cognitive-action-integration.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "NOT_RUN: configure official Kotlin and Shizuku/annotation jars"
+    },
+    "reason": null
+  },
+  {
+    "name": "native natural request \u2192 actual tool \u2192 receipt \u2192 persisted episode, with negative regressions",
+    "time": "0.000341",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/cognitive-action-integration.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "NOT_RUN: set CONTINUUM_FABRIC_JVM_DEPS to run the real Kotlin graph"
+    },
+    "reason": null
+  },
+  {
+    "name": "actual memory, CRE1 and CTX3 graph preserves provenance and emits content-free traces",
+    "time": "0.000195",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/cognitive-action-integration.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "NOT_RUN: configure official Kotlin/JUnit jars"
+    },
+    "reason": null
+  },
+  {
+    "name": "native JVM export feeds Node byte-for-byte when cross-language runner is configured",
+    "time": "0.000433",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/compute-fabric-model-adapter.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "Run scripts/continuum-fabric-jvm-check.sh for the actual JVM\u2192Node test"
+    },
+    "reason": null
+  },
+  {
+    "name": "real Harness service preserves the existing strict wire schema without mounting tools",
+    "time": "0.000219",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/harness-coding-provider.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "NOT_RUN: configure actual reviewed Harness SDK"
+    },
+    "reason": null
+  },
+  {
+    "name": "authority smuggling, no-op and HTTP failure remain rejected without hidden retries",
+    "time": "0.000285",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/harness-coding-provider.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "NOT_RUN: actual SDK required"
+    },
+    "reason": null
+  },
+  {
+    "name": "fixed isolated Android runner rejects 401 reports instead of returning a green subset",
+    "time": "0.001165",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/isolated-report-cap.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "Requires explicitly configured Docker; synthetic Gradle reports, not an Android build"
+    },
+    "reason": null
+  },
+  {
+    "name": "generated Kotlin code must compile RED before and GREEN after, then compute two expected outputs",
+    "time": "0.000287",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/kotlin-delegate-acceptance.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "wrong independent expected output rejects a compiling patch",
+    "time": "0.000165",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/kotlin-delegate-acceptance.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "an arbitrary red baseline is never accepted as proof of the requested missing method",
+    "time": "0.000203",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/kotlin-delegate-acceptance.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "new method compiles and computes a nontrivial result with real kotlinc",
+    "time": "0.000272",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/kotlin-delegate-synthesizer.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "HOST_INTEGRATION: typed dispatch binds actual canonical repair containers and refuses replay",
+    "time": "0.004452",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/momega1-typed-workspace-host.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "owner Kotlin IMPLEMENT generates real reviewable Git patch with two independent JVM oracles",
+    "time": "0.002056",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/owner-kotlin-preview.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "false owner output cannot create a verified Kotlin preview",
+    "time": "0.001127",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/owner-kotlin-preview.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "true"
+    },
+    "reason": null
+  },
+  {
+    "name": "fixed Docker CLI transport rejects mismatched weights before native launch, with no observation",
+    "time": "0.005105",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-7b.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_DOCKER_PROOF_NOT_RUN: fixed Docker client unavailable"
+    },
+    "reason": null
+  },
+  {
+    "name": "actual launcher gives exact private 7B profile two CPU seconds per remaining wall second",
+    "time": "0.001668",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-cpu.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"
+    },
+    "reason": null
+  },
+  {
+    "name": "two-thread CPU allowance leaves the existing wall cancellation deadline unchanged",
+    "time": "0.001006",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-cpu.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"
+    },
+    "reason": null
+  },
+  {
+    "name": "actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit",
+    "time": "0.001481",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-cpu.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"
+    },
+    "reason": null
+  },
+  {
+    "name": "actual namespace binds admitted descriptors and fixture output; never inference evidence",
+    "time": "0.000667",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "deadline cancels actual isolated process with bounded return",
+    "time": "0.001212",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "STOP cancels actual isolated process and leaves no trusted observation",
+    "time": "0.000729",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "malformed/oversized output and missing generation counters are rejected",
+    "time": "0.000438",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "actual FD mount retains selected inode across model path replacement",
+    "time": "0.000149",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "prompt evaluation counter alone cannot masquerade as output generation",
+    "time": "0.000088",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "inference sandbox denies host files, external interfaces, secrets and writable model",
+    "time": "0.000085",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "seccomp denies fork and rlimits bound native memory/descriptor budgets",
+    "time": "0.000123",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "changing model during actual execution invalidates otherwise valid output",
+    "time": "0.000121",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "production provider rejects synthetic fixture receipt even when transport MAC is valid",
+    "time": "0.000086",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "native worker threads remain permitted while process creation stays denied",
+    "time": "0.000173",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind",
+    "time": "0.000278",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "invalid model JSON retains authenticated process observation without a candidate",
+    "time": "0.000155",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  },
+  {
+    "name": "provider retains authenticated rejected-response observation and consumed durable budget",
+    "time": "0.000344",
+    "classname": "test",
+    "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-local-model-observation.test.mjs",
+    "skip": {
+      "type": "skipped",
+      "message": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    "reason": null
+  }
+]

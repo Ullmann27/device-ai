@@ -16,6 +16,8 @@ class LocalConversationContext {
     private val turns = ArrayDeque<Turn>()
     private var explicitFocus:String?=null
     private val situation = LocalConversationSituationTracker()
+    /** #758: owner-described object state of this session; survives the four-turn window, never the session. */
+    private val objects = OwnerObjectStateLedger()
     /** Latest web-research digest: external, unverified data kept apart from owner memory and model dialogue. */
     private var research: ResearchDialogueHandoff.Digest? = null
 
@@ -69,7 +71,10 @@ class LocalConversationContext {
         turns.addLast(Turn(bounded.request, bounded.response,
             bounded.request.takeIf { bounded.requestComplete }, responseComplete = bounded.responseComplete,
             modelResponse = bounded.modelResponse, responseHasEnd = bounded.responseHasEnd))
-        if (bounded.requestComplete) situation.observeOwnerTurn(bounded.request)
+        if (bounded.requestComplete) {
+            situation.observeOwnerTurn(bounded.request)
+            objects.observeOwnerTurn(bounded.request)
+        } else objects.markIncomplete()
         while (turns.size > LocalDialogueContextLimits.MAX_TURNS) turns.removeFirst()
         if (notify) runCatching { onTurnRecorded?.invoke(sessionId, bounded) }
     }
@@ -147,6 +152,18 @@ class LocalConversationContext {
     @Synchronized internal fun situationSnapshot(sessionId: String): ConversationSituationModel.Situation? =
         if (session == sessionId) situation.snapshot() else null
 
+    /**
+     * #758: the owner's own object statements of this session (colour, count, place) after all
+     * corrections, folded beyond the four-turn window. Required prompt data for a related request;
+     * "" when nothing relevant was described. Never a fact, memory write or tool grant.
+     */
+    @Synchronized fun objectStateBlock(sessionId: String, request: String): String =
+        if (session == sessionId) objects.promptBlock(request) else ""
+
+    /** #758: zero-token answer to a pure question about that state ("laut deinen Angaben …"), else null. */
+    @Synchronized fun objectStateAnswer(sessionId: String, question: String): String? =
+        if (session == sessionId) objects.answer(question) else null
+
     @Volatile var onTurnsInvalidated: ((String) -> Unit)? = null
     @Volatile var onTurnRecorded: ((String, LocalChatTranscriptStore.ContextTurn) -> Unit)? = null
 
@@ -154,18 +171,19 @@ class LocalConversationContext {
         val hadTurns = turns.isNotEmpty()
         turns.clear()
         situation.reset()
+        objects.reset()
         if (hadTurns) session?.let { id -> runCatching { onTurnsInvalidated?.invoke(id) } }
     }
 
     private fun switchTo(sessionId: String) {
-        turns.clear(); situation.reset(); session = sessionId; explicitFocus = null; research = null
+        turns.clear(); situation.reset(); objects.reset(); session = sessionId; explicitFocus = null; research = null
     }
 
     @Synchronized fun clear() { dropTurns(); session = null;explicitFocus=null;research=null }
 
     /** End of the process-scoped RAM lifetime (real Activity finish): nothing was invalidated, so nothing is reported. */
     @Synchronized fun forgetForExit() {
-        turns.clear(); situation.reset(); session = null; explicitFocus = null; research = null
+        turns.clear(); situation.reset(); objects.reset(); session = null; explicitFocus = null; research = null
     }
 
     /** Access is supplied by the current turn, never inferred from a saved research digest.

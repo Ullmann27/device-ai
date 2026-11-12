@@ -1,4 +1,7 @@
-# Continuum Omega – Test- und Reparaturmatrix (Stand 11.11.2026, Sitzungsende)
+# Continuum Omega – Test- und Reparaturmatrix (Fortsetzung 11.11.2026)
+
+Aktueller Integrationszweig: `integrate/omega-apk54-20261111`, Draft #769.
+Die folgende Ausgangsmatrix bleibt als Historie erhalten; aktueller Fortsetzungsstand unten.
 
 Quelle der Beobachtungen: Issue #670 (Fold7-Prüfprotokoll, Code51 → Code53) und verlinkte Issues.
 Installierte Referenz: originalsigniertes Code53 / 0.3.52, Quelle `050a57cb`.
@@ -51,3 +54,122 @@ Rohzusammenfassung: `docs/evidence/omega-20261111/test-summary.json`.
 | Android-Lint (`:app:lintDebug`, NewApi) | – | **NOT_RUN** |
 | Vollständige Android-Suite (~4 670) | – | **NOT_RUN** |
 | Fold7 (alles) | – | **NOT_RUN** |
+
+
+## Fortsetzung #769 — gemeinsamer Kandidat, Android-Abnahme offen
+
+| Gegenstand | Quelle / Nachweis | Aktueller Stand |
+|---|---|---|
+| #758 Gesprächsgedächtnis | #770 + #776 `dd0eda082`; 83/83 JVM, 3 neue Activity-Fälle | integriert; Android NOT_RUN |
+| #767/#759/#765 Routing | #772 `e20ca3a5`; 94/94 JVM, 7 neue Activity-Fälle; unabhängiger Review | integriert; Android NOT_RUN |
+| EXP06/EXP11 | #771 `965ad4c5`; 13/13 JVM + 13/13 Node; 2 neue Canvas-Fälle | integriert; Android NOT_RUN |
+| Masterprotokoll #747 | `c00326ced`, nur 145 Zeilen Dokumentation zusätzlich | integriert |
+| Core-Ausgangslauf | unverändert `3cb8df27`, vollständiger Lauf mit 98 Fällen | 97 PASS / 1 strikter nativer PDF-Hostfehler / 0 SKIP |
+| Node-Ausgangslauf | `3cb8df27`, uid1000; 1634 Fälle | 1612 PASS / 3 FAIL / 19 SKIP |
+| Backend-Ausgangslauf | `3cb8df27` | 64 PASS / 0 FAIL / 0 SKIP |
+| Drei Node-Prozessfälle isoliert | unverändert `3cb8df27` | 3 PASS; ursprüngliche Ursachen nicht bewiesen |
+| Zusätzliche Fehlerdiagnostik | Assertions unverändert; Quittungen jetzt im Fehlertext | 2 PASS / 1 FAIL; echter TIMEOUT im 1000-ms-Scheduler-Fixture nachgewiesen |
+| Vollständige Android-/Node-Prüfung, Visual, NewApi-Lint | auf gemeinsamem veröffentlichten Kandidaten geplant | NOT_RUN |
+| P3 gemeinsame Filament-Szene | braucht auch Viewport-/Masken-/Ursprungsumbau | ZURÜCKGESTELLT, nicht implementiert |
+| Allgemeine Kontextbudget-Anpassung | Direktrouten vermeiden Modellpfad in unterstützten Fällen | weiter OFFEN |
+| APK54 / 0.3.53 | Paket/ABI/Build/Signatur/Device-Gates getrennt | GEPLANT, NICHT GEBAUT, NICHT FREIGEGEBEN |
+
+Belege: `docs/evidence/omega-apk54-20261111/`. Kein Gerätebefund wird aus
+Hosttests abgeleitet; strikter PDF-Test und alle Sicherheitsprüfungen bleiben bestehen.
+
+### P2-Budgetnachtrag
+
+#776 `dd0eda082` repariert den neu reproduzierten Ledger-Pflichtblock:
+16.221 → 1.595 UTF-8-Bytes bei einer normalen objektbezogenen Aufgabe nach
+24 Korrekturrunden für sechs Gegenstände. Aktuelle Werte und Unsicherheiten
+bleiben im Prompt, ausgelassene Verlaufsdarstellung ist ausdrücklich benannt;
+interne Historie und historische Antworten sind unverändert. Neue Regression
+zuerst 2 PASS/3 FAIL, anschließend gesamte fokussierte Bestätigung 83/83.
+Dritter Activity-Fall ist integriert, Android-Ausführung noch NOT_RUN.
+Die Ursache der ursprünglichen kurzen Fold7-Kontextmeldung bleibt davon getrennt.
+
+## #569 — thermische Doppelarbeit, PR #773
+
+Quelle der thermischen Reparaturen: `1ba7b9458fd47184cedaed18e94e9aae1bd76c39`,
+Tree `903bca2e718caabe2846bfa76493493cedf10dc3`. Der spätere Zielstand `c02930f10`
+ist im Prüfzweig enthalten; alle kompilierten Thermikquellen und neun geprüfte
+Leistungs-/Qualitätsvorgaben blieben dabei unverändert.
+
+| Gegenstand | Beleg | Stand |
+|---|---|---|
+| Modellprüfung beim Laden | zwei vollständige SHA-256-Durchläufe → einer; jedes neue Laden weiter vollständig geprüft | behoben; #774 |
+| Unveränderter Lernstatus | redundantes Dekodieren und 14 Holdout-Beispiele entfallen bei identischen Bytes/Korpora; Statistiken frisch | behoben; #777 |
+| Lichtberechnungen | 1.526 → 70 Sinusaufrufe in diesem Helfer; 72 Draw-Traces bitgleich; statische Pfade wiederverwendet | behoben; #775 |
+| Gemeinsamer Kotlin/JVM-Lauf | 94 PASS / 0 FAIL / 0 SKIP; tatsächliche Produktionsquellen mit Cache-Abhängigkeiten | HOST_VERIFIZIERT |
+| Sechs Node-Vertragsdateien | 34 PASS / 0 FAIL / 0 SKIP; sechs negative Integritätsmutanten abgewiesen | HOST_VERIFIZIERT |
+| Unabhängiger finaler Review | fünf geänderte Produktionsdateien; keine blockierenden Befunde | geprüft |
+| Android-Prüfung und Lint | gemeinsamer lokaler Gradle-Lauf, bestehende exklusive Build-Sperre | RUNNING |
+| Native Modellantwort, Wärme, Energie, Geschwindigkeit auf Fold7 | kein verfügbarer Gerätekanal; keine Abkühlung oder Leistungssteigerung behauptet | NOT_RUN |
+
+Ziel bleibt #769. Keine Modell-, Thread-, Kontext-, Grafik- oder Schutzvorgabe wurde
+durch den Hitzefix reduziert. Die drei nachgewiesenen Einsparungen beweisen noch
+nicht die Hauptursache der starken Erwärmung während bereits geladener Inferenz.
+Belege: `docs/evidence/thermal-root-20261111/SUMMARY.json`; Übergabe:
+`docs/research/omega/THERMAL-ROOT-HANDOFF-20261111.md`.
+
+### Vollständige Core-Bestätigung und Thermik-Übernahme
+
+Der geerbte Core-Lauf ist vollständig abgeschlossen: **97 PASS / 1 FAIL / 0 SKIP**
+auf sauberem `3cb8df27`. Alle 30 Dokumentfluss- und sechs PDF-Szenenfälle bestanden.
+Die einzige verbleibende Niederlage ist `FileDescriptor.getOwnerId$()` im strikten
+PDF-Dekoder der Host-Laufzeit. Vollständiges Journal, XML, Log und Quellidentität:
+`docs/evidence/omega-apk54-20261111/baseline-core-summary.json`.
+
+#773 `8decff576` ist in den gemeinsamen Kandidaten übernommen. Seine drei kleinen
+Reparaturen entfernen doppelte Modellprüfung und unveränderte Status-/Lichtarbeit.
+Die fünf Produktionsdateien und zugehörigen neuen Tests sind byte-identisch zum
+unabhängig geprüften `1ba7b9458`; keine neue Blockade in den drei Gegenprüfungen.
+JVM 94/94 und Node 34/34 sind übernommene quellgebundene Thermik-Belege.
+Gemeinsame Android-/Visual-/Lint-Abnahme und echte Fold7-Thermik bleiben offen.
+
+### Gemeinsamer Node-Stand c36258a8
+
+Vollständig: **2.456 PASS / 5 FAIL / 37 SKIP** von 2.498 Fällen, Quelle unverändert.
+Der Umfang enthält zusätzlich `scripts/*.test.mjs`; die Summen sind nicht direkt
+mit dem geerbten 1.634-Fall-Lauf vergleichbar. Backend 64/64 und Syntaxprüfung PASS.
+Fünf Prozess-Fixture-Fehler werden unverändert isoliert untersucht; kein grüner
+Gesamtnachweis. Belege: `node-combined-c36258a8/SUMMARY.json` im Evidenzverzeichnis.
+
+Zwei Review-Nachträge (Verb-am-Ende-App-Routing und historische Gedächtnisanfragen)
+sind in kleinen Helper-Reparaturen. Der alte Android-Aufruf wurde vor Gradle-Start
+aus der Reihenfolge genommen; der neue 27-Klassen-Lauf folgt auf gemeinsamem SHA.
+
+### Übernommene Review-Reparaturen
+
+#778 `258639206`: Verb-am-Ende-Routing RED3/7 → GREEN45/45.
+#779 `4485ef71`: historische Anfragen RED3/9 → GREEN95/95; normaler großer
+Pflichtblock weiter1.595Byte. Alle31 übernommenen Quellhashes passen zu den
+grünen Manifesten. Zusätzliche4 Activity-Fälle integriert, gemeinsamer Lauf offen.
+
+Prozess-Einzelprüfung auf unverändertem c362: **37/37 PASS,0SKIP**. Finale volle
+Node-Menge bleibt354Dateien; äußere Parallelität1, innere Nebenläufigkeit und alle
+Fristen/Assertions bleiben unverändert. Frühere5 Fehler sind dadurch nicht erklärt
+oder rückwirkend behoben. Der neue Lauf wird ausdrücklich getrennt ausgewiesen.
+
+## Gemeinsamer vollständiger Node-Lauf – äußerlich seriell
+
+Exakter sauberer Source `5b935b4feaf960bb6973dd4d630f02744e41913f`: **2.498 Fälle, 2.455 PASS, 6 FAIL, 37 SKIP**; vollständiger Abschluss, Quelle unverändert, Prozessende bestätigt. Identische 354 Dateien/Reihenfolge, unveränderte Assertions und 30-Minuten-Grenze. Die Variante mit äußerer Parallelität 1 ist ebenfalls FAIL; der frühere Parallel-Lauf bleibt dokumentiert. Konkrete Fehler in `node-serial-5b935b4f/failures.json`; Ursachen werden getrennt geprüft. Android/Lint auf diesem Source läuft, APK noch nicht gebaut.
+
+## Vollständiger Android-Befund und integrierte Reparaturen
+
+| Prüfung | Ergebnis | Quelle |
+|---|---|---|
+| Gemeinsame27 Android-Klassen | 205:198 PASS/7 FAIL/0 SKIP; vollständig, Quelle unverändert |5b935b4f|
+| Konfigurierter NewApi-Lint | PASS,0Issues |5b935b4f|
+| Voller Android-Lauf | NOT_RUN; Voraussetzung vor Gradle abgewiesen |5b935b4f|
+| Kollektivdialog/Sicherheitsregressionen |101/101 reine Kotlin-Tests,21/21 integrierte Quellhashes gleich; unabhängiger Review OK |#781,32f21748|
+| STOP-/Planning-/Memory-Testaufbau |3 vollständige UI-Klassen repariert, alle fachlichen Assertions erhalten; gemeinsamer Retest offen |#781+#782|
+| Vollständiger PDF-Gate | Full-PASS verlangt echten nativen Prüffall exakt einmal SUCCESS; SKIP genügt nicht |neuer quellgebundener Starter|
+
+Die vier Memory-Fehler entstanden vor der Wartebedingung im eifrigen Diagnoseausdruck. STOP hatte die beabsichtigte Invalidierung vorzeitig in den Lookup-Zähler aufgenommen; Planning navigierte erneut über die bereits verborgene Startansicht. Der Pluraldialog deckte zusätzlich einen echten Produktionsfehler der Safety-Klassifizierung auf; dieser ist mit engen Negativfällen repariert. Native Geräteabnahme bleibt NOT_RUN.
+
+## Abgeschlossener UI-Retest c163641b
+
+**25 Fälle:11PASS/14FAIL/0SKIP**, drei vollständige Klassen, Quelle unverändert. NewApi-LintPASS; Analyse ausgeführt, identische Berichte von Gradle ausdrücklich als UP-TO-DATE wiederverwendet. Voller Android-Lauf vor Gradle am UI-Gate abgewiesen: NOT_RUN.13 neue Sofortprüfungen liefen vor dem geposteten Klick, ein Fall ließ das erwartete Gedächtniszentrum offen. Die kleinen Folgekorrekturen warten mit bestehenden Grenzen und bewahren alle fachlichen Assertions; Android-Retest danach offen. Rohbelege: `android-ui-recheck-c163641b/`.
+
+Inhaltsübersicht mit48 geprüften Blob-Vergleichen: `contents-c163641b/`. Vorhandene Kühlsteuerung und neue Recheneinsparungen getrennt; keine gemessene Fold7-Abkühlung behauptet.

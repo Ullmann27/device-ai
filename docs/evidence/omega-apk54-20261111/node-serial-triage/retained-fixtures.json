@@ -1,0 +1,23 @@
+[
+  {
+    "source": "/tmp/code-index-cli-McgV7p/code-index.json",
+    "saved": "current-code-index.json",
+    "sha256": "2e97feb40025262243adc2974f32371ca0142ca458eb1c4f7a5076afcff33238",
+    "mtimeNs": 1794416520794142668,
+    "binding": "retained fixture matched by content and execution interval; source path not emitted by JUnit"
+  },
+  {
+    "source": "/tmp/code-index-cli-McgV7p/code-index-cache.json",
+    "saved": "current-code-index-cache.json",
+    "sha256": "983a7885d9d065b7ada1cd9a501dbe8d51e0978c32ea7484df32b4b77115669a",
+    "mtimeNs": 1794416520790605367,
+    "binding": "retained fixture matched by content and execution interval; source path not emitted by JUnit"
+  },
+  {
+    "source": "/tmp/code-index-cli-On60BF/code-index.json",
+    "saved": "previous-code-index.json",
+    "sha256": "aacf37fc3bf5727e49545d49290a40663023e46a05ffc5f55d482401740c8912",
+    "mtimeNs": 1794414318930645229,
+    "binding": "retained fixture matched by content and execution interval; source path not emitted by JUnit"
+  }
+]

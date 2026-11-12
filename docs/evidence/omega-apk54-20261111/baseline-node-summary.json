@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "source": {
+    "commit": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
+    "tree": "888938b1a9921a1c2043041d9dbfeecf4cf7d942",
+    "clean": true
+  },
+  "command": "node --test --test-concurrency=1 .github/continuum/*.test.mjs",
+  "node": "24.22.1",
+  "uid": 1000,
+  "exitCode": 1,
+  "complete": true,
+  "counts": {
+    "tests": 1634,
+    "pass": 1612,
+    "fail": 3,
+    "cancelled": 0,
+    "skipped": 19,
+    "todo": 0
+  },
+  "durationMs": 1469921.590749,
+  "failures": [
+    "the same live scheduler automatically continues from a failed cycle to a healthy cycle (10621.46033ms)",
+    "finite scheduler returns zero only when its single full cycle passed (22587.902887ms)",
+    "an owner abort ends a running step and its detached grandchild within seconds (3509.456393ms)"
+  ],
+  "logSha256": "190d6516e53811406e7e479b9311be041d301ee7ceadf7bd96943c778096db1b",
+  "interpretation": "Three process-supervision failures require isolated diagnosis. Prior uid=0 failure counts are not reused."
+}

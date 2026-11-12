@@ -1,0 +1,21 @@
+gradle.projectsEvaluated {
+    def task = gradle.rootProject.project(':app').tasks.named('testDebugUnitTest').get()
+    task.outputs.upToDateWhen { false }
+    task.maxParallelForks = 1
+    task.maxHeapSize = '1024m'
+    task.filter {
+        setIncludePatterns(
+            'at.heinz.deviceai.localmodel.*',
+            'at.heinz.deviceai.learning.ContinuumLearningCoreTest',
+            'at.heinz.deviceai.learning.ContinuumLearningStatus*',
+            'at.heinz.deviceai.learning.TrainableSubwordEncoderTest',
+            'at.heinz.deviceai.learning.ModelCheckpointStoreTest',
+            'at.heinz.deviceai.learning.OwnerMemoryRecovery*',
+            'at.heinz.deviceai.ui.JarvisLightStreamReuseTest',
+            'at.heinz.deviceai.ui.JarvisLivingSceneTest',
+            'at.heinz.deviceai.ui.JarvisThermalVisualContractTest',
+            'at.heinz.deviceai.ui.JarvisRenderQualityTest',
+            'at.heinz.deviceai.ui.JarvisRenderQualityAdaptiveTest')
+    }
+    task.testLogging { events 'passed', 'failed', 'skipped'; exceptionFormat 'full' }
+}

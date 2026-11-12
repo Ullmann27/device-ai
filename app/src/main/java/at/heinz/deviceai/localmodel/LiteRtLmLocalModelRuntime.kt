@@ -142,9 +142,8 @@ class LiteRtLmLocalModelRuntime(
         }
         background.execute {
             val result = runCatching {
-                val model = catalog.get(id, version)
+                val (model, file) = catalog.sourceForLoad(id, version)
                     ?: error("Imported model is missing or failed its integrity check.")
-                val file = catalog.modelFile(model)
                 val capabilities = NativeLiteRtModelInspector().inspect(file)
                 require(capabilities == model.capabilities) {
                     "Model capability metadata changed after import."

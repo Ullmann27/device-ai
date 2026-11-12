@@ -5,6 +5,24 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class LocalConversationFollowUpPolicyTest {
+    @Test fun explicitConversationStateRequiresEarlierOwnerTurns() {
+        for (question in listOf(
+            "Wie viele Schrauben sind nach allen Korrekturen darin?",
+            "Beziehe dich ausschließlich auf unser bisheriges Gespräch. Welche Farbe hat die Kiste?",
+            "Welche Anzahl gilt laut meinen Angaben?"
+        )) assertTrue(question, LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(question))
+        assertFalse(LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn("Was bedeutet das Wort Korrekturen?"))
+    }
+
+    @Test fun aNewConversationIntroductionIsNotAnHistoricalFollowUp() {
+        val first = "Ich habe eine blaue Werkzeugkiste mit zwölf Schrauben in der Garage. " +
+            "Merk dir diese Angaben für unser Gespräch, ich frage dich später danach."
+        assertFalse(first, LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(first))
+        assertFalse(first, LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(first))
+        assertTrue(LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(
+            "Beziehe dich auf unser bisheriges Gespräch."))
+    }
+
     @Test fun fold7OwnerCorrectionAndHistoricalRecallRequirePreviousOwnerTurn() {
         assertTrue(LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(
             "Nun hat die rote Kiste 9 Ringe statt 4. Welche Kiste enthält jetzt mehr? Bitte nur Farbe und Anzahl nennen."

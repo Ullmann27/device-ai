@@ -1,0 +1,13 @@
+JUnit version 4.13.2
+..E..........
+Time: 1.398
+There was 1 failure:
+1) collectivePhrasesNeverExemptCoordinatedOrSeparateInstructions(at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest)
+java.lang.AssertionError: Wir starten mach Chrome auf
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.collectivePhrasesNeverExemptCoordinatedOrSeparateInstructions(BootstrapBrainOwnerIntentSafetyTest.kt:119)
+
+FAILURES!!!
+Tests run: 12,  Failures: 1
+

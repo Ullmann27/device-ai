@@ -1,0 +1,24 @@
+{
+  "source_head": "e0ef4896711383b1dd76761ffd2fe5a0b94f3e9f",
+  "cached_dependencies": "/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug",
+  "test_classes": [
+    "at.heinz.deviceai.localmodel.LocalModelLoadSourceTest",
+    "at.heinz.deviceai.localmodel.LocalModelCatalogTest",
+    "at.heinz.deviceai.localmodel.LocalModelImportStreamTest",
+    "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest",
+    "at.heinz.deviceai.localmodel.LocalModelThermalGuardTest",
+    "at.heinz.deviceai.localmodel.LocalModelGenerationPolicyTest",
+    "at.heinz.deviceai.localmodel.LocalModelComputeBudgetTest"
+  ],
+  "source_sha256": {
+    "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelLoadSourceTest.kt": "cdb8e9f25f25906ec7ca4631917b76391fc7fee1388a732ce39639f7ff50a93c",
+    "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelCatalogTest.kt": "e8c7873aafd9f1fdfe74009a476c2a0053894d6df1efaec4c5ef8f8e367adbc9",
+    "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelImportStreamTest.kt": "23c37dc3015c9227f85f23f2ab09c0bbb7f192dda655e121fbd960a739d2d086",
+    "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelReloadLifecycleTest.kt": "7dbbc6fa16c7ba34991049aa7716953e76eeaaa9197e8949b1b8a2b143cf51e0",
+    "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelThermalGuardTest.kt": "29aa239916348b05192d2ea3a889516b5df6e15f3bdcadace076ca1a6a27a08d",
+    "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelGenerationPolicyTest.kt": "f2886c9e438eab422baab50475ee9dea1da8ba917c838b1d2a62b238f2e64905",
+    "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelComputeBudgetTest.kt": "beeb26e329c4d297123aa7a4df2bddef2481022fc7fae1d8765ab60c05c82867",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt": "169e685b28b39392c33cd644362ddf58efeee98c3f4f806cf98a297bec579202",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt": "3c2b2864b3e51eda5a79ea3166b902a6e809493cb1fa910514de01b44779a029"
+  }
+}

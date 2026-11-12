@@ -1,122 +1,356 @@
 {
- "schema": 1,
- "updated": "2026-11-11",
- "integration_branch": "claude/omega-integration-20261111",
- "pr": 768,
- "base": {
-  "pr761": "8505c8850",
-  "pr747": "c00326ced",
-  "pr757": "be33c2c97",
-  "code53_installed": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05"
- },
- "entries": [
-  {
-   "issue": "cinema-connections",
-   "origin_pr": 757,
-   "commit": "be33c2c97",
-   "target_branch": "claude/omega-integration-20261111",
-   "tests": "Agent A 115/0 on 6c538e2e; not re-run after merge",
-   "status": "INTEGRIERT",
-   "device_check": "NOT_RUN"
+  "schema": 1,
+  "updated": "2026-11-11",
+  "integration_branch": "integrate/omega-apk54-20261111",
+  "pr": 769,
+  "base": {
+    "pr761": "8505c8850",
+    "pr747": "c00326ced",
+    "pr757": "be33c2c97",
+    "code53_installed": "050a57cb019dcc1b7fe6cfa2fb5c11176b048e05"
   },
-  {
-   "issue": "761-fixtures+speech-veto-contract",
-   "origin_pr": 768,
-   "commit": "120572483",
-   "target_branch": "claude/omega-integration-20261111",
-   "tests": "Geometry 3/3, Acceptance 6/6, node wiring 7/7",
-   "status": "GETESTET",
-   "device_check": "NOT_RUN"
-  },
-  {
-   "issue": "761-core-scope",
-   "origin_pr": 761,
-   "commit": "6c538e2ef",
-   "target_branch": "claude/omega-integration-20261111",
-   "tests": "98: 94 PASS / 4 FAIL (3 fixtures fixed, 1 strict host decode)",
-   "status": "GETESTET",
-   "device_check": "NOT_RUN"
-  },
-  {
-   "issue": "761-strict-pdf-decode",
-   "origin_pr": 761,
-   "commit": "a39089fe8",
-   "target_branch": "work/pdf-scene-20261111",
-   "tests": "0/1 host (NoSuchMethodError getOwnerId$)",
-   "status": "BLOCKIERT",
-   "device_check": "NOT_RUN"
-  },
-  {
-   "issue": "761-visual-scope",
-   "origin_pr": 761,
-   "commit": null,
-   "target_branch": "claude/omega-integration-20261111",
-   "tests": "NOT_RUN",
-   "status": "NOT_RUN",
-   "device_check": "NOT_RUN"
-  },
-  {
-   "issue": "cinema-matrix+engine-decision",
-   "origin_pr": null,
-   "commit": "999f268c1",
-   "target_branch": "claude/omega-integration-20261111",
-   "tests": "docs",
-   "status": "INTEGRIERT",
-   "device_check": "NOT_RUN"
-  },
-  {
-   "issue": "767/759/765-routing",
-   "origin_pr": null,
-   "commit": "231b8bad2",
-   "target_branch": "claude/omega-agent-b-routing-20261111",
-   "tests": "13 tests, 9 RED (reproduction), no fix",
-   "status": "WIP",
-   "device_check": "NOT_RUN"
-  },
-  {
-   "issue": "758-memory+context-window",
-   "origin_pr": null,
-   "commit": "02d9260c9",
-   "target_branch": "claude/omega-agent-c-memory-20261111",
-   "tests": "16 written, never compiled",
-   "status": "WIP",
-   "device_check": "NOT_RUN"
-  },
-  {
-   "issue": "node-regression",
-   "origin_pr": null,
-   "commit": "6c538e2ef",
-   "target_branch": "-",
-   "tests": "backend 64/64; contracts 1584 PASS/27 FAIL/23 SKIP, 26 baseline (= Code53), 1 fixed",
-   "status": "GETESTET",
-   "device_check": "-"
-  },
-  {
-   "issue": "lint+full-android-suite",
-   "origin_pr": null,
-   "commit": null,
-   "target_branch": "-",
-   "tests": "NOT_RUN",
-   "status": "NOT_RUN",
-   "device_check": "NOT_RUN"
-  },
-  {
-   "issue": "unified-filament-scene (P3)",
-   "origin_pr": null,
-   "commit": null,
-   "target_branch": "-",
-   "tests": "-",
-   "status": "NOT_RUN",
-   "device_check": "NOT_RUN"
-  },
-  {
-   "issue": "569/764/team/accounts/cleaner",
-   "origin_pr": null,
-   "commit": null,
-   "target_branch": "-",
-   "tests": "-",
-   "status": "OFFEN",
-   "device_check": "NOT_RUN"
+  "entries": [
+    {
+      "issue": "cinema-connections",
+      "origin_pr": 757,
+      "commit": "be33c2c97",
+      "target_branch": "claude/omega-integration-20261111",
+      "tests": "Agent A 115/0 on 6c538e2e; not re-run after merge",
+      "status": "INTEGRIERT",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "761-fixtures+speech-veto-contract",
+      "origin_pr": 768,
+      "commit": "120572483",
+      "target_branch": "claude/omega-integration-20261111",
+      "tests": "Geometry 3/3, Acceptance 6/6, node wiring 7/7",
+      "status": "GETESTET",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "761-core-scope",
+      "origin_pr": 761,
+      "commit": "6c538e2ef",
+      "target_branch": "claude/omega-integration-20261111",
+      "tests": "98: 94 PASS / 4 FAIL (3 fixtures fixed, 1 strict host decode)",
+      "status": "GETESTET",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "761-strict-pdf-decode",
+      "origin_pr": 761,
+      "commit": "a39089fe8",
+      "target_branch": "work/pdf-scene-20261111",
+      "tests": "0/1 host (NoSuchMethodError getOwnerId$)",
+      "status": "BLOCKIERT",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "761-visual-scope",
+      "origin_pr": 761,
+      "commit": null,
+      "target_branch": "claude/omega-integration-20261111",
+      "tests": "NOT_RUN",
+      "status": "NOT_RUN",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "cinema-matrix+engine-decision",
+      "origin_pr": null,
+      "commit": "999f268c1",
+      "target_branch": "claude/omega-integration-20261111",
+      "tests": "docs",
+      "status": "INTEGRIERT",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "767/759/765-routing",
+      "origin_pr": null,
+      "commit": "231b8bad2",
+      "target_branch": "claude/omega-agent-b-routing-20261111",
+      "tests": "13 tests, 9 RED (reproduction), no fix",
+      "status": "WIP",
+      "device_check": "NOT_RUN",
+      "superseded_by": "767/759/765-continuation"
+    },
+    {
+      "issue": "758-memory+context-window",
+      "origin_pr": null,
+      "commit": "02d9260c9",
+      "target_branch": "claude/omega-agent-c-memory-20261111",
+      "tests": "16 written, never compiled",
+      "status": "WIP",
+      "device_check": "NOT_RUN",
+      "superseded_by": "758-continuation for object memory; general prompt-budget redesign remains open"
+    },
+    {
+      "issue": "node-regression",
+      "origin_pr": null,
+      "commit": "6c538e2ef",
+      "target_branch": "-",
+      "tests": "backend 64/64; contracts 1584 PASS/27 FAIL/23 SKIP, 26 baseline (= Code53), 1 fixed",
+      "status": "GETESTET",
+      "device_check": "-"
+    },
+    {
+      "issue": "lint+full-android-suite",
+      "origin_pr": null,
+      "commit": null,
+      "target_branch": "-",
+      "tests": "NOT_RUN",
+      "status": "NOT_RUN",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "unified-filament-scene (P3)",
+      "origin_pr": null,
+      "commit": null,
+      "target_branch": "-",
+      "tests": "-",
+      "status": "NOT_RUN",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "569/764/team/accounts/cleaner",
+      "origin_pr": null,
+      "commit": null,
+      "target_branch": "-",
+      "tests": "-",
+      "status": "OFFEN",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "758-continuation",
+      "origin_pr": 770,
+      "commit": "dd0eda082bfcce624ecee9eb14a327d43d51b66d",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "83/83 focused Kotlin/JUnit PASS; ledger required-block boundary 16221 -> 1595 UTF-8 bytes; three actual Activity cases written, Android NOT_RUN",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
+      "device_check": "NOT_RUN",
+      "followup_pr": 776
+    },
+    {
+      "issue": "767/759/765-continuation",
+      "origin_pr": 772,
+      "commit": "e20ca3a5656f4ccd81625d8e930e2fea85f48eed",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "94/94 focused Kotlin/JUnit PASS; independent holdouts verified; seven new Activity cases written, Android NOT_RUN",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "cinema-exp06-exp11-switches",
+      "origin_pr": 771,
+      "commit": "965ad4c51ec4c5a90fdb25ce8fc09d1d1f65202e",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "13/13 Kotlin/JUnit and 13/13 Node PASS; two new Canvas cases written, Android NOT_RUN",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "747-master-protocol",
+      "origin_pr": 747,
+      "commit": "c00326cedc6b697d5634dbc33de9ffcdd29fe58c",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "Only the 145-line master protocol differs; no production delta. Reviewed and merged.",
+      "status": "INTEGRIERT",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "758-ledger-prompt-budget",
+      "origin_pr": 776,
+      "commit": "dd0eda082bfcce624ecee9eb14a327d43d51b66d",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "New five-case RED:2PASS/3FAIL; full focused confirmation83PASS. Internal state/history and existing budget gates unchanged.",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "569-thermal-repair",
+      "origin_pr": 773,
+      "component_prs": [
+        774,
+        775,
+        777
+      ],
+      "commit": "8decff576dc05ed3cdb0b8ded680b6098a1d8537",
+      "tested_local_source": "b1d7e7df90e56e0b4db2c131041fb9e6a7c16174",
+      "tested_tree": "903bca2e718caabe2846bfa76493493cedf10dc3",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "source_branch": "fix/thermal-root-20261111",
+      "target_included": "c02930f104e106cd8cba4ff8f6ecc1ad9fcee04f",
+      "tests": "94/94 combined JVM; 34/34 Node; 72 identical draw traces; independent 5-file review; Android tests/lint RUNNING",
+      "status": "INTEGRATED_PENDING_COMMON_ANDROID_QA",
+      "device_check": "NOT_RUN",
+      "integration": "Integrated into canonical #769; three independent root helper reviews found no new blocker. Reviewed production/tests identical to 1ba7b9458. Common Android and physical Fold7 acceptance remain pending.",
+      "evidence": "docs/evidence/thermal-root-20261111/SUMMARY.json",
+      "handoff": "docs/research/omega/THERMAL-ROOT-HANDOFF-20261111.md"
+    },
+    {
+      "issue": "761-core-confirmation-complete",
+      "origin_pr": 768,
+      "commit": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "Complete 98:97 PASS/1 strict native host FAIL/0 SKIP. All 30 document-flow and six PDF-scene cases PASS. Clean source unchanged.",
+      "status": "HOST_COMPLETE_STRICT_PDF_BLOCKED",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-apk54-20261111/baseline-core-summary.json"
+    },
+    {
+      "issue": "app-verb-final-review",
+      "origin_pr": 778,
+      "commit": "258639206227371271d324cd1e4c3c7a5a379a7a",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "RED10:3PASS/7FAIL; GREEN45/45; three actual Activity cases pending",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "memory-history-review",
+      "origin_pr": 779,
+      "commit": "4485ef71a3e00c93656dcede7788a7ad1af4e8a8",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "tests": "RED12:3PASS/9FAIL; GREEN95/95; one actual Activity case pending",
+      "status": "INTEGRATED_PENDING_ANDROID_QA",
+      "device_check": "NOT_RUN"
+    },
+    {
+      "issue": "apk54-full-node-serial",
+      "origin_pr": 769,
+      "commit": "5b935b4feaf960bb6973dd4d630f02744e41913f",
+      "target_branch": "integrate/omega-apk54-20261111",
+      "status": "FAIL",
+      "tests": "2498 total:2455 PASS/6 FAIL/37 SKIP; same354files/order; outerconcurrency1; sourceUnchangedtrue; terminationConfirmedtrue; complete evidence; unchanged30min bound",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-apk54-20261111/node-serial-5b935b4f/SUMMARY.json"
+    },
+    {
+      "issue": "apk54-first-common-android",
+      "origin_pr": 769,
+      "commit": "5b935b4feaf960bb6973dd4d630f02744e41913f",
+      "status": "COMPLETE_FAIL",
+      "tests": "205 total:198 PASS/7 FAIL/0 SKIP; all27 classes; source unchanged. Configured NewApi lint PASS/0issues. Full prerequisite rejected before Gradle: NOT_RUN.",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-apk54-20261111/android-focused-5b935b4f/SUMMARY.json"
+    },
+    {
+      "issue": "collective-start-safety-and-ui-fixtures",
+      "origin_pr": 781,
+      "commit": "32f217480915f45fb48c0d3952bcff117c5788d6",
+      "status": "INTEGRATED_PENDING_COMMON_UI_RECHECK",
+      "tests": "101/101 pure Kotlin cases;21/21 inputs match integrated files; final Safety97121251 reviewed. STOP generation and Planning chat-entry fixtures preserve behavioral assertions. Android NOT_RUN on repaired source.",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-collective-start-20261111/"
+    },
+    {
+      "issue": "memory-ui-fixture",
+      "origin_pr": 782,
+      "commit": "69cd1cb66ef1d48d7fb867ec12b1b9efd2472413",
+      "status": "INTEGRATED_PENDING_COMMON_UI_RECHECK",
+      "tests": "Preserved four original failure receipts. Deferred diagnostic and conditional CHAT entry independently reviewed; assertions and10-second wait unchanged. Android NOT_RUN on repaired source.",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-memory-ui-20261111/baseline-failures.json"
+    },
+    {
+      "issue": "apk54-ui-recheck-c163",
+      "origin_pr": 769,
+      "commit": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+      "status": "COMPLETE_FAIL_FIXTURE_FOLLOWUP",
+      "tests": "25total:11PASS/14FAIL/0SKIP,source unchanged;13 posted-click precondition races and1 legitimate memory-center dialog. NewApi lint PASS, Gradle report UP-TO-DATE explicitly recorded. Full Android NOT_RUN after prerequisite rejection.",
+      "device_check": "NOT_RUN",
+      "evidence": "docs/evidence/omega-apk54-20261111/android-ui-recheck-c163641b/SUMMARY.json"
+    },
+    {
+      "issue": "ui-posted-click-and-center-dialog-followup",
+      "origin_prs": [
+        783,
+        784
+      ],
+      "commits": [
+        "724331330f7ee3f676357b449c888f506645b681",
+        "288a351e27c1dd91502bb8037cdcb19ca86db57f"
+      ],
+      "status": "INTEGRATED_PENDING_COMMON_RECHECK",
+      "tests": "All3UIfile hashes match independent review; no app/src/main delta fromc163;21/21 pure safety inputs unchanged. Actual3class Android recheck NOT_RUN.",
+      "device_check": "NOT_RUN"
+    }
+  ],
+  "parent_pr": 768,
+  "execution_plan": {
+    "reason": "Complete the unchanged inherited core first. Run the full Android suite, visual cases and lint on the combined candidate to avoid duplicating expensive full runs before and after the same repairs. No assertion, test or strict native decoder gate is removed. Reproduce any unexpected combined failure on its relevant baseline before attributing it.",
+    "baseline_source": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
+    "inherited_core": {
+      "source": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
+      "tests": 98,
+      "pass": 97,
+      "fail": 1,
+      "skip": 0,
+      "complete": true,
+      "source_unchanged": true,
+      "failed_case": "PdfIntakeNativeDecodeProbeUiTest.actualProviderReadRendersAndExtractsSyntheticPdf",
+      "failure": "NoSuchMethodError: java.io.FileDescriptor.getOwnerId$()",
+      "evidence": "docs/evidence/omega-apk54-20261111/baseline-core-summary.json"
+    },
+    "baseline_node": {
+      "source": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
+      "tests": 1634,
+      "pass": 1612,
+      "fail": 3,
+      "skip": 19,
+      "cancelled": 0,
+      "complete": true,
+      "isolated_reproduction": "All three affected tests PASS unchanged; baseline cause unproven. New diagnostic run proves TIMEOUT in finite scheduler at 1000ms fixture limit. No production/timeout/assertion weakening."
+    },
+    "baseline_backend": {
+      "pass": 64,
+      "fail": 0,
+      "skip": 0
+    },
+    "heavy_gradle": "One serialized process; final Node uses the same lock to avoid overlapping heavy builds.",
+    "candidate_version": {
+      "code": 54,
+      "name": "0.3.53",
+      "status": "PLANNED_NOT_BUILT"
+    },
+    "p3": {
+      "status": "DEFERRED_NOT_IMPLEMENTED",
+      "reason": "Full shared scene requires HomeView viewport and avatar mask/origin changes as well as GPU acceptance. Preserve current working stage/fallback for the immediate candidate; no incomplete renderer is activated."
+    },
+    "node_final": "Full same 354-file inventory/order, outer test-file concurrency=1, same runOwnedCommand/assessNodeOutcome, unchanged 30-minute/inner-worker/test limits. Prior concurrency=2 FAIL remains recorded.",
+    "combined_node_c36258a8": {
+      "source": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+      "total": 2498,
+      "pass": 2456,
+      "fail": 5,
+      "skip": 37,
+      "complete": true,
+      "source_unchanged": true,
+      "evidence": "docs/evidence/omega-apk54-20261111/node-combined-c36258a8/SUMMARY.json"
+    },
+    "android_focused": "Completed5b:205total/198PASS/7FAIL/0SKIP,27classes; source unchanged; NewApi lintPASS. Reviewed #781/#782 now integrated, exact-source3-class recheck then full unfiltered Android pending.",
+    "review_followups": {
+      "app_verb_final": {
+        "pr": 778,
+        "source": "258639206227371271d324cd1e4c3c7a5a379a7a",
+        "green": "45/45",
+        "status": "INTEGRATED_PENDING_ANDROID_QA"
+      },
+      "memory_history": {
+        "pr": 779,
+        "source": "4485ef71a3e00c93656dcede7788a7ad1af4e8a8",
+        "green": "95/95",
+        "status": "INTEGRATED_PENDING_ANDROID_QA"
+      }
+    },
+    "node_isolated_process_c36258a8": {
+      "pass": 37,
+      "fail": 0,
+      "skip": 0,
+      "source_unchanged": true,
+      "durationSeconds": 56.02
+    },
+    "common_qa_source": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+    "common_android": "Completed25case UI recheck11PASS/14FAIL; NewApi lintPASS. Next reviewed test-only follow-ups require same three full classes then unfiltered full Android. No native PDF allowance."
   }
- ]
 }

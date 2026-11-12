@@ -181,6 +181,56 @@ class HollywoodFuiConnectionsUiTest {
         return false
     }
 
+    @Test fun disablingOrbLinkRemovesBandAndPacketWithoutDisablingReceiptRim() {
+        val withReceipt = Fixture()
+        val baseline = Fixture()
+        try {
+            for (f in listOf(withReceipt, baseline)) {
+                f.overlay.setEnergySource(f.orb)
+                f.overlay.setWorkActive(true)
+                f.frame(1_000L)
+                f.frame(6_000L)
+                assertTrue(count(f.pixels(), 105..350, 450..560) > 100)
+                f.overlay.orbLinkEnabled = false
+                assertEquals("Live OFF removes the band", 0,
+                    count(f.pixels(), 105..350, 450..560))
+            }
+            assertTrue("EXP12 remains independent", withReceipt.overlay.verifiedStep("call-no-band"))
+            for (f in listOf(withReceipt, baseline)) {
+                f.frame(6_016L)
+                f.frame(6_206L)
+            }
+            val actual = withReceipt.pixels()
+            val without = baseline.pixels()
+            assertEquals("No packet without EXP11", 0, count(actual, 105..350, 450..560))
+            var rimChanges = 0
+            for (i in actual.indices) {
+                if (!differs(actual[i], without[i])) continue
+                assertTrue("Only the receipt rim changes",
+                    nearRim(i % W, i / W, withReceipt.target, 14f))
+                rimChanges++
+            }
+            assertTrue("Verified rim remains visible", rimChanges > 20)
+            withReceipt.overlay.orbLinkEnabled = true
+            assertTrue("Live ON restores the band", count(withReceipt.pixels(), 105..350, 450..560) > 100)
+        } finally {
+            withReceipt.dispose()
+            baseline.dispose()
+        }
+    }
+
+    @Test fun orbLinkSwitchDoesNotHideIndependentReadingAttention() = fixture { f ->
+        f.overlay.setAttentionSource(f.face)
+        f.overlay.setEnergySource(f.orb)
+        f.overlay.setWorkActive(true)
+        f.overlay.orbLinkEnabled = false
+        f.frame(1_000L)
+        f.frame(6_000L)
+        assertEquals(0, count(f.pixels(), 105..350, 450..560))
+        assertTrue("Reading attention remains", threadPixels(f.pixels()) > 60)
+        assertFaceClear(f.pixels(), f)
+    }
+
     @Test fun receiptPacketOnlyAfterAVerifiedStepAndOnlyOnTheBand() {
         val withReceipt = Fixture()
         val baseline = Fixture()

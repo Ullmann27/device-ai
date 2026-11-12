@@ -1,0 +1,38 @@
+{
+  "source": "5b935b4feaf960bb6973dd4d630f02744e41913f",
+  "tree": "246ff9ffbbb3d17e59147806c90bb0b47a7743ef",
+  "profile": "full-node-outer-concurrency-1",
+  "startedAt": "2026-11-11T16:55:03.345Z",
+  "finishedAt": "2026-11-11T17:14:02.055Z",
+  "status": "FAIL",
+  "sourceUnchanged": true,
+  "cancelled": false,
+  "fileCount": 354,
+  "inventoryMatchesOriginal": true,
+  "timeoutMs": 1800000,
+  "process": {
+    "status": "FAIL",
+    "reason": "PROCESS_FAILED_OR_UNCONFIRMED",
+    "code": 1,
+    "exitSignal": null,
+    "error": null,
+    "terminationConfirmed": true
+  },
+  "counts": {
+    "total": 2498,
+    "passed": 2455,
+    "failed": 6,
+    "skipped": 37,
+    "executed": 2461,
+    "placeholders": 0,
+    "evidenceComplete": true
+  },
+  "backend": {
+    "check": "PASS",
+    "tests": 64,
+    "passed": 64,
+    "failed": 0,
+    "skipped": 0
+  },
+  "interpretation": "Complete FAIL. Serialization did not produce a green full run. Previous concurrency-2 failure evidence remains retained; timing/load is not established as the cause of all failures. Android currently executing; APK not built."
+}

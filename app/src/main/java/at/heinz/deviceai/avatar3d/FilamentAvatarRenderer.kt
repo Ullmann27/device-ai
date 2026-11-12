@@ -242,7 +242,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
                cinematicLighting: Boolean = false, windowAccentArgb: Int? = null,
                windowOpen: Boolean = false, gazeBlinkEnabled: Boolean = false,
                eyeNeckCouplingEnabled: Boolean = true,
-               sentenceGesturesEnabled: Boolean = true): Boolean {
+               sentenceGesturesEnabled: Boolean = true,
+               windowLightEnabled: Boolean = false): Boolean {
         val e = engine ?: return false
         if (width <= 0 || height <= 0 || !surface.isValid) return false
         if (viewportWidth != width || viewportHeight != height || appliedFraming != framingVersion) {
@@ -262,13 +263,13 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         mapper.update(pose, seconds, motion, gazeBlinkEnabled = gazeBlinkEnabled)
         mapper.applyDiagnosticBlink(diagnosticBlink)
         applyGlow(if (motion) pose.speakEnergy else 0f)
-        val flyIn = CinemaWindowLightState.snapshot
-        val accent = flyIn.accentOr(windowAccentArgb)
-        val open = windowOpen || flyIn.open
+        val lightWindow = CinemaWindowLightState.resolve(windowLightEnabled,
+            windowAccentArgb, windowOpen,
+            if (pose.gazeDirected) pose.gazeX else 0f,
+            if (pose.gazeDirected) pose.gazeY else 0f)
         // Light follows glass, not eyes.
-        val side = if (flyIn.open) flyIn.gazeX else if (pose.gazeDirected) pose.gazeX else 0f
-        val elevation = if (flyIn.open) flyIn.gazeY else if (pose.gazeDirected) pose.gazeY else 0f
-        applyCoreLight(coreEnergy, cinematicLighting && motion, accent, open, side, elevation)
+        applyCoreLight(coreEnergy, cinematicLighting && motion,
+            lightWindow.accentArgb, lightWindow.open, lightWindow.gazeX, lightWindow.gazeY)
         applySurfaceRadiance(coreEnergy, cinematicLighting && motion)
         // Cosmetic view drift uses the existing clock. Reduced motion restores
         // the same rest camera immediately; it does not change the actual pose.

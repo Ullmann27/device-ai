@@ -1,0 +1,18 @@
+JUnit version 4.13.2
+..E.....E.....
+Time: 0.205
+There were 2 failures:
+1) collectivePhrasesNeverExemptCoordinatedOrSeparateInstructions(at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest)
+java.lang.AssertionError: Wir starten und sende die Fotos
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.collectivePhrasesNeverExemptCoordinatedOrSeparateInstructions(BootstrapBrainOwnerIntentSafetyTest.kt:114)
+2) negationAndDiagnosisStayOutsideTheSingleConversationException(at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest)
+java.lang.AssertionError: Wir starten. Lösche nichts, prüfe nur den Akku.
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.BootstrapBrainOwnerIntentSafetyTest.negationAndDiagnosisStayOutsideTheSingleConversationException(BootstrapBrainOwnerIntentSafetyTest.kt:97)
+
+FAILURES!!!
+Tests run: 12,  Failures: 2
+

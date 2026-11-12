@@ -1,0 +1,91 @@
+{
+  "source": "3cb8df27c42fbc6db03d05b0f9993a8650be43af",
+  "tree": "888938b1a9921a1c2043041d9dbfeecf4cf7d942",
+  "worktreeStatus": "",
+  "node": "v24.22.1",
+  "uid": 1000,
+  "files": {
+    ".github/continuum/step-watchdog.test.mjs": "7a054d36defaba9a9132eb9a4f6f437c8f49953efb5b6d1f0a0db2e8238a895b",
+    ".github/continuum/step-watchdog.mjs": "d4d3a17f17d569799276eae1e4a238e0a6e460c39642536c732f3428718114f7",
+    "scripts/continuum-owned-process.mjs": "0548ba638e76a71b41ce0ee6bc20a7aa14dc1c2fc0ffff6c7a6f1d2f77a1354a",
+    ".github/continuum/local-worker-process.test.mjs": "677742b9e4e9dbcc3623c74ed7576799426169859140c6a434691f21de105190",
+    "scripts/continuum-local-development-worker.mjs": "78c42407252b6b167384ca47f337b880f4609a6cecd80a7004eaf0d2c83bd5c8",
+    "scripts/continuum-worker-lease.mjs": "3c3f6c0f3248923dde17385ff03b684efd66c36a747c2a8b6fc7ec2e62113b83"
+  },
+  "runs": [
+    {
+      "file": "isolated-01.tap",
+      "sha256": "a0f0bc1a13071dcf7d7ba633b742d270f562b83df8c3f3e43a489a51cb3182f8",
+      "mode": "unmodified test",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 1875.642324
+    },
+    {
+      "file": "workers-01.tap",
+      "sha256": "3a42c524aa2f6b7849e73a1d9ac427d8ad8b5357977dc5f874682655666944d7",
+      "mode": "unmodified test",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 5001.447696
+    },
+    {
+      "file": "watchdog-observed-01.tap",
+      "sha256": "c93ee20cdf5e908640804c40f18aa998760c13a1644e4b29618985a56b60e046",
+      "mode": "unmodified test plus external observation preload",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 1947.325019
+    },
+    {
+      "file": "watchdog-observed-02.tap",
+      "sha256": "490a702b14e05a695848a88d238a91cc555782e5c818c27774395bd99ec0aaba",
+      "mode": "unmodified test plus external observation preload",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 1168.5233
+    },
+    {
+      "file": "watchdog-observed-03.tap",
+      "sha256": "8f381215e698886dcad272a8367e0269f641d4ca1c72a41e8b239652a533b399",
+      "mode": "unmodified test plus external observation preload",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 1168.224723
+    },
+    {
+      "file": "watchdog-observed-04.tap",
+      "sha256": "c71f1b88a5a8a77d56367499e552db8820dce9db367f8830f43cff2fe7201657",
+      "mode": "unmodified test plus external observation preload",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 1213.778627
+    },
+    {
+      "file": "watchdog-observed-05.tap",
+      "sha256": "ac25ab5216cc521a0d2410ba8c92d065776e645c147e24dcb13eb45066bc9939",
+      "mode": "unmodified test plus external observation preload",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 1212.577735
+    },
+    {
+      "file": "watchdog-observed-06.tap",
+      "sha256": "69e4a7648056032a1d597f6fe5f163f9bd4d52bd1060b4d3f392286b4c8d250e",
+      "mode": "unmodified test plus external observation preload",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 1111.02975
+    }
+  ],
+  "sourceEdits": false,
+  "gradleStarted": false
+}

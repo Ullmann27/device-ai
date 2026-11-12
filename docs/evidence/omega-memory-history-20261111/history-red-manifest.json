@@ -1,0 +1,51 @@
+{
+  "production_ref": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+  "test_ref": "b08e22882c56a90257cdd8434081fad6aaba2a08",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/GermanNumberWords.kt": "8a8f528bb43a43b50dffaeea8c3f05627577a47ae0d07915eadeda730ed52e30",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedger.kt": "9d3278fcc383ed6e52cc96b8ce696d331eb33b196805fcf1d5aa4da2761ef2a4",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "332643aac7d0c5087253a00e63671fb8b1006a44fce85cddc6edb18a63cb8f1f",
+    "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt": "8f2d0e7f108aa751602574b57544c57eb9774afaa6a3985172b633ec823e9228",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt": "11c6f3d7af094104069a227375343d4eb77e5ee8d06ff93348108e2e11729d54",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalContextRetentionPolicy.kt": "6fbf305b24c8f1aeecabcd4d2b8f88182fcf11e0fead8a516d4e7d42d0d89add",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt": "07b6181f2954236b8a1eb5c597b804769da7e10cf2295e5ad96546058b94eaed",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalChatPromptBudget.kt": "09eeacb38b58b829598474c7d574e33a02da3a4544370a3868bf7f9736740452",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedgerHistoryPromptTest.kt": "e375364f61c5a046b8bfc557f73765c0a3dfef8a798061a753a24a63df9c382a"
+  },
+  "compile_command": [
+    "/workspace/scratch/6139925ecf70/toolchain/jdk-21.0.13+9/bin/java",
+    "-Xmx512m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.4.0/46429d5887df2d02f33fe11a0c8444c5be5fd8da/kotlin-build-tools-api-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.4.0/1ecabef3a8ba6a8e25654573d54edb7e4136e903/kotlin-daemon-embeddable-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+    "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+    "-no-stdlib",
+    "-no-reflect",
+    "-jvm-target",
+    "17",
+    "-Xfriend-paths=/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug",
+    "-classpath",
+    "/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar",
+    "-d",
+    "/workspace/scratch/2d62a799e417/memory-history-qa/history-red/classes",
+    "/workspace/scratch/2d62a799e417/memory-history-qa/history-red/sources/app/src/main/java/at/heinz/deviceai/cognitive/GermanNumberWords.kt",
+    "/workspace/scratch/2d62a799e417/memory-history-qa/history-red/sources/app/src/main/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedger.kt",
+    "/workspace/scratch/2d62a799e417/memory-history-qa/history-red/sources/app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+    "/workspace/scratch/2d62a799e417/memory-history-qa/history-red/sources/app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt",
+    "/workspace/scratch/2d62a799e417/memory-history-qa/history-red/sources/app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt",
+    "/workspace/scratch/2d62a799e417/memory-history-qa/history-red/sources/app/src/main/java/at/heinz/deviceai/cognitive/LocalContextRetentionPolicy.kt",
+    "/workspace/scratch/2d62a799e417/memory-history-qa/history-red/sources/app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt",
+    "/workspace/scratch/2d62a799e417/memory-history-qa/history-red/sources/app/src/main/java/at/heinz/deviceai/cognitive/LocalChatPromptBudget.kt",
+    "/workspace/scratch/2d62a799e417/memory-history-qa/history-red/sources/app/src/test/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedgerHistoryPromptTest.kt"
+  ],
+  "run_command": [
+    "/workspace/scratch/6139925ecf70/toolchain/jdk-21.0.13+9/bin/java",
+    "-Xmx256m",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/2d62a799e417/memory-history-qa/history-red/classes:/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar",
+    "org.junit.runner.JUnitCore",
+    "at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest"
+  ],
+  "scope": "Fresh selected Kotlin sources and JUnit tests; cached real app dependencies; no Gradle"
+}

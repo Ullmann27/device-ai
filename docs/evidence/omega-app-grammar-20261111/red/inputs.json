@@ -1,0 +1,17 @@
+{
+  "source_head": "6d4a5d5dfb980eac7bfd596707a1359231a9d33d",
+  "cached_dependencies": "/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug",
+  "test_classes": [
+    "at.heinz.deviceai.cognitive.OwnerAppVerbFinalIntentTest"
+  ],
+  "source_sha256": {
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppVerbFinalIntentTest.kt": "7f61c171b8cca3520b3d57fd8cc009bb51f77da5f87d0151ca091fb292d13a13",
+    "app/src/main/java/at/heinz/deviceai/systemintelligence/SystemDiagnosis.kt": "1072e49288fbc9781b36eb1f404d9bc5cd733d628190519648ebaec3c91cb000",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt": "7656e673f4210ac864c7f7cfd3ef391c5e2a3cc4fb45878402d0cea9b0d313c7",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt": "f1569524035bf9c4520a261941b319ae03365f7a435be3326ae012ef08324a08",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppClarification.kt": "4b25cbd11046ca948c33c008b07008fb3c7e637268501a1b8361faa69cdadd26",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppActionFlow.kt": "da1b17653eba41a6eba0fdae6d79136994c483f691ce83d841236e56420a5539",
+    "app/src/main/java/at/heinz/deviceai/cognitive/NativeAppLookup.kt": "1320ea3e28a0ce0e5c8b17af794b5755f89a1d1d194dd39c5372b3d7e203d730",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt": "a81c7a218124a4c38a82678739b35b7d9b9ba27f54e973462bf9f224991e9e78"
+  }
+}
