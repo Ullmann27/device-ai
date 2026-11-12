@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "workstation": {
+    "path": "cinema3d/cockpit-workstation.glb",
+    "sha256": "b7e81dde26a52699bca2a781d15cac91275486a72ce219a86eaec80b47601e1c",
+    "bytes": 351076
+  },
+  "orb": {
+    "path": "cinema3d/continuum-orb.glb",
+    "sha256": "ba4bd673e2196fcd8d970b3c83531ea26e20047ae530f092d0ef122808d6e161",
+    "bytes": 1425616
+  },
+  "monitorMaterial": {
+    "path": "cinema3d/live-monitor.filamat",
+    "sha256": "1b24ad728cecce23e9fca904c45370eb35ea5f9e2c0cd85ed3914f7490e27ac3",
+    "bytes": 53880
+  }
+}

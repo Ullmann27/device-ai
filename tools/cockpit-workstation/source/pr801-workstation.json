@@ -1,0 +1,7 @@
+{
+  "source_commit": "dfe8f08f646360c0290ef420b9e6b16cc90904a1",
+  "source_path": "app/src/main/assets/cinema3d/cockpit-workstation.glb",
+  "sha256": "3223168a58e5fa51c48bb56ba36aabbf0cdb936025a01d96d4b14e5e0fa023aa",
+  "bytes": 14728,
+  "provenance": "Owned Continuum geometry from PR801; Blender input only. No runtime safety/UI files imported."
+}

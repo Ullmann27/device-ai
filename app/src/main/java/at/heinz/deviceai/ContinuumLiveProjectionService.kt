@@ -9,8 +9,8 @@ import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.content.res.Configuration
-import android.graphics.PixelFormat
 import android.graphics.Rect
+import android.hardware.DataSpace
 import android.hardware.HardwareBuffer
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
@@ -148,8 +148,10 @@ class ContinuumLiveProjectionService : Service() {
         return (width * scale).roundToInt().coerceAtLeast(1) to (height * scale).roundToInt().coerceAtLeast(1)
     }
 
-    private fun newReader(width: Int, height: Int): ImageReader = ImageReader.newInstance(width, height,
-        PixelFormat.RGBA_8888, 3, HardwareBuffer.USAGE_GPU_SAMPLED_IMAGE).also { created ->
+    private fun newReader(width: Int, height: Int): ImageReader = ImageReader.Builder(width, height)
+        .setDefaultHardwareBufferFormat(HardwareBuffer.RGBA_8888)
+        .setDefaultDataSpace(DataSpace.DATASPACE_SRGB)
+        .setMaxImages(3).setUsage(HardwareBuffer.USAGE_GPU_SAMPLED_IMAGE).build().also { created ->
         created.setOnImageAvailableListener({ onImage(it) }, handler)
     }
 

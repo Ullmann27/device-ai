@@ -1,6 +1,10 @@
 package at.heinz.deviceai.avatar3d
 
 import android.opengl.Matrix
+import android.graphics.RectF
+import at.heinz.deviceai.AndroidLiveFrame
+import at.heinz.deviceai.cognitive.CockpitWorkEvent
+import at.heinz.deviceai.cognitive.LiveMonitorFeed
 import android.view.Surface
 import at.heinz.deviceai.avatar.AvatarPose
 import com.google.android.filament.*
@@ -19,7 +23,18 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private var loader: AssetLoader? = null
     private var asset: FilamentAsset? = null
     private var cockpitStage: FilamentCockpitStage? = null
-    private var cockpitSurface: Surface? = null
+    private var cockpitFrame: CockpitStageFrame? = null
+    private var cockpitHead = RectF()
+    private var cockpitOrb = RectF()
+    private var avatarRoot = 0
+    private var avatarWorldEntity = 0
+    private var avatarRootRest = FloatArray(16)
+    private var worldColorGrading: ColorGrading? = null
+    private var avatarFactors = emptyList<Pair<MaterialInstance, AvatarMaterialVariant.Factor>>()
+    private var appliedOpacity = -1f
+    private val worldTransform = FloatArray(16)
+    internal val cockpitReady get() = cockpitStage != null
+    internal val cockpitStatus get() = cockpitStage?.label ?: "3D-Szene nicht verfügbar"
     private var documentStage: FilamentDocumentStage? = null
     private var documentStageId: String? = null
     private var documentSurface: Surface? = null
@@ -104,7 +119,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         swapChain = e.createSwapChain(surface, SwapChainFlags.CONFIG_TRANSPARENT)
         provider = UbershaderProvider(e)
         loader = AssetLoader(e, requireNotNull(provider), EntityManager.get())
-        val glb = ByteBuffer.allocateDirect(bytes.size).put(bytes).apply { flip() }
+        val variant = AvatarMaterialVariant.prepare(bytes)
+        val glb = ByteBuffer.allocateDirect(variant.bytes.size).put(variant.bytes).apply { flip() }
         val a = requireNotNull(loader!!.createAsset(glb)) { "GLB loader rejected candidate" }; asset = a
         require(a.resourceUris.isEmpty()) { "External resources forbidden" }
         val resources = ResourceLoader(e, true)
@@ -119,6 +135,16 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         for (name in listOf("AvatarRoot", "Neck", "Head", "EyeLeft", "EyeRight", "Jaw")) {
             val instance = e.transformManager.getInstance(a.getFirstEntityByName(name)); require(instance != 0)
             joints[name] = Joint(instance, e.transformManager.getTransform(instance, FloatArray(16)))
+        }
+        val loadedRoot = e.transformManager.getInstance(a.root)
+        require(loadedRoot != 0)
+        avatarWorldEntity = EntityManager.get().create()
+        avatarRoot = e.transformManager.create(avatarWorldEntity)
+        Matrix.setIdentityM(avatarRootRest, 0)
+        e.transformManager.setParent(loadedRoot, avatarRoot)
+        avatarFactors = variant.factors.mapNotNull { factor ->
+            a.instance.materialInstances.firstOrNull { it.name == factor.name && it.material.hasParameter("baseColorFactor") }
+                ?.let { it to factor }
         }
         focus = metadata.focus
         val cameraAngle = Math.toRadians(focus.azimuthDegrees)
@@ -161,7 +187,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         if (kotlin.math.abs(k - lastGlow) < .01f) return
         lastGlow = k
         bloomSettings?.let { options ->
-            options.strength = .35f + .12f * k
+            options.strength = if (cockpitStage != null) .12f + .04f * k else .35f + .12f * k
             view?.bloomOptions = options
         }
     }
@@ -255,7 +281,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             restWindow = AvatarFraming.window(focus, width.toDouble() / height, anchorX, closeUp, keepOut)
         }
         val fitted = framing ?: requireNotNull(restWindow)
-        if (window != fitted) {
+        if (cockpitStage == null && window != fitted) {
             window = fitted
             camera!!.setProjection(Camera.Projection.ORTHO, fitted.left, fitted.right,
                 -fitted.halfHeight, fitted.halfHeight, .05, 10.0)
@@ -282,9 +308,15 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         val dy = if (moving) kotlin.math.sin(seconds * (2.0 * Math.PI / 4.0)) * 2.5 * 2.6 * px else 0.0
         val distance = 2.0 + if (moving) kotlin.math.sin(seconds * .21) * .06 else 0.0
         val cameraAngle = Math.toRadians(focus.azimuthDegrees)
-        camera!!.lookAt(focus.centerX + kotlin.math.sin(cameraAngle) * distance, centerY - dy,
-            focus.centerZ + kotlin.math.cos(cameraAngle) * distance,
-            focus.centerX, centerY - dy, focus.centerZ, 0.0, 1.0, 0.0)
+        val worldFrame = cockpitFrame
+        if (cockpitStage != null && worldFrame != null) {
+            updateWorld(worldFrame, fitted, seconds, motion)
+        } else {
+            camera!!.lookAt(focus.centerX + kotlin.math.sin(cameraAngle) * distance, centerY - dy,
+                focus.centerZ + kotlin.math.cos(cameraAngle) * distance,
+                focus.centerX, centerY - dy, focus.centerZ, 0.0, 1.0, 0.0)
+            applyAvatarOpacity(1f)
+        }
         for (instance in morphInstances) e.renderableManager.setMorphWeights(instance, mapper.weights, 0)
         receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.MORPH_UPLOADED) ?: 0
         // The neck carries most of the turn, the head the rest: the skin blends Neck→Head inside the chin band.
@@ -345,22 +377,73 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         documentSurface = null
     }
 
-    fun renderCockpitStage(surface: Surface, bytes: ByteArray, frame: CockpitStageFrame,
-                           bufferWidth: Int, bufferHeight: Int): Boolean {
-        val e = engine ?: return false
-        if (!frame.valid() || !surface.isValid) return false
-        if (cockpitSurface !== surface) {
-            clearCockpitStage()
-            cockpitStage = FilamentCockpitStage(e, requireNotNull(renderer), requireNotNull(loader), surface, bytes)
-            cockpitSurface = surface
+    internal fun configureCockpit(assets: CockpitSceneAssets, frame: CockpitStageFrame,
+                                   head: RectF, orb: RectF, feed: LiveMonitorFeed<AndroidLiveFrame>?) {
+        val e = requireNotNull(engine)
+        require(frame.valid() && head.width() > 0f && head.height() > 0f && orb.width() > 0f)
+        if (cockpitStage == null) {
+            cockpitStage = FilamentCockpitStage(e, requireNotNull(scene), requireNotNull(loader), assets)
+            worldColorGrading = ColorGrading.Builder().toneMapping(ColorGrading.ToneMapping.LINEAR)
+                .contrast(1f).saturation(1f).vibrance(1f).exposure(0f).build(e)
+            view!!.colorGrading = worldColorGrading
+            bloomSettings?.let { it.enabled = true; it.strength = .12f; view!!.bloomOptions = it }
         }
-        return cockpitStage?.render(frame, bufferWidth, bufferHeight) == true
+        cockpitFrame = frame
+        cockpitHead.set(head)
+        cockpitOrb.set(orb)
+        cockpitStage?.bind(feed)
+    }
+
+    internal fun bindCockpitFeed(feed: LiveMonitorFeed<AndroidLiveFrame>?) { cockpitStage?.bind(feed) }
+
+    internal fun cockpitWorkEvent(event: CockpitWorkEvent) { cockpitStage?.workEvent(event) }
+
+    private fun applyAvatarOpacity(alpha: Float) {
+        if (appliedOpacity == alpha) return
+        avatarFactors.forEach { (material, factor) ->
+            material.setParameter("baseColorFactor", factor.red, factor.green, factor.blue, factor.alpha * alpha)
+        }
+        appliedOpacity = alpha
+    }
+
+    private fun updateWorld(frame: CockpitStageFrame, fitted: AvatarFraming.Window, seconds: Float, motion: Boolean) {
+        val unit = frame.worldScale
+        val d = (frame.distance * unit).toDouble()
+        val near = frame.near
+        camera!!.setProjection(Camera.Projection.PERSPECTIVE,
+            -frame.width * unit * .5 * near / d, frame.width * unit * .5 * near / d,
+            -frame.height * unit * .5 * near / d, frame.height * unit * .5 * near / d, near, frame.far)
+        camera!!.lookAt(0.0, 0.0, d, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        val scale = (cockpitHead.height() * unit / (2 * fitted.halfHeight)).toFloat()
+        val x = (cockpitHead.left + cockpitHead.width() * fitted.anchorX - frame.width * .5).toFloat() * unit
+        val y = (frame.height * .5f - cockpitHead.centerY()) * unit
+        Matrix.setIdentityM(worldTransform, 0)
+        Matrix.translateM(worldTransform, 0, x, y, 0f)
+        Matrix.scaleM(worldTransform, 0, scale, scale, scale)
+        Matrix.rotateM(worldTransform, 0, -focus.azimuthDegrees.toFloat(), 0f, 1f, 0f)
+        Matrix.translateM(worldTransform, 0, -focus.centerX.toFloat(), -fitted.cameraCenterY.toFloat(), -focus.centerZ.toFloat())
+        Matrix.multiplyMM(transformed, 0, worldTransform, 0, avatarRootRest, 0)
+        engine!!.transformManager.setTransform(avatarRoot, transformed)
+        applyAvatarOpacity(at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY)
+        cockpitStage?.update(frame, cockpitOrb, seconds, motion)
+        bloomSettings?.let { options ->
+            val enabled = cockpitStage?.pixelsVisible != true
+            if (options.enabled != enabled) { options.enabled = enabled; view!!.bloomOptions = options }
+        }
     }
 
     fun clearCockpitStage() {
         cockpitStage?.close()
         cockpitStage = null
-        cockpitSurface = null
+        cockpitFrame = null
+        engine?.let { e ->
+            if (avatarRoot != 0) e.transformManager.setTransform(avatarRoot, avatarRootRest)
+            view?.colorGrading = null
+            worldColorGrading?.let(e::destroyColorGrading)
+        }
+        worldColorGrading = null
+        bloomSettings?.let { it.enabled = true; it.strength = .35f; view?.bloomOptions = it }
+        window = null
     }
 
     override fun close() {
@@ -369,8 +452,14 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         clearDocumentStage()
         faceMaterial = null
         faceEmission = null
+        avatarFactors = emptyList()
         // Each release is independent so a lost surface cannot skip the remaining native cleanup.
         runCatching { asset?.let { scene?.removeEntities(it.entities); loader?.destroyAsset(it) } }; asset = null
+        if (avatarWorldEntity != 0) {
+            runCatching { e.destroyEntity(avatarWorldEntity) }
+            runCatching { EntityManager.get().destroy(avatarWorldEntity) }
+            avatarWorldEntity = 0; avatarRoot = 0
+        }
         runCatching { loader?.destroy() }; loader = null
         runCatching { provider?.destroyMaterials() }; runCatching { provider?.destroy() }; provider = null
         for (entity in lightEntities) {

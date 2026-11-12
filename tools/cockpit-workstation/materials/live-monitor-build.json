@@ -1,0 +1,14 @@
+{
+  "filament_version": "1.56.0",
+  "material_version": "56",
+  "release_url": "https://github.com/google/filament/releases/download/v1.56.0/filament-v1.56.0-linux.tgz",
+  "release_archive_sha256": "393dcc066987345282f4b5c3f525ab053d9c21087141cdc8015f403cddf455f0",
+  "matc_sha256": "e31e6317c8aa3485580ba22d0c06797b5751466e55cb8e12453877f53316944f",
+  "source_sha256": "61991af2b3969b73c37ebc72ed6b12fad5a1ffd52f0b0988e8e80cba5d3a202a",
+  "output_sha256": "1b24ad728cecce23e9fca904c45370eb35ea5f9e2c0cd85ed3914f7490e27ac3",
+  "bytes": 53880,
+  "target": "mobile OpenGL and Vulkan",
+  "color_contract": "sRGB source; exact sRGB decode; neutral linear view",
+  "device_color_chart": "NOT_RUN",
+  "bloom_isolation": "NOT_IMPLEMENTED"
+}

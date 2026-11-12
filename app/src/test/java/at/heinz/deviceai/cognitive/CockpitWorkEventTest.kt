@@ -105,9 +105,30 @@ class CockpitWorkEventTest {
         val seen = mutableListOf<CockpitWorkEvent>()
         bus.subscribe { if (it is CockpitWorkEvent) seen += it }
         val adapter = LiveActionCockpitAdapter(CockpitWorkEmitter("task", 9, bus), 47)
+        adapter.emit(LiveActionEvent.Dispatched("task", "input", NodeActionKind.SET_TEXT, "com.example.app", null, 7, 0))
         adapter.emit(LiveActionEvent.Observed("task", "input", ObservationStamp("task", 47, 8, "com.example.app", 1, "digest", 1)))
-        assertEquals(1, seen.size)
+        assertEquals(2, seen.size)
         adapter.emit(LiveActionEvent.Observed("task", "input", ObservationStamp("task", 48, 9, "com.example.app", 1, "digest2", 2)))
-        assertEquals(1, seen.size)
+        assertEquals(2, seen.size)
+    }
+
+    @Test fun repeatedStepInAnotherTaskStillProducesItsOwnMotion() {
+        var nanos = 1_000_000L
+        val inputs = mutableListOf<AvatarEvent.WorkInput>()
+        val director = AvatarDirector(AvatarSink { if (it is AvatarEvent.WorkInput) inputs += it }) { nanos / 1_000_000 }
+        val bus = CockpitAnimationBus()
+        val bridge = ComputerWorkAvatarBridge(director, nanos = { nanos })
+        bus.subscribe(bridge)
+        for (task in listOf("first", "second")) {
+            bridge.bind(task, 9)
+            val emitter = CockpitWorkEmitter(task, 9, bus, { nanos }, { nanos / 1_000_000 })
+            emitter.emit(CockpitWorkEvent.Stage.ACCEPTED)
+            nanos += 1_000_000
+            emitter.emit(CockpitWorkEvent.Stage.DISPATCHED, "computer-1", CockpitWorkEvent.Action.CLICK,
+                observationRevision = 2)
+            emitter.emit(CockpitWorkEvent.Stage.STOPPED)
+        }
+        assertEquals(2, inputs.count { it.kind == AvatarWorkInput.CLICK })
+        bridge.close()
     }
 }

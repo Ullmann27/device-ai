@@ -1,0 +1,1358 @@
+{
+  "evidence": "BLENDER_MESH_BUILD_NOT_DEVICE_VERIFICATION",
+  "blender": "4.3.2",
+  "builder_sha256": "20cbc688743ab4c54308cd8e28913451f87572d7ebe6c6256b3a93e69cd953c6",
+  "source_commit": "dfe8f08f646360c0290ef420b9e6b16cc90904a1",
+  "source_sha256": "3223168a58e5fa51c48bb56ba36aabbf0cdb936025a01d96d4b14e5e0fa023aa",
+  "original_avatar_sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "parameter_sources": {
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer.kt": "5d67e724890255c660165c108eb5973b2d0ca79e9cf223575aec2f160be9d332",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt": "97ea8358c09c23ac688fbdc7eed4579b3a88ce80d3b3a010890df84406a3a46b",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt": "0f20bceefe13a6a0d135c6a4182a6f1e5f47d45e591801993aa4ca4825f854e2",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "bfd1b853e23c64da19825d5c725f1dedb5ea8810b04177ee7e4e5270cc45d8b9"
+  },
+  "coordinates": "glTF x right, y up, z toward camera; orb sphere radius 1",
+  "screen": {
+    "node": "monitor-live-pixels",
+    "uv_origin": "top-left",
+    "opaque": true,
+    "local_bounds": [
+      -0.465,
+      -0.445,
+      0.032,
+      0.465,
+      0.38,
+      0.032
+    ]
+  },
+  "material_parameters": {
+    "smoked-metal": {
+      "linear_base_color": [
+        0.025,
+        0.038,
+        0.064
+      ],
+      "metallic": 0.55,
+      "roughness": 0.28,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.24,
+      "linear_emission": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emission_strength": 1.0
+    },
+    "bevel-silver": {
+      "linear_base_color": [
+        0.15,
+        0.22,
+        0.3
+      ],
+      "metallic": 0.62,
+      "roughness": 0.22,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.15,
+      "linear_emission": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emission_strength": 1.0
+    },
+    "smoked-glass": {
+      "linear_base_color": [
+        0.045,
+        0.13,
+        0.23
+      ],
+      "metallic": 0.0,
+      "roughness": 0.12,
+      "alpha": 0.18,
+      "ior": 1.46,
+      "clearcoat": 0.35,
+      "linear_emission": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emission_strength": 1.0
+    },
+    "cyan-frost": {
+      "linear_base_color": [
+        0.035,
+        0.28,
+        0.36
+      ],
+      "metallic": 0.0,
+      "roughness": 0.3,
+      "alpha": 0.065,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.002,
+        0.018,
+        0.026
+      ],
+      "emission_strength": 1.0
+    },
+    "violet-frost": {
+      "linear_base_color": [
+        0.22,
+        0.1,
+        0.37
+      ],
+      "metallic": 0.0,
+      "roughness": 0.3,
+      "alpha": 0.065,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.015,
+        0.004,
+        0.025
+      ],
+      "emission_strength": 1.0
+    },
+    "prism-highlight": {
+      "linear_base_color": [
+        0.45,
+        0.69,
+        0.83
+      ],
+      "metallic": 0.3,
+      "roughness": 0.18,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.14,
+        0.24,
+        0.3
+      ],
+      "emission_strength": 1.0
+    },
+    "button-cyan": {
+      "linear_base_color": [
+        0.0,
+        0.7835377915261935,
+        1.0
+      ],
+      "metallic": 0.15,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.3,
+      "linear_emission": [
+        0.0,
+        0.7835377915261935,
+        1.0
+      ],
+      "emission_strength": 0.35
+    },
+    "button-cyan-soft": {
+      "linear_base_color": [
+        0.18782077230067787,
+        0.9215818562772946,
+        0.9646862478944651
+      ],
+      "metallic": 0.15,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.3,
+      "linear_emission": [
+        0.18782077230067787,
+        0.9215818562772946,
+        0.9646862478944651
+      ],
+      "emission_strength": 0.35
+    },
+    "button-violet": {
+      "linear_base_color": [
+        0.3712376804741491,
+        0.043735029256973465,
+        1.0
+      ],
+      "metallic": 0.15,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.3,
+      "linear_emission": [
+        0.3712376804741491,
+        0.043735029256973465,
+        1.0
+      ],
+      "emission_strength": 0.35
+    },
+    "button-violet-rim": {
+      "linear_base_color": [
+        0.6866853124353135,
+        0.2195261997292692,
+        1.0
+      ],
+      "metallic": 0.15,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.3,
+      "linear_emission": [
+        0.6866853124353135,
+        0.2195261997292692,
+        1.0
+      ],
+      "emission_strength": 0.35
+    },
+    "button-magenta": {
+      "linear_base_color": [
+        0.8713671191987972,
+        0.07421356838014963,
+        1.0
+      ],
+      "metallic": 0.15,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.3,
+      "linear_emission": [
+        0.8713671191987972,
+        0.07421356838014963,
+        1.0
+      ],
+      "emission_strength": 0.35
+    },
+    "button-amber": {
+      "linear_base_color": [
+        1.0,
+        0.5520114015120001,
+        0.10702310297826761
+      ],
+      "metallic": 0.15,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.3,
+      "linear_emission": [
+        1.0,
+        0.5520114015120001,
+        0.10702310297826761
+      ],
+      "emission_strength": 0.35
+    },
+    "button-green": {
+      "linear_base_color": [
+        0.0003035269835488375,
+        0.9734452903984125,
+        0.19806931955994886
+      ],
+      "metallic": 0.15,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.3,
+      "linear_emission": [
+        0.0003035269835488375,
+        0.9734452903984125,
+        0.19806931955994886
+      ],
+      "emission_strength": 0.35
+    },
+    "monitor-live-pixels": {
+      "unlit": true,
+      "linear_base_color": [
+        0.001,
+        0.002,
+        0.004
+      ],
+      "alpha": 1.0
+    },
+    "orb-cyan": {
+      "linear_base_color": [
+        0.0,
+        0.7835377915261935,
+        1.0
+      ],
+      "metallic": 0.1,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.0,
+        0.7835377915261935,
+        1.0
+      ],
+      "emission_strength": 1.3
+    },
+    "orb-cyan-soft": {
+      "linear_base_color": [
+        0.18782077230067787,
+        0.9215818562772946,
+        0.9646862478944651
+      ],
+      "metallic": 0.1,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.18782077230067787,
+        0.9215818562772946,
+        0.9646862478944651
+      ],
+      "emission_strength": 1.3
+    },
+    "orb-violet": {
+      "linear_base_color": [
+        0.3712376804741491,
+        0.043735029256973465,
+        1.0
+      ],
+      "metallic": 0.1,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.3712376804741491,
+        0.043735029256973465,
+        1.0
+      ],
+      "emission_strength": 1.3
+    },
+    "orb-violet-rim": {
+      "linear_base_color": [
+        0.6866853124353135,
+        0.2195261997292692,
+        1.0
+      ],
+      "metallic": 0.1,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.6866853124353135,
+        0.2195261997292692,
+        1.0
+      ],
+      "emission_strength": 1.3
+    },
+    "orb-magenta": {
+      "linear_base_color": [
+        0.8713671191987972,
+        0.07421356838014963,
+        1.0
+      ],
+      "metallic": 0.1,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.8713671191987972,
+        0.07421356838014963,
+        1.0
+      ],
+      "emission_strength": 1.3
+    },
+    "orb-amber": {
+      "linear_base_color": [
+        1.0,
+        0.5520114015120001,
+        0.10702310297826761
+      ],
+      "metallic": 0.1,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        1.0,
+        0.5520114015120001,
+        0.10702310297826761
+      ],
+      "emission_strength": 1.3
+    },
+    "orb-green": {
+      "linear_base_color": [
+        0.0003035269835488375,
+        0.9734452903984125,
+        0.19806931955994886
+      ],
+      "metallic": 0.1,
+      "roughness": 0.24,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.0003035269835488375,
+        0.9734452903984125,
+        0.19806931955994886
+      ],
+      "emission_strength": 1.3
+    },
+    "orb-soft-cyan": {
+      "linear_base_color": [
+        0.0,
+        0.7835377915261935,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4,
+      "alpha": 0.13,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.0,
+        0.7835377915261935,
+        1.0
+      ],
+      "emission_strength": 0.6
+    },
+    "orb-soft-cyan-soft": {
+      "linear_base_color": [
+        0.18782077230067787,
+        0.9215818562772946,
+        0.9646862478944651
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4,
+      "alpha": 0.13,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.18782077230067787,
+        0.9215818562772946,
+        0.9646862478944651
+      ],
+      "emission_strength": 0.6
+    },
+    "orb-soft-violet": {
+      "linear_base_color": [
+        0.3712376804741491,
+        0.043735029256973465,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4,
+      "alpha": 0.13,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.3712376804741491,
+        0.043735029256973465,
+        1.0
+      ],
+      "emission_strength": 0.6
+    },
+    "orb-soft-violet-rim": {
+      "linear_base_color": [
+        0.6866853124353135,
+        0.2195261997292692,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4,
+      "alpha": 0.13,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.6866853124353135,
+        0.2195261997292692,
+        1.0
+      ],
+      "emission_strength": 0.6
+    },
+    "orb-soft-magenta": {
+      "linear_base_color": [
+        0.8713671191987972,
+        0.07421356838014963,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4,
+      "alpha": 0.13,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.8713671191987972,
+        0.07421356838014963,
+        1.0
+      ],
+      "emission_strength": 0.6
+    },
+    "orb-soft-amber": {
+      "linear_base_color": [
+        1.0,
+        0.5520114015120001,
+        0.10702310297826761
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4,
+      "alpha": 0.13,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        1.0,
+        0.5520114015120001,
+        0.10702310297826761
+      ],
+      "emission_strength": 0.6
+    },
+    "orb-soft-green": {
+      "linear_base_color": [
+        0.0003035269835488375,
+        0.9734452903984125,
+        0.19806931955994886
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4,
+      "alpha": 0.13,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.0003035269835488375,
+        0.9734452903984125,
+        0.19806931955994886
+      ],
+      "emission_strength": 0.6
+    },
+    "orb-obsidian-glass": {
+      "linear_base_color": [
+        0.0027317428519395373,
+        0.007499032043226175,
+        0.02217388479338738
+      ],
+      "metallic": 0.0,
+      "roughness": 0.13,
+      "alpha": 0.065,
+      "ior": 1.46,
+      "clearcoat": 0.38,
+      "linear_emission": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emission_strength": 1.0
+    },
+    "orb-brain-glass": {
+      "linear_base_color": [
+        0.017641954488384078,
+        0.16826940018969075,
+        0.27467731206038465
+      ],
+      "metallic": 0.0,
+      "roughness": 0.24,
+      "alpha": 0.12,
+      "ior": 1.46,
+      "clearcoat": 0.2,
+      "linear_emission": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emission_strength": 1.0
+    },
+    "orb-core-glass": {
+      "linear_base_color": [
+        0.0015176349177441874,
+        0.19120168274079138,
+        0.26225065752969623
+      ],
+      "metallic": 0.0,
+      "roughness": 0.19,
+      "alpha": 0.16,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.0,
+        0.7835377915261935,
+        1.0
+      ],
+      "emission_strength": 0.25
+    },
+    "orb-pedestal-metal": {
+      "linear_base_color": [
+        0.035,
+        0.047,
+        0.075
+      ],
+      "metallic": 0.62,
+      "roughness": 0.27,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.25,
+      "linear_emission": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emission_strength": 1.0
+    }
+  },
+  "files": [
+    {
+      "path": "app/src/main/assets/cinema3d/cockpit-workstation.glb",
+      "sha256": "b7e81dde26a52699bca2a781d15cac91275486a72ce219a86eaec80b47601e1c",
+      "bytes": 351076,
+      "meshes": 34,
+      "triangles_unique_meshes": 4718,
+      "nodes": 108,
+      "materials": [
+        {
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.23999999463558197,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "smoked-metal",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.02500000037252903,
+              0.03799999877810478,
+              0.06400000303983688,
+              1
+            ],
+            "metallicFactor": 0.550000011920929,
+            "roughnessFactor": 0.2800000011920929
+          }
+        },
+        {
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.15000000596046448,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "bevel-silver",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.15000000596046448,
+              0.2199999988079071,
+              0.30000001192092896,
+              1
+            ],
+            "metallicFactor": 0.6200000047683716,
+            "roughnessFactor": 0.2199999988079071
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.019999999552965164,
+            0.6000000238418579,
+            0.949999988079071
+          ],
+          "name": "cyan-rim",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.03999999910593033,
+              0.5699999928474426,
+              0.800000011920929,
+              1
+            ],
+            "metallicFactor": 0.20000000298023224,
+            "roughnessFactor": 0.3499999940395355
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.3199999928474426,
+            0.05000000074505806,
+            0.75
+          ],
+          "name": "violet-rim",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.3199999928474426,
+              0.10000000149011612,
+              0.800000011920929,
+              1
+            ],
+            "metallicFactor": 0.20000000298023224,
+            "roughnessFactor": 0.3499999940395355
+          }
+        },
+        {
+          "alphaMode": "BLEND",
+          "doubleSided": true,
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.3499999940395355,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "smoked-glass",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.04500000178813934,
+              0.12999999523162842,
+              0.23000000417232513,
+              0.18000000715255737
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.11999999731779099
+          }
+        },
+        {
+          "alphaMode": "BLEND",
+          "doubleSided": true,
+          "emissiveFactor": [
+            0.0020000000949949026,
+            0.017999999225139618,
+            0.026000000536441803
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "cyan-frost",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.03500000014901161,
+              0.2800000011920929,
+              0.36000001430511475,
+              0.06499999761581421
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.30000001192092896
+          }
+        },
+        {
+          "alphaMode": "BLEND",
+          "doubleSided": true,
+          "emissiveFactor": [
+            0.014999999664723873,
+            0.004000000189989805,
+            0.02500000037252903
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "violet-frost",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.2199999988079071,
+              0.10000000149011612,
+              0.3700000047683716,
+              0.06499999761581421
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.30000001192092896
+          }
+        },
+        {
+          "emissiveFactor": [
+            0,
+            0.2742382271078956,
+            0.3499999940395355
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.30000001192092896,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "button-cyan",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0,
+              0.7835378050804138,
+              1,
+              1
+            ],
+            "metallicFactor": 0.15000000596046448,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.1299331911132473,
+            0.015307260602801853,
+            0.3499999940395355
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.30000001192092896,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "button-violet",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.37123769521713257,
+              0.04373503103852272,
+              1,
+              1
+            ],
+            "metallicFactor": 0.15000000596046448,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.06573727093445791,
+            0.32255364703189215,
+            0.3376401903349979
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.30000001192092896,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "button-cyan-soft",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.18782077729701996,
+              0.9215818643569946,
+              0.9646862745285034,
+              1
+            ],
+            "metallicFactor": 0.15000000596046448,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.3499999940395355,
+            0.19320399730198723,
+            0.03745808612094459
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.30000001192092896,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "button-amber",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              1,
+              0.5520114302635193,
+              0.10702310502529144,
+              1
+            ],
+            "metallicFactor": 0.15000000596046448,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.00010623444505727594,
+            0.3407058478984517,
+            0.06932426051456142
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.30000001192092896,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "button-green",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.0003035269910469651,
+              0.9734452962875366,
+              0.19806931912899017,
+              1
+            ],
+            "metallicFactor": 0.15000000596046448,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.30497847872157635,
+            0.02597474970392244,
+            0.3499999940395355
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.30000001192092896,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "button-magenta",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.8713670969009399,
+              0.07421357184648514,
+              1,
+              1
+            ],
+            "metallicFactor": 0.15000000596046448,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.24033985920736,
+            0.07683416921182751,
+            0.3499999940395355
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.30000001192092896,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "button-violet-rim",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.68668532371521,
+              0.21952620148658752,
+              1,
+              1
+            ],
+            "metallicFactor": 0.15000000596046448,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.14000000059604645,
+            0.23999999463558197,
+            0.30000001192092896
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "prism-highlight",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.44999998807907104,
+              0.6899999976158142,
+              0.8299999833106995,
+              1
+            ],
+            "metallicFactor": 0.30000001192092896,
+            "roughnessFactor": 0.18000000715255737
+          }
+        },
+        {
+          "extensions": {
+            "KHR_materials_unlit": {}
+          },
+          "name": "monitor-live-pixels",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.0010000000474974513,
+              0.0020000000949949026,
+              0.004000000189989805,
+              1
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.9
+          }
+        },
+        {
+          "name": "opaque-screen",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.0020000000949949026,
+              0.004000000189989805,
+              0.008999999612569809,
+              1
+            ],
+            "metallicFactor": 0
+          }
+        }
+      ],
+      "extensions_used": [
+        "KHR_materials_clearcoat",
+        "KHR_materials_unlit"
+      ]
+    },
+    {
+      "path": "app/src/main/assets/cinema3d/continuum-orb.glb",
+      "sha256": "ba4bd673e2196fcd8d970b3c83531ea26e20047ae530f092d0ef122808d6e161",
+      "bytes": 1425616,
+      "meshes": 47,
+      "triangles_unique_meshes": 74640,
+      "nodes": 52,
+      "materials": [
+        {
+          "emissiveFactor": [
+            0,
+            0.7835378050804138,
+            1
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            },
+            "KHR_materials_emissive_strength": {
+              "emissiveStrength": 1.2999999523162842
+            }
+          },
+          "name": "orb-cyan",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0,
+              0.7835378050804138,
+              1,
+              1
+            ],
+            "metallicFactor": 0.10000000149011612,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.68668532371521,
+            0.21952620148658752,
+            1
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            },
+            "KHR_materials_emissive_strength": {
+              "emissiveStrength": 1.2999999523162842
+            }
+          },
+          "name": "orb-violet-rim",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.68668532371521,
+              0.21952620148658752,
+              1,
+              1
+            ],
+            "metallicFactor": 0.10000000149011612,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "alphaMode": "BLEND",
+          "doubleSided": true,
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.20000000298023224,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "orb-brain-glass",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.017641954123973846,
+              0.16826939582824707,
+              0.2746773064136505,
+              0.11999999731779099
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "alphaMode": "BLEND",
+          "doubleSided": true,
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.3799999952316284,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "orb-obsidian-glass",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.0027317428030073643,
+              0.007499032188206911,
+              0.022173885256052017,
+              0.06499999761581421
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.12999999523162842
+          }
+        },
+        {
+          "alphaMode": "BLEND",
+          "doubleSided": true,
+          "emissiveFactor": [
+            0,
+            0.19588445127010345,
+            0.25
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "orb-core-glass",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.0015176349552348256,
+              0.19120168685913086,
+              0.2622506618499756,
+              0.1599999964237213
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.1899999976158142
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.19469622638594974,
+            0.955317691036315,
+            1
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            },
+            "KHR_materials_emissive_strength": {
+              "emissiveStrength": 1.2540921108872283
+            }
+          },
+          "name": "orb-cyan-soft",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.18782077729701996,
+              0.9215818643569946,
+              0.9646862745285034,
+              1
+            ],
+            "metallicFactor": 0.10000000149011612,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "alphaMode": "BLEND",
+          "doubleSided": true,
+          "emissiveFactor": [
+            0,
+            0.4701227017292453,
+            0.6000000238418579
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "orb-soft-cyan",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0,
+              0.7835378050804138,
+              1,
+              0.12999999523162842
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.4000000059604645
+          }
+        },
+        {
+          "alphaMode": "BLEND",
+          "doubleSided": true,
+          "emissiveFactor": [
+            0.5228202789155745,
+            0.04452814487728052,
+            0.6000000238418579
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "orb-soft-magenta",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.8713670969009399,
+              0.07421357184648514,
+              1,
+              0.12999999523162842
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.4000000059604645
+          }
+        },
+        {
+          "alphaMode": "BLEND",
+          "doubleSided": true,
+          "emissiveFactor": [
+            0.4120112106009799,
+            0.13171572612586502,
+            0.6000000238418579
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "orb-soft-violet-rim",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.68668532371521,
+              0.21952620148658752,
+              1,
+              0.12999999523162842
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.4000000059604645
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.8713670969009399,
+            0.07421357184648514,
+            1
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            },
+            "KHR_materials_emissive_strength": {
+              "emissiveStrength": 1.2999999523162842
+            }
+          },
+          "name": "orb-magenta",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.8713670969009399,
+              0.07421357184648514,
+              1,
+              1
+            ],
+            "metallicFactor": 0.10000000149011612,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.37123769521713257,
+            0.04373503103852272,
+            1
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            },
+            "KHR_materials_emissive_strength": {
+              "emissiveStrength": 1.2999999523162842
+            }
+          },
+          "name": "orb-violet",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.37123769521713257,
+              0.04373503103852272,
+              1,
+              1
+            ],
+            "metallicFactor": 0.10000000149011612,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "alphaMode": "BLEND",
+          "doubleSided": true,
+          "emissiveFactor": [
+            0.22274262598127592,
+            0.026241019665838028,
+            0.6000000238418579
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "orb-soft-violet",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.37123769521713257,
+              0.04373503103852272,
+              1,
+              0.12999999523162842
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.4000000059604645
+          }
+        },
+        {
+          "emissiveFactor": [
+            1,
+            0.5520114302635193,
+            0.10702310502529144
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            },
+            "KHR_materials_emissive_strength": {
+              "emissiveStrength": 1.2999999523162842
+            }
+          },
+          "name": "orb-amber",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              1,
+              0.5520114302635193,
+              0.10702310502529144,
+              1
+            ],
+            "metallicFactor": 0.10000000149011612,
+            "roughnessFactor": 0.23999999463558197
+          }
+        },
+        {
+          "alphaMode": "BLEND",
+          "doubleSided": true,
+          "emissiveFactor": [
+            0.6000000238418579,
+            0.33120687131908966,
+            0.06421386556680453
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "orb-soft-amber",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              1,
+              0.5520114302635193,
+              0.10702310502529144,
+              0.12999999523162842
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.4000000059604645
+          }
+        },
+        {
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.25,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "orb-pedestal-metal",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.03500000014901161,
+              0.04699999839067459,
+              0.07500000298023224,
+              1
+            ],
+            "metallicFactor": 0.6200000047683716,
+            "roughnessFactor": 0.27000001072883606
+          }
+        }
+      ],
+      "extensions_used": [
+        "KHR_materials_clearcoat",
+        "KHR_materials_emissive_strength"
+      ]
+    }
+  ]
+}

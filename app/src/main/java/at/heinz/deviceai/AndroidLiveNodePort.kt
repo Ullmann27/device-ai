@@ -13,11 +13,13 @@ internal class AndroidLiveNodePort(
     private val frameSequence: () -> Long,
     private val ensureActive: () -> Unit,
     private val permissionCheck: () -> Unit = { error("ACTION_GRANT_REQUIRED") },
-    private val deadlineNanos: Long = System.nanoTime() + 2_500_000_000L
+    private val deadlineNanos: Long = System.nanoTime() + 2_500_000_000L,
+    private val captureSession: Long = 0
 ) : NodeActionPort {
     private var before: NodeActionFrame? = null
     private var lastRequest: NodeActionRequest? = null
     private var clickExpectation: ClickRequest? = null
+    private var scrollWatch: ScreenObservationBus.ScrollWatch? = null
     var inputAttempted: Boolean = false
         private set
     var inputAccepted: Boolean? = null
@@ -39,6 +41,11 @@ internal class AndroidLiveNodePort(
         check(request.kind != NodeActionKind.SEND) { "SEND_REQUIRES_REGISTERED_TOOL" }
         lastRequest = request
         return inspect(request, target).second
+    }
+
+    override fun finished() {
+        ScreenObservationBus.finishScroll(scrollWatch)
+        scrollWatch = null
     }
 
     override fun awaitPostcondition(): NodeActionFrame? {
@@ -71,7 +78,8 @@ internal class AndroidLiveNodePort(
                 !it.password && click.matchesExpected(it)
             } == 1 } ?: false
             NodeActionKind.SCROLL_FORWARD, NodeActionKind.SCROLL_BACKWARD ->
-                frame.nodes.count { it.visible && it.scrollable && request.selector.matches(it) } == 1
+                before?.let { prior -> prior.nodes.singleOrNull { it.visible && request.selector.matches(it) }
+                    ?.let { target -> frame.scrollEvidence?.confirms(request, prior.stamp, target, frame) } } == true
             NodeActionKind.SEND -> false
         }
     }
@@ -115,6 +123,7 @@ internal class AndroidLiveNodePort(
             var selected: AccessibilityNodeInfo? = null
             var selectedRecord: ActionNode? = null
             var matches = 0
+            var scrollTargetMatches = 0
             try {
                 while (queue.isNotEmpty()) {
                     val (node, depth) = queue.removeFirst()
@@ -124,6 +133,9 @@ internal class AndroidLiveNodePort(
                         check(nodes.size < 256 && node.windowId == selection.target.id &&
                             node.packageName?.toString() == targetPackage) { "INCOMPLETE_OR_CHANGED_SCREEN_TREE" }
                         val record = describe(node, selection)
+                        if (record.visible && scrollWatch?.let { ScreenObservationBus.matchesScrollNode(it, node) } == true) {
+                            scrollTargetMatches++
+                        }
                         nodes += record
                         digest.update((record.toString() + "|$depth\n").toByteArray(Charsets.UTF_8))
                         if (request != null && record.visible && request.selector.matches(record)) {
@@ -142,8 +154,9 @@ internal class AndroidLiveNodePort(
                 }
                 check(ScreenObservationBus.liveRevision(access) == revision) { "SCREEN_CHANGED_DURING_READ" }
                 val stamp = ObservationStamp(taskId, access.epoch, revision, targetPackage, selection.target.id,
-                    digest.digest().joinToString("") { "%02x".format(it) }, System.nanoTime(), frameSequence())
-                val frame = NodeActionFrame(stamp, true, true, nodes)
+                    digest.digest().joinToString("") { "%02x".format(it) }, System.nanoTime(), frameSequence(), captureSession)
+                val movement = if (scrollTargetMatches == 1) scrollWatch?.let { ScreenObservationBus.scrollEvidence(it, stamp) } else null
+                val frame = NodeActionFrame(stamp, true, true, nodes, movement)
                 if (request == null) return@withLiveWindow frame to false
                 val original = before ?: error("NO_PRE_ACTION_OBSERVATION")
                 check(matches == 1 && selectedRecord == target && stamp.digest == original.stamp.digest &&
@@ -158,6 +171,10 @@ internal class AndroidLiveNodePort(
                 check(ScreenObservationBus.liveRevision(access) == revision) { "SCREEN_CHANGED_BEFORE_ACTION" }
                 checkActive()
                 permissionCheck()
+                if (request.kind in setOf(NodeActionKind.SCROLL_FORWARD, NodeActionKind.SCROLL_BACKWARD)) {
+                    scrollWatch = ScreenObservationBus.beginScroll(access, request, original.stamp, target!!, node)
+                    permissionCheck()
+                }
                 inputAttempted = true
                 val accepted = when (request.kind) {
                     NodeActionKind.CLICK -> node.performAction(AccessibilityNodeInfo.ACTION_CLICK)

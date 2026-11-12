@@ -55,7 +55,7 @@ class ComputerWorkAvatarBridge(
                     }
                     val age = (nanos() - event.occurredAtNanos) / 1_000_000
                     if (kind != null && age in 0..150) {
-                        director.workInputPerformed("${event.sessionId}:${event.stepId}", kind, age)
+                        director.workInputPerformed("${event.taskId.length}:${event.taskId}:${event.sessionId}:${event.stepId}", kind, age)
                         sounds.dispatched(event)
                     }
                 }
