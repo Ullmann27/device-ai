@@ -15,5 +15,25 @@ Dateibesitz: Transform-Update-Lane FilamentCockpitStage.kt, kleiner
 CockpitTransformUpdates-Helfer, eigene Tests/Runner. Keine Änderung an
 Assets, Materialien, Originalringen, Layout, Clock oder Avatarrenderer.
 Kandidat deaktivierbar; bei verfehltem Gate nicht übernehmen.
-Startcheckpoint ohne Produktionsdiff. Tests NOT_RUN, Gerät NOT_RUN.
+## Implementierungscheckpoint
+
+Der bestehende Transformblock ist unverändert berechnet; seine neun Aufrufe
+gehen durch einen instanzgebundenen Cache. Verglichen werden alle 16
+Float-Bitmuster, ohne Epsilon. Jeder erfolgreiche Upload erhält eine eigene
+Kopie. Uploadfehler verwerfen auch den vorherigen Cacheeintrag. Nicht endliche
+Matrizen werden weitergereicht, aber niemals gespeichert. `cacheTransforms=false`
+am internen Stage-Konstruktor stellt den ursprünglichen Schreibpfad her.
+
+Der eigene Harness extrahiert den Transformblock direkt aus Baseline und
+Arbeitsquelle. Nur RectF-Datenhülle und TransformManager sind Hostgrenzen.
+Aktuelle Produktionsklassen erzeugen die Matrizen; die tatsächlichen beiden
+Stage-GLBs liefern die Hierarchie. Alle lokalen und Weltkomponenten werden
+pro Frame exakt verglichen. Zusätzlich werden deaktivierter Kandidat,
+Elternbewegung, Resize, Seitenmonitor-Sichtbarkeit und Umkehr geprüft.
+
+Quellen und Repro unter `docs/evidence/astra55-experiment-b-scene-20261112/`.
+Erster Compilerlauf meldete eine fehlende bestehende Testabhängigkeit
+`GlbSkinningRig`; die Quellenliste wurde ergänzt. Wiederholung läuft.
+Status dieses Checkpoints: WIP / noch kein bestandener A/B-Nachweis.
+Vollständige kombinierte Androidklassen prüft Root separat. Gerät NOT_RUN.
 Transform-Aufrufbudget ist kein gemessener GPU-/FPS-/Thermikgewinn.
