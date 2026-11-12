@@ -22,6 +22,19 @@ internal object PublicKnowledgeTopicRouter {
     private val researchMarkers = Regex(
         "(?iu)\\b(?:quellen?|informationen|infos|internet|web|online|ris|aktuell[enmsr]*|neueste[nmsr]?)\\b"
     )
+    /**
+     * Code55 field P0 (#791, Fold7 offline): "Prüfe nicht das WLAN, sondern nur den Akku. Zeige mir den aktuellen
+     * Akkustand …" matched "prüfe" + "aktuell" and became a web search (NO_USABLE_EVIDENCE) instead of the local
+     * battery tool. A named state of the owner's own device keeps the weak verb+marker form local; explicit
+     * research commands ("Recherchiere …", "Suche im Internet …") are unaffected.
+     */
+    // Review #791: a strong web/source marker keeps explicit public research about devices a search.
+    private val strongResearchMarkers = Regex("(?iu)\\b(?:quellen?|informationen|infos|internet|web|online|ris)\\b")
+    private val ownDeviceStatus = Regex(
+        "(?iu)(?<![\\p{L}])(?:(?:den|der|dem|des|das|mein\\p{L}*|dein\\p{L}*)\\s+(?:aktuellen?\\s+)?" +
+            "(?:akku|batterie|wlan|speicher|handy|gerät|geraet|smartphone|bluetooth)\\p{L}*|akkustand|akkuladung|" +
+            "ladestand|akkutemperatur|batterietemperatur|thermalstatus|thermischen\\s+status|speicherplatz)(?![\\p{L}])"
+    )
     private val additionalAction = Regex(
         "(?iu)(?<![\\p{L}\\p{N}_])(?:sende|senden|schicke|schreib|schreibe|lösche|installiere|kaufe|bezahle|öffne|übertrage)(?![\\p{L}\\p{N}_])"
     )
@@ -62,7 +75,8 @@ internal object PublicKnowledgeTopicRouter {
         if (message.length !in 8..220 || message.any { it.isISOControl() }) return false
         val text = normalized(message)
         return researchCommand.matches(text) ||
-            (researchVerb.containsMatchIn(text) && researchMarkers.containsMatchIn(text))
+            (researchVerb.containsMatchIn(text) && researchMarkers.containsMatchIn(text) &&
+                (strongResearchMarkers.containsMatchIn(text) || !ownDeviceStatus.containsMatchIn(text)))
     }
 
     fun explicitTopic(message: String): String? = if (isResearchRequest(message)) topic(message) else null

@@ -128,7 +128,7 @@ class CinemaNativeSequenceUiTest {
             capture("idle")
             start("cinema-native-success")
             var last = 0L
-            for (time in listOf(140L, 280L, 650L, 1180L, 2100L)) {
+            for (time in listOf(140L, 280L, 400L, 520L, 650L, 1180L, 2100L)) {
                 advance(time - last)
                 capture("work-${time}ms")
                 last = time

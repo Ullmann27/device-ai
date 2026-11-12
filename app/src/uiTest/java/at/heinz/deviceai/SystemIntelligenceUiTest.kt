@@ -94,8 +94,16 @@ class SystemIntelligenceUiTest {
         render("system-cage", 440, 956, diagnose = true,
             spokenRequest = "bereinige bitte meinen Cage und sage mir wie viel du bereinigt hast", preview = true)
     }
+    /** Owner target sentence (Kapitel VI/VII): diagnosis plus own-cache preview, six groups, no change, real work scene. */
+    @Test @Config(qualifiers = "w440dp-h956dp-port-mdpi")
+    fun ownerTargetSentenceDiagnosesAndPreviewsWithoutCleanup() {
+        render("system-owner-target", 440, 956, diagnose = true,
+            spokenRequest = "Continuum, untersuche bitte mein Handy. Sag mir, was Speicher verbraucht, warum es heiß wird " +
+                "und was wir bereinigen könnten. Aber lösch noch nichts.", fromChat = true, diagnosisWithPreview = true)
+    }
     private fun render(label: String, width: Int, height: Int, diagnose: Boolean = false,
-                       spokenRequest: String? = null, fromChat: Boolean = false, preview: Boolean = false) {
+                       spokenRequest: String? = null, fromChat: Boolean = false, preview: Boolean = false,
+                       diagnosisWithPreview: Boolean = false) {
         ShadowChoreographer.setPaused(true)
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
         val app = RuntimeEnvironment.getApplication()
@@ -143,7 +151,7 @@ class SystemIntelligenceUiTest {
                 }
                 field("localRuntime").set(activity, noInference)
                 val storage = at.heinz.deviceai.systemintelligence.SystemStorageInspector(app)
-                val retained = if (preview) storage.retainDiagnosis(
+                val retained = if (preview || diagnosisWithPreview) storage.retainDiagnosis(
                     at.heinz.deviceai.systemintelligence.DiagnosticCacheRecord(1_000, 10_000, 2_000, 73, 0)) else null
                 val history = storage.diagnosisHistory()
                 if (fromChat) {
@@ -174,6 +182,16 @@ class SystemIntelligenceUiTest {
                 } else {
                     assertNotNull(executor.lastDiagnosis)
                     if (fromChat) assertTrue("Actual diagnosis entered existing work scene", sawWorkScene)
+                    if (diagnosisWithPreview) {
+                        assertNotNull("Read-only own-cache preview was made", executor.lastCachePreview)
+                        assertTrue(executor.lastCachePreview!!.entries.any { it.id == retained })
+                        assertEquals("Preview did not remove a report", history, storage.diagnosisHistory())
+                        val texts = descendants(root).filterIsInstance<android.widget.TextView>().map { it.text.toString() }
+                        listOf("1 · Messwerte", "3 · Hypothesen", "4 · Bereinigungskandidaten", "Bericht $retained",
+                            "5 · Erst nach Freigabe", "Keine Änderung durchgeführt", "Fremde App-Caches").forEach { part ->
+                            assertTrue(part, texts.any { it.contains(part) })
+                        }
+                    } else assertNull(executor.lastCachePreview)
                 }
                 assertNull(executor.lastCleanupResult)
                 assertEquals("Direct local route never infers", 0, modelCalls.get())

@@ -45,4 +45,19 @@ class DeviceBatteryProbeTest {
             BatteryManager.BATTERY_STATUS_NOT_CHARGING, -15)
         assertTrue(answer.contains("-1,5 °C"))
     }
+
+    @Test fun theAndroidThermalStatusIsReportedOrExplicitlyUnavailable() {
+        val reported = DeviceBatteryProbe.describe(66, 100, BatteryManager.BATTERY_STATUS_DISCHARGING, 279,
+            DeviceBatteryProbe.ThermalReading(0))
+        assertTrue(reported.contains("Akkustand: 66 %"))
+        assertTrue(reported.contains("27,9 °C"))
+        assertTrue(reported.contains("Android-Thermalstatus: normal (keine Drosselung)"))
+        val missing = DeviceBatteryProbe.describe(66, 100, BatteryManager.BATTERY_STATUS_DISCHARGING, 279,
+            DeviceBatteryProbe.ThermalReading(null))
+        assertTrue(missing.contains("Android-Thermalstatus: nicht verfügbar"))
+        assertTrue(DeviceBatteryProbe.thermalLabel(3).contains("stark"))
+        assertTrue(DeviceBatteryProbe.thermalLabel(9).contains("unbekannt"))
+        assertFalse(DeviceBatteryProbe.describe(66, 100, BatteryManager.BATTERY_STATUS_DISCHARGING, 279)
+            .contains("Thermalstatus"))
+    }
 }

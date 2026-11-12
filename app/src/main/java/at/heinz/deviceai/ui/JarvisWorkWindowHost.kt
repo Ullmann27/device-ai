@@ -182,8 +182,8 @@ class JarvisWorkWindowHost(
             home.consumeActivatedControl(it.target)
         }
         val planned = plan(home, container, scene, activatedControl) ?: return null
-        val first = previous?.let { Planned(JarvisWorkWindow.Plan(it, planned.plan.destination, planned.plan.protectedBounds),
-            planned.face, planned.viewport, planned.orb) } ?: planned
+        val first = previous?.let { Planned(JarvisWorkWindow.Plan(it, planned.plan.destination, planned.plan.protectedBounds,
+            planned.plan.deckLabels), planned.face, planned.viewport, planned.orb) } ?: planned
         val controlOrigin = activatedControl?.takeIf { previous == null }?.let {
             ControlOrigin(it, localBounds(it, container), RectF(planned.viewport), RectF(planned.plan.origin))
         }
@@ -269,6 +269,9 @@ class JarvisWorkWindowHost(
             fui.cinematicArcEnabled = arc
             fui.orbLinkEnabled = JarvisCinematicSettings.experimentEnabled(activity,
                 JarvisCinematicSettings.Experiment.EXP_11_ORB_LINK)
+            // The reading thread is light between window and face: it follows the owner's face-light switch.
+            fui.attentionLinkEnabled = JarvisCinematicSettings.experimentEnabled(activity,
+                JarvisCinematicSettings.Experiment.EXP_06_FACE_LIGHT)
             fui.workPulseEnabled = JarvisCinematicSettings.experimentEnabled(activity,
                 JarvisCinematicSettings.Experiment.EXP_12_RECEIPTS)
             fui.prismRimEnabled = JarvisCinematicSettings.experimentEnabled(activity,
@@ -312,7 +315,7 @@ class JarvisWorkWindowHost(
         }
         val accepted = window.open(body, first.plan.origin, first.plan.destination, title, first.plan.protectedBounds,
             accent = scene.accent, emblem = emblem, refit = refit, crystal = crystal, depthLayers = inheritedLayers,
-            recession = recession, onClosed = {
+            recession = recession, deckLabels = first.plan.deckLabels, onClosed = {
             releaseGeometry()
             documentStage?.close()
             window.onDocumentStageGeometryChanged = null
@@ -446,7 +449,8 @@ class JarvisWorkWindowHost(
         }
         val origin = edgeOrigin ?: stableOrigin ?: exactOrigin ?: navigation?.let { visibleBounds(it, container) }
             ?: besideFace(face, viewport, density)
-        return Planned(JarvisWorkWindow.Plan(origin, destination, withOrb), face, viewport, orb)
+        val deckLabels = geometry.boxes.filterKeys(::keepsFlightContactClear).values.map(::local)
+        return Planned(JarvisWorkWindow.Plan(origin, destination, withOrb, deckLabels), face, viewport, orb)
     }
 
     /**
@@ -489,6 +493,15 @@ class JarvisWorkWindowHost(
         private val STATUS_SCENE = requireNotNull(JarvisActionScenes.forCentre("Systemstatus"))
         /** The real page view of the document window (AgentActivity.presentDocumentScene): where the page recedes from. */
         const val DOCUMENT_PAGE_TAG = "jarvis-document-page"
+        /**
+         * Labelled deck content that stays in place while a work window flies (JarvisCinemaEntrance: status band with
+         * its KPI tiles, input, dialog, header, camera status): the flight contact's footprint and deck light never
+         * lie over it. The avatar stage is not a label (face and orb are protected bounds of their own); everything
+         * that flies away on a work order is not on the deck during the flight.
+         */
+        fun keepsFlightContactClear(slot: JarvisShellLayout.Slot): Boolean =
+            slot != JarvisShellLayout.Slot.AVATAR && !JarvisCinemaEntrance.fliesAwayOnWorkOrder(slot)
+
         /** „Auftrag angenommen · Bearbeitung läuft“ – the last steps, each label once, with its real state. */
         fun statusLine(steps: List<at.heinz.deviceai.cockpit.ProcessStep>): String? {
             if (steps.isEmpty()) return null

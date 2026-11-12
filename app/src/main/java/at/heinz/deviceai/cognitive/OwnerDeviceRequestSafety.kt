@@ -40,12 +40,37 @@ internal object OwnerDeviceRequestSafety {
     private val refusesAction = Regex("(?iu)^(?:ich\\s+(?:will|möchte|moechte)\\s+)?" +
         "nicht\\s*,?\\s+dass\\s+du(?![\\p{L}])")
     private val beforeAction = Regex("(?iu)^(?:bitte\\s+)?(?:nicht|nie|niemals)$")
-    private val noObject = Regex("(?iu)^(?:bitte\\s+)?(?:nichts|kein\\p{L}*)(?![\\p{L}])")
+    private val noObject = Regex("(?iu)^(?:bitte\\s+)?(?:(?:noch|vorerst|erstmal|erst\\s+mal)\\s+)?" +
+        "(?:nichts|kein\\p{L}*)(?![\\p{L}])")
     private val directRefusal = Regex("(?iu)^(?:bitte\\s+)?(?:nicht|nie|niemals)(?:$|\\s+" +
         "(?:die|den|das|diese\\p{L}*|mein\\p{L}*|dein\\p{L}*|etwas|alles)(?![\\p{L}]))")
     private val finalRefusal = Regex("(?iu)(?<![\\p{L}])(?:nicht|nie|niemals)$")
     private val notOnly = words("nicht\\s+nur|vergiss\\s+nicht")
-    private val proposalSubject = words("ich|man")
+    // Code55: impersonal commands ("Jetzt löscht man alle Fotos", "Man bereinigt jetzt alles") use the
+    // 3rd-person/2nd-plural -t form, which is not in `verbs` (its participle "installiert"/"entfernt" also
+    // appears in plain questions). Only "man"/"ihr" directly at the verb counts; question openings stay free.
+    // "start"/"beend"/"verbesser" are left out: "Morgen startet ihr mit eurem Projekt" is a plan (review #791).
+    private const val impersonalStems = "lösch|loesch|entfern|deinstallier|installier|verschieb|stopp|" +
+        "bezahl|änder|aender|bereinig|säuber|saeuber|optimier"
+    private const val impersonalAdverbs = "(?:(?:jetzt|gleich|sofort|einfach|dann|bitte|mal|noch)\\s+){0,2}"
+    // Only a negation that refuses the verb itself exempts the clause ("Man löscht nichts", "Ihr löscht keine Fotos");
+    // an object negation ("alle nicht gesicherten Fotos") does not (review #791).
+    private val impersonalRefusal = Regex("(?iu)(?:(?:man|ihr)\\s+$impersonalAdverbs(?:$impersonalStems)e?t|" +
+        "(?:$impersonalStems)e?t\\s+(?:man|ihr))\\s+(?:(?:noch|vorerst|erstmal|jetzt)\\s+)?" +
+        "(?:(?:nichts|nicht)(?:\\s+mehr)?$|kein\\p{L}*(?![\\p{L}]))")
+    private val impersonalChange = Regex("(?iu)(?<![\\p{L}])(?:(?:man|ihr)\\s+$impersonalAdverbs" +
+        "(?:$impersonalStems)e?t|(?:$impersonalStems)e?t\\s+(?:man|ihr))(?![\\p{L}])")
+    // Code55 (owner decision on the #791 review): a general how-to statement ("Bei Android entfernt man Apps über die
+    // Einstellungen") is conversation, not a change. Classification only – execution still needs a real, approved
+    // request. A present-tense trigger (jetzt/sofort/gleich/bitte/alle) keeps the block.
+    // Review #791: only "man" and only a clause that opens with the generic marker; "ihr" is a direct address.
+    private val genericStatement = Regex("(?iu)^(?:bei\\s+(?:android|samsung|ios|windows)|normalerweise|" +
+        "in\\s+der\\s+regel|üblicherweise|ueblicherweise|grundsätzlich|grundsaetzlich|allgemein)(?![\\p{L}])")
+    private val genericSubject = words("man")
+    private val directPlural = words("ihr")
+    private val actNow = words("jetzt|sofort|gleich|bitte|alle|alles|sämtliche|saemtliche|einfach|dann|mal|noch")
+    private val questionOpening = Regex("(?iu)^(?:wie|was|warum|wieso|weshalb|wo|wann|welche\\p{L}*|womit|wozu)(?![\\p{L}])")
+    private val proposalSubject = words("ich|man|wir")
     private val proposalModal = words("kann|könnte|koennte|sollte|könnten|koennten")
     private val proposalQuestion = words("was|welche\\p{L}*|wie")
     private val deferred = words("(?:erst|nur)\\s+nach\\s+meiner\\s+(?:freigabe|bestätigung|bestaetigung|entscheidung)|" +
@@ -58,7 +83,9 @@ internal object OwnerDeviceRequestSafety {
         "(?:(?:eine|die)\\s+)?(?:systemdiagnose|handyanalyse|geräteanalyse|geraeteanalyse|" +
         "analyse\\s+(?:meines|des)\\s+(?:handys|geräts|geraets|smartphones))$")
     private const val collectiveTime = "(?:heute|morgen|jetzt|bald|später|gleich)"
-    private const val collectiveObject = "(?:das|die|den|ein|eine|einen|unser(?:e|en|es)?)" +
+    // Code55: "Morgen wollen wir mit unserem Projekt starten" names a plan, not a device action.
+    private const val collectiveObject = "(?:(?:mit|an|bei|für|fuer)\\s+)?" +
+        "(?:das|die|den|dem|der|ein|eine|einen|einem|einer|unser(?:e|en|es|em|er)?)" +
         "\\s+[\\p{L}\\p{N}][\\p{L}\\p{N}-]{0,63}"
     private const val collectiveDetail = "(?:\\s+$collectiveTime)?(?:\\s+$collectiveObject)?(?:\\s+$collectiveTime)?"
     private val collectiveStart = Regex("(?iu)^(?:wir\\s+starten$collectiveDetail|" +
@@ -94,19 +121,29 @@ internal object OwnerDeviceRequestSafety {
             if (mutation.containsMatchIn(sentence) && excluded != null && !redirectsToRead)
                 categories += Category.CHANGE
         }
+        // Sentences that end in "?" ("Löscht man damit auch die Fotos?") are questions, also without a wh-word.
+        val questions = Regex("[^.;!\\n?]*\\?").findAll(normalized).map { it.value.trimEnd('?').trim() }.toList()
         for (part in normalized.split(clauseBoundary)) {
             val clause = part.trim().replace(Regex("^(?:aber|und|jedoch)\\s+"), "")
             if (clause.isBlank()) continue
             val changes = mutation.findAll(clause).toList()
             val category = when {
                 readOnlyStart.matches(clause) -> Category.READ_ONLY
+                changes.isEmpty() && impersonalChange.containsMatchIn(clause) &&
+                    genericStatement.containsMatchIn(clause) && genericSubject.containsMatchIn(clause) &&
+                    !directPlural.containsMatchIn(clause) && !actNow.containsMatchIn(clause) &&
+                    questions.none { it.contains(clause) } -> Category.CONVERSATION
+                changes.isEmpty() && impersonalChange.containsMatchIn(clause) &&
+                    !questionOpening.containsMatchIn(clause) && questions.none { it.contains(clause) } &&
+                    !impersonalRefusal.containsMatchIn(clause) -> Category.CHANGE
                 changes.isEmpty() && !improvements.containsMatchIn(clause) ->
                     if (ownerDecision.matches(clause)) Category.DEFERRED_CHANGE else Category.READ_ONLY
                 changes.size > 1 -> Category.CHANGE
                 notOnly.containsMatchIn(clause) -> Category.CHANGE
                 deferred.containsMatchIn(clause) -> Category.DEFERRED_CHANGE
-                // "was ich/man … löschen könnte" is a proposal; "Entferne alles, was ich … kann" is an imperative.
-                // The mutation verb must stand after the subject and must not open the clause.
+                // "was wir/ich/man … bereinigen könnten" is a proposal; "Lösch alles, was wir … könnten" or "Entferne
+                // alles, was ich … kann" is an imperative: question word, then subject, then the single mutation verb
+                // (review #788, Code54 7b81e46e8 and 9713854bf).
                 proposalModal.containsMatchIn(clause) && changes.singleOrNull()?.let { verb ->
                         isProposalOrder(clause, verb.range.first)
                     } == true -> Category.PROPOSAL

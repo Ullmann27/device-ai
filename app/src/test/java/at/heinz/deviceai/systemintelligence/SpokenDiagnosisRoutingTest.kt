@@ -43,6 +43,37 @@ class SpokenDiagnosisRoutingTest {
         ).forEach { assertTrue(it, routes(it)) }
     }
 
+    /** Owner target sentence (Kapitel VI/VII, 12.11.2026): read-only diagnosis plus own cache preview, never a cleanup. */
+    @Test fun ownerTargetSentenceRoutesToReadOnlyDiagnosisWithCachePreview() {
+        val owner = "Continuum, untersuche bitte mein Handy. Sag mir, was Speicher verbraucht, warum es heiß wird " +
+            "und was wir bereinigen könnten. Aber lösch noch nichts."
+        assertTrue(routes(owner))
+        assertTrue(SystemIntelligenceCommands.diagnosisIncludesOwnCachePreview(owner))
+        // The cleaning word is a question about candidates, never a cleanup request of its own.
+        assertFalse(SystemIntelligenceCommands.isCachePreviewRequest(owner))
+        listOf(
+            "Untersuche mein Handy und sag mir, was wir bereinigen könnten.",
+            "Untersuche mein Android-Gerät auf unnötige Dateien und informiere mich nur; danach entscheide ich selbst, was du löschen darfst."
+        ).forEach {
+            assertTrue(it, routes(it))
+            assertTrue(it, SystemIntelligenceCommands.diagnosisIncludesOwnCachePreview(it))
+        }
+        listOf("Prüf mein Handy", "Wie heiß ist mein Handy?", "Analysiere mein Handy, aber lösche nichts.")
+            .forEach { assertFalse(it, SystemIntelligenceCommands.diagnosisIncludesOwnCachePreview(it)) }
+    }
+
+    @Test fun ownerTargetSentenceVariantsWithARealChangeStillDoNotRoute() {
+        listOf(
+            "Untersuche bitte mein Handy und bereinige alles, was wir bereinigen könnten.",
+            "Untersuche bitte mein Handy. Sag mir, was wir bereinigen könnten. Lösch noch nichts, nur die Fotos.",
+            "Untersuche bitte mein Handy. Was wir bereinigen könnten, lösch es jetzt.",
+            "Untersuche bitte mein Handy. Wir bereinigen jetzt alles."
+        ).forEach {
+            assertFalse(it, routes(it))
+            assertFalse(it, SystemIntelligenceCommands.diagnosisIncludesOwnCachePreview(it))
+        }
+    }
+
     @Test fun negatedDeferredConditionalReportedOrKnowledgeQuestionsDoNotRoute() {
         listOf(
             "Mach keine Systemdiagnose",

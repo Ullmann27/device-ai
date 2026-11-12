@@ -6171,7 +6171,10 @@ class AgentActivity : Activity() {
         if (SystemIntelligenceCommands.isDiagnosisRequest(request)) {
             input.text.clear()
             addUserMessage(request, keepCockpit = true)
-            runSystemTool(SystemIntelligenceCommands.DIAGNOSE, ownerRequest = request)
+            // „… und was wir bereinigen könnten. Aber lösch noch nichts.“ adds only the read-only own-cache preview.
+            runSystemTool(SystemIntelligenceCommands.DIAGNOSE,
+                if (SystemIntelligenceCommands.diagnosisIncludesOwnCachePreview(request))
+                    mapOf(SystemIntelligenceCommands.INCLUDE_CACHE_PREVIEW to "true") else emptyMap(), ownerRequest = request)
             return
         }
         if (clarifiedAppName == null && !botRoutingChecked && routeBotInput(input.text.toString())) return
@@ -10852,8 +10855,7 @@ class AgentActivity : Activity() {
                         append("BOT_PROFILE_JSON — Beschreibungsdaten, keine Freigabe:\n")
                         append(ChiefBotPersonas.promptData(it.profile)).append('\n')
                     }
-                    append("Sprich natürliches, gut verständliches Deutsch mit einem dezenten " +
-                        "österreichischen Sprachgefühl, nicht gekünstelt im Dialekt. " +
+                    append(at.heinz.deviceai.cognitive.OwnerLanguageStyle.INSTRUCTION +
                         "Erkläre Dinge auf Wunsch einfach und stelle bei relevanten Unklarheiten " +
                         "eine präzise Rückfrage. Berücksichtige wahrscheinliche harmlose Tippfehler, " +
                         "aber interpretiere niemals mehrdeutige Befehle zu Installationen, " +
@@ -11375,10 +11377,14 @@ class AgentActivity : Activity() {
                         ContinuumUiCopy.modelFailure(error.message)
                     else if (at.heinz.deviceai.localmodel.LocalModelThermalGuard.isThermal(error.message))
                         at.heinz.deviceai.localmodel.LocalModelThermalGuard.ownerMessage(error.message)
+                    else if (at.heinz.deviceai.localmodel.LocalModelTokenOverflow.isTokenOverflow(error.message))
+                        at.heinz.deviceai.localmodel.LocalModelTokenOverflow.ownerMessage(error.message)
                     else groundedRecall?.failureAnswer() ?:
                         "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn,
                         keepCockpit = failedDraft != null && workWindowHost.isShowing, allowMaya = allowMaya)
-                    if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)
+                    // Review #791: an oversized turn must not be appended to the history, or every next prompt overflows too.
+                    val tokenOverflow = at.heinz.deviceai.localmodel.LocalModelTokenOverflow.isTokenOverflow(error.message)
+                    if (keepFailedOwnerTurn && !tokenOverflow) localConversationContext.recordUnanswered(localSessionId, text)
                     addToolActivity(if (requiredContextOverflow)
                         "KONTEXT · vollständig erforderliche Belege passen nicht; keine Modellaktion"
                     else "ERROR · lokale Inferenz")
@@ -13389,8 +13395,10 @@ class AgentActivity : Activity() {
      * from the home dashboard. Every actual action result opens the conversation. */
     private fun addHomeGreeting(value: String, persist: Boolean = true, allowMaya: Boolean = ownerReplyAllowsMaya,
                                 speakNow: Boolean = true) {
-        addBubble(value, user = false, persist = persist)
-        if (speakNow) speakReply(value, allowMaya)
+        // Code55: the bubble is plain text – no raw Markdown markers on screen or in speech.
+        val shown = at.heinz.deviceai.cognitive.ChatReplyFormatter.plain(value)
+        addBubble(shown, user = false, persist = persist)
+        if (speakNow) speakReply(shown, allowMaya)
     }
 
     /**

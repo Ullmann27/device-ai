@@ -165,7 +165,18 @@ class DeviceToolExecutor internal constructor(
                 val sample = AndroidSystemDiagnosis(context).capture(::cancelled)
                 check(!cancelled()) { "DIAGNOSIS_CANCELLED" }
                 lastDiagnosis = sample
-                sample.report()
+                // Read-only like the diagnosis itself: the preview only lists own reports; cleanup needs its own approval.
+                var previewProblem: String? = null
+                val preview = if (!boolArg(call, SystemIntelligenceCommands.INCLUDE_CACHE_PREVIEW, false)) null else try {
+                    systemStorage.previewOwnCache(::cancelled).also { lastCachePreview = it }
+                } catch (failure: Exception) {
+                    check(!cancelled()) { "DIAGNOSIS_CANCELLED" }
+                    previewProblem = failure.message?.takeIf { it.matches(Regex("[A-Z_]{3,64}")) } ?: "PREVIEW_FAILED"
+                    null
+                }
+                check(!cancelled()) { "DIAGNOSIS_CANCELLED" }
+                sample.reportHeader() + "\n\n" +
+                    DiagnosisEvaluation.evaluate(sample, preview, previewUnavailableReason = previewProblem).render()
             }
             SystemIntelligenceCommands.PREVIEW -> systemStorage.previewOwnCache(::cancelled).let {
                 lastCachePreview = it
