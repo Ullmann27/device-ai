@@ -18,6 +18,16 @@ source_sha="${SOURCE_SHA:-}"
 approved_sha="${OWNER_APPROVED_SHA:-}"
 qa_run_id="${QA_RUN_ID:-}"
 transport_run_id="${TRANSPORT_RUN_ID:-}"
+if [[ -z "$transport_run_id" && "$source_sha" =~ ^[a-f0-9]{40}$ ]]; then
+  # Code52's registered manual entry has no transport_run_id input.
+  runs="$(gh api "repos/$repo/actions/runs?branch=$target_branch&event=push&per_page=100")" || fail TRANSPORT_DISCOVERY
+  transport_run_id="$(jq -er --arg sha "$source_sha" --arg p "$transport_path" '
+    [.workflow_runs[] | select(.head_sha==$sha and .head_branch=="integrate/code55-apk-fable-20261112"
+      and .status=="completed" and .conclusion=="success"
+      and (.path==$p or (.path|startswith($p+"@"))))] |
+    sort_by(.created_at) | last | .id
+  ' <<< "$runs")" || fail TRANSPORT_RUN_NOT_GREEN
+fi
 [[ "${GITHUB_REPOSITORY:-}" == "$repo" ]] || fail REPOSITORY
 [[ "${GITHUB_REF:-}" == "refs/heads/$signing_branch" ]] || fail SIGNER_BRANCH
 [[ "${GITHUB_EVENT_NAME:-}" == workflow_dispatch ]] || fail SIGNER_EVENT
