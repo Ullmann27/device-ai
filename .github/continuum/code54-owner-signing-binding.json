@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "source_sha": "9713854bfb01d699f666058ac44379735307b66a",
+  "source_tree": "b815b5f2896b279edef15cad85aead82a85951af",
+  "workflow_blob_sha": "5a621b46802225b08bc085ad4e5202ac531a507c",
+  "qa_branch": "integrate/omega-apk54-20261111",
+  "qa_workflow_path": ".github/workflows/continuum-code54-qa.yml",
+  "qa_run_id": 43134158265,
+  "qa_run_attempt": 1,
+  "qa_job_android_id": 130916433622,
+  "qa_job_unsigned_id": 130916433295,
+  "apk_sha256": "eda9d67a56d3e1bdc934eee8eda7a5ff9d2ea649f5b767587ef078d8faf840ab",
+  "apk_bytes": 102864175,
+  "unsigned": {
+    "id": 13908580815,
+    "name": "Code54-UNSIGNED-NOT-INSTALLABLE",
+    "bytes": 73553790,
+    "digest": "sha256:855e9877ed3eef8b96cf9da2dc96931dfd93a339800b3ce76a6894e5fb4a787b"
+  },
+  "release_gate": "BLOCKED_PENDING_NATIVE_PDF_OR_EXPLICIT_OWNER_EXCEPTION",
+  "release_scope": "UNPUBLISHED_DRAFT_ONLY",
+  "note": "Exact original GitHub artifact downloaded and hashed; APK byte hash matches independent host proof. No owner authorization to sign, no PDF PASS, no exception. Change release_gate only after separately documented owner decision and signed-off validation."
+}
