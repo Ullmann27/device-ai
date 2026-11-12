@@ -119,6 +119,8 @@ object SystemIntelligenceCommands {
             .containsMatchIn(normalized)
     }
 
+    fun diagnosisIncludesOwnCachePreview(text: String): Boolean = false
+
     /** Cleaning speech opens preview only. */
     fun isCachePreviewRequest(text: String): Boolean {
         if (text.length !in 4..320 || text.any { it.isISOControl() || it in "\"„“”«»" }) return false

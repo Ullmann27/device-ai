@@ -64,6 +64,21 @@ class OwnerDeviceRequestSafetyTest {
         ).forEach { assertTrue(it, OwnerDeviceRequestSafety.inspect(it).blocked) }
     }
 
+    @Test fun ownerTargetSentenceIsReadOnlyWithAProposalAndAPostponedChange() {
+        val owner = "untersuche bitte mein handy. sag mir, was speicher verbraucht, warum es heiß wird " +
+            "und was wir bereinigen könnten. aber lösch noch nichts."
+        val assessment = OwnerDeviceRequestSafety.inspect(owner)
+        assertFalse(assessment.blocked)
+        assertTrue(OwnerDeviceRequestSafety.Category.PROPOSAL in assessment.categories)
+        assertTrue(OwnerDeviceRequestSafety.Category.NEGATED_CHANGE in assessment.categories)
+        assertFalse(assessment.readOnlyText.contains("bereinig"))
+        assertFalse(assessment.readOnlyText.contains("lösch"))
+        listOf("Lösch noch nichts, nur die Fotos", "Wir bereinigen jetzt alles", "Lösch noch die Fotos",
+            "Bereinige alles, was wir bereinigen könnten").forEach {
+            assertTrue(it, OwnerDeviceRequestSafety.inspect(it).blocked)
+        }
+    }
+
     @Test fun cacheMisrecognitionOnlyOpensTheReadOnlyPreview() {
         listOf("bereinige bitte meinen Cage und sage mir wie viel du bereinigt hast",
             "Bereinige meinen Cache", "Leere den Cache", "Jarvis, Cache-Vorschau").forEach {
