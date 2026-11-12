@@ -23,6 +23,7 @@ spec.loader.exec_module(evidence)
 def fixture():
     binding = json.loads((ROOT / ".github/continuum/code54-owner-signing-binding.json").read_text())
     binding["release_gate"] = "STRICT_NATIVE_PDF_PASS"  # isolated synthetic owner-PASS case only
+    binding["release_scope"] = "UNPUBLISHED_DRAFT_ONLY"
     repo = {"id": evidence.REPOSITORY_ID, "full_name": evidence.REPOSITORY}
     run = {"id": evidence.RUN, "run_attempt": 1,
            "head_sha": evidence.SOURCE, "head_branch": evidence.QA_BRANCH,
@@ -66,7 +67,7 @@ class MetadataContracts(unittest.TestCase):
         with self.assertRaisesRegex(evidence.Rejected, "RELEASE_GATE_BLOCKED"):
             evidence.verify_binding(binding)
         self.assertEqual(binding["release_gate"],
-                         "BLOCKED_PENDING_NATIVE_PDF_OR_EXPLICIT_OWNER_EXCEPTION")
+                         "DEVICE_TEST_NATIVE_PDF_EXCEPTION_PENDING_EVIDENCE")
 
     def test_synthetic_completed_green_identity(self):
         evidence.verify_metadata(**fixture())
@@ -250,6 +251,175 @@ class WorkflowContracts(unittest.TestCase):
         self.assertNotIn("set -x", s)
         self.assertLess(s.index("CODE54_METADATA_MISMATCH"),
                         s.index("ORIGINAL_P12_BASE64_INVALID"))
+
+
+
+def exception_fixture():
+    data = fixture()
+    binding = data["binding"]
+    locked = json.loads((ROOT / ".github/continuum/code54-owner-signing-binding.json").read_text())
+    binding["release_gate"] = evidence.DEVICE_TEST_EXCEPTION
+    binding["release_scope"] = "UNPUBLISHED_FOLD7_DEVICE_TEST_ONLY"
+    binding["owner_exception"] = locked["owner_exception"]
+    binding["qa_evidence"] = {
+        "id": 13909000000, "name": evidence.EVIDENCE_NAME,
+        "bytes": 45000, "digest": "sha256:" + "a" * 64
+    }
+    data["run"]["conclusion"] = "failure"
+    android = data["jobs"]["jobs"][0]
+    android["conclusion"] = "failure"
+    full = next(x for x in android["steps"] if
+                x["name"] == "Full unfiltered Android, native PDF strict")
+    full["conclusion"] = "failure"
+    android["steps"].append({
+        "name": "Preserve actual Android receipts",
+        "status": "completed", "conclusion": "success"
+    })
+    data["artifacts"]["artifacts"].append({
+        "id": 13909000000, "name": evidence.EVIDENCE_NAME,
+        "size_in_bytes": 45000, "digest": "sha256:" + "a" * 64,
+        "expired": False, "workflow_run": {
+            "id": evidence.RUN, "head_sha": evidence.SOURCE,
+            "head_branch": evidence.QA_BRANCH,
+            "repository_id": evidence.REPOSITORY_ID,
+            "head_repository_id": evidence.REPOSITORY_ID
+        }
+    })
+    return data
+
+
+def journal_fixture():
+    source = {
+        "head": evidence.SOURCE, "tree": evidence.TREE,
+        "status": "", "branch": evidence.QA_BRANCH
+    }
+    start = {
+        "type": "run_start", "task": ":app:testDebugUnitTest",
+        "source": source, "includePatterns": [], "excludePatterns": [],
+        "environment": {"projectProperties": {"continuumPdfAllowMissingHostNative": None}},
+    }
+    cases = [
+        {"type": "test_result", "class": "at.heinz.deviceai.fake.ContractTest",
+         "name": f"otherCase{i:05d}", "result": "SUCCESS", "padding": "p" * 170}
+        for i in range(4839)
+    ]
+    for cls, name in sorted(evidence.ALLOWED_SKIPS):
+        cases.append({"type": "test_result", "class": cls, "name": name,
+                      "result": "SKIPPED"})
+    cases.append({
+        "type": "test_result", "class": evidence.PDF_CASE[0],
+        "name": evidence.PDF_CASE[1], "result": "FAILURE",
+        "exceptions": [{
+            "type": "java.lang.NoSuchMethodError",
+            "message": "long java.io.FileDescriptor.getOwnerId$()",
+            "stackTrace": "at libcore.io.IoUtils.acquireRawFd\\nat android.graphics.pdf.PdfProcessor.create"
+        }]
+    })
+    end = {
+        "type": "suite_end", "result": "FAILURE",
+        "tests": len(cases), "passed": 4839, "failed": 1, "skipped": 17,
+        "sourceEnd": source, "sourceUnchanged": True,
+    }
+    return start, cases, end
+
+
+def write_pdf_evidence(root, journal=None):
+    path = root / "qa.zip"
+    if journal is None:
+        journal = journal_fixture()
+    start, cases, end = journal
+    lines = [start] + cases + [end]
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("code54-full/junit-progress.ndjson",
+                         "\n".join(json.dumps(item, separators=(",", ":")) for item in lines))
+        archive.writestr("CODE54-SOURCE.txt", (
+            f"source_sha={evidence.SOURCE}\nsource_tree={evidence.TREE}\n"
+            "qa_only=true\noriginal_signer=NOT_USED\nFold7=NOT_RUN\n"))
+    return path
+
+
+class DeviceTestExceptionContracts(unittest.TestCase):
+    def test_narrow_signed_draft_exception_accepts_only_exact_synthetic_run(self):
+        evidence.verify_metadata(**exception_fixture())
+
+    def test_exception_rejects_missing_owner_data_and_any_unrelated_failure(self):
+        mutations = [
+            (("binding", "owner_exception", "authorization_id"), "forged"),
+            (("binding", "owner_exception", "source_sha"), "f" * 40),
+            (("binding", "owner_exception", "publication"), "ALLOWED"),
+            (("binding", "owner_exception", "device_pdf_test_status"), "PASS"),
+            (("binding", "qa_evidence", "digest"), "sha256:" + "f" * 64),
+            (("run", "conclusion"), "success"),
+            (("jobs", "jobs", 0, "conclusion"), "success"),
+            (("jobs", "jobs", 0, "steps", 0, "conclusion"), "failure"),
+            (("jobs", "jobs", 0, "steps", -1, "conclusion"), "failure"),
+            (("artifacts", "artifacts", 1, "expired"), True),
+        ]
+        for path, value in mutations:
+            with self.subTest(path=path):
+                data = exception_fixture()
+                mutate(data, path, value)
+                with self.assertRaises(evidence.Rejected):
+                    evidence.verify_metadata(**data)
+
+    def test_exception_validates_4857_complete_cases_and_pdf_fingerprint(self):
+        with tempfile.TemporaryDirectory() as name:
+            path = write_pdf_evidence(Path(name))
+            data = exception_fixture()
+            data["binding"]["qa_evidence"]["bytes"] = path.stat().st_size
+            data["binding"]["qa_evidence"]["digest"] = "sha256:" + evidence.digest_file(path)
+            result = evidence.verify_pdf_only_host_exception(data["binding"], path)
+            self.assertEqual(result["total"], 4857)
+            self.assertEqual(result["failed"], 1)
+            self.assertEqual(result["native_pdf_fold7_result"], "NOT_RUN")
+            self.assertFalse(result["full_suite_pass"])
+
+    def test_exception_rejects_corrupted_or_unrelated_cases(self):
+        test_cases = ("another failure", "unknown skip", "missing case", "fake PDF PASS",
+                      "bad native fingerprint", "new source", "filtered")
+        for case in test_cases:
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as name:
+                start, cases, end = journal_fixture()
+                if case == "another failure":
+                    cases[0]["result"] = "FAILURE"
+                elif case == "unknown skip":
+                    cases[0]["result"] = "SKIPPED"
+                elif case == "missing case":
+                    cases.pop(1)
+                elif case == "fake PDF PASS":
+                    cases[-1]["result"] = "SUCCESS"
+                elif case == "bad native fingerprint":
+                    cases[-1]["exceptions"][0]["message"] = "noSuchMethod elsewhere"
+                    cases[-1]["exceptions"][0]["stackTrace"] = "unrelated"
+                elif case == "new source":
+                    start["source"] = {**start["source"], "head": "f" * 40}
+                elif case == "filtered":
+                    start["includePatterns"] = ["fake"]
+                path = write_pdf_evidence(Path(name), (start, cases, end))
+                binding = exception_fixture()["binding"]
+                binding["qa_evidence"]["bytes"] = path.stat().st_size
+                binding["qa_evidence"]["digest"] = "sha256:" + evidence.digest_file(path)
+                with self.assertRaises(evidence.Rejected):
+                    evidence.verify_pdf_only_host_exception(binding, path)
+
+    def test_unsigned_archive_cannot_substitute_native_pdf_evidence(self):
+        data = exception_fixture()
+        with tempfile.TemporaryDirectory() as name:
+            p = Path(name)
+            with self.assertRaises(evidence.Rejected):
+                evidence.verify_archives(data["binding"], p / "unsigned.zip", p / "output", None)
+
+    def test_device_test_scope_does_not_remove_protected_owner_gate(self):
+        signer = (ROOT / "scripts/continuum-code52-github-signer.sh").read_text()
+        workflow = (ROOT / ".github/workflows/continuum-code52-sign-release.yml").read_text()
+        self.assertIn("CODE54_QA_EVIDENCE_DOWNLOAD_FAILED", signer)
+        self.assertIn("CODE54_ARCHIVE_MISMATCH", signer)
+        self.assertIn("publication_permitted=false", signer)
+        self.assertIn("--draft --latest=false", signer)
+        self.assertIn("environment: continuum-original-signing", workflow)
+        self.assertNotIn("set -x", signer)
+        self.assertLess(signer.index("CODE54_QA_EVIDENCE_DOWNLOAD_FAILED"),
+                        signer.index("ORIGINAL_P12_BASE64_INVALID"))
 
 
 if __name__ == "__main__":
