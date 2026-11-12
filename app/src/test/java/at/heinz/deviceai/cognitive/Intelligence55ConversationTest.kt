@@ -65,4 +65,18 @@ class Intelligence55ConversationTest {
         }
         assertEquals("list_installed_apps", BootstrapBrain.decide("Welche Apps sind installiert?", emptyList()).tool)
     }
+
+    @Test fun aGeneralHowToStatementIsConversationButAPresentCommandStaysBlocked() {
+        listOf("Bei Android entfernt man Apps über die Einstellungen",
+            "Normalerweise löscht man den Cache in den Einstellungen").forEach {
+            val assessment = OwnerDeviceRequestSafety.inspect(it)
+            assertFalse(it, assessment.blocked)
+            assertTrue(it, OwnerDeviceRequestSafety.Category.CONVERSATION in assessment.categories)
+            assertNull(it, BootstrapBrain.decide(it, emptyList()).tool)
+        }
+        listOf("Bei Android entfernt man jetzt alle Apps", "Man löscht sofort über die Einstellungen den Cache",
+            "Normalerweise löscht man alles").forEach {
+            assertTrue(it, OwnerDeviceRequestSafety.inspect(it).blocked)
+        }
+    }
 }

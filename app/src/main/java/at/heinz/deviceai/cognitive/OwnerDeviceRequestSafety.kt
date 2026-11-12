@@ -60,6 +60,13 @@ internal object OwnerDeviceRequestSafety {
         "(?:(?:nichts|nicht)(?:\\s+mehr)?$|kein\\p{L}*(?![\\p{L}]))")
     private val impersonalChange = Regex("(?iu)(?<![\\p{L}])(?:(?:man|ihr)\\s+$impersonalAdverbs" +
         "(?:$impersonalStems)e?t|(?:$impersonalStems)e?t\\s+(?:man|ihr))(?![\\p{L}])")
+    // Code55 (owner decision on the #791 review): a general how-to statement ("Bei Android entfernt man Apps über die
+    // Einstellungen") is conversation, not a change. Classification only – execution still needs a real, approved
+    // request. A present-tense trigger (jetzt/sofort/gleich/bitte/alle) keeps the block.
+    private val genericStatement = words("bei\\s+(?:android|samsung|ios|windows)|normalerweise|in\\s+der\\s+regel|" +
+        "üblicherweise|ueblicherweise|grundsätzlich|grundsaetzlich|allgemein|über\\s+die\\s+einstellungen|" +
+        "ueber\\s+die\\s+einstellungen|in\\s+den\\s+einstellungen")
+    private val actNow = words("jetzt|sofort|gleich|bitte|alle|alles|sämtliche|saemtliche")
     private val questionOpening = Regex("(?iu)^(?:wie|was|warum|wieso|weshalb|wo|wann|welche\\p{L}*|womit|wozu)(?![\\p{L}])")
     private val proposalSubject = words("ich|man|wir")
     private val proposalModal = words("kann|könnte|koennte|sollte|könnten|koennten")
@@ -120,6 +127,9 @@ internal object OwnerDeviceRequestSafety {
             val changes = mutation.findAll(clause).toList()
             val category = when {
                 readOnlyStart.matches(clause) -> Category.READ_ONLY
+                changes.isEmpty() && impersonalChange.containsMatchIn(clause) &&
+                    genericStatement.containsMatchIn(clause) && !actNow.containsMatchIn(clause) &&
+                    questions.none { it.contains(clause) } -> Category.CONVERSATION
                 changes.isEmpty() && impersonalChange.containsMatchIn(clause) &&
                     !questionOpening.containsMatchIn(clause) && questions.none { it.contains(clause) } &&
                     !impersonalRefusal.containsMatchIn(clause) -> Category.CHANGE
