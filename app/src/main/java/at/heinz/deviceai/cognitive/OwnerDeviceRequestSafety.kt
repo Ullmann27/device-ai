@@ -46,6 +46,14 @@ internal object OwnerDeviceRequestSafety {
         "(?:die|den|das|diese\\p{L}*|mein\\p{L}*|dein\\p{L}*|etwas|alles)(?![\\p{L}]))")
     private val finalRefusal = Regex("(?iu)(?<![\\p{L}])(?:nicht|nie|niemals)$")
     private val notOnly = words("nicht\\s+nur|vergiss\\s+nicht")
+    // Code55: impersonal commands ("Jetzt löscht man alle Fotos", "Man bereinigt jetzt alles") use the
+    // 3rd-person/2nd-plural -t form, which is not in `verbs` (its participle "installiert"/"entfernt" also
+    // appears in plain questions). Only "man"/"ihr" directly at the verb counts; question openings stay free.
+    private const val impersonalStems = "lösch|loesch|entfern|deinstallier|installier|verschieb|start|stopp|" +
+        "bezahl|änder|aender|bereinig|säuber|saeuber|optimier|verbesser|beend"
+    private val impersonalChange = Regex("(?iu)(?<![\\p{L}])(?:(?:man|ihr)\\s+(?:(?:jetzt|gleich|sofort|einfach|" +
+        "dann|bitte|mal|noch)\\s+){0,2}(?:$impersonalStems)e?t|(?:$impersonalStems)e?t\\s+(?:man|ihr))(?![\\p{L}])")
+    private val questionOpening = Regex("(?iu)^(?:wie|was|warum|wieso|weshalb|wo|wann|welche\\p{L}*|womit|wozu)(?![\\p{L}])")
     private val proposalSubject = words("ich|man|wir")
     private val proposalModal = words("kann|könnte|koennte|sollte|könnten|koennten")
     private val proposalQuestion = words("was|welche\\p{L}*|wie")
@@ -103,6 +111,8 @@ internal object OwnerDeviceRequestSafety {
             val changes = mutation.findAll(clause).toList()
             val category = when {
                 readOnlyStart.matches(clause) -> Category.READ_ONLY
+                changes.isEmpty() && impersonalChange.containsMatchIn(clause) &&
+                    !questionOpening.containsMatchIn(clause) && negative.findAll(clause).none() -> Category.CHANGE
                 changes.isEmpty() && !improvements.containsMatchIn(clause) ->
                     if (ownerDecision.matches(clause)) Category.DEFERRED_CHANGE else Category.READ_ONLY
                 changes.size > 1 -> Category.CHANGE

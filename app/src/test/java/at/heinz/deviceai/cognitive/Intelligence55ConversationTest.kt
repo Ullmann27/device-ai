@@ -45,4 +45,17 @@ class Intelligence55ConversationTest {
         assertFalse(SystemIntelligenceCommands.isCachePreviewRequest(t))
         assertNotEquals("clear_cache", BootstrapBrain.decide(t, emptyList()).tool)
     }
+
+    @Test fun impersonalThirdPersonCommandsAreChangesButQuestionsStayFree() {
+        listOf("Jetzt löscht man alle Fotos", "Man bereinigt jetzt alles", "Man entfernt die alten Apps",
+            "Ihr löscht jetzt den Ordner", "Dann deinstalliert man WhatsApp").forEach {
+            assertTrue(it, OwnerDeviceRequestSafety.inspect(it).blocked)
+            assertNull(it, BootstrapBrain.decide(it, emptyList()).tool)
+        }
+        listOf("Welche Apps sind installiert?", "Wie weit ist Wien entfernt?", "Wie installiert man eine App?",
+            "Was bereinigt man normalerweise?", "Man löscht nichts", "Die App wurde entfernt").forEach {
+            assertFalse(it, OwnerDeviceRequestSafety.inspect(it).blocked)
+        }
+        assertEquals("list_installed_apps", BootstrapBrain.decide("Welche Apps sind installiert?", emptyList()).tool)
+    }
 }
