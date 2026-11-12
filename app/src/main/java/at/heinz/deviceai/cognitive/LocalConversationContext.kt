@@ -65,6 +65,14 @@ class LocalConversationContext {
         append(sessionId, turn, notify = false)
     }
 
+    /**
+     * Code55 (field bug E): this process still holds dialogue state of [sessionId] (an Activity recreation of the same
+     * chat). Unlike [render] it is never "" just because the bounded prompt view does not fit, so a restore from disk
+     * cannot replay the same turns a second time into the RAM context and the owner object-state memory.
+     */
+    @Synchronized fun holdsSession(sessionId: String): Boolean = session == sessionId &&
+        (turns.isNotEmpty() || explicitFocus != null || research != null || objects.hasState())
+
     private fun append(sessionId: String, turn: LocalChatTranscriptStore.ContextTurn, notify: Boolean = true) {
         if (session != sessionId) switchTo(sessionId)
         val bounded = turn.bounded()

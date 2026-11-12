@@ -100,28 +100,52 @@ class LocalChatTranscriptStore(private val dir: File) {
     /** The last [limit] context turns after the last reset marker, in order (the model context keeps at most four). */
     @Synchronized fun loadContextTurns(id: String, limit: Int = LocalDialogueContextLimits.MAX_TURNS): List<ContextTurn> {
         if (limit <= 0) return emptyList()
+        return scanContext(id, LocalDialogueContextLimits.MAX_TURNS).turns.takeLast(limit)
+    }
+
+    /**
+     * Code55 (field bug E): every context turn after the last reset marker, oldest first, at most [maxTurns]. The
+     * owner object-state memory folds the whole conversation, not only the four-turn model window, so a reopened
+     * app must replay all of it. When older turns of that range are not available (more than [maxTurns], or the
+     * bounded tail read started inside the range) the result starts with the same "incomplete" placeholder a
+     * corrupt line produces – a partial history is never presented as a complete one. Same file, same lines.
+     */
+    @Synchronized fun loadContextHistory(id: String, maxTurns: Int = MAX_HISTORY_TURNS): List<ContextTurn> {
+        if (maxTurns <= 0) return emptyList()
+        val scan = scanContext(id, maxTurns)
+        return if (scan.olderMissing) listOf(incompleteTurn()) + scan.turns.takeLast(maxTurns - 1) else scan.turns
+    }
+
+    private class ContextScan(val turns: List<ContextTurn>, val olderMissing: Boolean)
+
+    private fun incompleteTurn() = ContextTurn("", "(Gesprächskontext unvollständig)",
+        requestComplete = false, responseComplete = false, modelResponse = false, responseHasEnd = false)
+
+    private fun scanContext(id: String, keep: Int): ContextScan {
         val out = ArrayList<ContextTurn>()
+        val tail = tail(id)
+        // A tail read that starts inside the file may have cut turns after the last (unseen) reset marker.
+        var olderMissing = tail.truncated
         fun invalidate() {
             out.clear()
-            out += ContextTurn("", "(Gesprächskontext unvollständig)",
-                requestComplete = false, responseComplete = false, modelResponse = false,
-                responseHasEnd = false)
+            out += incompleteTurn()
+            olderMissing = false
         }
-        lines(id).forEach { line ->
+        tail.lines.forEach { line ->
             if (line.isBlank()) return@forEach
             val o = runCatching { JSONObject(line) }.getOrNull()
             if (o == null) { invalidate(); return@forEach }
             when (o.optString("k")) {
-                CONTEXT_RESET -> out.clear()
+                CONTEXT_RESET -> { out.clear(); olderMissing = false }
                 CONTEXT -> {
                     val turn = runCatching { readContextTurn(o) }.getOrNull()
                     if (turn == null) invalidate() else out += turn
                 }
                 else -> if (o.has("k")) invalidate()
             }
-            while (out.size > LocalDialogueContextLimits.MAX_TURNS) out.removeAt(0)
+            while (out.size > keep) { out.removeAt(0); olderMissing = true }
         }
-        return out.takeLast(limit)
+        return ContextScan(out, olderMissing)
     }
 
     private fun readContextTurn(o: JSONObject): ContextTurn {
@@ -147,17 +171,23 @@ class LocalChatTranscriptStore(private val dir: File) {
         }.toList().takeLast(limit)
     }
 
-    private fun lines(id: String): Sequence<String> {
-        if (!ID.matches(id)) return emptySequence()
+    private fun lines(id: String): Sequence<String> = tail(id).lines
+
+    private class Tail(val lines: Sequence<String>, val truncated: Boolean)
+
+    private fun tail(id: String): Tail {
+        if (!ID.matches(id)) return Tail(emptySequence(), false)
         val file = File(dir, "$id$SUFFIX")
-        if (!file.isFile) return emptySequence()
+        if (!file.isFile) return Tail(emptySequence(), false)
+        var truncated = false
         val text = RandomAccessFile(file, "r").use { raf ->
             val start = maxOf(0L, raf.length() - MAX_READ_BYTES)
+            truncated = start > 0
             raf.seek(start)
             ByteArray((raf.length() - start).toInt()).also { raf.readFully(it) }.toString(Charsets.UTF_8)
                 .let { if (start > 0) it.substringAfter('\n') else it }
         }
-        return text.lineSequence()
+        return Tail(text.lineSequence(), truncated)
     }
 
     @Synchronized fun conversations(): List<String> =
@@ -186,5 +216,7 @@ class LocalChatTranscriptStore(private val dir: File) {
         private const val LEGACY_CONTEXT_REQUEST = 1_000
         private const val LEGACY_CONTEXT_RESPONSE = 2_000
         private const val MAX_READ_BYTES = 4L * 1024 * 1024
+        /** Replay bound for the owner object-state memory after a reopen (UI-thread restore, bounded work). */
+        const val MAX_HISTORY_TURNS = 256
     }
 }

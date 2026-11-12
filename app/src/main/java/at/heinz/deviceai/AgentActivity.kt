@@ -614,15 +614,16 @@ class AgentActivity : Activity() {
                 pendingModelImport = Triple(id, version, sha)
             }
         }
-        savedInstanceState?.getString("ctx3_chat_id_v1")?.takeIf {
+        val activeChat = savedInstanceState?.getString("ctx3_chat_id_v1")?.takeIf {
             Regex("[a-f0-9-]{36}").matches(it)
-        }?.let { sessionId = it }
+        }
             // #568: after an app exit or process death the same central conversation continues.
             ?: runCatching {
                 chatTranscriptIo.submit(java.util.concurrent.Callable {
                     chatTranscripts.activeConversation { sessionId }
                 }).get(2, java.util.concurrent.TimeUnit.SECONDS)
-            }.getOrNull()?.let { sessionId = it }
+            }.getOrNull()
+        activeChat?.let { sessionId = it }
         restoreDocumentSelection(savedInstanceState)
         // Only a recreated instance of the same chat restores its last local answer anchor.
         if (savedInstanceState != null) {
@@ -740,14 +741,14 @@ class AgentActivity : Activity() {
         // the original SHA-256 is the selected catalog entry.
         restoreOriginalGemmaOnOpen()
         showPendingReceiptReview()
-        restoreChatTranscript()
+        val restoredBubbles = restoreChatTranscript()
         persistContextInvalidations()
-        restoreModelContext()
-        addHomeGreeting(persist = false, value =
-            "Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. " +
-                "Sprich oder schreibe mit mir. Mit „Merke dir: ...“ kannst du mein lokales Wissen ausdrücklich erweitern. " +
-                "Mit „Was kannst du?“ erfährst du meine aktuellen Fähigkeiten."
-        )
+        val restoredContext = restoreModelContext()
+        // Code55 (field bug E): the first-start greeting only for a genuinely new, empty conversation; a reopened
+        // conversation continues without it, and an incomplete restore says so instead of looking like a fresh start.
+        at.heinz.deviceai.cognitive.ConversationStartupNotice.message(
+            conversationLookupFailed = activeChat == null, restoredBubbles = restoredBubbles, context = restoredContext
+        )?.let { addHomeGreeting(persist = false, value = it) }
         savedInstanceState?.getString("chief_bot_selection_v1")?.takeIf {
             Regex("[a-z][a-z0-9-]{2,63}").matches(it)
         }?.let { selectBot(it) }
@@ -13421,26 +13422,36 @@ class AgentActivity : Activity() {
     /**
      * After an app exit or process death the model context of this chat is empty; refill it with the turns it had
      * admitted before (unverified dialogue data, same bounds). A recreated Activity keeps its RAM context untouched.
+     * Code55 (field bug E): all turns since the last reset are replayed, so the owner object-state memory also holds
+     * statements older than the four-turn model window; the model window itself keeps its four-turn bound. A timeout
+     * or read failure is reported to the caller instead of silently continuing with an empty context.
      */
-    private fun restoreModelContext() {
+    private fun restoreModelContext(): at.heinz.deviceai.cognitive.ConversationStartupNotice.ContextRestore {
         val id = sessionId
-        if (localConversationContext.render(id).isNotEmpty()) return
+        if (localConversationContext.holdsSession(id))
+            return at.heinz.deviceai.cognitive.ConversationStartupNotice.ContextRestore.KEPT_IN_MEMORY
         val turns = runCatching {
-            chatTranscriptIo.submit(java.util.concurrent.Callable { chatTranscripts.loadContextTurns(id) })
+            chatTranscriptIo.submit(java.util.concurrent.Callable { chatTranscripts.loadContextHistory(id) })
                 .get(2, java.util.concurrent.TimeUnit.SECONDS)
-        }.getOrDefault(emptyList())
+        }.getOrElse { return at.heinz.deviceai.cognitive.ConversationStartupNotice.ContextRestore.FAILED }
         turns.forEach { localConversationContext.restore(id, it) }
+        return if (turns.isEmpty()) at.heinz.deviceai.cognitive.ConversationStartupNotice.ContextRestore.NOTHING_STORED
+            else at.heinz.deviceai.cognitive.ConversationStartupNotice.ContextRestore.RESTORED
     }
 
-    /** Re-renders the stored central conversation as text only; nothing is re-run or re-stored (#568). */
-    private fun restoreChatTranscript() {
-        if (selectedBot != null) return
+    /**
+     * Re-renders the stored central conversation as text only; nothing is re-run or re-stored (#568).
+     * Returns the number of restored entries, or null when they could not be read in time (Code55, field bug E).
+     */
+    private fun restoreChatTranscript(): Int? {
+        if (selectedBot != null) return 0
         val id = sessionId
         val entries = runCatching {
             chatTranscriptIo.submit(java.util.concurrent.Callable { chatTranscripts.load(id) })
                 .get(2, java.util.concurrent.TimeUnit.SECONDS)
-        }.getOrDefault(emptyList())
+        }.getOrElse { return null }
         entries.forEach { addBubble(it.text, it.user, persist = false) }
+        return entries.size
     }
 
     private fun addBubble(value: String, user: Boolean, persist: Boolean = true) {
