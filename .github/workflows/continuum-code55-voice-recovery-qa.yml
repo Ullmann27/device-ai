@@ -1,0 +1,98 @@
+name: Code55 owner hands-free recovery host QA
+
+on:
+  push:
+    branches:
+      - fix/code55-handsfree-recovery-20261112
+    paths:
+      - '.github/workflows/continuum-code55-voice-recovery-qa.yml'
+      - '.github/continuum/code55-voice-test-filter.init.gradle'
+      - 'app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt'
+      - 'app/src/main/java/at/heinz/deviceai/AgentActivity.kt'
+      - 'app/src/main/java/at/heinz/deviceai/cognitive/ContinuousConversationMode.kt'
+      - 'app/src/main/java/at/heinz/deviceai/cognitive/LocalSpeechSession.kt'
+      - 'app/src/test/java/at/heinz/deviceai/cognitive/**'
+      - 'app/src/test/java/at/heinz/deviceai/AndroidSpeechFailureTest.kt'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code55-voice-recovery-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  host-regressions:
+    if: github.repository == 'Ullmann27/device-ai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 85
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          printf 'source=%s\ntree=%s\nFold7=NOT_RUN\nowner_signing=NOT_USED\n' "$GITHUB_SHA" "$(git rev-parse HEAD^{tree})" > "$RUNNER_TEMP/VOICE-HEAD.txt"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Android 36 host SDK
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Full relevant voice state-machine and Android error regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true \
+            -PcontinuumUiWidgetTests=true \
+            -I .github/continuum/code55-voice-test-filter.init.gradle \
+            :app:testDebugUnitTest
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          names={'ContinuousConversationModeTest','ContinuousConversationRecoveryTest',
+                 'LocalSpeechSessionTest','SpeechTurnRecoveryTest',
+                 'ConversationSpeechIntegrationRegressionTest','AndroidSpeechFailureTest'}
+          found=set(); tests=failed=errors=skipped=0
+          for file in Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'):
+              root=ET.parse(file).getroot()
+              class_name=root.get('name','').split('.')[-1]
+              if class_name not in names: continue
+              found.add(class_name)
+              tests+=int(root.get('tests','0'))
+              failed+=int(root.get('failures','0'))
+              errors+=int(root.get('errors','0'))
+              skipped+=int(root.get('skipped','0'))
+          print('VOICE_REGRESSIONS',{'classes':sorted(found),'tests':tests,
+                'failures':failed,'errors':errors,'skips':skipped})
+          assert found==names,(names-found)
+          assert tests>30 and failed==errors==skipped==0
+          PY
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Preserve actual JUnit receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code55-handsfree-host-evidence
+          path: |
+            ${{ runner.temp }}/VOICE-HEAD.txt
+            app/build/test-results/testDebugUnitTest/TEST-*.xml
+          retention-days: 14
+          if-no-files-found: warn

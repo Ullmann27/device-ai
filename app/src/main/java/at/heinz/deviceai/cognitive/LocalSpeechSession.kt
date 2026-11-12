@@ -109,7 +109,7 @@ internal class LocalSpeechSession(
             val cancelTimeout = platform.scheduleTimeout { if (isCurrent(current)) fail(current, LocalSpeechInputPolicy.Failure.TIMEOUT) }
             if (!isCurrent(current)) { cancelTimeout(); return }
             current.cancelTimeout = cancelTimeout
-            current.onState(true)
+            // The Android recognizer owns readiness; startListening() alone is not confirmation.
             if (isCurrent(current)) recognizer.start()
         } catch (_: SecurityException) {
             if (isCurrent(current)) fail(current, LocalSpeechInputPolicy.Failure.PERMISSION)

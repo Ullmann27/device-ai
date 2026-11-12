@@ -94,13 +94,55 @@ class ContinuousConversationModeTest {
         completeTurn(mode, "Weiter mit der Frage von vorhin.", "u5")
     }
 
-    @Test fun silenceIsRetriedOnceThenPauses() {
-        val (mode, token) = listeningMode()
-        assertEquals(Decision.RETRY_LISTEN, mode.listenFailed(token, session, silence = true))
-        val retry = mode.listeningTurn(session)!!
-        assertTrue(retry > token)
-        assertEquals(Decision.PAUSE, mode.listenFailed(retry, session, silence = true))
+    @Test fun silenceRetriesAreBoundedAndUseAColdRecognizer() {
+        val (mode, first) = listeningMode()
+        var token = first
+        repeat(ContinuousConversationMode.MAX_SILENT_RETRIES) { attempt ->
+            assertEquals(Decision.RETRY_LISTEN, mode.listenFailed(token, session, silence = true))
+            val next = mode.listeningTurn(session)!!
+            assertTrue(next > token)
+            assertEquals(attempt >= 1, mode.coldRecognizerRecommended)
+            token = next
+        }
+        assertEquals(Decision.PAUSE, mode.listenFailed(token, session, silence = true))
         assertEquals(State.PAUSED, mode.state)
+        assertTrue(mode.coldRecognizerRecommended)
+    }
+
+    @Test fun briefForegroundReturnRecoversButLateCallbacksStayInvalid() {
+        val (mode, stale) = listeningMode()
+        mode.suspendForBackground(1_000L)
+        assertEquals(State.PAUSED, mode.state)
+        assertTrue(mode.foregroundRecoveryPending)
+        assertNull(mode.listeningTurn(session))
+        assertEquals(Decision.IGNORE, mode.recognized(stale, session, "Alte Aufnahme"))
+        assertEquals(Decision.IGNORE, mode.restoreForeground(session, 2_000L, canListen = false, busy = false))
+        assertEquals(Decision.IGNORE, mode.restoreForeground(session, 2_000L, canListen = true, busy = true))
+        assertEquals(Decision.LISTEN, mode.restoreForeground(session, 2_001L, canListen = true, busy = false))
+        assertTrue(mode.coldRecognizerRecommended)
+        assertEquals(State.LISTENING, mode.state)
+        assertFalse(mode.foregroundRecoveryPending)
+        assertEquals(Decision.IGNORE, mode.recognized(stale, session, "Zu spät"))
+    }
+
+    @Test fun foregroundReturnAfterGraceNeverReopensTheMicrophone() {
+        val (mode, _) = listeningMode()
+        mode.suspendForBackground(1_000L)
+        assertEquals(Decision.PAUSE, mode.restoreForeground(session, 17_000L, canListen = true, busy = false))
+        assertEquals(State.PAUSED, mode.state)
+        assertFalse(mode.foregroundRecoveryPending)
+        assertNull(mode.listeningTurn(session))
+    }
+
+    @Test fun explicitStopOrSessionSwitchCancelsForegroundRecovery() {
+        val (mode, _) = listeningMode()
+        mode.suspendForBackground(2_000L)
+        mode.stop()
+        assertEquals(Decision.IGNORE, mode.restoreForeground(session, 2_200L, canListen = true, busy = false))
+        assertTrue(mode.start(session))
+        mode.suspendForBackground(4_000L)
+        assertEquals(Decision.STOP, mode.restoreForeground("other", 4_001L, canListen = true, busy = false))
+        assertFalse(mode.active)
     }
 
     @Test fun nonSilenceRecognizerErrorPausesImmediately() {
