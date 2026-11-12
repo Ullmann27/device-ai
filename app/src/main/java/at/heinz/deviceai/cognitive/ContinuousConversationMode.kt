@@ -119,7 +119,7 @@ class ContinuousConversationMode {
     }
 
     /**
-     * A silent recognizer timeout is retried once. A recoverable handover failure (recognizer
+     * Silent recognizer timeouts are retried at most three times. A recoverable handover failure (recognizer
      * busy/client error, start failure) is retried up to [MAX_RECOVERY_RETRIES] times with a cold
      * recognizer recommended from the second attempt on; afterwards, and for any other error,
      * the mode pauses so the owner decides. The mode never loops without bound.
