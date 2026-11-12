@@ -15,7 +15,8 @@ internal class FilamentCockpitStage(
     private val engine: Engine,
     private val scene: Scene,
     private val loader: AssetLoader,
-    assets: CockpitSceneAssets
+    assets: CockpitSceneAssets,
+    cacheTransforms: Boolean = true
 ) : AutoCloseable {
     private var workstation: FilamentAsset? = null
     private var orb: FilamentAsset? = null
@@ -30,6 +31,7 @@ internal class FilamentCockpitStage(
     private val orbitTransforms = mutableListOf<Pair<Int, FloatArray>>()
     private val transform = FloatArray(16)
     private val orbitCombined = FloatArray(16)
+    private val transformUpdates = CockpitTransformUpdates(engine.transformManager::setTransform, cacheTransforms)
     val pixelsVisible get() = pixels?.pixelsVisible == true
     var label = "Keine Bildquelle verbunden"
         private set
@@ -78,29 +80,38 @@ internal class FilamentCockpitStage(
 
     fun bind(feed: LiveMonitorFeed<AndroidLiveFrame>?) { pixels?.bind(feed) }
     fun workEvent(event: CockpitWorkEvent) { pixels?.workEvent(event) }
+    fun frameSubmitted(nowNanos: Long) {
+        pixels?.frameSubmitted(nowNanos)
+        label = pixels?.label ?: "3D-Bildquelle nicht verfügbar"
+    }
+    fun frameFailed() {
+        pixels?.frameFailed()
+        label = pixels?.label ?: "3D-Bildquelle nicht verfügbar"
+    }
 
     fun update(frame: CockpitStageFrame, orbBounds: RectF, phase: Float, motion: Boolean) {
         require(frame.valid())
         CockpitWorldTransforms.room(frame, transform)
-        engine.transformManager.setTransform(roomTransform, transform)
+        transformUpdates.setTransform(roomTransform, transform)
         if (frame.monitorWidth / frame.width > .70f) {
             transform[0] = 0f
             transform[5] = 0f
             transform[10] = 0f
         }
-        engine.transformManager.setTransform(sideMonitorTransform, transform)
-        engine.transformManager.setTransform(monitorTransform, frame.monitorTransform())
+        transformUpdates.setTransform(sideMonitorTransform, transform)
+        transformUpdates.setTransform(monitorTransform, frame.monitorTransform())
         CockpitWorldTransforms.orb(frame, orbBounds.left, orbBounds.top, orbBounds.right, orbBounds.bottom, transform)
-        engine.transformManager.setTransform(orbTransform, transform)
+        transformUpdates.setTransform(orbTransform, transform)
         orbitTransforms.forEachIndexed { index, (instance, rest) ->
             CockpitWorldTransforms.ringTransform(rest, index, phase, motion, orbitCombined)
-            engine.transformManager.setTransform(instance, orbitCombined)
+            transformUpdates.setTransform(instance, orbitCombined)
         }
         pixels?.update(frame, System.nanoTime())
         label = pixels?.label ?: "3D-Bildquelle nicht verfügbar"
     }
 
     override fun close() {
+        transformUpdates.clear()
         runCatching { pixels?.close() }; pixels = null
         for (loaded in listOfNotNull(workstation, orb)) {
             runCatching { scene.removeEntities(loaded.entities); loader.destroyAsset(loaded) }

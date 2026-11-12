@@ -1,0 +1,189 @@
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:10:35: error: unresolved reference 'GlbSkinningRig'.
+import at.heinz.deviceai.avatar3d.GlbSkinningRig
+                                  ^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:168:27: error: overload resolution ambiguity between candidates:
+fun <R, T> Result<T>.map(transform: (@ParameterName(...) T) -> R): Result<R>
+    [R|Contract description]
+     <
+        CallsInPlace(transform, AT_MOST_ONCE)
+    >
+fun <T, R> Array<out T>.map(transform: (T) -> R): List<R>
+fun <R> BooleanArray.map(transform: (Boolean) -> R): List<R>
+fun <R> ByteArray.map(transform: (Byte) -> R): List<R>
+fun <R> CharArray.map(transform: (Char) -> R): List<R>
+fun <R> DoubleArray.map(transform: (Double) -> R): List<R>
+fun <R> FloatArray.map(transform: (Float) -> R): List<R>
+fun <R> IntArray.map(transform: (Int) -> R): List<R>
+fun <R> LongArray.map(transform: (Long) -> R): List<R>
+fun <R> ShortArray.map(transform: (Short) -> R): List<R>
+fun <T, R> Iterable<T>.map(transform: (T) -> R): List<R>
+fun <K, V, R> Map<out K, V>.map(transform: (Map.Entry<K, V>) -> R): List<R>
+fun <R> UByteArray.map(transform: (UByte) -> R): List<R>
+fun <R> UIntArray.map(transform: (UInt) -> R): List<R>
+fun <R> ULongArray.map(transform: (ULong) -> R): List<R>
+fun <R> UShortArray.map(transform: (UShort) -> R): List<R>
+fun <T, R> Sequence<T>.map(transform: (T) -> R): Sequence<R>
+fun <R> CharSequence.map(transform: (Char) -> R): List<R>
+        return posedFaces.map { p ->
+                          ^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:168:33: error: cannot infer type for this parameter. Please specify it explicitly.
+        return posedFaces.map { p ->
+                                ^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:169:40: error: cannot infer type for this parameter. Please specify it explicitly.
+            frame.project((matrix[0] * p[0] + matrix[4] * p[1] + matrix[8] * p[2] + matrix[12]).toFloat(),
+                                       ^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:169:59: error: cannot infer type for this parameter. Please specify it explicitly.
+            frame.project((matrix[0] * p[0] + matrix[4] * p[1] + matrix[8] * p[2] + matrix[12]).toFloat(),
+                                                          ^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:169:78: error: cannot infer type for this parameter. Please specify it explicitly.
+            frame.project((matrix[0] * p[0] + matrix[4] * p[1] + matrix[8] * p[2] + matrix[12]).toFloat(),
+                                                                             ^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:169:83: error: overload resolution ambiguity between candidates:
+fun String?.plus(other: Any?): String
+fun <T> Array<T>.plus(element: T): Array<T>
+fun FloatArray.plus(element: Float): FloatArray
+fun <T> Collection<T>.plus(element: T): List<T>
+fun <T> Iterable<T>.plus(element: T): List<T>
+fun <T> Set<T>.plus(element: T): Set<T>
+fun <T> Sequence<T>.plus(element: T): Sequence<T>
+            frame.project((matrix[0] * p[0] + matrix[4] * p[1] + matrix[8] * p[2] + matrix[12]).toFloat(),
+                                                                                  ^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:170:30: error: cannot infer type for this parameter. Please specify it explicitly.
+                (matrix[1] * p[0] + matrix[5] * p[1] + matrix[9] * p[2] + matrix[13]).toFloat(),
+                             ^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:170:49: error: cannot infer type for this parameter. Please specify it explicitly.
+                (matrix[1] * p[0] + matrix[5] * p[1] + matrix[9] * p[2] + matrix[13]).toFloat(),
+                                                ^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:170:68: error: cannot infer type for this parameter. Please specify it explicitly.
+                (matrix[1] * p[0] + matrix[5] * p[1] + matrix[9] * p[2] + matrix[13]).toFloat(),
+                                                                   ^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:170:73: error: overload resolution ambiguity between candidates:
+fun String?.plus(other: Any?): String
+fun <T> Array<T>.plus(element: T): Array<T>
+fun FloatArray.plus(element: Float): FloatArray
+fun <T> Collection<T>.plus(element: T): List<T>
+fun <T> Iterable<T>.plus(element: T): List<T>
+fun <T> Set<T>.plus(element: T): Set<T>
+fun <T> Sequence<T>.plus(element: T): Sequence<T>
+                (matrix[1] * p[0] + matrix[5] * p[1] + matrix[9] * p[2] + matrix[13]).toFloat(),
+                                                                        ^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:171:30: error: cannot infer type for this parameter. Please specify it explicitly.
+                (matrix[2] * p[0] + matrix[6] * p[1] + matrix[10] * p[2] + matrix[14]).toFloat())
+                             ^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:171:49: error: cannot infer type for this parameter. Please specify it explicitly.
+                (matrix[2] * p[0] + matrix[6] * p[1] + matrix[10] * p[2] + matrix[14]).toFloat())
+                                                ^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:171:69: error: cannot infer type for this parameter. Please specify it explicitly.
+                (matrix[2] * p[0] + matrix[6] * p[1] + matrix[10] * p[2] + matrix[14]).toFloat())
+                                                                    ^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:171:74: error: overload resolution ambiguity between candidates:
+fun String?.plus(other: Any?): String
+fun <T> Array<T>.plus(element: T): Array<T>
+fun FloatArray.plus(element: Float): FloatArray
+fun <T> Collection<T>.plus(element: T): List<T>
+fun <T> Iterable<T>.plus(element: T): List<T>
+fun <T> Set<T>.plus(element: T): Set<T>
+fun <T> Sequence<T>.plus(element: T): Sequence<T>
+                (matrix[2] * p[0] + matrix[6] * p[1] + matrix[10] * p[2] + matrix[14]).toFloat())
+                                                                         ^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:176:27: error: unresolved reference 'GlbSkinningRig'.
+        private val rig = GlbSkinningRig.packaged()
+                          ^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:178:28: error: cannot infer type for this parameter. Please specify it explicitly.
+        private val chin = rig.translation("Neck")[1] + rig.translation("Head")[1] * .70
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:178:57: error: cannot infer type for this parameter. Please specify it explicitly.
+        private val chin = rig.translation("Neck")[1] + rig.translation("Head")[1] * .70
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:178:84: error: none of the following candidates is applicable:
+fun BigDecimal.times(other: BigDecimal): BigDecimal
+fun BigInteger.times(other: BigInteger): BigInteger
+        private val chin = rig.translation("Neck")[1] + rig.translation("Head")[1] * .70
+                                                                                   ^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:179:40: error: cannot infer type for this parameter. Please specify it explicitly.
+        private val rest = rig.skinned(emptyMap())
+                                       ^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:180:34: error: unresolved reference 'GlbSkinningRig'.
+        private val posedFaces = GlbSkinningRig.fullRangePoses().flatMap { (yaw, pitch) ->
+                                 ^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:180:76: error: cannot infer type for this parameter. Please specify it explicitly.
+        private val posedFaces = GlbSkinningRig.fullRangePoses().flatMap { (yaw, pitch) ->
+                                                                           ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:180:76: error: function 'component1()' is ambiguous for this expression:
+fun <T> Array<out T>.component1(): T
+fun BooleanArray.component1(): Boolean
+fun ByteArray.component1(): Byte
+fun CharArray.component1(): Char
+fun DoubleArray.component1(): Double
+fun FloatArray.component1(): Float
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun ShortArray.component1(): Short
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UByteArray.component1(): UByte
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UShortArray.component1(): UShort.
+        private val posedFaces = GlbSkinningRig.fullRangePoses().flatMap { (yaw, pitch) ->
+                                                                           ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:180:76: error: function 'component2()' is ambiguous for this expression:
+fun <T> Array<out T>.component2(): T
+fun BooleanArray.component2(): Boolean
+fun ByteArray.component2(): Byte
+fun CharArray.component2(): Char
+fun DoubleArray.component2(): Double
+fun FloatArray.component2(): Float
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun ShortArray.component2(): Short
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UByteArray.component2(): UByte
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UShortArray.component2(): UShort.
+        private val posedFaces = GlbSkinningRig.fullRangePoses().flatMap { (yaw, pitch) ->
+                                                                           ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:182:27: error: overload resolution ambiguity between candidates:
+fun <T, R> Array<out T>.flatMap(transform: (T) -> Iterable<R>): List<R>
+fun <T, R> Array<out T>.flatMap(transform: (T) -> Sequence<R>): List<R>
+fun <R> BooleanArray.flatMap(transform: (Boolean) -> Iterable<R>): List<R>
+fun <R> ByteArray.flatMap(transform: (Byte) -> Iterable<R>): List<R>
+fun <R> CharArray.flatMap(transform: (Char) -> Iterable<R>): List<R>
+fun <R> DoubleArray.flatMap(transform: (Double) -> Iterable<R>): List<R>
+fun <R> FloatArray.flatMap(transform: (Float) -> Iterable<R>): List<R>
+fun <R> IntArray.flatMap(transform: (Int) -> Iterable<R>): List<R>
+fun <R> LongArray.flatMap(transform: (Long) -> Iterable<R>): List<R>
+fun <R> ShortArray.flatMap(transform: (Short) -> Iterable<R>): List<R>
+fun <T, R> Iterable<T>.flatMap(transform: (T) -> Iterable<R>): List<R>
+fun <T, R> Iterable<T>.flatMap(transform: (T) -> Sequence<R>): List<R>
+fun <K, V, R> Map<out K, V>.flatMap(transform: (Map.Entry<K, V>) -> Iterable<R>): List<R>
+fun <K, V, R> Map<out K, V>.flatMap(transform: (Map.Entry<K, V>) -> Sequence<R>): List<R>
+fun <R> UByteArray.flatMap(transform: (UByte) -> Iterable<R>): List<R>
+fun <R> UIntArray.flatMap(transform: (UInt) -> Iterable<R>): List<R>
+fun <R> ULongArray.flatMap(transform: (ULong) -> Iterable<R>): List<R>
+fun <R> UShortArray.flatMap(transform: (UShort) -> Iterable<R>): List<R>
+fun <T, R> Sequence<T>.flatMap(transform: (T) -> Iterable<R>): Sequence<R>
+fun <T, R> Sequence<T>.flatMap(transform: (T) -> Sequence<R>): Sequence<R>
+fun <R> CharSequence.flatMap(transform: (Char) -> Iterable<R>): List<R>
+            posed.indices.flatMap { mesh ->
+                          ^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:182:37: error: cannot infer type for this parameter. Please specify it explicitly.
+            posed.indices.flatMap { mesh ->
+                                    ^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:183:38: error: unresolved reference 'size'.
+                (0 until posed[mesh].size / 3).filter { rest[mesh][it * 3 + 1] >= chin }.map {
+                                     ^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:183:67: error: no 'get' operator method providing array access.
+                (0 until posed[mesh].size / 3).filter { rest[mesh][it * 3 + 1] >= chin }.map {
+                                                                  ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:184:46: error: no 'get' operator method providing array access.
+                    doubleArrayOf(posed[mesh][it * 3], posed[mesh][it * 3 + 1], posed[mesh][it * 3 + 2])
+                                             ^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:184:67: error: no 'get' operator method providing array access.
+                    doubleArrayOf(posed[mesh][it * 3], posed[mesh][it * 3 + 1], posed[mesh][it * 3 + 2])
+                                                                  ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt:184:92: error: no 'get' operator method providing array access.
+                    doubleArrayOf(posed[mesh][it * 3], posed[mesh][it * 3 + 1], posed[mesh][it * 3 + 2])
+                                                                                           ^^^^^^^^^^^^

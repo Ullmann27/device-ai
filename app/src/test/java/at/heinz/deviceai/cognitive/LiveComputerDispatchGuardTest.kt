@@ -12,25 +12,46 @@ class LiveComputerDispatchGuardTest {
         LiveFrameOrigin.ACCESSIBILITY_WINDOW, staleAfterMillis = 1_500)
     private val feed = LatestLiveFrameHolder<Int>({}, { now })
 
-    private fun fresh(next: LiveFrameBinding = binding) {
+    private fun fresh(next: LiveFrameBinding = binding, submitted: Boolean = true) {
         feed.bind(next)
         assertTrue(feed.offer(LiveFrameMeta(next.captureSession, now, 400, 600,
             next.targetPackage, 42, false), 1) is LiveFrameOffer.Accepted)
         assertEquals(LiveMonitorState.LIVE, feed.status(now).state)
+        if (submitted) {
+            val state = feed.status(now)
+            val imported = requireNotNull(feed.monitorSubmission.imported(state, now))
+            assertTrue(feed.monitorSubmission.submitted(imported, state, now))
+        }
     }
 
     private fun checkLive() = LiveComputerDispatchGuard.checkLive(feed, task, session, now)
-    private fun denied() {
+    private fun denied(code: String = "COMPUTER_LIVE_FRAME_REQUIRED") {
         val error = assertThrows(IllegalStateException::class.java) { checkLive() }
-        assertEquals("COMPUTER_LIVE_FRAME_REQUIRED", error.message)
+        assertEquals(code, error.message)
+        assertFalse(LiveComputerDispatchGuard.isReady(feed, task, session, now))
     }
 
-    @Test fun freshBoundFrameAllowsInputWithoutLeasingOrConsumingIt() {
+    @Test fun freshSubmittedFrameAllowsInputWithoutConsumingIt() {
         fresh()
         checkLive()
         checkLive()
         feed.acquire()!!.use { assertEquals(session, it.binding.captureSession) }
         assertEquals(LiveMonitorState.LIVE, feed.status(now).state)
+        assertTrue(LiveComputerDispatchGuard.isReady(feed, task, session, now))
+    }
+
+    @Test fun captureAndImportWithoutRenderCannotAuthorizeInput() {
+        fresh(submitted = false)
+        denied("COMPUTER_MONITOR_FRAME_REQUIRED")
+        assertNotNull(feed.monitorSubmission.imported(feed.status(now), now))
+        denied("COMPUTER_MONITOR_FRAME_REQUIRED")
+    }
+
+    @Test fun lostSurfaceImmediatelyRevokesDispatch() {
+        fresh()
+        checkLive()
+        feed.monitorSubmission.invalidate()
+        denied("COMPUTER_MONITOR_FRAME_REQUIRED")
     }
 
     @Test fun eachDispatchRechecksAgeInsteadOfTrustingFirstObservation() {

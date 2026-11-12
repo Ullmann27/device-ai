@@ -12,12 +12,14 @@ internal data class ClickFrame(
 )
 internal data class ClickRequest(val packageName:String,val epoch:Long,val revision:Long,
     val label:String,val expectedLabel:String,val expectedEditable:Boolean=false,val expectedHeading:Boolean=false,
-    val expectedSearchField:Boolean=false) {
+    val expectedSearchField:Boolean=false,val expectedComposeField:Boolean=false) {
     fun matchesExpected(node:ClickNode):Boolean = if(expectedSearchField) LiveSearchSemantics.isField(node)
+        else if(expectedComposeField) LiveComposeSemantics.isField(node)
         else node.visible && node.label==expectedLabel && (!expectedEditable||node.editable) &&
             (!expectedHeading||node.heading)
 
     fun matchesExpected(node:ActionNode):Boolean = if(expectedSearchField) LiveSearchSemantics.isField(node)
+        else if(expectedComposeField) LiveComposeSemantics.isField(node)
         else node.visible && node.label==expectedLabel && (!expectedEditable||node.editable) &&
             (!expectedHeading||node.heading)
 }
@@ -38,7 +40,8 @@ internal object VerifiedNodeClick {
             Regex("[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)+")))
         fun validLabel(s:String)=s.length in 1..200 && s==s.trim() && s.none{it.isISOControl()}
         require(validLabel(request.label))
-        require(if(request.expectedSearchField) request.expectedLabel.isEmpty() &&
+        require(!request.expectedSearchField || !request.expectedComposeField)
+        require(if(request.expectedSearchField || request.expectedComposeField) request.expectedLabel.isEmpty() &&
             request.expectedEditable && !request.expectedHeading else validLabel(request.expectedLabel))
         check(ownerConfirmed){"OWNER_APPROVAL_REQUIRED"}
         // A click candidate never sends, posts, likes or calls: those need an exact SendApproval (see LiveComputerActions).

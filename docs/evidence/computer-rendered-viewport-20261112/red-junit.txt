@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+........E...
+Time: 5.137
+There was 1 failure:
+1) floatingImeExcludesVisibleNodeOutsideRenderedViewport(at.heinz.deviceai.AndroidLiveNodePortTest)
+java.lang.AssertionError: Off-viewport input reached Android expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.AndroidLiveNodePortTest.floatingImeExcludesVisibleNodeOutsideRenderedViewport(AndroidLiveNodePortTest.kt:155)
+
+FAILURES!!!
+Tests run: 11,  Failures: 1
+
