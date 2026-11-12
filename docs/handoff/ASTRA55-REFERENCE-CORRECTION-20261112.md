@@ -1,7 +1,7 @@
 # Cockpit: Korrektur nach Referenzvergleich
 
-Status: INTEGRIERT IM SUPPORTZWEIG / GEZIELTE HOSTPRÜFUNG BESTANDEN.
-Die abschließende Fünfring-Renderfolge wird auf dem eingefrorenen Produktstand erstellt.
+Status: PORTIERT / VERIFIZIERT (Host); GERÄTEBESTÄTIGT: NOT_RUN.
+Sechs abschließende Fünfring-Ansichten und der Bewegungsclip sind erzeugt.
 Übergabe: #801 gegen die vorhandene Cockpit-Integration #799.
 
 Produktquelle: `62c8602b1437c6b9f6637b2e101f603452089705`.
@@ -75,15 +75,26 @@ Quellhashes, Befehle, Protokolle und Grenzen:
 ## Darstellungsnachweis und Grenzen
 
 Die abschließende Folge verwendet dieselben drei GLBs und Kotlin-Matrizen in
-einer Blender-Szene mit einer perspektivischen Kamera. Vorgesehen sind Ruhe-,
-Übergangs- und Arbeitsansicht für Fold/Phone sowie ein Drei-Sekunden-Clip.
-Renderoptionen werden im tatsächlichen Manifest dokumentiert. Native Texte
-und gekennzeichneter Beispielinhalt bleiben unverändert.
+einer Blender-Szene mit einer perspektivischen Kamera. Ruhe-, Übergangs- und
+Arbeitsansichten für Fold/Phone wurden mit 32 Samples erzeugt und tatsächlich
+visuell geprüft. Der Drei-Sekunden-Clip enthält 60 vollständig decodierte
+Bilder mit 20 Bildern pro Sekunde und 16 Samples. Das ist die Abspielrate der
+Hostvorschau, kein gemessener Geräte-FPS-Wert.
+
+Aktuelle Bilder, Clip und Quittungen:
+`docs/evidence/cockpit-original-five-rings-20261112/README.md`.
+Alle 68 Quellen- und fünf Werkzeughashes stimmen mit dem integrierten Stand
+überein. Der Bildlauf blieb quellstabil. Die tatsächliche Monitorprojektion
+weicht maximal 0,000372 Pixel von der produktiven Kotlin-Quadprojektion ab.
+Native Texte und gekennzeichneter Beispielinhalt bleiben unverändert.
+
+Der installierte Blender-Build besitzt kein OpenImageDenoise-Backend; die
+erfolgreiche Folge ist deshalb ausdrücklich ohne Denoising dokumentiert.
+Einzelne äußere Plexus-Zierlinien des Originalassets reichen an die obere
+Stagekante. Kugelkörper, fünf Ringe, Gesicht und Monitor bleiben sichtbar.
 
 Frühere Vier-Ring-Bilder und Testbelege sind historische Zwischenstände und
-ersetzen den aktuellen Fünfring-Nachweis nicht. Die bisherigen Ansichten
-wurden tatsächlich visuell geprüft; die letzte Reihe wird nach Abschluss
-ebenfalls geprüft und gesondert abgelegt.
+ersetzen den aktuellen Fünfring-Nachweis nicht.
 
 Physischer Fold7-, Android-Filament-/GPU- und echter App-Capture-Beleg bleiben
 NOT_RUN. Hostlicht und Blender-Bildwirkung belegen keine identische
