@@ -2,8 +2,8 @@
   "version": 1,
   "workstation": {
     "path": "cinema3d/cockpit-workstation.glb",
-    "sha256": "c0157513208bba146aaa15a25c8f18bc066e3a343e8d48adfe1112e989a01e5b",
-    "bytes": 538844
+    "sha256": "03b6364e2ff396fd9207b129e765ce5d4a93975113315cc3896844e53fd8ad30",
+    "bytes": 48728
   },
   "orb": {
     "path": "cinema3d/continuum-orb.glb",

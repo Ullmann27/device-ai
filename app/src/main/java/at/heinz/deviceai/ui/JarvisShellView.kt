@@ -469,7 +469,7 @@ class JarvisShellView(context: Context) : View(context) {
             JarvisCinematicSettings.Experiment.EXP_05_WINGS)
         val depthBudget = motionBudgetProvider?.invoke()
         foregroundCinema = JarvisShellRenderer.CinemaFrame(elapsed, scale, workClear, exiting,
-            interruptedAfterMs, fromWorkingScene, depthBudget, sceneTime, returnResultElapsedMs)
+            interruptedAfterMs, fromWorkingScene, depthBudget, sceneTime, returnResultElapsedMs, workElapsed, resultForward)
         JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true,
             deckClearance = deckClearance, missionClearance = missionClearance,
             luxuryDepth = luxuryDepth, depthBudget = depthBudget, enableWings = wings,

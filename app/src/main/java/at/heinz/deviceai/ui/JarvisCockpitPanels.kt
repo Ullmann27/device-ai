@@ -89,8 +89,9 @@ object JarvisCockpitPanels {
         return s.cockpit.steps.isEmpty() && s.cockpit.openWork.isEmpty()
     }
 
-    fun drawDocumentPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
-        val y0 = title(p, b, "Dokument") { x, y ->
+    fun drawDocumentPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false) {
+        val y0 = if (workstation) CockpitWorkstationChrome.panelHeader(p, b, "Dokument", Icon.DOCUMENT)
+        else title(p, b, "Dokument") { x, y ->
             ContinuumIcons.draw(p, Icon.DOCUMENT, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f)
         }
         val vis = DocumentBlueprintView.visible(s.document)
@@ -122,8 +123,9 @@ object JarvisCockpitPanels {
         }
     }
 
-    fun drawDraftPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
-        val y0 = title(p, b, "Zusammenfassung – Entwurf") { x, y ->
+    fun drawDraftPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false) {
+        val y0 = if (workstation) CockpitWorkstationChrome.panelHeader(p, b, "Entwurf", Icon.CODE)
+        else title(p, b, "Zusammenfassung – Entwurf") { x, y ->
             ContinuumIcons.draw(p, Icon.CODE, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f)
         }
         val vis = DocumentBlueprintView.visible(s.document)

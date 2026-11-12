@@ -1,0 +1,85 @@
+{
+  "schema": "cockpit-host-review-v1",
+  "motionDurationMs": 420,
+  "videoFrameCount": 0,
+  "frames": [
+    {
+      "layout": "fold",
+      "phase": "idle",
+      "orbPhase": 0.4,
+      "focus": 0,
+      "key": "fold-idle",
+      "timeMs": 0,
+      "frame": {
+        "monitorLeft": 213,
+        "monitorRight": 639,
+        "distance": 2044.8,
+        "pitchDegrees": 0,
+        "yawDegrees": -3,
+        "contentBounds": [
+          0.035,
+          0.12,
+          0.965,
+          0.945
+        ],
+        "quad": [
+          228.38321,
+          279.26404,
+          625.0691,
+          279.66525,
+          625.0691,
+          419.34012,
+          228.38321,
+          417.52603
+        ],
+        "monitorBottom": 427.19998,
+        "width": 852,
+        "depthOffset": 0,
+        "contentDepth": 0.032,
+        "height": 480,
+        "monitorTop": 259.2
+      }
+    },
+    {
+      "layout": "phone",
+      "phase": "idle",
+      "orbPhase": 0.4,
+      "focus": 0,
+      "key": "phone-idle",
+      "timeMs": 0,
+      "frame": {
+        "monitorLeft": 7.74,
+        "monitorRight": 379.26,
+        "distance": 1382.4,
+        "pitchDegrees": 0,
+        "yawDegrees": -3,
+        "contentBounds": [
+          0.035,
+          0.12,
+          0.965,
+          0.945
+        ],
+        "quad": [
+          20.96669,
+          335.14337,
+          367.6328,
+          335.76703,
+          367.6328,
+          503.971,
+          20.96669,
+          501.15125
+        ],
+        "monitorBottom": 512.64,
+        "width": 387,
+        "depthOffset": 0,
+        "contentDepth": 0.032,
+        "height": 576,
+        "monitorTop": 311.04
+      }
+    }
+  ],
+  "inputClass": "SYNTHETIC_FOCUS_REPLAY",
+  "contentMode": "example",
+  "videoDurationMs": 0,
+  "videoFramesPerSecond": 20
+}

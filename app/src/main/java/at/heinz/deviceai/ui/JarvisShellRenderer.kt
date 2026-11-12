@@ -38,6 +38,7 @@ object JarvisShellRenderer {
 
     private val foregroundSlots = setOf(Slot.TOP_BAR, Slot.CONTINUUM_HEADER, Slot.DIALOG,
         Slot.CAMERA_STATUS, Slot.COCKPIT_SECONDARY)
+    private val workstationScreens = setOf(Slot.WORK_DOCUMENT, Slot.WORK_DRAFT)
     private val bare = setOf(Slot.AVATAR) + foregroundSlots
 
     data class ControlPress(val key: String, val target: String,
@@ -53,6 +54,8 @@ object JarvisShellRenderer {
         val budget: JarvisRenderQuality.Budget? = null,
         val timeMs: Long = 0L,
         val returnResultElapsedMs: Long = -1L,
+        val workElapsedMs: Long = elapsedMs,
+        val resultForward: Boolean = false,
     )
 
     /** Foreground shares the sampled scene frame. */
@@ -60,11 +63,27 @@ object JarvisShellRenderer {
                        deckClearance: Float = 0f, glass: GlassBackend? = null,
                        cinemaFrame: CinemaFrame = CinemaFrame()) {
         val scene = cinemaFrame
-        for (slot in foregroundSlots) {
+        for (slot in foregroundSlots + if (shell.workstation) workstationScreens else emptySet()) {
             val box = shell[slot] ?: continue
             val moving = scene.clearIdle && JarvisCinemaEntrance.fliesAwayOnWorkOrder(slot)
             val side = if (box.centerX >= shell.width / 2f) 1f else -1f
+            val screen = shell.workstation && slot in workstationScreens
+            val rank = JarvisCinemaEntrance.rankOf(slot, 0)
+            val kind = JarvisCinemaEntrance.kindOf(slot)
             val pose = when {
+                screen && scene.exiting && scene.clearIdle -> JarvisCinemaEntrance.returnPose(slot, rank,
+                    scene.elapsedMs, scene.interruptedAfterMs, side, scene.budget, scene.animatorScale,
+                    scene.fromWorkingScene, scene.returnResultElapsedMs)
+                screen && scene.exiting -> JarvisCinemaEntrance.pose(kind, rank, scene.workElapsedMs,
+                    exiting = true, side = side, budget = scene.budget, animatorScale = scene.animatorScale)
+                screen && scene.clearIdle && scene.resultForward && slot == Slot.WORK_DRAFT ->
+                    JarvisCinemaEntrance.resultAdvance(scene.workElapsedMs, scene.budget, scene.animatorScale)
+                screen && scene.clearIdle && scene.resultForward ->
+                    JarvisCinemaEntrance.settledPose(kind, rank, side, scene.budget, scene.animatorScale)
+                screen && scene.clearIdle -> JarvisCinemaEntrance.workOrderPose(slot, rank, scene.elapsedMs,
+                    side, scene.budget, scene.animatorScale, scene.fromWorkingScene)
+                screen -> JarvisCinemaEntrance.pose(kind, rank, scene.workElapsedMs,
+                    side = side, budget = scene.budget, animatorScale = scene.animatorScale)
                 moving && scene.exiting -> JarvisCinemaEntrance.returnPose(slot, 0, scene.elapsedMs,
                     scene.interruptedAfterMs, side, scene.budget, scene.animatorScale, scene.fromWorkingScene,
                     scene.returnResultElapsedMs)
@@ -87,10 +106,17 @@ object JarvisShellRenderer {
                 p.scale(kotlin.math.cos(Math.toRadians(pose.tiltY.toDouble())).toFloat(),
                     1f, box.centerX, box.centerY())
             }
-            if (slot != Slot.TOP_BAR && slot != Slot.CONTINUUM_HEADER) {
+            if (screen) {
+                if (pose.glassAlpha > .001f) {
+                    p.saveAlpha(pose.glassAlpha)
+                    CockpitWorkstationChrome.sidePanel(p, box)
+                    p.restore()
+                }
+            } else if (slot != Slot.TOP_BAR && slot != Slot.CONTINUUM_HEADER) {
                 if (pose.glassAlpha > .001f) {
                     if (pose.glassAlpha < .999f) p.saveAlpha(pose.glassAlpha)
-                    if (glass?.drawPanelGlass(box, 14f, 0f) != true) {
+                    if (shell.workstation) CockpitWorkstationChrome.badgeSurface(p, box)
+                    else if (glass?.drawPanelGlass(box, 14f, 0f) != true) {
                         JarvisReferenceHud.surface(p, box, 14f, Colors.cyan,
                             if (slot == Slot.COCKPIT_SECONDARY || slot == Slot.CAMERA_STATUS) Colors.violetRim else Colors.cyanDeep)
                     }
@@ -128,16 +154,18 @@ object JarvisShellRenderer {
             background(p, shell.width, shell.height)
         }
         val backdropHeight = shell[Slot.INPUT]?.bottom ?: shell[Slot.AVATAR]?.bottom ?: shell.height
-        JarvisReferenceHud.backdrop(p, shell.width, backdropHeight)
+        if (shell.workstation) shell[Slot.AVATAR]?.let { CockpitWorkstationChrome.backdrop(p, it) }
+        else JarvisReferenceHud.backdrop(p, shell.width, backdropHeight)
         val work = listOfNotNull(shell[Slot.WORK_DOCUMENT], shell[Slot.WORK_PROCESS], shell[Slot.WORK_DRAFT])
-        if (work.isNotEmpty()) {
+        if (work.isNotEmpty() && !shell.workstation) {
             JarvisVisualDepth.paintWorkStage(p, Box(
                 work.minOf { it.left }, work.minOf { it.top },
                 work.maxOf { it.right }, work.maxOf { it.bottom }))
         }
         val dolly = 1f
         p.save(); p.scale(dolly, dolly, shell.width / 2f, shell.height / 2f)
-        val cardSlots = shell.boxes.keys.filter { it !in bare && it != Slot.TILES }
+        val cardSlots = shell.boxes.keys.filter { it !in bare && it != Slot.TILES &&
+            (!shell.workstation || it !in workstationScreens) }
         val tileBoxes = shell.tileBoxes()
         val cards = cardSlots.map { shell[it]!! } + tileBoxes
         val cx = shell.width / 2f
@@ -229,7 +257,7 @@ object JarvisShellRenderer {
                 p.scale(perspective, 1f, box.centerX, box.centerY())
             }
             val tile = if (slot == null) tiles.getOrNull(tileIndex) else null
-            val ownsSurface = slot == Slot.BOTTOM_NAV || (content[slot] != null &&
+            val ownsSurface = slot == Slot.BOTTOM_NAV || (shell.workstation && slot == Slot.WORK_PROCESS) || (content[slot] != null &&
                 slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS))
             val r = JarvisDesign.Metrics.radiusCard
             if (cinema.glassAlpha < 0.02f && cinema.rimAlpha > 0.02f) {
@@ -296,7 +324,7 @@ object JarvisShellRenderer {
         JarvisReferenceHud.frame(p, shell.width, shell[Slot.STATUS]?.bottom?.plus(12f) ?: shell.height)
         if (!deferForeground) drawForeground(p, shell, content, deckClearance, glass,
             CinemaFrame(elapsedMs, animatorScale, clearIdle, exiting, interruptedAfterMs,
-                fromWorkingScene, depthBudget, timeMs, returnResultElapsedMs))
+                fromWorkingScene, depthBudget, timeMs, returnResultElapsedMs, workElapsedMs, resultForward))
     }
 
     private fun Box.centerY() = (top + bottom) / 2f

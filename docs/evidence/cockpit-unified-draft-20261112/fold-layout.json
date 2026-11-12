@@ -1,0 +1,106 @@
+{
+  "avatarOpacity": 1,
+  "contentHeight": 760,
+  "scene": {
+    "top": 68,
+    "left": 16,
+    "bottom": 548,
+    "right": 868
+  },
+  "head": {
+    "top": 95,
+    "left": 92,
+    "bottom": 431,
+    "right": 791
+  },
+  "avatarWindow": {
+    "cameraCenterY": 0.21031251179540994,
+    "left": -0.4400783898904202,
+    "halfHeight": 0.21153982690011613,
+    "right": 0.4400783898904202
+  },
+  "slots": {
+    "STATUS": {
+      "top": 704,
+      "left": 16,
+      "bottom": 752,
+      "right": 868
+    },
+    "INPUT": {
+      "top": 556,
+      "left": 16,
+      "bottom": 612,
+      "right": 868
+    },
+    "TOP_BAR": {
+      "top": 8,
+      "left": 16,
+      "bottom": 60,
+      "right": 868
+    },
+    "DIALOG": {
+      "top": 80,
+      "left": 16,
+      "bottom": 154,
+      "right": 186.40001
+    },
+    "WORK_DRAFT": {
+      "top": 341.6,
+      "left": 680.56,
+      "bottom": 485.6,
+      "right": 850.96
+    },
+    "AVATAR": {
+      "top": 68,
+      "left": 16,
+      "bottom": 548,
+      "right": 868
+    },
+    "WORK_PROCESS": {
+      "top": 327.2,
+      "left": 229,
+      "bottom": 495.19998,
+      "right": 655
+    },
+    "BOTTOM_NAV": {
+      "top": 620,
+      "left": 16,
+      "bottom": 696,
+      "right": 868
+    },
+    "COCKPIT_SECONDARY": {
+      "top": 136,
+      "left": 697.6,
+      "bottom": 184,
+      "right": 868
+    },
+    "CAMERA_STATUS": {
+      "top": 80,
+      "left": 697.6,
+      "bottom": 128,
+      "right": 868
+    },
+    "WORK_DOCUMENT": {
+      "top": 341.6,
+      "left": 33.04,
+      "bottom": 485.6,
+      "right": 203.44
+    }
+  },
+  "avatarFocus": {
+    "centerZ": 0.06414049118757248,
+    "centerX": -3.228597342967987E-4,
+    "azimuthDegrees": 0
+  },
+  "name": "fold",
+  "width": 884,
+  "avatarPullBackScale": 0.76,
+  "sideMonitorsVisible": true,
+  "orb": {
+    "top": 106,
+    "left": 319,
+    "bottom": 352,
+    "right": 564
+  },
+  "height": 760
+}

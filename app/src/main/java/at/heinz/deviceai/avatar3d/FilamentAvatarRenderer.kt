@@ -119,7 +119,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         swapChain = e.createSwapChain(surface, SwapChainFlags.CONFIG_TRANSPARENT)
         provider = UbershaderProvider(e)
         loader = AssetLoader(e, requireNotNull(provider), EntityManager.get())
-        val variant = AvatarMaterialVariant.prepare(bytes)
+        val variant = AvatarMaterialVariant.prepare(bytes,
+            at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY)
         val glb = ByteBuffer.allocateDirect(variant.bytes.size).put(variant.bytes).apply { flip() }
         val a = requireNotNull(loader!!.createAsset(glb)) { "GLB loader rejected candidate" }; asset = a
         require(a.resourceUris.isEmpty()) { "External resources forbidden" }
@@ -414,14 +415,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             -frame.width * unit * .5 * near / d, frame.width * unit * .5 * near / d,
             -frame.height * unit * .5 * near / d, frame.height * unit * .5 * near / d, near, frame.far)
         camera!!.lookAt(0.0, 0.0, d, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
-        val scale = (cockpitHead.height() * unit / (2 * fitted.halfHeight)).toFloat()
-        val x = (cockpitHead.left + cockpitHead.width() * fitted.anchorX - frame.width * .5).toFloat() * unit
-        val y = (frame.height * .5f - cockpitHead.centerY()) * unit
-        Matrix.setIdentityM(worldTransform, 0)
-        Matrix.translateM(worldTransform, 0, x, y, 0f)
-        Matrix.scaleM(worldTransform, 0, scale, scale, scale)
-        Matrix.rotateM(worldTransform, 0, -focus.azimuthDegrees.toFloat(), 0f, 1f, 0f)
-        Matrix.translateM(worldTransform, 0, -focus.centerX.toFloat(), -fitted.cameraCenterY.toFloat(), -focus.centerZ.toFloat())
+        CockpitWorldTransforms.avatar(frame, cockpitHead.left, cockpitHead.top,
+            cockpitHead.right, cockpitHead.bottom, fitted, focus, worldTransform)
         Matrix.multiplyMM(transformed, 0, worldTransform, 0, avatarRootRest, 0)
         engine!!.transformManager.setTransform(avatarRoot, transformed)
         applyAvatarOpacity(at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY)

@@ -1,7 +1,9 @@
 {
-  "source_commit": "dfe8f08f646360c0290ef420b9e6b16cc90904a1",
-  "source_path": "app/src/main/assets/cinema3d/cockpit-workstation.glb",
-  "sha256": "3223168a58e5fa51c48bb56ba36aabbf0cdb936025a01d96d4b14e5e0fa023aa",
-  "bytes": 14728,
-  "provenance": "Owned Continuum geometry from PR801; Blender input only. No runtime safety/UI files imported."
+  "source_base_commit": "5348087805fa4ab4152ea04e9f20bb41afae9d95",
+  "generator_path": "tools/cockpit-workstation/build_scene.py",
+  "generator_sha256": "89bd30f8af92e86def970474d1f070d7b6c347ebd2c80cb6308290404755e862",
+  "source_path": "tools/cockpit-workstation/source/pr801-workstation.glb",
+  "sha256": "f1edabf082ee4d30e275a862a375ac73dea65ab4e1f140ddb021845c87e6bcc3",
+  "bytes": 30776,
+  "provenance": "Owned reference workstation seed; unified packaging adds only the live texture plane."
 }

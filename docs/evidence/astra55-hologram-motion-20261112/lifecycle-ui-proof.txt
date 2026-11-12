@@ -1,0 +1,42 @@
+Robolectric 4.14.1, SDK 28, NATIVE graphics; direct JUnit 4.13.2.
+Test compiled with Kotlin 2.4.0 against the existing combined Android classpath.
+No Gradle invocation; JVM heap limited to384MB.
+
+Initial fixture: attached=true, shown=true, windowVisibility=8 (GONE), three failures before lifecycle actions.
+Fix: NATIVE graphics plus positive attached/shown/window-visible assertions.
+Production visibility guard unchanged.
+
+Test source SHA256: 2ebffd7cf57e02ad5bfa2db8ad46ce59e33db00e2ea061624e0b7c657e1cc314
+Combined production JAR SHA256: e6f5fda932025fd26405b4a2a7871f865f886cb0f686365b9ab01461aaff2d29
+
+Corrected fixture / production lifecycle fix:
+JUnit version 4.13.2
+...
+Time: 4.145
+
+OK (3 tests)
+
+
+Same corrected fixture / original f498fa3514 monitor source:
+JUnit version 4.13.2
+.E..E
+Time: 4.44
+There were 2 failures:
+1) hiddenMonitorRestartsWhenVisible(at.heinz.deviceai.ui.CockpitMonitorLifecycleUiTest)
+java.lang.AssertionError: Visibility resumes existing tick
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ui.CockpitMonitorLifecycleUiTest.hiddenMonitorRestartsWhenVisible$lambda$0(CockpitMonitorLifecycleUiTest.kt:78)
+	at at.heinz.deviceai.ui.CockpitMonitorLifecycleUiTest.withMonitor(CockpitMonitorLifecycleUiTest.kt:63)
+	at at.heinz.deviceai.ui.CockpitMonitorLifecycleUiTest.hiddenMonitorRestartsWhenVisible(CockpitMonitorLifecycleUiTest.kt:70)
+2) parentVisibilityRestartsWithoutForegroundToggle(at.heinz.deviceai.ui.CockpitMonitorLifecycleUiTest)
+java.lang.AssertionError: Parent visibility resumes tick
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ui.CockpitMonitorLifecycleUiTest.parentVisibilityRestartsWithoutForegroundToggle$lambda$0(CockpitMonitorLifecycleUiTest.kt:89)
+	at at.heinz.deviceai.ui.CockpitMonitorLifecycleUiTest.withMonitor(CockpitMonitorLifecycleUiTest.kt:63)
+	at at.heinz.deviceai.ui.CockpitMonitorLifecycleUiTest.parentVisibilityRestartsWithoutForegroundToggle(CockpitMonitorLifecycleUiTest.kt:81)
+
+FAILURES!!!
+Tests run: 3,  Failures: 2
+

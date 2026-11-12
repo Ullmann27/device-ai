@@ -104,7 +104,7 @@ object JarvisShellLayout {
 
         /** Only meaningful Android actions. Optional menu is omitted when three safe targets do not fit. */
         fun headerActionBoxes(): Map<String, Box> {
-            val b = grid?.areas?.get(Area.ICONS) ?: boxes[Slot.TOP_BAR]?.let {
+            val b = (if (workstation) null else grid?.areas?.get(Area.ICONS)) ?: boxes[Slot.TOP_BAR]?.let {
                 Box(maxOf(it.left, it.right - if (workstation) 144f else 96f), it.top, it.right, it.bottom)
             } ?: return emptyMap()
             val targets = if ((grid != null || workstation) && b.width >= 144f) listOf("notifications", "settings", "more")

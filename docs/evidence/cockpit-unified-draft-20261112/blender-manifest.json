@@ -1,0 +1,72 @@
+{
+  "evidenceClass": "HOST_UNIFIED_3D_RENDER",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "stillsSamples": 8,
+  "sequenceSamples": 8,
+  "threads": 2,
+  "denoising": false,
+  "seed": 731,
+  "assets": {
+    "cockpit": "03b6364e2ff396fd9207b129e765ce5d4a93975113315cc3896844e53fd8ad30",
+    "orb": "ba4bd673e2196fcd8d970b3c83531ea26e20047ae530f092d0ef122808d6e161",
+    "avatarRuntime": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+    "avatarOriginal": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+  },
+  "composition": "All three GLBs share one scene and camera; native Kotlin matrices and ring angles",
+  "projectionCheck": "Actual packaged monitor-live-pixels vertices against Kotlin quad",
+  "lighting": "Runtime light colors and locations; host intensities are not Filament photometric equivalence",
+  "colorManagement": "Standard sRGB display, no look, exposure zero; sample pixels unlit",
+  "avatarPose": "Original neutral rest pose; runtime-hidden tooth nodes excluded; no 2D avatar mask",
+  "frames": [
+    {
+      "key": "fold-idle",
+      "image": "fold-idle-stage.png",
+      "imageSha256": "5a0c7512225150d909e2cea978c9505bd9502c7effdcf8858059e88b03a9f604",
+      "samples": 8,
+      "projectionMaxErrorPixels": 0.0003381004333391502,
+      "projectedContentQuad": [
+        228.3831832408905,
+        279.2643642425537,
+        625.0691134929657,
+        279.6656084060669,
+        625.0691134929657,
+        419.34044122695923,
+        228.3831832408905,
+        417.52633810043335
+      ],
+      "ringAnglesDegrees": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "key": "phone-idle",
+      "image": "phone-idle-stage.png",
+      "imageSha256": "99f289cbebe97c8039913eb5330126dd8803f87539e66da41b046e6219e20ab4",
+      "samples": 8,
+      "projectionMaxErrorPixels": 0.0001187731933782743,
+      "projectedContentQuad": [
+        28.09658045321703,
+        335.15610122680664,
+        360.31704300642014,
+        335.75377464294434,
+        360.31704300642014,
+        503.9114055633545,
+        28.09658045321703,
+        501.20915508270264
+      ],
+      "ringAnglesDegrees": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "Filament": "NOT_RUN",
+  "Fold7": "NOT_RUN",
+  "deviceFps": "NOT_MEASURED",
+  "deviceThermal": "NOT_MEASURED"
+}

@@ -1,7 +1,6 @@
 package at.heinz.deviceai.avatar3d
 
 import android.graphics.RectF
-import android.opengl.Matrix
 import at.heinz.deviceai.AndroidLiveFrame
 import at.heinz.deviceai.cognitive.CockpitWorkEvent
 import at.heinz.deviceai.cognitive.LiveMonitorFeed
@@ -25,11 +24,11 @@ internal class FilamentCockpitStage(
     private var monitorInstance: MaterialInstance? = null
     private var pixels: CockpitLiveTexture? = null
     private var roomTransform = 0
+    private var sideMonitorTransform = 0
     private var monitorTransform = 0
     private var orbTransform = 0
     private val orbitTransforms = mutableListOf<Pair<Int, FloatArray>>()
     private val transform = FloatArray(16)
-    private val orbitRotation = FloatArray(16)
     private val orbitCombined = FloatArray(16)
     val pixelsVisible get() = pixels?.pixelsVisible == true
     var label = "Keine Bildquelle verbunden"
@@ -40,6 +39,7 @@ internal class FilamentCockpitStage(
             workstation = load(assets.workstation)
             orb = load(assets.orb)
             roomTransform = namedTransform(requireNotNull(workstation), "cockpit-room")
+            sideMonitorTransform = namedTransform(requireNotNull(workstation), "cockpit-side-monitors")
             monitorTransform = namedTransform(requireNotNull(workstation), "cockpit-monitor")
             orbTransform = namedTransform(requireNotNull(orb), "continuum-orb")
             repeat(5) { index ->
@@ -81,19 +81,19 @@ internal class FilamentCockpitStage(
 
     fun update(frame: CockpitStageFrame, orbBounds: RectF, phase: Float, motion: Boolean) {
         require(frame.valid())
-        val unit = frame.worldScale
-        Matrix.setIdentityM(transform, 0)
-        Matrix.scaleM(transform, 0, frame.width * unit, frame.height * unit, 1f)
+        CockpitWorldTransforms.room(frame, transform)
         engine.transformManager.setTransform(roomTransform, transform)
+        if (frame.monitorWidth / frame.width > .70f) {
+            transform[0] = 0f
+            transform[5] = 0f
+            transform[10] = 0f
+        }
+        engine.transformManager.setTransform(sideMonitorTransform, transform)
         engine.transformManager.setTransform(monitorTransform, frame.monitorTransform())
-        engine.transformManager.setTransform(orbTransform, frame.orbTransform(
-            orbBounds.left, orbBounds.top, orbBounds.right, orbBounds.bottom))
+        CockpitWorldTransforms.orb(frame, orbBounds.left, orbBounds.top, orbBounds.right, orbBounds.bottom, transform)
+        engine.transformManager.setTransform(orbTransform, transform)
         orbitTransforms.forEachIndexed { index, (instance, rest) ->
-            Matrix.setIdentityM(orbitRotation, 0)
-            val pose = CockpitOrbMotion.sample(index, if (motion) phase else .4f)
-            Matrix.rotateM(orbitRotation, 0, -pose.pitchDegrees, 1f, 0f, 0f)
-            Matrix.rotateM(orbitRotation, 0, pose.yawDegrees, 0f, 1f, 0f)
-            Matrix.multiplyMM(orbitCombined, 0, rest, 0, orbitRotation, 0)
+            CockpitWorldTransforms.ringTransform(rest, index, phase, motion, orbitCombined)
             engine.transformManager.setTransform(instance, orbitCombined)
         }
         pixels?.update(frame, System.nanoTime())

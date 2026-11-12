@@ -5,7 +5,7 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Slot
 
 /** One scene, readable native controls. */
 object CinematicWorkstationLayout {
-    const val AVATAR_OPACITY = .84f
+    const val AVATAR_OPACITY = 1f
     const val AVATAR_SCALE = .76f
     const val MONITOR_YAW_DEGREES = -3f
 
@@ -24,32 +24,41 @@ object CinematicWorkstationLayout {
         val statusH = 48f * font
         val dialogH = if (wide) 0f else 48f * font
         val reserved = headerH + inputH + dockH + statusH + dialogH + 6f * gap
-        val sceneH = maxOf(if (wide) 310f * font else 320f * font, viewport - reserved)
+        val minSceneH = if (wide) maxOf(310f, (28f + 96f * font) / .54f) else 320f
+        val sceneH = maxOf(minSceneH, viewport - reserved)
         val sceneTop = gap + headerH + gap + dialogH
         val scene = Box(margin, sceneTop, right, sceneTop + sceneH)
         val headW = minOf(room * if (wide) .82f else .98f, sceneH * 1.65f)
-        val headH = sceneH * .70f
-        val head = Box(width * .5f - headW * .5f, sceneTop,
-            width * .5f + headW * .5f, sceneTop + headH)
-        // Original infinity sits behind forehead.
-        val orbSize = minOf(headW * .96f, headH * .75f)
-        val orb = Box(width * .5f - orbSize * .5f, sceneTop,
-            width * .5f + orbSize * .5f, sceneTop + orbSize)
-        val monitorWidth = if (wide) room * .64f else room * .94f
-        val monitor = Box(width * .5f - monitorWidth * .5f, sceneTop + sceneH * .54f,
-            width * .5f + monitorWidth * .5f, scene.bottom - maxOf(16f, sceneH * .05f))
+        val headH = if (wide) sceneH * .62f else minOf(sceneH * .62f, room * .70f)
+        val headTop = sceneTop + sceneH * if (wide) .065f else .11f
+        val head = Box(width * .5f - headW * .5f, headTop,
+            width * .5f + headW * .5f, headTop + headH)
+        // Original rings surround solid skin.
+        val orbComposition = minOf(room * .98f, sceneH * .80f)
+        val orbSize = orbComposition * .64f
+        val orbTop = sceneTop + orbComposition * .10f
+        val orb = Box(width * .5f - orbSize * .5f, orbTop,
+            width * .5f + orbSize * .5f, orbTop + orbSize)
+        fun roomBox(left: Float, top: Float, right: Float, bottom: Float) =
+            Box(margin + room * left, sceneTop + sceneH * top,
+                margin + room * right, sceneTop + sceneH * bottom)
+        val monitor = if (wide) roomBox(.25f, .54f, .75f, .89f)
+            else roomBox(.04f, .54f, .96f, .89f)
         val boxes = linkedMapOf(
             Slot.TOP_BAR to Box(margin, gap, right, gap + headerH),
             Slot.AVATAR to scene,
             Slot.WORK_PROCESS to monitor
         )
         if (wide) {
-            val sideW = (room - monitorWidth) * .5f - gap
-            boxes[Slot.DIALOG] = Box(margin, sceneTop + 12f, margin + sideW, sceneTop + 112f * font)
-            boxes[Slot.CAMERA_STATUS] = Box(right - sideW, sceneTop + 12f, right, sceneTop + 60f * font)
-            boxes[Slot.COCKPIT_SECONDARY] = Box(right - sideW, sceneTop + 68f * font, right, monitor.top - gap)
-            boxes[Slot.WORK_DOCUMENT] = Box(margin, monitor.top + 20f, monitor.left - gap, monitor.bottom - 20f)
-            boxes[Slot.WORK_DRAFT] = Box(monitor.right + gap, monitor.top + 20f, right, monitor.bottom - 20f)
+            val sideW = room * .20f
+            val badgeTop = sceneTop + 12f
+            boxes[Slot.DIALOG] = Box(margin, badgeTop, margin + sideW, badgeTop + 74f * font)
+            val cameraBottom = badgeTop + 48f * font
+            boxes[Slot.CAMERA_STATUS] = Box(right - sideW, badgeTop, right, cameraBottom)
+            boxes[Slot.COCKPIT_SECONDARY] = Box(right - sideW, cameraBottom + gap, right,
+                cameraBottom + gap + 48f * font)
+            boxes[Slot.WORK_DOCUMENT] = roomBox(.02f, .57f, .22f, .87f)
+            boxes[Slot.WORK_DRAFT] = roomBox(.78f, .57f, .98f, .87f)
         } else {
             boxes[Slot.DIALOG] = Box(margin, gap + headerH + gap, right, sceneTop)
         }
@@ -74,6 +83,6 @@ object CinematicWorkstationLayout {
             overlays = setOf(Slot.AVATAR to Slot.WORK_PROCESS), grid = grid, viewportHeight = viewport,
             profile = profile, headBounds = head, orbBounds = orb, headStage = head, workstation = true,
             protectedFaceBounds = Box(width * .5f - headH * .29f, head.top,
-                width * .5f + headH * .29f, head.top + headH * .70f))
+                width * .5f + headH * .29f, head.top + headH * .64f))
     }
 }

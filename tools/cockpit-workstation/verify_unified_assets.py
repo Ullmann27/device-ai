@@ -5,6 +5,7 @@ import json
 import math
 import pathlib
 import struct
+from verify_scene import intersection_area
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 ASSETS = ROOT/"app/src/main/assets"
@@ -107,6 +108,55 @@ def monitor_contract(glb):
     assert len(glb.accessor(primitive["indices"])) == 6
 
 
+def reference_contract(glb):
+    roots = {glb.doc["nodes"][index]["name"] for index in glb.doc["scenes"][0]["nodes"]}
+    assert roots == {"cockpit-room", "cockpit-monitor", "cockpit-side-monitors"}
+    side_id, side_root = glb.node("cockpit-side-monitors")
+    extras = side_root["extras"]
+    assert extras["native_plane_z"] == 0
+    for key, expected in [("native_document_bounds", [.02, .57, .22, .87]),
+                          ("native_draft_bounds", [.78, .57, .98, .87])]:
+        assert max(abs(a-b) for a, b in zip(extras[key], expected)) < 1e-6
+    apertures = {name: (-.465, -.445, .465, .38)
+                 for name in ("monitor-bezel", "monitor-glass", "monitor-rim")}
+    for side in (-1, 1):
+        center = side * .38
+        for suffix in ("bezel", "glass", "rim"):
+            name = "side-%s-%s" % (side, suffix)
+            index, _ = glb.node(name)
+            assert glb.parent[index] == side_id
+            apertures[name] = (center-.1, -.37, center+.1, -.07)
+    for name, rectangle in apertures.items():
+        index, node = glb.node(name)
+        for primitive in glb.doc["meshes"][node["mesh"]]["primitives"]:
+            points = [glb.point(index, point) for point in glb.accessor(primitive["attributes"]["POSITION"])]
+            if name.endswith("-bezel") and name.startswith("side-"):
+                assert all(abs(point[2]) < 1e-7 for point in points)
+            indices = [value[0] for value in glb.accessor(primitive["indices"])]
+            for offset in range(0, len(indices), 3):
+                triangle = [points[i][:2] for i in indices[offset:offset+3]]
+                assert intersection_area(triangle, rectangle) < 1e-9, (name, "native opening")
+    assert not any(node.get("name", "").startswith(("key-bezel-", "key-inlay-", "arch-", "wing-"))
+                   for node in glb.doc["nodes"])
+    seed = Glb(ROOT/"tools/cockpit-workstation/source/pr801-workstation.glb")
+    used = {p["material"] for mesh in seed.doc["meshes"] for p in mesh["primitives"]}
+    actual = {entry["name"]: entry for entry in glb.doc["materials"]}
+    for index in used:
+        expected = seed.doc["materials"][index]
+        entry = actual[expected["name"]]
+        for key, default in (("alphaMode", "OPAQUE"), ("doubleSided", False)):
+            assert entry.get(key, default) == expected.get(key, default), (expected["name"], key)
+        for key, default in (("baseColorFactor", [1, 1, 1, 1]), ("metallicFactor", 1), ("roughnessFactor", 1)):
+            left = expected["pbrMetallicRoughness"].get(key, default)
+            right = entry["pbrMetallicRoughness"].get(key, default)
+            if isinstance(left, list):
+                assert max(abs(a-b) for a, b in zip(left, right)) < 1e-6, (expected["name"], key)
+            else:
+                assert abs(left-right) < 1e-6, (expected["name"], key)
+        assert max(abs(a-b) for a, b in zip(expected.get("emissiveFactor", [0, 0, 0]),
+                                           entry.get("emissiveFactor", [0, 0, 0]))) < 1e-6
+
+
 def orb_contract(glb):
     root_id, root = glb.node("continuum-orb")
     assert root.get("translation", [0, 0, 0]) == [0, 0, 0]
@@ -141,6 +191,8 @@ def main():
             glb = Glb(file)
             report[key] = glb.geometry()
             (monitor_contract if key == "workstation" else orb_contract)(glb)
+            if key == "workstation":
+                reference_contract(glb)
     shader_build = json.loads((ROOT/"tools/cockpit-workstation/materials/live-monitor-build.json").read_text())
     assert shader_build["output_sha256"] == manifest["monitorMaterial"]["sha256"]
     assert shader_build["source_sha256"] == sha(ROOT/"tools/cockpit-workstation/materials/live-monitor.mat")

@@ -2,6 +2,7 @@
 
 import bpy
 import bmesh
+import argparse
 import hashlib
 import json
 import math
@@ -12,8 +13,8 @@ from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "app/src/main/assets/cinema3d"
-SOURCE = ROOT / "tools/cockpit-workstation/source/pr801-reference-workstation.glb"
-SOURCE_SHA = "152669e9c7d8c5ea8627f09353fbd71bfca9ba93a6df6c751c7d44e2ea72de0d"
+SOURCE = ROOT / "tools/cockpit-workstation/source/pr801-workstation.glb"
+SOURCE_SHA = "f1edabf082ee4d30e275a862a375ac73dea65ab4e1f140ddb021845c87e6bcc3"
 AVATAR = ROOT / "app/src/main/assets/avatar3d/continuum-avatar.glb"
 AVATAR_SHA = "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
 TAU = math.tau
@@ -210,42 +211,24 @@ def workstation():
     room = bpy.data.objects["cockpit-room"]
     monitor = bpy.data.objects["cockpit-monitor"]
     sides = bpy.data.objects["cockpit-side-monitors"]
-    sides.parent = room
-    material("smoked-metal", (.026,.038,.058), .54,.27,coat=.24)
-    silver = material("brushed-edge",(.15,.21,.28),.65,.24,coat=.15)
-    material("smoked-glass",(.048,.11,.18),0.,.13,.24,coat=.35)
-    accents = {name: material("button-"+name,color,.15,.26,emission=color,strength=.25,coat=.25)
-               for name,color in PALETTE.items()}
-    old = bpy.data.objects.get("keyboard-keys")
-    if old:
-        bpy.data.objects.remove(old,do_unlink=True)
-    palette = ["cyan","cyan-soft","violet","magenta","violet-rim","cyan","green","amber","cyan-soft","violet","cyan"]
-    for row in range(3):
-        for column in range(11):
-            x=(column-5)*.027+(row%2)*.004
-            box("keyboard-raised-%d-%d"%(row,column),(x,-.4225,.093+row*.015),
-                (.021,.003,.010),accents[palette[column]],room,.0013)
-    box("keyboard-space",(0,-.4225,.139),(.13,.003,.010),silver,room,.0013)
-    for side in (-1,1):
-        for column in range(2):
-            box("keyboard-control-%d-%d"%(side,column),(side*(.095+column*.03),-.4225,.139),
-                (.022,.003,.010),accents["cyan" if side<0 else "violet"],room,.0013)
-    blank=unlit("monitor-inactive-dark",(.001,.002,.004))
-    for side in (-1,1):
-        x=side*.38
-        mesh("monitor-side-%d-idle"%side,[(x-.1004,-.0694,.001),(x-.1004,-.3706,.001),
-            (x+.1004,-.3706,.001),(x+.1004,-.0694,.001)],[(0,1,2,3)],blank,sides,False)
-    pixels = mesh("monitor-live-pixels",[(-.465,.38,.032),(-.465,-.445,.032),
-        (.465,-.445,.032),(.465,.38,.032)],[(0,1,2,3)],
-        unlit("monitor-live-pixels",(.001,.002,.004)),monitor,False)
-    layer=pixels.data.uv_layers.new(name="TEXCOORD_0")
-    uvs=[(0.,1.),(0.,0.),(1.,0.),(1.,1.)]
+    sides["native_plane_z"] = 0.
+    sides["native_document_bounds"] = [.02, .57, .22, .87]
+    sides["native_draft_bounds"] = [.78, .57, .98, .87]
+    raw = SOURCE.read_bytes()
+    size = struct.unpack_from("<I", raw, 12)[0]
+    for entry in json.loads(raw[20:20+size])["materials"]:
+        PINS[entry["name"]] = {"source_gltf": entry}
+    # UV origin is top-left.
+    pixels = mesh("monitor-live-pixels", [(-.465, .38, .032), (-.465, -.445, .032),
+                  (.465, -.445, .032), (.465, .38, .032)], [(0, 1, 2, 3)],
+                  unlit("monitor-live-pixels", (.001, .002, .004)), monitor, False)
+    layer = pixels.data.uv_layers.new(name="TEXCOORD_0")
+    blender_uvs = [(0., 1.), (0., 0.), (1., 0.), (1., 1.)]
     for loop in pixels.data.loops:
-        layer.data[loop.index].uv=uvs[loop.vertex_index]
-    monitor["live_pixel_contract"]="Opaque unlit external texture; no fabricated app content"
-    sides["content_contract"]="Inactive physical panels; no app source and no LIVE claim"
-    room["provenance"]="Updated PR801 rounded geometry; Blender raised keycaps and real pixel plane"
-    export(ASSETS/"cockpit-workstation.glb")
+        layer.data[loop.index].uv = blender_uvs[loop.vertex_index]
+    monitor["live_pixel_contract"] = "Opaque unlit external texture; no fabricated app content"
+    room["provenance"] = "Reference rounded desk seed; imported geometry and materials preserved"
+    export(ASSETS / "cockpit-workstation.glb")
 
 
 def hash_unit(i, j):
@@ -416,12 +399,27 @@ def record(path):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--workstation-only", action="store_true")
+    args = parser.parse_args(sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else [])
     assert bpy.app.version[:2] == (4, 3), "Revalidate another Blender version"
     assert sha(SOURCE) == SOURCE_SHA, "PR801 source changed"
+    source_metadata = json.loads(SOURCE.with_suffix(".json").read_text())
+    assert source_metadata["sha256"] == SOURCE_SHA
+    assert source_metadata["bytes"] == SOURCE.stat().st_size <= 32768
     assert sha(AVATAR) == AVATAR_SHA, "Original avatar changed"
     ASSETS.mkdir(exist_ok=True)
+    preserved_orb = None
+    if args.workstation_only:
+        previous = json.loads((ASSETS/"unified-assets-manifest.json").read_text())
+        preserved_orb = next(entry for entry in previous["files"] if entry["path"].endswith("/continuum-orb.glb"))
+        assert sha(ASSETS/"continuum-orb.glb") == preserved_orb["sha256"]
+        PINS.update({name: value for name, value in previous["material_parameters"].items() if name.startswith("orb-")})
     workstation()
-    orb()
+    if not args.workstation_only:
+        orb()
+    elif preserved_orb:
+        assert sha(ASSETS/"continuum-orb.glb") == preserved_orb["sha256"]
     files = [record(ASSETS/name) for name in ("cockpit-workstation.glb", "continuum-orb.glb")]
     assert sha(AVATAR) == AVATAR_SHA, "Original avatar changed during build"
     sources = ["app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
@@ -430,7 +428,8 @@ def main():
                "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
                "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt"]
     manifest = {"evidence": "BLENDER_MESH_BUILD_NOT_DEVICE_VERIFICATION", "blender": bpy.app.version_string,
-        "builder_sha256": sha(Path(__file__)), "source_commit": "6c951be2a165b658f16fff63dced8a5a3a9e9ef7",
+        "build_scope": "workstation_only" if args.workstation_only else "all_assets",
+        "builder_sha256": sha(Path(__file__)), "source_metadata": source_metadata,
         "source_sha256": SOURCE_SHA, "original_avatar_sha256": AVATAR_SHA,
         "parameter_sources": {p: sha(ROOT/p) for p in sources},
         "coordinates": "glTF x right, y up, z toward camera; orb sphere radius 1",
