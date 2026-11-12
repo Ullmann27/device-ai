@@ -170,7 +170,12 @@ internal class OwnerComputerSessionController(
             }) } finally { permission.revoke() }
             main.post {
                 if (closed || plan !== current) return@post
-                if (!visible()) { stop(); return@post }
+                if (!visible()) {
+                    stop()
+                    current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.PAUSED,
+                        "Continuum war beim Abschluss nicht sichtbar. Die letzte Wirkung ist nicht bestätigt; bitte prüfe die App."), null)
+                    return@post
+                }
                 if (runCatching { AndroidLiveComputer.checkActive(current.taskId) }.isFailure) {
                     stop()
                     current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.PAUSED,
