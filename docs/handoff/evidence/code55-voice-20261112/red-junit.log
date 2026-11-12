@@ -1,0 +1,29 @@
+JUnit version 4.13.2
+.......E..........E....E................................
+Time: 0.04
+There were 3 failures:
+1) repeatedBackgroundEventsDoNotExtendTheRecoveryWindow(at.heinz.deviceai.cognitive.ContinuousConversationModeTest)
+java.lang.AssertionError: expected:<PAUSE> but was:<LISTEN>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.ContinuousConversationModeTest.repeatedBackgroundEventsDoNotExtendTheRecoveryWindow(ContinuousConversationModeTest.kt:164)
+2) ownerPauseSurvivesBackgroundWithoutAutomaticListening(at.heinz.deviceai.cognitive.ContinuousConversationModeTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ContinuousConversationModeTest.ownerPauseSurvivesBackgroundWithoutAutomaticListening(ContinuousConversationModeTest.kt:142)
+3) failurePauseAlsoNeedsAnOwnerTapAfterBackground(at.heinz.deviceai.cognitive.ContinuousConversationModeTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ContinuousConversationModeTest.failurePauseAlsoNeedsAnOwnerTapAfterBackground(ContinuousConversationModeTest.kt:154)
+
+FAILURES!!!
+Tests run: 53,  Failures: 3
+

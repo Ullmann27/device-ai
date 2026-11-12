@@ -32,6 +32,13 @@ Sie ersetzt keinen Android-, Filament- oder Fold7-Test.
 5. Quell-SHA, einzelne Quelldateihashes, Assethashes, Prüfergebnis und Bildhashes
    werden gespeichert. Verändert sich eine verwendete Quelle während des
    Laufes, wird das Ergebnis verworfen.
+6. `CockpitStudioEnvironment.radiance` wird aus der tatsächlichen Kotlin-Quelle
+   mitkompiliert. Der Export tastet dieses Feld als lineare 256×128-RGBA-Datei
+   ab; Blender nutzt sie als Weltumgebung für glänzende Reflexionsstrahlen.
+   Die Lichtformel wird im Vorschaucode nicht nachgebildet. Der Feldhash ist
+   in Kotlin-, Blender- und Gesamtmanifest gebunden; die Datei liegt bei den
+   Bildern. Die bestehende diffuse Hostaufhellung und der Hostfaktor 0,08
+   bleiben erhalten. Cycles-Filterung ist keine Filament-Cubemap-Vorfilterung.
 
 ## Aufruf
 
@@ -95,6 +102,12 @@ den Produktions-Paintern wird anschließend unverändert montiert. Die Dokumentt
 unverändert in die Szene eingespeist und nicht separat retuschiert.
 Android-View-Lifecycle, MediaProjection, Sprache, Modell, Geräteframerate und
 Wärme werden nicht geprüft. Die Bilder tragen diese Grenze sichtbar.
+
+Die Abbildung der Weltumgebung folgt Blenders equirektangulärer Projektion:
+[Cycles 4.3.2 projection.h](https://github.com/blender/blender/blob/v4.3.2/intern/cycles/kernel/camera/projection.h).
+Die gemeinsame Achsenkonversion ist `(x,y,z) → (x,-z,y)` von Kotlin nach Blender.
+Das Feld enthält die echte neue Studio-Radiance, aber keine Messung ihrer
+Filament-Belichtung, des Monitorlichts oder von Bloom auf dem Gerät.
 
 `--content example` ist ausschließlich ein Hostmodus mit sachlichen
 Dokument-/Datei-Beispieldaten und sichtbarem Hinweis

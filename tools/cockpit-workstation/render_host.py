@@ -1,7 +1,9 @@
 """Render the actual unified scene."""
 import argparse
+from array import array
 import hashlib
 import json
+import math
 from pathlib import Path
 import sys
 
@@ -29,7 +31,46 @@ def point(x, y, z):
     return Vector((x, -z, y))
 
 
-def setup(width, height, samples, denoise):
+def studio_environment(world, directory, metadata):
+    if metadata['format'] != 'RGBA32F_LE' or metadata['colorSpace'] != 'LINEAR_SRGB' or \
+            metadata['rows'] != 'BOTTOM_TO_TOP' or metadata['projection'] != 'BLENDER_EQUIRECTANGULAR':
+        raise ValueError('Unsupported studio environment encoding')
+    if metadata['source'] != 'CockpitStudioEnvironment.radiance' or metadata['file'] != 'studio-environment.rgba32f':
+        raise ValueError('Production radiance export required')
+    width, height = metadata['width'], metadata['height']
+    if width != 256 or height != 128:
+        raise ValueError('Unexpected studio environment dimensions')
+    path = directory / metadata['file']
+    if sha(path) != metadata['sha256'] or path.stat().st_size != width * height * 16:
+        raise ValueError('Studio environment pin failed')
+    values = array('f')
+    values.frombytes(path.read_bytes())
+    if sys.byteorder != 'little':
+        values.byteswap()
+    if any(not math.isfinite(value) or value < 0 for value in values):
+        raise ValueError('Invalid studio radiance')
+    image = bpy.data.images.new('ProductionStudioRadiance', width=width, height=height,
+                                alpha=True, float_buffer=True)
+    image.colorspace_settings.name = 'Non-Color'
+    image.pixels.foreach_set(values)
+    image.update()
+    nodes, links = world.node_tree.nodes, world.node_tree.links
+    texture = nodes.new('ShaderNodeTexEnvironment')
+    texture.image = image
+    texture.projection = 'EQUIRECTANGULAR'
+    texture.interpolation = 'Linear'
+    reflected = nodes.new('ShaderNodeBackground')
+    reflected.inputs['Strength'].default_value = nodes['Background'].inputs['Strength'].default_value
+    ray = nodes.new('ShaderNodeLightPath')
+    combined = nodes.new('ShaderNodeMixShader')
+    links.new(texture.outputs['Color'], reflected.inputs['Color'])
+    links.new(ray.outputs['Is Glossy Ray'], combined.inputs[0])
+    links.new(nodes['Background'].outputs[0], combined.inputs[1])
+    links.new(reflected.outputs[0], combined.inputs[2])
+    links.new(combined.outputs[0], nodes['World Output'].inputs['Surface'])
+
+
+def setup(width, height, samples, denoise, directory, environment):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     scene = bpy.context.scene
     scene.render.engine = 'CYCLES'
@@ -51,6 +92,7 @@ def setup(width, height, samples, denoise):
     background = scene.world.node_tree.nodes['Background']
     background.inputs[0].default_value = (.90, .98, 1.10, 1)
     background.inputs[1].default_value = .08
+    studio_environment(scene.world, directory, environment)
     scene.view_settings.view_transform = 'Standard'
     scene.view_settings.look = 'None'
     scene.view_settings.exposure = 0
@@ -150,7 +192,7 @@ def main():
         group = [frame for frame in frames if frame['layout'] == name]
         first = group[0]['frame']
         width, height = int(first['width']), int(first['height'])
-        scene = setup(width, height, args.samples, args.denoise)
+        scene = setup(width, height, args.samples, args.denoise, out, exported['studioEnvironment'])
         bpy.ops.import_scene.gltf(filepath=str(workstation))
         room = bpy.data.objects['cockpit-room']
         monitor = bpy.data.objects['cockpit-monitor']
@@ -231,6 +273,9 @@ def main():
         'composition': 'All three GLBs share one scene and camera; five native Kotlin ring matrices',
         'projectionCheck': 'Actual packaged monitor-live-pixels vertices against Kotlin quad',
         'lighting': 'Runtime light colors and locations; host intensities are not Filament photometric equivalence',
+        'studioEnvironment': exported['studioEnvironment'],
+        'reflections': 'Compiled production radiance on glossy world rays; Cycles filtering, host strength 0.08',
+        'diffuseEnvironment': 'Previous constant host ambient retained; no Filament irradiance equivalence',
         'colorManagement': 'Standard sRGB display, no look, exposure zero; sample pixels unlit',
         'avatarPose': 'Original neutral rest pose; runtime-hidden tooth nodes excluded; no 2D avatar mask',
         'frames': records, 'Filament': 'NOT_RUN', 'Fold7': 'NOT_RUN',

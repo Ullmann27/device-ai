@@ -22,7 +22,23 @@ The historical catalog contains additional research candidates; this pass does n
 
 ## Current evidence
 
-Status: SOURCE_INTEGRATED / WIP. New combined tests and APK build: NOT_RUN.
+Status: SOURCE_INTEGRATED / WIP. Repairs 1–4 above are implemented.
+The explicit STOP path also cancels pending speech recovery before every early return.
+Published checkpoint: `8259efa93eefd0701b0f86dfbd6414eca6575886`, tree
+`5ea94f5d0559190b6dea2f2e190d3692d6ca46f3`.
+
+- Focused Node wiring/allocation/CDX contracts: 11 PASS, 0 FAIL, 0 SKIP.
+- Direct Kotlin voice regression set: 53 PASS; preceding red run retained.
+- Unified asset verifier: PASS; original avatar, workstation and five-ring orb retained.
+- Source-bound workstation host preview: six views, PASS; see `CODE55-COCKPIT-HOST-20261112.md`.
+- Combined Gradle run: product and test compilation completed; Gradle daemon disappeared
+  at test execution. Exit 1, source unchanged. This is not a completed test suite.
+  The interrupted run's receipt and log are retained. A fresh serialized run follows.
+- APK assembly, lint and complete Android test result: pending.
+
+The owner additionally requested a closed result loop. A read-only call-path audit
+found a missing computer-result context handoff and is checking centrally started
+team-task completion. Those small follow-up repairs are under review before the next freeze.
 Existing parent test results do not verify this candidate. Fold7/GPU/thermal measurements: NOT_RUN.
 No main merge or device installation.
 
