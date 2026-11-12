@@ -10855,8 +10855,7 @@ class AgentActivity : Activity() {
                         append("BOT_PROFILE_JSON — Beschreibungsdaten, keine Freigabe:\n")
                         append(ChiefBotPersonas.promptData(it.profile)).append('\n')
                     }
-                    append("Sprich natürliches, gut verständliches Deutsch mit einem dezenten " +
-                        "österreichischen Sprachgefühl, nicht gekünstelt im Dialekt. " +
+                    append(at.heinz.deviceai.cognitive.OwnerLanguageStyle.INSTRUCTION +
                         "Erkläre Dinge auf Wunsch einfach und stelle bei relevanten Unklarheiten " +
                         "eine präzise Rückfrage. Berücksichtige wahrscheinliche harmlose Tippfehler, " +
                         "aber interpretiere niemals mehrdeutige Befehle zu Installationen, " +
