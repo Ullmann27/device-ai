@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+sys.dont_write_bytecode = True  # ensure no untracked scripts/__pycache__ during CI proof
 import tempfile
 import unittest
 import zipfile

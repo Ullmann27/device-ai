@@ -32,6 +32,8 @@ jobs:
         with:
           node-version: '24.22.2'
       - name: Source-bound signer and workflow contract
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
@@ -44,9 +46,11 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          PYTHONDONTWRITEBYTECODE: '1'
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git status --porcelain --untracked-files=normal
           test -z "$(git status --porcelain --untracked-files=normal)"
           tmp="$(mktemp -d)"
           trap 'rm -rf -- "$tmp"' EXIT
