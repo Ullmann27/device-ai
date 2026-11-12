@@ -1,0 +1,9 @@
+PASS at.heinz.deviceai.cognitive.LiveSupportRegressionTest#anotherWindowDoesNotConfirmSameTaskAction tests=1 failures=0
+PASS at.heinz.deviceai.cognitive.LiveSupportRegressionTest#uncertainActionNeverBecomesRetryableThroughEviction tests=1 failures=0
+PASS at.heinz.deviceai.cognitive.LiveSupportRegressionTest#secureEvidenceStillCoversRateLimitedFrame tests=1 failures=0
+PASS at.heinz.deviceai.cognitive.LiveSupportRegressionTest#pauseDoesNotForgetSessionTimestamp tests=1 failures=0
+PASS at.heinz.deviceai.cognitive.LiveSupportRegressionTest#stopRetainsLeasedFrameUntilExactOnceRelease tests=1 failures=0
+PASS at.heinz.deviceai.cognitive.LiveComputerFramesTest tests=11 failures=0
+PASS at.heinz.deviceai.cognitive.LiveComputerActionsTest tests=10 failures=0
+PASS at.heinz.deviceai.cognitive.VerifiedNodeClickTest tests=6 failures=0
+TESTS_RUN=32 FAILURES=0

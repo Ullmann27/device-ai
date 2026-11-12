@@ -1,0 +1,62 @@
+[
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+    "sha256": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3",
+    "after_sha256": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3",
+    "unchanged_during_review": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt",
+    "sha256": "b75237b3dad8fea47f2595160681674c658bbca57d1473412804608cb69388e5",
+    "after_sha256": "b75237b3dad8fea47f2595160681674c658bbca57d1473412804608cb69388e5",
+    "unchanged_during_review": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveActionCockpitAdapter.kt",
+    "sha256": "563071d0a9e888fed08dd747d038bef3a06577c2599043a6487dbacae91c6b70",
+    "after_sha256": "563071d0a9e888fed08dd747d038bef3a06577c2599043a6487dbacae91c6b70",
+    "unchanged_during_review": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParser.kt",
+    "sha256": "283471fa5df65f140cb78a49083637019d4426e354db5dee1b1a1f9dcc116af8",
+    "after_sha256": "13f9143030659cded88b93d183eef6a8344fcdffec5151917a364e9fd06b8f09",
+    "unchanged_during_review": false
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt",
+    "sha256": "8e231aced849184439853fb2b9ca49738e18241717f789da462fe7cd7e92ad79",
+    "after_sha256": "8e231aced849184439853fb2b9ca49738e18241717f789da462fe7cd7e92ad79",
+    "unchanged_during_review": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt",
+    "sha256": "23c9bb9c4cf3d3db0b1e57eadf3349ca96eede7f6de02dada271125b2067a0ff",
+    "after_sha256": "23c9bb9c4cf3d3db0b1e57eadf3349ca96eede7f6de02dada271125b2067a0ff",
+    "unchanged_during_review": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt",
+    "sha256": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+    "after_sha256": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+    "unchanged_during_review": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/AgentProtocol.kt",
+    "sha256": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+    "after_sha256": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+    "unchanged_during_review": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
+    "sha256": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+    "after_sha256": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+    "unchanged_during_review": true
+  },
+  {
+    "path": "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerActionsTest.kt",
+    "sha256": "68183f4629a429b1eb3031fde0125e36b0e1bfd81454ec91b63a5f8b8647027b",
+    "after_sha256": "68183f4629a429b1eb3031fde0125e36b0e1bfd81454ec91b63a5f8b8647027b",
+    "unchanged_during_review": true
+  }
+]

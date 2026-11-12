@@ -1,0 +1,26 @@
+{
+  "observed_utc": "2026-11-12T11:48:54.922891+00:00",
+  "head": "080d7f4df9a7b355b1edbe5f876a35bc0d834338",
+  "status": [
+    " M app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+    " M app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+    " M app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+    "?? app/src/main/assets/cinema3d/cockpit-workstation.glb",
+    "?? app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt",
+    "?? app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt",
+    "?? app/src/main/java/at/heinz/deviceai/ui/CockpitMonitorPainter.kt",
+    "?? app/src/main/java/at/heinz/deviceai/ui/CockpitStageView.kt",
+    "?? app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt",
+    "?? tools/cockpit-workstation/"
+  ],
+  "sha256": {
+    "app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt": "7fc003cd44419d13bffecb6c304c927a5a29afbb7dcd1cae3afdcdfa682ed9ba",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitMonitorPainter.kt": "c8b097465df1028c22af588aa536589fb0cd3b6075c19cf011ad6fdb16c72dcc",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt": "838a729b644c5bdf9a0d4b80a4ad17738657fbfd9647cffd85136b1141514d26",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "bfd1b853e23c64da19825d5c725f1dedb5ea8810b04177ee7e4e5270cc45d8b9",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitStageView.kt": "11834dd5b248d195817433d660f1f70d3552acadf6756f8c0004853110c0f086",
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "c7e24ef36a85dd97af8af5fb3aad105efe4c6816c922c28204c9a3f9f93ff604",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "6cba2ecccd8daa8193d652bc72d2be34875afdfe171478735f483aca5945f95a"
+  },
+  "classification": "WIP source inspection only; no compile/render claim"
+}

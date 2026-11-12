@@ -1,0 +1,39 @@
+{"kind":"observation","name":"missing_direct_more","tested_widths":104,"count":104,"first":600,"last":703}
+{"kind":"layout","width":412.0,"height":915.0,"font":1.0,"header_actions":["notifications","settings","more"],"dock_columns":4,"dock_rows":2,"status":[12.0,859.0,400.0,907.0],"secondary":null,"dialog":[12.0,68.0,400.0,116.0],"document":null}
+{"kind":"layout","width":599.0,"height":760.0,"font":1.0,"header_actions":["notifications","settings","more"],"dock_columns":4,"dock_rows":2,"status":[12.0,704.0,587.0,752.0],"secondary":null,"dialog":[12.0,68.0,587.0,116.0],"document":null}
+{"kind":"layout","width":600.0,"height":760.0,"font":1.0,"header_actions":["notifications","settings"],"dock_columns":4,"dock_rows":2,"status":[16.0,704.0,584.0,752.0],"secondary":[489.76,136.0,584.0,242.32],"dialog":[16.0,80.0,110.240005,180.0],"document":[16.0,270.32,110.240005,464.0]}
+{"kind":"layout","width":650.0,"height":760.0,"font":1.0,"header_actions":["notifications","settings"],"dock_columns":8,"dock_rows":1,"status":[16.0,704.0,634.0,752.0],"secondary":[530.76,136.0,634.0,266.40002],"dialog":[16.0,80.0,119.240005,180.0],"document":[16.0,294.40002,119.240005,520.0]}
+{"kind":"layout","width":703.0,"height":760.0,"font":1.0,"header_actions":["notifications","settings"],"dock_columns":8,"dock_rows":1,"status":[16.0,704.0,687.0,752.0],"secondary":[574.22,136.0,687.0,266.40002],"dialog":[16.0,80.0,128.78,180.0],"document":[16.0,294.40002,128.78,520.0]}
+{"kind":"layout","width":704.0,"height":760.0,"font":1.0,"header_actions":["notifications","settings","more"],"dock_columns":8,"dock_rows":1,"status":[16.0,704.0,688.0,752.0],"secondary":[575.04,136.0,688.0,266.40002],"dialog":[16.0,80.0,128.96,180.0],"document":[16.0,294.40002,128.96,520.0]}
+{"kind":"layout","width":884.0,"height":760.0,"font":1.0,"header_actions":["notifications","settings","more"],"dock_columns":8,"dock_rows":1,"status":[16.0,704.0,868.0,752.0],"secondary":[722.64,136.0,868.0,266.40002],"dialog":[16.0,80.0,161.36002,180.0],"document":[16.0,294.40002,161.36002,520.0]}
+{"kind":"layout","width":884.0,"height":760.0,"font":2.0,"header_actions":["notifications","settings","more"],"dock_columns":8,"dock_rows":1,"status":[16.0,718.0,868.0,814.0],"secondary":null,"dialog":[16.0,132.0,161.36002,344.0],"document":[16.0,273.3,161.36002,402.0]}
+{"kind":"navigation","dock":["home","chat","memory","research","tasks","web","learning","device"],"removed_from_dock":["logic","agents","system"],"more":["logic","agents","system","notifications","settings","privacy","model-management","development","mobile-builder"]}
+{"kind":"check","name":"removed_targets_present_in_more","status":"PASS","detail":"Removed targets: logic, agents, system"}
+{"kind":"check","name":"eight_unique_dock_targets","status":"PASS","detail":"Actual dock definitions"}
+{"kind":"check","name":"phone_two_rows_four","status":"PASS","detail":"412 x 915 dp"}
+{"kind":"check","name":"wide_one_row_eight","status":"PASS","detail":"884 x 760 dp, synthetic host dimensions"}
+{"kind":"check","name":"status_geometry_survives_medium_width","status":"PASS","detail":"STATUS source route to system inspected separately"}
+{"kind":"check","name":"large_font_secondary_panel_preserved","status":"FAIL","detail":"884 x 760 dp, fontScale 2.0"}
+{"kind":"check","name":"large_font_dialog_document_nonoverlap","status":"FAIL","detail":"884 x 760 dp, fontScale 2.0"}
+{"kind":"check","name":"geometry_320_font1.0","status":"PASS","detail":"collisions=; secondary=null; minimum48dp=true"}
+{"kind":"check","name":"geometry_320_font1.5","status":"PASS","detail":"collisions=; secondary=null; minimum48dp=true"}
+{"kind":"check","name":"geometry_320_font2.0","status":"PASS","detail":"collisions=; secondary=null; minimum48dp=true"}
+{"kind":"check","name":"geometry_360_font1.0","status":"PASS","detail":"collisions=; secondary=null; minimum48dp=true"}
+{"kind":"check","name":"geometry_360_font1.5","status":"PASS","detail":"collisions=; secondary=null; minimum48dp=true"}
+{"kind":"check","name":"geometry_360_font2.0","status":"PASS","detail":"collisions=; secondary=null; minimum48dp=true"}
+{"kind":"check","name":"geometry_600_font1.0","status":"PASS","detail":"collisions=; secondary=[489.76,136.0,584.0,242.32]; minimum48dp=true"}
+{"kind":"check","name":"geometry_600_font1.5","status":"FAIL","detail":"collisions=DIALOG:WORK_DOCUMENT; secondary=[489.76,196.0,584.0,219.3]; minimum48dp=true"}
+{"kind":"check","name":"geometry_600_font2.0","status":"FAIL","detail":"collisions=DIALOG:WORK_DOCUMENT; secondary=null; minimum48dp=true"}
+{"kind":"check","name":"geometry_640_font1.0","status":"PASS","detail":"collisions=; secondary=[522.56,136.0,624.0,266.40002]; minimum48dp=true"}
+{"kind":"check","name":"geometry_640_font1.5","status":"FAIL","detail":"collisions=; secondary=[522.56,196.0,624.0,242.52]; minimum48dp=true"}
+{"kind":"check","name":"geometry_640_font2.0","status":"FAIL","detail":"collisions=DIALOG:WORK_DOCUMENT; secondary=null; minimum48dp=true"}
+{"kind":"check","name":"geometry_700_font1.0","status":"PASS","detail":"collisions=; secondary=[571.76,136.0,684.0,266.40002]; minimum48dp=true"}
+{"kind":"check","name":"geometry_700_font1.5","status":"FAIL","detail":"collisions=; secondary=[571.76,196.0,684.0,242.52]; minimum48dp=true"}
+{"kind":"check","name":"geometry_700_font2.0","status":"FAIL","detail":"collisions=DIALOG:WORK_DOCUMENT; secondary=null; minimum48dp=true"}
+{"kind":"check","name":"geometry_720_font1.0","status":"PASS","detail":"collisions=; secondary=[588.16,136.0,704.0,266.40002]; minimum48dp=true"}
+{"kind":"check","name":"geometry_720_font1.5","status":"FAIL","detail":"collisions=; secondary=[588.16,196.0,704.0,242.52]; minimum48dp=true"}
+{"kind":"check","name":"geometry_720_font2.0","status":"FAIL","detail":"collisions=DIALOG:WORK_DOCUMENT; secondary=null; minimum48dp=true"}
+{"kind":"check","name":"geometry_884_font1.0","status":"PASS","detail":"collisions=; secondary=[722.64,136.0,868.0,266.40002]; minimum48dp=true"}
+{"kind":"check","name":"geometry_884_font1.5","status":"FAIL","detail":"collisions=; secondary=[722.64,196.0,868.0,242.52]; minimum48dp=true"}
+{"kind":"check","name":"geometry_884_font2.0","status":"FAIL","detail":"collisions=DIALOG:WORK_DOCUMENT; secondary=null; minimum48dp=true"}
+{"kind":"summary","checks":28,"failures":12,"filament":"NOT_RUN","device":"NOT_RUN"}

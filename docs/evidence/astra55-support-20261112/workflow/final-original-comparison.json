@@ -1,0 +1,21 @@
+{
+  "at_utc": "2026-11-12T11:49:23.640336+00:00",
+  "current_head": "bf7a52ceaccc85ecc3ac5df8ed6b7af9af33b6a6",
+  "current_reducer_sha256": "b75237b3dad8fea47f2595160681674c658bbca57d1473412804608cb69388e5",
+  "base_reducer_sha256": "b75237b3dad8fea47f2595160681674c658bbca57d1473412804608cb69388e5",
+  "candidate_reducer_sha256": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
+  "candidate_already_present": false,
+  "reducer_still_matches_base": true,
+  "working_tree_modified_paths": [
+    " M app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+    " M app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+    " M app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParser.kt",
+    " M app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflow.kt",
+    " M app/src/main/java/at/heinz/deviceai/ui/ContinuumUiFeedback.kt",
+    "?? app/src/main/java/at/heinz/deviceai/avatar/ComputerWorkAvatarBridge.kt",
+    "?? app/src/main/java/at/heinz/deviceai/avatar/ComputerWorkCuePlayer.kt",
+    "?? app/src/test/java/at/heinz/deviceai/cognitive/CockpitWorkEventTest.kt",
+    "?? app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParserTest.kt",
+    "?? app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflowTest.kt"
+  ]
+}

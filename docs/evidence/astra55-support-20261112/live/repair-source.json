@@ -1,0 +1,18 @@
+{
+  "source": "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt",
+  "before_sha256": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5",
+  "candidate_sha256": "de97bfc174bd60bef5070d757cb6b44215af1865cd548fef0b70490235df1ee6",
+  "patch_sha256": "5a8d63b0b7232592cf7d8d3c2df589b6391fe1a6e5dbad095121742fb511d08a",
+  "scope": [
+    "window-id context binding",
+    "bounded fail-closed uncertainty journal"
+  ],
+  "scroll": "OPEN; unchanged",
+  "earlier_basis": {
+    "source_head": "5574282e9f2e6a8e726be81ec257073d4c723f77",
+    "before_sha256": "8e231aced849184439853fb2b9ca49738e18241717f789da462fe7cd7e92ad79",
+    "candidate_sha256": "0d3c57626e84ede85c25432e1187314c9b65e1d45217b47b81e50701399356f0"
+  },
+  "source_head": "8a71c46a1aeecc76ab9bb97076a6e6a39c11545b",
+  "final_evidence": "candidate-04-final"
+}

@@ -1,0 +1,20 @@
+{
+  "source_commit": "080d7f4df9a7b355b1edbe5f876a35bc0d834338",
+  "patch_sha256": "31dcdea0eadc1fe7f1618e5bc95cb2630abbe68690f838be7659e867f8f408dd",
+  "standard_layouts_compared": 7,
+  "standard_layouts_identical": true,
+  "baseline": {
+    "kind": "summary",
+    "checks": 28,
+    "failures": 12,
+    "filament": "NOT_RUN",
+    "device": "NOT_RUN"
+  },
+  "candidate": {
+    "kind": "summary",
+    "checks": 28,
+    "failures": 0,
+    "filament": "NOT_RUN",
+    "device": "NOT_RUN"
+  }
+}
