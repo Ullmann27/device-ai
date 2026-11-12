@@ -1,0 +1,6 @@
+{
+  "version": "1.56.0",
+  "classes_jar_sha256": "cad38e83e0226bd16f1e86385d7fd82b108258676949d7924b9c14a1eaa18c62",
+  "method_observation": "Boolean and float2 setParameter methods invoke native functions directly without Java value comparison",
+  "method": "javap -c -p; no native code execution"
+}
