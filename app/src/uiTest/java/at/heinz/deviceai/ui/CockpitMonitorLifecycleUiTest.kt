@@ -16,12 +16,14 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowChoreographer
 import java.time.Duration
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class CockpitMonitorLifecycleUiTest {
     private class CountingFeed : LiveMonitorFeed<AndroidLiveFrame> {
@@ -49,6 +51,9 @@ class CockpitMonitorLifecycleUiTest {
         val feed = CountingFeed()
         try {
             advance()
+            assertTrue("Monitor attaches to real window", monitor.isAttachedToWindow)
+            assertTrue("Monitor starts shown", monitor.isShown)
+            assertEquals("Host window starts visible", View.VISIBLE, monitor.windowVisibility)
             monitor.bind(feed)
             monitor.setForegroundActive(true)
             advance()

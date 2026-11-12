@@ -29,8 +29,14 @@ or permission path is introduced. Existing cinematic experiment settings are pre
 - All 101 sampled poses fit each of four phone/Fold/tablet geometries; pixel orientation remains correct.
 - Finite-difference velocity checks cover four reversal points and the braking join. The former
   interpolator restart fails the velocity countercheck. 200 repeated reversals remain bounded.
-- Four Android UI tests added for reversal, rebinding, lifecycle and reduced motion: NOT_RUN here.
-- Full Android compilation, Filament rendering and Fold7 validation: NOT_RUN here.
+- Final combined verification: 24 ordinary JUnit tests and eight Robolectric tests PASS.
+- Four motion UI tests cover reversal, rebinding, lifecycle and reduced motion; three additional
+  monitor lifecycle tests and the existing native pixel test also PASS. Fixtures use native
+  Android graphics and assert an actually visible window. No production guard was weakened.
+- Production and test Android compilation PASS on isolated integration source `e9523efd0b`.
+  The Gradle test runner stalled; final execution used direct JUnit against its real compiled
+  production JAR. See the shared support handoff and `android-ui-proof.json`.
+- Filament device rendering and Fold7 validation: NOT_RUN.
 
 Run the focused host classes `CockpitStageFrameTest` and `CockpitMonitorMotionTest`.
 On the combined source, run `CockpitMonitorMotionUiTest` and `CockpitMonitorPixelsUiTest`
@@ -46,4 +52,4 @@ Without it the GPU mesh and native app pixels would disagree. Render snapshots m
 the production Kotlin pose rather than reimplementing its trajectory.
 
 Rollback: revert this motion change and its paired renderer transform together.
-PORTIERT locally; host math VERIFIED; Android UI and GERÄTEBESTÄTIGT remain open.
+PORTIERT; host math and Robolectric UI VERIFIED; GERÄTEBESTÄTIGT remains open.

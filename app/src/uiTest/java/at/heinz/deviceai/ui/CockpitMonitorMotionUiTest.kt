@@ -3,6 +3,7 @@ package at.heinz.deviceai.ui
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
+import android.os.Looper
 import android.view.View
 import at.heinz.deviceai.AndroidLiveFrame
 import at.heinz.deviceai.ContinuumHologramView
@@ -12,15 +13,22 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowChoreographer
+import java.time.Duration
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28], qualifiers = "w884dp-h760dp-land-mdpi")
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class CockpitMonitorMotionUiTest {
     private fun withHome(check: (ContinuumHomeView, VirtualComputerMonitorView) -> Unit) {
-        val controller = Robolectric.buildActivity(Activity::class.java).setup().visible()
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val activity = controller.get()
         activity.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
             .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
@@ -29,10 +37,16 @@ class CockpitMonitorMotionUiTest {
         home.setJarvisShellStage(true)
         activity.setContentView(home)
         try {
+            controller.visible()
+            repeat(2) { shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(16)) }
+            controller.windowFocusChanged(true)
             home.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
             home.layout(0, 0, 884, 760)
             home.setForegroundActive(true)
+            assertTrue("Cockpit attaches to real window", home.isAttachedToWindow)
+            assertTrue("Cockpit starts shown", home.isShown)
+            assertEquals("Cockpit window starts visible", View.VISIBLE, home.windowVisibility)
             assertTrue(home.isPresentationActive())
             val monitor = home.findViewWithTag<VirtualComputerMonitorView>("continuum-live-computer-monitor")
             val labels = home.findViewWithTag<View>("jarvis-foreground")

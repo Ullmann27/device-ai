@@ -21,4 +21,3 @@ java.lang.AssertionError: Face clipped: 240.0/500.0/1.0 at 251.67159 < 296.21412
 
 FAILURES!!!
 Tests run: 4,  Failures: 3
-
