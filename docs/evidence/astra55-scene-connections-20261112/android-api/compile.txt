@@ -1,0 +1,4 @@
+Prior Kotlin 2.0.20 attempt: exit 2. Compiler metadata incompatibility.
+/workspace/scratch/01387b612451/wt-astra-integration/app/build/tmp/kotlin-classes/debug/META-INF/DeviceAI_app_debug.kotlin_module: error: module was compiled with an incompatible version of Kotlin. The binary version of its metadata is 2.4.0, expected version is 2.0.0.
+/workspace/scratch/c9f74e2967e3/gradle-home/caches/8.11.1/transforms/f69ea6ce302d275edfe54d72a778205e/transformed/litertlm-android-0.18.0/jars/classes.jar!/META-INF/third_party.odml.litert_lm.kotlin.java.com.google.ai.edge.litertlm_litertlm-android.kotlin_module: error: module was compiled with an incompatible version of Kotlin. The binary version of its metadata is 2.4.0, expected version is 2.0.0.
+Full stack trace omitted; successful matching-compiler check is android-api-2.4/.

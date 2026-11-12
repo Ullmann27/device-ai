@@ -1,5 +1,12 @@
 # Astra55 – gemeinsame Unterstützungs-Pipeline
 
+## Aktuelle Anschlussrunde
+
+Die vorhandenen Live-, Workflow- und Holographic-Bausteine sind im Supportzweig zusammengeführt.
+Stand, Produktionsanschlüsse, exakte Prüfbelege und der noch belegte gemeinsame Build-Slot stehen in
+[ASTRA55-SUPPORT-CONNECTIONS-20261112.md](ASTRA55-SUPPORT-CONNECTIONS-20261112.md).
+Die folgenden Abschnitte dokumentieren Auftrag und bisherigen Austausch.
+
 ## Auftrag und Ziel
 
 Bestehende virtuelle Arbeitsfläche nach Opus' Übergabe unterstützen. Keine neue Produktlinie, kein zweiter Renderer, keine weitere Aufgabenverwaltung. Grundlage: `CODE55-UEBERGABE-CHATGPT-ASTRA-20261112.md` und `ASTRA55-COCKPIT-INTEGRATION-20261112.md`.

@@ -1,0 +1,18 @@
+{
+  "base_head": "d7a59c6f6855dab3884e44725d6a2c3a55634806",
+  "import_source": "df43ec3580b7939462619505a1e196cf0373879e",
+  "compiler": "Kotlin 2.0.20; heap max512MiB",
+  "api": "Android36 / Filament+gltfio1.56.0 real classes",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "5af385e2bb7b65306547797ba1a54c87b42b3600d2b6296122264a9bf25fed30",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt": "d28c6aeb2a20fb6ee4b7e51b96c2a0f36ed6a17f4169781735f57464f7929440",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitMonitorMotion.kt": "547cc50c8ca02cac4f7d80563b8ca50dfd1d692aa000bb4871bfc684a0ffadd0",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/CockpitStageFrameTest.kt": "152f302f3e0244d43672135851e3444cb346bee5aebb31b38ecc15fac2bb9340",
+    "app/src/test/java/at/heinz/deviceai/ui/CockpitMonitorMotionTest.kt": "c480719c4b0f567911c2cdcdef6d7e2bd1d6644ee033b63a73f5224f39edbe4f"
+  },
+  "compile_exit": 0,
+  "test_exit": 0,
+  "android_ui": "NOT_RUN",
+  "FilamentGPU": "NOT_RUN",
+  "Fold7": "NOT_RUN"
+}

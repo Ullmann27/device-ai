@@ -1,0 +1,5 @@
+PASS at.heinz.deviceai.cognitive.LiveSupportRegressionTest tests=6 failures=0
+PASS at.heinz.deviceai.cognitive.LiveComputerFramesTest tests=11 failures=0
+PASS at.heinz.deviceai.cognitive.LiveComputerActionsTest tests=13 failures=0
+PASS at.heinz.deviceai.cognitive.VerifiedNodeClickTest tests=6 failures=0
+TESTS_RUN=36 FAILURES=0

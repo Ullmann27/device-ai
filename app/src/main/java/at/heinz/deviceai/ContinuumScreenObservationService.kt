@@ -9,14 +9,21 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.accessibility.AccessibilityWindowInfo
 import android.graphics.Rect
+import android.os.Build
+import android.os.SystemClock
 import at.heinz.deviceai.cognitive.*
 
 class ContinuumScreenObservationService:AccessibilityService(){
     override fun onServiceConnected(){super.onServiceConnected();ScreenObservationBus.connect(this)}
     override fun onAccessibilityEvent(event:AccessibilityEvent?){
         if(event==null)return
-        if(event.eventType==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED){
-            ScreenObservationBus.contentChanged(this,event.packageName?.toString())
+        if(event.eventType==AccessibilityEvent.TYPE_VIEW_SCROLLED){
+            ScreenObservationBus.scrolled(this,event)
+            return
+        }
+        if(event.eventType==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED||
+            event.eventType==AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED){
+            ScreenObservationBus.contentChanged(this,event.packageName?.toString(),event.windowId)
             return // Invalidate an in-flight read; do not capture text or invent a launch observation.
         }
         if(event.eventType==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED||
@@ -29,8 +36,8 @@ class ContinuumScreenObservationService:AccessibilityService(){
             finally{@Suppress("DEPRECATION") root.recycle()}
         }
     }
-    override fun onInterrupt(){ScreenObservationBus.interrupt(this)}
-    override fun onDestroy(){ScreenObservationBus.disconnect(this);super.onDestroy()}
+    override fun onInterrupt(){ScreenObservationBus.interrupt(this);AndroidLiveComputer.observationRevoked(this)}
+    override fun onDestroy(){ScreenObservationBus.disconnect(this);AndroidLiveComputer.observationRevoked(this);super.onDestroy()}
     internal fun readScreen(expectedPackage:String,checkActive:()->Unit,bindWindow:(Int)->Unit):ScreenTextSnapshot{
         checkActive()
         val root=rootInActiveWindow?:error("NO_ACTIVE_WINDOW")
@@ -53,27 +60,90 @@ class ContinuumScreenObservationService:AccessibilityService(){
 }
 
 internal data class ObservedAppScreen(val snapshot:ScreenTextSnapshot,val epoch:Long,val revision:Long,val observedAtMillis:Long)
+internal data class LiveObservationAccess(val service:ContinuumScreenObservationService,val epoch:Long)
 
 /** In-process, event-driven metadata only. No screen text cached on events. */
 internal object ScreenObservationBus:ForegroundEvents{
     private val lock=java.lang.Object();private var service:ContinuumScreenObservationService?=null
     private var epoch=0L;private var sequence=0L;private var wakeSequence=0L;private var latest:ForegroundWindow?=null
+    private var windowSequence=0L
     private var readingPackage:String?=null
     private var operationWindowId:Int?=null
     private var clickInProgress=false
     private var clickTargetEvent=false
     private var clickUncertain=false
+    private data class ScrollPosition(val x:Int?,val y:Int?,val fromIndex:Int?,val atMillis:Long)
+    private class PendingScroll(val request:NodeActionRequest,val before:ObservationStamp,
+                              val node:AccessibilityNodeInfo,val dispatchedAtMillis:Long){
+        var position:ScrollPosition?=null
+        var evidence:LiveScrollEvidence?=null
+    }
+    private var pendingScroll:PendingScroll?=null
     private val packageNamePattern=Regex("[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)+")
-    fun connect(s:ContinuumScreenObservationService)=synchronized(lock){service=s;epoch++;latest=null;lock.notifyAll()}
-    fun disconnect(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){service=null;epoch++;latest=null;lock.notifyAll()}}
-    fun interrupt(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){epoch++;latest=null;wakeSequence++;lock.notifyAll()}}
+    internal fun liveAccess():LiveObservationAccess?=synchronized(lock){service?.let{LiveObservationAccess(it,epoch)}}
+    internal fun liveRevision(access:LiveObservationAccess):Long=synchronized(lock){
+        check(service===access.service&&epoch==access.epoch){"OBSERVATION_PERMISSION_CHANGED"}
+        sequence
+    }
+    internal fun liveWindowRevision(access:LiveObservationAccess):Long=synchronized(lock){
+        check(service===access.service&&epoch==access.epoch){"OBSERVATION_PERMISSION_CHANGED"}
+        windowSequence
+    }
+    private fun clearLiveInputLocked(){
+        pendingScroll?.let{@Suppress("DEPRECATION") it.node.recycle()}
+        pendingScroll=null
+    }
+    internal fun prepareLiveInput(access:LiveObservationAccess,request:NodeActionRequest,
+                                  before:ObservationStamp,node:AccessibilityNodeInfo)=synchronized(lock){
+        check(liveRevision(access)==request.revision&&readingPackage==request.packageName){"STALE_LIVE_OPERATION"}
+        check(before.taskId==request.taskId&&before.epoch==access.epoch&&before.revision==request.revision&&
+            before.packageName==request.packageName&&before.windowId!=null&&
+            node.windowId==before.windowId&&node.packageName?.toString()==request.packageName){"ACTION_WINDOW_MISMATCH"}
+        clearLiveInputLocked()
+        operationWindowId=before.windowId
+        if(request.kind==NodeActionKind.SCROLL_FORWARD||request.kind==NodeActionKind.SCROLL_BACKWARD){
+            @Suppress("DEPRECATION")
+            val copy=AccessibilityNodeInfo.obtain(node)
+            pendingScroll=PendingScroll(request,before,copy,SystemClock.uptimeMillis())
+        }
+    }
+    internal fun liveScrollEvidence(access:LiveObservationAccess,request:NodeActionRequest,
+                                     before:ObservationStamp):LiveScrollEvidence?=synchronized(lock){
+        liveRevision(access)
+        pendingScroll?.takeIf{it.request==request&&it.before==before}?.evidence
+    }
+    internal fun <T> withLiveOperation(pkg:String,body:(LiveObservationAccess)->T):T {
+        val access=synchronized(lock){
+            val connected=service?:error("ACCESSIBILITY_OBSERVATION_NOT_GRANTED")
+            check(readingPackage==null&&!clickInProgress){"ANOTHER_SCREEN_READ_ACTIVE"}
+            clearLiveInputLocked();readingPackage=pkg;operationWindowId=null
+            LiveObservationAccess(connected,epoch)
+        }
+        try { return body(access) }
+        finally { synchronized(lock){clearLiveInputLocked();readingPackage=null;operationWindowId=null;lock.notifyAll()} }
+    }
+    internal fun awaitLiveRevision(access:LiveObservationAccess,after:Long,deadlineNanos:Long,checkActive:()->Unit):Boolean {
+        synchronized(lock){
+            while(liveRevision(access)<=after){
+                val remaining=(deadlineNanos-System.nanoTime())/1_000_000
+                if(remaining<=0)return false
+                checkActive()
+                lock.wait(remaining.coerceAtMost(50).coerceAtLeast(1))
+            }
+            return true
+        }
+    }
+    fun connect(s:ContinuumScreenObservationService)=synchronized(lock){clearLiveInputLocked();service=s;epoch++;latest=null;lock.notifyAll()}
+    fun disconnect(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){clearLiveInputLocked();service=null;epoch++;latest=null;lock.notifyAll()}}
+    fun interrupt(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){clearLiveInputLocked();epoch++;latest=null;wakeSequence++;lock.notifyAll()}}
     fun observed(s:ContinuumScreenObservationService,pkg:String,eventSender:String?=null)=synchronized(lock){if(service===s){
+        windowSequence++
         if(clickInProgress){
             if(pkg==readingPackage && eventSender==readingPackage && operationWindowId!=null)clickTargetEvent=true
             else clickUncertain=true
         }
         sequence++;latest=if(pkg.isNotBlank())ForegroundWindow(pkg,sequence,epoch) else null;lock.notifyAll()}}
-    fun contentChanged(s:ContinuumScreenObservationService,pkg:String?)=synchronized(lock){if(service===s){
+    fun contentChanged(s:ContinuumScreenObservationService,pkg:String?,windowId:Int?=null)=synchronized(lock){if(service===s){
         // Only a well-formed OS event sender known to differ from the active read
         // can be ignored. Missing/malformed senders remain uncertainty, never success.
         val target=readingPackage
@@ -82,10 +152,44 @@ internal object ScreenObservationBus:ForegroundEvents{
         // operation has bound a concrete target window. Unknown stays closed.
         if(target!=null&&knownPackage!=null&&knownPackage!=target&&
             (!clickInProgress||operationWindowId!=null))return@synchronized
+        if(knownPackage==target&&operationWindowId!=null&&windowId!=null&&windowId>=0&&
+            windowId!=operationWindowId)return@synchronized
         if(clickInProgress){
             if(knownPackage==target&&operationWindowId!=null)clickTargetEvent=true else clickUncertain=true
         }
         sequence++;if(knownPackage==null)latest=null;lock.notifyAll()}}
+    internal fun scrolled(s:ContinuumScreenObservationService,event:AccessibilityEvent){
+        val inspectSource=synchronized(lock){service===s&&pendingScroll!=null}
+        val source=if(inspectSource) runCatching{event.source}.getOrNull() else null
+        try{synchronized(lock){
+            if(service!==s)return
+            val priorRevision=sequence
+            contentChanged(s,event.packageName?.toString(),event.windowId)
+            val pending=pendingScroll?:return
+            val at=event.eventTime
+            if(sequence==priorRevision||epoch!=pending.before.epoch||source==null||
+                event.packageName?.toString()!=pending.before.packageName||event.windowId!=pending.before.windowId||
+                source.windowId!=pending.before.windowId||source.packageName?.toString()!=pending.before.packageName||
+                source!=pending.node||at<pending.dispatchedAtMillis||at>SystemClock.uptimeMillis())return
+            val previous=pending.position
+            if(previous!=null&&at<previous.atMillis)return
+            fun coordinate(value:Int):Int?=value.takeIf{it>=0&&it!=Int.MAX_VALUE}
+            val position=ScrollPosition(coordinate(event.scrollX),coordinate(event.scrollY),coordinate(event.fromIndex),at)
+            fun measured(value:Int):Long?=value.takeUnless{it==-1||it==Int.MIN_VALUE||it==Int.MAX_VALUE}?.toLong()
+            fun difference(current:Int?,previous:Int?):Long=
+                if(current!=null&&previous!=null)current.toLong()-previous else 0L
+            val deltaX=(if(Build.VERSION.SDK_INT>=28)measured(event.scrollDeltaX) else null)
+                ?.takeIf{it!=0L}?:difference(position.x,previous?.x)
+            val deltaY=(if(Build.VERSION.SDK_INT>=28)measured(event.scrollDeltaY) else null)
+                ?.takeIf{it!=0L}?:difference(position.y,previous?.y)
+            val indexDelta=difference(position.fromIndex,previous?.fromIndex)
+            pending.position=position
+            if(deltaX!=0L||deltaY!=0L||indexDelta!=0L){
+                pending.evidence=LiveScrollEvidence(pending.before,pending.request.fingerprint,
+                    pending.dispatchedAtMillis,at,sequence,deltaX,deltaY,indexDelta)
+            }
+        }}finally{@Suppress("DEPRECATION") source?.recycle()}
+    }
     private fun bindWindow(s:ContinuumScreenObservationService,pkg:String,grant:Long,revision:Long,id:Int,
                            allowTargetTransition:Boolean=false)=synchronized(lock){
         check(service===s&&epoch==grant&&sequence==revision&&readingPackage==pkg){"SCREEN_CHANGED_DURING_READ"}

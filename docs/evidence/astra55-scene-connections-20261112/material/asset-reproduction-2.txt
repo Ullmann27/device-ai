@@ -1,0 +1,1 @@
+app/src/main/assets/cinema3d/cockpit-workstation.glb 14732 f7a2931d592771044218347102b0db2fae5fa4c567b7863a9abe1d5bc4aadad0

@@ -1,0 +1,3 @@
+/tmp/astra55-workflow-connection-s4ip9mss/app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt:407:13: error: unresolved reference 'AvatarSentenceAccentPolicy'.
+        if (AvatarSentenceAccentPolicy.suppress(text, first, last, next)) return null
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^

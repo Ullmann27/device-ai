@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
@@ -26,7 +28,10 @@
         android:usesCleartextTraffic="false"
         android:theme="@style/AppTheme">
 
-        <!-- Explicit Android accessibility opt-in; read-only, per-request observations. -->
+        <service android:name=".ContinuumLiveProjectionService"
+            android:exported="false" android:foregroundServiceType="mediaProjection" />
+
+        <!-- Explicit Android accessibility opt-in and per-task grants. -->
         <service android:name=".ContinuumScreenObservationService"
             android:exported="true" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter><action android:name="android.accessibilityservice.AccessibilityService" /></intent-filter>

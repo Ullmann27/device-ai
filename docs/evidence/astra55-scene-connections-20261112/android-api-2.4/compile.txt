@@ -1,0 +1,6 @@
+app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt:1183:22: warning: 'var isChecked: Boolean' is deprecated. Deprecated in Java.
+                info.isChecked = isSelected
+                     ^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt:136:35: warning: elvis operator (?:) always returns the left operand of non-nullable type 'LiveMonitorFeed<AndroidLiveFrame>'.
+            val producer = source ?: return
+                                  ^^^^^^^^^

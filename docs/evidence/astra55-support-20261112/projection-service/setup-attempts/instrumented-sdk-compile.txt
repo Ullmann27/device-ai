@@ -1,0 +1,12 @@
+/tmp/astra55-projection-service/setup-1/frozen/ContinuumLiveProjectionService.kt:32:1: error: class 'ContinuumLiveProjectionService' is not abstract and does not implement abstract member:
+fun $$robo$getData(): Any!
+class ContinuumLiveProjectionService : Service() {
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/astra55-projection-service/setup-1/frozen/ContinuumLiveProjectionService.kt:62:28: error: class '<anonymous>' is not abstract and does not implement abstract member:
+fun $$robo$getData(): Any!
+    private val callback = object : MediaProjection.Callback() {
+                           ^^^^^^
+/tmp/astra55-projection-service/setup-1/frozen/ContinuumScreenObservationService.kt:14:1: error: class 'ContinuumScreenObservationService' is not abstract and does not implement abstract member:
+fun $$robo$getData(): Any!
+class ContinuumScreenObservationService:AccessibilityService(){
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

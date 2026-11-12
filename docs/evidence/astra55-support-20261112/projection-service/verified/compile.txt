@@ -1,0 +1,12 @@
+/workspace/scratch/6b5ba87c1951/projection-service-review/verified/frozen/AndroidLiveComputer.kt:182:80: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+                verdict = ActionEffectVerifier.verify(before.stamp, true, after!!.stamp,
+                                                                               ^^
+/workspace/scratch/6b5ba87c1951/projection-service-review/verified/frozen/AndroidLiveComputer.kt:183:26: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+                    after!!.nodes.count { !it.password && request.matchesExpected(it) } == 1)
+                         ^^
+/workspace/scratch/6b5ba87c1951/projection-service-review/verified/frozen/AndroidLiveComputer.kt:185:22: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+                after!!
+                     ^^
+/workspace/scratch/6b5ba87c1951/projection-service-review/verified/frozen/ContinuumScreenObservationService.kt:60:32: warning: this class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+    private val lock=java.lang.Object();private var service:ContinuumScreenObservationService?=null
+                               ^^^^^^

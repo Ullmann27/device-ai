@@ -218,35 +218,37 @@ class OwnerAppActionFlowTest {
         }
     }
 
-    @Test fun explicitFuzzyAppSelectionRetainsCancelAndLaunchReceipts() {
+    @Test fun explicitSingleFuzzyAppSkipsChoiceButRetainsApprovalAndLaunchReceipts() {
         val app = NativeAppCandidate("org.example.messenger", "WhatsApp")
+        var launches = 0
         val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { call ->
             if (call.name == "find_app") lookup(call, listOf(app))
-            else JSONObject().put("schema", "CONTINUUM_DEVICE_ACTION_V1")
+            else { launches++; JSONObject().put("schema", "CONTINUUM_DEVICE_ACTION_V1")
                 .put("action", "LAUNCH_APP").put("package", app.packageName)
-                .put("status", "VERIFIED_FOREGROUND").put("windowRevision", 7).toString()
+                .put("status", "VERIFIED_FOREGROUND").put("windowRevision", 7).toString() }
         })
         val intake = OwnerAppLookupIntent.inspect("Öffne Whats") as OwnerAppLookupIntent.Intake.Lookup
         assertFalse(intake.requireInstalledCandidate)
 
         val cancelled = OwnerAppActionFlow(intake.opening, intake.requireInstalledCandidate)
         val offered = cancelled.returned(invoke(gate, cancelled.start(intake.query)))
-        assertTrue(offered is OwnerAppActionFlow.Step.Choose)
+        assertTrue(offered is OwnerAppActionFlow.Step.Confirm)
         assertFalse(cancelled.lookupFinishedWithoutInteraction)
         assertTrue(cancelled.canRetainAppLookupContext)
-        val cancelReceipt = cancelled.choose(null) as OwnerAppActionFlow.Step.Done
-        assertTrue(cancelReceipt.message.contains("abgebrochen"))
+        val cancelReceipt = cancelled.returned(invoke(gate, checkNotNull(cancelled.confirm(false)))) as OwnerAppActionFlow.Step.Done
+        assertTrue(cancelReceipt.message.contains("abgelehnt"))
+        assertEquals(0, launches)
         assertFalse(cancelled.lookupFinishedWithoutInteraction)
 
         val launched = OwnerAppActionFlow(intake.opening, intake.requireInstalledCandidate)
-        val choices = launched.returned(invoke(gate, launched.start(intake.query))) as
-            OwnerAppActionFlow.Step.Choose
-        val confirmation = launched.choose(choices.candidates.single()) as
+        val confirmation = launched.returned(invoke(gate, launched.start(intake.query))) as
             OwnerAppActionFlow.Step.Confirm
         assertEquals(app.packageName, confirmation.candidate.packageName)
         val receipt = launched.returned(invoke(gate, checkNotNull(launched.confirm(true)))) as
             OwnerAppActionFlow.Step.Done
         assertTrue(receipt.message.contains("neuen aktiven Fenster"))
+        assertEquals(1, launches)
+        assertEquals(app, launched.launchedCandidate)
         assertTrue(launched.canRetainAppLookupContext)
         assertFalse(launched.lookupFinishedWithoutInteraction)
     }
@@ -257,9 +259,9 @@ class OwnerAppActionFlowTest {
         val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { lookup(it, listOf(app)) })
         val legacySelection = OwnerAppActionFlow(intake.opening)
         assertTrue(legacySelection.returned(invoke(gate, legacySelection.start(intake.query))) is
-            OwnerAppActionFlow.Step.Choose)
-        val cancelReceipt = legacySelection.choose(null) as OwnerAppActionFlow.Step.Done
-        assertTrue(cancelReceipt.message.contains("abgebrochen"))
+            OwnerAppActionFlow.Step.Confirm)
+        val cancelReceipt = legacySelection.returned(invoke(gate, checkNotNull(legacySelection.confirm(false)))) as OwnerAppActionFlow.Step.Done
+        assertTrue(cancelReceipt.message.contains("abgelehnt"))
         assertFalse(legacySelection.lookupFinishedWithoutInteraction)
         assertTrue(OwnerAppLookupIntent.shouldFallbackToConversation(
             intake, legacySelection.lookupVerified, legacySelection.candidates.size,
@@ -326,8 +328,9 @@ class OwnerAppActionFlowTest {
                     .put("windowRevision", 7).toString()
             })
             val flow = OwnerAppActionFlow(intake.opening, requireExactInstalledCandidate = intake.requireInstalledCandidate)
-            val choice = flow.returned(invoke(gate, flow.start(intake.query))) as OwnerAppActionFlow.Step.Choose
-            assertTrue(flow.choose(choice.candidates.single()) is OwnerAppActionFlow.Step.Confirm)
+            val confirmation = flow.returned(invoke(gate, flow.start(intake.query))) as OwnerAppActionFlow.Step.Confirm
+            assertEquals("org.example.messenger", confirmation.candidate.packageName)
+            assertEquals(listOf("find_app"), calls)
             val result = flow.returned(invoke(gate, checkNotNull(flow.confirm(approved)))) as OwnerAppActionFlow.Step.Done
             assertFalse(OwnerAppLookupIntent.shouldFallbackToConversation(
                 intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified))

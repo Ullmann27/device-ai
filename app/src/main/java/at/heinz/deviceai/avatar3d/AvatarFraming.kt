@@ -46,6 +46,15 @@ object AvatarFraming {
         val anchorX: Double
     )
 
+    /** Reveal shoulders, keep crown fixed. */
+    fun pullBack(window: Window, scale: Double): Window {
+        require(scale.isFinite() && scale in .5..1.0)
+        val vertical = window.halfHeight / scale
+        return window.copy(left = window.left / scale, right = window.right / scale,
+            halfHeight = vertical, cameraCenterY = window.cameraCenterY + window.halfHeight - vertical,
+            headScale = window.headScale * scale)
+    }
+
     fun window(focus: AvatarGlbContract.Focus, aspect: Double, anchorX: Double, closeUp: Double,
                keepOut: KeepOut? = null): Window {
         require(aspect.isFinite() && aspect > 0.0) { "Viewport aspect" }

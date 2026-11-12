@@ -18,6 +18,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private var provider: UbershaderProvider? = null
     private var loader: AssetLoader? = null
     private var asset: FilamentAsset? = null
+    private var cockpitStage: FilamentCockpitStage? = null
+    private var cockpitSurface: Surface? = null
     private var documentStage: FilamentDocumentStage? = null
     private var documentStageId: String? = null
     private var documentSurface: Surface? = null
@@ -114,7 +116,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             require(e.renderableManager.getMorphTargetCount(instance) == metadata.targets.size)
             instance
         }.toIntArray()
-        for (name in listOf("Neck", "Head", "EyeLeft", "EyeRight", "Jaw")) {
+        for (name in listOf("AvatarRoot", "Neck", "Head", "EyeLeft", "EyeRight", "Jaw")) {
             val instance = e.transformManager.getInstance(a.getFirstEntityByName(name)); require(instance != 0)
             joints[name] = Joint(instance, e.transformManager.getTransform(instance, FloatArray(16)))
         }
@@ -286,6 +288,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         for (instance in morphInstances) e.renderableManager.setMorphWeights(instance, mapper.weights, 0)
         receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.MORPH_UPLOADED) ?: 0
         // The neck carries most of the turn, the head the rest: the skin blends Neck→Head inside the chin band.
+        applyWorkBody(pose, motion)
         rotate("Neck", mapper.neckPitch, mapper.neckYaw)
         rotate("Head", mapper.headPitch - mapper.neckPitch, mapper.headYaw - mapper.neckYaw)
         rotate("EyeLeft", mapper.eyePitch, mapper.eyeYaw); rotate("EyeRight", mapper.eyePitch, mapper.eyeYaw)
@@ -300,6 +303,18 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_RENDERED) ?: 0
         } finally { r.endFrame() }
         return true
+    }
+
+    private fun applyWorkBody(pose: AvatarPose, motion: Boolean) {
+        val root = joints.getValue("AvatarRoot")
+        val left = if (motion && pose.leftShoulder.isFinite()) pose.leftShoulder.coerceIn(0f, 1f) else 0f
+        val right = if (motion && pose.rightShoulder.isFinite()) pose.rightShoulder.coerceIn(0f, 1f) else 0f
+        Matrix.setIdentityM(rotation, 0)
+        Matrix.translateM(rotation, 0, 0f, (left + right) * .0009f, 0f)
+        Matrix.rotateM(rotation, 0, (left + right) * .55f, 1f, 0f, 0f)
+        Matrix.rotateM(rotation, 0, (left - right) * .85f, 0f, 0f, 1f)
+        Matrix.multiplyMM(transformed, 0, root.rest, 0, rotation, 0)
+        engine!!.transformManager.setTransform(root.instance, transformed)
     }
 
     private fun rotate(name: String, pitch: Float, yaw: Float) {
@@ -330,8 +345,27 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         documentSurface = null
     }
 
+    fun renderCockpitStage(surface: Surface, bytes: ByteArray, frame: CockpitStageFrame,
+                           bufferWidth: Int, bufferHeight: Int): Boolean {
+        val e = engine ?: return false
+        if (!frame.valid() || !surface.isValid) return false
+        if (cockpitSurface !== surface) {
+            clearCockpitStage()
+            cockpitStage = FilamentCockpitStage(e, requireNotNull(renderer), requireNotNull(loader), surface, bytes)
+            cockpitSurface = surface
+        }
+        return cockpitStage?.render(frame, bufferWidth, bufferHeight) == true
+    }
+
+    fun clearCockpitStage() {
+        cockpitStage?.close()
+        cockpitStage = null
+        cockpitSurface = null
+    }
+
     override fun close() {
         val e = engine ?: return
+        clearCockpitStage()
         clearDocumentStage()
         faceMaterial = null
         faceEmission = null

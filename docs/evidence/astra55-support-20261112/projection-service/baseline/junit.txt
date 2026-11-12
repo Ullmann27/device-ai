@@ -1,0 +1,55 @@
+JUnit version 4.13.2
+.E.E.E.E.E.E
+Time: 3.75
+There were 6 failures:
+1) staleStartPromotesBeforeStoppingWithoutProjection(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.AssertionError: expected:<[startForeground:55:32, stopSelf]> but was:<[stopSelf]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.assertRejectedAfterPromotion(ContinuumLiveProjectionServiceUiTest.kt:129)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.staleStartPromotesBeforeStoppingWithoutProjection(ContinuumLiveProjectionServiceUiTest.kt:146)
+2) nullStartPromotesBeforeStoppingWithoutProjection(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.AssertionError: expected:<[startForeground:55:32, stopSelf]> but was:<[stopSelf]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.assertRejectedAfterPromotion(ContinuumLiveProjectionServiceUiTest.kt:129)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.nullStartPromotesBeforeStoppingWithoutProjection(ContinuumLiveProjectionServiceUiTest.kt:151)
+3) supersededQueuedStartKeepsReplacementCaptureBinding(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.AssertionError: expected:<[startForeground:55:32, stopSelf]> but was:<[stopSelf]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.assertRejectedAfterPromotion(ContinuumLiveProjectionServiceUiTest.kt:129)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.supersededQueuedStartKeepsReplacementCaptureBinding(ContinuumLiveProjectionServiceUiTest.kt:170)
+4) cancelledQueuedStartPromotesBeforeStoppingWithoutProjection(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.AssertionError: expected:<[startForeground:55:32, stopSelf]> but was:<[stopSelf]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.assertRejectedAfterPromotion(ContinuumLiveProjectionServiceUiTest.kt:129)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.cancelledQueuedStartPromotesBeforeStoppingWithoutProjection(ContinuumLiveProjectionServiceUiTest.kt:160)
+5) promotionFailureClosesAndUsesItsStartId(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.AssertionError: expected:<[startForeground:55:32, stopForeground:1, stopSelf:23]> but was:<[startForeground:55:32, stopForeground:1, stopSelf]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.promotionFailureClosesAndUsesItsStartId(ContinuumLiveProjectionServiceUiTest.kt:189)
+6) disconnectedObservationRejectsQueuedStartAfterPromotion(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.AssertionError: expected:<[startForeground:55:32, stopSelf]> but was:<[stopSelf]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.assertRejectedAfterPromotion(ContinuumLiveProjectionServiceUiTest.kt:129)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.disconnectedObservationRejectsQueuedStartAfterPromotion(ContinuumLiveProjectionServiceUiTest.kt:179)
+
+FAILURES!!!
+Tests run: 6,  Failures: 6
+

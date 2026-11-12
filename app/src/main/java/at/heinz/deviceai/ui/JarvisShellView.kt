@@ -39,6 +39,8 @@ class JarvisShellView(context: Context) : View(context) {
         invalidate()
         return AutoCloseable { motionFrames.remove(listener) }
     }
+    var selectedDockTarget: String = "home"
+        set(value) { field = value; invalidate() }
     var content: Map<JarvisShellLayout.Slot, JarvisShellRenderer.SlotContent> = emptyMap()
         set(value) { field = value; invalidate() }
     /** Presentation model of the action tiles (label/icon/target, optional display text from Kern). */
@@ -222,7 +224,7 @@ class JarvisShellView(context: Context) : View(context) {
         val viewport = viewportHeightDp.takeIf { it >= 160f } ?: h
         return shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp && layoutCompact == compactPresentation }
             ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp,
-                compactPresentation = compactPresentation).also {
+                compactPresentation = compactPresentation, workstation = true).also {
                 shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp; layoutViewport = viewport; layoutCompact = compactPresentation
             }
     }
@@ -474,7 +476,7 @@ class JarvisShellView(context: Context) : View(context) {
             exiting = exiting, workElapsedMs = workElapsed,
             clearIdle = workClear, resultForward = resultForward,
             fromWorkingScene = fromWorkingScene, interruptedAfterMs = interruptedAfterMs,
-            returnResultElapsedMs = returnResultElapsedMs, controlPress = controlPress, materialTimeMs = materialTime)
+            returnResultElapsedMs = returnResultElapsedMs, controlPress = controlPress, materialTimeMs = materialTime, selectedDockTarget = selectedDockTarget)
         publishWorkWindowMotion(s, elapsed, workElapsed, exiting, scale, now, depthBudget)
         canvas.restore()
         var workWindowMoving = false

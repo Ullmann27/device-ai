@@ -1,0 +1,59 @@
+{
+  "existing_generator_plus_exact_canopy": true,
+  "nodes": 83,
+  "materials": 9,
+  "renderables": 81,
+  "original_avatar_sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt_unchanged": true,
+  "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt_unchanged": true,
+  "ceiling": {
+    "ceiling--1": {
+      "translation": [
+        -0.35,
+        0.46,
+        -0.4
+      ],
+      "scale": [
+        0.26,
+        0.012,
+        0.035
+      ]
+    },
+    "ceiling-1": {
+      "translation": [
+        0.35,
+        0.46,
+        -0.4
+      ],
+      "scale": [
+        0.26,
+        0.012,
+        0.035
+      ]
+    },
+    "ceiling-line--1": {
+      "translation": [
+        -0.35,
+        0.45,
+        -0.38
+      ],
+      "scale": [
+        0.24,
+        0.002,
+        0.006
+      ]
+    },
+    "ceiling-line-1": {
+      "translation": [
+        0.35,
+        0.45,
+        -0.38
+      ],
+      "scale": [
+        0.24,
+        0.002,
+        0.006
+      ]
+    }
+  }
+}

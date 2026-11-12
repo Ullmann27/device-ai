@@ -123,7 +123,7 @@ object JarvisShellRenderer {
              fromWorkingScene: Boolean = false,
              interruptedAfterMs: Long = JarvisCinemaEntrance.WORKING_SETTLED_MS,
              returnResultElapsedMs: Long = -1L, controlPress: ControlPress? = null,
-             materialTimeMs: Long = timeMs) {
+             materialTimeMs: Long = timeMs, selectedDockTarget: String = "home") {
         if (glass?.drawBackground(shell.width, shell.height, timeMs) != true) {
             background(p, shell.width, shell.height)
         }
@@ -271,12 +271,13 @@ object JarvisShellRenderer {
                     slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
                     slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
                     slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
+                        selected = JarvisTiles.bottomNav.indexOfFirst { it.target == selectedDockTarget },
                         timeMs = if (animatorScale > 0f) materialTimeMs else 0L,
                         pressed = JarvisTiles.bottomNav.indexOfFirst { "bottom:${it.target}" == controlPress?.key },
                         pressX = controlPress?.xFraction ?: .5f, pressY = controlPress?.yFraction ?: .5f,
                         cinemaElapsedMs = if (clearIdle) null else cinemaElapsed,
                         cinemaExiting = exiting && !clearIdle,
-                        cinemaBudget = depthBudget, animatorScale = animatorScale)
+                        cinemaBudget = depthBudget, animatorScale = animatorScale, fontScale = shell.profile.fontScale)
                     slot != null -> header(p, box, label(slot))
                     tileIndex < tiles.size -> JarvisTiles.draw(p, box, tiles[tileIndex])
                 }

@@ -1,0 +1,34 @@
+JUnit version 4.13.2
+.E..E...E.....E.
+Time: 0.306
+There were 4 failures:
+1) staleDispatchCannotReusePreviousObservation(at.heinz.deviceai.cognitive.WorkflowReviewTest)
+java.lang.AssertionError: B accepted stale dispatch=true and verification=true
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.WorkflowReviewTest.staleDispatchCannotReusePreviousObservation(WorkflowReviewTest.kt:40)
+2) observationsNeverMoveBackwards(at.heinz.deviceai.cognitive.WorkflowReviewTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.WorkflowReviewTest.observationsNeverMoveBackwards(WorkflowReviewTest.kt:28)
+3) lateFailureDoesNotPauseSuccessor(at.heinz.deviceai.cognitive.WorkflowReviewTest)
+java.lang.AssertionError: expected:<DISPATCHED> but was:<PAUSED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.WorkflowReviewTest.lateFailureDoesNotPauseSuccessor(WorkflowReviewTest.kt:56)
+4) differentTasksInSameSessionEachAnimate(at.heinz.deviceai.cognitive.ComputerWorkPipelineTest)
+java.lang.AssertionError: task-B expected:<TEXT_SET> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.ComputerWorkPipelineTest.differentTasksInSameSessionEachAnimate(ComputerWorkPipelineTest.kt:126)
+
+FAILURES!!!
+Tests run: 12,  Failures: 4
+

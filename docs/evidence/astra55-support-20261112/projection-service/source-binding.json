@@ -1,0 +1,72 @@
+{
+  "source_commit": "16eef753e73dc8c15a9784b016459f0221234eef",
+  "root_fix": "d97fb979ff16d74f51f977812174f1a2080cb6c2",
+  "local_cherry_pick": "acc9e8b79da6869555989953d77dbd32c6bac971",
+  "all_frozen_sources_match": true,
+  "checks": [
+    {
+      "run": "baseline",
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumLiveProjectionService.kt",
+      "source_commit": "9c79a2ae5e20930c55976abe8d0391d8c0232570",
+      "frozen_sha256": "8b5bc1dd4b6d43909a37ea68aeb58bc3657a5d0671812a90f0f8f0ae7bd6e2b7",
+      "git_sha256": "8b5bc1dd4b6d43909a37ea68aeb58bc3657a5d0671812a90f0f8f0ae7bd6e2b7",
+      "matches": true
+    },
+    {
+      "run": "baseline",
+      "path": "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt",
+      "source_commit": "16eef753e73dc8c15a9784b016459f0221234eef",
+      "frozen_sha256": "caae3cc328de416c154f2219bbb84530ce4c490edb7b8fc2fe08ed5ab0aca2ec",
+      "git_sha256": "caae3cc328de416c154f2219bbb84530ce4c490edb7b8fc2fe08ed5ab0aca2ec",
+      "matches": true
+    },
+    {
+      "run": "baseline",
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt",
+      "source_commit": "16eef753e73dc8c15a9784b016459f0221234eef",
+      "frozen_sha256": "eaf8fb980b79e8caa6a82658a2ed134fffbe64d15d6dcbaf756ac4226d4c2ab8",
+      "git_sha256": "eaf8fb980b79e8caa6a82658a2ed134fffbe64d15d6dcbaf756ac4226d4c2ab8",
+      "matches": true
+    },
+    {
+      "run": "baseline",
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt",
+      "source_commit": "16eef753e73dc8c15a9784b016459f0221234eef",
+      "frozen_sha256": "4561a2ef27c654b3cbfc14ff2ebfc74ba4538a1d18817eb2be748c9b00407da9",
+      "git_sha256": "4561a2ef27c654b3cbfc14ff2ebfc74ba4538a1d18817eb2be748c9b00407da9",
+      "matches": true
+    },
+    {
+      "run": "verified",
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumLiveProjectionService.kt",
+      "source_commit": "16eef753e73dc8c15a9784b016459f0221234eef",
+      "frozen_sha256": "123b848eb689a85bfb576d00c268b24126c967cb73a77b48827af1ccc2f2759a",
+      "git_sha256": "123b848eb689a85bfb576d00c268b24126c967cb73a77b48827af1ccc2f2759a",
+      "matches": true
+    },
+    {
+      "run": "verified",
+      "path": "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt",
+      "source_commit": "16eef753e73dc8c15a9784b016459f0221234eef",
+      "frozen_sha256": "caae3cc328de416c154f2219bbb84530ce4c490edb7b8fc2fe08ed5ab0aca2ec",
+      "git_sha256": "caae3cc328de416c154f2219bbb84530ce4c490edb7b8fc2fe08ed5ab0aca2ec",
+      "matches": true
+    },
+    {
+      "run": "verified",
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt",
+      "source_commit": "16eef753e73dc8c15a9784b016459f0221234eef",
+      "frozen_sha256": "eaf8fb980b79e8caa6a82658a2ed134fffbe64d15d6dcbaf756ac4226d4c2ab8",
+      "git_sha256": "eaf8fb980b79e8caa6a82658a2ed134fffbe64d15d6dcbaf756ac4226d4c2ab8",
+      "matches": true
+    },
+    {
+      "run": "verified",
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt",
+      "source_commit": "16eef753e73dc8c15a9784b016459f0221234eef",
+      "frozen_sha256": "4561a2ef27c654b3cbfc14ff2ebfc74ba4538a1d18817eb2be748c9b00407da9",
+      "git_sha256": "4561a2ef27c654b3cbfc14ff2ebfc74ba4538a1d18817eb2be748c9b00407da9",
+      "matches": true
+    }
+  ]
+}

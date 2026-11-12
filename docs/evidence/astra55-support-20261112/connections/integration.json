@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "source_commit": "b2f051900427aa6671e87fa1a41089229591d760",
+  "source_tree": "815a9502e5191b42e6629e11bf6e9bc049c7686f",
+  "integration_remote_base": "c5a75198053325bb18264e09f4c3a22956d8bac9",
+  "upstream_local_equivalent": "2711ef9c6370a409d1b446b3434f3fce2de40619",
+  "live_head": "a80e76c7e5354ef0e8e5493e81f7a15a191ea3c1",
+  "workflow_head": "0a42121fc7223be54687cf600703cafdf0c7a55a",
+  "scene_head": "239f188839f7f5f8874c00168920a3206d9ff1d6",
+  "service_test_head": "e8bb703460d9b64a44b7a0736f31467a73d3edc5",
+  "peer_ui_fixture_head": "dfe8f08f646360c0290ef420b9e6b16cc90904a1",
+  "combined_workflow": {
+    "existing_passed": 63,
+    "regressions_passed": 12,
+    "failed": 0,
+    "all_source_hashes_match": true,
+    "sources": [
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+        "sha256": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt",
+        "sha256": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveActionCockpitAdapter.kt",
+        "sha256": "563071d0a9e888fed08dd747d038bef3a06577c2599043a6487dbacae91c6b70"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParser.kt",
+        "sha256": "626665ac4182af50ac9e7e3ff6f0464f3d2b008ef73de26e45a5509bc9f608c8"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflow.kt",
+        "sha256": "8df36ff35a5e81f2463139216b7a585e153b4253c7f9872220ef7836f4077bde"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt",
+        "sha256": "90dfc6f05783e7838381e1b62af5f9eeca492559c7a51c19f873fdeaaf27f816"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt",
+        "sha256": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt",
+        "sha256": "adeaa956fbfcf9ef363e75b148293ebc36f90004891825a94fe57c17d9242561"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt",
+        "sha256": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/AgentProtocol.kt",
+        "sha256": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
+        "sha256": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+        "sha256": "21dc3cbbb14e568cd1c792ccccbf04ec35838793492c6f3fbded6fe34bbad8c4"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+        "sha256": "19060b1c0133f055397fd21e69b0c2450bce506ba33b7eb4d0448c21c8c2fb2c"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarSentenceAccentPolicy.kt",
+        "sha256": "48cf078dc6dd6362fc9234ba816fb4e2cece0efecd4435083626c92badec56bc"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/avatar/ComputerWorkAvatarBridge.kt",
+        "sha256": "2fde38d538438a2d71f22d254fb06389677aa6a7f8cd03bef9f3988043779652"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/avatar/ComputerWorkCuePlayer.kt",
+        "sha256": "52aa870cd6b3555709531bb22ca81cff74ef1d4c1a3842baa5062642754a4114"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+        "sha256": "6873b4652a01873e8736781c9eafc13b006e92c9a537e457e151630e029b94b6"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt",
+        "sha256": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt",
+        "sha256": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerActionsTest.kt",
+        "sha256": "c70e726775bc3801f260230d8b809fd12d9da0f5d7aeba7d3ae2433899be7f27"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cognitive/LiveSearchClickTest.kt",
+        "sha256": "9fd260af0b885bc513818604ecbc7eb9662e5568c09a953eb47515d8331656bb"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cognitive/CockpitWorkEventTest.kt",
+        "sha256": "ce889eea9b5fa990561d0b6d877a0cec8897a15a1a09de4432a3ce8e1b649fd6"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflowTest.kt",
+        "sha256": "267a573c77bb3bac0fd27e521c49cfa9ddc90b3947af6488a11435518485895d"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParserTest.kt",
+        "sha256": "65685669a30a5b869d7198f01dcdc8959375ca5a730fe7e12a1462583c0bb3e2"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt",
+        "sha256": "5467a039e30f7ac85b67f2e4ffd915558e1bff744129ba9fbbd393c35ab75a40"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cognitive/WorkflowReviewTest.kt",
+        "sha256": "e2ce7023ca71747244f5dd1a80db7f19f27727503d54a044a989cb4e76f37f7b"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cognitive/ComputerWorkPipelineTest.kt",
+        "sha256": "742d1c10a66167ba07e8bb2f91835d06569f9a6de1f828a49a09da9f1fb16a18"
+      }
+    ]
+  },
+  "gradle": {
+    "status": "NOT_STARTED_SHARED_LOCK_BUSY",
+    "last_exit_code": 75,
+    "waiting_attempts": 2,
+    "combined_app_build": "NOT_RUN"
+  },
+  "asset_sha256": "8dfe8e9ae86969c53f5a4c60474cae2cb72f23c517bca6a9134edd8d4c98db9c",
+  "original_avatar_monitor_sources_match_main": true,
+  "fold7": "NOT_RUN",
+  "combined_service": {
+    "source_commit": "b2f051900427aa6671e87fa1a41089229591d760",
+    "compiler_exit": 0,
+    "passed": 6,
+    "failed": 0,
+    "compiled_source_count": 6,
+    "all_current_source_hashes_match": true,
+    "evidence": "projection-service/root-b2f0519/"
+  }
+}

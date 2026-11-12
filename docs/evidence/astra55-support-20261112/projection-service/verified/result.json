@@ -1,0 +1,59 @@
+{
+  "head_before": "16eef753e73dc8c15a9784b016459f0221234eef",
+  "service_ref": "WORKTREE",
+  "service_commit": "16eef753e73dc8c15a9784b016459f0221234eef",
+  "compiler": "Kotlin 2.4.0",
+  "robolectric": "4.14.1",
+  "sdk": 35,
+  "max_heap_mb": 512,
+  "gradle": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "environment": "Existing app classes; friend module; not a full source rebuild",
+  "environment_manifest": [
+    {
+      "index": 0,
+      "files": 3140,
+      "directory_manifest_sha256": "9899eba80212fc93b73ef0af4a115c5997733f1c59481fb37e8095d315849c5a"
+    },
+    {
+      "index": 1,
+      "files": 5,
+      "directory_manifest_sha256": "234a1476b430042cebcfd5fb8df29f06ede3c5a22420db00f4fed7b3afefe9cd"
+    },
+    {
+      "index": 2,
+      "sha256": "4f1fd3a0695ae2649359a37ab1643eac11407743ddfb138643726048c9082521"
+    }
+  ],
+  "java": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)",
+  "compile_exit": 0,
+  "junit_exit": 0,
+  "head_after": "16eef753e73dc8c15a9784b016459f0221234eef",
+  "sources": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumLiveProjectionService.kt",
+      "worktree_before_sha256": "123b848eb689a85bfb576d00c268b24126c967cb73a77b48827af1ccc2f2759a",
+      "frozen_sha256": "123b848eb689a85bfb576d00c268b24126c967cb73a77b48827af1ccc2f2759a",
+      "worktree_after_sha256": "123b848eb689a85bfb576d00c268b24126c967cb73a77b48827af1ccc2f2759a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt",
+      "worktree_before_sha256": "caae3cc328de416c154f2219bbb84530ce4c490edb7b8fc2fe08ed5ab0aca2ec",
+      "frozen_sha256": "caae3cc328de416c154f2219bbb84530ce4c490edb7b8fc2fe08ed5ab0aca2ec",
+      "worktree_after_sha256": "caae3cc328de416c154f2219bbb84530ce4c490edb7b8fc2fe08ed5ab0aca2ec"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt",
+      "worktree_before_sha256": "eaf8fb980b79e8caa6a82658a2ed134fffbe64d15d6dcbaf756ac4226d4c2ab8",
+      "frozen_sha256": "eaf8fb980b79e8caa6a82658a2ed134fffbe64d15d6dcbaf756ac4226d4c2ab8",
+      "worktree_after_sha256": "eaf8fb980b79e8caa6a82658a2ed134fffbe64d15d6dcbaf756ac4226d4c2ab8"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt",
+      "worktree_before_sha256": "4561a2ef27c654b3cbfc14ff2ebfc74ba4538a1d18817eb2be748c9b00407da9",
+      "frozen_sha256": "4561a2ef27c654b3cbfc14ff2ebfc74ba4538a1d18817eb2be748c9b00407da9",
+      "worktree_after_sha256": "4561a2ef27c654b3cbfc14ff2ebfc74ba4538a1d18817eb2be748c9b00407da9"
+    }
+  ],
+  "source_unchanged": true
+}

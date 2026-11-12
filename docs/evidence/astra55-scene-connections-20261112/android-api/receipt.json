@@ -1,0 +1,20 @@
+{
+  "compile_exit": 2,
+  "scope": "Changed production Android classes and imported UI tests, linked against existing integration app classes and real Android/dependency APIs; not a full application build",
+  "compiler": "Kotlin 2.0.20 / JVM17 / max512MiB",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "5af385e2bb7b65306547797ba1a54c87b42b3600d2b6296122264a9bf25fed30",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt": "98a4128f500ef07b60aee5d0dc86c9fef0f25a812f6a97630bc348b71e2e1579",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitMonitorMotion.kt": "547cc50c8ca02cac4f7d80563b8ca50dfd1d692aa000bb4871bfc684a0ffadd0",
+    "app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt": "2cd5fff8903dd2d550cb79df6e9d78cc33fab3c545ff3cc4f7223731a569a3eb",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt": "6881c3c19016a578b6a76fa3f74810f42438bb0f7ef77da016b7d6642132c613",
+    "app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt": "965d1cc425b1e5886a415b25e3b659341e6dfaa43afb7f4a59eedd234b7e8946",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitMonitorMotionUiTest.kt": "27180acf65f4dd101faf3a24cce000c7b5c9721c98882081f8e06348bf05339a",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitMonitorLifecycleUiTest.kt": "3f6195b3ff348397bd19187f6ad4b49a23d15ee25b5ea2870ee395041b5aeb9b"
+  },
+  "baseline_classpath_head_observed": "2711ef9c6370a409d1b446b3434f3fce2de40619",
+  "baseline_build_provenance": "Existing local compiled classes; not rebuilt or certified for observed HEAD",
+  "android_ui": "NOT_RUN",
+  "FilamentGPU": "NOT_RUN",
+  "Fold7": "NOT_RUN"
+}

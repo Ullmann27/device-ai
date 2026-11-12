@@ -1,0 +1,206 @@
+[
+  {
+    "name": "kotlin-compiler-embeddable-2.4.0.jar",
+    "sha256": "c2b25e8c1c93ec416ba4327f5e31eaec0f0c8847241b9353e294b8db9dce564f"
+  },
+  {
+    "name": "kotlin-build-tools-api-2.4.0.jar",
+    "sha256": "66917335497f9ab75a36c34b3d90bad2bc8dc256c34b2413ecd0c9467fcf597d"
+  },
+  {
+    "name": "kotlin-stdlib-2.4.0.jar",
+    "sha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c"
+  },
+  {
+    "name": "kotlin-script-runtime-2.4.0.jar",
+    "sha256": "196e8ecbf63daf477e34e67c2f871ee232ae7bf8b377432d876d1bbf9d273de3"
+  },
+  {
+    "name": "kotlin-daemon-embeddable-2.4.0.jar",
+    "sha256": "383093af5e078435b60043d19bfa83eb6191be0f4d13a28fb1c8a0f3ab24fe66"
+  },
+  {
+    "name": "kotlin-reflect-1.6.10.jar",
+    "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+  },
+  {
+    "name": "kotlinx-coroutines-core-jvm-1.8.0.jar",
+    "sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+  },
+  {
+    "name": "annotations-23.0.0.jar",
+    "sha256": "7b0f19724082cbfcbc66e5abea2b9bc92cf08a1ea11e191933ed43801eb3cd05"
+  },
+  {
+    "name": "pluginapi-4.14.1.jar",
+    "sha256": "ad8b74238d59bce6631e29190c105dd0c4701e836a2631060678407f621c7b7a"
+  },
+  {
+    "name": "nativeruntime-4.14.1.jar",
+    "sha256": "c07b66d315aec3272a7c64aa5f154b4194be2cc6030a733d16f2ee87330232a8"
+  },
+  {
+    "name": "junit-4.14.1.jar",
+    "sha256": "2cee817aadce3552706b09450ad1ea7ff5981924072d2adfe40ddad57d5fa123"
+  },
+  {
+    "name": "shadowapi-4.14.1.jar",
+    "sha256": "fd158863cee488475206ba1d23ff4c7d29be412eccd21b12d9416b0030aa582d"
+  },
+  {
+    "name": "robolectric-4.14.1.jar",
+    "sha256": "e0a73d45bceb94a5a0352b66e2120ad4a4b222fe406079130893b6c79d4441d1"
+  },
+  {
+    "name": "shadows-framework-4.14.1.jar",
+    "sha256": "f3cf7785eecf9b2e80fbb4caac4c42f63eeea3506e289581c04696a56a494622"
+  },
+  {
+    "name": "utils-4.14.1.jar",
+    "sha256": "6884eec32c9c9b23d74250e30a5ba9c5ece48784f808feba98f119b215ab59d8"
+  },
+  {
+    "name": "annotations-4.14.1.jar",
+    "sha256": "463a5ad1386c31010bc9af00bfe19a1b758d8c2dedd8c19e5c75d29ab8abb9ba"
+  },
+  {
+    "name": "resources-4.14.1.jar",
+    "sha256": "54eb274a47dec9e74cc9b45b9e4335bb5d83857c63b2a49dd8d1993e6321f2c5"
+  },
+  {
+    "name": "utils-reflector-4.14.1.jar",
+    "sha256": "eb8f52cdc24f59ae4cf13369c5bf990354c19c386e3e8f9f5d5cee04d836557b"
+  },
+  {
+    "name": "sandbox-4.14.1.jar",
+    "sha256": "de361f3de8c08d4488cf156683830f2bd43db1da85a5b136ad6d065b868d3bab"
+  },
+  {
+    "name": "plugins-maven-dependency-resolver-4.14.1.jar",
+    "sha256": "6c8dbc979db0780755e712acab9eeb9396811b2d4dc31a92a5b259f9876205ec"
+  },
+  {
+    "name": "nativeruntime-dist-compat-1.0.16.jar",
+    "sha256": "2f4e879b00eed634d0e43353ecff80db4d5ce24b3b213d1e6053cb21b0ced10f"
+  },
+  {
+    "name": "kotlin-stdlib-2.4.0.jar",
+    "sha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c"
+  },
+  {
+    "name": "kotlin-reflect-2.4.0.jar",
+    "sha256": "f0d8e8908624eb4478bb131e9f887366680d2e239741195e548fa5c906963b90"
+  },
+  {
+    "name": "kotlinx-coroutines-core-jvm-1.11.0.jar",
+    "sha256": "d1d75aa01dffbb4d1c520e67e4c4e7f5f6174718e7cb4632412503f2f0e604fa"
+  },
+  {
+    "name": "annotations-23.0.0.jar",
+    "sha256": "7b0f19724082cbfcbc66e5abea2b9bc92cf08a1ea11e191933ed43801eb3cd05"
+  },
+  {
+    "name": "annotation-jvm-1.9.1.jar",
+    "sha256": "1e343917ebf27ba96fe4dc52b1cad7fd32b738fbc6355bb6cd5b3b305d7212d0"
+  },
+  {
+    "name": "junit-4.13.2.jar",
+    "sha256": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3"
+  },
+  {
+    "name": "hamcrest-core-1.3.jar",
+    "sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+  },
+  {
+    "name": "javax.inject-1.jar",
+    "sha256": "91c77044a50c481636c32d916fd89c9118a72195390452c81065080f957de7ff"
+  },
+  {
+    "name": "javax.annotation-api-1.3.2.jar",
+    "sha256": "e04ba5195bcd555dc95650f7cc614d151e4bcd52d29a10b8aa2197f3ab89ab9b"
+  },
+  {
+    "name": "guava-33.3.1-jre.jar",
+    "sha256": "4bf0e2c5af8e4525c96e8fde17a4f7307f97f8478f11c4c8e35a0e3298ae4e90"
+  },
+  {
+    "name": "failureaccess-1.0.2.jar",
+    "sha256": "8a8f81cf9b359e3f6dfa691a1e776985c061ef2f223c9b2c80753e1b458e8064"
+  },
+  {
+    "name": "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar",
+    "sha256": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99"
+  },
+  {
+    "name": "error_prone_annotations-2.30.0.jar",
+    "sha256": "144f3aefbd6e27daec55d3753b2c6b13c1afdaf0cf04816cdb564588ed92f1bd"
+  },
+  {
+    "name": "j2objc-annotations-3.0.0.jar",
+    "sha256": "88241573467ddca44ffd4d74aa04c2bbfd11bf7c17e0c342c94c9de7a70a7c64"
+  },
+  {
+    "name": "checker-qual-3.43.0.jar",
+    "sha256": "3fbc2e98f05854c3df16df9abaa955b91b15b3ecac33623208ed6424640ef0f6"
+  },
+  {
+    "name": "test-parameter-injector-1.18.jar",
+    "sha256": "e5a7c649c54c412049908247ca5e25fe6921d746849c6017a84dc6044237a4b4"
+  },
+  {
+    "name": "bcprov-jdk18on-1.78.1.jar",
+    "sha256": "add5915e6acfc6ab5836e1fd8a5e21c6488536a8c1f21f386eeb3bf280b702d7"
+  },
+  {
+    "name": "conscrypt-openjdk-uber-2.5.2.jar",
+    "sha256": "eaf537d98e033d0f0451cd1b8cc74e02d7b55ec882da63c88060d806ba89c348"
+  },
+  {
+    "name": "snakeyaml-2.3.jar",
+    "sha256": "63a76fe66b652360bd4c2c107e6f0258daa7d4bb492008ba8c26fcd230ff9146"
+  },
+  {
+    "name": "sqlite4java-1.0.392.jar",
+    "sha256": "243a64470fda0e86a6fddeb0af4c7aa9426ce84e68cbfe18d75ee5da4b7e0b92"
+  },
+  {
+    "name": "asm-9.7.1.jar",
+    "sha256": "8cadd43ac5eb6d09de05faecca38b917a040bb9139c7edeb4cc81c740b713281"
+  },
+  {
+    "name": "asm-commons-9.7.1.jar",
+    "sha256": "9a579b54d292ad9be171d4313fd4739c635592c2b5ac3a459bbd1049cddec6a0"
+  },
+  {
+    "name": "asm-tree-9.7.1.jar",
+    "sha256": "9929881f59eb6b840e86d54570c77b59ce721d104e6dfd7a40978991c2d3b41f"
+  },
+  {
+    "name": "asm-analysis-9.7.1.jar",
+    "sha256": "85b29371884ba31bb76edf22323c2c24e172c3267a67152eba3d1ccc2e041ef2"
+  },
+  {
+    "name": "asm-util-9.7.1.jar",
+    "sha256": "f885be71b5c90556f5f1ad1c4f9276b29b96057c497d46666fe4ddbec3cb43c6"
+  },
+  {
+    "name": "monitor.jar",
+    "sha256": "d10797c3b5386a352f1601bc100cb3872d3841eda06a6216c7a5502479119206"
+  },
+  {
+    "name": "espresso-idling-resource.jar",
+    "sha256": "fd8686b8b35f21486512971c690996ca8540773407d64ed7fd543cc6a8d74d83"
+  },
+  {
+    "name": "android-all-instrumented-15-robolectric-12650502-i7.jar",
+    "sha256": "33c2d7cc4186d4605269d5d411fa1818972c5b30a9f70bfbbd3d430b076af52f"
+  },
+  {
+    "name": "android.jar",
+    "sha256": "03b32779a0177e67521444b010bd8159a01c0557daff1c0061fadf7c61a12ad5"
+  },
+  {
+    "name": "environment-2.jar",
+    "sha256": "4f1fd3a0695ae2649359a37ab1643eac11407743ddfb138643726048c9082521"
+  }
+]

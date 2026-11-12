@@ -25,6 +25,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
@@ -41,6 +42,7 @@ class JarvisWorkWindowHostViewportUiTest {
     @Before fun pauseVsync() { ShadowChoreographer.setPaused(true) }
 
     private class Fixture : AutoCloseable {
+        private val previousFont = RuntimeEnvironment.getFontScale().also { RuntimeEnvironment.setFontScale(2f) }
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val activity = controller.get()
         init {
@@ -78,13 +80,13 @@ class JarvisWorkWindowHostViewportUiTest {
             JarvisAvatarSlot.register(JarvisHoloAvatar(live))
             home.setJarvisShellStage(true)
             home.jarvisShell.ambientMotionEnabled = false
-            // Below REFERENCE_MIN_HEIGHT so the fixture keeps feature tiles and a scrollable deck.
+            // Large type requires real scrolling.
             home.configure(676f, true, windowHeightDp = 520f)
             home.onNavigateTarget = { target ->
-                assertEquals("system", target)
+                assertEquals("memory", target)
                 routed++
-                opened = host.show(home, TextView(activity).apply { text = "Echte Statusansicht" },
-                    "Systemstatus", requireNotNull(JarvisActionScenes.forCentre("Systemstatus", target))) { closed++ }
+                opened = host.show(home, TextView(activity).apply { text = "Echte Gedächtnisansicht" },
+                    "Gedächtniszentrum", requireNotNull(JarvisActionScenes.forCentre("Gedächtniszentrum", target))) { closed++ }
                 launch = opened?.let(::launchBounds)
             }
             activity.setContentView(page)
@@ -98,8 +100,7 @@ class JarvisWorkWindowHostViewportUiTest {
             assertEquals(676, home.width)
         }
 
-        // Keep locating the real card after it is intentionally hidden by the opened window.
-        fun card(): View = requireNotNull(home.findViewWithTag<View>("jarvis-tile:system"))
+        fun card(): View = requireNotNull(home.findViewWithTag<View>("jarvis-bottom:memory"))
 
         fun bounds(view: View): RectF = Rect(0, 0, view.width, view.height).let {
             container.offsetDescendantRectToMyCoords(view, it)
@@ -107,7 +108,7 @@ class JarvisWorkWindowHostViewportUiTest {
         }
 
         fun tapCard(): RectF {
-            val shown = bounds(JarvisHomeTestRoutes.destination(home, "system"))
+            val shown = bounds(JarvisHomeTestRoutes.destination(home, "memory"))
                 .apply { assertTrue(intersect(viewport)) }
             assertTrue(shown.width() >= 48f && shown.height() >= 48f)
             val now = SystemClock.uptimeMillis()
@@ -133,6 +134,7 @@ class JarvisWorkWindowHostViewportUiTest {
             controller.pause().stop().destroy()
             JarvisAvatarSlot.register(null)
             activity.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+            RuntimeEnvironment.setFontScale(previousFont)
         }
     }
 
@@ -143,29 +145,30 @@ class JarvisWorkWindowHostViewportUiTest {
         assertEquals(expected.bottom, actual.bottom, .01f)
     }
 
-    @Test fun scrolledCardOpensInsideTheClippedViewportWithoutResettingItsOrigin() {
+    @Test fun scrolledDockOpensInsideTheClippedViewportWithoutResettingItsOrigin() {
         Fixture().use { f ->
-            f.scroll.scrollTo(0, 700)
-            assertEquals(700, f.scroll.scrollY)
+            JarvisHomeTestRoutes.scrollIntoView(f.card())
+            val initial = f.scroll.scrollY
+            assertTrue("Large text scrolls to the real dock", initial > 0)
             val origin = f.tapCard()
-            assertEquals("Opening preserves the tapped scroll position", 700, f.scroll.scrollY)
-            val window = requireNotNull(f.opened) { "Scrolled card must open its work window" }
+            assertEquals("Opening preserves the tapped scroll position", initial, f.scroll.scrollY)
+            val window = requireNotNull(f.opened) { "Scrolled dock must open its work window" }
             sameBounds(origin, requireNotNull(f.launch))
             val destination = requireNotNull(window.shownBounds())
             assertTrue("Window stays within ancestor clipping", f.viewport.contains(destination))
-            assertTrue("Scroll does not collapse usable height", destination.height() >= 460f)
-            assertEquals(View.INVISIBLE, f.card().visibility)
+            assertTrue("Scroll retains a usable work area", destination.height() >= f.viewport.height() * .75f)
+            assertEquals("Native dock stays available", View.VISIBLE, f.card().visibility)
             f.host.close(immediate = true)
-            assertEquals(700, f.scroll.scrollY)
+            assertEquals(initial, f.scroll.scrollY)
             assertFalse(f.host.isShowing)
             assertEquals(View.VISIBLE, f.card().visibility)
             assertEquals(1, f.closed)
         }
     }
 
-    @Test fun partiallyVisibleCardStartsFromItsVisiblePartAndLaterScrollClosesTheWindow() {
+    @Test fun partiallyVisibleDockStartsFromItsVisiblePartAndLaterScrollClosesTheWindow() {
         Fixture().use { f ->
-            f.scroll.scrollTo(0, f.card().bottom - 60)
+            f.scroll.scrollTo(0, (f.card().top - f.viewport.height() + 60f).toInt())
             val initial = f.scroll.scrollY
             val origin = f.tapCard()
             assertEquals(60f, origin.height(), .01f)

@@ -1,0 +1,15 @@
+{
+  "head_before": "3f6fd72737c09aa8fda5bdc74f5616942dc7fbd7",
+  "branch": "work/astra55-support-workflow-connections-20261112",
+  "compiler": "Kotlin 2.0.20",
+  "max_heap_mb": 512,
+  "active_processors": 1,
+  "extracted_original_type_declarations": 6,
+  "android_gradle": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "compile_exit": 0,
+  "existing_exit": 0,
+  "regression_exit": 0,
+  "head_after": "3f6fd72737c09aa8fda5bdc74f5616942dc7fbd7",
+  "sources_unchanged": true
+}

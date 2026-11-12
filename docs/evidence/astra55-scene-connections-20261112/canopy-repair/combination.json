@@ -1,0 +1,25 @@
+{
+  "base_commit": "1d1ff43d5ff13ed70cf2aa8a314fc169f289f92b",
+  "main_reference": "84acc08cb452a40265f585270b0b3bb84444c792",
+  "asset_sha256": "8dfe8e9ae86969c53f5a4c60474cae2cb72f23c517bca6a9134edd8d4c98db9c",
+  "bytes": 14084,
+  "nodes": 77,
+  "renderables": 75,
+  "materials": 9,
+  "removed": [
+    "arch-cap--1-0",
+    "arch-cap--1-1",
+    "arch-cap--1-2",
+    "arch-cap-1-0",
+    "arch-cap-1-1",
+    "arch-cap-1-2"
+  ],
+  "only_expected_six_caps_removed": true,
+  "remaining_nodes_unchanged": true,
+  "meshes_unchanged": true,
+  "materials_unchanged": true,
+  "mesh_binary_unchanged": true,
+  "main_has_no_arch_caps": true,
+  "result_has_no_arch_caps": true,
+  "main_ceiling_parameters_preserved": true
+}

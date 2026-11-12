@@ -1,0 +1,164 @@
+[
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+    "frozen_sha256": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3",
+    "after_sha256": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt",
+    "frozen_sha256": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
+    "after_sha256": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveActionCockpitAdapter.kt",
+    "frozen_sha256": "563071d0a9e888fed08dd747d038bef3a06577c2599043a6487dbacae91c6b70",
+    "after_sha256": "563071d0a9e888fed08dd747d038bef3a06577c2599043a6487dbacae91c6b70",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParser.kt",
+    "frozen_sha256": "626665ac4182af50ac9e7e3ff6f0464f3d2b008ef73de26e45a5509bc9f608c8",
+    "after_sha256": "626665ac4182af50ac9e7e3ff6f0464f3d2b008ef73de26e45a5509bc9f608c8",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflow.kt",
+    "frozen_sha256": "8df36ff35a5e81f2463139216b7a585e153b4253c7f9872220ef7836f4077bde",
+    "after_sha256": "8df36ff35a5e81f2463139216b7a585e153b4253c7f9872220ef7836f4077bde",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt",
+    "frozen_sha256": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5",
+    "after_sha256": "708d5554142c447df85f8003043c2ba168ec9bb61e9062902c06b4122d140fb5",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt",
+    "frozen_sha256": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+    "after_sha256": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt",
+    "frozen_sha256": "adeaa956fbfcf9ef363e75b148293ebc36f90004891825a94fe57c17d9242561",
+    "after_sha256": "adeaa956fbfcf9ef363e75b148293ebc36f90004891825a94fe57c17d9242561",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt",
+    "frozen_sha256": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+    "after_sha256": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/AgentProtocol.kt",
+    "frozen_sha256": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+    "after_sha256": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
+    "frozen_sha256": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+    "after_sha256": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+    "frozen_sha256": "21dc3cbbb14e568cd1c792ccccbf04ec35838793492c6f3fbded6fe34bbad8c4",
+    "after_sha256": "21dc3cbbb14e568cd1c792ccccbf04ec35838793492c6f3fbded6fe34bbad8c4",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+    "frozen_sha256": "19060b1c0133f055397fd21e69b0c2450bce506ba33b7eb4d0448c21c8c2fb2c",
+    "after_sha256": "19060b1c0133f055397fd21e69b0c2450bce506ba33b7eb4d0448c21c8c2fb2c",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarSentenceAccentPolicy.kt",
+    "frozen_sha256": "48cf078dc6dd6362fc9234ba816fb4e2cece0efecd4435083626c92badec56bc",
+    "after_sha256": "48cf078dc6dd6362fc9234ba816fb4e2cece0efecd4435083626c92badec56bc",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/avatar/ComputerWorkAvatarBridge.kt",
+    "frozen_sha256": "2fde38d538438a2d71f22d254fb06389677aa6a7f8cd03bef9f3988043779652",
+    "after_sha256": "2fde38d538438a2d71f22d254fb06389677aa6a7f8cd03bef9f3988043779652",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/avatar/ComputerWorkCuePlayer.kt",
+    "frozen_sha256": "52aa870cd6b3555709531bb22ca81cff74ef1d4c1a3842baa5062642754a4114",
+    "after_sha256": "52aa870cd6b3555709531bb22ca81cff74ef1d4c1a3842baa5062642754a4114",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+    "frozen_sha256": "6873b4652a01873e8736781c9eafc13b006e92c9a537e457e151630e029b94b6",
+    "after_sha256": "6873b4652a01873e8736781c9eafc13b006e92c9a537e457e151630e029b94b6",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt",
+    "frozen_sha256": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2",
+    "after_sha256": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt",
+    "frozen_sha256": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f",
+    "after_sha256": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerActionsTest.kt",
+    "frozen_sha256": "68183f4629a429b1eb3031fde0125e36b0e1bfd81454ec91b63a5f8b8647027b",
+    "after_sha256": "68183f4629a429b1eb3031fde0125e36b0e1bfd81454ec91b63a5f8b8647027b",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/test/java/at/heinz/deviceai/cognitive/LiveSearchClickTest.kt",
+    "frozen_sha256": "9fd260af0b885bc513818604ecbc7eb9662e5568c09a953eb47515d8331656bb",
+    "after_sha256": "9fd260af0b885bc513818604ecbc7eb9662e5568c09a953eb47515d8331656bb",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/test/java/at/heinz/deviceai/cognitive/CockpitWorkEventTest.kt",
+    "frozen_sha256": "ce889eea9b5fa990561d0b6d877a0cec8897a15a1a09de4432a3ce8e1b649fd6",
+    "after_sha256": "ce889eea9b5fa990561d0b6d877a0cec8897a15a1a09de4432a3ce8e1b649fd6",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflowTest.kt",
+    "frozen_sha256": "267a573c77bb3bac0fd27e521c49cfa9ddc90b3947af6488a11435518485895d",
+    "after_sha256": "267a573c77bb3bac0fd27e521c49cfa9ddc90b3947af6488a11435518485895d",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParserTest.kt",
+    "frozen_sha256": "65685669a30a5b869d7198f01dcdc8959375ca5a730fe7e12a1462583c0bb3e2",
+    "after_sha256": "65685669a30a5b869d7198f01dcdc8959375ca5a730fe7e12a1462583c0bb3e2",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt",
+    "frozen_sha256": "5467a039e30f7ac85b67f2e4ffd915558e1bff744129ba9fbbd393c35ab75a40",
+    "after_sha256": "5467a039e30f7ac85b67f2e4ffd915558e1bff744129ba9fbbd393c35ab75a40",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/test/java/at/heinz/deviceai/cognitive/WorkflowReviewTest.kt",
+    "frozen_sha256": "e2ce7023ca71747244f5dd1a80db7f19f27727503d54a044a989cb4e76f37f7b",
+    "after_sha256": "e2ce7023ca71747244f5dd1a80db7f19f27727503d54a044a989cb4e76f37f7b",
+    "unchanged_during_check": true
+  },
+  {
+    "path": "app/src/test/java/at/heinz/deviceai/cognitive/ComputerWorkPipelineTest.kt",
+    "frozen_sha256": "742d1c10a66167ba07e8bb2f91835d06569f9a6de1f828a49a09da9f1fb16a18",
+    "after_sha256": "742d1c10a66167ba07e8bb2f91835d06569f9a6de1f828a49a09da9f1fb16a18",
+    "unchanged_during_check": true
+  }
+]

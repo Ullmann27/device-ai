@@ -1,0 +1,74 @@
+{
+  "source_commit": "b2f051900427aa6671e87fa1a41089229591d760",
+  "source_unchanged": true,
+  "root_head_at_later_binding": "47d275c6d52eebf52a2d5983656a6e128b7dd708",
+  "root_status_at_later_binding": [],
+  "all_frozen_sources_match": true,
+  "test_unchanged_from": "16eef753e73dc8c15a9784b016459f0221234eef",
+  "checks": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumLiveProjectionService.kt",
+      "source_commit": "b2f051900427aa6671e87fa1a41089229591d760",
+      "sha256": "123b848eb689a85bfb576d00c268b24126c967cb73a77b48827af1ccc2f2759a",
+      "matches": true,
+      "current_root_worktree_sha256": "123b848eb689a85bfb576d00c268b24126c967cb73a77b48827af1ccc2f2759a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt",
+      "source_commit": "b2f051900427aa6671e87fa1a41089229591d760",
+      "sha256": "caae3cc328de416c154f2219bbb84530ce4c490edb7b8fc2fe08ed5ab0aca2ec",
+      "matches": true,
+      "current_root_worktree_sha256": "caae3cc328de416c154f2219bbb84530ce4c490edb7b8fc2fe08ed5ab0aca2ec"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt",
+      "source_commit": "b2f051900427aa6671e87fa1a41089229591d760",
+      "sha256": "52debcfe6a7e8de19ef08ba061ce0be7693836d32c159e5071dbc8a3eeeb0b57",
+      "matches": true,
+      "current_root_worktree_sha256": "52debcfe6a7e8de19ef08ba061ce0be7693836d32c159e5071dbc8a3eeeb0b57"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt",
+      "source_commit": "b2f051900427aa6671e87fa1a41089229591d760",
+      "sha256": "90dfc6f05783e7838381e1b62af5f9eeca492559c7a51c19f873fdeaaf27f816",
+      "matches": true,
+      "current_root_worktree_sha256": "90dfc6f05783e7838381e1b62af5f9eeca492559c7a51c19f873fdeaaf27f816"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AndroidLiveNodePort.kt",
+      "source_commit": "b2f051900427aa6671e87fa1a41089229591d760",
+      "sha256": "a599004cd93a518af7b5c43d7d42ba8fa18f80fb933ae089d204ffdcd7200e4b",
+      "matches": true,
+      "current_root_worktree_sha256": "a599004cd93a518af7b5c43d7d42ba8fa18f80fb933ae089d204ffdcd7200e4b"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt",
+      "source_commit": "b2f051900427aa6671e87fa1a41089229591d760",
+      "sha256": "4561a2ef27c654b3cbfc14ff2ebfc74ba4538a1d18817eb2be748c9b00407da9",
+      "matches": true,
+      "current_root_worktree_sha256": "4561a2ef27c654b3cbfc14ff2ebfc74ba4538a1d18817eb2be748c9b00407da9"
+    }
+  ],
+  "fresh_classes": [
+    {
+      "path": "at/heinz/deviceai/cognitive/LiveScrollEvidence.class",
+      "sha256": "f41e77f5a5c0fc3d41f05f80455c375dce66d9193fb8d275776f5b8669a3774e",
+      "fresh_compile": true
+    },
+    {
+      "path": "at/heinz/deviceai/AndroidLiveNodePort.class",
+      "sha256": "35d3625a059cdaece73e02c45f956a6e54fede6e29c95d9531527e222df2f977",
+      "fresh_compile": true
+    },
+    {
+      "path": "at/heinz/deviceai/ScreenObservationBus.class",
+      "sha256": "3699439688e5ce413be403027b1c2ff5fb5c05befba3599cf7d4c32d39242d78",
+      "fresh_compile": true
+    },
+    {
+      "path": "at/heinz/deviceai/ContinuumLiveProjectionService.class",
+      "sha256": "2686dc662bc1952da31c3c163cfeccfa4b319de3e1e8f3e43718b4aa81f866d1",
+      "fresh_compile": true
+    }
+  ]
+}
