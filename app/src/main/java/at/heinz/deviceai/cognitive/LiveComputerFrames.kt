@@ -109,7 +109,8 @@ internal data class LiveMonitorStatus(
     val binding: LiveFrameBinding?,
     val meta: LiveFrameMeta?,
     val sequence: Long,
-    val ageMillis: Long?
+    val ageMillis: Long?,
+    val sourceEpoch: Long = 0L
 ) {
     /** Exactly one German status line; never claims LIVE for an unbound, stale or covered frame. */
     val label: String get() = if (reason == null) state.label else "${state.label} · ${reason.label}"
@@ -133,6 +134,7 @@ internal class LiveFrameLease<F : Any> internal constructor(
 
 /** The small interface Agent E's monitor (or any existing view) consumes. No rendering, no copies, no queue. */
 internal interface LiveMonitorFeed<F : Any> {
+    val monitorSubmission: LiveMonitorSubmission
     /** Cheap, lock-protected status for the current frame tick. */
     fun status(nowNanos: Long): LiveMonitorStatus
     /** Latest accepted frame, or null (no frame / already leased / ended). One lease at a time. */
@@ -149,6 +151,7 @@ internal class LatestLiveFrameHolder<F : Any>(
     private val release: (F) -> Unit,
     private val clockNanos: () -> Long = System::nanoTime
 ) : LiveMonitorFeed<F> {
+    override val monitorSubmission = LiveMonitorSubmission()
     private class Slot<F : Any>(val frame: F, val meta: LiveFrameMeta, val sequence: Long, val receivedNanos: Long,
                                 val binding: LiveFrameBinding) {
         var leased = false
@@ -162,6 +165,7 @@ internal class LatestLiveFrameHolder<F : Any>(
     private var retiredLeased: Slot<F>? = null
     private var sequence = 0L
     private var version = 0L
+    private var sourceEpoch = 0L
     private var lastAcceptedNanos = Long.MIN_VALUE
     private var lastFrameTimestamp = Long.MIN_VALUE
     /** Latest reason the source was refused/paused since the last accepted frame. */
@@ -257,7 +261,7 @@ internal class LatestLiveFrameHolder<F : Any>(
             age!! > b.staleAfterMillis -> LiveMonitorState.PAUSED to LiveMonitorReason.FRAME_STALE
             else -> LiveMonitorState.LIVE to null
         }
-        LiveMonitorStatus(state, reason, b, slot?.meta, slot?.sequence ?: 0, age)
+        LiveMonitorStatus(state, reason, b, slot?.meta, slot?.sequence ?: 0, age, sourceEpoch)
     }
 
     override fun version(): Long = synchronized(lock) { version }
@@ -298,6 +302,8 @@ internal class LatestLiveFrameHolder<F : Any>(
     }
 
     private fun dropCurrentLocked() {
+        sourceEpoch++
+        monitorSubmission.invalidate()
         val slot = current ?: return
         current = null
         retireLocked(slot)

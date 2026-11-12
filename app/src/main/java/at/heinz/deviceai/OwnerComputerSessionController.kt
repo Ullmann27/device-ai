@@ -133,11 +133,10 @@ internal class OwnerComputerSessionController(
                         while (true) {
                             checkActive()
                             val state = AndroidLiveComputer.feed.status(System.nanoTime())
-                            if (state.state == LiveMonitorState.LIVE &&
-                                state.binding?.captureSession == started.sessionId &&
-                                state.binding.taskId == current.taskId) break
+                            if (LiveComputerDispatchGuard.isReady(AndroidLiveComputer.feed,
+                                    current.taskId, started.sessionId, System.nanoTime())) break
                             check(SystemClock.elapsedRealtime() < deadline && state.state != LiveMonitorState.ENDED) {
-                                "NO_FRESH_LIVE_FRAME"
+                                "NO_FRESH_MONITOR_FRAME"
                             }
                             Thread.sleep(40)
                         }

@@ -147,10 +147,16 @@ internal object AndroidLiveComputer {
     }
 
     private fun port(current: Session, access: LiveObservationAccess,
-                     permissionCheck: () -> Unit = { error("ACTION_GRANT_REQUIRED") }) = AndroidLiveNodePort(access,
-        current.binding.taskId, current.binding.targetPackage, { feed.status(System.nanoTime()).sequence }, {
-            check(session(current.binding.taskId) === current) { "LIVE_COMPUTER_SESSION_CHANGED" }
-        }, permissionCheck, captureSession = current.binding.captureSession)
+                     permissionCheck: () -> Unit = { error("ACTION_GRANT_REQUIRED") }): AndroidLiveNodePort {
+        fun submittedFrame(): LiveMonitorStatus? {
+            val now = System.nanoTime()
+            return feed.monitorSubmission.submittedFrame(feed.status(now), now)
+        }
+        return AndroidLiveNodePort(access, current.binding.taskId, current.binding.targetPackage,
+            { submittedFrame()?.sequence ?: 0L }, {
+                check(session(current.binding.taskId) === current) { "LIVE_COMPUTER_SESSION_CHANGED" }
+            }, permissionCheck, captureSession = current.binding.captureSession, submittedFrame = ::submittedFrame)
+    }
 
     fun observe(taskId: String): NodeActionFrame {
         val current = session(taskId)
