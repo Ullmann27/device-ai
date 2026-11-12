@@ -1,0 +1,83 @@
+--- a/app/src/uiTest/java/at/heinz/deviceai/AndroidLiveNodePortTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/AndroidLiveNodePortTest.kt
+@@ -32,18 +32,26 @@
+             var target: AccessibilityNodeInfo? = null
+             var ownPackage = "at.heinz.deviceai"
+             var overlay = false
+-        }
+-        @Implementation public override fun getWindows(): List<AccessibilityWindowInfo> = (0..1).map { index ->
++            var targetBounds = Rect(600, 0, 1200, 1000)
++            var ownBounds = Rect(0, 0, 600, 1000)
++            var imeBounds: Rect? = null
++            fun resetGeometry() {
++                targetBounds = Rect(600, 0, 1200, 1000)
++                ownBounds = Rect(0, 0, 600, 1000)
++                imeBounds = null
++            }
++        }
++        @Implementation public override fun getWindows(): List<AccessibilityWindowInfo> = (0..if (imeBounds == null) 1 else 2).map { index ->
+             AccessibilityWindowInfo.obtain().also { window ->
+                 shadowOf(window).apply {
+-                    setId(if (index == 0) 42 else 43)
+-                    setType(AccessibilityWindowInfo.TYPE_APPLICATION)
++                    setId(42 + index)
++                    setType(if (index == 2) AccessibilityWindowInfo.TYPE_INPUT_METHOD else AccessibilityWindowInfo.TYPE_APPLICATION)
+                     setActive(index == 1)
+                     setFocused(index == 1)
+-                    setLayer(index + 1)
+-                    setBoundsInScreen(if (index == 0 || overlay) Rect(600, 0, 1200, 1000) else Rect(0, 0, 600, 1000))
++                    setLayer(index + 2)
++                    setBoundsInScreen(if (index == 2) imeBounds!! else if (index == 0 || overlay) targetBounds else ownBounds)
+                     setRoot(if (index == 0) target?.let { AccessibilityNodeInfo.obtain(it) }
+-                        else AccessibilityNodeInfo.obtain().apply { packageName = ownPackage })
++                        else AccessibilityNodeInfo.obtain().apply { packageName = if (index == 2) "com.keyboard" else ownPackage })
+                 }
+             }
+         }
+@@ -80,6 +88,7 @@
+         ServiceShadow.ownPackage = service.packageName
+         ServiceShadow.target = field()
+         ServiceShadow.overlay = false
++        ServiceShadow.resetGeometry()
+         ScreenObservationBus.connect(service)
+         access = ScreenObservationBus.liveAccess()!!
+     }
+@@ -87,6 +96,7 @@
+         ScreenObservationBus.disconnect(service)
+         ServiceShadow.target = null
+         ServiceShadow.overlay = false
++        ServiceShadow.resetGeometry()
+         NodeShadow.onAction = null
+         NodeShadow.onRefresh = null
+     }
+@@ -122,6 +132,30 @@
+         assertEquals(1, calls)
+     }
+ 
++    @Test fun floatingImeExcludesVisibleNodeOutsideRenderedViewport() {
++        ServiceShadow.targetBounds = Rect(1000, 0, 2000, 1000)
++        ServiceShadow.ownBounds = Rect(0, 0, 1000, 1000)
++        ServiceShadow.imeBounds = Rect(1200, 300, 1800, 600)
++        ServiceShadow.target = field().apply { setBoundsInScreen(Rect(1300, 100, 1500, 200)) }
++        val selection = service.liveWindowSelection("com.whatsapp")
++        assertTrue(selection.permitsNode(LivePixelRect(1300, 100, 1500, 200)))
++        val display = LivePixelRect(0, 0, 2000, 1000)
++        val own = LiveWindowRecord(43, service.packageName, LiveWindowKind.APPLICATION,
++            LivePixelRect(0, 0, 1000, 1000), 3, true, true)
++        val crop = requireNotNull(ProjectionCropGeometry.crop(display, 2000, 1000, 2000, 1000, selection, own))
++        assertEquals(LivePixelRect(1000, 600, 2000, 1000), crop)
++        assertEquals(LiveTargetBounds(0f, .6f, 1f, 1f),
++            ProjectionCropGeometry.viewport(display, 2000, 1000, selection.target.bounds, crop))
++        val port = AndroidLiveNodePort(access, task, "com.whatsapp", { 8L }, {},
++            { check(allowed) }, captureSession = 9L)
++        val before = port.current()
++        assertTrue(before.nodes.single().visible)
++        NodeShadow.onAction = { _, _ -> calls++; true }
++        runCatching { port.performOnce(request(before), before.nodes.single()) }
++        assertEquals("Off-viewport input reached Android", 0, calls)
++        assertFalse(port.inputAttempted)
++    }
++
+     @Test fun searchClickWaitsForSemanticFieldWithDifferentHint() {
+         ServiceShadow.target = field().apply {
+             hintText = null; text = "Suchen"; isEditable = false; isClickable = true

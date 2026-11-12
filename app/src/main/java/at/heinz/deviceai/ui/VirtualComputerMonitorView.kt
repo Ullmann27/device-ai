@@ -34,6 +34,7 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
     }
 
     fun bind(value: LiveMonitorFeed<AndroidLiveFrame>?) {
+        if (feed !== value) feed?.monitorSubmission?.invalidate()
         feed = value
         updatePlayback()
     }
@@ -46,6 +47,7 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
     private fun canPresent() = foreground && isAttachedToWindow && windowVisibility == VISIBLE && isShown
 
     private fun updatePlayback() {
+        if (!canPresent()) feed?.monitorSubmission?.invalidate()
         onFeedChanged?.invoke(feed?.takeIf { canPresent() })
         if (!canPresent()) updateStatus(feed?.status(System.nanoTime())?.label ?: "Keine Bildquelle verbunden", false)
         invalidate()
@@ -86,6 +88,7 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
         if (isAttachedToWindow) updatePlayback()
     }
     override fun onDetachedFromWindow() {
+        feed?.monitorSubmission?.invalidate()
         onFeedChanged?.invoke(null)
         ready = false
         super.onDetachedFromWindow()

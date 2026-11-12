@@ -138,6 +138,22 @@ class OwnerComputerTaskGrantTest {
             selector = NodeSelector(singleScrollable = true), text = null), searched.copy(nodes = searched.nodes + node("Kontakte", scrollable = true))) }
     }
 
+    @Test fun composerRoleStaysBoundToExactContactAndDraft() {
+        val permission = grant(draft())
+        val searched = frame(node("Search...", editable = true, text = "Anna"), node("Anna", clickable = true))
+        denied { grant().authorizeClick(searched, "Anna", "", true, false, expectedComposeField = true) }
+        denied { permission.authorizeClick(searched, "Anna", "", true, false, true, true) }
+        denied { permission.authorizeClick(searched, "Anna", "Message", true, false, expectedComposeField = true) }
+        denied { permission.authorizeClick(searched.copy(nodes = searched.nodes + node("Message", editable = true)),
+            "Anna", "", true, false, expectedComposeField = true) }
+        permission.authorizeClick(searched, "Anna", "", true, false, expectedComposeField = true)
+        denied { permission.authorizeClick(searched, "Anna", "", true, false, expectedComposeField = true) }
+        val compose = frame(node("Message", editable = true, text = ""), node("Anna", heading = true), revision = 2)
+        val call = request(revision = 2, selector = NodeSelector(label = "Message"), text = draft().draft)
+        denied { permission.authorize(call.copy(text = "Other text"), compose) }
+        permission.authorize(call, compose)
+    }
+
     @Test fun searchClickRequiresNewEditableRole() {
         val permission = grant()
         val source = frame(node("Suchen", clickable = true))

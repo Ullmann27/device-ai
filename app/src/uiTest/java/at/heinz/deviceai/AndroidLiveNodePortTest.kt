@@ -32,18 +32,26 @@ class AndroidLiveNodePortTest {
             var target: AccessibilityNodeInfo? = null
             var ownPackage = "at.heinz.deviceai"
             var overlay = false
+            var targetBounds = Rect(600, 0, 1200, 1000)
+            var ownBounds = Rect(0, 0, 600, 1000)
+            var imeBounds: Rect? = null
+            fun resetGeometry() {
+                targetBounds = Rect(600, 0, 1200, 1000)
+                ownBounds = Rect(0, 0, 600, 1000)
+                imeBounds = null
+            }
         }
-        @Implementation public override fun getWindows(): List<AccessibilityWindowInfo> = (0..1).map { index ->
+        @Implementation public override fun getWindows(): List<AccessibilityWindowInfo> = (0..if (imeBounds == null) 1 else 2).map { index ->
             AccessibilityWindowInfo.obtain().also { window ->
                 shadowOf(window).apply {
-                    setId(if (index == 0) 42 else 43)
-                    setType(AccessibilityWindowInfo.TYPE_APPLICATION)
+                    setId(42 + index)
+                    setType(if (index == 2) AccessibilityWindowInfo.TYPE_INPUT_METHOD else AccessibilityWindowInfo.TYPE_APPLICATION)
                     setActive(index == 1)
                     setFocused(index == 1)
-                    setLayer(index + 1)
-                    setBoundsInScreen(if (index == 0 || overlay) Rect(600, 0, 1200, 1000) else Rect(0, 0, 600, 1000))
+                    setLayer(index + 2)
+                    setBoundsInScreen(if (index == 2) imeBounds!! else if (index == 0 || overlay) targetBounds else ownBounds)
                     setRoot(if (index == 0) target?.let { AccessibilityNodeInfo.obtain(it) }
-                        else AccessibilityNodeInfo.obtain().apply { packageName = ownPackage })
+                        else AccessibilityNodeInfo.obtain().apply { packageName = if (index == 2) "com.keyboard" else ownPackage })
                 }
             }
         }
@@ -80,6 +88,7 @@ class AndroidLiveNodePortTest {
         ServiceShadow.ownPackage = service.packageName
         ServiceShadow.target = field()
         ServiceShadow.overlay = false
+        ServiceShadow.resetGeometry()
         ScreenObservationBus.connect(service)
         access = ScreenObservationBus.liveAccess()!!
     }
@@ -87,6 +96,7 @@ class AndroidLiveNodePortTest {
         ScreenObservationBus.disconnect(service)
         ServiceShadow.target = null
         ServiceShadow.overlay = false
+        ServiceShadow.resetGeometry()
         NodeShadow.onAction = null
         NodeShadow.onRefresh = null
     }
@@ -120,6 +130,92 @@ class AndroidLiveNodePortTest {
         val result = VerifiedNodeAction(LiveActionJournal(task)).execute(request(before), port)
         assertTrue(result.confirmed)
         assertEquals(1, calls)
+    }
+
+    private fun floatingIme(nodeBounds: Rect): LiveTargetBounds {
+        ServiceShadow.targetBounds = Rect(1000, 0, 2000, 1000)
+        ServiceShadow.ownBounds = Rect(0, 0, 1000, 1000)
+        ServiceShadow.imeBounds = Rect(1200, 300, 1800, 600)
+        ServiceShadow.target = field().apply { setBoundsInScreen(nodeBounds) }
+        val selection = service.liveWindowSelection("com.whatsapp")
+        assertTrue(selection.permitsNode(nodeBounds.liveRect()))
+        val display = LivePixelRect(0, 0, 2000, 1000)
+        val own = LiveWindowRecord(43, service.packageName, LiveWindowKind.APPLICATION,
+            LivePixelRect(0, 0, 1000, 1000), 3, true, true)
+        val crop = requireNotNull(ProjectionCropGeometry.crop(display, 2000, 1000, 2000, 1000, selection, own))
+        assertEquals(LivePixelRect(1000, 600, 2000, 1000), crop)
+        val viewport = requireNotNull(ProjectionCropGeometry.viewport(display, 2000, 1000, selection.target.bounds, crop))
+        assertEquals(LiveTargetBounds(0f, .6f, 1f, 1f), viewport)
+        return viewport
+    }
+
+    private fun submittedStatus(viewport: LiveTargetBounds) = LiveMonitorStatus(LiveMonitorState.LIVE, null,
+        LiveFrameBinding(task, 9L, "com.whatsapp", service.packageName, LiveFrameOrigin.PROJECTION_WINDOW_CROP),
+        LiveFrameMeta(9L, System.nanoTime(), 1000, 400, "com.whatsapp", 42, true, sourceViewport = viewport),
+        8L, 0L)
+
+    private fun capturedPort(frame: () -> LiveMonitorStatus?) = AndroidLiveNodePort(access, task, "com.whatsapp",
+        { frame()?.sequence ?: 0L }, {}, { check(allowed) { "OWNER_GRANT_REVOKED" } },
+        captureSession = 9L, submittedFrame = frame)
+
+    @Test fun floatingImeExcludesVisibleNodeOutsideRenderedViewport() {
+        val viewport = floatingIme(Rect(1300, 100, 1500, 200))
+        val port = capturedPort { submittedStatus(viewport) }
+        val before = port.current()
+        assertTrue(before.nodes.single().visible)
+        NodeShadow.onAction = { _, _ -> calls++; true }
+        val failure = assertThrows(IllegalStateException::class.java) {
+            port.performOnce(request(before), before.nodes.single())
+        }
+        assertEquals("TARGET_OUTSIDE_MONITOR_VIEWPORT", failure.message)
+        assertEquals("Off-viewport input reached Android", 0, calls)
+        assertFalse(port.inputAttempted)
+    }
+
+    @Test fun floatingImeRejectsTargetPartlyOutsideRenderedViewport() {
+        val viewport = floatingIme(Rect(1850, 550, 1950, 650))
+        val port = capturedPort { submittedStatus(viewport) }
+        val before = port.current()
+        assertTrue(before.nodes.single().visible)
+        assertTrue(before.nodes.single().bounds!!.centerY >= viewport.top)
+        NodeShadow.onAction = { _, _ -> calls++; true }
+        val failure = assertThrows(IllegalStateException::class.java) {
+            port.performOnce(request(before), before.nodes.single())
+        }
+        assertEquals("TARGET_OUTSIDE_MONITOR_VIEWPORT", failure.message)
+        assertEquals(0, calls)
+        assertFalse(port.inputAttempted)
+    }
+
+    @Test fun floatingImeAllowsAndVerifiesTargetInsideRenderedViewport() {
+        val bounds = Rect(1300, 700, 1500, 800)
+        val viewport = floatingIme(bounds)
+        val port = capturedPort { submittedStatus(viewport) }
+        val before = port.current()
+        NodeShadow.onAction = { action, args ->
+            calls++
+            assertEquals(AccessibilityNodeInfo.ACTION_SET_TEXT, action)
+            assertEquals("Anna", args!!.getCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE))
+            ServiceShadow.target = field("Anna").apply { setBoundsInScreen(bounds) }
+            changed(); true
+        }
+        assertTrue(VerifiedNodeAction(LiveActionJournal(task)).execute(request(before), port).confirmed)
+        assertEquals(1, calls)
+    }
+
+    @Test fun lostRenderReceiptAtFinalRefreshPreventsInput() {
+        var status: LiveMonitorStatus? = submittedStatus(floatingIme(Rect(1300, 700, 1500, 800)))
+        val port = capturedPort { status }
+        val before = port.current()
+        assertEquals(8L, before.stamp.frameSequence)
+        NodeShadow.onRefresh = { status = null }
+        NodeShadow.onAction = { _, _ -> calls++; true }
+        val failure = assertThrows(IllegalStateException::class.java) {
+            port.performOnce(request(before), before.nodes.single())
+        }
+        assertEquals("COMPUTER_RENDERED_SOURCE_REQUIRED", failure.message)
+        assertEquals(0, calls)
+        assertFalse(port.inputAttempted)
     }
 
     @Test fun searchClickWaitsForSemanticFieldWithDifferentHint() {
@@ -164,6 +260,27 @@ class AndroidLiveNodePortTest {
             VerifiedNodeClick.execute(request, true, port.clickPort(request) { _, _ -> })
         }
         assertEquals(0, calls)
+    }
+
+    @Test fun contactClickVerifiesObservedEnglishComposer() {
+        ServiceShadow.target = field().apply {
+            hintText = null; text = "Anna"; isEditable = false; isClickable = true
+        }
+        val port = port()
+        val before = port.current()
+        val request = ClickRequest("com.whatsapp", access.epoch, before.stamp.revision,
+            "Anna", "", expectedEditable = true, expectedComposeField = true)
+        NodeShadow.onAction = { action, _ ->
+            calls++
+            assertEquals(AccessibilityNodeInfo.ACTION_CLICK, action)
+            ServiceShadow.target = field().apply { hintText = "Message" }
+            changed(); true
+        }
+        val observed = VerifiedNodeClick.execute(request, true, port.clickPort(request) { _, _ -> })
+        assertEquals(1, calls)
+        assertTrue(observed.revision > before.stamp.revision)
+        assertEquals("Message", observed.nodes.single().label)
+        assertTrue(request.matchesExpected(observed.nodes.single()))
     }
 
     @Test fun intermediateRevisionWaitsForRealResultWithoutRepeatingInput() {

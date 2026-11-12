@@ -14,7 +14,8 @@ internal class AndroidLiveNodePort(
     private val ensureActive: () -> Unit,
     private val permissionCheck: () -> Unit = { error("ACTION_GRANT_REQUIRED") },
     private val deadlineNanos: Long = System.nanoTime() + 2_500_000_000L,
-    private val captureSession: Long = 0
+    private val captureSession: Long = 0,
+    private val submittedFrame: (() -> LiveMonitorStatus?)? = null
 ) : NodeActionPort {
     private var before: NodeActionFrame? = null
     private var lastRequest: NodeActionRequest? = null
@@ -175,6 +176,7 @@ internal class AndroidLiveNodePort(
                     scrollWatch = ScreenObservationBus.beginScroll(access, request, original.stamp, target!!, node)
                     permissionCheck()
                 }
+                checkRenderedTarget(target, selection.target.id)
                 inputAttempted = true
                 val accepted = when (request.kind) {
                     NodeActionKind.CLICK -> node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
@@ -195,6 +197,24 @@ internal class AndroidLiveNodePort(
                 selected?.takeIf { it !== root }?.let { @Suppress("DEPRECATION") it.recycle() }
             }
         }
+    }
+
+    private fun checkRenderedTarget(target: ActionNode, windowId: Int) {
+        if (captureSession <= 0L) return
+        val status = submittedFrame?.invoke() ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
+        val binding = status.binding ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
+        val meta = status.meta ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
+        val age = status.ageMillis ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
+        check(status.state == LiveMonitorState.LIVE && status.sequence > 0L &&
+            age in 0..binding.staleAfterMillis &&
+            binding.taskId == taskId && binding.targetPackage == targetPackage &&
+            binding.ownPackage == access.service.packageName && binding.captureSession == captureSession &&
+            meta.captureSession == captureSession && meta.sourcePackage == targetPackage &&
+            meta.sourceWindowId == windowId) { "COMPUTER_RENDERED_SOURCE_MISMATCH" }
+        val viewport = meta.sourceViewport ?: error("COMPUTER_RENDERED_VIEWPORT_REQUIRED")
+        val bounds = target.bounds ?: error("TARGET_BOUNDS_REQUIRED")
+        check(bounds.left >= viewport.left && bounds.top >= viewport.top &&
+            bounds.right <= viewport.right && bounds.bottom <= viewport.bottom) { "TARGET_OUTSIDE_MONITOR_VIEWPORT" }
     }
 
     private fun describe(node: AccessibilityNodeInfo, selection: LiveWindowSafety.Selection): ActionNode {

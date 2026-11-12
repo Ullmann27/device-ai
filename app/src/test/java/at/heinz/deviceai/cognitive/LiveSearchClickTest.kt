@@ -81,10 +81,36 @@ class LiveSearchClickTest {
     @Test fun searchRoleCannotBeCombinedWithAnotherExpectation() {
         val req = request.copy(expectedLabel = "", expectedSearchField = true)
         for (invalid in listOf(req.copy(expectedLabel = "Nachricht"), req.copy(expectedHeading = true),
-                req.copy(expectedEditable = false))) {
+                req.copy(expectedEditable = false), req.copy(expectedComposeField = true))) {
             assertThrows(IllegalArgumentException::class.java) {
                 VerifiedNodeClick.execute(invalid, true, port(frame(10, button), frame(11, field)))
             }
+        }
+    }
+
+    @Test fun composerRoleRequiresOneNewRealFieldAndOwnerApproval() {
+        val contact = button.copy(label = "Anna")
+        val req = request.copy(label = "Anna", expectedLabel = "", expectedComposeField = true)
+        val message = field.copy(label = "Message", enabled = true)
+        for (label in listOf("Message", "Nachricht")) {
+            assertEquals(11L, VerifiedNodeClick.execute(req, true,
+                port(frame(10, contact), frame(11, message.copy(label = label)))).revision)
+        }
+        for (after in listOf(frame(11, message, message.copy(label = "Nachricht")),
+                frame(11, message.copy(sensitive = true)), frame(11, message.copy(enabled = false)),
+                frame(11, message.copy(editable = false)), frame(11, message.copy(visible = false)),
+                frame(11, message.copy(viewId = "com.whatsapp:id/send_button")),
+                frame(11, message.copy(viewId = "com.whatsapp:id/search_src_text")),
+                frame(10, message), frame(11, message).copy(digest = "digest-10"))) {
+            assertThrows(IllegalStateException::class.java) {
+                VerifiedNodeClick.execute(req, true, port(frame(10, contact), after))
+            }
+        }
+        assertThrows(IllegalStateException::class.java) {
+            VerifiedNodeClick.execute(req, false, port(frame(10, contact), frame(11, message)))
+        }
+        assertThrows(IllegalStateException::class.java) {
+            VerifiedNodeClick.execute(req, true, port(frame(10, contact, message), frame(11, message)))
         }
     }
 }
