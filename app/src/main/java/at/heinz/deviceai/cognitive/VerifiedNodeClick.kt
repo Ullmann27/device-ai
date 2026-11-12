@@ -29,6 +29,8 @@ internal object VerifiedNodeClick {
         fun validLabel(s:String)=s.length in 1..200 && s==s.trim() && s.none{it.isISOControl()}
         require(validLabel(request.label)&&validLabel(request.expectedLabel))
         check(ownerConfirmed){"OWNER_APPROVAL_REQUIRED"}
+        // A click candidate never sends, posts, likes or calls: those need an exact SendApproval (see LiveComputerActions).
+        check(!SendActionGuard.isSendLike(request.label)){"SEND_REQUIRES_EXACT_OWNER_APPROVAL"}
         check(active.compareAndSet(false,true)){"ANOTHER_DEVICE_ACTION_ACTIVE"}
         try {
             port.checkActive()
