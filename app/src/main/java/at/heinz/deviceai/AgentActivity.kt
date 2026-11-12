@@ -11382,7 +11382,9 @@ class AgentActivity : Activity() {
                     else groundedRecall?.failureAnswer() ?:
                         "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn,
                         keepCockpit = failedDraft != null && workWindowHost.isShowing, allowMaya = allowMaya)
-                    if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)
+                    // Review #791: an oversized turn must not be appended to the history, or every next prompt overflows too.
+                    val tokenOverflow = at.heinz.deviceai.localmodel.LocalModelTokenOverflow.isTokenOverflow(error.message)
+                    if (keepFailedOwnerTurn && !tokenOverflow) localConversationContext.recordUnanswered(localSessionId, text)
                     addToolActivity(if (requiredContextOverflow)
                         "KONTEXT · vollständig erforderliche Belege passen nicht; keine Modellaktion"
                     else "ERROR · lokale Inferenz")

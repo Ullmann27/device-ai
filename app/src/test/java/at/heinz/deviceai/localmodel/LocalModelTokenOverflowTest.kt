@@ -13,6 +13,7 @@ class LocalModelTokenOverflowTest {
         val text = LocalModelTokenOverflow.ownerMessage(field)
         assertTrue(text.contains("4220 von höchstens 4096 Token"))
         assertTrue(text.contains("nichts abgeschnitten"))
+        assertTrue(text.contains("nicht in den Verlauf übernommen"))
         assertFalse(text.contains("Input token ids"))
     }
 

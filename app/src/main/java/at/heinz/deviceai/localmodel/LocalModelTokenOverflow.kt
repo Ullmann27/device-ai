@@ -17,7 +17,7 @@ internal object LocalModelTokenOverflow {
         val numbers = message?.let { counts.find(it) }
         val detail = numbers?.let { " (${it.groupValues[1]} von höchstens ${it.groupValues[2]} Token)" }.orEmpty()
         return "Dein Auftrag war zusammen mit dem bisherigen Gesprächsverlauf zu lang für das lokale Modell$detail. " +
-            "Ich habe nichts abgeschnitten und nichts erfunden. Stell die Frage bitte noch einmal kürzer oder " +
-            "beginne ein neues Gespräch, dann ist wieder genug Platz."
+            "Ich habe nichts abgeschnitten, nichts erfunden und diesen Auftrag nicht in den Verlauf übernommen. " +
+            "Wenn der Verlauf selbst schon sehr lang ist, beginne bitte ein neues Gespräch, dann ist wieder genug Platz."
     }
 }

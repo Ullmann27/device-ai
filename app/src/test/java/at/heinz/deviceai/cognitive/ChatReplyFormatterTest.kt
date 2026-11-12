@@ -10,7 +10,7 @@ class ChatReplyFormatterTest {
             "### Was ich tun kann (Meine Fähigkeiten):\n\n" +
             "*   **Informationen abrufen (Lesen):** Ich kann dir Infos geben, wie zum Beispiel:\n" +
             "    *   Welches Modell du hast (`get_device_info`).\n" +
-            "- Aktionen nur mit __Bestätigung__"
+            "- Aktionen nur __mit Bestätigung__"
         val shown = ChatReplyFormatter.plain(raw)
         assertFalse(shown, shown.contains("**"))
         assertFalse(shown, shown.contains("###"))
@@ -28,5 +28,10 @@ class ChatReplyFormatterTest {
         val code = "```kotlin\nval x = **y**\n# not a heading\n```"
         assertEquals(code, ChatReplyFormatter.plain(code))
         assertEquals("", ChatReplyFormatter.plain(""))
+    }
+
+    @Test fun dunderIdentifiersAreNotTreatedAsBold() {
+        assertEquals("Nutze __init__ und __name__", ChatReplyFormatter.plain("Nutze `__init__` und __name__"))
+        assertEquals("ganz wichtig", ChatReplyFormatter.plain("__ganz wichtig__"))
     }
 }
