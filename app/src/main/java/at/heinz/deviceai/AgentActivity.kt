@@ -1636,8 +1636,17 @@ class AgentActivity : Activity() {
                     status >= android.os.PowerManager.THERMAL_STATUS_SEVERE, "Thermal-Status",
                     status.toDouble(), android.os.PowerManager.THERMAL_STATUS_SEVERE.toDouble())
             }
-            power.addThermalStatusListener(mainExecutor, listener)
-            cockpitSubscriptions += AutoCloseable { power.removeThermalStatusListener(listener) }
+            // Android may reject observer registration; keep the rest of the cockpit usable.
+            val registered = try {
+                power.addThermalStatusListener(mainExecutor, listener)
+                true
+            } catch (failure: RuntimeException) {
+                android.util.Log.w("ContinuumThermal", "Thermal observer registration unavailable", failure)
+                false
+            }
+            if (registered) cockpitSubscriptions += AutoCloseable {
+                runCatching { power.removeThermalStatusListener(listener) }
+            }
         }
     }
 
