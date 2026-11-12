@@ -1,5 +1,8 @@
 # Experiment C · Ergebnis und Entscheid
 
+Der folgende Erstlauf gehört zur Basis `5f87bdc`; seine Belege bleiben unverändert.
+Der anschließende Integrationslauf gegen `711f23b` steht am Ende: **49/49 PASS**, gleiche 36 Abläufe.
+
 **Entscheid: bestehende Produktlogik beibehalten; zusätzlichen Planner, Retry oder Eventbus verwerfen.**
 Den neuen integrativen Regressionstest in PR #807 → #804 → #799 übernehmen.
 Im vorab festgelegten Umfang besteht die vorhandene Beobachtungs-/Handlungs-/Prüfkette alle Gates.
@@ -105,3 +108,54 @@ PORTIERT: Test/Harness im Experimentzweig. VERIFIZIERT: Originalcode mit synthet
 Android-Monitorpixel, Capture, GPU, APK und Fold7: NOT_RUN. Audit #803 bleibt außerhalb dieses Prüflaufs.
 Kein offener Produktversuch: Testintegration empfohlen, zusätzliche Produktlogik für diesen Befund abgelehnt.
 Rücknahme: neue Test-/Harnessdateien entfernen; keine Daten- oder API-Migration.
+
+## Integrationsnachlauf gegen den übernommenen Auditstand #803
+
+Produktionsbasis: `711f23b33a8fc602a3a0e4baa37aa61e42e6fc64` (kanonischer Merge von #803).
+Regulärer Merge in die eigene Experimentspur: `fa9a1e75d32885a8bef90d8635b9916eb7622897`.
+Geprüfter Quell-/Test-/Runnercommit: `efe40c98118f01352967564d4c423f2faf017dbd`.
+Keine manuellen Änderungen an Produktionsdateien; alle sind gegenüber der ausgewählten Basis identisch.
+
+Der Runner akzeptiert jetzt `--baseline` als vollständigen Commit-SHA; sein Default bleibt die
+historische Basis `5f87bdc610944b93d3173a83c5beeea315abeb66`.
+Wenn die aktuellen Originalquellen `LiveComposeSemantics` verwenden, kompiliert der Runner deren
+reale Quelldatei zusätzlich. Im Experimenttest wurde ausschließlich der inzwischen vorhandene,
+hier unbenutzte Portparameter `expectedComposeField` ergänzt. Die 36 Fälle und alle Gates bleiben gleich.
+
+```sh
+python tools/astra55-workflow-experiment/run.py \
+  --repo "$EXPERIMENT_REPO" \
+  --cache "$EXPERIMENT_DEPENDENCY_CACHE" \
+  --out "$EXPERIMENT_NEW_OUTPUT" \
+  --baseline 711f23b33a8fc602a3a0e4baa37aa61e42e6fc64
+```
+
+Tatsächlicher Output:
+
+```text
+COMPILE_EXIT 0
+EXPERIMENT_EXIT 0
+OK (3 tests)
+NEIGHBORS_EXIT 0
+OK (46 tests)
+```
+
+**49/49 JUnit-Methoden PASS**: drei Experimentmethoden mit unveränderten 36 Abläufen und
+46 aktuelle Nachbartests. Der neue Hauptstand enthält zwei zusätzliche Nachbarmethoden.
+`measured-711f/metrics.csv` ist bytegleich zur historischen Messwertdatei: 36 native Eingaben,
+36 DISPATCHED- und Avatar-Inputereignisse, 16 VERIFIED/COMPLETED, null frühe Erfolge.
+Alle 16 Widerspruchs- und vier Stopkontrollen verhindern Erfolg. Synthetische Erfolgszeiten,
+Cuegrenzen, Schulterwerte und der offengelegte Stop-Rückgabestatus PAUSED bleiben identisch.
+
+19 vollständige Produktionsdateien einschließlich `LiveComposeSemantics.kt` wurden frisch kompiliert;
+sechs Originaldeklarationen stammen aus drei weiteren Dateien. Mit fünf Testdateien sind alle
+27 eingefrorenen Dateien vor/nach dem Lauf identisch und gegen `efe40c9811` gebunden.
+Die Produktionsdateien sind zusätzlich bytegleich zu `711f23b`. Vorregistrierung und sämtliche
+historischen Dateien unter `measured/` bleiben unverändert.
+
+Die neuen Logs, Messwerte, Quellbindungen und Toolhashes stehen ausschließlich in `measured-711f/`.
+Der dortige Veröffentlichungsnachweis bindet Rohlogs und öffentliche Fassungen getrennt per SHA-256.
+Direkter JVM-Lauf mit 512 MB und einem Prozessor; keine Gradle-Ausführung, keine zusätzlichen
+Abhängigkeiten. Der Testentscheid bleibt bestehen: vorhandene Produktlogik beibehalten,
+Regressionstest in die gemeinsame Linie übernehmen. Android-Capture, Monitorpixel, GPU, APK,
+Fold7 und die übrige vollständige Audit-#803-Abnahme bleiben außerhalb dieses Hostlaufs.

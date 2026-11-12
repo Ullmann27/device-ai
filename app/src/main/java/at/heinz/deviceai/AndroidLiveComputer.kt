@@ -124,7 +124,14 @@ internal object AndroidLiveComputer {
     }
     internal fun pauseProjection(sessionId: Long, reason: LiveMonitorReason) = frames.pause(reason, sessionId)
     internal fun wantsProjectionFrame(sessionId: Long) = frames.wantsFrame(sessionId)
-    internal fun offerProjection(meta: LiveFrameMeta, frame: AndroidLiveFrame) = frames.offer(meta, frame)
+    internal fun offerProjection(meta: LiveFrameMeta, frame: AndroidLiveFrame): LiveFrameOffer {
+        // Producer records local acquisition nanoTime.
+        val deliveredAtNanos = System.nanoTime()
+        val elapsedMillis = if (meta.frameTimeNanos <= 0 || deliveredAtNanos < meta.frameTimeNanos ||
+            meta.captureAgeMillis < 0) Long.MAX_VALUE else
+            (deliveredAtNanos - meta.frameTimeNanos) / 1_000_000L
+        return frames.offer(meta.copy(captureAgeMillis = maxOf(meta.captureAgeMillis, elapsedMillis)), frame)
+    }
 
     internal fun observationRevoked(service: ContinuumScreenObservationService) {
         if (active.get()?.access?.service === service) stop(LiveMonitorReason.PERMISSION_REVOKED)
@@ -140,10 +147,16 @@ internal object AndroidLiveComputer {
     }
 
     private fun port(current: Session, access: LiveObservationAccess,
-                     permissionCheck: () -> Unit = { error("ACTION_GRANT_REQUIRED") }) = AndroidLiveNodePort(access,
-        current.binding.taskId, current.binding.targetPackage, { feed.status(System.nanoTime()).sequence }, {
-            check(session(current.binding.taskId) === current) { "LIVE_COMPUTER_SESSION_CHANGED" }
-        }, permissionCheck, captureSession = current.binding.captureSession)
+                     permissionCheck: () -> Unit = { error("ACTION_GRANT_REQUIRED") }): AndroidLiveNodePort {
+        fun submittedFrame(): LiveMonitorStatus? {
+            val now = System.nanoTime()
+            return feed.monitorSubmission.submittedFrame(feed.status(now), now)
+        }
+        return AndroidLiveNodePort(access, current.binding.taskId, current.binding.targetPackage,
+            { submittedFrame()?.sequence ?: 0L }, {
+                check(session(current.binding.taskId) === current) { "LIVE_COMPUTER_SESSION_CHANGED" }
+            }, permissionCheck, captureSession = current.binding.captureSession, submittedFrame = ::submittedFrame)
+    }
 
     fun observe(taskId: String): NodeActionFrame {
         val current = session(taskId)
@@ -172,7 +185,7 @@ internal object AndroidLiveComputer {
             check(access == current.access) { "OBSERVATION_PERMISSION_CHANGED" }
             val port = port(current, access, permissionCheck)
             val before = port.current()
-            val fingerprint = liveSha256("click|${request.packageName}|${request.label}|${request.expectedLabel}|${request.expectedEditable}|${request.expectedHeading}|${request.expectedSearchField}")
+            val fingerprint = liveSha256("click|${request.packageName}|${request.label}|${request.expectedLabel}|${request.expectedEditable}|${request.expectedHeading}|${request.expectedSearchField}|${request.expectedComposeField}")
             check(current.journal.admit(fingerprint, before.stamp) == LiveActionJournal.Admission.ALLOWED) { "CLICK_ALREADY_ATTEMPTED" }
             var dispatched = false
             var after: NodeActionFrame? = null

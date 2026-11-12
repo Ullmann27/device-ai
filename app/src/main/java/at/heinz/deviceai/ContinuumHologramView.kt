@@ -574,12 +574,14 @@ class ContinuumHologramView @JvmOverloads constructor(
                     ensure3dRenderer(); invalidate()
                 }
                 override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+                    native3d?.invalidateCockpitSubmission()
                     worldBufferWidth = 0; worldBufferHeight = 0
                     resizeWorldBuffer()
                     invalidate()
                 }
                 override fun onSurfaceTextureUpdated(surface: SurfaceTexture) = Unit
                 override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                    cockpitLiveFeed?.monitorSubmission?.invalidate()
                     documentStageBinding?.report(false)
                     native3d?.close(); native3d = null
                     nativeSurface?.release(); nativeSurface = null
@@ -630,6 +632,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     internal fun setCockpitLiveFeed(feed: at.heinz.deviceai.cognitive.LiveMonitorFeed<AndroidLiveFrame>?) {
+        if (cockpitLiveFeed !== feed) cockpitLiveFeed?.monitorSubmission?.invalidate()
         cockpitLiveFeed = feed
         native3d?.bindCockpitFeed(feed)
         invalidate()
@@ -641,6 +644,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     internal fun detachCockpitStage() {
+        cockpitLiveFeed?.monitorSubmission?.invalidate()
         cockpitWorldFrame = null
         cockpitLiveFeed = null
         native3d?.clearCockpitStage()
@@ -736,6 +740,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     private fun release3d(clearAsset: Boolean) {
+        cockpitLiveFeed?.monitorSubmission?.invalidate()
         onCockpitStatus?.invoke("3D-Szene angehalten", false)
         documentStageBinding?.report(false)
         native3d?.close(); native3d = null; native3dDrawn = false
@@ -1242,7 +1247,8 @@ class ContinuumHologramView @JvmOverloads constructor(
                 }
                     .onSuccess { rendered ->
                         if (layeredCockpit) {
-                            native3dDrawn = rendered && native3d?.cockpitReady == true
+                            val retained = native3dDrawn && native3d?.lastFrameSkipped == true
+                            native3dDrawn = (rendered || retained) && native3d?.cockpitReady == true
                             nativeTexture?.alpha = if (native3dDrawn) 1f else 0f
                         } else if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f }
                     }

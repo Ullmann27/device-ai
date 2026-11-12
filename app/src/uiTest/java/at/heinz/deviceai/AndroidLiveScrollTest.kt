@@ -38,6 +38,7 @@ class AndroidLiveScrollTest {
         service = Robolectric.buildService(ContinuumScreenObservationService::class.java).get()
         AndroidLiveNodePortTest.ServiceShadow.ownPackage = service.packageName
         AndroidLiveNodePortTest.ServiceShadow.overlay = false
+        AndroidLiveNodePortTest.ServiceShadow.resetGeometry()
         list = container()
         row = AccessibilityNodeInfo.obtain(View(service)).apply {
             packageName = "com.whatsapp"; text = "Vorher"
@@ -77,7 +78,11 @@ class AndroidLiveScrollTest {
     private fun execute(dispatch: () -> Unit): NodeActionResult {
         val port = AndroidLiveNodePort(access, "task", "com.whatsapp", { 1 }, {},
             { check(allowed) { "OWNER_GRANT_REVOKED" } },
-            deadlineNanos = System.nanoTime() + 800_000_000, captureSession = 7)
+            deadlineNanos = System.nanoTime() + 800_000_000, captureSession = 7,
+            submittedFrame = { LiveMonitorStatus(LiveMonitorState.LIVE, null,
+                LiveFrameBinding("task", 7L, "com.whatsapp", service.packageName, LiveFrameOrigin.ACCESSIBILITY_WINDOW),
+                LiveFrameMeta(7L, System.nanoTime(), 600, 1000, "com.whatsapp", 42, false,
+                    sourceViewport = LiveTargetBounds(0f, 0f, 1f, 1f)), 1L, 0L) })
         val before = port.current()
         val request = NodeActionRequest("task", "scroll", "com.whatsapp", access.epoch,
             before.stamp.revision, NodeActionKind.SCROLL_FORWARD, NodeSelector(singleScrollable = true))

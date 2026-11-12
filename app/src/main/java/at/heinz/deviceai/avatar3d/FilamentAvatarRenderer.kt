@@ -35,6 +35,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private val worldTransform = FloatArray(16)
     internal val cockpitReady get() = cockpitStage != null
     internal val cockpitStatus get() = cockpitStage?.label ?: "3D-Szene nicht verfügbar"
+    internal var lastFrameSkipped = false
+        private set
     private var documentStage: FilamentDocumentStage? = null
     private var documentStageId: String? = null
     private var documentSurface: Surface? = null
@@ -273,8 +275,12 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
                eyeNeckCouplingEnabled: Boolean = true,
                sentenceGesturesEnabled: Boolean = true,
                windowLightEnabled: Boolean = false, orbPhase: Float = .4f): Boolean {
+        lastFrameSkipped = false
         val e = engine ?: return false
-        if (width <= 0 || height <= 0 || !surface.isValid) return false
+        if (width <= 0 || height <= 0 || !surface.isValid) {
+            cockpitStage?.frameFailed()
+            return false
+        }
         if (viewportWidth != width || viewportHeight != height || appliedFraming != framingVersion) {
             viewportWidth = width; viewportHeight = height; appliedFraming = framingVersion
             view!!.viewport = Viewport(0, 0, width, height)
@@ -329,12 +335,21 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         asset!!.instance.animator.updateBoneMatrices()
         receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.JOINTS_UPLOADED) ?: 0
         val r = renderer!!
-        if (!r.beginFrame(swapChain!!, System.nanoTime())) return false
-        receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_BEGIN) ?: 0
         try {
-            r.render(view!!)
-            receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_RENDERED) ?: 0
-        } finally { r.endFrame() }
+            if (!r.beginFrame(swapChain!!, System.nanoTime())) {
+                lastFrameSkipped = true
+                return false
+            }
+            receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_BEGIN) ?: 0
+            try {
+                r.render(view!!)
+                receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_RENDERED) ?: 0
+            } finally { r.endFrame() }
+            cockpitStage?.frameSubmitted(System.nanoTime())
+        } catch (failure: Throwable) {
+            cockpitStage?.frameFailed()
+            throw failure
+        }
         return true
     }
 
@@ -396,6 +411,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     }
 
     internal fun bindCockpitFeed(feed: LiveMonitorFeed<AndroidLiveFrame>?) { cockpitStage?.bind(feed) }
+    internal fun invalidateCockpitSubmission() { cockpitStage?.frameFailed() }
 
     internal fun cockpitWorkEvent(event: CockpitWorkEvent) { cockpitStage?.workEvent(event) }
 

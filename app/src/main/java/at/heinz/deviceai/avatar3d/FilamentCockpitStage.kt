@@ -78,6 +78,14 @@ internal class FilamentCockpitStage(
 
     fun bind(feed: LiveMonitorFeed<AndroidLiveFrame>?) { pixels?.bind(feed) }
     fun workEvent(event: CockpitWorkEvent) { pixels?.workEvent(event) }
+    fun frameSubmitted(nowNanos: Long) {
+        pixels?.frameSubmitted(nowNanos)
+        label = pixels?.label ?: "3D-Bildquelle nicht verfügbar"
+    }
+    fun frameFailed() {
+        pixels?.frameFailed()
+        label = pixels?.label ?: "3D-Bildquelle nicht verfügbar"
+    }
 
     fun update(frame: CockpitStageFrame, orbBounds: RectF, phase: Float, motion: Boolean) {
         require(frame.valid())

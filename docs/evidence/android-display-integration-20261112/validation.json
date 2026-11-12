@@ -1,0 +1,148 @@
+{
+  "audit_base_public_commit": "5f87bdc610944b93d3173a83c5beeea315abeb66",
+  "audit_base_local_commit": "9918891a6da1d74275b087a04f4aa86c79074d46",
+  "audit_base_tree": "cae47c3abaee1a378b4157f26abf7e6ec33df2c1",
+  "tested_local_product_commit": "b7d4cbdda44a10ea94107e47eb0ef76f71e857a1",
+  "integration_pull_request": "https://github.com/Ullmann27/device-ai/pull/803",
+  "compile": {
+    "result": 0,
+    "selected_production_files": 52,
+    "elapsed_seconds": 35.13454031944275,
+    "kotlin": "2.4.0",
+    "java": "Temurin 17",
+    "scope": "Scoped Kotlin integration compile against frozen base classes; no full Gradle/APK/device claim",
+    "base_classes_jar_sha256": "6f5f1cfee967e825b11537f8b9abf05686378def648b7fd8edfbe8aea925e952",
+    "all_changed_production_files_included": true,
+    "source_stable": true
+  },
+  "production_source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "c6d2eaeb71d2a74cdd9057bcdab242cbb88c6fad1b03c9574b2f1cde30ef4d8c",
+    "app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt": "2240b87a5d209f9c25f131676cde9774e178bdedd2f491811473f1273cc377b4",
+    "app/src/main/java/at/heinz/deviceai/AndroidGpuFrameCopier.kt": "28201c0f68bfb5b8eeab29785c0861566efa2d01b5dee9cfc291a8019cafef9a",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "d175e336875e09b0260bbcb99dfbecec46e4ebfa8462b8c43056af2822f6e2d1",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveNodePort.kt": "0883773573cf37a5a725e443da8543356b8363c5b2886376fae24cee3ad73c3b",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveWindow.kt": "0fedbdc5cddbbd87db0ea38dbee8942dd48cff41c1bb205a00b985274a503fad",
+    "app/src/main/java/at/heinz/deviceai/AndroidNativeClick.kt": "554a6adcd1dd6395b6e42b3a6e5110dfbb7cb30fe4534a861ffb93c0bdaf5ad6",
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "67de6e148d182864c2833a7b6f9e1ea85cfa4665e041d78ac8c2ac4756ef9081",
+    "app/src/main/java/at/heinz/deviceai/ContinuumLiveProjectionService.kt": "e2b6369c1fb6748827f21e8a45cc04bd8d8385e8296c07215f95e02e054c8ee1",
+    "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt": "d6111a8d7ce07f69e181e514b3e516673ca81f14326c1bdb282041644f7d4afa",
+    "app/src/main/java/at/heinz/deviceai/OwnerComputerSessionController.kt": "1f41373c750e6caf8352f802e53527f26dead09fb1574268061e5e5a7be8c838",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMaterialVariant.kt": "ec529fb829754222040fa29496ecddfc2d9094161292779d6c2a7dc32d3b9b8a",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "ceeca7e6f728920c82fc2e10450b3b96893af61015ab1ebca4d2974b1681f02f",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitOrbMotion.kt": "f67133d9bab28f25c7d2069cc7fcf55407618aa1ac2c88f10b91d4ee5b5b5d68",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitPresentationSequence.kt": "20fbee7f3a14b86a15aa9d7b0cac373cade23259c223d287c5dd49d5d7f11e31",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitSceneAssets.kt": "fa8d446c448c200a8a168686a359bc2a0d316c2fa968e4748ff544aa50a96adc",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "77f37b8fd75398a75c46cdf0a97d21b29d81457c66ab031b8e8ba75377c20a16",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitWorldTransforms.kt": "47e4401345d3d3c6af678b89a1b8d479adf4a5226850f83713a50f4a9574aec0",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "5f06e1a4dd5d402b3e1b445bc5fad7b71ca2c6881e3156421d338266e38b9b27",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt": "80a3390521c9720c6306713523b612058e1d354b80212a578d335ee332d842fc",
+    "app/src/main/java/at/heinz/deviceai/cognitive/ComputerCaptureConsent.kt": "16e2418774e2dfcec7eeb3b0144aa48ce58a2e7b64815989cf868354dbd5889d",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveActionCockpitAdapter.kt": "6231e38541e2c3e811b5ea0f17edb3c0f41c25ccf82c9c1e507efefd0c7c74f8",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComposeSemantics.kt": "5314801dfc221383b35383f243fac290046cf20272a1fd359c8a9d3da2ab543c",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerDispatchGuard.kt": "0b11fc8375b93140beda810d5ba110f8ffd1c5a8c6a2adad98030e0916814a1b",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "1dd295223166ed0a1425bb7a928d4ab4124e122c8067dbf9355df4aba826d6f2",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveMonitorSubmission.kt": "b1dd139af2e44f6c79b817bd7b4714e934210b4f25a31b501463a5bdf8b8793e",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveScrollEvidence.kt": "587f6f687dcd88a924657182b45bd892e7f4908179340800002dda0b294e945e",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowCapture.kt": "2e85fd899823b97bd5ebeee7594e06f197ba1ba3e7422890551277574034dbb6",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowSafety.kt": "510f17c80bd109687fbb77c172dae3a56db21555f571a62d6d516a32de4c41a7",
+    "app/src/main/java/at/heinz/deviceai/cognitive/NativeAppLookup.kt": "1320ea3e28a0ce0e5c8b17af794b5755f89a1d1d194dd39c5372b3d7e203d730",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppActionFlow.kt": "ae08d352a8ac840061fd09c3820b2cb0feaef79f465aa8a8dac65352ec54276e",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppClarification.kt": "c5398ae4d0392b96ddc635f3fecc19281c6bbadc767add0eccb7a63efc4b8603",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt": "bdf6ed4af869f3d2a20906de6d6ce10d48bba403274cd062cd5ac9bde96688eb",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParser.kt": "626665ac4182af50ac9e7e3ff6f0464f3d2b008ef73de26e45a5509bc9f608c8",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerTaskGrant.kt": "1a743004d13a6e2199ae106e1a10af57e3f0ac6fc49afb54f0f87abbb3e20a85",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflow.kt": "3f202fb294aa7521d92cee5f88b291a6be8090d38ee2b0faf6c010dc27632ce3",
+    "app/src/main/java/at/heinz/deviceai/cognitive/ProjectionCropGeometry.kt": "bb39aa741efb44644f7efdfd21a2de58aed3ae459b8825920665d5f3e4d4885b",
+    "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedForegroundLaunch.kt": "caa56a03c2520144940a2ea937115a9b21416988e876d33dcf0599eb1850a38f",
+    "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt": "f87adcad148e8cfb177403ac4d45c3005ad923fd076c086bec49de67184a30ea",
+    "app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt": "50c1c8b075b2e3307e01e5fe050b20a4d2ab0f6cb446a41ea754aad35aac79f6",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitMonitorMotion.kt": "0a2655858549a799753e81e095b3a41c782c08da53743676739dd22a86c1df44",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitWorkstationChrome.kt": "402d1ee20c06f4352d5fadbb5ad513fbcc68068a04a05862bf02243b4a518fdb",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt": "860169ebce5d6ba73124f2684ed5fbcde5152311527b910d5950ea46a2511f6d",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt": "97ea8358c09c23ac688fbdc7eed4579b3a88ce80d3b3a010890df84406a3a46b",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGridContent.kt": "d20f19933a86112e4668fb1a764f8ed50ac683186025ec580841e057b4d1c50a",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt": "f8067893f9f2c9479b066ee094bd1c769d33da6bd9de7b06cf66e5d60b4ae09a",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt": "62ae3ea0b38ffba560141643069c3f12480ecddc2e95dcff7ec21e66ab7df997",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt": "84ced2cee048fdacadf3229b652bdda54d50b81011223b3034aa306f40e3a495",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt": "9cbaee0fa1f7266e0f8c989856e9c33deea0c46f8a16d008c7f68172f1d5bd2b",
+    "app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt": "98d6fe168eeff5b88c9d260ce0a1256ddb338f1273930063ebe2630426d1ea6a"
+  },
+  "suites": {
+    "pure": {
+      "tests": 98,
+      "result": 0,
+      "elapsed_seconds": 0.42704081535339355,
+      "source_stable": true,
+      "classes": [
+        "at.heinz.deviceai.cognitive.OwnerAppActionFlowTest",
+        "at.heinz.deviceai.cognitive.OwnerAppLookupIntentTest",
+        "at.heinz.deviceai.cognitive.ComputerCaptureConsentTest",
+        "at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest",
+        "at.heinz.deviceai.cognitive.OwnerComputerTaskGrantTest",
+        "at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest",
+        "at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest",
+        "at.heinz.deviceai.cognitive.VerifiedForegroundLaunchTest"
+      ],
+      "test_source_sha256": {
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppActionFlowTest.kt": "16adeb7637bfb38d670cd9009de4e1aa5578041b75c838452c7749b22bec3c09",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntentTest.kt": "0a179b608dd84d37907998d426e81cfb10e2a049c706d81e89f945f36765cf53",
+        "app/src/test/java/at/heinz/deviceai/cognitive/ComputerCaptureConsentTest.kt": "def72d9b662ad4fe9594d91c8e760faa5fdcd6695e68481ef86c9153f88b2350",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParserTest.kt": "65685669a30a5b869d7198f01dcdc8959375ca5a730fe7e12a1462583c0bb3e2",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerTaskGrantTest.kt": "e5601b10c2964b11390608f8b40956639846e6c14992984af2c2d3e2291b0970",
+        "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerDispatchGuardTest.kt": "3c9eab144c09b904f76275f6f46ea66fd21b527256c2f74b54376d3c43d938bf",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflowTest.kt": "7991e8882e5fd5645e00d0a23cba0fd4ff81fd29035dda98b03b09f011d9abef",
+        "app/src/test/java/at/heinz/deviceai/cognitive/VerifiedForegroundLaunchTest.kt": "7c35ba2f52c3a66618324ec5b2bd30b59f7fd4e0113f49bd1ff991fad8e10402"
+      },
+      "limits": "JVM contracts"
+    },
+    "native": {
+      "tests": 42,
+      "result": 0,
+      "elapsed_seconds": 16.132838249206543,
+      "source_stable": true,
+      "classes": [
+        "at.heinz.deviceai.AndroidLiveNodePortTest",
+        "at.heinz.deviceai.AndroidLiveScrollTest",
+        "at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest",
+        "at.heinz.deviceai.ui.CockpitMonitorLifecycleUiTest"
+      ],
+      "test_source_sha256": {
+        "app/src/uiTest/java/at/heinz/deviceai/AndroidLiveNodePortTest.kt": "adea4addedaf81417c2f509276b859b5a66b5dc2962394e4e102af6087169efe",
+        "app/src/uiTest/java/at/heinz/deviceai/AndroidLiveScrollTest.kt": "5d5aef3279bc8cde75222c03fa4fa070f2024f907863c9341789f29c126f4717",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt": "f195c38ac55b9fc2f0d4122ba186aca35a29e9c240dc6db9ab237f404346a420",
+        "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitMonitorLifecycleUiTest.kt": "1486dce55793490da43da32e87452de9558d9ae0b44a293748e90a88cd763d6e"
+      },
+      "limits": "Robolectric SDK28/35 host; no device/GPU evidence",
+      "resource_apk_sha256": "58c27c3f01ebd7f97350a9b2628abb274a447f4fdfc5c0decac54d7f7be4f3cd",
+      "manifest_sha256": "11bf3ed0976505a54ce863ea75295b83121a3b8ac7ddd511dde43035151b2bfc"
+    }
+  },
+  "total_tests_in_combined_run": 140,
+  "source_hashes_match_current_product_tree": true,
+  "evidence_sha256": {
+    "product-compile.txt": "72135b0ddada32bac6632b3aeb8086db7da51eec525e16e75d51ec9948334e6b",
+    "pure-tests.txt": "30d0008eba9b43a43e1c2c4718199fed9ad12b6410ffda232b982004e99736ef",
+    "native-tests.txt": "1f24e2b2f192c155502233b26e90570886cff10fa9f285e3c903c493a2448127",
+    "runner-snapshot.py.txt": "70be2914bbab73ead19be654ca4decaa1447e80fd4bfaf6876bc20b82ed2fe55"
+  },
+  "raw_execution_receipt_sha256": {
+    "compile-receipt.json": "b4c995b1fae8e15b10378f8daf76cae1e55ba38bf46db8b36aec9a4ee2fee51d",
+    "pure-receipt.json": "90253415d3feb5274fe1cff4948975ee4a1a7faa25f7f3c8267203c973f0c308",
+    "native-receipt.json": "a49246082d2b0bb37d6b5de35f24159fa58f31611c201f9c7ee9169c5d56091f"
+  },
+  "status": {
+    "ported": true,
+    "host_verified": true,
+    "device_confirmed": false,
+    "full_gradle_apk_build": false
+  },
+  "limits": [
+    "The compiler uses a frozen integration dependency JAR for unchanged classes.",
+    "Android tests run in Robolectric SDK 28/35 with controlled window, node, and consent fixtures.",
+    "Render submission is not a GPU fence, compositor, or physical panel proof.",
+    "Producer queue age before acquireLatestImage remains outside the measured delivery-age contract.",
+    "Child suite counts overlap and are not added to the combined 140 tests."
+  ]
+}

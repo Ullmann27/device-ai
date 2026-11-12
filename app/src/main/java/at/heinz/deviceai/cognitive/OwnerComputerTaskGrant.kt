@@ -51,7 +51,7 @@ internal class OwnerComputerTaskGrant private constructor(
                         }
                         queryEntered = true
                     }
-                    request.text == intent.draft && isCompose(target) && !draftEntered -> {
+                    request.text == intent.draft && LiveComposeSemantics.isField(target) && !draftEntered -> {
                         check(intent.goal in DRAFT_GOALS && intent.app == ComputerApp.WHATSAPP &&
                             frame.nodes.count { it.visible && !it.editable && it.label.equals(intent.query, true) &&
                                 (it.heading || it.viewId?.endsWith("/conversation_contact_name") == true) } == 1) {
@@ -76,7 +76,7 @@ internal class OwnerComputerTaskGrant private constructor(
 
     @Synchronized fun authorizeClick(frame: NodeActionFrame, label: String, expectedLabel: String,
                                      expectedEditable: Boolean, expectedHeading: Boolean,
-                                     expectedSearchField: Boolean = false) {
+                                     expectedSearchField: Boolean = false, expectedComposeField: Boolean = false) {
         checkFrame(frame)
         val target = frame.nodes.filter { it.visible && it.label == label }.singleOrNull()
             ?: error("APPROVAL_CLICK_AMBIGUOUS")
@@ -85,7 +85,7 @@ internal class OwnerComputerTaskGrant private constructor(
         when {
             intent.goal in SEARCH_GOALS && LiveSearchSemantics.isControl(target.label, target.viewId) &&
                 !searchClicked && !destinationClicked -> {
-                check(expectedEditable && !expectedHeading &&
+                check(!expectedComposeField && expectedEditable && !expectedHeading &&
                     (if (expectedSearchField) expectedLabel.isEmpty() &&
                         frame.nodes.none(LiveSearchSemantics::isField)
                     else LiveSearchSemantics.isSearchLabel(expectedLabel))) {
@@ -94,12 +94,14 @@ internal class OwnerComputerTaskGrant private constructor(
                 searchClicked = true
             }
             intent.goal in DRAFT_GOALS && label.equals(intent.query, true) && !destinationClicked -> {
-                check(!expectedSearchField && expectedEditable && !expectedHeading && expectedLabel.lowercase() in COMPOSE_LABELS &&
+                check(!expectedSearchField && expectedEditable && !expectedHeading &&
+                    (if (expectedComposeField) expectedLabel.isEmpty() && frame.nodes.none(LiveComposeSemantics::isField)
+                    else LiveComposeSemantics.isLabel(expectedLabel)) &&
                     searchContainsQuery(frame)) { "CONTACT_POSTCONDITION_MISMATCH" }
                 destinationClicked = true
             }
             intent.goal == ComputerGoal.OPEN_DOWNLOADS && label.lowercase() in DOWNLOAD_LABELS && !destinationClicked -> {
-                check(!expectedSearchField && expectedHeading && !expectedEditable && expectedLabel == label) { "FOLDER_POSTCONDITION_MISMATCH" }
+                check(!expectedSearchField && !expectedComposeField && expectedHeading && !expectedEditable && expectedLabel == label) { "FOLDER_POSTCONDITION_MISMATCH" }
                 destinationClicked = true
             }
             else -> error("CLICK_OUTSIDE_APPROVED_PLAN")
@@ -112,9 +114,7 @@ internal class OwnerComputerTaskGrant private constructor(
     companion object {
         private val SEARCH_GOALS = setOf(ComputerGoal.SEARCH, ComputerGoal.DRAFT_MESSAGE, ComputerGoal.SEND_MESSAGE)
         private val DRAFT_GOALS = setOf(ComputerGoal.DRAFT_MESSAGE, ComputerGoal.SEND_MESSAGE)
-        private val COMPOSE_LABELS = setOf("nachricht", "message")
         private val DOWNLOAD_LABELS = setOf("download", "downloads", "heruntergeladen")
-        private fun isCompose(node: ActionNode) = node.label.lowercase() in COMPOSE_LABELS
 
         fun fromOwnerDecision(taskId: String, packageName: String, epoch: Long, intent: OwnerComputerIntent,
                               approved: Boolean, clock: () -> Long): OwnerComputerTaskGrant? {
