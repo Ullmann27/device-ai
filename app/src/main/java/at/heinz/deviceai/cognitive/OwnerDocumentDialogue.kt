@@ -140,6 +140,14 @@ internal object OwnerDocumentDialogue {
         question.length <= 1_000 && (noun.containsMatchIn(question) || pageNumber.containsMatchIn(question) ||
             pageOrdinal.containsMatchIn(question) || documentWords.containsMatchIn(question))
 
+    fun reuseOpenSummary(request: String, assistantName: String? = null): Boolean {
+        val parsed = OwnerDocumentIntent.parse(request, assistantName) ?: return false
+        if (!parsed.wantsDraft) return false
+        val text = normalized(request, assistantName) ?: return false
+        return !Regex("(?iu)(?<![\\p{L}\\p{N}])(?:neu\\p{L}*|ander\\p{L}*|weitere\\p{L}*|eine)(?![\\p{L}\\p{N}])").containsMatchIn(text) &&
+            !Regex("(?iu)[\\p{L}\\p{N}_-]+\\.pdf").containsMatchIn(text)
+    }
+
     /** The deterministic parts of [question]; null when it is not a plain question about the opened file. */
     @JvmOverloads
     fun parse(question: String, pageCount: Int = Int.MAX_VALUE, assistantName: String? = null): List<Ask>? {

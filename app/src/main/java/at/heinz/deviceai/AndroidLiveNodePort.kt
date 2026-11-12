@@ -16,6 +16,8 @@ internal class AndroidLiveNodePort(
     private val deadlineNanos: Long = System.nanoTime() + 2_500_000_000L
 ) : NodeActionPort {
     private var before: NodeActionFrame? = null
+    private var lastRequest: NodeActionRequest? = null
+    private var clickExpectation: ClickRequest? = null
     var inputAttempted: Boolean = false
         private set
     var inputAccepted: Boolean? = null
@@ -35,14 +37,44 @@ internal class AndroidLiveNodePort(
             "ACTION_SESSION_MISMATCH"
         }
         check(request.kind != NodeActionKind.SEND) { "SEND_REQUIRES_REGISTERED_TOOL" }
+        lastRequest = request
         return inspect(request, target).second
     }
 
     override fun awaitPostcondition(): NodeActionFrame? {
         val prior = before ?: error("NO_PRE_ACTION_OBSERVATION")
-        if (!ScreenObservationBus.awaitLiveRevision(access, prior.stamp.revision, deadlineNanos, ::checkActive)) return null
-        checkActive()
-        return inspect(null, null).first
+        var revision = prior.stamp.revision
+        var latest: NodeActionFrame? = null
+        val observationDeadline = deadlineNanos - 100_000_000L
+        while (System.nanoTime() < observationDeadline) {
+            if (!ScreenObservationBus.awaitLiveRevision(access, revision, observationDeadline, ::checkActive)) return latest
+            checkActive()
+            val candidate = try { inspect(null, null).first }
+            catch (error: IllegalStateException) {
+                if (error.message != "SCREEN_CHANGED_DURING_READ") throw error
+                continue
+            }
+            latest = candidate
+            revision = candidate.stamp.revision
+            if (candidate.stamp.digest != prior.stamp.digest && expected(candidate)) return candidate
+        }
+        return latest
+    }
+
+    private fun expected(frame: NodeActionFrame): Boolean {
+        val request = lastRequest ?: return false
+        return when (request.kind) {
+            NodeActionKind.SET_TEXT -> frame.nodes.filter {
+                it.visible && it.editable && !it.password && request.selector.matches(it)
+            }.singleOrNull()?.textDigest == liveSha256(request.text!!)
+            NodeActionKind.CLICK -> clickExpectation?.let { click -> frame.nodes.count {
+                it.visible && !it.password && it.label == click.expectedLabel &&
+                    (!click.expectedEditable || it.editable) && (!click.expectedHeading || it.heading)
+            } == 1 } ?: false
+            NodeActionKind.SCROLL_FORWARD, NodeActionKind.SCROLL_BACKWARD ->
+                frame.nodes.count { it.visible && it.scrollable && request.selector.matches(it) } == 1
+            NodeActionKind.SEND -> false
+        }
     }
 
     fun clickPort(request: ClickRequest, onDispatched: (LiveTargetBounds?, Long) -> Unit): ClickObservationPort =
@@ -50,6 +82,7 @@ internal class AndroidLiveNodePort(
             override fun checkActive() = this@AndroidLiveNodePort.checkActive()
             override fun current() = this@AndroidLiveNodePort.current().asClickFrame()
             override fun clickOnce(request: ClickRequest): Boolean {
+                clickExpectation = request
                 val prior = before ?: error("NO_PRE_ACTION_OBSERVATION")
                 val target = prior.nodes.single { it.visible && it.label == request.label }
                 check(!target.editable && !target.password && target.clickable && target.enabled &&

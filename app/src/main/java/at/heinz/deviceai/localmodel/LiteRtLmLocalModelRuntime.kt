@@ -66,6 +66,8 @@ interface LocalModelRuntime {
     val inferenceProfiles: List<LocalInferenceProfile> get() = emptyList()
     /** CPU threads the loaded engine was configured with; null when unknown or not loaded. */
     val computeThreads: Int? get() = null
+    /** Fresh-chat UTF-8 budget; null for adapters without measurements. */
+    val maxPromptUtf8Bytes: Int? get() = null
     fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)
     fun unload(callback: (Result<Unit>) -> Unit = {})
     fun stream(prompt: String, callback: LocalInferenceCallback)
@@ -108,6 +110,12 @@ class LiteRtLmLocalModelRuntime(
     @Volatile
     override var computeThreads: Int? = null
         private set
+
+    @Volatile private var configuredContextTokens = 0
+    @Volatile private var prefaceTokenCount: Int? = null
+    override val maxPromptUtf8Bytes: Int? get() = if (loadedModel == null) null else
+        LocalNativePromptBudget.promptBytes(configuredContextTokens, prefaceTokenCount,
+            LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id))
 
     private var engine: Engine? = null
     private var conversation: Conversation? = null
@@ -155,13 +163,16 @@ class LiteRtLmLocalModelRuntime(
                     error("Cannot create LiteRT-LM cache directory.")
                 }
                 val threads = runCatching(cpuThreadCount).getOrNull()?.takeIf { it > 0 }
+                val contextCapacity = LocalNativePromptBudget.contextCapacity(capabilities.maxContextTokens)
                 val newEngine = Engine(
                     EngineConfig(
                         modelPath = file.absolutePath,
                         backend = Backend.CPU(threadCount = threads),
+                        maxNumTokens = contextCapacity,
                         cacheDir = cacheDirectory.absolutePath
                     )
                 )
+                var createdConversation: Conversation? = null
                 try {
                     newEngine.initialize()
                     val newConversation = newEngine.createConversation(
@@ -169,19 +180,35 @@ class LiteRtLmLocalModelRuntime(
                             systemInstruction = Contents.of(systemPrompt),
                             tools = ToolRegistry.all().map(::registeredToolProvider),
                             automaticToolCalling = false,
+                            prefillPrefaceOnInit = true,
                             maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)
                         )
                     )
+                    createdConversation = newConversation
+                    val prefixTokens = newConversation.getTokenCount()
+                    check(prefixTokens in 0..contextCapacity) { "LOCAL_MODEL_PREFACE_COUNT_UNVERIFIED" }
                     synchronized(lock) {
                         engine = newEngine
                         conversation = newConversation
                         startupConversationUnused = true
                         loadedModel = model
                         computeThreads = threads
+                        configuredContextTokens = contextCapacity
+                        prefaceTokenCount = prefixTokens
                         state = LocalModelState.READY
                     }
                 } catch (failure: Throwable) {
-                    runCatching { if (newEngine.isInitialized()) newEngine.close() }
+                    val releasedConversation = runCatching {
+                        createdConversation?.takeIf { it.isAlive }?.close()
+                    }
+                    val releasedEngine = if (releasedConversation.isSuccess) runCatching {
+                        if (newEngine.isInitialized()) newEngine.close()
+                    } else Result.failure(releasedConversation.exceptionOrNull()!!)
+                    if (releasedConversation.isFailure || releasedEngine.isFailure) synchronized(lock) {
+                        engine = newEngine
+                        conversation = createdConversation
+                        loadedModel = model
+                    }
                     throw failure
                 }
                 model
@@ -222,6 +249,7 @@ class LiteRtLmLocalModelRuntime(
             payloadBytes = payload.toByteArray(Charsets.UTF_8).size)
     }
 
+    @OptIn(com.google.ai.edge.litertlm.ExperimentalApi::class)
     private fun streamMessage(
         message: Message,
         promptCharacters: Int,
@@ -371,12 +399,15 @@ class LiteRtLmLocalModelRuntime(
         }
 
         try {
-            // Native context includes prior tool turns, system text and tool schemas.
-            // Unknown capacity/count refuses admission instead of guessing a fit.
-            if (!LocalToolContinuation.allowsSubmission(payloadBytes, inputTokens,
-                    loadedModel?.capabilities?.maxContextTokens ?: 0,
-                    LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id),
-                    continuation = !freshPrompt && !isolatedThinking)) {
+            val renderedBytes = runCatching {
+                LocalNativePromptBudget.renderedUtf8Estimate(activeConversation.renderMessageIntoString(message))
+            }.getOrNull()
+            val prefix = if (isolatedThinking) runCatching {
+                LocalNativePromptBudget.renderedUtf8Estimate(activeConversation.renderPrefaceIntoString())
+            }.getOrNull() else prefaceTokenCount
+            if (!LocalNativePromptBudget.allows(payloadBytes, renderedBytes, inputTokens, prefix,
+                    configuredContextTokens, LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id),
+                    fresh = freshPrompt || isolatedThinking)) {
                 finish(LocalInferenceEvent.Failed("LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL"))
                 return
             }
@@ -593,6 +624,8 @@ class LiteRtLmLocalModelRuntime(
                 engine = null
                 loadedModel = null
                 computeThreads = null
+                configuredContextTokens = 0
+                prefaceTokenCount = null
             }
             state = if (result.isSuccess) LocalModelState.EMPTY else LocalModelState.FAILED
         }

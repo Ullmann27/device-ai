@@ -231,6 +231,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
     }
     internal fun clearLiveComputerFeed() = setLiveComputerFeed(null)
+    internal fun showComputerWorkEvent(event: at.heinz.deviceai.cognitive.CockpitWorkEvent) = virtualMonitor.workEvent(event)
 
     private fun presentComputerFrame() {
         val base = computerFrame ?: return

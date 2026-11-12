@@ -10,6 +10,7 @@ import at.heinz.deviceai.avatar3d.CockpitStageFrame
 
 /** Opaque pixels, shared perspective, no tint. */
 internal class CockpitMonitorPainter {
+    data class Pointer(val x: Float, val y: Float, val progress: Float)
     private val matrix = Matrix()
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val image = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
@@ -17,7 +18,7 @@ internal class CockpitMonitorPainter {
     private val destination = RectF()
 
     fun draw(canvas: Canvas, frame: CockpitStageFrame, bitmap: Bitmap?, status: String, live: Boolean,
-             nativeFrameReady: Boolean, density: Float) {
+             nativeFrameReady: Boolean, density: Float, pointer: Pointer? = null) {
         if (!frame.valid()) return
         val width = frame.monitorWidth
         val height = frame.monitorHeight
@@ -49,6 +50,17 @@ internal class CockpitMonitorPainter {
             canvas.clipRect(left, top, right, bottom)
             image.alpha = 255
             canvas.drawBitmap(source, null, destination, image)
+            pointer?.let {
+                val x = destination.left + it.x * destination.width()
+                val y = destination.top + it.y * destination.height()
+                fill.color = 0xff56e4ef.toInt()
+                fill.alpha = ((1f - it.progress) * 220f).toInt().coerceIn(0, 255)
+                fill.style = Paint.Style.STROKE
+                fill.strokeWidth = 1.4f * density
+                canvas.drawCircle(x, y, (4f + 12f * it.progress) * density, fill)
+                fill.style = Paint.Style.FILL
+                fill.alpha = 255
+            }
             canvas.restore()
         } else {
             label.color = 0xffa7b7c8.toInt()

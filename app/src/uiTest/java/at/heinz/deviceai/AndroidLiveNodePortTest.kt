@@ -122,6 +122,22 @@ class AndroidLiveNodePortTest {
         assertEquals(1, calls)
     }
 
+    @Test fun intermediateRevisionWaitsForRealResultWithoutRepeatingInput() {
+        val port = port(); val before = port.current()
+        NodeShadow.onAction = { _, _ ->
+            calls++
+            changed()
+            Thread {
+                Thread.sleep(25)
+                ServiceShadow.target = field("Anna")
+                changed()
+            }.apply { isDaemon = true; start() }
+            true
+        }
+        assertTrue(VerifiedNodeAction(LiveActionJournal(task)).execute(request(before), port).confirmed)
+        assertEquals(1, calls)
+    }
+
     @Test fun acceptedWrongTextIsUnclearAndCannotRepeat() {
         val port = port(); val before = port.current(); val journal = LiveActionJournal(task)
         NodeShadow.onAction = { _, _ -> calls++; ServiceShadow.target = field("Andere"); changed(); true }

@@ -64,3 +64,27 @@ execution and bus, EXP-12 cancellation/session continuity. No second backlog,
 renderer, database or audio engine. Rollback the workflow/motion commits while
 retaining prior C foundation; default pose fields preserve renderer source
 compatibility.
+
+## Capture response binding
+
+`ComputerCaptureConsent` correlates one current system response to its original
+task. `begin(taskId)` replaces the pending request, `accept(requestCode)` consumes
+only the matching current response once, and `cancel()` invalidates it. A stale
+response does not consume a newer task's pending request. Default allocation is
+process-wide and never wraps; exhaustion fails closed and clears pending state.
+
+Reserved range is **60001..64999**. The existing PDF request range includes
+60000, so using the originally proposed 60000 would collide with the PDF path.
+`ownsRequestCode` excludes that boundary and all earlier Activity codes.
+
+Matching a response is not permission to execute. The Android coordinator must
+still check RESULT_OK, bind the returned Intent to the same Plan object, and
+defer execution until the real Activity is visible/resumed. Stop/destruction
+invalidates both the slot and any deferred result. Wrong request codes must not
+clear the newer pending-consent flag.
+
+Actual isolated source compilation with Kotlin 2.0.20/JDK17 and JUnit:
+`ComputerCaptureConsentTest` **12 / 12 PASS**, including parallel allocation,
+duplicate response consumption, cancellation, successor-task isolation, PDF
+range separation and non-wrapping exhaustion. No Android lifecycle success is
+inferred from these pure tests.

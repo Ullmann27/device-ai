@@ -49,6 +49,11 @@ class ContinuumLiveProjectionService : Service() {
     private var protectionWindow: Int? = null
     private var protectionAt = 0L
     private var protectionPending = false
+    private var sourceResetRequired = true
+    private var sourceGeometry: Geometry? = null
+
+    private data class Geometry(val target: LiveWindowRecord, val own: LiveWindowRecord,
+                                val crop: LivePixelRect, val windowRevision: Long)
 
     private data class Ticket(val target: LiveWindowRecord, val own: LiveWindowRecord,
                               val crop: LivePixelRect, val revision: Long, val generation: Long)
@@ -62,13 +67,17 @@ class ContinuumLiveProjectionService : Service() {
         override fun onCapturedContentVisibilityChanged(isVisible: Boolean) {
             visibilityReported = true
             visible = isVisible
-            if (!visible) AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.SOURCE_HIDDEN)
+            if (!visible) {
+                sourceResetRequired = true
+                AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.SOURCE_HIDDEN)
+            }
         }
         override fun onCapturedContentResize(width: Int, height: Int) {
             capturedWidth = width
             capturedHeight = height
             if (!visibilityReported) visible = true
             protectionWindow = null
+            sourceResetRequired = true
             AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.SOURCE_UNVERIFIED)
             updateSurface()
         }
@@ -143,15 +152,16 @@ class ContinuumLiveProjectionService : Service() {
         created.setOnImageAvailableListener({ onImage(it) }, handler)
     }
 
-    private fun updateSurface() {
+    private fun updateSurface(force: Boolean = false) {
         if (closed || display == null) return
         val size = bufferSize(displayBounds())
-        if (reader?.width == size.first && reader?.height == size.second) return
+        if (!force && reader?.width == size.first && reader?.height == size.second) return
         val previous = reader
         val replacement = newReader(size.first, size.second)
         reader = replacement
         display?.surface = null
-        display?.resize(size.first, size.second, resources.displayMetrics.densityDpi)
+        if (previous?.width != size.first || previous.height != size.second)
+            display?.resize(size.first, size.second, resources.displayMetrics.densityDpi)
         display?.surface = replacement.surface
         retire(previous)
     }
@@ -159,22 +169,33 @@ class ContinuumLiveProjectionService : Service() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         protectionWindow = null
+        sourceResetRequired = true
         AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.SOURCE_UNVERIFIED)
         updateSurface()
     }
 
     private fun ticket(currentReader: ImageReader): Ticket? {
-        if (closed || !visible || currentReader !== reader) return null
-        val (binding, access) = AndroidLiveComputer.projectionAccess(sessionId) ?: return null
+        if (closed || currentReader !== reader) return null
+        fun unverified(): Ticket? { sourceResetRequired = true; return null }
+        if (!visible) return unverified()
+        val (binding, access) = AndroidLiveComputer.projectionAccess(sessionId) ?: return unverified()
         val windows = access.service.liveWindows()
-        val target = LiveWindowSafety.select(windows, binding.targetPackage, binding.ownPackage) ?: return null
-        val own = windows.singleOrNull { it.packageName == binding.ownPackage && it.kind == LiveWindowKind.APPLICATION } ?: return null
+        val target = LiveWindowSafety.select(windows, binding.targetPackage, binding.ownPackage) ?: return unverified()
+        val own = windows.singleOrNull { it.packageName == binding.ownPackage && it.kind == LiveWindowKind.APPLICATION } ?: return unverified()
         val crop = ProjectionCropGeometry.crop(displayBounds(), capturedWidth, capturedHeight,
-            currentReader.width, currentReader.height, target, own) ?: return null
+            currentReader.width, currentReader.height, target, own) ?: return unverified()
         val now = SystemClock.elapsedRealtime()
         if (!protectionPending && (protectionWindow != target.target.id || now - protectionAt > 1_000))
             probeProtection(access, target.target.id)
-        if (protectionWindow != target.target.id || now - protectionAt > 2_000) return null
+        if (protectionWindow != target.target.id || now - protectionAt > 2_000) return unverified()
+        val geometry = Geometry(target.target, own, crop, ScreenObservationBus.liveWindowRevision(access))
+        if (sourceResetRequired || sourceGeometry != geometry) {
+            sourceGeometry = geometry
+            sourceResetRequired = false
+            // New queue excludes frames from previous geometry.
+            updateSurface(force = true)
+            return null
+        }
         return Ticket(target.target, own, crop, ScreenObservationBus.liveRevision(access), binding.captureSession)
     }
 
@@ -213,7 +234,8 @@ class ContinuumLiveProjectionService : Service() {
         copyingReader = source
         val crop = before.crop
         val time = System.nanoTime()
-        AndroidGpuFrameCopier.copy(image, Rect(crop.left, crop.top, crop.right, crop.bottom), gpuExecutor) { frame ->
+        gpuExecutor.execute {
+          AndroidGpuFrameCopier.copy(image, Rect(crop.left, crop.top, crop.right, crop.bottom), gpuExecutor) { frame ->
             handler.post {
                 copying = false
                 copyingReader = null
@@ -237,6 +259,7 @@ class ContinuumLiveProjectionService : Service() {
                     state.first.targetPackage, before.target.id, ownWindowVisible = false,
                     observationRevision = before.revision), frame)
             }
+          }
         }
     }
 

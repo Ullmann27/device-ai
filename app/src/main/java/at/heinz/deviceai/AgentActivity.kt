@@ -331,6 +331,7 @@ class AgentActivity : Activity() {
         val message: String, val nameOpening: Boolean? = null, val ownerRevision: Long = -1L)
     private var pendingAppActionReply: AppActionReply? = null
     private var computerController: OwnerComputerSessionController? = null
+    @Volatile private var computerViewVisible = false
     private data class PendingComputerLaunch(val session: String, val generation: Long, val packageName: String,
         val intent: at.heinz.deviceai.cognitive.OwnerComputerIntent, val approvedAt: Long)
     private var pendingComputerLaunch: PendingComputerLaunch? = null
@@ -799,7 +800,8 @@ class AgentActivity : Activity() {
             if (pending.session == sessionId && pending.generation == appLookupGeneration)
                 startComputerSession(pending)
         }
-        computerController?.restoreFeed()
+        computerViewVisible = true
+        computerController?.resumed()
         pendingReturnedDocument?.let { returned ->
             pendingReturnedDocument = null
             readSelectedDocument(returned)
@@ -812,6 +814,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        if (!isInMultiWindowMode) computerViewVisible = false
         if (!isInMultiWindowMode && computerController?.awaitingConsent != true) computerController?.stop()
         appNameClarification.clear()
         documentReadGeneration++
@@ -821,7 +824,7 @@ class AgentActivity : Activity() {
         if (botTeamOwnsLane && ::localRuntime.isInitialized) localRuntime.cancel()
         airbusCockpitOrchestrator?.setForeground(false)
         workWindowHost.close(immediate = true)
-        avatarDirector.clearAnimationIntents()
+        if (!computerFeedbackActive()) avatarDirector.clearAnimationIntents()
         ownerRecoveryReview?.close()
         ownerRecoveryReview = null
         clearTaskEffects()
@@ -851,8 +854,8 @@ class AgentActivity : Activity() {
         readinessVoiceResult = "Hörtest noch nicht bestätigt."
         foregroundLearningActive = false
         updateUiFeedbackPolicy()
-        hologramView?.setForegroundActive(false)
-        homeView?.setForegroundActive(false)
+        hologramView?.setForegroundActive(computerFeedbackActive())
+        homeView?.setForegroundActive(computerFeedbackActive())
         liveHardwareGauges?.setForegroundActive(false)
         brainScene?.setForegroundActive(false)
         stopVoiceAnimation()
@@ -897,6 +900,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onStop() {
+        computerViewVisible = false
         if (computerController?.awaitingConsent != true) computerController?.stop()
         super.onStop()
     }
@@ -1298,7 +1302,11 @@ class AgentActivity : Activity() {
                 onGreeting = { line -> runOnUiThread { recordCockpitDialog(false, line) } }, drift = cameraDrift)),
             cockpitBus.subscribe(airbus),
             cockpitBus.subscribe(at.heinz.deviceai.avatar.CinemaWindowGazeBridge(avatarDirector)),
-            cockpitBus.subscribe { runOnUiThread { pushCockpitState() } }
+            cockpitBus.subscribe { event -> runOnUiThread {
+                if (event is at.heinz.deviceai.cognitive.CockpitWorkEvent)
+                    homeView?.showComputerWorkEvent(event)
+                pushCockpitState()
+            } }
         )
         subscribeMemoryEvents()
         subscribeRealSignals()
@@ -6187,6 +6195,8 @@ class AgentActivity : Activity() {
             setFeed = { feed -> homeView?.setLiveComputerFeed(feed) },
             setBusy = { value -> activeLocalRequest = value; setBusy(value) },
             reply = { value -> addAssistantMessage(value, preserveLocalContext = true, keepCockpit = true) },
+            visible = { !isFinishing && !isDestroyed &&
+                (foregroundLearningActive || (computerViewVisible && isInMultiWindowMode)) },
             playClick = { playUiFeedback(at.heinz.deviceai.ui.ContinuumUiFeedback.Cue.BUTTON) },
             stopClick = { uiFeedback?.stop() }).also { computerController = it }
         controller.begin(pending.packageName, pending.intent, pending.approvedAt)
@@ -6349,6 +6359,14 @@ class AgentActivity : Activity() {
         }
         if (clarifiedAppName == null && !botRoutingChecked && routeBotInput(input.text.toString())) return
         if (clarifiedAppName == null && selectedBot == null && tryStartComputerRequest(request)) return
+        at.heinz.deviceai.cognitive.OwnerDeviceClockReply.answer(
+            OwnerAppLookupIntent.stripAddress(request, continuumState?.archive?.identityState?.chosenName),
+            java.time.Instant.now(), java.time.ZoneId.systemDefault())?.let { answer ->
+            input.text.clear()
+            addUserMessage(request, keepCockpit = true)
+            addNonModelReply(request, answer, at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+            return
+        }
         // Prior measurement requests never start a new tool, model or network call.
         if (!neuralCoach.isActive() &&
             at.heinz.deviceai.cognitive.OwnerPreviousBatteryIntent.isPreviousReadingRequest(request)) {
@@ -6371,6 +6389,19 @@ class AgentActivity : Activity() {
         val recall = at.heinz.deviceai.cognitive.WorkRecall.parse(request)
         val document = at.heinz.deviceai.cognitive.OwnerDocumentIntent.parse(request,
             continuumState?.archive?.identityState?.chosenName)
+        localConversationContext.document(sessionId)?.takeIf {
+            at.heinz.deviceai.cognitive.OwnerDocumentDialogue.reuseOpenSummary(request,
+                continuumState?.archive?.identityState?.chosenName)
+        }?.let { opened ->
+            if (!localModelReady()) answerFromDocument(request,
+                at.heinz.deviceai.cognitive.OwnerDocumentDialogue.withoutModel(opened))
+            else {
+                input.text.clear()
+                addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+                runLocal(request)
+            }
+            return
+        }
         if (recall != null || document != null) {
             input.text.clear()
             // A cockpit work scene answers on START; the request stays there instead of switching to the chat.
@@ -13810,13 +13841,16 @@ class AgentActivity : Activity() {
         }
     }
 
+    private fun computerFeedbackActive(): Boolean = computerViewVisible && isInMultiWindowMode &&
+        computerController?.active == true && computerController?.awaitingConsent != true
+
     private fun updateUiFeedbackPolicy() {
-        uiFeedback?.updatePolicy(voiceEnabled, foregroundLearningActive,
+        uiFeedback?.updatePolicy(voiceEnabled, foregroundLearningActive || computerFeedbackActive(),
             voiceSpeaking || voiceListening || voiceUtteranceId != null)
     }
 
     private fun playUiFeedback(cue: at.heinz.deviceai.ui.ContinuumUiFeedback.Cue) {
-        if (!voiceEnabled || !foregroundLearningActive || voiceSpeaking || voiceListening ||
+        if (!voiceEnabled || (!foregroundLearningActive && !computerFeedbackActive()) || voiceSpeaking || voiceListening ||
             voiceUtteranceId != null || isFinishing || isDestroyed) {
             updateUiFeedbackPolicy()
             return
@@ -14173,8 +14207,8 @@ class AgentActivity : Activity() {
 
     @Deprecated("Deprecated in Android SDK, kept for broad device compatibility")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == OwnerComputerSessionController.CAPTURE_REQUEST) {
-            computerController?.projectionResult(resultCode, data)
+        if (at.heinz.deviceai.cognitive.ComputerCaptureConsent.ownsRequestCode(requestCode)) {
+            computerController?.projectionResult(requestCode, resultCode, data)
             return
         }
         super.onActivityResult(requestCode, resultCode, data)

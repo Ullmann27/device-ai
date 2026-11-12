@@ -55,7 +55,8 @@ object JarvisShellLayout {
         val orbBounds: Box? = null,
         /** Native surface, behind dialogue. */
         val headStage: Box? = null,
-        val workstation: Boolean = false
+        val workstation: Boolean = false,
+        val protectedFaceBounds: Box? = null
     ) {
         val headAnchorX: Float get() = if (headStage != null) JarvisCockpitGrid.HEAD_ANCHOR_X else .5f
         val headCloseUp: Float get() = if (headStage != null) JarvisCockpitGrid.HEAD_CLOSE_UP else 1f

@@ -22,6 +22,7 @@ internal class OwnerComputerSessionController(
     private val setFeed: (LiveMonitorFeed<AndroidLiveFrame>?) -> Unit,
     private val setBusy: (Boolean) -> Unit,
     private val reply: (String) -> Unit,
+    private val visible: () -> Boolean,
     playClick: () -> Unit,
     stopClick: () -> Unit
 ) : AutoCloseable {
@@ -35,9 +36,12 @@ internal class OwnerComputerSessionController(
     @Volatile private var grant: OwnerComputerTaskGrant? = null
     @Volatile private var workflow: OwnerComputerWorkflow? = null
     private var pendingConsent = false
+    private val consentRequests = ComputerCaptureConsent()
+    private data class ConsentResult(val plan: Plan, val code: Int, val data: Intent)
+    private var deferredConsent: ConsentResult? = null
     private var closed = false
     val active: Boolean get() = plan != null
-    val awaitingConsent: Boolean get() = pendingConsent
+    val awaitingConsent: Boolean get() = pendingConsent || deferredConsent != null
 
     fun begin(packageName: String, intent: OwnerComputerIntent, approvedAt: Long) {
         stop()
@@ -52,27 +56,42 @@ internal class OwnerComputerSessionController(
         if (consent != null) {
             pendingConsent = true
             try {
-                activity.startActivityForResult(consent, CAPTURE_REQUEST)
+                val request = consentRequests.begin(next.taskId)
+                activity.startActivityForResult(consent, request.requestCode)
                 return
-            } catch (_: RuntimeException) { pendingConsent = false }
+            } catch (_: RuntimeException) {
+                consentRequests.cancel()
+                stop()
+                reply("Die Android-Bildschirmfreigabe konnte nicht geöffnet werden. Auftrag gestoppt.")
+                return
+            }
         }
         start(next, null, Activity.RESULT_CANCELED)
     }
 
-    fun projectionResult(resultCode: Int, data: Intent?) {
-        if (!pendingConsent) return
+    fun projectionResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val taskId = consentRequests.accept(requestCode) ?: return
         pendingConsent = false
+        val current = plan?.takeIf { it.taskId == taskId } ?: return
         if (resultCode != Activity.RESULT_OK || data == null) {
             stop()
             reply("Bildschirmfreigabe abgebrochen. Der Computer-Auftrag wurde gestoppt.")
             return
         }
-        val current = plan ?: return
-        start(current, data, resultCode)
+        deferredConsent = ConsentResult(current, resultCode, data)
+    }
+
+    fun resumed() {
+        val deferred = deferredConsent
+        if (deferred != null && visible()) {
+            deferredConsent = null
+            if (plan === deferred.plan) start(deferred.plan, deferred.data, deferred.code)
+        }
+        restoreFeed()
     }
 
     private fun start(current: Plan, data: Intent?, resultCode: Int) {
-        if (closed || plan !== current || SystemClock.elapsedRealtime() - current.approvedAt !in 0..180_000) {
+        if (closed || plan !== current || !visible() || SystemClock.elapsedRealtime() - current.approvedAt !in 0..180_000) {
             stop()
             return
         }
@@ -98,7 +117,7 @@ internal class OwnerComputerSessionController(
             var firstObservation = true
             val result = try { runner.run(current.intent, object : OwnerComputerWorkflow.Port {
                 override fun checkActive() {
-                    check(plan === current && grant === permission) { "COMPUTER_TASK_CHANGED" }
+                    check(plan === current && grant === permission && visible()) { "COMPUTER_TASK_CHANGED_OR_HIDDEN" }
                     permission.checkActive()
                     AndroidLiveComputer.checkActive(current.taskId)
                 }
@@ -154,6 +173,8 @@ internal class OwnerComputerSessionController(
         val previous = plan
         plan = null
         pendingConsent = false
+        deferredConsent = null
+        consentRequests.cancel()
         grant?.revoke()
         grant = null
         workflow?.cancel()
@@ -171,5 +192,4 @@ internal class OwnerComputerSessionController(
         bridge.close()
     }
 
-    companion object { const val CAPTURE_REQUEST = 2460 }
 }

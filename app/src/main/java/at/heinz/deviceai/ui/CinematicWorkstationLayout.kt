@@ -26,7 +26,7 @@ object CinematicWorkstationLayout {
         val sceneH = maxOf(if (wide) 310f else 320f, viewport - reserved)
         val sceneTop = gap + headerH + gap + dialogH
         val scene = Box(margin, sceneTop, right, sceneTop + sceneH)
-        val headW = minOf(room * if (wide) .48f else .88f, sceneH * .92f)
+        val headW = minOf(room * if (wide) .82f else .98f, sceneH * 1.65f)
         val headH = sceneH * .70f
         val head = Box(width * .5f - headW * .5f, sceneTop,
             width * .5f + headW * .5f, sceneTop + headH)
@@ -35,7 +35,7 @@ object CinematicWorkstationLayout {
         val orb = Box(width * .5f - orbSize * .5f, sceneTop + headH * .035f,
             width * .5f + orbSize * .5f, sceneTop + headH * .035f + orbSize)
         val monitorWidth = if (wide) room * .64f else room
-        val monitor = Box(width * .5f - monitorWidth * .5f, sceneTop + sceneH * .43f,
+        val monitor = Box(width * .5f - monitorWidth * .5f, sceneTop + sceneH * .50f,
             width * .5f + monitorWidth * .5f, scene.bottom - 8f)
         val boxes = linkedMapOf(
             Slot.TOP_BAR to Box(margin, gap, right, gap + headerH),
@@ -71,6 +71,8 @@ object CinematicWorkstationLayout {
         return JarvisShellLayout.Shell(JarvisShellLayout.formFactor(width, viewport), width,
             maxOf(viewport, y), boxes.filterValues { it.width > 0f && it.height > 0f }, 0, 0,
             overlays = setOf(Slot.AVATAR to Slot.WORK_PROCESS), grid = grid, viewportHeight = viewport,
-            profile = profile, headBounds = head, orbBounds = orb, headStage = head, workstation = true)
+            profile = profile, headBounds = head, orbBounds = orb, headStage = head, workstation = true,
+            protectedFaceBounds = Box(width * .5f - headH * .29f, head.top,
+                width * .5f + headH * .29f, head.top + headH * .70f))
     }
 }

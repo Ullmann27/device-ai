@@ -11,11 +11,14 @@ import android.hardware.HardwareBuffer
 import android.media.Image
 import androidx.annotation.RequiresApi
 import java.util.concurrent.Executor
+import java.util.concurrent.atomic.AtomicBoolean
 
 /** A private immutable output, not an ImageReader buffer lease. */
 @RequiresApi(34)
 internal object AndroidGpuFrameCopier {
+    private val inFlight = AtomicBoolean(false)
     fun copy(image: Image, crop: Rect, executor: Executor, done: (AndroidLiveFrame?) -> Unit) {
+        if (!inFlight.compareAndSet(false, true)) { image.close(); done(null); return }
         var source: HardwareBuffer? = null
         var bitmap: Bitmap? = null
         var output: HardwareBuffer? = null
@@ -53,6 +56,7 @@ internal object AndroidGpuFrameCopier {
                     heldSource.close()
                     image.close()
                     if (frame == null) heldOutput.close()
+                    inFlight.set(false)
                     done(frame)
                 }
             }
@@ -63,6 +67,7 @@ internal object AndroidGpuFrameCopier {
             source?.close()
             output?.close()
             image.close()
+            inFlight.set(false)
             done(null)
         }
     }
