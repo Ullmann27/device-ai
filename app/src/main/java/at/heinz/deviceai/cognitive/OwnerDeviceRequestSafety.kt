@@ -59,7 +59,9 @@ internal object OwnerDeviceRequestSafety {
         "(?:(?:eine|die)\\s+)?(?:systemdiagnose|handyanalyse|geräteanalyse|geraeteanalyse|" +
         "analyse\\s+(?:meines|des)\\s+(?:handys|geräts|geraets|smartphones))$")
     private const val collectiveTime = "(?:heute|morgen|jetzt|bald|später|gleich)"
-    private const val collectiveObject = "(?:das|die|den|ein|eine|einen|unser(?:e|en|es)?)" +
+    // Code55: "Morgen wollen wir mit unserem Projekt starten" names a plan, not a device action.
+    private const val collectiveObject = "(?:(?:mit|an|bei|für|fuer)\\s+)?" +
+        "(?:das|die|den|dem|der|ein|eine|einen|einem|einer|unser(?:e|en|es|em|er)?)" +
         "\\s+[\\p{L}\\p{N}][\\p{L}\\p{N}-]{0,63}"
     private const val collectiveDetail = "(?:\\s+$collectiveTime)?(?:\\s+$collectiveObject)?(?:\\s+$collectiveTime)?"
     private val collectiveStart = Regex("(?iu)^(?:wir\\s+starten$collectiveDetail|" +
