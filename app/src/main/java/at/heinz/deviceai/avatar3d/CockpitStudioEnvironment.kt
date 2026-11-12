@@ -84,9 +84,9 @@ internal class CockpitMonitorGlow(private val riseSeconds: Float = .35f, private
         val dt = if (lastNanos == Long.MIN_VALUE) 0f else ((nowNanos - lastNanos).coerceIn(0L, 100_000_000L) / 1e9f)
         lastNanos = nowNanos
         val target = if (pixelsVisible) 1f else 0f
-        val rate = if (target > level) riseSeconds else fallSeconds
-        level = if (dt <= 0f && uploaded < 0) target * 0f
-        else (level + (target - level) * (dt / rate).coerceIn(0f, 1f)).coerceIn(0f, 1f)
+        // Linear ramp: reaches the end value in bounded time and then stops uploading.
+        val change = dt / (if (target > level) riseSeconds else fallSeconds)
+        level = if (target > level) minOf(target, level + change) else maxOf(target, level - change)
         val step = (level * STEPS + .5f).toInt()
         if (step == uploaded) return null
         uploaded = step
