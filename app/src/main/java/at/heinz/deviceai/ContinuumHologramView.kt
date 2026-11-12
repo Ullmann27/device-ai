@@ -594,6 +594,68 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     /** Presentation only; no document access. */
+    private data class CockpitBinding(
+        val surface: Surface,
+        val bytes: ByteArray,
+        val ready: (Boolean) -> Unit,
+        var frame: at.heinz.deviceai.avatar3d.CockpitStageFrame? = null,
+        var width: Int = 0,
+        var height: Int = 0,
+        var reported: Boolean = false,
+        var failed: Boolean = false
+    ) {
+        fun report(value: Boolean) {
+            if (reported != value) { reported = value; ready(value) }
+        }
+    }
+    private var cockpitBinding: CockpitBinding? = null
+
+    internal fun attachCockpitStage(surface: Surface, ready: (Boolean) -> Unit) {
+        detachCockpitStage()
+        val bytes = runCatching {
+            val contract = at.heinz.deviceai.avatar3d.FilamentCockpitStage
+            val bytes = context.assets.open(contract.ASSET_PATH).use {
+                it.readBytes().also { bytes -> require(bytes.size <= contract.MAX_BYTES) }
+            }
+            val sha = java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
+                .joinToString("") { "%02x".format(it) }
+            require(sha == contract.ASSET_SHA256)
+            bytes
+        }.getOrNull() ?: return
+        cockpitBinding = CockpitBinding(surface, bytes, ready)
+        invalidate()
+    }
+
+    internal fun presentCockpitStage(frame: at.heinz.deviceai.avatar3d.CockpitStageFrame,
+                                     bufferWidth: Int, bufferHeight: Int) {
+        val binding = cockpitBinding ?: return
+        if (!frame.valid()) return
+        binding.frame = frame
+        binding.width = bufferWidth
+        binding.height = bufferHeight
+        invalidate()
+    }
+
+    internal fun detachCockpitStage() {
+        cockpitBinding?.report(false)
+        cockpitBinding = null
+        native3d?.clearCockpitStage()
+    }
+
+    private fun renderCockpitStage() {
+        val binding = cockpitBinding ?: return
+        if (!canDisplay3d() || binding.failed) { binding.report(false); return }
+        val frame = binding.frame ?: return
+        val native = native3d ?: return
+        runCatching {
+            native.renderCockpitStage(binding.surface, binding.bytes, frame, binding.width, binding.height)
+        }.onSuccess { if (it) binding.report(true) }.onFailure {
+            binding.failed = true
+            binding.report(false)
+            native.clearCockpitStage()
+        }
+    }
+
     internal fun attachDocumentStage(id: String, surface: Surface, ready: (Boolean) -> Unit) {
         documentStageBinding?.report(false)
         native3d?.clearDocumentStage()
@@ -666,6 +728,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     private fun release3d(clearAsset: Boolean) {
+        cockpitBinding?.report(false)
         documentStageBinding?.report(false)
         native3d?.close(); native3d = null; native3dDrawn = false
         nativeTexture?.let { texture -> texture.surfaceTextureListener = null; removeView(texture) }
@@ -1167,14 +1230,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                     .onFailure { fail3d() }
             }
             renderDocumentStage()
-            if (!native3dDrawn) {
-                val headCanvas = canvas.save()
-                transformHeadEntrance(canvas, density)
-                canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
-                avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
-                    pose, avatarSeconds, canAnimateFrame())
-                canvas.restoreToCount(headCanvas)
-            }
+            renderCockpitStage()
             if (!memoryScene.isActive && (native3dDrawn || cockpit || cockpitOrbBounds != null)) {
                 // Same original orb, same actual app state and speech frame; no second animation loop.
                 resolveOrbBounds(width, height)
@@ -1195,6 +1251,18 @@ class ContinuumHologramView @JvmOverloads constructor(
                     renderer.draw(painter, renderFrame)
                 }
                 canvas.restoreToCount(orbCanvas)
+            }
+            if (!native3dDrawn) {
+                val headCanvas = if (layeredCockpit) canvas.saveLayerAlpha(
+                    headDrawBounds.left / density, headDrawBounds.top / density,
+                    headDrawBounds.right / density, headDrawBounds.bottom / density,
+                    (at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY * 255f).toInt())
+                    else canvas.save()
+                transformHeadEntrance(canvas, density)
+                canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
+                avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
+                    pose, avatarSeconds, canAnimateFrame())
+                canvas.restoreToCount(headCanvas)
             }
             if (!native3dDrawn && head3dEnabled) {
                 val status = if (native3dFailed) "3D derzeit nicht verfügbar" else "3D wird initialisiert …"

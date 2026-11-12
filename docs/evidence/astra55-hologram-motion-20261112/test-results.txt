@@ -1,0 +1,8 @@
+Compiler: Kotlin 2.0.20
+Compile exit: 0
+JUnit version 4.13.2
+..............
+Time: 0.049
+
+OK (14 tests)
+

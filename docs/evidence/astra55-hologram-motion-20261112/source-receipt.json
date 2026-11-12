@@ -1,0 +1,15 @@
+{
+  "base_head": "108355a42218ba4955a7b1c8ce34a70c350286a5",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "5af385e2bb7b65306547797ba1a54c87b42b3600d2b6296122264a9bf25fed30",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitMonitorMotion.kt": "547cc50c8ca02cac4f7d80563b8ca50dfd1d692aa000bb4871bfc684a0ffadd0",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/CockpitStageFrameTest.kt": "152f302f3e0244d43672135851e3444cb346bee5aebb31b38ecc15fac2bb9340",
+    "app/src/test/java/at/heinz/deviceai/ui/CockpitMonitorMotionTest.kt": "c480719c4b0f567911c2cdcdef6d7e2bd1d6644ee033b63a73f5224f39edbe4f"
+  },
+  "compiler": "Kotlin 2.0.20",
+  "junit": "4.13.2",
+  "compile_exit": 0,
+  "test_exit": 0,
+  "android_ui_tests": "NOT_RUN",
+  "filament_device": "NOT_RUN"
+}
