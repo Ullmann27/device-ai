@@ -49,10 +49,17 @@ internal object OwnerDeviceRequestSafety {
     // Code55: impersonal commands ("Jetzt löscht man alle Fotos", "Man bereinigt jetzt alles") use the
     // 3rd-person/2nd-plural -t form, which is not in `verbs` (its participle "installiert"/"entfernt" also
     // appears in plain questions). Only "man"/"ihr" directly at the verb counts; question openings stay free.
-    private const val impersonalStems = "lösch|loesch|entfern|deinstallier|installier|verschieb|start|stopp|" +
-        "bezahl|änder|aender|bereinig|säuber|saeuber|optimier|verbesser|beend"
-    private val impersonalChange = Regex("(?iu)(?<![\\p{L}])(?:(?:man|ihr)\\s+(?:(?:jetzt|gleich|sofort|einfach|" +
-        "dann|bitte|mal|noch)\\s+){0,2}(?:$impersonalStems)e?t|(?:$impersonalStems)e?t\\s+(?:man|ihr))(?![\\p{L}])")
+    // "start"/"beend"/"verbesser" are left out: "Morgen startet ihr mit eurem Projekt" is a plan (review #791).
+    private const val impersonalStems = "lösch|loesch|entfern|deinstallier|installier|verschieb|stopp|" +
+        "bezahl|änder|aender|bereinig|säuber|saeuber|optimier"
+    private const val impersonalAdverbs = "(?:(?:jetzt|gleich|sofort|einfach|dann|bitte|mal|noch)\\s+){0,2}"
+    // Only a negation that refuses the verb itself exempts the clause ("Man löscht nichts", "Ihr löscht keine Fotos");
+    // an object negation ("alle nicht gesicherten Fotos") does not (review #791).
+    private val impersonalRefusal = Regex("(?iu)(?:(?:man|ihr)\\s+$impersonalAdverbs(?:$impersonalStems)e?t|" +
+        "(?:$impersonalStems)e?t\\s+(?:man|ihr))\\s+(?:(?:noch|vorerst|erstmal|jetzt)\\s+)?" +
+        "(?:(?:nichts|nicht)(?:\\s+mehr)?$|kein\\p{L}*(?![\\p{L}]))")
+    private val impersonalChange = Regex("(?iu)(?<![\\p{L}])(?:(?:man|ihr)\\s+$impersonalAdverbs" +
+        "(?:$impersonalStems)e?t|(?:$impersonalStems)e?t\\s+(?:man|ihr))(?![\\p{L}])")
     private val questionOpening = Regex("(?iu)^(?:wie|was|warum|wieso|weshalb|wo|wann|welche\\p{L}*|womit|wozu)(?![\\p{L}])")
     private val proposalSubject = words("ich|man|wir")
     private val proposalModal = words("kann|könnte|koennte|sollte|könnten|koennten")
@@ -105,6 +112,8 @@ internal object OwnerDeviceRequestSafety {
             if (mutation.containsMatchIn(sentence) && excluded != null && !redirectsToRead)
                 categories += Category.CHANGE
         }
+        // Sentences that end in "?" ("Löscht man damit auch die Fotos?") are questions, also without a wh-word.
+        val questions = Regex("[^.;!\\n?]*\\?").findAll(normalized).map { it.value.trimEnd('?').trim() }.toList()
         for (part in normalized.split(clauseBoundary)) {
             val clause = part.trim().replace(Regex("^(?:aber|und|jedoch)\\s+"), "")
             if (clause.isBlank()) continue
@@ -112,7 +121,8 @@ internal object OwnerDeviceRequestSafety {
             val category = when {
                 readOnlyStart.matches(clause) -> Category.READ_ONLY
                 changes.isEmpty() && impersonalChange.containsMatchIn(clause) &&
-                    !questionOpening.containsMatchIn(clause) && negative.findAll(clause).none() -> Category.CHANGE
+                    !questionOpening.containsMatchIn(clause) && questions.none { it.contains(clause) } &&
+                    !impersonalRefusal.containsMatchIn(clause) -> Category.CHANGE
                 changes.isEmpty() && !improvements.containsMatchIn(clause) ->
                     if (ownerDecision.matches(clause)) Category.DEFERRED_CHANGE else Category.READ_ONLY
                 changes.size > 1 -> Category.CHANGE

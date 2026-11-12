@@ -48,12 +48,19 @@ class Intelligence55ConversationTest {
 
     @Test fun impersonalThirdPersonCommandsAreChangesButQuestionsStayFree() {
         listOf("Jetzt löscht man alle Fotos", "Man bereinigt jetzt alles", "Man entfernt die alten Apps",
-            "Ihr löscht jetzt den Ordner", "Dann deinstalliert man WhatsApp").forEach {
+            "Ihr löscht jetzt den Ordner", "Dann deinstalliert man WhatsApp",
+            // Review #791: an object negation must not lift the block.
+            "Man löscht jetzt alle nicht gesicherten Fotos", "Ihr löscht jetzt alle Fotos und keine Videos",
+            "Man entfernt sofort alle Apps, keine Rückfrage").forEach {
             assertTrue(it, OwnerDeviceRequestSafety.inspect(it).blocked)
             assertNull(it, BootstrapBrain.decide(it, emptyList()).tool)
         }
         listOf("Welche Apps sind installiert?", "Wie weit ist Wien entfernt?", "Wie installiert man eine App?",
-            "Was bereinigt man normalerweise?", "Man löscht nichts", "Die App wurde entfernt").forEach {
+            "Was bereinigt man normalerweise?", "Man löscht nichts", "Die App wurde entfernt",
+            // Review #791: yes/no questions, refusals and plans stay free.
+            "Löscht man damit auch die Fotos?", "Entfernt man Apps über die Einstellungen?", "Ihr löscht keine Fotos",
+            "Startet ihr morgen mit dem Projekt?", "Morgen startet ihr mit eurem Projekt",
+            "Man startet am besten mit einem Backup").forEach {
             assertFalse(it, OwnerDeviceRequestSafety.inspect(it).blocked)
         }
         assertEquals("list_installed_apps", BootstrapBrain.decide("Welche Apps sind installiert?", emptyList()).tool)
