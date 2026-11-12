@@ -1,0 +1,39 @@
+name: Code55 spatial room source and QA
+on:
+  push:
+    branches: [work/code55-spatial-room-20261112]
+    paths:
+      - .github/workflows/code55-spatial-room-qa.yml
+      - app/src/main/java/at/heinz/deviceai/avatar3d/**
+      - app/src/test/java/at/heinz/deviceai/avatar3d/**
+      - tools/cinema-room/**
+permissions:
+  contents: read
+concurrency:
+  group: code55-spatial-room-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  source-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Preserve exact source and original identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          mkdir -p "$RUNNER_TEMP/cinema-source"
+          git archive --format=tar HEAD app/src app/build.gradle.kts build.gradle.kts settings.gradle.kts gradle gradlew gradle.properties AGENTS.md CLAUDE.md tools/capture tools/cinema-document | gzip -n > "$RUNNER_TEMP/cinema-source/source.tar.gz"
+          printf 'source_sha=%s\nsource_tree=%s\nFold7=NOT_RUN\n' "$GITHUB_SHA" "$(git rev-parse HEAD^{tree})" > "$RUNNER_TEMP/cinema-source/SOURCE.txt"
+          sha256sum app/src/main/assets/avatar3d/continuum-avatar.glb app/src/main/assets/cinema3d/document-workspace.glb > "$RUNNER_TEMP/cinema-source/ASSETS.sha256"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Code55-spatial-source
+          path: ${{ runner.temp }}/cinema-source/
+          if-no-files-found: error
+          retention-days: 3
