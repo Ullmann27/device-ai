@@ -33,7 +33,8 @@ internal data class ObservationStamp(
     val digest: String,
     val observedAtNanos: Long,
     /** Sequence of the LatestLiveFrameHolder frame shown at that moment; 0 = no frame. */
-    val frameSequence: Long = 0
+    val frameSequence: Long = 0,
+    val captureSession: Long = 0
 )
 
 internal enum class EffectVerdict {
@@ -60,7 +61,8 @@ internal object ActionEffectVerifier {
         accepted == false -> EffectVerdict.NOT_DISPATCHED
         accepted == null -> EffectVerdict.UNCLEAR_DISPATCH
         after == null -> EffectVerdict.UNCLEAR_NO_NEW_OBSERVATION
-        after.taskId != before.taskId || after.epoch != before.epoch || after.packageName != before.packageName ->
+        after.taskId != before.taskId || after.epoch != before.epoch || after.packageName != before.packageName ||
+            after.windowId != before.windowId || after.captureSession != before.captureSession ->
             EffectVerdict.UNCLEAR_CONTEXT_CHANGED
         after.revision <= before.revision || after.observedAtNanos <= before.observedAtNanos ->
             EffectVerdict.UNCLEAR_NO_NEW_OBSERVATION
@@ -104,6 +106,7 @@ internal class LiveActionJournal(val taskId: String, private val capacity: Int =
     private val entries = ArrayDeque<Entry>()
     private val unclearFingerprints = LinkedHashSet<String>()
     private var lastUnclearRevision = Long.MIN_VALUE
+    private var uncertaintyCapacityExhausted = false
     private var inFlight: String? = null
 
     init { require(taskId.matches(ACTION_ID) && capacity in 1..256) }
@@ -112,7 +115,7 @@ internal class LiveActionJournal(val taskId: String, private val capacity: Int =
         require(before.taskId == taskId) { "TASK_MISMATCH" }
         return when {
             inFlight != null -> Admission.IN_FLIGHT
-            fingerprint in unclearFingerprints -> Admission.BLOCKED_AFTER_UNCLEAR
+            uncertaintyCapacityExhausted || fingerprint in unclearFingerprints -> Admission.BLOCKED_AFTER_UNCLEAR
             before.revision <= lastUnclearRevision -> Admission.NEEDS_FRESH_OBSERVATION
             entries.any { it.fingerprint == fingerprint && it.revision == before.revision && it.digest == before.digest } ->
                 Admission.DUPLICATE_ON_SAME_OBSERVATION
@@ -126,8 +129,8 @@ internal class LiveActionJournal(val taskId: String, private val capacity: Int =
         entries.addLast(Entry(fingerprint, before.revision, before.digest, verdict))
         while (entries.size > capacity) entries.removeFirst()
         if (verdict.unclear) {
-            if (unclearFingerprints.size >= capacity) unclearFingerprints.remove(unclearFingerprints.first())
-            unclearFingerprints += fingerprint
+            if (unclearFingerprints.size < capacity) unclearFingerprints += fingerprint
+            else uncertaintyCapacityExhausted = true
             lastUnclearRevision = maxOf(lastUnclearRevision, before.revision, after?.revision ?: Long.MIN_VALUE)
         }
     }
@@ -202,7 +205,7 @@ internal data class ActionNode(
 )
 
 internal data class NodeActionFrame(val stamp: ObservationStamp, val safeWindows: Boolean, val complete: Boolean,
-                                    val nodes: List<ActionNode>)
+                                    val nodes: List<ActionNode>, val scrollEvidence: LiveScrollEvidence? = null)
 
 /** Exactly one of: label, viewId, or the single visible scrollable container. */
 internal data class NodeSelector(val label: String? = null, val viewId: String? = null, val singleScrollable: Boolean = false) {
@@ -244,6 +247,8 @@ internal interface NodeActionPort {
     fun performOnce(request: NodeActionRequest, target: ActionNode): Boolean
     /** A newer observation after the dispatch, or null when none arrived within the caller's deadline. */
     fun awaitPostcondition(): NodeActionFrame?
+    /** Release this action's observation binding. */
+    fun finished() {}
 }
 
 internal data class NodeActionResult(
@@ -287,7 +292,8 @@ internal class VerifiedNodeAction(private val journal: LiveActionJournal, privat
             val sendLike = SendActionGuard.isSendLike(target.label, target.viewId)
             when (request.kind) {
                 NodeActionKind.SCROLL_FORWARD, NodeActionKind.SCROLL_BACKWARD ->
-                    if (!target.scrollable || !target.enabled || sendLike) return refused("UNSAFE_SCROLL_TARGET", true, stamp)
+                    if (!target.scrollable || !target.enabled || target.password || sendLike)
+                        return refused("UNSAFE_SCROLL_TARGET", true, stamp)
                 NodeActionKind.SET_TEXT -> {
                     if (!target.editable || !target.enabled || target.password || sendLike) return refused("UNSAFE_TEXT_TARGET", true, stamp)
                     if (target.textDigest == liveSha256(request.text!!)) return refused("POSTCONDITION_ALREADY_PRESENT", true, stamp)
@@ -317,7 +323,7 @@ internal class VerifiedNodeAction(private val journal: LiveActionJournal, privat
                     catch (e: Exception) { reason = "POSTCONDITION_INTERRUPTED:" + (e.message ?: e.javaClass.simpleName).take(80); null }
                     after = post?.stamp?.takeIf { post.safeWindows && post.complete }
                     if (after != null) events.emit(LiveActionEvent.Observed(request.taskId, request.stepId, after))
-                    val expectation = post != null && expected(request, target, post)
+                    val expectation = post != null && expected(request, stamp, target, post)
                     verdict = ActionEffectVerifier.verify(stamp, true, after, expectation)
                     if (post == null && reason == "DISPATCH_FAILED") reason = "NO_NEW_OBSERVATION"
                     else if (post != null) reason = verdict.name
@@ -331,15 +337,16 @@ internal class VerifiedNodeAction(private val journal: LiveActionJournal, privat
             events.emit(LiveActionEvent.Verified(request.taskId, request.stepId, request.kind, verdict))
             return NodeActionResult(request.kind, verdict, true, accepted, after != null, stamp, after, reason)
         } finally {
-            active.set(false)
+            try { port.finished() } finally { active.set(false) }
         }
     }
 
     /** Expected change, judged on the NEW observation only. */
-    private fun expected(request: NodeActionRequest, target: ActionNode, post: NodeActionFrame): Boolean = when (request.kind) {
-        // A moved list changes the observed tree digest; that is checked by the verifier. The container must remain.
+    private fun expected(request: NodeActionRequest, before: ObservationStamp, target: ActionNode,
+                         post: NodeActionFrame): Boolean = when (request.kind) {
+        // A changed badge proves nothing.
         NodeActionKind.SCROLL_FORWARD, NodeActionKind.SCROLL_BACKWARD ->
-            post.nodes.count { it.visible && request.selector.matches(it) && it.scrollable } == 1
+            post.scrollEvidence?.confirms(request, before, target, post) == true
         // The very field now holds exactly the requested draft (compared by digest, text is not surfaced).
         NodeActionKind.SET_TEXT -> post.nodes.filter { it.visible && request.selector.matches(it) && it.editable && !it.password }
             .singleOrNull()?.textDigest == liveSha256(request.text!!)

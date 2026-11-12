@@ -27,7 +27,7 @@ import org.robolectric.shadows.ShadowAccessibilityWindowInfo
     AndroidLiveNodePortTest.NodeShadow::class, AndroidLiveNodePortTest.WindowShadow::class])
 class AndroidLiveNodePortTest {
     @Implements(AccessibilityService::class)
-    class ServiceShadow : ShadowAccessibilityService() {
+    open class ServiceShadow : ShadowAccessibilityService() {
         companion object {
             var target: AccessibilityNodeInfo? = null
             var ownPackage = "at.heinz.deviceai"

@@ -1,14 +1,13 @@
-"""Validate the packaged cockpit geometry."""
+"""Validate the bounded cockpit seed."""
 import hashlib
 import json
 import math
 from pathlib import Path
-import re
 import struct
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSET = ROOT / 'app/src/main/assets/cinema3d/cockpit-workstation.glb'
-STAGE = ROOT / 'app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt'
+ASSET = ROOT / 'tools/cockpit-workstation/source/pr801-workstation.glb'
+METADATA = ASSET.with_suffix('.json')
 
 
 def intersection_area(triangle, rectangle):
@@ -94,7 +93,10 @@ def verify():
                 if mesh['name'] in openings:
                     assert intersection_area([a[:2], b[:2], c[:2]], openings[mesh['name']]) < 1e-10, (mesh['name'], 'content obstruction')
     digest = hashlib.sha256(payload).hexdigest()
-    assert re.search(r'ASSET_SHA256 = "([a-f0-9]{64})"', STAGE.read_text()).group(1) == digest, 'Runtime pin mismatch'
+    metadata = json.loads(METADATA.read_text())
+    assert metadata['sha256'] == digest and metadata['bytes'] == len(payload), 'Seed pin mismatch'
+    assert metadata['source_path'] == str(ASSET.relative_to(ROOT))
+    assert hashlib.sha256((ROOT / metadata['generator_path']).read_bytes()).hexdigest() == metadata['generator_sha256']
     renderables = [node for node in document['nodes'] if 'mesh' in node]
     primitives = [primitive for node in renderables for primitive in document['meshes'][node['mesh']]['primitives']]
     print(json.dumps({'result': 'PASS', 'bytes': len(payload), 'sha256': digest,

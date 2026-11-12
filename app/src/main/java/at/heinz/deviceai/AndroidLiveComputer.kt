@@ -9,12 +9,14 @@ import android.hardware.HardwareBuffer
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.media.projection.MediaProjectionConfig
 import android.media.projection.MediaProjectionManager
 import at.heinz.deviceai.cognitive.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.Executors
 
 /** Hardware-backed pixels; no encoding or persistent capture. */
 internal class AndroidLiveFrame(
@@ -42,6 +44,9 @@ internal object AndroidLiveComputer {
     private val sequence = AtomicLong()
     private val active = AtomicReference<Session?>()
     private val handler by lazy { Handler(Looper.getMainLooper()) }
+    private val screenshotExecutor by lazy { Executors.newSingleThreadExecutor { work ->
+        Thread(work, "ContinuumWindowColor").apply { isDaemon = true }
+    } }
     private val frames = LatestLiveFrameHolder<AndroidLiveFrame>(AndroidLiveFrame::close)
     val feed: LiveMonitorFeed<AndroidLiveFrame> get() = frames
 
@@ -138,7 +143,7 @@ internal object AndroidLiveComputer {
                      permissionCheck: () -> Unit = { error("ACTION_GRANT_REQUIRED") }) = AndroidLiveNodePort(access,
         current.binding.taskId, current.binding.targetPackage, { feed.status(System.nanoTime()).sequence }, {
             check(session(current.binding.taskId) === current) { "LIVE_COMPUTER_SESSION_CHANGED" }
-        }, permissionCheck)
+        }, permissionCheck, captureSession = current.binding.captureSession)
 
     fun observe(taskId: String): NodeActionFrame {
         val current = session(taskId)
@@ -195,37 +200,46 @@ internal object AndroidLiveComputer {
     private fun captureWindow(current: Session) {
         if (active.get() !== current || current.cancelled.get()) return
         val before = try {
-            ScreenObservationBus.liveRevision(current.access)
-            current.access.service.liveWindowSelection(current.binding.targetPackage)
+            val revision = ScreenObservationBus.liveRevision(current.access)
+            val window = current.access.service.liveWindowSelection(current.binding.targetPackage).target
+            check(ScreenObservationBus.liveRevision(current.access) == revision) { "CAPTURE_SOURCE_CHANGED" }
+            LiveWindowCapture(current.binding, current.access.epoch, revision, window, SystemClock.uptimeMillis())
         } catch (_: Exception) {
             frames.pause(LiveMonitorReason.SOURCE_HIDDEN, current.binding.captureSession)
             schedule(current)
             return
         }
         try {
-            current.access.service.takeScreenshotOfWindow(before.target.id, current.access.service.mainExecutor,
+            current.access.service.takeScreenshotOfWindow(before.window.id, current.access.service.mainExecutor,
                 object : AccessibilityService.TakeScreenshotCallback {
                     override fun onSuccess(result: AccessibilityService.ScreenshotResult) {
                         val frame = AndroidLiveFrame(result.hardwareBuffer, result.colorSpace)
                         var handedOff = false
+                        var copying = false
                         try {
-                            if (active.get() !== current || current.cancelled.get()) return
-                            val revision = ScreenObservationBus.liveRevision(current.access)
-                            val after = current.access.service.liveWindowSelection(current.binding.targetPackage)
-                            if (after.target.id != before.target.id || after.target.bounds != before.target.bounds) {
-                                frames.pause(LiveMonitorReason.SOURCE_HIDDEN, current.binding.captureSession)
-                                return
+                            windowCaptureAge(current, before, result.timestamp)
+                            if (frame.colorSpace.isSrgb) {
+                                handedOff = true
+                                publishWindowFrame(current, before, frame, result.timestamp)
+                            } else {
+                                screenshotExecutor.execute {
+                                    AndroidGpuFrameCopier.copy(frame, screenshotExecutor) { converted ->
+                                        val posted = handler.post {
+                                            if (converted != null) publishWindowFrame(current, before, converted, result.timestamp)
+                                            else frames.pause(LiveMonitorReason.SOURCE_UNVERIFIED, current.binding.captureSession)
+                                            schedule(current)
+                                        }
+                                        if (!posted) converted?.close()
+                                    }
+                                }
+                                handedOff = true
+                                copying = true
                             }
-                            val meta = LiveFrameMeta(current.binding.captureSession, System.nanoTime(), frame.width, frame.height,
-                                current.binding.targetPackage, before.target.id, ownWindowVisible = false,
-                                observationRevision = revision, sourceViewport = LiveTargetBounds(0f, 0f, 1f, 1f))
-                            handedOff = true
-                            frames.offer(meta, frame)
                         } catch (_: Exception) {
                             frames.pause(LiveMonitorReason.SOURCE_UNVERIFIED, current.binding.captureSession)
                         } finally {
                             if (!handedOff) frame.close()
-                            schedule(current)
+                            if (!copying) schedule(current)
                         }
                     }
                     override fun onFailure(errorCode: Int) {
@@ -243,6 +257,31 @@ internal object AndroidLiveComputer {
             frames.pause(LiveMonitorReason.SOURCE_UNVERIFIED, current.binding.captureSession)
             schedule(current)
         }
+    }
+
+    private fun windowCaptureAge(current: Session, before: LiveWindowCapture, capturedAt: Long): Long {
+        check(active.get() === current && !current.cancelled.get()) { "CAPTURE_SESSION_CHANGED" }
+        val revision = ScreenObservationBus.liveRevision(current.access)
+        val after = current.access.service.liveWindowSelection(current.binding.targetPackage).target
+        check(ScreenObservationBus.liveRevision(current.access) == revision) { "CAPTURE_SOURCE_CHANGED" }
+        return before.ageIfCurrent(current.binding, current.access.epoch, revision, after, capturedAt,
+            SystemClock.uptimeMillis()) ?: error("CAPTURE_SOURCE_OR_TIME_CHANGED")
+    }
+
+    private fun publishWindowFrame(current: Session, before: LiveWindowCapture, frame: AndroidLiveFrame, capturedAt: Long) {
+        var handedOff = false
+        try {
+            val age = windowCaptureAge(current, before, capturedAt)
+            check(frame.colorSpace.isSrgb) { "CAPTURE_COLOR_UNVERIFIED" }
+            val meta = LiveFrameMeta(current.binding.captureSession, capturedAt * 1_000_000, frame.width, frame.height,
+                current.binding.targetPackage, before.window.id, ownWindowVisible = false,
+                observationRevision = before.revision, sourceViewport = LiveTargetBounds(0f, 0f, 1f, 1f),
+                captureAgeMillis = age)
+            handedOff = true
+            frames.offer(meta, frame)
+        } catch (_: Exception) {
+            frames.pause(LiveMonitorReason.SOURCE_UNVERIFIED, current.binding.captureSession)
+        } finally { if (!handedOff) frame.close() }
     }
 
     private fun schedule(current: Session) {

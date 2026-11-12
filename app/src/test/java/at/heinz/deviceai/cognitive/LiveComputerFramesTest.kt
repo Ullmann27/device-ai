@@ -162,4 +162,27 @@ class LiveComputerFramesTest {
         assertEquals(LiveFrameOffer.Refused(LiveFrameRefusal.OUT_OF_ORDER), holder.offer(meta(time = 50_000_000), Frame(2)))
         assertNull(holder.acquire())
     }
+
+    @Test fun deliveryAndGpuDelayDoNotRenewCaptureFreshness() {
+        holder.bind(binding(origin = LiveFrameOrigin.ACCESSIBILITY_WINDOW))
+        val delayed = meta().copy(captureAgeMillis = 1_400)
+        assertTrue(holder.offer(delayed, Frame(1)) is LiveFrameOffer.Accepted)
+        assertEquals(1_400L, holder.status(now).ageMillis)
+        advance(101)
+        assertEquals(1_501L, holder.status(now).ageMillis)
+        assertEquals(LiveMonitorState.PAUSED, holder.status(now).state)
+        assertEquals(LiveMonitorReason.FRAME_STALE, holder.status(now).reason)
+    }
+
+    @Test fun alreadyStaleOrInvalidCaptureIsReleasedWithoutBecomingLive() {
+        holder.bind(binding())
+        holder.offer(meta(), Frame(1))
+        assertEquals(LiveFrameOffer.Refused(LiveFrameRefusal.STALE_CAPTURE),
+            holder.offer(meta().copy(captureAgeMillis = 1_501), Frame(2)))
+        assertEquals(LiveMonitorState.PAUSED, holder.status(now).state)
+        assertNull(holder.acquire())
+        assertEquals(listOf(1, 2), released)
+        assertEquals(LiveFrameOffer.Refused(LiveFrameRefusal.STALE_CAPTURE),
+            holder.offer(meta().copy(captureAgeMillis = -1), Frame(3)))
+    }
 }

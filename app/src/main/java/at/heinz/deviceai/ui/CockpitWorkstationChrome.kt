@@ -92,6 +92,57 @@ object CockpitWorkstationChrome {
             .65f, Fill.Solid(Colors.rim), .75f)
     }
 
+    fun badgeSurface(p: ContinuumPainter, b: Box) {
+        p.fillRoundRect(b.left, b.top, b.right, b.bottom, 10f, panelFill, .94f)
+        val edge = Fill.Linear(b.left, b.top, b.right, b.bottom,
+            intArrayOf(Colors.cyan, Colors.cyanDeep, Colors.violetRim))
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, 10f, 1.1f, edge, .78f)
+        p.strokeRoundRect(b.left + 2f, b.top + 2f, b.right - 2f, b.bottom - 2f,
+            8f, .6f, Fill.Solid(Colors.text), .12f)
+    }
+
+    fun companionBadge(p: ContinuumPainter, b: Box, status: String, active: Boolean) {
+        val stacked = b.width < 260f
+        val mark = minOf(29f, b.height - 16f)
+        val top = if (stacked) b.top + 9f else b.centerY - mark * .5f
+        JarvisReferenceHud.brandMark(p, b.left + 10f, top, mark)
+        val textX = b.left + mark + 18f
+        val style = JarvisDesign.Type.body.copy(size = 13f)
+        val cap = p.capHeight(style)
+        p.drawText(JarvisShellRenderer.fit(p, "Device AI", style, b.right - textX - 8f),
+            textX, top + cap, style, Fill.Solid(Colors.text))
+        p.drawText(JarvisShellRenderer.fit(p, "Continuum", style, b.right - textX - 8f),
+            textX, top + cap * 2f + 2f, style, Fill.Solid(Colors.text))
+        val caption = JarvisDesign.Type.caption.copy(size = 11f)
+        val statusX = if (stacked) b.left + 21f else maxOf(textX + 82f, b.centerX + 12f)
+        val y = if (stacked) b.bottom - 9f else b.centerY + p.capHeight(caption) * .5f
+        p.fillCircle(statusX - 9f, y - p.capHeight(caption) * .5f, 2.8f,
+            Fill.Solid(if (active) Colors.ok else Colors.textMuted))
+        p.drawText(JarvisShellRenderer.fit(p, "JARVIS · $status", caption, b.right - statusX - 8f),
+            statusX, y, caption, Fill.Solid(Colors.textSecondary))
+    }
+
+    fun cameraBadge(p: ContinuumPainter, b: Box, status: String, active: Boolean) {
+        val fill = Fill.Solid(if (active) Colors.ok else Colors.cyanSoft)
+        p.strokeRoundRect(b.left + 10f, b.centerY - 6f, b.left + 26f, b.centerY + 6f, 3f, 1.1f, fill)
+        p.strokeCircle(b.left + 18f, b.centerY, 3.4f, 1.1f, fill)
+        p.fillCircle(b.left + 18f, b.centerY, 1.4f, fill)
+        val style = JarvisDesign.Type.caption.copy(size = 12f)
+        p.drawText(JarvisShellRenderer.fit(p, status, style, b.width - 44f),
+            b.left + 34f, b.centerY + p.capHeight(style) * .5f, style, Fill.Solid(Colors.textSecondary))
+    }
+
+    fun systemBadge(p: ContinuumPainter, b: Box, active: List<Boolean>) {
+        ContinuumIcons.draw(p, Icon.CPU, b.left + 18f, b.centerY, 17f, Fill.Solid(Colors.cyanSoft))
+        val style = JarvisDesign.Type.caption.copy(size = 12f)
+        p.drawText("System", b.left + 34f, b.centerY - 2f, style, Fill.Solid(Colors.textSecondary))
+        val step = minOf(14f, (b.width - 44f) / maxOf(1, active.size))
+        active.forEachIndexed { index, enabled ->
+            p.fillCircle(b.left + 37f + step * index, b.centerY + 10f, 2.4f,
+                Fill.Solid(if (enabled) Colors.ok else Colors.textMuted))
+        }
+    }
+
     fun panelHeader(p: ContinuumPainter, b: Box, title: String, icon: Icon): Float {
         val style = JarvisDesign.Type.heading
         val y = b.top + 10f + p.capHeight(style)

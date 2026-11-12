@@ -41,7 +41,8 @@ class CinematicWorkstationLayoutTest {
             val monitor = shell[Slot.WORK_PROCESS]!!
             val window = window(shell)
             val bottom = head.top - scene.top +
-                (window.cameraCenterY + window.halfHeight - posedBottom) * head.height / (2 * window.halfHeight)
+                (window.cameraCenterY + window.halfHeight - minOf(posedBottom, focus.face!!.bottom)) *
+                head.height / (2 * window.halfHeight)
             val base = CockpitStageFrame(scene.width, scene.height,
                 monitor.left - scene.left, monitor.top - scene.top,
                 monitor.right - scene.left, monitor.bottom - scene.top)

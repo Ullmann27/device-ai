@@ -18,15 +18,50 @@ import java.util.concurrent.atomic.AtomicBoolean
 internal object AndroidGpuFrameCopier {
     private val inFlight = AtomicBoolean(false)
     fun copy(image: Image, crop: Rect, executor: Executor, done: (AndroidLiveFrame?) -> Unit) {
-        if (!inFlight.compareAndSet(false, true)) { image.close(); done(null); return }
         var source: HardwareBuffer? = null
+        val input: Pair<HardwareBuffer, ColorSpace>
+        try {
+            source = image.hardwareBuffer ?: error("CAPTURE_BUFFER_UNAVAILABLE")
+            val color = observedColorSpace(image.dataSpace) ?: error("CAPTURE_COLOR_UNVERIFIED")
+            input = source to color
+        } catch (_: Exception) {
+            source?.close()
+            image.close()
+            done(null)
+            return
+        }
+        copy(input.first, input.second, crop, executor, { input.first.close(); image.close() }, done)
+    }
+
+    fun copy(frame: AndroidLiveFrame, executor: Executor, done: (AndroidLiveFrame?) -> Unit) =
+        copy(frame.hardwareBuffer, frame.colorSpace, Rect(0, 0, frame.width, frame.height), executor, frame::close, done)
+
+    internal fun observedColorSpace(dataSpace: Int): ColorSpace? = ColorSpace.getFromDataSpace(dataSpace)
+        ?.takeIf { it.model == ColorSpace.Model.RGB }
+
+    private fun copy(source: HardwareBuffer, colorSpace: ColorSpace, crop: Rect, executor: Executor,
+                     releaseInput: () -> Unit, done: (AndroidLiveFrame?) -> Unit) {
+        if (!inFlight.compareAndSet(false, true)) { releaseInput(); done(null); return }
+        val completed = AtomicBoolean(false)
         var bitmap: Bitmap? = null
         var output: HardwareBuffer? = null
         var renderer: HardwareBufferRenderer? = null
         var node: RenderNode? = null
+        fun complete(frame: AndroidLiveFrame?) {
+            if (!completed.compareAndSet(false, true)) return
+            try {
+                runCatching { renderer?.close() }
+                runCatching { node?.discardDisplayList() }
+                runCatching { bitmap?.recycle() }
+                runCatching { releaseInput() }
+                if (frame == null) runCatching { output?.close() }
+            } finally { inFlight.set(false) }
+            done(frame)
+        }
         try {
-            source = image.hardwareBuffer ?: error("CAPTURE_BUFFER_UNAVAILABLE")
-            val colorSpace = ColorSpace.getFromDataSpace(image.dataSpace) ?: ColorSpace.get(ColorSpace.Named.SRGB)
+            check(colorSpace.model == ColorSpace.Model.RGB && crop.width() > 0 && crop.height() > 0 &&
+                Rect(0, 0, source.width, source.height).contains(crop)) { "CAPTURE_INPUT_UNVERIFIED" }
+            val outputColorSpace = ColorSpace.get(ColorSpace.Named.SRGB)
             bitmap = Bitmap.wrapHardwareBuffer(source, colorSpace) ?: error("CAPTURE_BITMAP_UNAVAILABLE")
             output = HardwareBuffer.create(crop.width(), crop.height(), HardwareBuffer.RGBA_8888, 1,
                 HardwareBuffer.USAGE_GPU_SAMPLED_IMAGE or HardwareBuffer.USAGE_GPU_COLOR_OUTPUT)
@@ -36,39 +71,21 @@ internal object AndroidGpuFrameCopier {
             canvas.drawBitmap(bitmap, crop, Rect(0, 0, crop.width(), crop.height()), Paint(Paint.FILTER_BITMAP_FLAG))
             node.endRecording()
             renderer = HardwareBufferRenderer(output).apply { setContentRoot(node) }
-            val heldSource = source
-            val heldBitmap = bitmap
             val heldOutput = output
-            val heldRenderer = renderer
-            val heldNode = node
-            renderer.obtainRenderRequest().setColorSpace(colorSpace).draw(executor) { result ->
+            renderer.obtainRenderRequest().setColorSpace(outputColorSpace).draw(executor) { result ->
                 var frame: AndroidLiveFrame? = null
                 try {
                     // Never return a source before GPU completion.
                     val finished = result.fence.awaitForever()
                     if (finished && result.status == HardwareBufferRenderer.RenderResult.SUCCESS)
-                        frame = AndroidLiveFrame(heldOutput, colorSpace)
+                        frame = AndroidLiveFrame(heldOutput, outputColorSpace)
                 } finally {
                     result.fence.close()
-                    heldRenderer.close()
-                    heldNode.discardDisplayList()
-                    heldBitmap.recycle()
-                    heldSource.close()
-                    image.close()
-                    if (frame == null) heldOutput.close()
-                    inFlight.set(false)
-                    done(frame)
+                    complete(frame)
                 }
             }
         } catch (_: Exception) {
-            renderer?.close()
-            node?.discardDisplayList()
-            bitmap?.recycle()
-            source?.close()
-            output?.close()
-            image.close()
-            inFlight.set(false)
-            done(null)
+            complete(null)
         }
     }
 }

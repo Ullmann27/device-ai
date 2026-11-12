@@ -93,13 +93,13 @@ class CinemaButtonMaterialUiTest {
                     File(dir, "$label-$phase.json").writeText(JSONObject()
                         .put("source_commit", System.getenv("CONTINUUM_CAPTURE_SOURCE_COMMIT"))
                         .put("backend", "Robolectric API28 native Canvas; 2D fallback")
-                        .put("input", "Real decor DOWN/CANCEL/UP on bottom:system")
+                        .put("input", "Real decor DOWN/CANCEL/UP on bottom:device")
                         .put("pressed_key", field(home.jarvisShell, "pressedControlKey") ?: JSONObject.NULL)
                         .put("model_inference", "NOT_RUN").put("Fold7", "NOT_RUN").toString(2))
                 } finally { bitmap.recycle() }
             }
             advance(1800)
-            val button = children(home).single { it.tag == "jarvis-bottom:system" && it.isShown }
+            val button = children(home).single { it.tag == "jarvis-bottom:device" && it.isShown }
             JarvisHomeTestRoutes.scrollIntoView(button)
             advance(32)
             val bounds = JarvisHomeTestRoutes.visibleBounds(button)
@@ -151,7 +151,7 @@ class CinemaButtonMaterialUiTest {
             assertEquals("Clicked control owns origin X", expectedOrigin.centerX(), origin.centerX(), 1.5f)
             assertEquals("Clicked control owns origin Y", expectedOrigin.centerY(), origin.centerY(), 1.5f)
             assertSame(avatar, field(activity, "hologramView"))
-            assertEquals("Dock press reaches drawn material", "bottom:system", heldKey)
+            assertEquals("Dock press reaches drawn material", "bottom:device", heldKey)
             assertNull("Cancel clears material pressure", cancelledKey)
             assertNull("Release clears material pressure", releasedKey)
         } finally {

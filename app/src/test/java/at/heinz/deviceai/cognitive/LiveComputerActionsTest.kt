@@ -13,7 +13,7 @@ import org.junit.Test
 class LiveComputerActionsTest {
     private val pkg = "com.whatsapp"
     private fun stamp(revision: Long, digest: String, at: Long = revision * 10, task: String = "task-1", epoch: Long = 3,
-                      app: String = pkg) = ObservationStamp(task, epoch, revision, app, 42, digest, at)
+                      app: String = pkg) = ObservationStamp(task, epoch, revision, app, 42, digest, at, captureSession = 7)
     private val bounds = LiveTargetBounds(.1f, .1f, .9f, .2f)
     private val search = ActionNode("Suchen", "com.whatsapp:id/search_src_text", true, true, true, false, true, false, bounds)
     private val list = ActionNode("", "com.whatsapp:id/list", true, true, false, true, false, false, LiveTargetBounds(0f, .2f, 1f, 1f))
@@ -38,6 +38,14 @@ class LiveComputerActionsTest {
         NodeActionFrame(stamp, safe, complete, nodes.toList())
     private fun request(kind: NodeActionKind, selector: NodeSelector, text: String? = null, revision: Long = 10) =
         NodeActionRequest("task-1", "step-1", pkg, 3, revision, kind, selector, text)
+    private fun proveScroll(port: Port, request: NodeActionRequest) {
+        val before = port.before.stamp
+        val dispatch = LiveScrollDispatch(before, request.stepId, request.fingerprint,
+            LiveScrollDispatch.targetFingerprint(list), before.observedAtNanos + 1, 100)
+        val after = requireNotNull(port.after)
+        port.after = after.copy(scrollEvidence = LiveScrollEvidence(dispatch, after.stamp.revision,
+            before.observedAtNanos + 2, 101, LiveScrollMotion(pixelsY = 120)))
+    }
     private val events = mutableListOf<LiveActionEvent>()
     private val journal = LiveActionJournal("task-1")
     private val action = VerifiedNodeAction(journal) { events += it }
@@ -106,9 +114,11 @@ class LiveComputerActionsTest {
     @Test fun duplicateOnTheSameObservationIsRefusedButARealNextScrollIsAllowed() {
         val port = Port(frame(stamp(10, "a"), list), frame(stamp(11, "b"), list))
         val scroll = request(NodeActionKind.SCROLL_FORWARD, NodeSelector(singleScrollable = true))
+        proveScroll(port, scroll)
         assertEquals(EffectVerdict.CONFIRMED, action.execute(scroll, port).verdict)
         assertEquals("JOURNAL_DUPLICATE_ON_SAME_OBSERVATION", action.execute(scroll, port).reason)
         port.before = frame(stamp(11, "b"), list); port.after = frame(stamp(12, "c"), list)
+        proveScroll(port, scroll.copy(revision = 11))
         assertEquals(EffectVerdict.CONFIRMED, action.execute(scroll.copy(revision = 11), port).verdict)
         assertEquals(2, port.dispatches)
     }
@@ -148,6 +158,7 @@ class LiveComputerActionsTest {
         assertTrue(events.none { it is LiveActionEvent.Dispatched })
         assertEquals("JOURNAL_DUPLICATE_ON_SAME_OBSERVATION", action.execute(scroll, port).reason)
         port.accept = true; port.before = frame(stamp(12, "c"), list); port.after = frame(stamp(13, "d"), list)
+        proveScroll(port, scroll.copy(revision = 12))
         assertEquals(EffectVerdict.CONFIRMED, action.execute(scroll.copy(revision = 12), port).verdict)
     }
 

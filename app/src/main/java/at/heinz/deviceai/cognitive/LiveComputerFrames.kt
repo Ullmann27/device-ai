@@ -65,12 +65,14 @@ internal data class LiveFrameMeta(
     /** ScreenObservationBus revision at capture time, so an action can bind to exactly this observation. */
     val observationRevision: Long = -1,
     /** Output rectangle in normalized full-window coordinates. */
-    val sourceViewport: LiveTargetBounds? = null
+    val sourceViewport: LiveTargetBounds? = null,
+    /** Measured producer latency; never reset by delivery. */
+    val captureAgeMillis: Long = 0
 )
 
 internal enum class LiveFrameRefusal {
     NOT_BOUND, STOPPED, WRONG_SESSION, INVALID_SIZE, OUT_OF_ORDER, RATE_LIMITED,
-    SOURCE_UNVERIFIED, WRONG_SOURCE, OWN_WINDOW_MIRROR, SECURE_CONTENT
+    SOURCE_UNVERIFIED, WRONG_SOURCE, OWN_WINDOW_MIRROR, SECURE_CONTENT, STALE_CAPTURE
 }
 
 internal sealed interface LiveFrameOffer {
@@ -223,6 +225,7 @@ internal class LatestLiveFrameHolder<F : Any>(
                 LiveFrameRefusal.SECURE_CONTENT -> coverLocked(LiveMonitorReason.SECURE_CONTENT)
                 LiveFrameRefusal.WRONG_SOURCE -> coverLocked(LiveMonitorReason.WRONG_SOURCE)
                 LiveFrameRefusal.SOURCE_UNVERIFIED -> coverLocked(LiveMonitorReason.SOURCE_UNVERIFIED)
+                LiveFrameRefusal.STALE_CAPTURE -> coverLocked(LiveMonitorReason.FRAME_STALE)
                 else -> Unit
             }
         }
@@ -240,7 +243,10 @@ internal class LatestLiveFrameHolder<F : Any>(
     override fun status(nowNanos: Long): LiveMonitorStatus = synchronized(lock) {
         val b = binding
         val slot = current
-        val age = slot?.let { ((nowNanos - it.receivedNanos).coerceAtLeast(0)) / 1_000_000 }
+        val age = slot?.let {
+            val elapsed = ((nowNanos - it.receivedNanos).coerceAtLeast(0)) / 1_000_000
+            if (elapsed > Long.MAX_VALUE - it.meta.captureAgeMillis) Long.MAX_VALUE else elapsed + it.meta.captureAgeMillis
+        }
         val (state, reason) = when {
             ended -> LiveMonitorState.ENDED to (block ?: LiveMonitorReason.CAPTURE_STOPPED)
             b == null -> LiveMonitorState.NO_SOURCE to null
@@ -276,6 +282,7 @@ internal class LatestLiveFrameHolder<F : Any>(
         if (b.origin in setOf(LiveFrameOrigin.ACCESSIBILITY_WINDOW, LiveFrameOrigin.PROJECTION_WINDOW_CROP) && meta.sourceWindowId == null)
             return LiveFrameRefusal.SOURCE_UNVERIFIED
         if (source != b.targetPackage) return LiveFrameRefusal.WRONG_SOURCE
+        if (meta.captureAgeMillis !in 0..b.staleAfterMillis) return LiveFrameRefusal.STALE_CAPTURE
         if (rateLimitedLocked(b, now)) return LiveFrameRefusal.RATE_LIMITED
         return null
     }

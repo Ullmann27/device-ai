@@ -94,8 +94,14 @@ object JarvisCockpitGridContent {
             Slot.AVATAR -> Unit // the existing live View owns both render objects; never draw a stand-in behind it
             Slot.TOP_BAR -> header(p, b, grid, shell, s, now)
             Slot.CONTINUUM_HEADER -> brainHeader(p, b)
-            Slot.CAMERA_STATUS -> cameraStatus(p, b, s)
-            Slot.COCKPIT_SECONDARY -> modulesPanel(p, b, s)
+            Slot.CAMERA_STATUS -> if (shell?.workstation == true)
+                CockpitWorkstationChrome.cameraBadge(p, b, when {
+                    s.presentation.tracking -> "Gesicht erkannt"
+                    s.presentation.cameraSessionActive -> "Kamera aktiv"
+                    else -> "Kamera aus"
+                }, s.presentation.cameraSessionActive) else cameraStatus(p, b, s)
+            Slot.COCKPIT_SECONDARY -> if (shell?.workstation == true)
+                CockpitWorkstationChrome.systemBadge(p, b, modules(s).map { it.ok }) else modulesPanel(p, b, s)
             Slot.ROW_AGENTS -> JarvisCockpitPanels.drawAgents(p, b, s)
             Slot.ROW_TASKS -> JarvisCockpitPanels.drawTaskFlow(p, b, s)
             Slot.ROW_MEMORY -> JarvisMemoryActivityPanel.draw(p, b.left, b.top, b.right, b.bottom,
@@ -295,6 +301,10 @@ object JarvisCockpitGridContent {
     fun liveTaskText(s: ContinuumDashboardState): String = JarvisCockpitPanels.activeTaskText(s)
 
     private fun dialog(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, shell: Shell?, now: Long) {
+        if (shell?.workstation == true) {
+            CockpitWorkstationChrome.companionBadge(p, b, liveBadge(s), s.presentation.live || s.model.online)
+            return
+        }
         val title = Type.heading.copy(size = (b.width * .095f).coerceIn(16f, 22f))
         val detail = Type.caption.copy(size = 12f)
         val badge = liveBadge(s)

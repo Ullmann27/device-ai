@@ -24,23 +24,26 @@ object CinematicWorkstationLayout {
         val statusH = 48f * font
         val dialogH = if (wide) 0f else 48f * font
         val reserved = headerH + inputH + dockH + statusH + dialogH + 6f * gap
-        val sceneH = maxOf(if (wide) 310f else 320f, viewport - reserved)
+        val minSceneH = if (wide) maxOf(310f, (28f + 96f * font) / .54f) else 320f
+        val sceneH = maxOf(minSceneH, viewport - reserved)
         val sceneTop = gap + headerH + gap + dialogH
         val scene = Box(margin, sceneTop, right, sceneTop + sceneH)
         val headW = minOf(room * if (wide) .82f else .98f, sceneH * 1.65f)
-        val headH = sceneH * .70f
-        val headTop = sceneTop + sceneH * .055f
+        val headH = if (wide) sceneH * .70f else minOf(sceneH * .62f, room * .70f)
+        val headTop = sceneTop + sceneH * if (wide) .057f else .11f
         val head = Box(width * .5f - headW * .5f, headTop,
             width * .5f + headW * .5f, headTop + headH)
         // Original rings surround solid skin.
-        val orbSize = minOf(room * .98f, sceneH * .80f)
-        val orb = Box(width * .5f - orbSize * .5f, sceneTop,
-            width * .5f + orbSize * .5f, sceneTop + orbSize)
+        val orbComposition = minOf(room * .98f, sceneH * .80f)
+        val orbSize = orbComposition * .64f
+        val orbTop = sceneTop + orbComposition * .10f
+        val orb = Box(width * .5f - orbSize * .5f, orbTop,
+            width * .5f + orbSize * .5f, orbTop + orbSize)
         fun roomBox(left: Float, top: Float, right: Float, bottom: Float) =
             Box(margin + room * left, sceneTop + sceneH * top,
                 margin + room * right, sceneTop + sceneH * bottom)
         val monitor = if (wide) roomBox(.25f, .54f, .75f, .89f)
-            else roomBox(.02f, .54f, .98f, .89f)
+            else roomBox(.04f, .54f, .96f, .89f)
         val boxes = linkedMapOf(
             Slot.TOP_BAR to Box(margin, gap, right, gap + headerH),
             Slot.AVATAR to scene,
@@ -48,9 +51,12 @@ object CinematicWorkstationLayout {
         )
         if (wide) {
             val sideW = room * .20f
-            boxes[Slot.DIALOG] = Box(margin, sceneTop + 12f, margin + sideW, sceneTop + 112f * font)
-            boxes[Slot.CAMERA_STATUS] = Box(right - sideW, sceneTop + 12f, right, sceneTop + 60f * font)
-            boxes[Slot.COCKPIT_SECONDARY] = Box(right - sideW, sceneTop + 68f * font, right, monitor.top - gap)
+            val badgeTop = sceneTop + 12f
+            boxes[Slot.DIALOG] = Box(margin, badgeTop, margin + sideW, badgeTop + 74f * font)
+            val cameraBottom = badgeTop + 48f * font
+            boxes[Slot.CAMERA_STATUS] = Box(right - sideW, badgeTop, right, cameraBottom)
+            boxes[Slot.COCKPIT_SECONDARY] = Box(right - sideW, cameraBottom + gap, right,
+                cameraBottom + gap + 48f * font)
             boxes[Slot.WORK_DOCUMENT] = roomBox(.02f, .57f, .22f, .87f)
             boxes[Slot.WORK_DRAFT] = roomBox(.78f, .57f, .98f, .87f)
         } else {

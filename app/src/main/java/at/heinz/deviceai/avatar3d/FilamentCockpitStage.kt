@@ -1,140 +1,120 @@
 package at.heinz.deviceai.avatar3d
 
-import android.opengl.Matrix
-import android.view.Surface
+import android.graphics.RectF
+import at.heinz.deviceai.AndroidLiveFrame
+import at.heinz.deviceai.cognitive.CockpitWorkEvent
+import at.heinz.deviceai.cognitive.LiveMonitorFeed
 import com.google.android.filament.*
 import com.google.android.filament.gltfio.AssetLoader
 import com.google.android.filament.gltfio.FilamentAsset
 import com.google.android.filament.gltfio.ResourceLoader
 import java.nio.ByteBuffer
 
-/** Existing avatar engine owns resources. */
+/** Assets inside the existing scene. */
 internal class FilamentCockpitStage(
     private val engine: Engine,
-    private val renderer: Renderer,
+    private val scene: Scene,
     private val loader: AssetLoader,
-    private val surface: Surface,
-    bytes: ByteArray
+    assets: CockpitSceneAssets
 ) : AutoCloseable {
-    private var scene: Scene? = null
-    private var view: View? = null
-    private var camera: Camera? = null
-    private var swapChain: SwapChain? = null
-    private var asset: FilamentAsset? = null
+    private var workstation: FilamentAsset? = null
+    private var orb: FilamentAsset? = null
+    private var monitorMaterial: Material? = null
     private var ambientLight: IndirectLight? = null
-    private var cameraEntity = 0
-    private var lightEntity = 0
-    private var roomInstance = 0
-    private var monitorInstance = 0
-    private var sideMonitorInstance = 0
-    private var lastFrame: CockpitStageFrame? = null
+    private var monitorInstance: MaterialInstance? = null
+    private var pixels: CockpitLiveTexture? = null
+    private var roomTransform = 0
+    private var sideMonitorTransform = 0
+    private var monitorTransform = 0
+    private var orbTransform = 0
+    private val orbitTransforms = mutableListOf<Pair<Int, FloatArray>>()
     private val transform = FloatArray(16)
+    private val orbitCombined = FloatArray(16)
+    val pixelsVisible get() = pixels?.pixelsVisible == true
+    var label = "Keine Bildquelle verbunden"
+        private set
 
     init {
         try {
-            require(bytes.size in 1..MAX_BYTES)
-            scene = engine.createScene()
-            cameraEntity = EntityManager.get().create()
-            camera = engine.createCamera(cameraEntity).also { it.setExposure(11f, 1f / 125f, 100f) }
-            view = engine.createView().also {
-                it.scene = scene
-                it.camera = camera
-                it.blendMode = View.BlendMode.TRANSLUCENT
-                it.isPostProcessingEnabled = true
-                it.setShadowingEnabled(false)
-                it.bloomOptions = View.BloomOptions().apply {
-                    enabled = true; strength = .16f; resolution = 128; levels = 3
-                    quality = View.QualityLevel.LOW; threshold = true
-                }
+            workstation = load(assets.workstation)
+            orb = load(assets.orb)
+            roomTransform = namedTransform(requireNotNull(workstation), "cockpit-room")
+            sideMonitorTransform = namedTransform(requireNotNull(workstation), "cockpit-side-monitors")
+            monitorTransform = namedTransform(requireNotNull(workstation), "cockpit-monitor")
+            orbTransform = namedTransform(requireNotNull(orb), "continuum-orb")
+            repeat(4) { index ->
+                val instance = namedTransform(requireNotNull(orb), "orb-orbit-$index")
+                orbitTransforms += instance to engine.transformManager.getTransform(instance, FloatArray(16))
             }
-            swapChain = engine.createSwapChain(surface, SwapChainFlags.CONFIG_TRANSPARENT)
-            val buffer = ByteBuffer.allocateDirect(bytes.size).put(bytes).apply { flip() }
-            val loaded = requireNotNull(loader.createAsset(buffer))
-            asset = loaded
+            val entity = requireNotNull(workstation).getFirstEntityByName("monitor-live-pixels")
+            val renderable = engine.renderableManager.getInstance(entity)
+            require(renderable != 0 && engine.renderableManager.getPrimitiveCount(renderable) == 1)
+            val payload = ByteBuffer.allocateDirect(assets.monitorMaterial.size).put(assets.monitorMaterial).apply { flip() }
+            monitorMaterial = Material.Builder().payload(payload, assets.monitorMaterial.size).build(engine)
+            monitorInstance = requireNotNull(monitorMaterial).createInstance()
+            engine.renderableManager.setMaterialInstanceAt(renderable, 0, requireNotNull(monitorInstance))
+            pixels = CockpitLiveTexture(engine, requireNotNull(monitorInstance))
+            ambientLight = IndirectLight.Builder().irradiance(1, floatArrayOf(.90f, .98f, 1.10f))
+                .intensity(20_000f).build(engine)
+            scene.indirectLight = ambientLight
+        } catch (failure: Throwable) { close(); throw failure }
+    }
+
+    private fun load(bytes: ByteArray): FilamentAsset {
+        val buffer = ByteBuffer.allocateDirect(bytes.size).put(bytes).apply { flip() }
+        val loaded = requireNotNull(loader.createAsset(buffer))
+        try {
             require(loaded.resourceUris.isEmpty())
             val resources = ResourceLoader(engine, true)
             try { resources.loadResources(loaded) } finally { resources.destroy() }
-            roomInstance = engine.transformManager.getInstance(loaded.getFirstEntityByName("cockpit-room"))
-            monitorInstance = engine.transformManager.getInstance(loaded.getFirstEntityByName("cockpit-monitor"))
-            val sideEntity = loaded.getFirstEntityByName("cockpit-side-monitors")
-            sideMonitorInstance = if (sideEntity == 0) 0 else engine.transformManager.getInstance(sideEntity)
-            require(roomInstance != 0 && monitorInstance != 0)
-            scene!!.addEntities(loaded.entities)
-            lightEntity = EntityManager.get().create()
-            LightManager.Builder(LightManager.Type.DIRECTIONAL)
-                .color(.62f, .80f, 1f).intensity(95_000f)
-                .direction(-.32f, -.55f, -1f).castShadows(false).build(engine, lightEntity)
-            scene!!.addEntity(lightEntity)
-            ambientLight = IndirectLight.Builder()
-                .irradiance(1, floatArrayOf(.90f, .98f, 1.10f))
-                .intensity(20_000f).build(engine)
-            scene!!.indirectLight = ambientLight
+            scene.addEntities(loaded.entities)
             loaded.releaseSourceData()
-        } catch (failure: Throwable) {
-            close()
-            throw failure
-        }
+            return loaded
+        } catch (failure: Throwable) { loader.destroyAsset(loaded); throw failure }
     }
 
-    fun render(frame: CockpitStageFrame, bufferWidth: Int, bufferHeight: Int): Boolean {
-        if (!surface.isValid || !frame.valid() || bufferWidth <= 0 || bufferHeight <= 0 || asset == null) return false
-        if (frame != lastFrame) {
-            val d = frame.distance.toDouble()
-            camera!!.setProjection(Camera.Projection.PERSPECTIVE,
-                -frame.width * .5 / d, frame.width * .5 / d,
-                -frame.height * .5 / d, frame.height * .5 / d, 1.0, d * 4.0)
-            camera!!.lookAt(0.0, 0.0, d, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
-            Matrix.setIdentityM(transform, 0)
-            Matrix.scaleM(transform, 0, frame.width, frame.height, minOf(frame.width, frame.height))
-            engine.transformManager.setTransform(roomInstance, transform)
-            if (sideMonitorInstance != 0) {
-                val visible = frame.monitorWidth / frame.width <= .70f
-                Matrix.setIdentityM(transform, 0)
-                if (visible) Matrix.scaleM(transform, 0, frame.width, frame.height, minOf(frame.width, frame.height))
-                else Matrix.scaleM(transform, 0, 0f, 0f, 0f)
-                engine.transformManager.setTransform(sideMonitorInstance, transform)
-            }
-            Matrix.setIdentityM(transform, 0)
-            Matrix.translateM(transform, 0,
-                (frame.monitorLeft + frame.monitorRight - frame.width) * .5f,
-                (frame.height - frame.monitorTop - frame.monitorBottom) * .5f, frame.depthOffset)
-            Matrix.rotateM(transform, 0, frame.yawDegrees, 0f, 1f, 0f)
-            Matrix.rotateM(transform, 0, frame.pitchDegrees, 1f, 0f, 0f)
-            Matrix.scaleM(transform, 0, frame.monitorWidth, frame.monitorHeight,
-                minOf(frame.monitorWidth, frame.monitorHeight))
-            engine.transformManager.setTransform(monitorInstance, transform)
-            lastFrame = frame
+    private fun namedTransform(asset: FilamentAsset, name: String): Int =
+        engine.transformManager.getInstance(asset.getFirstEntityByName(name)).also { require(it != 0) { name } }
+
+    fun bind(feed: LiveMonitorFeed<AndroidLiveFrame>?) { pixels?.bind(feed) }
+    fun workEvent(event: CockpitWorkEvent) { pixels?.workEvent(event) }
+
+    fun update(frame: CockpitStageFrame, orbBounds: RectF, seconds: Float, motion: Boolean) {
+        require(frame.valid())
+        CockpitWorldTransforms.room(frame, transform)
+        engine.transformManager.setTransform(roomTransform, transform)
+        if (frame.monitorWidth / frame.width > .70f) {
+            transform[0] = 0f
+            transform[5] = 0f
+            transform[10] = 0f
         }
-        view!!.viewport = Viewport(0, 0, bufferWidth, bufferHeight)
-        if (!renderer.beginFrame(swapChain!!, System.nanoTime())) return false
-        try { renderer.render(view!!) } finally { renderer.endFrame() }
-        return true
+        engine.transformManager.setTransform(sideMonitorTransform, transform)
+        engine.transformManager.setTransform(monitorTransform, frame.monitorTransform())
+        CockpitWorldTransforms.orb(frame, orbBounds.left, orbBounds.top, orbBounds.right, orbBounds.bottom, transform)
+        engine.transformManager.setTransform(orbTransform, transform)
+        orbitTransforms.forEachIndexed { index, (instance, rest) ->
+            CockpitWorldTransforms.ringTransform(rest, index, seconds, motion, orbitCombined)
+            engine.transformManager.setTransform(instance, orbitCombined)
+        }
+        pixels?.update(frame, System.nanoTime())
+        label = pixels?.label ?: "3D-Bildquelle nicht verfügbar"
     }
 
     override fun close() {
-        runCatching { asset?.let { scene?.removeEntities(it.entities); loader.destroyAsset(it) } }
-        asset = null
-        if (lightEntity != 0) {
-            runCatching { scene?.removeEntity(lightEntity); engine.destroyEntity(lightEntity) }
-            runCatching { EntityManager.get().destroy(lightEntity) }
-            lightEntity = 0
+        runCatching { pixels?.close() }; pixels = null
+        for (loaded in listOfNotNull(workstation, orb)) {
+            runCatching { scene.removeEntities(loaded.entities); loader.destroyAsset(loaded) }
         }
-        runCatching { scene?.indirectLight = null }
+        workstation = null; orb = null
+        runCatching { monitorInstance?.let(engine::destroyMaterialInstance) }; monitorInstance = null
+        runCatching { monitorMaterial?.let(engine::destroyMaterial) }; monitorMaterial = null
+        runCatching { scene.indirectLight = null }
         runCatching { ambientLight?.let(engine::destroyIndirectLight) }; ambientLight = null
-        runCatching { view?.let(engine::destroyView) }; view = null
-        runCatching { scene?.let(engine::destroyScene) }; scene = null
-        if (cameraEntity != 0) {
-            runCatching { engine.destroyCameraComponent(cameraEntity) }
-            runCatching { EntityManager.get().destroy(cameraEntity) }
-            cameraEntity = 0
-        }
-        runCatching { swapChain?.let(engine::destroySwapChain) }; swapChain = null
-        runCatching { engine.flushAndWait() }
+        orbitTransforms.clear()
     }
 
     companion object {
         const val ASSET_PATH = "cinema3d/cockpit-workstation.glb"
-        const val ASSET_SHA256 = "152669e9c7d8c5ea8627f09353fbd71bfca9ba93a6df6c751c7d44e2ea72de0d"
-        const val MAX_BYTES = 32_768
+        const val MAX_BYTES = 2_000_000
     }
 }

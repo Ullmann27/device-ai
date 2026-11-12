@@ -62,18 +62,10 @@ object CockpitMonitorMotion {
         val progress = if (focus.isFinite()) focus.coerceIn(0f, 1f) else 0f
         if (progress == 0f) return base
         val arc = if (progress == 1f) 0f else sin(PI * progress).toFloat()
-        val dx = minOf(base.monitorLeft, base.width - base.monitorRight,
-            base.monitorWidth * .035f) * progress
-        val dy = minOf(base.monitorTop * .05f, 14f * density) * progress
         return base.copy(
-            monitorLeft = base.monitorLeft - dx,
-            monitorRight = base.monitorRight + dx,
-            monitorTop = base.monitorTop - dy,
             yawDegrees = (base.yawDegrees * (1f - progress) - 3.5f * arc).coerceIn(-8f, 8f),
             pitchDegrees = (base.pitchDegrees * (1f - progress) - 7.5f * arc).coerceIn(-12f, 12f),
-            depthOffset = (base.depthOffset * (1f - progress) -
-                minOf(base.monitorWidth, base.monitorHeight) * .26f * arc)
-                .coerceIn(-minOf(base.width, base.height) * .4f, minOf(base.width, base.height) * .4f)
+            depthOffset = base.depthOffset + minOf(base.monitorWidth, base.monitorHeight) * .22f * progress
         )
     }
 }

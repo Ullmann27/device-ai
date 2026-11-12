@@ -43,6 +43,17 @@ class ScreenObservationRevisionTest {
         assertEquals(epoch, ScreenObservationBus.grantEpoch())
         assertNull("content change is no new foreground confirmation", ScreenObservationBus.awaitAfter(before, 1))
     }
+    @Test fun textAndScrollEventsInvalidatePendingObservation() {
+        prepare()
+        for (type in listOf(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED, AccessibilityEvent.TYPE_VIEW_SCROLLED)) {
+            val before = ScreenObservationBus.revision()
+            val event = AccessibilityEvent.obtain(type)
+            event.packageName = "com.android.settings"
+            try { service.onAccessibilityEvent(event) } finally { event.recycle() }
+            assertTrue(ScreenObservationBus.revision() > before)
+            assertNull(ScreenObservationBus.awaitAfter(before, 1))
+        }
+    }
     @Test fun contentChangeDuringReadFailsClosedInsteadOfReleasingStaleText() {
         prepare(); var delivered = false
         val failure = assertThrows(IllegalStateException::class.java) {

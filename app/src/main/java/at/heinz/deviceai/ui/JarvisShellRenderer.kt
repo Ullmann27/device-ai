@@ -115,7 +115,8 @@ object JarvisShellRenderer {
             } else if (slot != Slot.TOP_BAR && slot != Slot.CONTINUUM_HEADER) {
                 if (pose.glassAlpha > .001f) {
                     if (pose.glassAlpha < .999f) p.saveAlpha(pose.glassAlpha)
-                    if (glass?.drawPanelGlass(box, 14f, 0f) != true) {
+                    if (shell.workstation) CockpitWorkstationChrome.badgeSurface(p, box)
+                    else if (glass?.drawPanelGlass(box, 14f, 0f) != true) {
                         JarvisReferenceHud.surface(p, box, 14f, Colors.cyan,
                             if (slot == Slot.COCKPIT_SECONDARY || slot == Slot.CAMERA_STATUS) Colors.violetRim else Colors.cyanDeep)
                     }

@@ -1,0 +1,9 @@
+{
+  "source_base_commit": "5348087805fa4ab4152ea04e9f20bb41afae9d95",
+  "generator_path": "tools/cockpit-workstation/build_scene.py",
+  "generator_sha256": "89bd30f8af92e86def970474d1f070d7b6c347ebd2c80cb6308290404755e862",
+  "source_path": "tools/cockpit-workstation/source/pr801-workstation.glb",
+  "sha256": "f1edabf082ee4d30e275a862a375ac73dea65ab4e1f140ddb021845c87e6bcc3",
+  "bytes": 30776,
+  "provenance": "Owned reference workstation seed; unified packaging adds only the live texture plane."
+}

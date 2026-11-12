@@ -116,7 +116,7 @@ class CockpitWorkReducer {
             CockpitWorkEvent.Stage.DISPATCHED -> {
                 val id = event.stepId ?: return false
                 if (event.action == null || pendingStep != null || id in dispatched || dispatched.size >= MAX_STEPS ||
-                    event.observationRevision <= 0) return false
+                    event.observationRevision <= 0 || event.observationRevision < observationRevision) return false
                 dispatched += id
                 pendingStep = id
                 beforeRevision = event.observationRevision
@@ -126,7 +126,7 @@ class CockpitWorkReducer {
             }
             CockpitWorkEvent.Stage.OBSERVED -> {
                 if (event.stepId != pendingStep || pendingStep == null ||
-                    event.observationRevision <= beforeRevision) return false
+                    event.observationRevision <= beforeRevision || event.observationRevision <= observationRevision) return false
                 observationRevision = event.observationRevision
                 frameSequence = event.frameSequence
             }
@@ -134,6 +134,9 @@ class CockpitWorkReducer {
                 if (event.stepId != pendingStep || pendingStep == null ||
                     observationRevision <= beforeRevision || event.observationRevision != observationRevision) return false
                 pendingStep = null
+            }
+            CockpitWorkEvent.Stage.ASK_OWNER, CockpitWorkEvent.Stage.PAUSED -> {
+                if (event.stepId != null && event.stepId != pendingStep) return false
             }
             CockpitWorkEvent.Stage.FOCUS -> {
                 if (pendingStep != null) return false

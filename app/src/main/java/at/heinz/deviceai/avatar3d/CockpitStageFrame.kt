@@ -18,6 +18,11 @@ data class CockpitStageFrame(
     val monitorWidth get() = monitorRight - monitorLeft
     val monitorHeight get() = monitorBottom - monitorTop
     val distance get() = maxOf(width, height) * 2.4f
+    val worldScale get() = 1f / minOf(width, height)
+    val restDepth get() = minOf(width, height) * .22f
+    val restCompensation get() = (distance - restDepth) / distance
+    val near get() = .01
+    val far get() = (distance * worldScale + 8f).toDouble()
     fun valid() = listOf(width, height, monitorLeft, monitorTop, monitorRight, monitorBottom,
         yawDegrees, pitchDegrees, depthOffset)
         .all(Float::isFinite) && width > 0f && height > 0f && monitorWidth > 0f && monitorHeight > 0f &&
@@ -31,30 +36,51 @@ data class CockpitStageFrame(
         return maxOf(1, (width * scale).toInt()) to maxOf(1, (height * scale).toInt())
     }
 
-    /** Clockwise, front plane coordinates. */
-    fun quad(left: Float = CONTENT_LEFT, top: Float = CONTENT_TOP,
-             right: Float = CONTENT_RIGHT, bottom: Float = CONTENT_BOTTOM): FloatArray {
-        require(valid() && left <= right && top <= bottom)
+    /** Column-major; shared with Filament. */
+    fun monitorTransform(): FloatArray {
+        require(valid())
         val angle = Math.toRadians(yawDegrees.toDouble())
         val c = cos(angle).toFloat()
         val s = sin(angle).toFloat()
         val pitch = Math.toRadians(pitchDegrees.toDouble())
         val cp = cos(pitch).toFloat()
         val sp = sin(pitch).toFloat()
-        val z = minOf(monitorWidth, monitorHeight) * CONTENT_DEPTH
-        val cx = (monitorLeft + monitorRight - width) * .5f
-        val cy = (height - monitorTop - monitorBottom) * .5f
+        val sx = monitorWidth * restCompensation * worldScale
+        val sy = monitorHeight * restCompensation * worldScale
+        val sz = minOf(monitorWidth, monitorHeight) * restCompensation * worldScale
+        return floatArrayOf(
+            c * sx, 0f, -s * sx, 0f,
+            s * sp * sy, cp * sy, c * sp * sy, 0f,
+            s * cp * sz, -sp * sz, c * cp * sz, 0f,
+            (monitorLeft + monitorRight - width) * .5f * restCompensation * worldScale,
+            (height - monitorTop - monitorBottom) * .5f * restCompensation * worldScale,
+            (restDepth + depthOffset) * worldScale, 1f)
+    }
+
+    /** Same camera as the scene. */
+    fun project(x: Float, y: Float, z: Float): Pair<Float, Float> {
+        val d = distance * worldScale
+        require(z < d)
+        val perspective = d / (d - z) / worldScale
+        return width * .5f + x * perspective to height * .5f - y * perspective
+    }
+
+    /** Clockwise front-plane coordinates. */
+    fun quad(left: Float = CONTENT_LEFT, top: Float = CONTENT_TOP,
+             right: Float = CONTENT_RIGHT, bottom: Float = CONTENT_BOTTOM): FloatArray {
+        require(valid() && left <= right && top <= bottom)
+        val matrix = monitorTransform()
         val result = FloatArray(8)
         val corners = arrayOf(left to top, right to top, right to bottom, left to bottom)
         corners.forEachIndexed { index, (u, v) ->
-            val localX = (u - .5f) * monitorWidth
-            val localY = (.5f - v) * monitorHeight
-            val pitchedY = cp * localY - sp * z
-            val pitchedZ = sp * localY + cp * z
-            val projectedZ = depthOffset - s * localX + c * pitchedZ
-            val scale = distance / (distance - projectedZ)
-            result[index * 2] = width * .5f + (cx + c * localX + s * pitchedZ) * scale
-            result[index * 2 + 1] = height * .5f - (cy + pitchedY) * scale
+            val x = u - .5f
+            val y = .5f - v
+            val z = CONTENT_DEPTH
+            val projected = project(matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12],
+                matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13],
+                matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])
+            result[index * 2] = projected.first
+            result[index * 2 + 1] = projected.second
         }
         return result
     }
