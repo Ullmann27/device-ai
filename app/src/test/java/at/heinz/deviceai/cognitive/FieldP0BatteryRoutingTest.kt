@@ -26,4 +26,14 @@ class FieldP0BatteryRoutingTest {
             assertTrue(it, PublicKnowledgeTopicRouter.isResearchRequest(it))
         }
     }
+
+    @Test fun neitherWebEntryPointTakesTheFieldSentence() {
+        // AgentActivity dispatches research via OwnerResearchCommand.parse (line ~6423) and chat web tools via
+        // WebToolRequest.fromChat (line ~6684) before the local tool route. Without an explicitly armed research
+        // button both must leave the local battery request alone (before the fix fromChat returned Search via
+        // explicitTopic). armed=true only follows the owner's explicit research button/dialog and stays a search.
+        assertNull(OwnerResearchCommand.parse(field))
+        assertNull(WebToolRequest.fromChat(field, armed = false))
+        assertNotNull(OwnerResearchCommand.parse("Recherchiere aktuelle Akku-Technologie"))
+    }
 }
