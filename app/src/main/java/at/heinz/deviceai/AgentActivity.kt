@@ -1236,7 +1236,7 @@ class AgentActivity : Activity() {
             (it.parent as? android.view.ViewGroup)?.removeView(it)
             hologramView = it
             avatarDirector.attach(it)
-            it.setForegroundActive(foregroundLearningActive)
+            it.setForegroundActive(foregroundLearningActive || computerFeedbackActive())
         }
         val home = at.heinz.deviceai.ui.ContinuumHomeView(this, liveHologram) { slot, x, y ->
             // Landscape action bar → Kern's CockpitActionHandler (same screens, plus the area-change event).
@@ -1252,7 +1252,7 @@ class AgentActivity : Activity() {
             externalBottomBarHeightDp = 0f)
         home.onNavigateTarget = ::navigateDashboardTarget
         home.setJarvisShellStage(true)
-        home.setForegroundActive(foregroundLearningActive)
+        home.setForegroundActive(foregroundLearningActive || computerFeedbackActive())
         homeView = home
         computerController?.restoreFeed()
         // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
@@ -3520,7 +3520,7 @@ class AgentActivity : Activity() {
         }
         head.setGeometry(if (mountedInChat) at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.PHONE
             else home.intendedGeometry)
-        head.setForegroundActive(foregroundLearningActive)
+        head.setForegroundActive(foregroundLearningActive || computerFeedbackActive())
         currentTaskEffectContext?.takeIf { it.session == sessionId && foregroundLearningActive }
             ?.let { head.setTaskEffectScope(it.scope) }
     }

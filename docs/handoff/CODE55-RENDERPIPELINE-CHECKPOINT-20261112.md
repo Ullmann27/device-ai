@@ -20,6 +20,10 @@ Produktionsstand vor dieser Dokumentation: `fa170ef88eb34a1fe19a4c6302594e97d560
 - #802: `c1d41bcdce73b42cbce3b77920ecd86360b379fe`; Ereignis-, Scroll-, Fenster-/Journal-, Foreground-Service- und Chat-Sitzungskorrekturen integriert. Neuere Screenshot-/Farb-/Frischeprüfungen erhalten.
 - Originalavatar SHA256 unverändert: `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`.
 
+## Letzte Sichtbarkeitskorrektur
+
+Beim Home-/Avatar-Neuaufbau wurde bislang nur `foregroundLearningActive` gesetzt. Damit konnte die bereits erlaubte, weiterhin sichtbare Computer-Sitzung im geteilten Bildschirm ihre Präsentation verlieren. Die drei Aufbau-/Umhängepfade verwenden jetzt dieselbe bestehende `computerFeedbackActive()`-Bedingung wie `onPause`. Aufnahme-, Eingabe- und Freigabegrenzen ändern sich dadurch nicht. Geräte-Resize-Abnahme bleibt NOT_RUN.
+
 ## Nächster zwingender Schritt
 
 Kompilation aller Testquellen abschließen → gemeinsame vollständige Android-Host-/UI-Suite → unsignierte Code55-APK → SHA/Artefakt/Restfehler dokumentieren → geprüften Stand nach #791 übernehmen. Zwölf Blender-Bilder der sechs Phasen in Fold-/Phone-Profil entstehen aus tatsächlichen Assets/Matrizen; sie sind keine Android-GPU-Geräteaufnahme.
