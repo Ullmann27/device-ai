@@ -34,7 +34,7 @@ import kotlin.math.abs
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class HollywoodFuiConnectionsUiTest {
-    private class Fixture(workPulse: Boolean = true) {
+    private class Fixture(workPulse: Boolean = true, deckLabels: List<RectF> = emptyList()) {
         val controller = Robolectric.buildActivity(Activity::class.java).setup().visible()
         val activity = controller.get()
         val root = FrameLayout(activity)
@@ -59,7 +59,7 @@ class HollywoodFuiConnectionsUiTest {
             assertTrue(window.open(body, origin, target, "Dokument", protected, onClosed = {
                 closed++
                 root.removeView(overlay)
-            }))
+            }, deckLabels = deckLabels))
             overlay.open(target, JarvisActionScenes.forDocument(), origin, protected)
             overlay.workPulseEnabled = workPulse
             layout()
@@ -85,8 +85,8 @@ class HollywoodFuiConnectionsUiTest {
         fun dispose() { window.dispose(); controller.pause().stop().destroy() }
     }
 
-    private fun fixture(workPulse: Boolean = true, block: (Fixture) -> Unit) {
-        val f = Fixture(workPulse)
+    private fun fixture(workPulse: Boolean = true, deckLabels: List<RectF> = emptyList(), block: (Fixture) -> Unit) {
+        val f = Fixture(workPulse, deckLabels)
         try { block(f) } finally { f.dispose() }
     }
 
@@ -205,6 +205,25 @@ class HollywoodFuiConnectionsUiTest {
         assertEquals("landed: no flight light is left on the deck", 0,
             deckLight(windowPixels(f), 356..415, 646..656))
     }
+
+    /**
+     * Code54 B2 (owner finding: the deck light crossed the KPI tiles for ≈300 ms): a labelled deck tile across the
+     * footprint's lower edge keeps every frame of the flight (work 280…650 ms) free of deck light, while the light
+     * stays on the free deck beside it. Without labels the same rows are lit (test above: > 40 px at 400 ms).
+     */
+    @Test fun flightContactNeverLightsALabelledDeckTile() =
+        fixture(deckLabels = listOf(RectF(340f, 636f, 440f, 700f))) { f ->
+            f.frame(1_000L)
+            var beside = 0
+            for (now in 1_280L..1_650L step 16) {
+                f.frame(now)
+                val pixels = windowPixels(f)
+                assertEquals("no deck light inside the KPI tile at work ${now - 1_000L} ms", 0,
+                    deckLight(pixels, 340..439, 636..699))
+                beside = maxOf(beside, deckLight(pixels, 446..484, 646..656))
+            }
+            assertTrue("the deck light stays on the free deck beside the tile ($beside)", beside > 10)
+        }
 
     @Test fun reducedMotionHasNoFlightContact() = fixture { f ->
         f.frame(1_000L, 0f)

@@ -78,8 +78,13 @@ class JarvisWorkWindow(
 ) : FrameLayout(context) {
     private enum class Phase { CLOSED, OPENING, OPEN, CLOSING }
 
-    /** Where the window unfolds from and to, and what it must leave visible; local overlay pixels. */
-    class Plan(val origin: RectF, val destination: RectF, val protectedBounds: List<RectF>)
+    /**
+     * Where the window unfolds from and to, and what it must leave visible; local overlay pixels. [deckLabels] is the
+     * labelled deck content that stays in place while the window flies (status band with its KPI tiles, input,
+     * header): the flight contact never lies over it.
+     */
+    class Plan(val origin: RectF, val destination: RectF, val protectedBounds: List<RectF>,
+               val deckLabels: List<RectF> = emptyList())
     /**
      * The document that steps back behind this window while it unfolds (draft out of document, owner brief 06.11.):
      * [document] is the window it had (overlay pixels), [page] where its real page stood, [pageImage] that page for the
@@ -137,6 +142,7 @@ class JarvisWorkWindow(
     private val origin = RectF()
     private val destination = RectF()
     private var protectedBounds = emptyList<RectF>()
+    private var deckLabels = emptyList<RectF>()
     private var phase = Phase.CLOSED
     private var disposed = false
     private var subscription: AutoCloseable? = null
@@ -412,7 +418,8 @@ class JarvisWorkWindow(
              protectedBounds: List<RectF> = emptyList(),
              onOpened: () -> Unit = {}, onClosed: () -> Unit = {}, accent: Int = Colors.cyan,
              emblem: android.graphics.drawable.Drawable? = null, refit: (() -> Plan?)? = null,
-             crystal: Boolean = false, depthLayers: Int = 0, recession: Recession? = null): Boolean {
+             crystal: Boolean = false, depthLayers: Int = 0, recession: Recession? = null,
+             deckLabels: List<RectF> = emptyList()): Boolean {
         if (disposed || deliveringFrame || isInLayout) return false
         val pixels = usable(origin, destination, protectedBounds) ?: return false
         if (body.parent != null && body.parent !== scroll) return false
@@ -439,7 +446,7 @@ class JarvisWorkWindow(
         titleView.text = title
         scroll.addView(body, FrameLayout.LayoutParams(-1, -2))
         scroll.scrollTo(0, 0)
-        place(origin, pixels, protectedBounds)
+        place(origin, pixels, protectedBounds, deckLabels)
         phase = Phase.OPENING
         startedAt = null
         lastFrameTime = null
@@ -470,10 +477,11 @@ class JarvisWorkWindow(
         return pixels
     }
 
-    private fun place(origin: RectF, pixels: RectF, protectedBounds: List<RectF>) {
+    private fun place(origin: RectF, pixels: RectF, protectedBounds: List<RectF>, deckLabels: List<RectF>) {
         this.origin.set(origin)
         this.destination.set(pixels)
         this.protectedBounds = protectedBounds.filter(JarvisWorkWindowGeometry::valid).map(::RectF)
+        this.deckLabels = deckLabels.filter(JarvisWorkWindowGeometry::valid).map(::RectF)
         panel.layoutParams = LayoutParams(pixels.width().toInt(), pixels.height().toInt()).apply {
             leftMargin = pixels.left.toInt()
             topMargin = pixels.top.toInt()
@@ -528,7 +536,7 @@ class JarvisWorkWindow(
             val plan = refit.let { host -> if (host != null) host() else selfPlan() }
             val pixels = plan?.let { usable(it.origin, it.destination, it.protectedBounds) }
             if (plan == null || pixels == null) { close(immediate = true); return@post }
-            place(plan.origin, pixels, plan.protectedBounds)
+            place(plan.origin, pixels, plan.protectedBounds, plan.deckLabels)
             applyFrame()
             updateRoute()
             requestFrame()
@@ -536,7 +544,8 @@ class JarvisWorkWindow(
     }
 
     private fun selfPlan(): Plan? = JarvisWorkWindowGeometry.destination(
-        RectF(0f, 0f, width.toFloat(), height.toFloat()), protectedBounds, density)?.let { Plan(RectF(origin), it, protectedBounds) }
+        RectF(0f, 0f, width.toFloat(), height.toFloat()), protectedBounds, density)?.let {
+        Plan(RectF(origin), it, protectedBounds, deckLabels) }
 
     fun close(immediate: Boolean = false) {
         setDocumentStageReady(null, false)
@@ -792,7 +801,14 @@ class JarvisWorkWindow(
                 (origin.bottom + (destination.bottom - origin.bottom) * progress) / density)
             if (focusDepth > 0f) focusCinematics.drawFocusDepth(painter,
                 HollywoodFuiCinematics.Box(0f, 0f, width / density, height / density), target, focusDepth, 14f, ground)
-            if (flightContact > 0f) focusCinematics.drawFlightContact(painter, ground, flightContact, 14f)
+            if (flightContact > 0f) {
+                // Footprint and deck light lie on free deck only, never over KPI tiles or other labelled deck content.
+                val contactSave = canvas.save()
+                deckLabels.forEach { canvas.clipOutRect(it.left / density, it.top / density,
+                    it.right / density, it.bottom / density) }
+                focusCinematics.drawFlightContact(painter, ground, flightContact, 14f)
+                canvas.restoreToCount(contactSave)
+            }
             canvas.restoreToCount(focusSave)
         }
         drawTrail(canvas)

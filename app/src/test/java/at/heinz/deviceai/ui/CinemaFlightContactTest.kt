@@ -102,6 +102,20 @@ class CinemaFlightContactTest {
             half.single { it.name == "fillRoundRect" }.alpha, 1e-4f)
     }
 
+    /**
+     * Code54 B2: the deck labels the host hands the window are exactly the labelled rows that stay on the deck while
+     * the window flies (JarvisCinemaEntrance) – status band with the KPI tiles first – never the avatar stage and
+     * never what has flown away (tiles, rows, work boxes, dock).
+     */
+    @Test fun flightContactKeepsTheLabelledDeckRowsThatStayClear() {
+        val clear = JarvisShellLayout.Slot.entries.filter(JarvisWorkWindowHost::keepsFlightContactClear).toSet()
+        assertEquals(setOf(JarvisShellLayout.Slot.TOP_BAR, JarvisShellLayout.Slot.DIALOG, JarvisShellLayout.Slot.INPUT,
+            JarvisShellLayout.Slot.STATUS, JarvisShellLayout.Slot.CONTINUUM_HEADER, JarvisShellLayout.Slot.CAMERA_STATUS),
+            clear)
+        for (slot in JarvisShellLayout.Slot.entries) if (slot in clear)
+            assertTrue("$slot stays on the deck during the flight", !JarvisCinemaEntrance.fliesAwayOnWorkOrder(slot))
+    }
+
     @Test fun settledContactShadowIsUnchangedAndFollowsTheGlassWhileItStillFlies() {
         val painterly = HollywoodFuiCinematics.Painterly(JarvisDesign.Colors.cyan)
         val viewport = HollywoodFuiCinematics.Box(0f, 0f, 884f, 760f)
