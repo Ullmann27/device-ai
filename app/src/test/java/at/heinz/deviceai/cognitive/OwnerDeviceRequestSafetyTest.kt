@@ -79,6 +79,22 @@ class OwnerDeviceRequestSafetyTest {
         }
     }
 
+    @Test fun anImperativeWithAProposalSubClauseIsStillAChange() {
+        // Review #788: one imperative mutation verb plus "was wir/ich/man … könnten" must never read as a proposal.
+        listOf("Lösch alles, was wir entbehren könnten",
+            "Untersuche mein Handy und lösch alles, was wir nicht brauchen könnten",
+            "Entferne bitte alles, was ich nicht brauchen kann",
+            "Lösche, was man entbehren könnte").forEach {
+            val assessment = OwnerDeviceRequestSafety.inspect(it)
+            assertTrue(it, assessment.blocked)
+            assertFalse(it, OwnerDeviceRequestSafety.Category.PROPOSAL in assessment.categories)
+        }
+        // The genuine proposal forms stay proposals.
+        listOf("Was könnten wir bereinigen?", "Sag mir, was man löschen könnte, aber lösch nichts").forEach {
+            assertFalse(it, OwnerDeviceRequestSafety.inspect(it).blocked)
+        }
+    }
+
     @Test fun cacheMisrecognitionOnlyOpensTheReadOnlyPreview() {
         listOf("bereinige bitte meinen Cage und sage mir wie viel du bereinigt hast",
             "Bereinige meinen Cache", "Leere den Cache", "Jarvis, Cache-Vorschau").forEach {
