@@ -1,0 +1,569 @@
+[
+  {
+    "path": "META-INF/com/android/build/gradle/app-metadata.properties",
+    "bytes": 57,
+    "compressedBytes": 53,
+    "method": 8,
+    "crc32": "4c47c10d"
+  },
+  {
+    "path": "META-INF/version-control-info.textproto",
+    "bytes": 120,
+    "compressedBytes": 118,
+    "method": 8,
+    "crc32": "5e6fef0e"
+  },
+  {
+    "path": "classes.dex",
+    "bytes": 10872712,
+    "compressedBytes": 4059336,
+    "method": 8,
+    "crc32": "794ec2a8"
+  },
+  {
+    "path": "classes2.dex",
+    "bytes": 5341272,
+    "compressedBytes": 1951223,
+    "method": 8,
+    "crc32": "e515b439"
+  },
+  {
+    "path": "lib/arm64-v8a/libc++_shared.so",
+    "bytes": 1292904,
+    "compressedBytes": 1292904,
+    "method": 0,
+    "crc32": "51e3dcdc"
+  },
+  {
+    "path": "lib/arm64-v8a/libfilament-jni.so",
+    "bytes": 2266408,
+    "compressedBytes": 2266408,
+    "method": 0,
+    "crc32": "81fe410b"
+  },
+  {
+    "path": "lib/arm64-v8a/libgltfio-jni.so",
+    "bytes": 4679472,
+    "compressedBytes": 4679472,
+    "method": 0,
+    "crc32": "dd57ed0a"
+  },
+  {
+    "path": "lib/arm64-v8a/liblitertlm_jni.so",
+    "bytes": 22155680,
+    "compressedBytes": 22155680,
+    "method": 0,
+    "crc32": "1b1d2ae2"
+  },
+  {
+    "path": "lib/arm64-v8a/libopencv_java4.so",
+    "bytes": 23972544,
+    "compressedBytes": 23972544,
+    "method": 0,
+    "crc32": "6338d842"
+  },
+  {
+    "path": "assets/audio/ui/continuum-button.pcm",
+    "bytes": 5120,
+    "compressedBytes": 3516,
+    "method": 8,
+    "crc32": "58229048"
+  },
+  {
+    "path": "assets/audio/ui/continuum-task-started.pcm",
+    "bytes": 13440,
+    "compressedBytes": 10188,
+    "method": 8,
+    "crc32": "0b90a00d"
+  },
+  {
+    "path": "assets/audio/ui/provenance.json",
+    "bytes": 1614,
+    "compressedBytes": 786,
+    "method": 8,
+    "crc32": "91e20b5a"
+  },
+  {
+    "path": "assets/avatar3d/LICENSE.ASSETS.md",
+    "bytes": 6962,
+    "compressedBytes": 2660,
+    "method": 8,
+    "crc32": "4f9735df"
+  },
+  {
+    "path": "assets/avatar3d/NOTICE.json",
+    "bytes": 4254,
+    "compressedBytes": 2110,
+    "method": 8,
+    "crc32": "1fb28a8d"
+  },
+  {
+    "path": "assets/avatar3d/continuum-avatar.glb",
+    "bytes": 12038416,
+    "compressedBytes": 3859456,
+    "method": 8,
+    "crc32": "6c3ce53b"
+  },
+  {
+    "path": "assets/cinema3d/document-workspace.glb",
+    "bytes": 491080,
+    "compressedBytes": 97150,
+    "method": 8,
+    "crc32": "566c42bb"
+  },
+  {
+    "path": "assets/continuum-owned-project-plans-v1.json",
+    "bytes": 3744,
+    "compressedBytes": 812,
+    "method": 8,
+    "crc32": "d41e88bd"
+  },
+  {
+    "path": "assets/continuum-research/natural-location-v3.csx",
+    "bytes": 32932,
+    "compressedBytes": 2854,
+    "method": 8,
+    "crc32": "27a88e97"
+  },
+  {
+    "path": "assets/continuum-training-studio-v1.json",
+    "bytes": 169019,
+    "compressedBytes": 15272,
+    "method": 8,
+    "crc32": "3e099a32"
+  },
+  {
+    "path": "assets/faceid/LICENSE-LIBCXX.txt",
+    "bytes": 16703,
+    "compressedBytes": 5444,
+    "method": 8,
+    "crc32": "080866a5"
+  },
+  {
+    "path": "assets/faceid/LICENSE-OPENCV.txt",
+    "bytes": 11358,
+    "compressedBytes": 3949,
+    "method": 8,
+    "crc32": "86e2b4b4"
+  },
+  {
+    "path": "assets/faceid/LICENSE-SFACE.txt",
+    "bytes": 11358,
+    "compressedBytes": 3949,
+    "method": 8,
+    "crc32": "86e2b4b4"
+  },
+  {
+    "path": "assets/faceid/LICENSE-YUNET.txt",
+    "bytes": 1085,
+    "compressedBytes": 643,
+    "method": 8,
+    "crc32": "1daf9ce6"
+  },
+  {
+    "path": "assets/faceid/NOTICE.txt",
+    "bytes": 1475,
+    "compressedBytes": 854,
+    "method": 8,
+    "crc32": "3edf7a4f"
+  },
+  {
+    "path": "assets/faceid/face_detection_yunet_2023mar.onnx",
+    "bytes": 232589,
+    "compressedBytes": 202604,
+    "method": 8,
+    "crc32": "bfdf4e40"
+  },
+  {
+    "path": "assets/faceid/face_recognition_sface_2021dec.onnx",
+    "bytes": 38696353,
+    "compressedBytes": 35912476,
+    "method": 8,
+    "crc32": "4ab8b732"
+  },
+  {
+    "path": "assets/faceid/model-manifest.json",
+    "bytes": 880,
+    "compressedBytes": 432,
+    "method": 8,
+    "crc32": "4f99d56e"
+  },
+  {
+    "path": "assets/fonts/Exo2-Light.ttf",
+    "bytes": 183876,
+    "compressedBytes": 82045,
+    "method": 8,
+    "crc32": "b259f102"
+  },
+  {
+    "path": "assets/fonts/Exo2-Medium.ttf",
+    "bytes": 191432,
+    "compressedBytes": 85284,
+    "method": 8,
+    "crc32": "4e30d3df"
+  },
+  {
+    "path": "assets/fonts/Exo2-Regular.ttf",
+    "bytes": 185720,
+    "compressedBytes": 82613,
+    "method": 8,
+    "crc32": "0a783bad"
+  },
+  {
+    "path": "assets/fonts/Exo2-SemiBold.ttf",
+    "bytes": 192720,
+    "compressedBytes": 86317,
+    "method": 8,
+    "crc32": "a84c82ff"
+  },
+  {
+    "path": "assets/fonts/LICENSE-Roboto-Apache-2.0.txt",
+    "bytes": 11357,
+    "compressedBytes": 3948,
+    "method": 8,
+    "crc32": "7b5d04bc"
+  },
+  {
+    "path": "assets/fonts/Montserrat-Light.ttf",
+    "bytes": 444356,
+    "compressedBytes": 186466,
+    "method": 8,
+    "crc32": "98e3d4a7"
+  },
+  {
+    "path": "assets/fonts/Montserrat-Medium.ttf",
+    "bytes": 447320,
+    "compressedBytes": 188095,
+    "method": 8,
+    "crc32": "bc34122f"
+  },
+  {
+    "path": "assets/fonts/Montserrat-Regular.ttf",
+    "bytes": 445928,
+    "compressedBytes": 187336,
+    "method": 8,
+    "crc32": "6a38604b"
+  },
+  {
+    "path": "assets/fonts/Montserrat-SemiBold.ttf",
+    "bytes": 454716,
+    "compressedBytes": 190251,
+    "method": 8,
+    "crc32": "61a4a673"
+  },
+  {
+    "path": "assets/fonts/OFL-Exo2.txt",
+    "bytes": 4386,
+    "compressedBytes": 1941,
+    "method": 8,
+    "crc32": "f171c3cd"
+  },
+  {
+    "path": "assets/fonts/OFL-Montserrat.txt",
+    "bytes": 4400,
+    "compressedBytes": 1947,
+    "method": 8,
+    "crc32": "85541068"
+  },
+  {
+    "path": "assets/fonts/Roboto-Bold.ttf",
+    "bytes": 514260,
+    "compressedBytes": 262448,
+    "method": 8,
+    "crc32": "335c5250"
+  },
+  {
+    "path": "assets/fonts/Roboto-Light.ttf",
+    "bytes": 518580,
+    "compressedBytes": 262201,
+    "method": 8,
+    "crc32": "9b696099"
+  },
+  {
+    "path": "assets/fonts/Roboto-Medium.ttf",
+    "bytes": 511592,
+    "compressedBytes": 259550,
+    "method": 8,
+    "crc32": "5b30aa85"
+  },
+  {
+    "path": "assets/fonts/Roboto-Regular.ttf",
+    "bytes": 515100,
+    "compressedBytes": 261151,
+    "method": 8,
+    "crc32": "c38d4ac7"
+  },
+  {
+    "path": "assets/jarvis-reference/device-ai-mark.png",
+    "bytes": 12058,
+    "compressedBytes": 12058,
+    "method": 0,
+    "crc32": "3a484a85"
+  },
+  {
+    "path": "assets/jarvis-reference/provenance.json",
+    "bytes": 1581,
+    "compressedBytes": 604,
+    "method": 8,
+    "crc32": "72dd1685"
+  },
+  {
+    "path": "assets/jarvis-reference/rail-energy.png",
+    "bytes": 75507,
+    "compressedBytes": 75507,
+    "method": 0,
+    "crc32": "2e867b3b"
+  },
+  {
+    "path": "assets/jarvis-reference/tile-cyan-energy.png",
+    "bytes": 5511,
+    "compressedBytes": 5511,
+    "method": 0,
+    "crc32": "06de27c8"
+  },
+  {
+    "path": "assets/jarvis-reference/tile-violet-energy.png",
+    "bytes": 5912,
+    "compressedBytes": 5912,
+    "method": 0,
+    "crc32": "82b8b415"
+  },
+  {
+    "path": "DebugProbesKt.bin",
+    "bytes": 1728,
+    "compressedBytes": 774,
+    "method": 8,
+    "crc32": "ca0d86c5"
+  },
+  {
+    "path": "META-INF/androidx/annotation/annotation/LICENSE.txt",
+    "bytes": 10175,
+    "compressedBytes": 3563,
+    "method": 8,
+    "crc32": "f9a816a8"
+  },
+  {
+    "path": "META-INF/kotlinx_coroutines_android.version",
+    "bytes": 6,
+    "compressedBytes": 6,
+    "method": 0,
+    "crc32": "40f5cd2d"
+  },
+  {
+    "path": "META-INF/kotlinx_coroutines_core.version",
+    "bytes": 6,
+    "compressedBytes": 6,
+    "method": 0,
+    "crc32": "40f5cd2d"
+  },
+  {
+    "path": "META-INF/services/kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoader",
+    "bytes": 90,
+    "compressedBytes": 72,
+    "method": 8,
+    "crc32": "9463aeee"
+  },
+  {
+    "path": "META-INF/services/kotlin.reflect.jvm.internal.impl.km.internal.extensions.MetadataExtensions",
+    "bytes": 70,
+    "compressedBytes": 60,
+    "method": 8,
+    "crc32": "bb8c15c1"
+  },
+  {
+    "path": "META-INF/services/kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition",
+    "bytes": 235,
+    "compressedBytes": 99,
+    "method": 8,
+    "crc32": "30ff9918"
+  },
+  {
+    "path": "META-INF/services/kotlinx.coroutines.CoroutineExceptionHandler",
+    "bytes": 54,
+    "compressedBytes": 50,
+    "method": 8,
+    "crc32": "8f594b50"
+  },
+  {
+    "path": "META-INF/services/kotlinx.coroutines.internal.MainDispatcherFactory",
+    "bytes": 52,
+    "compressedBytes": 49,
+    "method": 8,
+    "crc32": "4b95597f"
+  },
+  {
+    "path": "continuum/benchmark-v1.json",
+    "bytes": 12533,
+    "compressedBytes": 3934,
+    "method": 8,
+    "crc32": "7914b9cc"
+  },
+  {
+    "path": "kotlin-tooling-metadata.json",
+    "bytes": 626,
+    "compressedBytes": 283,
+    "method": 8,
+    "crc32": "23cacce0"
+  },
+  {
+    "path": "kotlin/annotation/annotation.kotlin_builtins",
+    "bytes": 1022,
+    "compressedBytes": 542,
+    "method": 8,
+    "crc32": "9ba69669"
+  },
+  {
+    "path": "kotlin/collections/collections.kotlin_builtins",
+    "bytes": 8625,
+    "compressedBytes": 1890,
+    "method": 8,
+    "crc32": "db78dd29"
+  },
+  {
+    "path": "kotlin/concurrent/atomics/atomics.kotlin_builtins",
+    "bytes": 2882,
+    "compressedBytes": 1111,
+    "method": 8,
+    "crc32": "3ca2aa63"
+  },
+  {
+    "path": "kotlin/coroutines/coroutines.kotlin_builtins",
+    "bytes": 139,
+    "compressedBytes": 118,
+    "method": 8,
+    "crc32": "13fe752e"
+  },
+  {
+    "path": "kotlin/internal/internal.kotlin_builtins",
+    "bytes": 596,
+    "compressedBytes": 359,
+    "method": 8,
+    "crc32": "66c650ba"
+  },
+  {
+    "path": "kotlin/kotlin.kotlin_builtins",
+    "bytes": 30920,
+    "compressedBytes": 5503,
+    "method": 8,
+    "crc32": "df618e5c"
+  },
+  {
+    "path": "kotlin/ranges/ranges.kotlin_builtins",
+    "bytes": 4353,
+    "compressedBytes": 1380,
+    "method": 8,
+    "crc32": "217cddfb"
+  },
+  {
+    "path": "kotlin/reflect/reflect.kotlin_builtins",
+    "bytes": 4859,
+    "compressedBytes": 1447,
+    "method": 8,
+    "crc32": "1792992d"
+  },
+  {
+    "path": "okhttp3/internal/publicsuffix/NOTICE",
+    "bytes": 218,
+    "compressedBytes": 149,
+    "method": 8,
+    "crc32": "df32c7fc"
+  },
+  {
+    "path": "okhttp3/internal/publicsuffix/publicsuffixes.gz",
+    "bytes": 41394,
+    "compressedBytes": 41394,
+    "method": 0,
+    "crc32": "f59fa4f6"
+  },
+  {
+    "path": "AndroidManifest.xml",
+    "bytes": 9532,
+    "compressedBytes": 2380,
+    "method": 8,
+    "crc32": "12fa1437"
+  },
+  {
+    "path": "res/-7.xml",
+    "bytes": 4572,
+    "compressedBytes": 1245,
+    "method": 8,
+    "crc32": "37a65b2e"
+  },
+  {
+    "path": "res/Aa.xml",
+    "bytes": 716,
+    "compressedBytes": 350,
+    "method": 8,
+    "crc32": "9084b5c0"
+  },
+  {
+    "path": "res/Gv.xml",
+    "bytes": 2564,
+    "compressedBytes": 886,
+    "method": 8,
+    "crc32": "65f345d3"
+  },
+  {
+    "path": "res/NT.xml",
+    "bytes": 552,
+    "compressedBytes": 304,
+    "method": 8,
+    "crc32": "d8294689"
+  },
+  {
+    "path": "res/TJ.xml",
+    "bytes": 1188,
+    "compressedBytes": 450,
+    "method": 8,
+    "crc32": "1ab8665a"
+  },
+  {
+    "path": "res/Xo.xml",
+    "bytes": 632,
+    "compressedBytes": 353,
+    "method": 8,
+    "crc32": "4b6d2828"
+  },
+  {
+    "path": "res/Zp.xml",
+    "bytes": 1668,
+    "compressedBytes": 630,
+    "method": 8,
+    "crc32": "25641569"
+  },
+  {
+    "path": "res/_x.xml",
+    "bytes": 1652,
+    "compressedBytes": 649,
+    "method": 8,
+    "crc32": "ee105d2d"
+  },
+  {
+    "path": "res/color/continuum_dialog_button_text.xml",
+    "bytes": 588,
+    "compressedBytes": 266,
+    "method": 8,
+    "crc32": "6051410f"
+  },
+  {
+    "path": "res/en.xml",
+    "bytes": 4100,
+    "compressedBytes": 1366,
+    "method": 8,
+    "crc32": "5699e893"
+  },
+  {
+    "path": "res/iS.xml",
+    "bytes": 576,
+    "compressedBytes": 271,
+    "method": 8,
+    "crc32": "85ab5013"
+  },
+  {
+    "path": "resources.arsc",
+    "bytes": 4124,
+    "compressedBytes": 4124,
+    "method": 0,
+    "crc32": "9682ef4c"
+  }
+]
