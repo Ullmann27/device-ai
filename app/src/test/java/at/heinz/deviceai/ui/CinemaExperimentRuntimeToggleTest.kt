@@ -129,4 +129,44 @@ class CinemaExperimentRuntimeToggleTest {
         assertFalse("Critical safety must still stop decorative motion", stop.animate)
     }
 
+    /**
+     * Code54 B2: the EXP_06 label changed („Fensterlicht und Lesefaden am Avatar“), its stored key did not. An owner
+     * who never touched the switch keeps both effects on (fresh install and already migrated install); a deliberate
+     * OFF stays OFF across the one-time migration. OFF/ON gates the face light exactly as the hologram reads it each
+     * frame (ContinuumHologramView → FilamentAvatarRenderer → CinemaWindowLightState.resolve), even while the gaze
+     * bridge has published a window light.
+     */
+    @Test fun exp06DefaultPersistenceAndFaceLightGate() {
+        val exp06 = JarvisCinematicSettings.Experiment.EXP_06_FACE_LIGHT
+        assertTrue(exp06.wired)
+        assertTrue(exp06.label == "Fensterlicht und Lesefaden am Avatar")
+        val prefs = JarvisCinematicSettings.preferences(context)
+        prefs.edit().clear().commit()
+        assertTrue("fresh install, never touched", JarvisCinematicSettings.experimentEnabled(context, exp06))
+        JarvisCinematicSettings.activateCinema52ByDefault(context)
+        prefs.edit().remove("exp52.EXP_06_FACE_LIGHT").commit()
+        JarvisCinematicSettings.activateCinema52ByDefault(context)
+        assertTrue("migrated install without a stored choice", JarvisCinematicSettings.experimentEnabled(context, exp06))
+
+        JarvisCinematicSettings.setExperiment(context, exp06, false)
+        assertFalse("stored under the unchanged key", prefs.getBoolean("exp52.EXP_06_FACE_LIGHT", true))
+        JarvisCinematicSettings.activateCinema52ByDefault(context)
+        assertFalse("a deliberate OFF survives the migration", JarvisCinematicSettings.experimentEnabled(context, exp06))
+
+        val accent = 0xFF33CCFF.toInt()
+        try {
+            at.heinz.deviceai.avatar3d.CinemaWindowLightState.apply(accent, .4f, open = true, gazeY = -.2f)
+            val off = at.heinz.deviceai.avatar3d.CinemaWindowLightState.resolve(
+                JarvisCinematicSettings.experimentEnabled(context, exp06), accent, true, .4f, -.2f)
+            assertFalse("EXP_06 OFF: no window light on the face, even with a published bridge light", off.open)
+            JarvisCinematicSettings.setExperiment(context, exp06, true)
+            val on = at.heinz.deviceai.avatar3d.CinemaWindowLightState.resolve(
+                JarvisCinematicSettings.experimentEnabled(context, exp06), accent, true, .4f, -.2f)
+            assertTrue("EXP_06 ON: the window lights the face again", on.open)
+            assertTrue(on.accentArgb == accent)
+        } finally {
+            at.heinz.deviceai.avatar3d.CinemaWindowLightState.reset()
+        }
+    }
+
 }

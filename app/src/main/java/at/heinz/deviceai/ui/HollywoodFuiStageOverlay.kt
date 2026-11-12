@@ -42,6 +42,14 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             invalidate()
             requestFrame()
         }
+    /** Owner switch of the avatar's reading thread (EXP_06, light between window and face); not the orb band. */
+    internal var attentionLinkEnabled = true
+        set(value) {
+            if (field == value) return
+            field = value
+            invalidate()
+            requestFrame()
+        }
     internal var prismRimEnabled = false
     internal var rimIsolationEnabled = false
     internal var zSliceEnabled = false
@@ -286,7 +294,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             if (workingFluid.energy > 0f) sink.y1 else fluidBox.bottom,
             fluid.copy(energy = fluid.energy * frame.closeFrame), renderBudget, receipt)
         // Cinema 2.0 connection: while real work runs, the avatar's reading thread joins face and window.
-        if (active && closingElapsedMs < 0L && !reducedMotion && budget.animate && !attentionSource.isEmpty) {
+        if (attentionLinkEnabled && active && closingElapsedMs < 0L && !reducedMotion && budget.animate &&
+            !attentionSource.isEmpty) {
             HollywoodFuiCinematics.attentionLink(
                 HollywoodFuiCinematics.Box(attentionSource.left / density, attentionSource.top / density,
                     attentionSource.right / density, attentionSource.bottom / density), boxDp)?.let { link ->
