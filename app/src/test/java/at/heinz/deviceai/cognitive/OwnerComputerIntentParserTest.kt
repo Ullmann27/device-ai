@@ -66,6 +66,35 @@ class OwnerComputerIntentParserTest {
         assertTrue(OwnerComputerIntentParser.parse("Öffne Word und bearbeite den Vertrag") is OwnerComputerIntentParser.Result.Unsupported)
     }
 
+    @Test fun systemAndEverydayAppsUseTheExistingOwnerApprovalPath() {
+        for ((phrase, expected) in listOf(
+            "Öffne Google Chrome" to ComputerApp.CHROME,
+            "Öffne Einstellungen" to ComputerApp.SETTINGS,
+            "Öffne Kamera" to ComputerApp.CAMERA,
+            "Öffne Samsung Galerie" to ComputerApp.GALLERY,
+            "Öffne Kalender" to ComputerApp.CALENDAR
+        )) {
+            val intent = ready(phrase)
+            assertEquals(expected, intent.app)
+            assertEquals(ComputerGoal.OPEN, intent.goal)
+            assertEquals(listOf(ComputerPlanStep.OPEN_APP, ComputerPlanStep.OBSERVE_APP), intent.steps)
+        }
+    }
+
+    @Test fun newOpenOnlyAppsCannotAcquireUntestedEditOrSearchActions() {
+        for (app in listOf(ComputerApp.CHROME, ComputerApp.SETTINGS,
+            ComputerApp.CAMERA, ComputerApp.GALLERY, ComputerApp.CALENDAR)) {
+            assertTrue(OwnerComputerIntentParser.parse(
+                "Öffne ${app.discoveryQuery} und suche Geheimnisse"
+            ) is OwnerComputerIntentParser.Result.Unsupported)
+            assertTrue(OwnerComputerIntentParser.parse(
+                "Suche in ${app.discoveryQuery} nach Kontakten"
+            ) is OwnerComputerIntentParser.Result.Unsupported)
+        }
+        assertTrue(OwnerComputerIntentParser.parse("Öffne Einstellungen nicht")
+            is OwnerComputerIntentParser.Result.Unsupported)
+    }
+
     @Test fun ambiguityAndOversizedTextDoNotProduceExecutablePlans() {
         assertTrue(OwnerComputerIntentParser.parse("Schreibe Anna auf WhatsApp und auf Facebook: Hallo") is OwnerComputerIntentParser.Result.Ask)
         assertTrue(OwnerComputerIntentParser.parse("Schreibe Anna auf WhatsApp: " + "x".repeat(501)) is OwnerComputerIntentParser.Result.Unsupported)

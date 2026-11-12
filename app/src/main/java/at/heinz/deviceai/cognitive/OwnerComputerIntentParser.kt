@@ -7,7 +7,12 @@ internal enum class ComputerApp(val discoveryQuery: String, val aliases: List<St
     FACEBOOK("Facebook", listOf("facebook")),
     FILES("Eigene Dateien", listOf("samsung eigene dateien", "eigene dateien", "meine dateien", "dateien")),
     WORD("Word", listOf("microsoft word", "word")),
-    EXCEL("Excel", listOf("microsoft excel", "excel"))
+    EXCEL("Excel", listOf("microsoft excel", "excel")),
+    CHROME("Chrome", listOf("google chrome", "chrome")),
+    SETTINGS("Einstellungen", listOf("android-einstellungen", "einstellungen")),
+    CAMERA("Kamera", listOf("kamera-app", "kamera")),
+    GALLERY("Galerie", listOf("samsung galerie", "galerie")),
+    CALENDAR("Kalender", listOf("kalender"))
 }
 
 internal enum class ComputerGoal { OPEN, SEARCH, OPEN_DOWNLOADS, DRAFT_MESSAGE, SEND_MESSAGE }
@@ -47,6 +52,8 @@ internal object OwnerComputerIntentParser {
 
     private val apps = ComputerApp.entries.flatMap { app -> app.aliases.map { it to app } }
         .sortedByDescending { it.first.length }
+    private val OPEN_ONLY_APPS = setOf(ComputerApp.CHROME, ComputerApp.SETTINGS,
+        ComputerApp.CAMERA, ComputerApp.GALLERY, ComputerApp.CALENDAR)
     private val otherAction = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:und|dann|danach)\\s+(?:sende?|schicke?|lösche?|loesche?|poste?|teile?|kaufe?|rufe?|öffne?|oeffne?|starte?|suche?)(?![\\p{L}\\p{N}_])")
     private val searchLabel = Regex("(?iu)^(?:und\\s+)?(?:suche|such|suche nach|such nach)\\s+(?:nach\\s+)?(.+)$")
 
@@ -93,6 +100,8 @@ internal object OwnerComputerIntentParser {
     }
 
     private fun search(app: ComputerApp, raw: String): Result {
+        if (app in OPEN_ONLY_APPS)
+            return Result.Unsupported("In ${app.discoveryQuery} ist nur das bestätigte Öffnen mit Livebild freigegeben.")
         val query = raw.trim().trim('"', '„', '“').trim()
         if (query.isBlank()) return Result.Ask("Wonach soll ich in ${app.discoveryQuery} suchen?")
         if (query.length > 200 || otherAction.containsMatchIn(query)) {
