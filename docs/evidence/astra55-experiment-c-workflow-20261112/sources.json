@@ -1,0 +1,66 @@
+{
+  "retrieved_on": "2026-11-12",
+  "research_before_experiment": true,
+  "external_code_imported": false,
+  "sources": [
+    {
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "url": "https://arxiv.org/abs/2210.03629v3",
+      "submitted": "2022-10-06",
+      "revision": "2023-03-10",
+      "authors": "Shunyu Yao et al.",
+      "primary": true,
+      "verified_scope": "Originale arXiv-Metadaten, Abstract und verfügbarer PDF-Suchauszug.",
+      "principle": "Das Paper verschränkt Modellüberlegungen mit Aktionen und Rückinformationen aus einer Umgebung.",
+      "limit": "Kein Android-/Fold7-Beleg. Der vorhandene feste Workflow ist dadurch kein implementierter ReAct-Planer. Keine Modell- oder Erfolgsratenübertragung."
+    },
+    {
+      "title": "AndroidWorld: A Dynamic Benchmarking Environment for Autonomous Agents",
+      "url": "https://arxiv.org/abs/2405.14573v5",
+      "submitted": "2024-05-23",
+      "revision": "2025-04-06",
+      "authors": "Christopher Rawles et al.",
+      "primary": true,
+      "verified_scope": "Originale arXiv-Metadaten und Abstract; direkter PDF-v5-Abruf in dieser Sitzung nicht verfügbar.",
+      "principle": "Parametrisierte Android-Aufgaben besitzen getrennte Initialisierung, Zustandsprüfung des Erfolgs und Bereinigung.",
+      "limit": "Das eigene Hostexperiment übernimmt nur das Prüfprinzip. Es führt weder AndroidWorld-Aufgaben noch einen AndroidWorld-Agenten aus."
+    },
+    {
+      "title": "AndroidWorld – originales Forschungsrepository",
+      "url": "https://github.com/google-research/android_world",
+      "publication_date": null,
+      "primary": true,
+      "verified_scope": "Öffentlicher README-Suchauszug des Originalrepositories.",
+      "principle": "Die Forschungsumgebung verwendet einen laufenden Android-Emulator und programmatisch prüfbare Aufgaben.",
+      "limit": "Kein Emulator, Server, Modell oder Repositorycode wird für dieses Experiment installiert oder ausgeführt. Keine Übertragung von privilegierten Benchmarkprüfungen auf Besitzergeräte."
+    },
+    {
+      "title": "AccessibilityNodeInfo – performAction und refresh",
+      "url": "https://developer.android.com/reference/android/view/accessibility/AccessibilityNodeInfo",
+      "publication_date": null,
+      "primary": true,
+      "version_scope": "Laufende offizielle API-Referenz, abgerufen 12.11.2026; performAction API14/16, refresh API18.",
+      "principle": "performAction liefert einen Wahrheitswert zur Aktionsausführung. refresh aktualisiert den Knoten und kann bei einem aus dem Baum entfernten View fehlschlagen.",
+      "inference": "Ob genau das beabsichtigte Auftragsziel eingetreten ist, wird deshalb in diesem Experiment gesondert aus der Nachbeobachtung geprüft.",
+      "limit": "Die Schlussfolgerung über das Besitzerziel ist eine eigene Testinvariante, kein wörtliches Android-Erfolgsversprechen. Der Hostport simuliert die OS-Aktion."
+    },
+    {
+      "title": "AccessibilityEvent – TYPE_VIEW_SCROLLED",
+      "url": "https://developer.android.com/reference/android/view/accessibility/AccessibilityEvent#TYPE_VIEW_SCROLLED",
+      "publication_date": null,
+      "primary": true,
+      "version_scope": "Laufende offizielle API-Referenz, abgerufen 12.11.2026.",
+      "principle": "Die Referenz empfiehlt, den UI-Zustand über den Quellknoten abzufragen, anstatt sich allein auf Eventeigenschaften zu stützen.",
+      "limit": "Das konkrete Experiment setzt Suchtext; native Scroll- und Accessibility-Ereignisse werden damit nicht auf einem Gerät bestätigt."
+    },
+    {
+      "title": "AccessibilityService – dispatchGesture",
+      "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService#dispatchGesture(android.accessibilityservice.GestureDescription,%20android.accessibilityservice.AccessibilityService.GestureResultCallback,%20android.os.Handler)",
+      "publication_date": null,
+      "primary": true,
+      "version_scope": "Laufende offizielle API-Referenz, abgerufen 12.11.2026.",
+      "principle": "Der Gestenstatus wird über einen optionalen Callback gemeldet; Darstellung und Aktionsstatus besitzen getrennte Zeitpunkte.",
+      "limit": "Kein neuer Gestenfallback. Der vorhandene Pfad bleibt beim gebundenen Node-Port und seinen bisherigen Freigaben."
+    }
+  ]
+}
