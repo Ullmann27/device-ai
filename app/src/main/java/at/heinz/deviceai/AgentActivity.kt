@@ -6171,7 +6171,10 @@ class AgentActivity : Activity() {
         if (SystemIntelligenceCommands.isDiagnosisRequest(request)) {
             input.text.clear()
             addUserMessage(request, keepCockpit = true)
-            runSystemTool(SystemIntelligenceCommands.DIAGNOSE, ownerRequest = request)
+            // „… und was wir bereinigen könnten. Aber lösch noch nichts.“ adds only the read-only own-cache preview.
+            runSystemTool(SystemIntelligenceCommands.DIAGNOSE,
+                if (SystemIntelligenceCommands.diagnosisIncludesOwnCachePreview(request))
+                    mapOf(SystemIntelligenceCommands.INCLUDE_CACHE_PREVIEW to "true") else emptyMap(), ownerRequest = request)
             return
         }
         if (clarifiedAppName == null && !botRoutingChecked && routeBotInput(input.text.toString())) return

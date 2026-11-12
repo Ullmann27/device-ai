@@ -40,12 +40,13 @@ internal object OwnerDeviceRequestSafety {
     private val refusesAction = Regex("(?iu)^(?:ich\\s+(?:will|möchte|moechte)\\s+)?" +
         "nicht\\s*,?\\s+dass\\s+du(?![\\p{L}])")
     private val beforeAction = Regex("(?iu)^(?:bitte\\s+)?(?:nicht|nie|niemals)$")
-    private val noObject = Regex("(?iu)^(?:bitte\\s+)?(?:nichts|kein\\p{L}*)(?![\\p{L}])")
+    private val noObject = Regex("(?iu)^(?:bitte\\s+)?(?:(?:noch|vorerst|erstmal|erst\\s+mal)\\s+)?" +
+        "(?:nichts|kein\\p{L}*)(?![\\p{L}])")
     private val directRefusal = Regex("(?iu)^(?:bitte\\s+)?(?:nicht|nie|niemals)(?:$|\\s+" +
         "(?:die|den|das|diese\\p{L}*|mein\\p{L}*|dein\\p{L}*|etwas|alles)(?![\\p{L}]))")
     private val finalRefusal = Regex("(?iu)(?<![\\p{L}])(?:nicht|nie|niemals)$")
     private val notOnly = words("nicht\\s+nur|vergiss\\s+nicht")
-    private val proposalSubject = words("ich|man")
+    private val proposalSubject = words("ich|man|wir")
     private val proposalModal = words("kann|könnte|koennte|sollte|könnten|koennten")
     private val proposalQuestion = words("was|welche\\p{L}*|wie")
     private val deferred = words("(?:erst|nur)\\s+nach\\s+meiner\\s+(?:freigabe|bestätigung|bestaetigung|entscheidung)|" +
@@ -105,8 +106,9 @@ internal object OwnerDeviceRequestSafety {
                 changes.size > 1 -> Category.CHANGE
                 notOnly.containsMatchIn(clause) -> Category.CHANGE
                 deferred.containsMatchIn(clause) -> Category.DEFERRED_CHANGE
-                // "was ich/man … löschen könnte" is a proposal; "Entferne alles, was ich … kann" is an imperative.
-                // The mutation verb must stand after the subject and must not open the clause.
+                // "was wir/ich/man … bereinigen könnten" is a proposal; "Lösch alles, was wir … könnten" or "Entferne
+                // alles, was ich … kann" is an imperative: question word, then subject, then the single mutation verb
+                // (review #788, Code54 7b81e46e8 and 9713854bf).
                 proposalModal.containsMatchIn(clause) && changes.singleOrNull()?.let { verb ->
                         isProposalOrder(clause, verb.range.first)
                     } == true -> Category.PROPOSAL
