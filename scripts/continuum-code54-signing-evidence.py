@@ -259,7 +259,7 @@ def verify_pdf_only_host_exception(binding, evidence_zip):
                     "\\" not in item.filename and
                     not stat.S_ISLNK(item.external_attr >> 16) and
                     not item.flag_bits & 1, "QA_EVIDENCE_UNSAFE_MEMBER")
-        journals = [n for n in names if n == "code54-full/junit-progress.ndjson"]
+        journals = [n for n in names if n == "_temp/code54-full/junit-progress.ndjson"]
         require(len(journals) == 1, "FULL_ANDROID_JOURNAL_MISSING")
         info = archive.getinfo(journals[0])
         require(1_000_000 <= info.file_size <= 60_000_000,
@@ -321,7 +321,7 @@ def verify_pdf_only_host_exception(binding, evidence_zip):
                 ("IoUtils" in detail or "PdfProcessor" in detail),
                 "PDF_HOST_FAILURE_FINGERPRINT")
         # Bind independent upload metadata, not just the Gradle test log.
-        source_receipt = [n for n in names if n == "CODE54-SOURCE.txt"]
+        source_receipt = [n for n in names if n == "_temp/CODE54-SOURCE.txt"]
         require(len(source_receipt) == 1 and
                 archive.getinfo(source_receipt[0]).file_size <= 4096,
                 "QA_SOURCE_RECEIPT_MISSING")
