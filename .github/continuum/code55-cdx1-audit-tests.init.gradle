@@ -1,0 +1,18 @@
+// Source-scoped, full JUnit classes; no Gradle safety policy changes.
+gradle.projectsEvaluated {
+    gradle.rootProject.project(':app').tasks.withType(org.gradle.api.tasks.testing.Test).configureEach { task ->
+        if (task.name == 'testDebugUnitTest') {
+            task.maxParallelForks = 1
+            def classes = [
+                'at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumTest',
+                'at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumCycleTest',
+                'at.heinz.deviceai.learning.DecoderGenerativeGateTest',
+                'at.heinz.deviceai.learning.DecoderGenerativePromotionTest'
+            ]
+            task.filter {
+                classes.each { includeTestsMatching(it) }
+                failOnNoMatchingTests = true
+            }
+        }
+    }
+}

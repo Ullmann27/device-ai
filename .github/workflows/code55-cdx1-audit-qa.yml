@@ -1,0 +1,98 @@
+name: Code55 CDX1 missing-evidence validation QA
+
+on:
+  push:
+    branches:
+      - fix/code55-cdx1-validation-controls-20261112
+    paths:
+      - '.github/workflows/code55-cdx1-audit-qa.yml'
+      - '.github/continuum/code55-cdx1-audit-tests.init.gradle'
+      - 'app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeCurriculum.kt'
+      - 'app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt'
+      - 'app/src/test/java/at/heinz/deviceai/learning/ContinuumCdxLargeCurriculumTest.kt'
+      - 'app/src/test/java/at/heinz/deviceai/learning/ContinuumCdxLargeCurriculumCycleTest.kt'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code55-cdx1-audit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate-no-training:
+    if: github.repository == 'Ullmann27/device-ai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Pin exact source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          printf 'source_sha=%s\nsource_tree=%s\nexperimental_only=true\ntraining=NOT_RUN\nsigning=NOT_USED\nFold7=NOT_RUN\n' "$GITHUB_SHA" "$(git rev-parse HEAD^{tree})" > "$RUNNER_TEMP/CDX1-SOURCE.txt"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Run complete CDX1 audit regression classes
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true \
+            -PcontinuumUiWidgetTests=true \
+            -I .github/continuum/code55-cdx1-audit-tests.init.gradle \
+            :app:testDebugUnitTest
+          python3 - <<'PY'
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          names={'ContinuumCdxLargeCurriculumTest','ContinuumCdxLargeCurriculumCycleTest',
+                 'DecoderGenerativeGateTest','DecoderGenerativePromotionTest'}
+          result=Path('app/build/test-results/testDebugUnitTest')
+          seen=set(); tests=failed=skips=errors=0
+          for file in result.glob('TEST-*.xml'):
+              root=ET.parse(file).getroot()
+              name=root.get('name','').rsplit('.',1)[-1]
+              if name not in names: continue
+              seen.add(name)
+              tests+=int(root.get('tests',0))
+              failed+=int(root.get('failures',0))
+              errors+=int(root.get('errors',0))
+              skips+=int(root.get('skipped',0))
+          print('CODE55_CDX1_AUDIT_CLASSES',sorted(seen),'cases',tests,
+                'failed',failed,'errors',errors,'skipped',skips,flush=True)
+          assert seen==names,(seen,names)
+          assert tests>=14 and failed==errors==skips==0
+          PY
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - name: Upload validation receipts only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code55-CDX1-validation-JUnit
+          path: |
+            ${{ runner.temp }}/CDX1-SOURCE.txt
+            app/build/test-results/testDebugUnitTest/TEST-*.xml
+          if-no-files-found: warn
+          retention-days: 14
