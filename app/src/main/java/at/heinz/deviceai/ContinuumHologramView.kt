@@ -158,10 +158,16 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     @android.annotation.TargetApi(29)
     private fun observeThermalPressure() {
-        thermalStatus = powerManager.currentThermalStatus
+        thermalStatus = runCatching { powerManager.currentThermalStatus }
+            .getOrDefault(PowerManager.THERMAL_STATUS_NONE)
         val listener = PowerManager.OnThermalStatusChangedListener { onThermalStatus(it) }
-        powerManager.addThermalStatusListener(context.mainExecutor, listener)
-        thermalListener = listener
+        try {
+            powerManager.addThermalStatusListener(context.mainExecutor, listener)
+            thermalListener = listener
+        } catch (failure: RuntimeException) {
+            android.util.Log.w("ContinuumThermal", "Avatar thermal observer unavailable", failure)
+            thermalListener = null
+        }
     }
 
     @android.annotation.TargetApi(29)
