@@ -27,6 +27,10 @@ class ContinuousConversationMode {
     private var replyUtterance: String? = null
     private var silentAttempts = 0
     private var recoveryAttempts = 0
+    private var foregroundSuspendedAt: Long? = null
+
+    /** True only for an expressly armed turn temporarily interrupted by Android. */
+    val foregroundRecoveryPending: Boolean get() = foregroundSuspendedAt != null
 
     /** True after a recognizer handover failure (busy/client) paused or is being retried: the
      * next microphone start should use a cold (freshly created) native recognizer. */
@@ -46,6 +50,7 @@ class ContinuousConversationMode {
         silentAttempts = 0
         recoveryAttempts = 0
         coldRecognizerRecommended = false
+        foregroundSuspendedAt = null
         state = State.LISTENING
         turn++
         return true
@@ -58,7 +63,36 @@ class ContinuousConversationMode {
         silentAttempts = 0
         recoveryAttempts = 0
         coldRecognizerRecommended = false
+        foregroundSuspendedAt = null
         turn++
+    }
+
+    /** No microphone runs in the background; keep only the user's previous opt-in. */
+    fun suspendForBackground(elapsedMs: Long) {
+        if (!active) return
+        pause()
+        foregroundSuspendedAt = elapsedMs
+    }
+
+    /** Resume only the same live foreground instance, briefly after Android interrupted it. */
+    fun restoreForeground(sessionId: String, elapsedMs: Long, canListen: Boolean, busy: Boolean): Decision {
+        val at = foregroundSuspendedAt ?: return Decision.IGNORE
+        if (session != sessionId) {
+            stop()
+            return Decision.STOP
+        }
+        if (elapsedMs < at || elapsedMs - at > FOREGROUND_GRACE_MS) {
+            foregroundSuspendedAt = null
+            return Decision.PAUSE
+        }
+        if (busy || !canListen) return Decision.IGNORE
+        foregroundSuspendedAt = null
+        state = State.LISTENING
+        silentAttempts = 0
+        recoveryAttempts = 0
+        coldRecognizerRecommended = true
+        turn++
+        return Decision.LISTEN
     }
 
     /** The adapter has created a fresh native recognizer; the recommendation is consumed. */
@@ -187,6 +221,7 @@ class ContinuousConversationMode {
         silentAttempts = 0
         recoveryAttempts = 0
         replyUtterance = null
+        foregroundSuspendedAt = null
         turn++
         return Decision.LISTEN
     }
@@ -197,15 +232,18 @@ class ContinuousConversationMode {
     private fun silence(): Decision {
         if (silentAttempts < MAX_SILENT_RETRIES) {
             silentAttempts++
+            coldRecognizerRecommended = silentAttempts >= 2
             turn++
             return Decision.RETRY_LISTEN
         }
         pause()
+        coldRecognizerRecommended = true
         return Decision.PAUSE
     }
 
     private fun pause() {
         state = State.PAUSED
+        foregroundSuspendedAt = null
         replyUtterance = null
         silentAttempts = 0
         recoveryAttempts = 0
@@ -213,7 +251,8 @@ class ContinuousConversationMode {
     }
 
     companion object {
-        const val MAX_SILENT_RETRIES = 1
+        const val MAX_SILENT_RETRIES = 3
+        const val FOREGROUND_GRACE_MS = 15_000L
         /** Automatic retries after „Spracherkenner belegt“ before the owner is asked to tap. */
         const val MAX_RECOVERY_RETRIES = 3
 
