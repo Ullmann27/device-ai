@@ -1,0 +1,16 @@
+{
+  "repository": "Ullmann27/device-ai",
+  "branch": "work/astra55-support-pipeline-20261112",
+  "support_pull_request": 802,
+  "integration_pull_request": 799,
+  "owner_publication_approval": "explicitly granted on 2026-11-12 after the concrete publication request",
+  "local_artifact_commit": "8ef308b678d5b51d89d96717cdf1a5f3c5d8af0d",
+  "published_artifact_commit": "f24c56c067512e1084abc2644de56b177346add0",
+  "local_artifact_tree": "e3bc9cd38d669775acd8cc18ecae770776f1765e",
+  "published_artifact_tree": "e3bc9cd38d669775acd8cc18ecae770776f1765e",
+  "artifact_tree_equal": true,
+  "transfer": "connected GitHub account; CLI lacked credentials",
+  "production_patch_integration": "NOT_PERFORMED_BY_SUPPORT",
+  "peer_acknowledgement": "PENDING",
+  "new_test_execution_during_publication": false
+}

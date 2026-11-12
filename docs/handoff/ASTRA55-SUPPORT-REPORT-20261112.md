@@ -79,6 +79,8 @@ Der Hauptintegrator übernimmt nur nach Abgleich mit seinem inzwischen erreichte
 
 ## Speicher- und Veröffentlichungsstatus
 
-**Supportpaket: LOCAL_ONLY / NOT_PUSHED.** Der automatische Freigabeprüfer hat den Push eines Koordinationsdokuments wegen interner Arbeitsbereichspfade und öffentlicher Veröffentlichung abgelehnt. Die Ablehnung wird nicht durch einen anderen Agenten oder Übertragungsweg umgangen. Dieser Bericht und die Tests/Patchkandidaten sind lokal vorbereitet; eine Veröffentlichung des Pakets benötigt die ausdrückliche Freigabe des Besitzers.
+**Supportpaket: VERÖFFENTLICHT**, nach ausdrücklicher Besitzerfreigabe vom 12.11.2026. [Draft-PR #802](https://github.com/Ullmann27/device-ai/pull/802) führt von `work/astra55-support-pipeline-20261112` in die bestehende Cockpit-Integration #799. Commit [`f24c56c067512e1084abc2644de56b177346add0`](https://github.com/Ullmann27/device-ai/commit/f24c56c067512e1084abc2644de56b177346add0) enthält exakt den Dateibaum `e3bc9cd38d669775acd8cc18ecae770776f1765e` des zuvor lokalen Supportpakets `8ef308b678d5b51d89d96717cdf1a5f3c5d8af0d`. Der Vergleich wurde beim Veröffentlichen geprüft.
+
+Die automatische Ablehnung des früheren Veröffentlichungsversuchs bleibt als Verlauf dokumentiert. Der Besitzer hat danach dem konkret bezeichneten Push zugestimmt. Weil der CLI-Zugang keine Zugangsdaten besaß, wurde derselbe freigegebene Dateibaum über den verbundenen GitHub-Zugang übertragen. Ältere `LOCAL_ONLY`-/`NOT_PUSHED`-Vermerke in Prüfprotokollen sind historische Angaben ihres jeweiligen Erstellungszeitpunkts.
 
 Die oben verlinkten bestehenden PR-Diskussionen enthalten die auf Projektbefunde begrenzte Aufgabenabstimmung und wurden erfolgreich veröffentlicht. Eine gegenseitige Empfangsbestätigung, Integration der Kandidaten, volle Android-Prüfung und Gerätebestätigung werden nicht behauptet.
