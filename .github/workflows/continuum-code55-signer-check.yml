@@ -1,0 +1,76 @@
+name: "Code55 original signer - zero-secret contract tests"
+
+on:
+  push:
+    branches:
+      - prep/code55-original-signer-20261112
+      - chatgpt/code52-owner-signing-20261109
+    paths:
+      - scripts/continuum-code55-original-signer.sh
+      - .github/workflows/continuum-code55-original-sign.yml
+      - .github/workflows/continuum-code55-signer-check.yml
+
+permissions:
+  contents: read
+
+jobs:
+  signer-no-secret-contract:
+    if: github.repository == 'Ullmann27/device-ai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check syntax and original signer isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/continuum-code55-original-signer.sh
+          bash -n scripts/continuum-code52-github-signer.sh
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('scripts/continuum-code55-original-signer.sh').read_text()
+          y=Path('.github/workflows/continuum-code55-original-sign.yml').read_text()
+          legacy=Path('scripts/continuum-code52-github-signer.sh').read_text()
+          assert 'exec bash scripts/continuum-code55-original-signer.sh "$mode"' in legacy
+          assert 'head_branch=="integrate/code55-apk-fable-20261112"' in legacy
+          assert 'continuum-original-signing' in s and 'continuum-original-signing' in y
+          assert 'OWNER_APPROVED_SHA' in s and 'FULL_ANDROID_GATE' in s
+          assert 'NATIVE_PDF_NOT_PASS' in s and 'ANDROID_CASES_NOT_FULL_GREEN' in s
+          assert 'code55' in s.lower() and '--draft --latest=false' in s
+          assert 'environment: continuum-original-signing' in y
+          assert 'workflow_dispatch:' in y and 'push:' not in y
+          assert 'ORIGINAL_P12:' not in y.split('original-signed-draft:')[0]
+          marker="<<'PY'\n"
+          assert s.count(marker)==1
+          embedded=s.split(marker,1)[1].split("\nPY\n",1)[0]
+          compile(embedded,'code55-archive-verifier','exec')
+          assert 'NATIVE_PDF_NOT_PASS' in embedded
+          assert 'ANDROID_CASES_NOT_FULL_GREEN' in embedded
+          print('CODE55_SIGNER_STATIC_GATE_PASS_NO_SIGNING')
+          PY
+      - name: Existing Code52/53/54 static compatibility tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test .github/continuum/code52-owner-signing-contract.test.mjs
+          python3 -I .github/continuum/code53-owner-signing-contract.test.py
+          python3 -I .github/continuum/code54-owner-signing-contract.test.py
+      - name: Denied wrong owner SHA without secrets or network
+        shell: bash
+        run: |
+          set -euo pipefail
+          export GITHUB_REPOSITORY=Ullmann27/device-ai
+          export GITHUB_REF=refs/heads/chatgpt/code52-owner-signing-20261109
+          export GITHUB_EVENT_NAME=workflow_dispatch
+          export SOURCE_SHA=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          export OWNER_APPROVED_SHA=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+          export QA_RUN_ID=43281254420
+          export TRANSPORT_RUN_ID=43281254462
+          if bash scripts/continuum-code55-original-signer.sh preflight > /tmp/negative.txt 2>&1; then
+            echo 'Rejected owner SHA reached success'
+            exit 1
+          fi
+          grep -Fq 'CODE55_SIGN_OWNER_SHA_APPROVAL' /tmp/negative.txt
+          echo 'CODE55_INVALID_OWNER_SHA_REJECTED_NO_SECRETS'

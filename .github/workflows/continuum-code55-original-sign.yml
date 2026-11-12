@@ -1,0 +1,91 @@
+name: "Continuum Code55 - protected original-signature Fold7 draft"
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: "Exact 40-character Code55 source SHA, manually approved by owner"
+        required: true
+        type: string
+      owner_approved_sha:
+        description: "Repeat the exact source SHA to authorize original signing"
+        required: true
+        type: string
+      qa_run_id:
+        description: "Fully successful unfiltered Code55 Android + strict PDF + lint workflow run"
+        required: true
+        type: string
+      transport_run_id:
+        description: "Successful Code55 scoped Android and verified unsigned ARM64 workflow run"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-code55-original-sign
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-owner-signing-20261109'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Prepare official 35 SDK tools
+        shell: bash
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"'
+      - name: Strict Code55 source/QA/owner preflight without signing secrets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}
+          QA_RUN_ID: ${{ inputs.qa_run_id }}
+          TRANSPORT_RUN_ID: ${{ inputs.transport_run_id }}
+        run: bash scripts/continuum-code55-original-signer.sh preflight
+
+  original-signed-draft:
+    needs: preflight
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-owner-signing-20261109'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: continuum-original-signing
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Prepare original Android 35 signing tools
+        shell: bash
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"'
+      - name: Verify original source and sign only the owner-approved draft
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}
+          QA_RUN_ID: ${{ inputs.qa_run_id }}
+          TRANSPORT_RUN_ID: ${{ inputs.transport_run_id }}
+          ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
+          ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}
+        run: bash scripts/continuum-code55-original-signer.sh sign

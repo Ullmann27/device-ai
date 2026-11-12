@@ -27,6 +27,16 @@ unsigned_name="Continuum-Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE.apk"
 source_sha="${SOURCE_SHA:-}"
 qa_run="${QA_RUN_ID:-}"
 approved_sha="${OWNER_APPROVED_SHA:-}"
+# Code55 is detected by its exact QA workflow, never by a loose version claim.
+# Reuse this already registered protected manual signer entry without altering Code52–54.
+if [[ "$qa_run" =~ ^[0-9]{6,20}$ ]]; then
+  qa_identity="$(gh api "repos/$repo/actions/runs/$qa_run")" || fail QA_RUN_UNREADABLE
+  if jq -e '.head_branch=="integrate/code55-apk-fable-20261112"
+     and (.path==".github/workflows/continuum-code55-full-qa.yml" or
+          (.path|startswith(".github/workflows/continuum-code55-full-qa.yml@")))' <<< "$qa_identity" >/dev/null; then
+    exec bash scripts/continuum-code55-original-signer.sh "$mode"
+  fi
+fi
 profile="code52"
 if [[ "$source_sha" == 050a57cb019dcc1b7fe6cfa2fb5c11176b048e05 ]]; then
   profile="code53"
