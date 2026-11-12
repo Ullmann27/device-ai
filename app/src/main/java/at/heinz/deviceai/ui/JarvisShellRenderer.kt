@@ -276,7 +276,7 @@ object JarvisShellRenderer {
                         pressX = controlPress?.xFraction ?: .5f, pressY = controlPress?.yFraction ?: .5f,
                         cinemaElapsedMs = if (clearIdle) null else cinemaElapsed,
                         cinemaExiting = exiting && !clearIdle,
-                        cinemaBudget = depthBudget, animatorScale = animatorScale)
+                        cinemaBudget = depthBudget, animatorScale = animatorScale, fontScale = shell.profile.fontScale)
                     slot != null -> header(p, box, label(slot))
                     tileIndex < tiles.size -> JarvisTiles.draw(p, box, tiles[tileIndex])
                 }

@@ -594,7 +594,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val h = if (jarvisShellStage && width / density >= 240f)
             (JarvisShellLayout.forContent(width / density, jarvisShell.viewportHeightDp,
                 resources.configuration.fontScale, jarvisShell.foldRail, offset,
-                compactPresentation = compactPresentation).height * density).toInt()
+                compactPresentation = compactPresentation, workstation = true).height * density).toInt()
             else maxOf(contentHeight, suggestedMinimumHeight)
         jarvisShell.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         shellForeground.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
@@ -641,7 +641,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val stage = shell?.get(JarvisShellLayout.Slot.AVATAR)
         val head = shell?.headStage ?: shell?.headBounds
         val header = shell?.grid?.areas?.get(JarvisCockpitGrid.Area.CONTINUUM_HEADER)
-        val orb = shell?.orbBounds?.let { ContinuumBrainOrbRenderer.columnFor(it, header) }
+        val orb = shell?.orbBounds?.let { if (shell.workstation) it else ContinuumBrainOrbRenderer.columnFor(it, header) }
         if (stage == null || head == null || orb == null) {
             hologram.setCockpitRegions(null, null)
             hologram.setHeadFraming(.5f, 1f)
@@ -653,7 +653,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
                 (box.right * density).toInt() - originX, (box.bottom * density).toInt() - originY)
         }
         // The latest reference has no owner card reserving half the face viewport.
-        hologram.setCockpitRegions(local(head), local(orb))
+        hologram.setCockpitRegions(local(head), local(orb), layered = shell.workstation)
         hologram.setHeadFraming(shell.headAnchorX, shell.headCloseUp, dialogKeepOut(shell, head))
     }
 
@@ -680,7 +680,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val viewport = jarvisShell.viewportHeightDp.takeIf { it >= 160f } ?: (heightPx / density)
         if (w < 240f || viewport < 160f) return null
         return JarvisShellLayout.forContent(w, viewport, resources.configuration.fontScale, jarvisShell.foldRail,
-            externalRailWidthDp = offset, compactPresentation = compactPresentation)
+            externalRailWidthDp = offset, compactPresentation = compactPresentation, workstation = true)
     }
 
     private data class ShellActionSpec(val key: String, val target: String, val label: String,

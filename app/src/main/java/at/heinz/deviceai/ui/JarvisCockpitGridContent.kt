@@ -362,11 +362,7 @@ object JarvisCockpitGridContent {
         }
         val latest = s.cockpit.dialog.lastOrNull { !it.fromOwner }?.text
             ?.takeIf { it.isNotBlank() && (s.presentation.processing || s.presentation.speaking) }
-        val prompt = when {
-            room >= 235f -> "Was soll ich für dich erledigen?"
-            room >= 140f -> "Was möchtest du tun?"
-            else -> "Gespräch öffnen"
-        }
+        val prompt = "Was soll ich für dich erledigen?"
         val style = if (latest != null) Type.body else Type.body.copy(size = (b.width * .027f).coerceIn(15f, 23f))
         val lineHeight = p.capHeight(style) + 4f
         val count = ((b.height - 16f) / lineHeight).toInt().coerceIn(1, 2)

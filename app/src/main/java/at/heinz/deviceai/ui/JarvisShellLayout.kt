@@ -54,7 +54,8 @@ object JarvisShellLayout {
         val headBounds: Box? = null,
         val orbBounds: Box? = null,
         /** Native surface, behind dialogue. */
-        val headStage: Box? = null
+        val headStage: Box? = null,
+        val workstation: Boolean = false
     ) {
         val headAnchorX: Float get() = if (headStage != null) JarvisCockpitGrid.HEAD_ANCHOR_X else .5f
         val headCloseUp: Float get() = if (headStage != null) JarvisCockpitGrid.HEAD_CLOSE_UP else 1f
@@ -103,9 +104,9 @@ object JarvisShellLayout {
         /** Only meaningful Android actions. Optional menu is omitted when three safe targets do not fit. */
         fun headerActionBoxes(): Map<String, Box> {
             val b = grid?.areas?.get(Area.ICONS) ?: boxes[Slot.TOP_BAR]?.let {
-                Box(maxOf(it.left, it.right - 96f), it.top, it.right, it.bottom)
+                Box(maxOf(it.left, it.right - if (workstation) 144f else 96f), it.top, it.right, it.bottom)
             } ?: return emptyMap()
-            val targets = if (grid != null && b.width >= 144f) listOf("notifications", "settings", "more")
+            val targets = if ((grid != null || workstation) && b.width >= 144f) listOf("notifications", "settings", "more")
                 else listOf("notifications", "settings")
             val size = minOf(48f, b.width / targets.size)
             val top = (b.centerY - size / 2f).coerceAtLeast(0f)
@@ -125,11 +126,12 @@ object JarvisShellLayout {
     /** Width is the available pane. */
     fun forContent(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,
                    externalRailWidthDp: Float = 0f, externalBottomBarHeightDp: Float = 0f,
-                   includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false): Shell {
+                   includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false, workstation: Boolean = false): Shell {
         require(externalRailWidthDp.isFinite() && externalRailWidthDp >= 0f)
         require(externalBottomBarHeightDp.isFinite() && externalBottomBarHeightDp >= 0f && externalBottomBarHeightDp < heightDp)
         val viewport = heightDp - externalBottomBarHeightDp
-        return create(widthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation)
+        return if (workstation && !compactPresentation) CinematicWorkstationLayout.create(widthDp, viewport, fontScale)
+            else create(widthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation)
     }
 
     fun create(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,

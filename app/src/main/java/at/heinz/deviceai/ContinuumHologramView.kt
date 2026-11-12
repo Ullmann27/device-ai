@@ -416,13 +416,16 @@ class ContinuumHologramView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun setCockpitRegions(head: Rect?, orb: Rect?) {
+    private var layeredCockpit = false
+
+    fun setCockpitRegions(head: Rect?, orb: Rect?, layered: Boolean = false) {
         require((head == null) == (orb == null)) { "Head and orb bounds must be supplied together" }
         if (head != null && orb != null) {
             require(!head.isEmpty && !orb.isEmpty && head.left >= 0 && head.top >= 0 && orb.left >= 0 && orb.top >= 0)
-            require(!Rect.intersects(head, orb)) { "Head and orb drawing regions must not overlap" }
+            require(layered || !Rect.intersects(head, orb)) { "Head and orb drawing regions must not overlap" }
         }
-        if (cockpitHeadBounds == head && cockpitOrbBounds == orb) return
+        if (cockpitHeadBounds == head && cockpitOrbBounds == orb && layeredCockpit == layered) return
+        layeredCockpit = layered
         resetCamera()
         cockpitHeadBounds = head?.let(::Rect)
         cockpitOrbBounds = orb?.let(::Rect)
@@ -1160,7 +1163,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                                 at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_10_SENTENCE)
                     )
                 }
-                    .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
+                    .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = if (layeredCockpit) at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY else 1f } }
                     .onFailure { fail3d() }
             }
             renderDocumentStage()

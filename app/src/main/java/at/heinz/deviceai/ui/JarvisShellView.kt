@@ -222,7 +222,7 @@ class JarvisShellView(context: Context) : View(context) {
         val viewport = viewportHeightDp.takeIf { it >= 160f } ?: h
         return shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp && layoutCompact == compactPresentation }
             ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp,
-                compactPresentation = compactPresentation).also {
+                compactPresentation = compactPresentation, workstation = true).also {
                 shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp; layoutViewport = viewport; layoutCompact = compactPresentation
             }
     }
