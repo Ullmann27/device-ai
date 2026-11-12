@@ -12220,6 +12220,7 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        cancelSpeechInputScope()
         pendingComputerLaunch = null
         computerController?.stop()
         appNameClarification.clear()
@@ -12301,7 +12302,6 @@ class AgentActivity : Activity() {
             addToolActivity("App-Auftrag abgebrochen; spätes Ergebnis wird ignoriert")
             return
         }
-        cancelSpeechInputScope()
         if (::executor.isInitialized) executor.cancelPendingActions()
         // Clear synchronously; already queued native deltas also check the
         // cancellation state before they may create or update a draft.

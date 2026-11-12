@@ -1,0 +1,14 @@
+{
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/ContinuousConversationMode.kt": "4a4f75e6695c55d115ae49489d50d89a5d9347e88b193b50ef88e06dc04fb4e6",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalSpeechSession.kt": "9c072ab7ac517da2815df39471e19ecf5847dd82349c4f87806d35c4167d0b91",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalSpeechInputPolicy.kt": "179f6c4e6ae26a07f5ab40fd64845f0ef6ae4af246474bdea0150fb480d4ce32",
+    "app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt": "30b9d4cf451898330fb7a15e856b7189a8c90c9a9f57e4e28900bfe8bec15ab3",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ContinuousConversationModeTest.kt": "5a5734957802bbec339dcf41a03095e96a9ce75c50b58ea243aad8b2bddf9340",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ContinuousConversationRecoveryTest.kt": "23edc4e649ae5546e705d968d241d13676a65cc41bdf0d7d50038267ea308f3a",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LocalSpeechSessionTest.kt": "4a173593482805ec7e66e9ca7c420071e7e3014e62bc2b6169590578d9050c7a"
+  },
+  "compile_exit": 0,
+  "junit_exit": 1,
+  "sources_unchanged": true
+}

@@ -6,6 +6,7 @@ import android.view.View
 import at.heinz.deviceai.cognitive.ContinuousConversationMode
 import at.heinz.deviceai.ui.ContinuumHomeView
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -107,6 +108,26 @@ class ContinuumCockpitHandsFreeUiTest {
         mode.stop()
         call(a, "addUserMessage", "Expliziter Chat")
         assertEquals(true, field(a, "conversationActive"))
+    }
+
+    @Test fun stopDuringAppLookupCancelsPendingForegroundRecovery() = withHandsFreeCockpit { a, mode, _, _ ->
+        val session = field(a, "sessionId") as String
+        assertTrue(mode.start(session))
+        mode.suspendForBackground(android.os.SystemClock.elapsedRealtime())
+        assertTrue(mode.foregroundRecoveryPending)
+        set(a, "appLookupActive", true)
+        set(a, "activeLocalRequest", true)
+        set(a, "busy", true)
+
+        assertTrue((field(a, "sendButton") as View).performClick())
+
+        assertEquals(false, field(a, "appLookupActive"))
+        assertEquals(false, field(a, "busy"))
+        assertEquals(ContinuousConversationMode.State.OFF, mode.state)
+        assertFalse(mode.foregroundRecoveryPending)
+        assertEquals(ContinuousConversationMode.Decision.IGNORE,
+            mode.restoreForeground(session, android.os.SystemClock.elapsedRealtime(), canListen = true, busy = false))
+        assertEquals(ContinuousConversationMode.State.OFF, mode.state)
     }
 
     /** PR #564 review: touching the START composer during hands-free must not route the next spoken turn to CHAT. */
