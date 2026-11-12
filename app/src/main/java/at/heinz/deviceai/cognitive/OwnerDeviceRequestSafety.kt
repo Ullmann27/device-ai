@@ -95,8 +95,9 @@ internal object OwnerDeviceRequestSafety {
                 changes.size > 1 -> Category.CHANGE
                 notOnly.containsMatchIn(clause) -> Category.CHANGE
                 deferred.containsMatchIn(clause) -> Category.DEFERRED_CHANGE
-                // Review #788: "was wir … bereinigen könnten" is a proposal; "Lösch alles, was wir … könnten" is an
-                // imperative. The mutation verb must stand after the subject and must not open the clause.
+                // "was wir/ich/man … bereinigen könnten" is a proposal; "Lösch alles, was wir … könnten" or "Entferne
+                // alles, was ich … kann" is an imperative. The mutation verb must stand after the subject and must not
+                // open the clause (review #788 and Code54 7b81e46e8).
                 proposalSubject.containsMatchIn(clause) && proposalModal.containsMatchIn(clause) &&
                     proposalQuestion.containsMatchIn(clause) && changes.single().let { verb ->
                         verb.range.first > 0 && proposalSubject.find(clause)!!.range.first < verb.range.first
