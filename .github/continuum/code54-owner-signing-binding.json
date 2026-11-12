@@ -17,9 +17,9 @@
     "bytes": 73553790,
     "digest": "sha256:855e9877ed3eef8b96cf9da2dc96931dfd93a339800b3ce76a6894e5fb4a787b"
   },
-  "release_gate": "DEVICE_TEST_NATIVE_PDF_EXCEPTION_PENDING_EVIDENCE",
+  "release_gate": "DEVICE_TEST_NATIVE_PDF_EXCEPTION_VERIFIED",
   "release_scope": "UNPUBLISHED_FOLD7_DEVICE_TEST_ONLY",
-  "note": "Owner has authorized preparation of an exact-source PDF-only Fold7 test exception. QA evidence artifact ID/digest is NOT available, so signer remains fail-closed; only full tests plus exactly one native PDF host failure can allow subsequent reviewed activation. No signature, install or release authorized by this file.",
+  "note": "Exact GitHub QA archive independently downloaded and SHA-256 checked: 4860 complete tests (4842 SUCCESS, 1 FAILURE strictly PdfIntakeNativeDecodeProbeUiTest.actualProviderReadRendersAndExtractsSyntheticPdf with NoSuchMethodError FileDescriptor.getOwnerId$ via IoUtils/PdfProcessor, 17 allowlisted SKIPPED); source stayed unchanged. This is an owner-scoped unpublished Fold7 device-test draft EXCEPTION, NOT a full QA pass, NOT PDF device acceptance and NOT an authorization to publish. Signer may be used only after reviewed merge into the protected branch and an explicit owner manual sign/deploy approval in GitHub environment. No signing or publication has occurred.",
   "owner_exception": {
     "authorization_id": "OWNER_CHAT_APPROVAL_2026_11_12_CODE54_PDF_DEVICE_TEST_ONLY",
     "source_sha": "9713854bfb01d699f666058ac44379735307b66a",
@@ -30,5 +30,10 @@
     "fold7_acceptance_required": true,
     "authorized_scope": "Only this one host-native PDF mismatch, after every other runnable Android case passes, for an unpublished original-signed owner device-test draft; protected environment approval separately required."
   },
-  "qa_evidence": null
+  "qa_evidence": {
+    "id": 13911650172,
+    "name": "Code54-Android-Source-QA-Receipts",
+    "bytes": 409596525,
+    "digest": "sha256:a8f6455af1fa22ec35fb72d4bbfc1464c0f6bd42cb971c0ded3ab635c289fd40"
+  }
 }

@@ -62,12 +62,16 @@ def mutate(data, path, value):
 
 
 class MetadataContracts(unittest.TestCase):
-    def test_real_binding_is_intentionally_unusable(self):
+    def test_real_binding_is_source_scoped_to_exact_reviewed_qa_artifact(self):
         binding = json.loads((ROOT / ".github/continuum/code54-owner-signing-binding.json").read_text())
-        with self.assertRaisesRegex(evidence.Rejected, "RELEASE_GATE_BLOCKED"):
-            evidence.verify_binding(binding)
-        self.assertEqual(binding["release_gate"],
-                         "DEVICE_TEST_NATIVE_PDF_EXCEPTION_PENDING_EVIDENCE")
+        evidence.verify_binding(binding)
+        self.assertEqual(binding["release_gate"], evidence.DEVICE_TEST_EXCEPTION)
+        self.assertEqual(binding["qa_evidence"]["id"], 13911650172)
+        self.assertEqual(binding["qa_evidence"]["bytes"], 409596525)
+        self.assertEqual(binding["qa_evidence"]["digest"],
+                         "sha256:a8f6455af1fa22ec35fb72d4bbfc1464c0f6bd42cb971c0ded3ab635c289fd40")
+        self.assertEqual(binding["owner_exception"]["device_pdf_test_status"], "NOT_RUN")
+        self.assertEqual(binding["owner_exception"]["publication"], "FORBIDDEN")
 
     def test_synthetic_completed_green_identity(self):
         evidence.verify_metadata(**fixture())
@@ -330,9 +334,9 @@ def write_pdf_evidence(root, journal=None):
     start, cases, end = journal
     lines = [start] + cases + [end]
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr("code54-full/junit-progress.ndjson",
+        archive.writestr("_temp/code54-full/junit-progress.ndjson",
                          "\n".join(json.dumps(item, separators=(",", ":")) for item in lines))
-        archive.writestr("CODE54-SOURCE.txt", (
+        archive.writestr("_temp/CODE54-SOURCE.txt", (
             f"source_sha={evidence.SOURCE}\nsource_tree={evidence.TREE}\n"
             "qa_only=true\noriginal_signer=NOT_USED\nFold7=NOT_RUN\n"))
     return path
