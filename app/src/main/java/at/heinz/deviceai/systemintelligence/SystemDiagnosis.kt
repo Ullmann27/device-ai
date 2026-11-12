@@ -36,19 +36,31 @@ data class SystemDiagnosis(
         add("Fremde App-Energie, CPU-Temperatur und Start-/Frame-/Modellzeiten wurden hier nicht gemessen. Kein Geschwindigkeitsgewinn belegt.")
     }
 
+    /** Header shared by the plain report and the six-group evaluation output. */
+    fun reportHeader(): String = buildString {
+        append("Lokale Systemdiagnose · Android-API ").append(androidSdk)
+        append("\nMesszeit: ").append(observedAtMillis)
+        if (unavailable.isNotEmpty()) append("\nNicht erfasst: ").append(unavailable.sorted().joinToString())
+    }
+
+    /** The measured facts, one line each; a missing value reads „nicht verfügbar“, never zero. */
+    fun measurementLines(): List<String> = listOf(
+        "Datenträger verfügbar: " + bytes(storageAvailableBytes),
+        "Datenträger gesamt: " + bytes(storageTotalBytes),
+        "RAM verfügbar: " + bytes(ramAvailableBytes),
+        "Continuum-PSS: " + bytes(ownPssBytes),
+        "Akku: " + (batteryPercent?.let { "$it %" } ?: "nicht verfügbar"),
+        "Akkutemperatur: " + (batteryTemperatureC?.let { decimal(it) + " °C" } ?: "nicht verfügbar"),
+        "Lädt: " + when (charging) { true -> "ja"; false -> "nein"; null -> "nicht verfügbar" },
+        "Android-Thermalstatus: " + (thermalStatus?.toString() ?: "nicht verfügbar"),
+        "App-CPU: " + (ownCpuCorePercent?.let { decimal(it) + " % eines Kerns" } ?: "nicht verfügbar") +
+            " · Fenster " + cpuSampleMillis + " ms"
+    )
+
     fun report(): String = buildString {
         append("Lokale Systemdiagnose · Android-API ").append(androidSdk)
         append("\nMesszeit: ").append(observedAtMillis)
-        append("\nDatenträger verfügbar: ").append(bytes(storageAvailableBytes))
-        append("\nDatenträger gesamt: ").append(bytes(storageTotalBytes))
-        append("\nRAM verfügbar: ").append(bytes(ramAvailableBytes))
-        append("\nContinuum-PSS: ").append(bytes(ownPssBytes))
-        append("\nAkku: ").append(batteryPercent?.let { "$it %" } ?: "nicht verfügbar")
-        append("\nAkkutemperatur: ").append(batteryTemperatureC?.let { decimal(it) + " °C" } ?: "nicht verfügbar")
-        append("\nLädt: ").append(when (charging) { true -> "ja"; false -> "nein"; null -> "unbekannt" })
-        append("\nAndroid-Thermalstatus: ").append(thermalStatus?.toString() ?: "nicht verfügbar")
-        append("\nApp-CPU: ").append(ownCpuCorePercent?.let { decimal(it) + " % eines Kerns" } ?: "nicht verfügbar")
-        append(" · Fenster ").append(cpuSampleMillis).append(" ms")
+        measurementLines().forEach { append("\n").append(it) }
         if (unavailable.isNotEmpty()) append("\nNicht erfasst: ").append(unavailable.sorted().joinToString())
         recommendations().forEach { append("\n• ").append(it) }
     }
@@ -57,7 +69,7 @@ data class SystemDiagnosis(
         fun bytes(value: Long?): String = value?.let {
             String.format(Locale.ROOT, "%.1f MiB", it / 1048576.0)
         } ?: "nicht verfügbar"
-        private fun decimal(value: Double) = String.format(Locale.ROOT, "%.1f", value)
+        internal fun decimal(value: Double) = String.format(Locale.ROOT, "%.1f", value)
     }
 }
 
@@ -70,6 +82,8 @@ object SystemIntelligenceCommands {
     const val RESTORE = "restore_own_cache"
     const val FILES = "analyze_granted_storage"
     const val SAVE = "save_system_snapshot"
+    /** Optional read-only flag of [DIAGNOSE]; a string, as the existing ToolGate schema types unknown flags. */
+    const val INCLUDE_CACHE_PREVIEW = "includeOwnCachePreview"
     val localTools = setOf(DIAGNOSE, CAPABILITIES, PREVIEW, CLEANUP, RESTORE, FILES, SAVE)
     fun cloudMayDispatch(toolName: String): Boolean = toolName in setOf("web_search", "web_read")
 
@@ -119,7 +133,16 @@ object SystemIntelligenceCommands {
             .containsMatchIn(normalized)
     }
 
-    fun diagnosisIncludesOwnCachePreview(text: String): Boolean = false
+    private val cleanupCandidateQuestion = Regex("(?iu)(?<![\\p{L}])(?:bereinig\\p{L}*|aufräum\\p{L}*|" +
+        "aufraeum\\p{L}*|säuber\\p{L}*|saeuber\\p{L}*|freimach\\p{L}*|cache|cage|" +
+        "unnötige\\s+dateien|unnoetige\\s+dateien)(?![\\p{L}])")
+
+    /**
+     * A diagnosis request that also asks what could be cleaned additionally opens the own-cache preview.
+     * Both are read-only; the cleanup itself still needs its own explicit approval in the system centre.
+     */
+    fun diagnosisIncludesOwnCachePreview(text: String): Boolean =
+        isDiagnosisRequest(text) && cleanupCandidateQuestion.containsMatchIn(normalizedRequest(text))
 
     /** Cleaning speech opens preview only. */
     fun isCachePreviewRequest(text: String): Boolean {

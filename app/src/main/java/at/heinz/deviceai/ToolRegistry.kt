@@ -53,7 +53,7 @@ sealed interface ArgSchema {
             "url" -> HttpsUrl
             "path", "source", "destination" -> SharedPath
             "roots" -> PathList
-            "userOnly" -> Flag
+            "userOnly", "includeOwnCachePreview" -> Flag
             "lines" -> Integer(1, 600)
             "limit" -> Integer(1, 250)
             "seconds" -> Integer(1, 60)
@@ -72,7 +72,7 @@ object ToolRegistry {
         ToolSpec("get_device_info", "Geräteinformationen", "Liest Modell, Android-Version und Build-Daten.", Risk.READ_ONLY),
         ToolSpec("get_battery_info", "Akku prüfen", "Liest den aktuellen Batteriestatus.", Risk.READ_ONLY),
         ToolSpec("get_storage_info", "Speicher prüfen", "Misst Gesamtgröße und nutzbaren Speicher des App-Datenträgers, ohne Dateien zu durchsuchen.", Risk.READ_ONLY),
-        ToolSpec("diagnose_device", "Handy analysieren", "Lokale Android-Momentaufnahme mit Messgrenzen; nur im Systemzentrum.", Risk.READ_ONLY),
+        ToolSpec("diagnose_device", "Handy analysieren", "Lokale Android-Momentaufnahme mit Messgrenzen; nur im Systemzentrum. Optional zusätzlich die nur lesende Vorschau der eigenen Diagnoseablage.", Risk.READ_ONLY, optional = setOf("includeOwnCachePreview")),
         ToolSpec("save_system_snapshot", "Messung lokal sichern", "Speichert genau die angezeigte technische Momentaufnahme als eigenen Diagnosebericht.", Risk.CONFIRM, required = setOf("snapshotId")),
         ToolSpec("get_system_capabilities", "Zugriffswege prüfen", "Prüft die tatsächliche Shizuku-Identität; erteilt keine Rechte.", Risk.READ_ONLY),
         ToolSpec("preview_own_cache", "Bereinigungsvorschau", "Prüft nur regenerierbare eigene Diagnoseberichte; schützt Modell- und Updatecache.", Risk.READ_ONLY),

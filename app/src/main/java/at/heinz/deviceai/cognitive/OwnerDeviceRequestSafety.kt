@@ -40,12 +40,13 @@ internal object OwnerDeviceRequestSafety {
     private val refusesAction = Regex("(?iu)^(?:ich\\s+(?:will|möchte|moechte)\\s+)?" +
         "nicht\\s*,?\\s+dass\\s+du(?![\\p{L}])")
     private val beforeAction = Regex("(?iu)^(?:bitte\\s+)?(?:nicht|nie|niemals)$")
-    private val noObject = Regex("(?iu)^(?:bitte\\s+)?(?:nichts|kein\\p{L}*)(?![\\p{L}])")
+    private val noObject = Regex("(?iu)^(?:bitte\\s+)?(?:(?:noch|vorerst|erstmal|erst\\s+mal)\\s+)?" +
+        "(?:nichts|kein\\p{L}*)(?![\\p{L}])")
     private val directRefusal = Regex("(?iu)^(?:bitte\\s+)?(?:nicht|nie|niemals)(?:$|\\s+" +
         "(?:die|den|das|diese\\p{L}*|mein\\p{L}*|dein\\p{L}*|etwas|alles)(?![\\p{L}]))")
     private val finalRefusal = Regex("(?iu)(?<![\\p{L}])(?:nicht|nie|niemals)$")
     private val notOnly = words("nicht\\s+nur|vergiss\\s+nicht")
-    private val proposalSubject = words("ich|man")
+    private val proposalSubject = words("ich|man|wir")
     private val proposalModal = words("kann|könnte|koennte|sollte|könnten|koennten")
     private val proposalQuestion = words("was|welche\\p{L}*|wie")
     private val deferred = words("(?:erst|nur)\\s+nach\\s+meiner\\s+(?:freigabe|bestätigung|bestaetigung|entscheidung)|" +
