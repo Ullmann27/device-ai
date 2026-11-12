@@ -95,6 +95,23 @@ class OwnerComputerIntentParserTest {
             is OwnerComputerIntentParser.Result.Unsupported)
     }
 
+    @Test fun explicitAppSwitchUsesTheSameNewOwnerApprovedOpenPlan() {
+        for ((request, app) in listOf(
+            "Wechsle zu Chrome" to ComputerApp.CHROME,
+            "Wechsel zu WhatsApp" to ComputerApp.WHATSAPP,
+            "Wechsle zu Einstellungen" to ComputerApp.SETTINGS
+        )) {
+            val intent = ready(request)
+            assertEquals(app, intent.app)
+            assertEquals(ComputerGoal.OPEN, intent.goal)
+            assertEquals(listOf(ComputerPlanStep.OPEN_APP, ComputerPlanStep.OBSERVE_APP), intent.steps)
+        }
+        assertSame(OwnerComputerIntentParser.Result.NotComputerCommand,
+            OwnerComputerIntentParser.parse("Wechsle zu irgendeiner anderen App"))
+        assertTrue(OwnerComputerIntentParser.parse("Wechsle zu Chrome und lösche Daten")
+            is OwnerComputerIntentParser.Result.Unsupported)
+    }
+
     @Test fun ambiguityAndOversizedTextDoNotProduceExecutablePlans() {
         assertTrue(OwnerComputerIntentParser.parse("Schreibe Anna auf WhatsApp und auf Facebook: Hallo") is OwnerComputerIntentParser.Result.Ask)
         assertTrue(OwnerComputerIntentParser.parse("Schreibe Anna auf WhatsApp: " + "x".repeat(501)) is OwnerComputerIntentParser.Result.Unsupported)
