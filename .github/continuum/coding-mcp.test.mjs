@@ -130,15 +130,46 @@ test('no successful read after credential revocation during a pending call', asy
   assert.equal(response.status, 401); assert.equal(response.text.includes('STOPPED'), false);
 });
 
-test('timeouts, oversized results/body and per-session parallel reads fail closed', async t => {
+test('timeouts and oversized results/body fail closed', async t => {
   const f = await fixture(t, { limits: { callTimeoutMs: 40, maxBodyBytes: 2048, maxResultBytes: 1024 }, reader: { getStatus: () => new Promise(() => {}), listTasks: () => ({ items: [{ details: 'x'.repeat(5000) }], nextCursor: null }) } });
   const session = await f.init();
   const pending = f.post(rpc(2, 'tools/call', { name: 'get_status', arguments: {} }), { session });
-  await new Promise(resolve => setTimeout(resolve, 10));
-  assert.equal((await f.post(rpc(3, 'tools/call', { name: 'list_tasks', arguments: {} }), { session })).status, 429);
   assert.equal((await pending).body.result.isError, true);
   assert.equal((await f.post(rpc(4, 'tools/call', { name: 'list_tasks', arguments: {} }), { session })).body.result.isError, true);
   assert.equal((await f.post('x'.repeat(3000), { session })).status, 413);
+});
+
+test('per-session parallel reads fail closed while the first reader is active', async t => {
+  let entered, signal;
+  const started = new Promise(resolve => { entered = resolve; });
+  const f = await fixture(t, { limits: { callTimeoutMs: 40 }, reader: {
+    getStatus: (_args, context) => { signal = context.signal; entered(); return new Promise(() => {}); },
+  } });
+  const session = await f.init();
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const pending = f.post(rpc(2, 'tools/call', { name: 'get_status', arguments: {} }), { session });
+  pending.catch(() => {});
+  try {
+    await started;
+    assert.equal(f.getMetrics().activeReads, 1);
+    const overlap = await f.post(rpc(3, 'tools/call', { name: 'list_tasks', arguments: {} }), { session });
+    assert.equal(overlap.status, 429);
+    assert.equal(overlap.body.error, 'MCP_READ_BUDGET');
+    assert.deepEqual(f.calls.map(call => call.name), ['getStatus']);
+    assert.equal(f.getMetrics().activeReads, 1);
+    t.mock.timers.tick(39);
+    assert.equal(signal.aborted, false);
+    assert.equal(f.getMetrics().readTimeouts, 0);
+    t.mock.timers.tick(1);
+    assert.equal((await pending).body.result.isError, true);
+    assert.equal(signal.aborted, true);
+    assert.equal(f.getMetrics().readTimeouts, 1);
+    assert.equal(f.getMetrics().activeReads, 0);
+  } finally {
+    t.mock.timers.reset();
+    await f.close();
+    await pending.catch(() => {});
+  }
 });
 
 test('terminated, absent, uninitialized and unknown sessions cannot query service', async t => {

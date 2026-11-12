@@ -1,5 +1,13 @@
 # Omega APK continuation — 11 November 2026
 
+> **Current readback, 12 November 2026:** Code54 is already originally signed
+> as unpublished device-test draft 442543223, source `9713854b`. The subsequent
+> exact `921cc382` Android run is complete: 4,842 PASS / 1 native PDF host FAIL /
+> 17 known SKIPs; UI 25/25 and NewApi lint PASS. The complete app tree is
+> identical between those sources. See [current continuation](OMEGA-CODE54-RESUME-20261112.md)
+> for actual source/run/artifact bindings and remaining gates. The checkpoints
+> below are retained historical evidence, not the present build/signing status.
+
 ## Resume source and owner request
 
 Continue the owner's requested memory, logic, extension and APK work from PR #768.
