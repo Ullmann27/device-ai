@@ -11377,6 +11377,8 @@ class AgentActivity : Activity() {
                         ContinuumUiCopy.modelFailure(error.message)
                     else if (at.heinz.deviceai.localmodel.LocalModelThermalGuard.isThermal(error.message))
                         at.heinz.deviceai.localmodel.LocalModelThermalGuard.ownerMessage(error.message)
+                    else if (at.heinz.deviceai.localmodel.LocalModelTokenOverflow.isTokenOverflow(error.message))
+                        at.heinz.deviceai.localmodel.LocalModelTokenOverflow.ownerMessage(error.message)
                     else groundedRecall?.failureAnswer() ?:
                         "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn,
                         keepCockpit = failedDraft != null && workWindowHost.isShowing, allowMaya = allowMaya)
@@ -13391,8 +13393,10 @@ class AgentActivity : Activity() {
      * from the home dashboard. Every actual action result opens the conversation. */
     private fun addHomeGreeting(value: String, persist: Boolean = true, allowMaya: Boolean = ownerReplyAllowsMaya,
                                 speakNow: Boolean = true) {
-        addBubble(value, user = false, persist = persist)
-        if (speakNow) speakReply(value, allowMaya)
+        // Code55: the bubble is plain text – no raw Markdown markers on screen or in speech.
+        val shown = at.heinz.deviceai.cognitive.ChatReplyFormatter.plain(value)
+        addBubble(shown, user = false, persist = persist)
+        if (speakNow) speakReply(shown, allowMaya)
     }
 
     /**
