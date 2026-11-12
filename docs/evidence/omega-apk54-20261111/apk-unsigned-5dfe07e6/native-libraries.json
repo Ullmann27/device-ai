@@ -1,0 +1,159 @@
+[
+  {
+    "path": "lib/arm64-v8a/libc++_shared.so",
+    "bytes": 1292904,
+    "sha256": "4397241b4bd20a8e579bfb41d21107857e12985f6a01ca0c2a5f83380d1270b4",
+    "machine": "AArch64",
+    "class": "ELF64",
+    "loadSegments": [
+      {
+        "offset": 0,
+        "virtualAddress": 0,
+        "fileSize": 634024,
+        "memorySize": 634024,
+        "alignment": 16384
+      },
+      {
+        "offset": 634032,
+        "virtualAddress": 650416,
+        "fileSize": 616000,
+        "memorySize": 616000,
+        "alignment": 16384
+      },
+      {
+        "offset": 1250032,
+        "virtualAddress": 1282800,
+        "fileSize": 39760,
+        "memorySize": 40208,
+        "alignment": 16384
+      },
+      {
+        "offset": 1289792,
+        "virtualAddress": 1338944,
+        "fileSize": 568,
+        "memorySize": 32016,
+        "alignment": 16384
+      }
+    ]
+  },
+  {
+    "path": "lib/arm64-v8a/libfilament-jni.so",
+    "bytes": 2266408,
+    "sha256": "d75914906f58575b70012edc4848fad5981d57de4a776d6486cdfabbf1c90da4",
+    "machine": "AArch64",
+    "class": "ELF64",
+    "loadSegments": [
+      {
+        "offset": 0,
+        "virtualAddress": 0,
+        "fileSize": 2229536,
+        "memorySize": 2229536,
+        "alignment": 16384
+      },
+      {
+        "offset": 2229536,
+        "virtualAddress": 2245920,
+        "fileSize": 33736,
+        "memorySize": 35552,
+        "alignment": 16384
+      },
+      {
+        "offset": 2263272,
+        "virtualAddress": 2296040,
+        "fileSize": 496,
+        "memorySize": 11848,
+        "alignment": 16384
+      }
+    ]
+  },
+  {
+    "path": "lib/arm64-v8a/libgltfio-jni.so",
+    "bytes": 4679472,
+    "sha256": "d0646ee3858dc865bc861529ce817fe4a667806c36a5c1fab67d7e2f1fcd9a2b",
+    "machine": "AArch64",
+    "class": "ELF64",
+    "loadSegments": [
+      {
+        "offset": 0,
+        "virtualAddress": 0,
+        "fileSize": 4651280,
+        "memorySize": 4651280,
+        "alignment": 16384
+      },
+      {
+        "offset": 4651280,
+        "virtualAddress": 4667664,
+        "fileSize": 25272,
+        "memorySize": 26352,
+        "alignment": 16384
+      },
+      {
+        "offset": 4676552,
+        "virtualAddress": 4709320,
+        "fileSize": 280,
+        "memorySize": 27728,
+        "alignment": 16384
+      }
+    ]
+  },
+  {
+    "path": "lib/arm64-v8a/liblitertlm_jni.so",
+    "bytes": 22155680,
+    "sha256": "4a94a3f955ad7c58cbcdfc5cb4ff566187bb9e8c5bc2c4056b4e226646c7e8fd",
+    "machine": "AArch64",
+    "class": "ELF64",
+    "loadSegments": [
+      {
+        "offset": 0,
+        "virtualAddress": 0,
+        "fileSize": 21303520,
+        "memorySize": 21303520,
+        "alignment": 16384
+      },
+      {
+        "offset": 21315584,
+        "virtualAddress": 21315584,
+        "fileSize": 792416,
+        "memorySize": 794624,
+        "alignment": 16384
+      },
+      {
+        "offset": 22108000,
+        "virtualAddress": 22124384,
+        "fileSize": 44360,
+        "memorySize": 394360,
+        "alignment": 16384
+      }
+    ]
+  },
+  {
+    "path": "lib/arm64-v8a/libopencv_java4.so",
+    "bytes": 23972544,
+    "sha256": "d331aac20d0a76981ea652f7df7978e3b82ccc46d5926dc7c394d33c813694ab",
+    "machine": "AArch64",
+    "class": "ELF64",
+    "loadSegments": [
+      {
+        "offset": 0,
+        "virtualAddress": 0,
+        "fileSize": 23236848,
+        "memorySize": 23236848,
+        "alignment": 16384
+      },
+      {
+        "offset": 23236848,
+        "virtualAddress": 23253232,
+        "fileSize": 446432,
+        "memorySize": 450320,
+        "alignment": 16384
+      },
+      {
+        "offset": 23683280,
+        "virtualAddress": 23716048,
+        "fileSize": 287184,
+        "memorySize": 1381504,
+        "alignment": 16384
+      }
+    ]
+  }
+]
