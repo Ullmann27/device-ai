@@ -1,60 +1,96 @@
-# Code55: drei angeschlossene Cockpit-Experimente
+# Code55: drei geprüfte Cockpit-Experimente
 
-Start: 12.11.2026. Status: RESEARCH_SHADOW / WIP, noch kein Ergebnis.
-Gemeinsame unveränderte Basis: `5f87bdc610944b93d3173a83c5beeea315abeb66`,
-Baum `cae47c3abaee1a378b4157f26abf7e6ec33df2c1` aus PR #799.
-Der lokale Zwischenstand `140c59ee` ist nicht die Experimentbasis.
+12.11.2026. PORTIERT in #804; VERIFIZIERT auf dem Host; GERÄTEBESTÄTIGT: NOT_RUN.
+Alle drei Versuche haben einen Abschlussentscheid.
 
-## Eine Integrationslinie
+## Gemeinsamer Anschluss
 
-Die drei abgegrenzten Zulieferungen laufen in
-`work/astra55-cockpit-experiments-20261112` zusammen und zielen auf
-`work/astra55-cockpit-integration-20261112` (#799), danach die bestehende #791.
-Der Hauptintegrator behält Gesamtbuild und Geräteabnahme. Der parallele
-Android-Anschlussaudit #803 bleibt zuständig für Capture, Eingabefreigabe,
-eingereichtes Monitorbild und tatsächliche App-Nachbedingungen.
+Anfangsbasis: `5f87bdc610944b93d3173a83c5beeea315abeb66`.
+Aktuelle integrierte Hauptbasis: `711f23b33a8fc602a3a0e4baa37aa61e42e6fc64`,
+einschließlich des regulär übernommenen Android-Audits #803.
 
-Dies sind Unterprüfungen der vorhandenen EXP-07/11/12; die bestehende
-EXP-05-Modellarchitektur wird nur als vorhandene Schnittstelle erhalten.
-Es entsteht kein zweiter Renderer, Ereignisbus, Planer oder Modelltrainer.
+**#805 / #806 / #807 → #804 → #799 → bestehende #791.**
+Gesamtbuild und Geräteabnahme der gesamten Code55-Linie bleiben beim Hauptintegrator.
+Die Arbeitsbäume anderer Teams wurden ausschließlich gelesen.
 
-## Drei vorab festgelegte Entscheidungen
-
-| Spur | Bestehender Anschluss | Vergleich und Annahmebedingung |
+| Unsere Spur | Partnerarbeit | Bestehender Vertrag |
 |---|---|---|
-| A / support_live | LiveMonitorFeed → CockpitLiveTexture → gemeinsamer Monitor | Unveränderte Uniformwerte überspringen. Mindestens 50 % weniger tatsächliche Material-Schreibaufrufe im eingefrorenen 60-Tick/10-Frame-Replay; Zustand, Framebindung und Buffer-Lebensdauer identisch. |
-| B / support_scene | FilamentCockpitStage → vorhandener TransformManager | Identische lokale Matrizen überspringen. Mindestens 20 % weniger Transform-Schreibaufrufe im dokumentierten Replay; lokale und Weltmatrizen einschließlich Elternbewegung identisch. |
-| C / support_workflow | Auftrag → Verifier → vorhandener Bus → Avatar/Cue | Sofortige und verzögerte Beobachtung vergleichen. Kein verfrühter Erfolg, keine zusätzliche native Eingabe; Widerspruch und Stop müssen Erfolg verhindern. Besteht der Bestand, wird ausschließlich der Nachweis angeschlossen. |
+| A / support_live / #805 | #803 Capture/Monitor, #799 Live-Computer | LiveMonitorFeed, CockpitLiveTexture, LiveMonitorSubmission |
+| B / support_scene / #806 | #799 Filament-Szene, integrierte #801-Referenzkorrektur | FilamentCockpitStage, CockpitWorldTransforms, Originalgeometrie |
+| C / support_workflow / #807 | #803 Eingabeprüfung, #799 Workflow | OwnerComputerWorkflow, Verifier, vorhandener Bus und Avatar/Cue |
 
-A und B sind isolierte, deaktivierbare A/B-Kandidaten. Nur bei bestandenen
-vorab festgelegten Gates wird der kleine Produktionsdiff übernommen. Ein
-negatives Ergebnis bleibt mit Ursache dokumentiert; keine Ersatz-Neuentwicklung.
-Aufrufbudgets auf dem Host beweisen weder GPU-Latenz noch Geräte-FPS oder Thermik.
+Abstimmung: [Start](https://github.com/Ullmann27/device-ai/pull/799#issuecomment-6826869196),
+[#803-Abgleich](https://github.com/Ullmann27/device-ai/pull/803#issuecomment-6827018323),
+[Kombinationscheckpoint](https://github.com/Ullmann27/device-ai/pull/799#issuecomment-6827480793).
+Ein veröffentlichter Kommentar ist kein behaupteter Live-Chat-Empfang.
 
-## Dateibesitz und Übergaben
+## Ergebnisse und Entscheidungen
 
-- A: `avatar3d/CockpitLiveTexture.kt`, ausschließlich Materialzustandsupdates,
-  dazu eigene Tests/Harness und Belege. Capture-/Dispatchlogik bleibt bei #803.
-- B: Transform-Update-Lane in `avatar3d/FilamentCockpitStage.kt`, kleiner
-  Transform-Helfer und eigene Tests/Harness. Assets, Clock und Layout unverändert.
-- C: neuer integrierter Workflow-Experimenttest, Runner und Belege.
-  Eine Produktionskorrektur braucht zuerst ein reproduziertes Gegenbeispiel.
-- Koordinator: Quellenabgleich, gemeinsames Register, konfliktfreie Übernahme,
-  gemeinsame gezielte Prüfung und öffentliche Übergabe an #799/#803.
+| Versuch | Vorab festgelegtes Gate | Ergebnis | Entscheid |
+|---|---|---|---|
+| A: Monitorparameter | ≥50 % weniger stabile Uniformaufrufe; gleiche Zustände/Bufferfolgen | 180→2 innerhalb 60 synthetischer Ticks; 42 Primär- und neun Holdout-Abläufe PASS | Reversiblen Produktionsadapter übernehmen |
+| B: 3D-Transformationen | ≥20 % weniger Upload-Aufrufe; gleiche lokale/Weltmatrizen | Zwölf Phasen 108→78; Fahrt 954→642; 30 JUnit-Tests PASS | Reversiblen Produktionsadapter übernehmen |
+| C: Aktionswirkung | Eine Eingabe je Ablauf; kein verfrühter Erfolg; Stop bleibt terminal | 36 Abläufe: 16 gültige Abschlüsse, 20 Negativkontrollen ohne Abschluss, 0 voreilige Erfolge; 49 JUnit-Methoden PASS | Regressionstest übernehmen; zusätzliche Produktlogik ablehnen |
 
-Jede Spur recherchiert zuerst offizielle Primärquellen und prüft danach die
-tatsächlich verwendete Filament-1.56.0-/Android-API. Webquellen sind keine
-Ermächtigung für Aktionen und kein Beleg, dass die App bereits funktioniert.
-Alle schweren Builds verwenden die bestehende gemeinsame Sperre; direkte
-kleine Compilerläufe bleiben begrenzt. Keine fremden Arbeitsbäume bearbeiten.
+A zählt nur frameAvailable/pointerAvailable/contentScale im Messfenster,
+ohne Initialisierung und Abschluss. Ein unabhängig ergänzter Holdout fand
+drei Fehler nach Teilwirkung vor einer Materialausnahme. Der erste Kandidat
+wurde korrigiert: Cache vor Versuch entwerten, erst nach Erfolg übernehmen.
+Rote Gegenproben bleiben erhalten. Beide A-Suiten bestanden erneut auf der
+vollständigen gemeinsamen Produktionsklasse gegen die aktuelle #803-Basis.
 
-## Nachweise, nächster Schritt, Rücknahme
+B vergleicht 318.352 lokale und ebenso viele Weltmatrixkomponenten bitgenau,
+zusätzlich 39.794 Projektionskoordinaten. Deaktivierung reproduziert alle
+Baseline-Aufrufe. Alle 64 tatsächlich kompilierten B-Eingaben sind im
+kombinierten Baum bytegleich. Die vier zusätzlich geänderten Schutzdateien
+gehören zu #803/A; ihr Anschluss wurde separat gegen die neue Hauptbasis
+geprüft. Ein neuer Blender-Lauf wurde nicht ausgeführt.
 
-Startcheckpoint: Quellen/Verträge/Issue #41 und aktuelle PRs gelesen;
-Tests für diese Experimente: NOT_RUN. Produktion noch unverändert.
-Als Nächstes: Baseline und Kandidat mit derselben Eingabefolge ausführen,
-negative Kontrollen dokumentieren, tatsächliche Quellhashes prüfen und
-akzeptierte Effekte gemeinsam an #799 übergeben. Vor Übernahme #803 abgleichen.
-Rücknahme: Kandidaten abschalten oder ihren jeweiligen kleinen Commit
-zurücknehmen; vorhandene Funktionen und Originalassets bleiben verfügbar.
-PORTIERT: noch nein. VERIFIZIERT: noch nein. GERÄTEBESTÄTIGT: NOT_RUN.
+C verwendet Originalworkflow, Wirkungsprüfung, Bus, Avatar und Cue-Player;
+OS-Port und monotone Uhr sind synthetisch. Nach Anpassung an expectedComposeField
+blieben 36 Fälle, Gates und CSV gleich. Alle 27 Prüfeingaben entsprechen dem
+kombinierten Baum. Bei Stop plus Freigabewiderruf lautet die Workflow-Rückgabe
+PAUSED; Ereignis/Reducer bleiben STOPPED. Diese konkrete Grenze ist offengelegt.
+
+## Gemeinsame Produktionsprüfung
+
+Auf `5849b99ff641ee5e98238e5127c02e6e0cbf408e` wurden 53 vollständige
+Produktionsdateien frisch kompiliert: Kotlin 2.4.0, Filament 1.56.0, Android SDK 36,
+**PASS**. Quellen und Abhängigkeiten blieben stabil. Sämtliche 53 Quellhashes
+passen auch zum anschließenden reinen Dokumentationsabschluss. Übrige
+Abhängigkeiten stammen aus einem eingefrorenen bestehenden Integrations-JAR;
+dies ist eine gezielte Kompilation, kein vollständiger Gradle-/APK-Build.
+
+Genau drei zusätzliche Produktionsdateien:
+
+- avatar3d/CockpitLiveTexture.kt: stabile Materialparameter zusammenfassen.
+- avatar3d/CockpitTransformUpdates.kt: identische lokale Matrizen überspringen.
+- avatar3d/FilamentCockpitStage.kt: vorhandene Transform-Aufrufe anbinden.
+
+Die unabhängige Quellprüfung bestätigt: Nach Entfernen ausschließlich der
+beiden Adapter sind die Rendererdateien exakt gleich der aktuellen Hauptbasis.
+Submission, Frische, Viewport, Bufferfreigabe und Fehlerregeln bleiben erhalten.
+Die echten Konstruktoraufrufer wurden geprüft und gemeinsam kompiliert.
+Originalassets, Shader, Weltformeln und Clock wurden nicht verändert.
+
+## Belege und Rücknahme
+
+- [Gemeinsames Prüfregister](../../evidence/astra55-experiments-combined-20261112/integration.json)
+- [Compiler, Rohtraces und unabhängiger Review](../../evidence/astra55-experiments-combined-20261112/)
+- [A: Quellen und Gegenproben](../../evidence/astra55-experiment-a-20261112/)
+- [B: Geometrie und Reproduktion](../../evidence/astra55-experiment-b-scene-20261112/README.md)
+- [C: beide Läufe und API-Anschluss](../../evidence/astra55-experiment-c-workflow-20261112/RESULT.md)
+- [Gemeinsame Ausführung](../../../tools/astra55-cockpit-experiments/README.md)
+
+Recherche vor Implementierung: offizielle Android-/Filament-Quellen,
+glTF-Spezifikation sowie Originalarbeiten ReAct und AndroidWorld. Abrufdaten,
+konkrete Übertragung und Grenzen stehen bei jedem Versuch. Kein Fremdcodeimport.
+
+Rücknahme A: coalesceUniforms=false; B: cacheTransforms=false. C ergänzt nur
+Tests. Bestehende EXP-07/11/12-Verträge bleiben erhalten; das Hauptregister
+verweist auf diese Belege. Keine neue Aufgabenverwaltung, kein Modelltraining.
+
+Die Ergebnisse belegen Schnittstellenaufrufe und kausale Hostabläufe.
+GPU-Zeit, Geräte-FPS, Thermik und Fold7 bleiben ungemessen. Kein allgemeiner
+visueller Android-Planer wird behauptet. Nächste gemeinsame Abnahme ist der
+bestehende Code55-Gesamtbuild mit realer Capture-/GPU-Messung.

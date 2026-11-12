@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile the combined source against existing Android dependencies."""
+"""Compile combined sources against Android."""
 import argparse
 import hashlib
 import json
@@ -47,6 +47,8 @@ def main():
         raise SystemExit("Exactly one frozen base classes JAR required")
     base = out / "base-classes.jar"
     shutil.copy2(base_candidates[0], base)
+    if sum(path.name == "filament-android-1.56.0-runtime.jar" for path in entries) != 1:
+        raise SystemExit("Filament 1.56.0 runtime required")
     classpath = [args.android_jar.resolve(), base]
     for entry in entries:
         if not entry.exists():
@@ -65,8 +67,6 @@ def main():
             else:
                 shutil.copy2(entry, destination)
             classpath[index] = destination
-    if sum(path.name == "filament-android-1.56.0-runtime.jar" for path in classpath) != 1:
-        raise SystemExit("Filament 1.56.0 runtime required")
     platform_properties = args.android_jar.parent / "source.properties"
     platform = dict(line.split("=", 1) for line in platform_properties.read_text().splitlines()
                     if "=" in line) if platform_properties.exists() else {}

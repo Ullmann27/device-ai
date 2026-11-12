@@ -38,7 +38,10 @@ def main():
     parser.add_argument("--repo", required=True, type=Path)
     parser.add_argument("--cache", required=True, type=Path)
     parser.add_argument("--out", required=True, type=Path)
+    parser.add_argument("--baseline", default=BASE, help="Expected production commit (full SHA).")
     args = parser.parse_args()
+    if not re.fullmatch(r"[0-9a-f]{40}", args.baseline):
+        parser.error("--baseline requires a full commit SHA")
     repo, cache, out = args.repo.resolve(), args.cache.resolve(), args.out.resolve()
     out.mkdir(parents=True, exist_ok=False)
     frozen = out / "frozen"
@@ -62,11 +65,14 @@ def main():
                  artifact("org.jetbrains", "annotations", "23.0.0")]
     runtime = [artifact("org.jetbrains.kotlin", "kotlin-stdlib", "2.4.0"),
                artifact("junit", "junit", "4.13.2"), artifact("org.hamcrest", "hamcrest-core", "1.3")]
-    metadata = {"head_before": git("rev-parse", "HEAD").decode().strip(), "production_base": BASE,
+    source_names = list(SOURCES)
+    if any("LiveComposeSemantics" in (repo / MAIN / name).read_text() for name in source_names):
+        source_names.append("cognitive/LiveComposeSemantics.kt")
+    metadata = {"head_before": git("rev-parse", "HEAD").decode().strip(), "production_base": args.baseline,
                 "compiler": "Kotlin 2.4.0", "max_heap_mb": 512, "active_processors": 1,
                 "clock": "synthetic_monotonic", "original_type_declarations_extracted": 6,
                 "gradle": "NOT_RUN", "android_device": "NOT_RUN", "fold7": "NOT_RUN"}
-    paths = [MAIN + name for name in SOURCES + DECLARATIONS] + [TEST + name for name in TESTS]
+    paths = [MAIN + name for name in source_names + DECLARATIONS] + [TEST + name for name in TESTS]
     manifest = []
     for path in paths:
         data = (repo / path).read_bytes()
@@ -75,7 +81,7 @@ def main():
         target.write_bytes(data)
         item = {"path": path, "frozen_sha256": sha(data)}
         if path.startswith(MAIN):
-            item["base_sha256"] = sha(git("show", BASE + ":" + path))
+            item["base_sha256"] = sha(git("show", args.baseline + ":" + path))
             assert item["frozen_sha256"] == item["base_sha256"], "Production changed: " + path
         manifest.append(item)
     contracts = (frozen / MAIN / DECLARATIONS[0]).read_text()
@@ -88,7 +94,7 @@ def main():
     status = re.search(r"enum class ToolExecutionStatus[^\n]*", (frozen / MAIN / DECLARATIONS[2]).read_text()).group(0)
     tool_types = frozen / "ToolTypes.kt"
     tool_types.write_text("package at.heinz.deviceai\n\n" + risk + "\n\n" + status + "\n")
-    sources = [frozen / MAIN / name for name in SOURCES] + [frozen / TEST / name for name in TESTS]
+    sources = [frozen / MAIN / name for name in source_names] + [frozen / TEST / name for name in TESTS]
     sources += [cockpit_types, tool_types]
     java = ["java", "-XX:ActiveProcessorCount=1", "-XX:-UsePerfData", "-Xmx512m",
             "-Djava.io.tmpdir=" + str(java_tmp)]
