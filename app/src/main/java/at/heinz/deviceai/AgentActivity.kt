@@ -333,7 +333,8 @@ class AgentActivity : Activity() {
     private var computerController: OwnerComputerSessionController? = null
     @Volatile private var computerViewVisible = false
     private data class PendingComputerLaunch(val session: String, val generation: Long, val packageName: String,
-        val intent: at.heinz.deviceai.cognitive.OwnerComputerIntent, val approvedAt: Long)
+        val intent: at.heinz.deviceai.cognitive.OwnerComputerIntent, val approvedAt: Long,
+        val request: String, val allowMaya: Boolean, val ownerRevision: Long)
     private var pendingComputerLaunch: PendingComputerLaunch? = null
     private var pendingLocalSpeechRequest: Int? = null
     private var pendingLocalSpeechSession: String? = null
@@ -542,6 +543,9 @@ class AgentActivity : Activity() {
     private var chiefStatusPool: at.heinz.deviceai.chief.ChiefWorkerPool? = null
     private var botRosterDialog: ContinuumBotRosterDialog? = null
     private var botTeam: at.heinz.deviceai.chief.ChiefBotTeam? = null
+    private data class TeamReplyOrigin(val taskId: String, val session: String, val generation: Long,
+        val revision: Long, val request: String, val allowMaya: Boolean, val ownerRevision: Long)
+    private var pendingTeamReply: TeamReplyOrigin? = null
     private var botTeamOwnsLane = false
     private val botProfiles by lazy {
         at.heinz.deviceai.chief.ChiefBotProfileStore(
@@ -812,6 +816,7 @@ class AgentActivity : Activity() {
             delivery.run()
         }
         mainHandler.post { maybeAskForConversationCamera() }
+        refreshBotTeam()
         if (continuousConversation.foregroundRecoveryPending) {
             mainHandler.removeCallbacks(conversationForegroundRecovery)
             mainHandler.postDelayed(conversationForegroundRecovery, 250L)
@@ -3070,10 +3075,16 @@ class AgentActivity : Activity() {
         val team = botTeam ?: return false
         val admissionToken = team.admissionToken()
         cancelSpeechInputScope()
+        pendingTeamReply = if (selectedBot == null && team.snapshot().tasks.none { it.id == id }) {
+            addUserMessage(text, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            TeamReplyOrigin(id, sessionId, admissionToken, revision, text, ownerReplyAllowsMaya, ownerReplyRevision)
+        } else null
         botTeamOwnsLane = true
+        activeLocalRequest = true
         setBusy(true)
         onBacklog({ team.submit(id, text, revision, ownerApproved = true, admissionToken = admissionToken) }) { result ->
             if (result.isFailure) {
+                pendingTeamReply?.takeIf { it.taskId == id }?.let { pendingTeamReply = null }
                 Toast.makeText(this, "Teamauftrag nicht angenommen oder Speicherung unklar. Verlauf prüfen.",
                     Toast.LENGTH_LONG).show()
             }
@@ -3092,9 +3103,46 @@ class AgentActivity : Activity() {
                 mainHandler.postDelayed({ refreshBotTeam() }, 250L)
             } else {
                 botTeamOwnsLane = false
+                activeLocalRequest = false
                 setBusy(false)
             }
         }
+        deliverTeamReply(team)
+    }
+
+    private fun deliverTeamReply(team: at.heinz.deviceai.chief.ChiefBotTeam) {
+        val origin = pendingTeamReply ?: return
+        val state = team.snapshot()
+        if (origin.session != sessionId || origin.generation != team.admissionToken() ||
+            origin.revision != state.revision) {
+            pendingTeamReply = null
+            return
+        }
+        if (!foregroundLearningActive || selectedBot != null || botTeamOwnsLane || team.active() ||
+            team.storageError != null) return
+        val task = state.tasks.singleOrNull { it.id == origin.taskId } ?: return
+        if (task.request != origin.request || task.teamRevision != origin.revision || task.active) return
+        val complete = task.status == at.heinz.deviceai.chief.ChiefTeamStatus.RESPONSES_RECORDED
+        val reply = if (complete) {
+            val review = task.responses.single { it.stage == "REVIEW" }
+            "KI-Team · Auftrag ${task.id.takeLast(8)}\n" +
+                "Analyse und Gegenprüfung sind gespeichert. Der Inhalt ist nicht unabhängig geprüft.\n\n" +
+                "Gegenprüfung:\n${review.text}"
+        } else "KI-Team · Auftrag ${task.id.takeLast(8)}\n" + when (task.status) {
+            at.heinz.deviceai.chief.ChiefTeamStatus.BLOCKED ->
+                "Der Auftrag ist blockiert. Keine vollständige Gegenprüfung bestätigt."
+            at.heinz.deviceai.chief.ChiefTeamStatus.CANCELLED,
+            at.heinz.deviceai.chief.ChiefTeamStatus.INTERRUPTED ->
+                "Der Auftrag wurde beendet. Keine vollständige Gegenprüfung bestätigt."
+            else -> "Der Auftrag ist fehlgeschlagen. Keine vollständige Gegenprüfung bestätigt."
+        }
+        pendingTeamReply = null
+        if (complete) localConversationContext.record(origin.session, origin.request, reply)
+        else localConversationContext.recordNonModel(origin.session, origin.request, "Teamauftrag · ${task.status}")
+        addAssistantMessage(reply, preserveLocalContext = true,
+            keepCockpit = activeWorkArea == ContinuumWorkArea.START, allowMaya = origin.allowMaya,
+            speakNow = origin.ownerRevision == ownerReplyRevision && continuousConversation.state !=
+                at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED)
     }
 
     private fun botContextChanging(agentId: String) {
@@ -6043,6 +6091,7 @@ class AgentActivity : Activity() {
                                      computerIntent: at.heinz.deviceai.cognitive.OwnerComputerIntent? = null) {
         val ownerSession = sessionId
         val ownerRevision = ownerReplyRevision
+        val allowMaya = ownerReplyAllowsMaya
         val contextual = appLookupContext?.takeIf { it.first == ownerSession }?.second.orEmpty()
         val query = OwnerAppLookupIntent.contextualTarget(intake.query, contextual)
         if (query == null) {
@@ -6107,7 +6156,7 @@ class AgentActivity : Activity() {
                     val approvedAt = computerApprovedAt
                     if (computerIntent != null && launched != null && approvedAt != null) {
                         val pending = PendingComputerLaunch(ownerSession, generation, launched.packageName,
-                            computerIntent, approvedAt)
+                            computerIntent, approvedAt, request, allowMaya, ownerRevision)
                         if (foregroundLearningActive) startComputerSession(pending)
                         else pendingComputerLaunch = pending
                         return
@@ -6203,12 +6252,33 @@ class AgentActivity : Activity() {
             localAgentExecutor,
             setFeed = { feed -> homeView?.setLiveComputerFeed(feed) },
             setBusy = { value -> activeLocalRequest = value; setBusy(value) },
-            reply = { value -> addAssistantMessage(value, preserveLocalContext = true, keepCockpit = true) },
             visible = { !isFinishing && !isDestroyed &&
                 (foregroundLearningActive || (computerViewVisible && isInMultiWindowMode)) },
             playClick = { playUiFeedback(at.heinz.deviceai.ui.ContinuumUiFeedback.Cue.BUTTON) },
             stopClick = { uiFeedback?.stop() }).also { computerController = it }
-        controller.begin(pending.packageName, pending.intent, pending.approvedAt)
+        controller.begin(pending.packageName, pending.intent, pending.approvedAt) { result, epoch ->
+            deliverComputerReply(pending, result, epoch)
+        }
+    }
+
+    private fun deliverComputerReply(pending: PendingComputerLaunch,
+                                      result: at.heinz.deviceai.cognitive.OwnerComputerWorkflow.Result,
+                                      observationEpoch: Long?) {
+        if (isFinishing || isDestroyed || pending.session != sessionId ||
+            selectedBot != null) return
+        if (observationEpoch == null && (result.status ==
+                at.heinz.deviceai.cognitive.OwnerComputerWorkflow.Status.VERIFIED || result.draftPrepared)) return
+        val accepted = if (observationEpoch != null && ScreenObservationBus.grantEpoch() != observationEpoch)
+            at.heinz.deviceai.cognitive.OwnerComputerWorkflow.Result(
+                at.heinz.deviceai.cognitive.OwnerComputerWorkflow.Status.PAUSED,
+                "Die Bildschirmfreigabe hat sich geändert. Die letzte Wirkung ist nicht bestätigt; bitte prüfe die App.")
+        else result
+        localConversationContext.recordToolResult(pending.session, pending.request, "owner_computer_workflow",
+            "${accepted.status}: ${accepted.message}")
+        addAssistantMessage(accepted.message, preserveLocalContext = true, keepCockpit = true,
+            allowMaya = pending.allowMaya,
+            speakNow = pending.ownerRevision == ownerReplyRevision && continuousConversation.state !=
+                at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED)
     }
 
     private fun deliverAppActionReply(reply: AppActionReply) {

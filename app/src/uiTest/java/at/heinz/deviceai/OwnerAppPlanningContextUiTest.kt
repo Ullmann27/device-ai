@@ -8,6 +8,10 @@ import android.widget.EditText
 import at.heinz.deviceai.cognitive.LocalChatTranscriptStore
 import at.heinz.deviceai.cognitive.LocalConversationContext
 import at.heinz.deviceai.cognitive.LocalDialogueRetention
+import at.heinz.deviceai.cognitive.ComputerApp
+import at.heinz.deviceai.cognitive.ComputerGoal
+import at.heinz.deviceai.cognitive.OwnerComputerIntent
+import at.heinz.deviceai.cognitive.OwnerComputerWorkflow
 import at.heinz.deviceai.localmodel.ImportedLocalModel
 import at.heinz.deviceai.localmodel.LocalInferenceCallback
 import at.heinz.deviceai.localmodel.LocalInferenceEvent
@@ -41,6 +45,15 @@ import java.util.concurrent.atomic.AtomicReference
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class OwnerAppPlanningContextUiTest {
+    @org.robolectric.annotation.Implements(android.media.projection.MediaProjectionManager::class)
+    class ProjectionConsentShadow {
+        @org.robolectric.annotation.Implementation(minSdk = 34)
+        protected fun createScreenCaptureIntent(config: android.media.projection.MediaProjectionConfig): android.content.Intent =
+            android.content.Intent("fixture.COMPUTER_CAPTURE_CONSENT")
+    }
+
+    private var activeActivityController: org.robolectric.android.controller.ActivityController<AgentActivity>? = null
+
     private class Runtime(ready: Boolean = true, modelPresent: Boolean = ready) : LocalModelRuntime {
         @Volatile override var state = if (ready) LocalModelState.READY else LocalModelState.EMPTY
         override val loadedModel = if (!modelPresent) null else ImportedLocalModel(
@@ -99,6 +112,7 @@ class OwnerAppPlanningContextUiTest {
     }
     private fun withActivity(runtime: Runtime = Runtime(), body: (AgentActivity, Runtime) -> Unit) {
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        activeActivityController = controller
         try {
             controller.setup().visible()
             repeat(2) { advance() }
@@ -112,6 +126,7 @@ class OwnerAppPlanningContextUiTest {
             runtime.cancel()
             runCatching { until("request released") { !(field(controller.get(), "busy") as Boolean) } }
             runCatching { controller.close() }
+            activeActivityController = null
             AgentActivity.chatTranscriptIo.submit {}.get(2, TimeUnit.SECONDS)
             LocalDialogueRetention.context.clear()
         }
@@ -136,6 +151,221 @@ class OwnerAppPlanningContextUiTest {
         return LocalChatTranscriptStore(File(activity.filesDir, "chat-history")).loadContextTurns(session(activity))
     }
     private fun addPrior(activity: AgentActivity) = context(activity).record(session(activity), PRIOR, "Zwei Schritte sind vorgesehen.")
+
+    private fun computerPending(activity: AgentActivity, request: String, ownerSession: String = session(activity)): Any {
+        val type = AgentActivity::class.java.declaredClasses.single { it.simpleName == "PendingComputerLaunch" }
+        return type.getDeclaredConstructor(String::class.java, Long::class.javaPrimitiveType,
+            String::class.java, OwnerComputerIntent::class.java, Long::class.javaPrimitiveType,
+            String::class.java, Boolean::class.javaPrimitiveType, Long::class.javaPrimitiveType).apply { isAccessible = true }.newInstance(
+            ownerSession, field(activity, "appLookupGeneration"), "com.whatsapp",
+            OwnerComputerIntent(ComputerApp.WHATSAPP, ComputerGoal.OPEN),
+            android.os.SystemClock.elapsedRealtime(), request, false, field(activity, "ownerReplyRevision"))
+    }
+
+    private fun computerReply(activity: AgentActivity, pending: Any, epoch: Long?) {
+        AgentActivity::class.java.getDeclaredMethod("deliverComputerReply", pending.javaClass,
+            OwnerComputerWorkflow.Result::class.java, Long::class.javaObjectType)
+            .apply { isAccessible = true }.invoke(activity, pending,
+                OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.VERIFIED, COMPUTER_RESULT), epoch)
+    }
+
+    private fun withObservation(body: (ContinuumScreenObservationService, Long) -> Unit) {
+        val controller = Robolectric.buildService(ContinuumScreenObservationService::class.java).create()
+        val service = controller.get()
+        ScreenObservationBus.connect(service)
+        try { body(service, checkNotNull(ScreenObservationBus.grantEpoch())) }
+        finally { ScreenObservationBus.disconnect(service); controller.destroy() }
+    }
+
+    private fun withTeam(activity: AgentActivity, body: (at.heinz.deviceai.chief.ChiefBotTeam) -> Unit) {
+        val profiles = (field(activity, "botProfiles" + '$' + "delegate") as Lazy<*>).value
+            as at.heinz.deviceai.chief.ChiefBotProfileStore
+        val calls = java.util.concurrent.atomic.AtomicInteger()
+        val model = object : at.heinz.deviceai.chief.ChiefTeamModel {
+            override fun readySha256() = "a".repeat(64)
+            override fun generate(prompt: String, cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation,
+                                  deadlineMillis: Long): String {
+                cancellation.throwIfCancelled()
+                return if (calls.incrementAndGet() == 1) "Die Annahme benötigt einen Test." else TEAM_REVIEW
+            }
+        }
+        val refresh = AgentActivity::class.java.getDeclaredMethod("refreshBotTeam").apply { isAccessible = true }
+        val team = at.heinz.deviceai.chief.ChiefBotTeam(profiles, model,
+            changed = { activity.runOnUiThread { refresh.invoke(activity) } })
+        team.initialize()
+        team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), team.snapshot().revision)
+        AgentActivity::class.java.getDeclaredField("botTeam").apply { isAccessible = true }.set(activity, team)
+        try { body(team) } finally { team.close() }
+    }
+
+    private fun submitTeam(activity: AgentActivity, team: at.heinz.deviceai.chief.ChiefBotTeam) {
+        val accepted = AgentActivity::class.java.getDeclaredMethod("submitBotTeam", String::class.java,
+            String::class.java, Long::class.javaPrimitiveType).apply { isAccessible = true }.invoke(activity,
+            "team-" + java.util.UUID.randomUUID(), TEAM_REQUEST, team.snapshot().revision)
+        assertEquals(true, accepted)
+    }
+
+    @Test fun centralTeamReviewReturnsOnceFromPersistedCompletion() = withActivity { activity, _ ->
+        withTeam(activity) { team ->
+            submitTeam(activity, team)
+            until("Team result delivered") { stored(activity).any { it.request == TEAM_REQUEST } }
+            val result = team.snapshot().tasks.single()
+            assertEquals(at.heinz.deviceai.chief.ChiefTeamStatus.RESPONSES_RECORDED, result.status)
+            assertEquals(2, result.responses.size)
+            val turn = stored(activity).single { it.request == TEAM_REQUEST }
+            assertTrue(turn.modelResponse)
+            assertTrue(turn.response.contains(TEAM_REVIEW))
+            assertTrue(turn.response.contains("nicht unabhängig geprüft"))
+            AgentActivity::class.java.getDeclaredMethod("refreshBotTeam").apply { isAccessible = true }.invoke(activity)
+            assertEquals(1, stored(activity).count { it.request == TEAM_REQUEST })
+        }
+    }
+
+    @Test fun privateTeamSubmissionDoesNotCopyResultsIntoCentralContext() = withActivity { activity, _ ->
+        withTeam(activity) { team ->
+            val profiles = (field(activity, "botProfiles" + '$' + "delegate") as Lazy<*>).value
+                as at.heinz.deviceai.chief.ChiefBotProfileStore
+            AgentActivity::class.java.getDeclaredField("selectedBot").apply { isAccessible = true }
+                .set(activity, profiles.get("bot-atlas"))
+            submitTeam(activity, team)
+            until("Private team completed") { team.snapshot().tasks.singleOrNull()?.status ==
+                at.heinz.deviceai.chief.ChiefTeamStatus.RESPONSES_RECORDED && field(activity, "busy") == false }
+            assertTrue(stored(activity).none { it.request == TEAM_REQUEST })
+            assertTrue(LocalChatTranscriptStore(File(activity.filesDir, "chat-history"))
+                .load(session(activity)).none { it.text.contains(TEAM_REVIEW) })
+        }
+    }
+
+    @Test fun centralStopCancelsTeamAdmissionAndReleasesLane() = withActivity { activity, _ ->
+        withTeam(activity) { team ->
+            submitTeam(activity, team)
+            assertEquals(true, field(activity, "activeLocalRequest"))
+            val generation = team.admissionToken()
+            assertTrue((field(activity, "sendButton") as Button).performClick())
+            assertTrue(team.admissionToken() > generation)
+            until("Stopped team releases lane") { field(activity, "busy") == false }
+            assertEquals(false, field(activity, "activeLocalRequest"))
+            assertEquals(false, field(activity, "botTeamOwnsLane"))
+            assertTrue(stored(activity).none { it.request == TEAM_REQUEST })
+        }
+    }
+
+    @Test fun changedSessionDiscardsPendingTeamReply() = discardPendingTeamReply(changeSession = true)
+    @Test fun revokedAdmissionDiscardsPendingTeamReply() = discardPendingTeamReply(changeSession = false)
+
+    private fun discardPendingTeamReply(changeSession: Boolean) = withActivity { activity, _ ->
+        withTeam(activity) { team ->
+            AgentActivity::class.java.getDeclaredField("foregroundLearningActive").apply { isAccessible = true }
+                .set(activity, false)
+            submitTeam(activity, team)
+            until("Team completed before delivery") { team.snapshot().tasks.singleOrNull()?.status ==
+                at.heinz.deviceai.chief.ChiefTeamStatus.RESPONSES_RECORDED && field(activity, "busy") == false }
+            assertNotNull(field(activity, "pendingTeamReply"))
+            if (changeSession) AgentActivity::class.java.getDeclaredField("sessionId").apply { isAccessible = true }
+                .set(activity, "new-team-chat")
+            else team.invalidate()
+            AgentActivity::class.java.getDeclaredField("foregroundLearningActive").apply { isAccessible = true }
+                .set(activity, true)
+            AgentActivity::class.java.getDeclaredMethod("refreshBotTeam").apply { isAccessible = true }.invoke(activity)
+            assertNull(field(activity, "pendingTeamReply"))
+            assertTrue(stored(activity).isEmpty())
+            assertTrue(context(activity).sessionEvidence(session(activity)).isNullOrEmpty())
+        }
+    }
+
+    @Test fun computerResultReachesFollowUpPromptAsObservedOutput() = withActivity { activity, runtime ->
+        withObservation { _, epoch ->
+            val request = "Öffne WhatsApp."
+            computerReply(activity, computerPending(activity, request), epoch)
+            val turn = stored(activity).last()
+            assertEquals(request, turn.request)
+            assertFalse(turn.modelResponse)
+            assertTrue(turn.response.contains("Werkzeugbeobachtung (owner_computer_workflow"))
+            assertTrue(turn.response.contains(COMPUTER_RESULT))
+            assertEquals(listOf(request), context(activity).sessionEvidence(session(activity)))
+
+            submit(activity, "Was wurde bei diesem App-Auftrag bestätigt?")
+            until("Computer observation reaches inference") { runtime.running }
+            assertTrue(runtime.prompts.last().contains(COMPUTER_RESULT))
+            assertTrue(runtime.prompts.last().contains("owner_computer_workflow"))
+            runtime.answer("Das App-Fenster wurde beobachtet; daraus folgt keine neue Gerätefreigabe.")
+            until("Follow-up completed") { field(activity, "busy") == false }
+        }
+    }
+
+    @Test fun staleComputerReplyCannotPromoteRevokedObservation() = withActivity { activity, _ ->
+        withObservation { service, epoch ->
+            val request = "Öffne WhatsApp."
+            computerReply(activity, computerPending(activity, request, "another-chat"), epoch)
+            computerReply(activity, computerPending(activity, request), null)
+            assertTrue(stored(activity).isEmpty())
+            val revoked = computerPending(activity, request)
+            ScreenObservationBus.interrupt(service)
+            computerReply(activity, revoked, epoch)
+
+            val turn = stored(activity).single()
+            assertFalse(turn.modelResponse)
+            assertTrue(turn.response.contains("PAUSED"))
+            assertFalse(turn.response.contains(COMPUTER_RESULT))
+            assertFalse(LocalChatTranscriptStore(File(activity.filesDir, "chat-history"))
+                .load(session(activity)).any { it.text == COMPUTER_RESULT })
+        }
+    }
+
+    private fun requestComputerConsent(activity: AgentActivity): android.content.Intent {
+        shadowOf(activity).setInMultiWindowMode(true)
+        val pending = computerPending(activity, "Öffne WhatsApp.")
+        AgentActivity::class.java.getDeclaredMethod("startComputerSession", pending.javaClass)
+            .apply { isAccessible = true }.invoke(activity, pending)
+        val launched = checkNotNull(shadowOf(activity).nextStartedActivityForResult)
+        assertEquals("fixture.COMPUTER_CAPTURE_CONSENT", launched.intent.action)
+        assertTrue((field(activity, "computerController") as OwnerComputerSessionController).awaitingConsent)
+        return launched.intent
+    }
+
+    @Test
+    @Config(sdk = [35], shadows = [ProjectionConsentShadow::class])
+    fun computerConsentPauseKeepsBoundReturnAfterLookupInvalidation() = withActivity { activity, _ ->
+        val consent = requestComputerConsent(activity)
+        val before = (field(activity, "appLookupGeneration") as Number).toLong()
+        checkNotNull(activeActivityController).pause()
+        assertTrue((field(activity, "appLookupGeneration") as Number).toLong() > before)
+        assertTrue((field(activity, "computerController") as OwnerComputerSessionController).awaitingConsent)
+        shadowOf(activity).receiveResult(consent, android.app.Activity.RESULT_OK, android.content.Intent("fixture.GRANTED"))
+        assertTrue(stored(activity).isEmpty())
+        checkNotNull(activeActivityController).resume()
+        val turn = stored(activity).single()
+        assertEquals("Öffne WhatsApp.", turn.request)
+        assertFalse(turn.modelResponse)
+        assertTrue(turn.response.contains("ACCESSIBILITY_OBSERVATION_NOT_GRANTED"))
+        assertFalse(field(activity, "busy") as Boolean)
+    }
+
+    @Test
+    @Config(sdk = [35], shadows = [ProjectionConsentShadow::class])
+    fun actualStopRejectsLateComputerConsentResult() = withActivity { activity, _ ->
+        val consent = requestComputerConsent(activity)
+        checkNotNull(activeActivityController).pause().resume()
+        assertTrue((field(activity, "sendButton") as Button).performClick())
+        assertFalse((field(activity, "computerController") as OwnerComputerSessionController).active)
+        shadowOf(activity).receiveResult(consent, android.app.Activity.RESULT_OK, android.content.Intent("fixture.GRANTED"))
+        checkNotNull(activeActivityController).pause().resume()
+        assertTrue(stored(activity).isEmpty())
+        assertTrue(context(activity).sessionEvidence(session(activity)).isNullOrEmpty())
+    }
+
+    @Test fun unavailableCaptureRecordsFailureThroughRealController() = withActivity { activity, _ ->
+        val request = "Öffne WhatsApp."
+        val pending = computerPending(activity, request)
+        AgentActivity::class.java.getDeclaredMethod("startComputerSession", pending.javaClass)
+            .apply { isAccessible = true }.invoke(activity, pending)
+        val turn = stored(activity).last()
+        assertEquals(request, turn.request)
+        assertFalse(turn.modelResponse)
+        assertTrue(turn.response.contains("FAILED"))
+        assertTrue(turn.response.contains("WINDOW_CAPTURE_REQUIRES_ANDROID_14"))
+        assertFalse(field(activity, "busy") as Boolean)
+    }
 
     @Test fun pluralStatementsReachConversationWithoutAppLookup() = withActivity { activity, runtime ->
         val generation = field(activity, "appLookupGeneration")
@@ -275,6 +505,9 @@ class OwnerAppPlanningContextUiTest {
     }
 
     private companion object {
+        const val COMPUTER_RESULT = "WhatsApp ist im gebundenen App-Fenster sichtbar."
+        const val TEAM_REQUEST = "Prüfe diese Annahme, ohne Werkzeuge aufzurufen."
+        const val TEAM_REVIEW = "Gegenprüfung: Der vorgeschlagene Test wurde noch nicht ausgeführt."
         const val PRIOR = "Unser Plan umfasst zwei Schritte."
         const val REQUEST = "Öffne Signal und vergleiche die Optionen."
         const val ANSWER = "Für den Vergleich brauche ich die Namen der Optionen. Signal wurde hier noch nicht geöffnet."
