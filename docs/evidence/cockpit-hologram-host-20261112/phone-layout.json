@@ -1,0 +1,36 @@
+{
+  "head": {
+    "top": 116,
+    "left": 15.869995,
+    "bottom": 461.6,
+    "right": 395.13
+  },
+  "avatarWindow": {
+    "cameraCenterY": 0.26108207226883884,
+    "left": -0.17642862192758302,
+    "halfHeight": 0.16077026642668726,
+    "right": 0.17642862192758302
+  },
+  "avatarFocus": {
+    "centerZ": 0.06414049118757248,
+    "centerX": -3.228597342967987E-4,
+    "azimuthDegrees": 0
+  },
+  "name": "phone",
+  "width": 411,
+  "avatarOpacity": 0.62,
+  "orb": {
+    "top": 128.09601,
+    "left": 70.716,
+    "bottom": 397.664,
+    "right": 340.284
+  },
+  "height": 960,
+  "contentHeight": 960,
+  "scene": {
+    "top": 116,
+    "left": 12,
+    "bottom": 692,
+    "right": 399
+  }
+}

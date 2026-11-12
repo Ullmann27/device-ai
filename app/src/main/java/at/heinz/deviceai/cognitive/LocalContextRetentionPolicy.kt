@@ -1,7 +1,9 @@
 package at.heinz.deviceai.cognitive
 
 /** Kind of a visible reply that did NOT come from the local language model. */
-enum class NonModelReplyKind { READ_ONLY_TOOL, DEVICE_CLOCK, STARTKERN_INFO, SAFETY_REFUSAL, MEMORY_CHANGE, MEMORY_RECALL, OBJECT_STATE_RECALL }
+enum class NonModelReplyKind { READ_ONLY_TOOL, DEVICE_CLOCK, STARTKERN_INFO, SAFETY_REFUSAL, MEMORY_CHANGE, MEMORY_RECALL, OBJECT_STATE_RECALL,
+    /** Field P0 Code54: answered from the PDF read in this session (name, pages, a page's read text). */
+    DOCUMENT_STATE }
 
 /**
  * M2: which non-model replies keep the same-session short-term context.
@@ -28,7 +30,7 @@ internal object LocalContextRetentionPolicy {
 
     fun recordsRequest(kind: NonModelReplyKind): Boolean = when (kind) {
         NonModelReplyKind.READ_ONLY_TOOL, NonModelReplyKind.DEVICE_CLOCK, NonModelReplyKind.STARTKERN_INFO,
-        NonModelReplyKind.MEMORY_RECALL, NonModelReplyKind.OBJECT_STATE_RECALL -> true
+        NonModelReplyKind.MEMORY_RECALL, NonModelReplyKind.OBJECT_STATE_RECALL, NonModelReplyKind.DOCUMENT_STATE -> true
         NonModelReplyKind.SAFETY_REFUSAL, NonModelReplyKind.MEMORY_CHANGE -> false
     }
 
@@ -40,5 +42,6 @@ internal object LocalContextRetentionPolicy {
         NonModelReplyKind.MEMORY_CHANGE -> "(Erinnerung geändert)"
         NonModelReplyKind.MEMORY_RECALL -> "(gespeicherte Erinnerung gelesen; keine Gedächtnisänderung)"
         NonModelReplyKind.OBJECT_STATE_RECALL -> "(eigene Angaben aus diesem Gespräch wiedergegeben; keine Gedächtnisänderung)"
+        NonModelReplyKind.DOCUMENT_STATE -> "(aus der gelesenen PDF beantwortet; kein Modelltext, keine Gedächtnisänderung)"
     }
 }

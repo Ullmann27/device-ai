@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:27" hostname="0f4ac18d136f" time="0.123">
+  <properties/>
+  <testcase name="theReferenceBelongsToItsSessionOnly" classname="at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest" time="0.079"/>
+  <testcase name="aDeterministicReplyIsRecordedAsALabelledTurnWithoutTheFileText" classname="at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest" time="0.013"/>
+  <testcase name="theHeadingIsTheFirstReadLineOfThatPageAndNothingElse" classname="at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest" time="0.01"/>
+  <testcase name="pageCountComesFromTheFileAlsoForThePronounFollowUp" classname="at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest" time="0.004"/>
+  <testcase name="otherQuestionsAndOrdersAreNotAnsweredFromFixedText" classname="at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest" time="0.002"/>
+  <testcase name="theModelBlockCarriesPageAttributedFactsAndCannotBeForged" classname="at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest" time="0.002"/>
+  <testcase name="whatWasNotReadIsSaidAndNeverInvented" classname="at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest" time="0.008"/>
+  <testcase name="documentQuestionsAreRecognizedButOrdersAreNot" classname="at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest" time="0.001"/>
+  <testcase name="theQualityGateRejectsANoPdfClaimWhenTheDocumentWasSupplied" classname="at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest" time="0.002"/>
+  <testcase name="theOpenedFileIsNamedFromTheReadDocument" classname="at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

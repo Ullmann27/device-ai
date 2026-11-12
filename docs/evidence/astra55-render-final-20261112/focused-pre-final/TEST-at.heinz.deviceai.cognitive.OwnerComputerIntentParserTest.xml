@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:27" hostname="0f4ac18d136f" time="0.052">
+  <properties/>
+  <testcase name="draftPreservesExactContent" classname="at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest" time="0.041"/>
+  <testcase name="openWhatsAppIsOnlyOpen" classname="at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest" time="0.001"/>
+  <testcase name="missingAppAndTextAreAskedSeparately" classname="at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest" time="0.003"/>
+  <testcase name="combinedSearchKeepsOwnerQuery" classname="at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest" time="0.001"/>
+  <testcase name="ordinaryConversationIsNotAComputerOrder" classname="at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest" time="0.002"/>
+  <testcase name="allRequestedAppsCanOpenWithoutPretendingEditors" classname="at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest" time="0.001"/>
+  <testcase name="ambiguityAndOversizedTextDoNotProduceExecutablePlans" classname="at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest" time="0.001"/>
+  <testcase name="unsupportedTailNeverFallsBackToOpening" classname="at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest" time="0.0"/>
+  <testcase name="sendIntentStillRequiresSeparateApproval" classname="at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -81,9 +81,9 @@ class LocalToolContinuationTest {
         assertTrue(LocalToolContinuation.fitsContext(100,100,16_000,1_024))
     }
 
-    @Test fun optionalMetadataCannotDisableAFullBudgetFreshChat() {
-        assertTrue(LocalToolContinuation.allowsSubmission(15_500,0,16_384,2_048,false))
-        assertTrue(LocalToolContinuation.allowsSubmission(16_000,null,0,2_048,false))
+    @Test fun freshChatCannotBypassOutputOrUnknownContextBudget() {
+        assertFalse(LocalToolContinuation.allowsSubmission(15_500,0,16_384,2_048,false))
+        assertFalse(LocalToolContinuation.allowsSubmission(16_000,null,0,2_048,false))
         assertFalse(LocalToolContinuation.allowsSubmission(16_001,null,0,2_048,false))
         assertFalse(LocalToolContinuation.allowsSubmission(15_500,0,16_384,2_048,true))
         assertFalse(LocalToolContinuation.allowsSubmission(100,null,0,2_048,true))

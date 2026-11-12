@@ -192,7 +192,8 @@ class JarvisLiveTabsUiTest {
 
     private fun assertHandles(f: Fixture) {
         val density = f.home.resources.displayMetrics.density
-        assertEquals(10, JarvisHomeTestRoutes.controls(f.home).size)
+        assertEquals(JarvisHomeTestRoutes.expectedDirectTargets(f.home),
+            JarvisHomeTestRoutes.controls(f.home).map { it.tag.toString().substringAfter(':') })
         assertNull(requireNotNull(f.shell.currentShell())[JarvisShellLayout.Slot.NAV_RAIL])
         val tabs = descendants(f.home).filter { it.tag?.toString()?.startsWith("jarvis-live-tab:") == true }
         assertEquals(listOf("system", "memory", "agents"), tabs.map { it.tag.toString().substringAfter(':') })
@@ -241,7 +242,8 @@ class JarvisLiveTabsUiTest {
             val density = f.home.resources.displayMetrics.density
             assertTrue("The drawer remains within the hero", panel.top >= stage.top * density &&
                 panel.bottom <= stage.bottom * density + 1f)
-            assertEquals(10, JarvisHomeTestRoutes.controls(f.home).size)
+            assertEquals(JarvisHomeTestRoutes.expectedDirectTargets(f.home),
+            JarvisHomeTestRoutes.controls(f.home).map { it.tag.toString().substringAfter(':') })
             f.assertQuiet()
         }
         f.tap("jarvis-live-panel:appearance")

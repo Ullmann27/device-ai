@@ -1,0 +1,74 @@
+{
+  "trials": 36,
+  "arms": {
+    "A": {
+      "trials": 4,
+      "native_inputs": 4,
+      "dispatched": 4,
+      "observed": 4,
+      "verified": 4,
+      "completed": 4,
+      "early_success": 0,
+      "avatar_inputs": 4,
+      "cues": 1,
+      "result_states": [
+        "VERIFIED"
+      ],
+      "final_stages": [
+        "COMPLETED"
+      ]
+    },
+    "B": {
+      "trials": 12,
+      "native_inputs": 12,
+      "dispatched": 12,
+      "observed": 12,
+      "verified": 12,
+      "completed": 12,
+      "early_success": 0,
+      "avatar_inputs": 12,
+      "cues": 7,
+      "result_states": [
+        "VERIFIED"
+      ],
+      "final_stages": [
+        "COMPLETED"
+      ]
+    },
+    "CONTRADICT": {
+      "trials": 16,
+      "native_inputs": 16,
+      "dispatched": 16,
+      "observed": 16,
+      "verified": 0,
+      "completed": 0,
+      "early_success": 0,
+      "avatar_inputs": 16,
+      "cues": 8,
+      "result_states": [
+        "PAUSED"
+      ],
+      "final_stages": [
+        "PAUSED"
+      ]
+    },
+    "STOP": {
+      "trials": 4,
+      "native_inputs": 4,
+      "dispatched": 4,
+      "observed": 0,
+      "verified": 0,
+      "completed": 0,
+      "early_success": 0,
+      "avatar_inputs": 4,
+      "cues": 1,
+      "result_states": [
+        "PAUSED"
+      ],
+      "final_stages": [
+        "STOPPED"
+      ]
+    }
+  },
+  "latencies_are_synthetic": true
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:26" hostname="0f4ac18d136f" time="0.132">
+  <properties/>
+  <testcase name="singleCharacterAppLabelStillRequiresConcreteApproval" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.079"/>
+  <testcase name="explicitFuzzyLaunchPreservesApprovedAndRejectedReceipts" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.007"/>
+  <testcase name="declinedConfirmationAndStoppedApprovalNeverCallLaunchBackend" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.002"/>
+  <testcase name="fuzzyImplicitAppNeedsFallBackBeforeAnySelection" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.004"/>
+  <testcase name="explicitSingleFuzzyAppSkipsChoiceButRetainsApprovalAndLaunchReceipts" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.003"/>
+  <testcase name="staleCallAndReplayCannotSelectOrReopenAnApp" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.002"/>
+  <testcase name="ambiguousAppsRequireSelectionBeforeConcreteConfirmation" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.002"/>
+  <testcase name="permissionFailureCannotBecomeVerifiedOpening" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.003"/>
+  <testcase name="missingAppAndLookupOnlyDoNotOfferExecution" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.002"/>
+  <testcase name="ownerInputReachesRealLookupThenExactConfirmationThenGate" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.009"/>
+  <testcase name="lookupFallbackGuardRejectsPostSelectionCompletionEvenWithFuzzyNeed" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.001"/>
+  <testcase name="exactImplicitAmbiguityPreservesCancellationReceipt" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.001"/>
+  <testcase name="compoundRequestsStayWholeAndReferencesNeedActualCandidates" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.009"/>
+  <testcase name="lookupVerifiedOnlyAfterFreshValidatedDiscoveryPayload" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.002"/>
+  <testcase name="readOnlyDiscoveryNeverSuggestsImplicitOpeningOrExecutesLaunch" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.001"/>
+  <testcase name="fuzzyImplicitIntentsFinishBeforeSelectionOrLaunch" classname="at.heinz.deviceai.cognitive.OwnerAppActionFlowTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

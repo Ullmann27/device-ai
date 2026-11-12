@@ -385,7 +385,10 @@ class ContinuumHologramView @JvmOverloads constructor(
             cameraFraming = AvatarCameraFraming(focus, w.toDouble() / h,
                 headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut, cameraProfile)
         }
-        val targetWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection)
+        val targetWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection).let {
+            if (layeredCockpit) at.heinz.deviceai.avatar3d.AvatarFraming.pullBack(it,
+                at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_SCALE.toDouble()) else it
+        }
         val fromWindow = cameraProfileBlendFrom
         cameraWindow = if (fromWindow != null && cameraProfileBlendStartedAtMs >= 0L) {
             val raw = ((SystemClock.uptimeMillis() - cameraProfileBlendStartedAtMs) / 260f).coerceIn(0f, 1f)
@@ -416,13 +419,17 @@ class ContinuumHologramView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun setCockpitRegions(head: Rect?, orb: Rect?) {
+    private var layeredCockpit = false
+
+    fun setCockpitRegions(head: Rect?, orb: Rect?, layered: Boolean = false) {
         require((head == null) == (orb == null)) { "Head and orb bounds must be supplied together" }
         if (head != null && orb != null) {
             require(!head.isEmpty && !orb.isEmpty && head.left >= 0 && head.top >= 0 && orb.left >= 0 && orb.top >= 0)
-            require(!Rect.intersects(head, orb)) { "Head and orb drawing regions must not overlap" }
+            require(layered || !Rect.intersects(head, orb)) { "Head and orb drawing regions must not overlap" }
         }
-        if (cockpitHeadBounds == head && cockpitOrbBounds == orb) return
+        if (cockpitHeadBounds == head && cockpitOrbBounds == orb && layeredCockpit == layered) return
+        if (layeredCockpit && !layered) detachCockpitStage()
+        layeredCockpit = layered
         resetCamera()
         cockpitHeadBounds = head?.let(::Rect)
         cockpitOrbBounds = orb?.let(::Rect)
@@ -562,11 +569,19 @@ class ContinuumHologramView @JvmOverloads constructor(
             texture.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
                 override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
                     nativeSurface = Surface(surface)
+                    worldBufferWidth = 0; worldBufferHeight = 0
+                    resizeWorldBuffer()
                     ensure3dRenderer(); invalidate()
                 }
-                override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) { invalidate() }
+                override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+                    native3d?.invalidateCockpitSubmission()
+                    worldBufferWidth = 0; worldBufferHeight = 0
+                    resizeWorldBuffer()
+                    invalidate()
+                }
                 override fun onSurfaceTextureUpdated(surface: SurfaceTexture) = Unit
                 override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                    cockpitLiveFeed?.monitorSubmission?.invalidate()
                     documentStageBinding?.report(false)
                     native3d?.close(); native3d = null
                     nativeSurface?.release(); nativeSurface = null
@@ -590,7 +605,69 @@ class ContinuumHologramView @JvmOverloads constructor(
             .onSuccess { native3d = it; it.setQuality(renderBudget().reducedBloom) }.onFailure { fail3d() }
     }
 
-    /** Presentation only; no document access. */
+    private var cockpitWorldAssets: at.heinz.deviceai.avatar3d.CockpitSceneAssets? = null
+    private var cockpitWorldFrame: at.heinz.deviceai.avatar3d.CockpitStageFrame? = null
+    private var cockpitWorldFailed = false
+    private var worldBufferWidth = 0
+    private var worldBufferHeight = 0
+    private var cockpitLiveFeed: at.heinz.deviceai.cognitive.LiveMonitorFeed<AndroidLiveFrame>? = null
+    internal var onCockpitStatus: ((String, Boolean) -> Unit)? = null
+
+    internal fun presentCockpitStage(frame: at.heinz.deviceai.avatar3d.CockpitStageFrame) {
+        if (!frame.valid()) return
+        cockpitWorldFrame = frame
+        resizeWorldBuffer()
+        invalidate()
+    }
+
+    private fun resizeWorldBuffer() {
+        if (!layeredCockpit) return
+        val surface = nativeTexture?.surfaceTexture ?: return
+        val size = cockpitWorldFrame?.bufferSize() ?: return
+        if (worldBufferWidth != size.first || worldBufferHeight != size.second) {
+            surface.setDefaultBufferSize(size.first, size.second)
+            worldBufferWidth = size.first
+            worldBufferHeight = size.second
+        }
+    }
+
+    internal fun setCockpitLiveFeed(feed: at.heinz.deviceai.cognitive.LiveMonitorFeed<AndroidLiveFrame>?) {
+        if (cockpitLiveFeed !== feed) cockpitLiveFeed?.monitorSubmission?.invalidate()
+        cockpitLiveFeed = feed
+        native3d?.bindCockpitFeed(feed)
+        invalidate()
+    }
+
+    internal fun cockpitWorkEvent(event: at.heinz.deviceai.cognitive.CockpitWorkEvent) {
+        native3d?.cockpitWorkEvent(event)
+        invalidate()
+    }
+
+    internal fun detachCockpitStage() {
+        cockpitLiveFeed?.monitorSubmission?.invalidate()
+        cockpitWorldFrame = null
+        cockpitLiveFeed = null
+        native3d?.clearCockpitStage()
+        onCockpitStatus?.invoke("3D-Szene nicht verbunden", false)
+    }
+
+    private fun prepareCockpitStage() {
+        if (!layeredCockpit) return
+        val native = native3d ?: return
+        val frame = cockpitWorldFrame ?: return
+        if (!canDisplay3d() || cockpitWorldFailed) return
+        runCatching {
+            val assets = cockpitWorldAssets ?: at.heinz.deviceai.avatar3d.CockpitSceneAssets.load(context.assets)
+                .also { cockpitWorldAssets = it }
+            resolveOrbBounds(width, height)
+            native.configureCockpit(assets, frame, headDrawBounds, orbDrawBounds, cockpitLiveFeed)
+        }.onFailure {
+            cockpitWorldFailed = true
+            native.clearCockpitStage()
+            onCockpitStatus?.invoke("3D-Szene nicht verfügbar", false)
+        }
+    }
+
     internal fun attachDocumentStage(id: String, surface: Surface, ready: (Boolean) -> Unit) {
         documentStageBinding?.report(false)
         native3d?.clearDocumentStage()
@@ -663,10 +740,14 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     private fun release3d(clearAsset: Boolean) {
+        cockpitLiveFeed?.monitorSubmission?.invalidate()
+        onCockpitStatus?.invoke("3D-Szene angehalten", false)
         documentStageBinding?.report(false)
         native3d?.close(); native3d = null; native3dDrawn = false
         nativeTexture?.let { texture -> texture.surfaceTextureListener = null; removeView(texture) }
         nativeTexture = null
+        worldBufferWidth = 0; worldBufferHeight = 0
+        cockpitWorldFailed = false
         nativeSurface?.release(); nativeSurface = null
         if (clearAsset) { assetGeneration++; assetBytes = null; assetMetadata = null; documentStageBytes = null }
     }
@@ -1049,9 +1130,10 @@ class ContinuumHologramView @JvmOverloads constructor(
         resolveHeadBounds(measuredWidth, measuredHeight)
         val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
         (nativeTexture?.layoutParams as? LayoutParams)?.let {
-            it.width = if (cockpitHeadBounds != null || cockpit) headDrawBounds.width().toInt() else (measuredWidth * .72f).toInt()
-            it.height = if (cockpitHeadBounds != null || cockpit) headDrawBounds.height().toInt() else LayoutParams.MATCH_PARENT
-            it.leftMargin = headDrawBounds.left.toInt(); it.topMargin = headDrawBounds.top.toInt()
+            it.width = if (layeredCockpit) measuredWidth else if (cockpitHeadBounds != null || cockpit) headDrawBounds.width().toInt() else (measuredWidth * .72f).toInt()
+            it.height = if (layeredCockpit) measuredHeight else if (cockpitHeadBounds != null || cockpit) headDrawBounds.height().toInt() else LayoutParams.MATCH_PARENT
+            it.leftMargin = if (layeredCockpit) 0 else headDrawBounds.left.toInt()
+            it.topMargin = if (layeredCockpit) 0 else headDrawBounds.top.toInt()
         }
         updateOrbTarget(measuredWidth, measuredHeight)
         super.onMeasure(MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
@@ -1103,7 +1185,8 @@ class ContinuumHologramView @JvmOverloads constructor(
                 memoryScene.sample(memorySceneTime()) == null)) clearMemoryScene()
         resolveHeadBounds(width, height)
         updateOrbTarget(width, height)
-        if (headEnabled && cockpitHeadBounds != null) {
+        if (headEnabled && cockpitHeadBounds != null) updateAuraFraming()
+        if (headEnabled && cockpitHeadBounds != null && !layeredCockpit) {
             val t = if (canAnimateFrame() && renderBudget().animate) avatarSeconds else 0f
             val stageWidth = width / density
             val stageHeight = height / density
@@ -1115,7 +1198,6 @@ class ContinuumHologramView @JvmOverloads constructor(
             }
             at.heinz.deviceai.ui.JarvisEnergyFlows.draw(painter, stageWidth, stageHeight - flowTop, t, energy)
             canvas.restoreToCount(flowCanvas)
-            updateAuraFraming()
             val auraCanvas = canvas.save()
             transformHeadEntrance(canvas, density)
             at.heinz.deviceai.ui.JarvisHeadAura.draw(painter, at.heinz.deviceai.ui.JarvisShellLayout.Box(
@@ -1135,15 +1217,18 @@ class ContinuumHologramView @JvmOverloads constructor(
             receipt.visemeOrdinal = pose.viseme.ordinal
             if (canDisplay3d() && native3d != null) {
                 runCatching {
+                    prepareCockpitStage()
                     native3d!!.setQuality(renderBudget().reducedBloom)
                     native3d!!.setFraming(headAnchorX, headCloseUp, headKeepOut)
                     native3d!!.render(
-                        pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0,
-                        nativeTexture?.height ?: 0,
+                        pose, avatarSeconds, canAnimateFrame(),
+                        if (layeredCockpit) worldBufferWidth else nativeTexture?.width ?: 0,
+                        if (layeredCockpit) worldBufferHeight else nativeTexture?.height ?: 0,
                         framing = if (cockpitHeadBounds != null) cameraWindow else null,
                         diagnosticBlink = proof?.blinkOverride,
                         receipt = receipt,
                         coreEnergy = coreEnergy,
+                        orbPhase = phase,
                         cinematicLighting = cinematicPrefs.getBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.KEY, true),
                         windowAccentArgb = workWindowAccentArgb,
                         windowOpen = workWindowActive,
@@ -1160,19 +1245,20 @@ class ContinuumHologramView @JvmOverloads constructor(
                                 at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_10_SENTENCE)
                     )
                 }
-                    .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
+                    .onSuccess { rendered ->
+                        if (layeredCockpit) {
+                            val retained = native3dDrawn && native3d?.lastFrameSkipped == true
+                            native3dDrawn = (rendered || retained) && native3d?.cockpitReady == true
+                            nativeTexture?.alpha = if (native3dDrawn) 1f else 0f
+                        } else if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f }
+                    }
                     .onFailure { fail3d() }
             }
             renderDocumentStage()
-            if (!native3dDrawn) {
-                val headCanvas = canvas.save()
-                transformHeadEntrance(canvas, density)
-                canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
-                avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
-                    pose, avatarSeconds, canAnimateFrame())
-                canvas.restoreToCount(headCanvas)
-            }
-            if (!memoryScene.isActive && (native3dDrawn || cockpit || cockpitOrbBounds != null)) {
+            if (layeredCockpit) onCockpitStatus?.invoke(
+                if (native3dDrawn) native3d?.cockpitStatus ?: "3D-Szene nicht verfügbar"
+                else "3D-Szene wird vorbereitet", native3dDrawn && native3d?.cockpitReady == true)
+            if (!layeredCockpit && !memoryScene.isActive && (native3dDrawn || cockpit || cockpitOrbBounds != null)) {
                 // Same original orb, same actual app state and speech frame; no second animation loop.
                 resolveOrbBounds(width, height)
                 val orbWidth = orbDrawBounds.width() / density
@@ -1192,6 +1278,18 @@ class ContinuumHologramView @JvmOverloads constructor(
                     renderer.draw(painter, renderFrame)
                 }
                 canvas.restoreToCount(orbCanvas)
+            }
+            if (!native3dDrawn && !layeredCockpit) {
+                val headCanvas = if (layeredCockpit) canvas.saveLayerAlpha(
+                    headDrawBounds.left / density, headDrawBounds.top / density,
+                    headDrawBounds.right / density, headDrawBounds.bottom / density,
+                    (at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY * 255f).toInt())
+                    else canvas.save()
+                transformHeadEntrance(canvas, density)
+                canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
+                avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
+                    pose, avatarSeconds, canAnimateFrame())
+                canvas.restoreToCount(headCanvas)
             }
             if (!native3dDrawn && head3dEnabled) {
                 val status = if (native3dFailed) "3D derzeit nicht verfügbar" else "3D wird initialisiert …"
@@ -1261,11 +1359,11 @@ class ContinuumHologramView @JvmOverloads constructor(
         xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.DST_IN)
     }
 
-    private fun headFadeActive() = headEnabled && native3dDrawn && cockpitHeadBounds != null && width > 0 && height > 0
+    private fun headFadeActive() = !layeredCockpit && headEnabled && native3dDrawn && cockpitHeadBounds != null && width > 0 && height > 0
 
     /** Only the native head surface is masked; full-view effect children keep their own unclipped drawing. */
     override fun drawChild(canvas: Canvas, child: android.view.View, drawingTime: Long): Boolean {
-        if (child !== nativeTexture) return super.drawChild(canvas, child, drawingTime)
+        if (child !== nativeTexture || layeredCockpit) return super.drawChild(canvas, child, drawingTime)
         val saved = canvas.save()
         transformHeadEntrance(canvas)
         val drawn = if (headFadeActive()) {

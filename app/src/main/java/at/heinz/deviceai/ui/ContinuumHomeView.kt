@@ -80,9 +80,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     fun setForegroundActive(active: Boolean) {
         if (foregroundActive && !active) presentationGeneration++
         foregroundActive = active
+        virtualMonitor.setForegroundActive(active)
         if (!active) hologram.clearMemoryScene()
         if (!active) liveTabs.collapseImmediately()
-        if (!active) clearShellPress()
+        if (!active) { clearShellPress(); settleMonitorFlight() }
         jarvisShell.refreshMotionPolicy()
         updateWaveAnimation()
     }
@@ -141,6 +142,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onDetachedFromWindow() {
         presentationGeneration++
+        settleMonitorFlight()
         clearShellPress()
         presentationBudgetRegistration?.close()
         presentationBudgetRegistration = null
@@ -162,7 +164,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         if (visibility != View.VISIBLE) presentationGeneration++
         if (visibility != View.VISIBLE) hologram.clearMemoryScene()
         if (visibility != View.VISIBLE) liveTabs.collapseImmediately()
-        if (visibility != View.VISIBLE) clearShellPress()
+        if (visibility != View.VISIBLE) { clearShellPress(); settleMonitorFlight() }
         updateWaveAnimation()
     }
 
@@ -171,7 +173,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         if (!isShown) presentationGeneration++
         if (!isShown) hologram.clearMemoryScene()
         if (!isShown) liveTabs.collapseImmediately()
-        if (!isShown) clearShellPress()
+        if (!isShown) { clearShellPress(); settleMonitorFlight() }
         updateWaveAnimation()
     }
     var state: ContinuumDashboardState = ContinuumDashboardState()
@@ -199,6 +201,127 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
      * targets and tile destinations (docs/ARCHITEKTUR-JARVIS.md, "Fehlt an der Schnittstelle").
      */
     val jarvisShell = JarvisShellView(context)
+    private val virtualMonitor = VirtualComputerMonitorView(context).apply {
+        translationZ = density * .7f
+        tag = "continuum-live-computer-monitor"
+        onFeedChanged = hologram::setCockpitLiveFeed
+        onWorkEvent = hologram::cockpitWorkEvent
+    }
+
+    private var computerFrame: at.heinz.deviceai.avatar3d.CockpitStageFrame? = null
+    private var monitorFocus = 0f
+    private var monitorTargetFocus = 0f
+    private var monitorFocusAnimator: android.animation.ValueAnimator? = null
+
+    private var liveComputerFeed: at.heinz.deviceai.cognitive.LiveMonitorFeed<at.heinz.deviceai.AndroidLiveFrame>? = null
+    private var monitorVelocity = 0f
+    private val monitorWorkSequence = at.heinz.deviceai.avatar3d.CockpitPresentationSequence()
+
+    internal fun setLiveComputerFeed(feed: at.heinz.deviceai.cognitive.LiveMonitorFeed<at.heinz.deviceai.AndroidLiveFrame>?) {
+        if (liveComputerFeed !== feed) monitorWorkSequence.reset()
+        liveComputerFeed = feed
+        virtualMonitor.bind(feed)
+        if (feed == null) moveMonitor(0f)
+    }
+    internal fun clearLiveComputerFeed() = setLiveComputerFeed(null)
+    internal fun showComputerWorkEvent(event: at.heinz.deviceai.cognitive.CockpitWorkEvent) {
+        if (android.os.Looper.myLooper() != android.os.Looper.getMainLooper()) {
+            post { showComputerWorkEvent(event) }
+            return
+        }
+        virtualMonitor.workEvent(event)
+        val binding = liveComputerFeed?.status(System.nanoTime())?.binding ?: return
+        if (!monitorWorkSequence.accept(event, binding, System.nanoTime())) return
+        val end = event.stage in setOf(at.heinz.deviceai.cognitive.CockpitWorkEvent.Stage.STOPPED,
+            at.heinz.deviceai.cognitive.CockpitWorkEvent.Stage.ERROR, at.heinz.deviceai.cognitive.CockpitWorkEvent.Stage.PAUSED,
+            at.heinz.deviceai.cognitive.CockpitWorkEvent.Stage.ASK_OWNER, at.heinz.deviceai.cognitive.CockpitWorkEvent.Stage.COMPLETED)
+        moveMonitor(if (end) 0f else 1f)
+    }
+
+    private fun moveMonitor(target: Float) {
+        if (monitorTargetFocus == target && (monitorFocusAnimator != null ||
+                kotlin.math.abs(monitorFocus - target) < .000001f)) return
+        val previous = monitorFocusAnimator
+        monitorFocusAnimator = null
+        previous?.cancel()
+        monitorTargetFocus = target
+        if (!isPresentationActive() || !virtualMonitor.isShown || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
+            settleMonitorFlight()
+            return
+        }
+        val flight = CockpitMonitorMotion.flight(monitorFocus, monitorVelocity, target)
+        if (flight.durationMs <= 0f) { settleMonitorFlight(); return }
+        val animator = android.animation.ValueAnimator.ofFloat(0f, flight.durationMs).apply {
+            duration = kotlin.math.ceil(flight.durationMs.toDouble()).toLong().coerceAtLeast(1L)
+            interpolator = android.view.animation.LinearInterpolator()
+            addUpdateListener {
+                if (monitorFocusAnimator !== it) return@addUpdateListener
+                if (!isPresentationActive() || !virtualMonitor.isShown || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
+                    settleMonitorFlight()
+                    return@addUpdateListener
+                }
+                val sample = flight.sample(it.animatedValue as Float)
+                monitorFocus = sample.focus
+                monitorVelocity = sample.velocityPerMs
+                presentComputerFrame()
+            }
+            addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    if (monitorFocusAnimator !== animation) return
+                    monitorFocusAnimator = null
+                    monitorFocus = target
+                    monitorVelocity = 0f
+                    presentComputerFrame()
+                }
+            })
+        }
+        monitorFocusAnimator = animator
+        animator.start()
+    }
+
+    private fun settleMonitorFlight() {
+        val previous = monitorFocusAnimator
+        monitorFocusAnimator = null
+        previous?.cancel()
+        monitorFocus = monitorTargetFocus
+        monitorVelocity = 0f
+        presentComputerFrame()
+    }
+
+    private fun presentComputerFrame() {
+        val base = computerFrame ?: return
+        val frame = CockpitMonitorMotion.pose(base, monitorFocus, density)
+        virtualMonitor.frame = frame
+        hologram.presentCockpitStage(frame)
+    }
+
+    private fun measureComputerStage(shell: JarvisShellLayout.Shell) {
+        val box = shell[JarvisShellLayout.Slot.AVATAR]
+        val monitor = shell[JarvisShellLayout.Slot.WORK_PROCESS]
+        val visible = jarvisShellStage && shell.workstation && box != null && monitor != null
+        virtualMonitor.visibility = if (visible) View.VISIBLE else View.GONE
+        if (!visible) { settleMonitorFlight(); hologram.detachCockpitStage(); return }
+        val stage = requireNotNull(box)
+        val display = requireNotNull(monitor)
+        val width = (stage.width * density).toInt()
+        val height = (stage.height * density).toInt()
+        for (view in listOf<View>(virtualMonitor)) view.measure(
+            MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
+        val frame = at.heinz.deviceai.avatar3d.CockpitStageFrame(width.toFloat(), height.toFloat(),
+            (display.left - stage.left) * density, (display.top - stage.top) * density,
+            minOf(width.toFloat(), (display.right - stage.left) * density),
+            minOf(height.toFloat(), (display.bottom - stage.top) * density))
+        computerFrame = frame
+        presentComputerFrame()
+    }
+
+    private fun layoutComputerStage(shell: JarvisShellLayout.Shell) {
+        val box = shell[JarvisShellLayout.Slot.AVATAR] ?: return
+        for (view in listOf<View>(virtualMonitor)) view.layout(
+            (box.left * density).toInt(), (box.top * density).toInt(),
+            (box.right * density).toInt(), (box.bottom * density).toInt())
+    }
     private val liveTabs = JarvisLiveTabs(context, jarvisShell, ::openJarvisTarget).apply {
         translationZ = density * 2f
     }
@@ -208,7 +331,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             tag = "jarvis-foreground"
             isClickable = false
             importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
-            translationZ = density * .5f
+            translationZ = density * .8f
         }
         override fun onDraw(canvas: Canvas) { jarvisShell.drawForeground(canvas) }
     }
@@ -262,6 +385,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     /** Selection follows the existing navigator; it never starts an agent or a model operation. */
     fun selectJarvisTarget(target: String) {
         selectedJarvisTarget = target
+        jarvisShell.selectedDockTarget = target
         shellActions.values.forEach { it.isSelected = it.target == target }
         shellRailList.refreshSelection()
         if (jarvisShellStage) jarvisShell.tiles = shellTiles(state)
@@ -309,6 +433,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private fun applyShellStage() {
         jarvisShell.visibility = if (jarvisShellStage) View.VISIBLE else View.GONE
         shellForeground.visibility = jarvisShell.visibility
+        virtualMonitor.visibility = jarvisShell.visibility
         views.values.forEach { it.visibility = if (jarvisShellStage) View.GONE else View.VISIBLE }
         shellActions.values.forEach { it.visibility = if (jarvisShellStage) View.VISIBLE else View.GONE }
         if (jarvisShellStage) applyDeckToActions()
@@ -355,6 +480,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     /** Children added by a docked renderer (attach): sized to the slot; the renderer positions them via x/y. */
     private fun isForeign(child: View) = child !== jarvisShell && child !== hologram && child !== avatarPlaceholder &&
+        child !== virtualMonitor &&
         child !== shellForeground && child !== memoryFullStage && child !== transientCard && child !== shellRailScroll &&
         child !== liveTabs && child !in views.values && child !in shellActions.values
 
@@ -439,7 +565,12 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         jarvisShell.content = JarvisShellContent.forState({ state }, grid = { jarvisShell.shell?.grid },
             shell = { jarvisShell.shell }) + mapOf(
                 JarvisShellLayout.Slot.NAV_RAIL to JarvisShellRenderer.SlotContent { _, _ -> },
-                JarvisShellLayout.Slot.AVATAR to JarvisShellRenderer.SlotContent { _, _ -> })
+                JarvisShellLayout.Slot.AVATAR to JarvisShellRenderer.SlotContent { _, _ -> },
+                JarvisShellLayout.Slot.WORK_PROCESS to JarvisShellRenderer.SlotContent { painter, box ->
+                    if (jarvisShell.shell?.workstation != true)
+                        JarvisShellContent.forState({ state }, shell = { jarvisShell.shell })
+                            .get(JarvisShellLayout.Slot.WORK_PROCESS)?.draw(painter, box)
+                })
         jarvisShell.onFrameDrawn = { shellForeground.invalidate() }
         jarvisShell.motionBudgetProvider = {
             if (foregroundActive) hologram.presentationRenderBudget()
@@ -451,6 +582,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         jarvisShell.importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
         addView(jarvisShell, 0)
         addView(hologram)
+        addView(virtualMonitor)
+        hologram.onCockpitStatus = virtualMonitor::updateStatus
         addView(avatarPlaceholder)
         addView(memoryFullStage)
         addView(shellForeground)
@@ -594,13 +727,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val h = if (jarvisShellStage && width / density >= 240f)
             (JarvisShellLayout.forContent(width / density, jarvisShell.viewportHeightDp,
                 resources.configuration.fontScale, jarvisShell.foldRail, offset,
-                compactPresentation = compactPresentation).height * density).toInt()
+                compactPresentation = compactPresentation, workstation = true).height * density).toInt()
             else maxOf(contentHeight, suggestedMinimumHeight)
         jarvisShell.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         shellForeground.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         memoryFullStage.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         if (jarvisShellStage) shellGeometry(width, h)?.let {
             measureShellActions(it)
+            measureComputerStage(it)
             liveTabs.setGeometry(it)
         }
         liveTabs.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
@@ -641,7 +775,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val stage = shell?.get(JarvisShellLayout.Slot.AVATAR)
         val head = shell?.headStage ?: shell?.headBounds
         val header = shell?.grid?.areas?.get(JarvisCockpitGrid.Area.CONTINUUM_HEADER)
-        val orb = shell?.orbBounds?.let { ContinuumBrainOrbRenderer.columnFor(it, header) }
+        val orb = shell?.orbBounds?.let { if (shell.workstation) it else ContinuumBrainOrbRenderer.columnFor(it, header) }
         if (stage == null || head == null || orb == null) {
             hologram.setCockpitRegions(null, null)
             hologram.setHeadFraming(.5f, 1f)
@@ -653,7 +787,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
                 (box.right * density).toInt() - originX, (box.bottom * density).toInt() - originY)
         }
         // The latest reference has no owner card reserving half the face viewport.
-        hologram.setCockpitRegions(local(head), local(orb))
+        hologram.setCockpitRegions(local(head), local(orb), layered = shell.workstation)
         hologram.setHeadFraming(shell.headAnchorX, shell.headCloseUp, dialogKeepOut(shell, head))
     }
 
@@ -680,7 +814,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val viewport = jarvisShell.viewportHeightDp.takeIf { it >= 160f } ?: (heightPx / density)
         if (w < 240f || viewport < 160f) return null
         return JarvisShellLayout.forContent(w, viewport, resources.configuration.fontScale, jarvisShell.foldRail,
-            externalRailWidthDp = offset, compactPresentation = compactPresentation)
+            externalRailWidthDp = offset, compactPresentation = compactPresentation, workstation = true)
     }
 
     private data class ShellActionSpec(val key: String, val target: String, val label: String,
@@ -843,7 +977,18 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             val available = target in JarvisShellContent.routes || onNavigateTarget != null
             isEnabled = available
             isSelected = target == selectedJarvisTarget
-            val value = if (key.startsWith("tile:")) JarvisShellContent.tileValue(target, state, System.currentTimeMillis()) else null
+            val value = when {
+                key.startsWith("tile:") -> JarvisShellContent.tileValue(target, state, System.currentTimeMillis())
+                key == "dialog:conversation" -> JarvisCockpitGridContent.liveBadge(state)
+                key == "camera:settings" -> when {
+                    state.presentation.tracking -> "Gesicht erkannt"
+                    state.presentation.cameraSessionActive -> "Kamera aktiv"
+                    else -> "Kamera aus"
+                }
+                key == "panel:COCKPIT_SECONDARY" -> JarvisCockpitGridContent.modules(state)
+                    .joinToString("; ") { "${it.label}: ${it.value}" }
+                else -> null
+            }
             contentDescription = label + (value?.let { ": $it" } ?: "") + if (available) "" else ": nicht verfügbar"
         }
 
@@ -991,6 +1136,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
                     (box.right * density).toInt(), (box.bottom * density).toInt())
             }
             layoutShellActions()
+            shellGeometry(r - l, b - t)?.let(::layoutComputerStage)
             return
         }
         for (child in listOf<View>(hologram) + views.values) {

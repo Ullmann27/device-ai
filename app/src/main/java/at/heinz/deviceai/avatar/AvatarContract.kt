@@ -31,6 +31,8 @@ enum class AudioLevelSource { PCM_ENVELOPE, WORD_RANGE_FALLBACK, TEXT_PACE_FALLB
 /** Compatibility names for canonical intents. */
 enum class AvatarGestureIntent { WINDOW_FOCUS, CONFIRM_NOD, THINK_MICRO }
 
+enum class AvatarWorkInput { CLICK, TEXT_SET, SCROLL }
+
 /** How a sentence of the spoken text ends: `.`/`!` closes a statement, `?` a question. */
 enum class SpeechBoundary { STATEMENT, QUESTION }
 
@@ -42,6 +44,8 @@ sealed interface AvatarEvent {
      * atMillis is observation time in the Director's existing clock domain. */
     data class GazeObserved(val gaze: GazeTarget, val confidence: Int, override val atMillis: Long) : AvatarEvent
     data class GazeCleared(override val atMillis: Long) : AvatarEvent
+    /** Actual input, never a typing loop. */
+    data class WorkInput(val actionId: String?, val kind: AvatarWorkInput?, override val atMillis: Long) : AvatarEvent
     /** Director-owned intent, never camera evidence. */
     data class AnimationIntentsChanged(val revision: Long, val windowGaze: GazeTarget?,
         val windowAtMillis: Long, val confirmationAtMillis: Long,
@@ -91,7 +95,11 @@ data class AvatarPose(val state: AvatarState, val expression: AvatarExpression, 
                       /** Sentence end reached in the spoken text and its gesture progress 0..1 (−1 = none). */
                       val sentenceEnd: SpeechBoundary? = null, val sentenceEndProgress: Float = -1f,
                       /** The eyes read the directed window while real work on its content runs (never without it). */
-                      val reading: Boolean = false) {
+                      val reading: Boolean = false,
+                      val workInput: AvatarWorkInput? = null,
+                      val workInputProgress: Float = -1f,
+                      val leftShoulder: Float = 0f,
+                      val rightShoulder: Float = 0f) {
     val confirmationProgress: Float get() = if (gesture == AvatarGestureIntent.CONFIRM_NOD) gestureProgress else -1f
 }
 
@@ -144,6 +152,10 @@ class AvatarPoseReducer {
     private val cues = ArrayList<AvatarEvent.VisemeCue>()
     private var sentenceEnd: SpeechBoundary? = null
     private var sentenceEndAtMillis = Long.MIN_VALUE
+    private var workInput: AvatarWorkInput? = null
+    private var workInputAtMillis = Long.MIN_VALUE
+    private var newestWorkInputAtMillis = Long.MIN_VALUE
+    private val workInputs = LinkedHashSet<String>()
 
     fun apply(event: AvatarEvent) {
         // Rejected/replayed audio must not resmooth the envelope or change the default pose clock.
@@ -160,6 +172,8 @@ class AvatarPoseReducer {
         if (event is AvatarEvent.AnimationIntentsChanged && event.revision <= animationRevision) return
         if (event is AvatarEvent.Gesture && (event.atMillis <= animationClearedAtMillis ||
                 event.atMillis <= lastLegacyGestureAtMillis)) return
+        if (event is AvatarEvent.WorkInput && (event.atMillis < newestWorkInputAtMillis ||
+                (event.actionId != null && event.actionId in workInputs))) return
         lastEventMillis = event.atMillis
         when (event) {
             is AvatarEvent.StateChanged -> {
@@ -175,6 +189,15 @@ class AvatarPoseReducer {
                 }
             }
             is AvatarEvent.GazeCleared -> clearObservedGaze(event.atMillis)
+            is AvatarEvent.WorkInput -> {
+                newestWorkInputAtMillis = event.atMillis
+                workInput = event.kind
+                workInputAtMillis = event.atMillis
+                event.actionId?.let {
+                    workInputs += it
+                    while (workInputs.size > 64) workInputs.remove(workInputs.first())
+                }
+            }
             is AvatarEvent.AnimationIntentsChanged -> {
                 animationRevision = event.revision
                 lastLegacyGestureAtMillis = maxOf(lastLegacyGestureAtMillis, event.atMillis)
@@ -253,6 +276,7 @@ class AvatarPoseReducer {
         clearUtterance()
         sentenceEnd = null
         sentenceEndAtMillis = Long.MIN_VALUE
+        workInput = null
     }
 
     private fun clearUtterance() {
@@ -359,11 +383,24 @@ class AvatarPoseReducer {
             AvatarGestureIntent.THINK_MICRO -> thinkingProgress
             null -> 0f
         }
+        val inputAge = atMillis.toDouble() - workInputAtMillis.toDouble()
+        val inputDuration = when (workInput) {
+            AvatarWorkInput.CLICK -> 220L
+            AvatarWorkInput.TEXT_SET -> 280L
+            AvatarWorkInput.SCROLL -> 420L
+            null -> 0L
+        }
+        val inputProgress = if (motion && inputDuration > 0 && inputAge >= 0 && inputAge < inputDuration)
+            (inputAge / inputDuration).toFloat() else -1f
+        val pulse = if (inputProgress >= 0) kotlin.math.sin(inputProgress * Math.PI).toFloat() else 0f
         return AvatarPose(state, expression, shownGaze.x, shownGaze.y, jaw, viseme, visemeWeight, liveEnergy,
             gazeObserved = shownDirected == null && observedGaze != null, gesture = gesture, gestureProgress = progress,
             gazeDirected = shownDirected != null, fallbackGazeX = underlyingGaze.x, fallbackGazeY = underlyingGaze.y,
             sentenceEnd = if (sentenceProgress >= 0f) sentenceEnd else null, sentenceEndProgress = sentenceProgress,
-            reading = shownDirected != null && directedReading)
+            reading = shownDirected != null && directedReading,
+            workInput = workInput.takeIf { inputProgress >= 0 }, workInputProgress = inputProgress,
+            leftShoulder = if (workInput == AvatarWorkInput.TEXT_SET) pulse * .6f else 0f,
+            rightShoulder = if (workInput == AvatarWorkInput.TEXT_SET) pulse * .8f else pulse)
     }
 
     companion object {

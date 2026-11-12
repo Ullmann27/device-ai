@@ -1,0 +1,1604 @@
+{
+  "schema": "cockpit-host-review-v1",
+  "motionDurationMs": 420,
+  "videoFrameCount": 49,
+  "frames": [
+    {
+      "layout": "fold",
+      "phase": "idle",
+      "focus": 0,
+      "key": "fold-idle",
+      "timeMs": 0,
+      "frame": {
+        "quad": [
+          173.32535,
+          282.67032,
+          681.3203,
+          283.22952,
+          681.3203,
+          447.1575,
+          173.32535,
+          444.47787
+        ],
+        "monitorLeft": 153.36002,
+        "monitorRight": 698.64,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": 0,
+        "width": 852,
+        "yawDegrees": -3,
+        "depthOffset": 0,
+        "height": 480,
+        "monitorTop": 259.2
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "transition",
+      "focus": 0.5,
+      "key": "fold-transition",
+      "timeMs": 210,
+      "frame": {
+        "quad": [
+          174.43977,
+          275.5743,
+          683.7251,
+          276.3579,
+          684.56165,
+          442.19705,
+          169.97119,
+          437.79395
+        ],
+        "monitorLeft": 143.81761,
+        "monitorRight": 708.18243,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -7.5,
+        "width": 852,
+        "yawDegrees": -5,
+        "depthOffset": -51.167995,
+        "height": 480,
+        "monitorTop": 252.72002
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "working",
+      "focus": 1,
+      "key": "fold-working",
+      "timeMs": 420,
+      "frame": {
+        "quad": [
+          153.80243,
+          271.51465,
+          698.1976,
+          271.51465,
+          698.1976,
+          445.1366,
+          153.80243,
+          445.1366
+        ],
+        "monitorLeft": 134.2752,
+        "monitorRight": 717.7248,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": 0,
+        "width": 852,
+        "yawDegrees": -0,
+        "depthOffset": 0,
+        "height": 480,
+        "monitorTop": 246.24
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-000",
+      "focus": 0,
+      "key": "fold-sequence-000",
+      "timeMs": 0,
+      "frame": {
+        "quad": [
+          173.32535,
+          282.67032,
+          681.3203,
+          283.22952,
+          681.3203,
+          447.1575,
+          173.32535,
+          444.47787
+        ],
+        "monitorLeft": 153.36002,
+        "monitorRight": 698.64,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": 0,
+        "width": 852,
+        "yawDegrees": -3,
+        "depthOffset": 0,
+        "height": 480,
+        "monitorTop": 259.2
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-001",
+      "focus": 0.0050636576,
+      "key": "fold-sequence-001",
+      "timeMs": 17.5,
+      "frame": {
+        "quad": [
+          173.39076,
+          282.576,
+          681.3063,
+          283.14142,
+          681.33075,
+          447.0948,
+          173.33133,
+          444.38
+        ],
+        "monitorLeft": 153.26338,
+        "monitorRight": 698.73663,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -0.11930459,
+        "width": 852,
+        "yawDegrees": -3.0404844,
+        "depthOffset": -0.81394356,
+        "height": 480,
+        "monitorTop": 259.1344
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-002",
+      "focus": 0.019675927,
+      "key": "fold-sequence-002",
+      "timeMs": 35,
+      "frame": {
+        "quad": [
+          173.58087,
+          282.3061,
+          681.2667,
+          282.88947,
+          681.35895,
+          446.91205,
+          173.34761,
+          444.09595
+        ],
+        "monitorLeft": 152.98451,
+        "monitorRight": 699.0155,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -0.46330795,
+        "width": 852,
+        "yawDegrees": -3.1571827,
+        "depthOffset": -3.1608717,
+        "height": 480,
+        "monitorTop": 258.945
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-003",
+      "focus": 0.04296875,
+      "key": "fold-sequence-003",
+      "timeMs": 52.5,
+      "frame": {
+        "quad": [
+          173.88603,
+          281.8837,
+          681.20734,
+          282.49493,
+          681.399,
+          446.6158,
+          173.36931,
+          443.63977
+        ],
+        "monitorLeft": 152.53996,
+        "monitorRight": 699.4601,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -1.0093553,
+        "width": 852,
+        "yawDegrees": -3.3421261,
+        "depthOffset": -6.8862247,
+        "height": 480,
+        "monitorTop": 258.64313
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-004",
+      "focus": 0.074074075,
+      "key": "fold-sequence-004",
+      "timeMs": 70,
+      "frame": {
+        "quad": [
+          174.29095,
+          281.3356,
+          681.13885,
+          281.9825,
+          681.44617,
+          446.21326,
+          173.38635,
+          443.02814
+        ],
+        "monitorLeft": 151.94632,
+        "monitorRight": 700.0537,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -1.729619,
+        "width": 852,
+        "yawDegrees": -3.5849333,
+        "depthOffset": -11.800152,
+        "height": 480,
+        "monitorTop": 258.24002
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-005",
+      "focus": 0.11212384,
+      "key": "fold-sequence-005",
+      "timeMs": 87.5,
+      "frame": {
+        "quad": [
+          174.76826,
+          280.69135,
+          681.0794,
+          281.37885,
+          681.50195,
+          445.71533,
+          173.38127,
+          442.28522
+        ],
+        "monitorLeft": 151.22015,
+        "monitorRight": 700.77985,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -2.587561,
+        "width": 852,
+        "yawDegrees": -3.871157,
+        "depthOffset": -17.653374,
+        "height": 480,
+        "monitorTop": 257.7469
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-006",
+      "focus": 0.15625,
+      "key": "fold-sequence-006",
+      "timeMs": 105,
+      "frame": {
+        "quad": [
+          175.27277,
+          279.9814,
+          681.05585,
+          280.7109,
+          681.5783,
+          445.14026,
+          173.32782,
+          441.44647
+        ],
+        "monitorLeft": 150.37802,
+        "monitorRight": 701.622,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -3.5354755,
+        "width": 852,
+        "yawDegrees": -4.1811385,
+        "depthOffset": -24.120426,
+        "height": 480,
+        "monitorTop": 257.17502
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-007",
+      "focus": 0.20558448,
+      "key": "fold-sequence-007",
+      "timeMs": 122.5,
+      "frame": {
+        "quad": [
+          175.73909,
+          279.23447,
+          681.1028,
+          280.00327,
+          681.70056,
+          444.5163,
+          173.19179,
+          440.56146
+        ],
+        "monitorLeft": 149.43648,
+        "monitorRight": 702.56354,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -4.514157,
+        "width": 852,
+        "yawDegrees": -4.489853,
+        "depthOffset": -30.79738,
+        "height": 480,
+        "monitorTop": 256.53564
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-008",
+      "focus": 0.25925928,
+      "key": "fold-sequence-008",
+      "timeMs": 140,
+      "frame": {
+        "quad": [
+          176.08331,
+          278.4747,
+          681.26074,
+          279.27573,
+          681.9085,
+          443.8824,
+          172.93391,
+          439.69315
+        ],
+        "monitorLeft": 148.41211,
+        "monitorRight": 703.58795,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -5.4553027,
+        "width": 852,
+        "yawDegrees": -4.76803,
+        "depthOffset": -37.218254,
+        "height": 480,
+        "monitorTop": 255.84001
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-009",
+      "focus": 0.31640625,
+      "key": "fold-sequence-009",
+      "timeMs": 157.5,
+      "frame": {
+        "quad": [
+          176.2102,
+          277.7198,
+          681.5707,
+          278.54163,
+          682.2522,
+          443.28607,
+          172.51363,
+          438.914
+        ],
+        "monitorLeft": 147.32147,
+        "monitorRight": 704.6786,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -6.2866855,
+        "width": 852,
+        "yawDegrees": -4.9845676,
+        "depthOffset": -42.890278,
+        "height": 480,
+        "monitorTop": 255.09938
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-010",
+      "focus": 0.3761574,
+      "key": "fold-sequence-010",
+      "timeMs": 175,
+      "frame": {
+        "quad": [
+          176.02544,
+          276.9809,
+          682.0693,
+          277.80832,
+          682.7838,
+          442.778,
+          171.89496,
+          438.29785
+        ],
+        "monitorLeft": 146.18112,
+        "monitorRight": 705.8189,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -6.9394865,
+        "width": 852,
+        "yawDegrees": -5.109955,
+        "depthOffset": -47.34395,
+        "height": 480,
+        "monitorTop": 254.32501
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-011",
+      "focus": 0.4376447,
+      "key": "fold-sequence-011",
+      "timeMs": 192.5,
+      "frame": {
+        "quad": [
+          175.45091,
+          276.26425,
+          682.7833,
+          277.0794,
+          683.5464,
+          442.40417,
+          171.05156,
+          437.9095
+        ],
+        "monitorLeft": 145.00766,
+        "monitorRight": 706.9924,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -7.356554,
+        "width": 852,
+        "yawDegrees": -5.1201243,
+        "depthOffset": -50.18935,
+        "height": 480,
+        "monitorTop": 253.52814
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-012",
+      "focus": 0.5,
+      "key": "fold-sequence-012",
+      "timeMs": 210,
+      "frame": {
+        "quad": [
+          174.43977,
+          275.5743,
+          683.7251,
+          276.3579,
+          684.56165,
+          442.19705,
+          169.97119,
+          437.79395
+        ],
+        "monitorLeft": 143.81761,
+        "monitorRight": 708.18243,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -7.5,
+        "width": 852,
+        "yawDegrees": -5,
+        "depthOffset": -51.167995,
+        "height": 480,
+        "monitorTop": 252.72002
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-013",
+      "focus": 0.56235534,
+      "key": "fold-sequence-013",
+      "timeMs": 227.5,
+      "frame": {
+        "quad": [
+          172.9869,
+          274.9165,
+          684.88904,
+          275.64975,
+          685.8207,
+          442.1689,
+          168.65887,
+          437.96814
+        ],
+        "monitorLeft": 142.62758,
+        "monitorRight": 709.37244,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -7.3565536,
+        "width": 852,
+        "yawDegrees": -4.745992,
+        "depthOffset": -50.189346,
+        "height": 480,
+        "monitorTop": 251.91188
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-014",
+      "focus": 0.62384254,
+      "key": "fold-sequence-014",
+      "timeMs": 245,
+      "frame": {
+        "quad": [
+          171.13394,
+          274.29883,
+          686.25116,
+          274.96497,
+          687.28296,
+          442.30948,
+          167.13858,
+          438.41754
+        ],
+        "monitorLeft": 141.4541,
+        "monitorRight": 710.5459,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -6.939487,
+        "width": 852,
+        "yawDegrees": -4.3668995,
+        "depthOffset": -47.343952,
+        "height": 480,
+        "monitorTop": 251.115
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-015",
+      "focus": 0.68359375,
+      "key": "fold-sequence-015",
+      "timeMs": 262.5,
+      "frame": {
+        "quad": [
+          168.9642,
+          273.73157,
+          687.7699,
+          274.31744,
+          688.88025,
+          442.58817,
+          165.45212,
+          439.09872
+        ],
+        "monitorLeft": 140.31377,
+        "monitorRight": 711.6863,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -6.2866855,
+        "width": 852,
+        "yawDegrees": -3.8830051,
+        "depthOffset": -42.890278,
+        "height": 480,
+        "monitorTop": 250.34064
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-016",
+      "focus": 0.7407408,
+      "key": "fold-sequence-016",
+      "timeMs": 280,
+      "frame": {
+        "quad": [
+          166.59201,
+          273.22507,
+          689.3893,
+          273.72202,
+          690.5289,
+          442.96136,
+          163.65689,
+          439.94705
+        ],
+        "monitorLeft": 139.22313,
+        "monitorRight": 712.7769,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -5.455302,
+        "width": 852,
+        "yawDegrees": -3.323585,
+        "depthOffset": -37.218246,
+        "height": 480,
+        "monitorTop": 249.6
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-017",
+      "focus": 0.7944155,
+      "key": "fold-sequence-017",
+      "timeMs": 297.5,
+      "frame": {
+        "quad": [
+          164.1471,
+          272.78726,
+          691.04315,
+          273.1916,
+          692.14307,
+          443.38098,
+          161.82184,
+          440.88736
+        ],
+        "monitorLeft": 138.19876,
+        "monitorRight": 713.8013,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -4.514158,
+        "width": 852,
+        "yawDegrees": -2.7233605,
+        "depthOffset": -30.797388,
+        "height": 480,
+        "monitorTop": 248.90439
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-018",
+      "focus": 0.84375,
+      "key": "fold-sequence-018",
+      "timeMs": 315,
+      "frame": {
+        "quad": [
+          161.75912,
+          272.42166,
+          692.66125,
+          272.7346,
+          693.647,
+          443.80273,
+          160.02206,
+          441.84464
+        ],
+        "monitorLeft": 137.25722,
+        "monitorRight": 714.7428,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -3.5354755,
+        "width": 852,
+        "yawDegrees": -2.1186385,
+        "depthOffset": -24.120426,
+        "height": 480,
+        "monitorTop": 248.26501
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-019",
+      "focus": 0.88787615,
+      "key": "fold-sequence-019",
+      "timeMs": 332.5,
+      "frame": {
+        "quad": [
+          159.54465,
+          272.12683,
+          694.17395,
+          272.35403,
+          694.9823,
+          444.1919,
+          158.33331,
+          442.7526
+        ],
+        "monitorLeft": 136.41507,
+        "monitorRight": 715.58496,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -2.5875611,
+        "width": 852,
+        "yawDegrees": -1.5439,
+        "depthOffset": -17.653376,
+        "height": 480,
+        "monitorTop": 247.69313
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-020",
+      "focus": 0.9259259,
+      "key": "fold-sequence-020",
+      "timeMs": 350,
+      "frame": {
+        "quad": [
+          157.60065,
+          271.89758,
+          695.51733,
+          272.0487,
+          696.10986,
+          444.52524,
+          156.8276,
+          443.55835
+        ],
+        "monitorLeft": 135.6889,
+        "monitorRight": 716.31116,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -1.7296194,
+        "width": 852,
+        "yawDegrees": -1.0293779,
+        "depthOffset": -11.800154,
+        "height": 480,
+        "monitorTop": 247.20001
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-021",
+      "focus": 0.95703125,
+      "key": "fold-sequence-021",
+      "timeMs": 367.5,
+      "frame": {
+        "quad": [
+          156.00247,
+          271.727,
+          696.63525,
+          271.81497,
+          697.00653,
+          444.79004,
+          155.56949,
+          444.22302
+        ],
+        "monitorLeft": 135.09526,
+        "monitorRight": 716.9048,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -1.0093553,
+        "width": 852,
+        "yawDegrees": -0.5999387,
+        "depthOffset": -6.8862247,
+        "height": 480,
+        "monitorTop": 246.79689
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-022",
+      "focus": 0.9803241,
+      "key": "fold-sequence-022",
+      "timeMs": 385,
+      "frame": {
+        "quad": [
+          154.80728,
+          271.6087,
+          697.48035,
+          271.64902,
+          697.65967,
+          444.98117,
+          154.61493,
+          444.71985
+        ],
+        "monitorLeft": 134.65073,
+        "monitorRight": 717.3493,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -0.46330756,
+        "width": 852,
+        "yawDegrees": -0.27523792,
+        "depthOffset": -3.1608691,
+        "height": 480,
+        "monitorTop": 246.49501
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-023",
+      "focus": 0.99493635,
+      "key": "fold-sequence-023",
+      "timeMs": 402.5,
+      "frame": {
+        "quad": [
+          154.06042,
+          271.53836,
+          698.01276,
+          271.54874,
+          698.0604,
+          445.09717,
+          154.01193,
+          445.02972
+        ],
+        "monitorLeft": 134.37186,
+        "monitorRight": 717.6282,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -0.11930448,
+        "width": 852,
+        "yawDegrees": -0.070866376,
+        "depthOffset": -0.8139428,
+        "height": 480,
+        "monitorTop": 246.30563
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-024",
+      "focus": 1,
+      "key": "fold-sequence-024",
+      "timeMs": 420,
+      "frame": {
+        "quad": [
+          153.80243,
+          271.51465,
+          698.1976,
+          271.51465,
+          698.1976,
+          445.1366,
+          153.80243,
+          445.1366
+        ],
+        "monitorLeft": 134.2752,
+        "monitorRight": 717.7248,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": 0,
+        "width": 852,
+        "yawDegrees": -0,
+        "depthOffset": 0,
+        "height": 480,
+        "monitorTop": 246.24
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-025",
+      "focus": 0.99493635,
+      "key": "fold-sequence-025",
+      "timeMs": 437.5,
+      "frame": {
+        "quad": [
+          154.06042,
+          271.53836,
+          698.01276,
+          271.54874,
+          698.0604,
+          445.09717,
+          154.01193,
+          445.02972
+        ],
+        "monitorLeft": 134.37186,
+        "monitorRight": 717.6282,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -0.11930448,
+        "width": 852,
+        "yawDegrees": -0.070866376,
+        "depthOffset": -0.8139428,
+        "height": 480,
+        "monitorTop": 246.30563
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-026",
+      "focus": 0.9803241,
+      "key": "fold-sequence-026",
+      "timeMs": 455,
+      "frame": {
+        "quad": [
+          154.80728,
+          271.6087,
+          697.48035,
+          271.64902,
+          697.65967,
+          444.98117,
+          154.61493,
+          444.71985
+        ],
+        "monitorLeft": 134.65073,
+        "monitorRight": 717.3493,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -0.46330756,
+        "width": 852,
+        "yawDegrees": -0.27523792,
+        "depthOffset": -3.1608691,
+        "height": 480,
+        "monitorTop": 246.49501
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-027",
+      "focus": 0.95703125,
+      "key": "fold-sequence-027",
+      "timeMs": 472.5,
+      "frame": {
+        "quad": [
+          156.00247,
+          271.727,
+          696.63525,
+          271.81497,
+          697.00653,
+          444.79004,
+          155.56949,
+          444.22302
+        ],
+        "monitorLeft": 135.09526,
+        "monitorRight": 716.9048,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -1.0093553,
+        "width": 852,
+        "yawDegrees": -0.5999387,
+        "depthOffset": -6.8862247,
+        "height": 480,
+        "monitorTop": 246.79689
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-028",
+      "focus": 0.9259259,
+      "key": "fold-sequence-028",
+      "timeMs": 490,
+      "frame": {
+        "quad": [
+          157.60065,
+          271.89758,
+          695.51733,
+          272.0487,
+          696.10986,
+          444.52524,
+          156.8276,
+          443.55835
+        ],
+        "monitorLeft": 135.6889,
+        "monitorRight": 716.31116,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -1.7296194,
+        "width": 852,
+        "yawDegrees": -1.0293779,
+        "depthOffset": -11.800154,
+        "height": 480,
+        "monitorTop": 247.20001
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-029",
+      "focus": 0.88787615,
+      "key": "fold-sequence-029",
+      "timeMs": 507.5,
+      "frame": {
+        "quad": [
+          159.54465,
+          272.12683,
+          694.17395,
+          272.35403,
+          694.9823,
+          444.1919,
+          158.33331,
+          442.7526
+        ],
+        "monitorLeft": 136.41507,
+        "monitorRight": 715.58496,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -2.5875611,
+        "width": 852,
+        "yawDegrees": -1.5439,
+        "depthOffset": -17.653376,
+        "height": 480,
+        "monitorTop": 247.69313
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-030",
+      "focus": 0.84375,
+      "key": "fold-sequence-030",
+      "timeMs": 525,
+      "frame": {
+        "quad": [
+          161.75912,
+          272.42166,
+          692.66125,
+          272.7346,
+          693.647,
+          443.80273,
+          160.02206,
+          441.84464
+        ],
+        "monitorLeft": 137.25722,
+        "monitorRight": 714.7428,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -3.5354755,
+        "width": 852,
+        "yawDegrees": -2.1186385,
+        "depthOffset": -24.120426,
+        "height": 480,
+        "monitorTop": 248.26501
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-031",
+      "focus": 0.79441553,
+      "key": "fold-sequence-031",
+      "timeMs": 542.5,
+      "frame": {
+        "quad": [
+          164.1471,
+          272.78726,
+          691.04315,
+          273.1916,
+          692.14307,
+          443.38098,
+          161.82184,
+          440.88736
+        ],
+        "monitorLeft": 138.19876,
+        "monitorRight": 713.8013,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -4.514157,
+        "width": 852,
+        "yawDegrees": -2.7233598,
+        "depthOffset": -30.79738,
+        "height": 480,
+        "monitorTop": 248.90439
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-032",
+      "focus": 0.7407407,
+      "key": "fold-sequence-032",
+      "timeMs": 560,
+      "frame": {
+        "quad": [
+          166.59204,
+          273.22507,
+          689.3893,
+          273.72202,
+          690.5289,
+          442.96136,
+          163.65689,
+          439.94705
+        ],
+        "monitorLeft": 139.22313,
+        "monitorRight": 712.7769,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -5.4553027,
+        "width": 852,
+        "yawDegrees": -3.323586,
+        "depthOffset": -37.218254,
+        "height": 480,
+        "monitorTop": 249.6
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-033",
+      "focus": 0.68359375,
+      "key": "fold-sequence-033",
+      "timeMs": 577.5,
+      "frame": {
+        "quad": [
+          168.9642,
+          273.73157,
+          687.7699,
+          274.31744,
+          688.88025,
+          442.58817,
+          165.45212,
+          439.09872
+        ],
+        "monitorLeft": 140.31377,
+        "monitorRight": 711.6863,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -6.2866855,
+        "width": 852,
+        "yawDegrees": -3.8830051,
+        "depthOffset": -42.890278,
+        "height": 480,
+        "monitorTop": 250.34064
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-034",
+      "focus": 0.6238426,
+      "key": "fold-sequence-034",
+      "timeMs": 595,
+      "frame": {
+        "quad": [
+          171.13394,
+          274.29883,
+          686.25116,
+          274.96497,
+          687.28296,
+          442.30948,
+          167.13858,
+          438.41754
+        ],
+        "monitorLeft": 141.4541,
+        "monitorRight": 710.5459,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -6.9394865,
+        "width": 852,
+        "yawDegrees": -4.3668995,
+        "depthOffset": -47.34395,
+        "height": 480,
+        "monitorTop": 251.115
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-035",
+      "focus": 0.5623553,
+      "key": "fold-sequence-035",
+      "timeMs": 612.5,
+      "frame": {
+        "quad": [
+          172.9869,
+          274.9165,
+          684.88904,
+          275.64975,
+          685.8207,
+          442.1689,
+          168.65887,
+          437.96814
+        ],
+        "monitorLeft": 142.62758,
+        "monitorRight": 709.37244,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -7.356554,
+        "width": 852,
+        "yawDegrees": -4.7459927,
+        "depthOffset": -50.18935,
+        "height": 480,
+        "monitorTop": 251.91188
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-036",
+      "focus": 0.5,
+      "key": "fold-sequence-036",
+      "timeMs": 630,
+      "frame": {
+        "quad": [
+          174.43977,
+          275.5743,
+          683.7251,
+          276.3579,
+          684.56165,
+          442.19705,
+          169.97119,
+          437.79395
+        ],
+        "monitorLeft": 143.81761,
+        "monitorRight": 708.18243,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -7.5,
+        "width": 852,
+        "yawDegrees": -5,
+        "depthOffset": -51.167995,
+        "height": 480,
+        "monitorTop": 252.72002
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-037",
+      "focus": 0.43764466,
+      "key": "fold-sequence-037",
+      "timeMs": 647.5,
+      "frame": {
+        "quad": [
+          175.45091,
+          276.26425,
+          682.7833,
+          277.0794,
+          683.5464,
+          442.40417,
+          171.05156,
+          437.9095
+        ],
+        "monitorLeft": 145.00766,
+        "monitorRight": 706.9924,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -7.3565536,
+        "width": 852,
+        "yawDegrees": -5.1201243,
+        "depthOffset": -50.189346,
+        "height": 480,
+        "monitorTop": 253.52814
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-038",
+      "focus": 0.37615743,
+      "key": "fold-sequence-038",
+      "timeMs": 665,
+      "frame": {
+        "quad": [
+          176.02544,
+          276.9809,
+          682.0693,
+          277.80832,
+          682.7838,
+          442.778,
+          171.89496,
+          438.29785
+        ],
+        "monitorLeft": 146.18112,
+        "monitorRight": 705.8189,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -6.939487,
+        "width": 852,
+        "yawDegrees": -5.1099553,
+        "depthOffset": -47.343952,
+        "height": 480,
+        "monitorTop": 254.32501
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-039",
+      "focus": 0.31640625,
+      "key": "fold-sequence-039",
+      "timeMs": 682.5,
+      "frame": {
+        "quad": [
+          176.2102,
+          277.7198,
+          681.5707,
+          278.54163,
+          682.2522,
+          443.28607,
+          172.51363,
+          438.914
+        ],
+        "monitorLeft": 147.32147,
+        "monitorRight": 704.6786,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -6.2866855,
+        "width": 852,
+        "yawDegrees": -4.9845676,
+        "depthOffset": -42.890278,
+        "height": 480,
+        "monitorTop": 255.09938
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-040",
+      "focus": 0.25925922,
+      "key": "fold-sequence-040",
+      "timeMs": 700,
+      "frame": {
+        "quad": [
+          176.08331,
+          278.4747,
+          681.26074,
+          279.27573,
+          681.9085,
+          443.8824,
+          172.93391,
+          439.69315
+        ],
+        "monitorLeft": 148.41211,
+        "monitorRight": 703.58795,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -5.455302,
+        "width": 852,
+        "yawDegrees": -4.7680297,
+        "depthOffset": -37.218246,
+        "height": 480,
+        "monitorTop": 255.84001
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-041",
+      "focus": 0.20558451,
+      "key": "fold-sequence-041",
+      "timeMs": 717.5,
+      "frame": {
+        "quad": [
+          175.73909,
+          279.23447,
+          681.1028,
+          280.00327,
+          681.70056,
+          444.5163,
+          173.19179,
+          440.56146
+        ],
+        "monitorLeft": 149.43648,
+        "monitorRight": 702.56354,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -4.5141573,
+        "width": 852,
+        "yawDegrees": -4.489853,
+        "depthOffset": -30.797384,
+        "height": 480,
+        "monitorTop": 256.53564
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-042",
+      "focus": 0.15625,
+      "key": "fold-sequence-042",
+      "timeMs": 735,
+      "frame": {
+        "quad": [
+          175.27277,
+          279.9814,
+          681.05585,
+          280.7109,
+          681.5783,
+          445.14026,
+          173.32782,
+          441.44647
+        ],
+        "monitorLeft": 150.37802,
+        "monitorRight": 701.622,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -3.5354755,
+        "width": 852,
+        "yawDegrees": -4.1811385,
+        "depthOffset": -24.120426,
+        "height": 480,
+        "monitorTop": 257.17502
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-043",
+      "focus": 0.112123825,
+      "key": "fold-sequence-043",
+      "timeMs": 752.5,
+      "frame": {
+        "quad": [
+          174.76826,
+          280.69135,
+          681.0794,
+          281.37885,
+          681.50195,
+          445.71533,
+          173.38127,
+          442.28522
+        ],
+        "monitorLeft": 151.22015,
+        "monitorRight": 700.77985,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -2.5875607,
+        "width": 852,
+        "yawDegrees": -3.8711567,
+        "depthOffset": -17.653372,
+        "height": 480,
+        "monitorTop": 257.7469
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-044",
+      "focus": 0.07407409,
+      "key": "fold-sequence-044",
+      "timeMs": 770,
+      "frame": {
+        "quad": [
+          174.29095,
+          281.3356,
+          681.13885,
+          281.9825,
+          681.44617,
+          446.21326,
+          173.38635,
+          443.02814
+        ],
+        "monitorLeft": 151.94632,
+        "monitorRight": 700.0537,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -1.7296194,
+        "width": 852,
+        "yawDegrees": -3.5849333,
+        "depthOffset": -11.800154,
+        "height": 480,
+        "monitorTop": 258.24002
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-045",
+      "focus": 0.04296875,
+      "key": "fold-sequence-045",
+      "timeMs": 787.5,
+      "frame": {
+        "quad": [
+          173.88603,
+          281.8837,
+          681.20734,
+          282.49493,
+          681.399,
+          446.6158,
+          173.36931,
+          443.63977
+        ],
+        "monitorLeft": 152.53996,
+        "monitorRight": 699.4601,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -1.0093553,
+        "width": 852,
+        "yawDegrees": -3.3421261,
+        "depthOffset": -6.8862247,
+        "height": 480,
+        "monitorTop": 258.64313
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-046",
+      "focus": 0.019675916,
+      "key": "fold-sequence-046",
+      "timeMs": 805,
+      "frame": {
+        "quad": [
+          173.58087,
+          282.3061,
+          681.2667,
+          282.88947,
+          681.35895,
+          446.91205,
+          173.34761,
+          444.09595
+        ],
+        "monitorLeft": 152.98451,
+        "monitorRight": 699.0155,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -0.46330768,
+        "width": 852,
+        "yawDegrees": -3.1571827,
+        "depthOffset": -3.16087,
+        "height": 480,
+        "monitorTop": 258.945
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-047",
+      "focus": 0.0050636623,
+      "key": "fold-sequence-047",
+      "timeMs": 822.5,
+      "frame": {
+        "quad": [
+          173.39076,
+          282.576,
+          681.3063,
+          283.14142,
+          681.33075,
+          447.0948,
+          173.33133,
+          444.38
+        ],
+        "monitorLeft": 153.26338,
+        "monitorRight": 698.73663,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": -0.1193047,
+        "width": 852,
+        "yawDegrees": -3.0404844,
+        "depthOffset": -0.8139443,
+        "height": 480,
+        "monitorTop": 259.1344
+      }
+    },
+    {
+      "layout": "fold",
+      "phase": "sequence-048",
+      "focus": 0,
+      "key": "fold-sequence-048",
+      "timeMs": 840,
+      "frame": {
+        "quad": [
+          173.32535,
+          282.67032,
+          681.3203,
+          283.22952,
+          681.3203,
+          447.1575,
+          173.32535,
+          444.47787
+        ],
+        "monitorLeft": 153.36002,
+        "monitorRight": 698.64,
+        "distance": 2044.8,
+        "monitorBottom": 456,
+        "pitchDegrees": 0,
+        "width": 852,
+        "yawDegrees": -3,
+        "depthOffset": 0,
+        "height": 480,
+        "monitorTop": 259.2
+      }
+    },
+    {
+      "layout": "phone",
+      "phase": "idle",
+      "focus": 0,
+      "key": "phone-idle",
+      "timeMs": 0,
+      "frame": {
+        "quad": [
+          13.639587,
+          339.30975,
+          375.0407,
+          340.01758,
+          375.0407,
+          537.27026,
+          13.639587,
+          533.87836
+        ],
+        "monitorLeft": 0,
+        "monitorRight": 387,
+        "distance": 1382.4,
+        "monitorBottom": 547.2,
+        "pitchDegrees": 0,
+        "width": 387,
+        "yawDegrees": -3,
+        "depthOffset": 0,
+        "height": 576,
+        "monitorTop": 311.04
+      }
+    },
+    {
+      "layout": "phone",
+      "phase": "transition",
+      "focus": 0.5,
+      "key": "phone-transition",
+      "timeMs": 210,
+      "frame": {
+        "quad": [
+          24.558273,
+          330.49155,
+          366.87238,
+          331.42206,
+          367.8448,
+          527.72943,
+          19.298843,
+          522.499
+        ],
+        "monitorLeft": 0,
+        "monitorRight": 387,
+        "distance": 1382.4,
+        "monitorBottom": 547.2,
+        "pitchDegrees": -7.5,
+        "width": 387,
+        "yawDegrees": -5,
+        "depthOffset": -61.4016,
+        "height": 576,
+        "monitorTop": 304.04
+      }
+    },
+    {
+      "layout": "phone",
+      "phase": "working",
+      "focus": 1,
+      "key": "phone-working",
+      "timeMs": 420,
+      "frame": {
+        "quad": [
+          12.496857,
+          327.2867,
+          374.5031,
+          327.2867,
+          374.5031,
+          534.8708,
+          12.496857,
+          534.8708
+        ],
+        "monitorLeft": 0,
+        "monitorRight": 387,
+        "distance": 1382.4,
+        "monitorBottom": 547.2,
+        "pitchDegrees": 0,
+        "width": 387,
+        "yawDegrees": -0,
+        "depthOffset": 0,
+        "height": 576,
+        "monitorTop": 297.04
+      }
+    }
+  ],
+  "inputClass": "SYNTHETIC_FOCUS_REPLAY",
+  "videoFramesPerSecond": 57.142857142857146
+}

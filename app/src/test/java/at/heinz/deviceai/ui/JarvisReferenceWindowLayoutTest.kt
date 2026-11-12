@@ -319,12 +319,14 @@ class JarvisReferenceWindowLayoutTest {
         }
     }
 
-    @Test fun cinemaPhoneDockReachesEveryRailDestinationWithoutASecondBar() {
+    @Test fun cinemaPhoneDockAndMorePreserveEveryDestinationWithoutASecondBar() {
         val phone = JarvisShellLayout.create(412f, 915f)
         val dock = requireNotNull(phone[Slot.BOTTOM_NAV])
-        assertEquals("The dock is the rail replacement, not the old five-item subset",
-            JarvisTiles.railNav.size, JarvisTiles.bottomNav.size)
-        assertEquals(JarvisTiles.railNav.map { it.target },
+        val expected = listOf("home", "chat", "memory", "research", "tasks", "web", "learning", "device")
+        assertEquals("The eight owner buttons have stable native routes", expected, JarvisTiles.bottomNav.map { it.target })
+        val reachable = expected + at.heinz.deviceai.ContinuumWorkAreaNavigationSpec.moreEntries.map { it.target }
+        assertTrue("Former rail actions remain available", reachable.containsAll(JarvisTiles.railNav.map { it.target }))
+        assertEquals(expected,
             JarvisTiles.bottomNavItemBoxes(dock).map { box ->
                 JarvisShellContent.hitTarget(phone, JarvisTiles.reference, box.centerX, box.centerY)
             })

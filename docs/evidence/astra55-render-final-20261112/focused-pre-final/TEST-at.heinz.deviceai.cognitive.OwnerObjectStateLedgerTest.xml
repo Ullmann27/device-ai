@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:29" hostname="0f4ac18d136f" time="0.061">
+  <properties/>
+  <testcase name="questionsConditionalsAndHedgesNeverAssertAValue" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.003"/>
+  <testcase name="germanNumberWordsCoverSpokenCounts" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.0"/>
+  <testcase name="nothingIsGuessedForUnknownObjectsAmbiguityOrMixedTasks" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.003"/>
+  <testcase name="interruptionsNeitherChangeNorEvictTheState" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.006"/>
+  <testcase name="aCorrectionThatNegatesOneObjectsValueBindsToThatObject" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.001"/>
+  <testcase name="anUnreadableOwnerTurnDisablesTheDeterministicAnswer" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.001"/>
+  <testcase name="referencesToThePreviousOrTheOtherValueResolveDeterministically" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.002"/>
+  <testcase name="topicResetAndSessionChangeDropTheEphemeralState" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.003"/>
+  <testcase name="temporalOrderOfEarlierStatementsIsAnsweredFromTheTimeline" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.003"/>
+  <testcase name="negationsWithSonderndOrAPlainReplacementSelectTheNewValue" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.007"/>
+  <testcase name="issue758StepByStepAnswersMatchTheOwnersExpectation" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.008"/>
+  <testcase name="modelPromptCarriesTheFinalStateForACorrectionTurn" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.005"/>
+  <testcase name="issue758FiveStepFlowSurvivesTheFourTurnWindow" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.01"/>
+  <testcase name="severalCorrectionsInOneSpokenSentenceKeepOnlyTheLastValidValue" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.002"/>
+  <testcase name="spokenNumbersWithColouredCountedThingsAreTracked" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.003"/>
+  <testcase name="unchangedAttributesSurviveACorrectionOfAnotherAttribute" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

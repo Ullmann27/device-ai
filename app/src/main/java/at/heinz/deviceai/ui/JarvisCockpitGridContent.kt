@@ -94,8 +94,14 @@ object JarvisCockpitGridContent {
             Slot.AVATAR -> Unit // the existing live View owns both render objects; never draw a stand-in behind it
             Slot.TOP_BAR -> header(p, b, grid, shell, s, now)
             Slot.CONTINUUM_HEADER -> brainHeader(p, b)
-            Slot.CAMERA_STATUS -> cameraStatus(p, b, s)
-            Slot.COCKPIT_SECONDARY -> modulesPanel(p, b, s)
+            Slot.CAMERA_STATUS -> if (shell?.workstation == true)
+                CockpitWorkstationChrome.cameraBadge(p, b, when {
+                    s.presentation.tracking -> "Gesicht erkannt"
+                    s.presentation.cameraSessionActive -> "Kamera aktiv"
+                    else -> "Kamera aus"
+                }, s.presentation.cameraSessionActive) else cameraStatus(p, b, s)
+            Slot.COCKPIT_SECONDARY -> if (shell?.workstation == true)
+                CockpitWorkstationChrome.systemBadge(p, b, modules(s).map { it.ok }) else modulesPanel(p, b, s)
             Slot.ROW_AGENTS -> JarvisCockpitPanels.drawAgents(p, b, s)
             Slot.ROW_TASKS -> JarvisCockpitPanels.drawTaskFlow(p, b, s)
             Slot.ROW_MEMORY -> JarvisMemoryActivityPanel.draw(p, b.left, b.top, b.right, b.bottom,
@@ -112,9 +118,9 @@ object JarvisCockpitGridContent {
                 if (at.heinz.deviceai.cockpit.JarvisUserCardSlot.renderer == null)
                     JarvisOwnerCardContent.draw(p, b, at.heinz.deviceai.cockpit.JarvisUserCardSlot.latest)
             }
-            Slot.WORK_DOCUMENT -> JarvisCockpitPanels.drawDocumentPreview(p, b, s)
+            Slot.WORK_DOCUMENT -> JarvisCockpitPanels.drawDocumentPreview(p, b, s, shell?.workstation == true)
             Slot.WORK_PROCESS -> JarvisCockpitPanels.drawWorkProcess(p, b, s)
-            Slot.WORK_DRAFT -> JarvisCockpitPanels.drawDraftPreview(p, b, s)
+            Slot.WORK_DRAFT -> JarvisCockpitPanels.drawDraftPreview(p, b, s, shell?.workstation == true)
             else -> return false
         }
         return true
@@ -122,7 +128,11 @@ object JarvisCockpitGridContent {
 
     private fun header(p: ContinuumPainter, b: Box, g: JarvisCockpitGrid.Grid?, shell: Shell?,
                        s: ContinuumDashboardState, now: Long) {
-        val brand = g?.areas?.get(Area.BRAND) ?: Box(b.left + 9f, b.top + 4f, b.right - 104f, b.bottom - 4f)
+        if (shell?.workstation == true) {
+            CockpitWorkstationChrome.header(p, b, shell.headerActionBoxes(), s.pendingNotifications, shell.profile.fontScale)
+            return
+        }
+        val brand = g?.areas?.get(Area.BRAND) ?: Box(b.left + 9f, b.top + 4f, b.right - if (shell?.workstation == true) 152f else 104f, b.bottom - 4f)
         val brandStyle = Type.brand.copy(size = if (g != null) 24f else 18f)
         val cap = p.capHeight(brandStyle)
         val cy = brand.centerY
@@ -291,6 +301,10 @@ object JarvisCockpitGridContent {
     fun liveTaskText(s: ContinuumDashboardState): String = JarvisCockpitPanels.activeTaskText(s)
 
     private fun dialog(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, shell: Shell?, now: Long) {
+        if (shell?.workstation == true) {
+            CockpitWorkstationChrome.companionBadge(p, b, liveBadge(s), s.presentation.live || s.model.online)
+            return
+        }
         val title = Type.heading.copy(size = (b.width * .095f).coerceIn(16f, 22f))
         val detail = Type.caption.copy(size = 12f)
         val badge = liveBadge(s)
@@ -299,7 +313,7 @@ object JarvisCockpitGridContent {
         ContinuumIcons.draw(p, Icon.PULSE, b.left + 23f, b.top + 16f, 20f, Fill.Solid(Colors.cyan))
         val live = Type.caption.copy(size = 10f)
         p.drawText(fit(p, "JARVIS", title, room * .7f), x, b.top + 8f + p.capHeight(title), title, Fill.Solid(Colors.cyan))
-        p.drawText("Live", b.right - 14f, b.top + 8f + p.capHeight(live), live,
+        p.drawText("Status", b.right - 14f, b.top + 8f + p.capHeight(live), live,
             Fill.Solid(if (s.presentation.live || s.model.online) Colors.ok else Colors.textMuted), TextAlign.RIGHT)
         val waveTop = b.top + 8f + p.capHeight(title) + 6f
         val waveBottom = minOf(b.bottom - p.capHeight(detail) - 10f, waveTop + 18f)
@@ -332,6 +346,10 @@ object JarvisCockpitGridContent {
         val textBox = shell?.inputConversationBox() ?: Box(b.left + 12f, b.top, b.right - 12f, b.bottom)
         val controls = shell?.dialogControlBoxes().orEmpty()
         val taskRunning = JarvisCockpitPanels.isOwnerTaskRunning(s)
+        if (shell?.workstation == true && !taskRunning && !s.presentation.processing && !s.presentation.speaking) {
+            CockpitWorkstationChrome.idleInput(p, b, textBox, controls, s.presentation.listening)
+            return
+        }
         controls.forEachIndexed { i, box ->
             val stop = taskRunning && i != 0
             val active = i == 0 && s.presentation.listening
@@ -362,11 +380,7 @@ object JarvisCockpitGridContent {
         }
         val latest = s.cockpit.dialog.lastOrNull { !it.fromOwner }?.text
             ?.takeIf { it.isNotBlank() && (s.presentation.processing || s.presentation.speaking) }
-        val prompt = when {
-            room >= 235f -> "Was soll ich für dich erledigen?"
-            room >= 140f -> "Was möchtest du tun?"
-            else -> "Gespräch öffnen"
-        }
+        val prompt = "Was soll ich für dich erledigen?"
         val style = if (latest != null) Type.body else Type.body.copy(size = (b.width * .027f).coerceIn(15f, 23f))
         val lineHeight = p.capHeight(style) + 4f
         val count = ((b.height - 16f) / lineHeight).toInt().coerceIn(1, 2)

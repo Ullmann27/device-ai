@@ -1,0 +1,43 @@
+{
+  "evidenceClass": "HOST_ASSET_RENDER",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "stillsSamples": 16,
+  "sequenceSamples": 16,
+  "threads": 2,
+  "denoising": false,
+  "seed": 731,
+  "assets": {
+    "cockpit": "3223168a58e5fa51c48bb56ba36aabbf0cdb936025a01d96d4b14e5e0fa023aa",
+    "avatar": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+  },
+  "lighting": "Fixed host inspection studio; not Filament photometric equivalence",
+  "avatarPose": "Original GLB neutral rest pose; runtime-hidden tooth nodes excluded",
+  "frames": [
+    {
+      "key": "fold-idle",
+      "image": "fold-idle-stage.png",
+      "imageSha256": "baf285c5c916250b061534839fab10d83c3a2a5018b98efedcf0e13c2d6ddead",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00038074195862236593,
+      "projectedContentQuad": [
+        173.32535362243652,
+        282.6706552505493,
+        681.3202965259552,
+        283.2298278808594,
+        681.3202965259552,
+        447.15784192085266,
+        173.32535362243652,
+        444.4782507419586
+      ]
+    },
+    {
+      "key": "fold-avatar-neutral",
+      "image": "fold-avatar.png",
+      "imageSha256": "2edefd55d3f7394ccf9de57361cfa87d6e04e38ac71a0b89e3254c238a104c51"
+    }
+  ],
+  "Filament": "NOT_RUN",
+  "Fold7": "NOT_RUN",
+  "deviceFps": "NOT_MEASURED",
+  "deviceThermal": "NOT_MEASURED"
+}

@@ -100,11 +100,12 @@ class JarvisReferenceHitTargetsUiTest {
 
     @Test fun compactCinemaDockRoutesAndExposesRealState() = withHome { home, calls ->
         size(home, 412, 915)
-        val targets = listOf("chat", "memory", "logic", "research", "agents", "tasks", "web", "learning", "device", "system")
-        assertEquals(targets, JarvisTiles.reference.map { it.target })
+        val targets = JarvisHomeTestRoutes.dockTargets
+        assertEquals(JarvisHomeTestRoutes.features, JarvisTiles.reference.map { it.target })
         assertFalse("Compact Cinema uses a tool dock, not the retired tile grid",
             requireNotNull(home.jarvisShell.currentShell()).hasFeatureTiles)
-        assertEquals(10, JarvisHomeTestRoutes.controls(home).size)
+        assertEquals(JarvisHomeTestRoutes.expectedDirectTargets(home),
+            JarvisHomeTestRoutes.controls(home).map { it.tag.toString().substringAfter(':') })
         for (target in targets) {
             val button = control(home, "bottom:$target")
             assertTrue(button.isClickable && button.isFocusable && button.isEnabled)
@@ -122,14 +123,15 @@ class JarvisReferenceHitTargetsUiTest {
     }
 
     @Test fun wideCardsAndInputHeaderActionsHaveSeparateNativeControls() = withHome { home, calls ->
-        assertEquals(10, JarvisHomeTestRoutes.controls(home).size)
-        for (item in JarvisTiles.reference) {
-            val button = JarvisHomeTestRoutes.destination(home, item.target)
+        assertEquals(JarvisHomeTestRoutes.expectedDirectTargets(home),
+            JarvisHomeTestRoutes.controls(home).map { it.tag.toString().substringAfter(':') })
+        for (target in JarvisHomeTestRoutes.expectedDirectTargets(home)) {
+            val button = JarvisHomeTestRoutes.destination(home, target)
             assertTrue(button.width >= 48 && button.height >= 48)
             tapThroughViewport(home, button)
             assertTrue(button.isSelected)
         }
-        assertEquals(JarvisTiles.reference.map { it.target }, calls)
+        assertEquals(JarvisHomeTestRoutes.expectedDirectTargets(home), calls)
         calls.clear()
         val actions = linkedMapOf("dialog:voice-input" to "voice-input", "dialog:send" to "chat",
             "header:mode" to "avatar-appearance", "header:notifications" to "notifications",
@@ -194,8 +196,14 @@ class JarvisReferenceHitTargetsUiTest {
                 tapThroughViewport(home, badge)
                 assertEquals("Companion badge opens the real conversation", listOf("chat"), calls)
                 calls.clear()
-                tapThroughViewport(home, control(home, "camera:settings"))
-                assertEquals("Camera settings remain reachable after scrolling", listOf("camera-settings"), calls)
+                if (shell[JarvisShellLayout.Slot.CAMERA_STATUS] != null) {
+                    tapThroughViewport(home, control(home, "camera:settings"))
+                    assertEquals("Camera settings remain reachable after scrolling", listOf("camera-settings"), calls)
+                } else {
+                    tapThroughViewport(home, control(home, "header:more"))
+                    assertEquals(listOf("more"), calls)
+                    assertTrue(ContinuumWorkAreaNavigationSpec.moreEntries.any { it.target == "camera-settings" })
+                }
                 assertTrue("Old input shortcuts are absent", descendants(home).none {
                     it.tag == "jarvis-dialog:camera-settings" || it.tag == "jarvis-dialog:avatar-appearance"
                 })
@@ -250,7 +258,7 @@ class JarvisReferenceHitTargetsUiTest {
                 assertSame(home, live.parent)
                 assertSame(live, (home.avatarRenderer as JarvisHoloAvatar).hologram)
                 assertEquals("Every destination remains reachable after reflow",
-                    JarvisHomeTestRoutes.features.toSet(),
+                    JarvisHomeTestRoutes.expectedDirectTargets(home).toSet(),
                     identities.keys.map { it.substringAfter(':') }.toSet())
                 val shell = requireNotNull(home.jarvisShell.currentShell())
                 if (shell.requiresVerticalScroll) {
@@ -281,7 +289,8 @@ class JarvisReferenceHitTargetsUiTest {
         val renderer = home.avatarRenderer
         val originalSlot = home.avatarSlotRect
         val legacyViews = at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.values().mapNotNull { home.viewFor(it) }
-        assertEquals(10, JarvisHomeTestRoutes.controls(home).size)
+        assertEquals(JarvisHomeTestRoutes.expectedDirectTargets(home),
+            JarvisHomeTestRoutes.controls(home).map { it.tag.toString().substringAfter(':') })
         home.updateAvailableViewport(420f)
         assertEquals(420f, home.jarvisShell.viewportHeightDp, 0f)
         assertEquals(legacyViews, at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.values().mapNotNull { home.viewFor(it) })
@@ -291,7 +300,7 @@ class JarvisReferenceHitTargetsUiTest {
         assertSame(renderer, home.avatarRenderer)
         val after = JarvisHomeTestRoutes.controls(home)
         assertEquals("Destinations survive a height-only composition change",
-            JarvisHomeTestRoutes.features, after.map { it.tag.toString().substringAfter(':') })
+            JarvisHomeTestRoutes.expectedDirectTargets(home), after.map { it.tag.toString().substringAfter(':') })
         assertFalse("A completed layout must settle", home.isLayoutRequested)
         home.updateAvailableViewport(420f)
         assertFalse("The same viewport must not request another layout", home.isLayoutRequested)

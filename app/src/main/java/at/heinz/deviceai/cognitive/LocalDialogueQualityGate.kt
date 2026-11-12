@@ -25,7 +25,15 @@ object LocalDialogueQualityGate {
     /** Canary strings of internal prompt frames; the model reproducing one means template completion, not an answer. */
     internal val INTERNAL_FRAMES = listOf(
         "UNTRUSTED EVIDENCE DATA", "<<<UNTRUSTED>>>", "CLAIM GRAPH:",
-        "EXTERNE RECHERCHEDATEN (", "ENDE EXTERNE RECHERCHEDATEN", "GESPRÄCHSDATEN —", "ENDE GESPRÄCHSDATEN"
+        "EXTERNE RECHERCHEDATEN (", "ENDE EXTERNE RECHERCHEDATEN", "GESPRÄCHSDATEN —", "ENDE GESPRÄCHSDATEN",
+        OwnerDocumentDialogue.BLOCK_START, OwnerDocumentDialogue.BLOCK_END
+    )
+    /** Field P0 Code54: „Ich habe keine PDF vor mir“ although the read document was in the prompt. */
+    private val documentDenial = listOf(
+        Regex("""\b(?:habe|sehe|kenne|finde) (?:\S+ ){0,2}(?:keine|kein|keinen) (?:\S+ )?(?:pdf|dokument|datei)\b"""),
+        Regex("""\b(?:liegt|liegen) (?:mir |uns )?(?:keine|kein|keinen) (?:\S+ )?(?:pdf|dokument|datei)\b"""),
+        Regex("""\b(?:kann|könnte) (?:\S+ ){0,2}(?:pdf|dokument|datei) nicht (?:sehen|öffnen|lesen|einsehen)\b"""),
+        Regex("""\bkeinen zugriff auf (?:\S+ ){0,2}(?:pdf|dokument|datei)\b""")
     )
 
     fun evaluate(
@@ -33,7 +41,8 @@ object LocalDialogueQualityGate {
         response: String,
         previousRequest: String? = null,
         previousResponse: String? = null,
-        priorOwnerContextSupplied: Boolean = false
+        priorOwnerContextSupplied: Boolean = false,
+        documentContextSupplied: Boolean = false
     ): Evaluation {
         val candidate = response.trim()
         if (candidate.isEmpty()) {
@@ -41,6 +50,9 @@ object LocalDialogueQualityGate {
         }
         if (candidate.length > 20_000) {
             return Evaluation(false, 0.1, "Antwort übermäßig lang. Kürze sie und beantworte die Frage direkt.")
+        }
+        OwnerLanguageStyle.outputFeedback(request, candidate)?.let {
+            return Evaluation(false, 0.1, it)
         }
         // A leaked internal prompt frame (research template, evidence block, dialogue frame) is not
         // a chat answer. Only flag a frame the owner did not explicitly ask about.
@@ -65,6 +77,12 @@ object LocalDialogueQualityGate {
             return Evaluation(false, 0.1,
                 "Antwort behauptet fehlenden Gesprächskontext, obwohl die früheren Nachrichten des Nutzers " +
                     "im Auftrag stehen. Nutze diese Angaben und beantworte die neue Nachricht direkt.")
+        }
+
+        if (documentContextSupplied && documentDenial.any { it.containsMatchIn(current) }) {
+            return Evaluation(false, 0.1,
+                "Antwort behauptet, die PDF liege nicht vor, obwohl ihre gelesenen Daten im Auftrag stehen. " +
+                    "Beantworte die Frage aus den DOKUMENTDATEN oder nenne, welche Seite nicht gelesen wurde.")
         }
 
         // Explicit uncertainty is valid. Never pressure a model to invent facts.

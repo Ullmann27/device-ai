@@ -1,0 +1,258 @@
+{
+  "baseline_commit": "711f23b33a8fc602a3a0e4baa37aa61e42e6fc64",
+  "candidate_head": "2de5e46c2064a087bc34e4fde6eed7fe14336f75",
+  "candidate_status": "",
+  "candidate_source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "3be9f4e497624e2c40213cfae7012bbda63fbebf03c40f01c45dfd6d30f68ad6",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitPresentationSequence.kt": "20fbee7f3a14b86a15aa9d7b0cac373cade23259c223d287c5dd49d5d7f11e31",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "77f37b8fd75398a75c46cdf0a97d21b29d81457c66ab031b8e8ba75377c20a16",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "1dd295223166ed0a1425bb7a928d4ab4124e122c8067dbf9355df4aba826d6f2",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "d175e336875e09b0260bbcb99dfbecec46e4ebfa8462b8c43056af2822f6e2d1",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+    "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveMonitorSubmission.kt": "b1dd139af2e44f6c79b817bd7b4714e934210b4f25a31b501463a5bdf8b8793e"
+  },
+  "boundary": "Host execution of full newly compiled CockpitLiveTexture; Android/Filament fixtures, no native GPU",
+  "metric": "Calls at Filament interface; no native latency or energy claim",
+  "max_heap_mib": 512,
+  "device": "NOT_RUN",
+  "gradle": "NOT_RUN",
+  "suite": "preregistered-14",
+  "dependencies": {
+    "kotlin-compiler-embeddable-2.0.20.jar": "a3604bf350c8bcce27102158bbb383fa4d1814bc486aaed59f278eada51ff6ad",
+    "kotlin-stdlib-2.0.20.jar": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006",
+    "kotlin-reflect-2.0.20.jar": "18f451e6b4b7bd1d1f9d60849c3cbf160e115302f97a2008c190d505c439c670",
+    "kotlin-script-runtime-2.0.20.jar": "fe97002a6798f7207564648919d6eeccfb338b95dc04b48886d856655bc64a4e",
+    "trove4j-1.0.20200330.jar": "c5fd725bffab51846bf3c77db1383c60aaaebfe1b7fe2f00d23fe1b7df0a439d",
+    "annotations-24.0.1.jar": "61666dbce7e42e6c85b43c04fcfb8293a21dcb55b3c80e869270ce42c01a6b35",
+    "kotlinx-coroutines-core-jvm-1.6.4.jar": "c24c8bb27bb320c4a93871501a7e5e0c61607638907b197aef675513d4c820be"
+  },
+  "harness_sha256": {
+    "DisplayUniformExperiment.kt": "e566803e6a7a29845ea0c1c5bba9f75727948625c01373f244e4a9b5f882f2aa",
+    "fixtures/AndroidColorSpace.kt": "b01a522949fdd5b026f8f848a2a545c7bbab85783c896badc73325659552cabe",
+    "fixtures/AndroidHardware.kt": "532347325cf53eaf1a455593d1fbdad63a0380df862bbe761c81de44c80b8c54",
+    "fixtures/AndroidOs.kt": "20cf7b8d07aee13219ca05aba2f28e36fb7979dd8c359ddf912a5bca1f60bb06",
+    "fixtures/AnimationType.kt": "dd3c37e8feb9692d3cfcbeba2b35b922620b8cf8fe5621d8eb2434e05ebbe074",
+    "fixtures/FilamentFixtures.kt": "5b5bb4aa6edbc9ce048c19dc6ad105a21766ae49843b7a99a7d780fa9e066eb7"
+  },
+  "runner_sha256": "b6a3e40e16d6960fae175a5b82b3323deeef52310920fb8f0375f49af18c78c0",
+  "arms": {
+    "baseline": {
+      "compile_exit": 0,
+      "source_sha256": {
+        "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "ceeca7e6f728920c82fc2e10450b3b96893af61015ab1ebca4d2974b1681f02f",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitPresentationSequence.kt": "20fbee7f3a14b86a15aa9d7b0cac373cade23259c223d287c5dd49d5d7f11e31",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "77f37b8fd75398a75c46cdf0a97d21b29d81457c66ab031b8e8ba75377c20a16",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "1dd295223166ed0a1425bb7a928d4ab4124e122c8067dbf9355df4aba826d6f2",
+        "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "d175e336875e09b0260bbcb99dfbecec46e4ebfa8462b8c43056af2822f6e2d1",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+        "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LiveMonitorSubmission.kt": "b1dd139af2e44f6c79b817bd7b4714e934210b4f25a31b501463a5bdf8b8793e"
+      },
+      "excerpts": {
+        "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": {
+          "symbol": "internal class AndroidLiveFrame(",
+          "excerpt_sha256": "613372de8eea57a69024e336905a88e5a80bc6ae68cd6d8acb4a9f1cd49663a5"
+        },
+        "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": {
+          "symbol": "internal data class LiveTargetBounds(",
+          "excerpt_sha256": "dc952ed005fa41dddbc3aaee1fb548c8702b16b14611d7581f28e196507aba56"
+        },
+        "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": {
+          "symbol": "data class CockpitWorkEvent(",
+          "excerpt_sha256": "0fbae0b89f2f9ae328f400dd52b203f4cbe8044cf0b995f2f28177adad0f25ee"
+        }
+      },
+      "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "run_exit": 0
+    },
+    "candidate": {
+      "compile_exit": 0,
+      "source_sha256": {
+        "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "3be9f4e497624e2c40213cfae7012bbda63fbebf03c40f01c45dfd6d30f68ad6",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitPresentationSequence.kt": "20fbee7f3a14b86a15aa9d7b0cac373cade23259c223d287c5dd49d5d7f11e31",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "77f37b8fd75398a75c46cdf0a97d21b29d81457c66ab031b8e8ba75377c20a16",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "1dd295223166ed0a1425bb7a928d4ab4124e122c8067dbf9355df4aba826d6f2",
+        "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "d175e336875e09b0260bbcb99dfbecec46e4ebfa8462b8c43056af2822f6e2d1",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+        "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LiveMonitorSubmission.kt": "b1dd139af2e44f6c79b817bd7b4714e934210b4f25a31b501463a5bdf8b8793e"
+      },
+      "excerpts": {
+        "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": {
+          "symbol": "internal class AndroidLiveFrame(",
+          "excerpt_sha256": "613372de8eea57a69024e336905a88e5a80bc6ae68cd6d8acb4a9f1cd49663a5"
+        },
+        "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": {
+          "symbol": "internal data class LiveTargetBounds(",
+          "excerpt_sha256": "dc952ed005fa41dddbc3aaee1fb548c8702b16b14611d7581f28e196507aba56"
+        },
+        "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": {
+          "symbol": "data class CockpitWorkEvent(",
+          "excerpt_sha256": "0fbae0b89f2f9ae328f400dd52b203f4cbe8044cf0b995f2f28177adad0f25ee"
+        }
+      },
+      "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "enabled": {
+      "run_exit": 0
+    },
+    "disabled": {
+      "run_exit": 0
+    }
+  },
+  "candidate_source_sha256_after": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "3be9f4e497624e2c40213cfae7012bbda63fbebf03c40f01c45dfd6d30f68ad6",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitPresentationSequence.kt": "20fbee7f3a14b86a15aa9d7b0cac373cade23259c223d287c5dd49d5d7f11e31",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "77f37b8fd75398a75c46cdf0a97d21b29d81457c66ab031b8e8ba75377c20a16",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "1dd295223166ed0a1425bb7a928d4ab4124e122c8067dbf9355df4aba826d6f2",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "d175e336875e09b0260bbcb99dfbecec46e4ebfa8462b8c43056af2822f6e2d1",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+    "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveMonitorSubmission.kt": "b1dd139af2e44f6c79b817bd7b4714e934210b4f25a31b501463a5bdf8b8793e"
+  },
+  "source_unchanged": true,
+  "comparisons": [
+    {
+      "case": "sixty_ticks_ten_frames",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 180,
+      "enabled_writes": 2,
+      "disabled_writes": 180,
+      "saving": 0.9888888888888889,
+      "primary_gate": true
+    },
+    {
+      "case": "sixty_ticks_one_frame",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 180,
+      "enabled_writes": 2,
+      "disabled_writes": 180,
+      "saving": 0.9888888888888889,
+      "primary_gate": true
+    },
+    {
+      "case": "no_source",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 48,
+      "enabled_writes": 0,
+      "disabled_writes": 48,
+      "saving": 1.0,
+      "primary_gate": null
+    },
+    {
+      "case": "session_switch_and_old_callback",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 19,
+      "enabled_writes": 8,
+      "disabled_writes": 19,
+      "saving": 0.5789473684210527,
+      "primary_gate": null
+    },
+    {
+      "case": "pause_stop_and_rebind",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 29,
+      "enabled_writes": 8,
+      "disabled_writes": 29,
+      "saving": 0.7241379310344828,
+      "primary_gate": null
+    },
+    {
+      "case": "resize_and_content_aspect",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 18,
+      "enabled_writes": 4,
+      "disabled_writes": 18,
+      "saving": 0.7777777777777778,
+      "primary_gate": null
+    },
+    {
+      "case": "viewport_pointer_and_frame_binding",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 24,
+      "enabled_writes": 6,
+      "disabled_writes": 24,
+      "saving": 0.75,
+      "primary_gate": null
+    },
+    {
+      "case": "stale_and_out_of_order",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 13,
+      "enabled_writes": 6,
+      "disabled_writes": 13,
+      "saving": 0.5384615384615384,
+      "primary_gate": null
+    },
+    {
+      "case": "latest_frame_only",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 3,
+      "enabled_writes": 2,
+      "disabled_writes": 3,
+      "saving": 0.33333333333333337,
+      "primary_gate": null
+    },
+    {
+      "case": "delayed_gpu_releases",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 12,
+      "enabled_writes": 2,
+      "disabled_writes": 12,
+      "saving": 0.8333333333333334,
+      "primary_gate": null
+    },
+    {
+      "case": "unsupported_color",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 10,
+      "enabled_writes": 3,
+      "disabled_writes": 10,
+      "saving": 0.7,
+      "primary_gate": null
+    },
+    {
+      "case": "import_failure_retry",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 10,
+      "enabled_writes": 3,
+      "disabled_writes": 10,
+      "saving": 0.7,
+      "primary_gate": null
+    },
+    {
+      "case": "material_failure_retry",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 7,
+      "enabled_writes": 3,
+      "disabled_writes": 7,
+      "saving": 0.5714285714285714,
+      "primary_gate": null
+    },
+    {
+      "case": "feed_detach_and_stream_reset",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 20,
+      "enabled_writes": 12,
+      "disabled_writes": 20,
+      "saving": 0.4,
+      "primary_gate": null
+    }
+  ],
+  "accepted_host_gate": true
+}

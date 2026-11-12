@@ -207,7 +207,7 @@ object JarvisTiles {
      * Labels stay the real German owner terms; reference mock-up names such as "Dateien" or "PDF"
      * are not shown because those routes do not exist.
      */
-    val bottomNav = railNav
+    val bottomNav = CockpitGlassButtons.buttons.map { NavItem(it.target, it.label, it.icon) }
 
     /** Shared by drawing, hit testing and the native, independently scrollable rail controls. */
     fun railItemBoxes(b: Box, count: Int = railNav.size, fontScale: Float = 1f): List<Box> {
@@ -283,10 +283,7 @@ object JarvisTiles {
 
     /** Columns that keep every dock cell at least [DOCK_MIN_CELL_DP] wide. Wide Fold/tablet stays one row. */
     fun bottomNavColumns(width: Float, itemCount: Int = bottomNav.size): Int {
-        if (itemCount <= 0 || !width.isFinite() || width <= 0f) return 1
-        val maxPerRow = maxOf(1, (width / DOCK_MIN_CELL_DP).toInt())
-        val rows = (itemCount + maxPerRow - 1) / maxPerRow
-        return (itemCount + rows - 1) / rows
+        return CockpitGlassButtons.columns(width, itemCount)
     }
 
     fun bottomNavRows(width: Float, itemCount: Int = bottomNav.size): Int {
@@ -325,7 +322,7 @@ object JarvisTiles {
                       timeMs: Long = 0L, pressed: Int = -1,
                       cinemaElapsedMs: Long? = null, cinemaExiting: Boolean = false,
                       cinemaBudget: JarvisRenderQuality.Budget? = null, animatorScale: Float = 1f,
-                      pressX: Float = .5f, pressY: Float = .5f) {
+                      pressX: Float = .5f, pressY: Float = .5f, fontScale: Float = 1f) {
         if (items.isEmpty()) return
         LuxuryHoloButtonRenderer.drawDockPlatform(p, b)
         val cells = bottomNavItemBoxes(b, items)
@@ -355,24 +352,16 @@ object JarvisTiles {
                 return@forEachIndexed
             }
             if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
-            val materialTime = if (animatorScale > 0f && cinemaBudget?.animate != false) timeMs else 0L
-            drawSurface(p, tile, model, active, materialTime, luxuryDepth = true, pressX = pressX, pressY = pressY)
+            val spec = CockpitGlassButtons.spec(it.target)
+            if (spec != null) {
+                CockpitGlassButtons.draw(p, tile, spec, active, i == pressed,
+                    fontScale = fontScale, pressX = pressX, pressY = pressY)
+            } else {
+                drawSurface(p, tile, model, active, timeMs, luxuryDepth = true,
+                    pressX = pressX, pressY = pressY)
+                draw(p, tile, model)
+            }
             if (cinema.glassAlpha < 1f) p.restore()
-            if (cinema.contentAlpha < 0.01f) { p.restore(); return@forEachIndexed }
-            if (cinema.contentAlpha < 1f) p.saveAlpha(cinema.contentAlpha)
-            val iconSize = minOf(22f, tile.height * .38f, tile.width * .42f)
-            val iy = tile.top + tile.height * .38f
-            val color = if (it.target == "system") Colors.violetSoft else if (active) Colors.cyan else Colors.cyanSoft
-            JarvisSceneFills.halo(p, tile.centerX, iy, iconSize * .7f, color, if (active) .16f else .08f)
-            if (!JarvisRailIcons.draw(p, it.target, tile.centerX - iconSize / 2f, iy - iconSize / 2f, iconSize, color))
-                ContinuumIcons.draw(p, it.icon, tile.centerX, iy, iconSize, Fill.Solid(color))
-            val style = JarvisDesign.Type.caption
-            val room = tile.width - 6f
-            val short = dockShortLabels[it.target] ?: it.label
-            val label = if (p.measureText(it.label, style) <= room) it.label else short
-            p.drawText(JarvisShellRenderer.fit(p, label, style, room), tile.centerX, tile.bottom - 8f,
-                style, Fill.Solid(if (active) Colors.text else Colors.textSecondary), TextAlign.CENTER)
-            if (cinema.contentAlpha < 1f) p.restore()
             p.restore()
         }
     }

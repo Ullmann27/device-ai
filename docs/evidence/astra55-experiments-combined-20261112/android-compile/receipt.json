@@ -1,0 +1,388 @@
+{
+  "source_commit": "5849b99ff641ee5e98238e5127c02e6e0cbf408e",
+  "baseline": "711f23b33a8fc602a3a0e4baa37aa61e42e6fc64",
+  "source_hashes": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "c6d2eaeb71d2a74cdd9057bcdab242cbb88c6fad1b03c9574b2f1cde30ef4d8c",
+    "app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt": "2240b87a5d209f9c25f131676cde9774e178bdedd2f491811473f1273cc377b4",
+    "app/src/main/java/at/heinz/deviceai/AndroidGpuFrameCopier.kt": "28201c0f68bfb5b8eeab29785c0861566efa2d01b5dee9cfc291a8019cafef9a",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "d175e336875e09b0260bbcb99dfbecec46e4ebfa8462b8c43056af2822f6e2d1",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveNodePort.kt": "0883773573cf37a5a725e443da8543356b8363c5b2886376fae24cee3ad73c3b",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveWindow.kt": "0fedbdc5cddbbd87db0ea38dbee8942dd48cff41c1bb205a00b985274a503fad",
+    "app/src/main/java/at/heinz/deviceai/AndroidNativeClick.kt": "554a6adcd1dd6395b6e42b3a6e5110dfbb7cb30fe4534a861ffb93c0bdaf5ad6",
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "67de6e148d182864c2833a7b6f9e1ea85cfa4665e041d78ac8c2ac4756ef9081",
+    "app/src/main/java/at/heinz/deviceai/ContinuumLiveProjectionService.kt": "e2b6369c1fb6748827f21e8a45cc04bd8d8385e8296c07215f95e02e054c8ee1",
+    "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt": "d6111a8d7ce07f69e181e514b3e516673ca81f14326c1bdb282041644f7d4afa",
+    "app/src/main/java/at/heinz/deviceai/OwnerComputerSessionController.kt": "1f41373c750e6caf8352f802e53527f26dead09fb1574268061e5e5a7be8c838",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMaterialVariant.kt": "ec529fb829754222040fa29496ecddfc2d9094161292779d6c2a7dc32d3b9b8a",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "3be9f4e497624e2c40213cfae7012bbda63fbebf03c40f01c45dfd6d30f68ad6",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitOrbMotion.kt": "f67133d9bab28f25c7d2069cc7fcf55407618aa1ac2c88f10b91d4ee5b5b5d68",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitPresentationSequence.kt": "20fbee7f3a14b86a15aa9d7b0cac373cade23259c223d287c5dd49d5d7f11e31",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitSceneAssets.kt": "fa8d446c448c200a8a168686a359bc2a0d316c2fa968e4748ff544aa50a96adc",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "77f37b8fd75398a75c46cdf0a97d21b29d81457c66ab031b8e8ba75377c20a16",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitTransformUpdates.kt": "75e7b55604f7990a4d4e6398fa074ef96d43b72fdec8f2c57c650ffa75bb6bf3",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitWorldTransforms.kt": "47e4401345d3d3c6af678b89a1b8d479adf4a5226850f83713a50f4a9574aec0",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "5f06e1a4dd5d402b3e1b445bc5fad7b71ca2c6881e3156421d338266e38b9b27",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt": "08bdd2f38ce40ab2f2bb39d431b43387c6e992585eca0725114dc2ae3157a794",
+    "app/src/main/java/at/heinz/deviceai/cognitive/ComputerCaptureConsent.kt": "16e2418774e2dfcec7eeb3b0144aa48ce58a2e7b64815989cf868354dbd5889d",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveActionCockpitAdapter.kt": "6231e38541e2c3e811b5ea0f17edb3c0f41c25ccf82c9c1e507efefd0c7c74f8",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComposeSemantics.kt": "5314801dfc221383b35383f243fac290046cf20272a1fd359c8a9d3da2ab543c",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerDispatchGuard.kt": "0b11fc8375b93140beda810d5ba110f8ffd1c5a8c6a2adad98030e0916814a1b",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "1dd295223166ed0a1425bb7a928d4ab4124e122c8067dbf9355df4aba826d6f2",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveMonitorSubmission.kt": "b1dd139af2e44f6c79b817bd7b4714e934210b4f25a31b501463a5bdf8b8793e",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveScrollEvidence.kt": "587f6f687dcd88a924657182b45bd892e7f4908179340800002dda0b294e945e",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowCapture.kt": "2e85fd899823b97bd5ebeee7594e06f197ba1ba3e7422890551277574034dbb6",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowSafety.kt": "510f17c80bd109687fbb77c172dae3a56db21555f571a62d6d516a32de4c41a7",
+    "app/src/main/java/at/heinz/deviceai/cognitive/NativeAppLookup.kt": "1320ea3e28a0ce0e5c8b17af794b5755f89a1d1d194dd39c5372b3d7e203d730",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppActionFlow.kt": "ae08d352a8ac840061fd09c3820b2cb0feaef79f465aa8a8dac65352ec54276e",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppClarification.kt": "c5398ae4d0392b96ddc635f3fecc19281c6bbadc767add0eccb7a63efc4b8603",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt": "bdf6ed4af869f3d2a20906de6d6ce10d48bba403274cd062cd5ac9bde96688eb",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParser.kt": "626665ac4182af50ac9e7e3ff6f0464f3d2b008ef73de26e45a5509bc9f608c8",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerTaskGrant.kt": "1a743004d13a6e2199ae106e1a10af57e3f0ac6fc49afb54f0f87abbb3e20a85",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflow.kt": "3f202fb294aa7521d92cee5f88b291a6be8090d38ee2b0faf6c010dc27632ce3",
+    "app/src/main/java/at/heinz/deviceai/cognitive/ProjectionCropGeometry.kt": "bb39aa741efb44644f7efdfd21a2de58aed3ae459b8825920665d5f3e4d4885b",
+    "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedForegroundLaunch.kt": "caa56a03c2520144940a2ea937115a9b21416988e876d33dcf0599eb1850a38f",
+    "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt": "f87adcad148e8cfb177403ac4d45c3005ad923fd076c086bec49de67184a30ea",
+    "app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt": "50c1c8b075b2e3307e01e5fe050b20a4d2ab0f6cb446a41ea754aad35aac79f6",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitMonitorMotion.kt": "0a2655858549a799753e81e095b3a41c782c08da53743676739dd22a86c1df44",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitWorkstationChrome.kt": "402d1ee20c06f4352d5fadbb5ad513fbcc68068a04a05862bf02243b4a518fdb",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt": "860169ebce5d6ba73124f2684ed5fbcde5152311527b910d5950ea46a2511f6d",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt": "97ea8358c09c23ac688fbdc7eed4579b3a88ce80d3b3a010890df84406a3a46b",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGridContent.kt": "d20f19933a86112e4668fb1a764f8ed50ac683186025ec580841e057b4d1c50a",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt": "f8067893f9f2c9479b066ee094bd1c769d33da6bd9de7b06cf66e5d60b4ae09a",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt": "62ae3ea0b38ffba560141643069c3f12480ecddc2e95dcff7ec21e66ab7df997",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt": "84ced2cee048fdacadf3229b652bdda54d50b81011223b3034aa306f40e3a495",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt": "9cbaee0fa1f7266e0f8c989856e9c33deea0c46f8a16d008c7f68172f1d5bd2b",
+    "app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt": "98d6fe168eeff5b88c9d260ce0a1256ddb338f1273930063ebe2630426d1ea6a"
+  },
+  "source_stable": true,
+  "compiler": "Kotlin 2.4.0",
+  "filament": "1.56.0",
+  "android_api": "36",
+  "environment_receipt_sha256": "b4c995b1fae8e15b10378f8daf76cae1e55ba38bf46db8b36aec9a4ee2fee51d",
+  "dependencies_stable": true,
+  "dependencies": [
+    {
+      "name": "android.jar",
+      "sha256": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+    },
+    {
+      "name": "base-classes.jar",
+      "sha256": "6f5f1cfee967e825b11537f8b9abf05686378def648b7fd8edfbe8aea925e952"
+    },
+    {
+      "name": "gradle-worker.jar",
+      "sha256": "cb387bb208436ebce922f6f0192e0d69d30f2bce54292af1160aea097015ca01"
+    },
+    {
+      "name": "robolectric-4.14.1.jar",
+      "sha256": "e0a73d45bceb94a5a0352b66e2120ad4a4b222fe406079130893b6c79d4441d1"
+    },
+    {
+      "name": "junit-4.13.2.jar",
+      "sha256": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3"
+    },
+    {
+      "name": "json-20240303.jar",
+      "sha256": "3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed"
+    },
+    {
+      "name": "gltfio-android-1.56.0-runtime.jar",
+      "sha256": "f6c475c6e5e330f46c86eca4136bfb2d5aade053544dc3b094d3873521de27bf"
+    },
+    {
+      "name": "filament-android-1.56.0-runtime.jar",
+      "sha256": "c0556c6d150516e2ac32d85f1cd8b9aaab98f62de50d2a10f4b0b8f6ea6b6469"
+    },
+    {
+      "name": "provider-13.1.5-runtime.jar",
+      "sha256": "671904b9cfefb1808e31e952dbc3b345af7b851ad3b87a00e4b56fb23e636608"
+    },
+    {
+      "name": "api-13.1.5-runtime.jar",
+      "sha256": "47965042cb1e53571e3b7638a807c3579ebc8ee760dc51d5c135e564359c8c20"
+    },
+    {
+      "name": "shared-13.1.5-runtime.jar",
+      "sha256": "70221c0c847a1bafa5f9505aa0c006371cd154275a9236ce65d98d1e830d36fe"
+    },
+    {
+      "name": "annotation-jvm-1.9.1.jar",
+      "sha256": "1e343917ebf27ba96fe4dc52b1cad7fd32b738fbc6355bb6cd5b3b305d7212d0"
+    },
+    {
+      "name": "litertlm-android-0.18.0-runtime.jar",
+      "sha256": "f895c3eff5ac948ba436f0f2c309ff77ace68593803d331dfeee9f311c5938ba"
+    },
+    {
+      "name": "kotlin-reflect-2.4.0.jar",
+      "sha256": "f0d8e8908624eb4478bb131e9f887366680d2e239741195e548fa5c906963b90"
+    },
+    {
+      "name": "kotlinx-coroutines-core-jvm-1.11.0.jar",
+      "sha256": "d1d75aa01dffbb4d1c520e67e4c4e7f5f6174718e7cb4632412503f2f0e604fa"
+    },
+    {
+      "name": "kotlinx-coroutines-android-1.11.0.jar",
+      "sha256": "c2cb206d27017c7d1bf5ff179787397543d13748dbabb0d7237e1585e0b29044"
+    },
+    {
+      "name": "opencv-4.13.0-runtime.jar",
+      "sha256": "ed9b7d498116da7d88201d79f21daa4423bd257f5f58f23245a30c363bdb9738"
+    },
+    {
+      "name": "okhttp-4.12.0.jar",
+      "sha256": "b1050081b14bb7a3a7e55a4d3ef01b5dcfabc453b4573a4fc019767191d5f4e0"
+    },
+    {
+      "name": "okio-jvm-3.6.0.jar",
+      "sha256": "67543f0736fc422ae927ed0e504b98bc5e269fda0d3500579337cb713da28412"
+    },
+    {
+      "name": "kotlin-stdlib-jdk8-1.9.10.jar",
+      "sha256": "a4c74d94d64ce1abe53760fe0389dd941f6fc558d0dab35e47c085a11ec80f28"
+    },
+    {
+      "name": "kotlin-stdlib-jdk7-1.9.10.jar",
+      "sha256": "ac6361bf9ad1ed382c2103d9712c47cdec166232b4903ed596e8876b0681c9b7"
+    },
+    {
+      "name": "kotlin-stdlib-2.4.0.jar",
+      "sha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c"
+    },
+    {
+      "name": "conscrypt-openjdk-uber-2.5.2.jar",
+      "sha256": "eaf537d98e033d0f0451cd1b8cc74e02d7b55ec882da63c88060d806ba89c348"
+    },
+    {
+      "name": "snakeyaml-2.3.jar",
+      "sha256": "63a76fe66b652360bd4c2c107e6f0258daa7d4bb492008ba8c26fcd230ff9146"
+    },
+    {
+      "name": "espresso-idling-resource-3.6.1-runtime.jar",
+      "sha256": "4116203cc65797b1ec99f23b6be6d79d0aeb365f6692d585c8d0b6308971d30e"
+    },
+    {
+      "name": "test-parameter-injector-1.18.jar",
+      "sha256": "e5a7c649c54c412049908247ca5e25fe6921d746849c6017a84dc6044237a4b4"
+    },
+    {
+      "name": "junit-4.14.1.jar",
+      "sha256": "2cee817aadce3552706b09450ad1ea7ff5981924072d2adfe40ddad57d5fa123"
+    },
+    {
+      "name": "shadows-framework-4.14.1.jar",
+      "sha256": "f3cf7785eecf9b2e80fbb4caac4c42f63eeea3506e289581c04696a56a494622"
+    },
+    {
+      "name": "resources-4.14.1.jar",
+      "sha256": "54eb274a47dec9e74cc9b45b9e4335bb5d83857c63b2a49dd8d1993e6321f2c5"
+    },
+    {
+      "name": "sandbox-4.14.1.jar",
+      "sha256": "de361f3de8c08d4488cf156683830f2bd43db1da85a5b136ad6d065b868d3bab"
+    },
+    {
+      "name": "nativeruntime-4.14.1.jar",
+      "sha256": "c07b66d315aec3272a7c64aa5f154b4194be2cc6030a733d16f2ee87330232a8"
+    },
+    {
+      "name": "utils-reflector-4.14.1.jar",
+      "sha256": "eb8f52cdc24f59ae4cf13369c5bf990354c19c386e3e8f9f5d5cee04d836557b"
+    },
+    {
+      "name": "plugins-maven-dependency-resolver-4.14.1.jar",
+      "sha256": "6c8dbc979db0780755e712acab9eeb9396811b2d4dc31a92a5b259f9876205ec"
+    },
+    {
+      "name": "shadowapi-4.14.1.jar",
+      "sha256": "fd158863cee488475206ba1d23ff4c7d29be412eccd21b12d9416b0030aa582d"
+    },
+    {
+      "name": "utils-4.14.1.jar",
+      "sha256": "6884eec32c9c9b23d74250e30a5ba9c5ece48784f808feba98f119b215ab59d8"
+    },
+    {
+      "name": "pluginapi-4.14.1.jar",
+      "sha256": "ad8b74238d59bce6631e29190c105dd0c4701e836a2631060678407f621c7b7a"
+    },
+    {
+      "name": "annotations-4.14.1.jar",
+      "sha256": "463a5ad1386c31010bc9af00bfe19a1b758d8c2dedd8c19e5c75d29ab8abb9ba"
+    },
+    {
+      "name": "javax.inject-1.jar",
+      "sha256": "91c77044a50c481636c32d916fd89c9118a72195390452c81065080f957de7ff"
+    },
+    {
+      "name": "javax.annotation-api-1.3.2.jar",
+      "sha256": "e04ba5195bcd555dc95650f7cc614d151e4bcd52d29a10b8aa2197f3ab89ab9b"
+    },
+    {
+      "name": "bcprov-jdk18on-1.78.1.jar",
+      "sha256": "add5915e6acfc6ab5836e1fd8a5e21c6488536a8c1f21f386eeb3bf280b702d7"
+    },
+    {
+      "name": "monitor-1.7.2-runtime.jar",
+      "sha256": "3641a1bd19fade3c43351d657bd5845f51f43ee2e2a40eaaee5d124d7af374b1"
+    },
+    {
+      "name": "hamcrest-core-1.3.jar",
+      "sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+    },
+    {
+      "name": "annotations-23.0.0.jar",
+      "sha256": "7b0f19724082cbfcbc66e5abea2b9bc92cf08a1ea11e191933ed43801eb3cd05"
+    },
+    {
+      "name": "aidl-13.1.5-runtime.jar",
+      "sha256": "3e81f44794c987ecc3ba03149747f22da0d5e7d9333729180e46b324bb72c179"
+    },
+    {
+      "name": "gson-2.14.0.jar",
+      "sha256": "2cbd119bf1961c28788310963dc80ba65f58cdeec1dd139c8bdb1240faa2c36f"
+    },
+    {
+      "name": "error_prone_annotation-2.34.0.jar",
+      "sha256": "99f8b53c75a50617d4f9bf45512eda82e7d8e9eb377471d822d3d4c4e034c510"
+    },
+    {
+      "name": "guava-33.3.1-android.jar",
+      "sha256": "2c3e41d1b380f2044d257947a3aa82dabf3ae4b978622745254aa18b6cf89ab0"
+    },
+    {
+      "name": "auto-value-annotations-1.11.0.jar",
+      "sha256": "5a055ce4255333b3346e1a8703da5bf8ff049532286fdcd31712d624abe111dd"
+    },
+    {
+      "name": "asm-commons-9.7.1.jar",
+      "sha256": "9a579b54d292ad9be171d4313fd4739c635592c2b5ac3a459bbd1049cddec6a0"
+    },
+    {
+      "name": "asm-util-9.7.1.jar",
+      "sha256": "f885be71b5c90556f5f1ad1c4f9276b29b96057c497d46666fe4ddbec3cb43c6"
+    },
+    {
+      "name": "asm-analysis-9.7.1.jar",
+      "sha256": "85b29371884ba31bb76edf22323c2c24e172c3267a67152eba3d1ccc2e041ef2"
+    },
+    {
+      "name": "asm-tree-9.7.1.jar",
+      "sha256": "9929881f59eb6b840e86d54570c77b59ce721d104e6dfd7a40978991c2d3b41f"
+    },
+    {
+      "name": "asm-9.7.1.jar",
+      "sha256": "8cadd43ac5eb6d09de05faecca38b917a040bb9139c7edeb4cc81c740b713281"
+    },
+    {
+      "name": "sqlite4java-1.0.392.jar",
+      "sha256": "243a64470fda0e86a6fddeb0af4c7aa9426ce84e68cbfe18d75ee5da4b7e0b92"
+    },
+    {
+      "name": "icu4j-75.1.jar",
+      "sha256": "543e43a91d1499e331c711a756f833d6fb8cc019f9c9913c0bdf4d53009932d5"
+    },
+    {
+      "name": "error_prone_annotations-2.48.0.jar",
+      "sha256": "b49c5c958316ed67a09c699dda9aa749caf434d51d863dea599ef36a49b9c855"
+    },
+    {
+      "name": "failureaccess-1.0.2.jar",
+      "sha256": "8a8f81cf9b359e3f6dfa691a1e776985c061ef2f223c9b2c80753e1b458e8064"
+    },
+    {
+      "name": "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar",
+      "sha256": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99"
+    },
+    {
+      "name": "jsr305-3.0.2.jar",
+      "sha256": "766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7"
+    },
+    {
+      "name": "checker-qual-3.43.0.jar",
+      "sha256": "3fbc2e98f05854c3df16df9abaa955b91b15b3ecac33623208ed6424640ef0f6"
+    },
+    {
+      "name": "j2objc-annotations-3.0.0.jar",
+      "sha256": "88241573467ddca44ffd4d74aa04c2bbfd11bf7c17e0c342c94c9de7a70a7c64"
+    },
+    {
+      "name": "nativeruntime-dist-compat-1.0.16.jar",
+      "sha256": "2f4e879b00eed634d0e43353ecff80db4d5ce24b3b213d1e6053cb21b0ced10f"
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "81e3f4c036306e74d6a8c19b58f11cd957cd091494cc3c493eecbeee57015a22"
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "cad38e83e0226bd16f1e86385d7fd82b108258676949d7924b9c14a1eaa18c62"
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "35aee86b938cb8d06b315c9d73c30f41ec7cfdc10009a5de83733bc5c4db5051"
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "4315fcd853f487321548be5a997749fe43105fa29aaaa6f6e7a8cdc958a38357"
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "8557b8c715d374f8da18e148ca5b971d1c7435e91447e6d4f7664403c7328760"
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "0ff0098f64407752c115bf2569a7cd3005c894ecb934e7fdbcd744037f398ce8"
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "9a5f8f1189ecb60b9ca18c4f1102c692badbdda809c69a602d1b10e1598abb05"
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "fd8686b8b35f21486512971c690996ca8540773407d64ed7fd543cc6a8d74d83"
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "d10797c3b5386a352f1601bc100cb3872d3841eda06a6216c7a5502479119206"
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "584945c98f21b0c4e3ccdb74b51528f89852174c30bb2a4786c43a8ca456e496"
+    },
+    {
+      "name": "73-R.jar",
+      "sha256": "4f1fd3a0695ae2649359a37ab1643eac11407743ddfb138643726048c9082521"
+    },
+    {
+      "name": "kotlin-compiler-embeddable-2.4.0.jar",
+      "sha256": "c2b25e8c1c93ec416ba4327f5e31eaec0f0c8847241b9353e294b8db9dce564f"
+    },
+    {
+      "name": "kotlin-stdlib-2.4.0.jar",
+      "sha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c"
+    },
+    {
+      "name": "kotlin-script-runtime-2.4.0.jar",
+      "sha256": "196e8ecbf63daf477e34e67c2f871ee232ae7bf8b377432d876d1bbf9d273de3"
+    },
+    {
+      "name": "kotlin-reflect-2.4.0.jar",
+      "sha256": "f0d8e8908624eb4478bb131e9f887366680d2e239741195e548fa5c906963b90"
+    },
+    {
+      "name": "kotlinx-coroutines-core-jvm-1.8.0.jar",
+      "sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+    },
+    {
+      "name": "annotations-23.0.0.jar",
+      "sha256": "7b0f19724082cbfcbc66e5abea2b9bc92cf08a1ea11e191933ed43801eb3cd05"
+    }
+  ],
+  "heap_mib": 512,
+  "processors": 1,
+  "result": 0,
+  "elapsed_seconds": 37.02920692800035,
+  "limits": "Scoped production compilation; existing classes supply unchanged dependencies. No full Gradle, native execution, APK or device result."
+}

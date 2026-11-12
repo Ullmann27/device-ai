@@ -423,7 +423,7 @@ class JarvisWorkWindowHost(
         fun local(box: JarvisShellLayout.Box) = RectF(offset.left + box.left * density,
             offset.top + box.top * density, offset.left + box.right * density,
             offset.top + box.bottom * density)
-        val face = (geometry.headStage ?: geometry.headBounds)?.let(::local)
+        val face = (geometry.protectedFaceBounds ?: geometry.headStage ?: geometry.headBounds)?.let(::local)
         val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
         val orb = geometry.orbBounds?.let(::local)
         val withOrb = protected + listOfNotNull(orb)
