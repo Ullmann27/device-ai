@@ -507,15 +507,15 @@ class LiteRtLmLocalModelRuntime(
                                     finish(LocalInferenceEvent.Failed("LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL"))
                                     return
                                 }
-                                val outputTokens = nativeTokens?.let { (it - (inputTokens ?: it)).coerceAtLeast(0) }
                                 finish(
                                     LocalInferenceEvent.Completed(
                                         LocalInferenceMetrics(
                                             promptCharacters = promptCharacters,
                                             responseCharacters = responseCharacters[0],
                                             streamedChunks = chunks[0],
-                                            inputTokens = inputTokens,
-                                            outputTokens = outputTokens,
+                                            // KV includes newly prefilled input.
+                                            inputTokens = null,
+                                            outputTokens = null,
                                             firstTokenLatencyMillis = firstTokenNanos?.let {
                                                 (it - startNanos).coerceAtLeast(0) / 1_000_000
                                             },

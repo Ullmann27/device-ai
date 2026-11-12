@@ -56,8 +56,9 @@ internal object JarvisHomeTestRoutes {
             assertEquals("More preserves former destinations", features.toSet(),
                 (dockTargets.filterNot { it == "home" } + moreTargets).toSet())
             assertTrue(ContinuumWorkAreaNavigationSpec.moreEntries.map { it.target }.containsAll(moreTargets))
-            val more = all.singleOrNull { it.tag == "jarvis-header:more" }
-                ?: all.single { it.tag == "jarvis-panel:STATUS" }
+            val headerMore = all.singleOrNull { it.tag == "jarvis-header:more" }
+            if (shell.workstation) assertNotNull("New cockpit exposes More in its header", headerMore)
+            val more = headerMore ?: all.single { it.tag == "jarvis-panel:STATUS" }
             assertTrue("More is reachable directly or through System", visibleWithinHome(more, home) && more.isClickable && more.isFocusable)
             dock
         }

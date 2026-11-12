@@ -84,8 +84,14 @@ ersetzt ihn. Private Inhalte werden für diese Fehler nicht protokolliert.
   bei unbekannten Metadaten ist 4096 die Anforderung, kein Gerätebefund.
 - Die Ausgabe kann bei knappem Kontext kürzer werden. Kontext-Ende ist kein
   Beleg für eine vollständig bearbeitete Anfrage.
-- Bestehende Metriken, die den KV-Zuwachs als Outputtokens anzeigen, sind keine
-  neue exakte Trennung zwischen Prefill- und Decodetokens.
+- Die öffentlichen Input-/Outputtoken-Metriken bleiben `null`, weil der KV-Zuwachs
+  neuen Input und Ausgabe gemeinsam enthält. Der echte KV-Zähler dient intern
+  weiterhin der Kontextkontrolle. Das gebundene SDK bietet zwar
+  `BenchmarkInfo.lastPrefillTokenCount` und `lastDecodeTokenCount`, aber nur bei
+  aktiviertem Benchmarkmodus. Dieser ist in der aktuellen App nicht aktiviert;
+  der native Abruf meldet dann ausdrücklich einen Fehler. Für eine reine Anzeige
+  wird der Ausführungsmodus nicht verändert. Die UI zeigt bereits den vorhandenen
+  ehrlichen Ersatztext „Tokenzahl nicht gemeldet“.
 
 Hosttests prüfen normale Pflichtpromptgrößen ohne Totalblockade, fehlende/native
 volle Zähler, keine Prefix-Doppelzählung, echten kumulierten Kontext bei
@@ -100,6 +106,8 @@ ersetzen keine native Modellinferenz.
 - https://github.com/google-ai-edge/LiteRT-LM/blob/v0.18.0/runtime/conversation/conversation_test.cc
 - https://github.com/google-ai-edge/LiteRT-LM/blob/v0.18.0/runtime/core/tasks.cc
 - https://github.com/google-ai-edge/LiteRT-LM/blob/v0.18.0/runtime/executor/llm_litert_compiled_model_executor.cc
+- https://github.com/google-ai-edge/LiteRT-LM/blob/v0.18.0/runtime/core/session_advanced.cc
+- https://github.com/google-ai-edge/LiteRT-LM/blob/v0.18.0/kotlin/java/com/google/ai/edge/litertlm/jni/litertlm.cc
 
 Quellstellen: `Conversation::Create` (Prefix-Prefill), `GetSingleTurnText` und
 `RenderMessageIntoString` (vollständiger Prefix nur beim leeren, unbefüllten Start),

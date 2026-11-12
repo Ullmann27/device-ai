@@ -121,6 +121,11 @@ internal class OwnerComputerSessionController(
                     permission.checkActive()
                     AndroidLiveComputer.checkActive(current.taskId)
                 }
+                private fun checkDispatchActive() {
+                    checkActive()
+                    LiveComputerDispatchGuard.checkLive(AndroidLiveComputer.feed, current.taskId,
+                        started.sessionId, System.nanoTime())
+                }
                 override fun observe(): NodeActionFrame {
                     checkActive()
                     if (firstObservation) {
@@ -129,7 +134,8 @@ internal class OwnerComputerSessionController(
                             checkActive()
                             val state = AndroidLiveComputer.feed.status(System.nanoTime())
                             if (state.state == LiveMonitorState.LIVE &&
-                                state.binding?.captureSession == started.sessionId) break
+                                state.binding?.captureSession == started.sessionId &&
+                                state.binding.taskId == current.taskId) break
                             check(SystemClock.elapsedRealtime() < deadline && state.state != LiveMonitorState.ENDED) {
                                 "NO_FRESH_LIVE_FRAME"
                             }
@@ -142,7 +148,7 @@ internal class OwnerComputerSessionController(
                 override fun perform(request: NodeActionRequest, events: LiveActionEventSink): NodeActionResult {
                     checkActive()
                     permission.authorize(request, observe())
-                    return AndroidLiveComputer.perform(request, events, permissionCheck = ::checkActive)
+                    return AndroidLiveComputer.perform(request, events, permissionCheck = ::checkDispatchActive)
                 }
                 override fun click(before: NodeActionFrame, label: String, expectedLabel: String,
                                    expectedEditable: Boolean, expectedHeading: Boolean, expectedSearchField: Boolean,
@@ -152,7 +158,7 @@ internal class OwnerComputerSessionController(
                     return AndroidLiveComputer.click(current.taskId,
                         ClickRequest(current.packageName, before.stamp.epoch, before.stamp.revision,
                             label, expectedLabel, expectedEditable, expectedHeading, expectedSearchField), ownerConfirmed = true,
-                        onDispatched = onDispatched, permissionCheck = ::checkActive)
+                        onDispatched = onDispatched, permissionCheck = ::checkDispatchActive)
                 }
             }) } finally { permission.revoke() }
             main.post {
