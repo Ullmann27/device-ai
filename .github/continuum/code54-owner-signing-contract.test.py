@@ -349,6 +349,10 @@ class DeviceTestExceptionContracts(unittest.TestCase):
             (("binding", "owner_exception", "publication"), "ALLOWED"),
             (("binding", "owner_exception", "device_pdf_test_status"), "PASS"),
             (("binding", "qa_evidence", "digest"), "sha256:" + "f" * 64),
+            (("binding", "release_scope"), "UNPUBLISHED_DRAFT_ONLY"),
+            (("artifacts", "artifacts", 1, "id"), 1),
+            (("artifacts", "artifacts", 1, "digest"), "sha256:" + "f" * 64),
+            (("artifacts", "artifacts", 1, "workflow_run", "head_sha"), "f" * 40),
             (("run", "conclusion"), "success"),
             (("jobs", "jobs", 0, "conclusion"), "success"),
             (("jobs", "jobs", 0, "steps", 0, "conclusion"), "failure"),
@@ -375,8 +379,9 @@ class DeviceTestExceptionContracts(unittest.TestCase):
             self.assertFalse(result["full_suite_pass"])
 
     def test_exception_rejects_corrupted_or_unrelated_cases(self):
-        test_cases = ("another failure", "unknown skip", "missing case", "fake PDF PASS",
-                      "bad native fingerprint", "new source", "filtered")
+        test_cases = ("another failure", "unknown skip", "missing case", "missing skip",
+                      "fake PDF PASS", "bad native fingerprint", "new source",
+                      "filtered", "native PDF bypass")
         for case in test_cases:
             with self.subTest(case=case), tempfile.TemporaryDirectory() as name:
                 start, cases, end = journal_fixture()
@@ -386,6 +391,8 @@ class DeviceTestExceptionContracts(unittest.TestCase):
                     cases[0]["result"] = "SKIPPED"
                 elif case == "missing case":
                     cases.pop(1)
+                elif case == "missing skip":
+                    cases[-2]["result"] = "SUCCESS"
                 elif case == "fake PDF PASS":
                     cases[-1]["result"] = "SUCCESS"
                 elif case == "bad native fingerprint":
@@ -395,6 +402,8 @@ class DeviceTestExceptionContracts(unittest.TestCase):
                     start["source"] = {**start["source"], "head": "f" * 40}
                 elif case == "filtered":
                     start["includePatterns"] = ["fake"]
+                elif case == "native PDF bypass":
+                    start["environment"]["projectProperties"]["continuumPdfAllowMissingHostNative"] = True
                 path = write_pdf_evidence(Path(name), (start, cases, end))
                 binding = exception_fixture()["binding"]
                 binding["qa_evidence"]["bytes"] = path.stat().st_size
