@@ -152,12 +152,15 @@ internal class OwnerComputerSessionController(
                 }
                 override fun click(before: NodeActionFrame, label: String, expectedLabel: String,
                                    expectedEditable: Boolean, expectedHeading: Boolean, expectedSearchField: Boolean,
+                                   expectedComposeField: Boolean,
                                    onDispatched: (LiveTargetBounds?, Long) -> Unit): NodeActionFrame {
                     checkActive()
-                    permission.authorizeClick(before, label, expectedLabel, expectedEditable, expectedHeading, expectedSearchField)
+                    permission.authorizeClick(before, label, expectedLabel, expectedEditable, expectedHeading,
+                        expectedSearchField, expectedComposeField)
                     return AndroidLiveComputer.click(current.taskId,
                         ClickRequest(current.packageName, before.stamp.epoch, before.stamp.revision,
-                            label, expectedLabel, expectedEditable, expectedHeading, expectedSearchField), ownerConfirmed = true,
+                            label, expectedLabel, expectedEditable, expectedHeading, expectedSearchField,
+                            expectedComposeField), ownerConfirmed = true,
                         onDispatched = onDispatched, permissionCheck = ::checkDispatchActive)
                 }
             }) } finally { permission.revoke() }

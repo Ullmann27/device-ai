@@ -17,6 +17,7 @@ internal class OwnerComputerWorkflow(
         fun click(before: NodeActionFrame, label: String, expectedLabel: String,
                   expectedEditable: Boolean = true, expectedHeading: Boolean = false,
                   expectedSearchField: Boolean = false,
+                  expectedComposeField: Boolean = false,
                   onDispatched: (LiveTargetBounds?, Long) -> Unit): NodeActionFrame
     }
 
@@ -85,14 +86,12 @@ internal class OwnerComputerWorkflow(
             if (!contact.clickable || frame.nodes.count { it.visible && it.label == contact.label } != 1) {
                 return ask("Der Kontakt ist sichtbar, aber sein anklickbares Ziel ist nicht eindeutig. Bitte wähle ihn in der App.")
             }
-            val composeLabel = if (field.label.equals("Search", true)) "Message" else "Nachricht"
-            frame = click(frame, contact.label, composeLabel)
+            frame = click(frame, contact.label, "", expectedComposeField = true)
             if (frame.nodes.count { it.visible && !it.editable && it.label.equals(query, true) &&
                     (it.heading || it.viewId?.substringAfterLast('/') == "conversation_contact_name") } != 1) {
                 return pause("Der geöffnete Chatkopf bestätigt den Empfänger nicht eindeutig. Kein Text eingetragen.")
             }
-            val compose = frame.nodes.filter { it.visible && it.enabled && it.editable && !it.password &&
-                it.label == composeLabel && !SendActionGuard.isSendLike(it.label, it.viewId) }.singleOrNull()
+            val compose = frame.nodes.filter(LiveComposeSemantics::isField).singleOrNull()
                 ?: return pause("Das Nachrichtenfeld wurde nicht eindeutig bestätigt. Kein Text eingetragen.")
             val draft = intent.draft?.takeIf { it.isNotBlank() }
                 ?: return ask("Welchen Text soll ich als Entwurf eintragen?")
@@ -101,8 +100,8 @@ internal class OwnerComputerWorkflow(
                 return ask("Im Nachrichtenfeld steht bereits ein anderer Entwurf. Soll dieser erhalten bleiben oder ersetzt werden?")
             }
             if (compose.textDigest != liveSha256(draft)) frame = setText(frame, compose, draft)
-            val confirmed = frame.nodes.any { it.visible && it.editable && !it.password &&
-                it.label == composeLabel && it.textDigest == liveSha256(draft) }
+            val confirmed = frame.nodes.filter(LiveComposeSemantics::isField).singleOrNull()
+                ?.textDigest == liveSha256(draft)
             if (!confirmed) return pause("Der Entwurf konnte nicht bestätigt werden. Bitte prüfe die App; ich wiederhole die Eingabe nicht.")
             if (intent.goal == ComputerGoal.SEND_MESSAGE) {
                 events.emit(CockpitWorkEvent.Stage.ASK_OWNER)
@@ -173,14 +172,14 @@ internal class OwnerComputerWorkflow(
 
     private fun click(frame: NodeActionFrame, label: String, expectedLabel: String,
                       expectedEditable: Boolean = true, expectedHeading: Boolean = false,
-                      expectedSearchField: Boolean = false): NodeActionFrame {
+                      expectedSearchField: Boolean = false, expectedComposeField: Boolean = false): NodeActionFrame {
         val source = checked(frame)
         val stepId = "computer-${++step}"
         val expectation = ClickRequest(packageName, observationEpoch, source.stamp.revision, label,
-            expectedLabel, expectedEditable, expectedHeading, expectedSearchField)
+            expectedLabel, expectedEditable, expectedHeading, expectedSearchField, expectedComposeField)
         var dispatched = false
         val after = checkNotNull(port).click(source, label, expectedLabel, expectedEditable,
-            expectedHeading, expectedSearchField) { target, sequence ->
+            expectedHeading, expectedSearchField, expectedComposeField) { target, sequence ->
             if (!dispatched) {
                 dispatched = true
                 events.emit(CockpitWorkEvent.Stage.DISPATCHED, stepId, CockpitWorkEvent.Action.CLICK,

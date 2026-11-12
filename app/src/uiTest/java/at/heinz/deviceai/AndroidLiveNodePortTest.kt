@@ -166,6 +166,27 @@ class AndroidLiveNodePortTest {
         assertEquals(0, calls)
     }
 
+    @Test fun contactClickVerifiesObservedEnglishComposer() {
+        ServiceShadow.target = field().apply {
+            hintText = null; text = "Anna"; isEditable = false; isClickable = true
+        }
+        val port = port()
+        val before = port.current()
+        val request = ClickRequest("com.whatsapp", access.epoch, before.stamp.revision,
+            "Anna", "", expectedEditable = true, expectedComposeField = true)
+        NodeShadow.onAction = { action, _ ->
+            calls++
+            assertEquals(AccessibilityNodeInfo.ACTION_CLICK, action)
+            ServiceShadow.target = field().apply { hintText = "Message" }
+            changed(); true
+        }
+        val observed = VerifiedNodeClick.execute(request, true, port.clickPort(request) { _, _ -> })
+        assertEquals(1, calls)
+        assertTrue(observed.revision > before.stamp.revision)
+        assertEquals("Message", observed.nodes.single().label)
+        assertTrue(request.matchesExpected(observed.nodes.single()))
+    }
+
     @Test fun intermediateRevisionWaitsForRealResultWithoutRepeatingInput() {
         val port = port(); val before = port.current()
         NodeShadow.onAction = { _, _ ->

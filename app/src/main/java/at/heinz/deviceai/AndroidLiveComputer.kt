@@ -172,7 +172,7 @@ internal object AndroidLiveComputer {
             check(access == current.access) { "OBSERVATION_PERMISSION_CHANGED" }
             val port = port(current, access, permissionCheck)
             val before = port.current()
-            val fingerprint = liveSha256("click|${request.packageName}|${request.label}|${request.expectedLabel}|${request.expectedEditable}|${request.expectedHeading}|${request.expectedSearchField}")
+            val fingerprint = liveSha256("click|${request.packageName}|${request.label}|${request.expectedLabel}|${request.expectedEditable}|${request.expectedHeading}|${request.expectedSearchField}|${request.expectedComposeField}")
             check(current.journal.admit(fingerprint, before.stamp) == LiveActionJournal.Admission.ALLOWED) { "CLICK_ALREADY_ATTEMPTED" }
             var dispatched = false
             var after: NodeActionFrame? = null
