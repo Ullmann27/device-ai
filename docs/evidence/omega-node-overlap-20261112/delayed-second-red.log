@@ -1,0 +1,30 @@
+CONTROL: second request dispatched after first response
+✖ timeouts, oversized results/body and per-session parallel reads fail closed (85.509412ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 179.693304
+
+✖ failing tests:
+
+test at .github/continuum/coding-mcp.test.mjs:133:1
+✖ timeouts, oversized results/body and per-session parallel reads fail closed (85.509412ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 429
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/01387b612451/wt-node-audit/.github/continuum/coding-mcp.test.mjs:138:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 429,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

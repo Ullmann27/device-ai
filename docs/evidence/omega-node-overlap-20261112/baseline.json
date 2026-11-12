@@ -1,0 +1,25 @@
+{
+  "label": "baseline",
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    ".github/continuum/coding-mcp.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/01387b612451/wt-node-audit",
+  "head": "921cc382a1510ae5cf047aafa82900a945def731",
+  "uid": 1000,
+  "node": "v24.22.1",
+  "startedAt": "2026-11-12T10:28:08.528472+00:00",
+  "sourcesBefore": {
+    ".github/continuum/coding-mcp.test.mjs": "42c026baf0c220a9e83f52c8d0432e9fc4e8308ce687adade56ce6b600c5945b",
+    ".github/continuum/coding-mcp-server.mjs": "4a3db639300c6a9645d6a732e78ea6aaa44fe36eee9cacb9cdaab55e4b6f8547"
+  },
+  "exitCode": 0,
+  "finishedAt": "2026-11-12T10:28:08.995518+00:00",
+  "sourcesAfter": {
+    ".github/continuum/coding-mcp.test.mjs": "42c026baf0c220a9e83f52c8d0432e9fc4e8308ce687adade56ce6b600c5945b",
+    ".github/continuum/coding-mcp-server.mjs": "4a3db639300c6a9645d6a732e78ea6aaa44fe36eee9cacb9cdaab55e4b6f8547"
+  },
+  "sourceUnchanged": true
+}

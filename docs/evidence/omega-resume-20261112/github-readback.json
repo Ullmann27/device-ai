@@ -1,0 +1,182 @@
+{
+  "schema": 1,
+  "observed_date": "2026-11-12",
+  "method": "Authenticated GitHub metadata and complete decoded Android job log read; test events counted from actual log. Release binary not downloaded in this audit.",
+  "canonical_branch": "integrate/omega-apk54-20261111",
+  "canonical_pr": 769,
+  "qa_source": "921cc382a1510ae5cf047aafa82900a945def731",
+  "signed_app_source": "9713854bfb01d699f666058ac44379735307b66a",
+  "app_tree_both_sources": "2d133946bd211f2c9a34402762e88d21d1c6a869",
+  "source_delta_files": [
+    ".github/workflows/continuum-code54-qa.yml"
+  ],
+  "android_qa": {
+    "run_id": 43177154472,
+    "job_id": 131044077327,
+    "conclusion": "failure",
+    "completed_at": "2026-11-12T08:45:09Z",
+    "full": {
+      "total": 4860,
+      "pass": 4842,
+      "fail": 1,
+      "skip": 17
+    },
+    "ui": {
+      "total": 25,
+      "pass": 25,
+      "fail": 0,
+      "skip": 0
+    },
+    "new_api_lint": "SUCCESS",
+    "failures": [
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest#actualProviderReadRendersAndExtractsSyntheticPdf",
+        "result": "FAILURE",
+        "duration_ms": 2615
+      }
+    ],
+    "skips": [
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.ChiefPatternE2ETest#s7_pending_agentMessagesUrgentWakesInfoWaits",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.ChiefPatternE2ETest#s4b_pending_profileDiarySharedLayers",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.ChiefPatternE2ETest#s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.ChiefPatternE2ETest#s5b_pending_textFileSkillLibraryLoadedOnDemand",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.ChiefPatternE2ETest#s6_pending_routineReportsOnlyWhenSomethingIsNew",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.ChiefPatternE2ETest#s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest#actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+        "result": "SKIPPED",
+        "duration_ms": 2
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest#cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest#schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest#schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest#schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest#schritt6b_lernen_hypotheseUndTagebuchEintrag",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest#schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest#schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest#actualNodeKotlinNodeTrainingParity",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest#actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      },
+      {
+        "phase": "full-android",
+        "test": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest#trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+        "result": "SKIPPED",
+        "duration_ms": 0
+      }
+    ],
+    "strict_native_pdf": "FAILURE: java.lang.NoSuchMethodError: long java.io.FileDescriptor.getOwnerId$()",
+    "raw_log_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/jobs/131044077327/logs"
+  },
+  "signing": {
+    "run_id": 43163584123,
+    "signer_source": "956c526d5c532c8d57a9901d9c8f180f83d96520",
+    "conclusion": "success",
+    "preflight_job_id": 131000162699,
+    "signing_job_id": 131000307058,
+    "completed_at": "2026-11-12T05:47:46Z",
+    "qa_binding_run_id": 43134158265
+  },
+  "release": {
+    "id": 442543223,
+    "draft": true,
+    "published_at": null,
+    "scope": "UNPUBLISHED_FOLD7_DEVICE_TEST_ONLY",
+    "version_code": 54,
+    "version_name": "0.3.53",
+    "package": "at.heinz.deviceai.continuumlocal",
+    "asset_id": 738249693,
+    "bytes": 102881866,
+    "sha256": "7bc1af136e9ad4063bf57307ad154f26a5924c493973ceb6736322ffdc514d88",
+    "signer_sha256_reported": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+    "url": "https://github.com/Ullmann27/device-ai/releases/tag/untagged-8d9da4abaf035618f69c",
+    "api_url": "https://api.github.com/repos/Ullmann27/device-ai/releases/442543223"
+  },
+  "physical_device_verification": "NOT_RUN",
+  "full_android_pass": false,
+  "node_full_gate": {
+    "source": "5b935b4feaf960bb6973dd4d630f02744e41913f",
+    "total": 2498,
+    "pass": 2455,
+    "fail": 6,
+    "skip": 37,
+    "status": "FAIL_RETAINED",
+    "evidence": "docs/evidence/omega-apk54-20261111/node-serial-5b935b4f/SUMMARY.json",
+    "note": "No full rerun in this continuation; later narrower profiles do not supersede this result."
+  }
+}

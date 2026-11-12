@@ -1,5 +1,11 @@
 # Continuum Omega – Test- und Reparaturmatrix (Fortsetzung 11.11.2026)
 
+> **Aktueller Stand, 12.11.2026:** [Fortsetzung Code54](../research/omega/OMEGA-CODE54-RESUME-20261112.md).
+> Originalsignierter Testentwurf vorhanden (`9713854b`, Release 442543223).
+> Vollständiger neuer Lauf auf `921cc382`: **4.842 PASS / 1 nativer PDF-Hostfehler /
+> 17 bekannte SKIPs**, UI **25/25**, NewApi-Lint **PASS**. Kein voller Android-PASS.
+> Die folgenden früheren Tabellen bleiben unveränderte historische Prüfstände.
+
 Aktueller Integrationszweig: `integrate/omega-apk54-20261111`, Draft #769.
 Die folgende Ausgangsmatrix bleibt als Historie erhalten; aktueller Fortsetzungsstand unten.
 
