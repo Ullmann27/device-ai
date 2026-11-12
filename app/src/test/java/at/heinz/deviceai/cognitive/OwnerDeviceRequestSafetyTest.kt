@@ -64,6 +64,37 @@ class OwnerDeviceRequestSafetyTest {
         ).forEach { assertTrue(it, OwnerDeviceRequestSafety.inspect(it).blocked) }
     }
 
+    @Test fun ownerTargetSentenceIsReadOnlyWithAProposalAndAPostponedChange() {
+        val owner = "untersuche bitte mein handy. sag mir, was speicher verbraucht, warum es heiß wird " +
+            "und was wir bereinigen könnten. aber lösch noch nichts."
+        val assessment = OwnerDeviceRequestSafety.inspect(owner)
+        assertFalse(assessment.blocked)
+        assertTrue(OwnerDeviceRequestSafety.Category.PROPOSAL in assessment.categories)
+        assertTrue(OwnerDeviceRequestSafety.Category.NEGATED_CHANGE in assessment.categories)
+        assertFalse(assessment.readOnlyText.contains("bereinig"))
+        assertFalse(assessment.readOnlyText.contains("lösch"))
+        listOf("Lösch noch nichts, nur die Fotos", "Wir bereinigen jetzt alles", "Lösch noch die Fotos",
+            "Bereinige alles, was wir bereinigen könnten").forEach {
+            assertTrue(it, OwnerDeviceRequestSafety.inspect(it).blocked)
+        }
+    }
+
+    @Test fun anImperativeWithAProposalSubClauseIsStillAChange() {
+        // Review #788: one imperative mutation verb plus "was wir/ich/man … könnten" must never read as a proposal.
+        listOf("Lösch alles, was wir entbehren könnten",
+            "Untersuche mein Handy und lösch alles, was wir nicht brauchen könnten",
+            "Entferne bitte alles, was ich nicht brauchen kann",
+            "Lösche, was man entbehren könnte").forEach {
+            val assessment = OwnerDeviceRequestSafety.inspect(it)
+            assertTrue(it, assessment.blocked)
+            assertFalse(it, OwnerDeviceRequestSafety.Category.PROPOSAL in assessment.categories)
+        }
+        // The genuine proposal forms stay proposals.
+        listOf("Was könnten wir bereinigen?", "Sag mir, was man löschen könnte, aber lösch nichts").forEach {
+            assertFalse(it, OwnerDeviceRequestSafety.inspect(it).blocked)
+        }
+    }
+
     @Test fun cacheMisrecognitionOnlyOpensTheReadOnlyPreview() {
         listOf("bereinige bitte meinen Cage und sage mir wie viel du bereinigt hast",
             "Bereinige meinen Cache", "Leere den Cache", "Jarvis, Cache-Vorschau").forEach {
@@ -78,7 +109,7 @@ class OwnerDeviceRequestSafetyTest {
             at.heinz.deviceai.ToolRegistry.risk(SystemIntelligenceCommands.PREVIEW))
     }
 
-    @Test fun anImperativeWithAProposalSubClauseIsStillAChange() {
+    @Test fun anImperativeWithAnIchOrManProposalSubClauseIsStillAChange() {
         // A single imperative mutation verb plus "was ich/man … kann/könnte" must never read as a proposal.
         listOf("Entferne bitte alles, was ich nicht brauchen kann", "Lösche, was man entbehren könnte",
             "Lösch alles, was ich nicht mehr brauchen könnte").forEach {
@@ -102,7 +133,9 @@ class OwnerDeviceRequestSafetyTest {
     @Test fun aDeclarativeCommandWithAProposalTailStaysAChange() {
         // Review #788: the subject only makes a proposal when it stands between the question word and the verb.
         listOf("Ich lösche jetzt alles, was ich nicht brauchen kann",
-            "Lösch jetzt alles, was man nicht brauchen kann").forEach {
+            "Lösch jetzt alles, was man nicht brauchen kann",
+            "Wir bereinigen jetzt alles, was wir nicht brauchen könnten",
+            "Wir löschen jetzt alles, was wir entbehren könnten").forEach {
             val assessment = OwnerDeviceRequestSafety.inspect(it)
             assertTrue(it, assessment.blocked)
             assertFalse(it, OwnerDeviceRequestSafety.Category.PROPOSAL in assessment.categories)
