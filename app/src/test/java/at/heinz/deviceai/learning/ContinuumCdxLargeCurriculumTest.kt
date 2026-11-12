@@ -13,6 +13,9 @@ class ContinuumCdxLargeCurriculumTest {
         assertEquals(48,corpus.PAIRS_PER_STAGE)
         assertEquals(48,corpus.audit.pairs.size)
         assertEquals(50,corpus.protectedAudit().pairs.size)
+        assertEquals(53,corpus.validationAudit.pairs.size)
+        assertTrue(DecoderGenerativeGate.hasControls(corpus.validationAudit))
+        assertEquals(5,corpus.missingEvidenceControls.size)
         val seen=mutableSetOf<String>()
         for(stage in 0 until corpus.STAGES) {
             val train=corpus.trainingStage(stage)
@@ -22,6 +25,7 @@ class ContinuumCdxLargeCurriculumTest {
         }
         assertEquals(576,seen.size)
         assertTrue(corpus.protectedAudit().pairs.none {it.conditionerText() in seen})
+        assertTrue(corpus.validationAudit.pairs.none {it.conditionerText() in seen})
         assertThrows(IllegalArgumentException::class.java) {corpus.trainingStage(-1)}
         assertThrows(IllegalArgumentException::class.java) {corpus.trainingStage(12)}
     }
@@ -29,7 +33,7 @@ class ContinuumCdxLargeCurriculumTest {
     @Test fun laterStagesRehearsePreviousTrainingWithoutEverSeeingFrozenAudits() {
         val corpus=ContinuumCdxLargeCurriculum
         val heldOut=corpus.protectedAudit().pairs.map { it.conditionerText() }.toSet()
-        val frozenNew=corpus.audit.pairs.map { it.conditionerText() }.toSet()
+        val frozenNew=corpus.validationAudit.pairs.map { it.conditionerText() }.toSet()
         assertEquals(50,heldOut.size)
         for(stage in 0 until corpus.STAGES) {
             val first=corpus.trainingStageWithReplay(stage)
@@ -52,6 +56,33 @@ class ContinuumCdxLargeCurriculumTest {
             assertTrue(complete.none { it in previous })
             assertTrue(complete.none { it in corpus.historicAudit })
         }
+    }
+
+    @Test fun validationIncludesFiveGenuinelyUnanswerableButSeparateQuestions() {
+        val c=ContinuumCdxLargeCurriculum
+        val validation=c.validationAudit
+        val immutableOriginal=c.audit.pairs
+        assertEquals(48,immutableOriginal.size)
+        assertEquals(immutableOriginal,validation.pairs.take(48))
+        assertEquals(5,validation.pairs.drop(48).size)
+        assertEquals(c.missingEvidenceControls,validation.pairs.drop(48))
+        assertTrue(c.missingEvidenceControls.all { pair ->
+            pair.answer=="unbekannt" && pair.evidence.startsWith("Roboter R") &&
+                !pair.question.contains("Wo steht")
+        })
+        val perfect=DecoderGenerativeGate.measure(validation) { pair ->
+            DecoderGeneration(pair.answer, pair.answer.length, true)
+        }
+        assertEquals(48,perfect.supported)
+        assertEquals(5,perfect.missing)
+        assertEquals(5,perfect.correctAbstentions)
+        assertTrue(perfect.qualified)
+        assertEquals(53,perfect.correct.size)
+        val guess=DecoderGenerativeGate.measure(validation) { pair ->
+            DecoderGeneration(if(pair.answer=="unbekannt")"Graz" else pair.answer,4,true)
+        }
+        assertFalse(guess.qualified)
+        assertEquals(5,guess.unsupported)
     }
 
     @Test fun danglingStageCursorLinkIsRejectedWithoutResettingTheTrainingProgress() {
