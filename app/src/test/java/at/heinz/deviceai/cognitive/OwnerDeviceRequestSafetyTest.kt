@@ -129,4 +129,19 @@ class OwnerDeviceRequestSafetyTest {
             assertFalse(it, OwnerDeviceRequestSafety.Category.PROPOSAL in assessment.categories)
         }
     }
+
+    @Test fun aDeclarativeCommandWithAProposalTailStaysAChange() {
+        // Review #788: the subject only makes a proposal when it stands between the question word and the verb.
+        listOf("Ich lösche jetzt alles, was ich nicht brauchen kann",
+            "Lösch jetzt alles, was man nicht brauchen kann",
+            "Wir bereinigen jetzt alles, was wir nicht brauchen könnten",
+            "Wir löschen jetzt alles, was wir entbehren könnten").forEach {
+            val assessment = OwnerDeviceRequestSafety.inspect(it)
+            assertTrue(it, assessment.blocked)
+            assertFalse(it, OwnerDeviceRequestSafety.Category.PROPOSAL in assessment.categories)
+        }
+        listOf("Was könnte ich löschen?", "Sag mir, was man löschen könnte, aber lösch nichts").forEach {
+            assertFalse(it, OwnerDeviceRequestSafety.inspect(it).blocked)
+        }
+    }
 }
