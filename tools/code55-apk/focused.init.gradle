@@ -1,0 +1,16 @@
+gradle.projectsEvaluated {
+    gradle.rootProject.project(':app').tasks.withType(org.gradle.api.tasks.testing.Test).configureEach { task ->
+        if (task.name == 'testDebugUnitTest') {
+            task.maxParallelForks = 1
+            task.filter {
+                includeTestsMatching('at.heinz.deviceai.OwnerAppPlanningContextUiTest')
+                includeTestsMatching('at.heinz.deviceai.ContinuumCockpitHandsFreeUiTest')
+                includeTestsMatching('at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest')
+                includeTestsMatching('at.heinz.deviceai.avatar3d.*')
+                includeTestsMatching('at.heinz.deviceai.cognitive.ContinuousConversationModeTest')
+                includeTestsMatching('at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumTest')
+                failOnNoMatchingTests = true
+            }
+        }
+    }
+}
