@@ -4,6 +4,7 @@ on:
     branches:
       - chatgpt/code52-owner-signing-20261109
       - prep/code53-original-signer-20261111
+      - prep/code54-original-signer-20261112
     paths:
       - '.github/workflows/continuum-code52-owner-signing-check.yml'
       - '.github/workflows/continuum-code52-sign-release.yml'
@@ -12,13 +13,17 @@ on:
       - '.github/continuum/code53-owner-signing-binding.json'
       - '.github/continuum/code53-owner-signing-contract.test.py'
       - 'scripts/continuum-code53-signing-evidence.py'
+      - 'scripts/continuum-code54-signing-evidence.py'
+      - '.github/continuum/code54-owner-signing-binding.json'
+      - '.github/continuum/code54-owner-signing-contract.test.py'
 permissions:
   contents: read
+  actions: read
 jobs:
   signer-static-safety:
     if: github.repository == 'Ullmann27/device-ai'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,9 +32,40 @@ jobs:
         with:
           node-version: '24.22.2'
       - name: Source-bound signer and workflow contract
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           bash -n scripts/continuum-code52-github-signer.sh
           node --test .github/continuum/code52-owner-signing-contract.test.mjs
           python3 -I .github/continuum/code53-owner-signing-contract.test.py
+          python3 -I .github/continuum/code54-owner-signing-contract.test.py
+      - name: Verify real Code54 failed-host PDF-only evidence (never signs)
+        if: github.ref == 'refs/heads/prep/code54-original-signer-20261112'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git status --porcelain --untracked-files=normal
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          tmp="$(mktemp -d)"
+          trap 'rm -rf -- "$tmp"' EXIT
+          gh api "repos/Ullmann27/device-ai/actions/runs/43134158265" > "$tmp/run.json"
+          gh api "repos/Ullmann27/device-ai/actions/runs/43134158265/jobs?per_page=100" > "$tmp/jobs.json"
+          gh api "repos/Ullmann27/device-ai/actions/runs/43134158265/artifacts?per_page=100" > "$tmp/artifacts.json"
+          gh api "repos/Ullmann27/device-ai/git/commits/9713854bfb01d699f666058ac44379735307b66a" > "$tmp/source.json"
+          python3 -I scripts/continuum-code54-signing-evidence.py metadata \
+            .github/continuum/code54-owner-signing-binding.json \
+            9713854bfb01d699f666058ac44379735307b66a \
+            9713854bfb01d699f666058ac44379735307b66a \
+            43134158265 "$tmp/run.json" "$tmp/jobs.json" "$tmp/artifacts.json" "$tmp/source.json"
+          gh api "repos/Ullmann27/device-ai/actions/artifacts/13911650172/zip" > "$tmp/evidence.zip"
+          gh api "repos/Ullmann27/device-ai/actions/artifacts/13908580815/zip" > "$tmp/unsigned.zip"
+          python3 -I scripts/continuum-code54-signing-evidence.py archives \
+            .github/continuum/code54-owner-signing-binding.json \
+            "$tmp/unsigned.zip" "$tmp/verified" "$tmp/evidence.zip"
+          echo "CODE54_DEVICE_TEST_PDF_EXCEPTION_PROVEN_NO_SIGNING"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Code52 and frozen Code53.
+# Code52, frozen Code53, and exact-source Code54 preparation (signing blocked until native PDF gate).
 # Exact owner approval remains mandatory.
 # Modi: preflight (ohne Geheimnisse) | sign (nur im geschützten Environment).
 # Signing material is used only inside the protected job and never printed or exported.
@@ -37,6 +37,17 @@ if [[ "$source_sha" == 050a57cb019dcc1b7fe6cfa2fb5c11176b048e05 ]]; then
   binding=".github/continuum/code53-owner-signing-binding.json"
   test -s "$binding" || fail CODE53_BINDING_MISSING
   command -v python3 >/dev/null || fail CODE53_PYTHON_MISSING
+elif [[ "$source_sha" == 9713854bfb01d699f666058ac44379735307b66a ]]; then
+  profile="code54"
+  code="54"
+  name_version="0.3.53"
+  artifact="Code54-UNSIGNED-NOT-INSTALLABLE"
+  unsigned_name="Continuum-Code54-UNSIGNED-NOT-INSTALLABLE.apk"
+  qa_branch="integrate/omega-apk54-20261111"
+  qa_workflow_path=".github/workflows/continuum-code54-qa.yml"
+  binding=".github/continuum/code54-owner-signing-binding.json"
+  test -s "$binding" || fail CODE54_BINDING_MISSING
+  command -v python3 >/dev/null || fail CODE54_PYTHON_MISSING
 fi
 
 [[ "${GITHUB_REPOSITORY:-}" == "$repo" ]] || fail WRONG_REPOSITORY
@@ -66,22 +77,45 @@ echo CHECKPOINT=ENVIRONMENT_OWNER_REVIEWER_AND_EXACT_BRANCH_POLICY_VERIFIED
 
 # 2. Source-bound QA.
 run="$(gh api "repos/$repo/actions/runs/$qa_run")" || fail QA_RUN_UNREADABLE
-if [[ "$profile" == code53 ]]; then
+if [[ "$profile" == code53 || "$profile" == code54 ]]; then
   printf '%s\n' "$run" > "$tmp/run.json"
   unset run
   gh api "repos/$repo/actions/runs/$qa_run/jobs?per_page=100" > "$tmp/jobs.json" || fail QA_JOBS_UNREADABLE
   gh api "repos/$repo/actions/runs/$qa_run/artifacts?per_page=100" > "$tmp/artifacts.json" || fail QA_ARTIFACTS_UNREADABLE
   gh api "repos/$repo/git/commits/$source_sha" > "$tmp/source.json" || fail SOURCE_COMMIT_UNREADABLE
-  python3 -I scripts/continuum-code53-signing-evidence.py metadata "$binding" \
-    "$source_sha" "$approved_sha" "$qa_run" "$tmp/run.json" "$tmp/jobs.json" \
-    "$tmp/artifacts.json" "$tmp/source.json" || fail CODE53_METADATA_MISMATCH
-  for kind in unsigned evidence; do
-    artifact_id="$(jq -er --arg kind "$kind" '.[$kind].id' "$binding")"
-    gh api "repos/$repo/actions/artifacts/$artifact_id/zip" > "$tmp/$kind.zip" || fail CODE53_ARCHIVE_DOWNLOAD_FAILED
-  done
-  python3 -I scripts/continuum-code53-signing-evidence.py archives "$binding" \
-    "$tmp/unsigned.zip" "$tmp/evidence.zip" "$tmp/unsigned" || fail CODE53_ARCHIVE_MISMATCH
-  lifecycle="PASS_IN_CODE53_ANDROID_HOST"
+  if [[ "$profile" == code53 ]]; then
+    python3 -I scripts/continuum-code53-signing-evidence.py metadata "$binding" \
+      "$source_sha" "$approved_sha" "$qa_run" "$tmp/run.json" "$tmp/jobs.json" \
+      "$tmp/artifacts.json" "$tmp/source.json" || fail CODE53_METADATA_MISMATCH
+    for kind in unsigned evidence; do
+      artifact_id="$(jq -er --arg kind "$kind" '.[$kind].id' "$binding")"
+      gh api "repos/$repo/actions/artifacts/$artifact_id/zip" > "$tmp/$kind.zip" || fail CODE53_ARCHIVE_DOWNLOAD_FAILED
+    done
+    python3 -I scripts/continuum-code53-signing-evidence.py archives "$binding" \
+      "$tmp/unsigned.zip" "$tmp/evidence.zip" "$tmp/unsigned" || fail CODE53_ARCHIVE_MISMATCH
+    lifecycle="PASS_IN_CODE53_ANDROID_HOST"
+  else
+    # The Code54 binding has a locked release_gate until the owner separately
+    # approves a source-exact native PDF result or a reviewed test exception.
+    python3 -I scripts/continuum-code54-signing-evidence.py metadata "$binding" \
+      "$source_sha" "$approved_sha" "$qa_run" "$tmp/run.json" "$tmp/jobs.json" \
+      "$tmp/artifacts.json" "$tmp/source.json" || fail CODE54_METADATA_MISMATCH
+    artifact_id="$(jq -er '.unsigned.id' "$binding")"
+    gh api "repos/$repo/actions/artifacts/$artifact_id/zip" > "$tmp/unsigned.zip" || fail CODE54_ARCHIVE_DOWNLOAD_FAILED
+    gate="$(jq -er '.release_gate' "$binding")" || fail CODE54_GATE_UNREADABLE
+    if [[ "$gate" == DEVICE_TEST_NATIVE_PDF_EXCEPTION_VERIFIED ]]; then
+      # Narrow owner-approved device-test scope only. All other test cases must pass.
+      evidence_id="$(jq -er '.qa_evidence.id' "$binding")" || fail CODE54_QA_EVIDENCE_UNBOUND
+      gh api "repos/$repo/actions/artifacts/$evidence_id/zip" > "$tmp/evidence.zip" || fail CODE54_QA_EVIDENCE_DOWNLOAD_FAILED
+      python3 -I scripts/continuum-code54-signing-evidence.py archives "$binding" \
+        "$tmp/unsigned.zip" "$tmp/unsigned" "$tmp/evidence.zip" || fail CODE54_ARCHIVE_MISMATCH
+      lifecycle="CODE54_HOST_PDF_FAILURE_FOLD7_PDF_REQUIRED_NOT_FULL_PASS"
+    else
+      python3 -I scripts/continuum-code54-signing-evidence.py archives "$binding" \
+        "$tmp/unsigned.zip" "$tmp/unsigned" || fail CODE54_ARCHIVE_MISMATCH
+      lifecycle="PASS_IN_CODE54_STRICT_ANDROID_HOST"
+    fi
+  fi
 else
 jq -e --arg sha "$source_sha" --arg b "$qa_branch" --arg path "$qa_workflow_path" '
   .head_sha==$sha and .head_branch==$b and .event=="push" and .status=="completed"
@@ -107,7 +141,7 @@ echo CHECKPOINT=RELEASE_PREFLIGHT_VALID
 
 # 4. Ungesignierte QA-APK aus genau diesem Lauf prüfen.
 [[ -n "${ANDROID_HOME:-}" ]] || fail ANDROID_HOME_MISSING
-if [[ "$profile" == code53 ]]; then
+if [[ "$profile" != code52 ]]; then
   unsigned="$tmp/unsigned/$unsigned_name"
 else
 mkdir "$tmp/unsigned"
@@ -149,7 +183,7 @@ test "$fp" = "$fingerprint" || fail ORIGINAL_CERTIFICATE_MISMATCH
 echo CHECKPOINT=ORIGINAL_P12_CERTIFICATE_VERIFIED
 
 # 6. Ausrichten, signieren, unabhängig prüfen.
-if [[ "$profile" == code53 ]]; then
+if [[ "$profile" != code52 ]]; then
   "$tools/zipalign" -P 16 -f 4 "$unsigned" "$tmp/aligned.apk" >/dev/null || fail APK_ZIPALIGN_FAILED
 else
   "$tools/zipalign" -p -f 4 "$unsigned" "$tmp/aligned.apk" >/dev/null || fail APK_ZIPALIGN_FAILED
@@ -163,7 +197,7 @@ verified="$("$tools/apksigner" verify --verbose --print-certs "$tmp/signed.apk")
 grep -Fq 'Verified using v2 scheme (APK Signature Scheme v2): true' <<< "$verified" || fail SIGNED_APK_V2_MISSING
 actual="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' <<< "$verified" | head -n1 | tr '[:upper:]' '[:lower:]')"
 test "$actual" = "$fingerprint" || fail SIGNED_APK_CERTIFICATE_MISMATCH
-if [[ "$profile" == code53 ]]; then
+if [[ "$profile" != code52 ]]; then
   "$tools/zipalign" -c -P 16 -v 4 "$tmp/signed.apk" >/dev/null || fail SIGNED_APK_ALIGNMENT_MISMATCH
 fi
 signed_badging="$("$tools/aapt2" dump badging "$tmp/signed.apk")" || fail SIGNED_APK_BADGING_FAILED
@@ -181,6 +215,19 @@ if [[ "$profile" == code53 ]]; then
     "unsigned_artifact_id=\(.unsigned.id)", "unsigned_artifact_digest=\(.unsigned.digest)",
     "evidence_artifact_id=\(.evidence.id)", "evidence_artifact_digest=\(.evidence.digest)"' \
     "$binding" >> "$tmp/BUILD-INFO.txt"
+elif [[ "$profile" == code54 ]]; then
+  jq -r '"source_tree=\(.source_tree)", "qa_workflow_blob=\(.workflow_blob_sha)",
+    "qa_android_job_id=\(.qa_job_android_id)", "qa_unsigned_job_id=\(.qa_job_unsigned_id)",
+    "unsigned_apk_sha256=\(.apk_sha256)", "unsigned_artifact_id=\(.unsigned.id)",
+    "unsigned_artifact_digest=\(.unsigned.digest)", "release_gate=\(.release_gate)"' \
+    "$binding" >> "$tmp/BUILD-INFO.txt"
+  if [[ "$gate" == DEVICE_TEST_NATIVE_PDF_EXCEPTION_VERIFIED ]]; then
+    jq -r '"qa_evidence_artifact_id=\(.qa_evidence.id)", "qa_evidence_artifact_digest=\(.qa_evidence.digest)",
+      "owner_pdf_exception=\(.owner_exception.authorization_id)",
+      "native_pdf_device_status=NOT_RUN",
+      "test_draft_only=true", "publication_permitted=false",
+      "requires_fold7_pdf_test=true"' "$binding" >> "$tmp/BUILD-INFO.txt"
+  fi
 fi
 echo CHECKPOINT=SIGNED_APK_CERTIFICATE_PACKAGE_AND_HASH_VERIFIED
 
@@ -193,10 +240,22 @@ Zertifikat SHA-256: $fingerprint
 APK SHA-256: $digest
 Größe in Bytes: $size
 QA-Lauf (GitHub, exakt dieser Commit): https://github.com/$repo/actions/runs/$qa_run
-JDK-21-Lifecycle: $lifecycle (required, included in the fully green Android suite).
+JDK-21-Lifecycle: $lifecycle (exakter Host-Pruefstand, keine Fold7-Garantie).
 Echte Fold7-Geräteprüfung (Thermik, Sprache, Avatar, PDF, Rotation, Update): NICHT AUSGEFÜHRT.
 Code51-to-Code$code: original package and signing certificate, higher versionCode. Exact Fold7 update/data preservation still NOT_RUN. Install only as an update; never uninstall or clear existing app data.
 EOF
+if [[ "$profile" == code54 && "$gate" == DEVICE_TEST_NATIVE_PDF_EXCEPTION_VERIFIED ]]; then
+  cat >> "$tmp/notes.txt" <<EOF
+
+*** UNVEROEFFENTLICHTER FOLD7-GERAETETEST-ENTWURF ***
+Der strikte native PDF Hosttest ist NICHT bestanden. Er scheiterte an
+java.io.FileDescriptor.getOwnerId$; andere Hosttests und exakt die
+17 festgelegten Skip-Faelle wurden quellgebunden verifiziert.
+Kein vollstaendiges Android QA PASS. PDF-Test auf Fold7: NOT_RUN.
+Nur Besitzer-Installation als Update fuer gezielte lokale Abnahme.
+NICHT veroeffentlichen, NICHT als Release-freigegeben bezeichnen.
+EOF
+fi
 gh release create "$tag" "$tmp/$name" "$tmp/BUILD-INFO.txt" --repo "$repo" --target "$source_sha" --title "Continuum Lokal $name_version (Code $code)" --notes-file "$tmp/notes.txt" --draft --latest=false >/dev/null || fail GITHUB_DRAFT_CREATE_FAILED
 mkdir "$tmp/readback"
 gh release download "$tag" --repo "$repo" --pattern "$name" --dir "$tmp/readback" >/dev/null || fail GITHUB_READBACK_FAILED
