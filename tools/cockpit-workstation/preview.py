@@ -198,7 +198,8 @@ def main():
         run(['java', '-Xmx512m', '-Djava.awt.headless=true', '-cp', os.pathsep.join([str(jar)] + cp),
              'at.heinz.deviceai.ui.WorkstationHostExport', str(root), str(work),
              'video' if args.video else 'draft' if args.draft else 'stills', args.content], work / 'export.log')
-        render_command = ['blender', '-b', '-t', '2', '--python', str(TOOL_ROOT / 'render_host.py'), '--',
+        render_command = ['blender', '-b', '-t', '2', '--python-exit-code', '1',
+             '--python', str(TOOL_ROOT / 'render_host.py'), '--',
              '--repo-root', str(root), '--work-dir', str(work), '--samples', str(args.samples),
              '--video-samples', str(args.video_samples or args.samples)]
         if args.denoise:
@@ -206,6 +207,9 @@ def main():
         if args.qa_lock:
             render_command = ['flock', '-w', '45', str(args.qa_lock.resolve())] + render_command
         run(render_command, work / 'blender.log')
+        if not (work / 'blender-manifest.json').is_file():
+            print((work / 'blender.log').read_text()[-9000:])
+            raise RuntimeError('Blender produced no completed render manifest')
         exported = json.loads((work / 'scene-export.json').read_text())
         compose(work, out, exported, layer_depths)
         if args.video:
