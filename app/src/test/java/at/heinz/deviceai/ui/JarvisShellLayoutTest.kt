@@ -121,7 +121,7 @@ class JarvisShellLayoutTest {
         assertTrue(JarvisTiles.reference.all { it.displayText == null })
         assertEquals(0, JarvisShellLayout.create(412f, 915f).tileBoxes().size)
         assertEquals(0, JarvisShellLayout.create(884f, 760f).tileBoxes().size)
-        assertEquals(JarvisTiles.railNav.size,
+        assertEquals(JarvisTiles.bottomNav.size,
             JarvisTiles.bottomNavItemBoxes(JarvisShellLayout.create(884f, 760f)[Slot.BOTTOM_NAV]!!).size)
     }
 

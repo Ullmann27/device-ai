@@ -19,9 +19,12 @@ class JarvisCockpitUxArchitectTest {
     private val phone = 412f to 915f
 
     @Test fun toolDockReplacesTheLeftRailAndKeepsEveryRailTarget() {
-        assertEquals(JarvisTiles.railNav.map { it.target }, JarvisTiles.bottomNav.map { it.target })
-        assertEquals(listOf("home", "chat", "memory", "logic", "research", "agents", "tasks", "web",
-            "learning", "device", "system"), JarvisTiles.bottomNav.map { it.target })
+        assertEquals(CockpitGlassButtons.buttons.map { it.target }, JarvisTiles.bottomNav.map { it.target })
+        assertEquals(listOf("home", "chat", "memory", "research", "tasks", "web",
+            "learning", "device"), JarvisTiles.bottomNav.map { it.target })
+        assertEquals(listOf("logic", "agents", "system"), CockpitGlassButtons.secondaryTargets)
+        assertTrue(at.heinz.deviceai.ContinuumWorkAreaNavigationSpec.moreEntries.map { it.target }
+            .containsAll(CockpitGlassButtons.secondaryTargets))
         for (item in JarvisTiles.bottomNav) assertTrue(item.target in JarvisShellContent.routes)
         assertFalse("Dateien is not a real route", JarvisTiles.bottomNav.any { it.label == "Dateien" })
         assertFalse("PDF is not a real route", JarvisTiles.bottomNav.any { it.label.equals("PDF", true) })
@@ -37,7 +40,7 @@ class JarvisCockpitUxArchitectTest {
             val hits = JarvisTiles.bottomNavItemBoxes(dock).mapIndexed { i, box ->
                 JarvisShellContent.hitTarget(shell, JarvisTiles.reference, box.centerX, box.centerY)
             }
-            assertEquals(JarvisTiles.railNav.map { it.target }, hits)
+            assertEquals(JarvisTiles.bottomNav.map { it.target }, hits)
         }
     }
 
@@ -48,7 +51,7 @@ class JarvisCockpitUxArchitectTest {
             assertNull("$label rail", shell[Slot.NAV_RAIL])
             assertFalse("$label must not keep the overflowing 10-tile reflow", shell.hasFeatureTiles)
             val dock = requireNotNull(shell[Slot.BOTTOM_NAV])
-            assertEquals(JarvisTiles.railNav.map { it.target },
+            assertEquals(JarvisTiles.bottomNav.map { it.target },
                 JarvisTiles.bottomNavItemBoxes(dock).map { box ->
                     JarvisShellContent.hitTarget(shell, JarvisTiles.reference, box.centerX, box.centerY)
                 })
@@ -56,7 +59,7 @@ class JarvisCockpitUxArchitectTest {
         }
         val withBar = JarvisShellLayout.create(412f, 915f, includeBottomNavigation = true)
         val dock = requireNotNull(withBar[Slot.BOTTOM_NAV])
-        assertEquals(JarvisTiles.railNav.map { it.target },
+        assertEquals(JarvisTiles.bottomNav.map { it.target },
             JarvisTiles.bottomNavItemBoxes(dock).map { box ->
                 JarvisShellContent.hitTarget(withBar, JarvisTiles.reference, box.centerX, box.centerY)
             })

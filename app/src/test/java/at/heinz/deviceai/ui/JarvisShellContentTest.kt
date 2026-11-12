@@ -48,7 +48,7 @@ class JarvisShellContentTest {
                 }
             } else {
                 val dock = requireNotNull(shell[JarvisShellLayout.Slot.BOTTOM_NAV])
-                assertEquals(JarvisTiles.railNav.map { it.target },
+                assertEquals(JarvisTiles.bottomNav.map { it.target },
                     JarvisTiles.bottomNavItemBoxes(dock).map { box ->
                         JarvisShellContent.hitTarget(shell, tiles, box.centerX, box.centerY)
                     })

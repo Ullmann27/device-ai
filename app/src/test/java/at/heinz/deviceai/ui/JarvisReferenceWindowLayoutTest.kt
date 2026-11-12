@@ -99,7 +99,7 @@ class JarvisReferenceWindowLayoutTest {
         assertNotNull(phone[Slot.BOTTOM_NAV])
         assertFalse(phone.requiresVerticalScroll)
         val dock = requireNotNull(shell[Slot.BOTTOM_NAV])
-        assertEquals(JarvisTiles.railNav.map { it.target },
+        assertEquals(JarvisTiles.bottomNav.map { it.target },
             JarvisTiles.bottomNavItemBoxes(dock).map { box ->
                 JarvisShellContent.hitTarget(shell, JarvisTiles.reference, box.centerX, box.centerY)
             })
@@ -325,7 +325,7 @@ class JarvisReferenceWindowLayoutTest {
         val expected = listOf("home", "chat", "memory", "research", "tasks", "web", "learning", "device")
         assertEquals("The eight owner buttons have stable native routes", expected, JarvisTiles.bottomNav.map { it.target })
         val reachable = expected + at.heinz.deviceai.ContinuumWorkAreaNavigationSpec.moreEntries.map { it.target }
-        assertTrue("Former rail actions remain available", reachable.containsAll(JarvisTiles.railNav.map { it.target }))
+        assertTrue("Former rail actions remain available", reachable.containsAll(JarvisTiles.bottomNav.map { it.target }))
         assertEquals(expected,
             JarvisTiles.bottomNavItemBoxes(dock).map { box ->
                 JarvisShellContent.hitTarget(phone, JarvisTiles.reference, box.centerX, box.centerY)
