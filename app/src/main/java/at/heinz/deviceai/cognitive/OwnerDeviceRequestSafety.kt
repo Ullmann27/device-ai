@@ -68,6 +68,17 @@ internal object OwnerDeviceRequestSafety {
         "(?:wollt|möchtet|werdet|könnt)\\s+ihr))$collectiveDetail\\s+starten)$")
     private val directedStart = words("du|dich|dir|dein\\p{L}*|sie|ihnen|dass|damit")
 
+    /**
+     * Proposal word order only: question word, then subject, then the single mutation verb ("was ich … löschen
+     * könnte", "was könnten wir bereinigen"). An imperative opening or a declarative "ich/wir/man lösche(n) jetzt …"
+     * before the question word stays a change, whatever sub-clause follows.
+     */
+    private fun isProposalOrder(clause: String, verbAt: Int): Boolean {
+        if (verbAt <= 0) return false
+        val question = proposalQuestion.findAll(clause).lastOrNull { it.range.first < verbAt } ?: return false
+        return proposalSubject.findAll(clause).any { it.range.first > question.range.last && it.range.first < verbAt }
+    }
+
     fun inspect(text: String): Assessment {
         if (roleHeader.containsMatchIn(text) || ruleOverride.containsMatchIn(text) || roleTakeover.containsMatchIn(text))
             return Assessment(setOf(Category.ROLE_MANIPULATION), "")
@@ -96,9 +107,8 @@ internal object OwnerDeviceRequestSafety {
                 deferred.containsMatchIn(clause) -> Category.DEFERRED_CHANGE
                 // "was ich/man … löschen könnte" is a proposal; "Entferne alles, was ich … kann" is an imperative.
                 // The mutation verb must stand after the subject and must not open the clause.
-                proposalSubject.containsMatchIn(clause) && proposalModal.containsMatchIn(clause) &&
-                    proposalQuestion.containsMatchIn(clause) && changes.singleOrNull()?.let { verb ->
-                        verb.range.first > 0 && proposalSubject.find(clause)!!.range.first < verb.range.first
+                proposalModal.containsMatchIn(clause) && changes.singleOrNull()?.let { verb ->
+                        isProposalOrder(clause, verb.range.first)
                     } == true -> Category.PROPOSAL
                 changes.singleOrNull()?.let { negatesAction(clause, it) } == true -> Category.NEGATED_CHANGE
                 changes.singleOrNull()?.value == "starten" && !improvements.containsMatchIn(clause) &&
