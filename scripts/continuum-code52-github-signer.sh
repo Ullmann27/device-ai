@@ -102,9 +102,19 @@ if [[ "$profile" == code53 || "$profile" == code54 ]]; then
       "$tmp/artifacts.json" "$tmp/source.json" || fail CODE54_METADATA_MISMATCH
     artifact_id="$(jq -er '.unsigned.id' "$binding")"
     gh api "repos/$repo/actions/artifacts/$artifact_id/zip" > "$tmp/unsigned.zip" || fail CODE54_ARCHIVE_DOWNLOAD_FAILED
-    python3 -I scripts/continuum-code54-signing-evidence.py archives "$binding" \
-      "$tmp/unsigned.zip" "$tmp/unsigned" || fail CODE54_ARCHIVE_MISMATCH
-    lifecycle="PASS_IN_CODE54_STRICT_ANDROID_HOST"
+    gate="$(jq -er '.release_gate' "$binding")" || fail CODE54_GATE_UNREADABLE
+    if [[ "$gate" == DEVICE_TEST_NATIVE_PDF_EXCEPTION_VERIFIED ]]; then
+      # Narrow owner-approved device-test scope only. All other test cases must pass.
+      evidence_id="$(jq -er '.qa_evidence.id' "$binding")" || fail CODE54_QA_EVIDENCE_UNBOUND
+      gh api "repos/$repo/actions/artifacts/$evidence_id/zip" > "$tmp/evidence.zip" || fail CODE54_QA_EVIDENCE_DOWNLOAD_FAILED
+      python3 -I scripts/continuum-code54-signing-evidence.py archives "$binding" \
+        "$tmp/unsigned.zip" "$tmp/unsigned" "$tmp/evidence.zip" || fail CODE54_ARCHIVE_MISMATCH
+      lifecycle="CODE54_HOST_PDF_FAILURE_FOLD7_PDF_REQUIRED_NOT_FULL_PASS"
+    else
+      python3 -I scripts/continuum-code54-signing-evidence.py archives "$binding" \
+        "$tmp/unsigned.zip" "$tmp/unsigned" || fail CODE54_ARCHIVE_MISMATCH
+      lifecycle="PASS_IN_CODE54_STRICT_ANDROID_HOST"
+    fi
   fi
 else
 jq -e --arg sha "$source_sha" --arg b "$qa_branch" --arg path "$qa_workflow_path" '
@@ -211,6 +221,13 @@ elif [[ "$profile" == code54 ]]; then
     "unsigned_apk_sha256=\(.apk_sha256)", "unsigned_artifact_id=\(.unsigned.id)",
     "unsigned_artifact_digest=\(.unsigned.digest)", "release_gate=\(.release_gate)"' \
     "$binding" >> "$tmp/BUILD-INFO.txt"
+  if [[ "$gate" == DEVICE_TEST_NATIVE_PDF_EXCEPTION_VERIFIED ]]; then
+    jq -r '"qa_evidence_artifact_id=\(.qa_evidence.id)", "qa_evidence_artifact_digest=\(.qa_evidence.digest)",
+      "owner_pdf_exception=\(.owner_exception.authorization_id)",
+      "native_pdf_device_status=NOT_RUN",
+      "test_draft_only=true", "publication_permitted=false",
+      "requires_fold7_pdf_test=true"' "$binding" >> "$tmp/BUILD-INFO.txt"
+  fi
 fi
 echo CHECKPOINT=SIGNED_APK_CERTIFICATE_PACKAGE_AND_HASH_VERIFIED
 
@@ -223,10 +240,22 @@ Zertifikat SHA-256: $fingerprint
 APK SHA-256: $digest
 Größe in Bytes: $size
 QA-Lauf (GitHub, exakt dieser Commit): https://github.com/$repo/actions/runs/$qa_run
-JDK-21-Lifecycle: $lifecycle (required, included in the fully green Android suite).
+JDK-21-Lifecycle: $lifecycle (exakter Host-Pruefstand, keine Fold7-Garantie).
 Echte Fold7-Geräteprüfung (Thermik, Sprache, Avatar, PDF, Rotation, Update): NICHT AUSGEFÜHRT.
 Code51-to-Code$code: original package and signing certificate, higher versionCode. Exact Fold7 update/data preservation still NOT_RUN. Install only as an update; never uninstall or clear existing app data.
 EOF
+if [[ "$profile" == code54 && "$gate" == DEVICE_TEST_NATIVE_PDF_EXCEPTION_VERIFIED ]]; then
+  cat >> "$tmp/notes.txt" <<EOF
+
+*** UNVEROEFFENTLICHTER FOLD7-GERAETETEST-ENTWURF ***
+Der strikte native PDF Hosttest ist NICHT bestanden. Er scheiterte an
+java.io.FileDescriptor.getOwnerId$; andere Hosttests und exakt die
+17 festgelegten Skip-Faelle wurden quellgebunden verifiziert.
+Kein vollstaendiges Android QA PASS. PDF-Test auf Fold7: NOT_RUN.
+Nur Besitzer-Installation als Update fuer gezielte lokale Abnahme.
+NICHT veroeffentlichen, NICHT als Release-freigegeben bezeichnen.
+EOF
+fi
 gh release create "$tag" "$tmp/$name" "$tmp/BUILD-INFO.txt" --repo "$repo" --target "$source_sha" --title "Continuum Lokal $name_version (Code $code)" --notes-file "$tmp/notes.txt" --draft --latest=false >/dev/null || fail GITHUB_DRAFT_CREATE_FAILED
 mkdir "$tmp/readback"
 gh release download "$tag" --repo "$repo" --pattern "$name" --dir "$tmp/readback" >/dev/null || fail GITHUB_READBACK_FAILED
