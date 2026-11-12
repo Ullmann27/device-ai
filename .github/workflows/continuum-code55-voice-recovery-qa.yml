@@ -6,6 +6,7 @@ on:
       - fix/code55-handsfree-recovery-20261112
     paths:
       - '.github/workflows/continuum-code55-voice-recovery-qa.yml'
+      - '.github/continuum/code55-voice-test-filter.init.gradle'
       - 'app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt'
       - 'app/src/main/java/at/heinz/deviceai/AgentActivity.kt'
       - 'app/src/main/java/at/heinz/deviceai/cognitive/ContinuousConversationMode.kt'
@@ -60,13 +61,8 @@ jobs:
             -Pkotlin.compiler.execution.strategy=in-process \
             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true \
-            :app:testDebugUnitTest \
-            --tests 'at.heinz.deviceai.cognitive.ContinuousConversationModeTest' \
-            --tests 'at.heinz.deviceai.cognitive.ContinuousConversationRecoveryTest' \
-            --tests 'at.heinz.deviceai.cognitive.LocalSpeechSessionTest' \
-            --tests 'at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest' \
-            --tests 'at.heinz.deviceai.cognitive.ConversationSpeechIntegrationRegressionTest' \
-            --tests 'at.heinz.deviceai.AndroidSpeechFailureTest'
+            -I .github/continuum/code55-voice-test-filter.init.gradle \
+            :app:testDebugUnitTest
           python3 - <<'PY'
           from pathlib import Path
           import xml.etree.ElementTree as ET

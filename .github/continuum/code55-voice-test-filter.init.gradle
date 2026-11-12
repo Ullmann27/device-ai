@@ -1,0 +1,20 @@
+// Complete source-bound test classes; no change to product safety policy.
+gradle.projectsEvaluated {
+    gradle.rootProject.project(':app').tasks.withType(org.gradle.api.tasks.testing.Test).configureEach { task ->
+        if (task.name == 'testDebugUnitTest') {
+            task.maxParallelForks = 1
+            def selectedClasses = [
+                'at.heinz.deviceai.cognitive.ContinuousConversationModeTest',
+                'at.heinz.deviceai.cognitive.ContinuousConversationRecoveryTest',
+                'at.heinz.deviceai.cognitive.LocalSpeechSessionTest',
+                'at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest',
+                'at.heinz.deviceai.cognitive.ConversationSpeechIntegrationRegressionTest',
+                'at.heinz.deviceai.AndroidSpeechFailureTest'
+            ]
+            task.filter {
+                selectedClasses.each { includeTestsMatching(it) }
+                failOnNoMatchingTests = true
+            }
+        }
+    }
+}
