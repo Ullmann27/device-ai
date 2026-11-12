@@ -122,6 +122,50 @@ class AndroidLiveNodePortTest {
         assertEquals(1, calls)
     }
 
+    @Test fun searchClickWaitsForSemanticFieldWithDifferentHint() {
+        ServiceShadow.target = field().apply {
+            hintText = null; text = "Suchen"; isEditable = false; isClickable = true
+            viewIdResourceName = "com.whatsapp:id/menuitem_search"
+        }
+        val port = port()
+        val before = port.current()
+        val request = ClickRequest("com.whatsapp", access.epoch, before.stamp.revision,
+            "Suchen", "", expectedEditable = true, expectedSearchField = true)
+        NodeShadow.onAction = { action, _ ->
+            calls++
+            assertEquals(AccessibilityNodeInfo.ACTION_CLICK, action)
+            ServiceShadow.target = field().apply {
+                hintText = "Fragen oder suchen"
+                viewIdResourceName = "com.whatsapp:id/search_src_text"
+            }
+            changed(); true
+        }
+        var dispatches = 0
+        val observed = VerifiedNodeClick.execute(request, true, port.clickPort(request) { _, _ -> dispatches++ })
+        assertTrue(observed.revision > before.stamp.revision)
+        assertEquals("Fragen oder suchen", observed.nodes.single().label)
+        assertEquals("com.whatsapp:id/search_src_text", observed.nodes.single().viewId)
+        assertTrue(request.matchesExpected(observed.nodes.single()))
+        assertEquals(1, calls)
+        assertEquals(1, dispatches)
+    }
+
+    @Test fun semanticClickStillChecksPermissionImmediatelyBeforeDispatch() {
+        ServiceShadow.target = field().apply {
+            hintText = null; text = "Suchen"; isEditable = false; isClickable = true
+        }
+        val port = port()
+        val before = port.current()
+        val request = ClickRequest("com.whatsapp", access.epoch, before.stamp.revision,
+            "Suchen", "", expectedEditable = true, expectedSearchField = true)
+        NodeShadow.onRefresh = { allowed = false }
+        NodeShadow.onAction = { _, _ -> calls++; true }
+        assertThrows(IllegalStateException::class.java) {
+            VerifiedNodeClick.execute(request, true, port.clickPort(request) { _, _ -> })
+        }
+        assertEquals(0, calls)
+    }
+
     @Test fun intermediateRevisionWaitsForRealResultWithoutRepeatingInput() {
         val port = port(); val before = port.current()
         NodeShadow.onAction = { _, _ ->

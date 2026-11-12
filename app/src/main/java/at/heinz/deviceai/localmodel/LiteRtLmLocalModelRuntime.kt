@@ -66,7 +66,7 @@ interface LocalModelRuntime {
     val inferenceProfiles: List<LocalInferenceProfile> get() = emptyList()
     /** CPU threads the loaded engine was configured with; null when unknown or not loaded. */
     val computeThreads: Int? get() = null
-    /** Fresh-chat UTF-8 budget; null for adapters without measurements. */
+    /** Transport limit, not an exact tokenizer budget. */
     val maxPromptUtf8Bytes: Int? get() = null
     fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)
     fun unload(callback: (Result<Unit>) -> Unit = {})
@@ -113,15 +113,14 @@ class LiteRtLmLocalModelRuntime(
 
     @Volatile private var configuredContextTokens = 0
     @Volatile private var prefaceTokenCount: Int? = null
-    override val maxPromptUtf8Bytes: Int? get() = if (loadedModel == null) null else
-        LocalNativePromptBudget.promptBytes(configuredContextTokens, prefaceTokenCount,
-            LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id))
+    override val maxPromptUtf8Bytes: Int? get() = if (loadedModel == null) null else LocalToolContinuation.MAX_INPUT_BYTES
 
     private var engine: Engine? = null
     private var conversation: Conversation? = null
     // Only the freshly initialized, never-dispatched chat conversation is reusable.
     // Consumed exactly once; subsequent full prompts always start fresh.
     private var startupConversationUnused = false
+    private var conversationContextInvalid = false
     private var inferenceConversation: Conversation? = null
     private var inferenceActive = false
     private var activeInferenceProfile: LocalInferenceProfileRecorder? = null
@@ -175,7 +174,7 @@ class LiteRtLmLocalModelRuntime(
                 var createdConversation: Conversation? = null
                 try {
                     newEngine.initialize()
-                    val newConversation = newEngine.createConversation(
+                    val prefixConversation = newEngine.createConversation(
                         ConversationConfig(
                             systemInstruction = Contents.of(systemPrompt),
                             tools = ToolRegistry.all().map(::registeredToolProvider),
@@ -184,13 +183,23 @@ class LiteRtLmLocalModelRuntime(
                             maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)
                         )
                     )
-                    createdConversation = newConversation
-                    val prefixTokens = newConversation.getTokenCount()
+                    createdConversation = prefixConversation
+                    val prefixTokens = prefixConversation.getTokenCount()
                     check(prefixTokens in 0..contextCapacity) { "LOCAL_MODEL_PREFACE_COUNT_UNVERIFIED" }
+                    prefixConversation.close()
+                    createdConversation = null
+                    val newConversation = newEngine.createConversation(ConversationConfig(
+                        systemInstruction = Contents.of(systemPrompt),
+                        tools = ToolRegistry.all().map(::registeredToolProvider),
+                        automaticToolCalling = false,
+                        maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)
+                    ))
+                    createdConversation = newConversation
                     synchronized(lock) {
                         engine = newEngine
                         conversation = newConversation
                         startupConversationUnused = true
+                        conversationContextInvalid = false
                         loadedModel = model
                         computeThreads = threads
                         configuredContextTokens = contextCapacity
@@ -240,6 +249,10 @@ class LiteRtLmLocalModelRuntime(
     }
 
     override fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) {
+        if (synchronized(lock) { conversationContextInvalid }) {
+            deliver(callback, LocalInferenceEvent.Failed("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET"))
+            return
+        }
         val payload = LocalToolContinuation.text(responses) ?: run {
             deliver(callback, LocalInferenceEvent.Failed("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET"))
             return
@@ -295,6 +308,7 @@ class LiteRtLmLocalModelRuntime(
                     // Do not change the per-turn fresh history isolation policy.
                     if (!freshPrompt && startupConversationUnused)
                         error("No active tool conversation to continue.")
+                    check(freshPrompt || !conversationContextInvalid) { "LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET" }
                     val reusePristine = freshPrompt && startupConversationUnused &&
                         conversation?.isAlive == true
                     startupConversationUnused = false
@@ -313,7 +327,10 @@ class LiteRtLmLocalModelRuntime(
                             LocalInferenceStage.PREVIOUS_CONVERSATION_RELEASE_EXIT) {
                             if (it.isAlive) it.close()
                         }
-                    }, reusePristineOnFirstPrompt = reusePristine).also { conversation = it }
+                    }, reusePristineOnFirstPrompt = reusePristine).also {
+                        conversation = it
+                        if (freshPrompt) conversationContextInvalid = false
+                    }
                 } catch (failure: Exception) {
                     profile.mark(LocalInferenceStage.INVOCATION_THROW)
                     state = LocalModelState.FAILED
@@ -402,12 +419,12 @@ class LiteRtLmLocalModelRuntime(
             val renderedBytes = runCatching {
                 LocalNativePromptBudget.renderedUtf8Estimate(activeConversation.renderMessageIntoString(message))
             }.getOrNull()
-            val prefix = if (isolatedThinking) runCatching {
-                LocalNativePromptBudget.renderedUtf8Estimate(activeConversation.renderPrefaceIntoString())
-            }.getOrNull() else prefaceTokenCount
-            if (!LocalNativePromptBudget.allows(payloadBytes, renderedBytes, inputTokens, prefix,
-                    configuredContextTokens, LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id),
-                    fresh = freshPrompt || isolatedThinking)) {
+            // Worker prefix is in its rendered input.
+            val prefix = if (isolatedThinking) 0 else prefaceTokenCount
+            val budget = LocalNativePromptBudget.plan(payloadBytes, renderedBytes, inputTokens, prefix,
+                configuredContextTokens, LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id),
+                fresh = freshPrompt || isolatedThinking)
+            if (budget == null) {
                 finish(LocalInferenceEvent.Failed("LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL"))
                 return
             }
@@ -484,10 +501,13 @@ class LiteRtLmLocalModelRuntime(
                             synchronized(callbackLock) {
                                 if (finished.get() || terminalOverrideRequested.get()) return
                                 val elapsed = (System.nanoTime() - startNanos).coerceAtLeast(0) / 1_000_000
-                                val outputTokens = runCatching {
-                                    activeConversation.getTokenCount() -
-                                        (inputTokens ?: activeConversation.getTokenCount())
-                                }.getOrNull()?.coerceAtLeast(0)
+                                val nativeTokens = runCatching { activeConversation.getTokenCount() }.getOrNull()
+                                if (!LocalNativePromptBudget.completeContext(nativeTokens, configuredContextTokens)) {
+                                    if (!isolatedThinking) synchronized(lock) { conversationContextInvalid = true }
+                                    finish(LocalInferenceEvent.Failed("LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL"))
+                                    return
+                                }
+                                val outputTokens = nativeTokens?.let { (it - (inputTokens ?: it)).coerceAtLeast(0) }
                                 finish(
                                     LocalInferenceEvent.Completed(
                                         LocalInferenceMetrics(
@@ -516,9 +536,12 @@ class LiteRtLmLocalModelRuntime(
                         try {
                             synchronized(callbackLock) {
                                 if (finished.get() || terminalOverrideRequested.get()) return
+                                val contextFailure = LocalNativePromptBudget.contextFailure(throwable.message.orEmpty())
+                                if (contextFailure && !isolatedThinking) synchronized(lock) { conversationContextInvalid = true }
                                 finish(
                                     if (throwable is CancellationException) LocalInferenceEvent.Cancelled
-                                    else LocalInferenceEvent.Failed(throwable.message.orEmpty().take(512))
+                                    else LocalInferenceEvent.Failed(if (contextFailure) "LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL"
+                                        else throwable.message.orEmpty().take(512))
                                 )
                             }
                         } finally {
@@ -526,15 +549,20 @@ class LiteRtLmLocalModelRuntime(
                             drainDeliveries()
                         }
                     }
-                }
+                },
+                maxOutputToken = budget.maxOutputTokens
             )
             profile.mark(LocalInferenceStage.NATIVE_DISPATCH_RETURN)
             if (generationCancelled.get()) runCatching { activeConversation.cancelProcess() }
         } catch (failure: Throwable) {
             profile.mark(LocalInferenceStage.NATIVE_DISPATCH_THROW)
             synchronized(callbackLock) {
-                if (!finished.get() && !terminalOverrideRequested.get())
-                    finish(LocalInferenceEvent.Failed(failure.message.orEmpty().take(512)))
+                if (!finished.get() && !terminalOverrideRequested.get()) {
+                    val contextFailure = LocalNativePromptBudget.contextFailure(failure.message.orEmpty())
+                    if (contextFailure && !isolatedThinking) synchronized(lock) { conversationContextInvalid = true }
+                    finish(LocalInferenceEvent.Failed(if (contextFailure) "LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL"
+                        else failure.message.orEmpty().take(512)))
+                }
             }
         } finally {
             drainDeliveries()
@@ -617,6 +645,7 @@ class LiteRtLmLocalModelRuntime(
             if (result.isSuccess) {
                 conversation = null
                 startupConversationUnused = false
+                conversationContextInvalid = false
                 inferenceConversation = null
                 activeInferenceProfile = null
                 activeCancellation = null

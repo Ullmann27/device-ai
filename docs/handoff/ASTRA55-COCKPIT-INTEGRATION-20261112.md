@@ -18,7 +18,32 @@
 
 ## Vorhandene Kandidaten
 
-Opus A `f07d7e924`, B `1d8440b3b`, C `0b4e56dae` + `f04836790`, D `92027cea3`, E `f8df180a7` sind gesichert. Sie werden anhand ihrer tatsächlichen Änderungen übernommen und neu geprüft. In D fehlen die im Bericht beschriebenen nativen Speech-/Activity-Änderungen. E enthält bislang nur den nicht angeschlossenen Button-Renderer.
+Opus A `f07d7e924`, B `1d8440b3b`, C `0b4e56dae` + `f04836790`, D `92027cea3`, E `f8df180a7` sind gesichert und in die Integration übernommen. Die in D ursprünglich fehlenden Speech-/Activity-Änderungen wurden ergänzt; der RED-PROBE-Retrywert wurde korrigiert. Der ursprünglich isolierte Button-Renderer aus E ist an echte Navigation angeschlossen.
+
+## Implementierter Stand
+
+- Originalavatar und Originalkugel erhalten; eigener Raum-/Monitorrahmen, Stirnposition der Kugel, transparenter Avatar, freier Kinn-/Schulterbereich.
+- Acht farbige echte Navigationsziele: Fold 1×8, Phone 2×4. Zusätzliche Ziele bleiben erreichbar.
+- MediaProjection mit eigenem GPU-Fensterausschnitt; alternativ einzelne Accessibility-Fensterbilder. Neueste Bilder, Sitzungs-/Fenster-/Geometriebindung und kein Modellaufruf pro Frame.
+- Auftragsparser, existierender App-Finder/ToolGate, konkrete Freigabe, Startnachweis und temporäre exakte Eingabeberechtigung durchgängig verbunden.
+- Reale Such-, Kontakt-/Entwurfs- und Download-Schritte mit Nachprüfung. Suchfelder werden über tatsächlich beobachtete Rolle/ID erkannt.
+- Gemeinsame Ereignisse treiben Blick, Körperimpulse, leisen Klick und bildgebundenen Klickring. Kein künstliches Tippen während Wartezeiten.
+- Aufnahme-OK bleibt beim ursprünglichen Auftrag und startet erst in sichtbarem `onResume`. Abbruch, Stop und verspätete Antworten sind gebunden.
+- PDF-Zusammenfassung verwendet das bereits geöffnete Dokument. Ein App-Treffer führt ohne überflüssige Mehrfachauswahl zur Freigabe. Gerätezeit wird direkt gelesen; typische unerbetene Mundart wird am fertigen Text geprüft.
+
+Die vollständige technische Bauanleitung und tatsächliche Funktionsgrenzen stehen in [CODE55-VIRTUELLER-COMPUTER.md](../architecture/CODE55-VIRTUELLER-COMPUTER.md).
+
+## Prüfstand während Integration
+
+Erster abgeschlossener kombinierter Fokuslauf auf Quellstand `779b7459ad01424020f8c4797d47173d97d6f71f`: **278 Tests, 270 bestanden, 8 fehlgeschlagen, 0 übersprungen**. Fünf Fehler stammen aus alten Navigationserwartungen des gemeinsamen UI-Testhelpers, drei aus alten Einzeltreffer-Erwartungen. Die nachfolgenden Korrekturen werden erneut im Gesamtstand geprüft. Maschinenlesbarer Nachweis: `docs/evidence/astra55-20261112/focused-initial.json`.
+
+Grün in diesem Lauf: AndroidLiveNodePort, LiveComputerFrames/Actions, LiveWindowSafety, ProjectionCropGeometry, Such-Klickvertrag, Parser, Workflow, TaskGrant, CaptureConsent, PDF-Dialog, Speech-Recovery, Geräteuhr, Mundartprüfung, Cockpit-Ereignisse, Layout, Monitor-Pixel und drei Android-Canvas-Ansichten. Diese Tests verwenden synthetische Daten und bestätigen keine echte App auf einem Gerät.
+
+Einzelne zusätzliche JVM-Prüfungen der Agenten sind in ihren Übergaben dokumentiert. Sie ersetzen keinen erneuten kombinierten Lauf auf dem integrierten Stand.
+
+Zwei frühere Gradle-Versuche endeten mit unerwartetem Daemon-Ende ohne Testergebnis. Der erste vollständige Lauf gelang mit 1 GiB Gradle-Heap, 768 MiB Test-Heap, einem Worker und regelmäßig neuem Testprozess. Eine Betriebssystem-OOM-Ursache ist damit nicht bewiesen. Der Lauf wurde mit Buildphasen und Speicherwerten protokolliert.
+
+Der Native-Budgetreview hat zusätzlich eine doppelte Preface-Zählung und eine unpraktisch strenge Byte=Token-Schranke gefunden. Die laufende Korrektur muss gegen den echten LiteRT-LM-0.18-Eingabepfad bewertet werden; keine exakte Tokenizer-API behaupten, die das SDK nicht anbietet.
 
 ## Abnahme
 
@@ -28,7 +53,15 @@ Opus A `f07d7e924`, B `1d8440b3b`, C `0b4e56dae` + `f04836790`, D `92027cea3`, E
 4. Gezielte Prüfungen, danach kombinierte Android-Suite und unsignierter Code55-Build.
 5. Gerätetest separat: WhatsApp öffnen, Kontakt suchen, Ergebnis sehen; keine Nachricht ohne passenden Auftrag/Freigabe.
 
-Anfangsstatus: **WIP / UNVERIFIED**. Auf diesem Integrationszweig noch keine eigenen Tests oder Builds. Fold7: **NOT_RUN**. Keine Signierung oder Installation. Kein Merge nach `main`.
+Integrationsstatus: **WIP mit ersten Hostnachweisen**. Vollsuite und unsigned Code55-Build werden auf dem abschließenden Quellstand nachgetragen. Fold7: **NOT_RUN**. Keine Signierung oder Installation. Kein Merge nach `main`.
+
+## Verbleibende Grenzen
+
+- Android-Filament, reale Aufnahme, OEM-Split-Screen, konkrete App-Ansichten, Wärme und Laufzeit sind auf dem Fold7 noch nicht geprüft.
+- WhatsApp-Entwurf ist implementiert; Versand ist nicht angeschlossen. Facebook/Word/Excel können angezeigt werden, aber ein allgemeiner Editor für beliebige Word-/Excel-Inhalte ist nicht implementiert.
+- PDF-Bezug über Activity-Neuerstellung ist abgedeckt. Nach vollständigem Wegwischen ist die Dokumentbindung noch nicht dauerhaft im Chat gespeichert. Der konkrete Anschluss an den bestehenden TranscriptStore steht in `docs/research/omega/ASTRA55-PDF-FOLLOWUP-HANDOFF.md`.
+- Ausgabeprüfung erkennt ausgewählte häufige Mundartmuster; sie ist keine vollständige deutsche Grammatikprüfung und keine sachliche Wahrheitsprüfung.
+- Host-GLB-Render und Android-Canvas-Bilder werden ausdrücklich als Hostnachweise beschriftet. Keine erzeugten Beispiel-App-Bilder werden als reale Aufnahme ausgegeben.
 
 ## Reproduzierbarkeit
 

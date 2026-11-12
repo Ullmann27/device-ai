@@ -167,7 +167,7 @@ internal object AndroidLiveComputer {
             check(access == current.access) { "OBSERVATION_PERMISSION_CHANGED" }
             val port = port(current, access, permissionCheck)
             val before = port.current()
-            val fingerprint = liveSha256("click|${request.packageName}|${request.label}|${request.expectedLabel}|${request.expectedEditable}|${request.expectedHeading}")
+            val fingerprint = liveSha256("click|${request.packageName}|${request.label}|${request.expectedLabel}|${request.expectedEditable}|${request.expectedHeading}|${request.expectedSearchField}")
             check(current.journal.admit(fingerprint, before.stamp) == LiveActionJournal.Admission.ALLOWED) { "CLICK_ALREADY_ATTEMPTED" }
             var dispatched = false
             var after: NodeActionFrame? = null
@@ -180,8 +180,7 @@ internal object AndroidLiveComputer {
                 })
                 after = port.current()
                 verdict = ActionEffectVerifier.verify(before.stamp, true, after!!.stamp,
-                    after!!.nodes.count { it.visible && !it.password && it.label == request.expectedLabel &&
-                        (!request.expectedEditable || it.editable) && (!request.expectedHeading || it.heading) } == 1)
+                    after!!.nodes.count { !it.password && request.matchesExpected(it) } == 1)
                 check(verdict.confirmed) { "CLICK_EFFECT_NOT_VERIFIED" }
                 after!!
             } catch (error: Exception) {
@@ -219,7 +218,7 @@ internal object AndroidLiveComputer {
                             }
                             val meta = LiveFrameMeta(current.binding.captureSession, System.nanoTime(), frame.width, frame.height,
                                 current.binding.targetPackage, before.target.id, ownWindowVisible = false,
-                                observationRevision = revision)
+                                observationRevision = revision, sourceViewport = LiveTargetBounds(0f, 0f, 1f, 1f))
                             handedOff = true
                             frames.offer(meta, frame)
                         } catch (_: Exception) {

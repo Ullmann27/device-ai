@@ -68,8 +68,7 @@ internal class AndroidLiveNodePort(
                 it.visible && it.editable && !it.password && request.selector.matches(it)
             }.singleOrNull()?.textDigest == liveSha256(request.text!!)
             NodeActionKind.CLICK -> clickExpectation?.let { click -> frame.nodes.count {
-                it.visible && !it.password && it.label == click.expectedLabel &&
-                    (!click.expectedEditable || it.editable) && (!click.expectedHeading || it.heading)
+                !it.password && click.matchesExpected(it)
             } == 1 } ?: false
             NodeActionKind.SCROLL_FORWARD, NodeActionKind.SCROLL_BACKWARD ->
                 frame.nodes.count { it.visible && it.scrollable && request.selector.matches(it) } == 1
@@ -100,7 +99,8 @@ internal class AndroidLiveNodePort(
     private fun NodeActionFrame.asClickFrame() = ClickFrame(stamp.packageName, stamp.epoch, stamp.revision,
         stamp.digest, safeWindows, complete, nodes.map {
             // Editable labels contain hints, never field text.
-            ClickNode(it.label, it.visible, it.enabled && it.clickable && !it.editable, it.password, it.editable, it.heading)
+            ClickNode(it.label, it.visible, it.enabled && it.clickable && !it.editable, it.password,
+                it.editable, it.heading, it.viewId, it.enabled)
         })
 
     private fun inspect(request: NodeActionRequest?, target: ActionNode?): Pair<NodeActionFrame, Boolean> {

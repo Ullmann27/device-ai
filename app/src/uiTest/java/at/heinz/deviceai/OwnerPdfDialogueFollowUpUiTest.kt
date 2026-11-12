@@ -403,4 +403,62 @@ class OwnerPdfDialogueFollowUpUiTest {
         assertEquals(0L, f.webAuthorizations.get())
         assertNoPicker(f.activity)
     }
+
+    @Test fun summarizeAlreadyOpenedPdfUsesItsActualPageContextWithoutPicker() = withFlow(InternetAccessMode.OFF) { f ->
+        openReadPdf(f)
+        val summary = ask(f, "Fasse die PDF zusammen.",
+            modelReply = "Auf Seite 1 geht es um die lokale Arbeit. Seite 2 beschreibt Cockpit und Sprachsteuerung.")
+        val prompt = checkNotNull(summary.prompt)
+        assertTrue(prompt, prompt.contains(fileName) && prompt.contains("[Seite 1]") && prompt.contains(heading))
+        assertTrue(prompt, prompt.contains("Kapitel 2: Cockpit und Sprachsteuerung"))
+        assertEquals(1, f.runtime.prompts.size)
+        assertEquals(0L, f.webAuthorizations.get())
+        assertNoPicker(f.activity)
+    }
+
+    @Test fun requestingOneNewSummaryDoesNotSelectAnotherPdf() = withFlow(InternetAccessMode.OFF) { f ->
+        openReadPdf(f)
+        val summary = ask(f, "Lies die PDF und erstelle eine neue Zusammenfassung.",
+            modelReply = "Seite 1 beschreibt den Stand der lokalen Arbeit. Seite 4 nennt Freigaben für Werkzeuge.")
+        val prompt = checkNotNull(summary.prompt)
+        assertTrue(prompt, prompt.contains(fileName))
+        assertEquals(1, f.runtime.prompts.size)
+        assertEquals(0L, f.webAuthorizations.get())
+        assertNoPicker(f.activity)
+    }
+
+    @Test fun explicitlyNewPdfStillOpensOwnersPickerAndDoesNotSummarizeOldSource() = withFlow(InternetAccessMode.OFF) { f ->
+        openReadPdf(f)
+        (field(f.activity, "input") as android.widget.EditText).setText("Fasse eine neue PDF zusammen.")
+        assertTrue((field(f.activity, "sendButton") as android.widget.Button).performClick())
+        advance(64L)
+        val picker = shadowOf(f.activity).nextStartedActivityForResult
+        assertNotNull(picker)
+        assertEquals(android.content.Intent.ACTION_OPEN_DOCUMENT, picker.intent.action)
+        assertEquals("application/pdf", picker.intent.type)
+        assertTrue(f.runtime.prompts.isEmpty())
+        assertEquals(0L, f.webAuthorizations.get())
+    }
+
+    @Test fun summaryWithoutOpenedPdfRequiresOwnerFileSelection() = withFlow(InternetAccessMode.OFF) { f ->
+        drainStartedActivities(f.activity)
+        (field(f.activity, "input") as android.widget.EditText).setText("Fasse die PDF zusammen.")
+        assertTrue((field(f.activity, "sendButton") as android.widget.Button).performClick())
+        advance(64L)
+        val picker = shadowOf(f.activity).nextStartedActivityForResult
+        assertNotNull(picker)
+        assertEquals(android.content.Intent.ACTION_OPEN_DOCUMENT, picker.intent.action)
+        assertTrue(f.runtime.prompts.isEmpty())
+        assertEquals(0L, f.webAuthorizations.get())
+    }
+
+    @Test fun unavailableModelDoesNotReplaceOpenPdfWithAnotherPicker() = withFlow(InternetAccessMode.OFF) { f ->
+        f.runtime.state = LocalModelState.EMPTY
+        openReadPdf(f)
+        val summary = ask(f, "Fasse die PDF zusammen.")
+        assertNull(summary.prompt)
+        assertTrue(summary.reply, summary.reply.contains(fileName) && summary.reply.contains("lokale Modell"))
+        assertTrue(f.runtime.prompts.isEmpty())
+        assertNoPicker(f.activity)
+    }
 }

@@ -299,7 +299,7 @@ object JarvisCockpitGridContent {
         ContinuumIcons.draw(p, Icon.PULSE, b.left + 23f, b.top + 16f, 20f, Fill.Solid(Colors.cyan))
         val live = Type.caption.copy(size = 10f)
         p.drawText(fit(p, "JARVIS", title, room * .7f), x, b.top + 8f + p.capHeight(title), title, Fill.Solid(Colors.cyan))
-        p.drawText("Live", b.right - 14f, b.top + 8f + p.capHeight(live), live,
+        p.drawText("Status", b.right - 14f, b.top + 8f + p.capHeight(live), live,
             Fill.Solid(if (s.presentation.live || s.model.online) Colors.ok else Colors.textMuted), TextAlign.RIGHT)
         val waveTop = b.top + 8f + p.capHeight(title) + 6f
         val waveBottom = minOf(b.bottom - p.capHeight(detail) - 10f, waveTop + 18f)

@@ -41,8 +41,8 @@ for side in [-1,1]:
   x=side*(.45-k*.028);z=-.24-k*.11
   part(f'arch-{side}-{k}',[x,.09,z],[.014,.76,.023],0,room)
   part(f'arch-light-{side}-{k}',[x-side*.008,.09,z+.013],[.0025,.68,.006],2 if side<0 else 3,room)
- part(f'ceiling-{side}',[side*.28,.46,-.40],[.40,.012,.035],1,room)
- part(f'ceiling-line-{side}',[side*.28,.45,-.38],[.38,.002,.006],2 if side<0 else 3,room)
+ part(f'ceiling-{side}',[side*.35,.46,-.40],[.26,.012,.035],1,room)
+ part(f'ceiling-line-{side}',[side*.35,.45,-.38],[.24,.002,.006],2 if side<0 else 3,room)
  part(f'wing-{side}',[side*.36,-.28,-.03],[.22,.012,.30],5,room)
  part(f'wing-edge-{side}',[side*.36,-.274,.12],[.22,.004,.005],2 if side<0 else 3,room)
 # Raised console and underglow.

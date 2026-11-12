@@ -11,6 +11,7 @@ import at.heinz.deviceai.cognitive.CockpitWorkEvent
 import at.heinz.deviceai.cognitive.LiveFrameBinding
 import at.heinz.deviceai.cognitive.LiveMonitorFeed
 import at.heinz.deviceai.cognitive.LiveMonitorState
+import at.heinz.deviceai.cognitive.LiveTargetBounds
 
 /** Read-only display; actions use ToolGate. */
 internal class VirtualComputerMonitorView(context: Context) : View(context) {
@@ -19,6 +20,7 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
     private var sourceSequence = -1L
     private var sourceSession = -1L
     private var sourceBinding: LiveFrameBinding? = null
+    private var sourceViewport: LiveTargetBounds? = null
     private var importedAtNanos = 0L
     private var live = false
     private var status = "Keine Bildquelle verbunden"
@@ -55,6 +57,7 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
         sourceSequence = -1
         sourceSession = -1
         sourceBinding = null
+        sourceViewport = null
         updatePlayback()
     }
 
@@ -71,6 +74,7 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
         sourceSequence = -1
         sourceSession = -1
         sourceBinding = null
+        sourceViewport = null
         importedAtNanos = 0L
         live = false
     }
@@ -106,7 +110,8 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
         val age = System.nanoTime() - event.occurredAtNanos
         if (event.stage == CockpitWorkEvent.Stage.DISPATCHED && event.action == CockpitWorkEvent.Action.CLICK &&
             event.target != null && age in 0..150_000_000L && event.frameSequence > 0 &&
-            state.state == LiveMonitorState.LIVE && event.frameSequence == sourceSequence && sourceBinding == binding) {
+            state.state == LiveMonitorState.LIVE && event.frameSequence == sourceSequence && sourceBinding == binding &&
+            sourceViewport?.let { event.target.x in it.left..it.right && event.target.y in it.top..it.bottom } == true) {
             click = event
             invalidate()
         }
@@ -126,6 +131,7 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
             sourceSequence = -1
             sourceSession = -1
             sourceBinding = null
+            sourceViewport = null
         } else if (sourceSequence != state.sequence || sourceSession != session) {
             val producer = source ?: return
             producer.acquire()?.use { lease ->
@@ -141,6 +147,7 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
                     sourceSequence = lease.sequence
                     sourceSession = lease.binding.captureSession
                     sourceBinding = lease.binding
+                    sourceViewport = lease.meta.sourceViewport
                     importedAtNanos = System.nanoTime()
                 } else { bitmap = null; live = false; status = "Bild kann nicht dargestellt werden" }
             }
@@ -160,7 +167,12 @@ internal class VirtualComputerMonitorView(context: Context) : View(context) {
             val elapsed = System.nanoTime() - it.occurredAtNanos
             if (elapsed !in 0..220_000_000L || currentPixels == null || it.frameSequence != sourceSequence ||
                 current?.binding?.captureSession != it.sessionId) { click = null; null }
-            else it.target?.let { target -> CockpitMonitorPainter.Pointer(target.x, target.y, elapsed / 220_000_000f) }
+            else sourceViewport?.let { viewport -> it.target?.let { target ->
+                val x = (target.x - viewport.left) / (viewport.right - viewport.left)
+                val y = (target.y - viewport.top) / (viewport.bottom - viewport.top)
+                if (x in 0f..1f && y in 0f..1f) CockpitMonitorPainter.Pointer(x, y, elapsed / 220_000_000f)
+                else null
+            } }
         }
         painter.draw(canvas, geometry, currentPixels?.takeIf { canDraw }, current?.label ?: status,
             current?.state == LiveMonitorState.LIVE && canDraw, nativeFrameReady, resources.displayMetrics.density, pointer)

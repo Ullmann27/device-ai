@@ -385,7 +385,10 @@ class ContinuumHologramView @JvmOverloads constructor(
             cameraFraming = AvatarCameraFraming(focus, w.toDouble() / h,
                 headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut, cameraProfile)
         }
-        val targetWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection)
+        val targetWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection).let {
+            if (layeredCockpit) at.heinz.deviceai.avatar3d.AvatarFraming.pullBack(it,
+                at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_SCALE.toDouble()) else it
+        }
         val fromWindow = cameraProfileBlendFrom
         cameraWindow = if (fromWindow != null && cameraProfileBlendStartedAtMs >= 0L) {
             val raw = ((SystemClock.uptimeMillis() - cameraProfileBlendStartedAtMs) / 260f).coerceIn(0f, 1f)

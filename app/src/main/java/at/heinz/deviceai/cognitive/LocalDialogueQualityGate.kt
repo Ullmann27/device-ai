@@ -51,6 +51,9 @@ object LocalDialogueQualityGate {
         if (candidate.length > 20_000) {
             return Evaluation(false, 0.1, "Antwort übermäßig lang. Kürze sie und beantworte die Frage direkt.")
         }
+        OwnerLanguageStyle.outputFeedback(request, candidate)?.let {
+            return Evaluation(false, 0.1, it)
+        }
         // A leaked internal prompt frame (research template, evidence block, dialogue frame) is not
         // a chat answer. Only flag a frame the owner did not explicitly ask about.
         val leaked = INTERNAL_FRAMES.firstOrNull { frame ->

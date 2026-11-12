@@ -1,85 +1,107 @@
-# Code55: vollständiger nativer Kontextvertrag
+# Code55: nativer Kontext und nutzbare Promptplanung
 
-Status: SOURCE_INTEGRATED, Host- und Geräteprüfung beim Integrator separat belegen.
-Betroffen: EXP-05/12. Keine Gewichte, ToolGate-Rechte oder Modellpromotion geändert.
+Status: SOURCE_INTEGRATED. Host- und Geräteprüfung separat belegen.
+EXP-05/12. Keine Gewichte, ToolGate-Rechte oder Modellpromotion geändert.
 
-## Tatsächlich geprüfte SDK-Schnittstelle
+## Verifizierte SDK-Grenzen
 
-Die im Projekt verwendete `litertlm-android:0.18.0`-AAR/API-JAR wurde lokal mit
-`javap` gelesen. Öffentliche API vorhanden:
+Die gebundene `litertlm-android:0.18.0`-AAR/API-JAR wurde mit `javap` geprüft.
+Zusätzlich wurden die unten verlinkten Quellen des Tags `v0.18.0` gelesen.
+Vorhanden sind `EngineConfig.maxNumTokens`, `ConversationConfig.initialMessages`,
+`prefillPrefaceOnInit`, `Conversation.getTokenCount()`,
+`renderMessageIntoString(Message)`, `renderPrefaceIntoString()` und der echte
+`maxOutputToken`-Parameter von `sendMessageAsync`.
 
-- `EngineConfig.maxNumTokens`
-- `ConversationConfig.prefillPrefaceOnInit`
-- `Conversation.getTokenCount()` für bereits vorhandenen KV-Cache
-- `Conversation.renderMessageIntoString(Message)`
-- `Conversation.renderPrefaceIntoString()`
+`getTokenCount()` zählt bestehenden KV-Cache, keinen noch ausstehenden Input.
+Eine öffentliche `countTokens(text)`-Methode gibt es in dieser Kotlin-Version
+nicht. Die C++-Option für getrenntes Anhängen/Vorbefüllen einer Conversation
+ist hier ebenfalls nicht öffentlich durchgereicht. `maxOutputToken=0` bedeutet
+keinen unterstützten Prefill-only-Modus. InitialMessages vorbefüllen wäre möglich,
+aber ein zusätzliches Zählgespräch würde den gesamten Auftrag nochmals auf der
+CPU vorbefüllen und könnte nicht transparent als dieselbe Conversation decodieren.
+Dieser teure Hilfsweg und private JNI-Handles werden nicht verwendet.
 
-Keine öffentliche `countTokens(text)`-Methode in dieser gebundenen Kotlin-Version.
-Eine solche Methode wurde nicht erfunden oder per Reflection auf private Handles
-aufgerufen. Neuere C++-Quellen mit `CountTokens` beweisen keine Verfügbarkeit im
-verwendeten Android-SDK.
+## Fehler und korrigierte Umsetzung
 
-## Bisheriger Fehler
+Die frühere Schranke zählte System-Anweisung und Tools nicht. Eine erste Reparatur
+mit UTF-8-Bytes gleich Tokens war wiederum zu streng: Bereits der feste Activity-
+Body ohne Identität, Genome und Auftrag enthält 1.135 UTF-8-Bytes. Pflicht-Tail,
+Identität und kompletter Auftrag kommen hinzu. 4.096 Kontexttokens minus 2.048
+pauschaler Ausgabe und großem Toolschema-Prefix lassen dafür oft keinen Platz.
+Außerdem enthält das native Renderresultat im frischen, nicht vorbefüllten
+Gespräch bereits den Prefix; dessen blindes erneutes Addieren zählt ihn doppelt.
 
-`getTokenCount()` vor dem ersten Prefill zählt System-Anweisung und Toolschemas
-noch nicht. Die frühere `allowsSubmission`-Funktion übersprang die vollständige
-Kapazitätsprüfung zusätzlich bei frischem Chat und isoliertem Denken. Das statische
-15.500-Zeichen-Limit ist keine Tokenmessung. Modell-Metadaten zur maximalen
-Kontextlänge sind außerdem nicht identisch mit der tatsächlich konfigurierten
-KV-Kapazität des Engines.
+Die Engine fordert jetzt ausdrücklich höchstens 4.096 Kontexttokens an; eine
+kleinere bekannte Modellgrenze hat Vorrang. Es wird kein 16K-Kontext aktiviert.
+Beim asynchronen Laden wird ein Gespräch mit der tatsächlichen System-Anweisung
+und allen Toolschemata vorbefüllt und sein echter Prefix-Zähler gemessen. Dieses
+Messgespräch wird geschlossen. Das wiederverwendbare Startgespräch und spätere
+frische Gespräche haben anschließend einen leeren KV-Cache.
 
-## Reparatur
+**Frische Chats und isoliertes Denken:** Vor Übergabe muss der native KV-Zähler
+null sein. Damit bekommt der native Prefill den vollständigen gerenderten Input
+inklusive System-Anweisung/Tools in einem Schritt. In SDK 0.18 prüft dieser Schritt
+die echte Zahl der tokenisierten Eingaben gegen das konfigurierte Maximum.
+Die Runtime schneidet den Besitzerauftrag nicht ab und entscheidet den Fit nicht
+anhand einer starren Byte=Token-Schätzung.
 
-Die Engine wird ausdrücklich mit maximal 4.096 Tokens konfiguriert; eine kleinere
-bekannte Modellgrenze hat Vorrang. Es wird kein größerer 16K-Kontext mit erhöhtem
-Speicher-/Thermikbedarf still aktiviert. Bei unbekannten Modell-Metadaten ist 4096
-die ausdrücklich angeforderte Konfiguration, deren Initialisierung gelingen muss.
+Für die Ausgabeplanung wird das Maximum aus vollständigem Rendertext/3 und
+nativ gemessenem Prefix plus Nutztext/3 verwendet, mit 256 Tokens Planungsreserve.
+**Drei UTF-8-Bytes je Token sind ausdrücklich eine Heuristik, keine Tokenmessung
+und kein Beweis, dass ein Auftrag hineinpasst.** Die Heuristik darf frische,
+vollständige Aufträge nicht pauschal blockieren. Bei engem geschätztem Budget
+bleibt eine kleine Ausgabeplanung von 128 Tokens. Das Ergebnis wird dem SDK
+wirklich als `maxOutputToken` übergeben; die Modellfamiliengrenze bleibt ein
+zusätzliches Maximum. Beispiel im Hosttest: 3.300 Nutztextbytes, 9.000 vollständige
+Templatebytes und 1.800 gemessene Prefixtokens ergeben 840 angeforderte
+Ausgabetokens. Das ist keine Messung eines konkreten Fold7-Modells.
 
-Der ohnehin asynchrone Load erstellt die erste Konversation mit
-`prefillPrefaceOnInit=true` und merkt sich deren echte native Prefix-Tokenzahl.
-Das betrifft dieselbe feste System-Anweisung und denselben registrierten
-Toolschema-Katalog wie spätere frische Chats. Deren Erstellung bleibt ohne
-zusätzliches Prefill unter dem Runtime-Lock. Noch leere frische KV-Caches erhalten
-die zuvor gemessene Prefixzahl; beim wiederverwendeten vorgefüllten Start-Cache
-wird sie nicht doppelt addiert. Fortsetzungen müssen ihren tatsächlichen,
-kumulierten KV-Zähler liefern.
+**Native Tool-Fortsetzungen:** Hier ist bereits KV belegt. Die allgemeine
+0.18-Prefill-Prüfung betrachtet nur die neu eingehenden Tokens; eine allgemeine
+Summenprüfung darf daraus nicht abgeleitet werden. Deshalb bleibt die Schranke
+für Fortsetzungen konservativ: echter kumulierter KV-Zähler plus gesamte
+UTF-8-/NFKC-Länge des gerenderten neuen Inputs, 256 Reserve und tatsächlich
+begrenzte Ausgabe. Zu große Fortsetzungen werden vor JNI vollständig abgelehnt.
+Diese Byte-Oberabschätzung ist weiterhin keine universelle exakte Tokenizer-
+Messung und kann passende Fortsetzungen ablehnen. Ein neues vollständiges
+Besitzerprompt darf im nächsten frischen Gespräch wieder normal starten.
 
-Der neue Input wird über das echte SDK-Chattemplate gerendert. Seine UTF-8-Länge
-und die UTF-8-Länge nach NFKC-Normalisierung bilden eine konservative Schätzung,
-keinen behaupteten exakten Tokenizer. Ausgabe-Maximum und zusätzliche
-Framingreserve zählen bei jedem Aufruf mit. Isoliertes Denken besitzt keine
-Tools und budgetiert seinen tatsächlich gerenderten Prefix ebenfalls konservativ.
-Unbekannte Render-/Count-Ergebnisse oder ein zu großes Gesamtbudget führen vor
-`sendMessageAsync` zu `LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL`.
+Die Transportgrenze `maxPromptUtf8Bytes` bleibt 16.000 Bytes. Sie behauptet keine
+exakte verbleibende Tokenkapazität und senkt die Activity-Pflichtpromptgrenze
+nicht auf wenige hundert Bytes. Native Fehler für einen zu langen Input werden
+auf `LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL` abgebildet. Ein terminaler nativer
+KV-Zähler am oder über dem konfigurierten Maximum gilt ebenfalls als unvollständig,
+auch wenn das SDK nur `onDone` meldet. Ein dadurch ungültiger Gesprächskontext
+darf nicht weiter als Tool-Fortsetzung genutzt werden. Der nächste frische Chat
+ersetzt ihn. Private Inhalte werden für diese Fehler nicht protokolliert.
 
-Die ursprüngliche Besitzeranfrage wird nicht abgeschnitten. Das optionale
-`LocalModelRuntime.maxPromptUtf8Bytes` erlaubt dem bestehenden PromptFrame-Aufrufer,
-vorher weniger optionale History/Advisory aufzunehmen. Die Runtime prüft trotzdem
-den vollständigen tatsächlichen Input. Die Thermal-Guard-Delegation gibt diese
-Eigenschaft unverändert weiter. Ein Budget von null ist ein echter Engpass zwischen
-Prefix und reservierter Ausgabe; es rechtfertigt kein stilles Entfernen von
-Sicherheitsvorgaben oder Schema-Teilen. Kleinere Promptpakete können konservativ
-abgelehnt werden, obwohl sie bei exakter Tokenisierung passen würden.
+## Was noch nicht bewiesen ist
 
-## Grenzen und Prüfung
+- Exakte Vorab-Tokenisierung des dynamischen Inputs fehlt im öffentlichen SDK.
+- Tatsächliche Prefixgröße, Standardauftrags-Nutzbarkeit, Antwortlänge, Load-/Prefill-
+  Latenz und Thermik auf dem Fold7: NOT_RUN.
+- Native Modellmetadaten können eine angeforderte Enginegrenze weiter begrenzen;
+  bei unbekannten Metadaten ist 4096 die Anforderung, kein Gerätebefund.
+- Die Ausgabe kann bei knappem Kontext kürzer werden. Kontext-Ende ist kein
+  Beleg für eine vollständig bearbeitete Anfrage.
+- Bestehende Metriken, die den KV-Zuwachs als Outputtokens anzeigen, sind keine
+  neue exakte Trennung zwischen Prefill- und Decodetokens.
 
-Neue Negativtests: fehlende Prefixzahl bei KV=0, keine Doppelzählung vorgefüllter
-Konversationen, kumulierte Fortsetzungen, vollständige Templatebytes,
-Ausgabereserve, Unicode-Expansion, unbekannte Kapazität und Zahlenüberlauf.
-`LocalToolContinuationTest` bestätigt, dass frische Chats die Prüfung nicht
-umgehen können. Native Modellinferenz, tatsächliche Prefix-Tokens, verbleibendes
-Promptbudget und Load-/Antwortlatenz auf dem Fold7: NOT_RUN.
+Hosttests prüfen normale Pflichtpromptgrößen ohne Totalblockade, fehlende/native
+volle Zähler, keine Prefix-Doppelzählung, echten kumulierten Kontext bei
+Fortsetzungen, Outputlimits, Unicode-Expansion und Zahlenüberlauf. Diese Tests
+ersetzen keine native Modellinferenz.
 
-Die Prefill-Messung wird einmal beim Modellladen ausgeführt. Ein Fehler bei der
-Prefixmessung schließt die erzeugte Konversation vor der Engine; nicht sicher
-freigegebene Handles bleiben für den vorhandenen expliziten Unload erhalten.
+## Primärquellen der gebundenen Version
 
-Primärquellen:
+- https://github.com/google-ai-edge/LiteRT-LM/blob/v0.18.0/kotlin/java/com/google/ai/edge/litertlm/Conversation.kt
+- https://github.com/google-ai-edge/LiteRT-LM/blob/v0.18.0/kotlin/java/com/google/ai/edge/litertlm/Config.kt
+- https://github.com/google-ai-edge/LiteRT-LM/blob/v0.18.0/runtime/conversation/conversation.cc
+- https://github.com/google-ai-edge/LiteRT-LM/blob/v0.18.0/runtime/conversation/conversation_test.cc
+- https://github.com/google-ai-edge/LiteRT-LM/blob/v0.18.0/runtime/core/tasks.cc
+- https://github.com/google-ai-edge/LiteRT-LM/blob/v0.18.0/runtime/executor/llm_litert_compiled_model_executor.cc
 
-- https://github.com/google-ai-edge/LiteRT-LM/blob/main/kotlin/java/com/google/ai/edge/litertlm/Conversation.kt
-- https://github.com/google-ai-edge/LiteRT-LM/blob/main/kotlin/java/com/google/ai/edge/litertlm/Config.kt
-- https://github.com/google-ai-edge/LiteRT-LM/blob/main/runtime/conversation/conversation_test.cc
-
-Die API-Verfügbarkeit wurde am tatsächlich gebundenen 0.18.0-Artefakt geprüft;
-die verlinkten aktuellen Quellen erklären die Semantik, ersetzen aber keinen
-Gerätelauf dieser SDK-Version.
+Quellstellen: `Conversation::Create` (Prefix-Prefill), `GetSingleTurnText` und
+`RenderMessageIntoString` (vollständiger Prefix nur beim leeren, unbefüllten Start),
+`Prefill` in `tasks.cc` (echte Input-Tokenzahl), `ShouldStop` (Decodegrenzen) sowie
+`GetTokenCount` (KV-Zähler). Keine API aus einem neueren Main-Zweig wird behauptet.

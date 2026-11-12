@@ -16,6 +16,7 @@ internal class OwnerComputerWorkflow(
         fun perform(request: NodeActionRequest, events: LiveActionEventSink): NodeActionResult
         fun click(before: NodeActionFrame, label: String, expectedLabel: String,
                   expectedEditable: Boolean = true, expectedHeading: Boolean = false,
+                  expectedSearchField: Boolean = false,
                   onDispatched: (LiveTargetBounds?, Long) -> Unit): NodeActionFrame
     }
 
@@ -46,14 +47,13 @@ internal class OwnerComputerWorkflow(
             if (currentSearch.size > 1) return ask("Ich sehe mehrere Suchfelder. Welches soll ich verwenden?")
             if (currentSearch.isEmpty()) {
                 val searchButtons = frame.nodes.filter { it.visible && it.enabled && it.clickable &&
-                    !it.editable && !it.password && isSearch(it) && !SendActionGuard.isSendLike(it.label, it.viewId) }
+                    !it.editable && !it.password && LiveSearchSemantics.isControl(it.label, it.viewId) }
                 if (searchButtons.size != 1) return pause("Die App-Suche ist nicht eindeutig bedienbar. Bitte öffne das Suchfeld in der sichtbaren App.")
                 val button = searchButtons.single()
                 if (button.label.isBlank() || frame.nodes.count { it.visible && it.label == button.label } != 1) {
                     return pause("Die Suchschaltfläche besitzt kein eindeutiges zugängliches Ziel.")
                 }
-                val expected = if (button.label.equals("Search", true)) "Search" else "Suchen"
-                frame = click(frame, button.label, expected)
+                frame = click(frame, button.label, "", expectedSearchField = true)
             }
             val field = searchFields(frame).singleOrNull()
                 ?: return pause("Ein neues eindeutiges Suchfeld wurde nicht bestätigt.")
@@ -172,11 +172,15 @@ internal class OwnerComputerWorkflow(
     }
 
     private fun click(frame: NodeActionFrame, label: String, expectedLabel: String,
-                      expectedEditable: Boolean = true, expectedHeading: Boolean = false): NodeActionFrame {
+                      expectedEditable: Boolean = true, expectedHeading: Boolean = false,
+                      expectedSearchField: Boolean = false): NodeActionFrame {
         val source = checked(frame)
         val stepId = "computer-${++step}"
+        val expectation = ClickRequest(packageName, observationEpoch, source.stamp.revision, label,
+            expectedLabel, expectedEditable, expectedHeading, expectedSearchField)
         var dispatched = false
-        val after = checkNotNull(port).click(source, label, expectedLabel, expectedEditable, expectedHeading) { target, sequence ->
+        val after = checkNotNull(port).click(source, label, expectedLabel, expectedEditable,
+            expectedHeading, expectedSearchField) { target, sequence ->
             if (!dispatched) {
                 dispatched = true
                 events.emit(CockpitWorkEvent.Stage.DISPATCHED, stepId, CockpitWorkEvent.Action.CLICK,
@@ -184,8 +188,7 @@ internal class OwnerComputerWorkflow(
             }
         }
         checked(after)
-        val expected = after.nodes.count { it.visible && (!expectedEditable || it.editable) &&
-            (!expectedHeading || it.heading) && !it.password && it.label == expectedLabel } == 1
+        val expected = after.nodes.count { !it.password && expectation.matchesExpected(it) } == 1
         if (!dispatched || ActionEffectVerifier.verify(source.stamp, true, after.stamp, expected) != EffectVerdict.CONFIRMED) {
             throw WorkflowPaused("Der neue App-Zustand wurde nach dem Klick nicht bestätigt. Kein zweiter Klick.")
         }
@@ -213,15 +216,7 @@ internal class OwnerComputerWorkflow(
         return finish("Der Download-Ordner wurde geöffnet und seine neue Ordnerüberschrift bestätigt.")
     }
 
-    private fun searchFields(frame: NodeActionFrame) = frame.nodes.filter {
-        it.visible && it.enabled && it.editable && !it.password && isSearch(it)
-    }
-
-    private fun isSearch(node: ActionNode): Boolean {
-        if (node.label.lowercase() in setOf("suchen", "suche", "search", "suchen …", "search…", "search...")) return true
-        val id = node.viewId?.substringAfterLast('/')?.lowercase() ?: return false
-        return id in setOf("search", "search_src_text", "search_input", "search_text", "search_bar", "menuitem_search", "menu_search")
-    }
+    private fun searchFields(frame: NodeActionFrame) = frame.nodes.filter(LiveSearchSemantics::isField)
 
     private fun contactHits(frame: NodeActionFrame, query: String) = frame.nodes.filter {
         it.visible && !it.editable && !it.password && it.label.equals(query, true)

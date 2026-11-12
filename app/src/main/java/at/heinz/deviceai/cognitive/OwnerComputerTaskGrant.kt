@@ -44,8 +44,11 @@ internal class OwnerComputerTaskGrant private constructor(
             NodeActionKind.SET_TEXT -> {
                 check(target.editable) { "APPROVAL_FIELD_REQUIRED" }
                 when {
-                    request.text == intent.query && isSearch(target) && !queryEntered -> {
+                    request.text == intent.query && LiveSearchSemantics.isField(target) && !queryEntered -> {
                         check(intent.goal in SEARCH_GOALS) { "SEARCH_NOT_APPROVED" }
+                        check(frame.nodes.filter(LiveSearchSemantics::isField).singleOrNull() == target) {
+                            "APPROVAL_SEARCH_AMBIGUOUS"
+                        }
                         queryEntered = true
                     }
                     request.text == intent.draft && isCompose(target) && !draftEntered -> {
@@ -72,26 +75,31 @@ internal class OwnerComputerTaskGrant private constructor(
     }
 
     @Synchronized fun authorizeClick(frame: NodeActionFrame, label: String, expectedLabel: String,
-                                     expectedEditable: Boolean, expectedHeading: Boolean) {
+                                     expectedEditable: Boolean, expectedHeading: Boolean,
+                                     expectedSearchField: Boolean = false) {
         checkFrame(frame)
         val target = frame.nodes.filter { it.visible && it.label == label }.singleOrNull()
             ?: error("APPROVAL_CLICK_AMBIGUOUS")
-        check(target.clickable && target.enabled && !target.password &&
+        check(target.clickable && target.enabled && !target.editable && !target.password &&
             !SendActionGuard.isSendLike(target.label, target.viewId)) { "APPROVAL_CLICK_UNSAFE" }
         when {
-            intent.goal in SEARCH_GOALS && isSearch(target) && !searchClicked && !destinationClicked -> {
-                check(expectedEditable && !expectedHeading && expectedLabel.lowercase() in SEARCH_LABELS) {
+            intent.goal in SEARCH_GOALS && LiveSearchSemantics.isControl(target.label, target.viewId) &&
+                !searchClicked && !destinationClicked -> {
+                check(expectedEditable && !expectedHeading &&
+                    (if (expectedSearchField) expectedLabel.isEmpty() &&
+                        frame.nodes.none(LiveSearchSemantics::isField)
+                    else LiveSearchSemantics.isSearchLabel(expectedLabel))) {
                     "SEARCH_POSTCONDITION_MISMATCH"
                 }
                 searchClicked = true
             }
             intent.goal in DRAFT_GOALS && label.equals(intent.query, true) && !destinationClicked -> {
-                check(expectedEditable && !expectedHeading && expectedLabel.lowercase() in COMPOSE_LABELS &&
+                check(!expectedSearchField && expectedEditable && !expectedHeading && expectedLabel.lowercase() in COMPOSE_LABELS &&
                     searchContainsQuery(frame)) { "CONTACT_POSTCONDITION_MISMATCH" }
                 destinationClicked = true
             }
             intent.goal == ComputerGoal.OPEN_DOWNLOADS && label.lowercase() in DOWNLOAD_LABELS && !destinationClicked -> {
-                check(expectedHeading && !expectedEditable && expectedLabel == label) { "FOLDER_POSTCONDITION_MISMATCH" }
+                check(!expectedSearchField && expectedHeading && !expectedEditable && expectedLabel == label) { "FOLDER_POSTCONDITION_MISMATCH" }
                 destinationClicked = true
             }
             else -> error("CLICK_OUTSIDE_APPROVED_PLAN")
@@ -99,19 +107,13 @@ internal class OwnerComputerTaskGrant private constructor(
     }
 
     private fun searchContainsQuery(frame: NodeActionFrame): Boolean = intent.query != null &&
-        frame.nodes.count { it.visible && it.editable && isSearch(it) &&
-            it.textDigest == liveSha256(intent.query) } == 1
+        frame.nodes.filter(LiveSearchSemantics::isField).singleOrNull()?.textDigest == liveSha256(intent.query)
 
     companion object {
         private val SEARCH_GOALS = setOf(ComputerGoal.SEARCH, ComputerGoal.DRAFT_MESSAGE, ComputerGoal.SEND_MESSAGE)
         private val DRAFT_GOALS = setOf(ComputerGoal.DRAFT_MESSAGE, ComputerGoal.SEND_MESSAGE)
-        private val SEARCH_LABELS = setOf("suchen", "suche", "search", "suchen …", "search…", "search...")
         private val COMPOSE_LABELS = setOf("nachricht", "message")
         private val DOWNLOAD_LABELS = setOf("download", "downloads", "heruntergeladen")
-        private val SEARCH_IDS = setOf("search", "search_src_text", "search_input", "search_text", "search_bar",
-            "menuitem_search", "menu_search")
-        private fun isSearch(node: ActionNode) = node.label.lowercase() in SEARCH_LABELS ||
-            node.viewId?.substringAfterLast('/')?.lowercase() in SEARCH_IDS
         private fun isCompose(node: ActionNode) = node.label.lowercase() in COMPOSE_LABELS
 
         fun fromOwnerDecision(taskId: String, packageName: String, epoch: Long, intent: OwnerComputerIntent,

@@ -63,7 +63,9 @@ internal data class LiveFrameMeta(
     /** The source is protected (FLAG_SECURE) or Android refused its pixels; such frames are never shown. */
     val secureContent: Boolean = false,
     /** ScreenObservationBus revision at capture time, so an action can bind to exactly this observation. */
-    val observationRevision: Long = -1
+    val observationRevision: Long = -1,
+    /** Output rectangle in normalized full-window coordinates. */
+    val sourceViewport: LiveTargetBounds? = null
 )
 
 internal enum class LiveFrameRefusal {

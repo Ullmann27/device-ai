@@ -6,6 +6,7 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Slot
 /** One scene, readable native controls. */
 object CinematicWorkstationLayout {
     const val AVATAR_OPACITY = .62f
+    const val AVATAR_SCALE = .76f
     const val MONITOR_YAW_DEGREES = -3f
 
     fun create(width: Float, viewport: Float, fontScale: Float = 1f): JarvisShellLayout.Shell {
@@ -31,11 +32,11 @@ object CinematicWorkstationLayout {
         val head = Box(width * .5f - headW * .5f, sceneTop,
             width * .5f + headW * .5f, sceneTop + headH)
         // Original infinity sits behind forehead.
-        val orbSize = minOf(headW * .96f, headH * .78f)
-        val orb = Box(width * .5f - orbSize * .5f, sceneTop + headH * .035f,
-            width * .5f + orbSize * .5f, sceneTop + headH * .035f + orbSize)
+        val orbSize = minOf(headW * .96f, headH * .78f) * AVATAR_SCALE
+        val orb = Box(width * .5f - orbSize * .5f, sceneTop + headH * .035f * AVATAR_SCALE,
+            width * .5f + orbSize * .5f, sceneTop + headH * .035f * AVATAR_SCALE + orbSize)
         val monitorWidth = if (wide) room * .64f else room
-        val monitor = Box(width * .5f - monitorWidth * .5f, sceneTop + sceneH * .50f,
+        val monitor = Box(width * .5f - monitorWidth * .5f, sceneTop + sceneH * .54f,
             width * .5f + monitorWidth * .5f, scene.bottom - 8f)
         val boxes = linkedMapOf(
             Slot.TOP_BAR to Box(margin, gap, right, gap + headerH),

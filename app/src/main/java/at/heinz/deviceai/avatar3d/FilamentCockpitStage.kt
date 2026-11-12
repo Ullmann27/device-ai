@@ -116,7 +116,7 @@ internal class FilamentCockpitStage(
 
     companion object {
         const val ASSET_PATH = "cinema3d/cockpit-workstation.glb"
-        const val ASSET_SHA256 = "4ae70566318444da5aff9c96b8819e5e82d7bdf2ab4d75565971c76cc856fb4b"
+        const val ASSET_SHA256 = "563d4ab95ce98d603bd48d68c48abf2d709748a604eea7cf8bfd9a43d06b2193"
         const val MAX_BYTES = 32_768
     }
 }

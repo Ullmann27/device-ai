@@ -56,7 +56,8 @@ class ContinuumLiveProjectionService : Service() {
                                 val crop: LivePixelRect, val windowRevision: Long)
 
     private data class Ticket(val target: LiveWindowRecord, val own: LiveWindowRecord,
-                              val crop: LivePixelRect, val revision: Long, val generation: Long)
+                              val crop: LivePixelRect, val viewport: LiveTargetBounds,
+                              val revision: Long, val generation: Long)
 
     private val callback = object : MediaProjection.Callback() {
         override fun onStop() {
@@ -182,8 +183,11 @@ class ContinuumLiveProjectionService : Service() {
         val windows = access.service.liveWindows()
         val target = LiveWindowSafety.select(windows, binding.targetPackage, binding.ownPackage) ?: return unverified()
         val own = windows.singleOrNull { it.packageName == binding.ownPackage && it.kind == LiveWindowKind.APPLICATION } ?: return unverified()
-        val crop = ProjectionCropGeometry.crop(displayBounds(), capturedWidth, capturedHeight,
+        val sourceDisplay = displayBounds()
+        val crop = ProjectionCropGeometry.crop(sourceDisplay, capturedWidth, capturedHeight,
             currentReader.width, currentReader.height, target, own) ?: return unverified()
+        val viewport = ProjectionCropGeometry.viewport(sourceDisplay, currentReader.width, currentReader.height,
+            target.target.bounds, crop) ?: return unverified()
         val now = SystemClock.elapsedRealtime()
         if (!protectionPending && (protectionWindow != target.target.id || now - protectionAt > 1_000))
             probeProtection(access, target.target.id)
@@ -196,7 +200,7 @@ class ContinuumLiveProjectionService : Service() {
             updateSurface(force = true)
             return null
         }
-        return Ticket(target.target, own, crop, ScreenObservationBus.liveRevision(access), binding.captureSession)
+        return Ticket(target.target, own, crop, viewport, ScreenObservationBus.liveRevision(access), binding.captureSession)
     }
 
     private fun probeProtection(access: LiveObservationAccess, windowId: Int) {
@@ -248,7 +252,7 @@ class ContinuumLiveProjectionService : Service() {
                 }
                 val after = runCatching { ticket(source) }.getOrNull()
                 if (System.nanoTime() - time > 750_000_000L || after == null || before.target != after.target || before.own != after.own || before.crop != after.crop ||
-                    before.generation != after.generation) {
+                    before.viewport != after.viewport || before.generation != after.generation) {
                     frame.close()
                     AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.SOURCE_UNVERIFIED)
                     return@post
@@ -257,7 +261,7 @@ class ContinuumLiveProjectionService : Service() {
                 if (state == null) { frame.close(); return@post }
                 AndroidLiveComputer.offerProjection(LiveFrameMeta(sessionId, time, frame.width, frame.height,
                     state.first.targetPackage, before.target.id, ownWindowVisible = false,
-                    observationRevision = before.revision), frame)
+                    observationRevision = before.revision, sourceViewport = before.viewport), frame)
             }
           }
         }

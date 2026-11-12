@@ -144,7 +144,11 @@ internal object OwnerDocumentDialogue {
         val parsed = OwnerDocumentIntent.parse(request, assistantName) ?: return false
         if (!parsed.wantsDraft) return false
         val text = normalized(request, assistantName) ?: return false
-        return !Regex("(?iu)(?<![\\p{L}\\p{N}])(?:neu\\p{L}*|ander\\p{L}*|weitere\\p{L}*|eine)(?![\\p{L}\\p{N}])").containsMatchIn(text) &&
+        val sourceEnd = noun.find(text)?.range?.last ?: return false
+        val source = text.substring(0, sourceEnd + 1)
+        val newSource = Regex("(?iu)$S(?:(?:neu|ander|weiter|zusätzlich|beliebig)\\p{L}*|" +
+            "ein(?:e|en|em|er|es)?(?:\\s+(?:neu|ander|weiter|zusätzlich|beliebig)\\p{L}*)?)\\s+$NOUN$E")
+        return !newSource.containsMatchIn(source) &&
             !Regex("(?iu)[\\p{L}\\p{N}_-]+\\.pdf").containsMatchIn(text)
     }
 

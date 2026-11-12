@@ -147,6 +147,41 @@ class OwnerComputerTaskGrantTest {
         denied { permission.authorizeClick(source, "Suchen", "Suchen", true, false) }
     }
 
+    @Test fun semanticSearchApprovalStillBindsOneClickAndExactQuery() {
+        val permission = grant()
+        val source = frame(node("Suchen", clickable = true))
+        denied { permission.authorizeClick(source, "Suchen", "Nachricht", true, false, true) }
+        denied { permission.authorizeClick(source, "Suchen", "", false, false, true) }
+        denied { permission.authorizeClick(source, "Suchen", "", true, true, true) }
+        permission.authorizeClick(source, "Suchen", "", true, false, true)
+        denied { permission.authorizeClick(source, "Suchen", "", true, false, true) }
+        val field = node("Fragen oder suchen", editable = true, viewId = "$pkg:id/search_src_text")
+        val selector = NodeSelector(viewId = field.viewId)
+        denied { permission.authorize(request(revision = 2, selector = selector, text = "Hanna"), frame(field, revision = 2)) }
+        permission.authorize(request(revision = 2, selector = selector), frame(field, revision = 2))
+        denied { permission.authorize(request(step = "again", revision = 3, selector = selector), frame(field, revision = 3)) }
+    }
+
+    @Test fun searchRoleDoesNotBroadenContactFolderOrOpeningApproval() {
+        val searched = frame(node("Suchen", editable = true, text = "Anna"), node("Anna", clickable = true))
+        denied { grant(draft()).authorizeClick(searched, "Anna", "", true, false, true) }
+        denied { grant(draft()).authorizeClick(searched, "Anna", "Nachricht", true, false, true) }
+        val files = OwnerComputerIntent(ComputerApp.FILES, ComputerGoal.OPEN_DOWNLOADS)
+        denied { grant(files).authorizeClick(frame(node("Downloads", clickable = true)), "Downloads", "", true, false, true) }
+        denied { grant(files).authorizeClick(frame(node("Downloads", clickable = true)), "Downloads", "Downloads", false, true, true) }
+        val opening = OwnerComputerIntent(ComputerApp.WHATSAPP, ComputerGoal.OPEN)
+        denied { grant(opening).authorizeClick(frame(node("Suchen", clickable = true)), "Suchen", "", true, false, true) }
+    }
+
+    @Test fun existingOrAmbiguousSearchRoleCannotBeAuthorizedAsNew() {
+        val field = node("Fragen oder suchen", editable = true, viewId = "$pkg:id/search_src_text")
+        denied { grant().authorizeClick(frame(node("Suchen", clickable = true), field), "Suchen", "", true, false, true) }
+        denied { grant().authorize(request(selector = NodeSelector(viewId = field.viewId)),
+            frame(field, node("Suche", editable = true))) }
+        denied { grant().authorize(request(selector = NodeSelector(viewId = field.viewId)),
+            frame(field.copy(editable = false))) }
+    }
+
     @Test fun downloadsRequireMatchingNewFolderHeading() {
         val permission = grant(OwnerComputerIntent(ComputerApp.FILES, ComputerGoal.OPEN_DOWNLOADS))
         val source = frame(node("Downloads", clickable = true))

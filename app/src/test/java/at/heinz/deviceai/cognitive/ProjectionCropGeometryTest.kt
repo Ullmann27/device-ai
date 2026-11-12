@@ -49,4 +49,23 @@ class ProjectionCropGeometryTest {
         assertNull(ProjectionCropGeometry.crop(display, 2184, 1968, 1920, 1730,
             selection.copy(target = app.copy(bounds = LivePixelRect(1096, -1, 2184, 1968))), own))
     }
+
+    @Test fun viewportPreservesKeyboardCropForClickCoordinates() {
+        val display = LivePixelRect(0, 0, 2000, 1000)
+        val target = LivePixelRect(1000, 0, 2000, 1000)
+        val viewport = ProjectionCropGeometry.viewport(display, 1000, 500, target,
+            LivePixelRect(500, 25, 1000, 350))!!
+        assertEquals(0f, viewport.left, 0.00001f)
+        assertEquals(0.05f, viewport.top, 0.00001f)
+        assertEquals(1f, viewport.right, 0.00001f)
+        assertEquals(0.7f, viewport.bottom, 0.00001f)
+        assertEquals(0.5f, (0.375f - viewport.top) / (viewport.bottom - viewport.top), 0.00001f)
+    }
+
+    @Test fun viewportRejectsForeignPixelsAndInvalidBuffers() {
+        assertNull(ProjectionCropGeometry.viewport(display, 1920, 1730, app.bounds,
+            LivePixelRect(0, 0, 1920, 1730)))
+        assertNull(ProjectionCropGeometry.viewport(display, 0, 1730, app.bounds,
+            LivePixelRect(964, 0, 1920, 1730)))
+    }
 }

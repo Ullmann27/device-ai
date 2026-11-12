@@ -479,7 +479,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 .count { v ->
                     val tag = v.tag?.toString() ?: return@count false
                     tag.startsWith("jarvis-tile:") || tag.startsWith("jarvis-panel:ROW_") ||
-                        (tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.features)
+                        (tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.dockTargets)
                 }
             val a11yBefore = a11yChildren()
             tap(root, memory)
@@ -678,7 +678,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             fun deckTag(v: View): Boolean {
                 val tag = v.tag?.toString() ?: return false
                 return tag.startsWith("jarvis-tile:") || tag.startsWith("jarvis-panel:ROW_") ||
-                    (tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.features)
+                    (tag.startsWith("jarvis-bottom:") && tag.substringAfter(':') in JarvisHomeTestRoutes.dockTargets)
             }
             fun deck() = JarvisHomeTestRoutes.deck(root).count { it.isShown }
             fun hidden() = JarvisHomeTestRoutes.deck(root).count { it.visibility == View.INVISIBLE }

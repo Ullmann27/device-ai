@@ -17,6 +17,8 @@ class OwnerComputerWorkflowTest {
     private inner class FakePort(var frame: NodeActionFrame) : OwnerComputerWorkflow.Port {
         val actions = mutableListOf<NodeActionRequest>()
         val clicks = mutableListOf<String>()
+        val clickExpectations = mutableListOf<ClickRequest>()
+        var clickRevisionDelta = 1L
         var refused = false
         var revoke = false
         var afterAction: (() -> Unit)? = null
@@ -43,14 +45,17 @@ class OwnerComputerWorkflowTest {
             return NodeActionResult(request.kind, EffectVerdict.CONFIRMED, true, true, true, before.stamp, frame.stamp, "CONFIRMED")
         }
         override fun click(before: NodeActionFrame, label: String, expectedLabel: String,
-                           expectedEditable: Boolean, expectedHeading: Boolean,
+                           expectedEditable: Boolean, expectedHeading: Boolean, expectedSearchField: Boolean,
                            onDispatched: (LiveTargetBounds?, Long) -> Unit): NodeActionFrame {
             checkActive()
             clicks += label
+            clickExpectations += ClickRequest(pkg, before.stamp.epoch, before.stamp.revision, label,
+                expectedLabel, expectedEditable, expectedHeading, expectedSearchField)
             onDispatched(bounds, before.stamp.frameSequence)
             val nodes = afterClick?.invoke(label, expectedLabel)
-                ?: listOf(node(expectedLabel, editable = expectedEditable).copy(heading = expectedHeading), node("Anna", clickable = true))
-            frame = frame(before.stamp.revision + 1, nodes)
+                ?: listOf(node(if (expectedSearchField) "Suchen" else expectedLabel, editable = expectedEditable)
+                    .copy(heading = expectedHeading), node("Anna", clickable = true))
+            frame = frame(before.stamp.revision + clickRevisionDelta, nodes)
             return frame
         }
     }
@@ -66,6 +71,8 @@ class OwnerComputerWorkflowTest {
         val result = workflow(bus).run(search(), port)
         assertEquals(OwnerComputerWorkflow.Status.VERIFIED, result.status)
         assertEquals(listOf("Suchen"), port.clicks)
+        assertTrue(port.clickExpectations.single().expectedSearchField)
+        assertEquals("", port.clickExpectations.single().expectedLabel)
         assertEquals(listOf(NodeActionKind.SET_TEXT), port.actions.map { it.kind })
         assertEquals("Anna", port.actions.single().text)
         assertEquals(2, seen.count { it.stage == CockpitWorkEvent.Stage.DISPATCHED })
@@ -79,6 +86,43 @@ class OwnerComputerWorkflowTest {
         assertEquals(OwnerComputerWorkflow.Status.VERIFIED, result.status)
         assertTrue(port.clicks.isEmpty())
         assertEquals(1, port.actions.size)
+    }
+
+    @Test fun differingSearchHintUsesObservedUniqueIdAndExactQuery() {
+        val port = FakePort(frame(1, listOf(node("Suchen", clickable = true))))
+        port.afterClick = { _, _ -> listOf(node("Fragen oder suchen", editable = true)
+            .copy(viewId = "$pkg:id/search_src_text"), node("Anna", clickable = true)) }
+        assertEquals(OwnerComputerWorkflow.Status.VERIFIED, workflow().run(search(), port).status)
+        assertEquals(listOf("Suchen"), port.clicks)
+        assertEquals("$pkg:id/search_src_text", port.actions.single().selector.viewId)
+        assertEquals("Anna", port.actions.single().text)
+    }
+
+    @Test fun ambiguousNewSearchFieldsStopBeforeEnteringText() {
+        val port = FakePort(frame(1, listOf(node("Suchen", clickable = true))))
+        port.afterClick = { _, _ -> listOf(node("Fragen oder suchen", editable = true)
+            .copy(viewId = "$pkg:id/search_src_text"), node("Suche", editable = true)) }
+        assertEquals(OwnerComputerWorkflow.Status.PAUSED, workflow().run(search(), port).status)
+        assertEquals(1, port.clicks.size)
+        assertTrue(port.actions.isEmpty())
+    }
+
+    @Test fun newSearchNeedsActualEditableRoleAndFreshRevision() {
+        val searchField = node("Fragen oder suchen", editable = true).copy(viewId = "$pkg:id/search_src_text")
+        for (invalid in listOf(searchField.copy(editable = false), searchField.copy(enabled = false),
+                searchField.copy(password = true), searchField.copy(viewId = "$pkg:id/message"))) {
+            val port = FakePort(frame(1, listOf(node("Suchen", clickable = true))))
+            port.afterClick = { _, _ -> listOf(invalid) }
+            assertEquals(OwnerComputerWorkflow.Status.PAUSED, workflow().run(search(), port).status)
+            assertEquals(1, port.clicks.size)
+            assertTrue(port.actions.isEmpty())
+        }
+        val stale = FakePort(frame(1, listOf(node("Suchen", clickable = true))))
+        stale.afterClick = { _, _ -> listOf(searchField) }
+        stale.clickRevisionDelta = 0
+        assertEquals(OwnerComputerWorkflow.Status.PAUSED, workflow().run(search(), stale).status)
+        assertEquals(1, stale.clicks.size)
+        assertTrue(stale.actions.isEmpty())
     }
 
     @Test fun existingQueryIsObservedWithoutRetyping() {
@@ -114,6 +158,7 @@ class OwnerComputerWorkflowTest {
         assertEquals(OwnerComputerWorkflow.Status.VERIFIED, result.status)
         assertTrue(result.draftPrepared)
         assertEquals(listOf("Anna"), port.clicks)
+        assertFalse(port.clickExpectations.single().expectedSearchField)
         assertEquals(listOf("Anna", "Hallo!"), port.actions.map { it.text })
         assertFalse(port.actions.any { it.kind == NodeActionKind.SEND })
     }
@@ -178,6 +223,7 @@ class OwnerComputerWorkflowTest {
         val verified = FakePort(frame(1, listOf(node("Downloads", clickable = true))))
         assertEquals(OwnerComputerWorkflow.Status.VERIFIED, workflow().run(intent, verified).status)
         assertEquals(listOf("Downloads"), verified.clicks)
+        assertFalse(verified.clickExpectations.single().expectedSearchField)
         val unproved = FakePort(frame(1, listOf(node("Downloads", clickable = true))))
         unproved.afterClick = { _, _ -> listOf(node("Downloads", clickable = true), node("Datei.pdf")) }
         assertEquals(OwnerComputerWorkflow.Status.PAUSED, workflow().run(intent, unproved).status)
