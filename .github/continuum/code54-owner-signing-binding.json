@@ -17,7 +17,18 @@
     "bytes": 73553790,
     "digest": "sha256:855e9877ed3eef8b96cf9da2dc96931dfd93a339800b3ce76a6894e5fb4a787b"
   },
-  "release_gate": "BLOCKED_PENDING_NATIVE_PDF_OR_EXPLICIT_OWNER_EXCEPTION",
-  "release_scope": "UNPUBLISHED_DRAFT_ONLY",
-  "note": "Exact original GitHub artifact downloaded and hashed; APK byte hash matches independent host proof. No owner authorization to sign, no PDF PASS, no exception. Change release_gate only after separately documented owner decision and signed-off validation."
+  "release_gate": "DEVICE_TEST_NATIVE_PDF_EXCEPTION_PENDING_EVIDENCE",
+  "release_scope": "UNPUBLISHED_FOLD7_DEVICE_TEST_ONLY",
+  "note": "Owner has authorized preparation of an exact-source PDF-only Fold7 test exception. QA evidence artifact ID/digest is NOT available, so signer remains fail-closed; only full tests plus exactly one native PDF host failure can allow subsequent reviewed activation. No signature, install or release authorized by this file.",
+  "owner_exception": {
+    "authorization_id": "OWNER_CHAT_APPROVAL_2026_11_12_CODE54_PDF_DEVICE_TEST_ONLY",
+    "source_sha": "9713854bfb01d699f666058ac44379735307b66a",
+    "test_class": "at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest",
+    "test_name": "actualProviderReadRendersAndExtractsSyntheticPdf",
+    "device_pdf_test_status": "NOT_RUN",
+    "publication": "FORBIDDEN",
+    "fold7_acceptance_required": true,
+    "authorized_scope": "Only this one host-native PDF mismatch, after every other runnable Android case passes, for an unpublished original-signed owner device-test draft; protected environment approval separately required."
+  },
+  "qa_evidence": null
 }
