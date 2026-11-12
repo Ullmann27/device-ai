@@ -94,8 +94,12 @@ internal object OwnerDeviceRequestSafety {
                 changes.size > 1 -> Category.CHANGE
                 notOnly.containsMatchIn(clause) -> Category.CHANGE
                 deferred.containsMatchIn(clause) -> Category.DEFERRED_CHANGE
+                // "was ich/man … löschen könnte" is a proposal; "Entferne alles, was ich … kann" is an imperative.
+                // The mutation verb must stand after the subject and must not open the clause.
                 proposalSubject.containsMatchIn(clause) && proposalModal.containsMatchIn(clause) &&
-                    proposalQuestion.containsMatchIn(clause) -> Category.PROPOSAL
+                    proposalQuestion.containsMatchIn(clause) && changes.single().let { verb ->
+                        verb.range.first > 0 && proposalSubject.find(clause)!!.range.first < verb.range.first
+                    } -> Category.PROPOSAL
                 changes.singleOrNull()?.let { negatesAction(clause, it) } == true -> Category.NEGATED_CHANGE
                 changes.singleOrNull()?.value == "starten" && !improvements.containsMatchIn(clause) &&
                     clause == completeClause && collectiveStart.matches(clause) &&

@@ -77,4 +77,15 @@ class OwnerDeviceRequestSafetyTest {
         assertEquals(at.heinz.deviceai.Risk.READ_ONLY,
             at.heinz.deviceai.ToolRegistry.risk(SystemIntelligenceCommands.PREVIEW))
     }
+
+    @Test fun anImperativeWithAProposalSubClauseIsStillAChange() {
+        // A single imperative mutation verb plus "was ich/man … kann/könnte" must never read as a proposal.
+        listOf("Entferne bitte alles, was ich nicht brauchen kann", "Lösche, was man entbehren könnte",
+            "Lösch alles, was ich nicht mehr brauchen könnte").forEach {
+            val assessment = OwnerDeviceRequestSafety.inspect(it)
+            assertTrue(it, assessment.blocked)
+            assertFalse(it, OwnerDeviceRequestSafety.Category.PROPOSAL in assessment.categories)
+        }
+        assertFalse(OwnerDeviceRequestSafety.inspect("Was könnte ich löschen?").blocked)
+    }
 }
