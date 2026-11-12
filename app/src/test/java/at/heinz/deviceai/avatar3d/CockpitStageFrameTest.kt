@@ -55,12 +55,15 @@ class CockpitStageFrameTest {
                 doubleArrayOf(0.0, 0.0, 0.0, 1.0))
             val corners = listOf(.035 to .12, .965 to .12, .965 to .945, .035 to .945)
             corners.forEachIndexed { index, (u, v) ->
-                val vertex = doubleArrayOf((u - .5) * frame.monitorWidth,
-                    (.5 - v) * frame.monitorHeight, minOf(frame.monitorWidth, frame.monitorHeight) * .032, 1.0)
+                val depth = minOf(frame.width, frame.height) * .22
+                val compensation = (frame.distance - depth) / frame.distance
+                val vertex = doubleArrayOf((u - .5) * frame.monitorWidth * compensation,
+                    (.5 - v) * frame.monitorHeight * compensation,
+                    minOf(frame.monitorWidth, frame.monitorHeight) * .032 * compensation, 1.0)
                 val rotated = multiply(rotationY, multiply(rotationX, vertex))
-                rotated[0] += (frame.monitorLeft + frame.monitorRight - frame.width) * .5
-                rotated[1] += (frame.height - frame.monitorTop - frame.monitorBottom) * .5
-                rotated[2] += frame.depthOffset
+                rotated[0] += (frame.monitorLeft + frame.monitorRight - frame.width) * .5 * compensation
+                rotated[1] += (frame.height - frame.monitorTop - frame.monitorBottom) * .5 * compensation
+                rotated[2] += depth + frame.depthOffset
                 val cameraZ = frame.distance - rotated[2]
                 val expectedX = frame.width * .5 + frame.distance * rotated[0] / cameraZ
                 val expectedY = frame.height * .5 - frame.distance * rotated[1] / cameraZ

@@ -29,8 +29,8 @@ object CinematicWorkstationLayout {
         val sceneTop = gap + headerH + gap + dialogH
         val scene = Box(margin, sceneTop, right, sceneTop + sceneH)
         val headW = minOf(room * if (wide) .82f else .98f, sceneH * 1.65f)
-        val headH = if (wide) sceneH * .70f else minOf(sceneH * .62f, room * .70f)
-        val headTop = sceneTop + sceneH * if (wide) .057f else .11f
+        val headH = if (wide) sceneH * .62f else minOf(sceneH * .62f, room * .70f)
+        val headTop = sceneTop + sceneH * if (wide) .065f else .11f
         val head = Box(width * .5f - headW * .5f, headTop,
             width * .5f + headW * .5f, headTop + headH)
         // Original rings surround solid skin.

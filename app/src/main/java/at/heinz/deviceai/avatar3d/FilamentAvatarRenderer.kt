@@ -119,7 +119,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         swapChain = e.createSwapChain(surface, SwapChainFlags.CONFIG_TRANSPARENT)
         provider = UbershaderProvider(e)
         loader = AssetLoader(e, requireNotNull(provider), EntityManager.get())
-        val variant = AvatarMaterialVariant.prepare(bytes)
+        val variant = AvatarMaterialVariant.prepare(bytes,
+            at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY)
         val glb = ByteBuffer.allocateDirect(variant.bytes.size).put(variant.bytes).apply { flip() }
         val a = requireNotNull(loader!!.createAsset(glb)) { "GLB loader rejected candidate" }; asset = a
         require(a.resourceUris.isEmpty()) { "External resources forbidden" }

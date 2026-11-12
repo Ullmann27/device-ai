@@ -6,8 +6,9 @@ Source checkpoint: `74e80a8151`, based on
 publication, the side-root attachment, and the shared room transform.
 
 Status: material/geometry source connected and host geometry checks `PASS`.
-The first reference draft was inspected. The revised unified host render is
-pending. No device, frame-rate, or APK claim.
+The unified 8-sample Fold/phone resting drafts at source `4b5663b8` were inspected
+for desk, keyboard, and stand contact. No further material correction is needed
+from those images. No device, frame-rate, or APK claim.
 
 ## Changes
 
@@ -76,10 +77,18 @@ changed here. Packaged geometry: 36 nodes, 15 meshes, 1,192 unique vertices,
 
 ## Boundaries and rollback
 
-Next: inspect the low-sample unified render, particularly the new keyboard,
-rounded desk, and stand contact in focus. Full device rendering/performance
-remains unverified. The ordinary focus lift can lower the foot roughly
-1.6 pixels relative to the resting desk; judge visibility in the actual render.
+Visual evidence: render checkpoint `39bd432bd1`,
+`docs/evidence/cockpit-unified-draft-20261112/fold-idle.png` and `phone-idle.png`.
+The curved desk and separate top/front edges are visible; the keyboard reads as
+a tilted key surface on both formats. Main and side stands visibly contact the
+desk, without evident floating or intersection. Native contents remain clear.
+Smoked glass is subtle and its perimeter remains readable. Sampling noise did
+not prompt material changes. This review covers those resting host views only.
+
+Next: final sampling and focus-view inspection on the coordinator's current
+source. Device rendering/performance remains unverified. The ordinary focus
+lift can lower the foot roughly 1.6 pixels relative to the resting desk;
+judge visibility in the actual focus render.
 
 EXP-05/06 interfaces are unchanged; EXP-11 retains the existing integration
 owner. EXP-12 rollback restores seed, generators, packaged workstation, and

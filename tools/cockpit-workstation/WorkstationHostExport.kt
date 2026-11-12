@@ -2,7 +2,9 @@ package at.heinz.deviceai.ui
 
 import at.heinz.deviceai.avatar3d.AvatarFraming
 import at.heinz.deviceai.avatar3d.AvatarGlbContract
+import at.heinz.deviceai.avatar3d.AvatarMaterialVariant
 import at.heinz.deviceai.avatar3d.CockpitStageFrame
+import at.heinz.deviceai.avatar3d.CockpitWorldTransforms
 import at.heinz.deviceai.ui.JarvisShellLayout.Box
 import at.heinz.deviceai.ui.JarvisShellLayout.Slot
 import java.awt.image.BufferedImage
@@ -25,6 +27,8 @@ object WorkstationHostExport {
         .put("monitorRight", monitorRight).put("monitorBottom", monitorBottom)
         .put("yawDegrees", yawDegrees).put("pitchDegrees", pitchDegrees)
         .put("depthOffset", depthOffset).put("distance", distance)
+        .put("worldScale", worldScale).put("near", near).put("far", far)
+        .put("monitorMatrix", JSONArray(monitorTransform().toList()))
         .put("quad", JSONArray(quad().toList()))
         .put("contentBounds", JSONArray(listOf(CockpitStageFrame.CONTENT_LEFT, CockpitStageFrame.CONTENT_TOP,
             CockpitStageFrame.CONTENT_RIGHT, CockpitStageFrame.CONTENT_BOTTOM)))
@@ -47,6 +51,8 @@ object WorkstationHostExport {
         check(avatarHash == AvatarGlbContract.ASSET_SHA256)
         val metadata = AvatarGlbContract.validate(avatarBytes)
         val focus = metadata.focus
+        val variant = AvatarMaterialVariant.prepare(avatarBytes, CinematicWorkstationLayout.AVATAR_OPACITY)
+        File(out, "avatar-runtime.glb").writeBytes(variant.bytes)
         val frames = JSONArray()
         val budget = JarvisRenderQuality.resolve(true, false, 0, false, false)
         for ((name, width, height) in listOf(Triple("fold", 884, 760), Triple("phone", 411, 960))) {
@@ -106,12 +112,21 @@ object WorkstationHostExport {
                             if (example) HostExampleContent.result(painter, box)
                             return@SlotContent
                         }
+                        Slot.DIALOG -> {
+                            CockpitWorkstationChrome.companionBadge(painter, box, "Vorschau", active = false)
+                            return@SlotContent
+                        }
+                        Slot.CAMERA_STATUS -> {
+                            CockpitWorkstationChrome.cameraBadge(painter, box, "Kamera aus", false)
+                            return@SlotContent
+                        }
+                        Slot.COCKPIT_SECONDARY -> {
+                            CockpitWorkstationChrome.systemBadge(painter, box, List(5) { false })
+                            return@SlotContent
+                        }
                         else -> Unit
                     }
                     val text = when (slot) {
-                        Slot.DIALOG -> "Device AI · Continuum"
-                        Slot.CAMERA_STATUS -> "KAMERA AUS"
-                        Slot.COCKPIT_SECONDARY -> "VORSCHAU"
                         Slot.STATUS -> if (example) "VORSCHAU · BEISPIELINHALT" else "HOSTVORSCHAU · kein Livebild"
                         else -> ""
                     }
@@ -128,16 +143,6 @@ object WorkstationHostExport {
             draw("$name-foreground.png") { p ->
                 JarvisShellRenderer.drawForeground(p, shell, content)
             }
-            draw("$name-head-front.png") { p ->
-                AvatarPresentation.drawFront(p, head, 0f, .18f, layered = true)
-            }
-            val mask = BufferedImage(head.width.toInt(), head.height.toInt(), BufferedImage.TYPE_INT_ARGB)
-            for (y in 0 until mask.height) for (x in 0 until mask.width) {
-                val alpha = (255f * JarvisHeadAura.fadeAlpha(x.toFloat(), y.toFloat(),
-                    mask.width.toFloat(), mask.height.toFloat()) * CinematicWorkstationLayout.AVATAR_OPACITY).toInt()
-                mask.setRGB(x, y, (alpha shl 24) or 0xffffff)
-            }
-            ImageIO.write(mask, "png", File(out, "$name-head-mask.png"))
             val forward = CockpitMonitorMotion.flight(0f, 0f, 1f)
             val returning = CockpitMonitorMotion.flight(1f, 0f, 0f)
             check(forward.durationMs == returning.durationMs)
@@ -163,31 +168,6 @@ object WorkstationHostExport {
                 val frame = CockpitMonitorMotion.pose(base, progress)
                 check(frame.valid())
                 val key = "$name-$label"
-                val energy = ContinuumHologramRenderer.Frame.energyOf(ContinuumHologramRenderer.Mode.READY)
-                val orbFrame = ContinuumHologramRenderer.Frame.still(ContinuumHologramRenderer.Mode.READY,
-                    HostOrbClock.sample(time / 1_000f, energy))
-                draw("$key-orb.png") { p ->
-                    p.save()
-                    val flowTop = scene.height * .62f
-                    p.clipRect(scene.left, scene.top + flowTop, scene.right, scene.bottom)
-                    p.translate(scene.left, scene.top + flowTop)
-                    JarvisEnergyFlows.draw(p, scene.width, scene.height - flowTop, time / 1_000f, orbFrame.energy)
-                    p.restore()
-                    JarvisHeadAura.draw(p, head, framing.anchorX.toFloat(), time / 1_000f,
-                        headScale = framing.headScale.toFloat(), activityEnergy = orbFrame.energy,
-                        referenceMode = true)
-                    AvatarPresentation.drawBack(p, head, time / 1_000f, orbFrame.energy, layered = true)
-                    p.save()
-                    p.translate(orbBox.left, orbBox.top)
-                    p.clipRect(0f, 0f, orbBox.width, orbBox.height)
-                    val orb = ContinuumHologramRenderer().apply {
-                        geometry = ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
-                        showBrand = AvatarPresentation.showOrbBrand(layered = true, headEnabled = true)
-                        layout(orbBox.width, orbBox.height)
-                    }
-                    orb.draw(p, orbFrame, transparentBackdrop = true)
-                    p.restore()
-                }
                 if (example) {
                     val cw = frame.monitorWidth * (CockpitStageFrame.CONTENT_RIGHT - CockpitStageFrame.CONTENT_LEFT)
                     val ch = frame.monitorHeight * (CockpitStageFrame.CONTENT_BOTTOM - CockpitStageFrame.CONTENT_TOP)
@@ -200,11 +180,24 @@ object WorkstationHostExport {
                     ImageIO.write(image, "png", File(out, "$key-example.png"))
                 }
                 frames.put(JSONObject().put("key", key).put("layout", name).put("phase", label)
-                    .put("focus", progress).put("timeMs", time).put("orbPhase", orbFrame.phase)
-                    .put("frame", frame.json()))
+                    .put("focus", progress).put("timeMs", time).put("frame", frame.json())
+                    .put("world", JSONObject()
+                        .put("room", JSONArray(CockpitWorldTransforms.room(frame).toList()))
+                        .put("avatar", JSONArray(CockpitWorldTransforms.avatar(frame,
+                            head.left - scene.left, head.top - scene.top,
+                            head.right - scene.left, head.bottom - scene.top, framing, focus).toList()))
+                        .put("orb", JSONArray(CockpitWorldTransforms.orb(frame,
+                            orbBox.left - scene.left, orbBox.top - scene.top,
+                            orbBox.right - scene.left, orbBox.bottom - scene.top).toList()))
+                        .put("ringAnglesDegrees", JSONArray((0..3).map {
+                            CockpitWorldTransforms.ringAngleDegrees(it, time / 1_000f, motion = true)
+                        }))))
             }
         }
-        File(out, "scene-export.json").writeText(JSONObject().put("schema", "cockpit-host-review-v1")
+        val variantHash = MessageDigest.getInstance("SHA-256").digest(variant.bytes)
+            .joinToString("") { "%02x".format(it) }
+        File(out, "scene-export.json").writeText(JSONObject().put("schema", "cockpit-unified-review-v1")
+            .put("sceneMode", "UNIFIED_3D").put("avatarRuntimeVariantSha256", variantHash)
             .put("inputClass", "SYNTHETIC_FOCUS_REPLAY").put("contentMode", if (example) "example" else "empty")
             .put("motionDurationMs", CockpitMonitorMotion.DURATION_MS)
             .put("videoFramesPerSecond", fps).put("videoDurationMs", if (video) videoDurationMs else 0f)

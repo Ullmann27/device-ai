@@ -11,7 +11,8 @@ object CockpitWorldTransforms {
                fitted: AvatarFraming.Window, focus: AvatarGlbContract.Focus,
                out: FloatArray = FloatArray(16)): FloatArray {
         require(frame.valid())
-        require(listOf(left, top, right, bottom).all(Float::isFinite) && right > left && bottom > top)
+        require(left.isFinite() && top.isFinite() && right.isFinite() && bottom.isFinite() &&
+            right > left && bottom > top)
         identity(out)
         val unit = frame.worldScale
         val scale = ((bottom - top) * unit / (2 * fitted.halfHeight)).toFloat()
@@ -45,7 +46,8 @@ object CockpitWorldTransforms {
     fun orb(frame: CockpitStageFrame, left: Float, top: Float, right: Float, bottom: Float,
             out: FloatArray = FloatArray(16)): FloatArray {
         require(frame.valid())
-        require(listOf(left, top, right, bottom).all(Float::isFinite) && right > left && bottom > top)
+        require(left.isFinite() && top.isFinite() && right.isFinite() && bottom.isFinite() &&
+            right > left && bottom > top)
         identity(out)
         val unit = frame.worldScale
         val cameraDistance = frame.distance * unit

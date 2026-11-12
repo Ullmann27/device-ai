@@ -19,7 +19,7 @@ class AvatarMaterialVariantTest {
         val pinned = MessageDigest.getInstance("SHA-256").digest(original).joinToString("") { "%02x".format(it) }
         assertEquals(AvatarGlbContract.ASSET_SHA256, pinned)
         val snapshot = original.copyOf()
-        val variant = AvatarMaterialVariant.prepare(original)
+        val variant = AvatarMaterialVariant.prepare(original, .62f)
         assertArrayEquals(snapshot, original)
         assertArrayEquals(original.copyOfRange(20 + jsonLength(original), original.size),
             variant.bytes.copyOfRange(20 + jsonLength(variant.bytes), variant.bytes.size))
@@ -40,6 +40,34 @@ class AvatarMaterialVariantTest {
                 prior.remove("alphaMode"); result.remove("alphaMode")
                 assertEquals(prior.toString(), result.toString())
             }
+        }
+    }
+
+    @Test fun solidAvatarKeepsOriginalOpaqueAndMaskedMaterials() {
+        val original = source()
+        val snapshot = original.copyOf()
+        val solid = AvatarMaterialVariant.prepare(original, 1f)
+        assertSame("Opaque branch uses original bytes", original, solid.bytes)
+        assertArrayEquals(snapshot, original)
+        val materials = json(solid.bytes).getJSONArray("materials")
+        val modes = (0 until materials.length()).associate {
+            val material = materials.getJSONObject(it)
+            material.getString("name") to material.optString("alphaMode", "OPAQUE")
+        }
+        assertEquals("OPAQUE", modes["DeepIndigoSkin"])
+        assertEquals("OPAQUE", modes["NaturalSclera"])
+        assertEquals("MASK", modes["VioletThreads"])
+        assertEquals("MASK", modes["CyanThreads"])
+        assertFalse(modes.values.contains("BLEND"))
+        val translucent = AvatarMaterialVariant.prepare(original, .999f)
+        assertFalse(original.contentEquals(translucent.bytes))
+        assertArrayEquals(snapshot, original)
+    }
+
+    @Test fun invalidOpacityCannotChangeMaterialMode() {
+        for (opacity in listOf(-.1f, 1.1f, Float.NaN, Float.POSITIVE_INFINITY)) {
+            try { AvatarMaterialVariant.prepare(source(), opacity); fail("Invalid opacity accepted") }
+            catch (_: IllegalArgumentException) { }
         }
     }
 

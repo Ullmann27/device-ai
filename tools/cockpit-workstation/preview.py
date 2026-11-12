@@ -20,7 +20,7 @@ JarvisVisualDepth JarvisDeckClearance JarvisCinemaEntrance HollywoodFuiConstruct
 JarvisWindowProfile JarvisCockpitGrid JarvisRailIcons JarvisTileEnergy LuxuryHoloButtonRenderer
 PerimeterWingChoreographer JarvisSceneFills ContinuumHologramRenderer ContinuumHologramPlexus
 ContinuumOrbitalRing JarvisFluidLight CinematicWorkstationLayout CockpitGlassButtons JarvisHeadAura JarvisEnergyFlows
-CockpitMonitorMotion AvatarPresentation'''.split()
+CockpitMonitorMotion CockpitWorkstationChrome'''.split()
 
 
 def sha(path):
@@ -39,6 +39,29 @@ def git(root, *args):
     return subprocess.check_output(['git', '-C', str(root), *args], text=True).strip()
 
 
+def packaged_assets(root):
+    directory = root / 'app/src/main/assets'
+    manifest = directory / 'cinema3d/cockpit-world.json'
+    if manifest.stat().st_size > 16_384:
+        raise ValueError('Packaged manifest exceeds runtime bound')
+    data = json.loads(manifest.read_text())
+    if data['version'] != 1:
+        raise ValueError('Unsupported packaged asset version')
+    files = [manifest, directory / 'avatar3d/continuum-avatar.glb']
+    for key, expected, limit in (
+            ('workstation', 'cinema3d/cockpit-workstation.glb', 2_000_000),
+            ('orb', 'cinema3d/continuum-orb.glb', 2_000_000),
+            ('monitorMaterial', 'cinema3d/live-monitor.filamat', 1_000_000)):
+        entry = data[key]
+        path = directory / expected
+        if entry['path'] != expected or not 1 <= entry['bytes'] <= limit:
+            raise ValueError(f'Packaged asset contract failed: {key}')
+        if path.stat().st_size != entry['bytes'] or sha(path) != entry['sha256']:
+            raise ValueError(f'Packaged asset pin failed: {key}')
+        files.append(path)
+    return files, data
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--repo-root', type=Path, default=TOOL_ROOT.parents[1])
@@ -51,6 +74,7 @@ def main():
     parser.add_argument('--video', action='store_true')
     parser.add_argument('--draft', action='store_true')
     parser.add_argument('--content', choices=('empty', 'example'), default='empty')
+    parser.add_argument('--qa-lock', type=Path)
     args = parser.parse_args()
     root, out = args.repo_root.resolve(), args.output.resolve()
     if args.draft and args.video:
@@ -75,7 +99,6 @@ def main():
     main = root / 'app/src/main/java/at/heinz/deviceai'
     ui = main / 'ui'
     sources = [ui / f'{name}.kt' for name in UI_SOURCES]
-    sources += [path for path in (ui / 'CockpitWorkstationChrome.kt',) if path.is_file()]
     sources += [main / 'motion' / f'{name}.kt' for name in
                 ('DampedSpring', 'Easings', 'MotionPresets', 'MotionContracts', 'Staggers', 'FaceMotion')]
     sources += [main / 'cockpit' / f'{name}.kt' for name in
@@ -83,32 +106,31 @@ def main():
     sources += [main / 'avatar' / f'{name}.kt' for name in ('AvatarContract', 'AvatarSentenceAccentPolicy')]
     sources += [main / 'avatar3d' / f'{name}.kt' for name in
                 ('AvatarGlbContract', 'AvatarMorphMapper', 'AvatarIdleMotion', 'GazeBlinkPolicy',
-                 'CriticalDampedSpring', 'AvatarFraming', 'CockpitStageFrame')]
+                 'CriticalDampedSpring', 'AvatarFraming', 'AvatarMaterialVariant',
+                 'CockpitStageFrame', 'CockpitWorldTransforms')]
     sources += [root / 'tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/Java2DContinuumPainter.kt']
-    assets = [root / 'app/src/main/assets/cinema3d/cockpit-workstation.glb',
-              root / 'app/src/main/assets/avatar3d/continuum-avatar.glb']
+    assets, asset_pins = packaged_assets(root)
     tracked_sources = sources + assets + [ui / 'JarvisCockpitGridContent.kt', ui / 'JarvisCockpitPanels.kt',
                                          ui / 'ContinuumHomeView.kt',
                                          main / 'avatar3d/FilamentCockpitStage.kt',
                                          main / 'avatar3d/FilamentAvatarRenderer.kt',
-                                         main / 'ContinuumHologramView.kt', ui / 'CockpitMonitorPainter.kt']
+                                         main / 'avatar3d/CockpitSceneAssets.kt',
+                                         main / 'ContinuumHologramView.kt',
+                                         root / 'tools/cockpit-workstation/materials/live-monitor.mat']
     before = {str(path.relative_to(root)): sha(path) for path in tracked_sources}
-    stage_source = (main / 'avatar3d/FilamentCockpitStage.kt').read_text()
-    pin = re.search(r'const val ASSET_SHA256\s*=\s*"([0-9a-f]{64})"', stage_source)
-    if not pin or pin.group(1) != sha(assets[0]):
-        raise ValueError('Cockpit asset does not match runtime pin')
     tool_hashes = {path.name: sha(path) for path in
                    (TOOL_ROOT / 'WorkstationHostExport.kt', TOOL_ROOT / 'HostExampleContent.kt',
                     TOOL_ROOT / 'render_host.py', TOOL_ROOT / 'compose_host.py', Path(__file__))}
     home_source = (ui / 'ContinuumHomeView.kt').read_text()
     layer_depths = {}
-    for label, member in (('foreground', 'shellForeground'), ('stage', 'cockpitStage'),
-                          ('monitor', 'virtualMonitor')):
+    for label, member in (('foreground', 'shellForeground'),):
         match = re.search(r'private val ' + member + r'\b.{0,350}?translationZ\s*=\s*density\s*\*\s*([.0-9]+)f',
                           home_source, flags=re.DOTALL)
         if not match:
             raise ValueError(f'Production layer boundary changed: {member}')
         layer_depths[label] = float(match.group(1))
+    native_z = re.search(r'hologram\.translationZ\s*=\s*density\s*\*\s*([.0-9]+)f', home_source)
+    layer_depths['scene'] = float(native_z.group(1)) if native_z else 0.0
     with tempfile.TemporaryDirectory(prefix='continuum-cockpit-preview-') as temporary:
         work = Path(temporary)
         text = (ui / 'JarvisCockpitGridContent.kt').read_text()
@@ -124,15 +146,6 @@ def main():
                     if 'const val STOP_TARGET =' in line)
         constants = work / 'HostStopConstant.kt'
         constants.write_text('package at.heinz.deviceai.ui\nobject JarvisCockpitPanels {\n' + stop + '\n}\n')
-        hologram = (main / 'ContinuumHologramView.kt').read_text()
-        initial = re.search(r'private var phase\s*=\s*([.0-9]+f)', hologram)
-        advance = re.search(r'if \(renderBudget\(\).animate\) (phase = [^\n]+)', hologram)
-        if not initial or not advance:
-            raise ValueError('Production orb clock boundary changed')
-        clock = work / 'HostOrbClock.kt'
-        clock.write_text('package at.heinz.deviceai.ui\nobject HostOrbClock {\n'
-                         'fun sample(delta: Float, energy: Float): Float {\n'
-                         'var phase = ' + initial.group(1) + '\n' + advance.group(1) + '\nreturn phase\n}\n}\n')
         cp = [str(stdlib[0]), str(args.json_jar.resolve())]
         if args.android_jar:
             cp.append(str(args.android_jar.resolve()))
@@ -140,15 +153,18 @@ def main():
         command = ['java', '-Xmx768m', '-cp', str(libs / '*'),
                    'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler', '-no-stdlib', '-no-reflect',
                    '-jvm-target', '17', '-nowarn', '-cp', os.pathsep.join(cp), '-d', str(jar)]
-        command += [str(path) for path in sources + [boundary, constants, clock,
+        command += [str(path) for path in sources + [boundary, constants,
                      TOOL_ROOT / 'WorkstationHostExport.kt', TOOL_ROOT / 'HostExampleContent.kt']]
         run(command, work / 'compile.log')
         run(['java', '-Xmx512m', '-Djava.awt.headless=true', '-cp', os.pathsep.join([str(jar)] + cp),
              'at.heinz.deviceai.ui.WorkstationHostExport', str(root), str(work),
              'video' if args.video else 'draft' if args.draft else 'stills', args.content], work / 'export.log')
-        run(['blender', '-b', '-t', '2', '--python', str(TOOL_ROOT / 'render_host.py'), '--',
+        render_command = ['blender', '-b', '-t', '2', '--python', str(TOOL_ROOT / 'render_host.py'), '--',
              '--repo-root', str(root), '--work-dir', str(work), '--samples', str(args.samples),
-             '--video-samples', str(args.video_samples or args.samples)], work / 'blender.log')
+             '--video-samples', str(args.video_samples or args.samples)]
+        if args.qa_lock:
+            render_command = ['flock', '-w', '60', str(args.qa_lock.resolve())] + render_command
+        run(render_command, work / 'blender.log')
         exported = json.loads((work / 'scene-export.json').read_text())
         compose(work, out, exported, layer_depths)
         if args.video:
@@ -167,21 +183,24 @@ def main():
     if not stable:
         raise RuntimeError('Source changed during rendering; discard output')
     manifest = {
-        'schema': 'cockpit-host-preview-v1', 'sourceCommit': source_commit,
+        'schema': 'cockpit-unified-preview-v1', 'sourceCommit': source_commit,
         'sourceFilesSha256': before, 'toolFilesSha256': tool_hashes,
-        'evidenceClass': 'HOST_COMPOSITE', 'sourceStableDuringRun': stable,
+        'evidenceClass': 'HOST_UNIFIED_3D_COMPOSITE', 'sourceStableDuringRun': stable,
+        'sharedRenderLockUsed': args.qa_lock is not None,
+        'packagedAssetPins': asset_pins,
         'productionLayerDepthDp': layer_depths,
         'sourceWorkingTree': git(root, 'status', '--porcelain', '--untracked-files=no'),
-        'components': {'cockpit': 'Exact packaged GLB, production Kotlin pose and projection',
-                       'avatar': 'Exact original GLB, neutral rest pose, production framing and alpha mask',
-                       'sphere': 'Existing ContinuumHologramRenderer, head aura, and energy flows through Java2D',
-                       'chrome': 'Existing JarvisShellRenderer, synthetic neutral labels',
-                       'monitorContent': 'Host-only document example; opaque, no tint, no app capture' if args.content == 'example'
+        'components': {'cockpit': 'Packaged GLB, actual Kotlin world and monitor matrices',
+                       'avatar': 'Original GLB through native AvatarMaterialVariant; neutral pose, actual world matrix',
+                       'sphere': 'Packaged continuum-orb.glb; actual Kotlin world matrix and ring angles; no 2D sphere layer',
+                       'chrome': 'Existing JarvisShellRenderer and CockpitWorkstationChrome; neutral host data',
+                       'monitorContent': 'Host-only document texture on actual live-pixel mesh; unlit, no tint, no app capture' if args.content == 'example'
                                          else 'Empty; no Android app pixels or live connection'},
         'contentMode': args.content,
         'motion': 'Production Flight.sample at fixed intervals, with rest holds; no extra easing',
-        'orbClock': {'initial': initial.group(1), 'productionAdvance': advance.group(1),
-                     'mode': 'READY', 'audio': 0, 'sampledDurationMs': exported['videoDurationMs']},
+        'orbMotion': {'source': 'CockpitWorldTransforms.ringAngleDegrees',
+                      'timeSource': 'Exported elapsed milliseconds / 1000',
+                      'sampledDurationMs': exported['videoDurationMs']},
         'limits': ['Blender studio is not Filament light equivalence', 'No Android layout lifecycle exercised',
                    'No speech, model, capture, or real device measurements'],
         'Filament': 'NOT_RUN', 'Fold7': 'NOT_RUN',

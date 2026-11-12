@@ -83,7 +83,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         virtualMonitor.setForegroundActive(active)
         if (!active) hologram.clearMemoryScene()
         if (!active) liveTabs.collapseImmediately()
-        if (!active) { clearShellPress(); monitorFocusAnimator?.cancel() }
+        if (!active) { clearShellPress(); settleMonitorFlight() }
         jarvisShell.refreshMotionPolicy()
         updateWaveAnimation()
     }
@@ -142,8 +142,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onDetachedFromWindow() {
         presentationGeneration++
-        monitorFocusAnimator?.cancel()
-        monitorFocusAnimator = null
+        settleMonitorFlight()
         clearShellPress()
         presentationBudgetRegistration?.close()
         presentationBudgetRegistration = null
@@ -165,7 +164,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         if (visibility != View.VISIBLE) presentationGeneration++
         if (visibility != View.VISIBLE) hologram.clearMemoryScene()
         if (visibility != View.VISIBLE) liveTabs.collapseImmediately()
-        if (visibility != View.VISIBLE) clearShellPress()
+        if (visibility != View.VISIBLE) { clearShellPress(); settleMonitorFlight() }
         updateWaveAnimation()
     }
 
@@ -174,7 +173,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         if (!isShown) presentationGeneration++
         if (!isShown) hologram.clearMemoryScene()
         if (!isShown) liveTabs.collapseImmediately()
-        if (!isShown) clearShellPress()
+        if (!isShown) { clearShellPress(); settleMonitorFlight() }
         updateWaveAnimation()
     }
     var state: ContinuumDashboardState = ContinuumDashboardState()
@@ -211,6 +210,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private var computerFrame: at.heinz.deviceai.avatar3d.CockpitStageFrame? = null
     private var monitorFocus = 0f
+    private var monitorTargetFocus = 0f
     private var monitorFocusAnimator: android.animation.ValueAnimator? = null
 
     private var liveComputerFeed: at.heinz.deviceai.cognitive.LiveMonitorFeed<at.heinz.deviceai.AndroidLiveFrame>? = null
@@ -239,25 +239,48 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     }
 
     private fun moveMonitor(target: Float) {
-        monitorFocusAnimator?.cancel()
+        if (monitorTargetFocus == target && (monitorFocusAnimator != null ||
+                kotlin.math.abs(monitorFocus - target) < .000001f)) return
+        val previous = monitorFocusAnimator
+        monitorFocusAnimator = null
+        previous?.cancel()
+        monitorTargetFocus = target
         if (!isPresentationActive() || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
-            monitorFocus = target
-            monitorVelocity = 0f
-            presentComputerFrame()
+            settleMonitorFlight()
             return
         }
         val flight = CockpitMonitorMotion.flight(monitorFocus, monitorVelocity, target)
-        monitorFocusAnimator = android.animation.ValueAnimator.ofFloat(0f, flight.durationMs).apply {
+        val animator = android.animation.ValueAnimator.ofFloat(0f, flight.durationMs).apply {
             duration = flight.durationMs.toLong().coerceAtLeast(1L)
             interpolator = android.view.animation.LinearInterpolator()
             addUpdateListener {
+                if (monitorFocusAnimator !== it) return@addUpdateListener
                 val sample = flight.sample(it.animatedValue as Float)
                 monitorFocus = sample.focus
                 monitorVelocity = sample.velocityPerMs
                 presentComputerFrame()
             }
-            start()
+            addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    if (monitorFocusAnimator !== animation) return
+                    monitorFocusAnimator = null
+                    monitorFocus = target
+                    monitorVelocity = 0f
+                    presentComputerFrame()
+                }
+            })
         }
+        monitorFocusAnimator = animator
+        animator.start()
+    }
+
+    private fun settleMonitorFlight() {
+        val previous = monitorFocusAnimator
+        monitorFocusAnimator = null
+        previous?.cancel()
+        monitorFocus = monitorTargetFocus
+        monitorVelocity = 0f
+        presentComputerFrame()
     }
 
     private fun presentComputerFrame() {

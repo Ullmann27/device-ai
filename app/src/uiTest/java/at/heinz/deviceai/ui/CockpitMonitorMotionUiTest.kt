@@ -4,10 +4,15 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.os.Looper
+import android.os.SystemClock
 import android.view.View
+import android.view.ViewGroup
 import at.heinz.deviceai.AndroidLiveFrame
 import at.heinz.deviceai.ContinuumHologramView
 import at.heinz.deviceai.cognitive.LatestLiveFrameHolder
+import at.heinz.deviceai.cognitive.LiveFrameBinding
+import at.heinz.deviceai.cognitive.LiveFrameOrigin
+import at.heinz.deviceai.cognitive.CockpitWorkEvent
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -68,15 +73,38 @@ class CockpitMonitorMotionUiTest {
         }
 
     private fun velocity(home: ContinuumHomeView): Float =
-        ContinuumHomeView::class.java.getDeclaredField("monitorFocusVelocity").let {
+        ContinuumHomeView::class.java.getDeclaredField("monitorVelocity").let {
             it.isAccessible = true
             it.getFloat(home)
         }
 
-    @Test fun duplicateFeedDoesNotRestartAndReversalHasNoJump() = withHome { home, monitor ->
-        val rest = monitor.frame
-        val feed = LatestLiveFrameHolder<AndroidLiveFrame>({})
-        home.setLiveComputerFeed(feed)
+    private val binding = LiveFrameBinding("ui-motion", 7L, "com.example.target", "at.heinz.deviceai",
+        LiveFrameOrigin.PROJECTION_SINGLE_APP)
+
+    private fun bindSource(home: ContinuumHomeView, monitor: VirtualComputerMonitorView): LatestLiveFrameHolder<AndroidLiveFrame> {
+        val rest = requireNotNull(monitor.frame)
+        val source = LatestLiveFrameHolder<AndroidLiveFrame>({}).apply { bind(binding) }
+        home.setLiveComputerFeed(source)
+        assertNull("Binding alone cannot start work", animator(home))
+        assertEquals("Binding alone preserves rest pose", rest, monitor.frame)
+        assertEquals(binding, source.status(System.nanoTime()).binding)
+        return source
+    }
+
+    private fun event(sequence: Long, stage: CockpitWorkEvent.Stage) = CockpitWorkEvent(
+        binding.taskId, binding.captureSession, sequence, System.nanoTime(), SystemClock.uptimeMillis(), stage)
+
+    private fun startWork(home: ContinuumHomeView, monitor: VirtualComputerMonitorView) {
+        bindSource(home, monitor)
+        home.showComputerWorkEvent(event(1L, CockpitWorkEvent.Stage.ACCEPTED))
+        home.showComputerWorkEvent(event(2L, CockpitWorkEvent.Stage.FOCUS))
+    }
+
+    @Test fun boundWorkEventsStartOnceAndReverseContinuously() = withHome { home, monitor ->
+        val rest = requireNotNull(monitor.frame)
+        val feed = bindSource(home, monitor)
+        val accepted = event(1L, CockpitWorkEvent.Stage.ACCEPTED)
+        home.showComputerWorkEvent(accepted)
         val opening = requireNotNull(animator(home))
         opening.setCurrentFraction(.45f)
         val middle = requireNotNull(monitor.frame)
@@ -84,8 +112,13 @@ class CockpitMonitorMotionUiTest {
         home.setLiveComputerFeed(feed)
         assertSame(opening, animator(home))
         assertEquals(middle, monitor.frame)
+        home.showComputerWorkEvent(accepted)
+        assertSame("Duplicate sequence keeps existing flight", opening, animator(home))
+        home.showComputerWorkEvent(event(2L, CockpitWorkEvent.Stage.FOCUS))
+        assertSame("Same work target keeps existing flight", opening, animator(home))
+        assertEquals(middle, monitor.frame)
         val incomingSpeed = velocity(home)
-        home.clearLiveComputerFeed()
+        home.showComputerWorkEvent(event(3L, CockpitWorkEvent.Stage.PAUSED))
         val closing = requireNotNull(animator(home))
         assertNotSame(opening, closing)
         assertEquals(middle, monitor.frame)
@@ -96,29 +129,41 @@ class CockpitMonitorMotionUiTest {
         assertNull(animator(home))
         assertEquals(0f, velocity(home), 0f)
         assertEquals(rest, monitor.frame)
+        home.clearLiveComputerFeed()
+        assertNull("Clearing at rest cannot restart flight", animator(home))
     }
 
     @Test fun backgroundSettlesWithoutReplayingOnResume() = withHome { home, monitor ->
-        home.setLiveComputerFeed(LatestLiveFrameHolder<AndroidLiveFrame>({}))
+        val rest = requireNotNull(monitor.frame)
+        startWork(home, monitor)
         requireNotNull(animator(home)).setCurrentFraction(.5f)
         home.setForegroundActive(false)
         val settled = requireNotNull(monitor.frame)
         assertNull(animator(home))
-        assertEquals(0f, settled.pitchDegrees, 0f)
-        assertTrue("Foreground work pose", settled.depthOffset > 0f)
+        assertEquals(0f, velocity(home), 0f)
+        assertEquals("Background settles requested pose", CockpitMonitorMotion.pose(rest, 1f), settled)
         home.setForegroundActive(true)
         assertNull(animator(home))
         assertEquals(settled, monitor.frame)
     }
 
     @Test fun hiddenCockpitReleasesItsFlight() = withHome { home, monitor ->
-        home.setLiveComputerFeed(LatestLiveFrameHolder<AndroidLiveFrame>({}))
+        val rest = requireNotNull(monitor.frame)
+        startWork(home, monitor)
         requireNotNull(animator(home)).setCurrentFraction(.3f)
         home.visibility = View.INVISIBLE
         assertNull(animator(home))
-        assertEquals(0f, requireNotNull(monitor.frame).pitchDegrees, 0f)
+        assertEquals(0f, velocity(home), 0f)
+        assertEquals(CockpitMonitorMotion.pose(rest, 1f), monitor.frame)
         home.visibility = View.VISIBLE
         assertNull(animator(home))
+        home.showComputerWorkEvent(event(3L, CockpitWorkEvent.Stage.PAUSED))
+        requireNotNull(animator(home)).setCurrentFraction(.3f)
+        (home.parent as ViewGroup).removeView(home)
+        assertFalse(home.isAttachedToWindow)
+        assertNull(animator(home))
+        assertEquals(0f, velocity(home), 0f)
+        assertEquals("Detach settles return pose", rest, monitor.frame)
     }
 
     @Test fun disabledSystemMotionGoesDirectlyToWorkPose() = withHome { home, monitor ->
@@ -128,10 +173,12 @@ class CockpitMonitorMotionUiTest {
         try {
             method.invoke(null, 0f)
             assertFalse(ValueAnimator.areAnimatorsEnabled())
-            home.setLiveComputerFeed(LatestLiveFrameHolder<AndroidLiveFrame>({}))
+            val rest = requireNotNull(monitor.frame)
+            startWork(home, monitor)
             assertNull(animator(home))
             assertEquals(0f, requireNotNull(monitor.frame).pitchDegrees, 0f)
             assertEquals(0f, requireNotNull(monitor.frame).yawDegrees, 0f)
+            assertEquals(CockpitMonitorMotion.pose(rest, 1f), monitor.frame)
         } finally {
             method.invoke(null, previous)
         }

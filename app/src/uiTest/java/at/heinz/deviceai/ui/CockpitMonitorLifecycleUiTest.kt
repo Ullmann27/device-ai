@@ -5,10 +5,10 @@ import android.os.Looper
 import android.view.View
 import android.widget.FrameLayout
 import at.heinz.deviceai.AndroidLiveFrame
-import at.heinz.deviceai.cognitive.LiveFrameLease
+import at.heinz.deviceai.cognitive.LatestLiveFrameHolder
+import at.heinz.deviceai.cognitive.LiveFrameBinding
+import at.heinz.deviceai.cognitive.LiveFrameOrigin
 import at.heinz.deviceai.cognitive.LiveMonitorFeed
-import at.heinz.deviceai.cognitive.LiveMonitorState
-import at.heinz.deviceai.cognitive.LiveMonitorStatus
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,84 +26,82 @@ import java.time.Duration
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class CockpitMonitorLifecycleUiTest {
-    private class CountingFeed : LiveMonitorFeed<AndroidLiveFrame> {
-        var reads = 0
-        override fun status(nowNanos: Long): LiveMonitorStatus {
-            reads++
-            return LiveMonitorStatus(LiveMonitorState.NO_SOURCE, null, null, null, 0, null)
-        }
-        override fun acquire(): LiveFrameLease<AndroidLiveFrame>? = null
-        override fun version() = 0L
-    }
-
     private fun advance() {
         shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(80))
     }
 
-    private fun withMonitor(check: (VirtualComputerMonitorView, FrameLayout, CountingFeed) -> Unit) {
+    private fun withMonitor(check: (VirtualComputerMonitorView, FrameLayout,
+        LatestLiveFrameHolder<AndroidLiveFrame>, MutableList<LiveMonitorFeed<AndroidLiveFrame>?>) -> Unit) {
         ShadowChoreographer.setPaused(true)
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
         val controller = Robolectric.buildActivity(Activity::class.java).setup().visible()
         val host = FrameLayout(controller.get())
         val monitor = VirtualComputerMonitorView(controller.get())
+        val delivered = mutableListOf<LiveMonitorFeed<AndroidLiveFrame>?>()
+        monitor.onFeedChanged = { delivered += it }
         host.addView(monitor, FrameLayout.LayoutParams(600, 400))
         controller.get().setContentView(host)
-        val feed = CountingFeed()
+        val feed = LatestLiveFrameHolder<AndroidLiveFrame>({}).apply {
+            bind(LiveFrameBinding("ui-lifecycle", 1L, "com.example.target", "at.heinz.deviceai",
+                LiveFrameOrigin.PROJECTION_SINGLE_APP))
+        }
         try {
             advance()
             assertTrue("Monitor attaches to real window", monitor.isAttachedToWindow)
             assertTrue("Monitor starts shown", monitor.isShown)
             assertEquals("Host window starts visible", View.VISIBLE, monitor.windowVisibility)
             monitor.bind(feed)
+            assertNull("Background never forwards a source", delivered.last())
             monitor.setForegroundActive(true)
             advance()
-            val reads = feed.reads
-            advance()
-            assertTrue("Visible feed advances", feed.reads > reads)
-            check(monitor, host, feed)
+            assertSame("Visible renderer receives bound object", feed, delivered.last())
+            check(monitor, host, feed, delivered)
         } finally {
             monitor.setForegroundActive(false)
             controller.pause().stop().destroy()
         }
     }
 
-    @Test fun hiddenMonitorRestartsWhenVisible() = withMonitor { monitor, _, feed ->
-        monitor.visibility = View.INVISIBLE
+    private fun delivery(expected: LiveMonitorFeed<AndroidLiveFrame>?,
+                         delivered: MutableList<LiveMonitorFeed<AndroidLiveFrame>?>, action: () -> Unit) {
+        val before = delivered.size
+        action()
         advance()
-        val stopped = feed.reads
+        assertTrue("Lifecycle publishes renderer binding", delivered.size > before)
+        assertSame(expected, delivered.last())
+        val settled = delivered.size
         advance()
-        assertEquals(stopped, feed.reads)
-        monitor.visibility = View.VISIBLE
-        advance()
-        assertTrue("Visibility resumes existing tick", feed.reads > stopped)
+        assertSame(expected, delivered.last())
+        assertTrue("Stable lifecycle cannot leak another source", delivered.drop(settled).all { it === expected })
     }
 
-    @Test fun parentVisibilityRestartsWithoutForegroundToggle() = withMonitor { _, host, feed ->
-        host.visibility = View.GONE
-        advance()
-        val stopped = feed.reads
-        advance()
-        assertEquals(stopped, feed.reads)
-        host.visibility = View.VISIBLE
-        advance()
-        assertTrue("Parent visibility resumes tick", feed.reads > stopped)
+    @Test fun hiddenMonitorReleasesAndRestoresBoundSource() = withMonitor { monitor, _, feed, delivered ->
+        delivery(null, delivered) { monitor.visibility = View.INVISIBLE }
+        assertFalse(monitor.isShown)
+        delivery(feed, delivered) { monitor.visibility = View.VISIBLE }
+        assertTrue(monitor.isShown)
     }
 
-    @Test fun backgroundAndDetachStayStopped() = withMonitor { monitor, host, feed ->
-        monitor.setForegroundActive(false)
-        monitor.visibility = View.INVISIBLE
-        monitor.visibility = View.VISIBLE
-        advance()
-        val background = feed.reads
-        advance()
-        assertEquals(background, feed.reads)
-        monitor.setForegroundActive(true)
-        advance()
-        assertTrue(feed.reads > background)
-        host.removeView(monitor)
-        advance()
-        val detached = feed.reads
-        advance()
-        assertEquals(detached, feed.reads)
+    @Test fun parentAndWindowVisibilityRestoreTheSameSource() = withMonitor { monitor, host, feed, delivered ->
+        delivery(null, delivered) { host.visibility = View.GONE }
+        delivery(feed, delivered) { host.visibility = View.VISIBLE }
+        val decor = host.rootView
+        delivery(null, delivered) { decor.visibility = View.INVISIBLE }
+        assertEquals("Actual window became hidden", View.INVISIBLE, monitor.windowVisibility)
+        delivery(feed, delivered) { decor.visibility = View.VISIBLE }
+        assertEquals("Actual window became visible", View.VISIBLE, monitor.windowVisibility)
+    }
+
+    @Test fun backgroundAndDetachNeverForwardSource() = withMonitor { monitor, host, feed, delivered ->
+        delivery(null, delivered) { monitor.setForegroundActive(false) }
+        delivery(null, delivered) { monitor.visibility = View.INVISIBLE }
+        delivery(null, delivered) { monitor.visibility = View.VISIBLE }
+        delivery(feed, delivered) { monitor.setForegroundActive(true) }
+        delivery(null, delivered) { host.removeView(monitor) }
+        assertFalse(monitor.isAttachedToWindow)
+        delivery(null, delivered) { monitor.bind(feed) }
+        delivery(null, delivered) { monitor.setForegroundActive(true) }
+        delivery(feed, delivered) { host.addView(monitor, FrameLayout.LayoutParams(600, 400)) }
+        assertTrue(monitor.isAttachedToWindow)
     }
 }

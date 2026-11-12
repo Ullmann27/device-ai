@@ -1,10 +1,9 @@
-"""Render exact assets; never device evidence."""
+"""Render the actual unified scene."""
 import argparse
 import hashlib
 import json
 import math
 from pathlib import Path
-import shutil
 import sys
 
 import bpy
@@ -12,12 +11,23 @@ from bpy_extras.object_utils import world_to_camera_view
 from mathutils import Matrix, Vector
 
 
-def point(x, y, z):
-    return Vector((x, -z, y))
+CONVERSION = Matrix(((1, 0, 0, 0), (0, 0, -1, 0), (0, 1, 0, 0), (0, 0, 0, 1)))
 
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def matrix(values):
+    return Matrix(tuple(tuple(values[column * 4 + row] for column in range(4)) for row in range(4)))
+
+
+def converted(values):
+    return CONVERSION @ matrix(values) @ CONVERSION.inverted()
+
+
+def point(x, y, z):
+    return Vector((x, -z, y))
 
 
 def setup(width, height, samples):
@@ -35,155 +45,184 @@ def setup(width, height, samples):
     scene.render.image_settings.file_format = 'PNG'
     scene.render.image_settings.color_mode = 'RGBA'
     scene.render.film_transparent = True
-    scene.world = bpy.data.worlds.new('HostReviewAmbient')
+    scene.world = bpy.data.worlds.new('HostAmbient')
     scene.world.use_nodes = True
     background = scene.world.node_tree.nodes['Background']
-    background.inputs[0].default_value = (.20, .28, .40, 1)
-    background.inputs[1].default_value = .35
-    scene.view_settings.view_transform = 'AgX'
-    scene.view_settings.look = 'AgX - Medium High Contrast'
+    background.inputs[0].default_value = (.90, .98, 1.10, 1)
+    background.inputs[1].default_value = .08
+    scene.view_settings.view_transform = 'Standard'
+    scene.view_settings.look = 'None'
     scene.view_settings.exposure = 0
     return scene
 
 
-def light(name, position, energy, color, kind='SUN', target=(0, 0, 0)):
+def light(name, position, energy, color, kind='SUN'):
     data = bpy.data.lights.new(name, kind)
     data.energy, data.color = energy, color
     obj = bpy.data.objects.new(name, data)
     bpy.context.scene.collection.objects.link(obj)
     obj.location = point(*position)
-    obj.rotation_euler = (point(*target) - obj.location).to_track_quat('-Z', 'Y').to_euler()
-    return obj
+    obj.rotation_euler = (-obj.location).to_track_quat('-Z', 'Y').to_euler()
 
 
-def camera(scene, position, target):
-    data = bpy.data.cameras.new('HostReviewCamera')
-    obj = bpy.data.objects.new('HostReviewCamera', data)
-    scene.collection.objects.link(obj)
-    obj.location = point(*position)
-    obj.rotation_euler = (point(*target) - obj.location).to_track_quat('-Z', 'Y').to_euler()
-    scene.camera = obj
-    return obj
+def import_avatar(path):
+    previous = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=str(path))
+    imported = set(bpy.data.objects) - previous
+    roots = [obj for obj in imported if obj.parent not in imported]
+    parent = bpy.data.objects.new('HostAvatarWorld', None)
+    bpy.context.scene.collection.objects.link(parent)
+    for obj in roots:
+        rest = obj.matrix_world.copy()
+        obj.parent = parent
+        obj.matrix_parent_inverse = Matrix.Identity(4)
+        obj.matrix_local = rest
+    for obj in imported:
+        if obj.name.startswith('Tooth'):
+            obj.hide_render = True
+    return parent
+
+
+def pixel_material(obj):
+    material = bpy.data.materials.new('HostExampleUnlit')
+    material.use_nodes = True
+    nodes = material.node_tree.nodes
+    nodes.clear()
+    output = nodes.new('ShaderNodeOutputMaterial')
+    emission = nodes.new('ShaderNodeEmission')
+    emission.inputs['Color'].default_value = (.001, .002, .004, 1)
+    emission.inputs['Strength'].default_value = 1
+    transparent = nodes.new('ShaderNodeBsdfTransparent')
+    path = nodes.new('ShaderNodeLightPath')
+    mix = nodes.new('ShaderNodeMixShader')
+    texture = nodes.new('ShaderNodeTexImage')
+    texture.interpolation = 'Linear'
+    texture.extension = 'CLIP'
+    links = material.node_tree.links
+    links.new(path.outputs['Is Camera Ray'], mix.inputs[0])
+    links.new(transparent.outputs[0], mix.inputs[1])
+    links.new(emission.outputs[0], mix.inputs[2])
+    links.new(mix.outputs[0], output.inputs['Surface'])
+    obj.data.materials.clear()
+    obj.data.materials.append(material)
+    return texture, emission, links
+
+
+def pixel_corners(obj):
+    corners = {}
+    uv = obj.data.uv_layers.active
+    if uv is None:
+        raise ValueError('Live pixel mesh has no UVs')
+    for loop in obj.data.loops:
+        key = tuple(round(value, 5) for value in uv.data[loop.index].uv)
+        corners[key] = obj.data.vertices[loop.vertex_index].co.copy()
+    ordered = ((0, 1), (1, 1), (1, 0), (0, 0))
+    if any(key not in corners for key in ordered):
+        raise ValueError('Live pixel UV contract changed')
+    return [corners[key] for key in ordered]
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--repo-root', type=Path, required=True)
     parser.add_argument('--work-dir', type=Path, required=True)
-    parser.add_argument('--samples', type=int, default=12)
+    parser.add_argument('--samples', type=int, default=8)
     parser.add_argument('--video-samples', type=int)
-    parser.add_argument('--frames', default='all')
     args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:])
-    if not 1 <= args.samples <= 64:
-        raise ValueError('Samples outside review bounds')
-    if args.video_samples is not None and not 1 <= args.video_samples <= 64:
-        raise ValueError('Video samples outside review bounds')
     root, out = args.repo_root.resolve(), args.work_dir.resolve()
-    asset = root / 'app/src/main/assets/cinema3d/cockpit-workstation.glb'
-    avatar = root / 'app/src/main/assets/avatar3d/continuum-avatar.glb'
+    if not 1 <= args.samples <= 64 or args.video_samples is not None and not 1 <= args.video_samples <= 64:
+        raise ValueError('Samples outside review bounds')
+    assets = root / 'app/src/main/assets'
+    workstation = assets / 'cinema3d/cockpit-workstation.glb'
+    orb_asset = assets / 'cinema3d/continuum-orb.glb'
+    avatar = out / 'avatar-runtime.glb'
     exported = json.loads((out / 'scene-export.json').read_text())
-    if exported['schema'] != 'cockpit-host-review-v1':
-        raise ValueError('Unsupported export schema')
+    if exported['schema'] != 'cockpit-unified-review-v1':
+        raise ValueError('Unified scene export required')
+    if sha(avatar) != exported['avatarRuntimeVariantSha256']:
+        raise ValueError('Runtime avatar differs from Kotlin export')
     frames = exported['frames']
-    if args.frames != 'all':
-        selected = set(args.frames.split(','))
-        frames = [frame for frame in frames if frame['key'] in selected]
-        if {frame['key'] for frame in frames} != selected:
-            raise ValueError('Unknown requested frame')
-    conversion = Matrix(((1, 0, 0, 0), (0, 0, -1, 0), (0, 1, 0, 0), (0, 0, 0, 1)))
     records = []
     for name in sorted({frame['layout'] for frame in frames}):
         layout = json.loads((out / f'{name}-layout.json').read_text())
         group = [frame for frame in frames if frame['layout'] == name]
-        width, height = [int(group[0]['frame'][key]) for key in ('width', 'height')]
+        first = group[0]['frame']
+        width, height = int(first['width']), int(first['height'])
         scene = setup(width, height, args.samples)
-        bpy.ops.import_scene.gltf(filepath=str(asset))
+        bpy.ops.import_scene.gltf(filepath=str(workstation))
         room = bpy.data.objects['cockpit-room']
         monitor = bpy.data.objects['cockpit-monitor']
-        room_rest, monitor_rest = room.matrix_world.copy(), monitor.matrix_world.copy()
-        room_matrix = Matrix.Diagonal((width, height, min(width, height), 1))
-        room.matrix_world = conversion @ room_matrix @ conversion.inverted() @ room_rest
         sides = bpy.data.objects.get('cockpit-side-monitors')
-        if sides:
-            sides.matrix_world = conversion @ room_matrix @ conversion.inverted() @ sides.matrix_world.copy()
-        distance = group[0]['frame']['distance']
-        cam = camera(scene, (0, 0, distance), (0, 0, 0))
-        cam.data.sensor_fit = 'HORIZONTAL'
-        cam.data.sensor_width = 36
-        cam.data.lens = 36 * distance / width
-        cam.data.clip_start, cam.data.clip_end = 1, distance * 4
-        light('HostKey', (.32, .55, 1), 4.5, (.62, .80, 1))
-        rendered_poses = {}
+        room_rest, monitor_rest = room.matrix_world.copy(), monitor.matrix_world.copy()
+        side_rest = sides.matrix_world.copy() if sides else None
+        pixels = bpy.data.objects['monitor-live-pixels']
+        local_pixels = pixel_corners(pixels)
+        texture, emission, links = pixel_material(pixels)
+        if exported['contentMode'] == 'example':
+            links.new(texture.outputs['Color'], emission.inputs['Color'])
+        bpy.ops.import_scene.gltf(filepath=str(orb_asset))
+        orb = bpy.data.objects['continuum-orb']
+        orb_rest = orb.matrix_world.copy()
+        rings = [(bpy.data.objects[f'orb-orbit-{i}'],
+                  bpy.data.objects[f'orb-orbit-{i}'].matrix_local.copy()) for i in range(4)]
+        avatar_root = import_avatar(avatar)
+        data = bpy.data.cameras.new('UnifiedHostCamera')
+        camera = bpy.data.objects.new('UnifiedHostCamera', data)
+        scene.collection.objects.link(camera)
+        scene.camera = camera
+        distance = first['distance'] * first['worldScale']
+        camera.location = point(0, 0, distance)
+        camera.rotation_euler = (-camera.location).to_track_quat('-Z', 'Y').to_euler()
+        data.sensor_fit, data.sensor_width = 'HORIZONTAL', 36
+        data.lens = 36 * distance / (width * first['worldScale'])
+        data.clip_start, data.clip_end = first['near'], first['far']
+        light('HostKey', (.35, .40, 1), 3.5, (.50, .82, 1))
+        light('HostViolet', (-.38, .32, .38), 4, (.55, .24, 1), 'POINT')
+        light('HostCore', (.32, .35, -.16), 3, (.18, .82, 1), 'POINT')
         for item in group:
+            f, world = item['frame'], item['world']
             scene.cycles.samples = (args.video_samples or args.samples) if item['phase'].startswith('sequence-') else args.samples
-            f = item['frame']
-            mw, mh = f['monitorRight'] - f['monitorLeft'], f['monitorBottom'] - f['monitorTop']
-            cx = (f['monitorLeft'] + f['monitorRight'] - width) / 2
-            cy = (height - f['monitorTop'] - f['monitorBottom']) / 2
-            model = (Matrix.Translation((cx, cy, f['depthOffset']))
-                     @ Matrix.Rotation(math.radians(f['yawDegrees']), 4, 'Y')
-                     @ Matrix.Rotation(math.radians(f['pitchDegrees']), 4, 'X')
-                     @ Matrix.Diagonal((mw, mh, min(mw, mh), 1)))
-            monitor.matrix_world = conversion @ model @ conversion.inverted() @ monitor_rest
+            room.matrix_world = converted(world['room']) @ room_rest
+            monitor.matrix_world = converted(f['monitorMatrix']) @ monitor_rest
             if sides:
+                sides.matrix_world = converted(world['room']) @ side_rest
                 for obj in [sides] + list(sides.children_recursive):
-                    obj.hide_render = mw / width > .70
+                    obj.hide_render = f['monitorRight'] - f['monitorLeft'] > f['width'] * .70
+            avatar_root.matrix_world = converted(world['avatar'])
+            orb.matrix_world = converted(world['orb']) @ orb_rest
+            for (ring, rest), degrees in zip(rings, world['ringAnglesDegrees']):
+                rotation = Matrix.Rotation(math.radians(degrees), 4, 'Z')
+                ring.matrix_local = rest @ CONVERSION @ rotation @ CONVERSION.inverted()
+            if exported['contentMode'] == 'example':
+                texture.image = bpy.data.images.load(str(out / f'{item["key"]}-example.png'), check_existing=True)
+                texture.image.colorspace_settings.name = 'sRGB'
             bpy.context.view_layer.update()
             projected = []
-            left, top, right, bottom = f['contentBounds']
-            for u, v in ((left, top), (right, top), (right, bottom), (left, bottom)):
-                world = conversion @ model @ Vector((u - .5, .5 - v, f['contentDepth'], 1))
-                clip = world_to_camera_view(scene, cam, world.to_3d())
+            for vertex in local_pixels:
+                clip = world_to_camera_view(scene, camera, pixels.matrix_world @ vertex)
                 projected.extend((clip.x * width, (1 - clip.y) * height))
             error = max(abs(a - b) for a, b in zip(projected, f['quad']))
             if error > .08:
-                raise ValueError(f'Projection mismatch: {item["key"]} {error:.4f}px')
+                raise ValueError(f'Actual mesh projection mismatch: {item["key"]} {error:.4f}px')
             file = out / f'{item["key"]}-stage.png'
-            signature = json.dumps({'frame': f, 'samples': scene.cycles.samples}, sort_keys=True)
-            previous = rendered_poses.get(signature)
-            if previous:
-                shutil.copyfile(out / f'{previous}-stage.png', file)
-            else:
-                scene.render.filepath = str(file)
-                bpy.ops.render.render(write_still=True)
-                rendered_poses[signature] = item['key']
+            scene.render.filepath = str(file)
+            bpy.ops.render.render(write_still=True)
             record = {'key': item['key'], 'image': file.name, 'imageSha256': sha(file),
-                      'samples': scene.cycles.samples,
-                      'projectionMaxErrorPixels': error, 'projectedContentQuad': projected}
-            if previous:
-                record['renderReusedFrom'] = previous
+                      'samples': scene.cycles.samples, 'projectionMaxErrorPixels': error,
+                      'projectedContentQuad': projected, 'ringAnglesDegrees': world['ringAnglesDegrees']}
             records.append(record)
-            print('COCKPIT_HOST_FRAME', json.dumps(record), flush=True)
-        head = layout['head']
-        hw, hh = int(head['right'] - head['left']), int(head['bottom'] - head['top'])
-        scene = setup(hw, hh, args.samples)
-        bpy.ops.import_scene.gltf(filepath=str(avatar))
-        for obj in bpy.data.objects:
-            if obj.name.startswith('Tooth'):
-                obj.hide_render = True
-        focus, win = layout['avatarFocus'], layout['avatarWindow']
-        target = (focus['centerX'], win['cameraCenterY'], focus['centerZ'])
-        azimuth = math.radians(focus['azimuthDegrees'])
-        cam = camera(scene, (target[0] + math.sin(azimuth) * 2,
-                            target[1], target[2] + math.cos(azimuth) * 2), target)
-        cam.data.type = 'ORTHO'
-        cam.data.ortho_scale = 2 * win['halfHeight'] * hw / hh
-        cam.data.sensor_fit = 'HORIZONTAL'
-        cam.data.shift_x = (win['left'] + win['right']) / (2 * (win['right'] - win['left']))
-        light('HostAvatarKey', (.35, .40, 1), 3.5, (.50, .82, 1), target=target)
-        light('HostAvatarViolet', (-.38, .32, .38), 4.0, (.55, .24, 1), kind='POINT', target=target)
-        light('HostAvatarRim', (.32, .35, -.16), 3.0, (.18, .82, 1), kind='POINT', target=target)
-        file = out / f'{name}-avatar.png'
-        scene.render.filepath = str(file)
-        bpy.ops.render.render(write_still=True)
-        records.append({'key': f'{name}-avatar-neutral', 'image': file.name, 'imageSha256': sha(file)})
+            print('COCKPIT_UNIFIED_HOST_FRAME', json.dumps(record), flush=True)
     (out / 'blender-manifest.json').write_text(json.dumps({
-        'evidenceClass': 'HOST_ASSET_RENDER', 'renderer': f'Blender {bpy.app.version_string} Cycles CPU',
+        'evidenceClass': 'HOST_UNIFIED_3D_RENDER', 'renderer': f'Blender {bpy.app.version_string} Cycles CPU',
         'stillsSamples': args.samples, 'sequenceSamples': args.video_samples or args.samples,
         'threads': 2, 'denoising': False, 'seed': 731,
-        'assets': {'cockpit': sha(asset), 'avatar': sha(avatar)},
-        'lighting': 'Fixed host inspection studio; not Filament photometric equivalence',
-        'avatarPose': 'Original GLB neutral rest pose; runtime-hidden tooth nodes excluded',
+        'assets': {'cockpit': sha(workstation), 'orb': sha(orb_asset), 'avatarRuntime': sha(avatar),
+                   'avatarOriginal': sha(assets / 'avatar3d/continuum-avatar.glb')},
+        'composition': 'All three GLBs share one scene and camera; native Kotlin matrices and ring angles',
+        'projectionCheck': 'Actual packaged monitor-live-pixels vertices against Kotlin quad',
+        'lighting': 'Runtime light colors and locations; host intensities are not Filament photometric equivalence',
+        'colorManagement': 'Standard sRGB display, no look, exposure zero; sample pixels unlit',
+        'avatarPose': 'Original neutral rest pose; runtime-hidden tooth nodes excluded; no 2D avatar mask',
         'frames': records, 'Filament': 'NOT_RUN', 'Fold7': 'NOT_RUN',
         'deviceFps': 'NOT_MEASURED', 'deviceThermal': 'NOT_MEASURED',
     }, indent=2) + '\n')
