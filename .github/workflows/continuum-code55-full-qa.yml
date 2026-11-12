@@ -1,0 +1,74 @@
+name: Code55 - full source QA (strict host PDF)
+
+on:
+  push:
+    branches:
+      - integrate/code55-apk-fable-20261112
+    paths:
+      - .github/workflows/continuum-code55-full-qa.yml
+      - app/**
+      - .github/continuum/**
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-code55-full-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  full-android:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Freeze Git source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          echo "source_sha=$GITHUB_SHA" > "$RUNNER_TEMP/code55-source.txt"
+          echo "source_tree=$(git rev-parse HEAD^{tree})" >> "$RUNNER_TEMP/code55-source.txt"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install official Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Full Android JUnit and UI tests - no filters, strict native PDF
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true             -PcontinuumUiWidgetTests=true             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle             :app:testDebugUnitTest
+      - name: Configured Android lint
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true             -PcontinuumUiWidgetTests=true :app:lintDebug
+      - name: Preserve all real test and lint receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code55-full-Android-source-QA
+          path: |
+            ${{ runner.temp }}/code55-source.txt
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/lint-results-debug.*
+          retention-days: 14
+          if-no-files-found: warn
