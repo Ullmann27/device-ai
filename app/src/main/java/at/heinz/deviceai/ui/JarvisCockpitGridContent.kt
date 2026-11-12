@@ -122,7 +122,7 @@ object JarvisCockpitGridContent {
 
     private fun header(p: ContinuumPainter, b: Box, g: JarvisCockpitGrid.Grid?, shell: Shell?,
                        s: ContinuumDashboardState, now: Long) {
-        val brand = g?.areas?.get(Area.BRAND) ?: Box(b.left + 9f, b.top + 4f, b.right - 104f, b.bottom - 4f)
+        val brand = g?.areas?.get(Area.BRAND) ?: Box(b.left + 9f, b.top + 4f, b.right - if (shell?.workstation == true) 152f else 104f, b.bottom - 4f)
         val brandStyle = Type.brand.copy(size = if (g != null) 24f else 18f)
         val cap = p.capHeight(brandStyle)
         val cy = brand.centerY

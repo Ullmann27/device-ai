@@ -100,10 +100,10 @@ for side in [-1,1]:
 part('desk',[0,-.48,.02],[.91,.035,.30],0,room)
 part('desk-bevel',[0,-.46,.17],[.91,.007,.012],1,room)
 part('desk-cyan',[0,-.472,.179],[.87,.003,.004],2,room)
-part('desk-glass',[0,-.447,.02],[.89,.008,.28],5,room)
-part('desk-rear-light',[0,-.45,-.12],[.78,.002,.003],3,room)
+part('desk-glass',[0,-.4615,.02],[.89,.002,.28],5,room)
+part('desk-rear-light',[0,-.4605,-.12],[.78,.002,.003],3,room)
 for k in range(9):
- part(f'deck-key-{k}',[-.12+k*.03,-.451,.08],[.022,.004,.028],1,room)
+ part(f'deck-key-{k}',[-.12+k*.03,-.4585,.08],[.022,.004,.028],1,room)
 # Monitor local front plane. Transform is native.
 part('screen-back',[0,0,-.008],[1,1,.035],0,monitor)
 part('screen-rear-bevel',[0,0,-.020],[1.018,1.018,.014],1,monitor)
@@ -119,8 +119,8 @@ for side in [-1,1]:
   part(f'corner-prism-{side}-{end}',[side*.466,end*.479,.036],[.030,.003,.002],8,monitor)
 part('monitor-status-sill',[0,.435,.022],[.94,.07,.012],0,monitor)
 part('monitor-lower-lip',[0,-.47,.028],[.94,.012,.012],0,monitor)
-part('stand',[0,-.60,-.11],[.035,.22,.026],1,monitor)
-part('stand-foot',[0,-.715,-.08],[.25,.012,.12],0,monitor)
+part('stand',[0,-.50175,-.11],[.035,.0235,.026],1,monitor)
+part('stand-foot',[0,-.5195,-.08],[.25,.012,.12],1,monitor)
 roomid=len(nodes);nodes.append({'name':'cockpit-room','children':room})
 monitorid=len(nodes);nodes.append({'name':'cockpit-monitor','children':monitor})
 root={'asset':{'version':'2.0','generator':'Continuum owned procedural cockpit 20261112'},'scene':0,'scenes':[{'nodes':[roomid,monitorid]}],'nodes':nodes,'meshes':meshes,'materials':materials,'buffers':[{'byteLength':len(blob)}],'bufferViews':views,'accessors':access}

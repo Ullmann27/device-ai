@@ -67,10 +67,8 @@ object WorkstationHostExport {
                 graphics.dispose()
                 ImageIO.write(image, "png", File(out, filename))
             }
-            val content = shell.boxes.keys.associateWith { slot ->
+            val content = shell.boxes.keys.filter { it != Slot.BOTTOM_NAV }.associateWith { slot ->
                 JarvisShellRenderer.SlotContent { painter, box ->
-                    if (slot == Slot.BOTTOM_NAV) JarvisTiles.drawBottomNav(painter, box,
-                        timeMs = 0L, fontScale = shell.profile.fontScale)
                     val text = when (slot) {
                         Slot.TOP_BAR -> "CONTINUUM · HOSTVORSCHAU"
                         Slot.DIALOG -> "3D-ARBEITSPLATZ"
@@ -116,18 +114,27 @@ object WorkstationHostExport {
                 val frame = CockpitMonitorMotion.pose(base, progress)
                 check(frame.valid())
                 val key = "$name-$label"
+                val orbFrame = ContinuumHologramRenderer.Frame.still(
+                    if (progress > 0f) ContinuumHologramRenderer.Mode.THINKING else ContinuumHologramRenderer.Mode.READY,
+                    time / 1_000f)
                 draw("$key-orb.png") { p ->
+                    p.save()
+                    val flowTop = scene.height * .62f
+                    p.clipRect(scene.left, scene.top + flowTop, scene.right, scene.bottom)
+                    p.translate(scene.left, scene.top + flowTop)
+                    JarvisEnergyFlows.draw(p, scene.width, scene.height - flowTop, time / 1_000f, orbFrame.energy)
+                    p.restore()
+                    JarvisHeadAura.draw(p, head, framing.anchorX.toFloat(), time / 1_000f,
+                        headScale = framing.headScale.toFloat(), activityEnergy = orbFrame.energy,
+                        referenceMode = true)
                     p.save()
                     p.translate(orbBox.left, orbBox.top)
                     p.clipRect(0f, 0f, orbBox.width, orbBox.height)
                     val orb = ContinuumHologramRenderer().apply {
                         geometry = ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
-                        showBrand = false
                         layout(orbBox.width, orbBox.height)
                     }
-                    orb.draw(p, ContinuumHologramRenderer.Frame.still(
-                        if (progress > 0f) ContinuumHologramRenderer.Mode.THINKING else ContinuumHologramRenderer.Mode.READY,
-                        time / 1_000f), transparentBackdrop = true)
+                    orb.draw(p, orbFrame, transparentBackdrop = true)
                     p.restore()
                 }
                 frames.put(JSONObject().put("key", key).put("layout", name).put("phase", label)

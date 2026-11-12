@@ -70,10 +70,13 @@ def main():
     parser.add_argument('--repo-root', type=Path, required=True)
     parser.add_argument('--work-dir', type=Path, required=True)
     parser.add_argument('--samples', type=int, default=12)
+    parser.add_argument('--video-samples', type=int)
     parser.add_argument('--frames', default='all')
     args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:])
     if not 1 <= args.samples <= 64:
         raise ValueError('Samples outside review bounds')
+    if args.video_samples is not None and not 1 <= args.video_samples <= 64:
+        raise ValueError('Video samples outside review bounds')
     root, out = args.repo_root.resolve(), args.work_dir.resolve()
     asset = root / 'app/src/main/assets/cinema3d/cockpit-workstation.glb'
     avatar = root / 'app/src/main/assets/avatar3d/continuum-avatar.glb'
@@ -107,6 +110,7 @@ def main():
         cam.data.clip_start, cam.data.clip_end = 1, distance * 4
         light('HostKey', (.32, .55, 1), 4.5, (.62, .80, 1))
         for item in group:
+            scene.cycles.samples = (args.video_samples or args.samples) if item['phase'].startswith('sequence-') else args.samples
             f = item['frame']
             mw, mh = f['monitorRight'] - f['monitorLeft'], f['monitorBottom'] - f['monitorTop']
             cx = (f['monitorLeft'] + f['monitorRight'] - width) / 2
@@ -129,6 +133,7 @@ def main():
             scene.render.filepath = str(file)
             bpy.ops.render.render(write_still=True)
             record = {'key': item['key'], 'image': file.name, 'imageSha256': sha(file),
+                      'samples': scene.cycles.samples,
                       'projectionMaxErrorPixels': error, 'projectedContentQuad': projected}
             records.append(record)
             print('COCKPIT_HOST_FRAME', json.dumps(record), flush=True)
@@ -157,7 +162,8 @@ def main():
         records.append({'key': f'{name}-avatar-neutral', 'image': file.name, 'imageSha256': sha(file)})
     (out / 'blender-manifest.json').write_text(json.dumps({
         'evidenceClass': 'HOST_ASSET_RENDER', 'renderer': f'Blender {bpy.app.version_string} Cycles CPU',
-        'samples': args.samples, 'threads': 2, 'denoising': False, 'seed': 731,
+        'stillsSamples': args.samples, 'sequenceSamples': args.video_samples or args.samples,
+        'threads': 2, 'denoising': False, 'seed': 731,
         'assets': {'cockpit': sha(asset), 'avatar': sha(avatar)},
         'lighting': 'Fixed host inspection studio; not Filament photometric equivalence',
         'avatarPose': 'Original GLB neutral rest pose; runtime-hidden tooth nodes excluded',

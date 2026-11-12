@@ -36,7 +36,7 @@ python3 tools/cockpit-workstation/preview.py \
   --kotlin-lib-dir "$KOTLIN_LIB_DIR" \
   --json-jar "$JSON_JAR" \
   --android-jar "$ANDROID_JAR" \
-  --samples 12 --video
+  --samples 32 --video --video-samples 16
 ```
 
 Das Ausgabeverzeichnis muss leer sein. `--repo-root` erlaubt die Prüfung einer
@@ -45,6 +45,8 @@ Sechs PNGs zeigen die drei Posen je Layout. Das optionale MP4 zeigt 49 durch
 `Flight.sample` bestimmte Zeitpunkte: eine volle Hin- und Rückfahrt. Die
 Abspielrate ergibt sich aus der Produktionsdauer; es gibt kein zusätzliches
 Easing und keine Zeitlupe. Das letzte Bild steht einen Frame lang.
+Bei unterschiedlicher Samplezahl enthält das Manifest die verwendeten Werte
+je Frame. Standardmäßig verwenden Einzelbilder und Video dieselbe Samplezahl.
 
 ## Evidenzgrenzen
 

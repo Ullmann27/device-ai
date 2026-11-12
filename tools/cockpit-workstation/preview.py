@@ -19,7 +19,7 @@ JarvisMotion JarvisShellLayout JarvisShellRenderer JarvisTiles ContinuumIcons Ja
 JarvisVisualDepth JarvisDeckClearance JarvisCinemaEntrance HollywoodFuiConstruct JarvisRenderQuality
 JarvisWindowProfile JarvisCockpitGrid JarvisRailIcons JarvisTileEnergy LuxuryHoloButtonRenderer
 PerimeterWingChoreographer JarvisSceneFills ContinuumHologramRenderer ContinuumHologramPlexus
-ContinuumOrbitalRing JarvisFluidLight CinematicWorkstationLayout CockpitGlassButtons JarvisHeadAura
+ContinuumOrbitalRing JarvisFluidLight CinematicWorkstationLayout CockpitGlassButtons JarvisHeadAura JarvisEnergyFlows
 CockpitMonitorMotion'''.split()
 
 
@@ -78,6 +78,7 @@ def main():
     parser.add_argument('--json-jar', type=Path, default=os.environ.get('JSON_JAR'))
     parser.add_argument('--android-jar', type=Path, default=os.environ.get('ANDROID_JAR'))
     parser.add_argument('--samples', type=int, default=12)
+    parser.add_argument('--video-samples', type=int)
     parser.add_argument('--video', action='store_true')
     args = parser.parse_args()
     root, out = args.repo_root.resolve(), args.output.resolve()
@@ -89,6 +90,8 @@ def main():
         raise ValueError('Missing Kotlin stdlib or org.json jar')
     if not 1 <= args.samples <= 64:
         raise ValueError('Samples outside review bounds')
+    if args.video_samples is not None and not 1 <= args.video_samples <= 64:
+        raise ValueError('Video samples outside review bounds')
     for executable in ('java', 'blender') + (('ffmpeg',) if args.video else ()):
         if shutil.which(executable) is None:
             raise ValueError(f'Missing installed executable: {executable}')
@@ -114,6 +117,10 @@ def main():
                                          ui / 'ContinuumHomeView.kt',
                                          main / 'avatar3d/FilamentCockpitStage.kt']
     before = {str(path.relative_to(root)): sha(path) for path in tracked_sources}
+    stage_source = (main / 'avatar3d/FilamentCockpitStage.kt').read_text()
+    pin = re.search(r'const val ASSET_SHA256\s*=\s*"([0-9a-f]{64})"', stage_source)
+    if not pin or pin.group(1) != sha(assets[0]):
+        raise ValueError('Cockpit asset does not match runtime pin')
     tool_hashes = {path.name: sha(path) for path in
                    (TOOL_ROOT / 'WorkstationHostExport.kt', TOOL_ROOT / 'render_host.py', Path(__file__))}
     home_source = (ui / 'ContinuumHomeView.kt').read_text()
@@ -152,7 +159,8 @@ def main():
              'at.heinz.deviceai.ui.WorkstationHostExport', str(root), str(work),
              'video' if args.video else 'stills'], work / 'export.log')
         run(['blender', '-b', '-t', '2', '--python', str(TOOL_ROOT / 'render_host.py'), '--',
-             '--repo-root', str(root), '--work-dir', str(work), '--samples', str(args.samples)], work / 'blender.log')
+             '--repo-root', str(root), '--work-dir', str(work), '--samples', str(args.samples),
+             '--video-samples', str(args.video_samples or args.samples)], work / 'blender.log')
         exported = json.loads((work / 'scene-export.json').read_text())
         compose(work, out, exported, layer_depths)
         if args.video:
@@ -176,7 +184,7 @@ def main():
         'sourceWorkingTree': git(root, 'status', '--porcelain', '--untracked-files=no'),
         'components': {'cockpit': 'Exact packaged GLB, production Kotlin pose and projection',
                        'avatar': 'Exact original GLB, neutral rest pose, production framing and alpha mask',
-                       'sphere': 'Existing ContinuumHologramRenderer through Java2D',
+                       'sphere': 'Existing ContinuumHologramRenderer, head aura, and energy flows through Java2D',
                        'chrome': 'Existing JarvisShellRenderer, synthetic neutral labels',
                        'monitorContent': 'Empty; no Android app pixels or live connection'},
         'motion': 'Production Flight.sample at fixed intervals, forward then reverse from rest; no extra easing',

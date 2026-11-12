@@ -84,7 +84,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         virtualMonitor.setForegroundActive(active)
         if (!active) hologram.clearMemoryScene()
         if (!active) liveTabs.collapseImmediately()
-        if (!active) clearShellPress()
+        if (!active) { clearShellPress(); monitorFocusAnimator?.cancel() }
         jarvisShell.refreshMotionPolicy()
         updateWaveAnimation()
     }
@@ -258,6 +258,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
     }
     internal fun clearLiveComputerFeed() = setLiveComputerFeed(null)
+    internal fun showComputerWorkEvent(event: at.heinz.deviceai.cognitive.CockpitWorkEvent) = virtualMonitor.workEvent(event)
 
     private fun settleComputerFocus() {
         monitorFocusAnimator?.cancel()
@@ -368,6 +369,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     /** Selection follows the existing navigator; it never starts an agent or a model operation. */
     fun selectJarvisTarget(target: String) {
         selectedJarvisTarget = target
+        jarvisShell.selectedDockTarget = target
         shellActions.values.forEach { it.isSelected = it.target == target }
         shellRailList.refreshSelection()
         if (jarvisShellStage) jarvisShell.tiles = shellTiles(state)
@@ -464,6 +466,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     /** Children added by a docked renderer (attach): sized to the slot; the renderer positions them via x/y. */
     private fun isForeign(child: View) = child !== jarvisShell && child !== hologram && child !== avatarPlaceholder &&
+        child !== cockpitStage && child !== virtualMonitor &&
         child !== shellForeground && child !== memoryFullStage && child !== transientCard && child !== shellRailScroll &&
         child !== liveTabs && child !in views.values && child !in shellActions.values
 
@@ -552,7 +555,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
                 JarvisShellLayout.Slot.WORK_PROCESS to JarvisShellRenderer.SlotContent { painter, box ->
                     if (jarvisShell.shell?.workstation != true)
                         JarvisShellContent.forState({ state }, shell = { jarvisShell.shell })
-                            [JarvisShellLayout.Slot.WORK_PROCESS]?.draw(painter, box)
+                            .get(JarvisShellLayout.Slot.WORK_PROCESS)?.draw(painter, box)
                 })
         jarvisShell.onFrameDrawn = { shellForeground.invalidate() }
         jarvisShell.motionBudgetProvider = {

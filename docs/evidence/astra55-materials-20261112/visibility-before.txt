@@ -1,0 +1,24 @@
+JUnit version 4.13.2
+..E.E.E
+Time: 1.095
+There were 3 failures:
+1) largeTextKeepsSidePanelsSeparate(at.heinz.deviceai.ui.CinematicWorkstationVisibilityTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.ui.CinematicWorkstationVisibilityTest.largeTextKeepsSidePanelsSeparate(CinematicWorkstationVisibilityTest.kt:65)
+2) packagedFootFitsInsideStageAtBothFocusEndpoints(at.heinz.deviceai.ui.CinematicWorkstationVisibilityTest)
+java.lang.AssertionError: Foot clipped: 320.0/500.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ui.CinematicWorkstationVisibilityTest.packagedFootFitsInsideStageAtBothFocusEndpoints(CinematicWorkstationVisibilityTest.kt:54)
+3) posedFaceAndCameraDriftClearFocusedMonitor(at.heinz.deviceai.ui.CinematicWorkstationVisibilityTest)
+java.lang.AssertionError: Face clipped: 240.0/500.0/1.0 at 251.67159 < 296.2141286231394
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ui.CinematicWorkstationVisibilityTest.posedFaceAndCameraDriftClearFocusedMonitor(CinematicWorkstationVisibilityTest.kt:29)
+
+FAILURES!!!
+Tests run: 4,  Failures: 3
+
