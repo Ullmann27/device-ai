@@ -245,16 +245,21 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         monitorFocusAnimator = null
         previous?.cancel()
         monitorTargetFocus = target
-        if (!isPresentationActive() || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
+        if (!isPresentationActive() || !virtualMonitor.isShown || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
             settleMonitorFlight()
             return
         }
         val flight = CockpitMonitorMotion.flight(monitorFocus, monitorVelocity, target)
+        if (flight.durationMs <= 0f) { settleMonitorFlight(); return }
         val animator = android.animation.ValueAnimator.ofFloat(0f, flight.durationMs).apply {
-            duration = flight.durationMs.toLong().coerceAtLeast(1L)
+            duration = kotlin.math.ceil(flight.durationMs.toDouble()).toLong().coerceAtLeast(1L)
             interpolator = android.view.animation.LinearInterpolator()
             addUpdateListener {
                 if (monitorFocusAnimator !== it) return@addUpdateListener
+                if (!isPresentationActive() || !virtualMonitor.isShown || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
+                    settleMonitorFlight()
+                    return@addUpdateListener
+                }
                 val sample = flight.sample(it.animatedValue as Float)
                 monitorFocus = sample.focus
                 monitorVelocity = sample.velocityPerMs
@@ -295,7 +300,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val monitor = shell[JarvisShellLayout.Slot.WORK_PROCESS]
         val visible = jarvisShellStage && shell.workstation && box != null && monitor != null
         virtualMonitor.visibility = if (visible) View.VISIBLE else View.GONE
-        if (!visible) { hologram.detachCockpitStage(); return }
+        if (!visible) { settleMonitorFlight(); hologram.detachCockpitStage(); return }
         val stage = requireNotNull(box)
         val display = requireNotNull(monitor)
         val width = (stage.width * density).toInt()

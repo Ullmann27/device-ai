@@ -1,7 +1,8 @@
 # Reference cockpit: unified material port
 
-Source checkpoint: `74e80a8151`, based on
-`5348087805fa4ab4152ea04e9f20bb41afae9d95`. Integration target:
+Material geometry checkpoint: `74e80a8151`. Final builder integration is based on
+`9e67f40eb4210d25ea764888d27ede555dc81327`, containing the original five-ring
+orb from main `7d6479f8c7c1c8e3c59f62399fb0a366676afe53`. Integration target:
 `work/astra55-reference-correction-20261112`. The coordinator owns integration,
 publication, the side-root attachment, and the shared room transform.
 
@@ -9,6 +10,10 @@ Status: material/geometry source connected and host geometry checks `PASS`.
 The unified 8-sample Fold/phone resting drafts at source `4b5663b8` were inspected
 for desk, keyboard, and stand contact. No further material correction is needed
 from those images. No device, frame-rate, or APK claim.
+
+The earlier host images establish the material geometry only; they predate the
+new original five-ring orb. The final combined five-ring scene requires its own
+source-bound render.
 
 ## Changes
 
@@ -24,6 +29,19 @@ adding the old duplicate keys and monitor inserts. It adds the existing opaque
 live texture pipeline. `--workstation-only` preserves the current orb bytes.
 No engine, animator, shader, Kotlin renderer, avatar, or orb changes belong to
 this material patch.
+
+The final rebind retains the new main `orb()` generator unchanged and preserves
+its existing packaged bytes. It restores `--workstation-only`, keeps the side
+monitors as independent scene roots, and omits the duplicate horizontal keycaps
+from main. Native side contents already cover their screen regions; additional
+inactive quads are unnecessary. Both the five-ring/original-geometry checks and
+the main Filamat source/output/version checks remain in the combined verifier.
+
+The rebind completed with `--workstation-only` after acquiring the shared build
+lock. The workstation, seed, original five-ring orb, avatar, and Filamat remain
+byte-identical before and after the build. The new build manifest is valid;
+all combined checks passed. The original five-ring `orb()` function is also
+AST-identical to main `7d6479f8c7`. Separate evidence records the build and hashes.
 
 The source-bound draft at `6c951` established aligned native side panels and
 visible stands. It also showed a very thin keyboard and a box-like desk front;
@@ -59,14 +77,16 @@ Checks cover binary/accessor bounds, finite unit normals, outward nondegenerate
 seed triangles, all native apertures, three roots, material/alpha preservation,
 the live plane and top-left UVs, seed budget, and runtime manifest hashes.
 Repeated seed generation also leaves the packaged unified asset unchanged.
-Two Blender builds produced identical workstation bytes. Reports:
-`docs/evidence/cockpit-reference-materials-20261112/`.
+Two earlier Blender builds produced identical workstation bytes. Their reports
+remain in `docs/evidence/cockpit-reference-materials-20261112/`; the final
+five-ring rebind has separate reports in
+`docs/evidence/cockpit-five-ring-materials-20261112/`.
 
 | Artifact | Bytes | SHA-256 |
 |---|---:|---|
 | Procedural seed | 30,776 | `f1edabf082ee4d30e275a862a375ac73dea65ab4e1f140ddb021845c87e6bcc3` |
 | Packaged workstation | 48,728 | `03b6364e2ff396fd9207b129e765ce5d4a93975113315cc3896844e53fd8ad30` |
-| Preserved unified orb | 1,425,616 | `ba4bd673e2196fcd8d970b3c83531ea26e20047ae530f092d0ef122808d6e161` |
+| Preserved original five-ring orb | 1,148,836 | `fdfe54ce9aa2ed6af5ec6866c1078a4a34ece511e66b29cd1b3672f83229079c` |
 
 Blender re-export duplicates some accessor data and appends the live plane.
 The 32 KiB limit applies to the procedural seed; the canonical runtime already

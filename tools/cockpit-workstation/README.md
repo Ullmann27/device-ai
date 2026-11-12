@@ -11,14 +11,18 @@ Sie ersetzt keinen Android-, Filament- oder Fold7-Test.
    Stop-Konstante werden unverändert an der vorhandenen Hostgrenze extrahiert.
 2. Der Export erzeugt Fold- und Phone-Layouts sowie Ruhe-, Übergangs- und
    Arbeitspose. `CockpitWorldTransforms` liefert die tatsächlichen Matrizen
-   für Raum, Avatar und Kugel sowie die Ringwinkel. Der Monitor verwendet
+   für Raum, Avatar und Kugel sowie fünf Ringrotationsmatrizen. Die Kugel
+   delegiert ihre Tiefenberechnung an `CockpitStageFrame.orbTransform()`.
+   `CockpitOrbMotion.sample` liefert die originalen Gier-/Nickwinkel.
+   Der Monitor verwendet
    `CockpitStageFrame.monitorTransform()`. Die Kamerarahmung ruft das aktuelle
    `AvatarFraming.pullBack` genau einmal auf.
 3. Blender importiert die gepackte Workstation-GLB, die gepackte Kugel-GLB und
    den Originalavatar in **eine Szene mit einer Kamera**. Der Avatar durchläuft
    dieselbe `AvatarMaterialVariant.prepare`-API wie die App. Der Host prüft die
-   tatsächlichen vier Mesh-Ecken von `monitor-live-pixels` gegen
-   `CockpitStageFrame.quad()`; ab 0,08 Pixel Abweichung bricht der Lauf ab.
+   tatsächlichen fünf Ringknoten gegen die exportierte Anzahl. Die vier
+   Mesh-Ecken von `monitor-live-pixels` werden gegen `CockpitStageFrame.quad()`
+   projiziert; ab 0,08 Pixel Abweichung bricht der Lauf ab.
 4. Raumhintergrund, Header, Badges, Seitenfenster und Glasbuttons kommen aus
    den Produktions-Paintern. Die 3D-Szene enthält keine zusätzlich montierte
    2D-Kugel, Aura oder Kopfmaske. Beispielinhalt liegt als deckende unlit
@@ -48,9 +52,15 @@ python3 tools/cockpit-workstation/preview.py \
 Das Ausgabeverzeichnis muss leer sein. `--repo-root` erlaubt die Prüfung einer
 kombinierten Integrationsquelle, ohne deren Produktionsdateien zu verändern.
 `--qa-lock` serialisiert Blender über die vereinbarte gemeinsame Prüfsperre;
-ein belegter Lock führt nach 60 Sekunden zu einem sichtbaren Abbruch.
+ein belegter Lock führt nach 45 Sekunden zu einem sichtbaren Abbruch.
 `--draft` erzeugt zunächst nur Fold-/Phone-Ruheansichten. Für die finale Serie
-`--samples 32 --content example --video --video-samples 16` verwenden.
+`--samples 32 --content example --video --video-samples 16 --denoise` verwenden,
+sofern die lokale Cycles-Version OpenImageDenoise unterstützt. `--denoise`
+setzt ausdrücklich `scene.cycles.use_denoising = True` mit dem Backend
+`OPENIMAGEDENOISE`. Fehlt dieses Backend, bricht der Render sichtbar ab;
+das Werkzeug ersetzt es nicht durch Bildretusche oder einen stillen Filter.
+Ohne den Schalter bleibt Denoising aus. Das Manifest verzeichnet den
+tatsächlich angeforderten und erfolgreich verwendeten Renderpfad.
 Ohne `--draft` entstehen sechs PNGs mit drei Posen je Layout.
 `export_host.sh` ist ein Einstieg in dieselbe vollständige Pipeline; die
 frühere gespiegelte Kamera-/Layoutkette wurde ersetzt.
@@ -58,9 +68,15 @@ frühere gespiegelte Kamera-/Layoutkette wurde ersetzt.
 Das optionale MP4 zeigt drei Sekunden mit 60 Frames bei 20 Bildern pro Sekunde.
 Der Monitor startet nach 500 Millisekunden, fährt mit `Flight.sample` und der
 Produktionsdauer nach vorn und später zurück; Haltephasen ergänzen den Clip.
-Die Kugel-GLB erhält für jeden Frame die tatsächlichen Winkel aus
-`CockpitWorldTransforms.ringAngleDegrees`. Es gibt keine erfundene Ringbahn,
-zusätzliches Easing oder Zeitlupe.
+Die Kugel-GLB erhält für jeden Frame fünf tatsächliche Matrizen aus
+`CockpitWorldTransforms.ringTransform(identity, index, phase, true)`.
+Blender multipliziert die exportierte Matrix mit der jeweiligen ursprünglichen
+Knotenmatrix; die Gier-/Nickformeln werden im Host nicht erneut implementiert.
+Die Phasen-Updatezeile, Startphase, READY-Energie und Delta-Begrenzung werden
+unverändert aus `ContinuumHologramView` gelesen und als kleiner Kotlin-Hostadapter
+kompiliert. Dieser spielt eine ausdrücklich synthetische Zeitreihe mit
+konstanter READY-Energie ab. Sekunden werden nicht als Phase ausgegeben.
+Es gibt keine zusätzliche Ringbahn, kein zusätzliches Easing und keine Zeitlupe.
 Die drei Sekunden behaupten keine vollständige periodische Ringumlaufzeit.
 Jeder Videoframe rendert die gemeinsame Szene mit der aktuellen Ringstellung.
 Bei unterschiedlicher Samplezahl enthält das Manifest die verwendeten Werte
@@ -69,11 +85,14 @@ je Frame. Standardmäßig verwenden Einzelbilder und Video dieselbe Samplezahl.
 ## Evidenzgrenzen
 
 **HOST_UNIFIED_3D_COMPOSITE:** Gepackte Geometrie, Produktionslayout,
-Produktionsmatrizen und Produktions-Ringwinkel; Blender-Beleuchtung und
+Produktionsmatrizen und originale Fünfringbewegung; Blender-Beleuchtung und
 Java2D-Chrome. Die feste Blender-Prüfbeleuchtung verwendet die Farben und
 Positionen der nativen Lichtquellen, ihre Intensitäten sind keine
 photometrisch identische Filament-Szene. Der Avatar bleibt in seiner neutralen
 Originalpose; Kopf-, Augen- und Lippenanimationen werden hier nicht abgespielt.
+Optionales Denoising betrifft ausschließlich den 3D-Render; die Chrome aus
+den Produktions-Paintern wird anschließend unverändert montiert. Die Dokumenttextur wird
+unverändert in die Szene eingespeist und nicht separat retuschiert.
 Android-View-Lifecycle, MediaProjection, Sprache, Modell, Geräteframerate und
 Wärme werden nicht geprüft. Die Bilder tragen diese Grenze sichtbar.
 

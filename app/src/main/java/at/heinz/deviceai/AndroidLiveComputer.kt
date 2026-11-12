@@ -66,13 +66,13 @@ internal object AndroidLiveComputer {
         val started = beginSession(context, taskId, targetPackage, ownerConfirmed, LiveFrameOrigin.PROJECTION_WINDOW_CROP)
         if (!started.started) return started
         return try {
-            context.startForegroundService(Intent(context, ContinuumLiveProjectionService::class.java)
+            checkNotNull(context.startForegroundService(Intent(context, ContinuumLiveProjectionService::class.java)
                 .putExtra(ContinuumLiveProjectionService.SESSION, started.sessionId!!)
                 .putExtra(ContinuumLiveProjectionService.RESULT_CODE, resultCode)
-                .putExtra(ContinuumLiveProjectionService.RESULT_DATA, resultData))
+                .putExtra(ContinuumLiveProjectionService.RESULT_DATA, resultData))) { "CAPTURE_SERVICE_START_REFUSED" }
             started
         } catch (_: Exception) {
-            stop()
+            endProjection(started.sessionId!!, LiveMonitorReason.SOURCE_UNVERIFIED)
             LiveComputerStart(false, "SCREEN_CAPTURE_START_FAILED")
         }
     }
@@ -100,7 +100,7 @@ internal object AndroidLiveComputer {
         previous?.cancelled?.set(true)
         frames.end(reason)
         ScreenObservationBus.wake()
-        previous?.stopCapture?.getAndSet(null)?.invoke()
+        previous?.stopCapture?.getAndSet(null)?.let { runCatching(it) }
     }
 
     internal fun projectionAccess(sessionId: Long): Pair<LiveFrameBinding, LiveObservationAccess>? {

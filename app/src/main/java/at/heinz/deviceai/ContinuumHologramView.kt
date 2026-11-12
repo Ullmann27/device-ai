@@ -1223,6 +1223,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                         diagnosticBlink = proof?.blinkOverride,
                         receipt = receipt,
                         coreEnergy = coreEnergy,
+                        orbPhase = phase,
                         cinematicLighting = cinematicPrefs.getBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.KEY, true),
                         windowAccentArgb = workWindowAccentArgb,
                         windowOpen = workWindowActive,

@@ -2,7 +2,6 @@
 import argparse
 import hashlib
 import json
-import math
 from pathlib import Path
 import sys
 
@@ -30,14 +29,16 @@ def point(x, y, z):
     return Vector((x, -z, y))
 
 
-def setup(width, height, samples):
+def setup(width, height, samples, denoise):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     scene = bpy.context.scene
     scene.render.engine = 'CYCLES'
     scene.cycles.device = 'CPU'
     scene.cycles.samples = samples
     scene.cycles.seed = 731
-    scene.cycles.use_denoising = False
+    scene.cycles.use_denoising = denoise
+    if denoise:
+        scene.cycles.denoiser = 'OPENIMAGEDENOISE'
     scene.render.threads_mode = 'FIXED'
     scene.render.threads = 2
     scene.render.resolution_x, scene.render.resolution_y = width, height
@@ -128,6 +129,7 @@ def main():
     parser.add_argument('--work-dir', type=Path, required=True)
     parser.add_argument('--samples', type=int, default=8)
     parser.add_argument('--video-samples', type=int)
+    parser.add_argument('--denoise', action='store_true')
     args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:])
     root, out = args.repo_root.resolve(), args.work_dir.resolve()
     if not 1 <= args.samples <= 64 or args.video_samples is not None and not 1 <= args.video_samples <= 64:
@@ -137,7 +139,7 @@ def main():
     orb_asset = assets / 'cinema3d/continuum-orb.glb'
     avatar = out / 'avatar-runtime.glb'
     exported = json.loads((out / 'scene-export.json').read_text())
-    if exported['schema'] != 'cockpit-unified-review-v1':
+    if exported['schema'] != 'cockpit-unified-review-v2' or exported['orbRingCount'] != 5:
         raise ValueError('Unified scene export required')
     if sha(avatar) != exported['avatarRuntimeVariantSha256']:
         raise ValueError('Runtime avatar differs from Kotlin export')
@@ -148,7 +150,7 @@ def main():
         group = [frame for frame in frames if frame['layout'] == name]
         first = group[0]['frame']
         width, height = int(first['width']), int(first['height'])
-        scene = setup(width, height, args.samples)
+        scene = setup(width, height, args.samples, args.denoise)
         bpy.ops.import_scene.gltf(filepath=str(workstation))
         room = bpy.data.objects['cockpit-room']
         monitor = bpy.data.objects['cockpit-monitor']
@@ -163,8 +165,12 @@ def main():
         bpy.ops.import_scene.gltf(filepath=str(orb_asset))
         orb = bpy.data.objects['continuum-orb']
         orb_rest = orb.matrix_world.copy()
+        expected_rings = {f'orb-orbit-{i}' for i in range(exported['orbRingCount'])}
+        actual_rings = {obj.name for obj in bpy.data.objects if obj.name.startswith('orb-orbit-')}
+        if actual_rings != expected_rings:
+            raise ValueError('Packaged original five-ring nodes differ from Kotlin export')
         rings = [(bpy.data.objects[f'orb-orbit-{i}'],
-                  bpy.data.objects[f'orb-orbit-{i}'].matrix_local.copy()) for i in range(4)]
+                  bpy.data.objects[f'orb-orbit-{i}'].matrix_local.copy()) for i in range(exported['orbRingCount'])]
         avatar_root = import_avatar(avatar)
         data = bpy.data.cameras.new('UnifiedHostCamera')
         camera = bpy.data.objects.new('UnifiedHostCamera', data)
@@ -190,9 +196,10 @@ def main():
                     obj.hide_render = f['monitorRight'] - f['monitorLeft'] > f['width'] * .70
             avatar_root.matrix_world = converted(world['avatar'])
             orb.matrix_world = converted(world['orb']) @ orb_rest
-            for (ring, rest), degrees in zip(rings, world['ringAnglesDegrees']):
-                rotation = Matrix.Rotation(math.radians(degrees), 4, 'Z')
-                ring.matrix_local = rest @ CONVERSION @ rotation @ CONVERSION.inverted()
+            if len(world['ringRotations']) != len(rings):
+                raise ValueError('Missing production ring rotations')
+            for (ring, rest), rotation in zip(rings, world['ringRotations']):
+                ring.matrix_local = rest @ converted(rotation)
             if exported['contentMode'] == 'example':
                 texture.image = bpy.data.images.load(str(out / f'{item["key"]}-example.png'), check_existing=True)
                 texture.image.colorspace_settings.name = 'sRGB'
@@ -209,16 +216,19 @@ def main():
             bpy.ops.render.render(write_still=True)
             record = {'key': item['key'], 'image': file.name, 'imageSha256': sha(file),
                       'samples': scene.cycles.samples, 'projectionMaxErrorPixels': error,
-                      'projectedContentQuad': projected, 'ringAnglesDegrees': world['ringAnglesDegrees']}
+                      'projectedContentQuad': projected, 'orbPhase': world['orbPhase'],
+                      'ringPoses': world['ringPoses'], 'ringRotations': world['ringRotations'],
+                      'denoising': scene.cycles.use_denoising}
             records.append(record)
             print('COCKPIT_UNIFIED_HOST_FRAME', json.dumps(record), flush=True)
     (out / 'blender-manifest.json').write_text(json.dumps({
         'evidenceClass': 'HOST_UNIFIED_3D_RENDER', 'renderer': f'Blender {bpy.app.version_string} Cycles CPU',
         'stillsSamples': args.samples, 'sequenceSamples': args.video_samples or args.samples,
-        'threads': 2, 'denoising': False, 'seed': 731,
+        'threads': 2, 'denoising': args.denoise,
+        'denoiser': 'OPENIMAGEDENOISE' if args.denoise else None, 'seed': 731,
         'assets': {'cockpit': sha(workstation), 'orb': sha(orb_asset), 'avatarRuntime': sha(avatar),
                    'avatarOriginal': sha(assets / 'avatar3d/continuum-avatar.glb')},
-        'composition': 'All three GLBs share one scene and camera; native Kotlin matrices and ring angles',
+        'composition': 'All three GLBs share one scene and camera; five native Kotlin ring matrices',
         'projectionCheck': 'Actual packaged monitor-live-pixels vertices against Kotlin quad',
         'lighting': 'Runtime light colors and locations; host intensities are not Filament photometric equivalence',
         'colorManagement': 'Standard sRGB display, no look, exposure zero; sample pixels unlit',

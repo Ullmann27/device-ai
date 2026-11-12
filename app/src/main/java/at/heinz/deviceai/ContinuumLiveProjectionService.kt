@@ -66,6 +66,7 @@ class ContinuumLiveProjectionService : Service() {
             stopSelf()
         }
         override fun onCapturedContentVisibilityChanged(isVisible: Boolean) {
+            if (closed) return
             visibilityReported = true
             visible = isVisible
             if (!visible) {
@@ -74,13 +75,14 @@ class ContinuumLiveProjectionService : Service() {
             }
         }
         override fun onCapturedContentResize(width: Int, height: Int) {
+            if (closed) return
             capturedWidth = width
             capturedHeight = height
             if (!visibilityReported) visible = true
             protectionWindow = null
             sourceResetRequired = true
             AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.SOURCE_UNVERIFIED)
-            updateSurface()
+            try { updateSurface() } catch (_: Exception) { failCapture() }
         }
     }
 
@@ -89,8 +91,19 @@ class ContinuumLiveProjectionService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val requested = intent?.getLongExtra(SESSION, 0) ?: 0
         if (intent?.action == STOP) {
-            AndroidLiveComputer.endProjection(requested, LiveMonitorReason.CAPTURE_STOPPED)
-            stopSelf()
+            if (sessionId == 0L || requested == sessionId) {
+                AndroidLiveComputer.endProjection(requested, LiveMonitorReason.CAPTURE_STOPPED)
+                closeCapture()
+                stopSelf(startId)
+            }
+            return START_NOT_STICKY
+        }
+        try {
+            createNotification(requested)
+        } catch (_: Exception) {
+            AndroidLiveComputer.endProjection(requested, LiveMonitorReason.SOURCE_UNVERIFIED)
+            closeCapture()
+            stopSelf(startId)
             return START_NOT_STICKY
         }
         if (requested == sessionId && sessionId != 0L && !closed) return START_NOT_STICKY
@@ -101,7 +114,6 @@ class ContinuumLiveProjectionService : Service() {
         }
         sessionId = requested
         try {
-            createNotification()
             val code = intent!!.getIntExtra(RESULT_CODE, 0)
             val data = intent.getParcelableExtra(RESULT_DATA, Intent::class.java) ?: error("CAPTURE_CONSENT_MISSING")
             check(code == android.app.Activity.RESULT_OK) { "CAPTURE_CONSENT_DENIED" }
@@ -128,10 +140,10 @@ class ContinuumLiveProjectionService : Service() {
         return START_NOT_STICKY
     }
 
-    private fun createNotification() {
+    private fun createNotification(captureSession: Long) {
         val manager = getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(NotificationChannel(CHANNEL, "Virtueller Computer", NotificationManager.IMPORTANCE_LOW))
-        val stop = PendingIntent.getService(this, 55, Intent(this, javaClass).setAction(STOP).putExtra(SESSION, sessionId),
+        val stop = PendingIntent.getService(this, 55, Intent(this, javaClass).setAction(STOP).putExtra(SESSION, captureSession),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val notification = Notification.Builder(this, CHANNEL)
             .setSmallIcon(R.drawable.ic_device_ai).setContentTitle("Virtueller Computer aktiv")
@@ -152,7 +164,8 @@ class ContinuumLiveProjectionService : Service() {
         .setDefaultHardwareBufferFormat(HardwareBuffer.RGBA_8888)
         .setDefaultDataSpace(DataSpace.DATASPACE_SRGB)
         .setMaxImages(3).setUsage(HardwareBuffer.USAGE_GPU_SAMPLED_IMAGE).build().also { created ->
-        created.setOnImageAvailableListener({ onImage(it) }, handler)
+        try { created.setOnImageAvailableListener({ onImage(it) }, handler) }
+        catch (error: Exception) { runCatching { created.close() }; throw error }
     }
 
     private fun updateSurface(force: Boolean = false) {
@@ -162,19 +175,21 @@ class ContinuumLiveProjectionService : Service() {
         val previous = reader
         val replacement = newReader(size.first, size.second)
         reader = replacement
-        display?.surface = null
-        if (previous?.width != size.first || previous.height != size.second)
-            display?.resize(size.first, size.second, resources.displayMetrics.densityDpi)
-        display?.surface = replacement.surface
-        retire(previous)
+        try {
+            display?.surface = null
+            if (previous?.width != size.first || previous.height != size.second)
+                display?.resize(size.first, size.second, resources.displayMetrics.densityDpi)
+            display?.surface = replacement.surface
+        } finally { retire(previous) }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+        if (closed) return
         protectionWindow = null
         sourceResetRequired = true
         AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.SOURCE_UNVERIFIED)
-        updateSurface()
+        try { updateSurface() } catch (_: Exception) { failCapture() }
     }
 
     private fun ticket(currentReader: ImageReader): Ticket? {
@@ -240,13 +255,13 @@ class ContinuumLiveProjectionService : Service() {
         copyingReader = source
         val crop = before.crop
         val time = System.nanoTime()
-        gpuExecutor.execute {
+        try { gpuExecutor.execute {
           AndroidGpuFrameCopier.copy(image, Rect(crop.left, crop.top, crop.right, crop.bottom), gpuExecutor) { frame ->
             handler.post {
                 copying = false
                 copyingReader = null
                 if (closed) gpuExecutor.shutdown()
-                retiredReaders.toList().forEach { it.close() }
+                retiredReaders.toList().forEach { runCatching { it.close() } }
                 retiredReaders.clear()
                 if (frame == null) {
                     AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.FRAME_STALE)
@@ -266,29 +281,44 @@ class ContinuumLiveProjectionService : Service() {
                     observationRevision = before.revision, sourceViewport = before.viewport), frame)
             }
           }
+        } } catch (_: Exception) {
+            copying = false
+            copyingReader = null
+            runCatching { image.close() }
+            failCapture()
         }
     }
 
     private fun retire(old: ImageReader?) {
         if (old == null) return
-        old.setOnImageAvailableListener(null, null)
-        if (old === copyingReader) retiredReaders += old else old.close()
+        if (old === copyingReader) retiredReaders += old
+        runCatching { old.setOnImageAvailableListener(null, null) }
+        if (old !== copyingReader) runCatching { old.close() }
     }
 
     private fun closeCapture() {
         if (closed) return
         closed = true
         visible = false
-        display?.surface = null
-        display?.release()
+        protectionWindow = null
+        val oldDisplay = display
         display = null
-        retire(reader)
+        val oldReader = reader
         reader = null
-        projection?.unregisterCallback(callback)
-        projection?.stop()
+        val oldProjection = projection
         projection = null
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        if (!copying) gpuExecutor.shutdown()
+        runCatching { oldDisplay?.surface = null }
+        runCatching { oldDisplay?.release() }
+        retire(oldReader)
+        runCatching { oldProjection?.unregisterCallback(callback) }
+        runCatching { oldProjection?.stop() }
+        runCatching { stopForeground(STOP_FOREGROUND_REMOVE) }
+        if (!copying) runCatching { gpuExecutor.shutdown() }
+    }
+
+    private fun failCapture() {
+        try { AndroidLiveComputer.endProjection(sessionId, LiveMonitorReason.SOURCE_UNVERIFIED) }
+        finally { closeCapture(); stopSelf() }
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

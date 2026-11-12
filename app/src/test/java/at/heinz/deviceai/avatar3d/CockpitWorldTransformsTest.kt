@@ -1,9 +1,12 @@
 package at.heinz.deviceai.avatar3d
 
+import at.heinz.deviceai.ui.ContinuumOrbitalRing
 import org.junit.Assert.*
 import org.junit.Test
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 class CockpitWorldTransformsTest {
     private val frames = listOf(CockpitStageFrame(852f, 480f, 213f, 259.2f, 639f, 427.2f),
@@ -50,6 +53,9 @@ class CockpitWorldTransformsTest {
             val l = frame.width * .2f; val r = frame.width * .8f
             val t = frame.height * .1f; val b = frame.height * .5f
             val matrix = CockpitWorldTransforms.orb(frame, l, t, r, b)
+            assertArrayEquals(frame.orbTransform(l, t, r, b), matrix, 0f)
+            assertEquals(CockpitStageFrame.ORB_FRONT_LIMIT,
+                matrix[14] + matrix[0] * CockpitStageFrame.ORB_MAX_RADIUS, .000001f)
             val radius = minOf(r - l, b - t) * .5f
             for (p in listOf(doubleArrayOf(-1.0, 0.0, 0.0), doubleArrayOf(1.0, 0.0, 0.0),
                 doubleArrayOf(0.0, -1.0, 0.0), doubleArrayOf(0.0, 1.0, 0.0))) {
@@ -62,20 +68,74 @@ class CockpitWorldTransformsTest {
         }
     }
 
-    @Test fun ringsRotateInsideTheirAuthoredPlaneAndReuseOutput() {
+    @Test fun fiveAuthoredRingsMatchOriginalPhaseProjection() {
+        val glb = GlbOrbGeometry()
+        assertEquals((0..4).map { "orb-orbit-$it" }, glb.names.filter { it.startsWith("orb-orbit-") })
+        val orbits = glb.source.getJSONArray("orbits")
+        assertEquals(5, orbits.length())
+        for (index in 0..4) {
+            val parameters = orbits.getJSONObject(index)
+            val speed = parameters.getDouble("speed").toFloat()
+            assertEquals(speed.toDouble(), glb.extras("orb-orbit-$index").getDouble("original_speed"), .000001)
+            val original = ContinuumOrbitalRing(parameters.getDouble("a").toFloat(),
+                parameters.getDouble("b").toFloat(), parameters.getDouble("tilt").toFloat())
+            for (phase in listOf(.4f, 1.2192f, 2.0384f, 3.6768f, 9.4f)) {
+                original.project(phase, speed, 0f, 0f, 100f)
+                val endpoints = (original.front.take(original.frontSize) +
+                    original.back.take(original.backSize)).chunked(2)
+                val matrix = CockpitWorldTransforms.ringTransform(glb.rest("orb-orbit-$index"), index, phase, true)
+                for (segment in 0..3) for (sample in listOf(0, 16, 32)) {
+                    val tube = glb.localVertices("orbit-$index-$segment-core")
+                    assertEquals(49 * 6, tube.size)
+                    val center = DoubleArray(3) { axis -> (0..5).sumOf { tube[sample * 6 + it][axis] } / 6 }
+                    val point = transform(matrix, center)
+                    val perspective = 100.0 * 8 / (8 - point[2])
+                    val x = point[0] * perspective; val y = -point[1] * perspective
+                    assertTrue("Original ring $index/$phase/$segment/$sample",
+                        endpoints.any { abs(it[0] - x) < .02 && abs(it[1] - y) < .02 })
+                }
+            }
+        }
+    }
+
+    @Test fun fiveRingsReuseOutputAndKeepNeutralPhase() {
         val rest = floatArrayOf(2f, 0f, 0f, 0f, 0f, 0f, 3f, 0f, 0f, -4f, 0f, 0f, .2f, .3f, .4f, 1f)
-        for (index in 0..3) {
-            val seconds = 3f
-            val angle = Math.toRadians((seconds * (3.5 + index * 1.2)))
-            val expected = transform(rest, doubleArrayOf(cos(angle), sin(angle), 0.0))
+        for (index in 0..4) {
+            val phase = 3f
+            val expected = CockpitWorldTransforms.ringTransform(rest, index, phase, true)
             val out = rest.copyOf()
-            assertSame(out, CockpitWorldTransforms.ringTransform(out, index, seconds, true, out))
-            val point = transform(out, doubleArrayOf(1.0, 0.0, 0.0))
-            for (axis in 0..2) assertEquals(expected[axis], point[axis], .000001)
-            assertArrayEquals(rest, CockpitWorldTransforms.ringTransform(rest, index, seconds, false), 0f)
-            assertEquals(0f, CockpitWorldTransforms.ringAngleDegrees(index, Float.NaN, true), 0f)
-            assertTrue(CockpitWorldTransforms.ringAngleDegrees(index, 3f, true) >
-                CockpitWorldTransforms.ringAngleDegrees(index, 1f, true))
+            assertSame(out, CockpitWorldTransforms.ringTransform(out, index, phase, true, out))
+            assertArrayEquals(expected, out, 0f)
+            assertArrayEquals(rest, CockpitWorldTransforms.ringTransform(rest, index, phase, false), 0f)
+            assertArrayEquals(rest, CockpitWorldTransforms.ringTransform(rest, index, .4f, true), 0f)
+            assertArrayEquals(rest, CockpitWorldTransforms.ringTransform(rest, index, Float.NaN, true), 0f)
+            assertArrayEquals(rest, CockpitWorldTransforms.ringTransform(rest, index, Float.POSITIVE_INFINITY, true), 0f)
+        }
+        assertThrows(IllegalArgumentException::class.java) { CockpitWorldTransforms.ringTransform(rest, 5, .4f, true) }
+        assertThrows(IllegalArgumentException::class.java) { CockpitWorldTransforms.ringTransform(rest, -1, .4f, true) }
+    }
+
+    @Test fun actualOrbGeometryRemainsBehindTheAvatarForEveryRingPhase() {
+        val geometry = GlbOrbGeometry()
+        val rest = geometry.vertices(.4f)
+        for (axis in 0..2) {
+            assertTrue(rest.minOf { it.point[axis] } <= -1.0)
+            assertTrue(rest.maxOf { it.point[axis] } >= 1.0)
+        }
+        val moving = rest.filter { it.mesh.startsWith("orbit-") }
+        assertTrue(moving.isNotEmpty())
+        assertTrue(moving.maxOf { sqrt(it.point.sumOf { value -> value * value }) } < CockpitStageFrame.ORB_MAX_RADIUS)
+        val fixed = rest.filterNot { it.mesh.startsWith("orbit-") }
+        assertTrue(fixed.maxOf { it.point[2] } < CockpitStageFrame.ORB_MAX_RADIUS)
+        for (phase in listOf(.4f, 1.2192f, 2.0384f, 3.6768f, 99f, 999.9f)) {
+            val vertices = geometry.vertices(phase)
+            for (frame in frames) {
+                val matrix = CockpitWorldTransforms.orb(frame, frame.width * .2f, frame.height * .1f,
+                    frame.width * .8f, frame.height * .5f)
+                val depth = vertices.map { transform(matrix, it.point)[2] }
+                assertTrue("Every actual vertex stays behind skin", depth.max() <= CockpitStageFrame.ORB_FRONT_LIMIT + .000001)
+                assertTrue("Orb remains before far plane", depth.min() > frame.distance * frame.worldScale - frame.far)
+            }
         }
     }
 

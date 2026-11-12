@@ -272,7 +272,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
                windowOpen: Boolean = false, gazeBlinkEnabled: Boolean = false,
                eyeNeckCouplingEnabled: Boolean = true,
                sentenceGesturesEnabled: Boolean = true,
-               windowLightEnabled: Boolean = false): Boolean {
+               windowLightEnabled: Boolean = false, orbPhase: Float = .4f): Boolean {
         val e = engine ?: return false
         if (width <= 0 || height <= 0 || !surface.isValid) return false
         if (viewportWidth != width || viewportHeight != height || appliedFraming != framingVersion) {
@@ -311,7 +311,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         val cameraAngle = Math.toRadians(focus.azimuthDegrees)
         val worldFrame = cockpitFrame
         if (cockpitStage != null && worldFrame != null) {
-            updateWorld(worldFrame, fitted, seconds, motion)
+            updateWorld(worldFrame, fitted, orbPhase, motion)
         } else {
             camera!!.lookAt(focus.centerX + kotlin.math.sin(cameraAngle) * distance, centerY - dy,
                 focus.centerZ + kotlin.math.cos(cameraAngle) * distance,
@@ -407,7 +407,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         appliedOpacity = alpha
     }
 
-    private fun updateWorld(frame: CockpitStageFrame, fitted: AvatarFraming.Window, seconds: Float, motion: Boolean) {
+    private fun updateWorld(frame: CockpitStageFrame, fitted: AvatarFraming.Window, orbPhase: Float, motion: Boolean) {
         val unit = frame.worldScale
         val d = (frame.distance * unit).toDouble()
         val near = frame.near
@@ -420,7 +420,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         Matrix.multiplyMM(transformed, 0, worldTransform, 0, avatarRootRest, 0)
         engine!!.transformManager.setTransform(avatarRoot, transformed)
         applyAvatarOpacity(at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY)
-        cockpitStage?.update(frame, cockpitOrb, seconds, motion)
+        cockpitStage?.update(frame, cockpitOrb, orbPhase, motion)
         bloomSettings?.let { options ->
             val enabled = cockpitStage?.pixelsVisible != true
             if (options.enabled != enabled) { options.enabled = enabled; view!!.bloomOptions = options }

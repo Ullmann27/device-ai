@@ -42,7 +42,7 @@ internal class FilamentCockpitStage(
             sideMonitorTransform = namedTransform(requireNotNull(workstation), "cockpit-side-monitors")
             monitorTransform = namedTransform(requireNotNull(workstation), "cockpit-monitor")
             orbTransform = namedTransform(requireNotNull(orb), "continuum-orb")
-            repeat(4) { index ->
+            repeat(5) { index ->
                 val instance = namedTransform(requireNotNull(orb), "orb-orbit-$index")
                 orbitTransforms += instance to engine.transformManager.getTransform(instance, FloatArray(16))
             }
@@ -79,7 +79,7 @@ internal class FilamentCockpitStage(
     fun bind(feed: LiveMonitorFeed<AndroidLiveFrame>?) { pixels?.bind(feed) }
     fun workEvent(event: CockpitWorkEvent) { pixels?.workEvent(event) }
 
-    fun update(frame: CockpitStageFrame, orbBounds: RectF, seconds: Float, motion: Boolean) {
+    fun update(frame: CockpitStageFrame, orbBounds: RectF, phase: Float, motion: Boolean) {
         require(frame.valid())
         CockpitWorldTransforms.room(frame, transform)
         engine.transformManager.setTransform(roomTransform, transform)
@@ -93,7 +93,7 @@ internal class FilamentCockpitStage(
         CockpitWorldTransforms.orb(frame, orbBounds.left, orbBounds.top, orbBounds.right, orbBounds.bottom, transform)
         engine.transformManager.setTransform(orbTransform, transform)
         orbitTransforms.forEachIndexed { index, (instance, rest) ->
-            CockpitWorldTransforms.ringTransform(rest, index, seconds, motion, orbitCombined)
+            CockpitWorldTransforms.ringTransform(rest, index, phase, motion, orbitCombined)
             engine.transformManager.setTransform(instance, orbitCombined)
         }
         pixels?.update(frame, System.nanoTime())

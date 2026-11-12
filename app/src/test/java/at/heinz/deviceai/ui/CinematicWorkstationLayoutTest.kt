@@ -6,6 +6,7 @@ import at.heinz.deviceai.avatar3d.AvatarGlbContract
 import at.heinz.deviceai.avatar3d.AvatarMorphMapper
 import at.heinz.deviceai.avatar3d.CockpitStageFrame
 import at.heinz.deviceai.avatar3d.CockpitWorldTransforms
+import at.heinz.deviceai.avatar3d.GlbOrbGeometry
 import at.heinz.deviceai.avatar3d.GlbSkinningRig
 import at.heinz.deviceai.ui.JarvisShellLayout.Slot
 import org.junit.Assert.*
@@ -13,6 +14,8 @@ import org.junit.Test
 
 class CinematicWorkstationLayoutTest {
     @Test fun originalSphereSurroundsTheSolidPosedHead() {
+        val geometry = GlbOrbGeometry()
+        val phases = listOf(.4f, 1.2192f, 2.0384f, 3.6768f).associateWith { geometry.vertices(it) }
         for ((w, h) in listOf(412f to 915f, 600f to 800f, 884f to 760f, 1280f to 800f)) {
             val shell = CinematicWorkstationLayout.create(w, h)
             val head = requireNotNull(shell.headBounds)
@@ -20,12 +23,26 @@ class CinematicWorkstationLayoutTest {
             val stage = shell[Slot.AVATAR]!!
             assertTrue(shell.workstation)
             assertEquals(head.centerX, orb.centerX, .01f)
-            val radius = minOf(orb.width, orb.height) * .5f
             val window = window(shell)
-            val points = facePoints(shell, frame(shell), window)
-            val headReach = points.maxOf { kotlin.math.abs(it.first - (head.centerX - stage.left)) }
-            assertTrue("Sphere visibly surrounds posed skin at $w", radius > headReach * 1.25)
-            assertTrue("Orbits remain inside scene", radius * 1.46f < stage.width * .5f)
+            val frame = frame(shell)
+            val points = facePoints(shell, frame, window)
+            val center = head.centerX - stage.left
+            val headReach = points.maxOf { kotlin.math.abs(it.first - center) }
+            val matrix = CockpitWorldTransforms.orb(frame, orb.left - stage.left, orb.top - stage.top,
+                orb.right - stage.left, orb.bottom - stage.top).map(Float::toDouble).toDoubleArray()
+            for ((phase, vertices) in phases) {
+                val projected = vertices.map { vertex ->
+                    val p = GlbOrbGeometry.transform(matrix, vertex.point)
+                    vertex.mesh to frame.project(p[0].toFloat(), p[1].toFloat(), p[2].toFloat())
+                }
+                val sphere = projected.filter { it.first == "orb-containment-shell" }.map { it.second.first }
+                assertTrue("Actual sphere surrounds posed skin at $w", sphere.min() < center - headReach * 1.25 &&
+                    sphere.max() > center + headReach * 1.25)
+                val left = projected.minOf { it.second.first }
+                val right = projected.maxOf { it.second.first }
+                assertTrue("Actual orb AABB remains in scene at $w/$phase: $left..$right",
+                    left >= 0f && right <= stage.width)
+            }
             assertTrue("Crown has room above", head.top > stage.top)
             assertEquals("Solid authored skin", 1f, CinematicWorkstationLayout.AVATAR_OPACITY, 0f)
             assertEquals("Pull back once", .76, window.headScale, .00001)

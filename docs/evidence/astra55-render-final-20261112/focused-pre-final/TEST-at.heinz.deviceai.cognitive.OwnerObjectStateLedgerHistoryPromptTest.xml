@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:28" hostname="0f4ac18d136f" time="0.089">
+  <properties/>
+  <testcase name="correctionSummaryKeepsHistoricalEvidence" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.012"/>
+  <testcase name="planningAndCurrentStateTasksStayCompact" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.013"/>
+  <testcase name="historicalProjectionPreservesUncertaintyAndUnresolvedReferences" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.004"/>
+  <testcase name="unrelatedChangeRequestsDoNotPullObjectEvidence" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.003"/>
+  <testcase name="comparisonsWithOldValuesKeepBothStates" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.003"/>
+  <testcase name="pastStateBeforeACorrectionKeepsEvidenceWithoutGuessingAnAnswer" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.006"/>
+  <testcase name="recentPastQuestionKeepsHistoricalEvidenceWithoutGuessingAPreviousValue" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.003"/>
+  <testcase name="historicalProjectionKeepsTruncationExplicit" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.007"/>
+  <testcase name="previouslySupportedZuvorAndCurrentRecallStayUnchanged" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.004"/>
+  <testcase name="inflectedHistoryNounsKeepHistoricalEvidence" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.004"/>
+  <testcase name="explicitChangeAndCorrectionRecallKeepsHistoricalEvidence" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.022"/>
+  <testcase name="questionAboutPastChangesKeepsHistoricalEvidence" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

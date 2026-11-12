@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:17" hostname="0f4ac18d136f" time="0.066">
+  <properties/>
+  <testcase name="onlyMatchingResponseConsumesCurrentTask" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.005"/>
+  <testcase name="oldResponseCannotAuthorizeSuccessorTask" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.0"/>
+  <testcase name="newControllerCannotAcceptOldControllerResponse" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.0"/>
+  <testcase name="exhaustedRangeNeverWrapsOrLeavesPreviousRequestActive" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.002"/>
+  <testcase name="invalidAllocatorNeverOverflowsIntoReusedCodes" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.037"/>
+  <testcase name="concurrentDuplicateResponsesAreConsumedOnce" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.007"/>
+  <testcase name="cancelledTaskIdReuseStillGetsNewCode" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.001"/>
+  <testcase name="invalidTaskCannotConsumeRequestCodes" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.006"/>
+  <testcase name="matchedResponseReturnsOnlyItsOriginalTaskIdentity" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.0"/>
+  <testcase name="processWideAllocationIsUniqueAcrossConcurrentControllers" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.007"/>
+  <testcase name="cancelInvalidatesPendingAndAlreadyQueuedResponse" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.001"/>
+  <testcase name="reservedRangeExcludesPdfAndExistingRequestCodes" classname="at.heinz.deviceai.cognitive.ComputerCaptureConsentTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

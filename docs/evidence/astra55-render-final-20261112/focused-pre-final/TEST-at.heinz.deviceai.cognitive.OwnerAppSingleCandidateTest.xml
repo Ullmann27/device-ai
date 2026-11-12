@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerAppSingleCandidateTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:26" hostname="0f4ac18d136f" time="0.009">
+  <properties/>
+  <testcase name="singleFuzzyCandidateNeedsApprovalButNoRedundantChoice" classname="at.heinz.deviceai.cognitive.OwnerAppSingleCandidateTest" time="0.004"/>
+  <testcase name="wrongPackageAndReplayedObservationNeverBecomeLiveSessionCandidate" classname="at.heinz.deviceai.cognitive.OwnerAppSingleCandidateTest" time="0.003"/>
+  <testcase name="implicitFuzzyNeedStillDoesNotBecomeAnOpening" classname="at.heinz.deviceai.cognitive.OwnerAppSingleCandidateTest" time="0.001"/>
+  <testcase name="oneReturnedRowIsNotSingleMatchWhenDiscoveryReportsMore" classname="at.heinz.deviceai.cognitive.OwnerAppSingleCandidateTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

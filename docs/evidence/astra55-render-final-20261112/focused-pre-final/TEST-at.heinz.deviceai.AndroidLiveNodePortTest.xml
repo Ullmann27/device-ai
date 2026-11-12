@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AndroidLiveNodePortTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:14:18" hostname="0f4ac18d136f" time="3.691">
+  <properties/>
+  <testcase name="acceptedWrongTextIsUnclearAndCannotRepeat" classname="at.heinz.deviceai.AndroidLiveNodePortTest" time="3.345"/>
+  <testcase name="splitScreenUsesTargetWindowEvenWhenOwnAppFocused" classname="at.heinz.deviceai.AndroidLiveNodePortTest" time="0.033"/>
+  <testcase name="searchClickWaitsForSemanticFieldWithDifferentHint" classname="at.heinz.deviceai.AndroidLiveNodePortTest" time="0.044"/>
+  <testcase name="permissionRevokedAtFinalDispatchCheckSendsNoInput" classname="at.heinz.deviceai.AndroidLiveNodePortTest" time="0.027"/>
+  <testcase name="labelsNeverContainDraftAndPasswordNeverSelected" classname="at.heinz.deviceai.AndroidLiveNodePortTest" time="0.032"/>
+  <testcase name="semanticClickStillChecksPermissionImmediatelyBeforeDispatch" classname="at.heinz.deviceai.AndroidLiveNodePortTest" time="0.058"/>
+  <testcase name="intermediateRevisionWaitsForRealResultWithoutRepeatingInput" classname="at.heinz.deviceai.AndroidLiveNodePortTest" time="0.056"/>
+  <testcase name="newlyOverlappingOwnWindowPreventsInput" classname="at.heinz.deviceai.AndroidLiveNodePortTest" time="0.06"/>
+  <testcase name="actualSetTextRequiresObservedExactDraft" classname="at.heinz.deviceai.AndroidLiveNodePortTest" time="0.036"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

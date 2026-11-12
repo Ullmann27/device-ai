@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:15:32" hostname="0f4ac18d136f" time="151.851">
+  <properties/>
+  <testcase name="withoutALoadedModelAPdfQuestionSaysWhatIsPossibleAndGuessesNothing" classname="at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest" time="24.07"/>
+  <testcase name="aQuestionForTheModelGetsThePagesReadAndANewQuestionGetsItsOwnAnswer" classname="at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest" time="16.449"/>
+  <testcase name="theReadPdfStaysBoundAcrossThePickerReturnRecreationAndLaterRecreations" classname="at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest" time="26.768"/>
+  <testcase name="withAlwaysOnInternetADocumentQuestionNeverBecomesWebResearch" classname="at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest" time="16.334"/>
+  <testcase name="unavailableModelDoesNotReplaceOpenPdfWithAnotherPicker" classname="at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest" time="12.371"/>
+  <testcase name="offlineFieldSequenceIsAnsweredFromTheReadPdfAndNeverReplaysTheOldAnswer" classname="at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest" time="21.033"/>
+  <testcase name="requestingOneNewSummaryDoesNotSelectAnotherPdf" classname="at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest" time="10.711"/>
+  <testcase name="summaryWithoutOpenedPdfRequiresOwnerFileSelection" classname="at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest" time="1.947"/>
+  <testcase name="explicitlyNewPdfStillOpensOwnersPickerAndDoesNotSummarizeOldSource" classname="at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest" time="10.213"/>
+  <testcase name="summarizeAlreadyOpenedPdfUsesItsActualPageContextWithoutPicker" classname="at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest" time="11.953"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

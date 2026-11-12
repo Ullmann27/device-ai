@@ -1,0 +1,17 @@
+{
+  "result": "PASS",
+  "integration_base": "9e67f40eb4210d25ea764888d27ede555dc81327",
+  "source_checkpoint": "368b46cca5",
+  "build_mode": "workstation_only",
+  "builder_sha256": "d33b39757e44837997d07245dfd53c7c9deb9952fe86a799a18949b411a7a4ff",
+  "original_five_ring_orb_generator": "AST_UNCHANGED_FROM_7d6479f8c7",
+  "asset_bytes_before_after": "IDENTICAL",
+  "sha256": {
+    "tools/cockpit-workstation/source/pr801-workstation.glb": "f1edabf082ee4d30e275a862a375ac73dea65ab4e1f140ddb021845c87e6bcc3",
+    "app/src/main/assets/cinema3d/cockpit-workstation.glb": "03b6364e2ff396fd9207b129e765ce5d4a93975113315cc3896844e53fd8ad30",
+    "app/src/main/assets/cinema3d/continuum-orb.glb": "fdfe54ce9aa2ed6af5ec6866c1078a4a34ece511e66b29cd1b3672f83229079c",
+    "app/src/main/assets/avatar3d/continuum-avatar.glb": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+    "app/src/main/assets/cinema3d/live-monitor.filamat": "1b24ad728cecce23e9fca904c45370eb35ea5f9e2c0cd85ed3914f7490e27ac3"
+  },
+  "device": "NOT_RUN"
+}

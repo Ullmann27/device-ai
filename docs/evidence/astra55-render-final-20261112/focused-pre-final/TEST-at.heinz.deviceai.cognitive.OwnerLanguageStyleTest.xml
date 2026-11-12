@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerLanguageStyleTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:28" hostname="0f4ac18d136f" time="0.074">
+  <properties/>
+  <testcase name="quotedDialectAndCodeRemainUnchanged" classname="at.heinz.deviceai.cognitive.OwnerLanguageStyleTest" time="0.005"/>
+  <testcase name="correctedStandardGermanPasses" classname="at.heinz.deviceai.cognitive.OwnerLanguageStyleTest" time="0.025"/>
+  <testcase name="explicitDialectRequestIsRespected" classname="at.heinz.deviceai.cognitive.OwnerLanguageStyleTest" time="0.0"/>
+  <testcase name="properNamesRemainValid" classname="at.heinz.deviceai.cognitive.OwnerLanguageStyleTest" time="0.0"/>
+  <testcase name="theInstructionDemandsStandardGermanAndDuAndForbidsDialect" classname="at.heinz.deviceai.cognitive.OwnerLanguageStyleTest" time="0.001"/>
+  <testcase name="completedDialectAnswerIsRejectedByTheActualQualityGate" classname="at.heinz.deviceai.cognitive.OwnerLanguageStyleTest" time="0.0"/>
+  <testcase name="wordsContainingDialectFragmentsAreNotRejected" classname="at.heinz.deviceai.cognitive.OwnerLanguageStyleTest" time="0.001"/>
+  <testcase name="theLocalModelPromptUsesTheSharedInstructionAndNoLongerInvitesDialect" classname="at.heinz.deviceai.cognitive.OwnerLanguageStyleTest" time="0.041"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

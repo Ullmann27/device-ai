@@ -5,8 +5,6 @@ import kotlin.math.sin
 
 /** Column-major unified scene transforms. */
 object CockpitWorldTransforms {
-    const val ORB_DEPTH = -.44f
-
     fun avatar(frame: CockpitStageFrame, left: Float, top: Float, right: Float, bottom: Float,
                fitted: AvatarFraming.Window, focus: AvatarGlbContract.Focus,
                out: FloatArray = FloatArray(16)): FloatArray {
@@ -45,41 +43,32 @@ object CockpitWorldTransforms {
 
     fun orb(frame: CockpitStageFrame, left: Float, top: Float, right: Float, bottom: Float,
             out: FloatArray = FloatArray(16)): FloatArray {
-        require(frame.valid())
+        require(out.size >= 16)
         require(left.isFinite() && top.isFinite() && right.isFinite() && bottom.isFinite() &&
             right > left && bottom > top)
-        identity(out)
-        val unit = frame.worldScale
-        val cameraDistance = frame.distance * unit
-        val perspectiveFit = (cameraDistance - ORB_DEPTH) / cameraDistance
-        val radius = minOf(right - left, bottom - top) * .5f * unit * perspectiveFit
-        out[0] = radius
-        out[5] = radius
-        out[10] = radius
-        out[12] = ((left + right) * .5f - frame.width * .5f) * unit * perspectiveFit
-        out[13] = (frame.height * .5f - (top + bottom) * .5f) * unit * perspectiveFit
-        out[14] = ORB_DEPTH
+        frame.orbTransform(left, top, right, bottom).copyInto(out)
         return out
     }
 
-    fun ringAngleDegrees(index: Int, seconds: Float, motion: Boolean): Float {
-        require(index in 0..3)
-        val time = if (motion && seconds.isFinite()) seconds else 0f
-        return time * (3.5f + index * 1.2f)
-    }
+    internal fun ringPose(index: Int, phase: Float, motion: Boolean): CockpitOrbMotion.Pose =
+        CockpitOrbMotion.sample(index, if (motion) phase else .4f)
 
-    fun ringTransform(rest: FloatArray, index: Int, seconds: Float, motion: Boolean,
+    /** rest × Rx(-pitch) × Ry(yaw). */
+    fun ringTransform(rest: FloatArray, index: Int, phase: Float, motion: Boolean,
                       out: FloatArray = FloatArray(16)): FloatArray {
         require(rest.size >= 16 && out.size >= 16)
-        val angle = Math.toRadians(ringAngleDegrees(index, seconds, motion).toDouble())
-        val c = cos(angle).toFloat()
-        val s = sin(angle).toFloat()
+        val pose = ringPose(index, phase, motion)
+        val yaw = Math.toRadians(pose.yawDegrees.toDouble())
+        val pitch = Math.toRadians(-pose.pitchDegrees.toDouble())
+        val cy = cos(yaw).toFloat(); val sy = sin(yaw).toFloat()
+        val cx = cos(pitch).toFloat(); val sx = sin(pitch).toFloat()
         for (row in 0..3) {
             val x = rest[row]
             val y = rest[row + 4]
-            out[row] = x * c + y * s
-            out[row + 4] = -x * s + y * c
-            out[row + 8] = rest[row + 8]
+            val z = rest[row + 8]
+            out[row] = x * cy + y * sx * sy - z * cx * sy
+            out[row + 4] = y * cx + z * sx
+            out[row + 8] = x * sy - y * sx * cy + z * cx * cy
             out[row + 12] = rest[row + 12]
         }
         return out

@@ -44,6 +44,8 @@ object WorkstationHostExport {
         val fps = 20
         val videoDurationMs = 3_000f
         val videoFrames = (videoDurationMs * fps / 1_000f).toInt()
+        val orbRingCount = 5
+        val identity = FloatArray(16) { if (it % 5 == 0) 1f else 0f }
         val assets = File(root, "app/src/main/assets")
         val avatarBytes = File(assets, AvatarGlbContract.ASSET_PATH).readBytes()
         val avatarHash = MessageDigest.getInstance("SHA-256").digest(avatarBytes)
@@ -166,6 +168,7 @@ object WorkstationHostExport {
             }
             for ((label, progress, time) in samples) {
                 val frame = CockpitMonitorMotion.pose(base, progress)
+                val orbPhase = HostOrbClock.sample(time, fps)
                 check(frame.valid())
                 val key = "$name-$label"
                 if (example) {
@@ -189,16 +192,26 @@ object WorkstationHostExport {
                         .put("orb", JSONArray(CockpitWorldTransforms.orb(frame,
                             orbBox.left - scene.left, orbBox.top - scene.top,
                             orbBox.right - scene.left, orbBox.bottom - scene.top).toList()))
-                        .put("ringAnglesDegrees", JSONArray((0..3).map {
-                            CockpitWorldTransforms.ringAngleDegrees(it, time / 1_000f, motion = true)
+                        .put("orbPhase", orbPhase)
+                        .put("ringRotations", JSONArray((0 until orbRingCount).map {
+                            JSONArray(CockpitWorldTransforms.ringTransform(identity, it, orbPhase, motion = true).toList())
+                        }))
+                        .put("ringPoses", JSONArray((0 until orbRingCount).map {
+                            val pose = CockpitWorldTransforms.ringPose(it, orbPhase, motion = true)
+                            JSONObject().put("yawDegrees", pose.yawDegrees).put("pitchDegrees", pose.pitchDegrees)
                         }))))
             }
         }
         val variantHash = MessageDigest.getInstance("SHA-256").digest(variant.bytes)
             .joinToString("") { "%02x".format(it) }
-        File(out, "scene-export.json").writeText(JSONObject().put("schema", "cockpit-unified-review-v1")
+        File(out, "scene-export.json").writeText(JSONObject().put("schema", "cockpit-unified-review-v2")
             .put("sceneMode", "UNIFIED_3D").put("avatarRuntimeVariantSha256", variantHash)
             .put("inputClass", "SYNTHETIC_FOCUS_REPLAY").put("contentMode", if (example) "example" else "empty")
+            .put("orbRingCount", orbRingCount)
+            .put("orbClock", JSONObject().put("mode", "CONSTANT_READY_REPLAY")
+                .put("source", "ContinuumHologramView phase update and stateEnergy(READY)")
+                .put("initialPhase", HostOrbClock.INITIAL_PHASE).put("energy", HostOrbClock.READY_ENERGY)
+                .put("maxDeltaSeconds", HostOrbClock.MAX_DELTA_SECONDS).put("sampleHz", fps))
             .put("motionDurationMs", CockpitMonitorMotion.DURATION_MS)
             .put("videoFramesPerSecond", fps).put("videoDurationMs", if (video) videoDurationMs else 0f)
             .put("videoFrameCount", if (video) videoFrames else 0)

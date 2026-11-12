@@ -1,0 +1,8 @@
+{
+  "source_commit": "6c951be2a165b658f16fff63dced8a5a3a9e9ef7",
+  "github_commit": "871a25cd5de72917cbe3fba54bb8a0d0fab7b103",
+  "source_path": "app/src/main/assets/cinema3d/cockpit-workstation.glb",
+  "sha256": "152669e9c7d8c5ea8627f09353fbd71bfca9ba93a6df6c751c7d44e2ea72de0d",
+  "bytes": 27904,
+  "provenance": "Owned reviewed rounded table, keyboard and monitor shells from updated PR801; no UI/runtime files imported."
+}

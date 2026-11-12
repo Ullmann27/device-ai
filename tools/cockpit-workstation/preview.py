@@ -62,6 +62,42 @@ def packaged_assets(root):
     return files, data
 
 
+def orb_clock_source(view_source):
+    patterns = {
+        'initial': r'private var phase = ([.0-9]+f)',
+        'energy': r'State\.READY\s*->\s*([.0-9]+f)',
+        'clamp': r'val delta = if \(lastFrameMs == 0L\)[^\n]+\.coerceIn\(0f,\s*([.0-9]+f)\)',
+        'update': r'if \(renderBudget\(\)\.animate\) (phase = [^\n]+)',
+    }
+    values = {}
+    for name, pattern in patterns.items():
+        match = re.search(pattern, view_source)
+        if not match:
+            raise ValueError(f'Production orb clock boundary changed: {name}')
+        values[name] = match.group(1)
+    return '''package at.heinz.deviceai.ui
+internal object HostOrbClock {
+    const val INITIAL_PHASE = %(initial)s
+    const val READY_ENERGY = %(energy)s
+    const val MAX_DELTA_SECONDS = %(clamp)s
+    fun sample(elapsedMs: Float, fps: Int): Float {
+        require(elapsedMs.isFinite() && elapsedMs in 0f..60_000f && fps in 1..120)
+        var phase = INITIAL_PHASE
+        var remaining = elapsedMs
+        val tick = 1_000f / fps
+        val energy = READY_ENERGY
+        while (remaining > 0f) {
+            val step = minOf(tick, remaining)
+            val delta = (step / 1_000f).coerceIn(0f, MAX_DELTA_SECONDS)
+            %(update)s
+            remaining = (remaining - step).coerceAtLeast(0f)
+        }
+        return phase
+    }
+}
+''' % values
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--repo-root', type=Path, default=TOOL_ROOT.parents[1])
@@ -75,6 +111,7 @@ def main():
     parser.add_argument('--draft', action='store_true')
     parser.add_argument('--content', choices=('empty', 'example'), default='empty')
     parser.add_argument('--qa-lock', type=Path)
+    parser.add_argument('--denoise', action='store_true', help='Use Cycles OpenImageDenoise; fail if unavailable')
     args = parser.parse_args()
     root, out = args.repo_root.resolve(), args.output.resolve()
     if args.draft and args.video:
@@ -107,7 +144,7 @@ def main():
     sources += [main / 'avatar3d' / f'{name}.kt' for name in
                 ('AvatarGlbContract', 'AvatarMorphMapper', 'AvatarIdleMotion', 'GazeBlinkPolicy',
                  'CriticalDampedSpring', 'AvatarFraming', 'AvatarMaterialVariant',
-                 'CockpitStageFrame', 'CockpitWorldTransforms')]
+                 'CockpitStageFrame', 'CockpitWorldTransforms', 'CockpitOrbMotion')]
     sources += [root / 'tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/Java2DContinuumPainter.kt']
     assets, asset_pins = packaged_assets(root)
     tracked_sources = sources + assets + [ui / 'JarvisCockpitGridContent.kt', ui / 'JarvisCockpitPanels.kt',
@@ -146,6 +183,8 @@ def main():
                     if 'const val STOP_TARGET =' in line)
         constants = work / 'HostStopConstant.kt'
         constants.write_text('package at.heinz.deviceai.ui\nobject JarvisCockpitPanels {\n' + stop + '\n}\n')
+        clock = work / 'HostOrbClock.kt'
+        clock.write_text(orb_clock_source((main / 'ContinuumHologramView.kt').read_text()))
         cp = [str(stdlib[0]), str(args.json_jar.resolve())]
         if args.android_jar:
             cp.append(str(args.android_jar.resolve()))
@@ -153,7 +192,7 @@ def main():
         command = ['java', '-Xmx768m', '-cp', str(libs / '*'),
                    'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler', '-no-stdlib', '-no-reflect',
                    '-jvm-target', '17', '-nowarn', '-cp', os.pathsep.join(cp), '-d', str(jar)]
-        command += [str(path) for path in sources + [boundary, constants,
+        command += [str(path) for path in sources + [boundary, constants, clock,
                      TOOL_ROOT / 'WorkstationHostExport.kt', TOOL_ROOT / 'HostExampleContent.kt']]
         run(command, work / 'compile.log')
         run(['java', '-Xmx512m', '-Djava.awt.headless=true', '-cp', os.pathsep.join([str(jar)] + cp),
@@ -162,8 +201,10 @@ def main():
         render_command = ['blender', '-b', '-t', '2', '--python', str(TOOL_ROOT / 'render_host.py'), '--',
              '--repo-root', str(root), '--work-dir', str(work), '--samples', str(args.samples),
              '--video-samples', str(args.video_samples or args.samples)]
+        if args.denoise:
+            render_command += ['--denoise']
         if args.qa_lock:
-            render_command = ['flock', '-w', '60', str(args.qa_lock.resolve())] + render_command
+            render_command = ['flock', '-w', '45', str(args.qa_lock.resolve())] + render_command
         run(render_command, work / 'blender.log')
         exported = json.loads((work / 'scene-export.json').read_text())
         compose(work, out, exported, layer_depths)
@@ -183,7 +224,7 @@ def main():
     if not stable:
         raise RuntimeError('Source changed during rendering; discard output')
     manifest = {
-        'schema': 'cockpit-unified-preview-v1', 'sourceCommit': source_commit,
+        'schema': 'cockpit-unified-preview-v2', 'sourceCommit': source_commit,
         'sourceFilesSha256': before, 'toolFilesSha256': tool_hashes,
         'evidenceClass': 'HOST_UNIFIED_3D_COMPOSITE', 'sourceStableDuringRun': stable,
         'sharedRenderLockUsed': args.qa_lock is not None,
@@ -192,15 +233,18 @@ def main():
         'sourceWorkingTree': git(root, 'status', '--porcelain', '--untracked-files=no'),
         'components': {'cockpit': 'Packaged GLB, actual Kotlin world and monitor matrices',
                        'avatar': 'Original GLB through native AvatarMaterialVariant; neutral pose, actual world matrix',
-                       'sphere': 'Packaged continuum-orb.glb; actual Kotlin world matrix and ring angles; no 2D sphere layer',
+                       'sphere': 'Packaged original five-ring GLB; native orb depth and Kotlin ring matrices; no 2D sphere layer',
                        'chrome': 'Existing JarvisShellRenderer and CockpitWorkstationChrome; neutral host data',
                        'monitorContent': 'Host-only document texture on actual live-pixel mesh; unlit, no tint, no app capture' if args.content == 'example'
                                          else 'Empty; no Android app pixels or live connection'},
         'contentMode': args.content,
         'motion': 'Production Flight.sample at fixed intervals, with rest holds; no extra easing',
-        'orbMotion': {'source': 'CockpitWorldTransforms.ringAngleDegrees',
-                      'timeSource': 'Exported elapsed milliseconds / 1000',
+        'orbMotion': {'source': 'CockpitWorldTransforms.ringTransform and CockpitOrbMotion.sample',
+                      'timeSource': 'Actual ContinuumHologramView phase update; fixed READY energy replay',
+                      'clock': exported['orbClock'], 'ringCount': exported['orbRingCount'],
                       'sampledDurationMs': exported['videoDurationMs']},
+        'denoising': {'enabled': args.denoise, 'backend': 'OPENIMAGEDENOISE' if args.denoise else None,
+                      'scope': 'Cycles 3D stage only; production Java2D chrome composed afterwards'},
         'limits': ['Blender studio is not Filament light equivalence', 'No Android layout lifecycle exercised',
                    'No speech, model, capture, or real device measurements'],
         'Filament': 'NOT_RUN', 'Fold7': 'NOT_RUN',
