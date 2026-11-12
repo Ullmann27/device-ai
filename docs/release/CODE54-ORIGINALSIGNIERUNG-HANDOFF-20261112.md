@@ -64,3 +64,23 @@ Diese Tests sind Host-Vertragsprüfungen. Sie beweisen nicht die vollständige A
 - [Actions Secrets-Namen prüfen](https://github.com/Ullmann27/device-ai/settings/secrets/actions)
 
 **Status zum Abschluss dieses Dokuments:** Code54-Signierprofil vorbereitet und durch Secrets-freie Testverträge geprüft. Originalsignierung NICHT ausgelöst. Ausnahmeregel NICHT genehmigt. Originalsignierzweig NICHT verändert.
+
+## Ergänzung: Eng begrenzte Ausnahme für den Fold7-Gerätetest (Besitzerfreigabe 12.11.2026)
+
+Der Besitzer hat die Umsetzung der zuvor ausdrücklich beschriebenen, auf genau `9713854bfb01d699f666058ac44379735307b66a` begrenzten PDF-Host-Ausnahme **für einen unveröffentlichten originalsignierten Gerätetest-Entwurf** beauftragt. Dies ist **keine** pauschale Freigabe zur Signierung oder zur Veröffentlichung. Ein persönlicher GitHub-Environment-Freigabeklick bleibt erforderlich.
+
+Implementiert auf dem isolierten Prep-Zweig:
+
+- Neues Profil `DEVICE_TEST_NATIVE_PDF_EXCEPTION_VERIFIED`, ausschließlich mit exakt gebundener Besitzerfreigabe und Beleg-Artifact; es ist noch **nicht aktiv**.
+- Der Vorbereitungsstatus der echten Bindung lautet `DEVICE_TEST_NATIVE_PDF_EXCEPTION_PENDING_EVIDENCE`. Er wird vom Signierer **abgewiesen**.
+- Nur ein vollständig abgeschlossener, unverändert ungefilterter Gradle-Lauf von mindestens 4.800 Testfällen kann als Grundlage dienen. Er muss **genau einen** FAIL haben: `PdfIntakeNativeDecodeProbeUiTest.actualProviderReadRendersAndExtractsSyntheticPdf`, mit nachgewiesenem Hostfehler `NoSuchMethodError` / `FileDescriptor.getOwnerId$` in `IoUtils` oder `PdfProcessor`.
+- Genau die 17 beim Code54-Baselinevergleich ausdrücklich bekannten `SKIPPED`-Fälle sind zulässig; alle anderen Fälle müssen SUCCESS sein. Jeder zusätzliche Fehler, ungekannter Skip, Filter, native PDF-Skip-Schalter oder nicht vollständig protokollierte Lauf blockiert die Ausnahme.
+- Belege werden aus dem **originalen GitHub-Actions-Evidence-ZIP** geladen. ZIP-Herkunft (gleicher Run, Branch, Quelle, Repository), ID, ZIP-SHA256, Quelle, Quellbaum, gesamte Testhistorie, Ausnahmegrund und APK-Hash sind obligatorisch.
+- Der Lauf muss dann öffentlichkeitsklar als `failure` und **nicht** als Full-Android-PASS eingestuft werden. Eine bestandene PDF-Prüfung auf Fold7 wird ausdrücklich **nicht behauptet**.
+- Das Ergebnis darf ausschließlich ein `--draft --latest=false` Release-Entwurf sein. Signierworkflow bleibt `workflow_dispatch`; Original-Reviewer und P12-Schutz bleiben unverändert. Release-Notizen und BUILD-INFO markieren `publication_permitted=false` und `native_pdf_device_status=NOT_RUN`.
+
+**Noch offen**: Der GitHub-Lauf [43134158265](https://github.com/Ullmann27/device-ai/actions/runs/43134158265) war bei der letzten Prüfung weiterhin `in_progress`, das vollständige Android-Evidence-ZIP mit geprüfter Artifact-ID/-Hash ist deshalb noch nicht verfügbar. Ohne diese Originalbelege kann der Profilstatus nicht auf `DEVICE_TEST_NATIVE_PDF_EXCEPTION_VERIFIED` geändert werden. Die separate Nicht-root-/Locale-Gegenprüfung der Hostfälle auf exakt dieser Quelle muss ebenfalls dokumentiert werden, sofern solche Fehler auftreten.
+
+**Tests:** [Secrets-freier Lauf 43142776422](https://github.com/Ullmann27/device-ai/actions/runs/43142776422) nach der Ausnahmeimplementierung: Code52 12/12, Code53 16/16, Code54 19/19; **47/47 bestanden**. Zusätzliche Regressionsmutanten decken falsche Owner-ID, Evidence-ID/-SHA/-Herkunft, fehlerhaften PDF-Host-Fingerabdruck, unterdrückte PDF-Prüfung, neue/fehlende SKIPs, weitere Fehler, Filter und unvollständige Suite ab. Keine Secrets gelesen, kein Signiervorgang gestartet.
+
+**Nächste Schritte:** vollständige QA-/Beleg-ZIP-Daten nach Abschluss der Läufe verbindlich prüfen, die begrenzte Ausnahme durch einen zweiten grünen Vertragslauf aktivieren, Draft-PR #790 nach technischem Review kontrolliert in den ursprünglichen geschützten Signierzweig übernehmen; anschließend kann der Besitzer den exakten Code54-Lauf manuell starten und die Environment-Freigabe persönlich erteilen. Kein `main`-Merge und keine automatische Installation.
