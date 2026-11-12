@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "project": "Ullmann27/device-ai",
-  "updated": "2026-11-08",
+  "updated": "2026-11-12",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
   "externalResearchIntegration": {
@@ -129,7 +129,7 @@
       "id": "EXP-07",
       "title": "Independent worker academy",
       "status": "SOURCE_INTEGRATED",
-      "present": "Repeatable repository skill lessons",
+      "present": "Repeatable repository skill lessons 2026-11-12: Code55 cockpit support experiments A/B/C have frozen baselines, independent failure holdouts and source-bound host evidence. Three partial-write cache failures were reproduced and repaired; 36 workflow traces retain one input and reject premature success. See docs/evidence/astra55-experiments-combined-20261112/integration.json. No device or model-quality promotion.",
       "entry": "docs/ASTRA-BAUMEISTER-ATLAS.md",
       "depends": "Pinned source/tests and novelty holdouts",
       "gate": "Adversarial hidden tasks and regression retention"
@@ -165,7 +165,7 @@
       "id": "EXP-11",
       "title": "Specialist orchestrator",
       "status": "RESEARCH_SHADOW",
-      "present": "Single backlog, typed specialists 2026-10-24: typed task adapter demonstrably reaches existing CCC1, mobile job, canonical backlog, teamleader, repair and fresh-worktree verifier; no parallel agent framework. Scoped patches review-only and excluded from automatic strategy learning/replay. Sol2026-10-27: normal main-chat bootstrap now reuses BoundedAgentOrchestrator, confirmed retrieval, ToolGate, actual Java File storage probe, receipt-bound episode and existing signed checkpoint.59native cognitiveJUnit/17FabricJUnit/9NodePASS; Android main-chat SOURCE_INTEGRATED, device/SDK/APKNOT_RUN. Denied/replayed calls cannot produce positive episodes/reputation; no model promotion. See docs/research/omega/SOL-JARVIS-HANDOFF-20261027.md. Follow-up a4fee812: checked Shizuku wire/results, bounded IO, incomplete output veto; actual adapter host compilation and69JUnit. Worker1147PASS0SKIP plus scripts283PASS1retained-owner-release-freezeFAIL0SKIP; Node aggregate1430PASS1FAIL. Numeric verifier batches the same frozen checks in one bounded context;10maximum-suite repetitions under loadPASS. See docs/research/omega/SOL-REPAIR-RESULT-20261027.md. Device/APK NOT_RUN; no model promotion.",
+      "present": "Single backlog, typed specialists 2026-10-24: typed task adapter demonstrably reaches existing CCC1, mobile job, canonical backlog, teamleader, repair and fresh-worktree verifier; no parallel agent framework. Scoped patches review-only and excluded from automatic strategy learning/replay. Sol2026-10-27: normal main-chat bootstrap now reuses BoundedAgentOrchestrator, confirmed retrieval, ToolGate, actual Java File storage probe, receipt-bound episode and existing signed checkpoint.59native cognitiveJUnit/17FabricJUnit/9NodePASS; Android main-chat SOURCE_INTEGRATED, device/SDK/APKNOT_RUN. Denied/replayed calls cannot produce positive episodes/reputation; no model promotion. See docs/research/omega/SOL-JARVIS-HANDOFF-20261027.md. Follow-up a4fee812: checked Shizuku wire/results, bounded IO, incomplete output veto; actual adapter host compilation and69JUnit. Worker1147PASS0SKIP plus scripts283PASS1retained-owner-release-freezeFAIL0SKIP; Node aggregate1430PASS1FAIL. Numeric verifier batches the same frozen checks in one bounded context;10maximum-suite repetitions under loadPASS. See docs/research/omega/SOL-REPAIR-RESULT-20261027.md. Device/APK NOT_RUN; no model promotion. 2026-11-12: Three bounded cockpit support lanes #805/#806/#807 converge through #804 into canonical #799, aligned with Android audit #803. Existing render/workflow paths are retained; two reversible update optimizations and an integrated observation regression were accepted. No second planner, event bus or runtime agent framework. See docs/research/omega/ASTRA55-COCKPIT-EXPERIMENTS-HANDOFF.md.",
       "entry": "docs/ASTRA-BAUMEISTER-ATLAS.md",
       "depends": "One shared policy/review gate",
       "gate": "Multiple specialist proposals, independent adjudication"

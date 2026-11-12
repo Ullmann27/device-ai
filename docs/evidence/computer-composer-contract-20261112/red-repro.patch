@@ -1,0 +1,27 @@
+diff --git a/app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflowTest.kt b/app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflowTest.kt
+index 49fad19885..4287f0ad80 100644
+--- a/app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflowTest.kt
++++ b/app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflowTest.kt
+@@ -163,6 +163,22 @@ class OwnerComputerWorkflowTest {
+         assertFalse(port.actions.any { it.kind == NodeActionKind.SEND })
+     }
+ 
++    @Test fun englishDraftUsesObservedComposerAfterDifferentSearchHints() {
++        for (hint in listOf("Search", "Search...", "Search…", "Ask or search")) {
++            val search = node(hint, editable = true, value = "Anna").copy(viewId = "$pkg:id/search_src_text")
++            val port = FakePort(frame(1, listOf(search, node("Anna", clickable = true))))
++            port.afterClick = { _, _ -> listOf(node("Anna").copy(heading = true),
++                node("Message", editable = true, value = ""), node("Send", clickable = true)) }
++            val result = workflow().run(OwnerComputerIntent(ComputerApp.WHATSAPP,
++                ComputerGoal.DRAFT_MESSAGE, "Anna", "Hello!"), port)
++            assertEquals(hint, OwnerComputerWorkflow.Status.VERIFIED, result.status)
++            assertTrue(result.draftPrepared)
++            assertEquals(listOf("Anna"), port.clicks)
++            assertEquals(listOf("Hello!"), port.actions.map { it.text })
++            assertFalse(port.actions.any { it.kind == NodeActionKind.SEND })
++        }
++    }
++
+     @Test fun mismatchedChatNeverReceivesDraft() {
+         val port = FakePort(frame(1, listOf(node("Suchen", editable = true), node("Anna", clickable = true))))
+         port.afterClick = { _, expected -> listOf(node("Hanna"), node(expected, editable = true)) }

@@ -24,7 +24,7 @@ internal class CockpitLiveTexture(
     private var binding: LiveFrameBinding? = null
     private var sequence = -1L
     private var sourceViewport: LiveTargetBounds? = null
-    private var importedAtNanos = 0L
+    private var imported: LiveMonitorSubmission.ImportedFrame? = null
     private var sourceWidth = 1
     private var sourceHeight = 1
     private var click: CockpitWorkEvent? = null
@@ -52,6 +52,7 @@ internal class CockpitLiveTexture(
         clearPixels()
         releaseStream()
         feed = value
+        feed?.monitorSubmission?.invalidate()
         workSequence.reset()
         failure = null
         if (!closed) createStream()
@@ -100,18 +101,25 @@ internal class CockpitLiveTexture(
             releaseStream()
             createStream()
         }
-        if ((sequence != state.sequence || binding != state.binding) && pending.size < MAX_GPU_REFERENCES) {
+        if ((imported == null || sequence != state.sequence || binding != state.binding) &&
+            pending.size < MAX_GPU_REFERENCES) {
             producer.acquire()?.use { lease ->
                 val current = producer.status(System.nanoTime())
                 if (!matches(current, lease.binding, lease.sequence)) return@use
                 if (lease.frame.colorSpace != ColorSpace.get(ColorSpace.Named.SRGB)) {
+                    clearPixels()
                     failure = "Farbraum wird nicht unterstützt"
                     return@use
                 }
                 val duplicate = runCatching { retain(lease.frame.hardwareBuffer) }.getOrNull()
-                if (duplicate == null) { failure = "Bild kann nicht übernommen werden"; return@use }
+                if (duplicate == null) {
+                    clearPixels()
+                    failure = "Bild kann nicht übernommen werden"
+                    return@use
+                }
                 val owned = OwnedBuffer(duplicate)
-                val latest = producer.status(System.nanoTime())
+                val sampledAt = System.nanoTime()
+                val latest = producer.status(sampledAt)
                 if (!matches(latest, lease.binding, lease.sequence)) { owned.close(); return@use }
                 pending += owned
                 try {
@@ -125,20 +133,26 @@ internal class CockpitLiveTexture(
                     sourceViewport = lease.meta.sourceViewport
                     sourceWidth = lease.frame.width
                     sourceHeight = lease.frame.height
-                    importedAtNanos = System.nanoTime()
+                    imported = producer.monitorSubmission.imported(latest, sampledAt)
                     failure = null
                 } catch (_: RuntimeException) {
                     pending.remove(owned)
                     owned.close()
+                    clearPixels()
                     failure = "3D-Bildimport fehlgeschlagen"
                 }
             }
         }
-        val current = producer.status(System.nanoTime())
-        available = matches(current, binding, sequence) && importedAtNanos > 0L &&
-            System.nanoTime() - importedAtNanos in 0..((binding?.staleAfterMillis ?: 0L) * 1_000_000L)
+        val now = System.nanoTime()
+        val current = producer.status(now)
+        available = producer.monitorSubmission.usable(imported, current, now)
+        if (!available) {
+            producer.monitorSubmission.invalidate()
+            imported = null
+        }
         setFrameAvailable(available)
-        label = if (available) current.label else failure ?: "Bild wird übernommen"
+        label = if (available && producer.monitorSubmission.isReady(current, now)) current.label
+            else failure ?: "Bild wird übernommen"
         val contentAspect = frame.monitorWidth * (CockpitStageFrame.CONTENT_RIGHT - CockpitStageFrame.CONTENT_LEFT) /
             (frame.monitorHeight * (CockpitStageFrame.CONTENT_BOTTOM - CockpitStageFrame.CONTENT_TOP))
         val sourceAspect = sourceWidth.toFloat() / sourceHeight
@@ -146,6 +160,22 @@ internal class CockpitLiveTexture(
         val fitY = minOf(1f, contentAspect / sourceAspect)
         setContentScale(fitX, fitY)
         updatePointer(current, System.nanoTime())
+    }
+
+    fun frameSubmitted(nowNanos: Long) {
+        val producer = feed ?: return
+        val candidate = imported
+        val current = producer.status(nowNanos)
+        if (!available || candidate == null ||
+            !producer.monitorSubmission.submitted(candidate, current, nowNanos)) {
+            clearPixels()
+            label = if (current.state == LiveMonitorState.LIVE) failure ?: "Bild wird übernommen" else current.label
+        } else label = current.label
+    }
+
+    fun frameFailed() {
+        clearPixels()
+        label = "3D-Bild nicht verfügbar"
     }
 
     fun workEvent(event: CockpitWorkEvent) {
@@ -177,11 +207,12 @@ internal class CockpitLiveTexture(
     }
 
     private fun clearPixels() {
+        feed?.monitorSubmission?.invalidate()
         available = false
         binding = null
         sequence = -1L
         sourceViewport = null
-        importedAtNanos = 0L
+        imported = null
         click = null
         setFrameAvailable(false)
         setPointerAvailable(false)

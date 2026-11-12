@@ -46,14 +46,19 @@ class OwnerComputerWorkflowTest {
         }
         override fun click(before: NodeActionFrame, label: String, expectedLabel: String,
                            expectedEditable: Boolean, expectedHeading: Boolean, expectedSearchField: Boolean,
+                           expectedComposeField: Boolean,
                            onDispatched: (LiveTargetBounds?, Long) -> Unit): NodeActionFrame {
             checkActive()
             clicks += label
             clickExpectations += ClickRequest(pkg, before.stamp.epoch, before.stamp.revision, label,
-                expectedLabel, expectedEditable, expectedHeading, expectedSearchField)
+                expectedLabel, expectedEditable, expectedHeading, expectedSearchField, expectedComposeField)
             onDispatched(bounds, before.stamp.frameSequence)
             val nodes = afterClick?.invoke(label, expectedLabel)
-                ?: listOf(node(if (expectedSearchField) "Suchen" else expectedLabel, editable = expectedEditable)
+                ?: listOf(node(when {
+                    expectedSearchField -> "Suchen"
+                    expectedComposeField -> "Nachricht"
+                    else -> expectedLabel
+                }, editable = expectedEditable)
                     .copy(heading = expectedHeading), node("Anna", clickable = true))
             frame = frame(before.stamp.revision + clickRevisionDelta, nodes)
             return frame
@@ -153,19 +158,56 @@ class OwnerComputerWorkflowTest {
 
     @Test fun draftChecksChatHeaderAndActualComposeText() {
         val port = FakePort(frame(1, listOf(node("Suchen", editable = true), node("Anna", clickable = true))))
-        port.afterClick = { _, expected -> listOf(node("Anna").copy(heading = true), node(expected, editable = true, value = ""), node("Senden", clickable = true)) }
+        port.afterClick = { _, _ -> listOf(node("Anna").copy(heading = true), node("Nachricht", editable = true, value = ""), node("Senden", clickable = true)) }
         val result = workflow().run(OwnerComputerIntent(ComputerApp.WHATSAPP, ComputerGoal.DRAFT_MESSAGE, "Anna", "Hallo!"), port)
         assertEquals(OwnerComputerWorkflow.Status.VERIFIED, result.status)
         assertTrue(result.draftPrepared)
         assertEquals(listOf("Anna"), port.clicks)
         assertFalse(port.clickExpectations.single().expectedSearchField)
+        assertTrue(port.clickExpectations.single().expectedComposeField)
         assertEquals(listOf("Anna", "Hallo!"), port.actions.map { it.text })
         assertFalse(port.actions.any { it.kind == NodeActionKind.SEND })
     }
 
+    @Test fun englishDraftUsesObservedComposerAfterDifferentSearchHints() {
+        for (hint in listOf("Search", "Search...", "Search…", "Ask or search")) {
+            val search = node(hint, editable = true, value = "Anna").copy(viewId = "$pkg:id/search_src_text")
+            val port = FakePort(frame(1, listOf(search, node("Anna", clickable = true))))
+            port.afterClick = { _, _ -> listOf(node("Anna").copy(heading = true),
+                node("Message", editable = true, value = ""), node("Send", clickable = true)) }
+            val result = workflow().run(OwnerComputerIntent(ComputerApp.WHATSAPP,
+                ComputerGoal.DRAFT_MESSAGE, "Anna", "Hello!"), port)
+            assertEquals(hint, OwnerComputerWorkflow.Status.VERIFIED, result.status)
+            assertTrue(result.draftPrepared)
+            assertEquals(listOf("Anna"), port.clicks)
+            assertEquals(listOf("Hello!"), port.actions.map { it.text })
+            assertFalse(port.actions.any { it.kind == NodeActionKind.SEND })
+        }
+    }
+
+    @Test fun invalidOrAmbiguousComposerCannotReceiveDraft() {
+        val compose = node("Message", editable = true, value = "")
+        val cases = listOf(listOf(compose, compose.copy(label = "Nachricht")),
+            listOf(compose.copy(enabled = false)), listOf(compose.copy(visible = false)),
+            listOf(compose.copy(editable = false)), listOf(compose.copy(password = true)),
+            listOf(compose.copy(viewId = "$pkg:id/send_button")),
+            listOf(compose.copy(viewId = "$pkg:id/search_src_text")))
+        for (fields in cases) {
+            val port = FakePort(frame(1, listOf(node("Search...", editable = true, value = "Anna"),
+                node("Anna", clickable = true))))
+            port.afterClick = { _, _ -> listOf(node("Anna").copy(heading = true)) + fields }
+            val result = workflow().run(OwnerComputerIntent(ComputerApp.WHATSAPP,
+                ComputerGoal.DRAFT_MESSAGE, "Anna", "Hello!"), port)
+            assertEquals(OwnerComputerWorkflow.Status.PAUSED, result.status)
+            assertFalse(result.draftPrepared)
+            assertTrue(port.actions.isEmpty())
+            assertEquals(listOf("Anna"), port.clicks)
+        }
+    }
+
     @Test fun mismatchedChatNeverReceivesDraft() {
         val port = FakePort(frame(1, listOf(node("Suchen", editable = true), node("Anna", clickable = true))))
-        port.afterClick = { _, expected -> listOf(node("Hanna"), node(expected, editable = true)) }
+        port.afterClick = { _, _ -> listOf(node("Hanna"), node("Nachricht", editable = true)) }
         val result = workflow().run(OwnerComputerIntent(ComputerApp.WHATSAPP, ComputerGoal.DRAFT_MESSAGE, "Anna", "Hallo"), port)
         assertEquals(OwnerComputerWorkflow.Status.PAUSED, result.status)
         assertEquals(1, port.actions.size)
@@ -174,7 +216,7 @@ class OwnerComputerWorkflowTest {
 
     @Test fun explicitSendStillCannotBypassExistingToolGate() {
         val port = FakePort(frame(1, listOf(node("Suchen", editable = true), node("Anna", clickable = true))))
-        port.afterClick = { _, expected -> listOf(node("Anna").copy(heading = true), node(expected, editable = true, value = ""), node("Senden", clickable = true)) }
+        port.afterClick = { _, _ -> listOf(node("Anna").copy(heading = true), node("Nachricht", editable = true, value = ""), node("Senden", clickable = true)) }
         val result = workflow().run(OwnerComputerIntent(ComputerApp.WHATSAPP, ComputerGoal.SEND_MESSAGE, "Anna", "Hallo"), port)
         assertEquals(OwnerComputerWorkflow.Status.ASK_OWNER, result.status)
         assertTrue(result.draftPrepared)
@@ -211,7 +253,7 @@ class OwnerComputerWorkflowTest {
 
     @Test fun existingDraftIsNotOverwritten() {
         val port = FakePort(frame(1, listOf(node("Suchen", editable = true), node("Anna", clickable = true))))
-        port.afterClick = { _, expected -> listOf(node("Anna").copy(heading = true), node(expected, editable = true, value = "Privater vorhandener Entwurf")) }
+        port.afterClick = { _, _ -> listOf(node("Anna").copy(heading = true), node("Nachricht", editable = true, value = "Privater vorhandener Entwurf")) }
         val result = workflow().run(OwnerComputerIntent(ComputerApp.WHATSAPP, ComputerGoal.DRAFT_MESSAGE, "Anna", "Hallo"), port)
         assertEquals(OwnerComputerWorkflow.Status.ASK_OWNER, result.status)
         assertEquals(listOf("Anna"), port.actions.map { it.text })
