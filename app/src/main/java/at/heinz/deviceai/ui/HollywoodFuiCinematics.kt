@@ -174,6 +174,18 @@ object HollywoodFuiCinematics {
         return (frame.glass * frame.closeGlass * arrived).coerceIn(0f, 1f)
     }
 
+    /**
+     * Flight contact 0..1: the construct exists (brackets) but has not landed yet, so it is carried above the deck.
+     * Rises with the brackets after lift-off, is gone at touch-down and returns while the window folds away. Derived
+     * from the construct's own frame and the window's openness – no clock; reduced motion never flies.
+     */
+    fun flightContact(frame: HollywoodFuiConstruct.Frame, openness: Float): Float {
+        if (!openness.isFinite()) return 0f
+        val o = openness.coerceIn(0f, 1f)
+        val airborne = 1f - o * o * (3f - 2f * o)
+        return (frame.brackets * frame.closeFrame * airborne).coerceIn(0f, 1f)
+    }
+
     // ---- drawing -------------------------------------------------------------------------------------------------
 
     class Painterly(private val accent: Int) {
@@ -267,7 +279,8 @@ object HollywoodFuiCinematics {
          * flat on half-covered labels. The row above the window (avatar, orb) is never shaded, so their protected
          * cut-outs leave no visible box. [strength] 0..1.
          */
-        fun drawFocusDepth(p: ContinuumPainter, viewport: Box, window: Box, strength: Float, radius: Float) {
+        fun drawFocusDepth(p: ContinuumPainter, viewport: Box, window: Box, strength: Float, radius: Float,
+                           contact: Box = window) {
             if (!strength.isFinite() || strength <= .01f || viewport.width <= 0f || viewport.height <= 0f ||
                 window.width <= 0f || window.height <= 0f || window.top >= viewport.bottom - 1f) return
             val s = strength.coerceIn(0f, 1f)
@@ -282,9 +295,31 @@ object HollywoodFuiCinematics {
             p.fillRect(viewport.left, window.top, viewport.right, viewport.bottom, shade, s)
             // Contact shadow: three widening, fading rings slightly below the glass.
             val drop = 5f
-            p.strokeRoundRect(window.left, window.top + drop, window.right, window.bottom + drop, radius + 6f, 26f, deckShade, .10f * s)
-            p.strokeRoundRect(window.left, window.top + drop, window.right, window.bottom + drop, radius + 3f, 14f, deckShade, .16f * s)
-            p.strokeRoundRect(window.left, window.top + drop * .5f, window.right, window.bottom + drop * .5f, radius, 6f, deckShade, .24f * s)
+            // They stand under the glass where it is in this frame ([contact]), not at a destination it has not reached.
+            p.strokeRoundRect(contact.left, contact.top + drop, contact.right, contact.bottom + drop, radius + 6f, 26f, deckShade, .10f * s)
+            p.strokeRoundRect(contact.left, contact.top + drop, contact.right, contact.bottom + drop, radius + 3f, 14f, deckShade, .16f * s)
+            p.strokeRoundRect(contact.left, contact.top + drop * .5f, contact.right, contact.bottom + drop * .5f, radius, 6f, deckShade, .24f * s)
+        }
+
+        /**
+         * Flight contact: while the construct is carried from its origin to its place it is not a bare wire frame
+         * floating over the deck – its footprint ([ground], the pane's straight path without the arc lift) darkens the
+         * deck as an umbra with a soft penumbra, and the hologram's own light lies as a fine accent line on the deck
+         * under its lower edge. The arc lifts the glass off this footprint and sets it down on it. [strength] 0..1
+         * from [flightContact]; nothing is drawn once the window has landed.
+         */
+        fun drawFlightContact(p: ContinuumPainter, ground: Box, strength: Float, radius: Float) {
+            if (!strength.isFinite() || strength <= .01f || ground.width <= 2f || ground.height <= 2f) return
+            val s = strength.coerceIn(0f, 1f)
+            val r = min(radius, min(ground.width, ground.height) * .5f)
+            val drop = 5f
+            p.fillRoundRect(ground.left, ground.top + drop, ground.right, ground.bottom + drop, r, deckShade, .34f * s)
+            p.strokeRoundRect(ground.left, ground.top + drop, ground.right, ground.bottom + drop, r + 6f, 26f, deckShade, .10f * s)
+            p.strokeRoundRect(ground.left, ground.top + drop, ground.right, ground.bottom + drop, r + 3f, 14f, deckShade, .16f * s)
+            val inset = min(r + 4f, ground.width * .2f)
+            val y = ground.bottom + drop
+            p.drawLine(ground.left + inset, y, ground.right - inset, y, 9f, accentFill, .12f * s)
+            p.drawLine(ground.left + inset, y, ground.right - inset, y, 1.6f, accentFill, .6f * s)
         }
 
         /**

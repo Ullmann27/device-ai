@@ -37,7 +37,7 @@ object JarvisCinematicSettings {
         EXP_03_DEPTH_GLASS("Geschützte Tiefenflächen", wired = true),
         EXP_04_FOLDER_FLIGHT("Fensterflug aus Kacheln", wired = true),
         EXP_05_WINGS("Räumliche Cockpit-Flügel", wired = true),
-        EXP_06_FACE_LIGHT("Fensterlicht auf Avatar", wired = true),
+        EXP_06_FACE_LIGHT("Fensterlicht und Lesefaden am Avatar", wired = true),
         EXP_07_GAZE("Augen-Hals-Kopplung", wired = true),
         EXP_08_PRE_SPEECH("Vorbereitende Lippenbewegung", wired = true),
         EXP_09_FOCUS_BLINK("Blickwechsel-Lidschlag", wired = true),

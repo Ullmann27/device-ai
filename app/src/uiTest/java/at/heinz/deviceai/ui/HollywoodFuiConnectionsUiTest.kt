@@ -34,7 +34,7 @@ import kotlin.math.abs
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class HollywoodFuiConnectionsUiTest {
-    private class Fixture(workPulse: Boolean = true) {
+    private class Fixture(workPulse: Boolean = true, deckLabels: List<RectF> = emptyList()) {
         val controller = Robolectric.buildActivity(Activity::class.java).setup().visible()
         val activity = controller.get()
         val root = FrameLayout(activity)
@@ -59,7 +59,7 @@ class HollywoodFuiConnectionsUiTest {
             assertTrue(window.open(body, origin, target, "Dokument", protected, onClosed = {
                 closed++
                 root.removeView(overlay)
-            }))
+            }, deckLabels = deckLabels))
             overlay.open(target, JarvisActionScenes.forDocument(), origin, protected)
             overlay.workPulseEnabled = workPulse
             layout()
@@ -85,8 +85,8 @@ class HollywoodFuiConnectionsUiTest {
         fun dispose() { window.dispose(); controller.pause().stop().destroy() }
     }
 
-    private fun fixture(workPulse: Boolean = true, block: (Fixture) -> Unit) {
-        val f = Fixture(workPulse)
+    private fun fixture(workPulse: Boolean = true, deckLabels: List<RectF> = emptyList(), block: (Fixture) -> Unit) {
+        val f = Fixture(workPulse, deckLabels)
         try { block(f) } finally { f.dispose() }
     }
 
@@ -145,6 +145,90 @@ class HollywoodFuiConnectionsUiTest {
         f.overlay.setRenderBudget(JarvisRenderQuality.resolve(false, false, 0, false, false))
         f.frame(6_032L)
         assertEquals("suspended budget: no thread", 0, threadPixels(f.pixels()))
+    }
+
+    @Test fun readingThreadSwitchRemovesOnlyTheThreadAndRestoresItLive() = fixture { f ->
+        f.overlay.setAttentionSource(f.face)
+        f.overlay.setEnergySource(f.orb)
+        f.overlay.setWorkActive(true)
+        f.frame(1_000L)
+        f.frame(6_000L)
+        assertTrue(threadPixels(f.pixels()) > 60)
+        val band = count(f.pixels(), 105..350, 450..560)
+        assertTrue("orb band runs", band > 100)
+        f.overlay.attentionLinkEnabled = false
+        val off = f.pixels()
+        assertEquals("EXP_06 OFF: no reading thread", 0, threadPixels(off))
+        assertEquals("the orb band is untouched", band, count(off, 105..350, 450..560))
+        assertFaceClear(off, f)
+        f.overlay.attentionLinkEnabled = true
+        assertTrue("live ON restores the thread", threadPixels(f.pixels()) > 60)
+    }
+
+    private fun windowPixels(f: Fixture): IntArray {
+        val image = Bitmap.createBitmap(W, H, Bitmap.Config.ARGB_8888)
+        return try {
+            f.window.draw(Canvas(image))
+            IntArray(W * H).also { image.getPixels(it, 0, W, 0, 0, W, H) }
+        } finally { image.recycle() }
+    }
+
+    /** Accent deck light of the flight contact: bright cyan pixels in a row band left of the destination. */
+    private fun deckLight(pixels: IntArray, xs: IntRange, ys: IntRange): Int {
+        var lit = 0
+        for (y in ys) for (x in xs) {
+            val c = pixels[y * W + x]
+            if (Color.alpha(c) > 60 && Color.blue(c) > 150 && Color.red(c) < 120) lit++
+        }
+        return lit
+    }
+
+    /**
+     * Flight at 400 ms: openness = 4·((400−140)/620)³ ≈ .295, footprint (335,458)–(502,646), so the deck light lies
+     * at y ≈ 651 from x ≈ 353 to 484 and the umbra covers the footprint 5 px lower.
+     */
+    @Test fun flyingConstructMarksItsFootprintOnTheDeckAndLandsClean() = fixture { f ->
+        f.frame(1_000L)
+        assertEquals("nothing before lift-off", 0, deckLight(windowPixels(f), 356..415, 646..656))
+        f.frame(1_400L)
+        val flying = windowPixels(f)
+        assertTrue("deck light under the flying glass (${deckLight(flying, 356..415, 646..656)})",
+            deckLight(flying, 356..415, 646..656) > 40)
+        for ((x, y) in listOf(380 to 520, 420 to 560, 460 to 600))
+            assertTrue("umbra on the footprint at ($x,$y): ${Color.alpha(flying[y * W + x])}",
+                Color.alpha(flying[y * W + x]) > 40)
+        for (pixel in listOf(f.face, f.orb).flatMap { r -> listOf(
+                (r.top.toInt() + 2) * W + r.left.toInt() + 2, (r.bottom.toInt() - 2) * W + r.right.toInt() - 2) })
+            assertEquals("protected bounds stay clear", Color.TRANSPARENT, flying[pixel])
+        f.frame(1_760L)
+        f.frame(3_000L)
+        assertEquals("landed: no flight light is left on the deck", 0,
+            deckLight(windowPixels(f), 356..415, 646..656))
+    }
+
+    /**
+     * Code54 B2 (owner finding: the deck light crossed the KPI tiles for ≈300 ms): a labelled deck tile across the
+     * footprint's lower edge keeps every frame of the flight (work 280…650 ms) free of deck light, while the light
+     * stays on the free deck beside it. Without labels the same rows are lit (test above: > 40 px at 400 ms).
+     */
+    @Test fun flightContactNeverLightsALabelledDeckTile() =
+        fixture(deckLabels = listOf(RectF(340f, 636f, 440f, 700f))) { f ->
+            f.frame(1_000L)
+            var beside = 0
+            for (now in 1_280L..1_650L step 16) {
+                f.frame(now)
+                val pixels = windowPixels(f)
+                assertEquals("no deck light inside the KPI tile at work ${now - 1_000L} ms", 0,
+                    deckLight(pixels, 340..439, 636..699))
+                beside = maxOf(beside, deckLight(pixels, 446..484, 646..656))
+            }
+            assertTrue("the deck light stays on the free deck beside the tile ($beside)", beside > 10)
+        }
+
+    @Test fun reducedMotionHasNoFlightContact() = fixture { f ->
+        f.frame(1_000L, 0f)
+        f.frame(1_400L, 0f)
+        assertEquals(0, deckLight(windowPixels(f), 356..415, 646..656))
     }
 
     @Test fun closingTheWindowRemovesTheThread() = fixture { f ->
