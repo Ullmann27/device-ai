@@ -1,0 +1,69 @@
+name: Code55 local answer quality experiment
+
+on:
+  push:
+    branches: [experiment/code55-answer-quality-20261112]
+    paths:
+      - '.github/workflows/continuum-code55-answer-quality-qa.yml'
+      - 'app/src/main/java/at/heinz/deviceai/cognitive/LocalAnswerQualityExperiment.kt'
+      - 'app/src/test/java/at/heinz/deviceai/cognitive/LocalAnswerQualityExperimentTest.kt'
+
+permissions:
+  contents: read
+
+jobs:
+  source-bound-quality-test:
+    if: github.repository == 'Ullmann27/device-ai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 85
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify source
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install official Android SDK
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Run actual arithmetic and German-language Golden Cases
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true \
+            :app:testDebugUnitTest --tests 'at.heinz.deviceai.cognitive.LocalAnswerQualityExperimentTest'
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          files=list(Path('app/build/test-results/testDebugUnitTest').glob('TEST-*LocalAnswerQualityExperimentTest.xml'))
+          assert len(files)==1
+          r=ET.parse(files[0]).getroot()
+          counts={key:int(r.get(key,'0')) for key in ('tests','failures','errors','skipped')}
+          print('ANSWER_QUALITY_EXPERIMENT', counts)
+          assert counts=={'tests':8,'failures':0,'errors':0,'skipped':0}
+          PY
+      - name: Upload JUnit proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code55-answer-quality-evidence
+          path: app/build/test-results/testDebugUnitTest/TEST-*LocalAnswerQualityExperimentTest.xml
+          if-no-files-found: warn
+          retention-days: 14
