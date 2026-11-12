@@ -193,6 +193,8 @@ class AgentActivity : Activity() {
         private const val SWB1_BYTES = 32_960
         private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"
         private const val WORK_AREA_STATE_KEY = "continuum_work_area_state"
+        /** Field P0 Code54: the PDF read in this chat, kept across an Activity recreation (SAF return, process death). */
+        private const val OPEN_DOCUMENT_STATE_KEY = "continuum_open_pdf_v1"
         // Public catalog metadata only, never private model bytes or credentials.
         private const val MODEL_IMPORT_ID_STATE_KEY = "continuum_model_import_id_v1"
         private const val MODEL_IMPORT_VERSION_STATE_KEY = "continuum_model_import_version_v1"
@@ -624,6 +626,7 @@ class AgentActivity : Activity() {
                 }).get(2, java.util.concurrent.TimeUnit.SECONDS)
             }.getOrNull()?.let { sessionId = it }
         restoreDocumentSelection(savedInstanceState)
+        restoreOpenDocument(savedInstanceState)
         // Only a recreated instance of the same chat restores its last local answer anchor.
         if (savedInstanceState != null) {
             at.heinz.deviceai.cognitive.LocalDialogueRetention.replyFor(sessionId)?.let {
@@ -867,6 +870,7 @@ class AgentActivity : Activity() {
             if (conversationActive) ContinuumWorkArea.CHAT.name else ContinuumWorkArea.START.name
         )
         outState.putString("ctx3_chat_id_v1",sessionId)
+        localConversationContext.document(sessionId)?.let { outState.putBundle(OPEN_DOCUMENT_STATE_KEY, openDocumentState(it)) }
         outState.putInt("continuum_pdf_code_v1", nextDocumentRequestCode)
         pendingDocumentSelection?.takeIf(::currentDocumentSelection)?.let { selection ->
             outState.putBundle("continuum_pdf_selection_v1", Bundle().apply {
@@ -2042,6 +2046,41 @@ class AgentActivity : Activity() {
         ownerReplyAllowsMaya = allowed
     }
 
+    /**
+     * Field P0 Code54: Android recreates this activity on the way back from the document picker (and may end the
+     * process while another app is in front). A non-configuration destroy forgets the RAM dialogue context, so the PDF
+     * read in this chat is kept in the saved state – bounded (the read text is at most [PdfDocumentIntake.MAX_TEXT_CHARS])
+     * and bound to its chat id; it is restored only into the same chat.
+     */
+    private fun openDocumentState(reference: at.heinz.deviceai.cognitive.OwnerDocumentDialogue.Reference) = Bundle().apply {
+        putString("session", reference.sessionId)
+        putString("episode", reference.episodeId)
+        putString("uri", reference.documentUri)
+        putString("name", reference.name)
+        putInt("pages", reference.pageCount)
+        putString("size", reference.sizeText)
+        putString("state", reference.textState.name)
+        putInt("textPages", reference.textPages)
+        putInt("textChars", reference.textChars)
+        val pages = reference.pageTexts
+        if (pages != null) putStringArrayList("pageTexts", ArrayList(pages)) else putString("text", reference.text)
+        putLong("revision", reference.ownerRevision)
+    }
+
+    private fun restoreOpenDocument(state: Bundle?) {
+        val saved = state?.getBundle(OPEN_DOCUMENT_STATE_KEY) ?: return
+        // A configuration change keeps the RAM binding; another chat never receives this document.
+        if (saved.getString("session") != sessionId || localConversationContext.document(sessionId) != null) return
+        val restored = runCatching {
+            at.heinz.deviceai.cognitive.OwnerDocumentDialogue.Reference(sessionId, saved.getString("episode"),
+                saved.getString("uri"), saved.getString("name") ?: return, saved.getInt("pages", -1), saved.getString("size"),
+                at.heinz.deviceai.cognitive.OwnerDocumentDialogue.TextState.valueOf(saved.getString("state") ?: return),
+                saved.getInt("textPages", -1), saved.getInt("textChars", -1), saved.getStringArrayList("pageTexts"),
+                saved.getString("text").orEmpty(), saved.getLong("revision", 0L))
+        }.getOrNull() ?: return
+        localConversationContext.recordDocument(sessionId, restored)
+    }
+
     private fun readSelectedDocument(returned: ReturnedDocument) {
         val selection = returned.selection
         if (!foregroundLearningActive || !currentDocumentSelection(selection)) return
@@ -2778,6 +2817,16 @@ class AgentActivity : Activity() {
         val episode = workJournal.newEpisode(at.heinz.deviceai.cognitive.CockpitWorkJournal.Kind.DOCUMENT, request,
             startState, doc.name, doc.pageCount, doc.text.length, documentUri)
         workEpisodeId = episode.id
+        // Field P0 Code54: what was really read belongs to this conversation – the next question is answered from it
+        // (name, pages, page-attributed text), not by web research, a new picker or a model without the document.
+        localConversationContext.recordDocument(sessionId, at.heinz.deviceai.cognitive.OwnerDocumentDialogue.Reference(
+            sessionId, episode.id, documentUri, doc.name, doc.pageCount, size,
+            when (doc.textState) {
+                PdfDocumentIntake.TextState.EXTRACTED -> at.heinz.deviceai.cognitive.OwnerDocumentDialogue.TextState.EXTRACTED
+                PdfDocumentIntake.TextState.NO_TEXT_LAYER -> at.heinz.deviceai.cognitive.OwnerDocumentDialogue.TextState.NO_TEXT_LAYER
+                PdfDocumentIntake.TextState.NEEDS_ANDROID_15 ->
+                    at.heinz.deviceai.cognitive.OwnerDocumentDialogue.TextState.NEEDS_ANDROID_15
+            }, doc.textPages, doc.text.length, doc.pageTexts.takeIf { it.isNotEmpty() }, doc.text, ownerReplyRevision))
         // Written on the document queue, before any later state change of this episode (same single thread).
         val append = Runnable { runCatching { workJournal.append(episode) }; publishOpenWork() }
         if (documentIoExecutor.isShutdown) append.run() else documentIoExecutor.execute(append)
@@ -6053,6 +6102,17 @@ class AgentActivity : Activity() {
         }
     }
 
+    /** A reply from the PDF read in this session: a labelled non-model turn, kept in the cockpit while it is open. */
+    private fun answerFromDocument(request: String, answer: String) {
+        input.text.clear()
+        val stay = activeWorkArea == ContinuumWorkArea.START
+        addUserMessage(request, keepCockpit = stay)
+        val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(localConversationContext, sessionId,
+            request, at.heinz.deviceai.cognitive.NonModelReplyKind.DOCUMENT_STATE)
+        addAssistantMessage(answer, preserveLocalContext = keep, keepCockpit = stay)
+        addToolActivity("DOKUMENT · aus der gelesenen PDF beantwortet · kein Modell-, Web- oder Dateiauswahl-Aufruf")
+    }
+
     private fun clarifyAppRequest(request: String, question: String, nameOpening: Boolean? = null) {
         appNameClarification.clear()
         localConversationContext.recordUnanswered(sessionId, request)
@@ -6621,13 +6681,30 @@ class AgentActivity : Activity() {
             addToolActivity("BELEGROUTE · lokal geprüft · keine Modell- oder Webanfrage")
             return
         }
+        // Field P0 Code54 („Fehler B“): a question about the PDF read in this session is answered from that file –
+        // name, pages, size, a page's first line or read text – with no model, web request or new picker; any other
+        // question about it never becomes public web research and reaches the model with the read facts (runLocal).
+        val openedDocument = localConversationContext.document(sessionId)
+        val assistantName = at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+            continuumState?.archive?.identityState?.chosenName)
+        val documentQuestion = openedDocument != null &&
+            at.heinz.deviceai.cognitive.OwnerDocumentDialogue.isDocumentQuestion(request, assistantName)
+        if (openedDocument != null) {
+            val fromDocument = at.heinz.deviceai.cognitive.OwnerDocumentDialogue.answer(openedDocument, request, assistantName)
+                ?: if (documentQuestion && !localModelReady())
+                    at.heinz.deviceai.cognitive.OwnerDocumentDialogue.withoutModel(openedDocument) else null
+            if (fromDocument != null) {
+                answerFromDocument(request, fromDocument)
+                return
+            }
+        }
         // With the owner's persistent ALWAYS_ON grant, automatically route only
         // de-identified public knowledge questions to a real research cycle.
         // Personal or ambiguous dialogue remains local; no silent chat upload.
         // B2: need-based, not mode-based. A conceptual why/how question is explained locally
         // even under ALWAYS_ON; the grant is spent only on questions that need world knowledge.
-        val publicTopic = if (mode != AssistantMode.LOCAL && !ownerForbidsExternalNetwork && internetConsent.mode ==
-            at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
+        val publicTopic = if (mode != AssistantMode.LOCAL && !ownerForbidsExternalNetwork && !documentQuestion &&
+            internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
             !at.heinz.deviceai.cognitive.FreshKnowledgeNeed.prefersLocalExplanation(request))
             at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
         if (publicTopic != null && !researchArmed) {
@@ -6649,7 +6726,7 @@ class AgentActivity : Activity() {
         // re-researched only within the same ASK consent; otherwise it stays visibly flagged.
         val staleResearch = localConversationContext.researchFreshness(sessionId, request)
             ?.takeIf { it.mustFlag && !at.heinz.deviceai.cognitive.FreshKnowledgeNeed.prefersLocalExplanation(request) }
-        if (mode != AssistantMode.LOCAL && !ownerForbidsExternalNetwork && !researchArmed &&
+        if (mode != AssistantMode.LOCAL && !ownerForbidsExternalNetwork && !researchArmed && !documentQuestion &&
             internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ASK &&
             (at.heinz.deviceai.cognitive.FreshKnowledgeNeed.needsCurrentWeb(request) || staleResearch != null)) {
             val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request)
@@ -6673,7 +6750,7 @@ class AgentActivity : Activity() {
             addToolActivity("AKTUALITÄT · Recherchestand ${staleResearch.status.name.lowercase()} · ${staleResearch.reason} · Antwort wird als unsicher gekennzeichnet")
         // Only knowledge questions reach the local source retrieval. Never use
         // sources as executable plans, tools or independent factual authority.
-        if (GroundedWebRecall.topicOf(request) != null) {
+        if (!documentQuestion && GroundedWebRecall.topicOf(request) != null) {
             input.text.clear()
             addUserMessage(request)
             runContinuumDialogue(request, sourceFallback = true)
@@ -10741,6 +10818,13 @@ class AgentActivity : Activity() {
             localConversationContext.situationHint(localSessionId, text) else ""
         val ownerObjectState = if (botTask == null && codingPlanning == null)
             localConversationContext.objectStateBlock(localSessionId, text) else ""
+        // Field P0 Code54: a question about the PDF read in this session gets its read facts, page by page, as
+        // required data (frozen for this turn). A document draft already carries the document's own text.
+        val documentBlock = if (botTask == null && codingPlanning == null && documentDraftTurn == null &&
+            at.heinz.deviceai.cognitive.OwnerDocumentDialogue.refersToDocument(text))
+            localConversationContext.document(localSessionId)?.let {
+                at.heinz.deviceai.cognitive.OwnerDocumentDialogue.promptBlock(it, text)
+            }.orEmpty() else ""
         val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task
         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
@@ -10876,6 +10960,7 @@ class AgentActivity : Activity() {
                     }
                     if (ownerObjectState.isNotBlank()) append(ownerObjectState)
                     if (situationHint.isNotBlank()) append(situationHint)
+                    if (documentBlock.isNotBlank()) append(documentBlock)
                     // Current task and retrieval precede optional compiled/history data.
                     // A long request must never disappear behind the512-char memory lookup.
                     if (compiledContext == null) append("Aktueller Auftrag:\n").append(task).append('\n')
@@ -10904,7 +10989,7 @@ class AgentActivity : Activity() {
                     task = task,
                     hasMemories = memories.isNotEmpty(),
                     hasConversationContext = conversationContext.isNotBlank(),
-                    hasGroundedEvidence = groundedRecall != null,
+                    hasGroundedEvidence = groundedRecall != null || documentBlock.isNotBlank(),
                     hasObservations = observations.isNotEmpty(),
                     hasReflection = reflection != null
                 )
@@ -11071,7 +11156,8 @@ class AgentActivity : Activity() {
                     previousResponse = previousLocalReply?.response,
                     // M3: earlier owner turns are IN the task → a "no access" answer gets one bounded retry.
                     priorOwnerContextSupplied = agentTask.startsWith(
-                        at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.HEADER)
+                        at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.HEADER),
+                    documentContextSupplied = documentBlock.isNotBlank()
                 )
             },
             experienceStore = if(codingPlanning == null && botTask == null) experienceStore else InMemoryExperienceStore(),

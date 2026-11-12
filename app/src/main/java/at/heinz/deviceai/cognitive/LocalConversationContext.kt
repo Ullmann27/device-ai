@@ -20,6 +20,12 @@ class LocalConversationContext {
     private val objects = OwnerObjectStateLedger()
     /** Latest web-research digest: external, unverified data kept apart from owner memory and model dialogue. */
     private var research: ResearchDialogueHandoff.Digest? = null
+    /**
+     * Field P0 Code54: the PDF the owner picked and JARVIS read in this session (name, pages, page-attributed text).
+     * Bound to its own session id: it survives a topic reset or memory change (the file is still open) but never
+     * another session; RAM only, like everything here – never written to disk, never an owner fact.
+     */
+    private var document: OwnerDocumentDialogue.Reference? = null
 
     /** Only explicit discourse control, never owner knowledge or tool authorization.
      * Ambiguous/negative corrections erase stale focus rather than guessing a referent.
@@ -124,6 +130,17 @@ class LocalConversationContext {
 
     @Synchronized fun hasResearch(sessionId: String): Boolean = session == sessionId && research != null
 
+    /** The document just read replaces an earlier one; a reference of another session is refused. */
+    @Synchronized internal fun recordDocument(sessionId: String, reference: OwnerDocumentDialogue.Reference) {
+        require(sessionId.isNotBlank() && reference.sessionId == sessionId)
+        if (session != sessionId) switchTo(sessionId)
+        document = reference
+    }
+
+    /** The document read in [sessionId], or null – never the document of another session. */
+    @Synchronized internal fun document(sessionId: String): OwnerDocumentDialogue.Reference? =
+        document?.takeIf { it.sessionId == sessionId }
+
     /** M2: freshness verdict of this session's research for a follow-up question; null without research. */
     @Synchronized internal fun researchFreshness(sessionId: String, question: String, nowMillis: Long = System.currentTimeMillis()):
         FreshKnowledgeNeed.FreshnessVerdict? =
@@ -177,6 +194,7 @@ class LocalConversationContext {
 
     private fun switchTo(sessionId: String) {
         turns.clear(); situation.reset(); objects.reset(); session = sessionId; explicitFocus = null; research = null
+        if (document?.sessionId != sessionId) document = null
     }
 
     @Synchronized fun clear() { dropTurns(); session = null;explicitFocus=null;research=null }
@@ -184,6 +202,7 @@ class LocalConversationContext {
     /** End of the process-scoped RAM lifetime (real Activity finish): nothing was invalidated, so nothing is reported. */
     @Synchronized fun forgetForExit() {
         turns.clear(); situation.reset(); objects.reset(); session = null; explicitFocus = null; research = null
+        document = null
     }
 
     /** Access is supplied by the current turn, never inferred from a saved research digest.
