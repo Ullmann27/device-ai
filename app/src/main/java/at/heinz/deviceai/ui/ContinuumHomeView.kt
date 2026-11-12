@@ -80,6 +80,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     fun setForegroundActive(active: Boolean) {
         if (foregroundActive && !active) presentationGeneration++
         foregroundActive = active
+        if (!active) settleComputerFocus()
         virtualMonitor.setForegroundActive(active)
         if (!active) hologram.clearMemoryScene()
         if (!active) liveTabs.collapseImmediately()
@@ -142,8 +143,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onDetachedFromWindow() {
         presentationGeneration++
-        monitorFocusAnimator?.cancel()
-        monitorFocusAnimator = null
+        settleComputerFocus()
         clearShellPress()
         presentationBudgetRegistration?.close()
         presentationBudgetRegistration = null
@@ -162,7 +162,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onWindowVisibilityChanged(visibility: Int) {
         super.onWindowVisibilityChanged(visibility)
-        if (visibility != View.VISIBLE) presentationGeneration++
+        if (visibility != View.VISIBLE) { presentationGeneration++; settleComputerFocus() }
         if (visibility != View.VISIBLE) hologram.clearMemoryScene()
         if (visibility != View.VISIBLE) liveTabs.collapseImmediately()
         if (visibility != View.VISIBLE) clearShellPress()
@@ -171,7 +171,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
-        if (!isShown) presentationGeneration++
+        if (!isShown) { presentationGeneration++; settleComputerFocus() }
         if (!isShown) hologram.clearMemoryScene()
         if (!isShown) liveTabs.collapseImmediately()
         if (!isShown) clearShellPress()
@@ -211,6 +211,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private var computerFrame: at.heinz.deviceai.avatar3d.CockpitStageFrame? = null
     private var monitorFocus = 0f
+    private var monitorFocusTarget = 0f
     private var monitorFocusAnimator: android.animation.ValueAnimator? = null
 
     private var liveComputerFeed: at.heinz.deviceai.cognitive.LiveMonitorFeed<at.heinz.deviceai.AndroidLiveFrame>? = null
@@ -239,25 +240,46 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     }
 
     private fun moveMonitor(target: Float) {
+        if (monitorFocusTarget == target && (monitorFocusAnimator?.isRunning == true || monitorFocus == target)) return
+        monitorFocusTarget = target
         monitorFocusAnimator?.cancel()
-        if (!isPresentationActive() || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
-            monitorFocus = target
-            monitorVelocity = 0f
-            presentComputerFrame()
+        monitorFocusAnimator = null
+        if (!isPresentationActive() || !virtualMonitor.isShown || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
+            settleComputerFocus()
             return
         }
         val flight = CockpitMonitorMotion.flight(monitorFocus, monitorVelocity, target)
-        monitorFocusAnimator = android.animation.ValueAnimator.ofFloat(0f, flight.durationMs).apply {
-            duration = flight.durationMs.toLong().coerceAtLeast(1L)
+        if (flight.durationMs <= 0f) { settleComputerFocus(); return }
+        val animation = android.animation.ValueAnimator.ofFloat(0f, flight.durationMs).apply {
+            duration = kotlin.math.ceil(flight.durationMs.toDouble()).toLong().coerceAtLeast(1L)
             interpolator = android.view.animation.LinearInterpolator()
             addUpdateListener {
-                val sample = flight.sample(it.animatedValue as Float)
-                monitorFocus = sample.focus
-                monitorVelocity = sample.velocityPerMs
-                presentComputerFrame()
+                if (!isPresentationActive() || !virtualMonitor.isShown || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
+                    settleComputerFocus()
+                } else {
+                    val sample = flight.sample(it.animatedValue as Float)
+                    monitorFocus = sample.focus
+                    monitorVelocity = sample.velocityPerMs
+                    presentComputerFrame()
+                }
             }
-            start()
+            addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    if (monitorFocusAnimator === animation) monitorFocusAnimator = null
+                }
+            })
         }
+        monitorFocusAnimator = animation
+        animation.start()
+    }
+
+    private fun settleComputerFocus() {
+        val animation = monitorFocusAnimator
+        monitorFocusAnimator = null
+        animation?.cancel()
+        monitorFocus = monitorFocusTarget
+        monitorVelocity = 0f
+        presentComputerFrame()
     }
 
     private fun presentComputerFrame() {
@@ -272,7 +294,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val monitor = shell[JarvisShellLayout.Slot.WORK_PROCESS]
         val visible = jarvisShellStage && shell.workstation && box != null && monitor != null
         virtualMonitor.visibility = if (visible) View.VISIBLE else View.GONE
-        if (!visible) { hologram.detachCockpitStage(); return }
+        if (!visible) { settleComputerFocus(); hologram.detachCockpitStage(); return }
         val stage = requireNotNull(box)
         val display = requireNotNull(monitor)
         val width = (stage.width * density).toInt()

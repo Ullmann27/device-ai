@@ -1,0 +1,413 @@
+{
+  "source": "8a0ec80dcd2ee973eea856fbed0d60a463794468",
+  "kind": "Gradle JVM and Robolectric host tests, no Filament GPU",
+  "summary": {
+    "tests": 367,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 237.097
+  },
+  "suites": [
+    {
+      "suite": "at.heinz.deviceai.AgentActivityReopenLifecycleUiTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 15.27
+    },
+    {
+      "suite": "at.heinz.deviceai.AndroidCaptureColorTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 3.136
+    },
+    {
+      "suite": "at.heinz.deviceai.AndroidLiveNodePortTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 3.691
+    },
+    {
+      "suite": "at.heinz.deviceai.AndroidLiveScrollTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 3.761
+    },
+    {
+      "suite": "at.heinz.deviceai.AndroidOnDeviceSpeechEvictionUiTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.089
+    },
+    {
+      "suite": "at.heinz.deviceai.AndroidWindowCaptureTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 4.113
+    },
+    {
+      "suite": "at.heinz.deviceai.CinemaButtonMaterialUiTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 35.222
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 6.652
+    },
+    {
+      "suite": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 6.948
+    },
+    {
+      "suite": "at.heinz.deviceai.OwnerObjectStateFieldStatementTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.189
+    },
+    {
+      "suite": "at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 151.851
+    },
+    {
+      "suite": "at.heinz.deviceai.PdfDocumentIntakeTextTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.009
+    },
+    {
+      "suite": "at.heinz.deviceai.avatar3d.AvatarMaterialVariantTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.196
+    },
+    {
+      "suite": "at.heinz.deviceai.avatar3d.CockpitLiveTextureGuardTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.019
+    },
+    {
+      "suite": "at.heinz.deviceai.avatar3d.CockpitPresentationSequenceTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.002
+    },
+    {
+      "suite": "at.heinz.deviceai.avatar3d.CockpitStageFrameTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.011
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.CockpitWorkEventTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.082
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.ComputerCaptureConsentTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.066
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.HandsFreeServiceFailureRecoveryTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.025
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.LiveComputerActionsTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.098
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.012
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.LiveComputerFramesTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.006
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.LiveScrollEvidenceTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.104
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.LiveSearchClickTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.009
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.LiveSupportBoundaryTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.003
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.LiveWindowCaptureTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.003
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.LiveWindowSafetyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.001
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.045
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerAppActionFlowTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.132
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerAppSingleCandidateTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.009
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.052
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerComputerTaskGrantTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.038
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.028
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerDeviceClockReplyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.024
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.123
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerLanguageStyleTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.074
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerObjectStateCountChangeTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.107
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.089
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerObjectStateLedgerPromptBudgetTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.131
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.038
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.061
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerObjectStateReopenMemoryTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.121
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.OwnerOpenDocumentSummaryTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.009
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.ProjectionCropGeometryTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.014
+    },
+    {
+      "suite": "at.heinz.deviceai.cognitive.WorkflowReviewTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.085
+    },
+    {
+      "suite": "at.heinz.deviceai.localmodel.LocalNativePromptBudgetTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.013
+    },
+    {
+      "suite": "at.heinz.deviceai.localmodel.LocalToolContinuationTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.07
+    },
+    {
+      "suite": "at.heinz.deviceai.ui.CinematicWorkstationLayoutTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.031
+    },
+    {
+      "suite": "at.heinz.deviceai.ui.CockpitMonitorMotionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.017
+    },
+    {
+      "suite": "at.heinz.deviceai.ui.CockpitMonitorPixelsUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 4.218
+    }
+  ]
+}

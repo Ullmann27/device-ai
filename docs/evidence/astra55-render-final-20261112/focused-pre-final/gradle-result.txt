@@ -1,0 +1,13 @@
+SOURCE 8a0ec80dcd2ee973eea856fbed0d60a463794468
+Gradle Test Executor 110 finished executing tests.
+
+> Task :app:testDebugUnitTest
+Finished generating test XML results (0.026 secs) into: /workspace/scratch/01387b612451/wt-astra-integration/app/build/test-results/testDebugUnitTest
+Generating HTML test report...
+Finished generating test html results (0.055 secs) into: /workspace/scratch/01387b612451/wt-astra-integration/app/build/reports/tests/testDebugUnitTest
+Build 1f803fef-a64a-40e0-9239-a357863789cc is closed
+[Incubating] Problems report is available at: file:///workspace/scratch/01387b612451/wt-astra-integration/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 5m 15s
+31 actionable tasks: 1 executed, 30 up-to-date
+Some of the file system contents retained in the virtual file system are on file systems that Gradle doesn't support watching. The relevant state was discarded to ensure changes to these locations are properly detected. You can override this by explicitly enabling file system watching.

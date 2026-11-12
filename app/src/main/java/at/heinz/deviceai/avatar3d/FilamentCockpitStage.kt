@@ -42,7 +42,7 @@ internal class FilamentCockpitStage(
             roomTransform = namedTransform(requireNotNull(workstation), "cockpit-room")
             monitorTransform = namedTransform(requireNotNull(workstation), "cockpit-monitor")
             orbTransform = namedTransform(requireNotNull(orb), "continuum-orb")
-            repeat(4) { index ->
+            repeat(5) { index ->
                 val instance = namedTransform(requireNotNull(orb), "orb-orbit-$index")
                 orbitTransforms += instance to engine.transformManager.getTransform(instance, FloatArray(16))
             }
@@ -79,26 +79,20 @@ internal class FilamentCockpitStage(
     fun bind(feed: LiveMonitorFeed<AndroidLiveFrame>?) { pixels?.bind(feed) }
     fun workEvent(event: CockpitWorkEvent) { pixels?.workEvent(event) }
 
-    fun update(frame: CockpitStageFrame, orbBounds: RectF, seconds: Float, motion: Boolean) {
+    fun update(frame: CockpitStageFrame, orbBounds: RectF, phase: Float, motion: Boolean) {
         require(frame.valid())
         val unit = frame.worldScale
         Matrix.setIdentityM(transform, 0)
         Matrix.scaleM(transform, 0, frame.width * unit, frame.height * unit, 1f)
         engine.transformManager.setTransform(roomTransform, transform)
         engine.transformManager.setTransform(monitorTransform, frame.monitorTransform())
-        val cameraDistance = frame.distance * unit
-        val depth = -.44f
-        val perspectiveFit = (cameraDistance - depth) / cameraDistance
-        val radius = minOf(orbBounds.width(), orbBounds.height()) * .5f * unit * perspectiveFit
-        Matrix.setIdentityM(transform, 0)
-        Matrix.translateM(transform, 0, (orbBounds.centerX() - frame.width * .5f) * unit * perspectiveFit,
-            (frame.height * .5f - orbBounds.centerY()) * unit * perspectiveFit, depth)
-        Matrix.scaleM(transform, 0, radius, radius, radius)
-        engine.transformManager.setTransform(orbTransform, transform)
+        engine.transformManager.setTransform(orbTransform, frame.orbTransform(
+            orbBounds.left, orbBounds.top, orbBounds.right, orbBounds.bottom))
         orbitTransforms.forEachIndexed { index, (instance, rest) ->
             Matrix.setIdentityM(orbitRotation, 0)
-            val time = if (motion && seconds.isFinite()) seconds else 0f
-            Matrix.rotateM(orbitRotation, 0, time * (3.5f + index * 1.2f), 0f, 0f, 1f)
+            val pose = CockpitOrbMotion.sample(index, if (motion) phase else .4f)
+            Matrix.rotateM(orbitRotation, 0, -pose.pitchDegrees, 1f, 0f, 0f)
+            Matrix.rotateM(orbitRotation, 0, pose.yawDegrees, 0f, 1f, 0f)
             Matrix.multiplyMM(orbitCombined, 0, rest, 0, orbitRotation, 0)
             engine.transformManager.setTransform(instance, orbitCombined)
         }

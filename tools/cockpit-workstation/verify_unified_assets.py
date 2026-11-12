@@ -111,16 +111,17 @@ def orb_contract(glb):
     root_id, root = glb.node("continuum-orb")
     assert root.get("translation", [0, 0, 0]) == [0, 0, 0]
     assert root.get("scale", [1, 1, 1]) == [1, 1, 1]
-    for i in range(4):
+    for i in range(5):
         node_id, _ = glb.node("orb-orbit-" + str(i))
         assert glb.parent[node_id] == root_id
-    for name in ("orb-original-infinity", "orb-containment-shell", "orb-core", "orb-spherical-grid",
-                 "orb-brain-lobe--1", "orb-brain-lobe-1", "orb-neural-links-cyan", "orb-pedestal-rings"):
+    for name in ("orb-original-infinity", "orb-containment-shell", "orb-core", "orb-original-nodes-cool",
+                 "orb-original-links-cool", "orb-original-dust-cool", "orb-original-pedestal-base"):
         _, node = glb.node(name)
         assert "mesh" in node
     index, node = glb.node("orb-original-infinity")
     primitive = glb.doc["meshes"][node["mesh"]]["primitives"][0]
-    assert all(glb.point(index, p)[2] > .98 for p in glb.accessor(primitive["attributes"]["POSITION"]))
+    assert all(glb.point(index, p)[2] > .38 for p in glb.accessor(primitive["attributes"]["POSITION"]))
+    assert not any("brain-lobe" in n.get("name", "") for n in glb.doc["nodes"])
 
 
 def main():
@@ -134,12 +135,16 @@ def main():
     for key, path in paths.items():
         file = ASSETS/path
         size = file.stat().st_size
-        assert 0 < size <= (1024*1024 if key == "monitorMaterial" else 2*1024*1024), (path, size)
+        assert 0 < size <= (1_000_000 if key == "monitorMaterial" else 2_000_000), (path, size)
         manifest[key] = {"path": path, "sha256": sha(file), "bytes": size}
         if file.suffix == ".glb":
             glb = Glb(file)
             report[key] = glb.geometry()
             (monitor_contract if key == "workstation" else orb_contract)(glb)
+    shader_build = json.loads((ROOT/"tools/cockpit-workstation/materials/live-monitor-build.json").read_text())
+    assert shader_build["output_sha256"] == manifest["monitorMaterial"]["sha256"]
+    assert shader_build["source_sha256"] == sha(ROOT/"tools/cockpit-workstation/materials/live-monitor.mat")
+    assert shader_build["filament_version"] == "1.56.0" and shader_build["material_version"] == "56"
     destination = ASSETS/"cinema3d/cockpit-world.json"
     if args.write_manifest:
         destination.write_text(json.dumps(manifest, indent=2)+"\n")

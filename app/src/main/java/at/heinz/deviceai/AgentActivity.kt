@@ -13479,6 +13479,8 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
             return
         }
+        pendingComputerLaunch = null
+        computerController?.stop()
         appNameClarification.clear()
         webToolGate.cancel()
         approvedModelWebSession.getAndSet(null)?.cancel()

@@ -57,6 +57,21 @@ data class CockpitStageFrame(
             (restDepth + depthOffset) * worldScale, 1f)
     }
 
+    /** Entire original orbit stays behind Jarvis. */
+    fun orbTransform(left: Float, top: Float, right: Float, bottom: Float): FloatArray {
+        require(valid() && right > left && bottom > top)
+        val screenRadius = minOf(right - left, bottom - top) * .5f * worldScale
+        val d = distance * worldScale
+        val reach = screenRadius * ORB_MAX_RADIUS
+        val depth = (ORB_FRONT_LIMIT - reach) / (1f - reach / d)
+        val fit = (d - depth) / d
+        val radius = screenRadius * fit
+        val x = ((left + right) * .5f - width * .5f) * worldScale * fit
+        val y = (height * .5f - (top + bottom) * .5f) * worldScale * fit
+        return floatArrayOf(radius, 0f, 0f, 0f, 0f, radius, 0f, 0f,
+            0f, 0f, radius, 0f, x, y, depth, 1f)
+    }
+
     /** Same camera as the scene. */
     fun project(x: Float, y: Float, z: Float): Pair<Float, Float> {
         val d = distance * worldScale
@@ -86,6 +101,8 @@ data class CockpitStageFrame(
     }
 
     companion object {
+        const val ORB_MAX_RADIUS = 1.72f
+        const val ORB_FRONT_LIMIT = -.4f
         const val CONTENT_LEFT = .035f
         const val CONTENT_TOP = .12f
         const val CONTENT_RIGHT = .965f

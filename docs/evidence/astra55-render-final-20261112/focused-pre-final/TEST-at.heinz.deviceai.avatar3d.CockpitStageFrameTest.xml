@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar3d.CockpitStageFrameTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:10" hostname="0f4ac18d136f" time="0.011">
+  <properties/>
+  <testcase name="viewBufferIsBoundedWithoutChangingAspect" classname="at.heinz.deviceai.avatar3d.CockpitStageFrameTest" time="0.01"/>
+  <testcase name="projectedPixelsKeepOrientationAtBothYawLimits" classname="at.heinz.deviceai.avatar3d.CockpitStageFrameTest" time="0.0"/>
+  <testcase name="invalidSourceGeometryCannotReachRenderer" classname="at.heinz.deviceai.avatar3d.CockpitStageFrameTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

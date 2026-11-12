@@ -92,10 +92,45 @@ Referenzen: [ScreenshotResult](https://developer.android.com/reference/android/a
 
 Der neue Besitzerauftrag verlangt zusätzlich die Prüfung des Foreground-Service-
 Absturzes. Der konkrete Geräte-Stacktrace liegt diesem Agenten nicht vor.
-Startverweigerung, Ressourcenwechsel und Entzug werden im getrennten Folgecommit
-an derselben vorhandenen Service-Kette geprüft und abgesichert.
+Der aktualisierte Supportbaum `30e9b246c961851220aab31821f89c16367e4967`
+(GitHub-Baum von `c1d41bcdce73b42cbce3b77920ecd86360b379fe`) enthält inzwischen
+einen konkreten FGS-Fix. Dieser vorhandene Service-Diff wurde übernommen:
+Foreground-Promotion vor Prüfung eines inzwischen veralteten Starts;
+Stop-PendingIntent schon mit der angeforderten Capture-Sitzung;
+Aufräumen und `stopSelf(startId)` bei verweigerter Promotion.
+Die sechs originalen ContinuumLiveProjectionServiceUiTest-Fälle wurden unverändert
+übernommen und auf den aktuellen vollständigen Capture-/Servicequellen erneut
+ausgeführt: **6/6 PASS**. Android-Systemprozess und Fold7 bleiben ungeprüft.
 
-PORTIERT: genannte Live-/Workflow-Reparaturen. VERIFIZIERT: die 36 JVM-Prüfungen.
+Der fehlende Zweizeiler in `AgentActivity.newSession` wurde dem Hauptintegrator
+zur konfliktfreien Übernahme gemeldet: vorgemerkten Computerstart verwerfen,
+bisherigen Controller vor dem neuen Chat stoppen. Dieser Agent ändert Activity nicht.
+
+### Ergänzende konkrete Service-Kanten
+
+- `startForegroundService` muss einen Komponentenstart bestätigen; null und
+  Ausnahme enden die zugehörige Capture-Sitzung und melden keinen laufenden Start.
+- Ein Stop-Intent einer alten Capture-Sitzung beendet keine neuere Service-Sitzung.
+  Der passende Stop räumt Aufnahme und Foreground-Status sofort auf.
+- Fehler beim Surface-Wechsel werden innerhalb der Resize-/Konfigurationscallbacks
+  behandelt. Alter und neuer Reader werden auch bei einem fehlgeschlagenen Wechsel
+  freigegeben; eine laufende GPU-Kopie behält ihre bestehende geschützte Lebensdauer.
+- Ein einzelner Fehler bei `projection.stop`, Listenerentfernung oder Displayfreigabe
+  überspringt die übrige Freigabe und `stopForeground` nicht mehr. Aufräumen bleibt
+  wiederholbar. Ein abgewiesener GPU-Auftrag gibt sein Image frei und beendet Capture.
+
+Die sechs ursprünglichen Tests plus sechs gezielte Ergänzungen bestehen: **12/12**.
+Rotkontrolle mit denselben Tests und Service/Controller aus `6785ed6762`:
+sechs Fehlermeldungen in fünf Testmethoden, einschließlich einer zusätzlichen
+Cleanup-Ausnahme des Resize-Falls. Die originalen sechs FGS-Prüfungen bleiben grün.
+Das belegt die ergänzenden Kanten ohne Behauptung eines historischen Geräte-Logs.
+Quellhashes und Rohresultate: `docs/evidence/astra55-pr802-integration-20261112/fgs/`.
+
+Scope-Freeze nach diesem Service-Folgecommit. Nur noch echte Integrationsregressionen;
+Gesamtkompilation, Gesamtsuite und APK liegen beim Hauptintegrator.
+
+PORTIERT: die genannten Live-/Workflow-/Capture-/Service-Reparaturen.
+VERIFIZIERT: die oben einzeln angegebenen, teilweise überlappenden Prüfläufe.
 GERÄTEBESTÄTIGT: nein. Der Integrator übernimmt die getrennten Commits und prüft
 anschließend den gemeinsamen Android-Stand. Rücknahme jeweils durch Rücknahme des
 zusammengehörigen Folgecommits; Main, Paket, Signatur und Originalassets bleiben erhalten.

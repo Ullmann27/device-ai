@@ -22,8 +22,9 @@ Die folgenden Klassen liegen unter `app/src/main/java/at/heinz/deviceai/`.
 | Bildquelle | `ContinuumLiveProjectionService.kt` | Android MediaProjection, aktuelle Fenstergeometrie und begrenzte Bildannahme |
 | GPU-Ausschnitt | `AndroidGpuFrameCopier.kt` | Eigenes unveränderliches HardwareBuffer-Bild des erlaubten Ausschnitts |
 | Bildvertrag | `cognitive/LiveComputerFrames.kt` | Sitzung, Fenster, Zeit, Revision, Frische und eindeutiger Ressourcenbesitz |
-| Monitor | `ui/VirtualComputerMonitorView.kt` | Bildreferenz, Seitenverhältnis, perspektivische Darstellung und echte Klickposition |
-| 3D-Arbeitsplatz | `avatar3d/FilamentCockpitStage.kt`, `avatar3d/CockpitStageFrame.kt` | Raum, Monitorrahmen und gemeinsame Kamera-/Projektionsgeometrie |
+| Monitorpixel | `avatar3d/CockpitLiveTexture.kt` | HardwareBuffer als externe Filament-Textur, Letterboxing und bildgebundener Klickring |
+| Monitorstatus | `ui/VirtualComputerMonitorView.kt` | Native Status-/Zugänglichkeitsanzeige und Sichtbarkeitsbindung; zeichnet keine App-Bitmap |
+| Gemeinsame 3D-Welt | `avatar3d/FilamentAvatarRenderer.kt`, `avatar3d/FilamentCockpitStage.kt`, `avatar3d/CockpitStageFrame.kt` | Eine Engine, Scene, View, Kamera und Swapchain für Avatar, Kugel, Arbeitsplatz und App-Pixel |
 | Layout | `ui/CinematicWorkstationLayout.kt`, `ui/ContinuumHomeView.kt` | Fold-/Phone-Anordnung, Szene, Eingabe und Navigation |
 | Gemeinsames Ereignis | `cognitive/CockpitWorkEvent.kt` | Erweiterung des vorhandenen CockpitAnimationBus |
 | Körper und Ton | `avatar/ComputerWorkAvatarBridge.kt`, `avatar/ComputerWorkCuePlayer.kt` | Reale Eingaben treiben kurze Bewegungs- und Klickimpulse |
@@ -49,7 +50,11 @@ Der MediaProjection-Pfad lässt Bilder mit mindestens 33 ms Abstand zu. Das ist 
 
 Es gibt keine Warteschlange alter Monitorbilder: `acquireLatestImage`, begrenzte ImageReader-Puffer und höchstens eine aktive GPU-Kopie begrenzen den Rückstau. Diese Begrenzung gilt auch über einen schnellen Aufnahme-Neustart hinweg. Für Monitorbilder werden weder PNG/JPEG/Base64-Kodierung noch Modellaufrufe pro Frame eingesetzt.
 
-Jedes Bild enthält Aufnahmesitzung, Zeit, Paket-/Fensterbindung, Beobachtungsrevision und den tatsächlich ausgeschnittenen Quellbereich. Ein Wechsel von Fenster oder Aufnahmegeometrie erneuert die Bildoberfläche. Der Monitor hält ausschließlich einen freigegebenen Bildbesitz und löst alte Referenzen ab.
+Jedes Bild enthält Aufnahmesitzung, Zeit, Paket-/Fensterbindung, Beobachtungsrevision und den tatsächlich ausgeschnittenen Quellbereich. Ein Wechsel von Fenster oder Aufnahmegeometrie erneuert die Bildoberfläche. Accessibility-Screenshots behalten die native Aufnahmezeit; Callback- und GPU-Latenz erneuern ihre Frische nicht. Fenster und Revision werden vor der Anfrage sowie bei der Übergabe erneut geprüft.
+
+Der GPU-Kopierer erzeugt ein echtes sRGB-Ausgangsbild. Bekannte RGB-Farbprofile werden konvertiert; unbekannte Profile werden verworfen. `CockpitLiveTexture` übernimmt einen eigenen nativen HardwareBuffer-Verweis über Filaments ACQUIRED-Stream. Höchstens zwei solcher eigenen Verweise stehen aus. Filaments Releasecallback gibt sie frei; Quellenwechsel, Pause und Stop lösen alte Verweise. Dies kommt zum begrenzten Capture-/Holder-Budget hinzu.
+
+Die Mesh-Fläche `monitor-live-pixels` besitzt exakt definierte UVs. Monitorgehäuse, Fläche und Klickring verwenden dieselbe räumliche Transformation. Die Pixel sind opaque/unlit und sRGB-dekodiert; die gemeinsame View verwendet neutrales Tonemapping. Bloom wird während sichtbarer realer App-Pixel deaktiviert, damit deren Farben nicht vom Glüheffekt verändert werden. Emissionsgeometrie und Beleuchtung bleiben erhalten.
 
 „Live“ setzt ein frisches Bild der richtigen Sitzung voraus. Ohne neues Bild wird nach der konfigurierten Frist, standardmäßig 1,5 Sekunden, pausiert. Bei verdeckter oder ungültiger Quelle, Sitzungswechsel und Stop werden die App-Pixel verworfen. Ein eingefrorenes altes App-Bild darf nicht weiter als Live-Inhalt stehen bleiben.
 
@@ -59,11 +64,11 @@ Android kann geschützte Inhalte verweigern. Die Screenshot-API meldet bestimmte
 
 Eine vorbereitete Aktion muss unmittelbar vor ihrem nativen Dispatch noch zur aktiven Freigabe gehören. Diese bindet Auftrag, Paket, Beobachtungsepoche und die exakten zulässigen Texte. Sie läuft ab, wird beim Abbruch widerrufen und nach Ende des Arbeitsablaufs entzogen.
 
-Knoten werden aus dem gebundenen Fenster gelesen. Sichtbarkeit, Eindeutigkeit, Rolle, Passwort-/Sende-Erkennung und neue Beobachtungsrevisionen entscheiden über den nächsten Schritt. Ein erfolgreicher Android-Methodenaufruf allein bestätigt noch keine Wirkung.
+Knoten werden aus dem gebundenen Fenster gelesen. Sichtbarkeit, Eindeutigkeit, Rolle, Passwort-/Sende-Erkennung und neue Beobachtungsrevisionen entscheiden über den nächsten Schritt. Ein erfolgreicher Android-Methodenaufruf allein bestätigt noch keine Wirkung. Scrollen verlangt zusätzlich ein nach dem Dispatch eingetroffenes natives Scrollereignis mit gemessener Bewegung des exakt gebundenen Containers. Ein geändertes Badge oder eine neue Textrevision beweist kein Scrollen.
 
 Bei unbekannter Wirkung gibt es keine automatische Wiederholung. Bereits vorhandene Nachrichtenentwürfe werden nicht überschrieben. Der WhatsApp-Entwurfspfad verlangt den bestätigten Empfänger im Chatkopf und ein überprüfbares Eingabefeld. Kontaktlisten werden nur begrenzt gescrollt. Das Senden bleibt im derzeitigen Computerpfad gesperrt, weil kein geprüfter Versandweg angeschlossen ist.
 
-Das Bild kann nach einem abgeschlossenen Suchauftrag sichtbar bleiben; dies erhält keine Eingabeberechtigung. Ein neuer Auftrag benötigt seine eigene Bindung. Die Aufnahme endet bei Stop oder beim vollständigen Verlassen der sichtbaren Arbeitsfläche.
+Das Bild kann nach einem abgeschlossenen Suchauftrag sichtbar bleiben; dies erhält keine Eingabeberechtigung. Ein neuer Auftrag benötigt seine eigene Bindung. Die Aufnahme endet bei Stop, beim Chat-Sitzungswechsel oder beim vollständigen Verlassen der sichtbaren Arbeitsfläche. Veraltete Stop-Intents dürfen keine neue Sitzung beenden. Der Foreground-Service wird innerhalb des vorgeschriebenen Startpfads promotet; abgewiesene Starts sowie Resize-/Cleanup-Fehler werden abgefangen.
 
 ## Bewegung und Klang
 
@@ -75,9 +80,11 @@ Die vorhandenen Avatar-Gelenke bleiben erhalten. Eine kleine Bewegung des Avatar
 
 ## Visuelle Vorgaben
 
-Die Originaldatei des Jarvis-Avatars bleibt bytegleich. Die Originalkugel liegt hinter dem etwas transparenten Avatar; ihre Mitte liegt im Stirnbereich. Monitorrahmen und Raum werden hinzugefügt. Echte App-Pixel bleiben deckend und behalten ihre Farben sowie ihr Seitenverhältnis.
+Die Originaldatei des Jarvis-Avatars bleibt bytegleich, einschließlich Geometrie, Gelenken, Morphs und Texturen. Eine Materialvariante beim Laden stellt 84 Prozent Deckkraft ein. Die Originalkugel wird aus den tatsächlich aktiven ursprünglichen Parametern als GLB-Geometrie exportiert: fünf Ringe mit ursprünglichen Geschwindigkeiten, Originalplexus, Partikel und Unendlichkeitszeichen.
 
-Die aufrechten Monitore haben eine geringe Arbeitsplatzperspektive. Kamera und Monitorhöhe lassen Gesicht, Kinn und Schultern sichtbar. Die Szene verwendet den vorhandenen Filament-Renderer und die vorhandene Kameraabstimmung.
+Ihre Tiefe wird aus Perspektive und Geometrieradius berechnet. Auch die vorderen Ringteile verbleiben hinter Jarvis. Die größere Kugel und das Zeichen liegen im Stirnbereich. Der gerundete Arbeitsplatz aus #801 ist über Blender reproduzierbar übernommen. Die zentrale App-Fläche sitzt in dessen Geometrie; seitliche Rahmen enthalten keine erfundenen App-Bilder.
+
+Die aufrechten Monitore haben eine geringe Arbeitsplatzperspektive. Kamera und Monitorhöhe lassen Gesicht, Kinn und Schultern sichtbar. Die Szene verwendet den vorhandenen Filament-Renderer und eine gemeinsame Perspektivkamera. Die 420-ms-Monitorfahrt bewegt den Monitor tatsächlich in Z-Richtung nach vorn und zurück. Sichtbarkeitswechsel beenden die laufende Fahrt sauber. Der frühere zweite Cockpit-Renderer wurde entfernt; die separate ältere PDF-Kartenansicht bleibt als bestehende Zusatzfunktion erhalten.
 
 | Ziel | Farbe | Offenes Fold7 | Normales Phone |
 |---|---|---|---|

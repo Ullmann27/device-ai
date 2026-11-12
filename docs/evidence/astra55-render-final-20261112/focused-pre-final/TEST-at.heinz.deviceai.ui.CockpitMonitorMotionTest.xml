@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.CockpitMonitorMotionTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:47" hostname="0f4ac18d136f" time="0.017">
+  <properties/>
+  <testcase name="reversingAnActiveFlightPreservesPositionAndVelocity" classname="at.heinz.deviceai.ui.CockpitMonitorMotionTest" time="0.002"/>
+  <testcase name="monitorRemainsInsidePhoneAndFoldSceneThroughoutFlight" classname="at.heinz.deviceai.ui.CockpitMonitorMotionTest" time="0.014"/>
+  <testcase name="workMovesActualDepthAndReturnsExactly" classname="at.heinz.deviceai.ui.CockpitMonitorMotionTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

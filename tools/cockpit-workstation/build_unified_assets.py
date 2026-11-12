@@ -12,8 +12,8 @@ from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "app/src/main/assets/cinema3d"
-SOURCE = ROOT / "tools/cockpit-workstation/source/pr801-workstation.glb"
-SOURCE_SHA = "3223168a58e5fa51c48bb56ba36aabbf0cdb936025a01d96d4b14e5e0fa023aa"
+SOURCE = ROOT / "tools/cockpit-workstation/source/pr801-reference-workstation.glb"
+SOURCE_SHA = "152669e9c7d8c5ea8627f09353fbd71bfca9ba93a6df6c751c7d44e2ea72de0d"
 AVATAR = ROOT / "app/src/main/assets/avatar3d/continuum-avatar.glb"
 AVATAR_SHA = "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
 TAU = math.tau
@@ -209,36 +209,43 @@ def workstation():
     bpy.ops.import_scene.gltf(filepath=str(SOURCE))
     room = bpy.data.objects["cockpit-room"]
     monitor = bpy.data.objects["cockpit-monitor"]
-    metal = material("smoked-metal", (.025, .038, .064), .55, .28, coat=.24)
-    silver = material("bevel-silver", (.15, .22, .30), .62, .22, coat=.15)
-    material("smoked-glass", (.045, .13, .23), 0., .12, .18, coat=.35)
-    material("cyan-frost", (.035, .28, .36), 0., .30, .065, (.002, .018, .026))
-    material("violet-frost", (.22, .10, .37), 0., .30, .065, (.015, .004, .025))
-    material("prism-highlight", (.45, .69, .83), .3, .18, emission=(.14, .24, .30))
-    accents = {name: material("button-" + name, color, .15, .24, emission=color, strength=.35, coat=.3)
-               for name, color in PALETTE.items()}
-    ordered = ["cyan", "violet", "cyan-soft", "amber", "cyan", "green", "magenta", "violet-rim", "cyan"]
-    for k, color in enumerate(ordered):
-        x = -.12 + k * .03
-        box("key-bezel-" + str(k), (x, -.453, .08), (.025, .005, .031), silver, room, .0015)
-        box("key-inlay-" + str(k), (x, -.4498, .08), (.020, .003, .025), accents[color], room, .001)
-    for side in (-1, 1):
-        box("monitor-inner-bevel-" + str(side), (side * .47, -.0325, .032),
-            (.006, .835, .010), silver, monitor, .0018)
-        for y in (-.466, .469):
-            box("monitor-corner-inlay-%s-%s" % (side, y), (side * .471, y, .036),
-                (.018, .011, .005), accents["cyan" if side < 0 else "violet"], monitor, .001)
-    # UV origin is top-left.
-    pixels = mesh("monitor-live-pixels", [(-.465, .38, .032), (-.465, -.445, .032),
-                  (.465, -.445, .032), (.465, .38, .032)], [(0, 1, 2, 3)],
-                  unlit("monitor-live-pixels", (.001, .002, .004)), monitor, False)
-    layer = pixels.data.uv_layers.new(name="TEXCOORD_0")
-    blender_uvs = [(0., 1.), (0., 0.), (1., 0.), (1., 1.)]
+    sides = bpy.data.objects["cockpit-side-monitors"]
+    sides.parent = room
+    material("smoked-metal", (.026,.038,.058), .54,.27,coat=.24)
+    silver = material("brushed-edge",(.15,.21,.28),.65,.24,coat=.15)
+    material("smoked-glass",(.048,.11,.18),0.,.13,.24,coat=.35)
+    accents = {name: material("button-"+name,color,.15,.26,emission=color,strength=.25,coat=.25)
+               for name,color in PALETTE.items()}
+    old = bpy.data.objects.get("keyboard-keys")
+    if old:
+        bpy.data.objects.remove(old,do_unlink=True)
+    palette = ["cyan","cyan-soft","violet","magenta","violet-rim","cyan","green","amber","cyan-soft","violet","cyan"]
+    for row in range(3):
+        for column in range(11):
+            x=(column-5)*.027+(row%2)*.004
+            box("keyboard-raised-%d-%d"%(row,column),(x,-.4225,.093+row*.015),
+                (.021,.003,.010),accents[palette[column]],room,.0013)
+    box("keyboard-space",(0,-.4225,.139),(.13,.003,.010),silver,room,.0013)
+    for side in (-1,1):
+        for column in range(2):
+            box("keyboard-control-%d-%d"%(side,column),(side*(.095+column*.03),-.4225,.139),
+                (.022,.003,.010),accents["cyan" if side<0 else "violet"],room,.0013)
+    blank=unlit("monitor-inactive-dark",(.001,.002,.004))
+    for side in (-1,1):
+        x=side*.38
+        mesh("monitor-side-%d-idle"%side,[(x-.1004,-.0694,.001),(x-.1004,-.3706,.001),
+            (x+.1004,-.3706,.001),(x+.1004,-.0694,.001)],[(0,1,2,3)],blank,sides,False)
+    pixels = mesh("monitor-live-pixels",[(-.465,.38,.032),(-.465,-.445,.032),
+        (.465,-.445,.032),(.465,.38,.032)],[(0,1,2,3)],
+        unlit("monitor-live-pixels",(.001,.002,.004)),monitor,False)
+    layer=pixels.data.uv_layers.new(name="TEXCOORD_0")
+    uvs=[(0.,1.),(0.,0.),(1.,0.),(1.,1.)]
     for loop in pixels.data.loops:
-        layer.data[loop.index].uv = blender_uvs[loop.vertex_index]
-    monitor["live_pixel_contract"] = "Opaque unlit external texture; no fabricated app content"
-    room["provenance"] = "PR801 source plus actual Blender bevels, normal modifiers and colored inserts"
-    export(ASSETS / "cockpit-workstation.glb")
+        layer.data[loop.index].uv=uvs[loop.vertex_index]
+    monitor["live_pixel_contract"]="Opaque unlit external texture; no fabricated app content"
+    sides["content_contract"]="Inactive physical panels; no app source and no LIVE claim"
+    room["provenance"]="Updated PR801 rounded geometry; Blender raised keycaps and real pixel plane"
+    export(ASSETS/"cockpit-workstation.glb")
 
 
 def hash_unit(i, j):
@@ -265,146 +272,135 @@ def cubic(a, b, c, d, count=24):
 
 def orb():
     reset()
+    source_path = ROOT/"tools/cockpit-workstation/source/original-orb-geometry.json"
+    source = json.loads(source_path.read_text())
+    for name, expected in source["source_hashes"].items():
+        assert sha(ROOT/name) == expected, "Original orb parameters changed"
     root = empty("continuum-orb")
-    root["coordinate_contract"] = "Origin=sphere center; sphere radius=1; glTF +z faces camera"
-    root["source"] = "ContinuumBrainOrbRenderer.kt / ContinuumOrbitalRing.kt / JarvisDesign.kt"
-    neon = {name: material("orb-" + name, color, .1, .24, emission=color, strength=1.3)
-            for name, color in PALETTE.items()}
-    soft = {name: material("orb-soft-" + name, color, 0., .4, .13, color, .6)
-            for name, color in PALETTE.items()}
-    glass = material("orb-obsidian-glass", rgb("091529"), 0., .13, .065, coat=.38)
-    brain_glass = material("orb-brain-glass", rgb("24728F"), 0., .24, .12, coat=.2)
-    core_glass = material("orb-core-glass", rgb("05798C"), 0., .19, .16, PALETTE["cyan"], .25)
-    steel = material("orb-pedestal-metal", (.035, .047, .075), .62, .27, coat=.25)
-    sphere("orb-containment-shell", (0, 0, 0), (.995, .995, .995), glass, root, 48, 24)
-    sphere("orb-core", (0, -.10, 0), (.42, .42, .42), core_glass, root, 28, 16)
-    # Four original orbital planes.
-    angles = [(.24, -.20), (-.49, .27), (.78, -.42), (-.31, .55)]
-    pairs = [("magenta", "violet-rim"), ("cyan", "violet"),
-             ("violet-rim", "cyan"), ("amber", "magenta")]
-    for index, ((tilt, yaw), colors) in enumerate(zip(angles, pairs)):
-        parent = empty("orb-orbit-" + str(index), root)
-        parent["source_inclination"] = tilt
-        parent["source_azimuth"] = yaw
-        radius = 1.25 + index * .07
-        for half, color in enumerate(colors):
-            points = [orbit_point((half + j / 96) * math.pi, radius, tilt, yaw) for j in range(97)]
-            line = Batch("orbit-%d-%d-core" % (index, half), neon[color], parent)
-            line.tube(points, .007, sides=6)
-            line.finish()
-            aura = Batch("orbit-%d-%d-volume" % (index, half), soft[color], parent)
-            aura.tube(points, .017, sides=5)
-            aura.finish()
-        bead = Batch("orbit-%d-bead" % index, neon[colors[0]], parent)
-        bead.ico(orbit_point(index * 2.1, radius, tilt, yaw), .024)
-        bead.finish()
-    # Spherical neural grid.
-    grid = Batch("orb-spherical-grid", soft["cyan"], root)
-    points = Batch("orb-grid-nodes", neon["cyan-soft"], root)
-    tilt = .32
-    def globe(theta, phi):
-        x, y, z = math.sin(theta) * math.cos(phi), math.cos(theta), math.sin(theta) * math.sin(phi)
-        return (.97*x, .97*(y*math.cos(tilt)-z*math.sin(tilt)), .97*(y*math.sin(tilt)+z*math.cos(tilt)))
-    for i in range(1, 7):
-        theta = math.pi * i / 7
-        grid.tube([globe(theta, TAU*j/96) for j in range(96)], .0042, True, 4)
-        for j in range(14):
-            points.ico(globe(theta, TAU*j/14), .010)
-    for j in range(14):
-        grid.tube([globe(math.pi*i/64, TAU*j/14) for i in range(65)], .0037, False, 4)
-    grid.finish()
-    points.finish()
-    # Two physical brain hemispheres.
-    for side in (-1, 1):
-        sphere("orb-brain-lobe-%s" % side, (side*.285, .33, .025), (.40, .43, .32), brain_glass, root, 28, 18)
-        folds = Batch("orb-brain-folds-%s" % side, neon["cyan" if side < 0 else "violet-rim"], root)
-        for k in range(8):
-            v = (k + 1) / 9 * math.pi
-            line = []
-            for j in range(64):
-                u = TAU * j / 64
-                ripple = .023 * math.sin(7*u + k*.7)
-                line.append((side*.285 + (.40+ripple)*math.sin(v)*math.cos(u),
-                             .33 + (.43+ripple)*math.cos(v),
-                             .025 + (.32+ripple)*math.sin(v)*math.sin(u)))
-            folds.tube(line, .0055, True, 4)
-        folds.finish()
-    neurons = []
-    neural = [Batch("orb-neurons-" + c, neon[c], root) for c in ("magenta", "violet-rim", "cyan")]
-    links = [Batch("orb-neural-links-" + c, soft[c], root) for c in ("magenta", "violet-rim", "cyan")]
-    for i in range(36):
-        theta, phi, w = hash_unit(i, 3)*math.pi, hash_unit(i, 7)*TAU, hash_unit(i, 13)
-        radius = .22 + .70*w
-        p = (math.sin(theta)*math.cos(phi)*.82*radius + (-.08 if i % 2 == 0 else .08),
-             -math.cos(theta)*.72*radius + .10, math.sin(theta)*math.sin(phi)*.82*radius)
-        neurons.append(Vector(p))
-        neural[i % 3].ico(p, .016 + .020*w)
-    for i, a in enumerate(neurons):
-        for j in range(i+1, len(neurons)):
-            if (a-neurons[j]).length <= .48:
-                links[(i+j) % 3].tube([a, neurons[j]], .0032, sides=4)
-    for batch in neural + links:
+    root["coordinate_contract"] = "Sphere radius 1; glTF x right, y up, z toward camera"
+    root["source"] = source["source"]
+    root["source_geometry_sha256"] = sha(source_path)
+    colors = {
+        "cool": rgb("78E1FF"), "violet": rgb("AA82FF"), "pink": rgb("F078D7"),
+        "halo": rgb("6E96F5"), "white": rgb("F0FCFF"), "blue": rgb("287DFF"),
+        "logo-left": rgb("46DEFF"), "logo-mid": rgb("7892FF"), "logo-right": rgb("D664FF"),
+        "logo-core": rgb("4650BE"),
+    }
+    neon = {name: material("orb-original-"+name, color, .08, .25, emission=color, strength=1.6)
+            for name, color in colors.items()}
+    soft = {name: material("orb-original-soft-"+name, color, 0., .32, .14, color, .8)
+            for name, color in colors.items()}
+    glass = material("orb-original-blue-glass", rgb("0C1A68"), 0., .16, .30, rgb("122C84"), .15, .35)
+    core = material("orb-original-inner-glass", rgb("243EC6"), 0., .20, .55, rgb("2230B0"), .30, .25)
+    sphere("orb-containment-shell", (0, 0, 0), (1, 1, 1), glass, root, 48, 24)
+    sphere("orb-core", (0, 0, 0), (.4, .4, .4), core, root, 40, 20)
+    sphere("orb-inner-volume", (0, -.05, 0), (.62, .62, .62), soft["blue"], root, 32, 16)
+    rim = Batch("orb-original-inner-rim", neon["violet"], root)
+    rim.tube([(.4*math.cos(TAU*i/128), .4*math.sin(TAU*i/128), .02) for i in range(128)], .01, True, 6)
+    rim.finish()
+    shell_rim = Batch("orb-original-containment-rim", soft["cool"], root)
+    shell_rim.tube([(math.cos(TAU*i/144), math.sin(TAU*i/144), 0) for i in range(144)], .016, True, 5)
+    shell_rim.finish()
+    # Rest tilt belongs to group.
+    for index, orbit in enumerate(source["orbits"]):
+        parent = empty("orb-orbit-"+str(index), root)
+        parent.rotation_euler[1] = math.radians(orbit["tilt"])
+        parent["canvas_tilt_degrees"] = orbit["tilt"]
+        parent["original_speed"] = orbit["speed"]
+        a, b = orbit["a"], orbit["b"]
+        depth = math.sqrt(a*a-b*b)
+        def orbit_position(t):
+            return (a*math.cos(t), -b*math.sin(t), depth*math.sin(t))
+        for segment in range(4):
+            color_index = 0 if segment in (1, 2) else 2
+            color = rgb(f'{int(orbit["colors"][color_index]) & 0xffffff:06X}')
+            mat = material("orb-orbit-%d-color-%d" % (index, color_index), color, .05, .28,
+                           emission=color, strength=1.6)
+            trace = Batch("orbit-%d-%d-core" % (index, segment), mat, parent)
+            trace.tube([orbit_position(TAU*(segment+j/48)/4) for j in range(49)],
+                       orbit["width"]/101*.30, sides=6)
+            trace.finish()
+        halo = Batch("orbit-%d-emission-volume" % index, soft["cool" if index%2==0 else "violet"], parent)
+        halo.tube([orbit_position(TAU*i/144) for i in range(144)], orbit["width"]/101*1.6, True, 5)
+        halo.finish()
+    cloud = source["plexus"]
+    volume = empty("orb-neural-volume", root)
+    from mathutils import Matrix
+    axis = Matrix(((1,0,0,0),(0,0,-1,0),(0,1,0,0),(0,0,0,1)))
+    pitch = .3+.05*math.sin(.4*.21)
+    volume.matrix_basis = axis @ Matrix.Rotation(-pitch,4,"X") @ Matrix.Rotation(.4*.16,4,"Y") @ axis.inverted()
+    positions = [(x,-y,z) for x,y,z in zip(cloud["bx"],cloud["by"],cloud["bz"])]
+    nodes = {name: Batch("orb-original-nodes-"+name, neon[name] if name != "halo" else soft[name], volume)
+             for name in ("cool","violet","pink","halo")}
+    links = {name: Batch("orb-original-links-"+name, soft[name], volume)
+             for name in ("cool","violet","pink","halo")}
+    for i, p in enumerate(positions):
+        layer = cloud["layer"][i]
+        name = "halo" if layer=="HALO" else "pink" if i%11==0 else "violet" if layer=="INNER" else "cool"
+        nodes[name].ico(p, .009 if layer!="HALO" else .007)
+    for i, (a,b) in enumerate(zip(cloud["edgeA"],cloud["edgeB"])):
+        name = "halo" if cloud["layer"][a]=="HALO" else "violet" if (positions[a][2]+positions[b][2])<0 else "cool"
+        links[name].tube([positions[a],positions[b]], .0032 if name!="halo" else .0024, sides=4)
+    for batch in list(nodes.values())+list(links.values()):
         batch.finish()
-    dust = [Batch("orb-particles-" + c, soft[c], root) for c in ("cyan", "magenta", "amber")]
-    for i in range(70):
-        angle = hash_unit(i, 11)*TAU
-        radius = .2 + 1.35*hash_unit(i, 23)
-        depth = (hash_unit(i, 37)-.5)*1.1
-        dust[i % 3].ico((math.cos(angle)*radius, math.sin(angle)*radius, depth), .005+.009*hash_unit(i, 41))
-    for batch in dust:
+    dust = {name: Batch("orb-original-dust-"+name, neon[name], volume) for name in ("cool","violet","pink")}
+    for i,(x,y,z) in enumerate(zip(cloud["dx"],cloud["dy"],cloud["dz"])):
+        name = ("cool","violet","pink")[cloud["dustTint"][i]]
+        dust[name].ico((x,-y,z), cloud["dustSize"][i]/101*.85)
+    for batch in dust.values():
         batch.finish()
-    # Original infinity, actual tube.
-    iw, ih, z = .19, .09, 1.012
-    origin = (0., -.18, z)
-    curves = [
-        (origin, (iw*.5, -.18+ih*1.4, z), (iw*1.15, -.18+ih*1.1, z), (iw*1.15, -.18, z)),
-        ((iw*1.15, -.18, z), (iw*1.15, -.18-ih*1.1, z), (iw*.5, -.18-ih*1.4, z), origin),
-        (origin, (-iw*.5, -.18+ih*1.4, z), (-iw*1.15, -.18+ih*1.1, z), (-iw*1.15, -.18, z)),
-        ((-iw*1.15, -.18, z), (-iw*1.15, -.18-ih*1.1, z), (-iw*.5, -.18-ih*1.4, z), origin),
-    ]
-    logo = Batch("orb-original-infinity", neon["cyan-soft"], root)
-    logo.tube([p for curve in curves for p in cubic(*curve)], .014, True, 8)
+    for i, (nx,ny,nz) in enumerate(zip(cloud["anx"],cloud["any"],cloud["anz"])):
+        n=Vector((nx,-ny,nz)).normalized()
+        u=Vector((0,0,1)).cross(n).normalized()
+        if u.length < .0001:
+            u=Vector((1,0,0))
+        v=n.cross(u).normalized()
+        start=math.radians(cloud["arcStart"][i]+.4*cloud["arcSpeed"][i])
+        sweep=math.radians(cloud["arcSweep"][i])
+        radius=cloud["arcRadius"][i]
+        trace=Batch("orb-original-inner-arc-"+str(i),neon[("cool","blue","violet","pink")[i%4]],volume)
+        trace.tube([tuple(radius*(u*math.cos(start+sweep*j/48)+v*math.sin(start+sweep*j/48)))
+                    for j in range(49)], .0048, sides=5)
+        trace.finish()
+    # Original sine infinity geometry.
+    logo = Batch("orb-original-infinity", neon["logo-mid"], root)
+    infinity = [(.29*math.sin(TAU*i/96), -.02-.135*math.sin(2*TAU*i/96), .43) for i in range(96)]
+    logo.tube(infinity, .0425, True, 8)
     logo.finish()
-    font = bpy.data.fonts.load(str(ROOT/"app/src/main/assets/fonts/Exo2-Medium.ttf"))
-    for label, y in (("Continuum", -.52), ("Gehirn", -.70)):
-        data = bpy.data.curves.new("orb-original-label-" + label.lower(), "FONT")
-        data.body, data.font, data.size = label, font, .11
-        data.align_x, data.align_y = "CENTER", "CENTER"
-        data.extrude, data.bevel_depth = .0015, .0006
-        data.resolution_u = 4
-        data.bevel_resolution = 1
-        obj = bpy.data.objects.new(data.name, data)
-        bpy.context.collection.objects.link(obj)
-        obj.parent = root
-        obj.location = point((0, y, 1.012))
-        obj.rotation_euler[0] = math.pi / 2
-        data.materials.append(neon["cyan-soft"])
-        bpy.context.view_layer.objects.active = obj
-        obj.select_set(True)
-        bpy.ops.object.convert(target="MESH")
-        obj.select_set(False)
-    # Original concentric pedestal tiers.
-    pedestal = Batch("orb-pedestal-rings", steel, root)
-    amber = Batch("orb-pedestal-amber", neon["amber"], root)
-    cyan = Batch("orb-pedestal-cyan", neon["cyan"], root)
-    for tier in range(3):
-        y, radius = -1.10-tier*.06, .95+tier*.14
-        pedestal.tube(ring_points(radius, y), .025, True, 6)
-        amber.tube(ring_points(radius*.86, y+.012), .006, True, 5)
-        cyan.tube(ring_points(radius*.70, y+.012), .005, True, 5)
-    amber.tube(ring_points(1.40, -1.24), .008, True, 5)
-    for batch in (pedestal, amber, cyan):
-        batch.finish()
-    for index in (-1, 0, 1):
-        box("orb-emitter-" + str(index), (index*.18, -1.40, .65), (.11, .03, .05), neon["cyan"], root, .007)
-    cone = Batch("orb-projection-volume", soft["cyan"], root)
-    for i in range(9):
-        t = i/8
-        cone.tube(ring_points(1.18*(1-t)+.32*t, -1.02+.96*t, 72), .004, True, 4)
-    for i in range(-2, 3):
-        cone.tube([(i*.16, -1.04, -.20), (i*.08, -.10, -.20)], .004, sides=4)
-    cone.finish()
-    export(ASSETS / "continuum-orb.glb")
+    highlight = Batch("orb-original-infinity-highlight", neon["white"], root)
+    highlight.tube([(x,y,z+.038) for x,y,z in infinity], .0055, True, 5)
+    highlight.finish()
+    glow = Batch("orb-original-infinity-volume", soft["logo-left"], root)
+    glow.tube(infinity,.085,True,5)
+    glow.finish()
+    # Physical original pedestal tiers.
+    ratio=source["geometry"]["sphere"]
+    pad=source["geometry"]["pad"]
+    wall=source["geometry"]["wall"]
+    steel=material("orb-original-pedestal-metal",rgb("0E2250"),.54,.28,coat=.2)
+    for name,radius,top,height in (("flange",1.56,pad+.06+wall,.06),
+                                   ("base",1.43,pad+.06,wall), ("pad",.97,pad,.07)):
+        radius,top,height=radius/ratio,top/ratio,height/ratio
+        bpy.ops.mesh.primitive_cylinder_add(vertices=96,radius=radius,depth=height,
+            location=point((0,-top-height*.5,0)))
+        obj=bpy.context.object
+        obj.name="orb-original-pedestal-"+name
+        obj.parent=root
+        obj.data.materials.append(steel)
+        bevel=obj.modifiers.new("Soft machined rim","BEVEL")
+        bevel.width=.008
+        bevel.segments=2
+        obj.modifiers.new("Pedestal normals","WEIGHTED_NORMAL")
+        trace=Batch("orb-original-pedestal-rim-"+name,neon["cool" if name!="base" else "violet"],root)
+        trace.tube(ring_points(radius,-top+.006),.006,True,6)
+        trace.finish()
+    projection = Batch("orb-original-projection-beams", soft["cool"], root)
+    for i in range(15):
+        t=(i-7)/7
+        projection.tube([(t*.5/ratio,-(pad-.05)/ratio,0),(t*.16,-.12,0)],.003,sides=4)
+    projection.tube([(0,.98,0),(0,-pad/ratio,0)],.006,sides=5)
+    projection.finish()
+    export(ASSETS/"continuum-orb.glb")
 
 
 def record(path):
@@ -428,12 +424,13 @@ def main():
     orb()
     files = [record(ASSETS/name) for name in ("cockpit-workstation.glb", "continuum-orb.glb")]
     assert sha(AVATAR) == AVATAR_SHA, "Original avatar changed during build"
-    sources = ["app/src/main/java/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer.kt",
+    sources = ["app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+               "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramPlexus.kt",
                "app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt",
                "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
                "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt"]
     manifest = {"evidence": "BLENDER_MESH_BUILD_NOT_DEVICE_VERIFICATION", "blender": bpy.app.version_string,
-        "builder_sha256": sha(Path(__file__)), "source_commit": "dfe8f08f646360c0290ef420b9e6b16cc90904a1",
+        "builder_sha256": sha(Path(__file__)), "source_commit": "6c951be2a165b658f16fff63dced8a5a3a9e9ef7",
         "source_sha256": SOURCE_SHA, "original_avatar_sha256": AVATAR_SHA,
         "parameter_sources": {p: sha(ROOT/p) for p in sources},
         "coordinates": "glTF x right, y up, z toward camera; orb sphere radius 1",
