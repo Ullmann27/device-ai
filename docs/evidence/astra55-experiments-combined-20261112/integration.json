@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "recorded_at": "2026-11-12T15:19:15.895359+00:00",
+  "repository": "Ullmann27/device-ai",
+  "initial_baseline": "5f87bdc610944b93d3173a83c5beeea315abeb66",
+  "canonical_baseline": "711f23b33a8fc602a3a0e4baa37aa61e42e6fc64",
+  "canonical_target": {
+    "branch": "work/astra55-cockpit-integration-20261112",
+    "pull_request": 799,
+    "parent_pull_request": 791
+  },
+  "support_pull_request": 804,
+  "peer_audit_pull_request": 803,
+  "related_experiments": [
+    "EXP-07",
+    "EXP-11",
+    "EXP-12"
+  ],
+  "production_paths": [
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitTransformUpdates.kt",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt"
+  ],
+  "decisions": {
+    "A": "ACCEPT_SOURCE_CHANGE",
+    "B": "ACCEPT_SOURCE_CHANGE",
+    "C": "ACCEPT_REGRESSION_TESTS_REJECT_ADDITIONAL_PRODUCT_LOGIC"
+  },
+  "experiments": [
+    {
+      "id": "A",
+      "agent": "support_live",
+      "pull_request": 805,
+      "published_commit": "3b812d2ccde906fd04cd2ecd8d5dca445caed740",
+      "comparison": "baseline / candidate enabled / candidate disabled",
+      "primary_scenario_runs": 42,
+      "independent_holdout_scenario_runs": 9,
+      "stable_uniform_calls_per_60_ticks": {
+        "baseline": 180,
+        "enabled": 2,
+        "disabled": 180
+      },
+      "initial_failed_holdout_cases": 3,
+      "final_holdout_failures": 0,
+      "combined_source_replay": "PASS",
+      "binding_and_buffer_trace_equivalence": true,
+      "rollback": "coalesceUniforms=false"
+    },
+    {
+      "id": "B",
+      "agent": "support_scene",
+      "pull_request": 806,
+      "published_commit": "adbd4e72767641a51cb1de89f280ce3d43e438cb",
+      "junit_tests_passed": 30,
+      "twelve_keyframe_calls": {
+        "baseline": 108,
+        "candidate": 78
+      },
+      "continuous_flight_calls": {
+        "baseline": 954,
+        "candidate": 642
+      },
+      "equal_local_matrix_components": 318352,
+      "equal_world_matrix_components": 318352,
+      "equal_projected_coordinates": 39794,
+      "compiled_inputs_match_combined_tree": 64,
+      "combined_stage_rechecked": "Exact normalized source review and full production compilation",
+      "rollback": "cacheTransforms=false"
+    },
+    {
+      "id": "C",
+      "agent": "support_workflow",
+      "pull_request": 807,
+      "published_commit": "16ce5bdbc5497d1844f62a543e4eeeb4c2e43f5c",
+      "junit_tests_passed": 49,
+      "trial_count": 36,
+      "native_fixture_inputs": 36,
+      "valid_completions": 16,
+      "negative_controls_without_completion": 20,
+      "premature_successes": 0,
+      "source_files_match_combined_tree": 27,
+      "timings": "Synthetic monotonic event times",
+      "rollback": "Remove added regression test; no product change"
+    }
+  ],
+  "combined_compile": {
+    "source_commit": "5849b99ff641ee5e98238e5127c02e6e0cbf408e",
+    "source_files": 53,
+    "compiler": "Kotlin 2.4.0",
+    "filament": "1.56.0",
+    "android_api": 36,
+    "result": "PASS",
+    "source_stable": true,
+    "dependencies_stable": true,
+    "current_sources_match": true
+  },
+  "original_assets_changed": false,
+  "authorization_logic_changed_by_this_package": false,
+  "limits": {
+    "gradle_full_build": "NOT_RUN_BY_THIS_PACKAGE",
+    "gpu": "NOT_RUN",
+    "device_fps": "NOT_MEASURED",
+    "thermal": "NOT_MEASURED",
+    "fold7": "NOT_RUN",
+    "general_visual_planner": "NOT_IMPLEMENTED_BY_THIS_PACKAGE"
+  }
+}

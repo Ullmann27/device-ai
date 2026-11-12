@@ -13,7 +13,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 /** Immutable buffers; bounded native references. */
 internal class CockpitLiveTexture(
     private val engine: Engine,
-    private val material: MaterialInstance
+    private val material: MaterialInstance,
+    private val coalesceUniforms: Boolean = true
 ) : AutoCloseable {
     private var stream: Stream? = null
     private var texture: Texture? = null
@@ -29,6 +30,10 @@ internal class CockpitLiveTexture(
     private var click: CockpitWorkEvent? = null
     private val workSequence = CockpitPresentationSequence()
     private var available = false
+    private var appliedFrameAvailable: Boolean? = null
+    private var appliedPointerAvailable: Boolean? = null
+    private var appliedScaleX = Float.NaN
+    private var appliedScaleY = Float.NaN
     val pixelsVisible get() = available
     private var closed = false
     private var failure: String? = null
@@ -63,10 +68,14 @@ internal class CockpitLiveTexture(
                     TextureSampler.MinFilter.LINEAR, TextureSampler.MagFilter.LINEAR,
                     TextureSampler.WrapMode.CLAMP_TO_EDGE))
             }
-        material.setParameter("frameAvailable", false)
-        material.setParameter("pointerAvailable", false)
+        appliedFrameAvailable = null
+        appliedPointerAvailable = null
+        appliedScaleX = Float.NaN
+        appliedScaleY = Float.NaN
+        setFrameAvailable(false)
+        setPointerAvailable(false)
         material.setParameter("sourceUv", 0f, 0f, 1f, 1f)
-        material.setParameter("contentScale", 1f, 1f)
+        setContentScale(1f, 1f)
         material.setParameter("pointerUv", .5f, .5f)
         material.setParameter("pointerPhase", 0f)
     }
@@ -141,7 +150,7 @@ internal class CockpitLiveTexture(
             producer.monitorSubmission.invalidate()
             imported = null
         }
-        material.setParameter("frameAvailable", available)
+        setFrameAvailable(available)
         label = if (available && producer.monitorSubmission.isReady(current, now)) current.label
             else failure ?: "Bild wird übernommen"
         val contentAspect = frame.monitorWidth * (CockpitStageFrame.CONTENT_RIGHT - CockpitStageFrame.CONTENT_LEFT) /
@@ -149,7 +158,7 @@ internal class CockpitLiveTexture(
         val sourceAspect = sourceWidth.toFloat() / sourceHeight
         val fitX = minOf(1f, sourceAspect / contentAspect)
         val fitY = minOf(1f, contentAspect / sourceAspect)
-        material.setParameter("contentScale", fitX, fitY)
+        setContentScale(fitX, fitY)
         updatePointer(current, System.nanoTime())
     }
 
@@ -188,7 +197,7 @@ internal class CockpitLiveTexture(
         val elapsed = event?.let { nowNanos - it.occurredAtNanos } ?: -1L
         val valid = available && event != null && viewport != null && elapsed in 0..220_000_000L &&
             event.frameSequence == sequence && state.binding?.captureSession == event.sessionId
-        material.setParameter("pointerAvailable", valid)
+        setPointerAvailable(valid)
         if (!valid) { click = null; return }
         val target = requireNotNull(event?.target)
         val source = requireNotNull(viewport)
@@ -205,8 +214,34 @@ internal class CockpitLiveTexture(
         sourceViewport = null
         imported = null
         click = null
-        material.setParameter("frameAvailable", false)
-        material.setParameter("pointerAvailable", false)
+        setFrameAvailable(false)
+        setPointerAvailable(false)
+    }
+
+    private fun setFrameAvailable(value: Boolean) {
+        if (!coalesceUniforms || appliedFrameAvailable != value) {
+            appliedFrameAvailable = null
+            material.setParameter("frameAvailable", value)
+            appliedFrameAvailable = value
+        }
+    }
+
+    private fun setPointerAvailable(value: Boolean) {
+        if (!coalesceUniforms || appliedPointerAvailable != value) {
+            appliedPointerAvailable = null
+            material.setParameter("pointerAvailable", value)
+            appliedPointerAvailable = value
+        }
+    }
+
+    private fun setContentScale(x: Float, y: Float) {
+        if (!coalesceUniforms || appliedScaleX != x || appliedScaleY != y) {
+            appliedScaleX = Float.NaN
+            appliedScaleY = Float.NaN
+            material.setParameter("contentScale", x, y)
+            appliedScaleX = x
+            appliedScaleY = y
+        }
     }
 
     private fun releaseStream() {
