@@ -36,7 +36,8 @@ test('developer speech uses actual German Android recognizer and a unique callba
   assert.match(recognizer,/SpeechRecognizer\.createOnDeviceSpeechRecognizer\(context\)/);
   assert.match(recognizer,/RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/);
   assert.match(recognizer,/RecognizerIntent\.EXTRA_LANGUAGE,\s*language\.tag/);
-  assert.match(recognizer,/val language = GermanOnDeviceSpeechLocale\(\)/);
+  assert.match(recognizer,/private val germanLocale = GermanOnDeviceSpeechLocale\(\)/);
+  assert.match(recognizer,/val language = germanLocale/);
   assert.match(recognizer,/language\.retry\(failure\)/);
   assert.match(germanLocale,/var tag: String = "de-AT"/);
   assert.match(germanLocale,/tag = "de-DE"/);
