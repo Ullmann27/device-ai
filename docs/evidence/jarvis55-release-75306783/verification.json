@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-13T05:04:54.638Z",
+  "sourceSha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742",
+  "sourceTree": "ea717d3aaf18b5c6023fe86b899d5519e7c2764e",
+  "canonicalBranch": "integrate/code55-apk-fable-20261112",
+  "status": "FULL_ANDROID_PENDING",
+  "fullQa": {
+    "runId": 43367109818,
+    "runAttempt": 1,
+    "status": "IN_PROGRESS",
+    "jobs": [
+      {
+        "id": 131694013130,
+        "name": "full-android",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 131694013481,
+        "name": "native-pdf",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 131694013587,
+        "name": "node-backend",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "node": {
+      "total": 2511,
+      "passed": 2474,
+      "failed": 0,
+      "skipped": 37,
+      "criticalSubset": 137
+    },
+    "backend": {
+      "passed": 64,
+      "failed": 0,
+      "skipped": 0
+    },
+    "native": {
+      "status": "PASS",
+      "sdk": 35,
+      "architecture": "x86_64",
+      "graphics": "ANGLE SwiftShader GLES3.1",
+      "content": "SYNTHETIC",
+      "pdf": {
+        "pages": 1,
+        "providerQueries": 1,
+        "providerOpens": 1,
+        "inkPixels": 506
+      },
+      "filament": {
+        "offscreen": true,
+        "quads": 2,
+        "materials": 2,
+        "textures": 2,
+        "uploadCompletions": 1,
+        "renderedFrames": 2,
+        "presentedFrames": 1,
+        "outputFrames": 2,
+        "contentCleared": true,
+        "panelsReleased": true,
+        "engineReleased": true,
+        "lastPhase": "finished"
+      },
+      "deviceAcceptance": false
+    }
+  },
+  "apk": {
+    "runId": 43367109797,
+    "runAttempt": 1,
+    "status": "PASS",
+    "jobs": [
+      {
+        "id": 131694013241,
+        "name": "unsigned-arm64",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 131694013662,
+        "name": "scoped-android",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "sha256": "4f7f0e9be17ac08cc90cb0f08d95ba6ad87aa495897d3d4512de61c462c5f18c",
+    "bytes": 103787127,
+    "identity": {
+      "package": "at.heinz.deviceai.continuumlocal",
+      "versionCode": 55,
+      "versionName": "0.3.54",
+      "abi": "arm64-v8a",
+      "minSdk": 26,
+      "targetSdk": 36,
+      "debuggable": false
+    },
+    "artifactStatus": "UNSIGNED_NOT_INSTALLABLE",
+    "zipalign16KiB": "PASS",
+    "signing": "NOT_USED",
+    "installation": "NOT_RUN",
+    "Fold7": "NOT_RUN",
+    "GPU": "NOT_RUN",
+    "assetHashesVerified": 43,
+    "scopedAndroid": {
+      "tests": 481,
+      "suites": 65,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    }
+  },
+  "artifacts": [
+    {
+      "id": 14011467813,
+      "name": "Code55-focused-Android-JUnit",
+      "size_in_bytes": 63085,
+      "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14011467813",
+      "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14011467813/zip",
+      "expired": false,
+      "created_at": "2026-11-13T04:53:13Z",
+      "expires_at": "2026-11-27T04:53:12Z",
+      "updated_at": "2026-11-13T04:53:13Z",
+      "digest": "sha256:4981c99fd1f697fc373d461d1c151fa51840c00bb0d09ee592bf1aa42681cadc",
+      "workflow_run": {
+        "id": 43367109797,
+        "repository_id": 1415878393,
+        "head_repository_id": 1415878393,
+        "head_branch": "integrate/code55-apk-fable-20261112",
+        "head_sha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742"
+      }
+    },
+    {
+      "id": 14010658272,
+      "name": "Code55-UNSIGNED-NOT-INSTALLABLE",
+      "size_in_bytes": 74435371,
+      "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14010658272",
+      "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14010658272/zip",
+      "expired": false,
+      "created_at": "2026-11-13T04:44:54Z",
+      "expires_at": "2026-11-27T04:44:51Z",
+      "updated_at": "2026-11-13T04:44:54Z",
+      "digest": "sha256:fb550837b63ff29c1da4b247e9fc22e63d04dd53b364daeb2235a74e4650e719",
+      "workflow_run": {
+        "id": 43367109797,
+        "repository_id": 1415878393,
+        "head_repository_id": 1415878393,
+        "head_branch": "integrate/code55-apk-fable-20261112",
+        "head_sha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742"
+      }
+    },
+    {
+      "id": 14011192438,
+      "name": "Code55-native-PDF-emulator-QA",
+      "size_in_bytes": 18632,
+      "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14011192438",
+      "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14011192438/zip",
+      "expired": false,
+      "created_at": "2026-11-13T04:46:59Z",
+      "expires_at": "2026-11-27T04:46:58Z",
+      "updated_at": "2026-11-13T04:46:59Z",
+      "digest": "sha256:3625bce28e4e38c16ff88b10a03f7eed0a001009f3b89267b63625fbdb9b9668",
+      "workflow_run": {
+        "id": 43367109818,
+        "repository_id": 1415878393,
+        "head_repository_id": 1415878393,
+        "head_branch": "integrate/code55-apk-fable-20261112",
+        "head_sha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742"
+      }
+    },
+    {
+      "id": 14011071954,
+      "name": "code55-github-node-evidence",
+      "size_in_bytes": 1657663,
+      "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14011071954",
+      "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14011071954/zip",
+      "expired": false,
+      "created_at": "2026-11-13T04:44:40Z",
+      "expires_at": "2026-11-27T04:44:39Z",
+      "updated_at": "2026-11-13T04:44:40Z",
+      "digest": "sha256:487dbd0f12375c216cad33fa5e19636915bf23c382a37e43d3d419bf06af8989",
+      "workflow_run": {
+        "id": 43367109818,
+        "repository_id": 1415878393,
+        "head_repository_id": 1415878393,
+        "head_branch": "integrate/code55-apk-fable-20261112",
+        "head_sha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742"
+      }
+    }
+  ],
+  "originalSigning": "NOT_RUN",
+  "publication": "NOT_RUN",
+  "installation": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "note": "Focused/scoped suites overlap full QA and must not be added. Emulator/host evidence is not Fold7 acceptance. Final full Android/lint and aggregate remain required."
+}
