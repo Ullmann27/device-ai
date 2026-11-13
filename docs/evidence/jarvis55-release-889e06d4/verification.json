@@ -1,0 +1,86 @@
+{
+  "source": "889e06d47fffd2230fa5b062dd1f31b65992e728",
+  "tree": "bf5f7aaaa0da11cd3d84fba9265174f186a82bc9",
+  "recordedAt": "2026-11-13T06:04:34.723047+00:00",
+  "status": "FULL_QA_PENDING",
+  "canonicalBranch": "integrate/code55-apk-fable-20261112",
+  "pullRequest": 809,
+  "fullQa": {
+    "run": 43373431089,
+    "status": "IN_PROGRESS",
+    "nodeBackend": "PASS",
+    "nativePdfFilament": "PASS",
+    "fullAndroid": "IN_PROGRESS",
+    "lint": "PENDING",
+    "aggregate": "PENDING"
+  },
+  "focused": {
+    "run": 43372191194,
+    "status": "PASS",
+    "tests": 395,
+    "suiteFiles": 59,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "apk": {
+    "run": 43373431159,
+    "status": "PASS_UNSIGNED",
+    "artifactId": 14013238378,
+    "bytes": 103787127,
+    "sha256": "d8fb018277076009631118616775d41688aaad455856c4b5b79b207dc8251332",
+    "package": "at.heinz.deviceai.continuumlocal",
+    "versionCode": 55,
+    "versionName": "0.3.54",
+    "abi": "arm64-v8a",
+    "minSdk": 26,
+    "targetSdk": 36,
+    "debuggable": false,
+    "assets": "PASS",
+    "alignment16KiB": "PASS",
+    "scopedCases": 488,
+    "scopedFailures": 0,
+    "scopedErrors": 0,
+    "scopedSkips": 0
+  },
+  "testDraftSigner": {
+    "source": "f232d34c5f28be3375d71f861120d6f673a62157",
+    "branch": "chatgpt/code52-owner-signing-20261109",
+    "entry": "continuum-code52-sign-release.yml",
+    "pullRequest": 828,
+    "contractRun": 43372707832,
+    "contractTests": 61,
+    "contractStatus": "PASS",
+    "originalSigning": "NOT_RUN",
+    "published": "NO",
+    "ownerApproval": "REQUIRED_BY_PROTECTED_WORKFLOW"
+  },
+  "nativeVisual": {
+    "run": 43374473925,
+    "artifactId": 14014490862,
+    "harnessSource": "2654fe65d53de4d13e3acf11ddbf6316686e6b8e",
+    "status": "PASS_NATIVE_OUTPUT_CAPTURE",
+    "device": "API35 software emulator",
+    "frames": 24,
+    "size": [
+      852,
+      480
+    ],
+    "exportFps": 12,
+    "exportIsPerformanceMeasurement": false
+  },
+  "Fold7": "NOT_RUN",
+  "Android17": "NOT_RUN",
+  "physicalCaptureActionVoice": "NOT_RUN",
+  "gpuFrametimes": "NOT_RUN",
+  "thermals": "NOT_RUN",
+  "mainMerge": "NOT_RUN",
+  "limitations": [
+    "Full source-bound Android QA and lint still running.",
+    "Real computer requires Continuum and target app visible in supported split-screen windows.",
+    "Native visual fixture has synthetic waiting state, no live source, direct still avatar pose.",
+    "200% font-scale fallback header overlap/caption clipping remains a visual finding.",
+    "Current native proof is not final cinematic-quality acceptance.",
+    "Gemma adapter training and automatic production weight promotion are not claimed."
+  ]
+}
