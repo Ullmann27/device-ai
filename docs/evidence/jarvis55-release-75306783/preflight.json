@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "sourceSha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742",
+  "sourceTree": "ea717d3aaf18b5c6023fe86b899d5519e7c2764e",
+  "canonicalBranch": "integrate/code55-apk-fable-20261112",
+  "preflight": {
+    "runId": 43365355774,
+    "runAttempt": 1,
+    "status": "PASS",
+    "android": {
+      "jobId": 131689904512,
+      "tests": 376,
+      "executed": 376,
+      "suites": 58,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "node": {
+      "jobId": 131689904943,
+      "total": 2511,
+      "passed": 2474,
+      "failed": 0,
+      "skipped": 37,
+      "criticalSubset": 137
+    },
+    "backend": {
+      "tests": 64,
+      "passed": 64,
+      "failed": 0,
+      "skipped": 0
+    },
+    "artifacts": [
+      {
+        "id": 14011290896,
+        "node_id": "MDg6QXJ0aWZhY3QxNDAxMTI5MDg5Ng==",
+        "name": "Jarvis55-targeted-regression-JUnit",
+        "size_in_bytes": 54466,
+        "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14011290896",
+        "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14011290896/zip",
+        "expired": false,
+        "digest": "sha256:61b3cd3559931ede3197d3119ee89c973acbbac16522e96f16721b39b1738044",
+        "created_at": "2026-11-13T04:40:04Z",
+        "updated_at": "2026-11-13T04:40:04Z",
+        "expires_at": "2026-11-27T04:40:03Z",
+        "workflow_run": {
+          "id": 43365355774,
+          "repository_id": 1415878393,
+          "head_repository_id": 1415878393,
+          "head_branch": "work/jarvis55-master-20261113",
+          "head_sha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742"
+        }
+      },
+      {
+        "id": 14010925186,
+        "node_id": "MDg6QXJ0aWZhY3QxNDAxMDkyNTE4Ng==",
+        "name": "Jarvis55-targeted-node-evidence",
+        "size_in_bytes": 1657957,
+        "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14010925186",
+        "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14010925186/zip",
+        "expired": false,
+        "digest": "sha256:0502356ff4223bc12373ce1019e82c358840d04502a91d87b3790fd7c6da6dfd",
+        "created_at": "2026-11-13T04:33:34Z",
+        "updated_at": "2026-11-13T04:33:34Z",
+        "expires_at": "2026-11-27T04:33:33Z",
+        "workflow_run": {
+          "id": 43365355774,
+          "repository_id": 1415878393,
+          "head_repository_id": 1415878393,
+          "head_branch": "work/jarvis55-master-20261113",
+          "head_sha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742"
+        }
+      }
+    ]
+  },
+  "fullQa": {
+    "runId": 43367109818,
+    "status": "REQUESTED"
+  },
+  "apk": {
+    "runId": 43367109797,
+    "status": "REQUESTED"
+  },
+  "originalSigning": "NOT_RUN",
+  "deviceAcceptance": "NOT_RUN",
+  "note": "Preflight is not full release acceptance. This evidence branch must not change the frozen source before its QA/signing."
+}
