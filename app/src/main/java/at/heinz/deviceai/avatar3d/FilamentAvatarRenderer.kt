@@ -464,10 +464,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         Matrix.multiplyMM(transformed, 0, worldTransform, 0, avatarRootRest, 0)
         engine!!.transformManager.setTransform(avatarRoot, transformed)
         applyAvatarOpacity(at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY)
-        // During the flight only the 3D monitor makes its presentation turn; native overlays keep the rest frame.
-        cockpitStage?.update(pose?.takeIf { it.monitorYawDegrees != 0.0 }?.let {
-            frame.copy(yawDegrees = (frame.yawDegrees + it.monitorYawDegrees).toFloat())
-        } ?: frame, cockpitOrb, orbPhase, motion)
+        // Presentation yaw belongs only to the monitor, never to the validated stage/native overlay frame.
+        cockpitStage?.update(frame, cockpitOrb, orbPhase, motion,
+            monitorTurnDegrees = (pose?.monitorYawDegrees ?: 0.0).toFloat())
         // SDR pixels stay below threshold.
     }
 

@@ -156,7 +156,8 @@ internal class FilamentCockpitStage(
         label = pixels?.label ?: "3D-Bildquelle nicht verfügbar"
     }
 
-    fun update(frame: CockpitStageFrame, orbBounds: RectF, phase: Float, motion: Boolean) {
+    fun update(frame: CockpitStageFrame, orbBounds: RectF, phase: Float, motion: Boolean,
+               monitorTurnDegrees: Float = 0f) {
         require(frame.valid())
         CockpitWorldTransforms.room(frame, transform)
         transformUpdates.setTransform(roomTransform, transform)
@@ -178,7 +179,7 @@ internal class FilamentCockpitStage(
             contextPanels = null
             android.util.Log.w("ContinuumCockpit", "Context panels unavailable", it)
         }
-        val monitorMatrix = frame.monitorTransform()
+        val monitorMatrix = frame.monitorTransform(monitorTurnDegrees)
         transformUpdates.setTransform(monitorTransform, monitorMatrix)
         if (monitorRearTransform != 0) transformUpdates.setTransform(monitorRearTransform, monitorMatrix)
         CockpitWorldTransforms.orb(frame, orbBounds.left, orbBounds.top, orbBounds.right, orbBounds.bottom, transform)
