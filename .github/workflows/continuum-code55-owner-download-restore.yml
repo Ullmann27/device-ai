@@ -1,0 +1,102 @@
+name: "Code55 — restore owner-approved family download (one-time)"
+on:
+  push:
+    branches:
+      - owner/code55-download-restore-20261113
+    paths:
+      - .github/workflows/continuum-code55-owner-download-restore.yml
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: continuum-code55-one-time-public-download-20261113
+  cancel-in-progress: false
+
+jobs:
+  restore:
+    if: github.repository == 'Ullmann27/device-ai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: \${{ github.token }}
+      REPO: Ullmann27/device-ai
+      SOURCE_SHA: 889e06d47fffd2230fa5b062dd1f31b65992e728
+      QA_RUN: "43373431089"
+      APK_RUN: "43373431159"
+      RELEASE_ID: "443913400"
+      SIGNED_ASSET_ID: "742637282"
+      SIGNED_SHA256: 2ba5cbf91f151833e204d54a6ac6435d9cf4081051de1cb25d5fd89a203a07b9
+      SIGNED_SIZE: "103803882"
+      SIGNER_CERT: 6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify exact owner-approved source, successful complete QA, signed release identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = "refs/heads/owner/code55-download-restore-20261113"
+          tag="continuum-local-code55-$SOURCE_SHA"
+          latest="$(gh api "repos/$REPO/releases/latest")"
+          jq -e '.tag_name=="continuum-local-code51-6c23d295e2fca2d4e5950a866547733ec5ff22b0"' <<< "$latest" >/dev/null
+          for run_id in "$QA_RUN" "$APK_RUN"; do
+            run="$(gh api "repos/$REPO/actions/runs/$run_id")"
+            jq -e --arg sha "$SOURCE_SHA" '.head_sha==$sha and .head_branch=="integrate/code55-apk-fable-20261112" and .event=="push" and .status=="completed" and .conclusion=="success"' <<< "$run" >/dev/null
+            jobs="$(gh api "repos/$REPO/actions/runs/$run_id/jobs?per_page=100")"
+            jq -e --argjson qa "$QA_RUN" --argjson id "$run_id" '
+              (.jobs|length)==(if $id==$qa then 4 else 2 end) and
+              all(.jobs[]; .conclusion=="success") and
+              ([.jobs[].name]|sort)==(if $id==$qa then
+                ["complete-qa","full-android","native-pdf","node-backend"] else
+                ["scoped-android","unsigned-arm64"] end|sort)
+            ' <<< "$jobs" >/dev/null
+          done
+          release="$(gh api "repos/$REPO/releases/$RELEASE_ID")"
+          jq -e --arg tag "$tag" --arg sha "$SOURCE_SHA" --arg cert "$SIGNER_CERT" \
+            --arg digest "$SIGNED_SHA256" --argjson size "$SIGNED_SIZE" \
+            --argjson asset "$SIGNED_ASSET_ID" '
+            .draft==true and .tag_name==$tag and .target_commitish==$sha and
+            (.body|contains($cert)) and
+            ([.assets[]|select(.name|endswith(".apk"))]|length)==1 and
+            ([.assets[]|select(.id==$asset)]|length)==1 and
+            ([.assets[]|select(.id==$asset)][0] |
+              .size==$size and .digest==("sha256:"+$digest) and
+              .name==("Continuum-Lokal-Code55-"+$digest+".apk"))
+          ' <<< "$release" >/dev/null
+          echo "PASS: original-signed Code55 draft and exact source-bound QA identified"
+      - name: Keep signed bytes identical and activate existing in-app public GitHub update channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="continuum-local-code55-$SOURCE_SHA"
+          canonical="Continuum-Lokal-$SIGNED_SHA256.apk"
+          gh api --method PATCH "repos/$REPO/releases/assets/$SIGNED_ASSET_ID" -f name="$canonical" > /dev/null
+          gh api --method PATCH "repos/$REPO/releases/$RELEASE_ID" \
+            -F draft=false -F prerelease=false -f make_latest=true >/dev/null
+          release="$(gh api "repos/$REPO/releases/$RELEASE_ID")"
+          jq -e --arg tag "$tag" --arg sha "$SOURCE_SHA" --arg digest "$SIGNED_SHA256" \
+            --argjson size "$SIGNED_SIZE" --arg canonical "$canonical" \
+            '.draft==false and .prerelease==false and .tag_name==$tag and
+             .target_commitish==$sha and
+             ([.assets[]|select(.name|endswith(".apk"))]|length)==1 and
+             ([.assets[]|select(.name==$canonical)][0] |
+                .digest==("sha256:"+$digest) and .size==$size and
+                .browser_download_url==("https://github.com/Ullmann27/device-ai/releases/download/"+$tag+"/"+$canonical))' <<< "$release" > /dev/null
+          latest="$(gh api "repos/$REPO/releases/latest")"
+          jq -e --argjson id "$RELEASE_ID" '.id==$id and .draft==false' <<< "$latest" >/dev/null
+          echo "PASS: Code55 is published as the exact latest update with original signed bytes"
+          printf 'DOWNLOAD=https://github.com/%s/releases/download/%s/%s\n' "$REPO" "$tag" "$canonical"
+      - name: Independently verify public unauthenticated APK download
+        shell: bash
+        env:
+          GH_TOKEN: ""
+        run: |
+          set -euo pipefail
+          url="https://github.com/Ullmann27/device-ai/releases/download/continuum-local-code55-$SOURCE_SHA/Continuum-Lokal-$SIGNED_SHA256.apk"
+          curl --fail --location --silent --show-error --retry 5 --retry-delay 2 --connect-timeout 15 --max-time 300 -o "/tmp/code55-owner-update.apk" "$url"
+          test "$(stat -c %s /tmp/code55-owner-update.apk)" = "$SIGNED_SIZE"
+          echo "$SIGNED_SHA256  /tmp/code55-owner-update.apk" | sha256sum --check --status
+          echo "PUBLIC_APK_DOWNLOAD_AND_SHA256_PASS"
