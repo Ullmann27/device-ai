@@ -1,0 +1,19 @@
+// Only targeted voice regression tests.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android project')
+    app.tasks.withType(org.gradle.api.tasks.testing.Test).matching {
+        it.name == 'testDebugUnitTest'
+    }.configureEach {
+        filter {
+            includeTestsMatching 'at.heinz.deviceai.cognitive.GermanOnDeviceSpeechLocaleTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ContinuousConversationModeTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ContinuousConversationRecoveryTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalSpeechSessionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ConversationSpeechIntegrationRegressionTest'
+            includeTestsMatching 'at.heinz.deviceai.AndroidSpeechFailureTest'
+            failOnNoMatchingTests = true
+        }
+    }
+}
