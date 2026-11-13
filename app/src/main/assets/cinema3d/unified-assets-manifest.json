@@ -2,7 +2,7 @@
   "evidence": "BLENDER_MESH_BUILD_NOT_DEVICE_VERIFICATION",
   "blender": "4.3.2",
   "build_scope": "workstation_only",
-  "builder_sha256": "ced8aa1853344bc6ce80b2665b680d660080a83d2e30143ff2644d43bb48af49",
+  "builder_sha256": "9074a0d1fb65e68fa3d70175810809b3e4418294f59d263ae3178d1eccd1dd9a",
   "source_metadata": {
     "source_base_commit": "5348087805fa4ab4152ea04e9f20bb41afae9d95",
     "generator_path": "tools/cockpit-workstation/build_scene.py",
@@ -772,17 +772,214 @@
         0.004
       ],
       "alpha": 1.0
+    },
+    "bunker-concrete": {
+      "linear_base_color": [
+        0.014443843596092545,
+        0.021219010376003555,
+        0.030713443732993635
+      ],
+      "metallic": 0.0,
+      "roughness": 0.88,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emission_strength": 1.0
+    },
+    "bunker-titanium": {
+      "linear_base_color": [
+        0.03433980680868217,
+        0.052860647023180246,
+        0.07421356838014963
+      ],
+      "metallic": 0.84,
+      "roughness": 0.38,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.12,
+      "linear_emission": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emission_strength": 1.0
+    },
+    "bunker-conduit-metal": {
+      "linear_base_color": [
+        0.021219010376003555,
+        0.033104766570885055,
+        0.04518620438567554
+      ],
+      "metallic": 0.78,
+      "roughness": 0.42,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emission_strength": 1.0
+    },
+    "bunker-channel-cyan": {
+      "linear_base_color": [
+        0.0015176349177441874,
+        0.14995978981060856,
+        0.1946178304415758
+      ],
+      "metallic": 0.22,
+      "roughness": 0.28,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.0,
+        0.7835377915261935,
+        1.0
+      ],
+      "emission_strength": 1.25
+    },
+    "bunker-channel-violet": {
+      "linear_base_color": [
+        0.03433980680868217,
+        0.014443843596092545,
+        0.10702310297826761
+      ],
+      "metallic": 0.22,
+      "roughness": 0.28,
+      "alpha": 1.0,
+      "ior": 1.46,
+      "clearcoat": 0.0,
+      "linear_emission": [
+        0.3712376804741491,
+        0.043735029256973465,
+        1.0
+      ],
+      "emission_strength": 1.1
     }
   },
   "files": [
     {
       "path": "app/src/main/assets/cinema3d/cockpit-workstation.glb",
-      "sha256": "9f00a0687d8bcdce910d38d2e61684e1517832003ef66f8df95efe56cdf4aca0",
-      "bytes": 52228,
-      "meshes": 15,
-      "triangles_unique_meshes": 1118,
-      "nodes": 36,
+      "sha256": "1a958f2b9fcfb4e6dca19fceb9424c1ad920be35e471646e45ecde7e9b031712",
+      "bytes": 645592,
+      "meshes": 20,
+      "triangles_unique_meshes": 9786,
+      "nodes": 41,
       "materials": [
+        {
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "bunker-concrete",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.014443843625485897,
+              0.021219009533524513,
+              0.03071344457566738,
+              1
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 0.8799999952316284
+          }
+        },
+        {
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "bunker-conduit-metal",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.021219009533524513,
+              0.03310476616024971,
+              0.045186202973127365,
+              1
+            ],
+            "metallicFactor": 0.7799999713897705,
+            "roughnessFactor": 0.41999998688697815
+          }
+        },
+        {
+          "emissiveFactor": [
+            0,
+            0.7835378050804138,
+            1
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            },
+            "KHR_materials_emissive_strength": {
+              "emissiveStrength": 1.25
+            }
+          },
+          "name": "bunker-channel-cyan",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.0015176349552348256,
+              0.14995978772640228,
+              0.1946178376674652,
+              1
+            ],
+            "metallicFactor": 0.2199999988079071,
+            "roughnessFactor": 0.2800000011920929
+          }
+        },
+        {
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.11999999731779099,
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            }
+          },
+          "name": "bunker-titanium",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.03433980792760849,
+              0.052860647439956665,
+              0.07421357184648514,
+              1
+            ],
+            "metallicFactor": 0.8399999737739563,
+            "roughnessFactor": 0.3799999952316284
+          }
+        },
+        {
+          "emissiveFactor": [
+            0.37123769521713257,
+            0.04373503103852272,
+            1
+          ],
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatRoughnessFactor": 0.1599999964237213
+            },
+            "KHR_materials_emissive_strength": {
+              "emissiveStrength": 1.100000023841858
+            }
+          },
+          "name": "bunker-channel-violet",
+          "pbrMetallicRoughness": {
+            "baseColorFactor": [
+              0.03433980792760849,
+              0.014443843625485897,
+              0.10702310502529144,
+              1
+            ],
+            "metallicFactor": 0.2199999988079071,
+            "roughnessFactor": 0.2800000011920929
+          }
+        },
         {
           "extensions": {
             "KHR_materials_clearcoat": {
@@ -909,6 +1106,7 @@
       ],
       "extensions_used": [
         "KHR_materials_clearcoat",
+        "KHR_materials_emissive_strength",
         "KHR_materials_unlit"
       ]
     },

@@ -40,7 +40,13 @@ test('reflow preserves the active agent, user draft, conversation views and dash
   assert.match(code, /input === rebuiltComposer/);
   assert.match(code, /chatMessages\.add\(child\)/);
   assert.match(code, /chatMessages\.forEach \{ chatContainer\.addView\(it\) \}/);
-  assert.match(code, /previousHomeState\?\.let \{ homeView\?\.state = it \}/);
+  assert.match(code, /val previousHomeState = homeView\?\.state/);
+  assert.match(code, /previousHomeState\?\.let \{ previous ->\s*homeView\?\.let \{ home -> home\.state = previous\.copy\(computer = home\.state\.computer\) \}\s*\}/);
+  assert.doesNotMatch(code, /homeView\?\.state = it\b|home\.state = previous\s*(?:\n|\})/);
+  assert.ok(code.indexOf('setContentView(buildUi())') < code.indexOf('previous.copy(computer = home.state.computer)'));
+  const pane = activity.split('private fun buildConversationPane(wide: Boolean): View {')[1]?.split('\n    private fun ')[0];
+  assert.ok(pane, 'rebuilt dashboard source');
+  assert.match(pane, /homeView = home\s*home\.onComputerPresentationChanged = \{ computerController\?\.refreshGaze\(\) \}\s*computerController\?\.restoreFeed\(\)/);
   assert.doesNotMatch(code, /onDestroy\(|localRuntime\.unload|bootstrapMemory\s*=/);
   assert.match(composer, /fun safeSelection\(\): Pair<Int, Int>/);
 });

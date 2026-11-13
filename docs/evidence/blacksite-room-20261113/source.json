@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "df1d02101065579759b6e13702c6a3ffbdffeee4",
+  "sourceTree": "b171ba13dbb8812b9a65609a4dd0504eb9780845",
+  "branch": "work/blacksite-room-20261113",
+  "preservedAssets": {
+    "tools/cockpit-workstation/source/pr801-workstation.glb": "09447df1b5f6dc270f6f9e42f68b9640b3fd019f82a624228b082c7d08eca99a",
+    "tools/cockpit-workstation/source/pr801-workstation.json": "eb8f0dbf6009174ea6c885ce663ee8f2de5bea8663c0682a84a1c4ec809a3e32",
+    "app/src/main/assets/avatar3d/continuum-avatar.glb": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+    "app/src/main/assets/cinema3d/continuum-orb.glb": "fdfe54ce9aa2ed6af5ec6866c1078a4a34ece511e66b29cd1b3672f83229079c",
+    "app/src/main/assets/cinema3d/live-monitor.filamat": "1b24ad728cecce23e9fca904c45370eb35ea5f9e2c0cd85ed3914f7490e27ac3",
+    "app/src/main/assets/cinema3d/document-workspace.glb": "903811921bc8d2d8ff7f2f845b0d2272c1210e4439001b09f17011f4509cc258"
+  },
+  "evidenceClass": "HOST_ROOM_BUILD_NOT_DEVICE_VERIFICATION"
+}

@@ -1,4 +1,4 @@
-name: Code55 - full source QA and native PDF
+name: Code55 - full source QA and native PDF/Filament
 
 on:
   push:
@@ -41,7 +41,8 @@ jobs:
         run: |
           set -euo pipefail
           python3 -B tools/cockpit-workstation/verify_scene.py
-          python3 -B tools/cockpit-workstation/verify_unified_assets.py
+          python3 -B tools/cockpit-workstation/verify_unified_assets.py --require-blacksite
+          python3 -B tools/cockpit-workstation/test_blacksite_contract.py
           python3 -B tools/code55-apk/validator_test.py
           python3 -B tools/code55-apk/junit_summary_test.py
       - name: Source-bound full critical and Node QA
@@ -50,6 +51,9 @@ jobs:
           node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code55-critical"
           node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code55-full"
           node -e "for(const p of ['code55-critical','code55-full']){const r=require(process.env.RUNNER_TEMP+'/'+p+'/report.json');if(r.status!=='PASS'||r.source.commit!==process.env.GITHUB_SHA||!r.sourceUnchanged)process.exit(69);console.log(p+' SOURCE_BOUND_PASS')}"
+      - name: Explain actual Node QA outcomes
+        if: always()
+        run: python3 -B tools/code55-apk/node-summary.py "$RUNNER_TEMP/code55-critical" "$RUNNER_TEMP/code55-full"
       - name: Backend check and tests
         run: |
           set -euo pipefail
@@ -196,7 +200,7 @@ jobs:
               cat "$evidence/emulator.log" || true
             fi
             if [[ -n "$emulator_pid" ]]; then
-              "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 emu kill || true
+              timeout 10 "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 emu kill || true
               kill "$emulator_pid" 2>/dev/null || true
             fi
             sudo chgrp "$original_kvm_group" /dev/kvm
@@ -206,9 +210,10 @@ jobs:
           trap cleanup EXIT
           sudo chgrp "$(id -gn)" /dev/kvm
           sudo chmod g+rw /dev/kvm
+          "$ANDROID_HOME/emulator/emulator" -version > "$evidence/emulator-version.txt"
           "$ANDROID_HOME/platform-tools/adb" start-server
           "$ANDROID_HOME/emulator/emulator" -avd continuum-native-pdf -port 5554 -accel on \
-            -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader -memory 2048 -cores 2 \
+            -no-window -no-audio -no-boot-anim -no-snapshot -gpu swangle -memory 2048 -cores 2 \
             > "$evidence/emulator.log" 2>&1 &
           emulator_pid=$!
           ready=false

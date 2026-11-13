@@ -28,7 +28,26 @@ git rev-parse HEAD > "$evidence/source-sha.txt"
 git rev-parse 'HEAD^{tree}' > "$evidence/source-tree.txt"
 sha256sum "$app" "$test" > "$evidence/apk-sha256.txt"
 "$adb" -s "$serial" shell getprop ro.build.fingerprint > "$evidence/android-fingerprint.txt"
-trap '"$adb" -s "$serial" logcat -d -v threadtime -s Filament AndroidRuntime libc DEBUG > "$evidence/native-filament-logcat.txt" 2>&1 || true' EXIT
+logcat_pid=''
+cleanup() {
+  probe_exit=$?
+  if [[ -n "$logcat_pid" ]]; then
+    kill "$logcat_pid" 2>/dev/null || true
+    for attempt in {1..10}; do
+      kill -0 "$logcat_pid" 2>/dev/null || break
+      sleep .1
+    done
+    kill -KILL "$logcat_pid" 2>/dev/null || true
+    wait "$logcat_pid" 2>/dev/null || true
+  fi
+  timeout -k 2s 5s "$adb" -s "$serial" logcat -d -v threadtime -s Filament AndroidRuntime libc DEBUG \
+    > "$evidence/native-filament-logcat-final.txt" 2>&1 || true
+  return "$probe_exit"
+}
+trap cleanup EXIT
+timeout -k 2s 290s "$adb" -s "$serial" logcat -v threadtime -s Filament AndroidRuntime libc DEBUG \
+  > "$evidence/native-filament-logcat.txt" 2>&1 &
+logcat_pid=$!
 "$adb" -s "$serial" shell dumpsys SurfaceFlinger > "$evidence/surfaceflinger.txt"
 python3 - "$evidence/surfaceflinger.txt" <<'PY'
 from pathlib import Path
@@ -38,9 +57,9 @@ gles = [line.strip() for line in text.splitlines() if line.strip().startswith("G
 assert len(gles) == 1 and "swiftshader" in gles[0].lower(), "Software GLES renderer required: " + str(gles)
 print(gles[0])
 PY
-"$adb" -s "$serial" install -r "$app" > "$evidence/install-app.txt"
-"$adb" -s "$serial" install -t -r "$test" > "$evidence/install-test.txt"
-timeout 240s "$adb" -s "$serial" shell am instrument -w -r -e probe filament \
+timeout -k 2s 60s "$adb" -s "$serial" install -r "$app" > "$evidence/install-app.txt"
+timeout -k 2s 60s "$adb" -s "$serial" install -t -r "$test" > "$evidence/install-test.txt"
+timeout -k 2s 240s "$adb" -s "$serial" shell am instrument -w -r -e probe filament \
   "$test_package/at.heinz.deviceai.ContinuumVisualInstrumentation" \
   | tee "$evidence/native-filament.txt"
 python3 - "$evidence/native-filament.txt" <<'PY'

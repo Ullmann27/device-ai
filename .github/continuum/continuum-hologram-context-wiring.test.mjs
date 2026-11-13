@@ -39,9 +39,16 @@ test('foreground lifecycle explicitly pauses, cancels, and resumes hologram whil
  const paused=segment(activity,'override fun onPause() {','override fun onSaveInstanceState(');
  const resumed=segment(activity,'override fun onResume() {','override fun onPause()');
  const policy=segment(orb,'private fun updateMotionPolicy() {','private fun settleState()');
- assert.ok(paused.includes('hologramView?.setForegroundActive(false)'));
+ assert.match(paused,/foregroundLearningActive = false\s*updateUiFeedbackPolicy\(\)\s*hologramView\?\.setForegroundActive\(computerFeedbackActive\(\)\)\s*homeView\?\.setForegroundActive\(computerFeedbackActive\(\)\)/);
+ const feedback=segment(activity,'private fun computerFeedbackActive(): Boolean','private fun updateUiFeedbackPolicy()');
+ assert.match(feedback,/computerViewVisible && isInMultiWindowMode &&\s*computerController\?\.active == true && computerController\?\.awaitingConsent != true/);
+ assert.doesNotMatch(paused,/hologramView\?\.setForegroundActive\(true\)|homeView\?\.setForegroundActive\(true\)/);
+ assert.match(paused,/if \(!isInMultiWindowMode\) computerViewVisible = false/);
+ assert.match(paused,/if \(!isInMultiWindowMode && computerController\?\.awaitingConsent != true\) computerController\?\.stop\(\)/);
+ const stopped=segment(activity,'override fun onStop() {','override fun onDestroy()');
+ assert.match(stopped,/computerViewVisible = false\s*if \(computerController\?\.awaitingConsent != true\) computerController\?\.stop\(\)/);
  assert.ok(resumed.includes('hologramView?.setForegroundActive(true)'));
- assert.ok(activity.includes('it.setForegroundActive(foregroundLearningActive)'),
+ assert.ok(activity.includes('it.setForegroundActive(foregroundLearningActive || computerFeedbackActive())'),
    'Fold/home rebuild must inherit current foreground status');
  assert.ok(orb.includes('foregroundActive && motionAllowed && isAttachedToWindow'));
  assert.ok(policy.includes('removeCallbacks(drawFrame)'));
