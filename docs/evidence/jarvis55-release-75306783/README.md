@@ -1,4 +1,6 @@
-# Code55 candidate 75306783
+# Code55 historical candidate 75306783
+
+**Superseded for release:** review identified app-topic conversation interception. Corrected source `97b607d00a9363f8c982a92fd47c783345e0d57a` is in [PR #827](https://github.com/Ullmann27/device-ai/pull/827), with [focused run43370686810](https://github.com/Ullmann27/device-ai/actions/runs/43370686810). Do not sign75306783; final full QA/APK must certify the replacement.
 
 Frozen source: `753067835c3b33ff850f5c3e8d079d9dcd5eb742`; tree `ea717d3aaf18b5c6023fe86b899d5519e7c2764e`.
 Canonical branch: `integrate/code55-apk-fable-20261112`, PR #809. No main merge.

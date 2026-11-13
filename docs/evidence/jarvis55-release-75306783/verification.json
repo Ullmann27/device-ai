@@ -4,7 +4,7 @@
   "sourceSha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742",
   "sourceTree": "ea717d3aaf18b5c6023fe86b899d5519e7c2764e",
   "canonicalBranch": "integrate/code55-apk-fable-20261112",
-  "status": "FULL_ANDROID_PENDING",
+  "status": "SUPERSEDED_FOR_RELEASE",
   "fullQa": {
     "runId": 43367109818,
     "runAttempt": 1,
@@ -196,5 +196,12 @@
   "publication": "NOT_RUN",
   "installation": "NOT_RUN",
   "fold7": "NOT_RUN",
-  "note": "Focused/scoped suites overlap full QA and must not be added. Emulator/host evidence is not Fold7 acceptance. Final full Android/lint and aggregate remain required."
+  "note": "75306783 is historical evidence, not the selected signing candidate. The corrected source needs its own complete QA and APK. Focused/scoped suites overlap full QA and are not additive.",
+  "releaseHold": {
+    "reason": "App-topic conversation interception confirmed in source",
+    "reviewCommentId": 6844232629,
+    "replacementPr": 827,
+    "replacementSource": "97b607d00a9363f8c982a92fd47c783345e0d57a",
+    "replacementFocusedRun": 43370686810
+  }
 }
