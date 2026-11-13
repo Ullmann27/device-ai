@@ -82,6 +82,60 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  renderer-preflight:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code56-apk-qa-20261113'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Source identity
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Android SDK
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Actual Android compilation and renderer regressions
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=56 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            -I .github/continuum/code56-renderer-tests.init.gradle :app:testDebugUnitTest
+          python3 - <<'PY'
+          import pathlib, xml.etree.ElementTree as ET
+          files = list(pathlib.Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'))
+          cases = [c for f in files for c in ET.parse(f).getroot().iter('testcase')]
+          assert cases, 'No actual JUnit results'
+          assert not any(c.find(x) is not None for c in cases for x in ('failure', 'error', 'skipped'))
+          repair = [c for c in cases if c.attrib.get('classname') == 'at.heinz.deviceai.avatar3d.CockpitMonitorPresentationTest']
+          assert len(repair) == 6, f'Missing monitor regression cases: {len(repair)}'
+          print(f'CODE56_RENDERER_PREFLIGHT_PASS cases={len(cases)} repair_cases={len(repair)}')
+          PY
+      - name: Preserve renderer JUnit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code56-Renderer-regressions
+          path: app/build/test-results/testDebugUnitTest/
+          if-no-files-found: warn
+          retention-days: 14
+
   full-android:
     if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code56-apk-qa-20261113'
     runs-on: ubuntu-latest
@@ -107,7 +161,7 @@ jobs:
         run: |
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
-      - name: Full unfiltered Android and UI regression suite
+      - name: Full unfiltered Android and UI regression suite including motion evidence
         run: |
           set -euo pipefail
           unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
@@ -116,13 +170,14 @@ jobs:
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
             -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=56 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -PcontinuumUiEvidenceDir="$RUNNER_TEMP/code56-ui-evidence" \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
             :app:testDebugUnitTest
       - name: Require exact declared skip policy
         if: always()
         run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
       - name: Android lint
-        if: success()
+        if: ${{ !cancelled() }}
         run: |
           set -euo pipefail
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
@@ -138,6 +193,7 @@ jobs:
           path: |
             app/build/test-results/testDebugUnitTest/
             app/build/reports/lint-results-debug.*
+            ${{ runner.temp }}/code56-ui-evidence/
           if-no-files-found: warn
           retention-days: 14
 
