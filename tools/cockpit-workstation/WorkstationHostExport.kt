@@ -4,15 +4,21 @@ import at.heinz.deviceai.avatar3d.AvatarFraming
 import at.heinz.deviceai.avatar3d.AvatarGlbContract
 import at.heinz.deviceai.avatar3d.AvatarMaterialVariant
 import at.heinz.deviceai.avatar3d.CockpitStageFrame
+import at.heinz.deviceai.avatar3d.CockpitStudioEnvironment
 import at.heinz.deviceai.avatar3d.CockpitWorldTransforms
 import at.heinz.deviceai.ui.JarvisShellLayout.Box
 import at.heinz.deviceai.ui.JarvisShellLayout.Slot
 import java.awt.image.BufferedImage
 import java.io.File
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.security.MessageDigest
 import javax.imageio.ImageIO
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 /** Exact layout and painter export. */
 object WorkstationHostExport {
@@ -34,10 +40,38 @@ object WorkstationHostExport {
             CockpitStageFrame.CONTENT_RIGHT, CockpitStageFrame.CONTENT_BOTTOM)))
         .put("contentDepth", CockpitStageFrame.CONTENT_DEPTH)
 
+    private fun studioEnvironment(out: File): JSONObject {
+        val width = CockpitStudioEnvironment.FACE_SIZE * 4
+        val height = width / 2
+        val bytes = ByteBuffer.allocate(width * height * 4 * 4).order(ByteOrder.LITTLE_ENDIAN)
+        val rgb = FloatArray(3)
+        for (row in 0 until height) for (column in 0 until width) {
+            val phi = PI - 2.0 * PI * (column + .5) / width
+            val theta = PI - PI * (row + .5) / height
+            val horizontal = sin(theta)
+            CockpitStudioEnvironment.radiance((horizontal * cos(phi)).toFloat(), cos(theta).toFloat(),
+                (-horizontal * sin(phi)).toFloat(), rgb)
+            check(rgb.all { it.isFinite() && it >= 0f })
+            rgb.forEach(bytes::putFloat)
+            bytes.putFloat(1f)
+        }
+        val file = File(out, "studio-environment.rgba32f")
+        file.writeBytes(bytes.array())
+        val digest = MessageDigest.getInstance("SHA-256").digest(bytes.array())
+            .joinToString("") { "%02x".format(it) }
+        return JSONObject().put("file", file.name).put("sha256", digest)
+            .put("width", width).put("height", height).put("format", "RGBA32F_LE")
+            .put("source", "CockpitStudioEnvironment.radiance")
+            .put("colorSpace", "LINEAR_SRGB").put("rows", "BOTTOM_TO_TOP")
+            .put("projection", "BLENDER_EQUIRECTANGULAR")
+            .put("directionMapping", "Blender (x,y,z) to Kotlin (x,z,-y)")
+    }
+
     @JvmStatic fun main(args: Array<String>) {
         require(args.size == 4)
         val root = File(args[0])
         val out = File(args[1]).apply { mkdirs() }
+        val environment = studioEnvironment(out)
         val video = args[2] == "video"
         val draft = args[2] == "draft"
         val example = args[3] == "example"
@@ -206,6 +240,7 @@ object WorkstationHostExport {
             .joinToString("") { "%02x".format(it) }
         File(out, "scene-export.json").writeText(JSONObject().put("schema", "cockpit-unified-review-v2")
             .put("sceneMode", "UNIFIED_3D").put("avatarRuntimeVariantSha256", variantHash)
+            .put("studioEnvironment", environment)
             .put("inputClass", "SYNTHETIC_FOCUS_REPLAY").put("contentMode", if (example) "example" else "empty")
             .put("orbRingCount", orbRingCount)
             .put("orbClock", JSONObject().put("mode", "CONSTANT_READY_REPLAY")

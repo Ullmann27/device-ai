@@ -224,6 +224,7 @@ class AgentActivity : Activity() {
     private var systemPickerSession: String? = null
     private var systemReport = "Noch keine Diagnose ausgeführt."
     private var systemBaseline: SystemPerformanceCapture? = null
+    private var systemThermalRecorder: ThermalPhaseRecorder? = null
     private var systemConfirmationDialog: AlertDialog? = null
     private lateinit var backend: AgentBackendClient
     private lateinit var modelCatalog: LocalModelCatalog
@@ -333,7 +334,8 @@ class AgentActivity : Activity() {
     private var computerController: OwnerComputerSessionController? = null
     @Volatile private var computerViewVisible = false
     private data class PendingComputerLaunch(val session: String, val generation: Long, val packageName: String,
-        val intent: at.heinz.deviceai.cognitive.OwnerComputerIntent, val approvedAt: Long)
+        val intent: at.heinz.deviceai.cognitive.OwnerComputerIntent, val approvedAt: Long,
+        val request: String, val allowMaya: Boolean, val ownerRevision: Long)
     private var pendingComputerLaunch: PendingComputerLaunch? = null
     private var pendingLocalSpeechRequest: Int? = null
     private var pendingLocalSpeechSession: String? = null
@@ -349,6 +351,7 @@ class AgentActivity : Activity() {
     private var chatMicButton: Button? = null
     private val conversationListen = Runnable { listenForConversationTurn() }
     private val conversationResume = Runnable { resumeConversationAfterReply() }
+    private val conversationForegroundRecovery = Runnable { recoverForegroundConversation() }
     private val conversationIdleCheck = Runnable { checkConversationReplyIdle() }
     private var voiceReady = false
     private var voiceInitialized = false
@@ -433,7 +436,7 @@ class AgentActivity : Activity() {
     private var bottomWorkAreaBar: View? = null
     private var syncPhoneNavigation: (() -> Unit)? = null
     // Reference-design start screen (PR #74): real data only, see ContinuumDashboardCollector.
-    private var homeView: at.heinz.deviceai.ui.ContinuumHomeView? = null
+    @Volatile private var homeView: at.heinz.deviceai.ui.ContinuumHomeView? = null
     // Jarvis cockpit animation layer (docs/CONTINUUM_COCKPIT.md): real events only, default visuals replaceable.
     private val cockpitBus = at.heinz.deviceai.cockpit.CockpitAnimationBus()
     private val cockpitTriggers = at.heinz.deviceai.cockpit.CockpitAnimationTriggers(cockpitBus)
@@ -541,6 +544,9 @@ class AgentActivity : Activity() {
     private var chiefStatusPool: at.heinz.deviceai.chief.ChiefWorkerPool? = null
     private var botRosterDialog: ContinuumBotRosterDialog? = null
     private var botTeam: at.heinz.deviceai.chief.ChiefBotTeam? = null
+    private data class TeamReplyOrigin(val taskId: String, val session: String, val generation: Long,
+        val revision: Long, val request: String, val allowMaya: Boolean, val ownerRevision: Long)
+    private var pendingTeamReply: TeamReplyOrigin? = null
     private var botTeamOwnsLane = false
     private val botProfiles by lazy {
         at.heinz.deviceai.chief.ChiefBotProfileStore(
@@ -811,11 +817,16 @@ class AgentActivity : Activity() {
             delivery.run()
         }
         mainHandler.post { maybeAskForConversationCamera() }
+        refreshBotTeam()
+        if (continuousConversation.foregroundRecoveryPending) {
+            mainHandler.removeCallbacks(conversationForegroundRecovery)
+            mainHandler.postDelayed(conversationForegroundRecovery, 250L)
+        }
     }
 
     override fun onPause() {
         if (!isInMultiWindowMode) computerViewVisible = false
-        if (!isInMultiWindowMode && computerController?.awaitingConsent != true) computerController?.stop()
+        if (!isInMultiWindowMode && computerController?.awaitingConsent != true) computerController?.stopForVisibilityLoss()
         appNameClarification.clear()
         documentReadGeneration++
         pendingReturnedDocument = null
@@ -843,8 +854,11 @@ class AgentActivity : Activity() {
             activeLocalRequest = false
             setBusy(false)
         }
-        // Ending the full recognition scope also invalidates pending Android permission callbacks.
-        cancelSpeechInputScope()
+        // Stop audio; preserve brief recovery.
+        if (continuousConversation.active) {
+            continuousConversation.suspendForBackground(android.os.SystemClock.elapsedRealtime())
+            cancelSpeechInputScope(preserveContinuousMode = true)
+        } else cancelSpeechInputScope()
         stopReadinessCamera()
         ownerFaceDialogs?.dismiss()
         readinessVoiceSampleId = null
@@ -901,7 +915,7 @@ class AgentActivity : Activity() {
 
     override fun onStop() {
         computerViewVisible = false
-        if (computerController?.awaitingConsent != true) computerController?.stop()
+        if (computerController?.awaitingConsent != true) computerController?.stopForVisibilityLoss()
         super.onStop()
     }
 
@@ -1153,7 +1167,9 @@ class AgentActivity : Activity() {
                 }
                 planMessage?.let { planText.text = it }
                 planCard.visibility = planVisible
-                previousHomeState?.let { homeView?.state = it }
+                previousHomeState?.let { previous ->
+                    homeView?.let { home -> home.state = previous.copy(computer = home.state.computer) }
+                }
                 activityMessage?.let { activityText.text = it }
                 neuralMessage?.let { neuralMonitor.text = it }
                 neuralProgress.progress = neuralPercent
@@ -1254,6 +1270,7 @@ class AgentActivity : Activity() {
         home.setJarvisShellStage(true)
         home.setForegroundActive(foregroundLearningActive || computerFeedbackActive())
         homeView = home
+        home.onComputerPresentationChanged = { computerController?.refreshGaze() }
         computerController?.restoreFeed()
         // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar(home.hologram))
@@ -1597,6 +1614,7 @@ class AgentActivity : Activity() {
                 if (!foregroundLearningActive) return@onSuccess
                 homeView?.takeIf { it.isShown }?.let { home ->
                     home.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
+                        computer = home.state.computer,
                         memoryActivity = memoryActivitySnapshot(state.memory),
                         document = airbusCockpitOrchestrator?.documentSnapshot())
                 }
@@ -1623,8 +1641,17 @@ class AgentActivity : Activity() {
                     status >= android.os.PowerManager.THERMAL_STATUS_SEVERE, "Thermal-Status",
                     status.toDouble(), android.os.PowerManager.THERMAL_STATUS_SEVERE.toDouble())
             }
-            power.addThermalStatusListener(mainExecutor, listener)
-            cockpitSubscriptions += AutoCloseable { power.removeThermalStatusListener(listener) }
+            // Android may reject observer registration; keep the rest of the cockpit usable.
+            val registered = try {
+                power.addThermalStatusListener(mainExecutor, listener)
+                true
+            } catch (failure: RuntimeException) {
+                android.util.Log.w("ContinuumThermal", "Thermal observer registration unavailable", failure)
+                false
+            }
+            if (registered) cockpitSubscriptions += AutoCloseable {
+                runCatching { power.removeThermalStatusListener(listener) }
+            }
         }
     }
 
@@ -3062,10 +3089,16 @@ class AgentActivity : Activity() {
         val team = botTeam ?: return false
         val admissionToken = team.admissionToken()
         cancelSpeechInputScope()
+        pendingTeamReply = if (selectedBot == null && team.snapshot().tasks.none { it.id == id }) {
+            addUserMessage(text, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            TeamReplyOrigin(id, sessionId, admissionToken, revision, text, ownerReplyAllowsMaya, ownerReplyRevision)
+        } else null
         botTeamOwnsLane = true
+        activeLocalRequest = true
         setBusy(true)
         onBacklog({ team.submit(id, text, revision, ownerApproved = true, admissionToken = admissionToken) }) { result ->
             if (result.isFailure) {
+                pendingTeamReply?.takeIf { it.taskId == id }?.let { pendingTeamReply = null }
                 Toast.makeText(this, "Teamauftrag nicht angenommen oder Speicherung unklar. Verlauf prüfen.",
                     Toast.LENGTH_LONG).show()
             }
@@ -3084,9 +3117,46 @@ class AgentActivity : Activity() {
                 mainHandler.postDelayed({ refreshBotTeam() }, 250L)
             } else {
                 botTeamOwnsLane = false
+                activeLocalRequest = false
                 setBusy(false)
             }
         }
+        deliverTeamReply(team)
+    }
+
+    private fun deliverTeamReply(team: at.heinz.deviceai.chief.ChiefBotTeam) {
+        val origin = pendingTeamReply ?: return
+        val state = team.snapshot()
+        if (origin.session != sessionId || origin.generation != team.admissionToken() ||
+            origin.revision != state.revision) {
+            pendingTeamReply = null
+            return
+        }
+        if (!foregroundLearningActive || selectedBot != null || botTeamOwnsLane || team.active() ||
+            team.storageError != null) return
+        val task = state.tasks.singleOrNull { it.id == origin.taskId } ?: return
+        if (task.request != origin.request || task.teamRevision != origin.revision || task.active) return
+        val complete = task.status == at.heinz.deviceai.chief.ChiefTeamStatus.RESPONSES_RECORDED
+        val reply = if (complete) {
+            val review = task.responses.single { it.stage == "REVIEW" }
+            "KI-Team · Auftrag ${task.id.takeLast(8)}\n" +
+                "Analyse und Gegenprüfung sind gespeichert. Der Inhalt ist nicht unabhängig geprüft.\n\n" +
+                "Gegenprüfung:\n${review.text}"
+        } else "KI-Team · Auftrag ${task.id.takeLast(8)}\n" + when (task.status) {
+            at.heinz.deviceai.chief.ChiefTeamStatus.BLOCKED ->
+                "Der Auftrag ist blockiert. Keine vollständige Gegenprüfung bestätigt."
+            at.heinz.deviceai.chief.ChiefTeamStatus.CANCELLED,
+            at.heinz.deviceai.chief.ChiefTeamStatus.INTERRUPTED ->
+                "Der Auftrag wurde beendet. Keine vollständige Gegenprüfung bestätigt."
+            else -> "Der Auftrag ist fehlgeschlagen. Keine vollständige Gegenprüfung bestätigt."
+        }
+        pendingTeamReply = null
+        if (complete) localConversationContext.record(origin.session, origin.request, reply)
+        else localConversationContext.recordNonModel(origin.session, origin.request, "Teamauftrag · ${task.status}")
+        addAssistantMessage(reply, preserveLocalContext = true,
+            keepCockpit = activeWorkArea == ContinuumWorkArea.START, allowMaya = origin.allowMaya,
+            speakNow = origin.ownerRevision == ownerReplyRevision && continuousConversation.state !=
+                at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED)
     }
 
     private fun botContextChanging(agentId: String) {
@@ -4657,9 +4727,12 @@ class AgentActivity : Activity() {
 
     private fun showSystemIntelligence(): Unit = showCenter(
         "Systemdiagnose", "Lokale Messungen und ausdrücklich freigegebene Schritte. Root bleibt deaktiviert.",
-        { done -> done(systemReport) },
+        { done -> done(systemReport + (systemThermalRecorder?.let { "\n\n" + it.diagnosticReportGerman() } ?: "")) },
         listOf(
             CenterAction("JETZT ANALYSIEREN", accent = true) { runSystemTool(SystemIntelligenceCommands.DIAGNOSE) },
+            CenterAction(if (systemThermalRecorder?.active != null) "MESSREIHE STOPPEN" else "NEUE MESSREIHE STARTEN") {
+                toggleSystemThermalRecording()
+            },
             CenterAction("VORHER-MESSUNG MERKEN") {
                 val current = executor.lastDiagnosis
                 if (current != null) {
@@ -4695,6 +4768,15 @@ class AgentActivity : Activity() {
         )
     )
 
+    private fun toggleSystemThermalRecording() {
+        if (busy || !foregroundLearningActive || isFinishing || isDestroyed) return
+        if (systemThermalRecorder?.active != null) systemThermalRecorder?.stop()
+        else systemThermalRecorder = ThermalPhaseRecorder(android.os.SystemClock::elapsedRealtime).apply {
+            start(ThermalPhaseRecorder.Phase.DIAGNOSTIC_SNAPSHOT, null)
+        }
+        showSystemIntelligence()
+    }
+
     private fun runSystemTool(name: String, arguments: Map<String, Any?> = emptyMap(), ownerRequest: String? = null) {
         require(name in SystemIntelligenceCommands.localTools && ToolRegistry.risk(name) == Risk.READ_ONLY)
         dispatchSystemTool(ToolCallRequest(UUID.randomUUID().toString(), name, arguments), false, false, ownerRequest)
@@ -4705,6 +4787,7 @@ class AgentActivity : Activity() {
         centerDialog?.dismiss(); centerDialog = null
         val generation = ++systemGeneration
         val ownerSession = sessionId
+        val requestedAtMillis = System.currentTimeMillis()
         val turn = at.heinz.deviceai.chief.TurnLifecycle(call.callId)
         activeChiefTurn = turn
         turn.acknowledge()?.let {
@@ -4736,6 +4819,8 @@ class AgentActivity : Activity() {
                 systemReport += "\n${bridge.statusDetail()}\nNormale Android-Diagnose benötigt Shizuku nicht."
             if (call.name == SystemIntelligenceCommands.DIAGNOSE && result.record.status == ToolExecutionStatus.SUCCEEDED) {
                 executor.lastDiagnosis?.let { current ->
+                    if (delivered && !result.replayed)
+                        systemThermalRecorder?.sampleDiagnosis(current, requestedAtMillis, System.currentTimeMillis())
                     systemBaseline?.let { baseline ->
                         val comparison = SystemPerformanceEvaluator.compare(baseline, systemPerformanceCapture(current))
                         systemReport += "\n\nVorher/Nachher: ${comparison.summaryGerman()}"
@@ -4802,7 +4887,7 @@ class AgentActivity : Activity() {
         val display = resources.displayMetrics
         val conditions = SystemPerformanceConditions(
             "${android.os.Build.MANUFACTURER}/${android.os.Build.MODEL}",
-            "", "system-snapshot-v1", "idle-observation",
+            "", "system-snapshot-v1", "diagnostic-snapshot",
             "${display.widthPixels}x${display.heightPixels}/${display.densityDpi}",
             batteryPercent = sample.batteryPercent, charging = sample.charging,
             batteryTemperatureC = sample.batteryTemperatureC, thermalStatus = sample.thermalStatus)
@@ -4817,6 +4902,7 @@ class AgentActivity : Activity() {
 
     private fun cancelSystemDiagnosis() {
         systemGeneration++
+        systemThermalRecorder?.stop()
         systemConfirmationDialog?.dismiss()
         systemConfirmationDialog = null
         activeSystemGate?.cancel()
@@ -5993,6 +6079,7 @@ class AgentActivity : Activity() {
             textSize = 21f
             contentDescription = "Nachricht senden"
             setOnClickListener {
+                if (consumeOwnerWorkInterruption()) return@setOnClickListener
                 if (consumePendingResearchChatReply()) return@setOnClickListener
                 val chiefStatus = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
                     ContinuumWorkerChatCommand.ChiefStatus
@@ -6035,6 +6122,7 @@ class AgentActivity : Activity() {
                                      computerIntent: at.heinz.deviceai.cognitive.OwnerComputerIntent? = null) {
         val ownerSession = sessionId
         val ownerRevision = ownerReplyRevision
+        val allowMaya = ownerReplyAllowsMaya
         val contextual = appLookupContext?.takeIf { it.first == ownerSession }?.second.orEmpty()
         val query = OwnerAppLookupIntent.contextualTarget(intake.query, contextual)
         if (query == null) {
@@ -6099,7 +6187,7 @@ class AgentActivity : Activity() {
                     val approvedAt = computerApprovedAt
                     if (computerIntent != null && launched != null && approvedAt != null) {
                         val pending = PendingComputerLaunch(ownerSession, generation, launched.packageName,
-                            computerIntent, approvedAt)
+                            computerIntent, approvedAt, request, allowMaya, ownerRevision)
                         if (foregroundLearningActive) startComputerSession(pending)
                         else pendingComputerLaunch = pending
                         return
@@ -6195,12 +6283,37 @@ class AgentActivity : Activity() {
             localAgentExecutor,
             setFeed = { feed -> homeView?.setLiveComputerFeed(feed) },
             setBusy = { value -> activeLocalRequest = value; setBusy(value) },
-            reply = { value -> addAssistantMessage(value, preserveLocalContext = true, keepCockpit = true) },
             visible = { !isFinishing && !isDestroyed &&
                 (foregroundLearningActive || (computerViewVisible && isInMultiWindowMode)) },
             playClick = { playUiFeedback(at.heinz.deviceai.ui.ContinuumUiFeedback.Cue.BUTTON) },
-            stopClick = { uiFeedback?.stop() }).also { computerController = it }
-        controller.begin(pending.packageName, pending.intent, pending.approvedAt)
+            stopClick = { uiFeedback?.stop() },
+            setPanels = { panel -> homeView?.let { home ->
+                home.state = home.state.copy(computer = panel)
+            } },
+            projectGaze = { homeView?.computerWorkGaze(it) }).also { computerController = it }
+        controller.begin(pending.packageName, pending.intent, pending.approvedAt) { result, epoch, speakNow ->
+            deliverComputerReply(pending, result, epoch, speakNow)
+        }
+    }
+
+    private fun deliverComputerReply(pending: PendingComputerLaunch,
+                                      result: at.heinz.deviceai.cognitive.OwnerComputerWorkflow.Result,
+                                      observationEpoch: Long?, speakNow: Boolean) {
+        if (isFinishing || isDestroyed || pending.session != sessionId ||
+            selectedBot != null) return
+        if (observationEpoch == null && (result.status ==
+                at.heinz.deviceai.cognitive.OwnerComputerWorkflow.Status.VERIFIED || result.draftPrepared)) return
+        val accepted = if (observationEpoch != null && ScreenObservationBus.grantEpoch() != observationEpoch)
+            at.heinz.deviceai.cognitive.OwnerComputerWorkflow.Result(
+                at.heinz.deviceai.cognitive.OwnerComputerWorkflow.Status.PAUSED,
+                "Die Bildschirmfreigabe hat sich geändert. Die letzte Wirkung ist nicht bestätigt; bitte prüfe die App.")
+        else result
+        localConversationContext.recordToolResult(pending.session, pending.request, "owner_computer_workflow",
+            "${accepted.status}: ${accepted.message}")
+        addAssistantMessage(accepted.message, preserveLocalContext = true, keepCockpit = true,
+            allowMaya = pending.allowMaya,
+            speakNow = speakNow && pending.ownerRevision == ownerReplyRevision && continuousConversation.state !=
+                at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED)
     }
 
     private fun deliverAppActionReply(reply: AppActionReply) {
@@ -6290,7 +6403,28 @@ class AgentActivity : Activity() {
         addToolActivity("GERÄTESTATUS · nur öffentliche Betriebsdaten · kein Modell- oder Werkzeugaufruf")
     }
 
+    private fun consumeOwnerWorkInterruption(spoken: String = input.text.toString().trim()): Boolean {
+        val addressed = OwnerAppLookupIntent.stripAddress(spoken,
+            continuumState?.archive?.identityState?.chosenName)
+        if (!at.heinz.deviceai.cognitive.OwnerCorrectionIntent.interruptsWork(addressed)) return false
+        val inCockpit = activeWorkArea == ContinuumWorkArea.START
+        val correctedDraft = documentDraftTurn?.episodeId
+        val previousReplyAllowsMaya = ownerReplyAllowsMaya
+        if (input.text.toString().trim() == spoken) input.text.clear()
+        val continueConversation = continuousConversation.ownerCorrection(sessionId)
+        cancelLocalRequest(preserveContinuousMode = continuousConversation.active, announceDraftStop = false)
+        recordWork(correctedDraft) { it.copy(correction = spoken) }
+        addUserMessage(spoken, keepCockpit = inCockpit)
+        ownerReplyAllowsMaya = ownerReplyAllowsMaya && previousReplyAllowsMaya
+        localConversationContext.recordNonModel(sessionId, spoken, "Besitzerkorrektur; nächster Auftrag offen")
+        addAssistantMessage("Verstanden. Was soll ich anders machen?", preserveLocalContext = true,
+            keepCockpit = inCockpit, allowMaya = ownerReplyAllowsMaya)
+        if (continueConversation) scheduleConversationIdleCheck()
+        return true
+    }
+
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
+        if (consumeOwnerWorkInterruption()) return
         if (computerController?.active == true && input.text.toString().trim().lowercase() in
             setOf("stopp", "stop", "computer stoppen", "live-bild stoppen")) {
             val stopRequest = input.text.toString().trim()
@@ -12211,7 +12345,10 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun cancelLocalRequest() {
+    private fun cancelLocalRequest() = cancelLocalRequest(preserveContinuousMode = false, announceDraftStop = true)
+
+    private fun cancelLocalRequest(preserveContinuousMode: Boolean, announceDraftStop: Boolean) {
+        cancelSpeechInputScope(preserveContinuousMode)
         pendingComputerLaunch = null
         computerController?.stop()
         appNameClarification.clear()
@@ -12249,7 +12386,7 @@ class AgentActivity : Activity() {
         voiceEngine?.stop()
         stopVoiceAnimation()
         clearTaskEffects(immediate = !foregroundLearningActive)
-        if (stoppedDraft?.sessionId == sessionId) addAssistantMessage(
+        if (announceDraftStop && stoppedDraft?.sessionId == sessionId) addAssistantMessage(
             "Entwurf mit STOP abgebrochen – nichts gespeichert.", preserveLocalContext = true,
             keepCockpit = activeWorkArea == ContinuumWorkArea.START)
         activeBotTask?.let { task ->
@@ -12293,7 +12430,6 @@ class AgentActivity : Activity() {
             addToolActivity("App-Auftrag abgebrochen; spätes Ergebnis wird ignoriert")
             return
         }
-        cancelSpeechInputScope()
         if (::executor.isInitialized) executor.cancelPendingActions()
         // Clear synchronously; already queued native deltas also check the
         // cancellation state before they may create or update a draft.
@@ -13886,13 +14022,18 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun cancelSpeechInputScope(){
+    private fun cancelSpeechInputScope(preserveContinuousMode: Boolean = false){
         speechScopeGeneration++;pendingLocalSpeechRequest=null;pendingLocalSpeechSession=null
         pendingLocalSpeechGeneration=-1L;pendingLocalSpeechDialog=null;activeLocalSpeechRequest=null
         voiceListening=false
         onDeviceSpeech?.shutdown()
-        // Ending the full recognition scope (pause, chat/bot switch) destroys the warm native recognizer.
-        stopConversationState()
+        if (preserveContinuousMode) {
+            mainHandler.removeCallbacks(conversationListen)
+            mainHandler.removeCallbacks(conversationResume)
+            mainHandler.removeCallbacks(conversationIdleCheck)
+            mainHandler.removeCallbacks(conversationForegroundRecovery)
+            refreshConversationMicPresentation()
+        } else stopConversationState()
     }
 
     private fun stopConversationState() {
@@ -13900,6 +14041,7 @@ class AgentActivity : Activity() {
         mainHandler.removeCallbacks(conversationListen)
         mainHandler.removeCallbacks(conversationResume)
         mainHandler.removeCallbacks(conversationIdleCheck)
+        mainHandler.removeCallbacks(conversationForegroundRecovery)
         if (continuousConversation.active) continuousConversation.stop()
         refreshConversationMicPresentation()
     }
@@ -13907,10 +14049,13 @@ class AgentActivity : Activity() {
     private fun refreshConversationMicPresentation() {
         val mic = chatMicButton ?: return
         val active = continuousConversation.active
-        mic.text = if (active) "🗣" else "🎙"
-        mic.contentDescription = if (active)
-            "Gesprächsmodus aktiv. Antippen: jetzt sprechen. Lange drücken: Gesprächsmodus beenden."
-        else "Spracheingabe starten"
+        val paused = continuousConversation.state == at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED
+        mic.text = if (paused) "⏸" else if (active) "🗣" else "🎙"
+        mic.contentDescription = when {
+            paused -> "Gesprächsmodus pausiert. Antippen: weiter sprechen. Lange drücken: beenden."
+            active -> "Gesprächsmodus aktiv. Antippen: jetzt sprechen. Lange drücken: beenden."
+            else -> "Spracheingabe starten"
+        }
     }
 
     /** Long press: end hands-free mode, or dictate silently into the draft (never sends). */
@@ -13935,6 +14080,7 @@ class AgentActivity : Activity() {
                 mainHandler.removeCallbacks(conversationResume)
                 mainHandler.removeCallbacks(conversationIdleCheck)
                 mainHandler.removeCallbacks(conversationListen)
+                mainHandler.removeCallbacks(conversationForegroundRecovery)
                 startVoiceInput()
             }
             else -> endContinuousConversation("Gesprächsmodus beendet: neue Chat-Sitzung.")
@@ -13991,6 +14137,7 @@ class AgentActivity : Activity() {
         if (isFinishing || isDestroyed) return
         when (continuousConversation.recognized(turnToken, sessionId, spoken)) {
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.SEND -> {
+                if (consumeOwnerWorkInterruption(spoken.trim())) return
                 val focused = input.hasFocus()
                 val merged = at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.mergeDictation(
                     input.text.toString(), if (focused) input.selectionStart else -1,
@@ -14071,6 +14218,27 @@ class AgentActivity : Activity() {
         }
     }
 
+    /** Recover only explicit foreground consent. */
+    private fun recoverForegroundConversation() {
+        if (!continuousConversation.foregroundRecoveryPending) return
+        if (isFinishing || isDestroyed) { stopConversationState(); return }
+        val canListen = foregroundLearningActive && hasWindowFocus() &&
+            !avatarAwaitingApproval && !voiceListening && input.text.isNullOrBlank() &&
+            centerDialog?.isShowing != true && readinessDialog?.isShowing != true &&
+            (onDeviceSpeech ?: AndroidOnDeviceSpeechInput(this).also { onDeviceSpeech = it })
+                .let { it.microphoneGranted() && it.available() }
+        when (continuousConversation.restoreForeground(
+                sessionId, android.os.SystemClock.elapsedRealtime(), canListen,
+                busy || botLookupPending || voiceSpeaking)) {
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.LISTEN -> startVoiceInput()
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.STOP ->
+                endContinuousConversation("Gesprächsmodus beendet: neue Chat-Sitzung.")
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.PAUSE ->
+                pauseContinuousConversationNotice("Nach einem längeren Hintergrundwechsel bitte erneut antippen.")
+            else -> mainHandler.postDelayed(conversationForegroundRecovery, 250L)
+        }
+    }
+
     /** The microphone reopens only in the foreground, without open dialog or pending approval. */
     private fun resumeConversationAfterReply() {
         val canListen = foregroundLearningActive && !isFinishing && !isDestroyed && hasWindowFocus() &&
@@ -14097,6 +14265,8 @@ class AgentActivity : Activity() {
         voiceEngine?.stop()
         stopVoiceAnimation()
         val scopeGeneration=++speechScopeGeneration
+        voiceListening=false
+        refreshHologramState()
         val scopeSession=sessionId
         val scopeResearchApproval=pendingResearchChatApproval?.approval
         val scopeDialog=devDialog
@@ -14146,9 +14316,23 @@ class AgentActivity : Activity() {
                         Toast.makeText(this,message,Toast.LENGTH_LONG).show()
                     }
                 }) }.onFailure {
-                    speech.cancel();Toast.makeText(this,"Lokale Spracheingabe nicht verfügbar. Keine Audioübertragung gestartet.",Toast.LENGTH_LONG).show()
+                    speech.cancel()
+                    if (conversationTurn != null && speechScopeGeneration == scopeGeneration &&
+                        sessionId == scopeSession) {
+                        onConversationListenFailed(conversationTurn,
+                            at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Failure.START_FAILED)
+                    } else Toast.makeText(this,
+                        "Lokale Spracheingabe nicht verfügbar. Keine Audioübertragung gestartet.",
+                        Toast.LENGTH_LONG).show()
                 }
-            else -> Toast.makeText(this,at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.unavailableReason(android.os.Build.VERSION.SDK_INT),Toast.LENGTH_LONG).show()
+            else -> {
+                if (conversationTurn != null)
+                    onConversationListenFailed(conversationTurn,
+                        at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Failure.SERVICE_UNAVAILABLE)
+                else Toast.makeText(this,
+                    at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.unavailableReason(android.os.Build.VERSION.SDK_INT),
+                    Toast.LENGTH_LONG).show()
+            }
         }
     }
 

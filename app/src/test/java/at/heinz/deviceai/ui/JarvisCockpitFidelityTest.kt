@@ -77,9 +77,9 @@ class JarvisCockpitFidelityTest {
         assertTrue("status under dock", shell[Slot.STATUS]!!.top > shell[Slot.BOTTOM_NAV]!!.bottom)
         val dock = shell[Slot.BOTTOM_NAV]!!
         val cells = JarvisTiles.bottomNavItemBoxes(dock)
-        assertEquals(JarvisTiles.railNav.size, cells.size)
+        assertEquals(JarvisTiles.bottomNav.size, cells.size)
         cells.forEach { assertTrue("dock cell is a usable target $it", it.width >= 48f - .01f && it.height >= 48f - .01f) }
-        assertEquals(JarvisTiles.railNav.map { it.target },
+        assertEquals(JarvisTiles.bottomNav.map { it.target },
             cells.map { box -> JarvisShellContent.hitTarget(shell, JarvisTiles.reference, box.centerX, box.centerY) })
     }
 
@@ -90,7 +90,7 @@ class JarvisCockpitFidelityTest {
         for ((w, h) in listOf(foldInner, tablet)) {
             val shell = JarvisShellLayout.create(w, h)
             val dock = requireNotNull(shell[Slot.BOTTOM_NAV])
-            assertEquals(JarvisTiles.railNav.map { it.target },
+            assertEquals(JarvisTiles.bottomNav.map { it.target },
                 JarvisTiles.bottomNavItemBoxes(dock).map { box ->
                     JarvisShellContent.hitTarget(shell, JarvisTiles.reference, box.centerX, box.centerY)
                 })

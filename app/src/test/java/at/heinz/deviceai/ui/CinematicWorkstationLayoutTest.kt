@@ -139,6 +139,50 @@ class CinematicWorkstationLayoutTest {
         }
     }
 
+    @Test fun compactWorkstationKeepsShorterGeometryAndAllNativeRoutes() {
+        fun overlaps(a: JarvisShellLayout.Box, b: JarvisShellLayout.Box) =
+            a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom
+        for (width in listOf(240f, 320f, 412f, 600f, 840f, 884f, 1280f, 1536f)) {
+            for (height in listOf(320f, 649f, 760f, 1050f)) for (font in listOf(1f, 1.5f, 2f)) {
+                val profile = "$width x $height font=$font"
+                val regular = JarvisShellLayout.forContent(width, height, font, workstation = true)
+                val compact = JarvisShellLayout.forContent(width, height, font,
+                    compactPresentation = true, workstation = true)
+                val sphere = requireNotNull(compact[Slot.AVATAR])
+                assertTrue("$profile retains workstation navigation", compact.workstation)
+                assertTrue("$profile content becomes shorter", compact.height < regular.height)
+                assertTrue("$profile original sphere shrinks", sphere.height < regular[Slot.AVATAR]!!.height)
+                assertEquals("$profile sphere is the actual renderer slot", compact.orbBounds, sphere)
+                assertNull(compact.headBounds)
+                assertNull(compact.headStage)
+                assertNull(compact.protectedFaceBounds)
+                assertNull(compact[Slot.WORK_PROCESS])
+                assertNull(compact[Slot.TILES])
+                assertEquals(regular[Slot.TOP_BAR], compact[Slot.TOP_BAR])
+                assertEquals(regular[Slot.BOTTOM_NAV]!!.height, compact[Slot.BOTTOM_NAV]!!.height, .001f)
+                val boxes = compact.boxes.values.toList()
+                assertTrue("$profile content bounds", boxes.all { it.left >= 0f && it.top >= 0f &&
+                    it.right <= width && it.bottom <= compact.height && it.width > 0f && it.height > 0f })
+                for (i in boxes.indices) for (j in i + 1 until boxes.size)
+                    assertFalse("$profile compact slots overlap", overlaps(boxes[i], boxes[j]))
+
+                val dock = JarvisTiles.bottomNavItemBoxes(compact[Slot.BOTTOM_NAV]!!)
+                assertEquals("$profile eight direct routes", 8, dock.size)
+                assertTrue("$profile More remains reachable", compact.headerActionBoxes().containsKey("more"))
+                val controls = compact.headerActionBoxes().values + compact.dialogControlBoxes() + dock +
+                    listOfNotNull(compact[Slot.DIALOG], compact.inputConversationBox(),
+                        compact[Slot.STATUS], compact[Slot.CAMERA_STATUS], compact[Slot.COCKPIT_SECONDARY])
+                assertTrue("$profile minimum touch sizes", controls.all { it.width >= 48f && it.height >= 48f })
+                for (i in controls.indices) for (j in i + 1 until controls.size)
+                    assertFalse("$profile touch controls overlap", overlaps(controls[i], controls[j]))
+                assertTrue(ContinuumWorkAreaNavigationSpec.moreEntries.map { it.target }
+                    .containsAll(CockpitGlassButtons.secondaryTargets))
+                assertEquals("$profile exact restoration", regular,
+                    JarvisShellLayout.forContent(width, height, font, workstation = true))
+            }
+        }
+    }
+
     private fun window(shell: JarvisShellLayout.Shell): AvatarFraming.Window {
         val head = shell.headBounds!!
         val dialog = shell[Slot.DIALOG]!!

@@ -1,6 +1,6 @@
-name: "Continuum Code51 — Originalsignierung und GitHub-Release"
+name: "Continuum Code51/55 — Originalsignierung und GitHub-Release"
 
-# Existing registered path; explicit owner Code51 channel approval (09.11.2026).
+# Existing registered path; manual owner sign-and-publish approval remains mandatory.
 # Nur manueller Start. Die Kanalwahl ersetzt NICHT die ausdrückliche SHA-Freigabe des Besitzers:
 # - owner_approved_sha muss exakt dem Quell-Commit entsprechen (bewusste Eingabe des Besitzers),
 # - das Environment continuum-original-signing muss Pflicht-Reviewer (Besitzer) und genau die Branch-Regel
@@ -14,11 +14,15 @@ on:
         required: true
         type: string
       qa_run_id:
-        description: "ID des vollständig grünen Code51-QA-Laufs auf genau diesem Commit (historischer Workflow-Pfad code50)"
+        description: "Exakter grüner Voll-QA-Lauf: Code51 historischer Pfad oder Code55 full-qa"
         required: true
         type: string
+      apk_run_id:
+        description: "Code55: grüner owner-apk-Lauf desselben SHA; für Code51 leer lassen"
+        required: false
+        type: string
       owner_approved_sha:
-        description: "Ausdrückliche Besitzerfreigabe: derselbe 40-stellige Commit-SHA zur Originalsignierung"
+        description: "Besitzerfreigabe dieses exakten SHA: Originalsignierung UND Veröffentlichung als neuester GitHub-Release"
         required: true
         type: string
 
@@ -31,7 +35,7 @@ concurrency:
 
 jobs:
   preflight:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/copilot/code51-master-integrator-20261108'
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/copilot/code51-master-integrator-20261108' || github.ref == 'refs/heads/integrate/code55-apk-fable-20261112')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -41,12 +45,28 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - uses: actions/setup-java@v4
+        if: github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: actions/setup-node@v4
+        if: github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+        with:
+          node-version: "24.22.2"
+      - name: Prepare Code55 public verification tools
+        if: github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"
       - name: Preflight without secrets
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ inputs.source_sha }}
           QA_RUN_ID: ${{ inputs.qa_run_id }}
+          APK_RUN_ID: ${{ inputs.apk_run_id }}
           OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}
         run: |
           set -euo pipefail
@@ -54,7 +74,7 @@ jobs:
 
   release-original-signed:
     needs: preflight
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/copilot/code51-master-integrator-20261108'
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/copilot/code51-master-integrator-20261108' || github.ref == 'refs/heads/integrate/code55-apk-fable-20261112')
     runs-on: ubuntu-latest
     timeout-minutes: 35
     environment: continuum-original-signing
@@ -69,6 +89,10 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+      - uses: actions/setup-node@v4
+        if: github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+        with:
+          node-version: "24.22.2"
       - name: Prepare official Android 35 signing tools
         shell: bash
         run: |
@@ -80,6 +104,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ inputs.source_sha }}
           QA_RUN_ID: ${{ inputs.qa_run_id }}
+          APK_RUN_ID: ${{ inputs.apk_run_id }}
           OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}
           ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
           ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}

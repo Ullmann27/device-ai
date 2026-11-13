@@ -144,7 +144,8 @@ def main():
     sources += [main / 'avatar3d' / f'{name}.kt' for name in
                 ('AvatarGlbContract', 'AvatarMorphMapper', 'AvatarIdleMotion', 'GazeBlinkPolicy',
                  'CriticalDampedSpring', 'AvatarFraming', 'AvatarMaterialVariant',
-                 'CockpitStageFrame', 'CockpitWorldTransforms', 'CockpitOrbMotion')]
+                 'CockpitStageFrame', 'CockpitWorldTransforms', 'CockpitOrbMotion',
+                 'CockpitStudioEnvironment')]
     sources += [root / 'tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/Java2DContinuumPainter.kt']
     assets, asset_pins = packaged_assets(root)
     tracked_sources = sources + assets + [ui / 'JarvisCockpitGridContent.kt', ui / 'JarvisCockpitPanels.kt',
@@ -152,6 +153,11 @@ def main():
                                          main / 'avatar3d/FilamentCockpitStage.kt',
                                          main / 'avatar3d/FilamentAvatarRenderer.kt',
                                          main / 'avatar3d/CockpitSceneAssets.kt',
+                                         main / 'avatar3d/CockpitPanelContent.kt',
+                                         ui / 'ComputerPanelPresentation.kt',
+                                         ui / 'AndroidContinuumPainter.kt',
+                                         ui / 'JarvisTextScalePainter.kt',
+                                         root / 'app/src/main/assets/cinema3d/document-workspace.glb',
                                          main / 'ContinuumHologramView.kt',
                                          root / 'tools/cockpit-workstation/materials/live-monitor.mat']
     before = {str(path.relative_to(root)): sha(path) for path in tracked_sources}
@@ -218,7 +224,8 @@ def main():
                  '-vf', 'pad=ceil(iw/2)*2:ceil(ih/2)*2',
                  '-c:v', 'libx264', '-threads', '2', '-pix_fmt', 'yuv420p', '-crf', '19',
                  str(out / 'fold-monitor-motion.mp4')], work / 'video.log')
-        for file in ('scene-export.json', 'fold-layout.json', 'phone-layout.json', 'blender-manifest.json'):
+        for file in ('scene-export.json', 'fold-layout.json', 'phone-layout.json', 'blender-manifest.json',
+                     'studio-environment.rgba32f'):
             shutil.copyfile(work / file, out / file)
     after = {str(path.relative_to(root)): sha(path) for path in tracked_sources}
     tools_after = {path.name: sha(path) for path in
@@ -236,12 +243,16 @@ def main():
         'productionLayerDepthDp': layer_depths,
         'sourceWorkingTree': git(root, 'status', '--porcelain', '--untracked-files=no'),
         'components': {'cockpit': 'Packaged GLB, actual Kotlin world and monitor matrices',
+                       'reflections': 'Compiled CockpitStudioEnvironment.radiance; linear field in Blender glossy world rays',
                        'avatar': 'Original GLB through native AvatarMaterialVariant; neutral pose, actual world matrix',
                        'sphere': 'Packaged original five-ring GLB; native orb depth and Kotlin ring matrices; no 2D sphere layer',
                        'chrome': 'Existing JarvisShellRenderer and CockpitWorkstationChrome; neutral host data',
+                       'sidePanels': 'Canvas host content only; native contextual texture upload/receipt NOT_EXERCISED',
+                       'room': 'Packaged static BLACKSITE geometry; this host run validates room/assets, not native panel connection',
                        'monitorContent': 'Host-only document texture on actual live-pixel mesh; unlit, no tint, no app capture' if args.content == 'example'
                                          else 'Empty; no Android app pixels or live connection'},
         'contentMode': args.content,
+        'studioEnvironment': exported['studioEnvironment'],
         'motion': 'Production Flight.sample at fixed intervals, with rest holds; no extra easing',
         'orbMotion': {'source': 'CockpitWorldTransforms.ringTransform and CockpitOrbMotion.sample',
                       'timeSource': 'Actual ContinuumHologramView phase update; fixed READY energy replay',
@@ -250,7 +261,8 @@ def main():
         'denoising': {'enabled': args.denoise, 'backend': 'OPENIMAGEDENOISE' if args.denoise else None,
                       'scope': 'Cycles 3D stage only; production Java2D chrome composed afterwards'},
         'limits': ['Blender studio is not Filament light equivalence', 'No Android layout lifecycle exercised',
-                   'No speech, model, capture, or real device measurements'],
+                   'No speech, model, capture, or real device measurements',
+                   'Native side-panel bitmap upload, GPU lifetime and frame receipts NOT_EXERCISED'],
         'Filament': 'NOT_RUN', 'Fold7': 'NOT_RUN',
         'outputs': {path.name: sha(path) for path in sorted(out.iterdir()) if path.is_file()},
     }

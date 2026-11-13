@@ -64,7 +64,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     @Synchronized fun onRuntime(signals: AvatarRuntimeSignals) {
         if (signals.listening || signals.speaking || signals.blocked || signals.awaitingApproval) clearWorkInput()
-        if ((signals.listening || signals.speaking) && windowIntent != null) {
+        if ((signals.listening || signals.speaking || signals.blocked || signals.awaitingApproval) && windowIntent != null) {
             windowIntent?.let { remember(retiredWindows, it.id) }
             windowIntent = null
             publishAnimationIntents(clock())
@@ -94,7 +94,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
      */
     private fun resumeWork(): Boolean {
         val work = workIntent ?: return false
-        if (windowIntent != null || utterance != null || state == AvatarState.LISTENING || state == AvatarState.SPEAKING) return false
+        if (windowIntent != null || utterance != null || !AvatarPoseReducer.permitsDirectedGaze(state)) return false
         val age = clock().toDouble() - work.atMillis.toDouble()
         if (age < 0 || age >= work.durationMs) { workIntent = null; return false }
         windowIntent = work
@@ -143,8 +143,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
      */
     @Synchronized fun canAdmitWindowGlance(): Boolean {
         expireAnimationIntents(clock())
-        return workIntent == null && state != AvatarState.LISTENING &&
-            state != AvatarState.SPEAKING && utterance == null
+        return workIntent == null && AvatarPoseReducer.permitsDirectedGaze(state) && utterance == null
     }
 
     private fun requestWindow(windowId: String, target: GazeTarget, durationMs: Long, yieldsToObservedGaze: Boolean = false): Boolean {
@@ -152,7 +151,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         expireAnimationIntents(at)
         if (workIntent != null) return false
         if (windowId.isBlank() || windowId == windowIntent?.id || windowId in retiredWindows) return false
-        if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) {
+        if (!AvatarPoseReducer.permitsDirectedGaze(state) || utterance != null) {
             remember(retiredWindows, windowId)
             return false
         }
@@ -210,7 +209,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
             target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y)),
             at, AvatarPoseReducer.MAX_WINDOW_WORK_MS, yieldsToObservedGaze = false, reading = true)
         workIntent = work
-        if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) return true
+        if (!AvatarPoseReducer.permitsDirectedGaze(state) || utterance != null) return true
         windowIntent?.takeIf { it.id != windowId }?.let { remember(retiredWindows, it.id) }
         windowIntent = work
         thinkingAtMillis = Long.MIN_VALUE

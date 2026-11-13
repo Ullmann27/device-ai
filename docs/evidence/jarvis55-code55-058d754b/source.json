@@ -1,0 +1,152 @@
+{
+  "sourceSha": "058d754b82e134b3eec0e3e3f21b788c46c8c479",
+  "sourceTree": "bf0536a3d08ce54ccc2e976bd9a2883d0619062e",
+  "fullQa": {
+    "runId": 43358315168,
+    "status": "FAIL",
+    "android": {
+      "jobId": 131665544652,
+      "tests": 5374,
+      "passed": 5354,
+      "failed": 3,
+      "skipped": 17,
+      "unexpectedSkips": [],
+      "lint": "PASS"
+    },
+    "node": {
+      "jobId": 131665544796,
+      "tests": 2498,
+      "passed": 2461,
+      "failed": 0,
+      "skipped": 37,
+      "criticalSubset": 137,
+      "backendPassed": 64
+    },
+    "native": {
+      "jobId": 131665544485,
+      "status": "PASS",
+      "runtime": "API35 x86_64 ANGLE/SwiftShader GLES3.1",
+      "pdf": {
+        "pages": 1,
+        "queries": 1,
+        "opens": 1,
+        "darkPixels": 506
+      },
+      "filament": {
+        "quads": 2,
+        "materials": 2,
+        "textures": 2,
+        "uploadCallbacks": 1,
+        "renderedFrames": 2,
+        "presentedFrames": 1,
+        "outputFrames": 2,
+        "cleared": true,
+        "panelsReleased": true,
+        "engineReleased": true,
+        "lastPhase": "finished"
+      },
+      "context": "Synthetic offscreen instrumentation; not Fold7 or owner task"
+    },
+    "artifacts": [
+      {
+        "id": 14009178288,
+        "node_id": "MDg6QXJ0aWZhY3QxNDAwOTE3ODI4OA==",
+        "name": "Code55-full-Android-source-QA",
+        "size_in_bytes": 310710423,
+        "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14009178288",
+        "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14009178288/zip",
+        "expired": false,
+        "digest": "sha256:c86b7a36f77736e51d5eed0a7afc5b23afd25e1e78c90bacd4291a1d92b2ef5f",
+        "created_at": "2026-11-13T04:12:23Z",
+        "updated_at": "2026-11-13T04:12:23Z",
+        "expires_at": "2026-11-27T04:12:12Z",
+        "workflow_run": {
+          "id": 43358315168,
+          "repository_id": 1415878393,
+          "head_repository_id": 1415878393,
+          "head_branch": "integrate/code55-apk-fable-20261112",
+          "head_sha": "058d754b82e134b3eec0e3e3f21b788c46c8c479"
+        }
+      },
+      {
+        "id": 14007695304,
+        "node_id": "MDg6QXJ0aWZhY3QxNDAwNzY5NTMwNA==",
+        "name": "code55-github-node-evidence",
+        "size_in_bytes": 1656574,
+        "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14007695304",
+        "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14007695304/zip",
+        "expired": false,
+        "digest": "sha256:2007d9d3eeb1e4156908f7e408cd5b1a741c43776ef032624de878d9bb79f774",
+        "created_at": "2026-11-13T03:24:27Z",
+        "updated_at": "2026-11-13T03:24:27Z",
+        "expires_at": "2026-11-27T03:24:26Z",
+        "workflow_run": {
+          "id": 43358315168,
+          "repository_id": 1415878393,
+          "head_repository_id": 1415878393,
+          "head_branch": "integrate/code55-apk-fable-20261112",
+          "head_sha": "058d754b82e134b3eec0e3e3f21b788c46c8c479"
+        }
+      },
+      {
+        "id": 14006998607,
+        "node_id": "MDg6QXJ0aWZhY3QxNDAwNjk5ODYwNw==",
+        "name": "Code55-native-PDF-emulator-QA",
+        "size_in_bytes": 18667,
+        "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14006998607",
+        "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14006998607/zip",
+        "expired": false,
+        "digest": "sha256:a9dce3376b19ab98e0f8fca477bfc2a44be7c4464b8c7e9b8929e93ae6a92e80",
+        "created_at": "2026-11-13T03:25:34Z",
+        "updated_at": "2026-11-13T03:25:34Z",
+        "expires_at": "2026-11-27T03:25:33Z",
+        "workflow_run": {
+          "id": 43358315168,
+          "repository_id": 1415878393,
+          "head_repository_id": 1415878393,
+          "head_branch": "integrate/code55-apk-fable-20261112",
+          "head_sha": "058d754b82e134b3eec0e3e3f21b788c46c8c479"
+        }
+      }
+    ]
+  },
+  "apk": {
+    "runId": 43358315144,
+    "jobId": 131665544649,
+    "status": "UNSIGNED_NOT_INSTALLABLE",
+    "audit": "PASS",
+    "sha256": "99eee7b63887d40154c5d7f40723e5784d786246ccb3a5ce12e7a4d7e82df5ef",
+    "artifactId": 14007177702,
+    "artifactZipBytes": 74434629,
+    "artifactZipSha256": "ea86033d9b3d51ec30f0b666ef0b9bddbfc0dade43f978955cd8e1350df39040",
+    "scopedTests": {
+      "jobId": 131665545156,
+      "total": 481,
+      "suites": 65,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    }
+  },
+  "signerPreparation": {
+    "sourceSha": "a02ace57fc77f5c91c9897297d578dedd720756a",
+    "runId": 43362097107,
+    "jobId": 131677750603,
+    "node": {
+      "total": 2511,
+      "passed": 2474,
+      "failed": 0,
+      "skipped": 37
+    },
+    "backendPassed": 64,
+    "functionalSignerCases": 18,
+    "boundaries": "Mocked GitHub/Android tools; actual Bash/Python/Node execution",
+    "actualSigning": "NOT_RUN"
+  },
+  "device": {
+    "Fold7": "NOT_RUN",
+    "Maya": "NOT_RUN",
+    "liveCaptureActions": "NOT_RUN",
+    "performanceThermals": "NOT_RUN"
+  }
+}

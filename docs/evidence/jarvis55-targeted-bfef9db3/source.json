@@ -1,0 +1,33 @@
+{
+  "source_sha": "bfef9db3c5d13e24245f617cc2f116a7c5800188",
+  "run_id": 43354998293,
+  "job_id": 131656638571,
+  "result": "PASS",
+  "tests": 344,
+  "executed": 344,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suite_files": 55,
+  "artifact": {
+    "id": 14006755213,
+    "name": "Jarvis55-targeted-regression-JUnit",
+    "size_in_bytes": 49801,
+    "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14006755213",
+    "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14006755213/zip",
+    "expired": false,
+    "created_at": "2026-11-13T03:03:19Z",
+    "expires_at": "2026-11-27T03:03:19Z",
+    "updated_at": "2026-11-13T03:03:19Z",
+    "digest": "sha256:40a3d66260aa474b4328018e61794fedee9336705419eaf07866268682490c00",
+    "workflow_run": {
+      "id": 43354998293,
+      "repository_id": 1415878393,
+      "head_repository_id": 1415878393,
+      "head_branch": "work/jarvis55-master-20261113",
+      "head_sha": "bfef9db3c5d13e24245f617cc2f116a7c5800188"
+    }
+  },
+  "scope": "Focused Kotlin/UI including actual diagnosis UI opt-in/stop/pause/resume and bounded numeric snapshot recorder. Not full QA or device measurements.",
+  "device": "NOT_RUN"
+}

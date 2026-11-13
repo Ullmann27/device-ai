@@ -10,14 +10,14 @@ const activity = fs.readFileSync(dir + 'AgentActivity.kt', 'utf8');
 const policy = fs.readFileSync(dir + 'cognitive/ContinuousConversationMode.kt', 'utf8');
 const unit = fs.readFileSync('app/src/test/java/at/heinz/deviceai/cognitive/ContinuousConversationModeTest.kt', 'utf8');
 
-function body(signature) {
-  const start = activity.indexOf(signature);
+function body(signature, source = activity) {
+  const start = source.indexOf(signature);
   assert.ok(start >= 0, 'missing ' + signature);
-  const open = activity.indexOf('{', start);
+  const open = source.indexOf('{', start);
   let depth = 0;
-  for (let i = open; i < activity.length; i++) {
-    if (activity[i] === '{') depth++;
-    else if (activity[i] === '}' && --depth === 0) return activity.slice(start, i + 1);
+  for (let i = open; i < source.length; i++) {
+    if (source[i] === '{') depth++;
+    else if (source[i] === '}' && --depth === 0) return source.slice(start, i + 1);
   }
   assert.fail('unbalanced ' + signature);
 }
@@ -115,7 +115,11 @@ test('offline owner turns retain their speech veto across delayed model replies'
   // #761 defers speech until a document/result window has arrived (speakNow); the veto must travel with it.
   assert.match(body('private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,'),
     /addHomeGreeting\(value, allowMaya = allowMaya(?:, speakNow = speakNow)?\)/);
-  assert.match(body('private fun addHomeGreeting('), /speakReply\(value, allowMaya\)/);
+  const greeting = body('private fun addHomeGreeting(');
+  assert.match(greeting, /val shown = at\.heinz\.deviceai\.cognitive\.ChatReplyFormatter\.plain\(value\)/);
+  assert.match(greeting, /addBubble\(shown, user = false, persist = persist\)/);
+  assert.match(greeting, /if \(speakNow\) speakReply\(shown, allowMaya\)/);
+  assert.doesNotMatch(greeting, /speakReply\(value|allowMaya\s*=\s*true/);
   assert.match(body('private fun offerDocumentNextSteps('), /addHomeGreeting\(message, allowMaya = allowMaya\)/);
 });
 
@@ -123,6 +127,15 @@ test('pure policy and its JVM regressions cover turns, stale callbacks, pause, s
   assert.doesNotMatch(policy, /^import android\./m);
   for (const name of ['severalGermanTurnsIncludingFollowUpRunWithoutNewGesture', 'lateRecognizerResultOfAnOldTurnIsIgnored',
     'oldReplyCallbackCannotReopenTheMicrophone', 'spokenStopEndsTheModeAndIsNotSentAsChat', 'spokenPauseKeepsTheModeAndTapResumes',
-    'silenceIsRetriedOnceThenPauses', 'openDialogPausesSoNoVoiceTurnCanAnswerAnApprovalPrompt', 'newChatSessionEndsTheMode'])
+    'silenceRetriesAreBoundedAndUseAColdRecognizer', 'openDialogPausesSoNoVoiceTurnCanAnswerAnApprovalPrompt', 'newChatSessionEndsTheMode',
+    'briefForegroundReturnRecoversButLateCallbacksStayInvalid', 'foregroundReturnAfterGraceNeverReopensTheMicrophone',
+    'ownerPauseSurvivesBackgroundWithoutAutomaticListening', 'failurePauseAlsoNeedsAnOwnerTapAfterBackground'])
     assert.match(unit, new RegExp('fun ' + name + '\\('));
+  const silence = body('private fun silence(): Decision', policy);
+  assert.match(policy, /const val MAX_SILENT_RETRIES = 3\b/);
+  assert.match(silence, /if \(silentAttempts < MAX_SILENT_RETRIES\) \{\s*silentAttempts\+\+\s*coldRecognizerRecommended = silentAttempts >= 2\s*turn\+\+\s*return Decision\.RETRY_LISTEN\s*\}\s*pause\(\)\s*coldRecognizerRecommended = true\s*return Decision\.PAUSE/);
+  assert.match(body('fun suspendForBackground(', policy), /if \(!active \|\| state == State\.PAUSED\) return/);
+  const cold = body('private fun applyColdRecognizerIfRecommended(');
+  assert.match(cold, /if \(!continuousConversation\.coldRecognizerRecommended\) return\s*onDeviceSpeech\?\.resetRecognizer\(\)\s*continuousConversation\.coldRecognizerUsed\(\)/);
+  assert.match(body('private fun startVoiceInput('), /if \(conversationTurn != null\) applyColdRecognizerIfRecommended\(\)/);
 });

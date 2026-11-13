@@ -138,8 +138,15 @@ class ChiefBotTeam(
         initialize()
         val current = view.tasks.firstOrNull { it.id == taskId } ?: error("BOT_TEAM_TASK_MISSING")
         if (!current.active) return
-        finish(taskId, ChiefTeamStatus.CANCELLED, "OWNER_STOP")
-        cancelRunning()
+        // Cancel before fallible storage work.
+        invalidate()
+        try {
+            finish(taskId, ChiefTeamStatus.CANCELLED, "OWNER_STOP")
+        } catch (failure: Exception) {
+            storageError = "BOT_TEAM_RESULT_NOT_COMMITTED"
+            runCatching { changed() }
+            throw failure
+        }
     }
 
     @Synchronized fun clearHistory(expectedRevision: Long) {

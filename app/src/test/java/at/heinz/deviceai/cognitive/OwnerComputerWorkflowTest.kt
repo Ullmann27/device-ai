@@ -240,6 +240,30 @@ class OwnerComputerWorkflowTest {
         assertTrue(port.clicks.isEmpty())
     }
 
+    @Test fun ownerCorrectionStopsExecutingDraftBeforeContactAndLateCompletion() {
+        val port = FakePort(frame(1, listOf(node("Suchen", editable = true), node("Anna", clickable = true))))
+        val seen = mutableListOf<CockpitWorkEvent>()
+        val bus = CockpitAnimationBus().also { it.subscribe { e -> if (e is CockpitWorkEvent) seen += e } }
+        val flow = workflow(bus)
+        port.afterAction = {
+            assertTrue(OwnerCorrectionIntent.interruptsWork("Stopp, das meine ich nicht."))
+            flow.cancel()
+        }
+        val result = flow.run(OwnerComputerIntent(ComputerApp.WHATSAPP,
+            ComputerGoal.DRAFT_MESSAGE, "Anna", "Guten Morgen"), port)
+        assertEquals(OwnerComputerWorkflow.Status.CANCELLED, result.status)
+        assertFalse(result.draftPrepared)
+        assertEquals(listOf(NodeActionKind.SET_TEXT), port.actions.map { it.kind })
+        assertEquals("Anna", port.actions.single().text)
+        assertTrue(port.clicks.isEmpty())
+        val stopped = seen.indexOfFirst { it.stage == CockpitWorkEvent.Stage.STOPPED }
+        assertTrue(stopped >= 0)
+        assertTrue(seen.take(stopped).any { it.stage == CockpitWorkEvent.Stage.VERIFIED })
+        assertFalse(seen.drop(stopped).any {
+            it.stage in setOf(CockpitWorkEvent.Stage.DISPATCHED, CockpitWorkEvent.Stage.COMPLETED)
+        })
+    }
+
     @Test fun changedSourceAndAmbiguousSearchAreBlocked() {
         val wrong = FakePort(frame(1, listOf(node("Suchen", editable = true))).let {
             it.copy(stamp = it.stamp.copy(epoch = 48))
@@ -249,6 +273,40 @@ class OwnerComputerWorkflowTest {
         val ambiguous = FakePort(frame(1, listOf(node("Suchen", editable = true), node("Search", editable = true))))
         assertEquals(OwnerComputerWorkflow.Status.ASK_OWNER, workflow().run(search(), ambiguous).status)
         assertTrue(ambiguous.actions.isEmpty())
+    }
+
+    @Test fun rotatedWindowDuringSearchStopsBeforeFurtherInput() {
+        val port = FakePort(frame(1, listOf(node("Suchen", editable = true))))
+        port.afterAction = {
+            port.frame = port.frame.copy(stamp = port.frame.stamp.copy(windowId = 99))
+        }
+        val result = workflow().run(search(), port)
+        assertEquals(OwnerComputerWorkflow.Status.PAUSED, result.status)
+        assertEquals(1, port.actions.size)
+        assertTrue(port.clicks.isEmpty())
+    }
+
+    @Test fun replacementCaptureSessionCannotConfirmAnOldComputerTask() {
+        val port = FakePort(frame(1, listOf(node("Suchen", editable = true))))
+        port.afterAction = {
+            port.frame = port.frame.copy(stamp = port.frame.stamp.copy(captureSession = 99))
+        }
+        val result = workflow().run(search(), port)
+        assertEquals(OwnerComputerWorkflow.Status.PAUSED, result.status)
+        assertEquals(1, port.actions.size)
+        assertTrue(port.clicks.isEmpty())
+    }
+
+    @Test fun lostPermissionAfterSearchClickPreventsTextEntry() {
+        val port = FakePort(frame(1, listOf(node("Suchen", clickable = true))))
+        port.afterClick = { _, _ ->
+            port.revoke = true
+            listOf(node("Suchen", editable = true))
+        }
+        val result = workflow().run(search(), port)
+        assertEquals(OwnerComputerWorkflow.Status.FAILED, result.status)
+        assertEquals(listOf("Suchen"), port.clicks)
+        assertTrue(port.actions.isEmpty())
     }
 
     @Test fun existingDraftIsNotOverwritten() {

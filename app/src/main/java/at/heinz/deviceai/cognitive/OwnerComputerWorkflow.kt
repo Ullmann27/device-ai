@@ -28,6 +28,8 @@ internal class OwnerComputerWorkflow(
     private val actionEvents = LiveActionCockpitAdapter(events, observationEpoch)
     private var step = 0
     private var port: Port? = null
+    private var initialWindowId: Int? = null
+    private var initialCaptureSession: Long? = null
 
     fun run(intent: OwnerComputerIntent, port: Port): Result {
         if (!started.compareAndSet(false, true)) return Result(Status.PAUSED, "Dieser App-Auftrag wurde bereits bearbeitet.")
@@ -135,6 +137,13 @@ internal class OwnerComputerWorkflow(
             frame.stamp.epoch != observationEpoch || frame.stamp.revision <= 0 || frame.stamp.digest.isBlank() ||
             !frame.safeWindows || !frame.complete || frame.nodes.size > 256) {
             throw WorkflowPaused("Das gebundene App-Fenster ist nicht mehr sicher beobachtbar. Auftrag angehalten.")
+        }
+        if (initialCaptureSession == null) {
+            initialWindowId = frame.stamp.windowId
+            initialCaptureSession = frame.stamp.captureSession
+        } else if (frame.stamp.windowId != initialWindowId ||
+            frame.stamp.captureSession != initialCaptureSession) {
+            throw WorkflowPaused("Das Android-Fenster oder die Aufnahme wurde gewechselt. Auftrag angehalten.")
         }
         return frame
     }

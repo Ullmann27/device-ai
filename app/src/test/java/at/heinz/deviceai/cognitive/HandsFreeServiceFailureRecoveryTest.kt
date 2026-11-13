@@ -56,14 +56,21 @@ class HandsFreeServiceFailureRecoveryTest {
         assertEquals(State.PAUSED, mode.state)
     }
 
-    @Test fun benignSilenceNeverKillsTheModeAndKeepsItsSingleRetry() {
+    @Test fun benignSilenceUsesThreeRetriesThenRequiresOwnerResume() {
         for (failure in listOf(Failure.NO_MATCH, Failure.NO_INPUT, Failure.TIMEOUT)) {
             val mode = listening()
             assertEquals(0, ContinuousConversationMode.recoveryBudget(failure))
-            assertEquals(Decision.RETRY_LISTEN, fail(mode, failure))
-            assertFalse("silence is no reason for a cold recognizer", mode.coldRecognizerRecommended)
+            assertEquals(3, ContinuousConversationMode.MAX_SILENT_RETRIES)
+            repeat(3) { attempt ->
+                assertEquals(Decision.RETRY_LISTEN, fail(mode, failure))
+                assertEquals(attempt >= 1, mode.coldRecognizerRecommended)
+                assertEquals(State.LISTENING, mode.state)
+            }
             assertEquals(Decision.PAUSE, fail(mode, failure))
             assertTrue(failure.name, mode.active)
+            assertEquals(State.PAUSED, mode.state)
+            assertEquals(Decision.IGNORE, mode.restoreForeground(session, 1_000, true, false))
+            assertEquals(State.PAUSED, mode.state)
             assertEquals(Decision.LISTEN, mode.ownerTap(session))
         }
     }

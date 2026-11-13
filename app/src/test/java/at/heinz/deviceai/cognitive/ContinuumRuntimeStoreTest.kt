@@ -74,6 +74,46 @@ class ContinuumRuntimeStoreTest {
     }
 
     @Test
+    fun eligibleExperienceSurvivesRestartBehindNewerUnverifiedTurns() {
+        val dir = Files.createTempDirectory("continuum-runtime-recall-eligibility").toFile()
+        try {
+            val signer = TestSigner()
+            val runtime = store(dir, signer)
+            val initial = runtime.openOrCreate()
+            val success = Experience(
+                id = "older-success", taskType = "agent_task",
+                requestSummary = "repair battery service extra detail",
+                sourceIds = listOf("tool-call:probe:sha256:" + "a".repeat(64)),
+                toolIds = listOf("get_device_info"), outcome = ExperienceOutcome.SUCCESS,
+                startedAt = 70, completedAt = 80, evaluation = Evaluation(true, 0.95)
+            )
+            val failure = success.copy(id = "older-failure", completedAt = 81,
+                outcome = ExperienceOutcome.FAILURE, evaluation = Evaluation(false, 0.1),
+                failures = listOf("Observed verification failure"))
+            val unverified = List(96) { index ->
+                success.copy(id = "unverified-$index", requestSummary = "repair battery service",
+                    completedAt = 90, outcome = ExperienceOutcome.PARTIAL)
+            }
+            runtime.checkpoint(initial, experiences = listOf(success, failure) + unverified)
+
+            val restarted = store(dir, signer).openOrCreate()
+            val cache = InMemoryExperienceStore()
+            restarted.archive.experiences.forEach(cache::store)
+            val hints = AgentExperienceRecall.hints(cache, "repair battery service", nowMillis = 100)
+
+            assertEquals(98, restarted.archive.experiences.size)
+            assertEquals(listOf(80L, 81L), hints.map { it.updatedAt })
+            assertEquals(1, hints.count { "success-hint" in it.tags })
+            assertEquals(1, hints.count { "failure-warning" in it.tags })
+            assertTrue(hints.all { it.validationState == ValidationState.UNVERIFIED })
+            assertTrue(hints.all { it.provenance == ProvenanceType.MODEL_GENERATED })
+            assertEquals(98, cache.all().size)
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
+
+    @Test
     fun processDeathBetweenArchiveAndSeedUsesMatchingLkgArchive() {
         val dir = Files.createTempDirectory("continuum-runtime-reconcile").toFile()
         try {

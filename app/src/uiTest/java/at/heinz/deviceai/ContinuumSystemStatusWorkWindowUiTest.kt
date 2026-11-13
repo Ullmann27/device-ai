@@ -365,9 +365,17 @@ class ContinuumSystemStatusWorkWindowUiTest {
             advance(640L); measure(root); draw(root)
             val work = shown(root, "jarvis-work-window")
             val origin = field(work, "origin") as android.graphics.RectF
-            assertFalse("seed beside, not inside the face", android.graphics.RectF(headBounds).let { face ->
-                val local = IntArray(2).also { avatar.getLocationInWindow(it) }
-                face.offset(local[0].toFloat(), local[1].toFloat()); android.graphics.RectF.intersects(face, origin) })
+            val faceBounds = checkNotNull(home.jarvisShell.currentShell()?.protectedFaceBounds)
+            val density = home.resources.displayMetrics.density
+            val shellPosition = IntArray(2).also(home.jarvisShell::getLocationOnScreen)
+            val workPosition = IntArray(2).also(work::getLocationOnScreen)
+            val face = android.graphics.RectF(faceBounds.left * density, faceBounds.top * density,
+                faceBounds.right * density, faceBounds.bottom * density).apply {
+                offset((shellPosition[0] - workPosition[0]).toFloat(),
+                    (shellPosition[1] - workPosition[1]).toFloat())
+            }
+            assertTrue("protected face is measured", face.width() > 0f && face.height() > 0f)
+            assertFalse("seed stays outside the actual face", android.graphics.RectF.intersects(face, origin))
             assertSame(beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
         } finally {
             framePump?.close()

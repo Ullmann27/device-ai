@@ -20,10 +20,15 @@ object SilentComputerWorkSounds : ComputerWorkSounds {
 class ComputerWorkAvatarBridge(
     private val director: AvatarDirector,
     private val sounds: ComputerWorkSounds = SilentComputerWorkSounds,
+    private val projectGaze: (CockpitWorkEvent) -> GazeTarget? = { null },
+    private val onWorkState: (CockpitWorkReducer.Snapshot) -> Unit = {},
     private val nanos: () -> Long = System::nanoTime
 ) : CockpitAnimationRenderer, AutoCloseable {
     val reducer = CockpitWorkReducer()
     private var windowId: String? = null
+    private var workGazeActive = false
+    private var focusEvent: CockpitWorkEvent? = null
+    private var lastTarget: GazeTarget? = null
     private var closed = false
 
     @Synchronized fun bind(taskId: String, sessionId: Long) {
@@ -35,17 +40,18 @@ class ComputerWorkAvatarBridge(
         sounds.stop()
         reducer.bind(taskId, sessionId)
         windowId = nextWindow
+        workGazeActive = false
+        focusEvent = null
+        lastTarget = null
     }
 
     @Synchronized override fun render(event: CockpitAnimationEvent) {
         if (closed || event !is CockpitWorkEvent || !reducer.apply(event, nanos())) return
         val window = windowId ?: return
-        val target = event.target?.let { GazeTarget((it.x - .5f) * .7f, -.18f - it.y * .15f) }
-            ?: GazeTarget(0f, -.25f)
         when (event.stage) {
-            CockpitWorkEvent.Stage.ACCEPTED -> director.windowWorkStarted(window, target)
+            CockpitWorkEvent.Stage.ACCEPTED -> focusWork(event)
             CockpitWorkEvent.Stage.FOCUS, CockpitWorkEvent.Stage.DISPATCHED -> {
-                director.windowMoved(window, target)
+                focusWork(event)
                 if (event.stage == CockpitWorkEvent.Stage.DISPATCHED) {
                     val kind = when (event.action) {
                         CockpitWorkEvent.Action.CLICK -> AvatarWorkInput.CLICK
@@ -64,11 +70,42 @@ class ComputerWorkAvatarBridge(
             CockpitWorkEvent.Stage.STOPPED, CockpitWorkEvent.Stage.ERROR,
             CockpitWorkEvent.Stage.COMPLETED -> {
                 director.windowWorkEnded(window)
+                workGazeActive = false
+                focusEvent = null
+                lastTarget = null
                 director.clearWorkInput()
                 sounds.stop()
             }
             else -> Unit
         }
+        onWorkState(reducer.snapshot(nanos()))
+    }
+
+    private fun focusWork(event: CockpitWorkEvent) {
+        focusEvent = event
+        updateProjection(renewLease = true)
+    }
+
+    @Synchronized fun refreshProjection() = updateProjection(renewLease = false)
+
+    private fun updateProjection(renewLease: Boolean) {
+        if (closed) return
+        val window = windowId ?: return
+        val event = focusEvent ?: return
+        val age = nanos() - event.occurredAtNanos
+        val fresh = age >= 0L && age / 1_000_000 < AvatarPoseReducer.MAX_WINDOW_WORK_MS
+        if (!fresh) focusEvent = null
+        val target = if (fresh) projectGaze(event)?.takeIf { it.x.isFinite() && it.y.isFinite() } else null
+        if (target == null) {
+            if (workGazeActive) director.windowWorkEnded(window)
+            workGazeActive = false
+            lastTarget = null
+            return
+        }
+        if (target == lastTarget && workGazeActive && !renewLease) return
+        if (workGazeActive && !renewLease) director.windowMoved(window, target)
+        else workGazeActive = director.windowWorkStarted(window, target)
+        lastTarget = target
     }
 
     @Synchronized override fun close() {
@@ -78,5 +115,8 @@ class ComputerWorkAvatarBridge(
         director.clearWorkInput()
         sounds.close()
         windowId = null
+        focusEvent = null
+        lastTarget = null
+        workGazeActive = false
     }
 }

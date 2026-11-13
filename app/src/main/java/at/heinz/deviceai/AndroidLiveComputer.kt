@@ -60,8 +60,10 @@ internal object AndroidLiveComputer {
         context.getSystemService(MediaProjectionManager::class.java)
             .createScreenCaptureIntent(MediaProjectionConfig.createConfigForDefaultDisplay()) else null
 
+    @android.annotation.SuppressLint("NewApi")
     fun startProjectionCapture(context: Context, taskId: String, targetPackage: String,
                                resultCode: Int, resultData: Intent, ownerConfirmed: Boolean): LiveComputerStart {
+        if (Build.VERSION.SDK_INT < 34) return LiveComputerStart(false, "WINDOW_CAPTURE_REQUIRES_ANDROID_14")
         if (resultCode != android.app.Activity.RESULT_OK) return LiveComputerStart(false, "SCREEN_CAPTURE_DENIED")
         val started = beginSession(context, taskId, targetPackage, ownerConfirmed, LiveFrameOrigin.PROJECTION_WINDOW_CROP)
         if (!started.started) return started

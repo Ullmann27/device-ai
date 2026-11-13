@@ -121,8 +121,25 @@ class JarvisShellLayoutTest {
         assertTrue(JarvisTiles.reference.all { it.displayText == null })
         assertEquals(0, JarvisShellLayout.create(412f, 915f).tileBoxes().size)
         assertEquals(0, JarvisShellLayout.create(884f, 760f).tileBoxes().size)
-        assertEquals(JarvisTiles.railNav.size,
+        assertEquals(JarvisTiles.bottomNav.size,
             JarvisTiles.bottomNavItemBoxes(JarvisShellLayout.create(884f, 760f)[Slot.BOTTOM_NAV]!!).size)
+    }
+
+    @Test fun compactLargeFontKeepsConversationAboveTheOriginalAndOutsideTheSphere() {
+        for ((width, height) in listOf(840f to 649f, 840f to 1050f))
+            for (font in listOf(1.5f, 2f)) {
+                val regular = JarvisShellLayout.create(width, height, font)
+                val compact = JarvisShellLayout.create(width, height, font, compactPresentation = true)
+                val dialog = requireNotNull(compact[Slot.DIALOG])
+                val sphere = requireNotNull(compact[Slot.AVATAR])
+                assertTrue("Conversation rises at $width x $height font=$font",
+                    dialog.top < regular[Slot.DIALOG]!!.top)
+                assertFalse("Conversation never covers the compact sphere",
+                    overlaps(dialog, sphere))
+                assertTrue("Compact sphere becomes smaller", sphere.height < regular[Slot.AVATAR]!!.height)
+                assertTrue("Compact content becomes shorter", compact.height < regular.height)
+                assertSane(compact)
+            }
     }
 
     @Test fun glowLevelsAreOrdered() {

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import at.heinz.deviceai.systemintelligence.SystemDiagnosis
 import at.heinz.deviceai.systemintelligence.SystemIntelligenceCommands
+import at.heinz.deviceai.systemintelligence.ThermalPhaseRecorder
 import at.heinz.deviceai.systemintelligence.AndroidSystemDiagnosis
 import at.heinz.deviceai.ui.SystemDiagnosisHologramView
 import org.junit.Assert.*
@@ -101,9 +102,14 @@ class SystemIntelligenceUiTest {
             spokenRequest = "Continuum, untersuche bitte mein Handy. Sag mir, was Speicher verbraucht, warum es heiß wird " +
                 "und was wir bereinigen könnten. Aber lösch noch nichts.", fromChat = true, diagnosisWithPreview = true)
     }
+    @Test @Config(qualifiers = "w440dp-h956dp-port-mdpi")
+    fun manualThermalSeriesRequiresOwnerStartAndStopsOnPauseOrCancel() {
+        render("system-manual-thermal", 440, 956, thermalSeries = true)
+    }
+
     private fun render(label: String, width: Int, height: Int, diagnose: Boolean = false,
                        spokenRequest: String? = null, fromChat: Boolean = false, preview: Boolean = false,
-                       diagnosisWithPreview: Boolean = false) {
+                       diagnosisWithPreview: Boolean = false, thermalSeries: Boolean = false) {
         ShadowChoreographer.setPaused(true)
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
         val app = RuntimeEnvironment.getApplication()
@@ -136,6 +142,71 @@ class SystemIntelligenceUiTest {
             }
             fun field(name: String) = AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }
             val executor = field("executor").get(activity) as DeviceToolExecutor
+            if (thermalSeries) {
+                val open = AgentActivity::class.java.getDeclaredMethod("showSystemIntelligence").apply { isAccessible = true }
+                fun recorder() = field("systemThermalRecorder").get(activity) as? ThermalPhaseRecorder
+                fun click(label: String) {
+                    measure()
+                    val action = descendants(root).filterIsInstance<android.widget.TextView>().firstOrNull {
+                        it.text.toString() == label && it.isShown
+                    }
+                    assertNotNull("Existing diagnosis action: $label", action)
+                    assertTrue(action!!.performClick())
+                    advance(64)
+                }
+                fun diagnoseOnce() {
+                    val previous = executor.lastDiagnosis
+                    click("JETZT ANALYSIEREN")
+                    val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
+                    while (field("busy").getBoolean(activity) && System.nanoTime() < deadline) {
+                        Thread.sleep(10)
+                        shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
+                        measure(); framePump.drawRequestedFrame()
+                    }
+                    assertFalse("Owner diagnosis completed", field("busy").getBoolean(activity))
+                    assertNotNull(executor.lastDiagnosis)
+                    assertNotSame("Fresh probe, no replay", previous, executor.lastDiagnosis)
+                    advance(64)
+                }
+                measure(); open.invoke(activity); advance(128)
+                assertNull(recorder())
+                diagnoseOnce()
+                assertNull("Diagnosis alone never opts in", recorder())
+                click("VORHER-MESSUNG MERKEN")
+                click("NEUE MESSREIHE STARTEN")
+                val first = recorder()!!
+                assertEquals(ThermalPhaseRecorder.Phase.DIAGNOSTIC_SNAPSHOT, first.active)
+                assertTrue("Previous snapshot was not copied", first.samples().isEmpty())
+                diagnoseOnce()
+                assertEquals(1, first.samples().size)
+                assertTrue((field("systemReport").get(activity) as String).contains("Vorher/Nachher:"))
+                assertTrue(descendants(root).any {
+                    it.isShown && it.contentDescription?.toString() == "Messpunkte: 1/2000"
+                })
+                click("MESSREIHE STOPPEN")
+                assertNull(first.active)
+                diagnoseOnce()
+                assertEquals("Explicit stop stays stopped", 1, first.samples().size)
+                click("NEUE MESSREIHE STARTEN")
+                val second = recorder()!!
+                assertNotSame(first, second)
+                assertTrue(second.samples().isEmpty())
+                controller.pause()
+                assertNull(second.active)
+                controller.resume()
+                open.invoke(activity); advance(128)
+                assertSame(second, recorder())
+                assertNull("Resume never restarts recording", second.active)
+                diagnoseOnce()
+                assertTrue(second.samples().isEmpty())
+                click("NEUE MESSREIHE STARTEN")
+                val third = recorder()!!
+                val cancel = AgentActivity::class.java.getDeclaredMethod("cancelSystemDiagnosis").apply { isAccessible = true }
+                cancel.invoke(activity)
+                assertNull("Existing STOP path stops sampling", third.active)
+                assertTrue(third.samples().isEmpty())
+                return
+            }
             if (diagnose) {
                 val request = spokenRequest ?: ("Continuum, schau dir bitte an, warum mein Handy so langsam geworden ist. " +
                     "Prüf zuerst alles, sag mir, was du gefunden hast, und mach danach die Verbesserungen, die ich dir freigebe.")

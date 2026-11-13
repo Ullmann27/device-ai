@@ -39,9 +39,22 @@ test('foreground lifecycle explicitly pauses, cancels, and resumes hologram whil
  const paused=segment(activity,'override fun onPause() {','override fun onSaveInstanceState(');
  const resumed=segment(activity,'override fun onResume() {','override fun onPause()');
  const policy=segment(orb,'private fun updateMotionPolicy() {','private fun settleState()');
- assert.ok(paused.includes('hologramView?.setForegroundActive(false)'));
+ assert.match(paused,/foregroundLearningActive = false\s*updateUiFeedbackPolicy\(\)\s*hologramView\?\.setForegroundActive\(computerFeedbackActive\(\)\)\s*homeView\?\.setForegroundActive\(computerFeedbackActive\(\)\)/);
+ const feedback=segment(activity,'private fun computerFeedbackActive(): Boolean','private fun updateUiFeedbackPolicy()');
+ assert.match(feedback,/computerViewVisible && isInMultiWindowMode &&\s*computerController\?\.active == true && computerController\?\.awaitingConsent != true/);
+ assert.doesNotMatch(paused,/hologramView\?\.setForegroundActive\(true\)|homeView\?\.setForegroundActive\(true\)/);
+ assert.match(paused,/if \(!isInMultiWindowMode\) computerViewVisible = false/);
+ assert.match(paused,/if \(!isInMultiWindowMode && computerController\?\.awaitingConsent != true\) computerController\?\.stopForVisibilityLoss\(\)/);
+ const stopped=segment(activity,'override fun onStop() {','override fun onDestroy()');
+ assert.match(stopped,/computerViewVisible = false\s*if \(computerController\?\.awaitingConsent != true\) computerController\?\.stopForVisibilityLoss\(\)/);
+ const controller=readFileSync(root+'OwnerComputerSessionController.kt','utf8');
+ const loss=segment(controller,'fun stopForVisibilityLoss() {','fun stop() {');
+ assert.match(loss,/if \(awaitingConsent\) return/);
+ assert.match(loss,/val interrupted = workflow != null\s*stop\(\)\s*if \(!interrupted\) return\s*previous\.reply/);
+ assert.match(loss,/OwnerComputerWorkflow\.Status\.CANCELLED/);
+ assert.match(loss,/\), null, false\)/, 'Visibility notice must remain silent');
  assert.ok(resumed.includes('hologramView?.setForegroundActive(true)'));
- assert.ok(activity.includes('it.setForegroundActive(foregroundLearningActive)'),
+ assert.ok(activity.includes('it.setForegroundActive(foregroundLearningActive || computerFeedbackActive())'),
    'Fold/home rebuild must inherit current foreground status');
  assert.ok(orb.includes('foregroundActive && motionAllowed && isAttachedToWindow'));
  assert.ok(policy.includes('removeCallbacks(drawFrame)'));

@@ -121,17 +121,20 @@ def reference_contract(glb):
                  for name in ("monitor-bezel", "monitor-glass", "monitor-rim")}
     for side in (-1, 1):
         center = side * .38
-        for suffix in ("bezel", "glass", "rim"):
+        for suffix in ("back", "bezel", "glass", "rim", "stand", "foot"):
             name = "side-%s-%s" % (side, suffix)
             index, _ = glb.node(name)
-            assert glb.parent[index] == side_id
+            assert glb.parent.get(index) == side_id, (name, "compact visibility group")
+        for suffix in ("bezel", "glass", "rim"):
+            name = "side-%s-%s" % (side, suffix)
             apertures[name] = (center-.1, -.37, center+.1, -.07)
     for name, rectangle in apertures.items():
         index, node = glb.node(name)
         for primitive in glb.doc["meshes"][node["mesh"]]["primitives"]:
             points = [glb.point(index, point) for point in glb.accessor(primitive["attributes"]["POSITION"])]
             if name.endswith("-bezel") and name.startswith("side-"):
-                assert all(abs(point[2]) < 1e-7 for point in points)
+                assert abs(max(point[2] for point in points)) < 1e-7
+                assert abs(min(point[2] for point in points)+.0008) < 1e-7
             indices = [value[0] for value in glb.accessor(primitive["indices"])]
             for offset in range(0, len(indices), 3):
                 triangle = [points[i][:2] for i in indices[offset:offset+3]]
@@ -155,6 +158,70 @@ def reference_contract(glb):
                 assert abs(left-right) < 1e-6, (expected["name"], key)
         assert max(abs(a-b) for a, b in zip(expected.get("emissiveFactor", [0, 0, 0]),
                                            entry.get("emissiveFactor", [0, 0, 0]))) < 1e-6
+        for extension, parameters in expected.get("extensions", {}).items():
+            assert extension in entry.get("extensions", {}), (expected["name"], extension)
+            for key, value in parameters.items():
+                assert abs(entry["extensions"][extension][key]-value) < 1e-6, (expected["name"], key)
+    for name in ("monitor-bezel", "side--1-bezel", "side-1-bezel"):
+        _, node = glb.node(name)
+        primitive = glb.doc["meshes"][node["mesh"]]["primitives"][0]
+        positions = glb.accessor(primitive["attributes"]["POSITION"])
+        assert max(p[2] for p in positions)-min(p[2] for p in positions) > .0003, (name, "flat bezel")
+
+
+
+BLACKSITE_BATCHES = {
+    "bunker-concrete-shell": "bunker-concrete",
+    "bunker-titanium-structure": "bunker-titanium",
+    "bunker-conduits": "bunker-conduit-metal",
+    "bunker-cyan-channels": "bunker-channel-cyan",
+    "bunker-violet-channels": "bunker-channel-violet",
+}
+
+
+def blacksite_contract(glb, required=False):
+    room_id, room = glb.node("cockpit-room")
+    extras = room.get("extras", {})
+    if "blacksite_schema" not in extras:
+        assert not required, "BLACKSITE geometry absent"
+        return {"state": "ABSENT"}
+    assert extras["blacksite_schema"] == 1
+    names = json.loads(extras["blacksite_batches"])
+    assert len(names) == len(set(names)) == 5 and set(names) == set(BLACKSITE_BATCHES)
+    actual = {n["name"] for n in glb.doc["nodes"] if n.get("name", "").startswith("bunker-")}
+    assert actual == set(names), ("unbatched room geometry", actual)
+    vertices, triangles = 0, 0
+    bounds = [[], [], []]
+    for name, material_name in BLACKSITE_BATCHES.items():
+        index, node = glb.node(name)
+        assert glb.parent[index] == room_id, (name, "room parent")
+        primitives = glb.doc["meshes"][node["mesh"]]["primitives"]
+        assert len(primitives) == 1, (name, "draw batch")
+        primitive = primitives[0]
+        material = glb.doc["materials"][primitive["material"]]
+        assert material["name"] == material_name
+        assert material.get("alphaMode", "OPAQUE") == "OPAQUE"
+        assert "KHR_materials_unlit" not in material.get("extensions", {})
+        points = [glb.point(index, point) for point in glb.accessor(primitive["attributes"]["POSITION"])]
+        assert points and all(math.isfinite(c) for point in points for c in point)
+        for point in points:
+            assert -.86 <= point[0] <= .86 and -.70 <= point[1] <= .84
+            assert -2.51 <= point[2] <= -.39, (name, "depth")
+            for axis, value in enumerate(point):
+                bounds[axis].append(value)
+        vertices += len(points)
+        triangles += len(glb.accessor(primitive["indices"])) // 3
+    assert vertices <= 24000 and triangles <= 12000, (vertices, triangles)
+    minimum_z, maximum_z = min(bounds[2]), max(bounds[2])
+    for aspect in (.45, .75, 1., 1.8, 2.4):
+        width, height = (aspect, 1.) if aspect >= 1. else (1., 1. / aspect)
+        distance = max(width, height) * 2.4
+        compensation = (distance - .22) / distance
+        depth = (minimum_z * compensation + .22, maximum_z * compensation + .22)
+        assert -8. < depth[0] < depth[1] < 0., ("camera clipping", aspect, depth)
+    return {"state": "PASS", "material_batches": 5, "vertices": vertices, "triangles": triangles,
+            "local_bounds": [[min(axis), max(axis)] for axis in bounds],
+            "scope": "Static geometry; moving aperture occlusion checked by host rays"}
 
 
 def orb_contract(glb):
@@ -177,6 +244,7 @@ def orb_contract(glb):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--write-manifest", action="store_true")
+    parser.add_argument("--require-blacksite", action="store_true")
     args = parser.parse_args()
     assert sha(ASSETS/"avatar3d/continuum-avatar.glb") == AVATAR_SHA
     paths = {"workstation": "cinema3d/cockpit-workstation.glb", "orb": "cinema3d/continuum-orb.glb",
@@ -193,6 +261,7 @@ def main():
             (monitor_contract if key == "workstation" else orb_contract)(glb)
             if key == "workstation":
                 reference_contract(glb)
+                report[key]["blacksite"] = blacksite_contract(glb, args.require_blacksite)
     shader_build = json.loads((ROOT/"tools/cockpit-workstation/materials/live-monitor-build.json").read_text())
     assert shader_build["output_sha256"] == manifest["monitorMaterial"]["sha256"]
     assert shader_build["source_sha256"] == sha(ROOT/"tools/cockpit-workstation/materials/live-monitor.mat")

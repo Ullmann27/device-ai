@@ -72,4 +72,32 @@ internal class LiveMonitorSubmission {
         generation++
         receipt = null
     }
+
+    companion object {
+        /** Bind input to submitted pixels. */
+        fun checkActionSource(status: LiveMonitorStatus?, source: ObservationStamp,
+                              ownPackage: String, target: LiveTargetBounds?) {
+            val shown = status ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
+            val binding = shown.binding ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
+            val meta = shown.meta ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
+            val age = shown.ageMillis ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
+            check(shown.state == LiveMonitorState.LIVE && shown.sequence > 0L &&
+                age in 0..binding.staleAfterMillis && source.captureSession > 0L &&
+                binding.taskId == source.taskId && binding.targetPackage == source.packageName &&
+                binding.ownPackage == ownPackage && binding.captureSession == source.captureSession &&
+                meta.captureSession == source.captureSession && meta.sourcePackage == source.packageName &&
+                meta.sourceWindowId == source.windowId && source.windowId != null) {
+                "COMPUTER_RENDERED_SOURCE_MISMATCH"
+            }
+            check(source.revision > 0L && meta.observationRevision == source.revision) {
+                "COMPUTER_RENDERED_OBSERVATION_MISMATCH"
+            }
+            val viewport = meta.sourceViewport ?: error("COMPUTER_RENDERED_VIEWPORT_REQUIRED")
+            val bounds = target ?: error("TARGET_BOUNDS_REQUIRED")
+            check(bounds.left >= viewport.left && bounds.top >= viewport.top &&
+                bounds.right <= viewport.right && bounds.bottom <= viewport.bottom) {
+                "TARGET_OUTSIDE_MONITOR_VIEWPORT"
+            }
+        }
+    }
 }

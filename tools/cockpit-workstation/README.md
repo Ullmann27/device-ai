@@ -32,6 +32,13 @@ Sie ersetzt keinen Android-, Filament- oder Fold7-Test.
 5. Quell-SHA, einzelne Quelldateihashes, Assethashes, Prüfergebnis und Bildhashes
    werden gespeichert. Verändert sich eine verwendete Quelle während des
    Laufes, wird das Ergebnis verworfen.
+6. `CockpitStudioEnvironment.radiance` wird aus der tatsächlichen Kotlin-Quelle
+   mitkompiliert. Der Export tastet dieses Feld als lineare 256×128-RGBA-Datei
+   ab; Blender nutzt sie als Weltumgebung für glänzende Reflexionsstrahlen.
+   Die Lichtformel wird im Vorschaucode nicht nachgebildet. Der Feldhash ist
+   in Kotlin-, Blender- und Gesamtmanifest gebunden; die Datei liegt bei den
+   Bildern. Die bestehende diffuse Hostaufhellung und der Hostfaktor 0,08
+   bleiben erhalten. Cycles-Filterung ist keine Filament-Cubemap-Vorfilterung.
 
 ## Aufruf
 
@@ -96,6 +103,12 @@ unverändert in die Szene eingespeist und nicht separat retuschiert.
 Android-View-Lifecycle, MediaProjection, Sprache, Modell, Geräteframerate und
 Wärme werden nicht geprüft. Die Bilder tragen diese Grenze sichtbar.
 
+Die Abbildung der Weltumgebung folgt Blenders equirektangulärer Projektion:
+[Cycles 4.3.2 projection.h](https://github.com/blender/blender/blob/v4.3.2/intern/cycles/kernel/camera/projection.h).
+Die gemeinsame Achsenkonversion ist `(x,y,z) → (x,-z,y)` von Kotlin nach Blender.
+Das Feld enthält die echte neue Studio-Radiance, aber keine Messung ihrer
+Filament-Belichtung, des Monitorlichts oder von Bloom auf dem Gerät.
+
 `--content example` ist ausschließlich ein Hostmodus mit sachlichen
 Dokument-/Datei-Beispieldaten und sichtbarem Hinweis
 **VORSCHAU · BEISPIELINHALT**. Diese Pixel sind keine App-Aufnahme und gelangen
@@ -111,3 +124,45 @@ unverändert.
 Zulieferung an `work/astra55-cockpit-integration-20261112` / PR #799. Aktive
 Architekturverträge EXP-06, EXP-11 und EXP-12 bleiben bestehen. Quellenintegration,
 Hostnachweis und Gerätebestätigung werden getrennt dokumentiert.
+
+## BLACKSITE-Raum
+
+Der bestehende Seed bleibt unverändert. `build_unified_assets.py --workstation-only`
+ergänzt fünf statische Materialbatches unter `cockpit-room`: Beton, Titantragwerk
+mit Schott, Leitungen sowie zwei Lichtkanäle. Avatar, Originalkugel, Livepixel-UVs
+und Seitenhalterungen bleiben an ihren bestehenden Knoten.
+
+`verify_unified_assets.py --require-blacksite` prüft die fünf Materialbatches,
+Hierarchie, endliche Geometrie, Tiefengrenzen und Budgets. Die tatsächliche
+Hostkamera prüft zusätzlich jeden gerenderten Frame auf Far-/Near-Plane-Verstöße
+und Bunker-Verdeckung der Hauptmonitor- sowie sichtbaren Seitenaperturen.
+Diese Prüfungen ersetzen keinen nativen Filament-Gerätetest.
+
+Der isolierte Workflow `continuum-blacksite-room.yml` läuft nur auf
+`work/blacksite-room-20261113`, wenn der Commit `[blacksite-build]` enthält.
+Er lädt ausschließlich Blender 4.3.2 von der offiziellen Release-URL,
+prüft dessen offiziellen SHA-256 und protokolliert den tatsächlich verwendeten
+Digest. Er baut und validiert die Assets, bindet einen lokalen Asset-Commit,
+rendert sechs Standbilder und den bestehenden Dreisekundenclip und veröffentlicht
+anschließend ausschließlich Assets und Belege auf demselben isolierten Branch.
+Quelländerung während des Laufs oder ein vorgeschobener Remote-HEAD verhindern
+den Push. Es gibt keinen Force-Push, APK-Build oder Signierungsschritt.
+
+Die Vorschau bindet jetzt auch den neuen Panelquellcode und das vorhandene
+Dokument-GLB. Seiteninhalte bleiben im Host jedoch Canvas-Inhalte. Bildbeschriftung
+und Manifest kennzeichnen deshalb die native Panel-Texturverbindung als ungeprüft.
+Ein BLACKSITE-Hostbild ist ein Raum-/Assetnachweis, kein Nachweis des Android-
+Texturuploads, der Frame-Receipts oder einer Geräteleistung.
+
+
+Recovery of completed run 43353026610 preserves its original render source and
+manifests. Artifact 14004669910 is verified against its recorded ZIP SHA-256.
+Only assets are rebuilt; every production and preview-tool digest must match the
+completed render before publication. A separate recovery receipt identifies the
+new build source and the original rendered asset commit. The original evidence
+is retained under `rendered-from-95df8a74`; it is never relabelled as a new render.
+The bounded evidence paths are explicitly staged with `git add --force`
+because the repository ignores `*.log`. The staged-file equality check remains.
+An FFprobe receipt verifies 60 decoded frames, three seconds, and 20 export FPS.
+A contact sheet samples every fourth encoded frame for visual review; neither
+the clip nor its contact sheet is a native-device performance measurement.

@@ -131,7 +131,7 @@ object JarvisShellLayout {
         require(externalRailWidthDp.isFinite() && externalRailWidthDp >= 0f)
         require(externalBottomBarHeightDp.isFinite() && externalBottomBarHeightDp >= 0f && externalBottomBarHeightDp < heightDp)
         val viewport = heightDp - externalBottomBarHeightDp
-        return if (workstation && !compactPresentation) CinematicWorkstationLayout.create(widthDp, viewport, fontScale)
+        return if (workstation) CinematicWorkstationLayout.create(widthDp, viewport, fontScale, compactPresentation)
             else create(widthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation)
     }
 
@@ -372,9 +372,12 @@ object JarvisShellLayout {
         val head: Box
         val orb: Box
         if (compactPresentation) {
-            b[Slot.CONTINUUM_HEADER] = Box(left, y, right, y + 70f * font)
-            y += 70f * font + gap
-            orb = Box(left, y, right, y + 112f)
+            // Place the real conversation beside the reduced sphere, not underneath it.
+            val dialogWidth = (room * .28f).coerceIn(120f, 188f)
+            val orbLeft = left + dialogWidth + gap
+            b[Slot.DIALOG] = Box(left, y, left + dialogWidth, y + 56f * font)
+            b[Slot.CONTINUUM_HEADER] = Box(orbLeft, y, right, y + 70f * font)
+            orb = Box(orbLeft, y + 70f * font + gap, right, y + 70f * font + gap + 112f)
             head = orb
             y = orb.bottom + gap
         } else {
@@ -388,9 +391,11 @@ object JarvisShellLayout {
             orb = Box(split + gap / 2f, y + 74f * font, right, y + heroH)
             y += heroH + gap
         }
-        b[Slot.AVATAR] = Box(left, head.top, right, orb.bottom)
+        b[Slot.AVATAR] = if (compactPresentation) orb else Box(left, head.top, right, orb.bottom)
         val overlayBadge = !compact && !compactPresentation
-        if (overlayBadge) {
+        if (compactPresentation) {
+            // DIALOG is already beside the sphere.
+        } else if (overlayBadge) {
             val badgeWidth = minOf(224f * font, head.width - 12f)
             b[Slot.DIALOG] = Box(left + 6f, head.bottom - 56f * font - 6f,
                 left + 6f + badgeWidth, head.bottom - 6f)

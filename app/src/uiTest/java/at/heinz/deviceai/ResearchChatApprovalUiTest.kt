@@ -120,7 +120,9 @@ class ResearchChatApprovalUiTest {
         idle()
     }
 
-    private fun startRecognizer(f: Fixture, handsFree: Boolean = true): SpeechRecognizer {
+    private fun startRecognizer(
+        f: Fixture, handsFree: Boolean = true, beforeReady: () -> Unit = {}
+    ): SpeechRecognizer {
         shadowOf(RuntimeEnvironment.getApplication()).grantPermissions(Manifest.permission.RECORD_AUDIO)
         ShadowSpeechRecognizer.setIsOnDeviceRecognitionAvailable(true)
         AgentActivity::class.java.getDeclaredMethod(
@@ -128,6 +130,10 @@ class ResearchChatApprovalUiTest {
             .apply { isAccessible = true }.invoke(f.activity)
         idle()
         val recognizer = requireNotNull(ShadowSpeechRecognizer.getLatestSpeechRecognizer())
+        assertEquals(false, field(f.activity, "voiceListening"))
+        beforeReady()
+        shadowOf(recognizer).triggerOnReadyForSpeech(Bundle())
+        idle()
         assertEquals(true, field(f.activity, "voiceListening"))
         return recognizer
     }
@@ -192,8 +198,17 @@ class ResearchChatApprovalUiTest {
         val active = requireNotNull(field(session, "active"))
         @Suppress("UNCHECKED_CAST")
         val delayedCallback = field(active, "onText") as (String) -> Unit
+        @Suppress("UNCHECKED_CAST")
+        val delayedState = field(active, "onState") as (Boolean) -> Unit
         ask(f, "Neuer Auftrag")
-        val currentRecognizer = startRecognizer(f)
+        val currentRecognizer = startRecognizer(f) {
+            delayedState(true)
+            delayedCallback("Ja, mach.")
+            idle()
+            assertFalse("Old readiness cannot arm the replacement", field(f.activity, "voiceListening") as Boolean)
+            assertTrue(f.completed.isEmpty())
+        }
+        delayedState(false)
         delayedCallback("Ja, mach.")
         idle()
         assertTrue(f.completed.isEmpty())

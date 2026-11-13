@@ -21,6 +21,7 @@ const tiles=read(ui+'JarvisTiles.kt');
 const menu=read(ui+'JarvisMenu.kt');
 const view=read(ui+'ContinuumHomeView.kt');
 const activity=read('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
+const hologram=read('app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt');
 const navigation=read('app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt');
 const activityMember=signature=>{
  const start=activity.indexOf(signature);
@@ -39,7 +40,8 @@ test('Fold portrait uses the shared width/font profile, one Activity rail and no
  assert.match(profile,/val reference = size != WidthClass\.COMPACT && heightDp >= REFERENCE_MIN_HEIGHT_DP &&\s*font <= 1\.3f && readableColumns == JarvisCockpitGrid\.TILE_COLUMNS/);
  assert.match(profile,/\s0f, reference\)/);
  assert.match(shell,/fun create\(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail\.LABELLED,\s*includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false\): Shell \{/);
- assert.match(shell,/return create\(widthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation\)/);
+ assert.match(shell,/return if \(workstation\) CinematicWorkstationLayout\.create\(widthDp, viewport, fontScale, compactPresentation\)\s*else create\(widthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation\)/);
+ assert.match(view,/JarvisShellLayout\.forContent\(width \/ density, jarvisShell\.viewportHeightDp,\s*resources\.configuration\.fontScale, jarvisShell\.foldRail, offset,\s*compactPresentation = compactPresentation, workstation = true\)/);
  assert.match(shell,/val profile = JarvisWindowProfile\.resolve\(widthDp, heightDp, fontScale, foldRail\)/);
  assert.match(shell,/return if \(profile\.referenceComposition\) reference\(widthDp, heightDp, profile\)\.let \{\s*if \(compactPresentation\) compactReference\(it\) else it\s*\} else if \(profile\.widthClass == WidthClass\.COMPACT\) \{\s*compactCinema\(widthDp, heightDp, profile, compactPresentation\)\s*\} else reflow\(widthDp, heightDp, profile, includeBottomNavigation, compactPresentation\)/);
  assert.match(shell,/private fun compactCinema\(/);
@@ -106,7 +108,13 @@ test('ten action controls share draw bounds while head and original orb retain s
  assert.match(view,/hologram\.setHeadFraming\(shell\.headAnchorX, shell\.headCloseUp, dialogKeepOut\(shell, head\)\)/);
  assert.match(view,/val dialog = shell\[JarvisShellLayout\.Slot\.DIALOG\] \?: return null/);
  assert.match(view,/val orb = shell\?\.orbBounds/);
- assert.match(view,/hologram\.setCockpitRegions\(local\(head\), local\(orb\)\)/);
+ assert.match(view,/hologram\.setCockpitRegions\(local\(head\), local\(orb\), layered = shell\.workstation\)/);
+ assert.match(view,/val orb = shell\?\.orbBounds\?\.let \{ if \(shell\.workstation\) it else ContinuumBrainOrbRenderer\.columnFor\(it, header\) \}/);
+ assert.match(view,/if \(stage == null \|\| head == null \|\| orb == null\) \{\s*hologram\.setCockpitRegions\(null, null\)/);
+ assert.match(hologram,/fun setCockpitRegions\(head: Rect\?, orb: Rect\?, layered: Boolean = false\)/);
+ assert.match(hologram,/require\(\(head == null\) == \(orb == null\)\)/);
+ assert.match(hologram,/require\(layered \|\| !Rect\.intersects\(head, orb\)\)/);
+ assert.match(hologram,/if \(layeredCockpit && !layered\) detachCockpitStage\(\)/);
  assert.match(view,/originX = \(stage\.left \* density\)\.toInt\(\)/);
  assert.match(view,/originY = \(stage\.top \* density\)\.toInt\(\)/);
  assert.match(view,/hologram\.setGeometry\(intendedGeometry\)/);
@@ -140,7 +148,10 @@ test('phone and Fold share the original live surface and preserve its lifecycle 
  assert.match(pane,/val liveHologram = \(hologramView \?: ContinuumHologramView\(this\)\)\.also/);
  assert.match(pane,/\(it\.parent as\? android\.view\.ViewGroup\)\?\.removeView\(it\)/);
  assert.match(pane,/avatarDirector\.attach\(it\)/);
- assert.match(pane,/it\.setForegroundActive\(foregroundLearningActive\)/);
+ assert.match(pane,/it\.setForegroundActive\(foregroundLearningActive \|\| computerFeedbackActive\(\)\)/);
+ assert.match(pane,/home\.setForegroundActive\(foregroundLearningActive \|\| computerFeedbackActive\(\)\)/);
+ assert.match(activityMember('private fun computerFeedbackActive(): Boolean'),/computerViewVisible && isInMultiWindowMode &&\s*computerController\?\.active == true && computerController\?\.awaitingConsent != true/);
+ assert.doesNotMatch(pane,/it\.setForegroundActive\(true\)|home\.setForegroundActive\(true\)/);
  assert.match(pane,/ContinuumHomeView\(this, liveHologram\)/);
  assert.match(pane,/home\.setJarvisShellStage\(true\)/);
  assert.match(pane,/JarvisHoloAvatar\(home\.hologram\)/);

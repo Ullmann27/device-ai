@@ -110,7 +110,8 @@ object CockpitGlassButtons {
      * contact ring marks the touch. Disabled: muted, no glow.
      */
     fun draw(p: ContinuumPainter, b: Box, spec: Spec, active: Boolean, pressed: Boolean = false,
-             disabled: Boolean = false, fontScale: Float = 1f, pressX: Float = .5f, pressY: Float = .5f) {
+             disabled: Boolean = false, fontScale: Float = 1f, pressX: Float = .5f, pressY: Float = .5f,
+             timeMs: Long = 0L) {
         if (b.width <= 4f || b.height <= 4f) return
         val sink = if (pressed && !disabled) 1.6f else 0f
         val l = b.left; val t = b.top + sink; val r = b.right; val bt = b.bottom + sink
@@ -155,11 +156,15 @@ object CockpitGlassButtons {
         if (pressed && !disabled) {
             val x = l + sunk.width * (pressX.takeIf(Float::isFinite) ?: .5f).coerceIn(0f, 1f)
             val y = t + sunk.height * (pressY.takeIf(Float::isFinite) ?: .5f).coerceIn(0f, 1f)
+            val pressure = LuxuryHoloButtonRenderer.pressure(true, false, timeMs)
+            val contact = Fill.Radial(x, y, maxOf(sunk.width, sunk.height),
+                intArrayOf(Argb.mix(a, 0xFFFFFFFF.toInt(), .65f), a, Argb.withAlpha(a, .08f)),
+                floatArrayOf(0f, .55f, 1f))
             p.setAdditive(true)
-            p.fillCircle(x, y, minOf(sunk.width, sunk.height) * .42f,
-                Fill.Radial(x, y, maxOf(1f, minOf(sunk.width, sunk.height) * .42f),
-                    intArrayOf(Argb.withAlpha(0xFFFFFFFF.toInt(), .32f), Argb.withAlpha(a, 0f))), 1f)
-            p.setAdditive(false)
+            try {
+                p.strokeRoundRect(l, t, r, bt, radius, 6f, contact, .35f * pressure)
+                p.strokeRoundRect(l, t, r, bt, radius, 1.8f, contact, .90f * pressure)
+            } finally { p.setAdditive(false) }
         }
         // Content: symbol above a readable label, both bright on the tinted glass.
         val room = sunk.width - 8f

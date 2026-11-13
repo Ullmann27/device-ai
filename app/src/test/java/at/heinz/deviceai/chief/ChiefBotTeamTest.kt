@@ -139,6 +139,50 @@ class ChiefBotTeamTest {
         lateResult { team, _ -> team.stop(team.snapshot().tasks.single().id) }
     }
 
+    @Test fun stopCancelsBeforeStorageFailureAndRevokesQueuedAdmission() {
+        val entered = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        val cancellation = java.util.concurrent.atomic.AtomicReference<DeliberationCancellation>()
+        val root = folder.newFolder("stop-storage")
+        val s = ChiefBotProfileStore(root)
+        val model = Model(sha) { _, token ->
+            cancellation.set(token)
+            entered.countDown()
+            while (release.count > 0) {
+                try { release.await(1, TimeUnit.SECONDS) } catch (_: InterruptedException) { }
+            }
+            "Späte Antwort"
+        }
+        val team = configured(s, model)
+        val stateFile = java.io.File(root, "bot-team-v1.bin")
+        var saved: ByteArray? = null
+        try {
+            val task = team.submit(id(), "Text prüfen", 1, true)
+            assertTrue(entered.await(5, TimeUnit.SECONDS))
+            val admitted = team.admissionToken()
+            saved = stateFile.readBytes()
+            stateFile.writeBytes(byteArrayOf(0))
+            assertThrows(IllegalArgumentException::class.java) { team.stop(task.id) }
+            assertThrows(java.util.concurrent.CancellationException::class.java) {
+                cancellation.get().throwIfCancelled()
+            }
+            assertEquals("BOT_TEAM_RESULT_NOT_COMMITTED", team.storageError)
+            assertTrue(team.admissionToken() > admitted)
+            stateFile.writeBytes(saved)
+            release.countDown()
+            assertTrue(team.awaitIdle(10_000))
+            assertThrows(IllegalStateException::class.java) {
+                team.submit(id(), "Vor Stopp eingereiht", 1, true, admitted)
+            }
+            assertEquals(1, model.calls.get())
+            assertTrue(s.teamState().tasks.single().responses.isEmpty())
+        } finally {
+            saved?.let(stateFile::writeBytes)
+            release.countDown()
+            team.close()
+        }
+    }
+
     private fun lateResult(mutate: (ChiefBotTeam, ChiefBotProfileStore) -> Unit) {
         val entered = CountDownLatch(1); val release = CountDownLatch(1)
         val model = Model(sha) { _, _ ->

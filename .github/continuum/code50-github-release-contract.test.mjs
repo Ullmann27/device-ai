@@ -77,7 +77,7 @@ test('Signier-Workflow: nur manuell, Preflight ohne Geheimnisse, Geheimnisse nur
   assert.doesNotMatch(sign, /render/i);
   // Eingaben nur als env-Zuordnung (kein Skript-Injection-Pfad), nie direkt im run-Text.
   for (const line of sign.split('\n').filter(l => l.includes('${{ inputs.'))) {
-    assert.match(line, /^\s+(SOURCE_SHA|QA_RUN_ID|OWNER_APPROVED_SHA): \$\{\{ inputs\.[a-z_]+ \}\}$/, line);
+    assert.match(line, /^\s+(SOURCE_SHA|QA_RUN_ID|APK_RUN_ID|OWNER_APPROVED_SHA): \$\{\{ inputs\.[a-z_]+ \}\}$/, line);
   }
 });
 
@@ -128,4 +128,48 @@ test('Code-50-Besitzerausnahme ist in AGENTS.md und CLAUDE.md eng begrenzt dokum
     assert.match(text, /Kanalwahl ist keine Signaturfreigabe/, f);
     assert.match(text, /bleibt für alle \*\*anderen\*\* Aufgaben unverändert gültig/, f);
   }
+});
+
+
+test('Code55 uses the registered signer with explicit sign-and-publish approval and both exact-source runs', () => {
+  assert.match(sign, /Originalsignierung UND Veröffentlichung als neuester GitHub-Release/);
+  assert.match(sign, /      apk_run_id:\n        description: [^\n]+\n        required: false\n        type: string/);
+  for (const job of ['preflight', 'release-original-signed']) {
+    const block = jobBlock(sign, job);
+    assert.match(block, /github\.ref == 'refs\/heads\/integrate\/code55-apk-fable-20261112'/);
+    assert.match(block, /APK_RUN_ID: \$\{\{ inputs\.apk_run_id \}\}/);
+  }
+  assert.ok(script.includes('code="55"'));
+  assert.ok(script.includes('name_version="0.3.54"'));
+  assert.ok(script.includes('.github/workflows/continuum-code55-full-qa.yml'));
+  assert.ok(script.includes('.github/workflows/continuum-code55-owner-apk.yml'));
+  assert.ok(script.includes('["node-backend","full-android","native-pdf","complete-qa"]'));
+  assert.ok(script.includes('["scoped-android","unsigned-arm64"]'));
+  assert.ok(script.includes('.id==$run and .head_sha==$sha and .head_branch==$b'));
+  assert.ok(script.includes('([.jobs[].name]|sort)==($names|sort)'));
+  assert.ok(script.includes('/attempts/$attempt/jobs?per_page=100'));
+  assert.ok(script.includes('QA_ATTEMPT_CHANGED'));
+  assert.ok(script.indexOf('\n  verify_code55_evidence\n') < script.indexOf('ORIGINAL_SECRETS_MISSING'));
+  assert.ok(script.indexOf('PINNED_CODE51_BASELINE_VERIFIED') < script.indexOf('ORIGINAL_SECRETS_MISSING'));
+});
+
+test('Code55 verifies artifact bytes, complete JUnit, native runtime receipts and preserved 16 KiB alignment', () => {
+  for (const evidence of ['code55-github-node-evidence', 'Code55-full-Android-source-QA',
+    'Code55-native-PDF-emulator-QA', 'Code55-UNSIGNED-NOT-INSTALLABLE',
+    'ARTIFACT_DIGEST_MISMATCH', 'ARTIFACT_SIZE_MISMATCH', 'ARTIFACT_ARCHIVE_UNSAFE',
+    'junit-summary.py', '--strict-skips', 'unexpected_skips', 'native-pdf.txt', 'native-filament.txt',
+    'provider_queries', 'upload_completions', 'panels_released', 'INSTRUMENTATION_CODE',
+    'assessNodeOutcome', 'junitSha256', 'validatorSha256', 'SIGNED_16K_ALIGNMENT_FAILED'])
+    assert.ok(script.includes(evidence), evidence);
+  assert.ok(script.includes('junit["tests"] >= 5321 and junit["executed"] >= 5303'));
+  assert.ok(script.includes('require(key not in result)'));
+  assert.ok(script.includes('object_pairs_hook=pairs'));
+  assert.ok(script.includes('identity not in case_ids'));
+  assert.ok(script.includes('name.rstrip("/") == path.as_posix()'));
+  assert.ok(script.includes('stat.S_IFREG, stat.S_IFDIR'));
+  assert.ok(script.includes('baseline_tag="continuum-local-code51-6c23d295e2fca2d4e5950a866547733ec5ff22b0"'));
+  assert.ok(script.includes('baseline_digest="1928f58609eeb71a674f75cd66faaa6b4c4ad44f693d060223c664ac63cadfc1"'));
+  assert.ok(script.includes('BASELINE_CERTIFICATE_MISMATCH'));
+  assert.ok(script.includes('"$tools/zipalign" -P 16 -f 4'));
+  assert.ok(script.includes('"$tools/zipalign" -c -P 16 -v 4'));
 });

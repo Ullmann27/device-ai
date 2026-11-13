@@ -1,0 +1,494 @@
+{
+  "base": "8a882e662cb48e3363213eb5005cb091828d89ec",
+  "scope": "HOST_JVM_CONTROLLED_MODEL_PORT",
+  "compiler": "Kotlin 2.0.20 / JDK17 target",
+  "compiler_flags": [
+    "-no-stdlib",
+    "-no-reflect",
+    "-Xskip-metadata-version-check",
+    "-XXLanguage:+BreakContinueInInlineLambdas",
+    "-jvm-target",
+    "17"
+  ],
+  "production_compiler": "Kotlin 2.4.0 / canonical Android build NOT_RUN",
+  "team_source_files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentProtocol.kt",
+      "sha256": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt",
+      "sha256": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt",
+      "sha256": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt",
+      "sha256": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionStartLatch.kt",
+      "sha256": "c25335de38195ed0636ed94d64045be01e72a0864d1291ba5c8788c3d46cd561"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolOutputCap.kt",
+      "sha256": "24edba33a1c4a4c234ccb2ed399e1d80c9305a60cd9ffaad08552ad2b6d061e0"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
+      "sha256": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "sha256": "21dc3cbbb14e568cd1c792ccccbf04ec35838793492c6f3fbded6fe34bbad8c4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+      "sha256": "19060b1c0133f055397fd21e69b0c2450bce506ba33b7eb4d0448c21c8c2fb2c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarSentenceAccentPolicy.kt",
+      "sha256": "48cf078dc6dd6362fc9234ba816fb4e2cece0efecd4435083626c92badec56bc"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefAvatarPracticeCurriculum.kt",
+      "sha256": "db386794597a4ccdc1f42b7722784b0f80dd9372171787817e4d14fd5c84ceb0"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt",
+      "sha256": "b5980276954575690b449171ae68020117d8674590f848b1da0195cb549c788c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotPersonas.kt",
+      "sha256": "61f49cf5b7f760497ba85d72c36766e07721c3f5f745b79e90dae8f290773881"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotPractice.kt",
+      "sha256": "52cecdf409f338e92cd0de9ea99b021c719a37e819d63f168c4babd543cce883"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt",
+      "sha256": "54647a523f24c4a8dd84efb3a56153ff03839d30135e96b5d997bf1aeb5d34ff"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotTeam.kt",
+      "sha256": "6c7378e337cfbb1238905edf9fd10420b9ed66edcb2ca0efc15a7f1f497ca175"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotTeamState.kt",
+      "sha256": "472fc41e124d1c423f4e413d39a4b9ede43c1dd725f36a1bd799ed217d9dc3b5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefDelegationCoordinator.kt",
+      "sha256": "e1ddd13e8736a9aa997a321608296a5f479867f6f8059f49bc8129da32a2360e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefEngineeringPracticeCurriculum.kt",
+      "sha256": "48cce876fa788b4297610f795dbf4e9b1f280f8124a987a985a6c5ade8366cb0"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefJobs.kt",
+      "sha256": "b174f9f760b96ff45b3a1b9a291fabde2f5438311590d74f8c26789e8578fba9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefMemory.kt",
+      "sha256": "ab96f54dcdde803ce5ccadd034e0cb8b6c524d3964533ce6dd945c9f70afb3ab"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt",
+      "sha256": "faadbdd88555454b7d4a720fc7fba49148baa809d6414ba91a81ea9ee2be0d16"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkspaceWiring.kt",
+      "sha256": "2634eccce83eecf296004336b7b4a24b21e8554cfd9afada81daf60ecfed209c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AgentCheckpointStore.kt",
+      "sha256": "e143d33449af04380172f7ff91f17c2f68143688fd2c8f35a97f5fd229d953c4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AgentExperienceRecall.kt",
+      "sha256": "fdf553d34dc29ec47343dc993d5205f6908ad08d3b5f0f5e90fbe857196333cf"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AgentTaskEvidence.kt",
+      "sha256": "fdc83c064b5f0d23d2a890541d1da32d0d50ecc8ad03b89ba03828e86038d557"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "sha256": "08ab8fefa4a8b2743d33cd274714620cd03437827ef8439147e47d2c5fff70c6"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AvatarCameraPolicy.kt",
+      "sha256": "d7174f72709901a7f3976ed8fc925c457d3e7d9a42b5dcaa505c3522c7484993"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BehaviorProfile.kt",
+      "sha256": "c932d9ca53b7b0268c64c2b173153302a9fdd24f7fce5bd275a55eadf148e823"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BehaviorUpdate.kt",
+      "sha256": "fb21b884d5ddbb86775df18947f5388db301806b365328679b894e035d6a53b5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+      "sha256": "bb1193be309c651964c86924b3e5f076f03487971a83bc482c0a5f38f8d93808"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedResearchTextSanitizer.kt",
+      "sha256": "c4347827b9992a1c8b1602be2e7762243dd879536eff33d9dbb5e95d8c91e782"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ChatReasoningRouter.kt",
+      "sha256": "1f8350fc97a4204f39e3e9c075b2c1cd99c25fccd657784a0379b4a6594a211b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveCore.kt",
+      "sha256": "7794948f987870937687bca3483cc7a7bcbd15631e74f165b045499a7c240a66"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveGenome.kt",
+      "sha256": "aaaa99327cf947513968c574bdebe2aa350d251862f17a45f2ccf4c730a6ad21"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitivePersistence.kt",
+      "sha256": "dc91846408638d40864e9d773e2413fa7e3c2da85cc8ce5fe3c612d0e2362219"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveTurnTrace.kt",
+      "sha256": "69754cf237aacaa1ab34aead248ac0c2348a48562065e06f4a1d24276cb7b8a9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ComputeFabric.kt",
+      "sha256": "500b752e7e8f7b70ac97d8dbdc685ee32589301178738a3d3150d0a58979718b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumIntelligence.kt",
+      "sha256": "89f54b76a538a34a08b1fc33e9db9e6b8be2225ccd3a079a6006dc9f8629c439"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumRuntimeStore.kt",
+      "sha256": "15123e381ce78cce3f74e7d22119c55bf36b80990736bc7d52938970ee94070e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeed.kt",
+      "sha256": "567eca9ee9748ec70aee2064d0a3057af006ecc196065585be1718287708c110"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeedStore.kt",
+      "sha256": "1222259d3256b53db302ec107b7e5a571cf1c1322cfb035f0f54b86b27347327"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt",
+      "sha256": "6e3694bb3a27c307d10f84d6e21ec469a0575517feab05dee4d1a86d061f1713"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/Deliberation.kt",
+      "sha256": "d499bf6992116571d886487b9f1d8de9f104a9a5b7b25e036dd3a553721b3d95"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ExperienceCompiler.kt",
+      "sha256": "30edf08e39a597de19e04541f16a5d41c7a26ba8f1473af05675d33de488e441"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ExternalContentActionGuard.kt",
+      "sha256": "6def9a740343e0f55cb678707d6b42eaf33fa7527aca6aa90eee4a676599a600"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt",
+      "sha256": "8f2d0e7f108aa751602574b57544c57eb9774afaa6a3985172b633ec823e9228"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityDrift.kt",
+      "sha256": "4287c290808b018acadb42a8dbcb55071151f20191581836a72049fda110a325"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityState.kt",
+      "sha256": "46a5c3c0380bed0087986e7e91d0d4622b9ebb61f5e9681908315ea43b3ed90a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityUpdateValidator.kt",
+      "sha256": "953fcbb585819745c731baa52f1d7052a7ebbe0e9a686c4b47175c7ea507afb3"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalAssistantIdentity.kt",
+      "sha256": "6adb9d2d1970d03a59641453875121e397b891e3bf2244c5213dec966e7eb84b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalChatPromptBudget.kt",
+      "sha256": "09eeacb38b58b829598474c7d574e33a02da3a4544370a3868bf7f9736740452"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt",
+      "sha256": "1ebc0941fa86bce769065087bd96719dd3f7c9491657b6f9e8976d48b116c905"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalDialogueContextLimits.kt",
+      "sha256": "bb1d1d5376a158f0d380dcc4e2875e278e645d8c98cb298d0b6ff60cf5c07228"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationCapture.kt",
+      "sha256": "94c178ab1cf8230af5ae3df1e3de9860986aadd3bc1e4a4ee25bd95f58a01cd4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationDeadlinePolicy.kt",
+      "sha256": "0d450f05d7dcd3d8531365b02af3d2b9bc103e481dfc1e7c238bd5903cec1aec"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationFailureCause.kt",
+      "sha256": "5fe8742b769294365ac28e6557de522da7dbccdebef807b15d00ac64f79b7526"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalGroundedRecall.kt",
+      "sha256": "de1b79d16b554bec57e2b4848aa91355a679188fc87300013c4cb52b9716ce1c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt",
+      "sha256": "07b6181f2954236b8a1eb5c597b804769da7e10cf2295e5ad96546058b94eaed"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
+      "sha256": "a64d0026d6262a9834fddad04c81adb79cb9a2590ac1f0c96966e4f821554716"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt",
+      "sha256": "05da98f3003916f1313d601412b64851f307ba1becd58b57a2de5ea731ea26f5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlan.kt",
+      "sha256": "a22c23d54d83da9b650e054c4840e6f76e1d382e6c5f5eeacbf8cbfc41942185"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/Research.kt",
+      "sha256": "94c789a97ae6e3100800c447033074a6031cbf2550f67710a5e675cb31e0a2de"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt",
+      "sha256": "b51c363635aa829f9f8bd7c1443524957ea902cf520b07ffec84ac517515b2c6"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchNegationSignals.kt",
+      "sha256": "ae054a494fb39cc2225c65d290f732e3bc9e9cdcc23971acc91a5540654a3429"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchQuestionFocus.kt",
+      "sha256": "44d86b474873c443c6a5ee542e49efe2e1b7c2d74f54e97da96c21133b9ba2b0"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+      "sha256": "adaadaf521a798ce52443e5f56e45d35b57555b2171f16e415eab376e2a416c9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/TemporalRoleEvidenceLedger.kt",
+      "sha256": "2f2af21601bf233092672c0725fabb7d72d64c51e8ca590085823f8289b206ca"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1Lexicon.kt",
+      "sha256": "aee0953c667286c3155ea64c0d56522eb78785e5b9a458b8fda63bc73e1a1257"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt",
+      "sha256": "b37ce85fbb9597df7eb787c925d804d89ea122e4a196119c88a1f4a9df5500e2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryEvents.kt",
+      "sha256": "66225f8e77cea0ccfe0f6a727aab10fc49571b54cfed399fca668adc1a6fbae7"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+      "sha256": "059ff1d05299cb4fc5289844ef727c38380fb0edde98e825f70f146b04e13a23"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumSkillLibrary.kt",
+      "sha256": "1f70156ad3a5a51aa2e447765f48970b55e07ff75b13fe595dd1c105c6cca386"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt",
+      "sha256": "952fe9a19caa125d1317c2f8df1da8dcd63c544309b16535fd5382fce2590ea0"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/Lex3LearningExperienceStore.kt",
+      "sha256": "c4c1372824e19b3adb1f3945ebb36d59efd38c32fac8f9b9129f9c961b1e7a64"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/OwnerMemoryRecovery.kt",
+      "sha256": "847cac5b1f361505269044c64df31e9ad52a9072d4f950bdd2d1ecbcdb06de2f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/OwnerStatementModality.kt",
+      "sha256": "5e52c556b39d556907db2fb7eb7a8f8b9badf42dc6a9f99c545ae06e7bee11d5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+      "sha256": "ca6625e499d10de19c2a31de6e83d7f50745509dac242d3261a6ce9be6868c78"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalInferenceDelivery.kt",
+      "sha256": "0e68949eafab1a0582f536b6fff763ae8ea41b6cd525899c0715f547469a8439"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalInferenceProfile.kt",
+      "sha256": "a8bbd0d8c71dcfea299c063b73184b1308aaf6973de5b308d586d05d8e41d0e3"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+      "sha256": "169e685b28b39392c33cd644362ddf58efeee98c3f4f806cf98a297bec579202"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelGenerationPolicy.kt",
+      "sha256": "8c45f4d6825662cbc101df11bc023b4e79ddb54a13f737cb0536fe109caaa131"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportProgress.kt",
+      "sha256": "bd84358afef594a6205699f914f2257b2a8dc1e1a84418a3bbbacf920f6688d1"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelThermalGuard.kt",
+      "sha256": "7d8b16c4966d28255260bbc81f817a2df7982e0d118e2793ade2faf03553c7d5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalNativePromptBudget.kt",
+      "sha256": "229817e93ce99fa3694e7a1c57039cf3fef8dff37fd2a91eaa3a8503feb05409"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalQwenPromptPolicy.kt",
+      "sha256": "503534b1c83d490be2564bc49689593169acd17ace3d3de7a6109386dc2da6aa"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalToolContinuation.kt",
+      "sha256": "712ab65bad7373eae42334c96a14a1c2c745d551da054841a5584bfa729354e8"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalToolTurnGate.kt",
+      "sha256": "5bde9f200bdd43ab754d56cc1a3c11704728063898d9f54289f515386b9eeb36"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalTurnModelBinding.kt",
+      "sha256": "1be81cd77dfe380dc4c4c73190d3e062c4e459d9452c834861069aeccf3136e9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/routines/ContinuumRoutines.kt",
+      "sha256": "67ab5b78d33370c210fa22708d06e3288381d2d4f3cfeacbfa5d246d15e785b6"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefBotTeamTest.kt",
+      "sha256": "887edcd5589da13138021c1e28e6f0b11c358e338c02f22cc3d45dc65138a10e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/StrictJson.kt",
+      "sha256": "f1d620a4401371c740e352a28959b5929f692f572eb8c6bebbd33a5530db9930"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalConversationBoundary.kt",
+      "sha256": "f2613e17e4183175ef5cdc17c8665dd018bd2da47559239e41245dec44b8728c"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefBotTeamSkillsTest.kt",
+      "sha256": "03f9f824a82b8176d317b059593b5be272c4d8f8a0f8f4c4ea5329012df3f03f"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefDelegationCoordinatorTest.kt",
+      "sha256": "1c753922ba880b806cde36a4363eed65ab62da98834e26386e00c276d9b74153"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkerPoolTest.kt",
+      "sha256": "650f81e4e1e9e837a411a1c2c61ba63cf54ec8cb5df0da9cca0960f518ab2294"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkerPoolShutdownTest.kt",
+      "sha256": "709c571d1ed680d45d522300bcbb0013cf62edd989abd77abb8cee48109dd3f6"
+    }
+  ],
+  "test_classes": [
+    "ChiefBotTeamTest",
+    "ChiefBotTeamSkillsTest",
+    "ChiefDelegationCoordinatorTest",
+    "ChiefWorkerPoolTest",
+    "ChiefWorkerPoolShutdownTest"
+  ],
+  "results": {
+    "team_baseline": {
+      "tests": 39,
+      "failures": 1
+    },
+    "team_candidate": {
+      "tests": 39,
+      "failures": 0
+    },
+    "speech_baseline": {
+      "tests": 37,
+      "failures": 1
+    },
+    "speech_candidate": {
+      "tests": 37,
+      "failures": 0
+    }
+  },
+  "device": "NOT_RUN",
+  "android_ui": "NOT_RUN",
+  "no_production_stubs": true,
+  "dependencies": [
+    {
+      "file": "kotlin-daemon-embeddable-2.0.20.jar",
+      "sha256": "5bd5113b85ab8528e192e2bb3fc197f5bc3448bcdbd058790b37fd37f4ee57af"
+    },
+    {
+      "file": "annotations-13.0.jar",
+      "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+    },
+    {
+      "file": "hamcrest-core-1.3.jar",
+      "sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+    },
+    {
+      "file": "kotlinx-coroutines-core-jvm-1.6.4.jar",
+      "sha256": "c24c8bb27bb320c4a93871501a7e5e0c61607638907b197aef675513d4c820be"
+    },
+    {
+      "file": "kotlin-script-runtime-2.0.20.jar",
+      "sha256": "fe97002a6798f7207564648919d6eeccfb338b95dc04b48886d856655bc64a4e"
+    },
+    {
+      "file": "kotlin-compiler-embeddable-2.0.20.jar",
+      "sha256": "a3604bf350c8bcce27102158bbb383fa4d1814bc486aaed59f278eada51ff6ad"
+    },
+    {
+      "file": "junit-4.13.2.jar",
+      "sha256": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3"
+    },
+    {
+      "file": "json-20240303.jar",
+      "sha256": "3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed"
+    },
+    {
+      "file": "kotlin-stdlib-2.0.20.jar",
+      "sha256": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006"
+    },
+    {
+      "file": "kotlin-reflect-1.6.10.jar",
+      "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+    },
+    {
+      "file": "trove4j-1.0.20200330.jar",
+      "sha256": "c5fd725bffab51846bf3c77db1383c60aaaebfe1b7fe2f00d23fe1b7df0a439d"
+    },
+    {
+      "file": "okhttp-4.12.0.jar",
+      "sha256": "b1050081b14bb7a3a7e55a4d3ef01b5dcfabc453b4573a4fc019767191d5f4e0"
+    },
+    {
+      "file": "litertlm-android.jar",
+      "sha256": "0ff0098f64407752c115bf2569a7cd3005c894ecb934e7fdbcd744037f398ce8"
+    },
+    {
+      "file": "okio-jvm-3.6.0.jar",
+      "sha256": "67543f0736fc422ae927ed0e504b98bc5e269fda0d3500579337cb713da28412"
+    },
+    {
+      "file": "android.jar",
+      "sha256": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+    }
+  ]
+}

@@ -26,6 +26,7 @@ class ContinuumCdxLargeCurriculumCycleTest {
         assertTrue(c.historicAudit.all { it.answer.endsWith(".") && it.answer.contains(" ") })
         assertFalse(c.train.any { it.answer.endsWith(".") })
         assertEquals(48, c.audit.pairs.size)
+        assertEquals(53, c.validationAudit.pairs.size)
         assertTrue(c.train.map { it.conditionerText() }.toSet()
             .intersect(c.protectedAudit().pairs.map { it.conditionerText() }.toSet()).isEmpty())
     }

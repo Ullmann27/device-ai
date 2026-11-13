@@ -92,6 +92,16 @@ class LiveScrollEvidenceTest {
         assertEquals(-80L, LiveScrollSample(deltaY = -80).movementSince(null)?.pixelsY)
     }
 
+    @Test fun extremeDeltasAndOffsetsCannotInventMovement() {
+        assertNull(LiveScrollSample(deltaX = Int.MAX_VALUE, deltaY = Int.MAX_VALUE).movementSince(null))
+        assertNull(LiveScrollSample(offsetY = Int.MAX_VALUE).movementSince(LiveScrollSample(offsetY = 0)))
+        assertNull(LiveScrollSample(offsetY = 80).movementSince(LiveScrollSample(offsetY = Int.MAX_VALUE)))
+        assertNull(LiveScrollSample(offsetX = Int.MAX_VALUE).movementSince(LiveScrollSample(offsetX = 0)))
+        assertNull(LiveScrollSample(offsetX = 80).movementSince(LiveScrollSample(offsetX = Int.MAX_VALUE)))
+        assertEquals(80L, LiveScrollSample(deltaX = Int.MAX_VALUE, deltaY = 80).movementSince(null)?.pixelsY)
+        assertEquals(-80L, LiveScrollSample(offsetY = 0).movementSince(LiveScrollSample(offsetY = 80))?.pixelsY)
+    }
+
     @Test fun offsetOrIndexSequenceProvidesMovementWithoutDeltas() {
         assertNull(LiveScrollSample(offsetY = 80).movementSince(null))
         assertEquals(80L, LiveScrollSample(offsetY = 80).movementSince(LiveScrollSample(offsetY = 0))?.pixelsY)

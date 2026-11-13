@@ -176,7 +176,9 @@ internal class AndroidLiveNodePort(
                     scrollWatch = ScreenObservationBus.beginScroll(access, request, original.stamp, target!!, node)
                     permissionCheck()
                 }
-                checkRenderedTarget(target, selection.target.id)
+                checkRenderedTarget(target, stamp)
+                checkActive()
+                check(ScreenObservationBus.liveRevision(access) == revision) { "SCREEN_CHANGED_BEFORE_ACTION" }
                 inputAttempted = true
                 val accepted = when (request.kind) {
                     NodeActionKind.CLICK -> node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
@@ -199,22 +201,10 @@ internal class AndroidLiveNodePort(
         }
     }
 
-    private fun checkRenderedTarget(target: ActionNode, windowId: Int) {
+    private fun checkRenderedTarget(target: ActionNode, source: ObservationStamp) {
         if (captureSession <= 0L) return
-        val status = submittedFrame?.invoke() ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
-        val binding = status.binding ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
-        val meta = status.meta ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
-        val age = status.ageMillis ?: error("COMPUTER_RENDERED_SOURCE_REQUIRED")
-        check(status.state == LiveMonitorState.LIVE && status.sequence > 0L &&
-            age in 0..binding.staleAfterMillis &&
-            binding.taskId == taskId && binding.targetPackage == targetPackage &&
-            binding.ownPackage == access.service.packageName && binding.captureSession == captureSession &&
-            meta.captureSession == captureSession && meta.sourcePackage == targetPackage &&
-            meta.sourceWindowId == windowId) { "COMPUTER_RENDERED_SOURCE_MISMATCH" }
-        val viewport = meta.sourceViewport ?: error("COMPUTER_RENDERED_VIEWPORT_REQUIRED")
-        val bounds = target.bounds ?: error("TARGET_BOUNDS_REQUIRED")
-        check(bounds.left >= viewport.left && bounds.top >= viewport.top &&
-            bounds.right <= viewport.right && bounds.bottom <= viewport.bottom) { "TARGET_OUTSIDE_MONITOR_VIEWPORT" }
+        LiveMonitorSubmission.checkActionSource(submittedFrame?.invoke(), source,
+            access.service.packageName, target.bounds)
     }
 
     private fun describe(node: AccessibilityNodeInfo, selection: LiveWindowSafety.Selection): ActionNode {

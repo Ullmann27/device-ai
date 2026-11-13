@@ -12,7 +12,10 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Slot
  * Platform-neutral; Android glass (backdrop blur, AGSL glow/background) plugs in via [GlassBackend].
  */
 object JarvisShellRenderer {
-    fun interface SlotContent { fun draw(p: ContinuumPainter, box: Box) }
+    fun interface SlotContent {
+        fun draw(p: ContinuumPainter, box: Box)
+        val drawnInScene: Boolean get() = false
+    }
 
     /** Native glass hooks (Android: JarvisGlassRenderer). Null = portable fallback (JVM preview, old APIs). */
     interface GlassBackend {
@@ -64,6 +67,7 @@ object JarvisShellRenderer {
                        cinemaFrame: CinemaFrame = CinemaFrame()) {
         val scene = cinemaFrame
         for (slot in foregroundSlots + if (shell.workstation) workstationScreens else emptySet()) {
+            if (slot in workstationScreens && content[slot]?.drawnInScene == true) continue
             val box = shell[slot] ?: continue
             val moving = scene.clearIdle && JarvisCinemaEntrance.fliesAwayOnWorkOrder(slot)
             val side = if (box.centerX >= shell.width / 2f) 1f else -1f

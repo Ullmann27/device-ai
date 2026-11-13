@@ -38,6 +38,29 @@ class LocalSpeechSessionTest {
         fun start() = session.start(states::add, text::add, errors::add)
         val recognizer get() = platform.recognizers.last()
     }
+    @Test fun listeningIsOnlyShownAfterTheRecognizerConfirmsReady() {
+        val f = Fixture()
+        f.start()
+        assertTrue("A start request is not live microphone readiness", f.states.isEmpty())
+        val r = f.recognizer
+        assertEquals(1, r.starts)
+        r.callbacks.ready()
+        assertEquals(listOf(true), f.states)
+        r.callbacks.result("Hallo")
+        assertEquals(listOf("Hallo"), f.text)
+        assertEquals(listOf(true, false), f.states)
+    }
+
+    @Test fun startupFailureDoesNotDisplayFalseListening() {
+        val f = Fixture()
+        f.platform.failCreate = IllegalStateException("no local recognizer")
+        f.start()
+        assertEquals(listOf(false), f.states)
+        assertTrue(f.text.isEmpty())
+        assertEquals(LocalSpeechInputPolicy.message(LocalSpeechInputPolicy.Failure.START_FAILED),
+            f.errors.single())
+    }
+
     @Test fun recognizedTextDeliveredExactlyOnceAndResourcesReleased() {
         val f = Fixture(); f.start(); val r = f.recognizer
         r.callbacks.ready(); r.callbacks.result("Hallo\n Heinz")

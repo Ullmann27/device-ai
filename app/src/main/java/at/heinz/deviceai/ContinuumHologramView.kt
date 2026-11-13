@@ -158,10 +158,16 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     @android.annotation.TargetApi(29)
     private fun observeThermalPressure() {
-        thermalStatus = powerManager.currentThermalStatus
+        thermalStatus = runCatching { powerManager.currentThermalStatus }
+            .getOrDefault(PowerManager.THERMAL_STATUS_NONE)
         val listener = PowerManager.OnThermalStatusChangedListener { onThermalStatus(it) }
-        powerManager.addThermalStatusListener(context.mainExecutor, listener)
-        thermalListener = listener
+        try {
+            powerManager.addThermalStatusListener(context.mainExecutor, listener)
+            thermalListener = listener
+        } catch (failure: RuntimeException) {
+            android.util.Log.w("ContinuumThermal", "Avatar thermal observer unavailable", failure)
+            thermalListener = null
+        }
     }
 
     @android.annotation.TargetApi(29)
@@ -612,6 +618,21 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var worldBufferHeight = 0
     private var cockpitLiveFeed: at.heinz.deviceai.cognitive.LiveMonitorFeed<AndroidLiveFrame>? = null
     internal var onCockpitStatus: ((String, Boolean) -> Unit)? = null
+    private var cockpitPanelContent: at.heinz.deviceai.avatar3d.CockpitPanelContent? = null
+    private val cockpitPanelPainter by lazy { AndroidContinuumPainter(context.assets) }
+    internal val cockpitPanelsVisible: Boolean get() = layeredCockpit && native3dDrawn &&
+        native3d?.cockpitPanelsPresented(cockpitPanelContent, cockpitWorldFrame) == true
+
+    internal fun setCockpitPanels(content: at.heinz.deviceai.avatar3d.CockpitPanelContent?) {
+        if (cockpitPanelContent?.key == content?.key &&
+            cockpitPanelContent?.observationRevision == content?.observationRevision) return
+        cockpitPanelContent = content
+        invalidate()
+    }
+
+    internal fun cockpitHeadCenter(): Pair<Float, Float>? =
+        if (headDrawBounds.width() > 0f && headDrawBounds.height() > 0f)
+            headDrawBounds.centerX() to headDrawBounds.centerY() else null
 
     internal fun presentCockpitStage(frame: at.heinz.deviceai.avatar3d.CockpitStageFrame) {
         if (!frame.valid()) return
@@ -647,6 +668,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         cockpitLiveFeed?.monitorSubmission?.invalidate()
         cockpitWorldFrame = null
         cockpitLiveFeed = null
+        cockpitPanelContent = null
         native3d?.clearCockpitStage()
         onCockpitStatus?.invoke("3D-Szene nicht verbunden", false)
     }
@@ -660,7 +682,8 @@ class ContinuumHologramView @JvmOverloads constructor(
             val assets = cockpitWorldAssets ?: at.heinz.deviceai.avatar3d.CockpitSceneAssets.load(context.assets)
                 .also { cockpitWorldAssets = it }
             resolveOrbBounds(width, height)
-            native.configureCockpit(assets, frame, headDrawBounds, orbDrawBounds, cockpitLiveFeed)
+            native.configureCockpit(assets, frame, headDrawBounds, orbDrawBounds, cockpitLiveFeed,
+                documentStageBytes, cockpitPanelPainter, cockpitPanelContent)
         }.onFailure {
             cockpitWorldFailed = true
             native.clearCockpitStage()
@@ -949,6 +972,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             renderer.draw(painter, renderFrame, transparentBackdrop = true)
             } finally {
                 renderFrame.energy = originalEnergy
+                renderer.layout(orbDrawBounds.width() / d, orbDrawBounds.height() / d)
                 canvas.restoreToCount(orb)
             }
         }
@@ -1279,7 +1303,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                 }
                 canvas.restoreToCount(orbCanvas)
             }
-            if (!native3dDrawn && !layeredCockpit) {
+            if (!native3dDrawn && (!layeredCockpit || !head3dEnabled)) {
                 val headCanvas = if (layeredCockpit) canvas.saveLayerAlpha(
                     headDrawBounds.left / density, headDrawBounds.top / density,
                     headDrawBounds.right / density, headDrawBounds.bottom / density,

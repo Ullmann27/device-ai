@@ -7,7 +7,12 @@ internal enum class ComputerApp(val discoveryQuery: String, val aliases: List<St
     FACEBOOK("Facebook", listOf("facebook")),
     FILES("Eigene Dateien", listOf("samsung eigene dateien", "eigene dateien", "meine dateien", "dateien")),
     WORD("Word", listOf("microsoft word", "word")),
-    EXCEL("Excel", listOf("microsoft excel", "excel"))
+    EXCEL("Excel", listOf("microsoft excel", "excel")),
+    CHROME("Chrome", listOf("google chrome", "chrome")),
+    SETTINGS("Einstellungen", listOf("android-einstellungen", "einstellungen")),
+    CAMERA("Kamera", listOf("kamera-app", "kamera")),
+    GALLERY("Galerie", listOf("samsung galerie", "galerie")),
+    CALENDAR("Kalender", listOf("kalender"))
 }
 
 internal enum class ComputerGoal { OPEN, SEARCH, OPEN_DOWNLOADS, DRAFT_MESSAGE, SEND_MESSAGE }
@@ -47,8 +52,11 @@ internal object OwnerComputerIntentParser {
 
     private val apps = ComputerApp.entries.flatMap { app -> app.aliases.map { it to app } }
         .sortedByDescending { it.first.length }
+    private val OPEN_ONLY_APPS = setOf(ComputerApp.CHROME, ComputerApp.SETTINGS,
+        ComputerApp.CAMERA, ComputerApp.GALLERY, ComputerApp.CALENDAR)
     private val otherAction = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:und|dann|danach)\\s+(?:sende?|schicke?|lösche?|loesche?|poste?|teile?|kaufe?|rufe?|öffne?|oeffne?|starte?|suche?)(?![\\p{L}\\p{N}_])")
     private val searchLabel = Regex("(?iu)^(?:und\\s+)?(?:suche|such|suche nach|such nach)\\s+(?:nach\\s+)?(.+)$")
+    private val negation = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:nicht|keinesfalls|niemals|kein(?:e|en|em|er|es)?)(?![\\p{L}\\p{N}_])")
 
     fun parse(raw: String, contextApp: ComputerApp? = null): Result {
         if (raw.length !in 1..2_000 || raw.any { it.isISOControl() && it != '\n' }) return Result.NotComputerCommand
@@ -58,14 +66,22 @@ internal object OwnerComputerIntentParser {
         text = text.replace(Regex("(?iu)^(?:kannst du|könntest du|koenntest du)\\s+(?:bitte\\s+)?"), "")
             .replace(Regex("(?iu)^bitte\\s+"), "").trim()
         if (text.isEmpty()) return Result.NotComputerCommand
-        val lower = text.lowercase(Locale.ROOT)
-        if (Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:nicht|keinesfalls|niemals)(?![\\p{L}\\p{N}_])").containsMatchIn(text.substringBefore(':'))) {
-            return if (apps.any { lower.contains(it.first) }) Result.Unsupported("Der verneinte App-Auftrag wird nicht ausgeführt.")
-                else Result.NotComputerCommand
+        val command = text.substringBefore(':')
+        if (negation.containsMatchIn(command)) {
+            val affirmative = negation.replace(command, " ").replace(Regex("\\s+"), " ").trim()
+            val candidate = if (':' in text) affirmative + ":" + text.substringAfter(':') else affirmative
+            return if (parseCommand(candidate, contextApp) == Result.NotComputerCommand) Result.NotComputerCommand
+                else Result.Unsupported("Der verneinte App-Auftrag wird nicht ausgeführt.")
         }
+        return parseCommand(text, contextApp)
+    }
+
+    private fun parseCommand(normalized: String, contextApp: ComputerApp?): Result {
+        var text = normalized
+        val lower = text.lowercase(Locale.ROOT)
         parseMessage(text, contextApp)?.let { return it }
         text = text.trimEnd('.', '?', '!').trim()
-        Regex("(?iu)^(?:öffne|oeffne|starte|open)\\s+(.+)$").matchEntire(text)?.let { match ->
+        Regex("(?iu)^(?:öffne|oeffne|starte|open|wechsle\\s+zu|wechsel\\s+zu)\\s+(.+)$").matchEntire(text)?.let { match ->
             val rest = match.groupValues[1].replace(Regex("(?iu)^bitte\\s+"), "")
             if (rest.matches(Regex("(?iu)(?:den\\s+)?download[- ]?ordner|downloads"))) {
                 return Result.Ready(OwnerComputerIntent(ComputerApp.FILES, ComputerGoal.OPEN_DOWNLOADS))
@@ -93,6 +109,8 @@ internal object OwnerComputerIntentParser {
     }
 
     private fun search(app: ComputerApp, raw: String): Result {
+        if (app in OPEN_ONLY_APPS)
+            return Result.Unsupported("In ${app.discoveryQuery} ist nur das bestätigte Öffnen mit Livebild freigegeben.")
         val query = raw.trim().trim('"', '„', '“').trim()
         if (query.isBlank()) return Result.Ask("Wonach soll ich in ${app.discoveryQuery} suchen?")
         if (query.length > 200 || otherAction.containsMatchIn(query)) {
@@ -114,6 +132,12 @@ internal object OwnerComputerIntentParser {
         val distinct = appMatches.map { it.second }.distinct()
         val explicitMessage = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:nachricht|nachrichtenentwurf)(?![\\p{L}\\p{N}_])")
             .containsMatchIn(command)
+        val explicitDestination = appMatches.any { (alias, _) ->
+            Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:in|auf|per|via)\\s+${Regex.escape(alias)}(?![\\p{L}\\p{N}_])")
+                .containsMatchIn(command)
+        }
+        if (distinct.isNotEmpty() && distinct.all { it in OPEN_ONLY_APPS } &&
+            !explicitMessage && !explicitDestination) return null
         if (distinct.isEmpty() && contextApp == null && !explicitMessage) return null
         if (distinct.size > 1) return Result.Ask("In welcher App soll ich den Entwurf vorbereiten?")
         val app = distinct.singleOrNull() ?: contextApp
