@@ -14,7 +14,7 @@ from mathutils import Vector
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "app/src/main/assets/cinema3d"
 SOURCE = ROOT / "tools/cockpit-workstation/source/pr801-workstation.glb"
-SOURCE_SHA = "f1edabf082ee4d30e275a862a375ac73dea65ab4e1f140ddb021845c87e6bcc3"
+SOURCE_SHA = "09447df1b5f6dc270f6f9e42f68b9640b3fd019f82a624228b082c7d08eca99a"
 AVATAR = ROOT / "app/src/main/assets/avatar3d/continuum-avatar.glb"
 AVATAR_SHA = "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
 TAU = math.tau

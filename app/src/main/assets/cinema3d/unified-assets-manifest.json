@@ -2,17 +2,17 @@
   "evidence": "BLENDER_MESH_BUILD_NOT_DEVICE_VERIFICATION",
   "blender": "4.3.2",
   "build_scope": "workstation_only",
-  "builder_sha256": "d33b39757e44837997d07245dfd53c7c9deb9952fe86a799a18949b411a7a4ff",
+  "builder_sha256": "ced8aa1853344bc6ce80b2665b680d660080a83d2e30143ff2644d43bb48af49",
   "source_metadata": {
     "source_base_commit": "5348087805fa4ab4152ea04e9f20bb41afae9d95",
     "generator_path": "tools/cockpit-workstation/build_scene.py",
-    "generator_sha256": "89bd30f8af92e86def970474d1f070d7b6c347ebd2c80cb6308290404755e862",
+    "generator_sha256": "74190516d93ace9e7a89d5ed5e99f29b112bd2eb5153a9998c2527a1264eebfb",
     "source_path": "tools/cockpit-workstation/source/pr801-workstation.glb",
-    "sha256": "f1edabf082ee4d30e275a862a375ac73dea65ab4e1f140ddb021845c87e6bcc3",
-    "bytes": 30776,
+    "sha256": "09447df1b5f6dc270f6f9e42f68b9640b3fd019f82a624228b082c7d08eca99a",
+    "bytes": 32716,
     "provenance": "Owned reference workstation seed; unified packaging adds only the live texture plane."
   },
-  "source_sha256": "f1edabf082ee4d30e275a862a375ac73dea65ab4e1f140ddb021845c87e6bcc3",
+  "source_sha256": "09447df1b5f6dc270f6f9e42f68b9640b3fd019f82a624228b082c7d08eca99a",
   "original_avatar_sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
   "parameter_sources": {
     "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt": "0dd2e9a54dc901035b31407f95dc3fcc5727cdd7c1f3b369e86ac5fec2b3a5a9",
@@ -635,13 +635,19 @@
         "name": "smoked-metal",
         "pbrMetallicRoughness": {
           "baseColorFactor": [
-            0.026,
-            0.038,
-            0.058,
+            0.02,
+            0.028,
+            0.044,
             1
           ],
-          "metallicFactor": 0.54,
-          "roughnessFactor": 0.27
+          "metallicFactor": 0.82,
+          "roughnessFactor": 0.34
+        },
+        "extensions": {
+          "KHR_materials_clearcoat": {
+            "clearcoatFactor": 0.32,
+            "clearcoatRoughnessFactor": 0.2
+          }
         }
       }
     },
@@ -650,13 +656,13 @@
         "name": "brushed-edge",
         "pbrMetallicRoughness": {
           "baseColorFactor": [
-            0.15,
-            0.21,
-            0.28,
+            0.19,
+            0.23,
+            0.29,
             1
           ],
-          "metallicFactor": 0.65,
-          "roughnessFactor": 0.24
+          "metallicFactor": 0.92,
+          "roughnessFactor": 0.22
         }
       }
     },
@@ -722,13 +728,19 @@
         "doubleSided": true,
         "pbrMetallicRoughness": {
           "baseColorFactor": [
-            0.048,
-            0.11,
-            0.18,
-            0.24
+            0.034,
+            0.072,
+            0.12,
+            0.18
           ],
-          "metallicFactor": 0.12,
-          "roughnessFactor": 0.13
+          "metallicFactor": 0,
+          "roughnessFactor": 0.1
+        },
+        "extensions": {
+          "KHR_materials_clearcoat": {
+            "clearcoatFactor": 1,
+            "clearcoatRoughnessFactor": 0.075
+          }
         }
       }
     },
@@ -765,51 +777,63 @@
   "files": [
     {
       "path": "app/src/main/assets/cinema3d/cockpit-workstation.glb",
-      "sha256": "03b6364e2ff396fd9207b129e765ce5d4a93975113315cc3896844e53fd8ad30",
-      "bytes": 48728,
+      "sha256": "9f00a0687d8bcdce910d38d2e61684e1517832003ef66f8df95efe56cdf4aca0",
+      "bytes": 52228,
       "meshes": 15,
-      "triangles_unique_meshes": 1022,
+      "triangles_unique_meshes": 1118,
       "nodes": 36,
       "materials": [
         {
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 0.3199999928474426,
+              "clearcoatRoughnessFactor": 0.20000000298023224
+            }
+          },
           "name": "smoked-metal",
           "pbrMetallicRoughness": {
             "baseColorFactor": [
-              0.026000000536441803,
-              0.03799999877810478,
-              0.057999998331069946,
+              0.019999999552965164,
+              0.02800000086426735,
+              0.04399999976158142,
               1
             ],
-            "metallicFactor": 0.5400000214576721,
-            "roughnessFactor": 0.27000001072883606
+            "metallicFactor": 0.8199999928474426,
+            "roughnessFactor": 0.3400000035762787
           }
         },
         {
           "name": "brushed-edge",
           "pbrMetallicRoughness": {
             "baseColorFactor": [
-              0.15000000596046448,
-              0.20999999344348907,
-              0.2800000011920929,
+              0.1899999976158142,
+              0.23000000417232513,
+              0.28999999165534973,
               1
             ],
-            "metallicFactor": 0.6499999761581421,
-            "roughnessFactor": 0.23999999463558197
+            "metallicFactor": 0.9200000166893005,
+            "roughnessFactor": 0.2199999988079071
           }
         },
         {
           "alphaMode": "BLEND",
           "doubleSided": true,
+          "extensions": {
+            "KHR_materials_clearcoat": {
+              "clearcoatFactor": 1,
+              "clearcoatRoughnessFactor": 0.07500000298023224
+            }
+          },
           "name": "smoked-glass",
           "pbrMetallicRoughness": {
             "baseColorFactor": [
-              0.04800000041723251,
-              0.10999999940395355,
-              0.18000000715255737,
-              0.23999999463558197
+              0.03400000184774399,
+              0.07199999690055847,
+              0.11999999731779099,
+              0.18000000715255737
             ],
-            "metallicFactor": 0.11999999731779099,
-            "roughnessFactor": 0.12999999523162842
+            "metallicFactor": 0,
+            "roughnessFactor": 0.10000000149011612
           }
         },
         {
@@ -884,6 +908,7 @@
         }
       ],
       "extensions_used": [
+        "KHR_materials_clearcoat",
         "KHR_materials_unlit"
       ]
     },

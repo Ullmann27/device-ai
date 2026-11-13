@@ -355,7 +355,8 @@ object JarvisTiles {
             val spec = CockpitGlassButtons.spec(it.target)
             if (spec != null) {
                 CockpitGlassButtons.draw(p, tile, spec, active, i == pressed,
-                    fontScale = fontScale, pressX = pressX, pressY = pressY)
+                    fontScale = fontScale, pressX = pressX, pressY = pressY,
+                    timeMs = if (animatorScale > 0f && cinemaBudget?.animate != false) timeMs else 0L)
             } else {
                 drawSurface(p, tile, model, active, timeMs, luxuryDepth = true,
                     pressX = pressX, pressY = pressY)

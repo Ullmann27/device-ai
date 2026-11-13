@@ -82,12 +82,12 @@ class LuxuryHoloButtonRendererTest {
 
     @Test fun shellRoutesPressureToOnlyTheActualDockControl() {
         val shell = JarvisShellLayout.create(884f, 760f)
-        val pressed = JarvisShellRenderer.ControlPress("bottom:system", "system", .2f, .8f)
+        val pressed = JarvisShellRenderer.ControlPress("bottom:device", "device", .2f, .8f)
         val probe = Probe()
         JarvisShellRenderer.draw(probe.painter, shell, timeMs = 300L, controlPress = pressed)
         assertEquals(2, probe.contacts.size)
         val dock = requireNotNull(shell[JarvisShellLayout.Slot.BOTTOM_NAV])
-        val index = JarvisTiles.bottomNav.indexOfFirst { it.target == "system" }
+        val index = JarvisTiles.bottomNav.indexOfFirst { it.target == "device" }
         val cell = JarvisTiles.bottomNavItemBoxes(dock)[index]
         assertTrue(probe.contacts.all { it.box.left > cell.left && it.box.right < cell.right })
         val released = Probe()
@@ -95,7 +95,7 @@ class LuxuryHoloButtonRendererTest {
         assertTrue(released.contacts.isEmpty())
         val other = Probe()
         JarvisShellRenderer.draw(other.painter, shell, timeMs = 300L,
-            controlPress = pressed.copy(key = "header:system"))
+            controlPress = pressed.copy(key = "header:device"))
         assertTrue(other.contacts.isEmpty())
     }
 
@@ -113,6 +113,28 @@ class LuxuryHoloButtonRendererTest {
         assertEquals(before.contacts.map { it.alpha }, reduced.contacts.map { it.alpha })
     }
 
+    @Test fun glassDockContactTracksTheRealPointer() {
+        val bounds = JarvisShellLayout.Box(0f, 0f, 800f, 120f)
+        val first = Probe()
+        val later = Probe()
+        JarvisTiles.drawBottomNav(first.painter, bounds, pressed = 1, timeMs = 300L,
+            pressX = .1f, pressY = .2f)
+        JarvisTiles.drawBottomNav(later.painter, bounds, pressed = 1, timeMs = 900L,
+            pressX = .9f, pressY = .8f)
+        assertEquals(2, first.contacts.size)
+        assertEquals(2, later.contacts.size)
+        assertTrue(first.contacts.first().fill.cx < later.contacts.first().fill.cx)
+        assertTrue(first.contacts.first().fill.cy < later.contacts.first().fill.cy)
+        assertTrue(first.contacts.first().alpha > later.contacts.first().alpha)
+        assertEquals(first.contacts.map { it.box }, later.contacts.map { it.box })
+        assertFalse(first.additive)
+        assertFalse(later.additive)
+        val disabled = Probe()
+        CockpitGlassButtons.draw(disabled.painter, box, CockpitGlassButtons.buttons[1],
+            active = true, pressed = true, disabled = true, timeMs = 300L)
+        assertTrue(disabled.contacts.isEmpty())
+    }
+
     @Test fun heldMaterialClockDoesNotAdvanceFrozenBackground() {
         val shell = JarvisShellLayout.create(884f, 760f)
         val probe = Probe()
@@ -125,7 +147,7 @@ class LuxuryHoloButtonRendererTest {
             override fun drawPanelGlass(box: JarvisShellLayout.Box, radius: Float, glow: Float) = false
         }
         JarvisShellRenderer.draw(probe.painter, shell, glass = glass, timeMs = 0L,
-            materialTimeMs = 300L, controlPress = JarvisShellRenderer.ControlPress("bottom:system", "system"))
+            materialTimeMs = 300L, controlPress = JarvisShellRenderer.ControlPress("bottom:device", "device"))
         assertEquals(0L, backgroundTime)
         assertEquals(2, probe.contacts.size)
         assertEquals(.35f, probe.contacts.first().alpha, .0001f)
