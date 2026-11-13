@@ -31,6 +31,8 @@ Added `OwnerComputerVisibilityUiTest` using the real Activity/controller lifecyc
 8. Ordinary verified reply retains its existing speech policy.
 9. Actual normal completion retains its verified reply on pause/stop, with plan/capture still retained and workflow already null before cleanup.
 
+Compatibility: all 126 existing UI Kotlin files at the pinned base were searched for direct/reflected controller/reply callers. The one existing three-argument reflection helper in `OwnerAppPlanningContextUiTest` now supplies the explicit speech flag. The new consent case reuses that harness's existing projection-consent shadow.
+
 Test status: **NOT_RUN**. This editing environment has no local Gradle/Android executor. No GitHub Actions run was dispatched by this worker. The integrator must run the new class and existing computer/voice/cancellation regressions on the integrated SHA:
 
 ```sh

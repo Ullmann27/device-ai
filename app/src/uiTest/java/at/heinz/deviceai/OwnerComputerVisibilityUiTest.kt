@@ -56,7 +56,8 @@ import java.util.concurrent.atomic.AtomicBoolean
     AndroidWindowCaptureTest.CaptureServiceShadow::class,
     AndroidWindowCaptureTest.InfoShadow::class,
     AndroidLiveNodePortTest.NodeShadow::class,
-    AndroidLiveNodePortTest.WindowShadow::class
+    AndroidLiveNodePortTest.WindowShadow::class,
+    OwnerAppPlanningContextUiTest.ProjectionConsentShadow::class
 ])
 @LooperMode(LooperMode.Mode.PAUSED)
 @GraphicsMode(GraphicsMode.Mode.LEGACY)

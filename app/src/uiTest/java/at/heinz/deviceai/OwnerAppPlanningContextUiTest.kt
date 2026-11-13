@@ -164,9 +164,9 @@ class OwnerAppPlanningContextUiTest {
 
     private fun computerReply(activity: AgentActivity, pending: Any, epoch: Long?) {
         AgentActivity::class.java.getDeclaredMethod("deliverComputerReply", pending.javaClass,
-            OwnerComputerWorkflow.Result::class.java, Long::class.javaObjectType)
+            OwnerComputerWorkflow.Result::class.java, Long::class.javaObjectType, Boolean::class.javaPrimitiveType)
             .apply { isAccessible = true }.invoke(activity, pending,
-                OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.VERIFIED, COMPUTER_RESULT), epoch)
+                OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.VERIFIED, COMPUTER_RESULT), epoch, true)
     }
 
     private fun withObservation(body: (ContinuumScreenObservationService, Long) -> Unit) {
