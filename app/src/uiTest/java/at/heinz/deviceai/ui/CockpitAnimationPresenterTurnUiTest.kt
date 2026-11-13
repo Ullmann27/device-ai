@@ -78,7 +78,8 @@ class CockpitAnimationPresenterTurnUiTest {
         CueOwner.values().forEach { CockpitCues.register(it, null) }
     }
 
-    private fun idle() = shadowOf(Looper.getMainLooper()).idle()
+    // Drain the pending view traversal.
+    private fun idle() = shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
     private fun emit(event: CockpitAnimationEvent) { bus.emit(event); idle() }
     private fun start(id: String) = emit(CockpitAnimationEvent.CommandFlyIn(id, 1_700_000_000_000L, "Prüfauftrag"))
     private fun end(id: String, delivered: Boolean = true) =
