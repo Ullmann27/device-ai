@@ -78,8 +78,8 @@ jobs:
           set -euo pipefail
           tools_dir="$RUNNER_TEMP/blacksite-tools"
           mkdir -p "$tools_dir"
-          curl --fail --location --retry 3 'https://download.blender.org/release/Blender4.3/blender-4.3.2.sha256' -o "$tools_dir/blender-4.3.2.sha256"
-          curl --fail --location --retry 3 'https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz' -o "$tools_dir/blender-4.3.2-linux-x64.tar.xz"
+          curl --fail --location --retry 3 'https://mirror.blender.org/release/Blender4.3/blender-4.3.2.sha256' -o "$tools_dir/blender-4.3.2.sha256"
+          curl --fail --location --retry 3 'https://mirror.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz' -o "$tools_dir/blender-4.3.2-linux-x64.tar.xz"
           python3 - <<'PY'
           import hashlib, json, os, re
           from pathlib import Path
@@ -94,9 +94,9 @@ jobs:
           assert digest == matches[0], "Official Blender checksum mismatch"
           receipt = {
               "blenderVersion": "4.3.2",
-              "archiveUrl": "https://download.blender.org/release/Blender4.3/" + name,
+              "archiveUrl": "https://mirror.blender.org/release/Blender4.3/" + name,
               "archiveSha256": digest,
-              "officialChecksumUrl": "https://download.blender.org/release/Blender4.3/blender-4.3.2.sha256",
+              "officialChecksumUrl": "https://mirror.blender.org/release/Blender4.3/blender-4.3.2.sha256",
               "checksumManifestSha256": hashlib.sha256(checksums.encode()).hexdigest(),
               "kotlinCompiler": "2.4.0", "json": "20240303", "pillow": "11.3.0",
               "compilerJars": {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
