@@ -245,7 +245,9 @@ internal class OwnerComputerSessionController(
     fun stopForVisibilityLoss() {
         if (awaitingConsent) return
         val previous = plan ?: return
+        val interrupted = workflow != null
         stop()
+        if (!interrupted) return
         previous.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.CANCELLED,
             "Computer-Auftrag und Live-Bild wurden gestoppt, weil Continuum nicht mehr sichtbar ist. " +
                 "Öffne Continuum und die Ziel-App im geteilten Bildschirm und starte den Auftrag erneut. " +

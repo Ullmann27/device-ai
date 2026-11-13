@@ -13,9 +13,9 @@ Status: SOURCE_INTEGRATED / NOT_RUN; device acceptance open.
 
 An active computer session previously stopped silently when fullscreen Continuum lost visibility. The old worker callback was then correctly rejected because its plan had been cleared.
 
-`AgentActivity.onPause/onStop` now call `OwnerComputerSessionController.stopForVisibilityLoss()`. It first uses the existing stop cleanup, revoking the grant, cancelling the workflow, ending capture and clearing feed/panels/plan. It then sends one CANCELLED reply explaining the stop and asking the owner to use split-screen and restart after checking the target app. The existing controller reply callback carries an explicit speech permission: only this notice passes false. No TTS/Maya path is entered for the notice.
+`AgentActivity.onPause/onStop` now call `OwnerComputerSessionController.stopForVisibilityLoss()`. It first uses the existing stop cleanup, revoking the grant, cancelling the workflow, ending capture and clearing feed/panels/plan. Only when a workflow is still pending, it then sends one CANCELLED reply explaining the stop and asking the owner to use split-screen and restart after checking the target app. The existing controller reply callback carries an explicit speech permission: only this notice passes false. No TTS/Maya path is entered for the notice.
 
-Pending/deferred Android capture consent remains exempt. A visible split-screen pause keeps the existing session. Inactive/duplicate lifecycle calls produce no message. Explicit owner STOP, correction and close use unchanged silent `stop()`; their existing caller replies remain intact. Plan identity still rejects late worker completions. Source/grant/capture/render-receipt gates are unchanged.
+Pending/deferred Android capture consent remains exempt. A visible split-screen pause keeps the existing session. Inactive/duplicate lifecycle calls produce no message. Completed workflows retain their original result when their remaining capture is closed; they receive no cancellation or restart instruction. Explicit owner STOP, correction and close use unchanged silent `stop()`; their existing caller replies remain intact. Plan identity still rejects late worker completions. Source/grant/capture/render-receipt gates are unchanged.
 
 ## Verification
 
@@ -29,6 +29,7 @@ Added `OwnerComputerVisibilityUiTest` using the real Activity/controller lifecyc
 6. Owner STOP keeps its existing reply.
 7. Owner correction keeps its existing reply.
 8. Ordinary verified reply retains its existing speech policy.
+9. Actual normal completion retains its verified reply on pause/stop, with plan/capture still retained and workflow already null before cleanup.
 
 Test status: **NOT_RUN**. This editing environment has no local Gradle/Android executor. No GitHub Actions run was dispatched by this worker. The integrator must run the new class and existing computer/voice/cancellation regressions on the integrated SHA:
 

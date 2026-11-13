@@ -1,9 +1,12 @@
 package at.heinz.deviceai
 
+import android.accessibilityservice.AccessibilityService
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.ColorSpace
 import android.graphics.Rect
+import android.hardware.HardwareBuffer
 import android.os.Looper
 import android.os.SystemClock
 import android.speech.tts.TextToSpeech
@@ -39,6 +42,8 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowChoreographer
+import org.robolectric.util.ReflectionHelpers
+import org.robolectric.util.ReflectionHelpers.ClassParameter
 import java.time.Duration
 import java.util.ArrayDeque
 import java.util.Locale
@@ -280,6 +285,49 @@ class OwnerComputerVisibilityUiTest {
 
     @Test fun ownerCorrectionKeepsItsExistingReply() = ownerCancellation(
         "Stopp, das meine ich nicht.", "Verstanden. Was soll ich anders machen?")
+
+    @Test fun completedWorkIsNotCancelledWhenTheRetainedCaptureCloses() = withFixture { f ->
+        advance()
+        val capture = AndroidWindowCaptureTest.CaptureServiceShadow.callback
+        assertNotNull(capture)
+        val buffer = HardwareBuffer.create(8, 8, HardwareBuffer.RGBA_8888, 1,
+            HardwareBuffer.USAGE_GPU_SAMPLED_IMAGE)
+        val screenshot = ReflectionHelpers.callConstructor(AccessibilityService.ScreenshotResult::class.java,
+            ClassParameter.from(HardwareBuffer::class.java, buffer),
+            ClassParameter.from(ColorSpace::class.java, ColorSpace.get(ColorSpace.Named.SRGB)),
+            ClassParameter.from(Long::class.javaPrimitiveType, SystemClock.uptimeMillis()))
+        capture!!.onSuccess(screenshot)
+        val feed = AndroidLiveComputer.feed
+        val now = System.nanoTime()
+        val status = feed.status(now)
+        assertEquals(LiveMonitorState.LIVE, status.state)
+        val imported = requireNotNull(feed.monitorSubmission.imported(status, now))
+        assertTrue(feed.monitorSubmission.submitted(imported, status, now))
+
+        f.work.removeFirst().run()
+        advance()
+
+        val message = "WhatsApp ist im gebundenen App-Fenster sichtbar."
+        assertEquals(1, chat(f.activity).count { it == message })
+        assertTrue(f.computer.active)
+        assertNotNull(field(f.computer, "plan"))
+        assertNull(field(f.computer, "workflow"))
+        assertNotNull(field(f.computer, "captureSession"))
+        assertSame(feed, f.feeds.last())
+        assertNotNull(f.panels.last())
+        val completed = chat(f.activity)
+
+        f.lifecycle.pause().stop()
+        advance()
+
+        assertEquals(completed, chat(f.activity))
+        assertTrue(notices(f.activity).isEmpty())
+        assertFalse(f.computer.active)
+        assertEquals(LiveMonitorState.ENDED, feed.status(System.nanoTime()).state)
+        assertTrue(buffer.isClosed)
+        assertNull(f.feeds.last())
+        assertNull(f.panels.last())
+    }
 
     @Test fun ordinaryVerifiedReplyStillUsesTheExistingSpeechPolicy() = withFixture { f ->
         val message = "Die App ist sichtbar."
