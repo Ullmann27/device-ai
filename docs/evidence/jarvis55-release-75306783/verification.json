@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "observedAt": "2026-11-13T05:04:54.638Z",
+  "observedAt": "2026-11-13T05:45:02.269Z",
   "sourceSha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742",
   "sourceTree": "ea717d3aaf18b5c6023fe86b899d5519e7c2764e",
   "canonicalBranch": "integrate/code55-apk-fable-20261112",
@@ -8,13 +8,13 @@
   "fullQa": {
     "runId": 43367109818,
     "runAttempt": 1,
-    "status": "IN_PROGRESS",
+    "status": "PASS",
     "jobs": [
       {
         "id": 131694013130,
         "name": "full-android",
-        "status": "in_progress",
-        "conclusion": null
+        "status": "completed",
+        "conclusion": "success"
       },
       {
         "id": 131694013481,
@@ -25,6 +25,12 @@
       {
         "id": 131694013587,
         "name": "node-backend",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 131712431278,
+        "name": "complete-qa",
         "status": "completed",
         "conclusion": "success"
       }
@@ -68,7 +74,17 @@
         "lastPhase": "finished"
       },
       "deviceAcceptance": false
-    }
+    },
+    "android": {
+      "tests": 5383,
+      "suites": 894,
+      "passed": 5366,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 17,
+      "unexpectedSkips": 0
+    },
+    "lint": "PASS"
   },
   "apk": {
     "runId": 43367109797,
@@ -190,6 +206,25 @@
         "head_branch": "integrate/code55-apk-fable-20261112",
         "head_sha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742"
       }
+    },
+    {
+      "id": 14013635800,
+      "name": "Code55-full-Android-source-QA",
+      "size_in_bytes": 315552160,
+      "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14013635800",
+      "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14013635800/zip",
+      "expired": false,
+      "created_at": "2026-11-13T05:33:59Z",
+      "expires_at": "2026-11-27T05:33:47Z",
+      "updated_at": "2026-11-13T05:33:59Z",
+      "digest": "sha256:31fc1241c047332c0ab8c4ca255968d885bd1df1ff34be9faaa1bb5ca0d2deb0",
+      "workflow_run": {
+        "id": 43367109818,
+        "repository_id": 1415878393,
+        "head_repository_id": 1415878393,
+        "head_branch": "integrate/code55-apk-fable-20261112",
+        "head_sha": "753067835c3b33ff850f5c3e8d079d9dcd5eb742"
+      }
     }
   ],
   "originalSigning": "NOT_RUN",
@@ -201,7 +236,7 @@
     "reason": "App-topic conversation interception confirmed in source",
     "reviewCommentId": 6844232629,
     "replacementPr": 827,
-    "replacementSource": "97b607d00a9363f8c982a92fd47c783345e0d57a",
-    "replacementFocusedRun": 43370686810
+    "replacementSource": "889e06d47fffd2230fa5b062dd1f31b65992e728",
+    "replacementFocusedRun": 43372191194
   }
 }
