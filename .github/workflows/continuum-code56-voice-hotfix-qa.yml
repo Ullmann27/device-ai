@@ -58,7 +58,7 @@ jobs:
                       'AndroidSpeechFailureTest')
           actual = {c.get('classname','').split('.')[-1] for c in cases}
           assert all(name in actual for name in expected), f'Missing classes: {set(expected) - actual}'
-          assert len([c for c in cases if c.get('classname','').endswith('GermanOnDeviceSpeechLocaleTest')]) == 4
+          assert len([c for c in cases if c.get('classname','').endswith('GermanOnDeviceSpeechLocaleTest')]) == 5
           print(f'VOICE_HOTFIX_JUNIT_PASS={len(cases)} FAILED=0 SKIPPED=0')
           PY
       - name: Save test receipts
