@@ -7,6 +7,8 @@ import at.heinz.deviceai.cognitive.OwnerCorrectionIntent.Correction
 import at.heinz.deviceai.cognitive.OwnerCorrectionIntent.Target
 import at.heinz.deviceai.cognitive.OwnerCorrectionIntent.Which
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Assert.assertNull
 import org.junit.Test
 import java.util.Calendar
@@ -22,6 +24,37 @@ class OwnerCorrectionIntentTest {
         assertEquals(Correction(Target.DRAFT, Which.YESTERDAY), OwnerCorrectionIntent.parse("Falsch, gemeint war der Entwurf von gestern"))
         listOf("Nein danke", "Ich meinte den letzten Entwurf", "Nein, das passt so", "Nein, ich meinte etwas anderes")
             .forEach { assertNull(it, OwnerCorrectionIntent.parse(it)) }
+    }
+
+    @Test fun directWorkCorrectionInterruptsWithoutGuessingANewTask() {
+        listOf("Stopp, das meine ich nicht.", "Stop! Das meine ich nicht!",
+            "Halt, so habe ich das nicht gemeint.", "Stopp das ist nicht gemeint",
+            "  STOPP, das meine ich nicht.  ").forEach {
+            assertTrue(it, OwnerCorrectionIntent.interruptsWork(it))
+            assertNull(it, OwnerCorrectionIntent.parse(it))
+        }
+    }
+
+    @Test fun quotedNegatedDescriptiveOrDifferentStopWordsDoNotInterrupt() {
+        listOf("„Stopp, das meine ich nicht.“", "\"Stopp, das meine ich nicht.\"",
+            "Er sagt: Stopp, das meine ich nicht.", "Bitte sage: Stopp, das meine ich nicht.",
+            "Nicht stoppen, das meine ich nicht.", "Stopp nicht, das meine ich nicht.",
+            "Wenn ich Stopp, das meine ich nicht sage, warte.", "Stoppe die Musik.",
+            "Stopp, das meine ich nicht. Öffne WhatsApp.", "Stopp, das meine ich nicht?",
+            "Stopp, das meine ich nicht – oder doch?", "Stopp, das meine ich nicht.\n",
+            "Stopp, das meine ich nicht." + " ".repeat(200)).forEach {
+            assertFalse(it, OwnerCorrectionIntent.interruptsWork(it))
+        }
+    }
+
+    @Test fun spokenCorrectionReachesChatAndRejectsOldRecognition() {
+        val mode = ContinuousConversationMode()
+        assertTrue(mode.start("current"))
+        val token = checkNotNull(mode.listeningTurn("current"))
+        val utterance = "Stopp, das meine ich nicht."
+        assertEquals(ContinuousConversationMode.Decision.SEND, mode.recognized(token, "current", utterance))
+        assertTrue(OwnerCorrectionIntent.interruptsWork(utterance))
+        assertEquals(ContinuousConversationMode.Decision.IGNORE, mode.recognized(token, "current", utterance))
     }
 
     @Test fun theReferenceIsResolvedInTheRecordAndNeverPointsAtTheCorrectedTask() {
