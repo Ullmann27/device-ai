@@ -18,9 +18,14 @@ class CockpitCameraFlightTest {
         assertTrue(CockpitCameraFlight.nearlyRest(pose(1.0), rest))
     }
 
-    @Test fun flightStartsBehindAboveAndCloseToTheMonitor() {
+    @Test fun flightStartsOnTheRearOfTheTurnedMonitorAboveAndClose() {
         val p = pose(0.0)
-        assertTrue("behind the monitor", p.eyeZ < pivot[2])
+        // Monitor front normal after the presentation turn vs. the direction towards the camera.
+        val turn = Math.toRadians(p.monitorYawDegrees)
+        val nx = kotlin.math.sin(turn); val nz = kotlin.math.cos(turn)
+        val dx = p.eyeX - pivot[0]; val dz = p.eyeZ - pivot[2]
+        val facing = (nx * dx + nz * dz) / sqrt(dx * dx + dz * dz)
+        assertTrue("the viewer starts on the rear housing: $facing", facing < -.8)
         assertTrue("above it", p.eyeY > pivot[1])
         assertEquals(pivot[0], p.targetX, 1e-12)
         val radius = sqrt((p.eyeX - pivot[0]).let { it * it } + (p.eyeY - pivot[1]).let { it * it } +
@@ -46,6 +51,30 @@ class CockpitCameraFlightTest {
             previous = p
         }
         assertTrue("the camera passes the monitor's side", sideSeen)
+    }
+
+    @Test fun dollyZoomStartsWideAndEndsExactlyAtTheRestFrustum() {
+        assertEquals(CockpitCameraFlight.START_FRUSTUM_SCALE, pose(0.0).frustumScale, 1e-12)
+        assertEquals(1.0, pose(1.0).frustumScale, 0.0)
+        var previous = pose(0.0).frustumScale
+        for (i in 1..100) {
+            val scale = pose(i / 100.0).frustumScale
+            assertTrue("frustum narrows monotonically", scale <= previous + 1e-12)
+            previous = scale
+        }
+    }
+
+    @Test fun cameraNeverEntersTheBunkerBehindTheMonitor() {
+        // Shipped GLB (monitor width 1): the solid bunker starts at z −0.40 behind the monitor centre.
+        for (i in 0..200) {
+            val p = CockpitCameraFlight.pose(i / 200.0, 0.0, 0.0, 0.0, 1.0, 4.7)
+            assertTrue("in front of the room opening at $i: ${p.eyeZ}", p.eyeZ > -.4)
+        }
+    }
+
+    @Test fun monitorTurnEndsExactlyAtItsRestYaw() {
+        assertEquals(CockpitCameraFlight.START_MONITOR_YAW_DEGREES, pose(0.0).monitorYawDegrees, 1e-12)
+        assertEquals(0.0, pose(1.0).monitorYawDegrees, 0.0)
     }
 
     @Test fun easingStartsAndEndsWithoutVelocity() {

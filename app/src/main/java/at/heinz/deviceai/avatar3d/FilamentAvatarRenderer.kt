@@ -445,24 +445,29 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         val unit = frame.worldScale
         val d = (frame.distance * unit).toDouble()
         val near = frame.near
-        camera!!.setProjection(Camera.Projection.PERSPECTIVE,
-            -frame.width * unit * .5 * near / d, frame.width * unit * .5 * near / d,
-            -frame.height * unit * .5 * near / d, frame.height * unit * .5 * near / d, near, frame.far)
         val flight = if (motion) cameraFlight.progress(System.nanoTime()) else { cameraFlight.cancel(); null }
-        if (flight == null) camera!!.lookAt(0.0, 0.0, d, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
-        else {
+        val pose = flight?.let {
             val monitor = frame.monitorTransform()
-            val pose = CockpitCameraFlight.pose(flight, monitor[12].toDouble(), monitor[13].toDouble(),
+            CockpitCameraFlight.pose(it, monitor[12].toDouble(), monitor[13].toDouble(),
                 monitor[14].toDouble(), (frame.monitorWidth * frame.restCompensation * unit).toDouble(), d)
-            camera!!.lookAt(pose.eyeX, pose.eyeY, pose.eyeZ, pose.targetX, pose.targetY, pose.targetZ,
-                pose.upX, pose.upY, pose.upZ)
         }
+        // Rest projection; a running flight widens it (dolly zoom) and returns to exactly this frustum.
+        val extent = pose?.frustumScale ?: 1.0
+        camera!!.setProjection(Camera.Projection.PERSPECTIVE,
+            -frame.width * unit * .5 * near / d * extent, frame.width * unit * .5 * near / d * extent,
+            -frame.height * unit * .5 * near / d * extent, frame.height * unit * .5 * near / d * extent, near, frame.far)
+        if (pose == null) camera!!.lookAt(0.0, 0.0, d, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        else camera!!.lookAt(pose.eyeX, pose.eyeY, pose.eyeZ, pose.targetX, pose.targetY, pose.targetZ,
+            pose.upX, pose.upY, pose.upZ)
         CockpitWorldTransforms.avatar(frame, cockpitHead.left, cockpitHead.top,
             cockpitHead.right, cockpitHead.bottom, fitted, focus, worldTransform)
         Matrix.multiplyMM(transformed, 0, worldTransform, 0, avatarRootRest, 0)
         engine!!.transformManager.setTransform(avatarRoot, transformed)
         applyAvatarOpacity(at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY)
-        cockpitStage?.update(frame, cockpitOrb, orbPhase, motion)
+        // During the flight only the 3D monitor makes its presentation turn; native overlays keep the rest frame.
+        cockpitStage?.update(pose?.takeIf { it.monitorYawDegrees != 0.0 }?.let {
+            frame.copy(yawDegrees = (frame.yawDegrees + it.monitorYawDegrees).toFloat())
+        } ?: frame, cockpitOrb, orbPhase, motion)
         // SDR pixels stay below threshold.
     }
 
