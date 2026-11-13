@@ -40,9 +40,9 @@ class ComputerPanelState private constructor(
             snapshot.stage == CockpitWorkEvent.Stage.STOPPED -> "Auftrag abgebrochen"
             else -> "Ziel noch nicht bestätigt"
         }, null, if (verified) Tone.OK else stageTone()))
-        resultMessage?.let { add(Row("Rückmeldung", it, null)) }
         add(Row("Quelle", if (snapshot.observationRevision > 0L || verified)
             "Beobachtete Android-Ansicht" else "$appLabel · gebundene Ansicht", null))
+        resultMessage?.let { add(Row("Rückmeldung", it, null)) }
     }
 
     private fun stageLabel(): String = when (snapshot.stage) {

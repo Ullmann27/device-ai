@@ -97,7 +97,7 @@ class ComputerPanelPresentationTest {
         event(CockpitWorkEvent.Stage.ACCEPTED)
         val painter = JarvisPresentationRecordingPainter()
         val dashboard = ContinuumDashboardState(computer = state())
-        val shell = JarvisShellLayout.create(884f, 760f, workstation = true)
+        val shell = CinematicWorkstationLayout.create(884f, 760f)
         val content = JarvisShellContent.forState({ dashboard }, shell = { shell })
         JarvisShellRenderer.drawForeground(painter, shell, content)
         val text = painter.texts.joinToString(" ")
