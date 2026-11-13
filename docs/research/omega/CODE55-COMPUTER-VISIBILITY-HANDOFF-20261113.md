@@ -1,6 +1,6 @@
 # Code55 computer visibility stop
 
-Status: SOURCE_INTEGRATED / NOT_RUN; device acceptance open.
+Status: SOURCE_INTEGRATED / PARTIAL_HOST_VERIFICATION; corrected completion fixture awaits rerun; device acceptance open.
 
 - Base: `058d754b82e134b3eec0e3e3f21b788c46c8c479`.
 - Patch branch: `work/jarvis55-visibility-reason-20261113`.
@@ -33,7 +33,9 @@ Added `OwnerComputerVisibilityUiTest` using the real Activity/controller lifecyc
 
 Compatibility: all 126 existing UI Kotlin files at the pinned base were searched for direct/reflected controller/reply callers. The one existing three-argument reflection helper in `OwnerAppPlanningContextUiTest` now supplies the explicit speech flag. The new consent case reuses that harness's existing projection-consent shadow.
 
-Test status: **NOT_RUN**. This editing environment has no local Gradle/Android executor. No GitHub Actions run was dispatched by this worker. The integrator must run the new class and existing computer/voice/cancellation regressions on the integrated SHA:
+First integrated host run: `f505f97397ff14c98a7c77709f9818fcf337e707`, [43364020806](https://github.com/Ullmann27/device-ai/actions/runs/43364020806), Android job 131684039738. Kotlin compilation passed; 372 focused tests executed, 1 failed, 0 skipped. Eight visibility cases and the existing planning class passed. The completion case failed its verified-reply precondition before testing lifecycle cleanup. Its fixture omitted the Android content-change event: `connect()` leaves the observation revision at zero, which the real workflow rejects. The fixture now emits the same service event as `AndroidLiveNodePortTest`, asserts a positive real observation revision, and retains every completion/lifecycle assertion. **Corrected fixture rerun: NOT_RUN.**
+
+This editing environment has no local Gradle/Android executor. No GitHub Actions run was dispatched by this worker. The integrator must run the new class and existing computer/voice/cancellation regressions on the integrated SHA:
 
 ```sh
 ./gradlew -PcontinuumUiWidgetTests=true :app:testDebugUnitTest --tests at.heinz.deviceai.OwnerComputerVisibilityUiTest
@@ -46,5 +48,5 @@ Use the existing registered Code55 QA workflow for final variant/task selection,
 Review and integrate this bounded patch into the named master branch; include this class in the existing focused regression selection if needed. Revert this commit to restore the prior lifecycle feedback. No persistence schema, permissions, package identity, signing files or renderer changed.
 
 PORTIERT: source patch prepared on the isolated branch.
-VERIFIZIERT: NOT_RUN; exact-source CI required.
+VERIFIZIERT: 8/9 new cases passed on integrated f505f973; corrected completion fixture needs exact-source rerun.
 GERÄTEBESTÄTIGT: NOT_RUN; fullscreen switch, split-screen and Android capture-dialog checks still required.

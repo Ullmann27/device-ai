@@ -13,6 +13,7 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.Voice
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.EditText
 import android.widget.TextView
@@ -288,6 +289,10 @@ class OwnerComputerVisibilityUiTest {
         "Stopp, das meine ich nicht.", "Verstanden. Was soll ich anders machen?")
 
     @Test fun completedWorkIsNotCancelledWhenTheRetainedCaptureCloses() = withFixture { f ->
+        val event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+        event.packageName = "com.whatsapp"
+        try { service.onAccessibilityEvent(event) } finally { event.recycle() }
+        assertTrue("An observed window requires an Android event", ScreenObservationBus.revision() > 0)
         advance()
         val capture = AndroidWindowCaptureTest.CaptureServiceShadow.callback
         assertNotNull(capture)
@@ -304,12 +309,15 @@ class OwnerComputerVisibilityUiTest {
         assertEquals(LiveMonitorState.LIVE, status.state)
         val imported = requireNotNull(feed.monitorSubmission.imported(status, now))
         assertTrue(feed.monitorSubmission.submitted(imported, status, now))
+        val observed = AndroidLiveComputer.observe(requireNotNull(status.binding).taskId)
+        assertTrue("The real observation carries the event revision", observed.stamp.revision > 0)
 
         f.work.removeFirst().run()
         advance()
 
         val message = "WhatsApp ist im gebundenen App-Fenster sichtbar."
-        assertEquals(1, chat(f.activity).count { it == message })
+        assertEquals("Actual completion reply: " + chat(f.activity),
+            1, chat(f.activity).count { it == message })
         assertTrue(f.computer.active)
         assertNotNull(field(f.computer, "plan"))
         assertNull(field(f.computer, "workflow"))
