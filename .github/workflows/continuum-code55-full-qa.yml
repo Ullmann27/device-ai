@@ -43,6 +43,7 @@ jobs:
           python3 -B tools/cockpit-workstation/verify_scene.py
           python3 -B tools/cockpit-workstation/verify_unified_assets.py
           python3 -B tools/code55-apk/validator_test.py
+          python3 -B tools/code55-apk/junit_summary_test.py
       - name: Source-bound full critical and Node QA
         run: |
           set -euo pipefail
@@ -103,10 +104,10 @@ jobs:
         run: |
           set -euo pipefail
           unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
-          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true             -PcontinuumUiWidgetTests=true             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle             :app:testDebugUnitTest
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true             -PcontinuumUiWidgetTests=true -PcontinuumUiEvidenceDir="$RUNNER_TEMP/code55-host-visual"             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle             :app:testDebugUnitTest
       - name: Summarize actual JUnit results
         if: always()
-        run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest
+        run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
       - name: Configured Android lint
         if: always()
         shell: bash
@@ -122,6 +123,7 @@ jobs:
             ${{ runner.temp }}/code55-source.txt
             app/build/test-results/testDebugUnitTest/
             app/build/reports/lint-results-debug.*
+            ${{ runner.temp }}/code55-host-visual/
           retention-days: 14
           if-no-files-found: warn
 
