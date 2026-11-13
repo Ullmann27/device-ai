@@ -394,11 +394,15 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     }
 
     internal fun configureCockpit(assets: CockpitSceneAssets, frame: CockpitStageFrame,
-                                   head: RectF, orb: RectF, feed: LiveMonitorFeed<AndroidLiveFrame>?) {
+                                   head: RectF, orb: RectF, feed: LiveMonitorFeed<AndroidLiveFrame>?,
+                                   panelBytes: ByteArray? = null,
+                                   panelPainter: at.heinz.deviceai.ui.AndroidContinuumPainter? = null,
+                                   panelContent: CockpitPanelContent? = null) {
         val e = requireNotNull(engine)
         require(frame.valid() && head.width() > 0f && head.height() > 0f && orb.width() > 0f)
         if (cockpitStage == null) {
-            cockpitStage = FilamentCockpitStage(e, requireNotNull(scene), requireNotNull(loader), assets)
+            cockpitStage = FilamentCockpitStage(e, requireNotNull(scene), requireNotNull(loader), assets,
+                panelBytes = panelBytes, panelPainter = panelPainter)
             worldColorGrading = ColorGrading.Builder().toneMapping(ColorGrading.ToneMapping.LINEAR)
                 .contrast(1f).saturation(1f).vibrance(1f).exposure(0f).build(e)
             view!!.colorGrading = worldColorGrading
@@ -409,7 +413,11 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         cockpitHead.set(head)
         cockpitOrb.set(orb)
         cockpitStage?.bind(feed)
+        cockpitStage?.panelContent(panelContent)
     }
+
+    internal fun cockpitPanelsPresented(content: CockpitPanelContent?, frame: CockpitStageFrame?) =
+        cockpitStage?.panelsPresented(content, frame) == true
 
     internal fun bindCockpitFeed(feed: LiveMonitorFeed<AndroidLiveFrame>?) { cockpitStage?.bind(feed) }
     internal fun invalidateCockpitSubmission() { cockpitStage?.frameFailed() }

@@ -618,6 +618,17 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var worldBufferHeight = 0
     private var cockpitLiveFeed: at.heinz.deviceai.cognitive.LiveMonitorFeed<AndroidLiveFrame>? = null
     internal var onCockpitStatus: ((String, Boolean) -> Unit)? = null
+    private var cockpitPanelContent: at.heinz.deviceai.avatar3d.CockpitPanelContent? = null
+    private val cockpitPanelPainter by lazy { AndroidContinuumPainter(context.assets) }
+    internal val cockpitPanelsVisible: Boolean get() = layeredCockpit && native3dDrawn &&
+        native3d?.cockpitPanelsPresented(cockpitPanelContent, cockpitWorldFrame) == true
+
+    internal fun setCockpitPanels(content: at.heinz.deviceai.avatar3d.CockpitPanelContent?) {
+        if (cockpitPanelContent?.key == content?.key &&
+            cockpitPanelContent?.observationRevision == content?.observationRevision) return
+        cockpitPanelContent = content
+        invalidate()
+    }
 
     internal fun cockpitHeadCenter(): Pair<Float, Float>? =
         if (headDrawBounds.width() > 0f && headDrawBounds.height() > 0f)
@@ -657,6 +668,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         cockpitLiveFeed?.monitorSubmission?.invalidate()
         cockpitWorldFrame = null
         cockpitLiveFeed = null
+        cockpitPanelContent = null
         native3d?.clearCockpitStage()
         onCockpitStatus?.invoke("3D-Szene nicht verbunden", false)
     }
@@ -670,7 +682,8 @@ class ContinuumHologramView @JvmOverloads constructor(
             val assets = cockpitWorldAssets ?: at.heinz.deviceai.avatar3d.CockpitSceneAssets.load(context.assets)
                 .also { cockpitWorldAssets = it }
             resolveOrbBounds(width, height)
-            native.configureCockpit(assets, frame, headDrawBounds, orbDrawBounds, cockpitLiveFeed)
+            native.configureCockpit(assets, frame, headDrawBounds, orbDrawBounds, cockpitLiveFeed,
+                documentStageBytes, cockpitPanelPainter, cockpitPanelContent)
         }.onFailure {
             cockpitWorldFailed = true
             native.clearCockpitStage()
