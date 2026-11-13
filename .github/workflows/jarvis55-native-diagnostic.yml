@@ -1,0 +1,49 @@
+name: Jarvis55 one-shot artifact diagnostics
+
+on:
+  push:
+    branches:
+      - work/jarvis55-native-diagnostic-20261113
+    paths:
+      - .github/workflows/jarvis55-native-diagnostic.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  inspect-artifacts:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/work/jarvis55-native-diagnostic-20261113'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Code55-native-PDF-emulator-QA
+          run-id: 43342791354
+          github-token: ${{ github.token }}
+          path: native-proof
+      - name: Print actual emulator failure
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          logs = list(Path('native-proof').rglob('emulator.log'))
+          assert len(logs) == 1, logs
+          print(logs[0].read_text())
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          name: Code55-UNSIGNED-NOT-INSTALLABLE
+          run-id: 43342791304
+          github-token: ${{ github.token }}
+          path: apk-proof
+      - name: Print actual APK audit
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          results = list(Path('apk-proof').rglob('RESULT.json'))
+          assert len(results) == 1, results
+          result = json.loads(results[0].read_text())
+          print(json.dumps(result, ensure_ascii=False, indent=2))
+          PY
