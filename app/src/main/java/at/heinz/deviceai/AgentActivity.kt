@@ -224,6 +224,7 @@ class AgentActivity : Activity() {
     private var systemPickerSession: String? = null
     private var systemReport = "Noch keine Diagnose ausgeführt."
     private var systemBaseline: SystemPerformanceCapture? = null
+    private var systemThermalRecorder: ThermalPhaseRecorder? = null
     private var systemConfirmationDialog: AlertDialog? = null
     private lateinit var backend: AgentBackendClient
     private lateinit var modelCatalog: LocalModelCatalog
@@ -4726,9 +4727,12 @@ class AgentActivity : Activity() {
 
     private fun showSystemIntelligence(): Unit = showCenter(
         "Systemdiagnose", "Lokale Messungen und ausdrücklich freigegebene Schritte. Root bleibt deaktiviert.",
-        { done -> done(systemReport) },
+        { done -> done(systemReport + (systemThermalRecorder?.let { "\n\n" + it.diagnosticReportGerman() } ?: "")) },
         listOf(
             CenterAction("JETZT ANALYSIEREN", accent = true) { runSystemTool(SystemIntelligenceCommands.DIAGNOSE) },
+            CenterAction(if (systemThermalRecorder?.active != null) "MESSREIHE STOPPEN" else "NEUE MESSREIHE STARTEN") {
+                toggleSystemThermalRecording()
+            },
             CenterAction("VORHER-MESSUNG MERKEN") {
                 val current = executor.lastDiagnosis
                 if (current != null) {
@@ -4764,6 +4768,15 @@ class AgentActivity : Activity() {
         )
     )
 
+    private fun toggleSystemThermalRecording() {
+        if (busy || !foregroundLearningActive || isFinishing || isDestroyed) return
+        if (systemThermalRecorder?.active != null) systemThermalRecorder?.stop()
+        else systemThermalRecorder = ThermalPhaseRecorder(android.os.SystemClock::elapsedRealtime).apply {
+            start(ThermalPhaseRecorder.Phase.DIAGNOSTIC_SNAPSHOT, null)
+        }
+        showSystemIntelligence()
+    }
+
     private fun runSystemTool(name: String, arguments: Map<String, Any?> = emptyMap(), ownerRequest: String? = null) {
         require(name in SystemIntelligenceCommands.localTools && ToolRegistry.risk(name) == Risk.READ_ONLY)
         dispatchSystemTool(ToolCallRequest(UUID.randomUUID().toString(), name, arguments), false, false, ownerRequest)
@@ -4774,6 +4787,7 @@ class AgentActivity : Activity() {
         centerDialog?.dismiss(); centerDialog = null
         val generation = ++systemGeneration
         val ownerSession = sessionId
+        val requestedAtMillis = System.currentTimeMillis()
         val turn = at.heinz.deviceai.chief.TurnLifecycle(call.callId)
         activeChiefTurn = turn
         turn.acknowledge()?.let {
@@ -4805,6 +4819,8 @@ class AgentActivity : Activity() {
                 systemReport += "\n${bridge.statusDetail()}\nNormale Android-Diagnose benötigt Shizuku nicht."
             if (call.name == SystemIntelligenceCommands.DIAGNOSE && result.record.status == ToolExecutionStatus.SUCCEEDED) {
                 executor.lastDiagnosis?.let { current ->
+                    if (delivered && !result.replayed)
+                        systemThermalRecorder?.sampleDiagnosis(current, requestedAtMillis, System.currentTimeMillis())
                     systemBaseline?.let { baseline ->
                         val comparison = SystemPerformanceEvaluator.compare(baseline, systemPerformanceCapture(current))
                         systemReport += "\n\nVorher/Nachher: ${comparison.summaryGerman()}"
@@ -4871,7 +4887,7 @@ class AgentActivity : Activity() {
         val display = resources.displayMetrics
         val conditions = SystemPerformanceConditions(
             "${android.os.Build.MANUFACTURER}/${android.os.Build.MODEL}",
-            "", "system-snapshot-v1", "idle-observation",
+            "", "system-snapshot-v1", "diagnostic-snapshot",
             "${display.widthPixels}x${display.heightPixels}/${display.densityDpi}",
             batteryPercent = sample.batteryPercent, charging = sample.charging,
             batteryTemperatureC = sample.batteryTemperatureC, thermalStatus = sample.thermalStatus)
@@ -4886,6 +4902,7 @@ class AgentActivity : Activity() {
 
     private fun cancelSystemDiagnosis() {
         systemGeneration++
+        systemThermalRecorder?.stop()
         systemConfirmationDialog?.dismiss()
         systemConfirmationDialog = null
         activeSystemGate?.cancel()
