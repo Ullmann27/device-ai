@@ -21,35 +21,45 @@ internal object AgentExperienceRecall {
         if (lookup == null || nowMillis < 0L || task.isBlank()) return emptyList()
         val queryTerms = words(task)
         if (queryTerms.isEmpty()) return emptyList()
+        val accepts = { exp: Experience -> eligibleForRecall(exp, queryTerms, nowMillis) }
         val candidates = runCatching {
             lookup.similarWithin(
                 "agent_task", task,
                 completedAtFrom = (nowMillis - MAX_AGE_MILLIS).coerceAtLeast(0L),
                 completedAtThrough = nowMillis,
-                limit = MAX_CANDIDATES
+                limit = MAX_CANDIDATES,
+                eligible = accepts
             )
         }.getOrElse { return emptyList() }
         val eligible = candidates.asSequence()
-            .filter { exp ->
-                exp.taskType == "agent_task" &&
-                    exp.completedAt <= nowMillis &&
-                    nowMillis - exp.completedAt <= MAX_AGE_MILLIS &&
-                    sharesTaskTerms(queryTerms, words(exp.requestSummary))
-            }.toList()
+            .take(MAX_CANDIDATES)
+            .filter(accepts)
+            .toList()
         val positives = eligible.asSequence()
-            .filter { exp ->
-                exp.outcome == ExperienceOutcome.SUCCESS &&
-                    exp.evaluation.success && exp.evaluation.score >= 0.7 &&
-                    exp.toolIds.isNotEmpty() &&
-                    exp.sourceIds.any { historicalToolDigest.matches(it) }
-            }.take(MAX_SUCCESS_HINTS).map { toHint(it, wasSuccessful = true) }.toList()
+            .filter(::isSuccessHint)
+            .take(MAX_SUCCESS_HINTS).map { toHint(it, wasSuccessful = true) }.toList()
         val negatives = eligible.asSequence()
-            .filter { exp ->
-                exp.outcome == ExperienceOutcome.FAILURE &&
-                    !exp.evaluation.success && exp.failures.isNotEmpty()
-            }.take(MAX_FAILURE_WARNINGS).map { toHint(it, wasSuccessful = false) }.toList()
+            .filter(::isFailureWarning)
+            .take(MAX_FAILURE_WARNINGS).map { toHint(it, wasSuccessful = false) }.toList()
         return positives + negatives
     }
+
+    private fun eligibleForRecall(exp: Experience, queryTerms: Set<String>, nowMillis: Long): Boolean =
+        exp.taskType == "agent_task" &&
+            exp.completedAt <= nowMillis &&
+            nowMillis - exp.completedAt <= MAX_AGE_MILLIS &&
+            sharesTaskTerms(queryTerms, words(exp.requestSummary)) &&
+            (isSuccessHint(exp) || isFailureWarning(exp))
+
+    private fun isSuccessHint(exp: Experience): Boolean =
+        exp.outcome == ExperienceOutcome.SUCCESS &&
+            exp.evaluation.success && exp.evaluation.score >= 0.7 &&
+            exp.toolIds.isNotEmpty() &&
+            exp.sourceIds.any { historicalToolDigest.matches(it) }
+
+    private fun isFailureWarning(exp: Experience): Boolean =
+        exp.outcome == ExperienceOutcome.FAILURE &&
+            !exp.evaluation.success && exp.failures.isNotEmpty()
 
     /** Trace of observed tools, not a claim that a plan was correct or verified. */
     fun observedRunSummary(usedTools: List<String>, retries: Int, recalledHints: Int): String {
