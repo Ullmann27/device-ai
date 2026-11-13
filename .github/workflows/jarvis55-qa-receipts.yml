@@ -1,14 +1,11 @@
 name: Jarvis55 - prior QA failure receipts
-
 on:
   push:
     branches: [work/jarvis55-qa-receipts-20261113]
     paths: [.github/workflows/jarvis55-qa-receipts.yml]
-
 permissions:
   contents: read
   actions: read
-
 jobs:
   inspect:
     if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/work/jarvis55-qa-receipts-20261113'
@@ -19,43 +16,25 @@ jobs:
         with:
           github-token: ${{ github.token }}
           run-id: 43354416362
-          name: Jarvis55-targeted-node-evidence
+          name: Code55-native-PDF-emulator-QA
           path: ${{ runner.temp }}/prior-qa
-      - name: Print bounded Node failure evidence
+      - name: Read native runtime evidence
         env:
           EVIDENCE_DIR: ${{ runner.temp }}/prior-qa
         run: |
           python3 - <<'PY'
-          import os, pathlib, json, xml.etree.ElementTree as ET
+          import os, pathlib
           root = pathlib.Path(os.environ["EVIDENCE_DIR"])
-          reports = list(root.rglob("report.json"))
-          assert len(reports) == 2
-          for file in sorted(reports):
-              report = json.loads(file.read_text())
-              assert report["source"]["commit"] == "fafac263d45645b5193640cb73bf703f33509b91"
-              summary = {key: report.get(key) for key in ("profile", "status", "sourceUnchanged", "cancelled")}
-              summary["checks"] = []
-              for check in report.get("checks", []):
-                  item = {key: check.get(key) for key in ("id", "status", "reason", "code", "error", "terminationConfirmed")}
-                  item["tests"] = {key: value for key, value in (check.get("tests") or {}).items() if key not in ("executedCaseHashes", "skippedCaseHashes")}
-                  summary["checks"].append(item)
-              print("REPORT", str(file.relative_to(root)), json.dumps(summary)[:20000])
           print("FILES", [str(file.relative_to(root)) for file in root.rglob("*") if file.is_file()])
-          count = 0
+          sources = list(root.rglob("source-sha.txt"))
+          assert sources and all("fafac263d45645b5193640cb73bf703f33509b91" in file.read_text() for file in sources)
           for file in sorted(root.rglob("*")):
-              if not file.is_file() or file.suffix in (".json", ".md"): continue
-              lines = file.read_text(errors="replace").splitlines()
-              matches = [i for i, line in enumerate(lines) if "not ok " in line or "FAIL" in line or "AssertionError" in line or "# tests " in line or "# pass " in line or "# fail " in line or "# skipped " in line]
-              if matches: print("LOG", str(file.relative_to(root)))
-              for i in matches[:35]:
-                  print("\\n".join(line[:900] for line in lines[max(0,i-1):i+12])[:7000])
-                  count += 1
-          for file in sorted(root.rglob("*.xml")):
-              for case in ET.parse(file).getroot().iter("testcase"):
-                  for tag in ("failure", "error"):
-                      for failure in case.findall(tag):
-                          print("FAILED_CASE", case.get("classname"), case.get("name"), failure.get("type"))
-                          print((failure.get("message") or "")[:1600])
-                          print("\\n".join((failure.text or "").splitlines()[:8])[:3000])
-          print("READ_ONLY_PRIOR_NODE_RECEIPT", count)
+              if not file.is_file(): continue
+              name = str(file.relative_to(root))
+              if file.name == "surfaceflinger.txt":
+                  print("GLES", [line for line in file.read_text().splitlines() if "GLES:" in line])
+              elif file.name in ("emulator.log", "native-filament-logcat.txt", "native-filament.txt", "install-app.txt", "install-test.txt", "source-sha.txt", "apk-sha256.txt"):
+                  print("NATIVE_FILE", name, file.stat().st_size)
+                  print("\n".join(file.read_text(errors="replace").splitlines()[-100:])[-18000:])
+          print("READ_ONLY_NATIVE_RECEIPT")
           PY
