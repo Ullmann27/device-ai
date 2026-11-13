@@ -22,6 +22,7 @@ class ContinuumVisualInstrumentation : Instrumentation() {
     private var captureMode = "display"
     private var pdfProbe = false
     private var filamentProbe = false
+    private var filamentVisuals = false
 
     override fun onCreate(arguments: Bundle?) {
         super.onCreate(arguments)
@@ -31,6 +32,7 @@ class ContinuumVisualInstrumentation : Instrumentation() {
         captureMode = if (arguments?.getString("capture_mode") == "view") "view" else "display"
         pdfProbe = arguments?.getString("probe") == "pdf"
         filamentProbe = arguments?.getString("probe") == "filament"
+        filamentVisuals = arguments?.getString("capture_frames") == "true"
         start()
     }
 
@@ -38,7 +40,7 @@ class ContinuumVisualInstrumentation : Instrumentation() {
     override fun onStart() {
         super.onStart()
         if (filamentProbe) {
-            val result = ContinuumNativeFilamentProbe.run(this)
+            val result = ContinuumNativeFilamentProbe.run(this, captureVisuals = filamentVisuals)
             finish(if (result.getString("status") == "ok") Activity.RESULT_OK else Activity.RESULT_CANCELED, result)
             return
         }
