@@ -35,8 +35,8 @@ def outline(bounds,radius,steps=4):
    points.append((x+radius*nx,y+radius*ny));normals.append((nx,ny))
  return points,normals
 
-def rounded_prism(radius,bevel=0):
- points,edge_normals=outline((-.5+bevel,-.5+bevel,.5-bevel,.5-bevel),radius-bevel)
+def rounded_prism(radius,bevel=0,steps=4):
+ points,edge_normals=outline((-.5+bevel,-.5+bevel,.5-bevel,.5-bevel),radius-bevel,steps)
  count=len(points);pos=[];norm=[];indices=[]
  for side in [1,-1]:
   first=len(pos)//3
@@ -49,7 +49,7 @@ def rounded_prism(radius,bevel=0):
   first=len(pos)//3
   nz=(upper[1]-lower[1])/(upper[0]-lower[0]);length=math.sqrt(1+nz*nz)
   for z,inset in [lower,upper]:
-   ring,normals=outline((-.5+inset,-.5+inset,.5-inset,.5-inset),radius-inset)
+   ring,normals=outline((-.5+inset,-.5+inset,.5-inset,.5-inset),radius-inset,steps)
    for (x,y),(nx,ny) in zip(ring,normals):
     pos.extend((x,y,z));norm.extend((nx/length,ny/length,nz/length))
   for index in range(count):
@@ -57,11 +57,16 @@ def rounded_prism(radius,bevel=0):
    indices.extend((a,b,b+count,a,b+count,a+count))
  return data(pos,3,5126),data(norm,3,5126),data(indices,1,5123)
 
-def frame_ring(outer,inner,radii,split=False):
+def frame_ring(outer,inner,radii,split=False,depth=0):
  outside,_=outline(outer,radii[0]);inside,_=outline(inner,radii[1])
  pos=[];norm=[];groups=[[],[]] if split else [[]]
  for out,ins in zip(outside,inside):
-  for x,y in [out,ins]: pos.extend((x,y,0));norm.extend((0,0,1))
+  dx,dy=out[0]-ins[0],out[1]-ins[1]
+  radial=dx*dx+dy*dy
+  nx,ny=depth*dx/radial,depth*dy/radial
+  length=math.sqrt(1+nx*nx+ny*ny)
+  for (x,y),z in [(out,-depth),(ins,0)]:
+   pos.extend((x,y,z));norm.extend((nx/length,ny/length,1/length))
  for index in range(len(outside)):
   following=(index+1)%len(outside)
   side=int(outside[index][0]+outside[following][0]>0) if split else 0
@@ -116,16 +121,19 @@ def bevelled_box(bevel=.07):
  return data(pos,3,5126),data(norm,3,5126),data(ind,1,5123)
 
 materials=[
- {'name':'smoked-metal','pbrMetallicRoughness':{'baseColorFactor':[.026,.038,.058,1],'metallicFactor':.54,'roughnessFactor':.27}},
- {'name':'brushed-edge','pbrMetallicRoughness':{'baseColorFactor':[.15,.21,.28,1],'metallicFactor':.65,'roughnessFactor':.24}},
+ {'name':'smoked-metal','pbrMetallicRoughness':{'baseColorFactor':[.020,.028,.044,1],'metallicFactor':.82,'roughnessFactor':.34}},
+ {'name':'brushed-edge','pbrMetallicRoughness':{'baseColorFactor':[.19,.23,.29,1],'metallicFactor':.92,'roughnessFactor':.22}},
  {'name':'cyan-rim','pbrMetallicRoughness':{'baseColorFactor':[.025,.52,.70,1],'metallicFactor':.2,'roughnessFactor':.3},'emissiveFactor':[.015,.44,.65]},
  {'name':'violet-rim','pbrMetallicRoughness':{'baseColorFactor':[.30,.09,.59,1],'metallicFactor':.2,'roughnessFactor':.3},'emissiveFactor':[.25,.045,.47]},
  {'name':'opaque-screen','pbrMetallicRoughness':{'baseColorFactor':[.002,.004,.009,1],'metallicFactor':0,'roughnessFactor':1}},
- {'name':'smoked-glass','alphaMode':'BLEND','doubleSided':True,'pbrMetallicRoughness':{'baseColorFactor':[.048,.11,.18,.24],'metallicFactor':.12,'roughnessFactor':.13}},
+ {'name':'smoked-glass','alphaMode':'BLEND','doubleSided':True,'pbrMetallicRoughness':{'baseColorFactor':[.034,.072,.12,.18],'metallicFactor':0,'roughnessFactor':.10}},
  {'name':'keycaps','pbrMetallicRoughness':{'baseColorFactor':[.20,.35,.43,1],'metallicFactor':.30,'roughnessFactor':.30},'emissiveFactor':[.008,.030,.042]}
 ]
+for index,weight,roughness in [(0,.32,.20),(5,1,.075)]:
+ materials[index]['extensions']={'KHR_materials_clearcoat':{
+  'clearcoatFactor':weight,'clearcoatRoughnessFactor':roughness}}
 bevel=bevelled_box()
-rounded=rounded_prism(.05)
+rounded=rounded_prism(.05,.008,3)
 desktop=rounded_prism(.32,.012)
 bevel_metal=mesh('bevel-metal',bevel,1)
 body_mesh=mesh('rounded-monitor-shell',rounded,0)
@@ -133,12 +141,12 @@ back_mesh=mesh('rounded-rear-edge',rounded,1)
 desk_mesh=mesh('rounded-desk',desktop,0)
 desk_edge=mesh('rounded-desk-edge',desktop,1)
 desk_glass=mesh('rounded-smoked-glass',desktop,5)
-main_ring=frame_ring((-.5,-.5,.5,.5),(-.470,-.450,.470,.385),(.05,.004))
+main_ring=frame_ring((-.5,-.5,.5,.5),(-.470,-.450,.470,.385),(.05,.004),depth=.005)
 main_bezel=mesh('monitor-metal-bezel',main_ring,1)
 main_glass=mesh('monitor-glass-bezel',main_ring,5)
 main_rim=mesh('monitor-light-rim',frame_ring((-.505,-.505,.505,.505),
  (-.499,-.499,.499,.499),(.055,.049),True),[2,3])
-side_ring=frame_ring((-.537,-.527,.537,.527),(-.502,-.502,.502,.502),(.05,.001))
+side_ring=frame_ring((-.537,-.527,.537,.527),(-.502,-.502,.502,.502),(.05,.001),depth=.0008)
 side_bezel=mesh('side-metal-bezel',side_ring,1)
 side_glass=mesh('side-glass-bezel',side_ring,5)
 side_rim=mesh('side-light-rim',frame_ring((-.539,-.529,.539,.529),
@@ -189,7 +197,7 @@ part('keyboard-keys',[0,0,0],[1,1,1],keys,room)
 part('screen-back',[0,0,-.008],[1.014,1.014,.04],body_mesh,monitor)
 part('screen-rear-bevel',[0,0,-.027],[1.026,1.026,.012],back_mesh,monitor)
 part('monitor-bezel',[0,0,.019],[1,1,1],main_bezel,monitor)
-part('monitor-glass',[0,0,.022],[1,1,1],main_glass,monitor)
+part('monitor-glass',[0,0,.0255],[1,1,1],main_glass,monitor)
 part('monitor-rim',[0,0,.027],[1,1,1],main_rim,monitor)
 for side in [-1,1]:
  for end in [-1,1]:
@@ -215,6 +223,7 @@ for name,children in [('cockpit-room',room),('cockpit-monitor',monitor),('cockpi
  root_ids.append(len(nodes));nodes.append({'name':name,'children':children})
 root={'asset':{'version':'2.0','generator':'Continuum owned procedural reference cockpit 20261112'},
  'scene':0,'scenes':[{'nodes':root_ids}],'nodes':nodes,'meshes':meshes,'materials':materials,
+ 'extensionsUsed':['KHR_materials_clearcoat'],
  'buffers':[{'byteLength':len(blob)}],'bufferViews':views,'accessors':access}
 js=json.dumps(root,separators=(',',':')).encode();js+=b' '*((-len(js))%4);blob+=b'\0'*((-len(blob))%4)
 out=struct.pack('<III',0x46546c67,2,12+8+len(js)+8+len(blob))+struct.pack('<II',len(js),0x4e4f534a)+js+struct.pack('<II',len(blob),0x004e4942)+blob

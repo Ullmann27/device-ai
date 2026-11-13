@@ -20,6 +20,7 @@ import java.util.Locale
 class ContinuumVisualInstrumentation : Instrumentation() {
     private var runLabel = "default"
     private var captureMode = "display"
+    private var pdfProbe = false
 
     override fun onCreate(arguments: Bundle?) {
         super.onCreate(arguments)
@@ -27,12 +28,18 @@ class ContinuumVisualInstrumentation : Instrumentation() {
             it.matches(Regex("[a-zA-Z0-9_-]{1,40}"))
         } ?: "default"
         captureMode = if (arguments?.getString("capture_mode") == "view") "view" else "display"
+        pdfProbe = arguments?.getString("probe") == "pdf"
         start()
     }
 
     // Instrumentation.start dispatches onStart on its worker thread.
     override fun onStart() {
         super.onStart()
+        if (pdfProbe) {
+            val result = ContinuumNativePdfProbe.run(targetContext.contentResolver)
+            finish(if (result.getString("status") == "ok") Activity.RESULT_OK else Activity.RESULT_CANCELED, result)
+            return
+        }
         val paths = arrayListOf<String>()
         var activity: Activity? = null
         var orb: ContinuumHologramView? = null

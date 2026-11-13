@@ -208,12 +208,23 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         onWorkEvent = hologram::cockpitWorkEvent
     }
 
+    @Volatile private var computerGaze: ComputerMonitorGaze? = null
+    internal var onComputerPresentationChanged: (() -> Unit)? = null
+
+    internal fun computerWorkGaze(event: at.heinz.deviceai.cognitive.CockpitWorkEvent): at.heinz.deviceai.avatar.GazeTarget? {
+        val geometry = computerGaze ?: return null
+        val feed = liveComputerFeed ?: return null
+        val time = System.nanoTime()
+        val submitted = feed.monitorSubmission.submittedFrame(feed.status(time), time) ?: return null
+        return geometry.project(event, submitted)
+    }
+
     private var computerFrame: at.heinz.deviceai.avatar3d.CockpitStageFrame? = null
     private var monitorFocus = 0f
     private var monitorTargetFocus = 0f
     private var monitorFocusAnimator: android.animation.ValueAnimator? = null
 
-    private var liveComputerFeed: at.heinz.deviceai.cognitive.LiveMonitorFeed<at.heinz.deviceai.AndroidLiveFrame>? = null
+    @Volatile private var liveComputerFeed: at.heinz.deviceai.cognitive.LiveMonitorFeed<at.heinz.deviceai.AndroidLiveFrame>? = null
     private var monitorVelocity = 0f
     private val monitorWorkSequence = at.heinz.deviceai.avatar3d.CockpitPresentationSequence()
 
@@ -293,6 +304,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val frame = CockpitMonitorMotion.pose(base, monitorFocus, density)
         virtualMonitor.frame = frame
         hologram.presentCockpitStage(frame)
+        computerGaze = hologram.cockpitHeadCenter()?.let { ComputerMonitorGaze(frame, it.first, it.second) }
+        onComputerPresentationChanged?.invoke()
     }
 
     private fun measureComputerStage(shell: JarvisShellLayout.Shell) {
@@ -300,7 +313,13 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val monitor = shell[JarvisShellLayout.Slot.WORK_PROCESS]
         val visible = jarvisShellStage && shell.workstation && box != null && monitor != null
         virtualMonitor.visibility = if (visible) View.VISIBLE else View.GONE
-        if (!visible) { settleMonitorFlight(); hologram.detachCockpitStage(); return }
+        if (!visible) {
+            settleMonitorFlight()
+            hologram.detachCockpitStage()
+            computerGaze = null
+            onComputerPresentationChanged?.invoke()
+            return
+        }
         val stage = requireNotNull(box)
         val display = requireNotNull(monitor)
         val width = (stage.width * density).toInt()
@@ -583,7 +602,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         addView(jarvisShell, 0)
         addView(hologram)
         addView(virtualMonitor)
-        hologram.onCockpitStatus = virtualMonitor::updateStatus
+        hologram.onCockpitStatus = { label, ready ->
+            virtualMonitor.updateStatus(label, ready)
+            onComputerPresentationChanged?.invoke()
+        }
         addView(avatarPlaceholder)
         addView(memoryFullStage)
         addView(shellForeground)

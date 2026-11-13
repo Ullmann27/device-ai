@@ -128,6 +128,9 @@ class ResearchChatApprovalUiTest {
             .apply { isAccessible = true }.invoke(f.activity)
         idle()
         val recognizer = requireNotNull(ShadowSpeechRecognizer.getLatestSpeechRecognizer())
+        assertEquals(false, field(f.activity, "voiceListening"))
+        shadowOf(recognizer).triggerOnReadyForSpeech(Bundle())
+        idle()
         assertEquals(true, field(f.activity, "voiceListening"))
         return recognizer
     }

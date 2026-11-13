@@ -119,7 +119,7 @@ class JarvisLiveAvatarWiringUiTest {
         assertEquals(0f, stopped.jawOpen, 0f)
     }
 
-    @Test fun foldSlotContainsTheSeparateHeadAndOrbAreas() = withShell { activity, home, live ->
+    @Test fun foldSlotContainsTheSharedHeadAndOrbScene() = withShell { activity, home, live ->
         val slot = home.avatarSlotRect
         val root = activity.window.decorView
         val homeOrigin = IntArray(2).also { home.getLocationInWindow(it) }
@@ -127,24 +127,27 @@ class JarvisLiveAvatarWiringUiTest {
         val railInset = homeOrigin[0] - rootOrigin[0]
         assertEquals("Dashboard owns its rail; Activity must not reserve a second rail", 0, railInset)
         assertEquals("The dashboard must fill the available pane without an inset-scrollbar gutter", root.width, home.width)
-        // Check against the current ten-card reference grid, not the retired ref5 offsets.
-        val grid = JarvisCockpitGrid.create(home.width.toFloat(), 760f)
-        val headStage = grid[JarvisCockpitGrid.Area.HEAD]
-        val orbStage = grid[JarvisCockpitGrid.Area.ORB]
-        assertEquals(headStage.left.toInt(), slot.left)
-        assertEquals("The orb keeps its own dedicated right boundary", orbStage.right.toInt(), slot.right)
+        val shell = requireNotNull(home.jarvisShell.currentShell())
+        assertTrue("The existing unified scene is active", shell.workstation)
+        val scene = requireNotNull(shell[at.heinz.deviceai.ui.JarvisShellLayout.Slot.AVATAR])
+        val headStage = requireNotNull(shell.headStage)
+        val orbStage = requireNotNull(shell.orbBounds)
+        val density = home.resources.displayMetrics.density
+        assertEquals((scene.left * density).toInt(), slot.left)
+        assertEquals((scene.right * density).toInt(), slot.right)
         assertEquals(slot.left, live.left)
         assertEquals(slot.right, live.right)
         assertTrue(live.width > 0 && live.height > 0)
         val head = field(live, "cockpitHeadBounds") as android.graphics.Rect
         val orb = field(live, "cockpitOrbBounds") as android.graphics.Rect
-        assertEquals("No obsolete owner-card offset may shrink the new head viewport", 0, head.left)
-        assertEquals(headStage.right.toInt() - slot.left, head.right)
-        assertEquals(orbStage.left.toInt() - slot.left, orb.left)
-        assertTrue("Head and orb have separate, positive viewports", head.width() > 0 && head.right < orb.left)
-        assertEquals("The orb keeps its full dedicated width", live.width, orb.right)
-        assertEquals(JarvisCockpitGrid.HEAD_ANCHOR_X, field(live, "headAnchorX") as Float, .001f)
-        assertEquals(JarvisCockpitGrid.HEAD_CLOSE_UP, field(live, "headCloseUp") as Float, .001f)
+        assertEquals((headStage.left * density).toInt() - slot.left, head.left)
+        assertEquals((headStage.right * density).toInt() - slot.left, head.right)
+        assertEquals((orbStage.left * density).toInt() - slot.left, orb.left)
+        assertEquals((orbStage.right * density).toInt() - slot.left, orb.right)
+        assertTrue("The original orb shares the head stage in depth", android.graphics.Rect.intersects(head, orb))
+        assertTrue(head.width() > 0 && orb.width() > 0)
+        assertEquals(shell.headAnchorX, field(live, "headAnchorX") as Float, .001f)
+        assertEquals(shell.headCloseUp, field(live, "headCloseUp") as Float, .001f)
     }
 
     @Test fun resizingTheSlotPreservesTheSurfaceAndCurrentSpeech() = withShell { activity, home, live ->

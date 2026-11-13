@@ -23,7 +23,7 @@ class JarvisThermalVisualContractTest {
         } as ContinuumPainter
         JarvisShellRenderer.draw(painter, JarvisShellLayout.create(884f, 760f),
             timeMs = 0L, materialTimeMs = time, depthBudget = budget,
-            controlPress = JarvisShellRenderer.ControlPress("bottom:system", "system"))
+            controlPress = JarvisShellRenderer.ControlPress("bottom:device", "device"))
         return rims
     }
 

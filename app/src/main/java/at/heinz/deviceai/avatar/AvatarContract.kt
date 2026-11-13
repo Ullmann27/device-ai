@@ -179,7 +179,7 @@ class AvatarPoseReducer {
             is AvatarEvent.StateChanged -> {
                 state = event.state; expression = event.expression; gaze = event.gaze
                 if (!permitsObservedGaze(state)) clearObservedGaze(event.atMillis)
-                if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING) directedGaze = null
+                if (!permitsDirectedGaze(state)) directedGaze = null
                 if (state != AvatarState.THINKING) thinkingAtMillis = Long.MIN_VALUE
             }
             is AvatarEvent.GazeObserved -> {
@@ -205,7 +205,7 @@ class AvatarPoseReducer {
                     GazeTarget(it.x.coerceIn(-MAX_DIRECTED_GAZE_X, MAX_DIRECTED_GAZE_X),
                         it.y.coerceIn(-MAX_DIRECTED_GAZE_Y, MAX_DIRECTED_GAZE_Y))
                 }
-                if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) directedGaze = null
+                if (!permitsDirectedGaze(state) || utterance != null) directedGaze = null
                 directedAtMillis = event.windowAtMillis
                 directedReading = event.windowReading && directedGaze != null
                 directedDurationMs = event.windowDurationMs.coerceIn(1L,
@@ -220,7 +220,7 @@ class AvatarPoseReducer {
                 lastLegacyGestureAtMillis = event.atMillis
                 when (event.intent) {
                     AvatarGestureIntent.WINDOW_FOCUS -> {
-                        if (state != AvatarState.LISTENING && state != AvatarState.SPEAKING && utterance == null) {
+                        if (permitsDirectedGaze(state) && utterance == null) {
                             directedGaze = GazeTarget(event.target.x.coerceIn(-MAX_DIRECTED_GAZE_X, MAX_DIRECTED_GAZE_X),
                                 event.target.y.coerceIn(-MAX_DIRECTED_GAZE_Y, MAX_DIRECTED_GAZE_Y))
                             directedAtMillis = event.atMillis
@@ -416,6 +416,10 @@ class AvatarPoseReducer {
         const val MAX_DIRECTED_GAZE_Y = .35f
         const val OBSERVED_GAZE_TTL_MS = 750L
         const val MIN_GAZE_CONFIDENCE = 60
+        fun permitsDirectedGaze(state: AvatarState) = when (state) {
+            AvatarState.IDLE, AvatarState.THINKING, AvatarState.RESEARCHING, AvatarState.LEARNING -> true
+            else -> false
+        }
         fun permitsObservedGaze(state: AvatarState) = state == AvatarState.IDLE ||
             state == AvatarState.LISTENING || state == AvatarState.SPEAKING
     }

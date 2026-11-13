@@ -269,7 +269,8 @@ class ContinuumLiveProjectionService : Service() {
                 }
                 val after = runCatching { ticket(source) }.getOrNull()
                 if (System.nanoTime() - time > 750_000_000L || after == null || before.target != after.target || before.own != after.own || before.crop != after.crop ||
-                    before.viewport != after.viewport || before.generation != after.generation) {
+                    before.viewport != after.viewport || before.generation != after.generation ||
+                    before.revision != after.revision) {
                     frame.close()
                     AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.SOURCE_UNVERIFIED)
                     return@post

@@ -131,7 +131,8 @@ def reference_contract(glb):
         for primitive in glb.doc["meshes"][node["mesh"]]["primitives"]:
             points = [glb.point(index, point) for point in glb.accessor(primitive["attributes"]["POSITION"])]
             if name.endswith("-bezel") and name.startswith("side-"):
-                assert all(abs(point[2]) < 1e-7 for point in points)
+                assert abs(max(point[2] for point in points)) < 1e-7
+                assert abs(min(point[2] for point in points)+.0008) < 1e-7
             indices = [value[0] for value in glb.accessor(primitive["indices"])]
             for offset in range(0, len(indices), 3):
                 triangle = [points[i][:2] for i in indices[offset:offset+3]]
@@ -155,6 +156,15 @@ def reference_contract(glb):
                 assert abs(left-right) < 1e-6, (expected["name"], key)
         assert max(abs(a-b) for a, b in zip(expected.get("emissiveFactor", [0, 0, 0]),
                                            entry.get("emissiveFactor", [0, 0, 0]))) < 1e-6
+        for extension, parameters in expected.get("extensions", {}).items():
+            assert extension in entry.get("extensions", {}), (expected["name"], extension)
+            for key, value in parameters.items():
+                assert abs(entry["extensions"][extension][key]-value) < 1e-6, (expected["name"], key)
+    for name in ("monitor-bezel", "side--1-bezel", "side-1-bezel"):
+        _, node = glb.node(name)
+        primitive = glb.doc["meshes"][node["mesh"]]["primitives"][0]
+        positions = glb.accessor(primitive["attributes"]["POSITION"])
+        assert max(p[2] for p in positions)-min(p[2] for p in positions) > .0003, (name, "flat bezel")
 
 
 def orb_contract(glb):

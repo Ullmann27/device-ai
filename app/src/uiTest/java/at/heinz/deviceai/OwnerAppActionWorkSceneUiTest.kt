@@ -308,11 +308,20 @@ class OwnerAppActionWorkSceneUiTest {
         assertEquals(0, port.calls.get())
     }
 
-    @Test fun explicitFuzzySelectionKeepsCancellationReceipt() = withActivity { a, port, _ ->
+    @Test fun ambiguousFuzzySelectionKeepsCancellationReceipt() = withActivity { a, port, _ ->
+        val info = ApplicationInfo().apply { packageName = "org.example.signalnotes"; nonLocalizedLabel = "Signal Notes" }
+        shadowOf(a.packageManager).installPackage(PackageInfo().apply {
+            packageName = info.packageName; applicationInfo = info
+        })
+        shadowOf(a.packageManager).addResolveInfoForIntent(
+            Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER), ResolveInfo().apply {
+                activityInfo = ActivityInfo().apply { packageName = info.packageName; name = "Main"; applicationInfo = info }
+                nonLocalizedLabel = "Signal Notes"
+            })
         submit(a, "Öffne Sig", chat = false)
         await { ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
         val dialog = ShadowAlertDialog.getLatestAlertDialog()
-        assertEquals(1, dialog.listView.adapter.count)
+        assertEquals(2, dialog.listView.adapter.count)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
         await { get(a, "busy") == false }
         assertEquals(0, port.calls.get())

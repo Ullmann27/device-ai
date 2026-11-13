@@ -23,14 +23,16 @@ internal class OwnerComputerSessionController(
     private val setBusy: (Boolean) -> Unit,
     private val visible: () -> Boolean,
     playClick: () -> Unit,
-    stopClick: () -> Unit
+    stopClick: () -> Unit,
+    projectGaze: (CockpitWorkEvent) -> at.heinz.deviceai.avatar.GazeTarget? = { null }
 ) : AutoCloseable {
     private data class Plan(val taskId: String, val packageName: String, val intent: OwnerComputerIntent,
                             val approvedAt: Long,
                             val reply: (OwnerComputerWorkflow.Result, Long?) -> Unit)
     private val main = Handler(Looper.getMainLooper())
     private val bridge = ComputerWorkAvatarBridge(director,
-        ComputerWorkCuePlayer(post = { main.post(it) }, playClick = playClick, stopClick = stopClick))
+        ComputerWorkCuePlayer(post = { main.post(it) }, playClick = playClick, stopClick = stopClick),
+        projectGaze = projectGaze)
     private val subscription = bus.subscribe(bridge)
     @Volatile private var plan: Plan? = null
     @Volatile private var grant: OwnerComputerTaskGrant? = null
@@ -192,6 +194,8 @@ internal class OwnerComputerSessionController(
                 "Die App-Arbeit konnte nicht gestartet werden. Es wurde keine weitere Eingabe ausgeführt."), null)
         }
     }
+
+    fun refreshGaze() = bridge.refreshProjection()
 
     fun restoreFeed() { if (active && !pendingConsent) setFeed(AndroidLiveComputer.feed) }
 

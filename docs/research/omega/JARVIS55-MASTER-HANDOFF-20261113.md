@@ -15,3 +15,12 @@ EXP-00/05/06/07/08/11/12 compatibility maintained. No model-weight promotion, ex
 Validation pending: focused Kotlin/Node, full native Gradle/lint, source-bound host frames, APK inspection. Fold7/GPU/voice/live projection/thermal tests require a connected authorized device and remain NOT_RUN until observed.
 
 Rollback: revert this branch's commits; preserve all upstream work.
+
+## Connected attention checkpoint
+
+- Restored and reviewed prior attention work: approval/blocked/listening/speaking suppress directed work gaze; fresh work can resume after a pause, STOP retires late events.
+- Removed fabricated fixed monitor coordinates from ComputerWorkAvatarBridge. Gaze consumes the actually submitted capture binding, crop, image dimensions and projected CockpitStageFrame. Uses the existing JarvisWindowGaze adapter relative to the laid-out head region. This is a geometric gaze target, not measured eye fixation.
+- Reuses the existing render/status callback to track moving monitors. Missing/stale/mismatched pixels yield no work target; rendering never dispatches actions.
+- Fullstage memory rendering now restores the existing orb renderer dimensions immediately, including unified-3D scenes that do not draw the old 2D orb next frame.
+- Legacy UI fixtures follow the shared head/orb scene and ambiguous two-app selection; no production permission rules changed.
+- Native UI/Filament verification remains pending; focused JVM source hashes and checks are recorded with this checkpoint.

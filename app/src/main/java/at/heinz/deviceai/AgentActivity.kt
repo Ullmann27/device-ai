@@ -435,7 +435,7 @@ class AgentActivity : Activity() {
     private var bottomWorkAreaBar: View? = null
     private var syncPhoneNavigation: (() -> Unit)? = null
     // Reference-design start screen (PR #74): real data only, see ContinuumDashboardCollector.
-    private var homeView: at.heinz.deviceai.ui.ContinuumHomeView? = null
+    @Volatile private var homeView: at.heinz.deviceai.ui.ContinuumHomeView? = null
     // Jarvis cockpit animation layer (docs/CONTINUUM_COCKPIT.md): real events only, default visuals replaceable.
     private val cockpitBus = at.heinz.deviceai.cockpit.CockpitAnimationBus()
     private val cockpitTriggers = at.heinz.deviceai.cockpit.CockpitAnimationTriggers(cockpitBus)
@@ -1267,6 +1267,7 @@ class AgentActivity : Activity() {
         home.setJarvisShellStage(true)
         home.setForegroundActive(foregroundLearningActive || computerFeedbackActive())
         homeView = home
+        home.onComputerPresentationChanged = { computerController?.refreshGaze() }
         computerController?.restoreFeed()
         // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar(home.hologram))
@@ -6264,7 +6265,8 @@ class AgentActivity : Activity() {
             visible = { !isFinishing && !isDestroyed &&
                 (foregroundLearningActive || (computerViewVisible && isInMultiWindowMode)) },
             playClick = { playUiFeedback(at.heinz.deviceai.ui.ContinuumUiFeedback.Cue.BUTTON) },
-            stopClick = { uiFeedback?.stop() }).also { computerController = it }
+            stopClick = { uiFeedback?.stop() },
+            projectGaze = { homeView?.computerWorkGaze(it) }).also { computerController = it }
         controller.begin(pending.packageName, pending.intent, pending.approvedAt) { result, epoch ->
             deliverComputerReply(pending, result, epoch)
         }

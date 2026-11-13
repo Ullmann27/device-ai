@@ -619,6 +619,10 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var cockpitLiveFeed: at.heinz.deviceai.cognitive.LiveMonitorFeed<AndroidLiveFrame>? = null
     internal var onCockpitStatus: ((String, Boolean) -> Unit)? = null
 
+    internal fun cockpitHeadCenter(): Pair<Float, Float>? =
+        if (headDrawBounds.width() > 0f && headDrawBounds.height() > 0f)
+            headDrawBounds.centerX() to headDrawBounds.centerY() else null
+
     internal fun presentCockpitStage(frame: at.heinz.deviceai.avatar3d.CockpitStageFrame) {
         if (!frame.valid()) return
         cockpitWorldFrame = frame
@@ -955,6 +959,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             renderer.draw(painter, renderFrame, transparentBackdrop = true)
             } finally {
                 renderFrame.energy = originalEnergy
+                renderer.layout(orbDrawBounds.width() / d, orbDrawBounds.height() / d)
                 canvas.restoreToCount(orb)
             }
         }
