@@ -9,6 +9,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import android.os.SystemClock
+import at.heinz.deviceai.cognitive.ContinuumAutonomyControl
 import at.heinz.deviceai.BootstrapMemoryStore
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
@@ -22,7 +24,14 @@ import java.util.concurrent.atomic.AtomicBoolean
  * - All prior weights are retained unless frozen holdouts and user-approved training improve.
  * No network, always-listening microphone, device tool call or unreviewed self-labeling.
  */
-class NeuralPracticeScheduler(context: Context) {
+class NeuralPracticeScheduler internal constructor(
+    context: Context,
+    private val now: () -> Long,
+    private val resources: (Context) -> ContinuumLearningResources
+) {
+    constructor(context: Context) : this(context, SystemClock::elapsedRealtime,
+        { it.continuumLearningResources() })
+
     private val app = context.applicationContext
     private val prefs = app.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
     private val jobs get() = app.getSystemService(JobScheduler::class.java)
@@ -82,9 +91,21 @@ class NeuralPracticeScheduler(context: Context) {
     fun practiceOnce(cancelled: () -> Boolean = { false },
         progress: (NeuralLearningProgress) -> Unit = {}
     ): String {
-        if (!enabled || cancelled()) return "Lernzyklus nicht aktiv."
+        if (!enabled) return "Lernzyklus nicht aktiv."
+        val budget = ContinuumLearningRunBudget(now(), ContinuumOfflineLearningBudget.MAX_WALL_MILLIS,
+            now, { runCatching { resources(app) }.getOrElse {
+                ContinuumLearningResources(null, false, null, null)
+            } })
+        var stopped = false
+        fun stopRequested(): Boolean {
+            if (!stopped) stopped = !enabled || Thread.currentThread().isInterrupted ||
+                !ContinuumAutonomyControl.mayResearch(ContinuumAutonomyControl.level(app)) ||
+                cancelled() || budget.cancelled()
+            return stopped
+        }
         if (!RUNNING.compareAndSet(false, true)) return "Bereits ein Lernzyklus aktiv."
         try {
+            if (stopRequested()) return "Lernzyklus pausiert oder Ressourcen nicht verfügbar."
             val memory = BootstrapMemoryStore(app)
             val original = memory.neuralSnapshot()
                 ?: return record("Kein trainierter neuronaler Lernstand vorhanden.", false, "")
@@ -98,8 +119,8 @@ class NeuralPracticeScheduler(context: Context) {
                 prefs.edit().putString("status", waiting).apply()
                 return waiting
             }
-            val result = model.practice(steps = 200, cancelled = cancelled, onProgress = progress)
-            if (cancelled() || !enabled) return "Übungsdurchgang abgebrochen; nichts gespeichert."
+            val result = model.practice(steps = 200, cancelled = ::stopRequested, onProgress = progress)
+            if (stopRequested()) return "Übungsdurchgang abgebrochen; nichts gespeichert."
             if (!result.accepted)
                 return record("200er-Zyklus verworfen: " + result.reason +
                     "; neuer Wortschatz " + result.unfamiliarAfter.correct + "/12.", false, fingerprint)
@@ -107,13 +128,13 @@ class NeuralPracticeScheduler(context: Context) {
                 "%.5f → %.5f".format(Locale.ROOT, result.trainingLossBefore,result.trainingLossAfter) +
                 "; Härtetest " + result.unfamiliarBefore.correct + "/12 → " +
                 result.unfamiliarAfter.correct + "/12."
-            val saved = !cancelled() && enabled &&
-                memory.compareAndSaveNeuralSnapshot(original,model.save(),report)
+            if (stopRequested()) return "Übungsdurchgang abgebrochen; nichts gespeichert."
+            val saved = memory.compareAndSaveNeuralSnapshot(original,model.save(),report)
             return record(if(saved) report else
                 "Neue Gewichte nicht übernommen: Speicherstand wurde verändert oder Speichern fehlgeschlagen.",
                 saved, fingerprint)
         } catch (error: Exception) {
-            if (cancelled()) return "Übungsdurchgang abgebrochen."
+            if (stopRequested()) return "Übungsdurchgang abgebrochen."
             return record("Lernzyklus fehlgeschlagen: " + error.javaClass.simpleName,false,"")
         } finally { RUNNING.set(false) }
     }
