@@ -292,8 +292,23 @@ class ContinuumVisualEvidenceUiTest {
         assertEquals("Data fades before the frame folds", 1f, panel.scaleX, .001f)
         assertTrue("Data starts fading during the first close phase", panel.alpha > 0f && panel.alpha < 1f)
         advance(160L); measure(root, w, h)
-        assertTrue("Closing frame must visibly fold after data fade", work.isShown &&
-            panel.scaleX > 0f && panel.scaleX < 1f)
+        val closingOpenness = phaseValue("openness")
+        assertTrue("Closing frame returns toward its source: $closingOpenness",
+            work.isShown && closingOpenness > 0f && closingOpenness < 1f)
+        assertEquals("Data is hidden before return flight", 0f, panel.alpha, .001f)
+        val closingFrame = phaseValue("stageOpacity")
+        assertTrue("Frame remains during return flight: $closingFrame",
+            closingFrame > 0f && closingFrame < 1f)
+        assertEquals("Closing width follows the actual source", (source.width() +
+            (destination.width() - source.width()) * closingOpenness) / panel.width, panel.scaleX, .001f)
+        assertEquals("Closing height follows the actual source", (source.height() +
+            (destination.height() - source.height()) * closingOpenness) / panel.height, panel.scaleY, .001f)
+        assertEquals("Return flight approaches the source horizontally",
+            source.left + (destination.left - source.left) * closingOpenness - panel.left,
+            panel.translationX, .001f)
+        assertTrue("Return flight changes actual geometry",
+            kotlin.math.abs(panel.scaleY - 1f) > .001f || kotlin.math.abs(panel.translationX) > .1f ||
+                kotlin.math.abs(panel.translationY) > .1f)
         assertProtectedRegions(work, head)
         capture(root, "$tag-6c-systemstatus-closing", w, h)
 

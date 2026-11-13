@@ -13,13 +13,17 @@ gradle.projectsEvaluated {
                 includeTestsMatching('at.heinz.deviceai.learning.NeuralPracticeSchedulerGateUiTest')
                 includeTestsMatching('at.heinz.deviceai.AndroidLiveNodePortTest')
                 includeTestsMatching('at.heinz.deviceai.AndroidLiveScrollTest')
-                includeTestsMatching('at.heinz.deviceai.OwnerComputerVisibilityUiTest')
-                includeTestsMatching('at.heinz.deviceai.OwnerAppPlanningContextUiTest')
                 includeTestsMatching('at.heinz.deviceai.ResearchChatApprovalUiTest')
                 includeTestsMatching('at.heinz.deviceai.ui.CinematicWorkstationLayoutTest')
                 includeTestsMatching('at.heinz.deviceai.localmodel.LocalModelThermalGuardTest')
                 includeTestsMatching('at.heinz.deviceai.systemintelligence.ThermalPhaseRecorderTest')
                 includeTestsMatching('at.heinz.deviceai.SystemIntelligenceUiTest')
+                includeTestsMatching('at.heinz.deviceai.OwnerComputerVisibilityUiTest')
+                includeTestsMatching('at.heinz.deviceai.OwnerAppPlanningContextUiTest')
+                includeTestsMatching('at.heinz.deviceai.ContinuumVisualEvidenceUiTest.fold7Inner')
+                includeTestsMatching('at.heinz.deviceai.ContinuumVisualEvidenceUiTest.fold7InnerLargerFont')
+                includeTestsMatching('at.heinz.deviceai.ContinuumVisualEvidenceUiTest.referenceTablet')
+                includeTestsMatching('at.heinz.deviceai.ContinuumVisualEvidenceUiTest.fold7CoverAndPhone')
                 failOnNoMatchingTests = true
             }
         }
