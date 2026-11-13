@@ -213,9 +213,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private fun updateCockpitPanels() {
         hologram.setCockpitPanels(at.heinz.deviceai.avatar3d.CockpitPanelContent.from(
-            state, density, resources.configuration.fontScale) {
-            if (isAttachedToWindow) hologram.invalidate()
-        })
+            state, density, resources.configuration.fontScale, hologram::postInvalidateOnAnimation))
         nativePanelsVisible = hologram.cockpitPanelsVisible
     }
 
