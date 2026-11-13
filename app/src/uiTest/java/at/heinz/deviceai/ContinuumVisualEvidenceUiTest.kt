@@ -420,11 +420,12 @@ class ContinuumVisualEvidenceUiTest {
     /**
      * Motion clip of the real cockpit as numbered frames (15 fps) for ffmpeg: idle orb/rim motion, listening,
      * thinking, speaking (scripted TTS word ranges), a tile press and the Systemstatus window opening and closing.
-     * Host canvas with the 2D head preview, not Filament. Runs only with -PcontinuumUiEvidenceDir=… .
+     * Host canvas with the 2D head preview, not Filament. Runs the assertions without export;
+     * optional PNG/marks artifacts require -PcontinuumUiEvidenceDir=… .
      */
     private fun motionClip(tag: String, w: Int, h: Int) {
         val dir = System.getProperty("continuum.ui.evidenceDir")?.let { File(it, "motion-$tag").apply { mkdirs() } }
-        org.junit.Assume.assumeTrue("clip frames are evidence only", dir != null)
+        // Absence of an optional evidence directory must never SKIP the motion regression.
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
@@ -452,7 +453,10 @@ class ContinuumVisualEvidenceUiTest {
                 while (t < ms) {
                     each(t); advance(66L); t += 66L; measure(root, w, h)
                     bitmap.eraseColor(0); root.draw(Canvas(bitmap))
-                    File(dir, "frame-%04d.png".format(index++)).outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                    val frameIndex = index++
+                    if (dir != null) File(dir, "frame-%04d.png".format(frameIndex)).outputStream().use {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                    }
                 }
             }
             val marks = StringBuilder()
@@ -528,7 +532,8 @@ class ContinuumVisualEvidenceUiTest {
             director.onRuntime(AvatarRuntimeSignals()); head.setState(ContinuumHologramView.State.READY)
             scene("finishToolScene", "clip-app", true)
             mark("Werkzeug hat geantwortet · Fenster faltet zurück, Deck kehrt zurück"); record(3_000)
-            mark("Ende"); File(dir, "marks.txt").writeText(marks.toString())
+            mark("Ende")
+            if (dir != null) File(dir, "marks.txt").writeText(marks.toString())
             assertTrue("clip has frames", index > 100)
         } finally {
             bitmap.recycle()
