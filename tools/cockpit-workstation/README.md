@@ -124,3 +124,32 @@ unverändert.
 Zulieferung an `work/astra55-cockpit-integration-20261112` / PR #799. Aktive
 Architekturverträge EXP-06, EXP-11 und EXP-12 bleiben bestehen. Quellenintegration,
 Hostnachweis und Gerätebestätigung werden getrennt dokumentiert.
+
+## BLACKSITE-Raum
+
+Der bestehende Seed bleibt unverändert. `build_unified_assets.py --workstation-only`
+ergänzt fünf statische Materialbatches unter `cockpit-room`: Beton, Titantragwerk
+mit Schott, Leitungen sowie zwei Lichtkanäle. Avatar, Originalkugel, Livepixel-UVs
+und Seitenhalterungen bleiben an ihren bestehenden Knoten.
+
+`verify_unified_assets.py --require-blacksite` prüft die fünf Materialbatches,
+Hierarchie, endliche Geometrie, Tiefengrenzen und Budgets. Die tatsächliche
+Hostkamera prüft zusätzlich jeden gerenderten Frame auf Far-/Near-Plane-Verstöße
+und Bunker-Verdeckung der Hauptmonitor- sowie sichtbaren Seitenaperturen.
+Diese Prüfungen ersetzen keinen nativen Filament-Gerätetest.
+
+Der isolierte Workflow `continuum-blacksite-room.yml` läuft nur auf
+`work/blacksite-room-20261113`, wenn der Commit `[blacksite-build]` enthält.
+Er lädt ausschließlich Blender 4.3.2 von der offiziellen Release-URL,
+prüft dessen offiziellen SHA-256 und protokolliert den tatsächlich verwendeten
+Digest. Er baut und validiert die Assets, bindet einen lokalen Asset-Commit,
+rendert sechs Standbilder und den bestehenden Dreisekundenclip und veröffentlicht
+anschließend ausschließlich Assets und Belege auf demselben isolierten Branch.
+Quelländerung während des Laufs oder ein vorgeschobener Remote-HEAD verhindern
+den Push. Es gibt keinen Force-Push, APK-Build oder Signierungsschritt.
+
+Die Vorschau bindet jetzt auch den neuen Panelquellcode und das vorhandene
+Dokument-GLB. Seiteninhalte bleiben im Host jedoch Canvas-Inhalte. Bildbeschriftung
+und Manifest kennzeichnen deshalb die native Panel-Texturverbindung als ungeprüft.
+Ein BLACKSITE-Hostbild ist ein Raum-/Assetnachweis, kein Nachweis des Android-
+Texturuploads, der Frame-Receipts oder einer Geräteleistung.

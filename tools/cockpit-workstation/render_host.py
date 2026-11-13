@@ -165,6 +165,49 @@ def pixel_corners(obj):
     return [corners[key] for key in ordered]
 
 
+
+def room_visibility_guard(scene, camera, room, pixels, local_pixels, sides):
+    """Check actual transformed room geometry."""
+    batches = [obj for obj in room.children_recursive if obj.name.startswith("bunker-")]
+    if not batches:
+        return {"state": "ABSENT", "rays": 0, "vertices": 0}
+    if len(batches) != 5 or any(obj.type != "MESH" for obj in batches):
+        raise ValueError("Expected five static room batches")
+    origin = camera.matrix_world.translation
+    camera_inverse = camera.matrix_world.inverted()
+    vertices = 0
+    for obj in batches:
+        for vertex in obj.data.vertices:
+            depth = -(camera_inverse @ obj.matrix_world @ vertex.co).z
+            if not camera.data.clip_start < depth < camera.data.clip_end:
+                raise ValueError("Bunker vertex outside camera depth: " + obj.name)
+            vertices += 1
+    targets = []
+    corners = [pixels.matrix_world @ corner for corner in local_pixels]
+    for row in range(5):
+        v = row / 4.
+        for column in range(5):
+            u = column / 4.
+            targets.append(corners[0].lerp(corners[1], u).lerp(corners[3].lerp(corners[2], u), v))
+    if sides and not sides.hide_render:
+        for center in (-.38, .38):
+            for row in range(5):
+                for column in range(5):
+                    targets.append(sides.matrix_world @ point(center - .10 + column * .05,
+                                                              -.07 - row * .075, 0.))
+    for obj in batches:
+        inverse = obj.matrix_world.inverted()
+        local_origin = inverse @ origin
+        for target in targets:
+            direction = inverse @ target - local_origin
+            length = direction.length
+            hit, _, _, _ = obj.ray_cast(local_origin, direction.normalized(), distance=max(0., length - 1e-5))
+            if hit:
+                raise ValueError("Bunker occludes an actual monitor aperture: " + obj.name)
+    return {"state": "PASS", "materialBatches": len(batches), "rays": len(targets) * len(batches),
+            "vertices": vertices, "scope": "Actual camera, main UV quad, side plane geometry"}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--repo-root', type=Path, required=True)
@@ -253,11 +296,13 @@ def main():
             error = max(abs(a - b) for a, b in zip(projected, f['quad']))
             if error > .08:
                 raise ValueError(f'Actual mesh projection mismatch: {item["key"]} {error:.4f}px')
+            room_guard = room_visibility_guard(scene, camera, room, pixels, local_pixels, sides)
             file = out / f'{item["key"]}-stage.png'
             scene.render.filepath = str(file)
             bpy.ops.render.render(write_still=True)
             record = {'key': item['key'], 'image': file.name, 'imageSha256': sha(file),
                       'samples': scene.cycles.samples, 'projectionMaxErrorPixels': error,
+                      'blacksiteVisibility': room_guard,
                       'projectedContentQuad': projected, 'orbPhase': world['orbPhase'],
                       'ringPoses': world['ringPoses'], 'ringRotations': world['ringRotations'],
                       'denoising': scene.cycles.use_denoising}
@@ -272,6 +317,7 @@ def main():
                    'avatarOriginal': sha(assets / 'avatar3d/continuum-avatar.glb')},
         'composition': 'All three GLBs share one scene and camera; five native Kotlin ring matrices',
         'projectionCheck': 'Actual packaged monitor-live-pixels vertices against Kotlin quad',
+        'sidePanelConnection': 'NOT_EXERCISED; host still draws Canvas side content',
         'lighting': 'Runtime light colors and locations; host intensities are not Filament photometric equivalence',
         'studioEnvironment': exported['studioEnvironment'],
         'reflections': 'Compiled production radiance on glossy world rays; Cycles filtering, host strength 0.08',

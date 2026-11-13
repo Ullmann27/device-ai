@@ -153,6 +153,11 @@ def main():
                                          main / 'avatar3d/FilamentCockpitStage.kt',
                                          main / 'avatar3d/FilamentAvatarRenderer.kt',
                                          main / 'avatar3d/CockpitSceneAssets.kt',
+                                         main / 'avatar3d/CockpitPanelContent.kt',
+                                         ui / 'ComputerPanelPresentation.kt',
+                                         ui / 'AndroidContinuumPainter.kt',
+                                         ui / 'JarvisTextScalePainter.kt',
+                                         root / 'app/src/main/assets/cinema3d/document-workspace.glb',
                                          main / 'ContinuumHologramView.kt',
                                          root / 'tools/cockpit-workstation/materials/live-monitor.mat']
     before = {str(path.relative_to(root)): sha(path) for path in tracked_sources}
@@ -242,6 +247,8 @@ def main():
                        'avatar': 'Original GLB through native AvatarMaterialVariant; neutral pose, actual world matrix',
                        'sphere': 'Packaged original five-ring GLB; native orb depth and Kotlin ring matrices; no 2D sphere layer',
                        'chrome': 'Existing JarvisShellRenderer and CockpitWorkstationChrome; neutral host data',
+                       'sidePanels': 'Canvas host content only; native contextual texture upload/receipt NOT_EXERCISED',
+                       'room': 'Packaged static BLACKSITE geometry; this host run validates room/assets, not native panel connection',
                        'monitorContent': 'Host-only document texture on actual live-pixel mesh; unlit, no tint, no app capture' if args.content == 'example'
                                          else 'Empty; no Android app pixels or live connection'},
         'contentMode': args.content,
@@ -254,7 +261,8 @@ def main():
         'denoising': {'enabled': args.denoise, 'backend': 'OPENIMAGEDENOISE' if args.denoise else None,
                       'scope': 'Cycles 3D stage only; production Java2D chrome composed afterwards'},
         'limits': ['Blender studio is not Filament light equivalence', 'No Android layout lifecycle exercised',
-                   'No speech, model, capture, or real device measurements'],
+                   'No speech, model, capture, or real device measurements',
+                   'Native side-panel bitmap upload, GPU lifetime and frame receipts NOT_EXERCISED'],
         'Filament': 'NOT_RUN', 'Fold7': 'NOT_RUN',
         'outputs': {path.name: sha(path) for path in sorted(out.iterdir()) if path.is_file()},
     }

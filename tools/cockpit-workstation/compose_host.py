@@ -20,9 +20,9 @@ def compose(work, out, exported, layer_depths):
         footer.paste(result, (0, 0), result)
         draw = ImageDraw.Draw(footer)
         font = ImageFont.load_default(size=12)
-        draw.text((10, result.height + 9), f'HOSTRENDER | UNIFIED 3D | {name.upper()} | {frame["phase"]}',
+        draw.text((10, result.height + 9), f'HOSTRENDER | RAUM + ORIGINALASSETS | {name.upper()} | {frame["phase"]}',
                   font=font, fill='#8deeff')
-        draw.text((10, result.height + 29), 'Produktionsassets + Kotlin-Matrizen | Blender + Java2D',
+        draw.text((10, result.height + 29), 'Seiteninhalt: Canvas | native Panel-Textur ungeprüft',
                   font=font, fill='#d9e4ef')
         content = 'VORSCHAU · BEISPIELINHALT' if exported['contentMode'] == 'example' else 'Monitor ohne Livebild'
         draw.text((10, result.height + 49), content + ' | kein Gerätebeleg', font=font, fill='#c2abc8')

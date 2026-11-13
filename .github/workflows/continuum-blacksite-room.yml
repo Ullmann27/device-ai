@@ -1,0 +1,125 @@
+name: BLACKSITE - isolated room build and host evidence
+
+on:
+  push:
+    branches:
+      - work/blacksite-room-20261113
+
+permissions:
+  contents: write
+
+concurrency:
+  group: blacksite-room-isolated
+  cancel-in-progress: false
+
+jobs:
+  room:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/work/blacksite-room-20261113' && contains(github.event.head_commit.message, '[blacksite-build]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Freeze exact source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = "Ullmann27/device-ai"
+          test "$GITHUB_REF" = "refs/heads/work/blacksite-room-20261113"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install fixed host dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg libxrender1 libxi6 libxfixes3 libxkbcommon0 libsm6 libgl1
+          python3 -m pip install --disable-pip-version-check Pillow==11.3.0
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36'
+          echo "ANDROID_JAR=$ANDROID_HOME/platforms/android-36/android.jar" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/blacksite-jvm"
+          cat > "$RUNNER_TEMP/blacksite-jvm/settings.gradle" <<'EOF'
+          rootProject.name = 'blacksite-host-toolchain'
+          EOF
+          cat > "$RUNNER_TEMP/blacksite-jvm/build.gradle" <<'EOF'
+          repositories { mavenCentral() }
+          configurations { hostCompiler }
+          dependencies {
+              hostCompiler 'org.jetbrains.kotlin:kotlin-compiler-embeddable:2.4.0'
+              hostCompiler 'org.jetbrains.kotlin:kotlin-stdlib:2.4.0'
+              hostCompiler 'org.json:json:20240303'
+          }
+          tasks.register('copyCompiler', Copy) {
+              from configurations.hostCompiler
+              into layout.buildDirectory.dir('compiler')
+          }
+          EOF
+          gradle --no-daemon --max-workers=1 -p "$RUNNER_TEMP/blacksite-jvm" copyCompiler
+          echo "KOTLIN_LIB_DIR=$RUNNER_TEMP/blacksite-jvm/build/compiler" >> "$GITHUB_ENV"
+          echo "JSON_JAR=$RUNNER_TEMP/blacksite-jvm/build/compiler/json-20240303.jar" >> "$GITHUB_ENV"
+      - name: Verify official Blender 4.3.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          tools_dir="$RUNNER_TEMP/blacksite-tools"
+          mkdir -p "$tools_dir"
+          curl --fail --location --retry 3 'https://download.blender.org/release/Blender4.3/blender-4.3.2.sha256' -o "$tools_dir/blender-4.3.2.sha256"
+          curl --fail --location --retry 3 'https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz' -o "$tools_dir/blender-4.3.2-linux-x64.tar.xz"
+          python3 - <<'PY'
+          import hashlib, json, os, re
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"])
+          tools = root / "blacksite-tools"
+          name = "blender-4.3.2-linux-x64.tar.xz"
+          checksums = (tools / "blender-4.3.2.sha256").read_text()
+          matches = [line.split()[0] for line in checksums.splitlines()
+                     if len(line.split()) == 2 and line.split()[1].lstrip("*") == name]
+          assert len(matches) == 1 and re.fullmatch(r"[a-f0-9]{64}", matches[0])
+          digest = hashlib.file_digest((tools / name).open("rb"), "sha256").hexdigest()
+          assert digest == matches[0], "Official Blender checksum mismatch"
+          receipt = {
+              "blenderVersion": "4.3.2",
+              "archiveUrl": "https://download.blender.org/release/Blender4.3/" + name,
+              "archiveSha256": digest,
+              "officialChecksumUrl": "https://download.blender.org/release/Blender4.3/blender-4.3.2.sha256",
+              "checksumManifestSha256": hashlib.sha256(checksums.encode()).hexdigest(),
+              "kotlinCompiler": "2.4.0", "json": "20240303", "pillow": "11.3.0",
+              "compilerJars": {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+                               for p in sorted((root / "blacksite-jvm/build/compiler").glob("*.jar"))},
+          }
+          (root / "blacksite-toolchain.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          print("OFFICIAL_BLENDER_CHECKSUM", digest)
+          PY
+          tar -xJf "$tools_dir/blender-4.3.2-linux-x64.tar.xz" -C "$tools_dir"
+          "$tools_dir/blender-4.3.2-linux-x64/blender" -b --factory-startup --python-exit-code 1 --python-expr 'import bpy; assert bpy.app.version == (4, 3, 2)'
+          echo "$tools_dir/blender-4.3.2-linux-x64" >> "$GITHUB_PATH"
+      - name: Generate, validate, render and publish isolated evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/cockpit-workstation/ci_blacksite.py
+      - name: Preserve actual build and render evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blacksite-room-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/blacksite-evidence/
+            ${{ runner.temp }}/blacksite-toolchain.json
+          if-no-files-found: warn
+          retention-days: 14

@@ -205,6 +205,93 @@ def export(path):
         export_lights=False, export_animations=False, export_extras=True)
 
 
+
+def blacksite_room(parent):
+    """Five static material batches."""
+    concrete = material("bunker-concrete", rgb("202831"), roughness=.88)
+    titanium = material("bunker-titanium", rgb("34414D"), metallic=.84, roughness=.38, coat=.12)
+    conduits = material("bunker-conduit-metal", rgb("28333C"), metallic=.78, roughness=.42)
+    cyan = material("bunker-channel-cyan", rgb("056C7A"), metallic=.22, roughness=.28,
+                    emission=PALETTE["cyan"], strength=1.25)
+    violet = material("bunker-channel-violet", rgb("34205C"), metallic=.22, roughness=.28,
+                      emission=PALETTE["violet"], strength=1.10)
+
+    def boxes(name, entries, mat, bevel):
+        objects = []
+        for index, (center, dimensions) in enumerate(entries):
+            obj = box(name + "-part-" + str(index), center, dimensions, mat, parent, bevel)
+            bpy.context.view_layer.objects.active = obj
+            for modifier in list(obj.modifiers):
+                bpy.ops.object.modifier_apply(modifier=modifier.name)
+            objects.append(obj)
+        bpy.ops.object.select_all(action="DESELECT")
+        for obj in objects:
+            obj.select_set(True)
+        bpy.context.view_layer.objects.active = objects[0]
+        bpy.ops.object.join()
+        obj = objects[0]
+        obj.name = name
+        obj.data.name = name
+        return obj
+
+    shell = [
+        ((0., -.625, -1.42), (1.70, .12, 2.04)),
+        ((0., .765, -1.42), (1.70, .12, 2.04)),
+        ((-.80, .07, -1.42), (.10, 1.50, 2.04)),
+        ((.80, .07, -1.42), (.10, 1.50, 2.04)),
+    ]
+    for column in range(4):
+        for row in range(3):
+            shell.append((((column - 1.5) * .416, (row - 1) * .48 + .07, -2.40),
+                          (.406, .470, .10)))
+    boxes("bunker-concrete-shell", shell, concrete, .006)
+
+    frame = []
+    for depth in (-2.12, -1.42, -.72):
+        for side in (-1, 1):
+            frame.append(((side * .707, .055, depth), (.065, 1.27, .085)))
+            frame.append(((side * .665, -.531, depth), (.13, .048, .115)))
+        frame.append(((0., .665, depth), (1.48, .075, .105)))
+    for side in (-1, 1):
+        frame.append(((side * .265, .045, -2.285), (.511, 1.105, .090)))
+        frame.append(((side * .555, .04, -2.235), (.055, 1.20, .095)))
+        for height in (-.34, .05, .44):
+            frame.append(((side * .59, height, -2.20), (.135, .035, .065)))
+    frame.append(((0., .64, -2.235), (1.16, .075, .095)))
+    frame.append(((0., -.565, -2.235), (1.16, .075, .095)))
+    boxes("bunker-titanium-structure", frame, titanium, .005)
+
+    pipes = Batch("bunker-conduits", conduits, parent)
+    for side in (-1, 1):
+        for offset in (0., .045, .09):
+            pipes.tube([(side * .667, .42 + offset, -.58),
+                        (side * .667, .42 + offset, -1.93),
+                        (side * .60, .42 + offset, -2.16),
+                        (side * .60, -.45, -2.16)], .013, sides=8)
+    pipes.finish()
+
+    channels = []
+    for side, name, mat in ((-1, "bunker-cyan-channels", cyan),
+                            (1, "bunker-violet-channels", violet)):
+        batch = Batch(name, mat, parent)
+        batch.tube([(side * .607, -.50, -2.17), (side * .607, .56, -2.17),
+                    (side * .06, .56, -2.17)], .008, sides=6)
+        batch.tube([(side * .625, -.548, -.53), (side * .625, -.548, -2.10)], .007, sides=6)
+        for depth in (-2.12, -1.42, -.72):
+            batch.tube([(side * .644, .609, depth + .055),
+                        (side * .10, .609, depth + .055)], .005, sides=6)
+        channels.append(batch.finish().name)
+    names = ["bunker-concrete-shell", "bunker-titanium-structure", "bunker-conduits"] + channels
+    parent["blacksite_schema"] = 1
+    parent["blacksite_batches"] = json.dumps(names, separators=(",", ":"))
+    parent["blacksite_provenance"] = "Owned static geometry; no Android-state or activity simulation"
+    for name in names:
+        obj = bpy.data.objects[name]
+        assert obj.parent == parent and obj.type == "MESH"
+        assert len(obj.data.materials) == 1
+    return names
+
+
 def workstation():
     reset()
     bpy.ops.import_scene.gltf(filepath=str(SOURCE))
@@ -228,6 +315,7 @@ def workstation():
         layer.data[loop.index].uv = blender_uvs[loop.vertex_index]
     monitor["live_pixel_contract"] = "Opaque unlit external texture; no fabricated app content"
     room["provenance"] = "Reference rounded desk seed; imported geometry and materials preserved"
+    blacksite_room(room)
     export(ASSETS / "cockpit-workstation.glb")
 
 
