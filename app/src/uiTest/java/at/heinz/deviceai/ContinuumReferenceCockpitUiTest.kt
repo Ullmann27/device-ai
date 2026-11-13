@@ -1164,8 +1164,7 @@ class ContinuumReferenceCockpitUiTest {
             assertTrue("$profile compact surface remains visible", avatar.isShown)
             assertFalse("$profile compact renders the original orb", avatar.isNativeHeadEnabled())
             assertTrue("$profile compact shrinks the actual surface", avatar.height < originalAvatarBounds.height())
-            val compactDialog = requireNotNull(compactHome.jarvisShell.currentShell())
-                [JarvisShellLayout.Slot.DIALOG]!!
+            val compactDialog = requireNotNull(compactHome.jarvisShell.currentShell())[JarvisShellLayout.Slot.DIALOG]!!
             assertEquals("$profile conversation follows compact geometry",
                 (compactDialog.top * compactHome.resources.displayMetrics.density).toInt(),
                 shellControl(activity, "jarvis-dialog:conversation").top)

@@ -180,9 +180,12 @@ class ContinuumVisualEvidenceUiTest {
         val panel = shown(work, "jarvis-work-window:panel")
         assertSame("Work area uses the original window", root, work.rootView)
         assertSame("Systemstatus must not create AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
-        val openness = field(work, "openness") as Float
-        val source = field(work, "origin") as android.graphics.RectF
-        val destination = field(work, "destination") as android.graphics.RectF
+        val openness = at.heinz.deviceai.ui.JarvisWorkWindow::class.java.getDeclaredField("openness")
+            .apply { isAccessible = true }.get(work) as Float
+        val source = at.heinz.deviceai.ui.JarvisWorkWindow::class.java.getDeclaredField("origin")
+            .apply { isAccessible = true }.get(work) as android.graphics.RectF
+        val destination = at.heinz.deviceai.ui.JarvisWorkWindow::class.java.getDeclaredField("destination")
+            .apply { isAccessible = true }.get(work) as android.graphics.RectF
         assertTrue("Opening advances between endpoints: $openness", openness > 0f && openness < 1f)
         assertEquals("Width follows the actual source", (source.width() +
             (destination.width() - source.width()) * openness) / panel.width, panel.scaleX, .001f)

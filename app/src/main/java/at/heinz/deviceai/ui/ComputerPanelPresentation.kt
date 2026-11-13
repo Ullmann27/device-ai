@@ -5,6 +5,9 @@ import at.heinz.deviceai.cognitive.CockpitWorkReducer
 import at.heinz.deviceai.cognitive.ComputerGoal
 import at.heinz.deviceai.cognitive.OwnerComputerIntent
 import at.heinz.deviceai.cognitive.OwnerComputerWorkflow
+import at.heinz.deviceai.cognitive.LiveMonitorReason
+import at.heinz.deviceai.cognitive.LiveMonitorState
+import at.heinz.deviceai.cognitive.LiveMonitorStatus
 import at.heinz.deviceai.ui.ContinuumCockpitPresentation.Row
 import at.heinz.deviceai.ui.ContinuumCockpitPresentation.Tone
 
@@ -69,6 +72,16 @@ class ComputerPanelState private constructor(
     }
 
     companion object {
+        internal fun sourceMatches(taskId: String, packageName: String, sessionId: Long,
+                                   source: LiveMonitorStatus): Boolean {
+            val binding = source.binding ?: return false
+            return taskId.isNotBlank() && sessionId > 0L &&
+                binding.taskId == taskId && binding.targetPackage == packageName &&
+                binding.captureSession == sessionId &&
+                source.state != LiveMonitorState.NO_SOURCE && source.state != LiveMonitorState.ENDED &&
+                source.reason != LiveMonitorReason.PERMISSION_REVOKED
+        }
+
         internal fun from(taskId: String, sessionId: Long, intent: OwnerComputerIntent,
                           snapshot: CockpitWorkReducer.Snapshot,
                           result: OwnerComputerWorkflow.Result? = null): ComputerPanelState? {

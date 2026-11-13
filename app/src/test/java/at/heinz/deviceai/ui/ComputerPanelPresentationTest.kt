@@ -110,6 +110,41 @@ class ComputerPanelPresentationTest {
         assertFalse(painter.texts.contains("Entwurf"))
     }
 
+
+    @Test fun retainedPanelsRequireTheirOriginalCaptureSource() {
+        val binding = LiveFrameBinding("task", 7, "com.whatsapp", "at.heinz.deviceai.continuumlocal",
+            LiveFrameOrigin.ACCESSIBILITY_WINDOW)
+        val source = LiveMonitorStatus(LiveMonitorState.LIVE, null, binding, null, 12, 0)
+        fun accepts(status: LiveMonitorStatus) =
+            ComputerPanelState.sourceMatches("task", "com.whatsapp", 7, status)
+
+        assertTrue(accepts(source))
+        assertFalse(accepts(source.copy(binding = binding.copy(taskId = "successor"))))
+        assertFalse(accepts(source.copy(binding = binding.copy(captureSession = 8))))
+        assertFalse(accepts(source.copy(binding = binding.copy(targetPackage = "com.android.chrome"))))
+        assertFalse(accepts(source.copy(binding = null)))
+        assertFalse(accepts(source.copy(state = LiveMonitorState.NO_SOURCE)))
+        assertFalse(accepts(source.copy(state = LiveMonitorState.ENDED,
+            reason = LiveMonitorReason.CAPTURE_STOPPED)))
+        assertFalse(accepts(source.copy(state = LiveMonitorState.PAUSED,
+            reason = LiveMonitorReason.PERMISSION_REVOKED)))
+        assertFalse(ComputerPanelState.sourceMatches("task", "com.whatsapp", 0, source))
+    }
+
+    @Test fun pendingAndPausedWorkAreNotClaimedAsLiveVideo() {
+        val binding = LiveFrameBinding("task", 7, "com.whatsapp", "at.heinz.deviceai.continuumlocal",
+            LiveFrameOrigin.ACCESSIBILITY_WINDOW)
+        val waiting = LiveMonitorStatus(LiveMonitorState.WAITING, null, binding, null, 0, null)
+        assertTrue(ComputerPanelState.sourceMatches("task", "com.whatsapp", 7, waiting))
+        assertTrue(ComputerPanelState.sourceMatches("task", "com.whatsapp", 7,
+            waiting.copy(state = LiveMonitorState.PAUSED, reason = LiveMonitorReason.FRAME_STALE)))
+        event(CockpitWorkEvent.Stage.ACCEPTED)
+        assertFalse(state().verified)
+        event(CockpitWorkEvent.Stage.PAUSED)
+        assertEquals("Arbeit pausiert", state().planningRows().single { it.label == "Ablauf" }.value)
+        assertFalse(state().verified)
+    }
+
     @Test fun clearingComputerStateReturnsToExistingDocumentContent() {
         val painter = JarvisPresentationRecordingPainter()
         val dashboard = ContinuumDashboardState(document = HollywoodFuiLiveData.document(
