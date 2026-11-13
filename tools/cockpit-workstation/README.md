@@ -153,3 +153,16 @@ Dokument-GLB. Seiteninhalte bleiben im Host jedoch Canvas-Inhalte. Bildbeschrift
 und Manifest kennzeichnen deshalb die native Panel-Texturverbindung als ungeprüft.
 Ein BLACKSITE-Hostbild ist ein Raum-/Assetnachweis, kein Nachweis des Android-
 Texturuploads, der Frame-Receipts oder einer Geräteleistung.
+
+
+Recovery of completed run 43353026610 preserves its original render source and
+manifests. Artifact 14004669910 is verified against its recorded ZIP SHA-256.
+Only assets are rebuilt; every production and preview-tool digest must match the
+completed render before publication. A separate recovery receipt identifies the
+new build source and the original rendered asset commit. The original evidence
+is retained under `rendered-from-95df8a74`; it is never relabelled as a new render.
+The bounded evidence paths are explicitly staged with `git add --force`
+because the repository ignores `*.log`. The staged-file equality check remains.
+An FFprobe receipt verifies 60 decoded frames, three seconds, and 20 export FPS.
+A contact sheet samples every fourth encoded frame for visual review; neither
+the clip nor its contact sheet is a native-device performance measurement.

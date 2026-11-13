@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: blacksite-room-isolated
@@ -108,6 +109,46 @@ jobs:
           tar -xJf "$tools_dir/blender-4.3.2-linux-x64.tar.xz" -C "$tools_dir"
           "$tools_dir/blender-4.3.2-linux-x64/blender" -b --factory-startup --python-exit-code 1 --python-expr 'import bpy; assert bpy.app.version == (4, 3, 2)'
           echo "$tools_dir/blender-4.3.2-linux-x64" >> "$GITHUB_PATH"
+      - name: Recover the completed source-bound render artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, os
+          from pathlib import Path
+          import urllib.error, urllib.parse, urllib.request
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, request, response, code, message, headers, url):
+                  return None
+          endpoint = "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14004669910/zip"
+          request = urllib.request.Request(endpoint, headers={
+              "Authorization": "Bearer " + os.environ["GH_TOKEN"],
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+          })
+          try:
+              response = urllib.request.build_opener(NoRedirect).open(request, timeout=30)
+              response.close()
+              raise RuntimeError("Expected GitHub artifact redirect")
+          except urllib.error.HTTPError as error:
+              if error.code != 302:
+                  raise
+              location = error.headers["Location"]
+          parsed = urllib.parse.urlsplit(location)
+          assert parsed.scheme == "https" and parsed.hostname and not parsed.username
+          with urllib.request.urlopen(location, timeout=60) as response:
+              archive = response.read(8_000_001)
+          assert len(archive) <= 8_000_000
+          expected = "cb3ec00e4e3ba77462440b479cafa65d83f8bdf85f1afe699b8ed6ce0f927d7e"
+          assert hashlib.sha256(archive).hexdigest() == expected, "Recovery ZIP digest mismatch"
+          target = Path(os.environ["RUNNER_TEMP"]) / "blacksite-recovery.zip"
+          target.write_bytes(archive)
+          with Path(os.environ["GITHUB_ENV"]).open("a") as environment:
+              environment.write("BLACKSITE_RECOVER_ZIP=" + str(target) + "\n")
+          print("RECOVERY_ARCHIVE_VERIFIED", expected)
+          PY
       - name: Generate, validate, render and publish isolated evidence
         shell: bash
         run: |
