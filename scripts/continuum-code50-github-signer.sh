@@ -102,7 +102,7 @@ download_code55_proof() {
   gh api "repos/$repo/actions/artifacts/$id/zip" > "$tmp/$prefix.zip" || fail ARTIFACT_DOWNLOAD_FAILED
   [[ "$(stat -c %s "$tmp/$prefix.zip")" == "$size" ]] || fail ARTIFACT_SIZE_MISMATCH
   [[ "sha256:$(sha256sum "$tmp/$prefix.zip" | cut -d' ' -f1)" == "$digest" ]] || fail ARTIFACT_DIGEST_MISMATCH
-  python3 - "$tmp/$prefix.zip" "$tmp/$prefix" <<'PY' || fail ARTIFACT_ARCHIVE_UNSAFE
+  python3 -B - "$tmp/$prefix.zip" "$tmp/$prefix" <<'PY' || fail ARTIFACT_ARCHIVE_UNSAFE
 from pathlib import Path, PurePosixPath
 import shutil, stat, sys, zipfile
 archive, destination = map(Path, sys.argv[1:])
@@ -151,7 +151,7 @@ verify_code55_evidence() {
   download_code55_proof "$qa_run" "Code55-full-Android-source-QA" host full
   download_code55_proof "$qa_run" "Code55-native-PDF-emulator-QA" native full
   download_code55_proof "$apk_run" "$artifact" unsigned apk
-  python3 - "$tmp" "$source_sha" "$source_tree" "$tools" <<'PY' || fail CODE55_RECEIPT_OR_APK_INVALID
+  python3 -B - "$tmp" "$source_sha" "$source_tree" "$tools" <<'PY' || fail CODE55_RECEIPT_OR_APK_INVALID
 from pathlib import Path
 import hashlib, importlib.util, json, re, subprocess, sys, xml.etree.ElementTree as ET
 root, sha, tree, tools = Path(sys.argv[1]), sys.argv[2], sys.argv[3], Path(sys.argv[4])
@@ -195,10 +195,12 @@ def instrument(path):
 for path in (root / "node").rglob("report.json"):
     read_json(path)
 pdf = instrument(one(root / "native", "native-pdf.txt"))
+require(pdf.get("sdk") == "35")
 require(all(pdf.get(key) == "1" for key in ("provider_queries", "provider_opens", "page_count")))
 require(int(pdf.get("rendered_ink_pixels", "0")) > 0)
 filament_path = one(root / "native", "native-filament.txt")
 filament = instrument(filament_path)
+require(filament.get("last_phase") == "finished")
 require(filament.get("sdk") == "35" and filament.get("context", "").startswith("SYNTHETIC FILAMENT TEST;"))
 require(all(filament.get(key) == "2" for key in ("native_quads", "native_materials", "native_textures")))
 require(filament.get("upload_completions") == "1")

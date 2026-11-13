@@ -169,8 +169,8 @@ function code55Fixture() {
       [directory + filename, Object.entries(values).map(([key, value]) =>
         'INSTRUMENTATION_RESULT: ' + key + '=' + value).join('\n') + '\nINSTRUMENTATION_CODE: -1\n']);
   };
-  native('', 'native-pdf.txt', {status: 'ok', provider_queries: 1, provider_opens: 1, page_count: 1, rendered_ink_pixels: 506});
-  native('filament/', 'native-filament.txt', {status: 'ok', sdk: 35, context: 'SYNTHETIC FILAMENT TEST; fixture',
+  native('', 'native-pdf.txt', {status: 'ok', sdk: 35, provider_queries: 1, provider_opens: 1, page_count: 1, rendered_ink_pixels: 506});
+  native('filament/', 'native-filament.txt', {status: 'ok', sdk: 35, last_phase: 'finished', context: 'SYNTHETIC FILAMENT TEST; fixture',
     native_quads: 2, native_materials: 2, native_textures: 2, upload_completions: 1,
     rendered_frames: 1, presented_frames: 1, output_frames: 1, content_cleared: true, panels_released: true, engine_released: true});
   fixture.files.native.push(['filament/surfaceflinger.txt', 'GLES: SwiftShader synthetic fixture\n']);
@@ -317,7 +317,7 @@ test('Code55 rejects malformed JSON, duplicate fields and mismatched source rece
 test('Code55 requires actual unsigned hash and the preserved 16 KiB audit', () => {
   assert.ok(has55Tools, 'Code55 signer tests require bash, jq, Python and Node');
   fails55(runCode55(f => change(f, 'unsigned', 'app-release-unsigned.apk', value => value + 'tampered')), 'CODE55_RECEIPT_OR_APK_INVALID');
-  fails55(runCode55(f => change(f, 'unsigned', 'SHA256SUMS.txt', value => '0' + value.slice(1))), 'CODE55_RECEIPT_OR_APK_INVALID');
+  fails55(runCode55(f => change(f, 'unsigned', 'SHA256SUMS.txt', value => '0'.repeat(64) + value.slice(64))), 'CODE55_RECEIPT_OR_APK_INVALID');
   fails55(runCode55(f => jsonChange(f, 'unsigned', 'RESULT.json', value => { value.zipalign16KiB = 'FAIL'; })), 'CODE55_RECEIPT_OR_APK_INVALID');
   fails55(runCode55(f => { f.alignmentFailure = true; }), 'CODE55_RECEIPT_OR_APK_INVALID');
 });
@@ -339,6 +339,8 @@ test('Code55 requires both successful native completions and their exact source'
     fails55(runCode55(f => change(f, 'native', filename, value => value.replace('INSTRUMENTATION_CODE: -1', 'INSTRUMENTATION_CODE: 0'))), 'CODE55_RECEIPT_OR_APK_INVALID');
   }
   fails55(runCode55(f => change(f, 'native', 'filament/source-sha.txt', () => TREE)), 'CODE55_RECEIPT_OR_APK_INVALID');
+  fails55(runCode55(f => change(f, 'native', 'native-pdf.txt', value => value.replace('sdk=35', 'sdk=34'))), 'CODE55_RECEIPT_OR_APK_INVALID');
+  fails55(runCode55(f => change(f, 'native', 'native-filament.txt', value => value.replace('last_phase=finished', 'last_phase=rendering'))), 'CODE55_RECEIPT_OR_APK_INVALID');
 });
 
 test('Code55 independently reassesses Node XML and rejects tampered or failed reports', () => {
