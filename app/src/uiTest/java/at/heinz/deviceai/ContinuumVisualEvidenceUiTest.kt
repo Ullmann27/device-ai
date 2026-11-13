@@ -15,6 +15,7 @@ import at.heinz.deviceai.avatar.AvatarDirector
 import at.heinz.deviceai.avatar.AvatarPoseReducer
 import at.heinz.deviceai.avatar.AvatarRuntimeSignals
 import at.heinz.deviceai.ui.ContinuumHomeView
+import at.heinz.deviceai.ui.HollywoodFuiConstruct
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertSame
@@ -180,13 +181,28 @@ class ContinuumVisualEvidenceUiTest {
         val panel = shown(work, "jarvis-work-window:panel")
         assertSame("Work area uses the original window", root, work.rootView)
         assertSame("Systemstatus must not create AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
-        val openness = at.heinz.deviceai.ui.JarvisWorkWindow::class.java.getDeclaredField("openness")
+        fun phaseValue(name: String) = at.heinz.deviceai.ui.JarvisWorkWindow::class.java.getDeclaredField(name)
             .apply { isAccessible = true }.get(work) as Float
         val source = at.heinz.deviceai.ui.JarvisWorkWindow::class.java.getDeclaredField("origin")
             .apply { isAccessible = true }.get(work) as android.graphics.RectF
         val destination = at.heinz.deviceai.ui.JarvisWorkWindow::class.java.getDeclaredField("destination")
             .apply { isAccessible = true }.get(work) as android.graphics.RectF
-        assertTrue("Opening advances between endpoints: $openness", openness > 0f && openness < 1f)
+        val anchor = phaseValue("trailProgress")
+        assertTrue("Light anchor advances during its hold: $anchor", anchor > 0f && anchor < 1f)
+        assertEquals("Flight waits for the anchor phase", 0f, phaseValue("openness"), .0001f)
+        assertEquals("Anchor starts at the real source width", source.width() / panel.width, panel.scaleX, .001f)
+        assertEquals("Anchor starts at the real source height", source.height() / panel.height, panel.scaleY, .001f)
+        assertEquals("Anchor phase has no released data", 0f, panel.alpha, .001f)
+        assertEquals("Frame waits for the anchor", 0f, phaseValue("stageOpacity"), .001f)
+        assertProtectedRegions(work, head)
+        capture(root, "$tag-6a-systemstatus-anchor", w, h)
+
+        val bracketSampleMs = (HollywoodFuiConstruct.ANCHOR_END_MS + HollywoodFuiConstruct.BRACKETS_END_MS) / 2
+        advance(bracketSampleMs - 80L); measure(root, w, h)
+        val openness = phaseValue("openness")
+        assertTrue("Opening advances during brackets: $openness", openness > 0f && openness < 1f)
+        val brackets = phaseValue("stageOpacity")
+        assertTrue("Brackets build before data release: $brackets", brackets > 0f && brackets < 1f)
         assertEquals("Width follows the actual source", (source.width() +
             (destination.width() - source.width()) * openness) / panel.width, panel.scaleX, .001f)
         assertEquals("Height follows the actual source", (source.height() +
@@ -197,7 +213,14 @@ class ContinuumVisualEvidenceUiTest {
         assertFalse("Directed glance is not camera tracking", avatarPose(head).gazeObserved)
         capture(root, "$tag-6a-systemstatus-opening", w, h)
 
-        advance(960L)
+        val dataSampleMs = (HollywoodFuiConstruct.DATA_START_MS + HollywoodFuiConstruct.DATA_END_MS) / 2
+        advance(dataSampleMs - bracketSampleMs); measure(root, w, h)
+        assertTrue("Data releases only in its phase", panel.alpha > 0f && panel.alpha < 1f)
+        assertTrue("Flight continues forward", phaseValue("openness") > openness)
+        assertProtectedRegions(work, head)
+        capture(root, "$tag-6a-systemstatus-data-release", w, h)
+
+        advance(HollywoodFuiConstruct.DATA_END_MS - dataSampleMs + 140L)
         val io = field(a, "learningIoExecutor") as ExecutorService
         io.submit(Runnable {}).get(5L, TimeUnit.SECONDS)
         advance(64L); measure(root, w, h)

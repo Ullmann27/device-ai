@@ -131,7 +131,7 @@ object JarvisShellLayout {
         require(externalRailWidthDp.isFinite() && externalRailWidthDp >= 0f)
         require(externalBottomBarHeightDp.isFinite() && externalBottomBarHeightDp >= 0f && externalBottomBarHeightDp < heightDp)
         val viewport = heightDp - externalBottomBarHeightDp
-        return if (workstation && !compactPresentation) CinematicWorkstationLayout.create(widthDp, viewport, fontScale)
+        return if (workstation) CinematicWorkstationLayout.create(widthDp, viewport, fontScale, compactPresentation)
             else create(widthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation)
     }
 
