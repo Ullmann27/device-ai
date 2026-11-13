@@ -153,4 +153,30 @@ class ComputerPanelPresentationTest {
         assertTrue(painter.texts.contains("Synthetisch.pdf"))
         assertFalse(painter.texts.contains("WhatsApp"))
     }
+    @Test fun nativePresentationSuppressesBothForegroundSurfacesUntilRevoked() {
+        event(CockpitWorkEvent.Stage.ACCEPTED)
+        val dashboard = ContinuumDashboardState(computer = state())
+        val shell = CinematicWorkstationLayout.create(884f, 760f)
+        val original = JarvisShellContent.forState({ dashboard }, shell = { shell })
+        var submitted = true
+        val content = original.toMutableMap()
+        for (slot in listOf(JarvisShellLayout.Slot.WORK_DOCUMENT, JarvisShellLayout.Slot.WORK_DRAFT)) {
+            content[slot] = object : JarvisShellRenderer.SlotContent {
+                override val drawnInScene: Boolean get() = submitted
+                override fun draw(p: ContinuumPainter, box: JarvisShellLayout.Box) {
+                    original.getValue(slot).draw(p, box)
+                }
+            }
+        }
+        val native = JarvisPresentationRecordingPainter()
+        JarvisShellRenderer.drawForeground(native, shell, content)
+        assertFalse(native.texts.contains("Auftrag"))
+        assertFalse(native.texts.contains("Ergebnis"))
+        submitted = false
+        val fallback = JarvisPresentationRecordingPainter()
+        JarvisShellRenderer.drawForeground(fallback, shell, content)
+        assertTrue(fallback.texts.contains("Auftrag"))
+        assertTrue(fallback.texts.contains("Ergebnis"))
+    }
+
 }

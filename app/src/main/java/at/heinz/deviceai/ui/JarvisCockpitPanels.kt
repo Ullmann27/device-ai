@@ -172,7 +172,7 @@ object JarvisCockpitPanels {
         }
     }
 
-    private fun drawComputerRows(p: ContinuumPainter, b: Box, heading: String, icon: Icon,
+    internal fun drawComputerRows(p: ContinuumPainter, b: Box, heading: String, icon: Icon,
                                  rows: List<Row>, workstation: Boolean) {
         val y0 = if (workstation) CockpitWorkstationChrome.panelHeader(p, b, heading, icon)
         else title(p, b, heading) { x, y ->

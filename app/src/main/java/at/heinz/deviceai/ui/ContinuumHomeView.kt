@@ -185,6 +185,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             val taskChanged = JarvisCockpitPanels.isOwnerTaskRunning(field) !=
                 JarvisCockpitPanels.isOwnerTaskRunning(value)
             field = value
+            updateCockpitPanels()
             if (taskChanged) requestLayout()
             liveTabs.updateState(value)
             views.values.forEach { it.refresh() }
@@ -206,6 +207,23 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         tag = "continuum-live-computer-monitor"
         onFeedChanged = hologram::setCockpitLiveFeed
         onWorkEvent = hologram::cockpitWorkEvent
+    }
+
+    private var nativePanelsVisible = false
+
+    private fun updateCockpitPanels() {
+        hologram.setCockpitPanels(at.heinz.deviceai.avatar3d.CockpitPanelContent.from(
+            state, density, resources.configuration.fontScale, hologram::postInvalidateOnAnimation))
+        nativePanelsVisible = hologram.cockpitPanelsVisible
+    }
+
+    private fun contextualPanel(result: Boolean) = object : JarvisShellRenderer.SlotContent {
+        override val drawnInScene: Boolean get() = nativePanelsVisible
+        override fun draw(p: ContinuumPainter, box: JarvisShellLayout.Box) {
+            val workstation = jarvisShell.shell?.workstation == true
+            if (result) JarvisCockpitPanels.drawDraftPreview(p, box, state, workstation)
+            else JarvisCockpitPanels.drawDocumentPreview(p, box, state, workstation)
+        }
     }
 
     @Volatile private var computerGaze: ComputerMonitorGaze? = null
@@ -332,6 +350,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             minOf(width.toFloat(), (display.right - stage.left) * density),
             minOf(height.toFloat(), (display.bottom - stage.top) * density))
         computerFrame = frame
+        updateCockpitPanels()
         presentComputerFrame()
     }
 
@@ -583,6 +602,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         setWillNotDraw(false)
         jarvisShell.content = JarvisShellContent.forState({ state }, grid = { jarvisShell.shell?.grid },
             shell = { jarvisShell.shell }) + mapOf(
+                JarvisShellLayout.Slot.WORK_DOCUMENT to contextualPanel(false),
+                JarvisShellLayout.Slot.WORK_DRAFT to contextualPanel(true),
                 JarvisShellLayout.Slot.NAV_RAIL to JarvisShellRenderer.SlotContent { _, _ -> },
                 JarvisShellLayout.Slot.AVATAR to JarvisShellRenderer.SlotContent { _, _ -> },
                 JarvisShellLayout.Slot.WORK_PROCESS to JarvisShellRenderer.SlotContent { painter, box ->
@@ -604,6 +625,11 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         addView(virtualMonitor)
         hologram.onCockpitStatus = { label, ready ->
             virtualMonitor.updateStatus(label, ready)
+            val panels = ready && hologram.cockpitPanelsVisible
+            if (nativePanelsVisible != panels) {
+                nativePanelsVisible = panels
+                shellForeground.invalidate()
+            }
             onComputerPresentationChanged?.invoke()
         }
         addView(avatarPlaceholder)

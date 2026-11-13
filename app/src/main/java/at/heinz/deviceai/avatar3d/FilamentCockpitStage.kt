@@ -16,7 +16,9 @@ internal class FilamentCockpitStage(
     private val scene: Scene,
     private val loader: AssetLoader,
     assets: CockpitSceneAssets,
-    cacheTransforms: Boolean = true
+    cacheTransforms: Boolean = true,
+    private val panelBytes: ByteArray? = null,
+    private val panelPainter: at.heinz.deviceai.ui.AndroidContinuumPainter? = null
 ) : AutoCloseable {
     private var workstation: FilamentAsset? = null
     private var orb: FilamentAsset? = null
@@ -32,6 +34,9 @@ internal class FilamentCockpitStage(
     )
     private var monitorInstance: MaterialInstance? = null
     private var pixels: CockpitLiveTexture? = null
+    private var contextPanels: CockpitContextPanels? = null
+    private var contextContent: CockpitPanelContent? = null
+    private var contextPanelsFailed = false
     private var roomTransform = 0
     private var sideMonitorTransform = 0
     private var monitorTransform = 0
@@ -120,14 +125,23 @@ internal class FilamentCockpitStage(
     private fun namedTransform(asset: FilamentAsset, name: String): Int =
         engine.transformManager.getInstance(asset.getFirstEntityByName(name)).also { require(it != 0) { name } }
 
+    fun panelContent(content: CockpitPanelContent?) {
+        if (contextContent?.key != content?.key ||
+            contextContent?.observationRevision != content?.observationRevision) contextPanels?.frameFailed()
+        contextContent = content
+    }
+    fun panelsPresented(content: CockpitPanelContent?, frame: CockpitStageFrame?) =
+        contextPanels?.presented(content, frame) == true
     fun bind(feed: LiveMonitorFeed<AndroidLiveFrame>?) { pixels?.bind(feed) }
     fun workEvent(event: CockpitWorkEvent) { pixels?.workEvent(event) }
     fun frameSubmitted(nowNanos: Long) {
         pixels?.frameSubmitted(nowNanos)
+        contextPanels?.frameSubmitted()
         label = pixels?.label ?: "3D-Bildquelle nicht verfügbar"
     }
     fun frameFailed() {
         pixels?.frameFailed()
+        contextPanels?.frameFailed()
         label = pixels?.label ?: "3D-Bildquelle nicht verfügbar"
     }
 
@@ -141,6 +155,18 @@ internal class FilamentCockpitStage(
             transform[10] = 0f
         }
         transformUpdates.setTransform(sideMonitorTransform, transform)
+        if (!contextPanelsFailed) runCatching {
+            if (contextPanels == null && contextContent != null && panelBytes != null && panelPainter != null &&
+                frame.monitorWidth / frame.width <= .70f) {
+                contextPanels = CockpitContextPanels(engine, scene, loader, panelBytes, sideMonitorTransform, panelPainter)
+            }
+            contextPanels?.update(contextContent, frame)
+        }.onFailure {
+            contextPanelsFailed = true
+            contextPanels?.close()
+            contextPanels = null
+            android.util.Log.w("ContinuumCockpit", "Context panels unavailable", it)
+        }
         val monitorMatrix = frame.monitorTransform()
         transformUpdates.setTransform(monitorTransform, monitorMatrix)
         CockpitWorldTransforms.orb(frame, orbBounds.left, orbBounds.top, orbBounds.right, orbBounds.bottom, transform)
@@ -158,6 +184,8 @@ internal class FilamentCockpitStage(
     override fun close() {
         transformUpdates.clear()
         runCatching { pixels?.close() }; pixels = null
+        runCatching { contextPanels?.close() }; contextPanels = null
+        contextContent = null
         for (loaded in listOfNotNull(workstation, orb)) {
             runCatching { scene.removeEntities(loaded.entities); loader.destroyAsset(loaded) }
         }
@@ -178,5 +206,166 @@ internal class FilamentCockpitStage(
     companion object {
         const val ASSET_PATH = "cinema3d/cockpit-workstation.glb"
         const val MAX_BYTES = 2_000_000
+    }
+}
+
+
+/** Two contextual quads, same scene. */
+private class CockpitContextPanels(
+    private val engine: Engine,
+    private val scene: Scene,
+    private val loader: AssetLoader,
+    bytes: ByteArray,
+    parent: Int,
+    private val painter: at.heinz.deviceai.ui.AndroidContinuumPainter
+) : AutoCloseable {
+    private val owner = Thread.currentThread()
+    private val handler = android.os.Handler(requireNotNull(android.os.Looper.myLooper()))
+    private val state = CockpitPanelUploadState()
+    private val textPainter = at.heinz.deviceai.ui.JarvisTextScalePainter(painter)
+    private val pages = IntArray(2)
+    private val materials = arrayOfNulls<MaterialInstance>(2)
+    private val textures = arrayOfNulls<Texture>(2)
+    private val sampler = TextureSampler(TextureSampler.MinFilter.LINEAR, TextureSampler.MagFilter.LINEAR,
+        TextureSampler.WrapMode.CLAMP_TO_EDGE)
+    private var asset: FilamentAsset? = null
+    private var textureWidth = 0
+    private var textureHeight = 0
+    private var shown = false
+    private var closed = false
+
+    init {
+        try {
+            require(bytes.size in 1..FilamentDocumentStage.MAX_BYTES)
+            val buffer = ByteBuffer.allocateDirect(bytes.size).put(bytes).apply { flip() }
+            val instances = arrayOfNulls<com.google.android.filament.gltfio.FilamentInstance>(2)
+            val loaded = requireNotNull(loader.createInstancedAsset(buffer, instances))
+            asset = loaded
+            require(loaded.resourceUris.isEmpty())
+            val resources = ResourceLoader(engine, true)
+            try { resources.loadResources(loaded) } finally { resources.destroy() }
+            val transforms = engine.transformManager
+            for (index in pages.indices) {
+                val instance = requireNotNull(instances[index])
+                val entity = instance.entities.single { loaded.getName(it) == "pdf-page" }
+                pages[index] = entity
+                val renderable = engine.renderableManager.getInstance(entity)
+                require(renderable != 0 && engine.renderableManager.getPrimitiveCount(renderable) == 1)
+                val original = engine.renderableManager.getMaterialInstanceAt(renderable, 0)
+                require(original.material.hasParameter("baseColorMap"))
+                val material = MaterialInstance.duplicate(original, if (index == 0) "cockpit-plan" else "cockpit-result")
+                materials[index] = material
+                engine.renderableManager.setMaterialInstanceAt(renderable, 0, material)
+                val transform = transforms.getInstance(entity)
+                transforms.setParent(transform, parent)
+                transforms.setTransform(transform, floatArrayOf(
+                    .20f, 0f, 0f, 0f, 0f, .30f, 0f, 0f, 0f, 0f, 1f, 0f,
+                    if (index == 0) -.38f else .38f, -.22f, 0f, 1f))
+            }
+            loaded.releaseSourceData()
+        } catch (failure: Throwable) {
+            close()
+            throw failure
+        }
+    }
+
+    fun presented(content: CockpitPanelContent?, frame: CockpitStageFrame?) = state.presented(content, frame)
+    fun frameSubmitted() { if (shown) state.frameSubmitted() else state.frameFailed() }
+    fun frameFailed() = state.frameFailed()
+
+    fun update(content: CockpitPanelContent?, frame: CockpitStageFrame) {
+        check(Thread.currentThread() === owner)
+        if (closed) return
+        state.request(content, frame)
+        show(state.drawable)
+        val ticket = state.begin() ?: return
+        upload(requireNotNull(content), ticket)
+    }
+
+    private fun show(value: Boolean) {
+        if (shown == value) return
+        for (page in pages) if (value) scene.addEntity(page) else scene.removeEntity(page)
+        shown = value
+    }
+
+    private fun prepareTextures(width: Int, height: Int) {
+        if (textureWidth == width && textureHeight == height) return
+        for (index in textures.indices) {
+            val candidate = Texture.Builder().width(width).height(height).levels(1)
+                .sampler(Texture.Sampler.SAMPLER_2D).format(Texture.InternalFormat.SRGB8_A8).build(engine)
+            try {
+                requireNotNull(materials[index]).setParameter("baseColorMap", candidate, sampler)
+            } catch (failure: Throwable) {
+                engine.destroyTexture(candidate)
+                throw failure
+            }
+            val previous = textures[index]
+            textures[index] = candidate
+            previous?.let(engine::destroyTexture)
+        }
+        textureWidth = width
+        textureHeight = height
+    }
+
+    private fun upload(content: CockpitPanelContent, ticket: CockpitPanelUploadState.Ticket) {
+        val request = ticket.request
+        prepareTextures(request.width, request.height)
+        val bitmaps = arrayOfNulls<android.graphics.Bitmap>(2)
+        try {
+            textPainter.fontScale = request.key.fontScale
+            val box = at.heinz.deviceai.ui.JarvisShellLayout.Box(0f, 0f,
+                request.logicalWidth, request.logicalHeight)
+            for (index in bitmaps.indices) {
+                val bitmap = android.graphics.Bitmap.createBitmap(request.width, request.height,
+                    android.graphics.Bitmap.Config.ARGB_8888)
+                bitmaps[index] = bitmap
+                val canvas = android.graphics.Canvas(bitmap)
+                canvas.drawColor(0xff041320.toInt())
+                canvas.scale(request.width / request.logicalWidth, request.height / request.logicalHeight)
+                painter.begin(canvas)
+                content.draw(textPainter, box, index == 1)
+            }
+        } catch (failure: Throwable) {
+            bitmaps.forEach { it?.recycle() }
+            throw failure
+        }
+        var remaining = bitmaps.size
+        var scheduled = 0
+        try {
+            for (index in bitmaps.indices) {
+                val bitmap = requireNotNull(bitmaps[index])
+                com.google.android.filament.android.TextureHelper.setBitmap(engine,
+                    requireNotNull(textures[index]), 0, bitmap, handler, Runnable {
+                        bitmap.recycle()
+                        if (closed) return@Runnable
+                        remaining--
+                        if (remaining == 0) {
+                            state.complete(ticket)
+                            content.requestFrame()
+                        }
+                    })
+                scheduled++
+            }
+        } catch (failure: Throwable) {
+            for (index in scheduled until bitmaps.size) bitmaps[index]?.recycle()
+            throw failure
+        }
+    }
+
+    override fun close() {
+        check(Thread.currentThread() === owner)
+        if (closed) return
+        closed = true
+        state.close()
+        for (page in pages) if (page != 0) runCatching { scene.removeEntity(page) }
+        shown = false
+        runCatching { asset?.let(loader::destroyAsset) }
+        asset = null
+        for (index in materials.indices) {
+            runCatching { materials[index]?.let(engine::destroyMaterialInstance) }
+            materials[index] = null
+            runCatching { textures[index]?.let(engine::destroyTexture) }
+            textures[index] = null
+        }
     }
 }
