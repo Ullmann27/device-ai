@@ -36,7 +36,12 @@ def main() -> int:
             raise AssertionError(f'{label}: accepted')
         checks.append({'case': label, 'result': 'PASS'})
 
-    original = subprocess.check_output(['git', 'show', '67bf048a7d50a78b027da27a6b9814cbd2457372:docs/qa/apk53-a980/validate-unsigned-apk.py'], cwd=repo, text=True)
+    baseline = repo / 'tools/code55-apk/baselines/code53-validator.py'
+    raw = baseline.read_bytes()
+    blob = hashlib.sha1(b'blob ' + str(len(raw)).encode('ascii') + b'\0' + raw).hexdigest()
+    if blob != '90b8dcba60a62bf52b2d8fe1530d19f841328256':
+        raise AssertionError('Historical validator baseline changed')
+    original = raw.decode('utf-8')
     old_ast, new_ast = ast.parse(original), ast.parse(text)
     functions = ('require', 'digest_stream', 'digest_file', 'write_json', 'run', 'check_elf', 'check_unsigned_diagnostic', 'check_archive')
     for name in functions:

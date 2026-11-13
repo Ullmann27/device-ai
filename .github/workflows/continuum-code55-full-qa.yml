@@ -176,7 +176,7 @@ jobs:
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
             :app:assembleDebug :app:assembleDebugAndroidTest
-      - name: Verify actual provider, native rendering and extracted text
+      - name: Verify native PDF and actual Filament panel lifecycle
         shell: bash
         run: |
           set -euo pipefail
@@ -223,6 +223,7 @@ jobs:
           done
           test "$ready" = true
           timeout 300 bash tools/code55-apk/native-pdf-emulator.sh emulator-5554 "$evidence"
+          timeout 300 bash tools/code55-apk/native-filament-emulator.sh emulator-5554 "$evidence/filament"
       - name: Preserve native proof
         if: always()
         uses: actions/upload-artifact@v4
