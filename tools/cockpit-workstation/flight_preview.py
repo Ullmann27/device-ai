@@ -17,6 +17,7 @@ from mathutils import Matrix, Quaternion, Vector
 
 ROOT = Path(__file__).resolve().parents[2]
 GLB = ROOT / "app/src/main/assets/cinema3d/cockpit-workstation.glb"
+REAR = ROOT / "app/src/main/assets/cinema3d/monitor-rear-details.glb"
 import os
 START_YAW = float(os.environ.get("FLIGHT_START_YAW", "60.0"))
 START_PITCH = float(os.environ.get("FLIGHT_START_PITCH", "-10.0"))
@@ -91,6 +92,13 @@ def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=str(GLB))
     monitor = bpy.data.objects["cockpit-monitor"]
+    if REAR.is_file() and os.environ.get("FLIGHT_WITHOUT_REAR") != "1":
+        # Same attachment as FilamentCockpitStage: the rear root follows the monitor group's transform.
+        bpy.ops.import_scene.gltf(filepath=str(REAR))
+        rear = bpy.data.objects["monitor-rear-details"]
+        rear.parent = monitor
+        rear.matrix_parent_inverse = Matrix.Identity(4)
+        rear.matrix_basis = Matrix.Identity(4)
     pivot_b = monitor.matrix_world.translation.copy()
     pivot = (pivot_b.x, pivot_b.z, -pivot_b.y)
     monitor_width = 1.0

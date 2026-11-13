@@ -22,6 +22,9 @@ internal class FilamentCockpitStage(
 ) : AutoCloseable {
     private var workstation: FilamentAsset? = null
     private var orb: FilamentAsset? = null
+    /** Code56 rear housing details (vents, VESA, arm, I/O, cables); follows the monitor matrix every frame. */
+    private var monitorRear: FilamentAsset? = null
+    private var monitorRearTransform = 0
     private var monitorMaterial: Material? = null
     private var ambientLight: IndirectLight? = null
     private var studioReflections: Texture? = null
@@ -56,6 +59,14 @@ internal class FilamentCockpitStage(
             roomTransform = namedTransform(requireNotNull(workstation), "cockpit-room")
             sideMonitorTransform = namedTransform(requireNotNull(workstation), "cockpit-side-monitors")
             monitorTransform = namedTransform(requireNotNull(workstation), "cockpit-monitor")
+            // Optional, separately pinned asset: a failure leaves the previous scene intact.
+            assets.monitorRear?.let { bytes ->
+                runCatching { load(bytes) }.onSuccess { loaded ->
+                    runCatching { namedTransform(loaded, "monitor-rear-details") }
+                        .onSuccess { monitorRear = loaded; monitorRearTransform = it }
+                        .onFailure { runCatching { scene.removeEntities(loaded.entities); loader.destroyAsset(loaded) } }
+                }
+            }
             orbTransform = namedTransform(requireNotNull(orb), "continuum-orb")
             repeat(5) { index ->
                 val instance = namedTransform(requireNotNull(orb), "orb-orbit-$index")
@@ -169,6 +180,7 @@ internal class FilamentCockpitStage(
         }
         val monitorMatrix = frame.monitorTransform()
         transformUpdates.setTransform(monitorTransform, monitorMatrix)
+        if (monitorRearTransform != 0) transformUpdates.setTransform(monitorRearTransform, monitorMatrix)
         CockpitWorldTransforms.orb(frame, orbBounds.left, orbBounds.top, orbBounds.right, orbBounds.bottom, transform)
         transformUpdates.setTransform(orbTransform, transform)
         orbitTransforms.forEachIndexed { index, (instance, rest) ->
@@ -186,10 +198,10 @@ internal class FilamentCockpitStage(
         runCatching { pixels?.close() }; pixels = null
         runCatching { contextPanels?.close() }; contextPanels = null
         contextContent = null
-        for (loaded in listOfNotNull(workstation, orb)) {
+        for (loaded in listOfNotNull(workstation, orb, monitorRear)) {
             runCatching { scene.removeEntities(loaded.entities); loader.destroyAsset(loaded) }
         }
-        workstation = null; orb = null
+        workstation = null; orb = null; monitorRear = null; monitorRearTransform = 0
         runCatching { monitorInstance?.let(engine::destroyMaterialInstance) }; monitorInstance = null
         runCatching { monitorMaterial?.let(engine::destroyMaterial) }; monitorMaterial = null
         runCatching { scene.indirectLight = null }

@@ -5,6 +5,10 @@ Erzeugt mit `tools/cockpit-workstation/flight_preview.py` (Blender 4.0.2, Cycles
 `CockpitCameraFlight.kt` (gleiche Konstanten). Avatar, Originalkugel und Live-Pixel sind nicht Teil dieses Assets und
 fehlen daher. Evidenzklasse: `HOST_BLENDER_CYCLES_ILLUSTRATION`.
 
+Ab Commit „rear housing“ enthält die Vorschau zusätzlich das neue, echte Rückseiten-Mesh
+`cinema3d/monitor-rear-details.glb` (gleiche Anhängung an `cockpit-monitor` wie in `FilamentCockpitStage`).
+`host-flight-sheet-BEFORE-rear-details.jpg` zeigt den Zustand davor (strukturlose Platte).
+
 | Datei | Fortschritt | Inhalt |
 |---|---|---|
 | `host-flight-0-rear.jpg` | 0,00 | Monitor um −100° gedreht, Kamera 60° vorn-seitlich → Rückseite |
@@ -16,5 +20,7 @@ fehlen daher. Evidenzklasse: `HOST_BLENDER_CYCLES_ILLUSTRATION`.
 
 Erkenntnisse aus der Vorschau: (1) Der Bunker liegt direkt hinter dem Monitor und ist kaum breiter (±0,85 vs. ±0,51
 Monitorbreiten); die Wände sind Volumen → die Kamera bleibt vor der Raumöffnung, der Monitor dreht sich.
-(2) Die Rückseite des Monitors ist im Asset eine strukturlose dunkle Platte – Lüftungsschlitze, Anschlüsse und
-VESA-Halter fehlen und müssen als echte Meshes ergänzt werden.
+(2) Die Rückseite war im Asset eine strukturlose dunkle Platte. Jetzt ergänzt durch
+`tools/cockpit-workstation/build_monitor_rear.py` (deterministisch, ohne Blender): Gehäusebuckel mit Fasen und Tiefe,
+8 Kühllamellen über dunklem Lüftungsfeld, 2×7 Seitenlamellen, VESA-100-Platte mit 4 Schrauben, Gelenk, Arm zum
+Ständer, Anschlussfeld (3× USB-C, HDMI, Strom, Status-LED), 2 Kabel, violette/cyanfarbene Akzentleisten.

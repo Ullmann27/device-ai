@@ -47,7 +47,15 @@ bereits um überlagernde Fenster beschnitten.
 
 - **Fold7: NOT_RUN.** Keine Gerätebestätigung von Live-Bild, „Öffne Downloads“, „Öffne WhatsApp“, Texteingabe.
 - **Filament-Aufnahmen / Clip: NOT_RUN.** In diesem Container gibt es keinen Emulator, keine System-Images, kein KVM.
-- **GLB-Details (Lüftungsschlitze, Anschlüsse, VESA, angewinkelte Seitenmonitore): nicht umgesetzt.** Die Workstation-GLB
+- **Monitorrückseite: als echtes Mesh umgesetzt (host-getestet, Filament-Bild offen).** Separates, SHA-gepinntes Asset
+  `cinema3d/monitor-rear-details.glb` (16 500 B, 47 Teile, Generator `build_monitor_rear.py`, deterministisch),
+  geladen in `CockpitSceneAssets` (optional; Fehler lässt die bisherige Szene unverändert) und in
+  `FilamentCockpitStage` mit derselben Matrix wie `cockpit-monitor` gerendert (folgt auch der Präsentationsdrehung).
+  `MonitorRearDetailsAssetTest`: Pin, Teile, jeder Vertex hinter z −0,031 (verdeckt nie die Live-Pixel) und innerhalb
+  der Monitorfläche. Host-Vorschau: `docs/evidence/code56-camera-flight/`.
+- **Kamerafahrt:** Kamera bleibt vor der Raumöffnung (60° → 0°), Monitor dreht sich (−100° → 0°), Dolly-Zoom 2,4× → 1×;
+  endet exakt in Ruhekamera/-frustum/-ausrichtung. Host-getestet; **Filament-Aufnahme fehlt** (kein Emulator/KVM).
+- **Noch offen am Asset:** angewinkelte Seitenmonitore (an native 2D-Ausschnitte gebunden) und Umbau des Gesamt-GLB. Die Workstation-GLB
   wird über `tools/cockpit-workstation/build_unified_assets.py` gebaut, das exakt Blender 4.3 verlangt
   (`assert bpy.app.version[:2] == (4, 3)`); hier ist nur Blender 4.0.2 vorhanden, und PyPI bietet für das hiesige
   Python 3.13 nur `bpy` 5.1–5.3. Zusätzlich sind die Seitenmonitore
@@ -86,6 +94,7 @@ bereits um überlagernde Fenster beschnitten.
 | Gezielte Gradle-Hostsuite (Live-Computer, Beobachtungsbus, Projektion, Controller-UI, Dokumentfluss, Cockpit/Filament-Hosttests, Routing, Kamerafahrt) | 85 Klassen · 529 Tests · 0 Fehler · 0 übersprungen |
 | App-Ablauf (OwnerAppActionFlow, App-Suche, Bot-Routing) | 6 Klassen · 70 Tests · 0 Fehler |
 | Tokenbudget + Prompt-Rahmung + Laufzeit + Dialog/Kontext + Dokumentfluss | 41 Klassen · 242 Tests · 0 Fehler |
+| avatar3d-Paket + Kamerafahrt + Rückseiten-Asset + Cinema | 66 Klassen · 304 Tests · 0 Fehler |
 | Chief/KI-Team + Bot-UI | 31 Klassen · 251 Tests · 2 rot – beide auch auf Basis `4d1c3fbfc` rot (Schreibschutz-Tests, Prozess läuft als uid 0); Team-Nachlauf mit neuem E2E-Test 30/30 |
 | Node-Verträge der berührten Quellen | 291/291 |
 | Node-Vollsuite | 1650: 1601 grün, 26 rot, 23 übersprungen – die 26 roten identisch auf Basis `4d1c3fbfc` (`JUNIT_FILE_IDENTITY_UNSUPPORTED_RUNTIME` in ccc1-redgreen-verifier, coding-orchestrator-failure-report, momega1-verifier-regressions) |
