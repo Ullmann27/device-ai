@@ -72,7 +72,11 @@ bereits um überlagernde Fenster beschnitten.
   (`ChiefFailureCode`; Diagnose z. B. `FAILED__LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL`), Freitext nie. Wahrscheinliche
   Ursache im Feld: dasselbe zu große Prompt-Budget (Team-Prompts ≤ 15 500 Byte, ≈ 5 k Token > 4 096) – auf dem Gerät
   am neuen Diagnosecode zu bestätigen.
-- **NEURON-Herkunft**, „Was kannst du davon löschen?“: offen.
+- **NEURON-Herkunft: Anzeige ehrlich gemacht (host-getestet).** Ein „Verbesserung“-Zähler stieg, sobald im kleinen
+  Startkern-Netz (Gruß/Frage-Klassifikator, nicht Gemma) der Trainingsverlust sank und Prüfsätze nicht schlechter
+  wurden (`NeuralDialogue.practice`) – kein Qualitätsbeleg. Anzeige jetzt „übernommen (Verlust ↓, kein Qualitätsbeleg)“;
+  Lernlogik unverändert. NEURON-Tests 19 Klassen · 63 Tests grün.
+- „Was kannst du davon löschen?“: offen (Antwort braucht den gesicherten Löschweg für Einzelfakten; nicht erfunden).
 - Volle Android-Suite, Lint, APK-Bau: in diesem Zweig noch nicht gelaufen.
 
 ## 3a. Durchgeführte Prüfungen (Host, 13.11.2026, Commit `03b80b202` + App-Ablauf-Fix)

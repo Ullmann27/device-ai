@@ -4359,7 +4359,8 @@ class AgentActivity : Activity() {
             .append(" · Semantik ").append(core.semanticHoldout.correct).append("/").append(core.semanticHoldout.total).append("\n")
         val practice = NeuralPracticeScheduler(this@AgentActivity)
         append("AUTO-ÜBEN: ").append(if (practice.enabled) "AN" else "AUS").append(" · ")
-            .append(practice.attempts).append(" Zyklen, ").append(practice.improvements).append(" Verbesserungen\n")
+            .append(practice.attempts).append(" Zyklen, ").append(practice.improvements)
+            .append(" übernommen (Startkern-Netz: Trainingsverlust gesunken, Prüfsätze nicht schlechter – kein Qualitätsbeleg)\n")
         val cre=learning.cre1ResearchStatus()
         append("\nCRE1-Forschung: ").append(if(cre.available)"eigener trainierter Forschungsstand" else "noch kein freigegebener Forschungsstand")
             .append(" · ").append(cre.steps).append(" Trainingsschritte\n")
@@ -7451,7 +7452,8 @@ class AgentActivity : Activity() {
                     "Nach drei ergebnislosen Zyklen bleiben die Gewichte erhalten. " +
                     "Sobald du mir weitere bestätigte Beispiele beibringst, übe ich automatisch weiter.\n\n" +
                     "Bisherige Versuche: " + practice.attempts +
-                    " · Verbesserungen: " + practice.improvements +
+                    " · übernommen: " + practice.improvements +
+                    " (kleines Startkern-Netz, nicht Gemma; Trainingsverlust gesunken und Prüfsätze nicht schlechter – kein Beleg für bessere Antworten)" +
                     "\nLetztes Ergebnis: " + practice.lastStatus)
                 .setNegativeButton("Weiterlaufen lassen", null)
                 .setPositiveButton("AUTO-ÜBEN STOPPEN") { _, _ ->
@@ -7501,7 +7503,7 @@ class AgentActivity : Activity() {
         if (!busy) {
             neuralMonitor.text = if (practice.enabled)
                 "NEURON · AUTO-LERNEN · " + practice.attempts + " Zyklen, " +
-                    practice.improvements + " Verbesserungen\n" +
+                    practice.improvements + " übernommen (Verlust ↓, kein Qualitätsbeleg)\n" +
                     ContinuumStatusExcerpt.readable(practice.lastStatus, 110)
             else "NEURON · Auto-Lernen aus\n" +
                 ContinuumStatusExcerpt.readable(practice.lastStatus, 140)
@@ -7876,7 +7878,7 @@ class AgentActivity : Activity() {
             val practice = NeuralPracticeScheduler(this@AgentActivity)
             append("AUTO-LERNEN: ").append(if (practice.enabled) "AN" else "AUS")
                 .append(" · Versuche: ").append(practice.attempts)
-                .append(", Verbesserungen: ").append(practice.improvements)
+                .append(", übernommen (Verlust ↓, Prüfsätze nicht schlechter): ").append(practice.improvements)
                 .append(" · ").append(practice.lastStatus).append("\n")
             append("Neuron Demo · Neuron Sprachlabor · Neuron Vergleichslabor · Neuron üben · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
             append("Internetquellen fragen: Was weißt du über Solarzellen Sonnenlicht?\n")
