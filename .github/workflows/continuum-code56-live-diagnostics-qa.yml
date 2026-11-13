@@ -45,9 +45,8 @@ jobs:
             -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=56 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
-            :app:testDebugUnitTest \
-            --tests at.heinz.deviceai.cognitive.LiveCaptureDiagnosticsTest \
-            --tests at.heinz.deviceai.cognitive.LiveObservationEventPolicyTest
+            -I .github/continuum/code56-live-diagnostics-tests.init.gradle \
+            :app:testDebugUnitTest
       - name: Require actually executed cases with no failures or skips
         shell: bash
         run: |
