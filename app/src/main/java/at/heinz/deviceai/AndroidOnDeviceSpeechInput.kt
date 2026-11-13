@@ -25,6 +25,7 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
     private val handler = Handler(Looper.getMainLooper())
     private var warmRecognizer: SpeechRecognizer? = null
     private var warmEngine: LocalSpeechEngine = LocalSpeechEngine.NONE
+    private val germanLocale = GermanOnDeviceSpeechLocale()
 
     private fun destroyWarmRecognizer() {
         val recognizer = warmRecognizer
@@ -63,7 +64,7 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
             var closed = false
             lateinit var recovery: SpeechTurnRecovery
             lateinit var listener: RecognitionListener
-            val language = GermanOnDeviceSpeechLocale()
+            val language = germanLocale
             var languageRetry: Runnable? = null
 
             fun intent() = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
