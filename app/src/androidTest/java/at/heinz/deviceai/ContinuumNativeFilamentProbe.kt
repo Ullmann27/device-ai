@@ -52,9 +52,15 @@ internal object ContinuumNativeFilamentProbe {
         var renderer: FilamentAvatarRenderer? = null
         var output: ImageReader? = null
         var failure: Throwable? = null
+        fun phase(name: String) {
+            if (result.getString("last_phase") == name) return
+            result.putString("last_phase", name)
+            instrumentation.sendStatus(1, Bundle().apply { putString("filament_phase", name) })
+        }
         try {
             check(Build.VERSION.SDK_INT == 35) { "FILAMENT_PROBE_REQUIRES_API_35" }
             check(Build.SUPPORTED_ABIS.contains("x86_64")) { "FILAMENT_PROBE_REQUIRES_X86_64" }
+            phase("assets")
             val assets = instrumentation.targetContext.assets
             val avatar = pinned(assets, AvatarGlbContract.ASSET_PATH,
                 AvatarGlbContract.MAX_BYTES, AvatarGlbContract.ASSET_SHA256)
@@ -92,6 +98,7 @@ internal object ContinuumNativeFilamentProbe {
             fun draw(): Boolean {
                 val actual = requireNotNull(renderer)
                 val receipt = AvatarFrameReceipt()
+                phase("render")
                 val rendered = actual.render(pose, renderedFrames / 60f, false, width, height, receipt = receipt)
                 if (rendered) {
                     val required = AvatarFrameReceipt.FILAMENT_BEGIN or AvatarFrameReceipt.FILAMENT_RENDERED
@@ -99,12 +106,14 @@ internal object ContinuumNativeFilamentProbe {
                     renderedFrames++
                     if (actual.cockpitPanelsPresented(content, frame)) presentedFrames++
                 }
+                phase("flush")
                 engine.flushAndWait()
                 outputFailure.get()?.let { throw it }
                 return rendered
             }
 
             instrumentation.onMain {
+                phase("surface_create")
                 output = ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 3).also { reader ->
                     reader.setOnImageAvailableListener({ available ->
                         try {
@@ -118,17 +127,22 @@ internal object ContinuumNativeFilamentProbe {
                         } catch (error: Throwable) { outputFailure.compareAndSet(null, error) }
                     }, Handler(Looper.getMainLooper()))
                 }
+                phase("renderer_create")
                 val actual = FilamentAvatarRenderer.create(requireNotNull(output).surface, avatar, metadata)
                 renderer = actual
                 engine = field(actual, "engine") as Engine
                 scene = field(actual, "scene") as Scene
                 check(engine.isValid) { "FILAMENT_STARTUP_FAILED" }
+                phase("renderer_ready")
                 baselineEntities = scene.entityCount
+                phase("cockpit_configure")
                 actual.configureCockpit(cockpit, frame, head, orb, feed = null,
                     panelBytes = document, panelPainter = AndroidContinuumPainter(assets), panelContent = content)
                 check(actual.cockpitReady) { "COCKPIT_STARTUP_FAILED" }
                 check(!actual.cockpitPanelsPresented(content, frame)) { "PRESENTED_BEFORE_UPLOAD" }
+                phase("first_draw")
                 draw()
+                phase("first_draw_returned")
                 val stage = requireNotNull(field(actual, "cockpitStage"))
                 check(field(stage, "contextPanelsFailed") == false) { "NATIVE_PANEL_STARTUP_FAILED" }
                 panels = checkNotNull(field(stage, "contextPanels")) { "NATIVE_PANELS_MISSING" }
@@ -139,8 +153,10 @@ internal object ContinuumNativeFilamentProbe {
                     "PRESENTED_BEFORE_UPLOAD_CALLBACKS"
                 }
             }
+            phase("await_uploads")
             await("UPLOAD_CALLBACKS_TIMEOUT") {
                 instrumentation.onMain {
+                    phase("upload_flush")
                     engine.flushAndWait()
                     outputFailure.get()?.let { throw it }
                     uploadState.drawable
@@ -151,9 +167,11 @@ internal object ContinuumNativeFilamentProbe {
                 check(!requireNotNull(renderer).cockpitPanelsPresented(content, frame)) { "UPLOAD_IS_NOT_SUBMISSION" }
                 check(pages.none(scene::hasEntity)) { "QUADS_VISIBLE_BEFORE_SHOW" }
             }
+            phase("await_submission")
             await("NATIVE_PRESENTATION_TIMEOUT") {
                 instrumentation.onMain { draw() && requireNotNull(renderer).cockpitPanelsPresented(content, frame) }
             }
+            phase("await_output")
             await("NATIVE_OUTPUT_TIMEOUT") {
                 outputFailure.get()?.let { throw it }
                 outputFrames.get() > 0
@@ -193,6 +211,7 @@ internal object ContinuumNativeFilamentProbe {
                 result.putInt("rendered_frames", renderedFrames)
                 result.putInt("presented_frames", presentedFrames)
                 result.putInt("output_frames", outputFrames.get())
+                phase("content_clear")
                 actual.configureCockpit(cockpit, frame, head, orb, feed = null, panelContent = null)
                 check(!actual.cockpitPanelsPresented(content, frame)) { "CLEAR_KEPT_PRESENTATION" }
             }
@@ -204,7 +223,9 @@ internal object ContinuumNativeFilamentProbe {
                 result.putBoolean("content_cleared", true)
                 val materials = (field(panels, "materials") as Array<*>).map { it as MaterialInstance }
                 val textures = (field(panels, "textures") as Array<*>).map { it as Texture }
+                phase("stage_release")
                 actual.clearCockpitStage()
+                phase("stage_release_flush")
                 engine.flushAndWait()
                 check(!actual.cockpitReady && !actual.cockpitPanelsPresented(content, frame)) { "STAGE_NOT_CLEARED" }
                 check(field(panels, "closed") == true && field(panels, "asset") == null &&
@@ -218,10 +239,12 @@ internal object ContinuumNativeFilamentProbe {
                 check(materials.all { destroyed { it.nativeObject } } &&
                     textures.all { destroyed { it.nativeObject } }) { "NATIVE_PANEL_RESOURCES_RETAINED" }
                 result.putBoolean("panels_released", true)
+                phase("engine_release")
                 actual.close()
                 check(!engine.isValid) { "ENGINE_NOT_RELEASED" }
                 renderer = null
                 result.putBoolean("engine_released", true)
+                phase("finished")
             }
         } catch (error: Throwable) {
             failure = error
