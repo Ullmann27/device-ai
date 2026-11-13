@@ -33,10 +33,11 @@ jobs:
           for file in sorted(reports):
               report = json.loads(file.read_text())
               assert report["source"]["commit"] == "fafac263d45645b5193640cb73bf703f33509b91"
-              print("REPORT", str(file.relative_to(root)), json.dumps(report)[:18000])
+              print("REPORT", str(file.relative_to(root)), json.dumps({key: value for key, value in report.items() if key != "source"})[:18000])
+          print("FILES", [str(file.relative_to(root)) for file in root.rglob("*") if file.is_file()])
           count = 0
           for file in sorted(root.rglob("*")):
-              if not file.is_file() or file.suffix not in (".log", ".txt"): continue
+              if not file.is_file() or file.suffix in (".json", ".md"): continue
               lines = file.read_text(errors="replace").splitlines()
               matches = [i for i, line in enumerate(lines) if "not ok " in line or "FAIL" in line or "AssertionError" in line or "# tests " in line or "# pass " in line or "# fail " in line or "# skipped " in line]
               if matches: print("LOG", str(file.relative_to(root)))
