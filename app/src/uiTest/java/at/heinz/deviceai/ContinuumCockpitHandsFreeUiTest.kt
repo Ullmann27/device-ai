@@ -78,6 +78,106 @@ class ContinuumCockpitHandsFreeUiTest {
         ).apply { isAccessible = true }.invoke(a, value, false)
     }
 
+    private fun applySpeech(a: AgentActivity, token: Long, text: String) {
+        AgentActivity::class.java.getDeclaredMethod("applyConversationSpeech",
+            Long::class.javaPrimitiveType, String::class.java).apply { isAccessible = true }.invoke(a, token, text)
+    }
+
+    private fun callNoArgs(a: AgentActivity, name: String) {
+        AgentActivity::class.java.getDeclaredMethod(name).apply { isAccessible = true }.invoke(a)
+    }
+
+    private fun chatTexts(view: View): List<String> =
+        (if (view is android.widget.TextView) listOf(view.text.toString()) else emptyList()) +
+            if (view is android.view.ViewGroup)
+                (0 until view.childCount).flatMap { chatTexts(view.getChildAt(it)) } else emptyList()
+
+    private fun runningLookup(a: AgentActivity) {
+        set(a, "appLookupActive", true)
+        set(a, "activeLocalRequest", true)
+        set(a, "busy", true)
+    }
+
+    @Test fun spokenCorrectionCancelsBusyLookupAndWaitsForOneClarification() = withHandsFreeCockpit { a, mode, _, _ ->
+        val session = field(a, "sessionId") as String
+        assertTrue(mode.start(session))
+        val token = checkNotNull(mode.listeningTurn(session))
+        val tts = field(a, "voiceEngine") as android.speech.tts.TextToSpeech
+        tts.setVoice(android.speech.tts.Voice("de-de-local", java.util.Locale.GERMANY,
+            android.speech.tts.Voice.QUALITY_HIGH, android.speech.tts.Voice.LATENCY_NORMAL, false, emptySet()))
+        set(a, "voiceEnabled", true)
+        set(a, "voiceReady", true)
+        callNoArgs(a, "installVoiceProgressListener")
+        val priorSpeech = shadowOf(tts).spokenTextList.size
+        set(a, "ownerReplyAllowsMaya", false)
+        runningLookup(a)
+
+        applySpeech(a, token, "Stopp, das meine ich nicht.")
+
+        assertEquals(false, field(a, "appLookupActive"))
+        assertEquals(false, field(a, "busy"))
+        assertEquals(false, field(a, "ownerReplyAllowsMaya"))
+        assertEquals(ContinuousConversationMode.State.SPEAKING, mode.state)
+        assertTrue(mode.active)
+        val clarification = "Verstanden. Was soll ich anders machen?"
+        assertEquals(listOf(clarification), shadowOf(tts).spokenTextList.drop(priorSpeech))
+        assertEquals(1, chatTexts(field(a, "chatContainer") as View).count { it == clarification })
+        val utterance = field(a, "voiceUtteranceId") as String
+        val listener = checkNotNull(shadowOf(tts).utteranceProgressListener)
+        listener.onStop("superseded-reply", true)
+        assertEquals(ContinuousConversationMode.State.SPEAKING, mode.state)
+        listener.onDone(utterance)
+        assertEquals(ContinuousConversationMode.State.RESUMING, mode.state)
+        assertTrue(mode.active)
+        applySpeech(a, token, "Stopp, das meine ich nicht.")
+        assertEquals(1, chatTexts(field(a, "chatContainer") as View).count { it == clarification })
+    }
+
+    @Test fun spokenCorrectionRetainsUnsentDraftAndPausesBeforeListening() = withHandsFreeCockpit { a, mode, _, _ ->
+        val session = field(a, "sessionId") as String
+        assertTrue(mode.start(session))
+        val token = checkNotNull(mode.listeningTurn(session))
+        val input = field(a, "input") as android.widget.EditText
+        input.setText("Noch ungesendeter Entwurf")
+        runningLookup(a)
+
+        applySpeech(a, token, "Stopp, das meine ich nicht.")
+
+        assertEquals("Noch ungesendeter Entwurf", input.text.toString())
+        assertEquals(false, field(a, "appLookupActive"))
+        assertEquals(ContinuousConversationMode.State.THINKING, mode.state)
+        callNoArgs(a, "checkConversationReplyIdle")
+        assertEquals(ContinuousConversationMode.State.PAUSED, mode.state)
+        assertEquals("Noch ungesendeter Entwurf", input.text.toString())
+    }
+
+    @Test fun typedCorrectionDoesNotReactivatePausedOrInactiveConversation() {
+        for (paused in listOf(false, true)) withHandsFreeCockpit { a, mode, _, _ ->
+            if (paused) {
+                val session = field(a, "sessionId") as String
+                assertTrue(mode.start(session))
+                assertEquals(ContinuousConversationMode.Decision.PAUSE,
+                    mode.recognized(checkNotNull(mode.listeningTurn(session)), session, "Pause"))
+            }
+            val previousState = mode.state
+            val previousTurn = mode.turn
+            val priorClarifications = chatTexts(field(a, "chatContainer") as View)
+                .count { it == "Verstanden. Was soll ich anders machen?" }
+            runningLookup(a)
+            (field(a, "input") as android.widget.EditText).setText("Stopp, das meine ich nicht.")
+
+            assertTrue((field(a, "sendButton") as View).performClick())
+
+            assertEquals(false, field(a, "appLookupActive"))
+            assertEquals(previousState, mode.state)
+            assertEquals(previousTurn, mode.turn)
+            callNoArgs(a, "checkConversationReplyIdle")
+            assertEquals(previousState, mode.state)
+            assertEquals(priorClarifications + 1, chatTexts(field(a, "chatContainer") as View)
+                .count { it == "Verstanden. Was soll ich anders machen?" })
+        }
+    }
+
     @Test fun spokenTurnsStayOnCockpitAndExplicitChatStillWorks() = withHandsFreeCockpit { a, mode, home, head ->
         val session = field(a, "sessionId") as String
         assertTrue(mode.start(session))

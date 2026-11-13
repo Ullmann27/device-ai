@@ -35,6 +35,57 @@ class ContinuousConversationModeTest {
         return token
     }
 
+    @Test fun correctionRetainsConsentAndWaitsForItsOwnClarification() {
+        val (mode, token) = listeningMode()
+        assertEquals(Decision.SEND, mode.recognized(token, session, "Arbeitsauftrag"))
+        mode.assistantSpeechQueued("old")
+        assertTrue(mode.ownerCorrection(session))
+        assertTrue(mode.active)
+        assertEquals(State.THINKING, mode.state)
+        assertEquals(Decision.IGNORE, mode.assistantSpeechFinished("old", interrupted = true))
+        assertEquals(Decision.IGNORE, mode.recognized(token, session, "veraltete Erkennung"))
+        mode.assistantSpeechQueued("clarification")
+        assertEquals(Decision.LISTEN, mode.assistantSpeechFinished("clarification", interrupted = false))
+        assertEquals(Decision.LISTEN, mode.resume(session, canListen = true, busy = false))
+        assertEquals(State.LISTENING, mode.state)
+    }
+
+    @Test fun silentCorrectionWaitsUntilCancelledWorkHasEnded() {
+        val (mode, _) = listeningMode()
+        assertTrue(mode.ownerCorrection(session))
+        assertEquals(Decision.LISTEN, mode.replyIdle())
+        assertEquals(Decision.IGNORE, mode.resume(session, canListen = true, busy = true))
+        assertEquals(State.THINKING, mode.state)
+        assertEquals(Decision.LISTEN, mode.replyIdle())
+        assertEquals(Decision.LISTEN, mode.resume(session, canListen = true, busy = false))
+    }
+
+    @Test fun correctionNeverStartsInactiveOrPausedConversation() {
+        val inactive = ContinuousConversationMode()
+        val inactiveTurn = inactive.turn
+        assertFalse(inactive.ownerCorrection(session))
+        inactive.assistantSpeechQueued("clarification")
+        assertEquals(Decision.IGNORE, inactive.replyIdle())
+        assertEquals(State.OFF, inactive.state)
+        assertEquals(inactiveTurn, inactive.turn)
+        val (paused, token) = listeningMode()
+        assertEquals(Decision.PAUSE, paused.recognized(token, session, "Pause"))
+        val pausedTurn = paused.turn
+        assertFalse(paused.ownerCorrection(session))
+        paused.assistantSpeechQueued("clarification")
+        assertEquals(Decision.IGNORE, paused.assistantSpeechFinished("clarification", interrupted = false))
+        assertEquals(Decision.IGNORE, paused.replyIdle())
+        assertEquals(Decision.IGNORE, paused.resume(session, canListen = true, busy = false))
+        assertEquals(State.PAUSED, paused.state)
+        assertEquals(pausedTurn, paused.turn)
+    }
+
+    @Test fun correctionCannotBorrowAnotherConversationSession() {
+        val (mode, _) = listeningMode()
+        assertFalse(mode.ownerCorrection("different-session"))
+        assertEquals(State.OFF, mode.state)
+    }
+
     @Test fun dictationIsNotAConversationTurnUntilExplicitlyStarted() {
         val mode = ContinuousConversationMode()
         assertNull(mode.listeningTurn(session))

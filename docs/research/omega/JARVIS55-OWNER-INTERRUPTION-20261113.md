@@ -22,7 +22,12 @@ could also append the correction to an existing unsent draft.
   draft remains untouched. Stale recognition still fails the existing turn-token check.
 - Stop the controlled computer workflow, revoke its grant, clear queued visual work and
   stop reply speech through existing cancellation. Do not infer a replacement action.
-  Ask “Verstanden. Was soll ich anders machen?”
+  Ask “Verstanden. Was soll ich anders machen?” once; suppress the older draft STOP speech.
+- Preserve only the existing authorized continuous conversation. An active non-paused
+  same-session correction waits for its own clarification and the existing speech/idle
+  callbacks; PAUSED and OFF are not reactivated. No-argument STOP retains its prior behavior.
+- Preserve the preceding reply's no-online-speech restriction for this clarification;
+  cancellation and its new owner bubble cannot authorize Maya implicitly.
 - Keep prior conversation evidence and completed journal records. Append the owner's
   correction as a non-model context turn. Record it against an actual active document draft,
   never an unrelated older document episode. Existing transcript/journal writers persist it.
@@ -54,14 +59,24 @@ mechanism was added.
   input, result CANCELLED and no later DISPATCHED/COMPLETED cue. Earlier verified search
   evidence remains in the event record.
 
+- Continuous-conversation unit tests cover clarification completion, old callback rejection,
+  busy cancellation completion, PAUSED/OFF preservation and foreign-session rejection.
+- Existing Robolectric Activity fixtures exercise the actual Send and current-ASR routes
+  while busy, one TTS clarification, preserved composer draft, PAUSED/OFF and cancellation
+  of a running controlled model draft, its journal correction and a late rejected answer.
+
 The workflow regression uses synthetic observations, not a physical Android app.
+The fake port emits Dispatched, Observed and Verified before its afterAction interruption;
+the assertion retaining earlier VERIFIED evidence is intentional and unchanged.
+Activity/TTS fixtures use Robolectric and a controlled model, not actual microphone audio.
 
 ## Verification
 
 Kotlin compilation, JUnit, full QA, native UI dispatch, actual Android computer abort,
 Fold7 speech/capture/thermal tests: **NOT_RUN** in this connector-only work session.
 The integrator must run OwnerCorrectionIntentTest, OwnerComputerWorkflowTest,
-ContinuousConversationModeTest and the existing scoped/full QA on the integrated SHA.
+ContinuousConversationModeTest, ContinuumCockpitHandsFreeUiTest, ContinuumDocumentFlowUiTest
+and the existing scoped/full QA on the integrated SHA.
 Actual hardware acceptance must confirm the compound interruption during live work and
 during a pending approval, no subsequent input, stopped speech/cues, and no late success.
 An already dispatched external Shizuku effect is not claimed to be reversible.

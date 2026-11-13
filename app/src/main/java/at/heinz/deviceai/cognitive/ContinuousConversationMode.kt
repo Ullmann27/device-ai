@@ -153,6 +153,22 @@ class ContinuousConversationMode {
         else -> 1_600L
     }
 
+    /** Await correction; retain existing consent. */
+    fun ownerCorrection(sessionId: String): Boolean {
+        if (!active || state == State.PAUSED) return false
+        if (session != sessionId) {
+            stop()
+            return false
+        }
+        state = State.THINKING
+        replyUtterance = null
+        silentAttempts = 0
+        recoveryAttempts = 0
+        foregroundSuspendedAt = null
+        turn++
+        return true
+    }
+
     /** The chat path did not accept the turn (for example busy or a pending draft). */
     fun sendRejected(): Decision {
         if (state != State.THINKING) return Decision.IGNORE

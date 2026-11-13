@@ -400,6 +400,39 @@ class ContinuumDocumentFlowUiTest {
         assertTrue(shadowOf(engine).spokenTextList.none { it.startsWith("Dein Entwurf") })
     }
 
+    @Test fun typedCorrectionCancelsRunningDraftAndSpeaksOnlyTheClarification() = withFlow { activity, root, runtime ->
+        runtime.holdOnCancel = true
+        val scene = startDraft(activity, root, runtime, "Korrektur-Test.pdf", "Synthetischer Testtext.")
+        until(root, "the draft is recorded") { state(scene) == CockpitWorkJournal.State.DRAFTING }
+        val mode = field(activity, "continuousConversation") as at.heinz.deviceai.cognitive.ContinuousConversationMode
+        assertTrue(mode.start(field(activity, "sessionId") as String))
+        val engine = enableLocalSpeech(activity)
+        val priorSpeech = shadowOf(engine).spokenTextList.size
+        val correction = "Stopp, das meine ich nicht."
+        (field(activity, "input") as android.widget.EditText).setText(correction)
+
+        assertTrue((field(activity, "sendButton") as View).performClick())
+
+        assertNull(field(activity, "documentDraftTurn"))
+        assertEquals(0, stopReplies(activity))
+        assertEquals(at.heinz.deviceai.cognitive.ContinuousConversationMode.State.SPEAKING, mode.state)
+        val clarification = "Verstanden. Was soll ich anders machen?"
+        assertEquals(listOf(clarification), shadowOf(engine).spokenTextList.drop(priorSpeech))
+        runtime.answer("Später Testentwurf nach Besitzerkorrektur.")
+        until(root, "the cancelled worker exits") { !(field(activity, "busy") as Boolean) && !runtime.running }
+        until(root, "the correction is persisted") {
+            scene.journal.all().single { it.id == scene.episode }.let {
+                it.state == CockpitWorkJournal.State.ABORTED && it.correction == correction && it.correctedAt != null
+            }
+        }
+        val chat = descendants(field(activity, "chatContainer") as View)
+            .filterIsInstance<TextView>().map { it.text.toString() }
+        assertEquals(1, chat.count { it == clarification })
+        assertTrue(chat.none { it.contains("Später Testentwurf") })
+        assertEquals(0, stopReplies(activity))
+        assertEquals(listOf(clarification), shadowOf(engine).spokenTextList.drop(priorSpeech))
+    }
+
     @Test fun stopDuringTheDraftEndsReadingWindowAndRunAsAborted() = withFlow { activity, root, runtime ->
         val scene = startDraft(activity, root, runtime, "Notizen.pdf", "Notizen zum Projekt.")
         until(root, "the journal records the running draft") { state(scene) == CockpitWorkJournal.State.DRAFTING }

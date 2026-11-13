@@ -6392,13 +6392,17 @@ class AgentActivity : Activity() {
         if (!at.heinz.deviceai.cognitive.OwnerCorrectionIntent.interruptsWork(addressed)) return false
         val inCockpit = activeWorkArea == ContinuumWorkArea.START
         val correctedDraft = documentDraftTurn?.episodeId
+        val previousReplyAllowsMaya = ownerReplyAllowsMaya
         if (input.text.toString().trim() == spoken) input.text.clear()
-        cancelLocalRequest()
+        val continueConversation = continuousConversation.ownerCorrection(sessionId)
+        cancelLocalRequest(preserveContinuousMode = continuousConversation.active, announceDraftStop = false)
         recordWork(correctedDraft) { it.copy(correction = spoken) }
         addUserMessage(spoken, keepCockpit = inCockpit)
+        ownerReplyAllowsMaya = ownerReplyAllowsMaya && previousReplyAllowsMaya
         localConversationContext.recordNonModel(sessionId, spoken, "Besitzerkorrektur; nächster Auftrag offen")
         addAssistantMessage("Verstanden. Was soll ich anders machen?", preserveLocalContext = true,
-            keepCockpit = inCockpit)
+            keepCockpit = inCockpit, allowMaya = ownerReplyAllowsMaya)
+        if (continueConversation) scheduleConversationIdleCheck()
         return true
     }
 
@@ -12324,8 +12328,10 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun cancelLocalRequest() {
-        cancelSpeechInputScope()
+    private fun cancelLocalRequest() = cancelLocalRequest(preserveContinuousMode = false, announceDraftStop = true)
+
+    private fun cancelLocalRequest(preserveContinuousMode: Boolean, announceDraftStop: Boolean) {
+        cancelSpeechInputScope(preserveContinuousMode)
         pendingComputerLaunch = null
         computerController?.stop()
         appNameClarification.clear()
@@ -12363,7 +12369,7 @@ class AgentActivity : Activity() {
         voiceEngine?.stop()
         stopVoiceAnimation()
         clearTaskEffects(immediate = !foregroundLearningActive)
-        if (stoppedDraft?.sessionId == sessionId) addAssistantMessage(
+        if (announceDraftStop && stoppedDraft?.sessionId == sessionId) addAssistantMessage(
             "Entwurf mit STOP abgebrochen – nichts gespeichert.", preserveLocalContext = true,
             keepCockpit = activeWorkArea == ContinuumWorkArea.START)
         activeBotTask?.let { task ->
