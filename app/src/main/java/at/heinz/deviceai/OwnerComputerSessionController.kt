@@ -43,6 +43,8 @@ internal class OwnerComputerSessionController(
     private data class ConsentResult(val plan: Plan, val code: Int, val data: Intent)
     private var deferredConsent: ConsentResult? = null
     private var closed = false
+    private var captureSession: Long? = null
+    private var retainedPanel: at.heinz.deviceai.ui.ComputerPanelState? = null
     val active: Boolean get() = plan != null
     val awaitingConsent: Boolean get() = pendingConsent || deferredConsent != null
 
@@ -116,6 +118,7 @@ internal class OwnerComputerSessionController(
         val permission = checkNotNull(OwnerComputerTaskGrant.fromOwnerDecision(current.taskId, current.packageName,
             started.observationEpoch, current.intent, true, SystemClock::elapsedRealtime))
         grant = permission
+        captureSession = started.sessionId
         val emitter = CockpitWorkEmitter(current.taskId, started.sessionId, bus)
         bridge.bind(current.taskId, started.sessionId)
         val runner = OwnerComputerWorkflow(current.taskId, current.packageName, started.observationEpoch, emitter)
@@ -179,14 +182,14 @@ internal class OwnerComputerSessionController(
                         "Continuum war beim Abschluss nicht sichtbar. Die letzte Wirkung ist nicht bestätigt; bitte prüfe die App."), null)
                     return@post
                 }
-                if (runCatching { AndroidLiveComputer.checkActive(current.taskId) }.isFailure) {
+                if (!sourceActive(current, started.sessionId)) {
                     stop()
                     current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.PAUSED,
                         "Das Live-Bild oder seine Freigabe wurde beendet. Die letzte Wirkung ist nicht bestätigt; bitte prüfe die App."), null)
                     return@post
                 }
                 workflow = null
-                setPanels(at.heinz.deviceai.ui.ComputerPanelState.from(current.taskId,
+                publishPanels(at.heinz.deviceai.ui.ComputerPanelState.from(current.taskId,
                     started.sessionId, current.intent, bridge.reducer.snapshot(System.nanoTime()), result))
                 setBusy(false)
                 current.reply(result, started.observationEpoch)
@@ -204,19 +207,47 @@ internal class OwnerComputerSessionController(
         if (snapshot.taskId != current.taskId) return
         main.post {
             if (!closed && plan === current) {
-                setPanels(at.heinz.deviceai.ui.ComputerPanelState.from(current.taskId,
-                    sourceSession, current.intent, snapshot))
+                val panel = if (sourceActive(current, sourceSession))
+                    at.heinz.deviceai.ui.ComputerPanelState.from(current.taskId,
+                        sourceSession, current.intent, snapshot) else null
+                publishPanels(panel)
             }
         }
     }
 
     fun refreshGaze() = bridge.refreshProjection()
 
-    fun restoreFeed() { if (active && !pendingConsent) setFeed(AndroidLiveComputer.feed) }
+    fun restoreFeed() {
+        val current = plan
+        val sourceSession = captureSession
+        if (closed || current == null || pendingConsent || sourceSession == null) return
+        if (!sourceActive(current, sourceSession)) {
+            publishPanels(null)
+            setFeed(null)
+            return
+        }
+        setFeed(AndroidLiveComputer.feed)
+        publishPanels(retainedPanel?.takeIf {
+            it.taskId == current.taskId && it.sessionId == sourceSession
+        })
+    }
+
+    private fun sourceActive(current: Plan, sourceSession: Long): Boolean {
+        if (closed || plan !== current || captureSession != sourceSession ||
+            runCatching { AndroidLiveComputer.checkActive(current.taskId) }.isFailure) return false
+        return at.heinz.deviceai.ui.ComputerPanelState.sourceMatches(current.taskId,
+            current.packageName, sourceSession, AndroidLiveComputer.feed.status(System.nanoTime()))
+    }
+
+    private fun publishPanels(panel: at.heinz.deviceai.ui.ComputerPanelState?) {
+        retainedPanel = panel
+        setPanels(panel)
+    }
 
     fun stop() {
         val previous = plan
         plan = null
+        captureSession = null
         pendingConsent = false
         deferredConsent = null
         consentRequests.cancel()
@@ -226,7 +257,7 @@ internal class OwnerComputerSessionController(
         workflow = null
         AndroidLiveComputer.stop()
         setFeed(null)
-        setPanels(null)
+        publishPanels(null)
         if (previous != null) setBusy(false)
     }
 

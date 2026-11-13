@@ -1166,7 +1166,9 @@ class AgentActivity : Activity() {
                 }
                 planMessage?.let { planText.text = it }
                 planCard.visibility = planVisible
-                previousHomeState?.let { homeView?.state = it }
+                previousHomeState?.let { previous ->
+                    homeView?.let { home -> home.state = previous.copy(computer = home.state.computer) }
+                }
                 activityMessage?.let { activityText.text = it }
                 neuralMessage?.let { neuralMonitor.text = it }
                 neuralProgress.progress = neuralPercent
