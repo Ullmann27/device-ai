@@ -1,4 +1,4 @@
-name: Jarvis55 - pinned full QA failure receipts
+name: Jarvis55 - pinned full QA archive and failure receipts
 on:
   push:
     branches: [work/jarvis55-qa-receipts-20261113]
@@ -18,23 +18,62 @@ jobs:
         run: |
           set -euo pipefail
           gh api repos/Ullmann27/device-ai/actions/artifacts/14009178288/zip > "$RUNNER_TEMP/prior-qa.zip"
-      - name: Verify archive and inspect geometry
+      - name: Verify signer archive limits and inspect geometry
         run: |
           python3 -B - <<'PY'
-          import collections, hashlib, json, os, pathlib, zipfile
+          import collections, hashlib, json, os, pathlib, stat, zipfile
           import xml.etree.ElementTree as ET
           path = pathlib.Path(os.environ["RUNNER_TEMP"]) / "prior-qa.zip"
-          assert path.stat().st_size == 310710423
+          assert path.stat().st_size == 310710423 and path.stat().st_size <= 2147483648
           with path.open("rb") as handle:
               digest = hashlib.file_digest(handle, "sha256").hexdigest()
           assert digest == "c86b7a36f77736e51d5eed0a7afc5b23afd25e1e78c90bacd4291a1d92b2ef5f"
           with zipfile.ZipFile(path) as archive:
+              entries = archive.infolist()
+              assert 0 < len(entries) <= 50000
+              total_bytes = sum(entry.file_size for entry in entries)
+              assert total_bytes <= 4294967296
+              normalized = set()
+              modes = collections.Counter()
+              suffixes = collections.Counter()
+              media_bytes = collections.Counter()
+              for entry in entries:
+                  name = entry.filename
+                  member = pathlib.PurePosixPath(name)
+                  assert member.parts and name and not name.startswith("/")
+                  assert "\\" not in name and all(ord(c) >= 32 and ord(c) != 127 for c in name)
+                  assert ".." not in member.parts and name.rstrip("/") == member.as_posix()
+                  assert member.as_posix() not in normalized
+                  normalized.add(member.as_posix())
+                  mode = stat.S_IFMT(entry.external_attr >> 16)
+                  assert mode in (0, stat.S_IFREG, stat.S_IFDIR)
+                  modes[str(mode)] += 1
+                  assert 0 <= entry.file_size <= 2147483648
+                  if not entry.is_dir():
+                      suffixes[member.suffix] += 1
+                      if member.suffix in (".png", ".mp4", ".webm"):
+                          media_bytes[member.suffix] += entry.file_size
+              assert archive.testzip() is None
+              largest = max(entries, key=lambda entry: entry.file_size)
+              print("SIGNER_ARCHIVE_LIMITS", json.dumps({
+                  "status": "PASS", "artifact_id": 14009178288,
+                  "source_sha": "058d754b82e134b3eec0e3e3f21b788c46c8c479",
+                  "zip_bytes": path.stat().st_size, "zip_sha256": digest,
+                  "entries": len(entries), "uncompressed_bytes": total_bytes,
+                  "max_member_bytes": largest.file_size, "max_member": largest.filename,
+                  "file_modes": dict(modes), "file_suffixes": dict(suffixes),
+                  "media_bytes": dict(media_bytes), "paths": "PASS", "crc": "PASS",
+                  "limits": {"zip_bytes": 2147483648, "entries": 50000,
+                             "uncompressed_bytes": 4294967296, "member_bytes": 2147483648}
+              }, sort_keys=True))
               names = archive.namelist()
               assert len(names) == len(set(names))
               source = [n for n in names if n.endswith("code55-source.txt")]
               assert len(source) == 1
               text = archive.read(source[0]).decode()
-              assert "source_sha=058d754b82e134b3eec0e3e3f21b788c46c8c479" in text
+              assert text.splitlines() == [
+                  "source_sha=058d754b82e134b3eec0e3e3f21b788c46c8c479",
+                  "source_tree=bf0536a3d08ce54ccc2e976bd9a2883d0619062e"]
               print("SOURCE", text.strip())
               cases = collections.Counter()
               totals = collections.Counter()
