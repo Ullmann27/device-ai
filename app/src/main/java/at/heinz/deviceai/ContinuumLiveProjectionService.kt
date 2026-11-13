@@ -225,7 +225,7 @@ class ContinuumLiveProjectionService : Service() {
             updateSurface(force = true)
             return null
         }
-        LiveCaptureDiagnostics.record(sessionId, LiveCaptureDiagnostics.Event.TARGET_WINDOW_VISIBLE)
+        // ticket() also runs after the GPU copy; recording here would count the same frame twice.
         return Ticket(target.target, own, crop, viewport, ScreenObservationBus.liveRevision(access), binding.captureSession)
     }
 
@@ -261,6 +261,9 @@ class ContinuumLiveProjectionService : Service() {
             AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.SOURCE_UNVERIFIED)
             return
         }
+        // Count one verified target per received frame, only after the PRE-copy ticket succeeded.
+        // The post-copy validation must not inflate the owner's image-chain diagnostics.
+        LiveCaptureDiagnostics.record(sessionId, LiveCaptureDiagnostics.Event.TARGET_WINDOW_VISIBLE)
         copying = true
         copyingReader = source
         val crop = before.crop
