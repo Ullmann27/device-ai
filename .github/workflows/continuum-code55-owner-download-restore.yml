@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      GH_TOKEN: \${{ github.token }}
+      GH_TOKEN: ${{ github.token }}
       REPO: Ullmann27/device-ai
       SOURCE_SHA: 889e06d47fffd2230fa5b062dd1f31b65992e728
       QA_RUN: "43373431089"
