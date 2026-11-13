@@ -1,72 +1,74 @@
 # Jarvis55 / BLACKSITE OMEGA integration
 
-Integrator: `work/jarvis55-master-20261113`. Canonical owner APK line: PR #809, `integrate/code55-apk-fable-20261112`, targeting #799 → #791. No main merge.
+Integrator: `work/jarvis55-master-20261113`, PR #816. Canonical owner APK line: PR #809, `integrate/code55-apk-fable-20261112`, targeting #799 → #791. No main merge.
 
-## Source and status
+## Current source and acceptance
 
-The canonical source tested in run 43344572061 / 43344572298 is `41306257ce03c1e22e998877bf769ce42b3a0486` (tree `3a16a64f4d831ba51d54f24cbb952d850e8d433e`). It includes #811, Fable #808 mirror correction `472ef3fd6ceb137a10bbdd2090c0ae713a460bcf`, and the existing transform/uniform optimizations.
+Reviewed implementation source before this record: `2c02cad5f3533388dd4a457d895dfceeefcc59bb`. It includes #811, Fable #808 mirror correction `472ef3fd6ceb137a10bbdd2090c0ae713a460bcf`, existing transform/uniform optimizations and the BLACKSITE asset/evidence branch #822. Canonical source remains `41306257ce03c1e22e998877bf769ce42b3a0486` until the guarded integration fast-forward.
 
-Current reviewed integration before this record: `c02292f43ebc072db304f3f8ba558c88ae72796f`. Subsequent commits migrate the unsupported host native-PDF bridge test to the independently passing mandatory Android instrumentation, connect contextual text to the existing Filament side surfaces, repair owner interruption and replacement ASR readiness, filter experience eligibility before retrieval limits, and enforce the existing shared learning pause/thermal budget. The combined SHA requires a fresh unfiltered run.
-
-| Evidence on 41306257 | Observed result |
+| Source-bound execution | Actual result |
 | --- | --- |
-| Scoped Android Kotlin/UI | PASS, job 131620672911 |
-| ARM64 release APK build | PASS, job 131620672824 |
-| Strict original-assets/package/16 KiB APK audit | PASS |
-| Native Android PDF provider/render/text | PASS, API35 emulator, job 131620674180 |
-| Complete Android JUnit/UI | FAIL: 5,321 tests, 18 failures, 18 skipped; job 131620673839 |
-| Configured Android lint | PASS, same job |
-| New-source full Node/backend | Pending integration run |
+| Targeted Android/UI, e06fb3c0, run43352301870 | 317 passed, zero failures/errors/skips |
+| Targeted Android/UI, 02c38cc0, run43353510013 | 323 passed, zero failures/errors/skips; thermal admission races included |
+| Targeted Android/UI, bfef9db3, run43354998293 | 344 passed, 55 suites, zero failures/errors/skips; manual measurement lifecycle included |
+| Complete Node, d1938053, run43356537474 | 2,498 total: 2,461 passed, zero failures, 37 reported skips; source unchanged |
+| Critical Node, same source/run | 137 passed; subset, not additional to full Node |
+| Backend, same source/run | 64 passed, zero failures/skips; type/check passed |
+| Strict BLACKSITE geometry, six mutation cases, APK validator and five JUnit guard tests | Passed in Node job131659794565 |
+| Native PDF + Filament, 2c02cad5, run43357310925 | PASS; actual two surfaces/materials/textures, render/upload/clear/release |
+| Complete unfiltered Android/UI+lint on combined source | REQUIRED; not replaced by scoped runs |
 | Fold7 live capture, audio, GPU, thermals | NOT_RUN |
+| Original-signed new APK / installation | NOT_RUN |
 
-APK SHA256: `bade04a6d8dd7fd4f0366a8abceed39bf80272b4546b71261575680e0f3a3ebf`. Package `at.heinz.deviceai.continuumlocal`, versionCode55/versionName0.3.54. [Artifact 14000694515](https://github.com/Ullmann27/device-ai/actions/runs/43344572061/artifacts/14000694515) is **UNSIGNED_NOT_INSTALLABLE**; original signer was not used.
+Receipts: `docs/evidence/jarvis55-targeted-e06fb3c0/`, `jarvis55-targeted-02c38cc/`, `jarvis55-targeted-bfef9db3/`, `jarvis55-node-d1938053/`. Native receipt: `docs/evidence/jarvis55-native-2c02cad5/source.json`. The first two native preflight failures remain documented separately.
 
-Native PDF proof: real production PdfDocumentIntake, provider queries1/opens1, page1, rendered dark pixels506, extracted synthetic marker and page attribution. Exact source bindings and assertion migration are in `docs/evidence/jarvis55-native-pdf-20261113/` and `JARVIS55-NATIVE-PDF-GATE-MIGRATION-20261113.md`. This is synthetic-document Android instrumentation, not a completed owner Argon4 task.
+The older canonical41306257 ARM64 APK passed assembly and strict original-assets/package/16KiB audit in run43344572061. It is **UNSIGNED_NOT_INSTALLABLE** and does not contain the newer BLACKSITE/repair work. APK SHA256 `bade04a6d8dd7fd4f0366a8abceed39bf80272b4546b71261575680e0f3a3ebf`; [artifact14000694515](https://github.com/Ullmann27/device-ai/actions/runs/43344572061/artifacts/14000694515). Package remains `at.heinz.deviceai.continuumlocal`, versionCode55/versionName0.3.54.
 
-## Integrated behavior
+## Connected behavior
 
-- Geometry-bound work attention uses the actually submitted capture binding, image crop/letterboxing and projected monitor frame relative to the laid-out head. Missing/stale/foreign task/session/revision pixels cannot produce a work target.
-- Listening, speaking, approval and blocked states preempt computer gaze. STOP retires pending input cues; actual accepted work events can resume attention. Render refreshes do not renew the bounded work lease.
-- Controller → existing CockpitWorkReducer → ComputerPanelState → existing dashboard/side-panel path carries actual app, goal, stage, action and verification state. Verified step and verified whole task are distinct.
-- Panel restoration revalidates current task, package, capture session and active source. Stop/revocation clears retention; queued stale updates and Fold/Home rebuilds cannot resurrect old panels.
-- Android actions require the exact rendered observation revision. Frames crossing revisions are rejected and binding is rechecked before dispatch.
-- Team stop revokes admission/cancels work before fallible persistence, preventing continued inference or late responses after storage errors.
-- Replacement ASR clears the old readiness flag before starting the new recognition scope. Real current ASR readiness still controls the indicator; stale callbacks cannot re-arm it. Explicit PAUSED is not automatically resumed.
-- A direct owner correction such as “Stopp, das meine ich nicht” cancels current work and cues, keeps an unsent draft, and asks one short clarification. The existing active conversation consent is preserved; PAUSED/OFF sessions are never reactivated. Negated/quoted/reported stop text does not authorize cancellation.
-- Verified-experience eligibility is applied before memory ranking/64-candidate limiting and rechecked afterwards. Newer PARTIAL dialogue records cannot crowd out eligible older experience. Existing provenance, zero-confidence historical hints, two success/two failure bounds and signed archive continuity remain.
-- Existing 273-weight classifier practice now checks opt-in, global autonomy pause, cancellation and the shared resource/deadline budget at entry, update boundaries and before saving. Cancellation stays latched for the run. This is not Gemma training, and no model weights were promoted by this work.
-- Existing workstation geometry now has chamfered surfaces and matched titanium/clearcoat/glass materials. The original avatar, orb and five rings remain; central pixel plane/UVs are unchanged.
-- Existing tile pressure feedback restored. No extra renderer, cognition store, event bus, model-weight promotion or permission bypass.
+- Real task/session/observation revision and the actual submitted capture binding drive existing CockpitWorkReducer → ComputerPanelState → CockpitAnimationBus/ComputerWorkAvatarBridge. Crop, letterboxing, monitor projection and the laid-out head determine work gaze. Missing, stale or foreign pixels never authorize an action or manufacture a gaze target.
+- Listening, speaking, approval and blocked states preempt work. STOP retires cues and revokes/cancels work before fallible persistence. Render refreshes cannot renew the bounded work lease. Verified step and verified whole task remain distinct.
+- Panel restoration revalidates task, package, capture session and active source. Stop/revocation clears retention; delayed updates and Fold/Home rebuilds cannot resurrect stale work.
+- Native context panels use actual planning/result rows and actual running-agent state. `CockpitPanelContent` feeds two existing document-plane instances in the same Filament Scene, with separate material instances and reusable bounded textures. Visible-content/density/font keys avoid unchanged uploads; newer observations require actual frame submission. Canvas remains until native presentation is confirmed or side planes are unreadably small.
+- Replacement ASR clears the old readiness flag before starting the new recognition scope. Only current Android READY lights the indicator. Stale callbacks cannot re-arm it, and explicit PAUSED never auto-resumes.
+- “Stopp, das meine ich nicht” cancels current work/cues/speech, preserves an unsent draft and requests one short clarification. Existing conversation consent survives; OFF/PAUSED stays off/paused. Negated, quoted, reported and conditional stop text is excluded.
+- Verified-experience eligibility is applied before memory ranking/64-candidate limiting and checked again after lookup. Recent PARTIAL dialogue cannot displace older eligible experience. Existing provenance, zero-confidence historical hints, two-success/two-failure bounds and signed archive continuity remain. Legacy lookup providers without the optional prefilter retain their bounded compatibility behavior.
+- Existing 273-weight classifier practice checks opt-in, global pause, cancellation and shared resource/deadline budgets at entry, update boundaries and before save. Cancellation remains latched. This is not Gemma training; no experimental model weights were promoted.
+- LiteRT admission retains ownership through native cancellation and suppresses late or duplicate callbacks after thermal stop. A stale cooler sample cannot erase a heat stop, and an old cancel cannot cancel the next generation. Callbacks run outside the guard lock; thresholds and no-auto-retry behavior are unchanged.
+- Systemdiagnose now connects the existing ThermalPhaseRecorder through an explicit “NEUE MESSREIHE STARTEN” action and actual successful fresh diagnosis results. Only reported thermal status/battery temperature is recorded; unknown GPU/CPU temperature, headroom and model timings remain unknown. Stop/cancel/onPause/capacity end the series; there is no extra sampler, timer, scheduler or inference call.
+- Compact font-scaled layout retains the existing workstation composition instead of switching to a taller legacy reflow. Eight navigation routes, input/status/dialog/header accessibility remain. Small monitors are hidden rather than made unreadable.
 
-Native contextual panel source is now connected through `CockpitPanelContent` → `FilamentCockpitStage.CockpitContextPanels`, using two instances of the existing verified document plane, independent material instances and reusable textures in the same Scene. Actual rows are rasterized only when their visible content/density/font key changes. A newer observation is acknowledged only after the corresponding native frame submission; stale callbacks cannot replace current content. Canvas remains until native presentation is confirmed or side panels are too small. Kotlin/native device execution of this new connection is still NOT_RUN; this is source integration, not a measured GPU result.
+The phone ChiefBotTeam remains bounded chief plus two sequential text specialists, with empty tool rights in that lane. Three external development workers actually contributed source/review; this is not evidence that three phone workers are simultaneously running. Detailed actual model, scheduler, memory and coding paths: `BLACKSITE-MODEL-ANDROID-EXECUTION-INVENTORY-20261113.md`. Gemma LoRA/GPU/NPU/latency or months-long autonomous improvement are not measured by this milestone.
 
-The phone's ChiefBotTeam remains the existing bounded, sequential ANALYZE → REVIEW model lane with zero tool rights. Three external development workers are available; that does not establish that three phone agents are running.
+## BLACKSITE scene and visual evidence
 
-## Verification history and limits
+Five static opaque PBR batches under the existing `cockpit-room` add concrete, titanium structures/bulkhead, conduits and cyan/violet light channels: 16,836 vertices, 8,668 triangles. Workstation GLB645,592bytes; SHA256 `1a958f2b9fcfb4e6dca19fceb9424c1ad920be35e471646e45ecde7e9b031712`. Original avatar, orb/five rings, seed, central pixel plane/UVs and document asset pins remain unchanged. Fable environment is byte-identical to472ef3fd; mirror=true remains.
 
-Before the local runtime became unavailable, source-bound host checks passed: 65 attention/action cases, 12 panel/fidelity cases, 11 pressure-feedback cases, 39 team/worker cases and 37 speech cases. These are scoped receipts, not full device acceptance. Code and published evidence are in this Git history; local-only temporary runners/render files are not represented as uploaded.
+Asset/evidence branch final `a6073f08078a4a894bc69dfe3aa51885a56a137c` is integrated. `docs/evidence/blacksite-room-20261113/` contains six stills, three-second60-frame MP4, decoded15-frame contact sheet, geometry/occlusion checks and exact-source/toolchain manifest. Recovery run43355720723 verified the original artifact digest and regenerated identical production assets before committing the files; render provenance was not rewritten.
 
-Six host frames and a three-second clip were rendered from the tree corresponding to remote `ef767adf16ea555117a1043a4117129ff8ececdd`. Their recovery commands/hashes are in `JARVIS55-GRAPHICS-RECOVERY-20261113.md`; the files were not uploaded before the runtime failed. These previews use explicitly labelled example content and are not Android screenshots or device FPS measurements.
+Original render input95df8a74/local asset commit05ece592 is preserved in the manifest. This is component evidence, not a complete preview of later Activity/compact-layout changes. Host export20FPS is an encoding choice, not device performance. Content is explicitly synthetic example PDF/panel data; native contextual-panel connection was not exercised by these renders. Root inspected the decoded contact sheet and phone-working image. Geometry/parallax and layered room structure are visible; very dark concrete and CPU sampling noise remain visual limitations. Finished Hollywood quality is not claimed.
 
-The first recovered full run on84268 failed at Kotlin test compilation and emulator AVD discovery. Those compile fixtures and the common ANDROID_AVD_HOME were corrected; the second scoped/native runs passed. Complete QA remains mandatory. No test-result filters, ignored failures or missing-native assumptions are used as acceptance.
+## Full regression closure and native boundary
 
-## Full QA regression closure
+The previous full Android run43344572298 on41306257 had5,321 tests,18 failures,18 skips; configured lint passed. All18 XML failures were independently extracted in diagnostic43350986680 with exact artifact digest/source verification.
 
-All 18 XML failures were independently extracted without rerunning tests in [diagnostic run 43350986680](https://github.com/Ullmann27/device-ai/actions/runs/43350986680). Its download verified artifact 14004060039 SHA256 `516a90e1925d1ae443a49d9b15348139dbd72535a4aa4487d3ff229423573366` and exact source41306257. Raw bounded output and source/result manifest: `docs/evidence/jarvis55-full-qa-41306257/`.
-
-| Cases | Source diagnosis and integration |
+| Previous failures | Reviewed change |
 | --- | --- |
-| 3 input + 7 scroll | Old fixtures omitted the mandatory observation revision. Initial observation and frozen matching render receipt now supplied; all 22 original methods/71 assertions retained, four final-dispatch negatives added. Integrated5dbe7625 via c02292f4; rerun pending. |
-| 1 native PDF host bridge | Unsupported host FileDescriptor method. Equivalent and stronger native instrumentation already passed; host duplicate migrated, negative/pure tests retained, native lane mandatory. |
-| 1 replacement ASR | Old readiness retained before new READY. Two-line presentation reset and stale callback regression integrated6644a72a. |
-| 2 compact layout | Font1.5 switched workstation to taller legacy reflow. Existing-layout repair in progress. |
-| 4 visual timing | Actual anchor holds flight at zero at80ms. Preserve anchor checks and verify flight/data in their real phases; repair in progress. |
+| 3 input + 7 scroll | Fixtures now bind initial observation and render receipt to the required revision. All22 original methods/71 assertions retained; four final-dispatch negatives added. Actual targeted pass. |
+| 1 native PDF host bridge | Unsupported host FileDescriptor method migrated to the independently passing mandatory Android instrumentation. Host negatives/pure tests retained. |
+| 1 replacement ASR | Readiness reset plus current/stale callback regression. Actual targeted pass. |
+| 2 compact layout | Existing-layout compactPresentation repair integrated1fbe. Pure layout cases pass; two unchanged full Activity cases still require full QA. |
+| 4 visual timing | Assertions use real140ms anchor hold, flight/data phases and retained settled/close geometry. Production timing unchanged; full UI rerun required. |
 
-## Next concrete work
+Historical17 explicit JUnit skips are catalogued; any new skip fails strict validation. Existing fold7InnerMotionClip now receives its evidence directory so it executes instead of being the18th skip. Full Android job has no case filters; targeted harness is separate. Mandatory aggregate requires Node/backend, unfiltered Android/lint and native PDF/Filament success.
 
-1. Integrate reviewed compact/timeline corrections; run unfiltered Android+lint, native PDF and source-bound Node/backend on a frozen canonical SHA.
-2. Continue existing workstation BLACKSITE geometry: batched real architectural meshes under the current room, original avatar/orb/monitor UV preservation, pinned generator and real host comparison evidence. Graphics worker owns this isolated generation step; no new renderer.
-3. Build and strictly audit the same-source ARM64 APK. Use existing original-signing approval route; never replace key/package or fabricate SHA-specific approval.
-4. On authorized Fold7: capture/rotation/crop, actual task and owner interruption, Maya/ASR, layouts, frame-time percentiles and thermal phases. All hardware results remain NOT_RUN.
+Native PDF has passed on API35x86_64 using real production PdfDocumentIntake: provider query1/open1, page1,506 dark pixels, extracted synthetic marker/page attribution. That is not an owner Argon4 task. First Filament attempt43354416362 compiled and passed PDF, then the host SwiftShader emulator crashed without a completed probe. Second43356537474 failed before boot because a diagnostic version query selected a GUI binary missing libpulse. Current2c02 uses headless version query and official swangle emulator backend. Actual run43357310925/job131662313877 passed PDF and Filament: two quads/materials/textures, aggregate upload callback1, rendered frames2, presented1, output2, clear/panel-release/engine-release true, instrumentation code-1. Production Filament still uses OPENGL. Phase diagnostics, timeout/logcat capture and all render/upload/clear/release assertions are retained; no failure is converted to pass.
 
-EXP-00/05/06/07/08/11/12 compatibility maintained. Preserve all upstream work and branches. Rollback individual reviewed commits; do not reset or force-push shared branches.
+## Release and next executable steps
+
+1. Native preflight passed. Freeze the reviewed common source and guarded-fast-forward #809. Run full Node/backend, unfiltered Android/UI+lint, native PDF/Filament and unsigned ARM64 assembly/audit on that exact source.
+2. Resolve any remaining full-suite failures. Publish exact SHA, actual counts, APK hash and artifact link; neither a partial suite nor an unsigned APK establishes installable readiness.
+3. Use the existing original signing route only with its exact-source approval and protected reviewer. Existing registered historical Code50 signing workflow is currently Code51-pinned and cannot be blindly dispatched forCode55. Never replace key/package or synthesize approval.
+4. Authorized Fold7 acceptance still needs real capture/rotation/crop, document task and interruption, Maya/ASR lifecycle, folding/layout, frame-time median/p95/jank, memory/power and thermal phases. Reuse existing diagnosis/performance tools; report unavailable measurements explicitly.
+
+No main merge, branch reset/force-push, extra renderer, parallel memory store, secret access or weight promotion. Preserve all upstream work. Roll back individual reviewed commits if required.
