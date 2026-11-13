@@ -12,7 +12,6 @@ gradle.projectsEvaluated {
                     'at.heinz.deviceai.ContinuumDocumentSceneUiTest',
                     'at.heinz.deviceai.ContinuumPdfSceneAcceptanceUiTest',
                     'at.heinz.deviceai.PdfIntakeCancellationUiTest',
-                    'at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest',
                     'at.heinz.deviceai.PdfDocumentIntakeTextTest',
                     'at.heinz.deviceai.ui.JarvisPdfWindowPresentationUiTest',
                     'at.heinz.deviceai.ui.DocumentStagePageGeometryUiTest',
@@ -44,19 +43,22 @@ gradle.projectsEvaluated {
                 'at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest'
             ]
             def scope = gradle.rootProject.providers.gradleProperty('continuumPdfQaScope').getOrElse('all')
-            if (!(scope in ['all', 'core', 'visual', 'decode'])) {
-                throw new GradleException("Unknown continuumPdfQaScope: ${scope}; expected all, core, visual or decode")
+            // Native decoding requires Android.
+            if (scope == 'decode') {
+                throw new GradleException('Native PDF decode requires tools/code55-apk/native-pdf-emulator.sh; the Code55 full QA workflow runs this mandatory Android probe')
+            }
+            if (!(scope in ['all', 'core', 'visual'])) {
+                throw new GradleException("Unknown continuumPdfQaScope: ${scope}; expected all, core or visual")
+            }
+            if (gradle.rootProject.providers.gradleProperty('continuumPdfAllowMissingHostNative').orNull != null) {
+                throw new GradleException('continuumPdfAllowMissingHostNative was removed; native PDF verification cannot be skipped')
             }
             def selectedClasses = scope == 'all' ? allClasses : allClasses.findAll {
-                scope == 'decode' ? it == 'at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest' :
-                    scope == 'visual' ? visualClasses.contains(it) : !visualClasses.contains(it)
+                scope == 'visual' ? visualClasses.contains(it) : !visualClasses.contains(it)
             }
             task.filter {
                 selectedClasses.each { includeTestsMatching(it) }
                 failOnNoMatchingTests = true
-            }
-            if (gradle.rootProject.providers.gradleProperty('continuumPdfAllowMissingHostNative').orNull == 'true') {
-                task.systemProperty('continuum.pdf.allowMissingHostNative', 'true')
             }
 
             def evidencePath = gradle.rootProject.providers.gradleProperty('continuumUiEvidenceDir').orNull
@@ -114,8 +116,7 @@ gradle.projectsEvaluated {
                             arch: System.getProperty('os.arch'), androidHome: System.getenv('ANDROID_HOME'),
                             maxParallelForks: task.maxParallelForks,
                             projectProperties: ['continuumUiWidgetTests', 'continuumLocalStandaloneQa',
-                                'continuumStandaloneVersionCode', 'continuumOwnerArm64', 'deviceAiMentorPreview',
-                                'continuumPdfAllowMissingHostNative'].collectEntries { key ->
+                                'continuumStandaloneVersionCode', 'continuumOwnerArm64', 'deviceAiMentorPreview'].collectEntries { key ->
                                 [(key): gradle.rootProject.providers.gradleProperty(key).orNull]
                             }]])
                     task.logger.lifecycle("PDF_QA_JOURNAL ${scope} ${runId} ${journal}")
