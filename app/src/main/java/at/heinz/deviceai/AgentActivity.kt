@@ -14248,6 +14248,8 @@ class AgentActivity : Activity() {
         voiceEngine?.stop()
         stopVoiceAnimation()
         val scopeGeneration=++speechScopeGeneration
+        voiceListening=false
+        refreshHologramState()
         val scopeSession=sessionId
         val scopeResearchApproval=pendingResearchChatApproval?.approval
         val scopeDialog=devDialog
