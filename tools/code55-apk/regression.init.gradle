@@ -1,0 +1,23 @@
+gradle.projectsEvaluated {
+    gradle.rootProject.project(':app').tasks.withType(org.gradle.api.tasks.testing.Test).configureEach { task ->
+        if (task.name == 'testDebugUnitTest') {
+            task.maxParallelForks = 1
+            task.filter {
+                includeTestsMatching('at.heinz.deviceai.avatar3d.*')
+                includeTestsMatching('at.heinz.deviceai.cognitive.OwnerCorrectionIntentTest')
+                includeTestsMatching('at.heinz.deviceai.cognitive.ContinuousConversationModeTest')
+                includeTestsMatching('at.heinz.deviceai.cognitive.AgentExperienceRecallTest')
+                includeTestsMatching('at.heinz.deviceai.cognitive.ExperienceRecallWindowTest')
+                includeTestsMatching('at.heinz.deviceai.cognitive.ExperienceRecallRecencyTest')
+                includeTestsMatching('at.heinz.deviceai.cognitive.ContinuumRuntimeStoreTest')
+                includeTestsMatching('at.heinz.deviceai.learning.NeuralPracticeSchedulerGateUiTest')
+                includeTestsMatching('at.heinz.deviceai.AndroidLiveNodePortTest')
+                includeTestsMatching('at.heinz.deviceai.AndroidLiveScrollTest')
+                includeTestsMatching('at.heinz.deviceai.ResearchChatApprovalUiTest')
+                includeTestsMatching('at.heinz.deviceai.ui.CinematicWorkstationLayoutTest')
+                includeTestsMatching('at.heinz.deviceai.localmodel.LocalModelThermalGuardTest')
+                failOnNoMatchingTests = true
+            }
+        }
+    }
+}

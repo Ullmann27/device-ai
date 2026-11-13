@@ -1,0 +1,63 @@
+name: Jarvis55 - targeted integration regressions
+
+on:
+  push:
+    branches: [work/jarvis55-master-20261113]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jarvis55-targeted-regressions
+  cancel-in-progress: false
+
+jobs:
+  regression:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/work/jarvis55-master-20261113' && contains(github.event.head_commit.message, '[jarvis-regressions]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify immutable source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install official Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Exact-source focused Kotlin and UI regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true             -PcontinuumUiWidgetTests=true -I tools/code55-apk/regression.init.gradle :app:testDebugUnitTest
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - name: Summarize actual focused JUnit results
+        if: always()
+        run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest
+      - name: Preserve focused JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Jarvis55-targeted-regression-JUnit
+          path: app/build/test-results/testDebugUnitTest/
+          if-no-files-found: warn
+          retention-days: 14
