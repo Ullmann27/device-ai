@@ -57,6 +57,17 @@ bereits um überlagernde Fenster beschnitten.
 - **Kontextfenster/Tokenbudget**, **KI-Team-Fehler**, **NEURON-Herkunft**, „Was kannst du davon löschen?“: offen.
 - Volle Android-Suite, Lint, APK-Bau: in diesem Zweig noch nicht gelaufen.
 
+## 3a. Durchgeführte Prüfungen (Host, 13.11.2026, Commit `03b80b202` + App-Ablauf-Fix)
+
+| Prüfung | Ergebnis |
+|---|---|
+| Gezielte Gradle-Hostsuite (Live-Computer, Beobachtungsbus, Projektion, Controller-UI, Dokumentfluss, Cockpit/Filament-Hosttests, Routing, Kamerafahrt) | 85 Klassen · 529 Tests · 0 Fehler · 0 übersprungen |
+| App-Ablauf (OwnerAppActionFlow, App-Suche, Bot-Routing) | 6 Klassen · 70 Tests · 0 Fehler |
+| Node-Verträge der berührten Quellen | 291/291 |
+| Node-Vollsuite | 1650: 1601 grün, 26 rot, 23 übersprungen – die 26 roten identisch auf Basis `4d1c3fbfc` (`JUNIT_FILE_IDENTITY_UNSUPPORTED_RUNTIME` in ccc1-redgreen-verifier, coding-orchestrator-failure-report, momega1-verifier-regressions) |
+
+Hinweis: Ein früherer Lauf wurde nicht gewertet, weil während seiner Kompilierung kurz `git stash` lief.
+
 ## 4. Nächster Gerätetest (Fold7, Split-Screen)
 
 1. Continuum + Eigene Dateien nebeneinander, Bedienungshilfe aktiv. „Öffne Downloads.“ → Freigabe „Gesamter Bildschirm“.
