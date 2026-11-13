@@ -73,11 +73,13 @@ internal class OwnerAppActionFlow(
         if (requireExactInstalledCandidate && !matches.exactLabel) return done(
             "Kein exakter installierter App-Treffer bestätigt. Keine App gestartet."
         )
-        if (!opening) return done("Gefundene Apps: " + candidates.joinToString("; ") {
+        if (!opening) return done((if (candidates.size == 1) "Gefundene App: " else "Gefundene Apps: ") + candidates.joinToString("; ") {
             "${it.label} (${it.packageName})"
         } + ". Es wurde nichts geöffnet.")
         phase = Phase.CHOOSE
-        return if (matches.total == 1 && candidates.size == 1) choose(candidates.single())
+        // Code55 field: one exact, launchable hit (e.g. WhatsApp) must not ask „which one?“ with a single entry.
+        // The concrete launch approval (Step.Confirm) still follows.
+        return if (candidates.size == 1 && (matches.total == 1 || matches.exactLabel)) choose(candidates.single())
             else Step.Choose(candidates)
     }
 

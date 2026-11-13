@@ -170,7 +170,11 @@ internal class CockpitLiveTexture(
             !producer.monitorSubmission.submitted(candidate, current, nowNanos)) {
             clearPixels()
             label = if (current.state == LiveMonitorState.LIVE) failure ?: "Bild wird übernommen" else current.label
-        } else label = current.label
+        } else {
+            label = current.label
+            current.binding?.let { at.heinz.deviceai.cognitive.LiveCaptureDiagnostics.record(it.captureSession,
+                at.heinz.deviceai.cognitive.LiveCaptureDiagnostics.Event.MONITOR_PRESENTED) }
+        }
     }
 
     fun frameFailed() {

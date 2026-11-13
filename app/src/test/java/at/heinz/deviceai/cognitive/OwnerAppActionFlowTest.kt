@@ -46,6 +46,23 @@ class OwnerAppActionFlowTest {
         }
     }
 
+    @Test fun oneExactLaunchableHitGoesStraightToConcreteApproval() {
+        val intake = OwnerAppLookupIntent.inspect("Öffne WhatsApp") as OwnerAppLookupIntent.Intake.Lookup
+        var launches = 0
+        val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner {
+            if (it.name == "launch_app") launches++
+            // The provider counted a second, non-launchable match but supplied only the exact launchable one.
+            JSONObject().put("schema", "CONTINUUM_APP_DISCOVERY_V1").put("readOnly", true).put("totalMatches", 2)
+                .put("candidates", JSONArray(listOf(JSONObject().put("label", "WhatsApp")
+                    .put("packageName", "com.whatsapp")))).toString()
+        })
+        val flow = OwnerAppActionFlow(intake.opening)
+        val step = flow.returned(invoke(gate, flow.start(intake.query)))
+        assertTrue("no single-entry choice list: $step", step is OwnerAppActionFlow.Step.Confirm)
+        assertEquals("com.whatsapp", (step as OwnerAppActionFlow.Step.Confirm).call.arguments["packageOrName"])
+        assertEquals("approval still required before any launch", 0, launches)
+    }
+
     @Test fun singleCharacterAppLabelStillRequiresConcreteApproval() {
         val intake = OwnerAppLookupIntent.inspect("Öffne X") as OwnerAppLookupIntent.Intake.Lookup
         val app = NativeAppCandidate("org.example.single", "X")

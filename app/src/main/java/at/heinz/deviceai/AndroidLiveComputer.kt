@@ -94,12 +94,14 @@ internal object AndroidLiveComputer {
         val session = Session(binding, access)
         active.set(session)
         frames.bind(binding)
+        LiveCaptureDiagnostics.begin(binding.captureSession)
         return LiveComputerStart(true, "WAITING_FOR_WINDOW", binding.captureSession, access.epoch)
     }
 
     fun stop(reason: LiveMonitorReason = LiveMonitorReason.CAPTURE_STOPPED) {
         val previous = active.getAndSet(null)
         previous?.cancelled?.set(true)
+        previous?.let { LiveCaptureDiagnostics.record(it.binding.captureSession, LiveCaptureDiagnostics.Event.CAPTURE_STOPPED) }
         frames.end(reason)
         ScreenObservationBus.wake()
         previous?.stopCapture?.getAndSet(null)?.let { runCatching(it) }
@@ -132,7 +134,18 @@ internal object AndroidLiveComputer {
         val elapsedMillis = if (meta.frameTimeNanos <= 0 || deliveredAtNanos < meta.frameTimeNanos ||
             meta.captureAgeMillis < 0) Long.MAX_VALUE else
             (deliveredAtNanos - meta.frameTimeNanos) / 1_000_000L
-        return frames.offer(meta.copy(captureAgeMillis = maxOf(meta.captureAgeMillis, elapsedMillis)), frame)
+        val offer = frames.offer(meta.copy(captureAgeMillis = maxOf(meta.captureAgeMillis, elapsedMillis)), frame)
+        recordOffer(meta.captureSession, offer)
+        return offer
+    }
+
+    private fun recordOffer(session: Long, offer: LiveFrameOffer) {
+        when {
+            offer is LiveFrameOffer.Accepted ->
+                LiveCaptureDiagnostics.record(session, LiveCaptureDiagnostics.Event.FRAME_SUBMITTED_TO_MONITOR)
+            offer is LiveFrameOffer.Refused && offer.reason != LiveFrameRefusal.RATE_LIMITED ->
+                LiveCaptureDiagnostics.reject(session, LiveCaptureDiagnostics.Rejection.HOLDER_REFUSED)
+        }
     }
 
     internal fun observationRevoked(service: ContinuumScreenObservationService) {
@@ -174,7 +187,17 @@ internal object AndroidLiveComputer {
         check(request.packageName == current.binding.targetPackage) { "ACTION_SESSION_MISMATCH" }
         return ScreenObservationBus.withLiveOperation(request.packageName) { access ->
             check(access == current.access) { "OBSERVATION_PERMISSION_CHANGED" }
-            VerifiedNodeAction(current.journal, events).execute(request, port(current, access, permissionCheck))
+            val session = current.binding.captureSession
+            val counted = LiveActionEventSink { event ->
+                when (event) {
+                    is LiveActionEvent.Dispatched -> LiveCaptureDiagnostics.record(session, LiveCaptureDiagnostics.Event.ACTION_DISPATCHED)
+                    is LiveActionEvent.Verified -> if (event.verdict.confirmed)
+                        LiveCaptureDiagnostics.record(session, LiveCaptureDiagnostics.Event.ACTION_EFFECT_CONFIRMED)
+                    else -> Unit
+                }
+                events.emit(event)
+            }
+            VerifiedNodeAction(current.journal, counted).execute(request, port(current, access, permissionCheck))
         }
     }
 
@@ -196,12 +219,14 @@ internal object AndroidLiveComputer {
                 VerifiedNodeClick.execute(request, ownerConfirmed, port.clickPort(request) { bounds, frame ->
                     dispatched = true
                     verdict = EffectVerdict.UNCLEAR_NO_NEW_OBSERVATION
+                    LiveCaptureDiagnostics.record(current.binding.captureSession, LiveCaptureDiagnostics.Event.ACTION_DISPATCHED)
                     onDispatched(bounds, frame)
                 })
                 after = port.current()
                 verdict = ActionEffectVerifier.verify(before.stamp, true, after!!.stamp,
                     after!!.nodes.count { !it.password && request.matchesExpected(it) } == 1)
                 check(verdict.confirmed) { "CLICK_EFFECT_NOT_VERIFIED" }
+                LiveCaptureDiagnostics.record(current.binding.captureSession, LiveCaptureDiagnostics.Event.ACTION_EFFECT_CONFIRMED)
                 after!!
             } catch (error: Exception) {
                 if (dispatched) verdict = EffectVerdict.UNCLEAR_NO_NEW_OBSERVATION
@@ -293,7 +318,7 @@ internal object AndroidLiveComputer {
                 observationRevision = before.revision, sourceViewport = LiveTargetBounds(0f, 0f, 1f, 1f),
                 captureAgeMillis = age)
             handedOff = true
-            frames.offer(meta, frame)
+            recordOffer(meta.captureSession, frames.offer(meta, frame))
         } catch (_: Exception) {
             frames.pause(LiveMonitorReason.SOURCE_UNVERIFIED, current.binding.captureSession)
         } finally { if (!handedOff) frame.close() }

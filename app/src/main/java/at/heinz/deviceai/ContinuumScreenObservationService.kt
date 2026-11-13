@@ -127,6 +127,8 @@ internal object ScreenObservationBus:ForegroundEvents{
         // can be ignored. Missing/malformed senders remain uncertainty, never success.
         val target=readingPackage
         val knownPackage=pkg?.takeIf{packageNamePattern.matches(it)}
+        // Continuum's own label/animation updates never change the foreign target (see LiveObservationEventPolicy).
+        if(LiveObservationEventPolicy.ignoreOwnContent(knownPackage,runCatching{s.packageName}.getOrNull().orEmpty(),target))return@synchronized
         // During a click, an unrelated sender is harmless only after the
         // operation has bound a concrete target window. Unknown stays closed.
         if(target!=null&&knownPackage!=null&&knownPackage!=target&&

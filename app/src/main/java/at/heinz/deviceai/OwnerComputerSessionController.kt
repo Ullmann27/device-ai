@@ -57,11 +57,13 @@ internal class OwnerComputerSessionController(
             return
         }
         val next = Plan("computer-" + UUID.randomUUID(), packageName, intent, approvedAt, reply)
+        LiveCaptureDiagnostics.prepareConsent()
         plan = next
         setBusy(true)
         val consent = if (activity.isInMultiWindowMode) AndroidLiveComputer.createProjectionConsentIntent(activity) else null
         if (consent != null) {
             pendingConsent = true
+            LiveCaptureDiagnostics.recordPending(LiveCaptureDiagnostics.Event.PROJECTION_CONSENT_REQUESTED)
             try {
                 val request = consentRequests.begin(next.taskId)
                 activity.startActivityForResult(consent, request.requestCode)
@@ -81,6 +83,8 @@ internal class OwnerComputerSessionController(
         val taskId = consentRequests.accept(requestCode) ?: return
         pendingConsent = false
         val current = plan?.takeIf { it.taskId == taskId } ?: return
+        LiveCaptureDiagnostics.recordPending(if (resultCode == Activity.RESULT_OK && data != null)
+            LiveCaptureDiagnostics.Event.PROJECTION_CONSENT_ACCEPTED else LiveCaptureDiagnostics.Event.PROJECTION_CONSENT_DENIED)
         if (resultCode != Activity.RESULT_OK || data == null) {
             stop()
             current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.CANCELLED,
@@ -112,7 +116,8 @@ internal class OwnerComputerSessionController(
             stop()
             current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.FAILED,
                 "Das Live-Bild konnte nicht gestartet werden: ${started.reason}. " +
-                    "Öffne Continuum und die Ziel-App nebeneinander und prüfe die Android-Bildschirmfreigabe."), null, true)
+                    "Öffne Continuum und die Ziel-App nebeneinander und prüfe die Android-Bildschirmfreigabe.",
+                diagnostics = LiveCaptureDiagnostics.summary()), null, true)
             return
         }
         val permission = checkNotNull(OwnerComputerTaskGrant.fromOwnerDecision(current.taskId, current.packageName,
@@ -183,14 +188,30 @@ internal class OwnerComputerSessionController(
                 if (!sourceActive(current, started.sessionId)) {
                     stop()
                     current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.PAUSED,
-                        "Das Live-Bild oder seine Freigabe wurde beendet. Die letzte Wirkung ist nicht bestätigt; bitte prüfe die App."), null, true)
+                        "Das Live-Bild oder seine Freigabe wurde beendet. Die letzte Wirkung ist nicht bestätigt; bitte prüfe die App.",
+                        diagnostics = LiveCaptureDiagnostics.summary()), null, true)
                     return@post
                 }
                 workflow = null
-                publishPanels(at.heinz.deviceai.ui.ComputerPanelState.from(current.taskId,
-                    started.sessionId, current.intent, bridge.reducer.snapshot(System.nanoTime()), result))
-                setBusy(false)
-                current.reply(result, started.observationEpoch, true)
+                val finalPanel = at.heinz.deviceai.ui.ComputerPanelState.from(current.taskId,
+                    started.sessionId, current.intent, bridge.reducer.snapshot(System.nanoTime()), result)
+                if (result.status == OwnerComputerWorkflow.Status.VERIFIED) {
+                    // The confirmed result stays live briefly, then capture ends on its own (Code56 field fix:
+                    // MediaProjection must never outlive the task indefinitely).
+                    publishPanels(finalPanel)
+                    setBusy(false)
+                    main.postDelayed({ if (!closed && plan === current && workflow == null) stop() },
+                        RESULT_RETENTION_MILLIS)
+                } else {
+                    // Failed, paused, cancelled or waiting for the owner: release MediaProjection, the capture
+                    // service and the observation grant at once; only the result page stays.
+                    stop()
+                    publishPanels(finalPanel)
+                }
+                val reported = if (result.status == OwnerComputerWorkflow.Status.FAILED ||
+                    result.status == OwnerComputerWorkflow.Status.PAUSED)
+                    result.copy(diagnostics = LiveCaptureDiagnostics.summary()) else result
+                current.reply(reported, started.observationEpoch, true)
             }
         } } catch (_: java.util.concurrent.RejectedExecutionException) {
             stop()
@@ -244,7 +265,8 @@ internal class OwnerComputerSessionController(
 
     fun stopForVisibilityLoss() {
         if (awaitingConsent) return
-        val previous = plan ?: return
+        // A result page retained after capture ended is cleared with the cockpit's visibility as well.
+        val previous = plan ?: run { if (retainedPanel != null) publishPanels(null); return }
         val interrupted = workflow != null
         stop()
         if (!interrupted) return
@@ -269,6 +291,11 @@ internal class OwnerComputerSessionController(
         setFeed(null)
         publishPanels(null)
         if (previous != null) setBusy(false)
+    }
+
+    companion object {
+        /** How long a verified result stays live on the monitor before capture ends by itself. */
+        const val RESULT_RETENTION_MILLIS = 8_000L
     }
 
     override fun close() {

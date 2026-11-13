@@ -69,6 +69,28 @@ class OwnerComputerWorkflowTest {
         OwnerComputerWorkflow("task", pkg, 47, CockpitWorkEmitter("task", 9, bus))
     private fun search() = OwnerComputerIntent(ComputerApp.WHATSAPP, ComputerGoal.SEARCH, "Anna")
 
+    @Test fun missingLiveFrameFailureNamesTheConcreteReasonWithoutAction() {
+        var actions = 0
+        val port = object : OwnerComputerWorkflow.Port {
+            override fun checkActive() {}
+            override fun observe(): NodeActionFrame = throw IllegalStateException("NO_FRESH_MONITOR_FRAME")
+            override fun perform(request: NodeActionRequest, events: LiveActionEventSink): NodeActionResult {
+                actions++; error("no action allowed")
+            }
+            override fun click(before: NodeActionFrame, label: String, expectedLabel: String,
+                               expectedEditable: Boolean, expectedHeading: Boolean, expectedSearchField: Boolean,
+                               expectedComposeField: Boolean,
+                               onDispatched: (LiveTargetBounds?, Long) -> Unit): NodeActionFrame {
+                actions++; error("no click allowed")
+            }
+        }
+        val result = workflow().run(OwnerComputerIntent(ComputerApp.FILES, ComputerGoal.OPEN_DOWNLOADS), port)
+        assertEquals(OwnerComputerWorkflow.Status.FAILED, result.status)
+        assertTrue(result.message, result.message.contains("(Diagnose: NO_FRESH_MONITOR_FRAME)"))
+        assertTrue(result.message.contains("Die letzte Wirkung ist nicht bestätigt"))
+        assertEquals(0, actions)
+    }
+
     @Test fun actualSearchClickThenSetTextWithFreshObservations() {
         val port = FakePort(frame(1, listOf(node("Suchen", clickable = true))))
         val seen = mutableListOf<CockpitWorkEvent>()

@@ -6053,9 +6053,13 @@ class AgentActivity : Activity() {
             LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .90f).apply { marginStart = dp(4) }
         )
         actions.addView(
-            smallButton("⌁ Datei", "PDF-Datei aus Android auswählen und im Gespräch lesen") {
+            smallButton("⌁ Datei", "Tippen: PDF-Datei aus Android auswählen und im Gespräch lesen. " +
+                "Lange drücken: Quelldatei für den Entwicklungsbereich wählen") {
                 // Chat attachments must use the existing owner-approved PDF intake, not the coding assistant.
                 openPdfDocumentPicker(wantsDraft = false, request = "PDF über Datei im Gespräch öffnen")
+            }.apply {
+                // „App erstellen“ stays reachable from the composer, but only by an explicit long press.
+                setOnLongClickListener { showDevelopmentDialog(); true }
             },
             LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .94f).apply { marginStart = dp(4) }
         )
@@ -6315,6 +6319,10 @@ class AgentActivity : Activity() {
             allowMaya = pending.allowMaya,
             speakNow = speakNow && pending.ownerRevision == ownerReplyRevision && continuousConversation.state !=
                 at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED)
+        // Fixed-code image-chain counts for field diagnosis: shown, never spoken, never model context.
+        if (accepted === result) result.diagnostics?.let {
+            addAssistantMessage(it, preserveLocalContext = true, keepCockpit = true, allowMaya = false, speakNow = false)
+        }
     }
 
     private fun deliverAppActionReply(reply: AppActionReply) {
@@ -6358,7 +6366,7 @@ class AgentActivity : Activity() {
 
     /** Public status only: no collector invocation, disk scan, model call, bot seed, grant,
      * learning radar or memory/context mutation. Current runtime flags outrank cached telemetry. */
-    private fun showCurrentAppCapabilities(request: String) {
+    private fun showCurrentAppCapabilities(request: String, modelOnly: Boolean = false) {
         appNameClarification.clear()
         val runtimeState = if (::localRuntime.isInitialized) when (localRuntime.state) {
             LocalModelState.EMPTY -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.NOT_LOADED
@@ -6389,7 +6397,10 @@ class AgentActivity : Activity() {
             continuousConversation.active, keepCockpitDuringHandsFree,
             activeWorkArea == ContinuumWorkArea.START
         )
-        val reply = "Continuum · Aktuelle App-Fähigkeiten\n\n" +
+        val reply = if (modelOnly) "Continuum · Lokales Modell\n\n" +
+            at.heinz.deviceai.cognitive.OwnerCapabilityReply.describeModel(snapshot) +
+            " Importierte Modelle: " + (knownImportedModelCount?.takeIf { it >= 0 }?.toString() ?: "unbekannt") + "."
+        else "Continuum · Aktuelle App-Fähigkeiten\n\n" +
             at.heinz.deviceai.cognitive.OwnerCapabilityReply.describe(snapshot)
         input.text.clear()
         showActionResultWithoutForcingChat()
@@ -6703,6 +6714,10 @@ class AgentActivity : Activity() {
         when (ownerLocalIntent) {
             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.CAPABILITIES -> {
                 showCurrentAppCapabilities(request)
+                return
+            }
+            at.heinz.deviceai.cognitive.OwnerChatLocalIntent.MODEL_IDENTITY -> {
+                showCurrentAppCapabilities(request, modelOnly = true)
                 return
             }
             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING -> {

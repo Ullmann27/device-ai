@@ -69,6 +69,8 @@ class ContinuumLiveProjectionService : Service() {
             if (closed) return
             visibilityReported = true
             visible = isVisible
+            LiveCaptureDiagnostics.record(sessionId, if (isVisible) LiveCaptureDiagnostics.Event.CAPTURED_CONTENT_VISIBLE
+                else LiveCaptureDiagnostics.Event.CAPTURED_CONTENT_HIDDEN)
             if (!visible) {
                 sourceResetRequired = true
                 AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.SOURCE_HIDDEN)
@@ -131,6 +133,7 @@ class ContinuumLiveProjectionService : Service() {
             display = granted.createVirtualDisplay("Continuum owner app view", size.first, size.second,
                 resources.displayMetrics.densityDpi, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 captureReader.surface, null, handler)
+            LiveCaptureDiagnostics.record(sessionId, LiveCaptureDiagnostics.Event.CAPTURE_SERVICE_STARTED)
             // Resize callback proves the actual captured extent.
         } catch (_: Exception) {
             AndroidLiveComputer.endProjection(sessionId, LiveMonitorReason.SOURCE_UNVERIFIED)
@@ -194,29 +197,35 @@ class ContinuumLiveProjectionService : Service() {
 
     private fun ticket(currentReader: ImageReader): Ticket? {
         if (closed || currentReader !== reader) return null
-        fun unverified(): Ticket? { sourceResetRequired = true; return null }
-        if (!visible) return unverified()
-        val (binding, access) = AndroidLiveComputer.projectionAccess(sessionId) ?: return unverified()
+        fun unverified(reason: LiveCaptureDiagnostics.Rejection): Ticket? {
+            LiveCaptureDiagnostics.reject(sessionId, reason)
+            sourceResetRequired = true
+            return null
+        }
+        if (!visible) return unverified(LiveCaptureDiagnostics.Rejection.CONTENT_NOT_VISIBLE)
+        val (binding, access) = AndroidLiveComputer.projectionAccess(sessionId) ?: return unverified(LiveCaptureDiagnostics.Rejection.OBSERVATION_UNAVAILABLE)
         val windows = access.service.liveWindows()
-        val target = LiveWindowSafety.select(windows, binding.targetPackage, binding.ownPackage) ?: return unverified()
-        val own = windows.singleOrNull { it.packageName == binding.ownPackage && it.kind == LiveWindowKind.APPLICATION } ?: return unverified()
+        val target = LiveWindowSafety.select(windows, binding.targetPackage, binding.ownPackage) ?: return unverified(LiveCaptureDiagnostics.Rejection.TARGET_WINDOW_UNVERIFIED)
+        val own = windows.singleOrNull { it.packageName == binding.ownPackage && it.kind == LiveWindowKind.APPLICATION } ?: return unverified(LiveCaptureDiagnostics.Rejection.OWN_WINDOW_UNVERIFIED)
         val sourceDisplay = displayBounds()
         val crop = ProjectionCropGeometry.crop(sourceDisplay, capturedWidth, capturedHeight,
-            currentReader.width, currentReader.height, target, own) ?: return unverified()
+            currentReader.width, currentReader.height, target, own) ?: return unverified(LiveCaptureDiagnostics.Rejection.CROP_UNVERIFIED)
         val viewport = ProjectionCropGeometry.viewport(sourceDisplay, currentReader.width, currentReader.height,
-            target.target.bounds, crop) ?: return unverified()
+            target.target.bounds, crop) ?: return unverified(LiveCaptureDiagnostics.Rejection.CROP_UNVERIFIED)
         val now = SystemClock.elapsedRealtime()
         if (!protectionPending && (protectionWindow != target.target.id || now - protectionAt > 1_000))
             probeProtection(access, target.target.id)
-        if (protectionWindow != target.target.id || now - protectionAt > 2_000) return unverified()
+        if (protectionWindow != target.target.id || now - protectionAt > 2_000) return unverified(LiveCaptureDiagnostics.Rejection.PROTECTION_UNCONFIRMED)
         val geometry = Geometry(target.target, own, crop, ScreenObservationBus.liveWindowRevision(access))
         if (sourceResetRequired || sourceGeometry != geometry) {
             sourceGeometry = geometry
             sourceResetRequired = false
+            LiveCaptureDiagnostics.reject(sessionId, LiveCaptureDiagnostics.Rejection.GEOMETRY_RESET)
             // New queue excludes frames from previous geometry.
             updateSurface(force = true)
             return null
         }
+        LiveCaptureDiagnostics.record(sessionId, LiveCaptureDiagnostics.Event.TARGET_WINDOW_VISIBLE)
         return Ticket(target.target, own, crop, viewport, ScreenObservationBus.liveRevision(access), binding.captureSession)
     }
 
@@ -245,6 +254,7 @@ class ContinuumLiveProjectionService : Service() {
     private fun onImage(source: ImageReader) {
         val image = runCatching { source.acquireLatestImage() }.getOrNull() ?: return
         if (closed || copying || !AndroidLiveComputer.wantsProjectionFrame(sessionId)) { image.close(); return }
+        LiveCaptureDiagnostics.record(sessionId, LiveCaptureDiagnostics.Event.CAPTURE_FRAME_RECEIVED)
         val before = runCatching { ticket(source) }.getOrNull()
         if (before == null) {
             image.close()
@@ -264,6 +274,7 @@ class ContinuumLiveProjectionService : Service() {
                 retiredReaders.toList().forEach { runCatching { it.close() } }
                 retiredReaders.clear()
                 if (frame == null) {
+                    LiveCaptureDiagnostics.reject(sessionId, LiveCaptureDiagnostics.Rejection.COPY_FAILED)
                     AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.FRAME_STALE)
                     return@post
                 }
@@ -271,6 +282,7 @@ class ContinuumLiveProjectionService : Service() {
                 if (System.nanoTime() - time > 750_000_000L || after == null || before.target != after.target || before.own != after.own || before.crop != after.crop ||
                     before.viewport != after.viewport || before.generation != after.generation ||
                     before.revision != after.revision) {
+                    LiveCaptureDiagnostics.reject(sessionId, LiveCaptureDiagnostics.Rejection.SOURCE_CHANGED_DURING_COPY)
                     frame.close()
                     AndroidLiveComputer.pauseProjection(sessionId, LiveMonitorReason.SOURCE_UNVERIFIED)
                     return@post
