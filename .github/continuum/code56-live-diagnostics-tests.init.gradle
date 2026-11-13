@@ -1,0 +1,14 @@
+// Isolated diagnostic preflight only. The canonical full Code56 QA stays unfiltered.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app project')
+    app.tasks.withType(org.gradle.api.tasks.testing.Test).matching {
+        it.name == 'testDebugUnitTest'
+    }.configureEach {
+        filter {
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LiveCaptureDiagnosticsTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LiveObservationEventPolicyTest'
+            failOnNoMatchingTests = true
+        }
+    }
+}
