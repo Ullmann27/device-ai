@@ -26,14 +26,20 @@ jobs:
           EVIDENCE_DIR: ${{ runner.temp }}/prior-qa
         run: |
           python3 - <<'PY'
-          import os, pathlib, json
+          import os, pathlib, json, xml.etree.ElementTree as ET
           root = pathlib.Path(os.environ["EVIDENCE_DIR"])
           reports = list(root.rglob("report.json"))
           assert len(reports) == 2
           for file in sorted(reports):
               report = json.loads(file.read_text())
               assert report["source"]["commit"] == "fafac263d45645b5193640cb73bf703f33509b91"
-              print("REPORT", str(file.relative_to(root)), json.dumps({key: value for key, value in report.items() if key != "source"})[:18000])
+              summary = {key: report.get(key) for key in ("profile", "status", "sourceUnchanged", "cancelled")}
+              summary["checks"] = []
+              for check in report.get("checks", []):
+                  item = {key: check.get(key) for key in ("id", "status", "reason", "code", "error", "terminationConfirmed")}
+                  item["tests"] = {key: value for key, value in (check.get("tests") or {}).items() if key not in ("executedCaseHashes", "skippedCaseHashes")}
+                  summary["checks"].append(item)
+              print("REPORT", str(file.relative_to(root)), json.dumps(summary)[:20000])
           print("FILES", [str(file.relative_to(root)) for file in root.rglob("*") if file.is_file()])
           count = 0
           for file in sorted(root.rglob("*")):
@@ -44,5 +50,12 @@ jobs:
               for i in matches[:35]:
                   print("\\n".join(line[:900] for line in lines[max(0,i-1):i+12])[:7000])
                   count += 1
+          for file in sorted(root.rglob("*.xml")):
+              for case in ET.parse(file).getroot().iter("testcase"):
+                  for tag in ("failure", "error"):
+                      for failure in case.findall(tag):
+                          print("FAILED_CASE", case.get("classname"), case.get("name"), failure.get("type"))
+                          print((failure.get("message") or "")[:1600])
+                          print("\\n".join((failure.text or "").splitlines()[:8])[:3000])
           print("READ_ONLY_PRIOR_NODE_RECEIPT", count)
           PY
