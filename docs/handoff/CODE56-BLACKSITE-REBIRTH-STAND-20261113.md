@@ -88,6 +88,20 @@ bereits um überlagernde Fenster beschnitten.
 
 Hinweis: Ein früherer Lauf wurde nicht gewertet, weil während seiner Kompilierung kurz `git stash` lief.
 
+### Unsignierte APK (nur Bau-/Packnachweis, nicht installierbar über die originalsignierte App, nicht verteilt)
+
+| Feld | Wert |
+|---|---|
+| Quelle | `ce1ff8da4` (Zweig `claude/code56-blacksite-rebirth-20261113`) |
+| Befehl | `:app:assembleRelease` mit `-PcontinuumStandaloneVersionCode=56 -PcontinuumLocalRenderUnsigned=true -PcontinuumOwnerArm64=true -PdeviceAiMentorPreview=true`, Signier-Umgebungsvariablen entfernt |
+| Paket / Version | `at.heinz.deviceai.continuumlocal` · versionCode 56 · versionName 0.3.55 · min 26 / target 36 |
+| Größe / SHA-256 | 103 787 127 Byte · `8009ab48a49f8049afe0427f36b3fb1349c50df35bf820f4b1d138b3f6dcf778` |
+| Signatur | keine (`apksigner verify` → DOES NOT VERIFY, erwartet) |
+| Inhalt geprüft | `cinema3d/*` (Workstation-GLB 645 592 B, Orb, live-monitor.filamat), arm64 Filament/gltfio/LiteRT-LM/OpenCV, neue Klassen im Dex |
+
+Originalsignierung nur über den geschützten Signierweg nach SHA-genauer Besitzerfreigabe. Die frühere unsignierte
+APK55 aus `472ef3fd6` (SHA-256 `bdb393a2…7d603`) ist überholt (Code55 wurde aus `889e06d47` signiert).
+
 ## 4. Nächster Gerätetest (Fold7, Split-Screen)
 
 1. Continuum + Eigene Dateien nebeneinander, Bedienungshilfe aktiv. „Öffne Downloads.“ → Freigabe „Gesamter Bildschirm“.
