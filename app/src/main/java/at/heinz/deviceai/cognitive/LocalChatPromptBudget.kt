@@ -19,6 +19,10 @@ internal object LocalChatPromptBudget {
     const val FULL_CHARACTERS = 15_500
     const val BRIEF_FIRST_TURN_CHARACTERS = 6_000
 
+    /** The prompt frame never exceeds the loaded model's native window budget (Code56); unknown keeps [cap]. */
+    fun withNativeBudget(cap: Int, nativeBytes: Int?): Int =
+        if (nativeBytes == null) cap else minOf(cap, nativeBytes).coerceAtLeast(1)
+
     fun limit(
         task: String,
         hasMemories: Boolean,

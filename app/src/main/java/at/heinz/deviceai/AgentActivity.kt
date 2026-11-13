@@ -11277,7 +11277,7 @@ class AgentActivity : Activity() {
                     }
                     // Current task/evidence precede optional history under the prompt cap.
                 }
-                val promptCap = at.heinz.deviceai.cognitive.LocalChatPromptBudget.limit(
+                val requestedPromptCap = at.heinz.deviceai.cognitive.LocalChatPromptBudget.limit(
                     task = task,
                     hasMemories = memories.isNotEmpty(),
                     hasConversationContext = conversationContext.isNotBlank(),
@@ -11287,9 +11287,13 @@ class AgentActivity : Activity() {
                 )
                 if (botTask == null && codingPlanning == null) runOnUiThread {
                     if (sessionId == localSessionId && activeChatCancellation === cancellation)
-                        updateLocalReasoningContext(chiefTurn.turnId, promptCap, memories.size)
+                        updateLocalReasoningContext(chiefTurn.turnId, requestedPromptCap, memories.size)
                 }
-                val briefInstruction = if (promptCap ==
+                // The frame must also fit the loaded model's measured window (system + tools preface); optional
+                // history is cut first, mandatory content that cannot fit is refused honestly before native prefill.
+                val promptCap = at.heinz.deviceai.cognitive.LocalChatPromptBudget.withNativeBudget(requestedPromptCap,
+                    if (::localRuntime.isInitialized) localRuntime.tokenAwarePromptUtf8Bytes else null)
+                val briefInstruction = if (requestedPromptCap ==
                     at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS)
                     "\nKurze Einstiegsfrage: Antworte möglichst direkt in höchstens drei kurzen Sätzen. " +
                         "Keine zusätzlichen internen Denkschritte behaupten."

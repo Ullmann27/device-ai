@@ -60,7 +60,14 @@ bereits um überlagernde Fenster beschnitten.
   → immer `grounded=true` mit vollständigem Originalsatz inkl. „Polarlicht 482“. Der Lernkern verliert den Namen also
   nicht; der Feldfehler liegt in einem anderen Pfad (lokales Modell mit Gedächtniskontext oder Gesprächsweg).
   Für die Ursache wird der genaue Feld-Wortlaut (Speichersatz + Frage + Antwort) benötigt.
-- **Kontextfenster/Tokenbudget**, **KI-Team-Fehler**, **NEURON-Herkunft**, „Was kannst du davon löschen?“: offen.
+- **Kontextfenster/Tokenbudget: Ursache gemessen und Budget-Fix umgesetzt (host-getestet, Gerät offen).** Hostmessung mit
+  echtem `ToolRegistry`: 33 Werkzeugdeklarationen ≈ 7 043 Byte JSON ≈ 1 760–2 350 Token – etwa die Hälfte des
+  4 096-Token-Fensters; das alte Zeichenbudget (15 500) passte nie. Neu: `LocalNativePromptBudget.promptByteBudget`
+  (nativ gemessene Präfix-Token, 3 Byte/Token wie der Planer, ≥ 512 Antwort-Token, Rahmenreserve) über
+  `LocalModelRuntime.tokenAwarePromptUtf8Bytes`; die Prompt-Rahmung nimmt das Minimum → optionale Historie wird zuerst
+  gekürzt, Pflichtinhalt, der nicht passt, wird vor dem nativen Prefill ehrlich abgelehnt. Nicht geändert: Anzahl und Text
+  der Werkzeugdeklarationen (würde Modellverhalten ändern; erst nach Gerätemessung des echten Präfix entscheiden).
+- **KI-Team-Fehler**, **NEURON-Herkunft**, „Was kannst du davon löschen?“: offen.
 - Volle Android-Suite, Lint, APK-Bau: in diesem Zweig noch nicht gelaufen.
 
 ## 3a. Durchgeführte Prüfungen (Host, 13.11.2026, Commit `03b80b202` + App-Ablauf-Fix)
@@ -69,6 +76,7 @@ bereits um überlagernde Fenster beschnitten.
 |---|---|
 | Gezielte Gradle-Hostsuite (Live-Computer, Beobachtungsbus, Projektion, Controller-UI, Dokumentfluss, Cockpit/Filament-Hosttests, Routing, Kamerafahrt) | 85 Klassen · 529 Tests · 0 Fehler · 0 übersprungen |
 | App-Ablauf (OwnerAppActionFlow, App-Suche, Bot-Routing) | 6 Klassen · 70 Tests · 0 Fehler |
+| Tokenbudget + Prompt-Rahmung + Laufzeit + Dialog/Kontext + Dokumentfluss | 41 Klassen · 242 Tests · 0 Fehler |
 | Node-Verträge der berührten Quellen | 291/291 |
 | Node-Vollsuite | 1650: 1601 grün, 26 rot, 23 übersprungen – die 26 roten identisch auf Basis `4d1c3fbfc` (`JUNIT_FILE_IDENTITY_UNSUPPORTED_RUNTIME` in ccc1-redgreen-verifier, coding-orchestrator-failure-report, momega1-verifier-regressions) |
 
