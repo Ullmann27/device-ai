@@ -24,6 +24,15 @@ internal object OwnerCorrectionIntent {
     private val previous = Regex("(?iu)$S(vorigen|vorige|vorletzten|vorletzte|davor|früheren|frühere)$E")
     private val yesterday = Regex("(?iu)$S(gestern|gestrigen|gestrige)$E")
 
+    private val workInterruption = Regex("(?iu)^(?:stopp?|halt)[,!.…]?\\s+" +
+        "(?:das\\s+meine\\s+ich\\s+nicht|so\\s+habe\\s+ich\\s+das\\s+nicht\\s+gemeint|" +
+        "das\\s+ist\\s+nicht\\s+gemeint)[.!…]?$")
+
+    /** Direct correction, no inferred replacement. */
+    fun interruptsWork(utterance: String): Boolean =
+        utterance.length in 10..200 && utterance.none { it.isISOControl() } &&
+            workInterruption.matches(utterance.trim())
+
     fun parse(utterance: String): Correction? {
         if (utterance.length !in 10..200 || utterance.any { it.isISOControl() }) return null
         if (!marker.containsMatchIn(utterance) || !meant.containsMatchIn(utterance)) return null

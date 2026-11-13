@@ -6062,6 +6062,7 @@ class AgentActivity : Activity() {
             textSize = 21f
             contentDescription = "Nachricht senden"
             setOnClickListener {
+                if (consumeOwnerWorkInterruption()) return@setOnClickListener
                 if (consumePendingResearchChatReply()) return@setOnClickListener
                 val chiefStatus = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
                     ContinuumWorkerChatCommand.ChiefStatus
@@ -6385,7 +6386,24 @@ class AgentActivity : Activity() {
         addToolActivity("GERÄTESTATUS · nur öffentliche Betriebsdaten · kein Modell- oder Werkzeugaufruf")
     }
 
+    private fun consumeOwnerWorkInterruption(spoken: String = input.text.toString().trim()): Boolean {
+        val addressed = OwnerAppLookupIntent.stripAddress(spoken,
+            continuumState?.archive?.identityState?.chosenName)
+        if (!at.heinz.deviceai.cognitive.OwnerCorrectionIntent.interruptsWork(addressed)) return false
+        val inCockpit = activeWorkArea == ContinuumWorkArea.START
+        val correctedDraft = documentDraftTurn?.episodeId
+        if (input.text.toString().trim() == spoken) input.text.clear()
+        cancelLocalRequest()
+        recordWork(correctedDraft) { it.copy(correction = spoken) }
+        addUserMessage(spoken, keepCockpit = inCockpit)
+        localConversationContext.recordNonModel(sessionId, spoken, "Besitzerkorrektur; nächster Auftrag offen")
+        addAssistantMessage("Verstanden. Was soll ich anders machen?", preserveLocalContext = true,
+            keepCockpit = inCockpit)
+        return true
+    }
+
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
+        if (consumeOwnerWorkInterruption()) return
         if (computerController?.active == true && input.text.toString().trim().lowercase() in
             setOf("stopp", "stop", "computer stoppen", "live-bild stoppen")) {
             val stopRequest = input.text.toString().trim()
@@ -14096,6 +14114,7 @@ class AgentActivity : Activity() {
         if (isFinishing || isDestroyed) return
         when (continuousConversation.recognized(turnToken, sessionId, spoken)) {
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.SEND -> {
+                if (consumeOwnerWorkInterruption(spoken.trim())) return
                 val focused = input.hasFocus()
                 val merged = at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.mergeDictation(
                     input.text.toString(), if (focused) input.selectionStart else -1,
