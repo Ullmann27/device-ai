@@ -18,36 +18,30 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: 43344572298
-          name: Code55-full-Android-source-QA
+          run-id: 43354416362
+          name: Jarvis55-targeted-node-evidence
           path: ${{ runner.temp }}/prior-qa
-      - name: Print bounded failure evidence
+      - name: Print bounded Node failure evidence
         env:
           EVIDENCE_DIR: ${{ runner.temp }}/prior-qa
         run: |
           python3 - <<'PY'
-          import os, pathlib, xml.etree.ElementTree as ET
+          import os, pathlib, json
           root = pathlib.Path(os.environ["EVIDENCE_DIR"])
-          source = list(root.rglob("code55-source.txt"))
-          assert len(source) == 1
-          assert "source_sha=41306257ce03c1e22e998877bf769ce42b3a0486" in source[0].read_text()
-          print(source[0].read_text())
-          failures = 0
-          for file in sorted(root.rglob("TEST-*.xml")):
-              suite = ET.parse(file).getroot()
-              for case in suite.iter("testcase"):
-                  for tag in ("failure", "error"):
-                      for failure in case.findall(tag):
-                          failures += 1
-                          print(case.get("classname"), case.get("name"), failure.get("type"))
-                          print((failure.get("message") or "")[:1500])
-                          print("\n".join((failure.text or "").splitlines()[:5]))
-          for file in sorted(root.rglob("TEST-*.xml")):
-              suite = ET.parse(file).getroot()
-              for case in suite.iter("testcase"):
-                  for skipped in case.findall("skipped"):
-                      print("DESIGNED_OR_UNEXPECTED_SKIP", case.get("classname"), case.get("name"),
-                            (skipped.get("message") or skipped.text or "")[:800])
-          assert failures == 18, failures
-          print("READ_ONLY_PRIOR_QA_RECEIPT_PASS")
+          reports = list(root.rglob("report.json"))
+          assert len(reports) == 2
+          for file in sorted(reports):
+              report = json.loads(file.read_text())
+              assert report["source"]["commit"] == "fafac263d45645b5193640cb73bf703f33509b91"
+              print("REPORT", str(file.relative_to(root)), json.dumps(report)[:18000])
+          count = 0
+          for file in sorted(root.rglob("*")):
+              if not file.is_file() or file.suffix not in (".log", ".txt"): continue
+              lines = file.read_text(errors="replace").splitlines()
+              matches = [i for i, line in enumerate(lines) if "not ok " in line or "FAIL" in line or "AssertionError" in line or "# tests " in line or "# pass " in line or "# fail " in line or "# skipped " in line]
+              if matches: print("LOG", str(file.relative_to(root)))
+              for i in matches[:35]:
+                  print("\\n".join(line[:900] for line in lines[max(0,i-1):i+12])[:7000])
+                  count += 1
+          print("READ_ONLY_PRIOR_NODE_RECEIPT", count)
           PY
