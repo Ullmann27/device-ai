@@ -225,6 +225,26 @@ interface ExperienceLookup {
             .take(limit)
             .toList()
     }
+
+    // Bounded fallback for legacy providers.
+    fun similarWithin(
+        taskType: String,
+        request: String,
+        completedAtFrom: Long,
+        completedAtThrough: Long,
+        limit: Int,
+        eligible: (Experience) -> Boolean
+    ): List<Experience> {
+        require(limit >= 0)
+        require(completedAtFrom >= 0 && completedAtThrough >= completedAtFrom)
+        if (limit == 0) return emptyList()
+        return similarWithin(taskType, request, completedAtFrom, completedAtThrough, limit)
+            .asSequence()
+            .take(limit)
+            .filter { it.completedAt in completedAtFrom..completedAtThrough }
+            .filter(eligible)
+            .toList()
+    }
 }
 
 class InMemoryExperienceStore : ExperienceStore, ExperienceLookup {
@@ -251,6 +271,16 @@ class InMemoryExperienceStore : ExperienceStore, ExperienceLookup {
         completedAtFrom: Long,
         completedAtThrough: Long,
         limit: Int
+    ): List<Experience> =
+        similarWithin(taskType, request, completedAtFrom, completedAtThrough, limit) { true }
+
+    override fun similarWithin(
+        taskType: String,
+        request: String,
+        completedAtFrom: Long,
+        completedAtThrough: Long,
+        limit: Int,
+        eligible: (Experience) -> Boolean
     ): List<Experience> {
         require(limit >= 0)
         require(completedAtFrom >= 0 && completedAtThrough >= completedAtFrom)
@@ -259,6 +289,7 @@ class InMemoryExperienceStore : ExperienceStore, ExperienceLookup {
         return all().asSequence()
             .filter { it.completedAt in completedAtFrom..completedAtThrough }
             .filter { it.taskType.equals(taskType, ignoreCase = true) }
+            .filter(eligible)
             .map { it to jaccard(queryTerms, terms(it.requestSummary)) }
             .filter { it.second > 0.0 || queryTerms.isEmpty() }
             .sortedWith(compareByDescending<Pair<Experience, Double>> { it.second }

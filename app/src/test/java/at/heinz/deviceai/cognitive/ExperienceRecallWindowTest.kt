@@ -60,6 +60,20 @@ class ExperienceRecallWindowTest {
             store.similarWithin("agent_task", task, now - age, now, 1).map { it.id })
     }
 
+    @Test fun eligibilityPrecedesRankingWithoutChangingOrderingOrLimits() {
+        val store = InMemoryExperienceStore()
+        repeat(96) { store.store(past("drop-$it", now)) }
+        store.store(past("keep-z", now - 1))
+        store.store(past("keep-a", now - 1))
+        store.store(past("keep-old", now - 10))
+        store.store(past("keep-less-relevant", now, "$task extra detail"))
+        val matches = store.similarWithin("agent_task", task, now - age, now, 3) {
+            it.id.startsWith("keep-")
+        }
+        assertEquals(listOf("keep-a", "keep-z", "keep-old"), matches.map { it.id })
+        assertEquals(64, store.similarWithin("agent_task", task, now - age, now, 64) { true }.size)
+    }
+
     @Test fun invalidWindowAndNegativeLimitsAreRejected() {
         val store = InMemoryExperienceStore()
         val legacy = object : ExperienceLookup {
@@ -77,6 +91,18 @@ class ExperienceRecallWindowTest {
                 lookup.similarWithin("agent_task", task, now, now - 1, 1)
             }
             assertTrue(lookup.similarWithin("agent_task", task, 0, now, 0).isEmpty())
+            assertThrows(IllegalArgumentException::class.java) {
+                lookup.similarWithin("agent_task", task, 0, now, -1) { true }
+            }
+            assertThrows(IllegalArgumentException::class.java) {
+                lookup.similarWithin("agent_task", task, -1, now, 1) { true }
+            }
+            assertThrows(IllegalArgumentException::class.java) {
+                lookup.similarWithin("agent_task", task, now, now - 1, 1) { true }
+            }
+            assertTrue(lookup.similarWithin("agent_task", task, 0, now, 0) {
+                error("zero limit must not evaluate candidates")
+            }.isEmpty())
         }
         assertThrows(IllegalArgumentException::class.java) {
             store.similar("agent_task", task, -1)
@@ -95,6 +121,72 @@ class ExperienceRecallWindowTest {
         assertTrue(legacy.similarWithin("agent_task", task, now - age, now, 2).isEmpty())
         assertEquals(listOf("valid"), legacy.similarWithin("agent_task", task, now - age, now, 3).map { it.id })
         assertEquals(listOf(2, 3), requestedLimits)
+    }
+
+    @Test fun eligibilityFallbackKeepsLegacyRequestAndInspectionBounded() {
+        val records = listOf(past("skip-1", now), past("skip-2", now), past("keep", now))
+        val requestedLimits = mutableListOf<Int>()
+        val inspected = mutableListOf<String>()
+        val legacy = object : ExperienceLookup {
+            override fun similar(taskType: String, request: String, limit: Int): List<Experience> =
+                error("window API required")
+
+            override fun similarWithin(
+                taskType: String, request: String,
+                completedAtFrom: Long, completedAtThrough: Long, limit: Int
+            ): List<Experience> {
+                requestedLimits += limit
+                return records
+            }
+        }
+        assertTrue(legacy.similarWithin("agent_task", task, now - age, now, 2) {
+            inspected += it.id
+            it.id == "keep"
+        }.isEmpty())
+        assertEquals(listOf("skip-1", "skip-2"), inspected)
+        assertEquals(listOf("keep"), legacy.similarWithin("agent_task", task, now - age, now, 3) {
+            it.id == "keep"
+        }.map { it.id })
+        assertEquals(listOf(2, 3), requestedLimits)
+    }
+
+    @Test fun recallRevalidatesUncooperativeProviderAndCapsReturnedCandidates() {
+        val valid = past("valid", now - 1)
+        val failure = valid.copy(id = "failure", outcome = ExperienceOutcome.FAILURE,
+            evaluation = Evaluation(false, 0.1), failures = listOf("Observed verification failure"))
+        var returned = listOf(
+            valid.copy(id = "partial", outcome = ExperienceOutcome.PARTIAL),
+            valid.copy(id = "assumed", sourceIds = emptyList()),
+            valid.copy(id = "low-score", evaluation = Evaluation(true, 0.4)),
+            valid.copy(id = "no-tools", toolIds = emptyList()),
+            valid.copy(id = "bad-digest", sourceIds = listOf("model:assumed-success")),
+            valid.copy(id = "wrong-type", taskType = "owner_fact"),
+            past("irrelevant", now, "different task"),
+            past("future", now + 1),
+            past("expired", now - age - 1),
+            failure.copy(id = "failure-without-observation", failures = emptyList()),
+            valid, failure
+        )
+        val lookup = object : ExperienceLookup {
+            override fun similar(taskType: String, request: String, limit: Int): List<Experience> =
+                error("eligibility API required")
+
+            override fun similarWithin(
+                taskType: String, request: String,
+                completedAtFrom: Long, completedAtThrough: Long,
+                limit: Int, eligible: (Experience) -> Boolean
+            ): List<Experience> {
+                assertEquals(64, limit)
+                return returned
+            }
+        }
+        val hints = AgentExperienceRecall.hints(lookup, task, now)
+        assertEquals(2, hints.size)
+        assertEquals(1, hints.count { "success-hint" in it.tags })
+        assertEquals(1, hints.count { "failure-warning" in it.tags })
+        assertTrue(hints.all { it.validationState == ValidationState.UNVERIFIED })
+        returned = List(64) { valid.copy(id = "partial-$it", outcome = ExperienceOutcome.PARTIAL) } + valid
+        assertTrue(AgentExperienceRecall.hints(lookup, task, now).isEmpty())
     }
 
     @Test fun recallSuppliesExplicitWindowAtEpochAndLongMaximum() {
