@@ -16,6 +16,8 @@ gradle.projectsEvaluated {
                 includeTestsMatching('at.heinz.deviceai.ResearchChatApprovalUiTest')
                 includeTestsMatching('at.heinz.deviceai.ui.CinematicWorkstationLayoutTest')
                 includeTestsMatching('at.heinz.deviceai.localmodel.LocalModelThermalGuardTest')
+                includeTestsMatching('at.heinz.deviceai.systemintelligence.ThermalPhaseRecorderTest')
+                includeTestsMatching('at.heinz.deviceai.SystemIntelligenceUiTest')
                 failOnNoMatchingTests = true
             }
         }

@@ -2,6 +2,7 @@ package at.heinz.deviceai.systemintelligence
 
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.math.roundToInt
 
 /**
  * Data-sparse Fold7 heat measurement by phase (owner order 12.11.2026, priority 4). Records only numbers the device
@@ -11,7 +12,7 @@ import org.json.JSONObject
  * so the measurement itself cannot push a warm phone further. Bounded: at most [MAX_SAMPLES] samples per session.
  */
 class ThermalPhaseRecorder(private val clock: () -> Long) {
-    enum class Phase { IDLE_APP_OPEN, MODEL_LOAD, SHORT_INFERENCE, LONG_INFERENCE, MAYA_SPEECH, CINEMA_ONLY, SPEECH_AND_CINEMA, AFTER_STOP_REST }
+    enum class Phase { IDLE_APP_OPEN, MODEL_LOAD, SHORT_INFERENCE, LONG_INFERENCE, MAYA_SPEECH, CINEMA_ONLY, SPEECH_AND_CINEMA, AFTER_STOP_REST, DIAGNOSTIC_SNAPSHOT }
 
     data class Sample(val atMs: Long, val phase: Phase, val thermalStatus: Int?, val headroom: Float?,
                       val batteryTenthsC: Int?, val modelRunMs: Long?)
@@ -23,6 +24,7 @@ class ThermalPhaseRecorder(private val clock: () -> Long) {
 
     private val samples = ArrayList<Sample>()
     private val phaseStarts = LinkedHashMap<Phase, Long>()
+    private var lastDiagnosisAtMillis: Long? = null
     var active: Phase? = null
         private set
 
@@ -46,6 +48,31 @@ class ThermalPhaseRecorder(private val clock: () -> Long) {
             batteryTenthsC?.takeIf { it in -200..800 },
             modelRunMs?.takeIf { it >= 0L })
         return true
+    }
+
+    /** Accepts fresh diagnosis samples only. */
+    fun sampleDiagnosis(snapshot: SystemDiagnosis, requestedAtMillis: Long, completedAtMillis: Long): Boolean {
+        if (active != Phase.DIAGNOSTIC_SNAPSHOT || requestedAtMillis < 0 ||
+            completedAtMillis < requestedAtMillis || snapshot.observedAtMillis !in requestedAtMillis..completedAtMillis ||
+            lastDiagnosisAtMillis?.let { snapshot.observedAtMillis <= it } == true) return false
+        val battery = snapshot.batteryTemperatureC?.takeIf { it.isFinite() && it in -20.0..80.0 }
+            ?.let { (it * 10).roundToInt() }
+        val accepted = sample(snapshot.thermalStatus, null, battery)
+        if (accepted) lastDiagnosisAtMillis = snapshot.observedAtMillis
+        if (samples.size >= MAX_SAMPLES) stop()
+        return accepted
+    }
+
+    fun diagnosticReportGerman(): String {
+        val own = samples.filter { it.phase == Phase.DIAGNOSTIC_SNAPSHOT }
+        val battery = own.mapNotNull { it.batteryTenthsC }
+        val state = if (active == Phase.DIAGNOSTIC_SNAPSHOT) "aktiv" else "gestoppt"
+        return "Manuelle Diagnose-Messreihe · $state\nMesspunkte: ${own.size}/$MAX_SAMPLES" +
+            "\nThermalstatus (höchster): ${own.mapNotNull { it.thermalStatus }.maxOrNull() ?: "unbekannt"}" +
+            "\nLetzte Akkutemperatur: ${own.lastOrNull()?.batteryTenthsC?.let { "${it / 10.0} °C" } ?: "unbekannt"}" +
+            "\nAkkuänderung: ${if (battery.size >= 2) "${(battery.last() - battery.first()) / 10.0} °C" else "unbekannt"}" +
+            "\nNur bei einer erneut angeforderten Diagnose; keine Hintergrundmessung." +
+            "\nGPU, CPU-Temperatur, Headroom und Modellzeiten: nicht gemessen."
     }
 
     fun stop() { active = null }
