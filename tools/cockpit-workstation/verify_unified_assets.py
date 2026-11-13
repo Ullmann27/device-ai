@@ -121,10 +121,12 @@ def reference_contract(glb):
                  for name in ("monitor-bezel", "monitor-glass", "monitor-rim")}
     for side in (-1, 1):
         center = side * .38
-        for suffix in ("bezel", "glass", "rim"):
+        for suffix in ("back", "bezel", "glass", "rim", "stand", "foot"):
             name = "side-%s-%s" % (side, suffix)
             index, _ = glb.node(name)
-            assert glb.parent[index] == side_id
+            assert glb.parent.get(index) == side_id, (name, "compact visibility group")
+        for suffix in ("bezel", "glass", "rim"):
+            name = "side-%s-%s" % (side, suffix)
             apertures[name] = (center-.1, -.37, center+.1, -.07)
     for name, rectangle in apertures.items():
         index, node = glb.node(name)
