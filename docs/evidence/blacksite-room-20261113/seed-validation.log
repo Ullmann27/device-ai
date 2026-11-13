@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "bytes": 32716,
+  "sha256": "09447df1b5f6dc270f6f9e42f68b9640b3fd019f82a624228b082c7d08eca99a",
+  "renderables": 32,
+  "draw_primitives": 37,
+  "instanced_triangles": 2500,
+  "checks": [
+    "binary/accessors",
+    "finite/unit normals",
+    "outward winding",
+    "native openings",
+    "root contract",
+    "budget/pin"
+  ]
+}

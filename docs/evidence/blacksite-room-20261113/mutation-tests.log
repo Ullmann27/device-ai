@@ -1,0 +1,11 @@
+test_front_occluder_is_rejected (test_blacksite_contract.BlacksiteContractTest.test_front_occluder_is_rejected) ... ok
+test_generated_batches_pass (test_blacksite_contract.BlacksiteContractTest.test_generated_batches_pass) ... ok
+test_missing_room_is_rejected (test_blacksite_contract.BlacksiteContractTest.test_missing_room_is_rejected) ... ok
+test_side_parent_is_rejected (test_blacksite_contract.BlacksiteContractTest.test_side_parent_is_rejected) ... ok
+test_transparency_cannot_hide_geometry_failures (test_blacksite_contract.BlacksiteContractTest.test_transparency_cannot_hide_geometry_failures) ... ok
+test_unbatched_primitives_are_rejected (test_blacksite_contract.BlacksiteContractTest.test_unbatched_primitives_are_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.165s
+
+OK
