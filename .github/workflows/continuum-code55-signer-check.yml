@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - prep/code55-original-signer-20261112
+      - work/code55-test-draft-20261113
       - chatgpt/code52-owner-signing-20261109
     paths:
       - scripts/continuum-code55-original-signer.sh
+      - .github/continuum/code55-test-draft-preflight.test.mjs
+      - .github/workflows/continuum-code52-sign-release.yml
       - .github/workflows/continuum-code55-original-sign.yml
       - .github/workflows/continuum-code55-signer-check.yml
 
@@ -36,18 +39,18 @@ jobs:
           assert 'exec bash scripts/continuum-code55-original-signer.sh "$mode"' in legacy
           assert 'head_branch=="integrate/code55-apk-fable-20261112"' in legacy
           assert 'continuum-original-signing' in s and 'continuum-original-signing' in y
-          assert 'OWNER_APPROVED_SHA' in s and 'FULL_ANDROID_GATE' in s
-          assert 'NATIVE_PDF_NOT_PASS' in s and 'ANDROID_CASES_NOT_FULL_GREEN' in s
+          assert 'OWNER_APPROVED_SHA' in s and 'REQUIRED_JOBS_NOT_GREEN' in s
+          assert 'native-pdf' in s and 'complete-qa' in s
+          assert 'CODE55_RECEIPT_OR_APK_INVALID' in s
           assert 'code55' in s.lower() and '--draft --latest=false' in s
           assert 'environment: continuum-original-signing' in y
           assert 'workflow_dispatch:' in y and 'push:' not in y
           assert 'ORIGINAL_P12:' not in y.split('original-signed-draft:')[0]
-          marker="<<'PY'\n"
-          assert s.count(marker)==1
-          embedded=s.split(marker,1)[1].split("\nPY\n",1)[0]
-          compile(embedded,'code55-archive-verifier','exec')
-          assert 'NATIVE_PDF_NOT_PASS' in embedded
-          assert 'ANDROID_CASES_NOT_FULL_GREEN' in embedded
+          import re
+          embedded=re.findall(r"<<'PY'[^\n]*\n(.*?)\nPY\n",s,re.S)
+          assert len(embedded)==2
+          for code in embedded: compile(code,'code55-proof-verifier','exec')
+          assert '--strict-skips' in s and 'native-filament.txt' in s
           print('CODE55_SIGNER_STATIC_GATE_PASS_NO_SIGNING')
           PY
       - name: Existing Code52/53/54 static compatibility tests
@@ -72,5 +75,17 @@ jobs:
             echo 'Rejected owner SHA reached success'
             exit 1
           fi
-          grep -Fq 'CODE55_SIGN_OWNER_SHA_APPROVAL' /tmp/negative.txt
+          grep -Fq 'CODE55_SIGN_APPROVED_SHA_DIFFERS_FROM_SOURCE' /tmp/negative.txt
           echo 'CODE55_INVALID_OWNER_SHA_REJECTED_NO_SECRETS'
+      - uses: actions/checkout@v4
+        with:
+          ref: 889e06d47fffd2230fa5b062dd1f31b65992e728
+          path: .verification-source
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.2"
+      - name: Functional split-QA rejection tests without secrets
+        env:
+          CODE55_TEST_SOURCE_DIR: ${{ github.workspace }}/.verification-source
+        run: node --test .github/continuum/code55-test-draft-preflight.test.mjs

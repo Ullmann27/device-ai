@@ -44,6 +44,9 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.2"
       - name: Prepare official 35 SDK tools
         shell: bash
         run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"'
@@ -75,6 +78,9 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.2"
       - name: Prepare original Android 35 signing tools
         shell: bash
         run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"'
