@@ -31,6 +31,13 @@ class GermanOnDeviceSpeechLocaleTest {
         }
     }
 
+    @Test fun terminalLocaleFailureExplainsBothGermanVariants() {
+        val missing = LocalSpeechInputPolicy.message(LocalSpeechInputPolicy.Failure.LANGUAGE_UNAVAILABLE)
+        val unsupported = LocalSpeechInputPolicy.message(LocalSpeechInputPolicy.Failure.LANGUAGE_UNSUPPORTED)
+        assertTrue(missing.contains("Österreich") && missing.contains("Deutschland"))
+        assertTrue(unsupported.contains("Österreich") && unsupported.contains("Deutschland"))
+    }
+
     @Test fun allLaterFailuresAreTerminalAfterFallback() {
         val locale = GermanOnDeviceSpeechLocale()
         assertTrue(locale.retry(LocalSpeechInputPolicy.Failure.LANGUAGE_UNAVAILABLE))
