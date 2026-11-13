@@ -42,6 +42,12 @@ jobs:
                           print(case.get("classname"), case.get("name"), failure.get("type"))
                           print((failure.get("message") or "")[:1500])
                           print("\n".join((failure.text or "").splitlines()[:5]))
+          for file in sorted(root.rglob("TEST-*.xml")):
+              suite = ET.parse(file).getroot()
+              for case in suite.iter("testcase"):
+                  for skipped in case.findall("skipped"):
+                      print("DESIGNED_OR_UNEXPECTED_SKIP", case.get("classname"), case.get("name"),
+                            (skipped.get("message") or skipped.text or "")[:800])
           assert failures == 18, failures
           print("READ_ONLY_PRIOR_QA_RECEIPT_PASS")
           PY
