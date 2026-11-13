@@ -1,4 +1,4 @@
-name: Code55 - full source QA (strict host PDF)
+name: Code55 - full source QA and native PDF
 
 on:
   push:
@@ -7,6 +7,9 @@ on:
     paths:
       - .github/workflows/continuum-code55-full-qa.yml
       - app/**
+      - scripts/**
+      - backend/**
+      - tools/cockpit-workstation/**
       - .github/continuum/**
       - tools/code55-apk/native-pdf-emulator.sh
 
@@ -18,6 +21,45 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  node-backend:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Freeze Node source
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.2"
+      - name: Source-bound full critical and Node QA
+        run: |
+          set -euo pipefail
+          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code55-critical"
+          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code55-full"
+          node -e "for(const p of ['code55-critical','code55-full']){const r=require(process.env.RUNNER_TEMP+'/'+p+'/report.json');if(r.status!=='PASS'||r.source.commit!==process.env.GITHUB_SHA||!r.sourceUnchanged)process.exit(69);console.log(p+' SOURCE_BOUND_PASS')}"
+      - name: Backend check and tests
+        run: |
+          set -euo pipefail
+          npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+          npm --prefix backend run check
+          npm --prefix backend test
+      - name: Preserve Node receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: code55-github-node-evidence
+          path: |
+            ${{ runner.temp }}/code55-critical/
+            ${{ runner.temp }}/code55-full/
+          if-no-files-found: warn
+          retention-days: 14
+
   full-android:
     if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
     runs-on: ubuntu-latest
@@ -50,7 +92,7 @@ jobs:
         run: |
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
-      - name: Full Android JUnit and UI tests - no filters, strict native PDF
+      - name: Full Android JUnit and UI tests - no filters
         shell: bash
         run: |
           set -euo pipefail
@@ -181,13 +223,15 @@ jobs:
 
   complete-qa:
     if: always() && github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
-    needs: [full-android, native-pdf]
+    needs: [full-android, native-pdf, node-backend]
     runs-on: ubuntu-latest
     steps:
-      - name: Require both real QA lanes
+      - name: Require all source-bound QA lanes
         env:
           HOST_RESULT: ${{ needs.full-android.result }}
           NATIVE_RESULT: ${{ needs.native-pdf.result }}
+          NODE_RESULT: ${{ needs.node-backend.result }}
         run: |
           test "$HOST_RESULT" = success
           test "$NATIVE_RESULT" = success
+          test "$NODE_RESULT" = success
