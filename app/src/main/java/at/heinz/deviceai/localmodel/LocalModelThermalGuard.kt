@@ -37,15 +37,22 @@ object LocalModelThermalGuard {
         else -> "Das lokale Modell wurde wegen der Gerätetemperatur nicht ausgeführt."
     }
 
-    private class Run { @Volatile var stoppedByHeat = false }
+    private class Run {
+        var stoppedByHeat = false
+        var startReturned = false
+        var cancelIssued = false
+        var cancelling = false
+        var terminal = false
+        val delivery = LocalInferenceDelivery()
+    }
 
     private class Guarded(
         private val delegate: LocalModelRuntime,
         private val thermalStatus: () -> Int?
     ) : LocalModelRuntime by delegate {
         private val lock = Any()
-        /** Every admitted start until its terminal event; a start the busy runtime rejects leaves again at once. */
         private val inFlight = LinkedHashSet<Run>()
+        private var nativeOwner: Run? = null
 
         override fun stream(prompt: String, callback: LocalInferenceCallback) =
             guarded(callback) { delegate.stream(prompt, it) }
@@ -57,33 +64,87 @@ object LocalModelThermalGuard {
             guarded(callback) { delegate.respondToTools(responses, it) }
 
         private fun guarded(callback: LocalInferenceCallback, start: (LocalInferenceCallback) -> Unit) {
-            val status = runCatching(thermalStatus).getOrNull()
-            if (status != null && status >= SEVERE) {
-                callback.onEvent(LocalInferenceEvent.Failed(PAUSED_THERMAL))
-                return
-            }
+            // Register before sampling Android.
             val run = Run()
             synchronized(lock) { inFlight += run }
             try {
+                val status = runCatching(thermalStatus).getOrNull()
+                val paused = synchronized(lock) {
+                    if (status != null && status >= SEVERE) run.stoppedByHeat = true
+                    if (run.stoppedByHeat) {
+                        finishLocked(run)
+                        true
+                    } else {
+                        check(nativeOwner == null) { "A local model is not ready." }
+                        nativeOwner = run
+                        false
+                    }
+                }
+                if (paused) {
+                    callback.onEvent(LocalInferenceEvent.Failed(PAUSED_THERMAL))
+                    return
+                }
                 start(LocalInferenceCallback { event ->
                     val terminal = event is LocalInferenceEvent.Completed || event is LocalInferenceEvent.Cancelled ||
                         event is LocalInferenceEvent.Failed
-                    if (terminal) synchronized(lock) { inFlight -= run }
-                    callback.onEvent(if (terminal && run.stoppedByHeat && event !is LocalInferenceEvent.Completed)
-                        LocalInferenceEvent.Failed(STOPPED_THERMAL) else event)
+                    synchronized(lock) {
+                        if (run.terminal) return@LocalInferenceCallback
+                        if (terminal) finishLocked(run)
+                        run.delivery.enqueue {
+                            val delivered = synchronized(lock) {
+                                if (!run.stoppedByHeat) event
+                                else if (terminal) LocalInferenceEvent.Failed(STOPPED_THERMAL)
+                                else null
+                            }
+                            delivered?.let(callback::onEvent)
+                        }
+                    }
+                    run.delivery.drain()
+                    if (!terminal) cancelHeated(run)
                 })
+                synchronized(lock) { run.startReturned = true }
+                cancelHeated(run)
             } catch (rejected: Throwable) {
-                synchronized(lock) { inFlight -= run }
+                synchronized(lock) { finishLocked(run) }
                 throw rejected
+            }
+        }
+
+        // Cancellation retains native ownership.
+        private fun finishLocked(run: Run) {
+            run.terminal = true
+            inFlight -= run
+            if (nativeOwner === run && !run.cancelling) nativeOwner = null
+        }
+
+        private fun cancelHeated(run: Run) {
+            val cancel = synchronized(lock) {
+                if (nativeOwner !== run || run.terminal || !run.stoppedByHeat || run.cancelIssued ||
+                    (!run.startReturned && delegate.state != LocalModelState.GENERATING)) false
+                else {
+                    run.cancelIssued = true
+                    run.cancelling = true
+                    true
+                }
+            }
+            if (!cancel) return
+            try {
+                delegate.cancel()
+            } finally {
+                synchronized(lock) {
+                    run.cancelling = false
+                    if (run.terminal && nativeOwner === run) nativeOwner = null
+                }
             }
         }
 
         fun onThermalStatus(status: Int) {
             if (status < SEVERE) return
-            val marked = synchronized(lock) {
-                inFlight.filter { !it.stoppedByHeat }.onEach { it.stoppedByHeat = true }.isNotEmpty()
+            val owner = synchronized(lock) {
+                inFlight.forEach { it.stoppedByHeat = true }
+                nativeOwner
             }
-            if (marked) delegate.cancel()
+            owner?.let(::cancelHeated)
         }
     }
 }
