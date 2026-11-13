@@ -49,6 +49,7 @@ class AndroidLiveScrollTest {
         AndroidLiveNodePortTest.ServiceShadow.target = list
         ScreenObservationBus.connect(service)
         access = ScreenObservationBus.liveAccess()!!
+        contentChanged()
     }
 
     @After fun cleanup() {
@@ -60,6 +61,10 @@ class AndroidLiveScrollTest {
 
     private fun changed() {
         row.text = "Nachher"
+        contentChanged()
+    }
+
+    private fun contentChanged() {
         val event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
         event.packageName = "com.whatsapp"
         try { service.onAccessibilityEvent(event) } finally { event.recycle() }
@@ -75,14 +80,15 @@ class AndroidLiveScrollTest {
         try { service.onAccessibilityEvent(event) } finally { event.recycle() }
     }
 
-    private fun execute(dispatch: () -> Unit): NodeActionResult {
+    private fun execute(renderedRevision: Long = ScreenObservationBus.liveRevision(access),
+                        dispatch: () -> Unit): NodeActionResult {
+        val submitted = LiveMonitorStatus(LiveMonitorState.LIVE, null,
+            LiveFrameBinding("task", 7L, "com.whatsapp", service.packageName, LiveFrameOrigin.ACCESSIBILITY_WINDOW),
+            LiveFrameMeta(7L, System.nanoTime(), 600, 1000, "com.whatsapp", 42, false,
+                observationRevision = renderedRevision, sourceViewport = LiveTargetBounds(0f, 0f, 1f, 1f)), 1L, 0L)
         val port = AndroidLiveNodePort(access, "task", "com.whatsapp", { 1 }, {},
             { check(allowed) { "OWNER_GRANT_REVOKED" } },
-            deadlineNanos = System.nanoTime() + 800_000_000, captureSession = 7,
-            submittedFrame = { LiveMonitorStatus(LiveMonitorState.LIVE, null,
-                LiveFrameBinding("task", 7L, "com.whatsapp", service.packageName, LiveFrameOrigin.ACCESSIBILITY_WINDOW),
-                LiveFrameMeta(7L, System.nanoTime(), 600, 1000, "com.whatsapp", 42, false,
-                    sourceViewport = LiveTargetBounds(0f, 0f, 1f, 1f)), 1L, 0L) })
+            deadlineNanos = System.nanoTime() + 800_000_000, captureSession = 7, submittedFrame = { submitted })
         val before = port.current()
         val request = NodeActionRequest("task", "scroll", "com.whatsapp", access.epoch,
             before.stamp.revision, NodeActionKind.SCROLL_FORWARD, NodeSelector(singleScrollable = true))
@@ -135,6 +141,18 @@ class AndroidLiveScrollTest {
     @Test fun unchangedPositionDoesNotConfirm() {
         assertEquals(EffectVerdict.UNCLEAR_EXPECTATION_NOT_MET,
             execute { scrolled(index = 4); scrolled(index = 4); changed() }.verdict)
+    }
+
+    @Test fun unboundRenderReceiptPreventsScrollAndReleasesWatch() {
+        val refused = execute(renderedRevision = -1L) {
+            scrolled(index = 1); scrolled(index = 4); changed()
+        }
+        assertFalse(refused.confirmed)
+        assertEquals("DISPATCH_FAILED:COMPUTER_RENDERED_OBSERVATION_MISMATCH", refused.reason)
+        assertEquals(0, calls)
+        assertEquals(EffectVerdict.CONFIRMED,
+            execute { scrolled(index = 1); scrolled(index = 4); changed() }.verdict)
+        assertEquals(1, calls)
     }
 
     @Test fun revokedGrantPreventsScrollDispatch() {

@@ -91,6 +91,7 @@ class AndroidLiveNodePortTest {
         ServiceShadow.resetGeometry()
         ScreenObservationBus.connect(service)
         access = ScreenObservationBus.liveAccess()!!
+        changed()
     }
     @After fun cleanup() {
         ScreenObservationBus.disconnect(service)
@@ -149,10 +150,10 @@ class AndroidLiveNodePortTest {
         return viewport
     }
 
-    private fun submittedStatus(viewport: LiveTargetBounds) = LiveMonitorStatus(LiveMonitorState.LIVE, null,
+    private fun submittedStatus(viewport: LiveTargetBounds, revision: Long) = LiveMonitorStatus(LiveMonitorState.LIVE, null,
         LiveFrameBinding(task, 9L, "com.whatsapp", service.packageName, LiveFrameOrigin.PROJECTION_WINDOW_CROP),
-        LiveFrameMeta(9L, System.nanoTime(), 1000, 400, "com.whatsapp", 42, true, sourceViewport = viewport),
-        8L, 0L)
+        LiveFrameMeta(9L, System.nanoTime(), 1000, 400, "com.whatsapp", 42, true,
+            observationRevision = revision, sourceViewport = viewport), 8L, 0L)
 
     private fun capturedPort(frame: () -> LiveMonitorStatus?) = AndroidLiveNodePort(access, task, "com.whatsapp",
         { frame()?.sequence ?: 0L }, {}, { check(allowed) { "OWNER_GRANT_REVOKED" } },
@@ -160,7 +161,8 @@ class AndroidLiveNodePortTest {
 
     @Test fun floatingImeExcludesVisibleNodeOutsideRenderedViewport() {
         val viewport = floatingIme(Rect(1300, 100, 1500, 200))
-        val port = capturedPort { submittedStatus(viewport) }
+        val status = submittedStatus(viewport, ScreenObservationBus.liveRevision(access))
+        val port = capturedPort { status }
         val before = port.current()
         assertTrue(before.nodes.single().visible)
         NodeShadow.onAction = { _, _ -> calls++; true }
@@ -174,7 +176,8 @@ class AndroidLiveNodePortTest {
 
     @Test fun floatingImeRejectsTargetPartlyOutsideRenderedViewport() {
         val viewport = floatingIme(Rect(1850, 550, 1950, 650))
-        val port = capturedPort { submittedStatus(viewport) }
+        val status = submittedStatus(viewport, ScreenObservationBus.liveRevision(access))
+        val port = capturedPort { status }
         val before = port.current()
         assertTrue(before.nodes.single().visible)
         assertTrue(before.nodes.single().bounds!!.centerY >= viewport.top)
@@ -190,7 +193,8 @@ class AndroidLiveNodePortTest {
     @Test fun floatingImeAllowsAndVerifiesTargetInsideRenderedViewport() {
         val bounds = Rect(1300, 700, 1500, 800)
         val viewport = floatingIme(bounds)
-        val port = capturedPort { submittedStatus(viewport) }
+        val status = submittedStatus(viewport, ScreenObservationBus.liveRevision(access))
+        val port = capturedPort { status }
         val before = port.current()
         NodeShadow.onAction = { action, args ->
             calls++
@@ -204,7 +208,8 @@ class AndroidLiveNodePortTest {
     }
 
     @Test fun lostRenderReceiptAtFinalRefreshPreventsInput() {
-        var status: LiveMonitorStatus? = submittedStatus(floatingIme(Rect(1300, 700, 1500, 800)))
+        var status: LiveMonitorStatus? = submittedStatus(floatingIme(Rect(1300, 700, 1500, 800)),
+            ScreenObservationBus.liveRevision(access))
         val port = capturedPort { status }
         val before = port.current()
         assertEquals(8L, before.stamp.frameSequence)
@@ -216,6 +221,42 @@ class AndroidLiveNodePortTest {
         assertEquals("COMPUTER_RENDERED_SOURCE_REQUIRED", failure.message)
         assertEquals(0, calls)
         assertFalse(port.inputAttempted)
+    }
+
+    private fun rejectsChangedRenderReceipt(reason: String, change: (LiveFrameMeta) -> LiveFrameMeta) {
+        changed()
+        var status = submittedStatus(floatingIme(Rect(1300, 700, 1500, 800)),
+            ScreenObservationBus.liveRevision(access))
+        val port = capturedPort { status }
+        val before = port.current()
+        assertTrue(before.stamp.revision > 1L)
+        assertEquals(before.stamp.revision, status.meta!!.observationRevision)
+        NodeShadow.onRefresh = { status = status.copy(meta = change(status.meta!!)) }
+        NodeShadow.onAction = { _, _ -> calls++; true }
+        val failure = assertThrows(IllegalStateException::class.java) {
+            port.performOnce(request(before), before.nodes.single())
+        }
+        assertEquals(reason, failure.message)
+        assertEquals(0, calls)
+        assertFalse(port.inputAttempted)
+    }
+
+    @Test fun staleRenderRevisionAtFinalRefreshPreventsInput() {
+        rejectsChangedRenderReceipt("COMPUTER_RENDERED_OBSERVATION_MISMATCH") {
+            it.copy(observationRevision = it.observationRevision - 1L)
+        }
+    }
+
+    @Test fun unboundRenderRevisionAtFinalRefreshPreventsInput() {
+        rejectsChangedRenderReceipt("COMPUTER_RENDERED_OBSERVATION_MISMATCH") {
+            it.copy(observationRevision = -1L)
+        }
+    }
+
+    @Test fun differentRenderedWindowAtFinalRefreshPreventsInput() {
+        rejectsChangedRenderReceipt("COMPUTER_RENDERED_SOURCE_MISMATCH") {
+            it.copy(sourceWindowId = 99)
+        }
     }
 
     @Test fun searchClickWaitsForSemanticFieldWithDifferentHint() {
