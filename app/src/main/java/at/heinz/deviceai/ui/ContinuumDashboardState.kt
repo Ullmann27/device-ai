@@ -26,7 +26,9 @@ data class ContinuumDashboardState(
     /** Event bars are session observations, separately labelled from the persistent ledger totals. */
     val memoryActivity: MemoryActivitySnapshot? = null,
     /** Honest Document-Blueprint snapshot (#687); null = no document in this turn. Never sampled. */
-    val document: HollywoodFuiLiveData.Document? = null
+    val document: HollywoodFuiLiveData.Document? = null,
+    /** Bound, observed Android work only. */
+    val computer: ComputerPanelState? = null
 ) {
     data class PresentationStatus(
         val listening: Boolean = false,

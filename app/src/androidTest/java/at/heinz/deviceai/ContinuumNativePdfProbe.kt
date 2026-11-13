@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.Locale
+import java.util.concurrent.atomic.AtomicInteger
 
 /** Native decode, no PDF shadows. */
 internal object ContinuumNativePdfProbe {
@@ -24,8 +25,14 @@ internal object ContinuumNativePdfProbe {
         try {
             check(Build.VERSION.SDK_INT >= 35) { "NATIVE_PDF_REQUIRES_API_35" }
             val uri = Uri.parse("content://at.heinz.deviceai.tests.synthetic.pdfprobe/document/4711")
+            val before = checkNotNull(resolver.call(uri, "counts", null, null)) { "NO_PROVIDER_COUNTERS" }
             val document = PdfDocumentIntake(resolver).read(uri, 360)
             try {
+                val after = checkNotNull(resolver.call(uri, "counts", null, null)) { "NO_PROVIDER_COUNTERS" }
+                val queries = after.getInt("queries") - before.getInt("queries")
+                val opens = after.getInt("opens") - before.getInt("opens")
+                check(queries == 1) { "PROVIDER_QUERY_COUNT" }
+                check(opens == 1) { "PROVIDER_OPEN_COUNT" }
                 check(document.name == ContinuumNativePdfProbeProvider.NAME) { "PROVIDER_NAME_MISMATCH" }
                 check(document.sizeBytes == ContinuumNativePdfProbeProvider.bytes().size.toLong()) { "PROVIDER_SIZE_MISMATCH" }
                 check(document.pageCount == 1 && document.textPages == 1) { "PAGE_COUNT_MISMATCH" }
@@ -40,6 +47,8 @@ internal object ContinuumNativePdfProbe {
                     Color.green(it) < 180 && Color.blue(it) < 180 }
                 check(ink > 0) { "NO_RENDERED_INK" }
                 putInt("rendered_ink_pixels", ink)
+                putInt("provider_queries", queries)
+                putInt("provider_opens", opens)
                 putInt("page_count", document.pageCount)
                 putString("status", "ok")
                 putString("stream", "Native PDF provider, render and text extraction passed.\n")
@@ -53,7 +62,17 @@ internal object ContinuumNativePdfProbe {
 
 /** Serves one immutable synthetic fixture. */
 class ContinuumNativePdfProbeProvider : ContentProvider() {
+    private val queries = AtomicInteger()
+    private val opens = AtomicInteger()
     override fun onCreate() = true
+
+    override fun call(method: String, arg: String?, extras: Bundle?): Bundle {
+        check(method == "counts") { "UNKNOWN_PROBE_METHOD" }
+        return Bundle().apply {
+            putInt("queries", queries.get())
+            putInt("opens", opens.get())
+        }
+    }
 
     private fun checkUri(uri: Uri) {
         if (uri.path != "/document/4711" || uri.query != null || uri.fragment != null)
@@ -65,6 +84,7 @@ class ContinuumNativePdfProbeProvider : ContentProvider() {
     override fun query(uri: Uri, projection: Array<out String>?, selection: String?,
                        selectionArgs: Array<out String>?, sortOrder: String?): Cursor {
         checkUri(uri)
+        queries.incrementAndGet()
         val columns = projection ?: arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE)
         return MatrixCursor(columns).apply {
             addRow(columns.map { when (it) {
@@ -78,6 +98,7 @@ class ContinuumNativePdfProbeProvider : ContentProvider() {
     @Synchronized override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor {
         checkUri(uri)
         if (mode != "r") throw FileNotFoundException("READ_ONLY_SYNTHETIC_FIXTURE")
+        opens.incrementAndGet()
         val fixture = File(checkNotNull(context).cacheDir, NAME)
         if (!fixture.exists()) fixture.writeBytes(bytes())
         return ParcelFileDescriptor.open(fixture, ParcelFileDescriptor.MODE_READ_ONLY)

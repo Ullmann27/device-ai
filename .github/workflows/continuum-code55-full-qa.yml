@@ -8,6 +8,7 @@ on:
       - .github/workflows/continuum-code55-full-qa.yml
       - app/**
       - .github/continuum/**
+      - tools/code55-apk/native-pdf-emulator.sh
 
 permissions:
   contents: read
@@ -72,3 +73,103 @@ jobs:
             app/build/reports/lint-results-debug.*
           retention-days: 14
           if-no-files-found: warn
+
+  native-pdf:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Freeze native probe source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install official native Android runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0' 'emulator' 'system-images;android-35;google_apis;x86_64'
+          printf 'no\n' | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd --name continuum-native-pdf --package 'system-images;android-35;google_apis;x86_64' --device pixel_7
+      - name: Build disposable native test APKs
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            :app:assembleDebug :app:assembleDebugAndroidTest
+      - name: Verify actual provider, native rendering and extracted text
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/code55-native-pdf"
+          mkdir -p "$evidence"
+          test -c /dev/kvm
+          original_kvm_group="$(stat -c '%g' /dev/kvm)"
+          original_kvm_mode="$(stat -c '%a' /dev/kvm)"
+          emulator_pid=''
+          cleanup() {
+            if [[ -n "$emulator_pid" ]]; then
+              "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 emu kill || true
+              kill "$emulator_pid" 2>/dev/null || true
+            fi
+            sudo chgrp "$original_kvm_group" /dev/kvm
+            sudo chmod "$original_kvm_mode" /dev/kvm
+          }
+          trap cleanup EXIT
+          sudo chgrp "$(id -gn)" /dev/kvm
+          sudo chmod g+rw /dev/kvm
+          "$ANDROID_HOME/platform-tools/adb" start-server
+          "$ANDROID_HOME/emulator/emulator" -avd continuum-native-pdf -port 5554 -accel on \
+            -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader -memory 2048 -cores 2 \
+            > "$evidence/emulator.log" 2>&1 &
+          emulator_pid=$!
+          ready=false
+          deadline=$((SECONDS + 600))
+          while (( SECONDS < deadline )); do
+            kill -0 "$emulator_pid"
+            if [[ "$(timeout 10 "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 shell -n getprop sys.boot_completed 2>/dev/null | tr -d '\r' || true)" == 1 ]]; then
+              ready=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ready" = true
+          timeout 300 bash tools/code55-apk/native-pdf-emulator.sh emulator-5554 "$evidence"
+      - name: Preserve native proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code55-native-PDF-emulator-QA
+          path: ${{ runner.temp }}/code55-native-pdf/
+          retention-days: 14
+          if-no-files-found: warn
+
+  complete-qa:
+    if: always() && github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+    needs: [full-android, native-pdf]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require both real QA lanes
+        env:
+          HOST_RESULT: ${{ needs.full-android.result }}
+          NATIVE_RESULT: ${{ needs.native-pdf.result }}
+        run: |
+          test "$HOST_RESULT" = success
+          test "$NATIVE_RESULT" = success

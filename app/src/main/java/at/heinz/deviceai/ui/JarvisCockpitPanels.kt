@@ -90,6 +90,12 @@ object JarvisCockpitPanels {
     }
 
     fun drawDocumentPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false) {
+        s.computer?.let { computer ->
+            val agents = s.cockpit.workers?.takeIf { it.any { worker -> worker.running } }
+                ?.let { agentRows(s).take(2) }.orEmpty()
+            drawComputerRows(p, b, "Auftrag", Icon.DOCUMENT, computer.planningRows() + agents, workstation)
+            return
+        }
         val y0 = if (workstation) CockpitWorkstationChrome.panelHeader(p, b, "Dokument", Icon.DOCUMENT)
         else title(p, b, "Dokument") { x, y ->
             ContinuumIcons.draw(p, Icon.DOCUMENT, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f)
@@ -124,6 +130,10 @@ object JarvisCockpitPanels {
     }
 
     fun drawDraftPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false) {
+        s.computer?.let { computer ->
+            drawComputerRows(p, b, "Ergebnis", Icon.DOCUMENT, computer.resultRows(), workstation)
+            return
+        }
         val y0 = if (workstation) CockpitWorkstationChrome.panelHeader(p, b, "Entwurf", Icon.CODE)
         else title(p, b, "Zusammenfassung – Entwurf") { x, y ->
             ContinuumIcons.draw(p, Icon.CODE, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f)
@@ -159,6 +169,36 @@ object JarvisCockpitPanels {
             JarvisReferenceHud.surface(p, box, 8f, Colors.cyan, Colors.cyanDeep)
             p.drawText(fit(p, label, st, box.width - 8f), box.centerX,
                 box.centerY + p.capHeight(st) / 2f, st, Fill.Solid(Colors.text), TextAlign.CENTER)
+        }
+    }
+
+    private fun drawComputerRows(p: ContinuumPainter, b: Box, heading: String, icon: Icon,
+                                 rows: List<Row>, workstation: Boolean) {
+        val y0 = if (workstation) CockpitWorkstationChrome.panelHeader(p, b, heading, icon)
+        else title(p, b, heading) { x, y ->
+            ContinuumIcons.draw(p, icon, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f)
+        }
+        val style = Type.caption
+        val cap = p.capHeight(style)
+        val lineHeight = cap + 5f
+        val width = (b.width - 28f).coerceAtLeast(0f)
+        var y = rowsTop(p, y0) + cap
+        for (row in rows) {
+            if (y > b.bottom - 8f) break
+            val words = (row.label + ": " + row.value).split(' ')
+            var line = ""
+            for (word in words) {
+                val next = if (line.isEmpty()) word else "$line $word"
+                if (line.isNotEmpty() && p.measureText(next, style) > width) {
+                    p.drawText(fit(p, line, style, width), b.left + 14f, y, style, Fill.Solid(tone(row.state)))
+                    y += lineHeight
+                    line = word
+                    if (y > b.bottom - 8f) break
+                } else line = next
+            }
+            if (y > b.bottom - 8f) break
+            p.drawText(fit(p, line, style, width), b.left + 14f, y, style, Fill.Solid(tone(row.state)))
+            y += lineHeight + 4f
         }
     }
 

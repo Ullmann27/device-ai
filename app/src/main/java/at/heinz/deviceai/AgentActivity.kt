@@ -1611,6 +1611,7 @@ class AgentActivity : Activity() {
                 if (!foregroundLearningActive) return@onSuccess
                 homeView?.takeIf { it.isShown }?.let { home ->
                     home.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
+                        computer = home.state.computer,
                         memoryActivity = memoryActivitySnapshot(state.memory),
                         document = airbusCockpitOrchestrator?.documentSnapshot())
                 }
@@ -6266,6 +6267,9 @@ class AgentActivity : Activity() {
                 (foregroundLearningActive || (computerViewVisible && isInMultiWindowMode)) },
             playClick = { playUiFeedback(at.heinz.deviceai.ui.ContinuumUiFeedback.Cue.BUTTON) },
             stopClick = { uiFeedback?.stop() },
+            setPanels = { panel -> homeView?.let { home ->
+                home.state = home.state.copy(computer = panel)
+            } },
             projectGaze = { homeView?.computerWorkGaze(it) }).also { computerController = it }
         controller.begin(pending.packageName, pending.intent, pending.approvedAt) { result, epoch ->
             deliverComputerReply(pending, result, epoch)

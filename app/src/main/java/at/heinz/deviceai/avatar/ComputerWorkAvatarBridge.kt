@@ -21,6 +21,7 @@ class ComputerWorkAvatarBridge(
     private val director: AvatarDirector,
     private val sounds: ComputerWorkSounds = SilentComputerWorkSounds,
     private val projectGaze: (CockpitWorkEvent) -> GazeTarget? = { null },
+    private val onWorkState: (CockpitWorkReducer.Snapshot) -> Unit = {},
     private val nanos: () -> Long = System::nanoTime
 ) : CockpitAnimationRenderer, AutoCloseable {
     val reducer = CockpitWorkReducer()
@@ -77,14 +78,17 @@ class ComputerWorkAvatarBridge(
             }
             else -> Unit
         }
+        onWorkState(reducer.snapshot(nanos()))
     }
 
     private fun focusWork(event: CockpitWorkEvent) {
         focusEvent = event
-        refreshProjection()
+        updateProjection(renewLease = true)
     }
 
-    @Synchronized fun refreshProjection() {
+    @Synchronized fun refreshProjection() = updateProjection(renewLease = false)
+
+    private fun updateProjection(renewLease: Boolean) {
         if (closed) return
         val window = windowId ?: return
         val event = focusEvent ?: return
@@ -98,8 +102,8 @@ class ComputerWorkAvatarBridge(
             lastTarget = null
             return
         }
-        if (target == lastTarget && workGazeActive) return
-        if (workGazeActive) director.windowMoved(window, target)
+        if (target == lastTarget && workGazeActive && !renewLease) return
+        if (workGazeActive && !renewLease) director.windowMoved(window, target)
         else workGazeActive = director.windowWorkStarted(window, target)
         lastTarget = target
     }

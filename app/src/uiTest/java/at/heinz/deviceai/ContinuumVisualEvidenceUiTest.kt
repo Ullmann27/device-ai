@@ -135,9 +135,22 @@ class ContinuumVisualEvidenceUiTest {
         val bitmap = Bitmap.createBitmap(work.width, work.height, Bitmap.Config.ARGB_8888)
         try {
             work.draw(Canvas(bitmap))
-            for (name in listOf("cockpitHeadBounds", "cockpitOrbBounds")) {
-                val region = avatarRegion(head, name)
-                region.offset(headPosition[0] - workPosition[0], headPosition[1] - workPosition[1])
+            val home = head.parent as? at.heinz.deviceai.ui.ContinuumHomeView
+            val shell = home?.jarvisShell?.currentShell()
+            val face = shell?.protectedFaceBounds?.takeIf { shell.workstation }
+            val regions = if (face != null && home != null) {
+                val origin = IntArray(2).also { home.getLocationOnScreen(it) }
+                val density = home.resources.displayMetrics.density
+                listOf("protectedFaceBounds" to Rect((face.left * density).toInt(),
+                    (face.top * density).toInt(), (face.right * density).toInt(), (face.bottom * density).toInt()).apply {
+                    offset(origin[0] - workPosition[0], origin[1] - workPosition[1])
+                })
+            } else listOf("cockpitHeadBounds", "cockpitOrbBounds").map { name ->
+                name to avatarRegion(head, name).apply {
+                    offset(headPosition[0] - workPosition[0], headPosition[1] - workPosition[1])
+                }
+            }
+            for ((name, region) in regions) {
                 assertFalse("Protected region exists: $name", region.isEmpty)
                 val viewport = Rect(0, 0, work.width, work.height)
                 if (!region.intersect(viewport)) {
@@ -167,7 +180,14 @@ class ContinuumVisualEvidenceUiTest {
         val panel = shown(work, "jarvis-work-window:panel")
         assertSame("Work area uses the original window", root, work.rootView)
         assertSame("Systemstatus must not create AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
-        assertTrue("Opening has an intermediate scale", panel.scaleX > 0f && panel.scaleX < 1f)
+        val openness = field(work, "openness") as Float
+        val source = field(work, "origin") as android.graphics.RectF
+        val destination = field(work, "destination") as android.graphics.RectF
+        assertTrue("Opening advances between endpoints: $openness", openness > 0f && openness < 1f)
+        assertEquals("Width follows the actual source", (source.width() +
+            (destination.width() - source.width()) * openness) / panel.width, panel.scaleX, .001f)
+        assertEquals("Height follows the actual source", (source.height() +
+            (destination.height() - source.height()) * openness) / panel.height, panel.scaleY, .001f)
         assertEquals("Content stays hidden until the cinematic data phase", 0f, panel.alpha, .001f)
         assertProtectedRegions(work, head)
         assertTrue("Opening reaches the existing avatar gaze", avatarPose(head).gazeDirected)

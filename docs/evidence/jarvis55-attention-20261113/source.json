@@ -1,5 +1,5 @@
 {
-  "source_sha": "ed2e7b5af6c84b3197844d474ffafa64df3c08c4",
+  "source_sha": "28aef014a48641eb92f1235074b5468992b4bf70",
   "source_files": {
     "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "1dd295223166ed0a1425bb7a928d4ab4124e122c8067dbf9355df4aba826d6f2",
     "app/src/main/java/at/heinz/deviceai/cognitive/LiveMonitorSubmission.kt": "0f0235e4336bb3ebfc6066cfa250eefb3a52fabaad9c2e762cd5a98c74455f2e",
@@ -18,7 +18,7 @@
     "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "64f0ffaa510fd32c84423a61768c1a8aede003dfdbeea6b6661c806996f2979c",
     "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "99af771e4081378707cde78dbc7ac69f0eed57c54285b5c575409a488a5067ab",
     "app/src/main/java/at/heinz/deviceai/avatar/AvatarSentenceAccentPolicy.kt": "48cf078dc6dd6362fc9234ba816fb4e2cece0efecd4435083626c92badec56bc",
-    "app/src/main/java/at/heinz/deviceai/avatar/ComputerWorkAvatarBridge.kt": "dd057548001aa479b82344a41b32f07886a432bea9f6e861f6705432c01c5dd7",
+    "app/src/main/java/at/heinz/deviceai/avatar/ComputerWorkAvatarBridge.kt": "52225704d7e5d0da8a2c7ba3589e0e47415fa8778374141349182209976f2083",
     "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
     "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3",
     "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt": "6873b4652a01873e8736781c9eafc13b006e92c9a537e457e151630e029b94b6",
@@ -26,7 +26,7 @@
     "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "77f37b8fd75398a75c46cdf0a97d21b29d81457c66ab031b8e8ba75377c20a16",
     "app/src/main/java/at/heinz/deviceai/ui/JarvisWindowGaze.kt": "93422fb2f0d6900049e3aef1fd37697edb45677a66ce5aef38697c0a52c09bc3",
     "app/src/main/java/at/heinz/deviceai/ui/ComputerMonitorGaze.kt": "30b233941d491a5590700a7e3a9530ab3c69ddd8bedf5bf8087ccd25656e540a",
-    "app/src/test/java/at/heinz/deviceai/avatar/ComputerWorkAttentionTest.kt": "cdd0fcf1888436ed12c16e4f337ccc90105c2489b11523a80803f4de6ccc00e6",
+    "app/src/test/java/at/heinz/deviceai/avatar/ComputerWorkAttentionTest.kt": "c44543664d6fc5937dcb11d4d246926d1f19672c2817ed458fe7b5a3de06ea1d",
     "app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt": "5467a039e30f7ac85b67f2e4ffd915558e1bff744129ba9fbbd393c35ab75a40",
     "app/src/test/java/at/heinz/deviceai/ui/ComputerMonitorGazeTest.kt": "b8a8e9c20f7e5bd44749f34f5cf614651459d05e2cb2b88fcce572b2c6022e17",
     "app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2",

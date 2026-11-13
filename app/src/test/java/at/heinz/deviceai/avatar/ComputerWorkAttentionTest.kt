@@ -143,6 +143,36 @@ class ComputerWorkAttentionTest {
         assertFalse(pose.pose(now).reading)
     }
 
+    @Test fun freshWorkEventsRenewAttentionWithoutInputReplay() {
+        val bridge = ComputerWorkAvatarBridge(director, projectGaze = { target }, nanos = { now * 1_000_000 })
+        bridge.bind("task", 9)
+        bridge.render(event(1, CockpitWorkEvent.Stage.ACCEPTED))
+        repeat(3) { index ->
+            now += AvatarPoseReducer.MAX_WINDOW_WORK_MS / 2
+            bridge.render(event(index + 2L, CockpitWorkEvent.Stage.FOCUS))
+            assertTrue(pose.pose(now).reading)
+            assertNull(pose.pose(now).workInput)
+        }
+    }
+
+    @Test fun panelsReceiveOnlyAcceptedCurrentWorkEvents() {
+        val states = mutableListOf<at.heinz.deviceai.cognitive.CockpitWorkReducer.Snapshot>()
+        val bridge = ComputerWorkAvatarBridge(director, onWorkState = { states += it },
+            nanos = { now * 1_000_000 })
+        bridge.bind("task", 9)
+        bridge.render(event(1, CockpitWorkEvent.Stage.ACCEPTED).copy(taskId = "other"))
+        assertTrue(states.isEmpty())
+        val accepted = event(1, CockpitWorkEvent.Stage.ACCEPTED)
+        bridge.render(accepted)
+        bridge.render(accepted)
+        bridge.render(event(2, CockpitWorkEvent.Stage.STOPPED))
+        bridge.render(event(3, CockpitWorkEvent.Stage.FOCUS))
+        assertEquals(listOf(CockpitWorkEvent.Stage.ACCEPTED, CockpitWorkEvent.Stage.STOPPED),
+            states.map { it.stage })
+        assertTrue(states.all { it.taskId == "task" && it.sessionId == 9L })
+        bridge.close()
+    }
+
     private fun event(sequence: Long, stage: CockpitWorkEvent.Stage): CockpitWorkEvent {
         now++
         return CockpitWorkEvent("task", 9, sequence, now * 1_000_000, now, stage,

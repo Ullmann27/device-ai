@@ -24,6 +24,7 @@ internal class OwnerComputerSessionController(
     private val visible: () -> Boolean,
     playClick: () -> Unit,
     stopClick: () -> Unit,
+    private val setPanels: (at.heinz.deviceai.ui.ComputerPanelState?) -> Unit = {},
     projectGaze: (CockpitWorkEvent) -> at.heinz.deviceai.avatar.GazeTarget? = { null }
 ) : AutoCloseable {
     private data class Plan(val taskId: String, val packageName: String, val intent: OwnerComputerIntent,
@@ -32,7 +33,7 @@ internal class OwnerComputerSessionController(
     private val main = Handler(Looper.getMainLooper())
     private val bridge = ComputerWorkAvatarBridge(director,
         ComputerWorkCuePlayer(post = { main.post(it) }, playClick = playClick, stopClick = stopClick),
-        projectGaze = projectGaze)
+        projectGaze = projectGaze, onWorkState = ::workStateChanged)
     private val subscription = bus.subscribe(bridge)
     @Volatile private var plan: Plan? = null
     @Volatile private var grant: OwnerComputerTaskGrant? = null
@@ -185,6 +186,8 @@ internal class OwnerComputerSessionController(
                     return@post
                 }
                 workflow = null
+                setPanels(at.heinz.deviceai.ui.ComputerPanelState.from(current.taskId,
+                    started.sessionId, current.intent, bridge.reducer.snapshot(System.nanoTime()), result))
                 setBusy(false)
                 current.reply(result, started.observationEpoch)
             }
@@ -192,6 +195,18 @@ internal class OwnerComputerSessionController(
             stop()
             current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.FAILED,
                 "Die App-Arbeit konnte nicht gestartet werden. Es wurde keine weitere Eingabe ausgeführt."), null)
+        }
+    }
+
+    private fun workStateChanged(snapshot: CockpitWorkReducer.Snapshot) {
+        val current = plan ?: return
+        val sourceSession = snapshot.sessionId ?: return
+        if (snapshot.taskId != current.taskId) return
+        main.post {
+            if (!closed && plan === current) {
+                setPanels(at.heinz.deviceai.ui.ComputerPanelState.from(current.taskId,
+                    sourceSession, current.intent, snapshot))
+            }
         }
     }
 
@@ -211,6 +226,7 @@ internal class OwnerComputerSessionController(
         workflow = null
         AndroidLiveComputer.stop()
         setFeed(null)
+        setPanels(null)
         if (previous != null) setBusy(false)
     }
 

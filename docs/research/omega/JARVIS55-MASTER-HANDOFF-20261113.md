@@ -8,7 +8,7 @@ Integrator branch: `work/jarvis55-master-20261113`, targeting #809 after review.
 
 Scope: preserve existing Filament, avatar, five-ring orb, cognitive and permission paths; improve real monitor presentation and geometry-bound attention, interrupted task continuity, and actual computer evidence. Build an exact-source APK candidate with unchanged original package.
 
-Existing uncommitted attention changes from the earlier workspace will be reviewed and tested before adoption. Full QA on parent run 43297198210 failed; scoped run 43297197973 is insufficient for full acceptance.
+Existing attention changes from the earlier workspace were reviewed, extended and tested before adoption. Full QA on parent run 43297198210 failed; scoped run 43297197973 is insufficient for full acceptance.
 
 EXP-00/05/06/07/08/11/12 compatibility maintained. No model-weight promotion, extra renderer/event bus, main merge, signing-key change or permission bypass.
 
@@ -24,3 +24,9 @@ Rollback: revert this branch's commits; preserve all upstream work.
 - Fullstage memory rendering now restores the existing orb renderer dimensions immediately, including unified-3D scenes that do not draw the old 2D orb next frame.
 - Legacy UI fixtures follow the shared head/orb scene and ambiguous two-app selection; no production permission rules changed.
 - Native UI/Filament verification remains pending; focused JVM source hashes and checks are recorded with this checkpoint.
+
+## Work surfaces and source continuity
+
+The existing side-panel drawing path now presents the accepted CockpitWorkReducer snapshot. Left: app, bounded goal and actual stage/action. Right: pending/checked-step/checked-task distinction and workflow result. The existing controller binds intent and final result to the current task/session, clears displays on stop, and preserves panel state during dashboard refresh. No parallel event bus or Android dispatcher.
+
+Source-bound host attention/action suite: 65 passing. This includes rejected stale/duplicate/foreign events never reaching the panel callback. New side-panel rendering tests and full Gradle compilation are pending at this checkpoint. Native PDF provider instrumentation now records actual query/open counts and source guards. No Fold7 proof yet.

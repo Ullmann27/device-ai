@@ -1290,7 +1290,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                 }
                 canvas.restoreToCount(orbCanvas)
             }
-            if (!native3dDrawn && !layeredCockpit) {
+            if (!native3dDrawn && (!layeredCockpit || !head3dEnabled)) {
                 val headCanvas = if (layeredCockpit) canvas.saveLayerAlpha(
                     headDrawBounds.left / density, headDrawBounds.top / density,
                     headDrawBounds.right / density, headDrawBounds.bottom / density,
