@@ -6053,8 +6053,9 @@ class AgentActivity : Activity() {
             LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .90f).apply { marginStart = dp(4) }
         )
         actions.addView(
-            smallButton("⌁ Datei", "Quelldatei im Entwicklungszentrum auswählen") {
-                showDevelopmentDialog()
+            smallButton("⌁ Datei", "PDF-Datei aus Android auswählen und im Gespräch lesen") {
+                // Chat attachments must use the existing owner-approved PDF intake, not the coding assistant.
+                openPdfDocumentPicker(wantsDraft = false, request = "PDF über Datei im Gespräch öffnen")
             },
             LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .94f).apply { marginStart = dp(4) }
         )
