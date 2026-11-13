@@ -167,7 +167,14 @@ class ContinuumVisualEvidenceUiTest {
         val panel = shown(work, "jarvis-work-window:panel")
         assertSame("Work area uses the original window", root, work.rootView)
         assertSame("Systemstatus must not create AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
-        assertTrue("Opening has an intermediate scale", panel.scaleX > 0f && panel.scaleX < 1f)
+        val openness = field(work, "openness") as Float
+        val source = field(work, "origin") as android.graphics.RectF
+        val destination = field(work, "destination") as android.graphics.RectF
+        assertTrue("Opening advances between endpoints: $openness", openness > 0f && openness < 1f)
+        assertEquals("Width follows the actual source", (source.width() +
+            (destination.width() - source.width()) * openness) / panel.width, panel.scaleX, .001f)
+        assertEquals("Height follows the actual source", (source.height() +
+            (destination.height() - source.height()) * openness) / panel.height, panel.scaleY, .001f)
         assertEquals("Content stays hidden until the cinematic data phase", 0f, panel.alpha, .001f)
         assertProtectedRegions(work, head)
         assertTrue("Opening reaches the existing avatar gaze", avatarPose(head).gazeDirected)
