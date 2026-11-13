@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 /** Native scene; synthetic context only. */
 internal object ContinuumNativeFilamentProbe {
-    fun run(instrumentation: Instrumentation): Bundle {
+    fun run(instrumentation: Instrumentation, captureVisuals: Boolean = false): Bundle {
         val result = Bundle().apply {
             putInt("sdk", Build.VERSION.SDK_INT)
             putString("evidence_type", "Native Filament panel uploads/submission; synthetic context; offscreen surface")
@@ -80,6 +80,8 @@ internal object ContinuumNativeFilamentProbe {
             val head = local(requireNotNull(shell.headBounds))
             val orb = local(requireNotNull(shell.orbBounds))
             val (width, height) = frame.bufferSize()
+            val export = if (captureVisuals) NativeFilamentFrameExport(instrumentation.targetContext) else null
+            var captureEnabled = false
             val uploads = AtomicInteger()
             val outputFrames = AtomicInteger()
             val outputFailure = AtomicReference<Throwable?>()
@@ -99,7 +101,11 @@ internal object ContinuumNativeFilamentProbe {
                 val actual = requireNotNull(renderer)
                 val receipt = AvatarFrameReceipt()
                 phase("render")
-                val rendered = actual.render(pose, renderedFrames / 60f, false, width, height, receipt = receipt)
+                val rendered = actual.render(pose, renderedFrames / if (captureVisuals) 12f else 60f,
+                    captureVisuals, width, height, receipt = receipt,
+                    cinematicLighting = captureVisuals, coreEnergy = if (captureVisuals) .18f else 0f,
+                    gazeBlinkEnabled = captureVisuals,
+                    orbPhase = .4f + if (captureVisuals) renderedFrames / 600f else 0f)
                 if (rendered) {
                     val required = AvatarFrameReceipt.FILAMENT_BEGIN or AvatarFrameReceipt.FILAMENT_RENDERED
                     check((receipt.stageFlags and required) == required) { "NO_NATIVE_RENDER_RECEIPT" }
@@ -123,6 +129,7 @@ internal object ContinuumNativeFilamentProbe {
                                     "EMPTY_NATIVE_OUTPUT"
                                 }
                                 outputFrames.incrementAndGet()
+                                if (captureEnabled) export?.capture(image)
                             }
                         } catch (error: Throwable) { outputFailure.compareAndSet(null, error) }
                     }, Handler(Looper.getMainLooper()))
@@ -175,6 +182,28 @@ internal object ContinuumNativeFilamentProbe {
             await("NATIVE_OUTPUT_TIMEOUT") {
                 outputFailure.get()?.let { throw it }
                 outputFrames.get() > 0
+            }
+            if (export != null) {
+                phase("visual_capture")
+                instrumentation.onMain {
+                    output?.acquireLatestImage()?.close()
+                    captureEnabled = true
+                }
+                repeat(NativeFilamentFrameExport.FRAME_COUNT) { index ->
+                    await("VISUAL_FRAME_TIMEOUT") { instrumentation.onMain { draw() } }
+                    await("VISUAL_OUTPUT_TIMEOUT") {
+                        instrumentation.onMain { export.count > index }
+                    }
+                }
+                instrumentation.onMain {
+                    captureEnabled = false
+                    export.finish()
+                    result.putInt("captured_frames", export.count)
+                    result.putInt("capture_width", width)
+                    result.putInt("capture_height", height)
+                    result.putString("capture_kind", "NATIVE_RGBA_OUTPUT; synthetic waiting state")
+                    result.putString("export_timebase", "12 FPS offline sequence; NOT a performance measurement")
+                }
             }
             instrumentation.onMain {
                 val actual = requireNotNull(renderer)
