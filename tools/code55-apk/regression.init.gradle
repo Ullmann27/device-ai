@@ -13,6 +13,8 @@ gradle.projectsEvaluated {
                 includeTestsMatching('at.heinz.deviceai.learning.NeuralPracticeSchedulerGateUiTest')
                 includeTestsMatching('at.heinz.deviceai.AndroidLiveNodePortTest')
                 includeTestsMatching('at.heinz.deviceai.AndroidLiveScrollTest')
+                includeTestsMatching('at.heinz.deviceai.OwnerComputerVisibilityUiTest')
+                includeTestsMatching('at.heinz.deviceai.OwnerAppPlanningContextUiTest')
                 includeTestsMatching('at.heinz.deviceai.ResearchChatApprovalUiTest')
                 includeTestsMatching('at.heinz.deviceai.ui.CinematicWorkstationLayoutTest')
                 includeTestsMatching('at.heinz.deviceai.localmodel.LocalModelThermalGuardTest')

@@ -826,7 +826,7 @@ class AgentActivity : Activity() {
 
     override fun onPause() {
         if (!isInMultiWindowMode) computerViewVisible = false
-        if (!isInMultiWindowMode && computerController?.awaitingConsent != true) computerController?.stop()
+        if (!isInMultiWindowMode && computerController?.awaitingConsent != true) computerController?.stopForVisibilityLoss()
         appNameClarification.clear()
         documentReadGeneration++
         pendingReturnedDocument = null
@@ -915,7 +915,7 @@ class AgentActivity : Activity() {
 
     override fun onStop() {
         computerViewVisible = false
-        if (computerController?.awaitingConsent != true) computerController?.stop()
+        if (computerController?.awaitingConsent != true) computerController?.stopForVisibilityLoss()
         super.onStop()
     }
 
@@ -6291,14 +6291,14 @@ class AgentActivity : Activity() {
                 home.state = home.state.copy(computer = panel)
             } },
             projectGaze = { homeView?.computerWorkGaze(it) }).also { computerController = it }
-        controller.begin(pending.packageName, pending.intent, pending.approvedAt) { result, epoch ->
-            deliverComputerReply(pending, result, epoch)
+        controller.begin(pending.packageName, pending.intent, pending.approvedAt) { result, epoch, speakNow ->
+            deliverComputerReply(pending, result, epoch, speakNow)
         }
     }
 
     private fun deliverComputerReply(pending: PendingComputerLaunch,
                                       result: at.heinz.deviceai.cognitive.OwnerComputerWorkflow.Result,
-                                      observationEpoch: Long?) {
+                                      observationEpoch: Long?, speakNow: Boolean) {
         if (isFinishing || isDestroyed || pending.session != sessionId ||
             selectedBot != null) return
         if (observationEpoch == null && (result.status ==
@@ -6312,7 +6312,7 @@ class AgentActivity : Activity() {
             "${accepted.status}: ${accepted.message}")
         addAssistantMessage(accepted.message, preserveLocalContext = true, keepCockpit = true,
             allowMaya = pending.allowMaya,
-            speakNow = pending.ownerRevision == ownerReplyRevision && continuousConversation.state !=
+            speakNow = speakNow && pending.ownerRevision == ownerReplyRevision && continuousConversation.state !=
                 at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED)
     }
 

@@ -29,7 +29,7 @@ internal class OwnerComputerSessionController(
 ) : AutoCloseable {
     private data class Plan(val taskId: String, val packageName: String, val intent: OwnerComputerIntent,
                             val approvedAt: Long,
-                            val reply: (OwnerComputerWorkflow.Result, Long?) -> Unit)
+                            val reply: (OwnerComputerWorkflow.Result, Long?, Boolean) -> Unit)
     private val main = Handler(Looper.getMainLooper())
     private val bridge = ComputerWorkAvatarBridge(director,
         ComputerWorkCuePlayer(post = { main.post(it) }, playClick = playClick, stopClick = stopClick),
@@ -49,11 +49,11 @@ internal class OwnerComputerSessionController(
     val awaitingConsent: Boolean get() = pendingConsent || deferredConsent != null
 
     fun begin(packageName: String, intent: OwnerComputerIntent, approvedAt: Long,
-              reply: (OwnerComputerWorkflow.Result, Long?) -> Unit) {
+              reply: (OwnerComputerWorkflow.Result, Long?, Boolean) -> Unit) {
         stop()
         if (closed || SystemClock.elapsedRealtime() - approvedAt !in 0..180_000) {
             reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.PAUSED,
-                "Die App-Freigabe ist abgelaufen. Bitte starte den Auftrag erneut."), null)
+                "Die App-Freigabe ist abgelaufen. Bitte starte den Auftrag erneut."), null, true)
             return
         }
         val next = Plan("computer-" + UUID.randomUUID(), packageName, intent, approvedAt, reply)
@@ -70,7 +70,7 @@ internal class OwnerComputerSessionController(
                 consentRequests.cancel()
                 stop()
                 next.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.FAILED,
-                    "Die Android-Bildschirmfreigabe konnte nicht geöffnet werden. Auftrag gestoppt."), null)
+                    "Die Android-Bildschirmfreigabe konnte nicht geöffnet werden. Auftrag gestoppt."), null, true)
                 return
             }
         }
@@ -84,7 +84,7 @@ internal class OwnerComputerSessionController(
         if (resultCode != Activity.RESULT_OK || data == null) {
             stop()
             current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.CANCELLED,
-                "Bildschirmfreigabe abgebrochen. Der Computer-Auftrag wurde gestoppt."), null)
+                "Bildschirmfreigabe abgebrochen. Der Computer-Auftrag wurde gestoppt."), null, true)
             return
         }
         deferredConsent = ConsentResult(current, resultCode, data)
@@ -112,7 +112,7 @@ internal class OwnerComputerSessionController(
             stop()
             current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.FAILED,
                 "Das Live-Bild konnte nicht gestartet werden: ${started.reason}. " +
-                    "Öffne Continuum und die Ziel-App nebeneinander und prüfe die Android-Bildschirmfreigabe."), null)
+                    "Öffne Continuum und die Ziel-App nebeneinander und prüfe die Android-Bildschirmfreigabe."), null, true)
             return
         }
         val permission = checkNotNull(OwnerComputerTaskGrant.fromOwnerDecision(current.taskId, current.packageName,
@@ -177,27 +177,25 @@ internal class OwnerComputerSessionController(
             main.post {
                 if (closed || plan !== current) return@post
                 if (!visible()) {
-                    stop()
-                    current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.PAUSED,
-                        "Continuum war beim Abschluss nicht sichtbar. Die letzte Wirkung ist nicht bestätigt; bitte prüfe die App."), null)
+                    stopForVisibilityLoss()
                     return@post
                 }
                 if (!sourceActive(current, started.sessionId)) {
                     stop()
                     current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.PAUSED,
-                        "Das Live-Bild oder seine Freigabe wurde beendet. Die letzte Wirkung ist nicht bestätigt; bitte prüfe die App."), null)
+                        "Das Live-Bild oder seine Freigabe wurde beendet. Die letzte Wirkung ist nicht bestätigt; bitte prüfe die App."), null, true)
                     return@post
                 }
                 workflow = null
                 publishPanels(at.heinz.deviceai.ui.ComputerPanelState.from(current.taskId,
                     started.sessionId, current.intent, bridge.reducer.snapshot(System.nanoTime()), result))
                 setBusy(false)
-                current.reply(result, started.observationEpoch)
+                current.reply(result, started.observationEpoch, true)
             }
         } } catch (_: java.util.concurrent.RejectedExecutionException) {
             stop()
             current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.FAILED,
-                "Die App-Arbeit konnte nicht gestartet werden. Es wurde keine weitere Eingabe ausgeführt."), null)
+                "Die App-Arbeit konnte nicht gestartet werden. Es wurde keine weitere Eingabe ausgeführt."), null, true)
         }
     }
 
@@ -242,6 +240,18 @@ internal class OwnerComputerSessionController(
     private fun publishPanels(panel: at.heinz.deviceai.ui.ComputerPanelState?) {
         retainedPanel = panel
         setPanels(panel)
+    }
+
+    fun stopForVisibilityLoss() {
+        if (awaitingConsent) return
+        val previous = plan ?: return
+        val interrupted = workflow != null
+        stop()
+        if (!interrupted) return
+        previous.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.CANCELLED,
+            "Computer-Auftrag und Live-Bild wurden gestoppt, weil Continuum nicht mehr sichtbar ist. " +
+                "Öffne Continuum und die Ziel-App im geteilten Bildschirm und starte den Auftrag erneut. " +
+                "Prüfe zuvor, was die Ziel-App bereits übernommen hat."), null, false)
     }
 
     fun stop() {
