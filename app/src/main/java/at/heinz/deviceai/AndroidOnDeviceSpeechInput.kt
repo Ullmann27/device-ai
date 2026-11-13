@@ -14,6 +14,7 @@ import android.speech.SpeechRecognizer
 import at.heinz.deviceai.cognitive.LocalSpeechEngine
 import at.heinz.deviceai.cognitive.LocalSpeechInputPolicy
 import at.heinz.deviceai.cognitive.LocalSpeechSession
+import at.heinz.deviceai.cognitive.GermanOnDeviceSpeechLocale
 import at.heinz.deviceai.cognitive.SpeechTurnRecovery
 
 /** Owner-gesture, main-thread, bounded on-device recognition. No service launch,
@@ -61,10 +62,13 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
             var recognizer = acquireWarmRecognizer()
             var closed = false
             lateinit var recovery: SpeechTurnRecovery
+            lateinit var listener: RecognitionListener
+            val language = GermanOnDeviceSpeechLocale()
+            var languageRetry: Runnable? = null
 
             fun intent() = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                putExtra(RecognizerIntent.EXTRA_LANGUAGE, "de-AT")
+                putExtra(RecognizerIntent.EXTRA_LANGUAGE, language.tag)
                 putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
                 putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
                 putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
@@ -76,7 +80,15 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                 if (!closed) recognizer.startListening(intent())
             }
 
-            val listener = object : RecognitionListener {
+            fun restartCold() {
+                if (closed) return
+                destroyWarmRecognizer()
+                recognizer = acquireWarmRecognizer()
+                recognizer.setRecognitionListener(listener)
+                startNative()
+            }
+
+            listener = object : RecognitionListener {
                 override fun onReadyForSpeech(params: Bundle?) = callbacks.ready()
                 override fun onBeginningOfSpeech() {}
                 override fun onRmsChanged(rmsdB: Float) {}
@@ -85,6 +97,23 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                 override fun onError(error: Int) {
                     if (closed) return
                     val failure = classifySpeechError(error)
+                    if (languageRetry != null) return
+                    if (language.retry(failure)) {
+                        val retry = Runnable {
+                            languageRetry = null
+                            if (closed) return@Runnable
+                            runCatching { restartCold() }.onFailure {
+                                destroyWarmRecognizer()
+                                if (!closed) callbacks.failed(LocalSpeechInputPolicy.Failure.START_FAILED)
+                            }
+                        }
+                        languageRetry = retry
+                        if (!handler.postDelayed(retry, 250L)) {
+                            languageRetry = null
+                            callbacks.failed(LocalSpeechInputPolicy.Failure.START_FAILED)
+                        }
+                        return
+                    }
                     // Fold7 (#641): a single warm retry was not enough after TTS released the audio
                     // path. Escalate warm → warm → cold inside this turn before giving up.
                     if (isWarmRetryableSpeechError(error) && recovery.recoverableError(failure)) return
@@ -96,14 +125,6 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                     results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull().orEmpty())
                 override fun onPartialResults(partialResults: Bundle?) {}
                 override fun onEvent(eventType: Int, params: Bundle?) {}
-            }
-
-            fun restartCold() {
-                if (closed) return
-                destroyWarmRecognizer()
-                recognizer = acquireWarmRecognizer()
-                recognizer.setRecognitionListener(listener)
-                startNative()
             }
 
             recovery = SpeechTurnRecovery(
@@ -134,12 +155,16 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                     if (closed) return
                     closed = true
                     recovery.close()
+                    languageRetry?.let(handler::removeCallbacks)
+                    languageRetry = null
                     runCatching { recognizer.cancel() }
                 }
                 override fun destroy() {
                     // End this turn lease only. The native recognizer stays warm until Platform.shutdown().
                     closed = true
                     recovery.close()
+                    languageRetry?.let(handler::removeCallbacks)
+                    languageRetry = null
                 }
             }
         }
