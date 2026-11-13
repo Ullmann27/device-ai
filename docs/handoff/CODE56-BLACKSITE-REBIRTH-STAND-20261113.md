@@ -49,11 +49,17 @@ bereits um überlagernde Fenster beschnitten.
 - **Filament-Aufnahmen / Clip: NOT_RUN.** In diesem Container gibt es keinen Emulator, keine System-Images, kein KVM.
 - **GLB-Details (Lüftungsschlitze, Anschlüsse, VESA, angewinkelte Seitenmonitore): nicht umgesetzt.** Die Workstation-GLB
   wird über `tools/cockpit-workstation/build_unified_assets.py` gebaut, das exakt Blender 4.3 verlangt
-  (`assert bpy.app.version[:2] == (4, 3)`); hier ist nur Blender 4.0.2 vorhanden. Zusätzlich sind die Seitenmonitore
+  (`assert bpy.app.version[:2] == (4, 3)`); hier ist nur Blender 4.0.2 vorhanden, und PyPI bietet für das hiesige
+  Python 3.13 nur `bpy` 5.1–5.3. Zusätzlich sind die Seitenmonitore
   an native Android-Ausschnitte gebunden (`native_document_bounds`/`native_draft_bounds`, `native_plane_z = 0`);
   ein Anwinkeln verlangt eine Lösung für diese 2D-Ausschnitte. Vorhanden sind bereits: Rückplatte, Rückfase, Rahmen,
   Glas, Ständer + Fuß, Tastatur, Schreibtisch, Seitenmonitore (flach), Bunkerraum.
-- **Gedächtnis „Polarlicht 482“ → „Schrauben“:** nicht reproduziert; der genaue Wortlaut des Feldtests fehlt.
+- **Gedächtnis „Polarlicht 482“ → „Schrauben“:** nicht reproduziert. Host-Probe (temporär, nicht eingecheckt) mit echtem
+  `ContinuumLearningCore` + `ContinuumCognitiveRuntime` nach „Neustart“ (neue Instanzen, gleiches Verzeichnis):
+  3 Speicherformen („heißt Polarlicht 482“, „„Polarlicht 482““, zwei Sätze) × 6 Fragen (Name, Farbe, Ort, Anzahl …)
+  → immer `grounded=true` mit vollständigem Originalsatz inkl. „Polarlicht 482“. Der Lernkern verliert den Namen also
+  nicht; der Feldfehler liegt in einem anderen Pfad (lokales Modell mit Gedächtniskontext oder Gesprächsweg).
+  Für die Ursache wird der genaue Feld-Wortlaut (Speichersatz + Frage + Antwort) benötigt.
 - **Kontextfenster/Tokenbudget**, **KI-Team-Fehler**, **NEURON-Herkunft**, „Was kannst du davon löschen?“: offen.
 - Volle Android-Suite, Lint, APK-Bau: in diesem Zweig noch nicht gelaufen.
 
