@@ -58,7 +58,7 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=normal)"
       - name: Summarize actual focused JUnit results
         if: always()
-        run: python3 tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest
+        run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest
       - name: Preserve focused JUnit
         if: always()
         uses: actions/upload-artifact@v4
@@ -113,7 +113,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 tools/code55-apk/validator.py             app/build/outputs/apk/release/app-release-unsigned.apk             "$RUNNER_TEMP/code55-apk-audit"             --repo "$GITHUB_WORKSPACE"             --build-tools "$ANDROID_HOME/build-tools/35.0.0"             --java-home "$JAVA_HOME"             --expected-source "$GITHUB_SHA"             --expected-tree "$(git rev-parse HEAD^{tree})"
+          python3 -B tools/code55-apk/validator.py             app/build/outputs/apk/release/app-release-unsigned.apk             "$RUNNER_TEMP/code55-apk-audit"             --repo "$GITHUB_WORKSPACE"             --build-tools "$ANDROID_HOME/build-tools/35.0.0"             --java-home "$JAVA_HOME"             --expected-source "$GITHUB_SHA"             --expected-tree "$(git rev-parse HEAD^{tree})"
       - name: Upload verified unsigned APK and exact SHA receipts
         if: success()
         uses: actions/upload-artifact@v4

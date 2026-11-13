@@ -1,0 +1,42 @@
+{
+  "source_sha": "41306257ce03c1e22e998877bf769ce42b3a0486",
+  "source_tree": "3a16a64f4d831ba51d54f24cbb952d850e8d433e",
+  "full_qa": {
+    "run_id": 43344572298,
+    "conclusion": "FAILURE",
+    "host_job_id": 131620673839,
+    "tests": 5321,
+    "failed": 18,
+    "skipped": 18,
+    "lint": "PASS",
+    "artifact_id": 14004060039,
+    "artifact_zip_sha256": "516a90e1925d1ae443a49d9b15348139dbd72535a4aa4487d3ff229423573366"
+  },
+  "native_pdf": {
+    "job_id": 131620674180,
+    "status": "PASS",
+    "runtime": "Android API 35 x86_64 emulator",
+    "scope": "synthetic provider and PDF; full app native code",
+    "artifact_id": 14000972737
+  },
+  "apk": {
+    "run_id": 43344572061,
+    "job_id": 131620672824,
+    "status": "UNSIGNED_NOT_INSTALLABLE",
+    "apk_sha256": "bade04a6d8dd7fd4f0366a8abceed39bf80272b4546b71261575680e0f3a3ebf",
+    "artifact_id": 14000694515,
+    "package": "at.heinz.deviceai.continuumlocal",
+    "version_code": 55,
+    "original_signer": "NOT_USED",
+    "audit": "PASS"
+  },
+  "diagnostic": {
+    "run_id": 43350986680,
+    "job_id": 131641725448,
+    "source_receipt_verified": true,
+    "artifact_digest_verified": true,
+    "failed_cases": 18
+  },
+  "device": "NOT_RUN",
+  "superseded_by": "Current integration contains additional untested changes; these results do not certify its HEAD."
+}

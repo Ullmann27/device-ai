@@ -11,7 +11,7 @@ on:
       - backend/**
       - tools/cockpit-workstation/**
       - .github/continuum/**
-      - tools/code55-apk/native-pdf-emulator.sh
+      - tools/code55-apk/**
 
 permissions:
   contents: read
@@ -40,9 +40,9 @@ jobs:
       - name: Original scene and APK validator contracts
         run: |
           set -euo pipefail
-          python3 tools/cockpit-workstation/verify_scene.py
-          python3 tools/cockpit-workstation/verify_unified_assets.py
-          python3 tools/code55-apk/validator_test.py
+          python3 -B tools/cockpit-workstation/verify_scene.py
+          python3 -B tools/cockpit-workstation/verify_unified_assets.py
+          python3 -B tools/code55-apk/validator_test.py
       - name: Source-bound full critical and Node QA
         run: |
           set -euo pipefail
@@ -106,7 +106,7 @@ jobs:
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true             -PcontinuumUiWidgetTests=true             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle             :app:testDebugUnitTest
       - name: Summarize actual JUnit results
         if: always()
-        run: python3 tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest
+        run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest
       - name: Configured Android lint
         if: always()
         shell: bash

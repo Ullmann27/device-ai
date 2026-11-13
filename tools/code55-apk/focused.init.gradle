@@ -18,6 +18,16 @@ gradle.projectsEvaluated {
                 includeTestsMatching('at.heinz.deviceai.ui.JarvisShellContentTest')
                 includeTestsMatching('at.heinz.deviceai.ui.JarvisShellLayoutTest')
                 includeTestsMatching('at.heinz.deviceai.ui.ComputerPanelPresentationTest')
+                includeTestsMatching('at.heinz.deviceai.ContinuumDocumentFlowUiTest')
+                includeTestsMatching('at.heinz.deviceai.ResearchChatApprovalUiTest')
+                includeTestsMatching('at.heinz.deviceai.AndroidLiveNodePortTest')
+                includeTestsMatching('at.heinz.deviceai.AndroidLiveScrollTest')
+                includeTestsMatching('at.heinz.deviceai.cognitive.OwnerCorrectionIntentTest')
+                includeTestsMatching('at.heinz.deviceai.cognitive.AgentExperienceRecallTest')
+                includeTestsMatching('at.heinz.deviceai.cognitive.ExperienceRecallWindowTest')
+                includeTestsMatching('at.heinz.deviceai.cognitive.ExperienceRecallRecencyTest')
+                includeTestsMatching('at.heinz.deviceai.cognitive.ContinuumRuntimeStoreTest')
+                includeTestsMatching('at.heinz.deviceai.learning.NeuralPracticeSchedulerGateUiTest')
                 failOnNoMatchingTests = true
             }
         }
