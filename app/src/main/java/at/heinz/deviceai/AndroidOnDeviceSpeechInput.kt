@@ -155,7 +155,7 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                     if (closed) return
                     closed = true
                     recovery.close()
-                    languageRetry?.let(handler::removeCallbacks)
+                    languageRetry?.let { handler.removeCallbacks(it) }
                     languageRetry = null
                     runCatching { recognizer.cancel() }
                 }
@@ -163,7 +163,7 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                     // End this turn lease only. The native recognizer stays warm until Platform.shutdown().
                     closed = true
                     recovery.close()
-                    languageRetry?.let(handler::removeCallbacks)
+                    languageRetry?.let { handler.removeCallbacks(it) }
                     languageRetry = null
                 }
             }
