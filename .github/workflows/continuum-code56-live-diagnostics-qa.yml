@@ -1,0 +1,71 @@
+name: Code56 live-diagnostics regression (isolated)
+on:
+  push:
+    branches:
+      - work/code56-live-diagnostics-fix-20261113
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-diagnostics:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/work/code56-live-diagnostics-fix-20261113'
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Exact branch source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Android SDK 36
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Compile production source and test real live-diagnostics regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=56 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            :app:testDebugUnitTest \
+            --tests at.heinz.deviceai.cognitive.LiveCaptureDiagnosticsTest \
+            --tests at.heinz.deviceai.cognitive.LiveObservationEventPolicyTest
+      - name: Require actually executed cases with no failures or skips
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import pathlib, xml.etree.ElementTree as ET
+          files = list(pathlib.Path("app/build/test-results/testDebugUnitTest").glob("TEST-*.xml"))
+          cases = [c for f in files for c in ET.parse(f).getroot().iter("testcase")]
+          assert cases, "No actual JUnit cases executed"
+          failed = [c for c in cases if c.find("failure") is not None or c.find("error") is not None or c.find("skipped") is not None]
+          assert not failed, f"{len(failed)} failed/errored/skipped cases"
+          assert any(c.get("classname", "").endswith(".LiveCaptureDiagnosticsTest") and c.get("name") == "liveTargetVisibilityIsCountedOncePerReceivedFrame" for c in cases), "Missing new regression"
+          print(f"JUNIT_PASS={len(cases)} JUNIT_FAILED=0 JUNIT_SKIPPED=0")
+          PY
+      - name: Preserve test receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code56-live-diagnostics-qa
+          path: app/build/test-results/testDebugUnitTest/
+          if-no-files-found: warn
+          retention-days: 14
