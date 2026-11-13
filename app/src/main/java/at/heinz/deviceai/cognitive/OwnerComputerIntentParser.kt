@@ -56,6 +56,7 @@ internal object OwnerComputerIntentParser {
         ComputerApp.CAMERA, ComputerApp.GALLERY, ComputerApp.CALENDAR)
     private val otherAction = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:und|dann|danach)\\s+(?:sende?|schicke?|lösche?|loesche?|poste?|teile?|kaufe?|rufe?|öffne?|oeffne?|starte?|suche?)(?![\\p{L}\\p{N}_])")
     private val searchLabel = Regex("(?iu)^(?:und\\s+)?(?:suche|such|suche nach|such nach)\\s+(?:nach\\s+)?(.+)$")
+    private val negation = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:nicht|keinesfalls|niemals|kein(?:e|en|em|er|es)?)(?![\\p{L}\\p{N}_])")
 
     fun parse(raw: String, contextApp: ComputerApp? = null): Result {
         if (raw.length !in 1..2_000 || raw.any { it.isISOControl() && it != '\n' }) return Result.NotComputerCommand
@@ -65,11 +66,19 @@ internal object OwnerComputerIntentParser {
         text = text.replace(Regex("(?iu)^(?:kannst du|könntest du|koenntest du)\\s+(?:bitte\\s+)?"), "")
             .replace(Regex("(?iu)^bitte\\s+"), "").trim()
         if (text.isEmpty()) return Result.NotComputerCommand
-        val lower = text.lowercase(Locale.ROOT)
-        if (Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:nicht|keinesfalls|niemals)(?![\\p{L}\\p{N}_])").containsMatchIn(text.substringBefore(':'))) {
-            return if (apps.any { lower.contains(it.first) }) Result.Unsupported("Der verneinte App-Auftrag wird nicht ausgeführt.")
-                else Result.NotComputerCommand
+        val command = text.substringBefore(':')
+        if (negation.containsMatchIn(command)) {
+            val affirmative = negation.replace(command, " ").replace(Regex("\\s+"), " ").trim()
+            val candidate = if (':' in text) affirmative + ":" + text.substringAfter(':') else affirmative
+            return if (parseCommand(candidate, contextApp) == Result.NotComputerCommand) Result.NotComputerCommand
+                else Result.Unsupported("Der verneinte App-Auftrag wird nicht ausgeführt.")
         }
+        return parseCommand(text, contextApp)
+    }
+
+    private fun parseCommand(normalized: String, contextApp: ComputerApp?): Result {
+        var text = normalized
+        val lower = text.lowercase(Locale.ROOT)
         parseMessage(text, contextApp)?.let { return it }
         text = text.trimEnd('.', '?', '!').trim()
         Regex("(?iu)^(?:öffne|oeffne|starte|open|wechsle\\s+zu|wechsel\\s+zu)\\s+(.+)$").matchEntire(text)?.let { match ->
@@ -123,6 +132,12 @@ internal object OwnerComputerIntentParser {
         val distinct = appMatches.map { it.second }.distinct()
         val explicitMessage = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:nachricht|nachrichtenentwurf)(?![\\p{L}\\p{N}_])")
             .containsMatchIn(command)
+        val explicitDestination = appMatches.any { (alias, _) ->
+            Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:in|auf|per|via)\\s+${Regex.escape(alias)}(?![\\p{L}\\p{N}_])")
+                .containsMatchIn(command)
+        }
+        if (distinct.isNotEmpty() && distinct.all { it in OPEN_ONLY_APPS } &&
+            !explicitMessage && !explicitDestination) return null
         if (distinct.isEmpty() && contextApp == null && !explicitMessage) return null
         if (distinct.size > 1) return Result.Ask("In welcher App soll ich den Entwurf vorbereiten?")
         val app = distinct.singleOrNull() ?: contextApp

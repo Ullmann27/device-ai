@@ -116,4 +116,67 @@ class OwnerComputerIntentParserTest {
         assertTrue(OwnerComputerIntentParser.parse("Schreibe Anna auf WhatsApp und auf Facebook: Hallo") is OwnerComputerIntentParser.Result.Ask)
         assertTrue(OwnerComputerIntentParser.parse("Schreibe Anna auf WhatsApp: " + "x".repeat(501)) is OwnerComputerIntentParser.Result.Unsupported)
     }
+
+    @Test fun negatedEverydayQuestionsRemainConversation() {
+        for (request in listOf(
+            "Warum funktioniert meine Kamera nicht?",
+            "Ich finde die Einstellungen nicht",
+            "Warum synchronisiert mein Kalender nicht?",
+            "Meine Galerie zeigt das Bild nicht",
+            "Chrome funktioniert nicht",
+            "Ich benutze WordPress niemals"
+        )) assertSame(request, OwnerComputerIntentParser.Result.NotComputerCommand,
+            OwnerComputerIntentParser.parse(request))
+    }
+
+    @Test fun openOnlyAppTopicsDoNotBecomeMessages() {
+        for (app in listOf("Kamera", "Einstellungen", "Kalender", "Galerie", "Chrome")) {
+            for (context in listOf(null, ComputerApp.WHATSAPP)) {
+                for (request in listOf(
+                    "Schreibe mir einen Text über den $app",
+                    "Verfasse eine Erklärung über $app",
+                    "Schreibe mir keinen Text über $app",
+                    "Schreibe mir einen Text über $app nicht auf Englisch"
+                )) assertSame(request, OwnerComputerIntentParser.Result.NotComputerCommand,
+                    OwnerComputerIntentParser.parse(request, context))
+            }
+        }
+        assertSame(OwnerComputerIntentParser.Result.NotComputerCommand,
+            OwnerComputerIntentParser.parse("Schreibe einen Vergleich über Kalender und Galerie"))
+    }
+
+    @Test fun explicitNegatedCommandsStillCannotProducePlans() {
+        for (app in ComputerApp.entries) {
+            for (request in listOf(
+                "Öffne ${app.discoveryQuery} nicht",
+                "Öffne nicht ${app.discoveryQuery}",
+                "Starte niemals ${app.discoveryQuery}",
+                "Wechsle keinesfalls zu ${app.discoveryQuery}",
+                "Nicht ${app.discoveryQuery} öffnen",
+                "Suche in ${app.discoveryQuery} nicht nach Anna"
+            )) assertTrue(request, OwnerComputerIntentParser.parse(request)
+                is OwnerComputerIntentParser.Result.Unsupported)
+        }
+        assertTrue(OwnerComputerIntentParser.parse("Schreibe keine Nachricht an Anna in WhatsApp: Hallo")
+            !is OwnerComputerIntentParser.Result.Ready)
+        assertTrue(OwnerComputerIntentParser.parse("Sende Anna in WhatsApp nicht: Hallo")
+            is OwnerComputerIntentParser.Result.Unsupported)
+    }
+
+    @Test fun explicitMessagesInOpenOnlyAppsRemainUnsupported() {
+        for (app in listOf("Kamera", "Einstellungen", "Kalender", "Galerie", "Chrome")) {
+            for (request in listOf("Schreibe eine Nachricht an Anna in $app: Hallo",
+                "Schicke Anna auf $app: Hallo")) {
+                assertTrue(request, OwnerComputerIntentParser.parse(request)
+                    is OwnerComputerIntentParser.Result.Unsupported)
+            }
+        }
+    }
+
+    @Test fun draftBodyNegationDoesNotCancelTheOwnerCommand() {
+        val intent = ready("Schreibe Anna auf WhatsApp: Die Kamera funktioniert nicht.")
+        assertEquals(ComputerGoal.DRAFT_MESSAGE, intent.goal)
+        assertEquals("Die Kamera funktioniert nicht.", intent.draft)
+        assertFalse(intent.steps.contains(ComputerPlanStep.REQUIRE_SEND_APPROVAL))
+    }
 }

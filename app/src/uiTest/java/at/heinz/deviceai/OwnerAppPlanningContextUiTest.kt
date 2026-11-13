@@ -386,6 +386,37 @@ class OwnerAppPlanningContextUiTest {
         }
     }
 
+    @Test fun appTopicQuestionsReachConversationWithoutComputerWork() = withActivity { activity, runtime ->
+        val generation = field(activity, "appLookupGeneration")
+        for (request in listOf(
+            "Warum funktioniert meine Kamera nicht?",
+            "Ich finde die Einstellungen nicht",
+            "Schreibe mir einen Text über den Kalender",
+            "Verfasse eine Erklärung über Galerie und Chrome"
+        )) {
+            submit(activity, request)
+            until("App topic reaches inference: $request") { runtime.running }
+            assertEquals(request, generation, field(activity, "appLookupGeneration"))
+            assertNull(field(activity, "activeOwnerAppFlow"))
+            assertNull(field(activity, "pendingComputerLaunch"))
+            assertTrue(runtime.prompts.last().contains(request))
+            runtime.answer("Für diese Erklärung wurde keine App bedient.")
+            until("App topic completed") { field(activity, "busy") == false }
+        }
+    }
+
+    @Test fun explicitNegatedAppCommandNeverReachesInferenceOrLookup() = withActivity { activity, runtime ->
+        val generation = field(activity, "appLookupGeneration")
+        submit(activity, "Öffne Kamera nicht")
+        repeat(3) { advance() }
+        assertEquals(generation, field(activity, "appLookupGeneration"))
+        assertTrue(runtime.prompts.isEmpty())
+        assertFalse(runtime.running)
+        assertNull(field(activity, "activeOwnerAppFlow"))
+        assertNull(field(activity, "pendingComputerLaunch"))
+        assertFalse(field(activity, "busy") as Boolean)
+    }
+
     @Test fun unmatchedVerbFinalReturnsToConversationWithoutArmingNameReply() = withActivity { activity, runtime ->
         val before = (field(activity, "appLookupGeneration") as Number).toLong()
         submit(activity, "Projekt starten")

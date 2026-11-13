@@ -5,6 +5,7 @@ gradle.projectsEvaluated {
             task.filter {
                 includeTestsMatching('at.heinz.deviceai.avatar3d.*')
                 includeTestsMatching('at.heinz.deviceai.cognitive.OwnerCorrectionIntentTest')
+                includeTestsMatching('at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest')
                 includeTestsMatching('at.heinz.deviceai.cognitive.ContinuousConversationModeTest')
                 includeTestsMatching('at.heinz.deviceai.cognitive.AgentExperienceRecallTest')
                 includeTestsMatching('at.heinz.deviceai.cognitive.ExperienceRecallWindowTest')
