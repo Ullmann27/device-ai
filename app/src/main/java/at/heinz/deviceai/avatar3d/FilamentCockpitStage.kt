@@ -104,7 +104,8 @@ internal class FilamentCockpitStage(
             val faceBytes = size * size * 3 * 4
             texture.generatePrefilterMipmap(engine,
                 Texture.PixelBufferDescriptor(bytes, Texture.Format.RGB, Texture.Type.FLOAT),
-                IntArray(6) { it * faceBytes }, Texture.PrefilterOptions().apply { sampleCount = 16; mirror = false })
+                // Filament samples reflection cubemaps X-mirrored (PrefilterOptions default); faces() is plain OpenGL layout.
+                IntArray(6) { it * faceBytes }, Texture.PrefilterOptions().apply { sampleCount = 16; mirror = true })
             return texture
         } catch (failure: Throwable) { engine.destroyTexture(texture); throw failure }
     }
