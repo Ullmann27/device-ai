@@ -1,4 +1,4 @@
-name: Jarvis55 - prior QA failure receipts
+name: Jarvis55 - pinned full QA failure receipts
 on:
   push:
     branches: [work/jarvis55-qa-receipts-20261113]
@@ -12,29 +12,52 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ github.token }}
-          run-id: 43354416362
-          name: Code55-native-PDF-emulator-QA
-          path: ${{ runner.temp }}/prior-qa
-      - name: Read native runtime evidence
+      - name: Download immutable host evidence
         env:
-          EVIDENCE_DIR: ${{ runner.temp }}/prior-qa
+          GH_TOKEN: ${{ github.token }}
         run: |
-          python3 - <<'PY'
-          import os, pathlib
-          root = pathlib.Path(os.environ["EVIDENCE_DIR"])
-          print("FILES", [str(file.relative_to(root)) for file in root.rglob("*") if file.is_file()])
-          sources = list(root.rglob("source-sha.txt"))
-          assert sources and all("fafac263d45645b5193640cb73bf703f33509b91" in file.read_text() for file in sources)
-          for file in sorted(root.rglob("*")):
-              if not file.is_file(): continue
-              name = str(file.relative_to(root))
-              if file.name == "surfaceflinger.txt":
-                  print("GLES", [line for line in file.read_text().splitlines() if "GLES:" in line])
-              elif file.name in ("emulator.log", "native-filament-logcat.txt", "native-filament.txt", "install-app.txt", "install-test.txt", "source-sha.txt", "apk-sha256.txt"):
-                  print("NATIVE_FILE", name, file.stat().st_size)
-                  print("\n".join(file.read_text(errors="replace").splitlines()[-100:])[-18000:])
-          print("READ_ONLY_NATIVE_RECEIPT")
+          set -euo pipefail
+          gh api repos/Ullmann27/device-ai/actions/artifacts/14009178288/zip > "$RUNNER_TEMP/prior-qa.zip"
+      - name: Verify archive and inspect geometry
+        run: |
+          python3 -B - <<'PY'
+          import collections, hashlib, json, os, pathlib, zipfile
+          import xml.etree.ElementTree as ET
+          path = pathlib.Path(os.environ["RUNNER_TEMP"]) / "prior-qa.zip"
+          assert path.stat().st_size == 310710423
+          with path.open("rb") as handle:
+              digest = hashlib.file_digest(handle, "sha256").hexdigest()
+          assert digest == "c86b7a36f77736e51d5eed0a7afc5b23afd25e1e78c90bacd4291a1d92b2ef5f"
+          with zipfile.ZipFile(path) as archive:
+              names = archive.namelist()
+              assert len(names) == len(set(names))
+              source = [n for n in names if n.endswith("code55-source.txt")]
+              assert len(source) == 1
+              text = archive.read(source[0]).decode()
+              assert "source_sha=058d754b82e134b3eec0e3e3f21b788c46c8c479" in text
+              print("SOURCE", text.strip())
+              cases = collections.Counter()
+              totals = collections.Counter()
+              for name in sorted(names):
+                  if not name.endswith(".xml") or "/TEST-" not in "/" + name:
+                      continue
+                  suite = ET.fromstring(archive.read(name))
+                  for case in suite.findall(".//testcase"):
+                      key = (case.get("classname"), case.get("name"))
+                      cases[key] += 1
+                      totals["tests"] += 1
+                      for kind in ("failure", "error", "skipped"):
+                          result = case.find(kind)
+                          if result is not None:
+                              totals[kind] += 1
+                              if kind != "skipped":
+                                  print("FAILED", key, result.get("message"), (result.text or "")[:1800])
+              duplicates = [(key, value) for key, value in cases.items() if value > 1]
+              print("XML_TOTALS", json.dumps(dict(totals), sort_keys=True))
+              print("DUPLICATE_IDENTITIES", json.dumps(duplicates[:30]))
+              for name in sorted(names):
+                  if name.endswith(".views.txt") and any(phase in name for phase in ("systemstatus-anchor", "systemstatus-opening", "systemstatus-open.")):
+                      lines = archive.read(name).decode().splitlines()
+                      print("GEOMETRY", name, [line for line in lines if "tag=jarvis-work-window " in line or "tag=jarvis-work-window:panel " in line])
+          print("READ_ONLY_DIGEST_VERIFIED_HOST_EVIDENCE")
           PY
