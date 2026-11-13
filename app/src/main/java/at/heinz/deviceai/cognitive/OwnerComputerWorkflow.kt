@@ -22,7 +22,9 @@ internal class OwnerComputerWorkflow(
     }
 
     enum class Status { VERIFIED, ASK_OWNER, PAUSED, CANCELLED, FAILED }
-    data class Result(val status: Status, val message: String, val draftPrepared: Boolean = false)
+    /** [diagnostics]: optional fixed-code image-chain summary shown unspoken next to the reply (never in model context). */
+    data class Result(val status: Status, val message: String, val draftPrepared: Boolean = false,
+                      val diagnostics: String? = null)
     private val started = AtomicBoolean(false)
     private val cancelled = AtomicBoolean(false)
     private val actionEvents = LiveActionCockpitAdapter(events, observationEpoch)
@@ -116,9 +118,10 @@ internal class OwnerComputerWorkflow(
             cancelled()
         } catch (e: WorkflowPaused) {
             pause(e.message ?: "Die Wirkung ist unklar. Bitte prüfe die sichtbare App.")
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             events.emit(CockpitWorkEvent.Stage.ERROR)
-            Result(Status.FAILED, "Der App-Auftrag wurde angehalten. Die letzte Wirkung ist nicht bestätigt; es erfolgt keine automatische Wiederholung.")
+            Result(Status.FAILED, "Der App-Auftrag wurde angehalten. " + ComputerFailureExplanation.describe(e.message) +
+                " Die letzte Wirkung ist nicht bestätigt; es erfolgt keine automatische Wiederholung.")
         } finally {
             this.port = null
         }

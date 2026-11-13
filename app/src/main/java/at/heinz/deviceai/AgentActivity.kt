@@ -3060,7 +3060,10 @@ class AgentActivity : Activity() {
                     }
                     cancellation.throwIfCancelled()
                     check(generated.failure == null && generated.completion == LocalGenerationCompletion.COMPLETE &&
-                        generated.proposal == null && generated.rejectedToolResponses.isEmpty()) { "BOT_TEAM_GENERATION_FAILED" }
+                        generated.proposal == null && generated.rejectedToolResponses.isEmpty()) {
+                        // Keep a fixed native code (e.g. context overflow) traceable; free text never travels.
+                        at.heinz.deviceai.chief.ChiefFailureCode.of(generated.failure) ?: "BOT_TEAM_GENERATION_FAILED"
+                    }
                     return generated.response
                 }
             }, changed = { runOnUiThread { refreshBotTeam() } },
@@ -4356,7 +4359,8 @@ class AgentActivity : Activity() {
             .append(" · Semantik ").append(core.semanticHoldout.correct).append("/").append(core.semanticHoldout.total).append("\n")
         val practice = NeuralPracticeScheduler(this@AgentActivity)
         append("AUTO-ÜBEN: ").append(if (practice.enabled) "AN" else "AUS").append(" · ")
-            .append(practice.attempts).append(" Zyklen, ").append(practice.improvements).append(" Verbesserungen\n")
+            .append(practice.attempts).append(" Zyklen, ").append(practice.improvements)
+            .append(" übernommen (Startkern-Netz: Trainingsverlust gesunken, Prüfsätze nicht schlechter – kein Qualitätsbeleg)\n")
         val cre=learning.cre1ResearchStatus()
         append("\nCRE1-Forschung: ").append(if(cre.available)"eigener trainierter Forschungsstand" else "noch kein freigegebener Forschungsstand")
             .append(" · ").append(cre.steps).append(" Trainingsschritte\n")
@@ -6053,8 +6057,13 @@ class AgentActivity : Activity() {
             LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .90f).apply { marginStart = dp(4) }
         )
         actions.addView(
-            smallButton("⌁ Datei", "Quelldatei im Entwicklungszentrum auswählen") {
-                showDevelopmentDialog()
+            smallButton("⌁ Datei", "Tippen: PDF-Datei aus Android auswählen und im Gespräch lesen. " +
+                "Lange drücken: Quelldatei für den Entwicklungsbereich wählen") {
+                // Chat attachments must use the existing owner-approved PDF intake, not the coding assistant.
+                openPdfDocumentPicker(wantsDraft = false, request = "PDF über Datei im Gespräch öffnen")
+            }.apply {
+                // „App erstellen“ stays reachable from the composer, but only by an explicit long press.
+                setOnLongClickListener { showDevelopmentDialog(); true }
             },
             LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .94f).apply { marginStart = dp(4) }
         )
@@ -6314,6 +6323,10 @@ class AgentActivity : Activity() {
             allowMaya = pending.allowMaya,
             speakNow = speakNow && pending.ownerRevision == ownerReplyRevision && continuousConversation.state !=
                 at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED)
+        // Fixed-code image-chain counts for field diagnosis: shown, never spoken, never model context.
+        if (accepted === result) result.diagnostics?.let {
+            addAssistantMessage(it, preserveLocalContext = true, keepCockpit = true, allowMaya = false, speakNow = false)
+        }
     }
 
     private fun deliverAppActionReply(reply: AppActionReply) {
@@ -6357,7 +6370,7 @@ class AgentActivity : Activity() {
 
     /** Public status only: no collector invocation, disk scan, model call, bot seed, grant,
      * learning radar or memory/context mutation. Current runtime flags outrank cached telemetry. */
-    private fun showCurrentAppCapabilities(request: String) {
+    private fun showCurrentAppCapabilities(request: String, modelOnly: Boolean = false) {
         appNameClarification.clear()
         val runtimeState = if (::localRuntime.isInitialized) when (localRuntime.state) {
             LocalModelState.EMPTY -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.NOT_LOADED
@@ -6388,7 +6401,10 @@ class AgentActivity : Activity() {
             continuousConversation.active, keepCockpitDuringHandsFree,
             activeWorkArea == ContinuumWorkArea.START
         )
-        val reply = "Continuum · Aktuelle App-Fähigkeiten\n\n" +
+        val reply = if (modelOnly) "Continuum · Lokales Modell\n\n" +
+            at.heinz.deviceai.cognitive.OwnerCapabilityReply.describeModel(snapshot) +
+            " Importierte Modelle: " + (knownImportedModelCount?.takeIf { it >= 0 }?.toString() ?: "unbekannt") + "."
+        else "Continuum · Aktuelle App-Fähigkeiten\n\n" +
             at.heinz.deviceai.cognitive.OwnerCapabilityReply.describe(snapshot)
         input.text.clear()
         showActionResultWithoutForcingChat()
@@ -6702,6 +6718,10 @@ class AgentActivity : Activity() {
         when (ownerLocalIntent) {
             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.CAPABILITIES -> {
                 showCurrentAppCapabilities(request)
+                return
+            }
+            at.heinz.deviceai.cognitive.OwnerChatLocalIntent.MODEL_IDENTITY -> {
+                showCurrentAppCapabilities(request, modelOnly = true)
                 return
             }
             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING -> {
@@ -7432,7 +7452,8 @@ class AgentActivity : Activity() {
                     "Nach drei ergebnislosen Zyklen bleiben die Gewichte erhalten. " +
                     "Sobald du mir weitere bestätigte Beispiele beibringst, übe ich automatisch weiter.\n\n" +
                     "Bisherige Versuche: " + practice.attempts +
-                    " · Verbesserungen: " + practice.improvements +
+                    " · übernommen: " + practice.improvements +
+                    " (kleines Startkern-Netz, nicht Gemma; Trainingsverlust gesunken und Prüfsätze nicht schlechter – kein Beleg für bessere Antworten)" +
                     "\nLetztes Ergebnis: " + practice.lastStatus)
                 .setNegativeButton("Weiterlaufen lassen", null)
                 .setPositiveButton("AUTO-ÜBEN STOPPEN") { _, _ ->
@@ -7482,7 +7503,7 @@ class AgentActivity : Activity() {
         if (!busy) {
             neuralMonitor.text = if (practice.enabled)
                 "NEURON · AUTO-LERNEN · " + practice.attempts + " Zyklen, " +
-                    practice.improvements + " Verbesserungen\n" +
+                    practice.improvements + " übernommen (Verlust ↓, kein Qualitätsbeleg)\n" +
                     ContinuumStatusExcerpt.readable(practice.lastStatus, 110)
             else "NEURON · Auto-Lernen aus\n" +
                 ContinuumStatusExcerpt.readable(practice.lastStatus, 140)
@@ -7857,7 +7878,7 @@ class AgentActivity : Activity() {
             val practice = NeuralPracticeScheduler(this@AgentActivity)
             append("AUTO-LERNEN: ").append(if (practice.enabled) "AN" else "AUS")
                 .append(" · Versuche: ").append(practice.attempts)
-                .append(", Verbesserungen: ").append(practice.improvements)
+                .append(", übernommen (Verlust ↓, Prüfsätze nicht schlechter): ").append(practice.improvements)
                 .append(" · ").append(practice.lastStatus).append("\n")
             append("Neuron Demo · Neuron Sprachlabor · Neuron Vergleichslabor · Neuron üben · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
             append("Internetquellen fragen: Was weißt du über Solarzellen Sonnenlicht?\n")
@@ -11261,7 +11282,7 @@ class AgentActivity : Activity() {
                     }
                     // Current task/evidence precede optional history under the prompt cap.
                 }
-                val promptCap = at.heinz.deviceai.cognitive.LocalChatPromptBudget.limit(
+                val requestedPromptCap = at.heinz.deviceai.cognitive.LocalChatPromptBudget.limit(
                     task = task,
                     hasMemories = memories.isNotEmpty(),
                     hasConversationContext = conversationContext.isNotBlank(),
@@ -11271,9 +11292,13 @@ class AgentActivity : Activity() {
                 )
                 if (botTask == null && codingPlanning == null) runOnUiThread {
                     if (sessionId == localSessionId && activeChatCancellation === cancellation)
-                        updateLocalReasoningContext(chiefTurn.turnId, promptCap, memories.size)
+                        updateLocalReasoningContext(chiefTurn.turnId, requestedPromptCap, memories.size)
                 }
-                val briefInstruction = if (promptCap ==
+                // The frame must also fit the loaded model's measured window (system + tools preface); optional
+                // history is cut first, mandatory content that cannot fit is refused honestly before native prefill.
+                val promptCap = at.heinz.deviceai.cognitive.LocalChatPromptBudget.withNativeBudget(requestedPromptCap,
+                    if (::localRuntime.isInitialized) localRuntime.tokenAwarePromptUtf8Bytes else null)
+                val briefInstruction = if (requestedPromptCap ==
                     at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS)
                     "\nKurze Einstiegsfrage: Antworte möglichst direkt in höchstens drei kurzen Sätzen. " +
                         "Keine zusätzlichen internen Denkschritte behaupten."

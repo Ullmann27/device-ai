@@ -46,9 +46,8 @@ internal object OwnerCapabilityReply {
         return describe(snapshot)
     }
 
-    fun describe(s: OwnerCapabilitySnapshot): String = buildString {
-        append("Mein aktueller Stand auf diesem Gerät:\n\n")
-        append(when (s.modelState) {
+    /** Only the model line: which local model is actually loaded, never a guess. */
+    fun describeModel(s: OwnerCapabilitySnapshot): String = when (s.modelState) {
             OwnerCapabilitySnapshot.ModelState.UNKNOWN -> "Lokales Sprachmodell: Laufzeitstatus unbekannt."
             OwnerCapabilitySnapshot.ModelState.NOT_LOADED -> "Lokales Sprachmodell: keines geladen. Der Startkern ersetzt kein frei formulierendes Sprachmodell."
             OwnerCapabilitySnapshot.ModelState.LOADING -> "Lokales Sprachmodell: wird geladen und ist noch nicht bereit."
@@ -58,7 +57,11 @@ internal object OwnerCapabilityReply {
             OwnerCapabilitySnapshot.ModelState.GENERATING -> "Lokales Sprachmodell: gerade mit einer Antwort beschäftigt."
             OwnerCapabilitySnapshot.ModelState.UNLOADING -> "Lokales Sprachmodell: wird entladen und ist nicht bereit."
             OwnerCapabilitySnapshot.ModelState.FAILED -> "Lokales Sprachmodell: Laufzeitfehler; Modellzentrum und Diagnose prüfen."
-        })
+    }
+
+    fun describe(s: OwnerCapabilitySnapshot): String = buildString {
+        append("Mein aktueller Stand auf diesem Gerät:\n\n")
+        append(describeModel(s))
         append("\nImportierte Modelle: ").append(s.importedModelCount?.takeIf { it >= 0 }?.toString() ?: "unbekannt")
             .append(". Ein Import allein bedeutet keine ausführbare KI.")
         append("\n\nSpracheingabe: ").append(when (s.onDeviceSpeechAvailable) {

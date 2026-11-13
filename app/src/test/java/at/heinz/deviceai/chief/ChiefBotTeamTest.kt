@@ -202,6 +202,19 @@ class ChiefBotTeamTest {
         } finally { release.countDown(); team.close() }
     }
 
+    /** Code56: a failed team turn keeps its fixed native cause traceable instead of a bare FAILED. */
+    @Test fun failedGenerationRecordsItsFixedCauseCode() {
+        val s = store()
+        val team = configured(s, Model(sha) { _, _ -> error("LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL") })
+        try {
+            team.submit(id(), "Text prüfen", 1, true); assertTrue(team.awaitIdle(10_000))
+            val task = s.teamState().tasks.single()
+            assertEquals(ChiefTeamStatus.FAILED, task.status)
+            assertTrue(task.diagnostic, task.diagnostic.endsWith("LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL"))
+            assertTrue(task.responses.isEmpty())
+        } finally { team.close() }
+    }
+
     @Test fun changedModelCannotCommitResponse() {
         val s = store(); lateinit var model: Model
         model = Model(sha) { _, _ -> model.sha = "b".repeat(64); "Antwort" }

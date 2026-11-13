@@ -36,10 +36,16 @@ data class CockpitStageFrame(
         return maxOf(1, (width * scale).toInt()) to maxOf(1, (height * scale).toInt())
     }
 
-    /** Column-major; shared with Filament. */
-    fun monitorTransform(): FloatArray {
+    /** Column-major rest projection; shared with native overlays and Filament. */
+    fun monitorTransform(): FloatArray = monitorTransform(0f)
+
+    /** Rotate only the monitor, before nonuniform scale. Never change the validated stage frame. */
+    fun monitorTransform(presentationTurnDegrees: Float): FloatArray {
         require(valid())
-        val angle = Math.toRadians(yawDegrees.toDouble())
+        require(presentationTurnDegrees.isFinite() && presentationTurnDegrees in -180f..180f)
+        val yaw = if (presentationTurnDegrees == 0f) yawDegrees.toDouble()
+            else yawDegrees.toDouble() + presentationTurnDegrees.toDouble()
+        val angle = Math.toRadians(yaw)
         val c = cos(angle).toFloat()
         val s = sin(angle).toFloat()
         val pitch = Math.toRadians(pitchDegrees.toDouble())

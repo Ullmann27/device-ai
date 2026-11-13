@@ -16,6 +16,24 @@ internal object LocalNativePromptBudget {
         return if (modelLimit == 0) ENGINE_CONTEXT_TOKENS else minOf(modelLimit, ENGINE_CONTEXT_TOKENS)
     }
 
+    /** Answer tokens a prompt must leave free (or the model's own smaller output limit). */
+    const val MIN_ANSWER_RESERVE = 512
+
+    /**
+     * Code56 field P0: the app built prompts up to 15 500 characters although the measured preface (system
+     * instruction + 33 tool declarations ≈ 7 kB JSON ≈ 1.8–2.4 k tokens on the host count) already fills about half
+     * of the 4 096-token window; such prompts failed natively („passen nicht in das Kontextfenster“, overflow).
+     * This returns the prompt UTF-8 bytes that keep [plan]'s own 3 bytes/token estimate inside the window while
+     * leaving a usable answer. Planning bound, never proof: the native prefill check still decides.
+     */
+    fun promptByteBudget(contextTokens: Int, prefaceTokens: Int?, requestedOutput: Int): Int? {
+        if (contextTokens <= 0 || prefaceTokens == null || prefaceTokens < 0 || requestedOutput < 1) return null
+        val answer = minOf(requestedOutput, MIN_ANSWER_RESERVE)
+        val tokens = contextTokens.toLong() - prefaceTokens - answer - FRAMING_RESERVE
+        if (tokens <= 0) return 0
+        return (tokens * 3).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+    }
+
     fun renderedUtf8Estimate(text: String): Int = maxOf(text.toByteArray(Charsets.UTF_8).size,
         Normalizer.normalize(text, Normalizer.Form.NFKC).toByteArray(Charsets.UTF_8).size)
 

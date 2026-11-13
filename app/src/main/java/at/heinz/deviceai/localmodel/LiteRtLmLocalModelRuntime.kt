@@ -68,6 +68,8 @@ interface LocalModelRuntime {
     val computeThreads: Int? get() = null
     /** Transport limit, not an exact tokenizer budget. */
     val maxPromptUtf8Bytes: Int? get() = null
+    /** Prompt bytes that fit the loaded engine's window after its measured preface; null when unknown. */
+    val tokenAwarePromptUtf8Bytes: Int? get() = null
     fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)
     fun unload(callback: (Result<Unit>) -> Unit = {})
     fun stream(prompt: String, callback: LocalInferenceCallback)
@@ -114,6 +116,10 @@ class LiteRtLmLocalModelRuntime(
     @Volatile private var configuredContextTokens = 0
     @Volatile private var prefaceTokenCount: Int? = null
     override val maxPromptUtf8Bytes: Int? get() = if (loadedModel == null) null else LocalToolContinuation.MAX_INPUT_BYTES
+    override val tokenAwarePromptUtf8Bytes: Int? get() = loadedModel?.let { model ->
+        LocalNativePromptBudget.promptByteBudget(configuredContextTokens, prefaceTokenCount,
+            LocalModelGenerationPolicy.maxOutputTokens(model.id))
+    }
 
     private var engine: Engine? = null
     private var conversation: Conversation? = null

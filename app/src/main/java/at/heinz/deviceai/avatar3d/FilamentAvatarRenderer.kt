@@ -24,6 +24,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private var asset: FilamentAsset? = null
     private var cockpitStage: FilamentCockpitStage? = null
     private var cockpitFrame: CockpitStageFrame? = null
+    /** Code56 phase C camera flight; idle = exact rest camera. */
+    private val cameraFlight = CockpitCameraFlight.Clock()
     private var cockpitHead = RectF()
     private var cockpitOrb = RectF()
     private var avatarRoot = 0
@@ -422,7 +424,14 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     internal fun bindCockpitFeed(feed: LiveMonitorFeed<AndroidLiveFrame>?) { cockpitStage?.bind(feed) }
     internal fun invalidateCockpitSubmission() { cockpitStage?.frameFailed() }
 
-    internal fun cockpitWorkEvent(event: CockpitWorkEvent) { cockpitStage?.workEvent(event) }
+    internal fun cockpitWorkEvent(event: CockpitWorkEvent) {
+        when (event.stage) {
+            CockpitWorkEvent.Stage.ACCEPTED -> if (cockpitStage != null) cameraFlight.start(System.nanoTime())
+            CockpitWorkEvent.Stage.STOPPED, CockpitWorkEvent.Stage.ERROR -> cameraFlight.cancel()
+            else -> Unit
+        }
+        cockpitStage?.workEvent(event)
+    }
 
     private fun applyAvatarOpacity(alpha: Float) {
         if (appliedOpacity == alpha) return
@@ -436,20 +445,33 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         val unit = frame.worldScale
         val d = (frame.distance * unit).toDouble()
         val near = frame.near
+        val flight = if (motion) cameraFlight.progress(System.nanoTime()) else { cameraFlight.cancel(); null }
+        val pose = flight?.let {
+            val monitor = frame.monitorTransform()
+            CockpitCameraFlight.pose(it, monitor[12].toDouble(), monitor[13].toDouble(),
+                monitor[14].toDouble(), (frame.monitorWidth * frame.restCompensation * unit).toDouble(), d)
+        }
+        // Rest projection; a running flight widens it (dolly zoom) and returns to exactly this frustum.
+        val extent = pose?.frustumScale ?: 1.0
         camera!!.setProjection(Camera.Projection.PERSPECTIVE,
-            -frame.width * unit * .5 * near / d, frame.width * unit * .5 * near / d,
-            -frame.height * unit * .5 * near / d, frame.height * unit * .5 * near / d, near, frame.far)
-        camera!!.lookAt(0.0, 0.0, d, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+            -frame.width * unit * .5 * near / d * extent, frame.width * unit * .5 * near / d * extent,
+            -frame.height * unit * .5 * near / d * extent, frame.height * unit * .5 * near / d * extent, near, frame.far)
+        if (pose == null) camera!!.lookAt(0.0, 0.0, d, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        else camera!!.lookAt(pose.eyeX, pose.eyeY, pose.eyeZ, pose.targetX, pose.targetY, pose.targetZ,
+            pose.upX, pose.upY, pose.upZ)
         CockpitWorldTransforms.avatar(frame, cockpitHead.left, cockpitHead.top,
             cockpitHead.right, cockpitHead.bottom, fitted, focus, worldTransform)
         Matrix.multiplyMM(transformed, 0, worldTransform, 0, avatarRootRest, 0)
         engine!!.transformManager.setTransform(avatarRoot, transformed)
         applyAvatarOpacity(at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY)
-        cockpitStage?.update(frame, cockpitOrb, orbPhase, motion)
+        // Presentation yaw belongs only to the monitor, never to the validated stage/native overlay frame.
+        cockpitStage?.update(frame, cockpitOrb, orbPhase, motion,
+            monitorTurnDegrees = (pose?.monitorYawDegrees ?: 0.0).toFloat())
         // SDR pixels stay below threshold.
     }
 
     fun clearCockpitStage() {
+        cameraFlight.cancel()
         cockpitStage?.close()
         cockpitStage = null
         cockpitFrame = null

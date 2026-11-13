@@ -338,6 +338,45 @@ class OwnerComputerVisibilityUiTest {
         assertNull(f.panels.last())
     }
 
+    /** Code56 field fix: a verified result stays live only briefly; MediaProjection never outlives the task. */
+    @Test fun verifiedResultCaptureEndsByItselfAfterTheRetentionWindow() = withFixture { f ->
+        val event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+        event.packageName = "com.whatsapp"
+        try { service.onAccessibilityEvent(event) } finally { event.recycle() }
+        advance()
+        val capture = AndroidWindowCaptureTest.CaptureServiceShadow.callback
+        assertNotNull(capture)
+        val buffer = HardwareBuffer.create(8, 8, HardwareBuffer.RGBA_8888, 1,
+            HardwareBuffer.USAGE_GPU_SAMPLED_IMAGE)
+        val screenshot = ReflectionHelpers.callConstructor(AccessibilityService.ScreenshotResult::class.java,
+            ClassParameter.from(HardwareBuffer::class.java, buffer),
+            ClassParameter.from(ColorSpace::class.java, ColorSpace.get(ColorSpace.Named.SRGB)),
+            ClassParameter.from(Long::class.javaPrimitiveType, SystemClock.uptimeMillis()))
+        capture!!.onSuccess(screenshot)
+        val feed = AndroidLiveComputer.feed
+        val now = System.nanoTime()
+        val status = feed.status(now)
+        assertEquals(LiveMonitorState.LIVE, status.state)
+        val imported = requireNotNull(feed.monitorSubmission.imported(status, now))
+        assertTrue(feed.monitorSubmission.submitted(imported, status, now))
+        f.work.removeFirst().run()
+        advance()
+        assertEquals(1, chat(f.activity).count { it == "WhatsApp ist im gebundenen App-Fenster sichtbar." })
+        assertTrue("the confirmed result is shown live first", f.computer.active)
+        assertEquals(false, field(f.activity, "busy"))
+
+        advance(OwnerComputerSessionController.RESULT_RETENTION_MILLIS - 100)
+        assertTrue(f.computer.active)
+        advance(200)
+
+        assertFalse("capture must end by itself after the result", f.computer.active)
+        assertNull(field(f.computer, "captureSession"))
+        assertEquals(LiveMonitorState.ENDED, feed.status(System.nanoTime()).state)
+        assertTrue(buffer.isClosed)
+        assertNull(f.feeds.last())
+        assertTrue("no visibility notice for an orderly end", notices(f.activity).isEmpty())
+    }
+
     @Test fun ordinaryVerifiedReplyStillUsesTheExistingSpeechPolicy() = withFixture { f ->
         val message = "Die App ist sichtbar."
         call(f.activity, "deliverComputerReply",

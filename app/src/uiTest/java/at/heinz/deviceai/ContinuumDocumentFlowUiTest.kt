@@ -21,6 +21,7 @@ import at.heinz.deviceai.localmodel.LocalToolResponse
 import at.heinz.deviceai.ui.ContinuumHomeView
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -287,6 +288,32 @@ class ContinuumDocumentFlowUiTest {
         assertTrue(launched.intent.flags and android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION != 0)
         assertTrue(runtime.prompts.isEmpty())
         assertNull(field(activity, "activeOrchestrator"))
+    }
+
+    /** Code55 field P0: „Suche mir eine PDF“ went to web research; the full chat route must open the picker. */
+    @Test fun searchingForAPdfOpensThePickerNotWebResearch() = withFlow { activity, _, runtime ->
+        (field(activity, "input") as android.widget.EditText).setText("Suche mir eine PDF")
+        assertTrue((field(activity, "sendButton") as android.widget.Button).performClick())
+        val launched = requireNotNull(shadowOf(activity).nextStartedActivityForResult)
+        assertEquals(android.content.Intent.ACTION_OPEN_DOCUMENT, launched.intent.action)
+        assertEquals("application/pdf", launched.intent.type)
+        assertTrue(runtime.prompts.isEmpty())
+    }
+
+    /** Code55 field bug: „⌁ Datei“ opened the development assistant instead of the Android PDF picker. */
+    @Test fun dateiButtonOpensTheAndroidPdfPickerNotTheDevelopmentAssistant() = withFlow { activity, root, runtime ->
+        val button = descendants(root).filterIsInstance<TextView>().single { it.text.toString() == "⌁ Datei" }
+        assertTrue(button.performClick())
+        val launched = requireNotNull(shadowOf(activity).nextStartedActivityForResult)
+        assertEquals(android.content.Intent.ACTION_OPEN_DOCUMENT, launched.intent.action)
+        assertEquals("application/pdf", launched.intent.type)
+        assertTrue(launched.intent.hasCategory(android.content.Intent.CATEGORY_OPENABLE))
+        assertNull("the development assistant must not open", field(activity, "devDialog"))
+        assertTrue(runtime.prompts.isEmpty())
+        // The development source picker stays an explicit, separate long-press route.
+        assertTrue(button.performLongClick())
+        assertNotNull(field(activity, "devDialog"))
+        (field(activity, "devDialog") as android.app.AlertDialog).dismiss()
     }
 
     @Test fun jarvisReadsTheDocumentWhileTheModelWorksAndThenShowsTheDraft() = withFlow { activity, root, runtime ->

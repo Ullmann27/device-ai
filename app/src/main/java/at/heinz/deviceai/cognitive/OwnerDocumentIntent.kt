@@ -24,8 +24,17 @@ internal object OwnerDocumentIntent {
             COURTESY + "(?:(?:die|das|ein|eine|mein|meine|diese|dieses)\\s+)?" +
             "(?:(?:ausgewählte[nrs]?|letzte[nrs]?|gleiche[nrs]?|dieselbe|selbe[nrs]?|vorige[nrs]?|gestrige[nrs]?)\\s+)?" +
             "(?:pdf(?:-datei|-dokument)?|dokument)\\s+" + COURTESY +
-            "(?:öffnen|anzeigen|zeigen|lesen|vorlesen|analysieren|prüfen|zusammenfassen)" +
+            "(?:öffnen|anzeigen|zeigen|lesen|vorlesen|analysieren|prüfen|zusammenfassen|suchen|heraussuchen|auswählen)" +
             "(?:\\s+(?:bitte|für\\s+mich))?[.!?]*$"
+    )
+    /**
+     * Code55 field bug: „Suche mir eine PDF“ went to web research. As a whole utterance it means a PDF on this device,
+     * so it opens Android's own picker; any further words („… im Internet“, „… über Quantenphysik“) keep their route.
+     */
+    private val findPdf = Regex(
+        "(?iu)^(?:such|suche|finde|hol|hole|wähle)(?:\\s+(?:mir|bitte|mal|kurz|eben))*\\s+" +
+            "(?:(?:eine|die|das|ein|meine|mein)\\s+)?(?:pdf|pdf-datei|pdf-dokument)" +
+            "(?:\\s+(?:aus|auf|von)\\s+(?:meinem|dem)\\s+(?:handy|gerät|telefon|speicher))?(?:\\s+bitte)?[.!?]*$"
     )
     private val extraAction = Regex(
         "(?iu)(?:^|[.!?,;]\\s*|\\s+(?:und|danach|anschließend|dann)\\s+)" +
@@ -57,6 +66,7 @@ internal object OwnerDocumentIntent {
         if (prohibited.containsMatchIn(original)) return null
         val text = original.replace(presentationTail, "").trimEnd()
         val direct = read.find(text) ?: namedPdf.matchEntire(text)
+        if (findPdf.matches(text)) return Request(wantsDraft = false, reuse = false)
         if (direct == null && !politeRead.matches(text)) return null
         if (direct != null && (joinedObject.containsMatchIn(direct.value) ||
                 extraAction.findAll(text).any { it.groups[1]!!.range.first != direct.range.first })) return null
