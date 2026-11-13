@@ -1,0 +1,47 @@
+name: Jarvis55 - prior QA failure receipts
+
+on:
+  push:
+    branches: [work/jarvis55-qa-receipts-20261113]
+    paths: [.github/workflows/jarvis55-qa-receipts.yml]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  inspect:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/work/jarvis55-qa-receipts-20261113'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43344572298
+          name: Code55-full-Android-source-QA
+          path: ${{ runner.temp }}/prior-qa
+      - name: Print bounded failure evidence
+        env:
+          EVIDENCE_DIR: ${{ runner.temp }}/prior-qa
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, xml.etree.ElementTree as ET
+          root = pathlib.Path(os.environ["EVIDENCE_DIR"])
+          source = list(root.rglob("code55-source.txt"))
+          assert len(source) == 1
+          assert "source_sha=41306257ce03c1e22e998877bf769ce42b3a0486" in source[0].read_text()
+          print(source[0].read_text())
+          failures = 0
+          for file in sorted(root.rglob("TEST-*.xml")):
+              suite = ET.parse(file).getroot()
+              for case in suite.iter("testcase"):
+                  for tag in ("failure", "error"):
+                      for failure in case.findall(tag):
+                          failures += 1
+                          print(case.get("classname"), case.get("name"), failure.get("type"))
+                          print((failure.get("message") or "")[:1500])
+                          print("\n".join((failure.text or "").splitlines()[:5]))
+          assert failures == 18, failures
+          print("READ_ONLY_PRIOR_QA_RECEIPT_PASS")
+          PY
