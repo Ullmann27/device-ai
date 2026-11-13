@@ -9,7 +9,8 @@ object CinematicWorkstationLayout {
     const val AVATAR_SCALE = .76f
     const val MONITOR_YAW_DEGREES = -3f
 
-    fun create(width: Float, viewport: Float, fontScale: Float = 1f): JarvisShellLayout.Shell {
+    fun create(width: Float, viewport: Float, fontScale: Float = 1f,
+               compactPresentation: Boolean = false): JarvisShellLayout.Shell {
         require(width.isFinite() && width >= 240f && viewport.isFinite() && viewport >= 160f)
         val profile = JarvisWindowProfile.resolve(width, viewport, fontScale)
         val font = maxOf(1f, profile.fontScale)
@@ -25,7 +26,8 @@ object CinematicWorkstationLayout {
         val dialogH = if (wide) 0f else 48f * font
         val reserved = headerH + inputH + dockH + statusH + dialogH + 6f * gap
         val minSceneH = if (wide) maxOf(310f, (28f + 96f * font) / .54f) else 320f
-        val sceneH = maxOf(minSceneH, viewport - reserved)
+        val sceneH = if (compactPresentation) maxOf(112f, if (wide) 28f + 96f * font else 0f)
+            else maxOf(minSceneH, viewport - reserved)
         val sceneTop = gap + headerH + gap + dialogH
         val scene = Box(margin, sceneTop, right, sceneTop + sceneH)
         val headW = minOf(room * if (wide) .82f else .98f, sceneH * 1.65f)
@@ -35,8 +37,9 @@ object CinematicWorkstationLayout {
             width * .5f + headW * .5f, headTop + headH)
         // Original rings surround solid skin.
         val orbComposition = minOf(room * .98f, sceneH * .80f)
-        val orbSize = orbComposition * .64f
-        val orbTop = sceneTop + orbComposition * .10f
+        val orbSize = if (compactPresentation) 112f else orbComposition * .64f
+        val orbTop = if (compactPresentation) sceneTop + (sceneH - orbSize) * .5f
+            else sceneTop + orbComposition * .10f
         val orb = Box(width * .5f - orbSize * .5f, orbTop,
             width * .5f + orbSize * .5f, orbTop + orbSize)
         fun roomBox(left: Float, top: Float, right: Float, bottom: Float) =
@@ -46,9 +49,9 @@ object CinematicWorkstationLayout {
             else roomBox(.04f, .54f, .96f, .89f)
         val boxes = linkedMapOf(
             Slot.TOP_BAR to Box(margin, gap, right, gap + headerH),
-            Slot.AVATAR to scene,
-            Slot.WORK_PROCESS to monitor
+            Slot.AVATAR to if (compactPresentation) orb else scene
         )
+        if (!compactPresentation) boxes[Slot.WORK_PROCESS] = monitor
         if (wide) {
             val sideW = room * .20f
             val badgeTop = sceneTop + 12f
@@ -57,8 +60,10 @@ object CinematicWorkstationLayout {
             boxes[Slot.CAMERA_STATUS] = Box(right - sideW, badgeTop, right, cameraBottom)
             boxes[Slot.COCKPIT_SECONDARY] = Box(right - sideW, cameraBottom + gap, right,
                 cameraBottom + gap + 48f * font)
-            boxes[Slot.WORK_DOCUMENT] = roomBox(.02f, .57f, .22f, .87f)
-            boxes[Slot.WORK_DRAFT] = roomBox(.78f, .57f, .98f, .87f)
+            if (!compactPresentation) {
+                boxes[Slot.WORK_DOCUMENT] = roomBox(.02f, .57f, .22f, .87f)
+                boxes[Slot.WORK_DRAFT] = roomBox(.78f, .57f, .98f, .87f)
+            }
         } else {
             boxes[Slot.DIALOG] = Box(margin, gap + headerH + gap, right, sceneTop)
         }
@@ -69,7 +74,7 @@ object CinematicWorkstationLayout {
         y += dockH + gap
         boxes[Slot.STATUS] = Box(margin, y, right, y + statusH)
         y += statusH + gap
-        val grid = if (wide) JarvisCockpitGrid.create(width, maxOf(480f, viewport), profile.fontScale)
+        val grid = if (wide && !compactPresentation) JarvisCockpitGrid.create(width, maxOf(480f, viewport), profile.fontScale)
             .let { original ->
                 original.copy(areas = original.areas + mapOf(
                     JarvisCockpitGrid.Area.HEADER to boxes.getValue(Slot.TOP_BAR),
@@ -79,10 +84,13 @@ object CinematicWorkstationLayout {
                 ))
             } else null
         return JarvisShellLayout.Shell(JarvisShellLayout.formFactor(width, viewport), width,
-            maxOf(viewport, y), boxes.filterValues { it.width > 0f && it.height > 0f }, 0, 0,
-            overlays = setOf(Slot.AVATAR to Slot.WORK_PROCESS), grid = grid, viewportHeight = viewport,
-            profile = profile, headBounds = head, orbBounds = orb, headStage = head, workstation = true,
-            protectedFaceBounds = Box(width * .5f - headH * .29f, head.top,
+            if (compactPresentation) y else maxOf(viewport, y),
+            boxes.filterValues { it.width > 0f && it.height > 0f }, 0, 0,
+            overlays = if (compactPresentation) emptySet() else setOf(Slot.AVATAR to Slot.WORK_PROCESS),
+            grid = grid, viewportHeight = viewport,
+            profile = profile, headBounds = head.takeUnless { compactPresentation }, orbBounds = orb,
+            headStage = head.takeUnless { compactPresentation }, workstation = true,
+            protectedFaceBounds = if (compactPresentation) null else Box(width * .5f - headH * .29f, head.top,
                 width * .5f + headH * .29f, head.top + headH * .64f))
     }
 }
