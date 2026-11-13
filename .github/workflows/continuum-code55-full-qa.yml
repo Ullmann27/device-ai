@@ -104,7 +104,16 @@ jobs:
         run: |
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0' 'emulator' 'system-images;android-35;google_apis;x86_64'
-          printf 'no\n' | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd --name continuum-native-pdf --package 'system-images;android-35;google_apis;x86_64' --device pixel_7
+          export ANDROID_USER_HOME="$RUNNER_TEMP/continuum-native-user"
+          export ANDROID_AVD_HOME="$ANDROID_USER_HOME/avd"
+          mkdir -p "$ANDROID_AVD_HOME"
+          printf 'ANDROID_USER_HOME=%s\n' "$ANDROID_USER_HOME" >> "$GITHUB_ENV"
+          printf 'ANDROID_AVD_HOME=%s\n' "$ANDROID_AVD_HOME" >> "$GITHUB_ENV"
+          printf 'no\n' | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd \
+            --name continuum-native-pdf --package 'system-images;android-35;google_apis;x86_64' \
+            --device pixel_7 --path "$ANDROID_AVD_HOME/continuum-native-pdf.avd"
+          test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
+          test "$("$ANDROID_HOME/emulator/emulator" -list-avds | tr -d '\r')" = continuum-native-pdf
       - name: Build disposable native test APKs
         shell: bash
         run: |
@@ -120,17 +129,26 @@ jobs:
           set -euo pipefail
           evidence="$RUNNER_TEMP/code55-native-pdf"
           mkdir -p "$evidence"
+          : "${ANDROID_USER_HOME:?Native user directory missing}"
+          : "${ANDROID_AVD_HOME:?Native AVD directory missing}"
+          test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
+          test -s "$ANDROID_AVD_HOME/continuum-native-pdf.avd/config.ini"
           test -c /dev/kvm
           original_kvm_group="$(stat -c '%g' /dev/kvm)"
           original_kvm_mode="$(stat -c '%a' /dev/kvm)"
           emulator_pid=''
           cleanup() {
+            native_exit=$?
+            if (( native_exit != 0 )) && [[ -f "$evidence/emulator.log" ]]; then
+              cat "$evidence/emulator.log" || true
+            fi
             if [[ -n "$emulator_pid" ]]; then
               "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 emu kill || true
               kill "$emulator_pid" 2>/dev/null || true
             fi
             sudo chgrp "$original_kvm_group" /dev/kvm
             sudo chmod "$original_kvm_mode" /dev/kvm
+            return "$native_exit"
           }
           trap cleanup EXIT
           sudo chgrp "$(id -gn)" /dev/kvm
