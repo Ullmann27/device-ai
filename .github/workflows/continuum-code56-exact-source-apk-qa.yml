@@ -3,15 +3,13 @@ on:
   push:
     branches:
       - release/code56-apk-qa-20261113
-    paths:
-      - .github/workflows/continuum-code56-exact-source-apk-qa.yml
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: code56-source-qa-20261113
+  group: code56-source-qa-v2-20261113
   cancel-in-progress: false
 
 jobs:
@@ -161,7 +159,7 @@ jobs:
         run: |
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
-      - name: Full unfiltered Android and UI regression suite including motion evidence
+      - name: Full unfiltered Android and UI regression suite (motion exercised without PNG export)
         run: |
           set -euo pipefail
           unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
@@ -170,7 +168,6 @@ jobs:
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
             -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=56 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
-            -PcontinuumUiEvidenceDir="$RUNNER_TEMP/code56-ui-evidence" \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
             :app:testDebugUnitTest
       - name: Require exact declared skip policy
@@ -193,7 +190,6 @@ jobs:
           path: |
             app/build/test-results/testDebugUnitTest/
             app/build/reports/lint-results-debug.*
-            ${{ runner.temp }}/code56-ui-evidence/
           if-no-files-found: warn
           retention-days: 14
 
