@@ -388,20 +388,29 @@ class OwnerAppPlanningContextUiTest {
 
     @Test fun appTopicQuestionsReachConversationWithoutComputerWork() = withActivity { activity, runtime ->
         val generation = field(activity, "appLookupGeneration")
-        for (request in listOf(
-            "Warum funktioniert meine Kamera nicht?",
-            "Ich finde die Einstellungen nicht",
-            "Schreibe mir einen Text über den Kalender",
-            "Verfasse eine Erklärung über Galerie und Chrome"
+        for ((request, reply) in listOf(
+            "Warum funktioniert meine Kamera nicht?" to
+                "Das kann ich nicht sicher beurteilen. Welche Meldung zeigt die Kamera?",
+            "Ich finde die Einstellungen nicht" to
+                "Welche Ansicht siehst du gerade? Beschreibe mir die Symbole.",
+            "Schreibe mir einen Text über den Kalender" to
+                "Ein Kalender ordnet Termine nach Datum und Uhrzeit.",
+            "Verfasse eine Erklärung über Galerie und Chrome" to
+                "Eine Galerie verwaltet Bilder. Chrome zeigt Webseiten an."
         )) {
+            val previousCalls = runtime.prompts.size
             submit(activity, request)
             until("App topic reaches inference: $request") { runtime.running }
             assertEquals(request, generation, field(activity, "appLookupGeneration"))
             assertNull(field(activity, "activeOwnerAppFlow"))
             assertNull(field(activity, "pendingComputerLaunch"))
             assertTrue(runtime.prompts.last().contains(request))
-            runtime.answer("Für diese Erklärung wurde keine App bedient.")
-            until("App topic completed") { field(activity, "busy") == false }
+            runtime.answer(reply)
+            until("App topic completed: $request", details = {
+                "; busy=${field(activity, "busy")}; running=${runtime.running}; prompts=${runtime.prompts.size}"
+            }) { field(activity, "busy") == false }
+            assertEquals("One completed inference", previousCalls + 1, runtime.prompts.size)
+            assertEquals(reply, stored(activity).single { it.request == request }.response)
         }
     }
 

@@ -39,3 +39,13 @@ contracts retained; no experiment or weights promoted. Revert this isolated
 change on the development branch if validation fails; never rewrite a shared
 branch. Source integration, host verification and Fold7 acceptance remain
 separate. Original signing/publication/installation NOT_RUN.
+
+Focused run `43370686810` at source `97b607d0`: 395 cases, 394 passed,
+one UI fixture failure, zero errors/skips; Node/backend passed. All parser
+cases passed and the topic reached inference. The fixture supplied the
+identical model answer for different questions; the existing quality gate
+correctly requested a bounded retry, for which the fixture had no answer.
+The follow-up supplies distinct relevant answers and additionally asserts
+one inference and one persisted response per request. The quality gate,
+timeout and production routing remain unchanged. A fresh focused run is
+required before canonical integration.
