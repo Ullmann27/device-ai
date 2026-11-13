@@ -17,6 +17,7 @@ gradle.projectsEvaluated {
                 includeTestsMatching('at.heinz.deviceai.ui.JarvisReferenceWindowLayoutTest')
                 includeTestsMatching('at.heinz.deviceai.ui.JarvisShellContentTest')
                 includeTestsMatching('at.heinz.deviceai.ui.JarvisShellLayoutTest')
+                includeTestsMatching('at.heinz.deviceai.ui.ComputerPanelPresentationTest')
                 failOnNoMatchingTests = true
             }
         }

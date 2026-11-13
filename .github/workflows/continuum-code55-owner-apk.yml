@@ -56,6 +56,9 @@ jobs:
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true             -PcontinuumUiWidgetTests=true -I tools/code55-apk/focused.init.gradle :app:testDebugUnitTest
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test -z "$(git status --porcelain --untracked-files=normal)"
+      - name: Summarize actual focused JUnit results
+        if: always()
+        run: python3 tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest
       - name: Preserve focused JUnit
         if: always()
         uses: actions/upload-artifact@v4
