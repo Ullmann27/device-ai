@@ -291,7 +291,10 @@ class ChiefBotTeam(
             if (report.status != WorkerStatus.DONE) {
                 finish(current.id, if (report.status == WorkerStatus.CANCELLED) ChiefTeamStatus.CANCELLED
                     else if (report.status == WorkerStatus.BLOCKED) ChiefTeamStatus.BLOCKED else ChiefTeamStatus.FAILED,
-                    report.status.name)
+                    // Stored diagnostics allow only [A-Z0-9_] (≤ 80): status, then the traceable code after „__“.
+                    (report.status.name + (ChiefFailureCode.fromSummary(report.summary)
+                        ?: ChiefFailureCode.of(report.summary)?.takeIf { report.status == WorkerStatus.BLOCKED })
+                        ?.let { "__$it" }.orEmpty()).take(80))
                 return
             }
             requireCurrent(execution)

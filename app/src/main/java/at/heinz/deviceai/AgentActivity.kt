@@ -3060,7 +3060,10 @@ class AgentActivity : Activity() {
                     }
                     cancellation.throwIfCancelled()
                     check(generated.failure == null && generated.completion == LocalGenerationCompletion.COMPLETE &&
-                        generated.proposal == null && generated.rejectedToolResponses.isEmpty()) { "BOT_TEAM_GENERATION_FAILED" }
+                        generated.proposal == null && generated.rejectedToolResponses.isEmpty()) {
+                        // Keep a fixed native code (e.g. context overflow) traceable; free text never travels.
+                        at.heinz.deviceai.chief.ChiefFailureCode.of(generated.failure) ?: "BOT_TEAM_GENERATION_FAILED"
+                    }
                     return generated.response
                 }
             }, changed = { runOnUiThread { refreshBotTeam() } },

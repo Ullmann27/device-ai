@@ -231,9 +231,22 @@ class ChiefWorkerPool(
             val cause = (e as? java.util.concurrent.ExecutionException)?.cause ?: e
             if (cause is WorkerBlocked && !slot.cancelled.get()) report(WorkerStatus.BLOCKED, cause.message ?: "Blockiert.")
             else if (slot.cancelled.get()) report(WorkerStatus.CANCELLED, "Vom Chef abgebrochen.")
-            else report(WorkerStatus.FAILED, "Fehlgeschlagen: ${cause.javaClass.simpleName}")
+            else report(WorkerStatus.FAILED, "Fehlgeschlagen: ${cause.javaClass.simpleName}" +
+                (ChiefFailureCode.of(cause.message)?.let { " ($it)" } ?: ""))
         }
     }
+}
+
+/**
+ * Code56 (KI-Team field report: bot-iris/bot-archiv/bot-atlas only showed FAILED/CANCELLED): a fixed upper-case
+ * reason code may travel with a failure so it is traceable; free exception text never does.
+ */
+object ChiefFailureCode {
+    private val CODE = Regex("[A-Z][A-Z0-9_]{5,63}")
+    private val TRAILING = Regex("\\(([A-Z][A-Z0-9_]{5,63})\\)$")
+    fun of(message: String?): String? = message?.trim()?.takeIf { CODE.matches(it) }
+    /** Code at the end of a worker summary, e.g. „Fehlgeschlagen: IllegalStateException (BOT_TEAM_GENERATION_FAILED)“. */
+    fun fromSummary(summary: String?): String? = summary?.trim()?.let { TRAILING.find(it)?.groupValues?.get(1) }
 }
 
 /** Tool scoping for a worker brief, enforced twice: before the approval prompt (model) and at execution (runner). */

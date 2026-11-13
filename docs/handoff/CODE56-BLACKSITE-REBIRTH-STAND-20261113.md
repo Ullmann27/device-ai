@@ -67,7 +67,12 @@ bereits um überlagernde Fenster beschnitten.
   `LocalModelRuntime.tokenAwarePromptUtf8Bytes`; die Prompt-Rahmung nimmt das Minimum → optionale Historie wird zuerst
   gekürzt, Pflichtinhalt, der nicht passt, wird vor dem nativen Prefill ehrlich abgelehnt. Nicht geändert: Anzahl und Text
   der Werkzeugdeklarationen (würde Modellverhalten ändern; erst nach Gerätemessung des echten Präfix entscheiden).
-- **KI-Team-Fehler**, **NEURON-Herkunft**, „Was kannst du davon löschen?“: offen.
+- **KI-Team-Fehler: rückverfolgbar gemacht (host-getestet), Ursache auf dem Gerät offen.** Vorher speicherte der
+  Worker-Pool nur den Ausnahmeklassennamen und das Team nur „FAILED“. Jetzt wandert ein fester Code mit
+  (`ChiefFailureCode`; Diagnose z. B. `FAILED__LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL`), Freitext nie. Wahrscheinliche
+  Ursache im Feld: dasselbe zu große Prompt-Budget (Team-Prompts ≤ 15 500 Byte, ≈ 5 k Token > 4 096) – auf dem Gerät
+  am neuen Diagnosecode zu bestätigen.
+- **NEURON-Herkunft**, „Was kannst du davon löschen?“: offen.
 - Volle Android-Suite, Lint, APK-Bau: in diesem Zweig noch nicht gelaufen.
 
 ## 3a. Durchgeführte Prüfungen (Host, 13.11.2026, Commit `03b80b202` + App-Ablauf-Fix)
@@ -77,6 +82,7 @@ bereits um überlagernde Fenster beschnitten.
 | Gezielte Gradle-Hostsuite (Live-Computer, Beobachtungsbus, Projektion, Controller-UI, Dokumentfluss, Cockpit/Filament-Hosttests, Routing, Kamerafahrt) | 85 Klassen · 529 Tests · 0 Fehler · 0 übersprungen |
 | App-Ablauf (OwnerAppActionFlow, App-Suche, Bot-Routing) | 6 Klassen · 70 Tests · 0 Fehler |
 | Tokenbudget + Prompt-Rahmung + Laufzeit + Dialog/Kontext + Dokumentfluss | 41 Klassen · 242 Tests · 0 Fehler |
+| Chief/KI-Team + Bot-UI | 31 Klassen · 251 Tests · 2 rot – beide auch auf Basis `4d1c3fbfc` rot (Schreibschutz-Tests, Prozess läuft als uid 0); Team-Nachlauf mit neuem E2E-Test 30/30 |
 | Node-Verträge der berührten Quellen | 291/291 |
 | Node-Vollsuite | 1650: 1601 grün, 26 rot, 23 übersprungen – die 26 roten identisch auf Basis `4d1c3fbfc` (`JUNIT_FILE_IDENTITY_UNSUPPORTED_RUNTIME` in ccc1-redgreen-verifier, coding-orchestrator-failure-report, momega1-verifier-regressions) |
 
