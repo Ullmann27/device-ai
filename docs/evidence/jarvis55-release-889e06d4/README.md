@@ -5,16 +5,18 @@ Tree: `bf5f7aaaa0da11cd3d84fba9265174f186a82bc9`.
 Canonical integration: [PR #809](https://github.com/Ullmann27/device-ai/pull/809).
 This evidence commit does not change the frozen product.
 
-At 2026-11-13 06:04 UTC, full QA remains **IN_PROGRESS**. The unsigned
-ARM64 APK and its scoped tests passed. This is not yet an installable owner
-update or a completed release acceptance.
+At 2026-11-13 06:36 UTC, exact-source full QA is **PASS**. All four required
+jobs completed successfully in attempt 1. The downloaded full archive was
+independently checked against authenticated metadata, source/tree and actual
+JUnit cases. The unsigned ARM64 APK is ready for the protected test-signing
+step; original signing and physical-device acceptance remain outstanding.
 
 | Check | Actual result |
 | --- | --- |
 | Focused preflight [43372191194](https://github.com/Ullmann27/device-ai/actions/runs/43372191194) | 395 passed, 0 failures/errors/skips |
 | APK [43373431159](https://github.com/Ullmann27/device-ai/actions/runs/43373431159) | Both jobs passed; 488 scoped Android cases passed |
-| Full QA [43373431089](https://github.com/Ullmann27/device-ai/actions/runs/43373431089) | Node/backend and native PDF/Filament passed; unfiltered Android/UI + lint pending |
-| Full Node | 2,474 passed, 37 declared skips; critical subset not counted twice |
+| Full QA [43373431089](https://github.com/Ullmann27/device-ai/actions/runs/43373431089) | PASS: 5,373 passed / 5,390 enumerated Android cases, 894 suites; 17 declared skips, zero failures/errors/unknown skips; configured lint and final aggregate passed |
+| Full Node / backend | 2,474 Node passed, 37 declared skips; 64 backend passed; critical subset not counted twice |
 | APK source and asset integrity | Independent ZIP/inner APK hashes, 40 Git assets, 2 pinned model files and provenance verified |
 | Native pixel capture [43374473925](https://github.com/Ullmann27/device-ai/actions/runs/43374473925) | 24 actual 852×480 RGBA frames, 24 distinct hashes; resource cleanup passed |
 | Protected draft signer [43372707832](https://github.com/Ullmann27/device-ai/actions/runs/43372707832) | 61 zero-secret contracts passed; original signing not run |
@@ -45,8 +47,10 @@ speech or owner approval. Twelve FPS is the offline export clock, **not a
 measured device frame rate**. Full Activity composition, 200% font scale,
 Fold7/Android17 and real capture/action/voice remain unverified by this probe.
 
-Host fallback review found header overlap and clipped/ellipsized navigation
-captions at 200% font scale. This is an open visual finding. The current native
+Five relevant host images from this source are byte-identical to the previously
+inspected 75306783 outputs (see `host-image-comparison.json`). Host fallback
+review found header overlap and clipped/ellipsized navigation captions at 200%
+font scale. This is an open visual finding. The current native
 capture is a technical output proof, not final cinematic-quality acceptance.
 
 ## Original-signing handoff
@@ -56,7 +60,7 @@ Protected signer source:
 `f232d34c5f28be3375d71f861120d6f673a62157`.
 Branch: `chatgpt/code52-owner-signing-20261109`.
 
-After the exact-source full QA has passed and the owner approves this source,
+Exact-source full QA has passed. After the owner approves this source,
 the registered [Code52 manual entry](https://github.com/Ullmann27/device-ai/actions/workflows/continuum-code52-sign-release.yml)
 accepts:
 
@@ -72,6 +76,13 @@ and protected-environment gates before using the existing original key,
 and creates an **unpublished, non-latest draft**. It does not publish Latest.
 This document does not supply or substitute owner/protected approval.
 No original signing, publication, device installation or main merge occurred.
+
+[Konkrete Signierschritte](ORIGINALSIGNIERUNG.md) · [Fold7-Testablauf](FOLD7-TESTABLAUF.md)
+
+Full QA archive: artifact 14015732455, 315,552,237 bytes, SHA256
+`3f4eecb48e0aa6bb42a01615c4cc874345e5aa1ed6a0fdbefd06e7b2c7be8195`.
+It contains 894 JUnit XML reports and 608 host PNGs. The native clip is the
+separate source-equivalent instrumentation artifact described above.
 
 Real computer testing requires Continuum and the target app simultaneously
 visible in supported split-screen windows. No background fullscreen autonomy,

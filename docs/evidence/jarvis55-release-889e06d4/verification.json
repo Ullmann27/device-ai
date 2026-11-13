@@ -1,18 +1,31 @@
 {
   "source": "889e06d47fffd2230fa5b062dd1f31b65992e728",
   "tree": "bf5f7aaaa0da11cd3d84fba9265174f186a82bc9",
-  "recordedAt": "2026-11-13T06:04:34.723047+00:00",
-  "status": "FULL_QA_PENDING",
+  "recordedAt": "2026-11-13T06:36:11.978922+00:00",
+  "status": "FULL_QA_PASS_UNSIGNED_TEST_CANDIDATE",
   "canonicalBranch": "integrate/code55-apk-fable-20261112",
   "pullRequest": 809,
   "fullQa": {
     "run": 43373431089,
-    "status": "IN_PROGRESS",
+    "status": "PASS",
     "nodeBackend": "PASS",
     "nativePdfFilament": "PASS",
-    "fullAndroid": "IN_PROGRESS",
-    "lint": "PENDING",
-    "aggregate": "PENDING"
+    "fullAndroid": "PASS",
+    "lint": "PASS",
+    "aggregate": "PASS",
+    "attempt": 1,
+    "suiteFiles": 894,
+    "tests": 5390,
+    "passed": 5373,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 17,
+    "unexpectedSkips": [],
+    "backendPassed": 64,
+    "nodePassed": 2474,
+    "nodeDeclaredSkips": 37,
+    "artifactId": 14015732455,
+    "artifactSha256": "3f4eecb48e0aa6bb42a01615c4cc874345e5aa1ed6a0fdbefd06e7b2c7be8195"
   },
   "focused": {
     "run": 43372191194,
@@ -76,11 +89,15 @@
   "thermals": "NOT_RUN",
   "mainMerge": "NOT_RUN",
   "limitations": [
-    "Full source-bound Android QA and lint still running.",
     "Real computer requires Continuum and target app visible in supported split-screen windows.",
     "Native visual fixture has synthetic waiting state, no live source, direct still avatar pose.",
     "200% font-scale fallback header overlap/caption clipping remains a visual finding.",
     "Current native proof is not final cinematic-quality acceptance.",
     "Gemma adapter training and automatic production weight promotion are not claimed."
+  ],
+  "remaining": [
+    "Explicit exact-source owner/protected signing approval",
+    "Original signing and unpublished test draft",
+    "Physical Fold7 capture/action/voice, visual and thermal acceptance"
   ]
 }
