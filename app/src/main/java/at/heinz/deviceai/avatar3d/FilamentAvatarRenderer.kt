@@ -502,8 +502,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
 
     override fun close() {
         val e = engine ?: return
-        clearCockpitStage()
-        clearDocumentStage()
+        runCatching { clearCockpitStage() }
+        runCatching { clearDocumentStage() }
         faceMaterial = null
         faceEmission = null
         avatarFactors = emptyList()
@@ -536,8 +536,16 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         const val HIDDEN_NODE_PREFIX = "Tooth"
         fun create(surface: Surface, bytes: ByteArray, metadata: AvatarGlbContract.Metadata): FilamentAvatarRenderer {
             val candidate = FilamentAvatarRenderer(surface)
-            try { candidate.initialize(bytes, metadata); return candidate }
-            catch (failure: Throwable) { candidate.close(); throw failure }
+            try {
+                candidate.initialize(bytes, metadata)
+                candidate.synchronizePendingFrames()
+                return candidate
+            } catch (failure: Throwable) {
+                runCatching { candidate.close() }.onFailure {
+                    if (it !== failure) failure.addSuppressed(it)
+                }
+                throw failure
+            }
         }
     }
 }
