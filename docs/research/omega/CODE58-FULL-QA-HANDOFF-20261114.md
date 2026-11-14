@@ -47,6 +47,32 @@ Record the created remote SHA and actual run ID/results in the accompanying PR.
 Keep the source frozen after successful QA; do not add a documentation-only
 commit and reuse the previous source's result for signing.
 
+## First complete-run diagnosis
+
+Run `43571580048` on `0c747194a1e93801216e693cc0d6501c306d1e33`
+built and verified the unsigned ARM64 APK and passed renderer preflight.
+The complete Node suite reported 2,471 passing, three failing and 37 skipped
+cases. All three failures were obsolete source assertions in
+`continuum-hologram-context-wiring.test.mjs` and
+`continuum-owner-mainapp-quality.test.mjs`: they still required the old
+`Runnable` scheduler instead of the integrated `Choreographer.FrameCallback`.
+
+The corrected source contracts retain single-callback ownership, frame
+admission, timestamp propagation and lifecycle cancellation. They additionally
+check re-scheduling outside frame admission and reset ordering on pause/detach.
+Both test files reproduced the three failures locally before correction and
+then passed all 11 cases with zero skips on Node `v24.22.1`.
+Backend execution was not reached after the complete Node failure.
+A new complete run on the corrected source is required; the failed
+run cannot authorize signing. Its Node artifact ZIP SHA-256 is
+`57926faa8934bb594101476a27ba4e640e733d4dc2ec4d99924e05b0428a618c`.
+
+The dedicated Code58 QA concurrency group now cancels superseded runs when a
+corrected candidate is pushed. The already-failed first run is superseded
+without waiting for its remaining long Android job. All four jobs must still
+pass on the new exact source; interrupted Android results are not acceptance
+evidence. Protected signing concurrency and owner review are unchanged.
+
 ## Existing protected signing path
 
 The established signing branch is `chatgpt/code52-owner-signing-20261109`.

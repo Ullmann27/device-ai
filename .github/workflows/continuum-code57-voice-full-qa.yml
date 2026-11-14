@@ -10,7 +10,7 @@ permissions:
 
 concurrency:
   group: code58-full-qa-v1-20261114
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   unsigned-arm64:
