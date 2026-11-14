@@ -36,6 +36,8 @@ collect() {
     if ! timeout -k 2s 5s "$adb" -s "$serial" exec-out run-as "$package" \
         cat "cache/code59-hologram-diagnostic/$name" > "$evidence/$name" 2> "$evidence/$name-transfer.txt"; then
       rm -f "$evidence/$name"
+    elif [[ "$name" == *.png && "$(od -An -tx1 -N8 "$evidence/$name" | tr -d ' \n')" != 89504e470d0a1a0a ]]; then
+      mv "$evidence/$name" "$evidence/$name-transfer-stdout.txt"
     fi
   done
   timeout -k 2s 5s "$adb" -s "$serial" logcat -d -v threadtime -t 10000 \
