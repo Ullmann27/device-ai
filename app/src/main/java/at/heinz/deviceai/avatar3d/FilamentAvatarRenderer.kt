@@ -37,6 +37,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private var appliedOpacity = -1f
     private val worldTransform = FloatArray(16)
     internal val cockpitReady get() = cockpitStage != null
+    private var submittedCockpitAtRest = false
+    internal val cockpitAtRest get() = cockpitReady && submittedCockpitAtRest
     internal val cockpitStatus get() = cockpitStage?.label ?: "3D-Szene nicht verfügbar"
     internal var lastFrameSkipped = false
         private set
@@ -362,7 +364,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             } finally { r.endFrame() }
             receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_SUBMITTED) ?: 0
             cockpitStage?.frameSubmitted(System.nanoTime())
+            submittedCockpitAtRest = !cameraFlight.active
         } catch (failure: Throwable) {
+            submittedCockpitAtRest = false
             cockpitStage?.frameFailed()
             throw failure
         }
@@ -485,6 +489,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     }
 
     fun clearCockpitStage() {
+        submittedCockpitAtRest = false
         cameraFlight.cancel()
         cockpitStage?.close()
         cockpitStage = null
