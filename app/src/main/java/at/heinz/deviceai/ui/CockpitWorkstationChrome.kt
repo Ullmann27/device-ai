@@ -132,15 +132,15 @@ object CockpitWorkstationChrome {
             b.left + 34f, b.centerY + p.capHeight(style) * .5f, style, Fill.Solid(Colors.textSecondary))
     }
 
-    fun systemBadge(p: ContinuumPainter, b: Box, active: List<Boolean>) {
+    fun systemBadge(p: ContinuumPainter, b: Box, cpuPercent: Int?, memoryPercent: Int?) {
         ContinuumIcons.draw(p, Icon.CPU, b.left + 18f, b.centerY, 17f, Fill.Solid(Colors.cyanSoft))
         val style = JarvisDesign.Type.caption.copy(size = 12f)
         p.drawText("System", b.left + 34f, b.centerY - 2f, style, Fill.Solid(Colors.textSecondary))
-        val step = minOf(14f, (b.width - 44f) / maxOf(1, active.size))
-        active.forEachIndexed { index, enabled ->
-            p.fillCircle(b.left + 37f + step * index, b.centerY + 10f, 2.4f,
-                Fill.Solid(if (enabled) Colors.ok else Colors.textMuted))
-        }
+        val values = "CPU ${cpuPercent?.let { "$it%" } ?: "—"} · " +
+            "RAM ${memoryPercent?.let { "$it%" } ?: "—"}"
+        val caption = style.copy(size = 10f)
+        p.drawText(JarvisShellRenderer.fit(p, values, caption, b.width - 44f),
+            b.left + 34f, b.centerY + 12f, caption, Fill.Solid(Colors.textSecondary))
     }
 
     fun panelHeader(p: ContinuumPainter, b: Box, title: String, icon: Icon): Float {

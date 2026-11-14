@@ -157,7 +157,7 @@ object WorkstationHostExport {
                             return@SlotContent
                         }
                         Slot.COCKPIT_SECONDARY -> {
-                            CockpitWorkstationChrome.systemBadge(painter, box, List(5) { false })
+                            CockpitWorkstationChrome.systemBadge(painter, box, null, null)
                             return@SlotContent
                         }
                         else -> Unit

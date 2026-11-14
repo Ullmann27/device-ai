@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "bunker": {
+    "path": "cinema3d/continuum-bunker-v04.glb",
+    "bytes": 3027184,
+    "sha256": "288cf282ff4b2caddfd21c889c75264db6145c69ab35476b374c42ca08de043b"
+  },
+  "source": "Continuum_Bunker_Stage_V04_Android.glb",
+  "roots": [
+    "continuum-bunker",
+    "continuum-mission-desk",
+    "continuum-monitor-engineering"
+  ]
+}

@@ -623,6 +623,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var worldBufferHeight = 0
     private var cockpitLiveFeed: at.heinz.deviceai.cognitive.LiveMonitorFeed<AndroidLiveFrame>? = null
     internal var onCockpitStatus: ((String, Boolean) -> Unit)? = null
+    internal val cockpitAtRest get() = native3dDrawn && native3d?.cockpitAtRest == true
     private var cockpitPanelContent: at.heinz.deviceai.avatar3d.CockpitPanelContent? = null
     private val cockpitPanelPainter by lazy { AndroidContinuumPainter(context.assets) }
     internal val cockpitPanelsVisible: Boolean get() = layeredCockpit && native3dDrawn &&

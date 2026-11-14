@@ -101,7 +101,8 @@ object JarvisCockpitGridContent {
                     else -> "Kamera aus"
                 }, s.presentation.cameraSessionActive) else cameraStatus(p, b, s)
             Slot.COCKPIT_SECONDARY -> if (shell?.workstation == true)
-                CockpitWorkstationChrome.systemBadge(p, b, modules(s).map { it.ok }) else modulesPanel(p, b, s)
+                CockpitWorkstationChrome.systemBadge(p, b, s.system.appCpuPercent, s.system.memoryPercent)
+            else modulesPanel(p, b, s)
             Slot.ROW_AGENTS -> JarvisCockpitPanels.drawAgents(p, b, s)
             Slot.ROW_TASKS -> JarvisCockpitPanels.drawTaskFlow(p, b, s)
             Slot.ROW_MEMORY -> JarvisMemoryActivityPanel.draw(p, b.left, b.top, b.right, b.bottom,

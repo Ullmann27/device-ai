@@ -9,7 +9,8 @@ import java.io.ByteArrayOutputStream
 /** APK-only, bounded, integrity-checked assets. */
 internal data class CockpitSceneAssets(val workstation: ByteArray, val orb: ByteArray, val monitorMaterial: ByteArray,
                                        /** Code56 rear housing meshes; null keeps the previous scene (never blocks it). */
-                                       val monitorRear: ByteArray? = null) {
+                                       val monitorRear: ByteArray? = null,
+                                       val bunker: ByteArray? = null) {
     companion object {
         private fun boundedRead(input: InputStream, limit: Int): ByteArray {
             val output = ByteArrayOutputStream()
@@ -53,16 +54,32 @@ internal data class CockpitSceneAssets(val workstation: ByteArray, val orb: Byte
                 require(bytes.size == expectedSize && sha256(bytes) == entry.getString("sha256"))
                 bytes
             }.getOrNull()
+            val bunker = loadBunker(assets::open)
             return CockpitSceneAssets(
                 read("workstation", "cinema3d/cockpit-workstation.glb", 2_000_000),
                 read("orb", "cinema3d/continuum-orb.glb", 2_000_000),
                 read("monitorMaterial", "cinema3d/live-monitor.filamat", 1_000_000),
-                rear)
+                rear, bunker)
         }
 
         const val REAR_PATH = "cinema3d/monitor-rear-details.glb"
         const val REAR_PIN = "cinema3d/monitor-rear-details.json"
         const val REAR_MAX_BYTES = 64_000
+        const val BUNKER_PATH = "cinema3d/continuum-bunker-v04.glb"
+        const val BUNKER_PIN = "cinema3d/continuum-bunker-v04.json"
+        const val BUNKER_MAX_BYTES = 4_000_000
+
+        internal fun loadBunker(open: (String) -> InputStream): ByteArray? = runCatching {
+            val pin = JSONObject(String(open(BUNKER_PIN).use { boundedRead(it, 4_096) }, Charsets.UTF_8))
+            require(pin.getInt("version") == 1)
+            val entry = pin.getJSONObject("bunker")
+            require(entry.getString("path") == BUNKER_PATH)
+            val expectedSize = entry.getInt("bytes")
+            require(expectedSize in 1..BUNKER_MAX_BYTES)
+            val bytes = open(BUNKER_PATH).use { boundedRead(it, BUNKER_MAX_BYTES) }
+            require(bytes.size == expectedSize && sha256(bytes) == entry.getString("sha256"))
+            bytes
+        }.getOrNull()
 
         internal fun sha256(bytes: ByteArray): String =
             MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }

@@ -1,0 +1,18 @@
+{
+  "version": 4,
+  "base": "Continuum_Mission_Desk_V3.glb",
+  "baseSha256": "0e6dd56445d5c96f40c228101329f4583ef305de4c33d0491279211ab16e3ee1",
+  "androidBase": "b8c31554ce7416540692f1d30b559be3712495d7",
+  "referenceViews": [
+    "compact",
+    "expanded"
+  ],
+  "originalAvatar": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+  "state": "ASSET_VALIDATED_ANDROID_INTEGRATED_DEVICE_TEST_PENDING",
+  "renderEngine": "Blender 4.3.2 Cycles CPU",
+  "fullStageSha256": "9319a4224b374bf64b87f04cd09d1ffcb1410f6a21d679270921d3e7d935ef75",
+  "androidStageSha256": "288cf282ff4b2caddfd21c889c75264db6145c69ab35476b374c42ca08de043b",
+  "originalAvatarSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "sourceAnimationsPreserved": 4,
+  "androidDeviceRun": false
+}
