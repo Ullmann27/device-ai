@@ -148,7 +148,9 @@ def verify_hologram(directory, source_sha, source_tree, expected_apks=None):
     assert all(a['surface_texture_timestamp'] <= b['surface_texture_timestamp'] for a, b in zip(observed, observed[1:]))
     for sample in observed:
         assert visible(sample['hologram']) and visible(sample['texture']), 'Stage is not visible'
-        assert sample['texture']['class'] == 'android.view.TextureView'
+        texture_type = sample.get('texture_is_texture_view',
+                                  sample['texture']['class'] == 'android.view.TextureView')
+        assert texture_type is True, 'View is not a verified TextureView'
         assert sample['ancestors'] and all(visible(parent) for parent in sample['ancestors'])
         assert all(sample[key] is True for key in ('texture_available', 'texture_parent_is_hologram',
                    'surface_valid', 'renderer_present', 'cockpit_ready', 'native3dDrawn',
