@@ -372,7 +372,7 @@ try:
     shell('settings', 'put', 'system', 'user_rotation', '0')
     nodes, first_pid, portrait = launch('fresh-empty-no-permissions')
     if tap(nodes, ['SCHLIESSEN']):
-        nodes, _, _ = snapshot('setup-dismissed')
+        nodes, _, _ = snapshot('setup-dismissed', await_text='Darf ich dich beim Gespräch anschauen?')
     if tap(nodes, ['NEIN']):
         nodes, _, _ = snapshot('camera-declined')
     if routine_mode:
