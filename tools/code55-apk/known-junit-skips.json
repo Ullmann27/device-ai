@@ -1,6 +1,5 @@
 {
   "at.heinz.deviceai.chief.ChiefPatternE2ETest": [
-    "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
     "s4b_pending_profileDiarySharedLayers",
     "s5b_pending_textFileSkillLibraryLoadedOnDemand",
     "s6_pending_routineReportsOnlyWhenSomethingIsNew",
@@ -8,10 +7,7 @@
     "s8d_pending_limitGuardIsWiredBeforeWorkerStart"
   ],
   "at.heinz.deviceai.chief.FirstThinkingRunE2ETest": [
-    "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
     "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
-    "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
-    "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
     "schritt6b_lernen_hypotheseUndTagebuchEintrag",
     "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen"
   ],

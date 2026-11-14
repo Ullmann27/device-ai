@@ -325,6 +325,10 @@ jobs:
               'newerOwnerRequestKeepsActualMemoryWriteReceipt'
           )}
           required |= {('ContinuumContrastiveParityTest','actualNodeKotlinNodeTrainingParity'),
+                       ('FirstThinkingRunE2ETest','schritt1b_ziel_turnLifecycleQuittiertGenauEinmal'),
+                       ('FirstThinkingRunE2ETest','schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope'),
+                       ('FirstThinkingRunE2ETest','schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert'),
+                       ('ChiefPatternE2ETest','s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack'),
                        ('ContinuumContrastiveParityTest','actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds'),
                        ('Cre1InferenceEncoderTest','trainedNodeCheckpointMatchesKotlinFeaturesAndScores'),
                        ('DevelopmentBacklogRoundtripTest','kotlinChangesNodeWrittenBacklogWithTheSharedRules')}
