@@ -164,10 +164,9 @@ internal class OwnerRoutineRuntime private constructor(private val app: Context)
             synchronized(dispatchLock) {
                 admitting.set(generation)
                 try {
-                    if (!generation.get()) {
-                        dispatcher.tick()
-                        if (event != null && !generation.get()) dispatcher.onEvent(event)
-                    }
+                    val allowStart = { !generation.get() && !paused() }
+                    dispatcher.tick(allowStart)
+                    if (event != null) dispatcher.onEvent(event, allowStart)
                 } finally { admitting.remove() }
             }
             if (!pool.awaitIdle(120_000)) {

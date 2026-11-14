@@ -116,8 +116,22 @@ class RoutineDispatcher(
         }
     }
 
-    fun tick(): Int = poll(book.claimDue(clock()))
-    fun onEvent(name: String): Int = poll(book.claimTriggered(name))
+    fun tick(): Int = tick { true }
+    fun tick(allowStart: () -> Boolean): Int {
+        val claims = synchronized(book) {
+            if (Thread.currentThread().isInterrupted || !allowStart()) return 0
+            book.claimDue(clock())
+        }
+        return poll(claims)
+    }
+    fun onEvent(name: String): Int = onEvent(name) { true }
+    fun onEvent(name: String, allowStart: () -> Boolean): Int {
+        val claims = synchronized(book) {
+            if (Thread.currentThread().isInterrupted || !allowStart()) return 0
+            book.claimTriggered(name)
+        }
+        return poll(claims)
+    }
     fun retryReports() { poll(emptyList()) }
     fun inFlight(): Set<String> = synchronized(book) { inFlight.keys.toSet() }
     fun activeWorkerIds(): Set<String> = synchronized(book) { inFlight.values.map { "rt-" + it.runId }.toSet() }

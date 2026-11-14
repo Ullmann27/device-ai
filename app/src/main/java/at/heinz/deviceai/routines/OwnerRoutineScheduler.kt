@@ -64,14 +64,13 @@ class OwnerRoutineJobService : JobService() {
     @Synchronized override fun onStopJob(params: JobParameters): Boolean {
         stopped?.set(true)
         cancellation?.let { it.set(true); runtime?.cancelGeneration(it) }
-        worker?.interrupt()
+        // Preserve pending durable writes.
         return true
     }
 
     override fun onDestroy() {
         stopped?.set(true)
         cancellation?.let { it.set(true); runtime?.cancelGeneration(it) }
-        worker?.interrupt()
         super.onDestroy()
     }
 }
