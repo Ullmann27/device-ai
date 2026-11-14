@@ -6,6 +6,7 @@ if [[ $# -ne 2 || ! "$1" =~ ^emulator-[0-9]+$ ]]; then
 fi
 : "${ANDROID_HOME:?Android SDK required}"
 python3 -I - "$@" <<'PY'
+import base64
 import hashlib
 import json
 import os
@@ -22,6 +23,7 @@ sdk = Path(os.environ['ANDROID_HOME'])
 adb = sdk / 'platform-tools/adb'
 package = 'at.heinz.deviceai.mentorpaired'
 activity = package + '/at.heinz.deviceai.AgentActivity'
+snapshot_runner = package + '.test/at.heinz.deviceai.ContinuumWindowSnapshotInstrumentation'
 
 def command(args, timeout=30, check=True):
     result = subprocess.run(list(map(str, args)), capture_output=True, timeout=timeout)
@@ -83,65 +85,49 @@ def captured_device(label, *args, timeout=30):
     save(label + '-command.json', json.dumps({'args': argv, 'returncode': result.returncode}))
     return result
 
-def focused_hierarchy(label, displays):
-    assert displays.tag == 'displays', f'{label}: window dump root missing'
-    windows = []
-    for display in displays.findall('display'):
-        if display.get('id') != '0':
-            continue
-        for window in display.iter('window'):
-            if window.get('focused') != 'true' or window.get('type') != 'TYPE_APPLICATION':
-                continue
-            windows.append(window)
-    assert len(windows) == 1, f'{label}: focused application window not unique'
-    window = windows[0]
-    hierarchies = window.findall('hierarchy')
-    assert len(hierarchies) == 1, f'{label}: focused application hierarchy missing'
-    hierarchy = hierarchies[0]
-    assert any(node.get('package') == package for node in hierarchy.iter('node')), f'{label}: focused window is not QA app'
-    save(label + '-window.json', json.dumps(window.attrib, ensure_ascii=False))
-    return hierarchy
-
 def read_hierarchy(label):
-    remote = '/sdcard/continuum-native-smoke.xml'
-    deadline = time.monotonic() + 45
-    all_windows = False
-    def budget(maximum):
-        remaining = deadline - time.monotonic()
-        assert remaining > 0, f'{label}: UI hierarchy deadline exceeded'
-        return min(maximum, remaining)
-    transient = ('ERROR: null root node returned by UiTestAutomationBridge.',
-                 'ERROR: could not get idle state.')
-    for attempt in range(1, 4):
-        prefix = f'{label}-uiautomator-{attempt}'
-        shell('rm', '-f', remote, timeout=budget(5))
-        options = ['--compressed', '--windows'] if all_windows else ['--compressed']
-        result = captured_device(prefix, 'shell', 'uiautomator', 'dump', *options, remote,
-                                 timeout=budget(35))
-        output = (result.stdout + result.stderr).decode(errors='replace')
-        assert result.returncode == 0, f'{label}: UI dump failed: {output[-1000:]}'
-        present = captured_device(prefix + '-file', 'shell', 'test', '-s', remote, timeout=budget(5))
-        if present.returncode == 0:
-            content = captured_device(prefix + '-read', 'exec-out', 'cat', remote, timeout=budget(5))
-            save(label + ('-windows.xml' if all_windows else '.xml'), content.stdout)
-            assert content.returncode == 0, f'{label}: UI dump could not be read'
-            assert 'ERROR:' not in output, f'{label}: UI dump reported an error: {output[-1000:]}'
-            try:
-                hierarchy = ET.fromstring(content.stdout)
-            except ET.ParseError as error:
-                raise RuntimeError(f'{label}: UI dump is not XML; raw evidence saved') from error
-            if all_windows:
-                hierarchy = focused_hierarchy(label, hierarchy)
-                save(label + '.xml', ET.tostring(hierarchy, encoding='utf-8', xml_declaration=True))
-            assert hierarchy.tag == 'hierarchy', f'{label}: UI hierarchy root missing'
-            return hierarchy
-        assert present.returncode == 1, f'{label}: UI dump file check failed'
-        if not any(message in output for message in transient) or attempt == 3 or time.monotonic() >= deadline:
-            raise RuntimeError(f'{label}: UI dump file missing: {output[-1000:]}')
-        if transient[0] in output:
-            all_windows = True
-        time.sleep(min(1, max(0, deadline - time.monotonic())))
-    raise RuntimeError(f'{label}: UI hierarchy unavailable')
+    started = time.time_ns()
+    before = shell('pidof', package)
+    assert re.fullmatch(r'\d+(?: \d+)*', before), f'{label}: app process missing'
+    result = captured_device(label + '-ui-automation', 'shell', 'am', 'instrument', '-w', '-r',
+                             snapshot_runner, timeout=60)
+    after = shell('pidof', package)
+    assert before == after, f'{label}: snapshot changed app process'
+    output = result.stdout.decode(errors='replace')
+    assert result.returncode == 0 and 'INSTRUMENTATION_FAILED' not in output, f'{label}: snapshot runner failed'
+    assert re.search(r'^INSTRUMENTATION_CODE: -1\r?$', output, re.M), f'{label}: snapshot instrumentation failed'
+    pairs = re.findall(r'^INSTRUMENTATION_RESULT: ([a-z_][a-z0-9_]*)=(.*?)\r?$', output, re.M)
+    values = dict(pairs)
+    assert len(values) == len(pairs) and values.get('status') == 'ok', f'{label}: invalid snapshot result'
+    assert values.get('helper_package') == package + '.test', f'{label}: wrong snapshot process package'
+    assert re.fullmatch(r'\d+', values.get('helper_pid', '')), f'{label}: helper process missing'
+    assert values['helper_pid'] not in before.split(), f'{label}: helper instrumented app process'
+    windows = json.loads(values['windows'])
+    focused = [w for w in windows if w['display'] == 0 and w['focused'] and w['type'] == 1]
+    assert len(focused) == 1 and focused[0]['id'] == int(values['window_id']), f'{label}: focused window mismatch'
+    windows_after = json.loads(values['windows_after'])
+    focused_after = [w for w in windows_after if w['display'] == 0 and w['focused'] and w['type'] == 1]
+    assert len(focused_after) == 1 and focused_after[0]['id'] == focused[0]['id'], f'{label}: focus changed during capture'
+    times = [int(values[key]) for key in ('capture_started_ms', 'hierarchy_finished_ms',
+                                         'screenshot_finished_ms', 'capture_finished_ms')]
+    assert 0 < times[0] <= times[1] <= times[2] <= times[3], f'{label}: inconsistent capture times'
+    xml = base64.b64decode(values['hierarchy_base64'], validate=True)
+    assert 0 < len(xml) <= 262144, f'{label}: invalid hierarchy size'
+    save(label + '.xml', xml)
+    png = device('exec-out', 'run-as', package + '.test', 'cat', 'cache/continuum-window-snapshot.png')
+    save(label + '.png', png)
+    assert hashlib.sha256(png).hexdigest() == values['screenshot_sha'], f'{label}: screenshot hash mismatch'
+    assert png.startswith(b'\x89PNG\r\n\x1a\n') and len(png) > 4096, f'{label}: invalid screenshot'
+    dimensions = struct.unpack('>II', png[16:24])
+    assert dimensions == (int(values['screenshot_width']), int(values['screenshot_height'])), f'{label}: screenshot size mismatch'
+    values.update(host_started_unix_ns=started, host_finished_unix_ns=time.time_ns(),
+                  app_pid_before=before, app_pid_after=after)
+    save(label + '-window.json', json.dumps(values, ensure_ascii=False))
+    hierarchy = ET.fromstring(xml)
+    assert hierarchy.tag == 'hierarchy', f'{label}: UI hierarchy root missing'
+    assert hierarchy.get('rotation') == values['rotation'], f'{label}: rotation metadata mismatch'
+    assert len(list(hierarchy.iter('node'))) == int(values['node_count']), f'{label}: hierarchy node count mismatch'
+    return hierarchy
 
 def snapshot(label, rotation=None):
     pid = shell('pidof', package, check=False)
@@ -152,10 +138,12 @@ def snapshot(label, rotation=None):
                activities.splitlines() if 'ResumedActivity' in line), f'{label}: activity not resumed'
     png = device('exec-out', 'screencap', '-p')
     assert png.startswith(b'\x89PNG\r\n\x1a\n') and len(png) > 4096, f'{label}: invalid screenshot'
+    save(label + '-before.png', png)
+    hierarchy = read_hierarchy(label)
+    png = (out / (label + '.png')).read_bytes()
     width, height = struct.unpack('>II', png[16:24])
     assert min(width, height) >= 200, f'{label}: empty display'
-    save(label + '.png', png)
-    hierarchy = read_hierarchy(label)
+    assert shell('pidof', package) == pid, f'{label}: app process changed during snapshot'
     if rotation is not None:
         assert hierarchy.get('rotation') == str(rotation), f'{label}: rotation not applied'
     nodes = []
@@ -193,6 +181,10 @@ try:
     save('android-fingerprint.txt', shell('getprop', 'ro.build.fingerprint'))
     save('install-app.txt', device('install', '-r', app, timeout=90))
     save('install-test.txt', device('install', '-t', '-r', test, timeout=90))
+    instrumentation = shell('pm', 'list', 'instrumentation')
+    save('instrumentation-targets.txt', instrumentation)
+    expected = 'instrumentation:' + snapshot_runner + ' (target=' + package + '.test)'
+    assert instrumentation.splitlines().count(expected) == 1, 'Snapshot runner must target its test package'
     shell('am', 'force-stop', package)
     cleared = shell('pm', 'clear', package)
     save('clear-empty-data.txt', cleared)
@@ -275,6 +267,8 @@ finally:
                 shell('settings', 'delete', scope, name) if value == 'null' else shell('settings', 'put', scope, name, value)
         except BaseException as error:
             report.setdefault('cleanup_errors', []).append(str(error))
+            failure = failure or error
+            report.setdefault('error', str(error))
     report['status'] = 'FAILED' if failure else 'PASS'
     save('RESULT.json', json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 if failure:
