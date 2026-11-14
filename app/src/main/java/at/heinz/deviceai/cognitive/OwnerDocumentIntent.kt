@@ -36,6 +36,14 @@ internal object OwnerDocumentIntent {
             "(?:(?:eine|die|das|ein|meine|mein)\\s+)?(?:pdf|pdf-datei|pdf-dokument)" +
             "(?:\\s+(?:aus|auf|von)\\s+(?:meinem|dem)\\s+(?:handy|gerät|telefon|speicher))?(?:\\s+bitte)?[.!?]*$"
     )
+    /** Owner picks a PDF and requests only its first page to be summarized.
+     * This never opens files without Android's picker and accepts no extra device action. */
+    private val firstPageSelection = Regex(
+        "(?iu)^ich\\s+(?:möchte|will|würde\\s+gern(?:e)?)\\s+" +
+            "(?:(?:eine|die|meine|diese)\\s+)?pdf(?:-datei|-dokument)?\\s+" +
+            "(?:auswählen|öffnen)\\s+und\\s+(?:die\\s+)?erste\\s+seite\\s+" +
+            "zusammenfassen[.!?]*$"
+    )
     private val extraAction = Regex(
         "(?iu)(?:^|[.!?,;]\\s*|\\s+(?:und|danach|anschließend|dann)\\s+)" +
             "(?:(?:bitte|danach|anschließend|dann)\\s+)*" +
@@ -67,6 +75,7 @@ internal object OwnerDocumentIntent {
         val text = original.replace(presentationTail, "").trimEnd()
         val direct = read.find(text) ?: namedPdf.matchEntire(text)
         if (findPdf.matches(text)) return Request(wantsDraft = false, reuse = false)
+        if (firstPageSelection.matches(text)) return Request(wantsDraft = true, reuse = false)
         if (direct == null && !politeRead.matches(text)) return null
         if (direct != null && (joinedObject.containsMatchIn(direct.value) ||
                 extraAction.findAll(text).any { it.groups[1]!!.range.first != direct.range.first })) return null
