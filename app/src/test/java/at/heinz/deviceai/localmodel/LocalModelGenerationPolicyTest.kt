@@ -5,9 +5,9 @@ import org.junit.Test
 
 class LocalModelGenerationPolicyTest {
     @Test fun gemma4E4bOnDeviceCatalogHasExtendedButBoundedBudget() {
-        assertEquals(2_048, LocalModelGenerationPolicy.maxOutputTokens("gemma4-e4b-it"))
-        assertEquals(2_048, LocalModelGenerationPolicy.maxOutputTokens("gemma-4-E4B-it"))
-        assertEquals(2_048, LocalModelGenerationPolicy.maxOutputTokens("gemma-4-E2B-it"))
+        assertEquals(3_072, LocalModelGenerationPolicy.maxOutputTokens("gemma4-e4b-it"))
+        assertEquals(3_072, LocalModelGenerationPolicy.maxOutputTokens("gemma-4-E4B-it"))
+        assertEquals(3_072, LocalModelGenerationPolicy.maxOutputTokens("gemma-4-E2B-it"))
     }
 
     @Test fun unknownAndNonGemma4FamiliesKeepConservativeBudget() {
@@ -17,7 +17,7 @@ class LocalModelGenerationPolicyTest {
     }
 
     @Test fun machineLocaleDoesNotChangeFamilyDetection() {
-        assertEquals(2_048, LocalModelGenerationPolicy.maxOutputTokens("GEMMA-4-E4B-IT"))
+        assertEquals(3_072, LocalModelGenerationPolicy.maxOutputTokens("GEMMA-4-E4B-IT"))
     }
 
     @Test fun gemma4ExtendedContextCanReserveAThreeThousandTokenReply() {
