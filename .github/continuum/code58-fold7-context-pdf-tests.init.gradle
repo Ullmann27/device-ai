@@ -1,0 +1,12 @@
+// Narrow Fold7 field-phrase regression suite. No runnable device authority or model weights.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app')
+    app.tasks.withType(org.gradle.api.tasks.testing.Test).matching { it.name == 'testDebugUnitTest' }.configureEach {
+        filter {
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerObjectScopeCorrectionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerDocumentIntentTest'
+            failOnNoMatchingTests = true
+        }
+    }
+}
