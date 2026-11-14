@@ -474,9 +474,14 @@ jobs:
           sudo chgrp "$(id -gn)" /dev/kvm
           sudo chmod g+rw /dev/kvm
           "$ANDROID_HOME/emulator/emulator" -no-window -version > "$evidence/emulator-version.txt"
+          if timeout 30 "$ANDROID_HOME/emulator/emulator" -no-window -help-gpu > "$evidence/emulator-gpu-help.txt" 2>&1; then
+            printf '0\n' > "$evidence/emulator-gpu-help-exit.txt"
+          else
+            printf '%s\n' "$?" > "$evidence/emulator-gpu-help-exit.txt"
+          fi
           "$ANDROID_HOME/platform-tools/adb" start-server
           "$ANDROID_HOME/emulator/emulator" -avd continuum-native-pdf -port 5554 -accel on \
-            -no-window -no-audio -no-boot-anim -no-snapshot -gpu swangle -memory 2048 -cores 2 \
+            -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader -memory 2048 -cores 2 \
             > "$evidence/emulator.log" 2>&1 &
           emulator_pid=$!
           ready=false
@@ -490,6 +495,14 @@ jobs:
             sleep 2
           done
           test "$ready" = true
+          python3 - "$evidence/emulator.log" <<'PY'
+          import pathlib, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          assert 'gles_mode_selected:swiftshader' in log, 'Requested backend not selected'
+          adapters = [line for line in log.splitlines() if 'Graphics Adapter ' in line]
+          assert len(adapters) == 1 and 'SwiftShader' in adapters[0] and 'ANGLE (' not in adapters[0], adapters
+          print('DIRECT_SWIFTSHADER_BACKEND_CONFIRMED')
+          PY
           timeout 300 bash tools/code55-apk/native-pdf-emulator.sh emulator-5554 "$evidence"
           timeout 300 bash tools/code55-apk/native-filament-emulator.sh emulator-5554 "$evidence/filament"
           timeout 300 bash tools/code55-apk/native-hologram-emulator.sh emulator-5554 "$evidence/hologram"
