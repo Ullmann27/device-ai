@@ -1,4 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <instrumentation
+        android:name="at.heinz.deviceai.ContinuumVisualInstrumentation"
+        android:targetPackage="at.heinz.deviceai.mentorpaired" />
+    <instrumentation
+        android:name="at.heinz.deviceai.ContinuumWindowSnapshotInstrumentation"
+        android:targetPackage="at.heinz.deviceai.mentorpaired.test"
+        android:targetProcesses="at.heinz.deviceai.mentorpaired.test" />
     <application>
         <!-- Synthetic fixture only; test APK. -->
         <provider

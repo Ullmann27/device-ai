@@ -101,7 +101,7 @@ internal object ContinuumNativeFilamentProbe {
                 phase("render")
                 val rendered = actual.render(pose, renderedFrames / 60f, false, width, height, receipt = receipt)
                 if (rendered) {
-                    val required = AvatarFrameReceipt.FILAMENT_BEGIN or AvatarFrameReceipt.FILAMENT_RENDERED
+                    val required = AvatarFrameReceipt.FILAMENT_BEGIN or AvatarFrameReceipt.FILAMENT_SUBMITTED
                     check((receipt.stageFlags and required) == required) { "NO_NATIVE_RENDER_RECEIPT" }
                     renderedFrames++
                     if (actual.cockpitPanelsPresented(content, frame)) presentedFrames++

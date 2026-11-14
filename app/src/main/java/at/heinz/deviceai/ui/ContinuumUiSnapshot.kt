@@ -12,6 +12,7 @@ import android.provider.MediaStore
 import android.view.View
 import android.view.WindowInsets
 import org.json.JSONObject
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -73,16 +74,34 @@ object ContinuumUiSnapshot {
             put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
             put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/Continuum")
             put(MediaStore.MediaColumns.IS_PENDING, 1)
-        }) ?: return null
-        resolver.openOutputStream(image)?.use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) } ?: return null
-        resolver.update(image, ContentValues().apply { put(MediaStore.MediaColumns.IS_PENDING, 0) }, null, null)
-        val json = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, "$name.json")
-            put(MediaStore.MediaColumns.MIME_TYPE, "application/json")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/Continuum")
-        })
-        if (json != null) resolver.openOutputStream(json)?.use { it.write(metrics.toString(1).toByteArray()) }
-        return Saved(image, json, name)
+        }) ?: throw IOException("Abnahme-Bild kann nicht angelegt werden.")
+        var json: Uri? = null
+        try {
+            (resolver.openOutputStream(image, "w") ?: throw IOException("Abnahme-Bild ist nicht schreibbar.")).use {
+                check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) { "Abnahme-Bild konnte nicht geschrieben werden." }
+            }
+            json = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, "$name.json")
+                put(MediaStore.MediaColumns.MIME_TYPE, "application/json")
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/Continuum")
+                put(MediaStore.MediaColumns.IS_PENDING, 1)
+            })
+            val published = ContentValues().apply { put(MediaStore.MediaColumns.IS_PENDING, 0) }
+            json?.let { uri ->
+                (resolver.openOutputStream(uri, "w") ?: throw IOException("Bilddaten sind nicht schreibbar.")).use {
+                    it.write(metrics.toString(1).toByteArray(Charsets.UTF_8))
+                }
+                check(resolver.update(uri, published, null, null) == 1) { "Bilddaten wurden nicht veröffentlicht." }
+            }
+            check(resolver.update(image, published, null, null) == 1) { "Abnahme-Bild wurde nicht veröffentlicht." }
+            return Saved(image, json, name)
+        } catch (failure: Throwable) {
+            listOfNotNull(json, image).forEach { uri ->
+                try { resolver.delete(uri, null, null) }
+                catch (cleanup: Throwable) { if (cleanup !== failure) failure.addSuppressed(cleanup) }
+            }
+            throw failure
+        }
     }
 
     /** Share sheet with both files; read access is granted only to the app the owner picks. */

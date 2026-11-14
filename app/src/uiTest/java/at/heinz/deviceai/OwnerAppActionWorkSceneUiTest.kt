@@ -48,6 +48,7 @@ class OwnerAppActionWorkSceneUiTest {
         val cancelled = CountDownLatch(1)
         val calls = AtomicInteger()
         @Volatile var lateCompletionAfterCancel = false
+        val successfulReturns = AtomicInteger()
         var failure: String? = null
         override fun execute(call: ToolCallRequest, callback: (Result<String>) -> Unit) {
             calls.incrementAndGet()
@@ -66,11 +67,13 @@ class OwnerAppActionWorkSceneUiTest {
                         interrupted = true
                     }
                 }
-                callback(failure?.let { Result.failure(IllegalStateException(it)) } ?: Result.success(
-                    """{"schema":"CONTINUUM_DEVICE_ACTION_V1","action":"LAUNCH_APP","package":"$packageName","status":"VERIFIED_FOREGROUND","windowRevision":7}"""))
-                completed.countDown()
+                val outcome = failure?.let { Result.failure<String>(IllegalStateException(it)) } ?: Result.success(
+                    """{"schema":"CONTINUUM_DEVICE_ACTION_V1","action":"LAUNCH_APP","package":"$packageName","status":"VERIFIED_FOREGROUND","windowRevision":7}""")
+                callback(outcome)
+                if (outcome.isSuccess) successfulReturns.incrementAndGet()
             } finally {
                 if (interrupted) Thread.currentThread().interrupt()
+                completed.countDown()
             }
         }
         override fun cancelPending() {
@@ -242,6 +245,31 @@ class OwnerAppActionWorkSceneUiTest {
             }
         }
 
+    @Test fun routineCommandInvalidatesPendingComputerSearch() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, _ ->
+            submit(a, "Suche in WhatsApp", chat = false)
+            val clarification = requireNotNull(get(a, "computerClarification"))
+            assertNotNull("Search term is pending", get(clarification, "pending"))
+            val before = lookupGeneration(a)
+            submit(a, "Routine alle 15 Minuten: Akku unter 10 %", chat = false)
+            await {
+                val chat = get(a, "chatContainer") as View
+                get(a, "botLookupPending") == false && descendants(chat).filterIsInstance<TextView>()
+                    .any { it.text.toString().contains("Dieses Routineziel oder diese Bedingung ist nicht unterstützt.") }
+            }
+            assertEquals("Routine performs no app lookup", before, lookupGeneration(a))
+            assertEquals(0, port.calls.get())
+            assertFalse(ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
+
+            submit(a, "Elena", chat = false)
+            await { get(a, "busy") == false && get(a, "botLookupPending") == false }
+            assertEquals("Old search cannot revive", before, lookupGeneration(a))
+            assertNull(get(clarification, "pending"))
+            assertNull(get(a, "activeOwnerAppFlow"))
+            assertEquals(0, port.calls.get())
+            assertFalse(ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
+        }
+
     @Test
     @Config(sdk = [35], shadows = [OwnerAppPlanningContextUiTest.ProjectionConsentShadow::class])
     fun approvedSplitScreenLaunchStartsComputerWithoutRefocusingCockpit() =
@@ -322,6 +350,7 @@ class OwnerAppActionWorkSceneUiTest {
             await { port.completed.count == 0L }
             advance(32)
 
+            assertEquals("Late native success returned", 1, port.successfulReturns.get())
             assertNull(get(a, "activeOwnerAppFlow"))
             assertNull(get(a, "pendingComputerLaunch"))
             assertNull(get(a, "computerController"))

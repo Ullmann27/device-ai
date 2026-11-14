@@ -51,10 +51,13 @@ logcat_pid=$!
 "$adb" -s "$serial" shell dumpsys SurfaceFlinger > "$evidence/surfaceflinger.txt"
 python3 - "$evidence/surfaceflinger.txt" <<'PY'
 from pathlib import Path
+import re
 import sys
 text = Path(sys.argv[1]).read_text()
 gles = [line.strip() for line in text.splitlines() if line.strip().startswith("GLES:")]
-assert len(gles) == 1 and "swiftshader" in gles[0].lower(), "Software GLES renderer required: " + str(gles)
+assert len(gles) == 1 and "llvmpipe" in gles[0].lower(), "Pinned software GLES renderer required: " + str(gles)
+assert "swiftshader" not in gles[0].lower() and "angle (" not in gles[0].lower(), gles
+assert re.search(r"OpenGL ES (?:3\.[0-9]+|[4-9]\.[0-9]+)\b", gles[0]), "GLES 3 or newer required: " + str(gles)
 print(gles[0])
 PY
 timeout -k 2s 60s "$adb" -s "$serial" install -r "$app" > "$evidence/install-app.txt"

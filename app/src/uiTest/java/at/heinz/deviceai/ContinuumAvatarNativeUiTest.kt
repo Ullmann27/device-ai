@@ -55,9 +55,19 @@ class ContinuumAvatarNativeUiTest {
         assertEquals("Window traversal must preserve the requested viewport height", height, view.height)
     }
 
-    private fun snapshot(view: View, name: String): Bitmap {
+    private fun assertFrozenActiveClock(view: ContinuumHologramView, expected: ContinuumHologramView.MotionSample) {
+        val pending = ContinuumHologramView::class.java.getDeclaredField("framePending").apply { isAccessible = true }
+        assertTrue("Speech fixture must retain its scheduled frame", pending.getBoolean(view))
+        val actual = view.sampleMotion()
+        assertEquals("PCM comparison must not advance callbacks", expected.callbackCount, actual.callbackCount)
+        assertEquals("PCM comparison must hold the idle phase", expected.phase, actual.phase, 0f)
+    }
+
+    private fun snapshot(view: ContinuumHologramView, name: String): Bitmap {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val before = view.sampleMotion().drawCount
         view.draw(Canvas(bitmap))
+        assertTrue("Pixel capture must execute the actual Canvas draw", view.sampleMotion().drawCount > before)
         System.getProperty("continuum.ui.evidenceDir")?.let { path ->
             val out = java.io.File(path).apply { mkdirs() }
             java.io.File(out, "$name.png").outputStream().use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
@@ -76,7 +86,12 @@ class ContinuumAvatarNativeUiTest {
                 view.setForegroundActive(true)
                 val director = AvatarDirector(view, android.os.SystemClock::elapsedRealtime)
                 director.onRuntime(AvatarRuntimeSignals(speaking = true))
-                assertTrue("Speech pixels require a live visible head", view.motionDiagnostics().contains("LIVE"))
+                val before = view.sampleMotion()
+                advanceFrames(200)
+                val active = view.sampleMotion()
+                assertTrue("Speech fixture requires real frame callbacks", active.callbackCount > before.callbackCount)
+                assertTrue("Speech fixture requires real phase progress", active.phase > before.phase)
+                assertFrozenActiveClock(view, active)
                 val closed = snapshot(view, "head-${width}x$height-closed").also { frames += it }
                 director.speechStarted("fixture", "Hallo Heinz")
                 // Production Director and View.pose share Android elapsedRealtime; the Robolectric
@@ -85,7 +100,7 @@ class ContinuumAvatarNativeUiTest {
                     if (index > 0) Thread.sleep(33)
                     director.audioLevel("fixture", .8f)
                 }
-                assertTrue("Speech pixels require a live visible head", view.motionDiagnostics().contains("LIVE"))
+                assertFrozenActiveClock(view, active)
                 val speaking = snapshot(view, "head-${width}x$height-speaking").also { frames += it }
                 assertFalse("Existing speech envelope must visibly open the mouth", closed.sameAs(speaking))
                 var mouthPixels = 0
@@ -96,7 +111,7 @@ class ContinuumAvatarNativeUiTest {
                 director.speechEnded("fixture", true)
                 director.audioLevel("fixture", 1f)
                 director.wordRange("fixture", 0, 5)
-                assertTrue("Speech pixels require a live visible head", view.motionDiagnostics().contains("LIVE"))
+                assertFrozenActiveClock(view, active)
                 val stopped = snapshot(view, "head-${width}x$height-stopped").also { frames += it }
                 assertTrue("Interruption and stale callbacks must return to the closed mouth", closed.sameAs(stopped))
             } finally {

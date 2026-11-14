@@ -22,6 +22,7 @@ class ContinuumVisualInstrumentation : Instrumentation() {
     private var captureMode = "display"
     private var pdfProbe = false
     private var filamentProbe = false
+    private var hologramProbe = false
 
     override fun onCreate(arguments: Bundle?) {
         super.onCreate(arguments)
@@ -31,12 +32,18 @@ class ContinuumVisualInstrumentation : Instrumentation() {
         captureMode = if (arguments?.getString("capture_mode") == "view") "view" else "display"
         pdfProbe = arguments?.getString("probe") == "pdf"
         filamentProbe = arguments?.getString("probe") == "filament"
+        hologramProbe = arguments?.getString("probe") == "hologram"
         start()
     }
 
     // Instrumentation.start dispatches onStart on its worker thread.
     override fun onStart() {
         super.onStart()
+        if (hologramProbe) {
+            val result = ContinuumNativeHologramProbe.run(this)
+            finish(if (result.getString("status") == "ok") Activity.RESULT_OK else Activity.RESULT_CANCELED, result)
+            return
+        }
         if (filamentProbe) {
             val result = ContinuumNativeFilamentProbe.run(this)
             finish(if (result.getString("status") == "ok") Activity.RESULT_OK else Activity.RESULT_CANCELED, result)
