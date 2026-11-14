@@ -13,6 +13,9 @@ import xml.etree.ElementTree as ET
 import zlib
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'tools/code55-apk'))
+from test_native_hologram_evidence import HologramFixture
+
 WORKFLOW = ROOT / '.github/workflows/continuum-code57-original-sign.yml'
 SCRIPT = ROOT / 'scripts/continuum-code57-original-signer.sh'
 SIGN_NAME = 'Verify exact source, sign with original key, retain unpublished draft only'
@@ -170,6 +173,7 @@ class NativeEvidenceTest(unittest.TestCase):
             'native_textures':'2','upload_completions':'1','rendered_frames':'3','presented_frames':'3',
             'output_frames':'3','content_cleared':'true','panels_released':'true','engine_released':'true'})
         (self.root/'filament/surfaceflinger.txt').write_text('GLES: Synthetic SwiftShader fixture\n')
+        self.hologram = HologramFixture(self.root/'hologram')
 
     def submitted_ui_fixture(self):
         reply = ('Continuum · Aktuelle App-Fähigkeiten Mein aktueller Stand auf diesem Gerät: '
@@ -218,13 +222,37 @@ class NativeEvidenceTest(unittest.TestCase):
 
     def validate(self):
         (self.root/'app/RESULT.json').write_text(json.dumps(self.report))
-        return subprocess.run([sys.executable,'-B','-c',self.validator,str(self.root),self.sha,self.tree],
+        return subprocess.run([sys.executable,'-B','-c',self.validator,str(self.root),self.sha,self.tree,str(ROOT)],
             capture_output=True,text=True,timeout=10)
 
     def test_complete_bound_evidence_passes(self):
         result = self.validate()
         self.assertEqual(result.returncode,0,result.stderr)
         self.assertIn('SOURCE_BOUND_NATIVE_RUNTIME_VERIFIED',result.stdout)
+
+    def test_missing_hologram_evidence_fails(self):
+        (self.root/'hologram/native-hologram.txt').unlink()
+        self.assertNotEqual(self.validate().returncode,0)
+
+    def test_native_quads_cannot_replace_consumed_hologram_frames(self):
+        for sample in self.hologram.report['samples']:
+            sample['surface_texture_timestamp'] = 0
+        self.hologram.save()
+        self.assertNotEqual(self.validate().returncode,0)
+
+    def test_hologram_must_use_the_same_source_and_apks(self):
+        path = self.root/'hologram/source-sha.txt'
+        path.write_text('e'*40)
+        self.assertNotEqual(self.validate().returncode,0)
+        path.write_text(self.sha)
+        path = self.root/'hologram/apk-sha256.txt'
+        path.write_text(path.read_text().replace('c'*64,'e'*64))
+        self.assertNotEqual(self.validate().returncode,0)
+
+    def test_matching_hashes_do_not_make_empty_surface_pixels_valid(self):
+        self.hologram.report['pixel_copy']['image'] = self.hologram.image('hologram-surface-copy.png',b'\0'*16)
+        self.hologram.save()
+        self.assertNotEqual(self.validate().returncode,0)
 
     def test_wrong_source_tree_package_and_runtime_fail(self):
         for key,bad in [('source_sha','e'*40),('source_tree','f'*40),('package','another.package'),

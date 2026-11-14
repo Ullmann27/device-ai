@@ -118,9 +118,11 @@ print('CHECKPOINT=STRICT_JUNIT_17_SKIPS_AND_LINT_VERIFIED')
 PY
 
 # Revalidate native, source-bound evidence.
-python3 -B - "$tmp/native" "$source_sha" "$source_tree" <<'PY' || fail NATIVE_RUNTIME_EVIDENCE
+python3 -B - "$tmp/native" "$source_sha" "$source_tree" "$tmp/source" <<'PY' || fail NATIVE_RUNTIME_EVIDENCE
 import json,pathlib,re,struct,sys,xml.etree.ElementTree as ET
 root=pathlib.Path(sys.argv[1]);sha=sys.argv[2];tree=sys.argv[3]
+sys.path.insert(0,str(pathlib.Path(sys.argv[4])/'tools/code55-apk'))
+from native_hologram_evidence import verify_hologram
 report=json.loads((root/'app/RESULT.json').read_text())
 assert report['status']=='PASS' and report['source_sha']==sha and report['source_tree']==tree
 assert report['package']=='at.heinz.deviceai.mentorpaired' and report['sdk']==35 and report['abi']=='x86_64'
@@ -257,6 +259,8 @@ assert all(int(filament[n])>0 for n in ('rendered_frames','presented_frames','ou
 assert all(filament.get(n)=='true' for n in ('content_cleared','panels_released','engine_released'))
 gles=[line.strip() for line in (root/'filament/surfaceflinger.txt').read_text().splitlines() if line.strip().startswith('GLES:')]
 assert len(gles)==1 and 'swiftshader' in gles[0].lower()
+surface=verify_hologram(root/'hologram',sha,tree,apk_hashes)
+assert surface['status']=='SURFACE_FRAMES_VERIFIED'
 print('CHECKPOINT=SOURCE_BOUND_NATIVE_RUNTIME_VERIFIED')
 PY
 
