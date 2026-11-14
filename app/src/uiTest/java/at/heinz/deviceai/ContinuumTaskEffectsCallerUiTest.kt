@@ -57,6 +57,22 @@ class ContinuumTaskEffectsCallerUiTest {
         .single {it.name==n && it.parameterCount==args.size}.apply {isAccessible=true}.invoke(a,*args)
     private fun field(o:Any,n:String)=o.javaClass.getDeclaredField(n).apply {isAccessible=true}.get(o)
     private fun pulses(h:ContinuumHologramView)=field(field(h,"taskEffects")!!,"pulses") as List<*>
+    private fun effectState(a: AgentActivity, h: ContinuumHologramView): String {
+        val context = get(a, "currentTaskEffectContext")
+        val effects = field(h, "taskEffects")!!
+        val motion = h.sampleMotion()
+        return "uptime=${android.os.SystemClock.uptimeMillis()}, " +
+            "contextSession=${context?.let { field(it, "session") }}, session=${get(a, "sessionId")}, " +
+            "contextScope=${context?.let { field(it, "scope") }}, effectScope=${field(effects, "scope")}, " +
+            "foreground=${get(a, "foregroundLearningActive")}, finishing=${a.isFinishing}, destroyed=${a.isDestroyed}, " +
+            "attached=${h.isAttachedToWindow}, shown=${h.isShown}, window=${h.windowVisibility}, " +
+            "focus=${h.hasWindowFocus()}, notBefore=${field(h, "taskEffectsNotBeforeMs")}, " +
+            "callbacks=${motion.callbackCount}, draws=${motion.drawCount}, phase=${motion.phase}, " +
+            "lastNow=${field(effects, "lastNow")}, seen=${field(effects, "seen")}, " +
+            "pulses=${pulses(h).map { pulse ->
+                listOf("id", "type", "kind", "at", "duration").associateWith { field(pulse!!, it) }
+            }}"
+    }
     private fun idle() {
         shadowOf(Looper.getMainLooper()).idle()
         framePump?.drawRequestedFrame()
@@ -143,11 +159,23 @@ class ContinuumTaskEffectsCallerUiTest {
         assertFalse(dispatched);assertTrue(pulses(h).isEmpty())
     }
     @Test fun actualChiefStatusWorkerProducesAWorkerArrival() = withFixture {a,h ->
+        val before = effectState(a, h)
         call(a,"showChiefWorkerStatus")
+        val submitted = effectState(a, h)
         val pool=get(a,"chiefStatusPool") as at.heinz.deviceai.chief.ChiefWorkerPool
-        assertTrue(pool.awaitIdle(2000));idle()
-        assertTrue("Actual WorkerJob.run has no worker arrival",pulses(h).any {
-            field(it!!,"type")==0 && field(it,"kind")==ContinuumTaskEffects.Kind.WORKER
+        assertTrue("Actual status worker did not finish", pool.awaitIdle(2000))
+        val delivered = effectState(a, h)
+        idle()
+        val completed = effectState(a, h)
+        val report = get(a, "lastChiefWorkerReport") as? at.heinz.deviceai.chief.WorkerReport
+        val trace = "before=[$before]; submitted=[$submitted]; delivered=[$delivered]; " +
+            "completed=[$completed]; report=${report?.id}/${report?.status}"
+        assertNotNull("Actual WorkerReport missing: $trace", report)
+        assertEquals("Actual WorkerJob did not succeed: $trace",
+            at.heinz.deviceai.chief.WorkerStatus.DONE, report!!.status)
+        assertTrue("Actual WorkerJob.run has no worker arrival: $trace",pulses(h).any {
+            field(it!!,"type")==0 && field(it,"kind")==ContinuumTaskEffects.Kind.WORKER &&
+                field(it,"id")==report.id
         })
     }
     @Test fun actualActionButtonUsesBoundedFeedbackAndPendingSpeechMutesIt() = withFixture {a,_ ->
