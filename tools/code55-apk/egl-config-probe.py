@@ -313,8 +313,8 @@ def collect():
                 )
                 if not selected or item.is_dir():
                     continue
-                if ".." in parts or not re.fullmatch(r"[A-Za-z0-9_/.-]+", item.filename):
-                    raise ValueError("Unexpected pinned library entry")
+                if ".." in parts or not re.fullmatch(r"[A-Za-z0-9_/+.-]+", item.filename):
+                    raise ValueError("Unexpected pinned library entry: " + repr(item.filename))
                 names.append(item.filename)
             if not names or len(names) != len(set(names)):
                 raise ValueError("Invalid selected library entries")
