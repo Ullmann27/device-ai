@@ -140,4 +140,29 @@ class OwnerObjectScopeCorrectionTest {
             assertTrue(text + "\n" + answer, answer == null || !answer.contains("Farbe: rot"))
         }
     }
+
+    @Test fun fold7OwnerMemoryExampleAndPronounQuestionKeepOneObject() {
+        val c = LocalConversationContext()
+        val introduction = "Merke dir für dieses Gespräch: Die blaue Werkzeugkiste steht in der Garage und enthält fünf Schraubenschlüssel."
+        val question = "Welche Farbe hat sie und wo steht sie?"
+        c.record(session, introduction, "Ich habe mir notiert: Die blaue Werkzeugkiste steht in der Garage und enthält fünf Schraubenschlüssel.")
+        val answer = c.objectStateAnswer(session, question)
+        assertNotNull("An explicitly session-scoped owner statement must be observable without model inference", answer)
+        assertTrue(answer, answer!!.contains("Farbe: blau"))
+        assertTrue(answer, answer.contains("Ort: in der Garage"))
+    }
+
+    @Test fun fold7CorrectionWithoutIchMeinteKeepsLocationAndCount() {
+        val c = LocalConversationContext()
+        c.record(session, "Merke dir für dieses Gespräch: Die blaue Werkzeugkiste steht in der Garage und enthält fünf Schraubenschlüssel.", "Verstanden.")
+        val correction = "Nein, die Werkzeugkiste ist rot. Der Standort und die Anzahl bleiben gleich."
+        assertNull(c.inspectRequest(session, correction))
+        c.record(session, correction, "Die Werkzeugkiste ist nun rot.")
+        val answer = c.objectStateAnswer(session, "Welche Farbe hat die Werkzeugkiste, wo steht sie und wie viele Schraubenschlüssel sind darin?")
+        assertNotNull(answer)
+        assertTrue(answer, answer!!.contains("Farbe: rot"))
+        assertTrue(answer, answer.contains("Ort: in der Garage"))
+        assertTrue(answer, answer.contains("Anzahl Schraubenschlüssel: 5"))
+    }
+
 }
