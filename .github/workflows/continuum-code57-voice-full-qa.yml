@@ -342,11 +342,14 @@ jobs:
               'traceNamesTheBrokenStageInsteadOfGuessing',
               'consumerEvidenceRequiresCallbackAndTimestampAdvanceOnTheBoundSurface',
               'replacementAndReleaseRejectPreviousSurfaceEvidence',
+              'resizedSameSurfaceCannotReusePreviousGenerationReceipts',
               'newSubmissionCannotBorrowEarlierConsumerUpdate',
               'consumerReceiptExpiresWithTheBoundedTraceWindow',
               'motionWindowReportsUpdatesAndTimestampProgressSeparately'
           )}
           required |= {('ContinuumAvatar3dLifecycleUiTest', name) for name in (
+              'textureResizeSynchronizesBeforeFrameworkSurfaceCallback',
+              'headAndStageLayoutsResizeOnlyChangedTextureDimensions',
               'legacyEnabledHeadUpgradesButExplicitOrbAnd2dStayChosen',
               'defaultOrbAndPausedOptional3dNeverStartAssetOrNativeWork',
               'actualFailureReportsUnavailabilityAndRetainsSingleLifecycleClock',

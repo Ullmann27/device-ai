@@ -102,6 +102,56 @@ def visible(view):
             and view.get('width', 0) > 0 and view.get('height', 0) > 0)
 
 
+def verify_resize(report, baseline):
+    proof = report['resize_regression']
+    assert proof['status'] == 'PASSED' and not proof.get('restore_error'), 'Resize did not complete'
+    assert all(proof['unchanged'][key] is True for key in
+               ('same_dimensions_preserved', 'monitor_pose_preserved'))
+    before = proof['before']
+    stable = ('native_renderer_identity', 'engine_identity', 'asset_identity', 'scene_identity',
+              'renderer_identity', 'cockpitStage_identity', 'surface_identity', 'surface_texture_identity')
+    for key in stable:
+        assert type(before[key]) is int and before[key] != 0
+        assert before[key] == baseline[key], 'Resize uses a different renderer or surface'
+    sizes = lambda state: (state['worldBufferWidth'], state['worldBufferHeight'])
+    texture_size = lambda state: (state['texture']['width'], state['texture']['height'])
+    previous = before
+    times = [baseline['elapsed_nanos'], proof['started_elapsed_nanos'], before['elapsed_nanos']]
+    for group, changed_key, rendered_key in (
+            ('stage', 'changed', 'rendered'), ('stage', 'restored', 'restored_rendered'),
+            ('texture_layout', 'changed', 'rendered'), ('texture_layout', 'restored', 'restored_rendered')):
+        changed, rendered = proof[group][changed_key], proof[group][rendered_key]
+        for state in (changed, rendered):
+            assert all(state[key] == before[key] for key in stable), 'Resize replaced renderer or surface'
+            assert state['hologram']['identity'] == before['hologram']['identity']
+            assert state['texture']['identity'] == before['texture']['identity']
+            assert state['texture_is_texture_view'] is True and state['main_thread'] == 'main'
+            assert state['surface_valid'] is True and state['renderer_present'] is True
+            assert all(state[key] is False for key in ('native3dFailed', 'cockpitWorldFailed', 'assetLoading'))
+            assert all(type(value) is int and value > 0 for value in sizes(state))
+        assert changed['swapChain_identity'] != previous['swapChain_identity'], 'Resize retained old SwapChain'
+        assert type(changed['swapChain_identity']) is int and changed['swapChain_identity'] != 0
+        assert rendered['swapChain_identity'] == changed['swapChain_identity'], 'Unstable resized SwapChain'
+        assert changed['consumer_generation'] > previous['consumer_generation'], 'Stale resize generation'
+        assert rendered['consumer_generation'] == changed['consumer_generation']
+        assert changed['native3dDrawn'] is False and changed['texture']['alpha'] == 0
+        assert rendered['native3dDrawn'] is True and visible(rendered['texture'])
+        assert rendered['surface_texture_timestamp'] > changed['surface_texture_timestamp']
+        assert changed['surface_texture_timestamp'] >= previous['surface_texture_timestamp']
+        assert sizes(rendered) == sizes(changed) == (rendered['viewport_width'], rendered['viewport_height'])
+        if group == 'stage' and changed_key == 'changed':
+            assert sizes(changed) != sizes(before), 'Stage buffer did not change'
+        else:
+            assert sizes(changed) == sizes(before), 'Stage buffer was not restored'
+        expected_texture = ((texture_size(before)[0] - 1, texture_size(before)[1])
+                            if group == 'texture_layout' and changed_key == 'changed' else texture_size(before))
+        assert texture_size(changed) == texture_size(rendered) == expected_texture
+        times.extend((changed['elapsed_nanos'], rendered['elapsed_nanos']))
+        previous = rendered
+    times.extend((proof['finished_elapsed_nanos'], report['finished_elapsed_nanos']))
+    assert all(type(value) is int and value > 0 for value in times) and times == sorted(times), 'Resize time sequence mismatch'
+
+
 def verify_hologram(directory, source_sha, source_tree, expected_apks=None):
     directory = Path(directory)
     assert re.fullmatch('[0-9a-f]{40}', source_sha) and re.fullmatch('[0-9a-f]{40}', source_tree)
@@ -172,12 +222,14 @@ def verify_hologram(directory, source_sha, source_tree, expected_apks=None):
     assert all(type(value) is int and value > 0 for value in times) and times == sorted(times), 'Capture sequence mismatch'
     assert report['texture_readback']['thread'] == 'main'
     assert all(action['button'] in ('SCHLIESSEN', 'NEIN') for action in report['actions'])
+    verify_resize(report, observed[-1])
     return {'status': 'SURFACE_FRAMES_VERIFIED', 'source_sha': source_sha, 'source_tree': source_tree,
             'apk_sha256': apks, 'texture_visible_rgb_pixels': texture['visible_rgb_pixels'],
             'copied_visible_rgb_pixels': copied['visible_rgb_pixels'],
             'texture_size': [texture['width'], texture['height']],
             'copied_surface_size': [copied['width'], copied['height']],
             'renderer_viewport': [first['viewport_width'], first['viewport_height']],
+            'resize': 'SWAPCHAIN_RESIZE_VERIFIED',
             'avatar_content': 'REQUIRES_IMAGE_REVIEW'}
 
 
