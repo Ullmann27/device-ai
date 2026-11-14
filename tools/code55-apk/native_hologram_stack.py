@@ -201,9 +201,10 @@ class Session:
             if self.read("adb-uid-root", "shell", "id", "-u") != "0":
                 raise RuntimeError("Disposable stack diagnosis unavailable")
             self.device("root")
-            help_text = self.read("guest-timeout-help", "shell", "/system/bin/timeout", "--help")
-            if "-k" not in help_text:
-                raise RuntimeError("Guest kill deadline unsupported")
+            help_result = self.command("guest-timeout-help", "shell", "/system/bin/timeout", "--help")
+            self.state["guest_timeout_help_exit"] = help_result.returncode
+            self.read("guest-timeout-command-probe", "shell", "/system/bin/timeout", "-k", "2s", "15s",
+                      "/system/bin/true", timeout=22)
             output_path = Path(evidence) / "native-hologram.txt"
             with output_path.open("wb") as output:
                 self.instrumentation_deadline = time.monotonic() + 240

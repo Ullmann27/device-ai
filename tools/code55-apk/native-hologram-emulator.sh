@@ -38,6 +38,8 @@ collect() {
       rm -f "$evidence/$name"
     elif [[ "$name" == *.png && "$(od -An -tx1 -N8 "$evidence/$name" | tr -d ' \n')" != 89504e470d0a1a0a ]]; then
       mv "$evidence/$name" "$evidence/$name-transfer-stdout.txt"
+    elif [[ "$name" == *.json ]] && ! python3 -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$evidence/$name" 2>/dev/null; then
+      mv "$evidence/$name" "$evidence/$name-transfer-stdout.txt"
     fi
   done
   timeout -k 2s 5s "$adb" -s "$serial" logcat -d -v threadtime -t 10000 \
