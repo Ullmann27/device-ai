@@ -1,0 +1,106 @@
+name: "Code59 - exact-source RAM RED and repaired RAM/Chief GREEN"
+run-name: "Three old RAM assertions and 47 repaired RAM/Chief tests"
+
+on:
+  push:
+    branches:
+      - diagnostic/code59-memory-regression-20261114
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code59-memory-regression-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  memory-regression:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/diagnostic/code59-memory-regression-20261114'
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - phase: red
+            source: 4c7d849a5eb997cd42b64f0dcf6c6b7d32bd7c95
+          - phase: green
+            source: ca2c59a89864efc6ad54645ff6099d2e2b9e6b17
+    env:
+      MEMORY_PHASE: ${{ matrix.phase }}
+      EVIDENCE_DIR: ${{ runner.temp }}/code59-memory-${{ matrix.phase }}
+    steps:
+      - name: Checkout exact harness
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          path: memory-harness
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .github/continuum/code59-memory-regression.py
+            .github/workflows/code59-memory-regression.yml
+      - name: Checkout fixed source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ matrix.source }}
+          path: memory-source
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Bind source and exact test selection
+        run: |
+          set -euo pipefail
+          python3 -B "$GITHUB_WORKSPACE/memory-harness/.github/continuum/code59-memory-regression.py" prepare \
+            --phase "$MEMORY_PHASE" --source "$GITHUB_WORKSPACE/memory-source" --evidence "$EVIDENCE_DIR"
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        with:
+          gradle-version: '8.11.1'
+      - name: Android SDK and actual tool versions
+        run: |
+          set -euo pipefail
+          java -version 2>&1 | tee "$EVIDENCE_DIR/java-version.log"
+          gradle --version 2>&1 | tee "$EVIDENCE_DIR/gradle-version.log"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0' \
+            2>&1 | tee "$EVIDENCE_DIR/sdk-install.log"
+      - name: Run selected tests and record actual exit
+        working-directory: memory-source
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          set +e
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=59 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            -I "$EVIDENCE_DIR/tests.init.gradle" :app:testDebugUnitTest \
+            2>&1 | tee "$EVIDENCE_DIR/gradle.log"
+          statuses=("${PIPESTATUS[@]}")
+          set -e
+          printf '%s\n' "${statuses[0]}" > "$EVIDENCE_DIR/gradle.exit"
+          printf '%s\n' "${statuses[1]}" > "$EVIDENCE_DIR/tee.exit"
+      - name: Validate actual assertions and complete GREEN
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE_DIR"
+          python3 -B "$GITHUB_WORKSPACE/memory-harness/.github/continuum/code59-memory-regression.py" verify \
+            --phase "$MEMORY_PHASE" --source "$GITHUB_WORKSPACE/memory-source" --evidence "$EVIDENCE_DIR" \
+            2>&1 | tee "$EVIDENCE_DIR/validation.log"
+      - name: Preserve original JUnit and logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Code59-Memory-${{ matrix.phase }}-${{ matrix.source }}
+          path: ${{ env.EVIDENCE_DIR }}/
+          if-no-files-found: error
+          retention-days: 14
