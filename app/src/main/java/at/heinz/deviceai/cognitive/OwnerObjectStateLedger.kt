@@ -150,6 +150,9 @@ internal class OwnerObjectStateLedger {
     private val consumption = setOf("getrunken", "gegessen", "verbraucht", "gelesen", "geschlafen", "gewartet")
 
     private fun supportedStatement(list: List<Tok>): Boolean {
+        // An owner's spoken correction often starts with "Nein, ...". The correction
+        // marker is not part of the object statement; still check every word after it.
+        if (list.size > 1 && list.first().low == "nein") return supportedStatement(list.drop(1))
         val text = list.joinToString(" ") { it.low }
         if (countChangeSentence(list)) return true
         val owned = acquisition.find(text)
@@ -367,7 +370,11 @@ internal class OwnerObjectStateLedger {
         val original = text.trim()
         if (original.isEmpty()) return
         if (original.length > 4_000 || original.any { it.isISOControl() && it != '\n' }) { incomplete = true; return }
-        val clean = objectCorrectionBody(original) ?: original
+        // Explicit "for this conversation" is an owner-scoped statement, not an
+        // executable tool or a new persistent-memory authorization. Parse only its
+        // stated object facts; keep the original owner turn intact in history.
+        val clean = objectCorrectionBody(original) ?: original.replace(
+            Regex("(?iu)^merke\\s+dir\\s+für\\s+dieses\\s+gespräch\\s*:\\s*"), "")
         if (quotedOrReported.containsMatchIn(clean)) return
         message++
         val toks = tokens(clean)
