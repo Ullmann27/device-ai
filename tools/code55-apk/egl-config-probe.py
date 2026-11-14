@@ -239,6 +239,52 @@ def stop_own_child(process):
         process.wait(timeout=2)
 
 
+def loader_preflight(sdk, output, env, deadline):
+    libraries = sorted(p for p in (sdk / "lib64").rglob("*") if p.is_file() and ".so" in p.name)
+    if not libraries:
+        raise ValueError("No selected SDK libraries")
+    for path in libraries:
+        if not path.resolve(strict=True).is_relative_to(sdk.resolve()):
+            raise ValueError("Preflight library escaped bundle")
+    readelf = pathlib.Path("/usr/bin/readelf").resolve(strict=True)
+    loader = pathlib.Path("/lib64/ld-linux-x86-64.so.2").resolve(strict=True)
+    result = {
+        "library_path_order": env["LD_LIBRARY_PATH"].split(":"),
+        "tool_sources": [
+            "https://sourceware.org/binutils/docs/binutils/readelf.html",
+            "https://man7.org/linux/man-pages/man8/ld.so.8.html",
+        ],
+        "tools": [
+            {"path": str(p), "sha256": file_hash(p)} for p in (readelf, loader)
+        ],
+        "commands": [],
+    }
+    commands = [("dynamic-sections", [str(readelf), "--wide", "--dynamic", *map(str, libraries)])]
+    gl = sdk / "lib64" / "gles_llvmpipe"
+    for name in ("libEGL.so", "libGLESv2.so", "libgallium-25.2.4.so"):
+        commands.append(("loader-" + name, [str(loader), "--list", str(gl / name)]))
+    for label, command in commands:
+        available = min(10, deadline - time.monotonic() - 40)
+        if available <= 0:
+            raise TimeoutError("Insufficient loader preflight deadline")
+        entry = {"label": label, "command": command, "timeout_seconds": available}
+        result["commands"].append(entry)
+        write_json(output / "loader-preflight.json", result)
+        with (output / (label + "-stdout.txt")).open("wb") as stdout, (output / (label + "-stderr.txt")).open("wb") as stderr:
+            try:
+                process = subprocess.run(
+                    command, env=env, stdin=subprocess.DEVNULL, stdout=stdout, stderr=stderr,
+                    timeout=available, check=False,
+                )
+                entry["exit_code"] = process.returncode
+            except subprocess.TimeoutExpired:
+                entry["timed_out"] = True
+                raise
+            finally:
+                write_json(output / "loader-preflight.json", result)
+    return result
+
+
 def collect():
     os.environ.pop("GH_TOKEN", None)
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
@@ -308,7 +354,7 @@ def collect():
                 parts = path.parts
                 selected = (
                     item.filename == "emulator/source.properties"
-                    or parts[:3] == ("emulator", "lib64", "gles_llvmpipe")
+                    or parts[:3] in (("emulator", "lib64", "gles_llvmpipe"), ("emulator", "lib64", "vulkan"))
                     or (path.parent == pathlib.PurePosixPath("emulator/lib64") and ".so" in path.name)
                 )
                 if not selected or item.is_dir():
@@ -334,7 +380,7 @@ def collect():
             raise ValueError("Pinned package version mismatch")
         gl = sdk / "lib64" / "gles_llvmpipe"
         manifest = []
-        for path in sorted(gl.rglob("*")):
+        for path in sorted((sdk / "lib64").rglob("*")):
             if path.is_symlink():
                 path.resolve(strict=True)
             if not path.is_file():
@@ -348,7 +394,8 @@ def collect():
                 "sha256": file_hash(resolved),
                 "symlink_target": os.readlink(path) if path.is_symlink() else None,
             })
-        write_json(output / "bundled-gles-libraries.json", manifest)
+        write_json(output / "bundled-gles-libraries.json", [m for m in manifest if m["archive_path"].startswith("emulator/lib64/gles_llvmpipe/")])
+        write_json(output / "bundled-loader-dependencies.json", [m for m in manifest if not m["archive_path"].startswith("emulator/lib64/gles_llvmpipe/")])
         for required in ("libEGL.so", "libGLESv2.so", "libgallium-25.2.4.so"):
             if not (gl / required).is_file():
                 raise ValueError("Required bundled library missing")
@@ -356,12 +403,14 @@ def collect():
             "PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "DISPLAY", "WAYLAND_DISPLAY", "XDG_RUNTIME_DIR"
         ) if key in os.environ}
         env.update({
-            "LD_LIBRARY_PATH": str(gl) + ":" + str(sdk / "lib64"),
+            "LD_LIBRARY_PATH": ":".join(map(str, (gl, sdk / "lib64", sdk / "lib64" / "vulkan"))),
             "LIBGL_DRIVERS_PATH": str(gl / "dri"),
             "GBM_BACKENDS_PATH": str(gl / "gbm"), "EGL_LOG_LEVEL": "debug",
         })
         meta["common_probe_environment"] = env
         meta["probe_environment_difference"] = {"default": None, "surfaceless": "surfaceless"}
+        write_json(report, meta)
+        meta["loader_preflight"] = loader_preflight(sdk, output, env, deadline)
         write_json(report, meta)
         for mode in ("default", "surfaceless"):
             if deadline - time.monotonic() < 20:

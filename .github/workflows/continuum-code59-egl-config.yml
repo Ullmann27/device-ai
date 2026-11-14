@@ -36,9 +36,9 @@ jobs:
           metadata = json.loads(body)
           assert metadata['type'] == 'file' and metadata['encoding'] == 'base64'
           assert metadata['path'] == 'tools/code55-apk/egl-config-probe.py'
-          assert metadata['sha'] == '9ec66054db47bdc72d690e4d6d09c5d3b4210887' and metadata['size'] == 19279
+          assert metadata['sha'] == '7a147718aec9d81f6d08c622e4af1d6eec21b746' and metadata['size'] == 21940
           raw = base64.b64decode(''.join(metadata['content'].splitlines()), validate=True)
-          assert len(raw) == 19279
+          assert len(raw) == 21940
           assert hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest() == metadata['sha']
           destination = pathlib.Path(os.environ['RUNNER_TEMP']) / 'egl-config-probe.py'
           with destination.open('xb') as output:
