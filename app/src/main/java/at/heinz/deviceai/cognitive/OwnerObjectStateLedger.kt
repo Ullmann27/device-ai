@@ -159,8 +159,13 @@ internal class OwnerObjectStateLedger {
                 list.none { it.low in consumption }
         }
         val named = list.indexOfFirst { resolveItemName(it.low) != null }
-        if (named in 0..4 && list.take(named).all {
-                it.low in articles + setOf("in", "im", "auf", "unter", "neben") || color(it.low) != null
+        // "Nein, die Werkzeugkiste ist rot" is a correction of an explicitly
+        // named existing item. Leading "nein" does not negate the new value;
+        // the actual value's own "nicht" remains handled by mention polarity.
+        if (named in 0..4 && list.take(named).withIndex().all { (index, token) ->
+                (index == 0 && token.low == "nein") ||
+                    token.low in articles + setOf("in", "im", "auf", "unter", "neben") ||
+                    color(token.low) != null
             }) return true
         if (Regex("""^(?:nein\s+)?nicht\s|^(?:es|sie|er)\s+(?:ist|sind|steht|stehen|liegt|liegen)\s|^(?:korrigiere|ändere)\s+(?:die\s+)?(?:anzahl|zahl|farbe|ort|standort)\s""")
                 .containsMatchIn(text)) return true
