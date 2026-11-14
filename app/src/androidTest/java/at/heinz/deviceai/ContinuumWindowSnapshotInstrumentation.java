@@ -33,9 +33,11 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
     private static final String APP_PACKAGE = "at.heinz.deviceai.mentorpaired";
     private static final long TIMEOUT_MS = 45000;
     private int nodes;
+    private boolean awaitAvatarDiagnostic;
 
     @Override public void onCreate(Bundle arguments) {
         super.onCreate(arguments);
+        awaitAvatarDiagnostic = arguments != null && "true".equals(arguments.getString("await_avatar_diagnostic"));
         start();
     }
 
@@ -85,7 +87,8 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
                     if (focusedCount == 1) root = focused.getRoot();
                     observation.putBoolean("root_present", root != null);
                     sendStatus(1, observation);
-                    if (root != null && APP_PACKAGE.equals(text(root.getPackageName())) && root.refresh()) {
+                    if (root != null && APP_PACKAGE.equals(text(root.getPackageName())) && root.refresh()
+                            && (!awaitAvatarDiagnostic || hasAvatarDiagnosticTitle(root))) {
                         long captureStarted = SystemClock.uptimeMillis();
                         Display display = getContext().getSystemService(DisplayManager.class)
                                 .getDisplay(Display.DEFAULT_DISPLAY);
@@ -167,7 +170,7 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
                 }
                 SystemClock.sleep(200);
             }
-            require(code == Activity.RESULT_OK, "Focused QA hierarchy unavailable before deadline");
+            require(code == Activity.RESULT_OK, "Requested QA hierarchy unavailable before deadline");
         } catch (Throwable failure) {
             result.putString("status", "failed");
             result.putString("error", failure.toString());
@@ -175,6 +178,18 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
         }
         result.putLong("elapsed_ms", SystemClock.uptimeMillis() - started);
         finish(code, result);
+    }
+
+    private boolean hasAvatarDiagnosticTitle(AccessibilityNodeInfo root) {
+        List<AccessibilityNodeInfo> matches = root.findAccessibilityNodeInfosByText("Hologramm");
+        try {
+            for (AccessibilityNodeInfo match : matches) {
+                String title = text(match.getText());
+                if ("Continuum · Hologramm-Gerätediagnose".equals(title)
+                        || "Hologramm · Diagnose".equals(title)) return true;
+            }
+            return false;
+        } finally { for (AccessibilityNodeInfo match : matches) match.recycle(); }
     }
 
     private void writeNode(XmlSerializer xml, AccessibilityNodeInfo node, int index) throws Exception {

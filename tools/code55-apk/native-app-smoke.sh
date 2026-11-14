@@ -85,11 +85,12 @@ def captured_device(label, *args, timeout=30):
     save(label + '-command.json', json.dumps({'args': argv, 'returncode': result.returncode}))
     return result
 
-def read_hierarchy(label):
+def read_hierarchy(label, await_avatar_diagnostic=False):
     started = time.time_ns()
     before = shell('pidof', package)
     assert re.fullmatch(r'\d+(?: \d+)*', before), f'{label}: app process missing'
-    result = captured_device(label + '-ui-automation', 'shell', 'am', 'instrument', '-w', '-r',
+    options = ['-e', 'await_avatar_diagnostic', 'true'] if await_avatar_diagnostic else []
+    result = captured_device(label + '-ui-automation', 'shell', 'am', 'instrument', '-w', '-r', *options,
                              snapshot_runner, timeout=60)
     after = shell('pidof', package)
     assert before == after, f'{label}: snapshot changed app process'
@@ -129,7 +130,7 @@ def read_hierarchy(label):
     assert len(list(hierarchy.iter('node'))) == int(values['node_count']), f'{label}: hierarchy node count mismatch'
     return hierarchy
 
-def snapshot(label, rotation=None):
+def snapshot(label, rotation=None, record=True, await_avatar_diagnostic=False):
     pid = shell('pidof', package, check=False)
     assert re.fullmatch(r'\d+(?: \d+)*', pid), f'{label}: app process missing'
     activities = shell('dumpsys', 'activity', 'activities')
@@ -139,7 +140,7 @@ def snapshot(label, rotation=None):
     png = device('exec-out', 'screencap', '-p')
     assert png.startswith(b'\x89PNG\r\n\x1a\n') and len(png) > 4096, f'{label}: invalid screenshot'
     save(label + '-before.png', png)
-    hierarchy = read_hierarchy(label)
+    hierarchy = read_hierarchy(label, await_avatar_diagnostic=await_avatar_diagnostic)
     png = (out / (label + '.png')).read_bytes()
     width, height = struct.unpack('>II', png[16:24])
     assert min(width, height) >= 200, f'{label}: empty display'
@@ -154,8 +155,9 @@ def snapshot(label, rotation=None):
             if x2 > x1 and y2 > y1:
                 nodes.append(node)
     assert any(n.get('text') or n.get('content-desc') for n in nodes), f'{label}: empty app UI'
-    report['checks'].append({'name': label, 'status': 'PASS', 'pid': pid,
-                             'bounded_app_nodes': len(nodes), 'display': [width, height]})
+    if record:
+        report['checks'].append({'name': label, 'status': 'PASS', 'pid': pid,
+                                 'bounded_app_nodes': len(nodes), 'display': [width, height]})
     return nodes, pid, (width, height)
 
 def launch(label):
@@ -165,16 +167,104 @@ def launch(label):
     time.sleep(2)
     return snapshot(label)
 
-def tap(nodes, labels):
+def visible_bounds(node, display):
+    match = re.fullmatch(r'\[(-?\d+),(-?\d+)\]\[(-?\d+),(-?\d+)\]', node.get('bounds', ''))
+    if not match:
+        return None
+    x1, y1, x2, y2 = map(int, match.groups())
+    if 0 <= x1 < x2 <= display[0] and 0 <= y1 < y2 <= display[1]:
+        return x1, y1, x2, y2
+    return None
+
+def control(nodes, label, display=None):
+    return next((n for n in nodes if n.get('enabled') == 'true' and n.get('clickable') == 'true'
+                 and label in (n.get('text'), n.get('content-desc'))
+                 and (display is None or visible_bounds(n, display))), None)
+
+def tap_node(node, display):
+    bounds = visible_bounds(node, display)
+    assert bounds, 'Tap control outside viewport'
+    x1, y1, x2, y2 = bounds
+    shell('input', 'tap', str((x1+x2)//2), str((y1+y2)//2))
+    time.sleep(1)
+
+def tap(nodes, labels, display=None):
     for label in labels:
-        candidates = [n for n in nodes if n.get('enabled') == 'true' and n.get('clickable') == 'true'
-                      and label in (n.get('text'), n.get('content-desc'))]
-        if candidates:
-            x1, y1, x2, y2 = map(int, re.findall(r'\d+', candidates[0].get('bounds')))
+        candidate = control(nodes, label, display)
+        if candidate is not None:
+            x1, y1, x2, y2 = map(int, re.findall(r'\d+', candidate.get('bounds')))
             shell('input', 'tap', str((x1+x2)//2), str((y1+y2)//2))
             time.sleep(1)
             return True
     return False
+
+def establish_offline(label):
+    shell('cmd', 'connectivity', 'airplane-mode', 'enable')
+    shell('svc', 'wifi', 'disable')
+    shell('svc', 'data', 'disable')
+    deadline = time.monotonic() + 20
+    while True:
+        network = shell('dumpsys', 'connectivity')
+        save(label + '-connectivity.txt', network)
+        if re.search(r'(?:Active default network:|mActiveDefaultNetwork=)\s*(?:none|null)(?:\s|$)', network, re.I):
+            return
+        assert time.monotonic() < deadline, 'No-network state not established'
+        time.sleep(1)
+
+def capability_response(nodes):
+    texts = [re.sub(r'\s+', ' ', n.get('text', '')).strip() for n in nodes]
+    prefix = 'Continuum · Aktuelle App-Fähigkeiten Mein aktueller Stand auf diesem Gerät:'
+    replies = [text for text in texts if text.startswith(prefix)]
+    assert len(replies) == 1, 'Actual local capability answer missing'
+    reply = replies[0]
+    assert 'Lokales Sprachmodell: keines geladen.' in reply, 'Unexpected model state'
+    assert 'Diese Statusantwort startet kein Modell, keine Recherche, kein Mikrofon und keinen Entwicklungsauftrag.' in reply
+    editors = [n for n in nodes if n.get('class') == 'android.widget.EditText']
+    assert len(editors) == 1 and editors[0].get('text', '') in ('', 'Schreibe eine Nachricht …'), 'Submitted input not cleared'
+    return reply
+
+def collect_avatar_diagnostic(nodes, pid, display):
+    buttons = [n for n in nodes if n.get('enabled') == 'true' and n.get('clickable') == 'true'
+               and n.get('content-desc', '').startswith('Systemstatus: Gedächtnis:')
+               and visible_bounds(n, display)]
+    assert len(buttons) == 1, 'Visible system-status control missing'
+    tap_node(buttons[0], display)
+    nodes, current, _ = snapshot('avatar-system-opened', rotation=1, record=False)
+    assert current == pid, 'Avatar diagnostic changed process'
+    gestures = []
+    label = 'HOLOGRAMM · LIVE-FRAMES PRÜFEN'
+    for attempt in range(7):
+        if control(nodes, label, display) is not None:
+            break
+        assert attempt < 6, 'Avatar diagnostic action unreachable after scrolling'
+        scrolls = [n for n in nodes if n.get('class') == 'android.widget.ScrollView'
+                   and n.get('scrollable') == 'true' and visible_bounds(n, display)
+                   and not n.get('content-desc', '').startswith('Continuum-Cockpit, vertikal scrollbar')]
+        assert len(scrolls) == 1, 'Unique system-status scroll container missing'
+        x1, y1, x2, y2 = visible_bounds(scrolls[0], display)
+        x = (x1+x2)//2
+        start_y, end_y = y2-(y2-y1)//6, y1+(y2-y1)//6
+        result = captured_device(f'avatar-system-scroll-{attempt+1}-input', 'shell', 'input', 'swipe',
+                                 str(x), str(start_y), str(x), str(end_y), '700')
+        assert result.returncode == 0, 'System-status swipe failed'
+        gestures.append([x, start_y, x, end_y, 700])
+        nodes, current, _ = snapshot(f'avatar-system-scroll-{attempt+1}', rotation=1, record=False)
+        assert current == pid, 'Avatar diagnostic changed process'
+    assert tap(nodes, [label], display), 'Avatar diagnostic action missing'
+    nodes, current, _ = snapshot('avatar-diagnostic', rotation=1, record=False, await_avatar_diagnostic=True)
+    assert current == pid, 'Avatar diagnostic changed process'
+    texts = [n.get('text', '') for n in nodes if n.get('text')]
+    assert 'Continuum · Hologramm-Gerätediagnose' in texts, 'Avatar diagnostic error dialog'
+    text = '\n'.join(texts)
+    assert all(marker in text for marker in ['Animations-Callbacks:', 'Wirkliche Canvas-Zeichnungen:',
+                                            'Phasenänderung:', 'Start:', 'Ende:']), 'Avatar diagnostic incomplete'
+    report['avatar_diagnostic'] = {'status': 'OBSERVED', 'text': text,
+        'stage_evidence': 'rotation-top.png', 'dialog_evidence': 'avatar-diagnostic.xml',
+        'scroll_gestures': gestures, 'limit': 'Read-only report; no visible-avatar or performance certification'}
+    assert tap(nodes, ['Schließen', 'SCHLIESSEN'], display), 'Avatar diagnostic close control missing'
+    nodes, current, _ = snapshot('avatar-return', rotation=1, record=False)
+    assert current == pid, 'Avatar diagnostic changed process'
+    return nodes
 
 failure = None
 try:
@@ -206,8 +296,26 @@ try:
         nodes, _, _ = snapshot('camera-declined')
     conversation = ['Konversation öffnen', 'JARVIS: Konversation öffnen', 'Gespräch öffnen', 'Gespräch', 'Chat']
     assert tap(nodes, conversation), 'Conversation control missing'
+    nodes, _, display = snapshot('conversation-opened', record=False)
+    editors = [n for n in nodes if n.get('class') == 'android.widget.EditText']
+    assert len(editors) == 1, 'Composer missing'
+    establish_offline('conversation')
+    tap_node(editors[0], display)
+    question = 'Was kannst du?'
+    shell('input', 'text', "'Was%skannst%sdu?'")
+    keyboard = shell('dumpsys', 'input_method')
+    save('conversation-typing-input-method.txt', keyboard)
+    if re.search(r'(?:mInputShown|mIsInputViewShown)=true\b', keyboard):
+        shell('input', 'keyevent', 'KEYCODE_BACK')
+    nodes, _, display = snapshot('conversation-input', record=False)
+    editors = [n for n in nodes if n.get('class') == 'android.widget.EditText']
+    assert len(editors) == 1 and editors[0].get('text') == question, 'Typed question missing'
+    assert tap(nodes, ['Nachricht senden'], display), 'Send control missing'
     nodes, _, _ = snapshot('conversation')
-    assert any(n.get('class') == 'android.widget.EditText' for n in nodes), 'Composer missing'
+    reply = capability_response(nodes)
+    report['conversation_submission'] = {'question': question, 'response_text': reply,
+        'input_evidence': 'conversation-input.xml', 'response_evidence': 'conversation.xml',
+        'offline_evidence': 'conversation-connectivity.txt'}
     keyboard = shell('dumpsys', 'input_method')
     save('conversation-input-method.txt', keyboard)
     if re.search(r'(?:mInputShown|mIsInputViewShown)=true\b', keyboard):
@@ -218,24 +326,52 @@ try:
     assert any(n.get('content-desc') in conversation or n.get('text') in conversation for n in nodes), 'Home not restored'
     shell('settings', 'put', 'system', 'user_rotation', '1')
     time.sleep(2)
-    _, rotated_pid, landscape = snapshot('rotation', rotation=1)
+    nodes, rotated_pid, landscape = snapshot('rotation-top', rotation=1, record=False)
     assert portrait[0] == landscape[1] and portrait[1] == landscape[0], 'Display did not rotate'
     assert rotated_pid == first_pid, 'Process died during rotation'
+    nodes = collect_avatar_diagnostic(nodes, first_pid, landscape)
+    navigation = ['Start', 'Gespräch', 'Gedächtnis', 'Forschung', 'Aufgaben', 'Internet', 'Lernen', 'Geräte']
+    gestures = []
+    for attempt in range(4):
+        if control(nodes, 'Konversation öffnen', landscape) is not None and all(
+                control(nodes, label, landscape) is not None for label in navigation):
+            break
+        assert attempt < 3, 'Landscape input/navigation unreachable after scrolling'
+        scrolls = [n for n in nodes if n.get('class') == 'android.widget.ScrollView'
+                   and n.get('scrollable') == 'true' and visible_bounds(n, landscape)
+                   and n.get('content-desc', '').startswith('Continuum-Cockpit, vertikal scrollbar')]
+        assert len(scrolls) == 1, 'Landscape scroll container missing'
+        x1, y1, x2, y2 = visible_bounds(scrolls[0], landscape)
+        x = (x1+x2)//2
+        start_y, end_y = y2-(y2-y1)//6, y1+(y2-y1)//6
+        result = captured_device(f'rotation-scroll-{attempt+1}-input', 'shell', 'input', 'swipe',
+                                 str(x), str(start_y), str(x), str(end_y), '700')
+        assert result.returncode == 0, 'Landscape swipe failed'
+        gestures.append([x, start_y, x, end_y, 700])
+        nodes, pid, _ = snapshot(f'rotation-scroll-{attempt+1}', rotation=1, record=False)
+        assert pid == first_pid, 'Process changed during scrolling'
+    assert gestures, 'Expected real landscape scroll was not exercised'
+    nodes, pid, _ = snapshot('rotation', rotation=1)
+    assert pid == first_pid, 'Process changed during landscape navigation'
+    controls = {label: control(nodes, label, landscape) for label in ['Konversation öffnen', *navigation]}
+    assert all(n is not None for n in controls.values()), 'Landscape controls not visible'
+    report['landscape_navigation'] = {'scroll_gestures': gestures,
+        'visible_controls': {label: list(visible_bounds(n, landscape)) for label, n in controls.items()},
+        'controls_evidence': 'rotation.xml', 'conversation_evidence': 'landscape-conversation.xml'}
+    assert tap(nodes, ['Konversation öffnen'], landscape), 'Landscape input not reachable'
+    nodes, pid, _ = snapshot('landscape-conversation', rotation=1, record=False)
+    assert pid == first_pid and any(n.get('class') == 'android.widget.EditText'
+                                   and visible_bounds(n, landscape) for n in nodes), 'Landscape composer missing'
+    assert tap(nodes, ['Zur Startseite mit allen KI-Bereichen'], landscape), 'Landscape START not reachable'
+    nodes, pid, _ = snapshot('landscape-start-roundtrip', rotation=1, record=False)
+    assert pid == first_pid and any(n.get('class') == 'android.widget.ScrollView'
+        and n.get('content-desc', '').startswith('Continuum-Cockpit, vertikal scrollbar')
+        and visible_bounds(n, landscape) for n in nodes), 'Landscape home not restored'
     shell('am', 'force-stop', package)
     assert not shell('pidof', package, check=False), 'Force-stop failed'
     _, restarted_pid, _ = launch('process-restart')
     assert restarted_pid != first_pid, 'New process not observed'
-    shell('cmd', 'connectivity', 'airplane-mode', 'enable')
-    shell('svc', 'wifi', 'disable')
-    shell('svc', 'data', 'disable')
-    deadline = time.monotonic() + 20
-    while True:
-        network = shell('dumpsys', 'connectivity')
-        save('offline-connectivity.txt', network)
-        if re.search(r'(?:Active default network:|mActiveDefaultNetwork=)\s*(?:none|null)(?:\s|$)', network, re.I):
-            break
-        assert time.monotonic() < deadline, 'No-network state not established'
-        time.sleep(1)
+    establish_offline('offline')
     shell('am', 'force-stop', package)
     launch('offline-restart')
     assert command(['git', 'rev-parse', 'HEAD']).decode().strip() == source

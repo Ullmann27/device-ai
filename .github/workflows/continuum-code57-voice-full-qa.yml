@@ -476,7 +476,8 @@ jobs:
           test "$ready" = true
           timeout 300 bash tools/code55-apk/native-pdf-emulator.sh emulator-5554 "$evidence"
           timeout 300 bash tools/code55-apk/native-filament-emulator.sh emulator-5554 "$evidence/filament"
-          timeout 420 bash tools/code55-apk/native-app-smoke.sh emulator-5554 "$evidence/app"
+          # Bound 26 capped UI captures.
+          timeout 1500 bash tools/code55-apk/native-app-smoke.sh emulator-5554 "$evidence/app"
       - name: Preserve native proof
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
