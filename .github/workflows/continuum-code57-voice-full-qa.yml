@@ -1,8 +1,10 @@
 name: "Code59 - integrated exact-source full QA and unsigned ARM64 APK"
+run-name: ${{ github.ref_name == 'diagnostic/code59-native-lint-20261114' && 'DIAGNOSTIC ONLY - native runtime and full lint' || 'Code59 full source QA and ARM64' }}
 on:
   push:
     branches:
       - release/code59-complete-qa-20261114
+      - diagnostic/code59-native-lint-20261114
   workflow_dispatch:
 
 permissions:
@@ -138,7 +140,7 @@ jobs:
           retention-days: 14
 
   full-android:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/release/code59-complete-qa-20261114' || github.ref == 'refs/heads/diagnostic/code59-native-lint-20261114')
     runs-on: ubuntu-latest
     timeout-minutes: 150
     steps:
@@ -163,6 +165,7 @@ jobs:
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
       - name: Full unfiltered Android and UI regression suite (motion exercised without PNG export)
+        if: github.ref == 'refs/heads/release/code59-complete-qa-20261114'
         run: |
           set -euo pipefail
           unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
@@ -174,10 +177,10 @@ jobs:
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
             :app:testDebugUnitTest
       - name: Require exact declared skip policy
-        if: always()
+        if: ${{ always() && github.ref == 'refs/heads/release/code59-complete-qa-20261114' }}
         run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
       - name: Require Code59 regression coverage
-        if: always()
+        if: ${{ always() && github.ref == 'refs/heads/release/code59-complete-qa-20261114' }}
         run: |
           python3 - <<'PY'
           import pathlib, xml.etree.ElementTree as ET
@@ -314,7 +317,7 @@ jobs:
           retention-days: 14
 
   native-runtime:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/release/code59-complete-qa-20261114' || github.ref == 'refs/heads/diagnostic/code59-native-lint-20261114')
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
