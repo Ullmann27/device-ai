@@ -44,8 +44,23 @@ split-window accessibility shadows; no GPU success or actual pixels are mocked
 into an owner-facing result.
 
 Local `git diff --check`: PASS. Android/JUnit execution: NOT_RUN locally; no
-Android SDK or Robolectric dependencies are available. The root integrator will
-run the complete class in the existing Code58 exact-source QA workflow.
+Android SDK or Robolectric dependencies are available.
+
+First actual GitHub run `43566195472`, job `132360472369`, integrated source
+`547ab9d1c68afbd3b48d872b369149ba6727348f`: projection class 21 cases,
+18 passed, 3 failed, zero skips. The three new cases failed during fixture
+creation with `IllegalArgumentException: The image dimensions must be positive`;
+the service-only Robolectric context returned 0x0 maximum window bounds.
+The tests had not reached the production reset path.
+
+The fixture now supplies explicit 1200x1000 `WindowMetrics` at the
+`WindowManagerImpl.getMaximumWindowMetrics()` Android boundary. Both the fixture
+and production `displayBounds()` read this same geometry; an assertion checks
+their agreement. Both accessibility application windows occupy disjoint
+600x1000 halves. The existing source/crop/cleanup assertions are unchanged.
+This uses the same custom WindowManager shadow approach as AndroidX Camera's
+`TestShadowWindowManager`; no production display geometry is changed.
+Corrected-fixture Android rerun: PENDING through the root integrator.
 Fold7 capture/GPU/rotation: NOT_RUN. No installed-device success is claimed.
 
 Compatibility: EXP-12 identity/checkpoint continuity; existing capture-session
@@ -54,5 +69,6 @@ Rollback: revert this worker patch. Next step: integrate, execute the complete
 projection test class, then verify real Fold7 capture and a geometry change.
 
 PORTIERT: worker source ready for integration.
-VERIFIZIERT: whitespace only; Android execution pending.
+VERIFIZIERT: whitespace PASS; first Android run exposed the corrected fixture;
+corrected Android execution pending.
 GERÄTEBESTÄTIGT: NOT_RUN.

@@ -19,7 +19,9 @@ import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.SystemClock
 import android.view.Surface
+import android.view.WindowInsets
 import android.view.WindowManager
+import android.view.WindowMetrics
 import android.view.accessibility.AccessibilityNodeInfo
 import at.heinz.deviceai.cognitive.LiveMonitorState
 import at.heinz.deviceai.cognitive.LiveFrameMeta
@@ -39,6 +41,7 @@ import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowService
+import org.robolectric.shadows.ShadowWindowManagerImpl
 import org.robolectric.shadow.api.Shadow
 import org.robolectric.util.ReflectionHelpers
 import org.robolectric.util.ReflectionHelpers.ClassParameter
@@ -50,6 +53,7 @@ import org.robolectric.util.ReflectionHelpers.ClassParameter
         ContinuumLiveProjectionServiceUiTest.ProjectionManagerShadow::class,
         ContinuumLiveProjectionServiceUiTest.ProjectionShadow::class,
         ContinuumLiveProjectionServiceUiTest.DisplayShadow::class,
+        ContinuumLiveProjectionServiceUiTest.WindowGeometryShadow::class,
         AndroidLiveNodePortTest.NodeShadow::class,
         AndroidLiveNodePortTest.WindowShadow::class])
 @LooperMode(LooperMode.Mode.PAUSED)
@@ -132,6 +136,13 @@ class ContinuumLiveProjectionServiceUiTest {
                 throw IllegalStateException("Synthetic detached display")
         }
         @Implementation protected fun release() { releases++ }
+    }
+
+    @Implements(className = "android.view.WindowManagerImpl", minSdk = 30, isInAndroidSdk = false)
+    class WindowGeometryShadow : ShadowWindowManagerImpl() {
+        @Implementation
+        protected fun getMaximumWindowMetrics(): WindowMetrics =
+            WindowMetrics(Rect(0, 0, 1200, 1000), WindowInsets.Builder().build())
     }
 
     private lateinit var application: Application
@@ -380,6 +391,9 @@ class ContinuumLiveProjectionServiceUiTest {
         val intent = queuedCapture(task)
         val session = intent.getLongExtra(ContinuumLiveProjectionService.SESSION, 0)
         val bounds = service.getSystemService(WindowManager::class.java).maximumWindowMetrics.bounds
+        assertEquals(Rect(0, 0, 1200, 1000), bounds)
+        assertEquals(bounds.liveRect(), ReflectionHelpers.callInstanceMethod<at.heinz.deviceai.cognitive.LivePixelRect>(
+            service, "displayBounds"))
         val middle = bounds.left + bounds.width() / 2
         AndroidLiveNodePortTest.ServiceShadow.ownBounds = Rect(bounds.left, bounds.top, middle, bounds.bottom)
         AndroidLiveNodePortTest.ServiceShadow.targetBounds = Rect(middle, bounds.top, bounds.right, bounds.bottom)
