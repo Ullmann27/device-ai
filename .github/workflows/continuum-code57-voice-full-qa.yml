@@ -104,7 +104,7 @@ jobs:
         run: |
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
-      - name: Actual Android compilation and renderer regressions
+      - name: Actual Android compilation, renderer and date regressions
         run: |
           set -euo pipefail
           unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
@@ -114,7 +114,8 @@ jobs:
             -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=58 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
-            -I .github/continuum/code56-renderer-tests.init.gradle :app:testDebugUnitTest
+            -I .github/continuum/code56-renderer-tests.init.gradle \
+            -I .github/continuum/code58-date-tail-tests.init.gradle :app:testDebugUnitTest
           python3 - <<'PY'
           import pathlib, xml.etree.ElementTree as ET
           files = list(pathlib.Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'))
@@ -123,7 +124,9 @@ jobs:
           assert not any(c.find(x) is not None for c in cases for x in ('failure', 'error', 'skipped'))
           repair = [c for c in cases if c.attrib.get('classname') == 'at.heinz.deviceai.avatar3d.CockpitMonitorPresentationTest']
           assert len(repair) == 6, f'Missing monitor regression cases: {len(repair)}'
-          print(f'CODE57_RENDERER_PREFLIGHT_PASS cases={len(cases)} repair_cases={len(repair)}')
+          date_cases = [c for c in cases if c.attrib.get('classname') == 'at.heinz.deviceai.cognitive.ProactiveDateTailRegressionTest']
+          assert len(date_cases) == 9, f'Missing date-tail regressions: {len(date_cases)}'
+          print(f'CODE58_RENDERER_PREFLIGHT_PASS cases={len(cases)} repair_cases={len(repair)} date_cases={len(date_cases)}')
           PY
       - name: Preserve renderer JUnit evidence
         if: always()
@@ -225,6 +228,17 @@ jobs:
                        ('LocalShortClarificationTest','namedQuestionsQuotesAndCommandsRemainIndependent'),
                        ('LocalShortClarificationTest','clarificationNeverAuthorizesContinuationOrDeviceActions')}
           required.add(('LocalPoliteFollowUpTest','stretchedContinuationAssemblesPromptAndClearsSession'))
+          required |= {('ProactiveDateTailRegressionTest', name) for name in (
+              'dottedClockValuesPreserveToday',
+              'quantitiesStaySeparateFromTheYear',
+              'invalidClocksAndIdentifiersDoNotBecomeQuantities',
+              'explicitYearAndCalendarDayRemainAuthoritative',
+              'trustAndRelativeFreshnessAreNotRelaxed',
+              'correctedDateStillRespectsAnnouncementCooldown',
+              'shortYearsWithProseAreNotCounts',
+              'clockUnitsCannotHideInvalidTails',
+              'countUnitsCannotHideIdentifiers'
+          )}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE58_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY

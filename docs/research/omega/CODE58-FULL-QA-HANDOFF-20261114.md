@@ -22,9 +22,9 @@ observed commit SHAs. The four original jobs and their safety checks remain:
 1. `unsigned-arm64`: exact source, original package, ARM64-only, version,
    16-KiB alignment, unsigned state, APK digest and BUILD-INFO.
 2. `renderer-preflight`: Android compilation and renderer regressions,
-   explicitly including the six monitor-presentation cases.
+   explicitly including the six monitor-presentation and nine date-tail cases.
 3. `full-android`: unfiltered Android/UI JUnit, unchanged strict declared-skip
-   policy, 43 required Code58 regression methods and Android lint.
+   policy, 52 required Code58 regression methods and Android lint.
 4. `node-backend`: critical and complete Node QA, backend checks and tests.
 
 The additional test `stretchedContinuationAssemblesPromptAndClearsSession`
@@ -32,7 +32,7 @@ preserves the useful integration coverage from PR #840 commit
 `201054e78fde9fd75c226de13f8d82d0d7adadb4` as a separate method. It exercises
 context, history, prompt firewall, final assembly and cleared-session rejection.
 The previously verified byte-budget, response-ending and incomplete-history
-tests remain intact. No Android production source is changed at this checkpoint.
+tests remain intact. No Android production source changed at that initial preparation checkpoint.
 
 ## Verification at commit creation
 
@@ -88,3 +88,42 @@ approval. No signing secrets are needed for preparing or testing that patch.
 
 Canonical production fallback remains the verified `f7445b3` checkpoint.
 Do not reset another team's branch or bypass a failed test or owner gate.
+
+## Reviewed date-tail integration
+
+PR #843 supplied dotted-clock and explicit person-count recognition on
+`b54ec8f1b1e682eb399f6ebe01230076c994f1dd`. Run `43573007635`
+passed the 373-case shared Android matrix with no failures/skips and critical
+Node contracts. Its corrected old-memory fixture preserves both timestamp
+ordering and all trust/privacy/freshness assertions.
+
+Independent review rejected the unrestricted count-word pattern: short years
+followed by prose, such as `14.11. 27 um 18 Uhr`, became today's event.
+It also found optional-clock-unit backtracking for `18.30 Uhr/7` and
+`18.30 Uhrzeit`. The integration restricts counts to explicit guest/person/
+child units, rejects identifier suffixes, and makes the optional clock unit
+possessive. This quantifier is documented by both Java and Android:
+https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/regex/Pattern.html
+https://developer.android.com/reference/java/util/regex/Pattern
+
+Nine public-memory regression methods now cover the original six cases plus
+short-year prose, malformed clock-unit suffixes and count identifiers.
+The renderer preflight also runs those nine cases for early failure feedback.
+The complete release gate remains unfiltered and requires all 52 mandatory methods. The support
+workflow retains its branch and assertions, raises its minimum to 377 cases
+(including the preserved prompt test), and pins its existing actions.
+
+This is the only additional Android production file since `f7445b3`.
+The new integration source requires a new full QA run. The preceding source
+`0343cd6234c607bfba856d448ec09d79cc0129ea` passed renderer, ARM64,
+2,474 Node cases (37 skipped) and 64 backend cases; its incomplete Android
+run must not be reused as acceptance for this integration.
+
+After the local executor recovered, 93 targeted Kotlin/JVM probes passed
+through the real public engine and production retriever, with unchanged
+production memory declarations and no JUnit fakes. The checked production-file
+SHA-256 is `6f31ccae5d3c0e8827c3c750200751d86a7502119958d076206fe53abb8e10f7`.
+The nine JUnit methods still require the actual Android/GitHub run; these
+probes do not constitute device or complete-suite acceptance.
+The source/run pins in signing PR #844 must follow the final successful
+integration run before its protected branch can be activated.
