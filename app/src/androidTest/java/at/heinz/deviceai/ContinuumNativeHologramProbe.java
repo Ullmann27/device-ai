@@ -128,7 +128,8 @@ public final class ContinuumNativeHologramProbe {
                 boolean failed = current.optBoolean("native3dFailed") || current.optBoolean("cockpitWorldFailed");
                 settled = failed || (!current.optBoolean("assetLoading") && current.optBoolean("texture_available")
                         && current.optBoolean("renderer_present") && current.optBoolean("surface_valid")
-                        && current.optBoolean("cockpit_ready") && current.optBoolean("native3dDrawn"));
+                        && current.optBoolean("cockpit_ready") && current.optBoolean("native3dDrawn")
+                        && current.optLong("surface_texture_timestamp") > 0);
                 if (settled) break;
                 SystemClock.sleep(1000);
                 current = onMain(this::sample);
