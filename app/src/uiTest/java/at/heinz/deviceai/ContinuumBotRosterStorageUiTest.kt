@@ -130,8 +130,8 @@ class ContinuumBotRosterStorageUiTest {
             team.initialize()
             team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), 0)
             roster = ContinuumBotRosterDialog(activity, store, io, team = team,
-                onTeamSubmit = { id, request, revision ->
-                    io.execute { team.submit(id, request, revision, true) }
+                onTeamSubmit = { id, request, revision, shared, followup ->
+                    io.execute { team.submit(id, request, revision, true, shared = shared, followup = followup) }
                     true
                 }).also { it.show() }
             io.drain()
@@ -215,5 +215,70 @@ class ContinuumBotRosterStorageUiTest {
         assertFalse(original.isShowing)
         assertSame(original, current())
         assertEquals(20, ChiefBotProfileStore(dir).page().items.size)
+    }
+
+    @Test fun privateSearchShowsActualDatesAndOnlyTheSelectedBotsCurrentRecords() {
+        val root = File(parent, "private-records")
+        val store = ChiefBotProfileStore(root)
+        val profiles = store.seedDefaults(20)
+        val selected = profiles.sortedBy { it.agentId }.first()
+        val other = profiles.first { it.agentId != selected.agentId }
+        store.saveWorkingContext(selected.agentId, selected.agentId, "EIGENE_PRIVATE_NOTIZ", selected.profileVersion)
+        store.saveWorkingContext(other.agentId, other.agentId, "ANDERE_PRIVATE_NOTIZ", other.profileVersion)
+        open(store)
+        buttons("Profil und Arbeitsbereich öffnen").first().performClick(); io.drain()
+        click("Private Aufzeichnungen suchen")
+        assertTrue(text(), text().contains("EIGENE_PRIVATE_NOTIZ"))
+        assertFalse(text(), text().contains("ANDERE_PRIVATE_NOTIZ"))
+        val record = store.privateRecords(selected.agentId, selected.agentId).records.single()
+        val date = java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss z", java.util.Locale.getDefault())
+        assertTrue(text(), text().contains(date.format(java.util.Date(record.createdAtMillis))))
+        assertTrue(text(), text().contains("nicht einzelner Aussagen"))
+        views().filterIsInstance<EditText>().single().setText("andere_private")
+        click("Suchen")
+        assertTrue(text(), text().contains("Keine aktuelle private Aufzeichnung enthält diesen Suchtext."))
+        assertFalse(text().contains("EIGENE_PRIVATE_NOTIZ"))
+        click("Alle aktuellen Aufzeichnungen")
+        assertTrue(text().contains("EIGENE_PRIVATE_NOTIZ"))
+        assertFalse(text().contains("ANDERE_PRIVATE_NOTIZ"))
+    }
+
+    @Test fun clearingNoteThroughExistingEditorRemovesItFromReopenedPrivateSearch() {
+        val root = File(parent, "private-clear")
+        val store = ChiefBotProfileStore(root)
+        val selected = store.seedDefaults(20).sortedBy { it.agentId }.first()
+        val noted = store.saveWorkingContext(selected.agentId, selected.agentId, "ENTFERNTE_PRIVATE_NOTIZ", selected.profileVersion)
+        open(store)
+        buttons("Profil und Arbeitsbereich öffnen").first().performClick(); io.drain()
+        click("Private Aufzeichnungen suchen")
+        assertTrue(text().contains("ENTFERNTE_PRIVATE_NOTIZ"))
+        click("Zurück zum Arbeitsbereich")
+        views().filterIsInstance<EditText>().single().setText("")
+        click("Arbeitsnotiz speichern")
+        roster!!.close()
+        open(ChiefBotProfileStore(root))
+        buttons("Profil und Arbeitsbereich öffnen").first().performClick(); io.drain()
+        click("Private Aufzeichnungen suchen")
+        assertTrue(text(), text().contains("Keine aktuellen privaten Aufzeichnungen gespeichert."))
+        assertFalse(text().contains("ENTFERNTE_PRIVATE_NOTIZ"))
+        assertTrue(File(root, "working-context/${selected.memoryNamespace}/${noted.contextObjectId}.obj").isFile)
+    }
+
+    @Test fun closedPrivateSearchDoesNotPresentItsQueuedStorageResult() {
+        val store = ChiefBotProfileStore(File(parent, "private-closed"))
+        val selected = store.seedDefaults(20).sortedBy { it.agentId }.first()
+        store.saveWorkingContext(selected.agentId, selected.agentId, "PRIVATE_AFTER_CLOSE", selected.profileVersion)
+        open(store)
+        buttons("Profil und Arbeitsbereich öffnen").first().performClick(); io.drain()
+        assertTrue(buttons("Private Aufzeichnungen suchen").single().performClick())
+        val old = current()
+        assertEquals(1, io.pending.size)
+        roster!!.close()
+        io.drain()
+        assertFalse(old.isShowing)
+        assertSame(old, current())
+        assertFalse(views(old.window!!.decorView).filterIsInstance<TextView>().any {
+            it.text.toString().contains("PRIVATE_AFTER_CLOSE")
+        })
     }
 }

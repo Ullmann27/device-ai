@@ -247,9 +247,22 @@ class ContinuumHologramMotionUiTest {
         val view = ContinuumHologramView(controller.get())
         try {
             attachOrb(controller.get(), view)
-            assertFalse(view.motionDiagnostics().contains("LIVE"))
+            val inactive = view.sampleMotion()
+            assertFalse(pending(view))
+            advanceFrames(200)
+            assertEquals(inactive.callbackCount, view.sampleMotion().callbackCount)
+            assertEquals(inactive.phase, view.sampleMotion().phase, 0f)
             view.setForegroundActive(false)
-            assertFalse(view.motionDiagnostics().contains("LIVE"))
+            advanceFrames(200)
+            assertFalse(pending(view))
+            assertEquals(inactive.callbackCount, view.sampleMotion().callbackCount)
+            assertEquals(inactive.phase, view.sampleMotion().phase, 0f)
+            view.setForegroundActive(true)
+            assertTrue("Positive control must schedule the same clock", pending(view))
+            advanceFrames(200)
+            val active = view.sampleMotion()
+            assertTrue("Positive control must execute real callbacks", active.callbackCount > inactive.callbackCount)
+            assertTrue("Positive control must advance the phase", active.phase > inactive.phase)
         } finally { controller.pause().stop().destroy() }
     }
 

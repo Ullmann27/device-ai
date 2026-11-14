@@ -8,6 +8,7 @@ import at.heinz.deviceai.cognitive.LiveMonitorFeed
 import android.view.Surface
 import at.heinz.deviceai.avatar.AvatarPose
 import com.google.android.filament.*
+import com.google.android.filament.android.FilamentHelper
 import com.google.android.filament.gltfio.*
 import java.nio.ByteBuffer
 
@@ -87,6 +88,19 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     }
     private var bloomSettings: com.google.android.filament.View.BloomOptions? = null
     private var reducedQuality = false
+
+    internal fun synchronizePendingFrames() {
+        engine?.let(FilamentHelper::synchronizePendingFrames)
+    }
+
+    internal fun recreateSwapChain() {
+        val e = engine ?: return
+        invalidateCockpitSubmission()
+        lastFrameSkipped = false
+        swapChain?.let(e::destroySwapChain)
+        swapChain = null
+        swapChain = e.createSwapChain(surface, SwapChainFlags.CONFIG_TRANSPARENT)
+    }
 
     private fun initialize(bytes: ByteArray, metadata: AvatarGlbContract.Metadata) {
         Gltfio.init()
@@ -345,8 +359,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_BEGIN) ?: 0
             try {
                 r.render(view!!)
-                receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_RENDERED) ?: 0
             } finally { r.endFrame() }
+            receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_SUBMITTED) ?: 0
             cockpitStage?.frameSubmitted(System.nanoTime())
         } catch (failure: Throwable) {
             cockpitStage?.frameFailed()
@@ -488,8 +502,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
 
     override fun close() {
         val e = engine ?: return
-        clearCockpitStage()
-        clearDocumentStage()
+        runCatching { clearCockpitStage() }
+        runCatching { clearDocumentStage() }
         faceMaterial = null
         faceEmission = null
         avatarFactors = emptyList()
@@ -522,8 +536,16 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         const val HIDDEN_NODE_PREFIX = "Tooth"
         fun create(surface: Surface, bytes: ByteArray, metadata: AvatarGlbContract.Metadata): FilamentAvatarRenderer {
             val candidate = FilamentAvatarRenderer(surface)
-            try { candidate.initialize(bytes, metadata); return candidate }
-            catch (failure: Throwable) { candidate.close(); throw failure }
+            try {
+                candidate.initialize(bytes, metadata)
+                candidate.synchronizePendingFrames()
+                return candidate
+            } catch (failure: Throwable) {
+                runCatching { candidate.close() }.onFailure {
+                    if (it !== failure) failure.addSuppressed(it)
+                }
+                throw failure
+            }
         }
     }
 }

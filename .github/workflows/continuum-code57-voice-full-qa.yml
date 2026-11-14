@@ -1,20 +1,22 @@
-name: "Code58 - integrated exact-source full QA and unsigned ARM64 APK"
+name: "Code59 - integrated exact-source full QA and unsigned ARM64 APK"
+run-name: ${{ github.ref_name == 'diagnostic/code59-native-lint-20261114' && 'DIAGNOSTIC ONLY - native runtime and full lint' || 'Code59 full source QA and ARM64' }}
 on:
   push:
     branches:
-      - release/code58-full-qa-20261114
+      - release/code59-complete-qa-20261114
+      - diagnostic/code59-native-lint-20261114
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: code58-full-qa-v1-20261114
-  cancel-in-progress: true
+  group: code59-complete-qa-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   unsigned-arm64:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code58-full-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -42,7 +44,7 @@ jobs:
         run: |
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
-      - name: Assemble Code58 from verified source without signing credentials
+      - name: Assemble Code59 from verified source without signing credentials
         shell: bash
         run: |
           set -euo pipefail
@@ -50,7 +52,7 @@ jobs:
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
-            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=58 \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=59 \
             -PcontinuumLocalRenderUnsigned=true :app:assembleRelease
       - name: Check exact version, ARM64, alignment, signing status and SHA-256
         shell: bash
@@ -59,29 +61,47 @@ jobs:
           apk=app/build/outputs/apk/release/app-release-unsigned.apk
           tools="$ANDROID_HOME/build-tools/35.0.0"
           test -s "$apk"
-          "$tools/aapt2" dump badging "$apk" > /tmp/code58-badging.txt
-          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='58' versionName='0.3.57'" /tmp/code58-badging.txt
-          grep -Fxq "native-code: 'arm64-v8a'" /tmp/code58-badging.txt
+          "$tools/aapt2" dump badging "$apk" > /tmp/code59-badging.txt
+          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='59' versionName='0.3.58'" /tmp/code59-badging.txt
+          grep -Fxq "native-code: 'arm64-v8a'" /tmp/code59-badging.txt
+          grep -Eq "^(sdkVersion|minSdkVersion):'26'$" /tmp/code59-badging.txt
+          grep -Fxq "targetSdkVersion:'36'" /tmp/code59-badging.txt
+          if grep -q '^application-debuggable' /tmp/code59-badging.txt; then exit 1; fi
           "$tools/zipalign" -c -P 16 -v 4 "$apk" > /dev/null
           if "$tools/apksigner" verify "$apk" > /dev/null 2>&1; then
             echo "Refusing unexpectedly signed test artifact" >&2
             exit 1
           fi
-          mkdir -p code58-evidence
-          cp "$apk" code58-evidence/Continuum-Code58-UNSIGNED-NOT-INSTALLABLE.apk
-          sha256sum code58-evidence/Continuum-Code58-UNSIGNED-NOT-INSTALLABLE.apk > code58-evidence/SHA256SUMS.txt
-          printf 'source=%s\nsource_tree=%s\nversionCode=58\nversionName=0.3.57\npackage=at.heinz.deviceai.continuumlocal\nabi=arm64-v8a\nstatus=UNSIGNED_NOT_INSTALLABLE\nfold7_test=NOT_RUN\n' "$GITHUB_SHA" "$(git rev-parse HEAD^{tree})" > code58-evidence/BUILD-INFO.txt
+          mkdir -p code59-evidence
+          python3 -B - "$apk" <<'ELF'
+          import importlib.util, json, os, pathlib, zipfile
+          spec = importlib.util.spec_from_file_location('apk_validator', 'tools/code55-apk/validator.py')
+          validator = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(validator)
+          import sys
+          with zipfile.ZipFile(sys.argv[1]) as archive:
+              assert archive.testzip() is None, 'APK archive integrity'
+              libraries = {n for n in archive.namelist() if n.startswith('lib/') and n.endswith('.so')}
+              assert libraries == validator.EXPECTED_LIBRARIES, libraries
+              results = [validator.check_elf(archive.read(n), n) for n in sorted(libraries)]
+          pathlib.Path('code59-evidence/NATIVE-LIBRARIES.json').write_text(json.dumps({
+              'source_sha': os.environ['GITHUB_SHA'], 'status': 'PASS', 'libraries': results}, indent=2) + '\n')
+          print('CODE59_NATIVE_ELF_16K_PASS', len(results))
+          ELF
+          cp "$apk" code59-evidence/Continuum-Code59-UNSIGNED-NOT-INSTALLABLE.apk
+          sha256sum code59-evidence/Continuum-Code59-UNSIGNED-NOT-INSTALLABLE.apk > code59-evidence/SHA256SUMS.txt
+          printf 'source=%s\nsource_tree=%s\nversionCode=59\nversionName=0.3.58\npackage=at.heinz.deviceai.continuumlocal\nabi=arm64-v8a\nstatus=UNSIGNED_NOT_INSTALLABLE\nfold7_test=NOT_RUN\n' "$GITHUB_SHA" "$(git rev-parse HEAD^{tree})" > code59-evidence/BUILD-INFO.txt
       - name: Save verified unsigned APK
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: Code58-UNSIGNED-NOT-INSTALLABLE
-          path: code58-evidence/
+          name: Code59-UNSIGNED-NOT-INSTALLABLE
+          path: code59-evidence/
           if-no-files-found: error
           retention-days: 14
 
   renderer-preflight:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code58-full-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -111,7 +131,7 @@ jobs:
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
-            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=58 \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=59 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
             -I .github/continuum/code56-renderer-tests.init.gradle \
@@ -126,19 +146,19 @@ jobs:
           assert len(repair) == 6, f'Missing monitor regression cases: {len(repair)}'
           date_cases = [c for c in cases if c.attrib.get('classname') == 'at.heinz.deviceai.cognitive.ProactiveDateTailRegressionTest']
           assert len(date_cases) == 9, f'Missing date-tail regressions: {len(date_cases)}'
-          print(f'CODE58_RENDERER_PREFLIGHT_PASS cases={len(cases)} repair_cases={len(repair)} date_cases={len(date_cases)}')
+          print(f'CODE59_RENDERER_PREFLIGHT_PASS cases={len(cases)} repair_cases={len(repair)} date_cases={len(date_cases)}')
           PY
       - name: Preserve renderer JUnit evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: Code58-Renderer-regressions
+          name: Code59-Renderer-regressions
           path: app/build/test-results/testDebugUnitTest/
           if-no-files-found: warn
           retention-days: 14
 
   full-android:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code58-full-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/release/code59-complete-qa-20261114' || github.ref == 'refs/heads/diagnostic/code59-native-lint-20261114')
     runs-on: ubuntu-latest
     timeout-minutes: 150
     steps:
@@ -155,6 +175,9 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.22.2'
       - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
         with:
           gradle-version: '8.11.1'
@@ -163,21 +186,45 @@ jobs:
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
       - name: Full unfiltered Android and UI regression suite (motion exercised without PNG export)
+        if: github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+        env:
+          CONTINUUM_BACKLOG_ROUNDTRIP_DIR: ${{ runner.temp }}/code59-backlog
+          CONTINUUM_CONTRASTIVE_PARITY_DIR: ${{ runner.temp }}/code59-contrastive
+          CONTINUUM_CRE1_PARITY_DIR: ${{ runner.temp }}/code59-cre1
+        run: |
+          set -euo pipefail
+          mkdir -p app/build/reports
+          node .github/continuum/backlog-fixtures.mjs roundtrip-prepare "$CONTINUUM_BACKLOG_ROUNDTRIP_DIR" | tee app/build/reports/code59-parity-prepare.log
+          node .github/continuum/contrastive-parity.mjs prepare "$CONTINUUM_CONTRASTIVE_PARITY_DIR" | tee -a app/build/reports/code59-parity-prepare.log
+          node .github/continuum/cre-parity.mjs prepare "$CONTINUUM_CRE1_PARITY_DIR" | tee -a app/build/reports/code59-parity-prepare.log
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=59 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            :app:testDebugUnitTest
+          node .github/continuum/backlog-fixtures.mjs roundtrip-verify "$CONTINUUM_BACKLOG_ROUNDTRIP_DIR" | tee app/build/reports/code59-parity-verify.log
+          node .github/continuum/contrastive-parity.mjs verify "$CONTINUUM_CONTRASTIVE_PARITY_DIR" | tee -a app/build/reports/code59-parity-verify.log
+          node .github/continuum/cre-parity.mjs verify "$CONTINUUM_CRE1_PARITY_DIR" | tee -a app/build/reports/code59-parity-verify.log
+      - name: Diagnose actual snapshot and launch regressions
+        if: github.ref == 'refs/heads/diagnostic/code59-native-lint-20261114'
         run: |
           set -euo pipefail
           unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
-            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=58 \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=59 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
-            :app:testDebugUnitTest
+            -I .github/continuum/code59-targeted-tests.init.gradle :app:testDebugUnitTest
       - name: Require exact declared skip policy
-        if: always()
+        if: ${{ always() && github.ref == 'refs/heads/release/code59-complete-qa-20261114' }}
         run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
-      - name: Require Code58 regression coverage
-        if: always()
+      - name: Require Code59 regression coverage
+        if: ${{ always() && github.ref == 'refs/heads/release/code59-complete-qa-20261114' }}
         run: |
           python3 - <<'PY'
           import pathlib, xml.etree.ElementTree as ET
@@ -239,31 +286,329 @@ jobs:
               'clockUnitsCannotHideInvalidTails',
               'countUnitsCannotHideIdentifiers'
           )}
+          required |= {('OwnerAppActionWorkSceneUiTest', name) for name in (
+              'approvedSplitScreenLaunchStartsComputerWithoutRefocusingCockpit',
+              'approvedLaunchDoesNotStartComputerAfterCockpitStops',
+              'approvedFullscreenLaunchWaitsForCockpitReturn',
+              'ownerStopDuringSplitScreenLaunchRejectsLateCallback',
+              'failedSplitScreenLaunchCannotRequestComputerConsent'
+          )}
+          required |= {('OwnerComputerIntentParserTest', name) for name in (
+              'messageDestinationPrepositionsDoNotBecomeRecipientText',
+              'perAndViaPreserveDraftBodyAndSeparateSendApproval',
+              'destinationPrepositionsCannotBypassNegationOrAmbiguity'
+          )}
+          required.add(('OwnerComputerTaskGrantTest','parsedDestinationKeepsExistingDraftAndSendProtected'))
+          required |= {('ContinuumUiSnapshotUiTest', name) for name in (
+              'successfulSavePublishesClosedPngAndJson',
+              'nullImageStreamRemovesPendingRow',
+              'imageAccessDenialLeavesNoPendingRow',
+              'failedPngEncodingRemovesPendingRow',
+              'imageStreamCloseFailureRemovesPendingRow',
+              'nullMetadataStreamRemovesBothRows',
+              'metadataWriteFailureRemovesBothRows',
+              'publishFailureRemovesBothRows',
+              'rollbackFailurePreservesCauseAndAttemptsOtherRow',
+              'unavailableOptionalMetadataKeepsValidImage',
+              'oldAndroidDoesNotCreateRows'
+          )}
+          required |= {('OwnerFactRevocationUiTest', name) for name in (
+              'confirmedDeletionCancelsPausedOwnerReply',
+              'confirmedDeletionRejectsLateToolProposal',
+              'cancelledDeletionPreservesPendingReplyAndFacts',
+              'queuedDeletionBlocksReplacementRequestUntilRevocation',
+              'replacementActivityWaitsForOriginalDeletionAndCanRememberAgain',
+              'failedLedgerDeletionReleasesAdmissionAndCanBeRetried',
+              'unrelatedModelDiagnosticSurvivesDeletion',
+              'unrelatedCodingPlanningSurvivesDeletion',
+              'queuedRememberedAnswerCannotOutliveRevocation',
+              'newerOwnerRequestKeepsActualMemoryWriteReceipt'
+          )}
+          required |= {('ContinuumContrastiveParityTest','actualNodeKotlinNodeTrainingParity'),
+                       ('FirstThinkingRunE2ETest','schritt1b_ziel_turnLifecycleQuittiertGenauEinmal'),
+                       ('FirstThinkingRunE2ETest','schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope'),
+                       ('FirstThinkingRunE2ETest','schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert'),
+                       ('ChiefPatternE2ETest','s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack'),
+                       ('ContinuumContrastiveParityTest','actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds'),
+                       ('Cre1InferenceEncoderTest','trainedNodeCheckpointMatchesKotlinFeaturesAndScores'),
+                       ('DevelopmentBacklogRoundtripTest','kotlinChangesNodeWrittenBacklogWithTheSharedRules')}
+          required.add(('ChiefPatternE2ETest','s5b_textFileSkillLibraryRechecksApprovalBetweenWorkerStages'))
+          required.add(('RoutineRestartIdentityTest','recreatedDispatcherNeverReusesRunOrMessageIdentity'))
+          required |= {('AvatarLiveDiagnosticsTest', name) for name in (
+              'submittedFrameWithoutConsumerUpdateCannotClaimLive',
+              'deterministicProofCoversIdleBlinkGazeSpeechThinkingAndCard',
+              'proofOutputsStayBounded',
+              'proofCompletionRequiresCallbacksCanvasAndConsumerTrace',
+              'currentProofCannotBorrowLiveTraceFromAnEarlierRun',
+              'traceNamesTheBrokenStageInsteadOfGuessing',
+              'consumerEvidenceRequiresCallbackAndTimestampAdvanceOnTheBoundSurface',
+              'replacementAndReleaseRejectPreviousSurfaceEvidence',
+              'resizedSameSurfaceCannotReusePreviousGenerationReceipts',
+              'newSubmissionCannotBorrowEarlierConsumerUpdate',
+              'consumerReceiptExpiresWithTheBoundedTraceWindow',
+              'motionWindowReportsUpdatesAndTimestampProgressSeparately'
+          )}
+          required |= {('ContinuumAvatar3dLifecycleUiTest', name) for name in (
+              'textureResizeSynchronizesBeforeFrameworkSurfaceCallback',
+              'headAndStageLayoutsResizeOnlyChangedTextureDimensions',
+              'legacyEnabledHeadUpgradesButExplicitOrbAnd2dStayChosen',
+              'defaultOrbAndPausedOptional3dNeverStartAssetOrNativeWork',
+              'actualFailureReportsUnavailabilityAndRetainsSingleLifecycleClock',
+              'pauseMotionAndReattachmentResumeOnlyFreshMonotonicGaze'
+          )}
+          required |= {('BoundedThinkingMemoryTest', name) for name in (
+              'modelStepReadsChangedProviderAfterRealToolResult',
+              'ownerRevocationClearsThinkingJournalBeforeFreshRecall',
+              'revokedInstancesCannotAppendAndNewOwnerRunsRemainAllowed',
+              'unclearedThinkingJournalPreventsLedgerRevocation',
+              'ownerRecallRefreshesBetweenActualStepsAndJournalPreservesOutcomeScope',
+              'deniedToolCannotBecomeSuccessfulThinkingOutcome',
+              'replayedToolReceiptCannotCreateFreshThinkingEvidence',
+              'lateScreenObservationDiscardsEarlierBufferedThinkingSteps',
+              'incompleteOwnerResponseCreatesNoThinkingJournal',
+              'revocationDuringPausedModelRejectsLateToolAndBufferedJournal',
+              'journalWriteFailureRetainsRealTaskResultWithoutClaimingPersistence',
+              'ownerRecallAliasesCannotDisplaceExistingProviderEvidence'
+          )}
+          required |= {('OwnerFactRevocationUiTest', name) for name in (
+              'confirmedDeletionClearsThinkingJournalAndRejectsLateReflection',
+              'thinkingJournalFailureCannotReportSuccessfulOwnerRevocation'
+          )}
+          required.add(('FirstThinkingRunE2ETest','schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch'))
+          required.add(('FirstThinkingRunE2ETest','schritt6b_lernen_hypotheseUndTagebuchEintrag'))
+          required |= {('RoutineDeliveryTest', name) for name in (
+              'fullMailboxRetainsCompletedEventResult',
+              'fullMailboxRetainsBlockedEventResult',
+              'fullMailboxRetainsFailedEventResult',
+              'pendingDeliveryKeepsRoutineClaimAndPreventsWorkerReplay',
+              'allValidLongRoutineIdsDeliverWithinExistingMailboxBounds',
+              'removingAndReaddingRoutineDiscardsOnlyItsOldPendingReport',
+              'lateRemovedWorkerCannotAcknowledgeReplacementClaim',
+              'urgentRetryKeepsStableMessageAndClaimThroughReentrantWake',
+              'delayedDeliveryAdvancesScheduleOnlyAfterMailboxAccepts'
+          )}
+          required |= {('RoutineStateStoreTest', name) for name in (
+              'approvedScopeAndCompletedReportSurviveReopen',
+              'changedGoalScopeOrTriggerInvalidatesOriginalApproval',
+              'staleWriterCannotRestoreStoppedRoutine',
+              'alteredPayloadFailsClosedWithoutDeletingEvidence',
+              'symlinkCannotRedirectRoutineWrites',
+              'nonReadOnlyScopeAndMismatchedRunAreRejected',
+              'pendingMessageAndAppendCheckpointRemainBoundToOriginalReport'
+          )}
+          required |= {('RoutineStoreIndependentContractTest', name) for name in (
+              'secondJsonLineCannotPiggybackOnBoundAssistantLine',
+              'trailingTextCannotPiggybackOnBoundAssistantLine',
+              'senderMustMatchStoredRoutineIdentity',
+              'activeRunsCannotShareDurableIdentity',
+              'deliveryCannotBeAcknowledgedWithoutBoundAppendBytes',
+              'invalidSurrogateIsRejectedBeforeReplacingReadableState'
+          )}
+          required |= {('PersistentRoutineDeliveryTest', name) for name in (
+              'completedResultRestoresWithoutRepeatingTool',
+              'fullMailboxRetainsOriginalResultAndClaimAcrossReopen',
+              'restoredRunningClaimIsReportedUncertainWithoutRedispatch',
+              'completionWriteFailureRetriesOnlyTheFinishedReport',
+              'ownerStopRevokesRunningClaimBeforeLateResult',
+              'nextPeriodUsesFreshPlanAndUniqueDurableReceipts',
+              'restoredOutboxRechecksRevocationAfterUrgentWake',
+              'digestAdapterFailureStillProducesDurableCompletion'
+          )}
+          required.add(('RoutineRevokedAdmissionContractTest', 'admissionCallbackRevocationPreventsLaterToolStart'))
+          required |= {('RoutineChatDeliveryTest', name) for name in (
+              'durableMessageIsWrittenOnceAndAcknowledgedAfterAppend',
+              'completedAppendBeforeProcessLossIsProvedWithoutDuplicate',
+              'tornAppendIsCompletedAtItsOriginalOffset',
+              'failedAcknowledgementRetainsProofForLaterDelivery',
+              'revokedRoutineCannotWriteQueuedMessage',
+              'deletedConversationIsNotRecreatedByRecovery',
+              'conflictingTranscriptBytesArePreservedAndRemainUnacknowledged',
+              'tornOlderTailGetsOnlyOneSeparatorAndOneMessage',
+              'checkpointCannotWriteAdditionalRecordsOrMalformedUnicode'
+          )}
+          required |= {('OwnerRoutineCommandsTest', name) for name in (
+              'concreteIntervalAndConditionRemainBoundToTheApprovedGoal',
+              'unsupportedExtraWorkAndConditionsNeverBecomeSimpleBatteryReads',
+              'onlyTheExplicitAppStartEventAndLegalIntervalsAreAdmitted',
+              'actualReadOnlyPlanScopesAreFreshAndLimited',
+              'lowBatteryConditionRejectsUnverifiedOrNonmatchingMeasurements',
+              'storageTimeDoesNotInventChangeButOriginalResultRemainsAvailable'
+          )}
+          required.add(('OwnerRoutineConditionalDeliveryTest', 'batteryThresholdKeepsSilentReadingsAndReportsOnlyNewLowReadings'))
+          required |= {('RoutineChatDeliveryTest', name) for name in (
+              'displayedCompleteRecordWithoutFinalNewlineKeepsItsReadBoundary',
+              'readSnapshotBoundaryDoesNotAdvanceWithLaterAppend'
+          )}
+          required.add(('ShizukuBridgeLifecycleTest', 'grantedOnlyBridgeNeverOpensPermissionDialogAfterRevocation'))
+          required |= {('OwnerRoutineRuntimeUiTest', name) for name in (
+              'realJobReadsLowBatteryAndKeepsPersistedDueTime',
+              'onStopJobRevokesWaitingGenerationBeforeAnyDeviceRead',
+              'ownerStopDuringAndroidAdmissionPreventsTheActualBatteryRead',
+              'notStopRecheckedAfterResourceObservationBlocksToolStart',
+              'realAndroidLowMemoryBlocksBeforeToolReceipt',
+              'deniedShizukuIsReportedWithoutRequestingNewPermission',
+              'actualThermalAdmissionBlocksBeforeWorkerTools',
+              'firstPausedProcessRestoresFinishedReportWithoutWorkerReplay',
+              'delayedShellDispatchCannotStartAfterRoutineRevocation',
+              'persistentFailureAfterPartialAdmissionCancelsTheFinishedJobGeneration',
+              'trustedFilesParentAliasWorksButInnerRoutineLinkIsRejected'
+          )}
+          required |= {('OwnerRoutineActivityUiTest', name) for name in (
+              'actualConfirmationCancelLeavesNoPersistentRoutine',
+              'actualConfirmationRunsBatteryAndListsThenStopsWithoutCancellingOwnerTurn',
+              'unsupportedConditionalGoalNeverOpensApprovalOrExecutes',
+              'explicitRoutineControlsEndTheRealAppNameQuestion',
+              'editableBotNamedRoutineKeepsColonAndCommaAddressingBeforeOwnerCommands',
+              'appendDuringPauseAppearsOnceWhenTheSameOwnerViewReturns',
+              'lateDeliveryStaysOutOfPrivateBotViewAndDifferentOwnerConversation',
+              'destroyedViewDropsLateCallbackAndReplacementRestoresDurableMessageOnce',
+              'recoveredCompleteJsonWithoutNewlineIsNotDisplayedTwice',
+              'deletedBoundChatDoesNotBlockIndependentLaterReport',
+              'urgentWakeDuringOlderDrainIsRetriedOnceAfterThatDrain',
+              'innerChatLinkIsRejectedWithoutWritingOutsideAppHistory',
+              'actualRotationAndSavedActivityRecreationDoNotTriggerAppStartAgain'
+          )}
+          required |= {('ChiefBotConversationTest', name) for name in (
+              'privateNotePromptPreservesStoredSnapshotDate',
+              'retainedConversationPromptDatesWholeSnapshotAndNeverIndividualTurns'
+          )}
+          required |= {('ChiefBotPrivateMemoryTest', name) for name in (
+              'datedCurrentRecordsSurviveReopenAndRemainPrivate',
+              'searchUsesCurrentPointersAndNeverResurrectsClearedObjects',
+              'contentDedupKeepsOriginalDateAndSearchHonorsTimeBounds',
+              'corruptCurrentRecordFailsWithoutFallingBackToOlderPrivateContent'
+          )}
+          required |= {('ContinuumBotRosterStorageUiTest', name) for name in (
+              'privateSearchShowsActualDatesAndOnlyTheSelectedBotsCurrentRecords',
+              'clearingNoteThroughExistingEditorRemovesItFromReopenedPrivateSearch',
+              'closedPrivateSearchDoesNotPresentItsQueuedStorageResult'
+          )}
+          required |= {('ChiefBotSharedKnowledgeTest', name) for name in (
+              'explicitSubsetReachesBothRealWorkerPromptsWithoutPrivateOrUnselectedContent',
+              'ownerTaskApprovalAloneNeverSharesStoredFacts',
+              'reviewExcludesHypothesesAndRevokedFactsAndNeedsExplicitSubsetApproval',
+              'changedRequestAndRecipientProfileRejectGrantBeforeAnyModelOrTask',
+              'invalidatedAdmissionAndChangedTeamRequireFreshDisplayedSelection',
+              'ownerRevocationInvalidatesQueuedGrantBeforeLedgerWriteWithoutCancellingOtherSelection',
+              'ownerRevocationInvalidatesPendingSelectionBeforeItsApprovalStarts',
+              'approvalCannotBeTransferredToReopenedTeamOrAnotherOwnerStore',
+              'selectedFactRevocationCancelsPausedModelAndRejectsActualLateReply',
+              'unrelatedFactAndOtherOwnerDirectoryDoNotCancelApprovedRun',
+              'withdrawnSelectionRejectsLateReplyWithoutChangingOwnerFacts',
+              'reconfirmingFactNeverRevivesOldGrantButAllowsFreshExplicitTask',
+              'revokedPreviewCannotApproveAndOversizedSelectionIsNeverSilentlyClipped'
+          )}
+          required |= {('ContinuumBotSharedKnowledgeUiTest', name) for name in (
+              'explicitFactSelectionAndSeparateTaskConsentReachActualTeamPrompts',
+              'cancellingFactPickerKeepsTaskApprovalFreeOfStoredFacts',
+              'editingAndRestoringTaskInvalidatesEarlierFactSelection',
+              'discardDuringQueuedApprovalCannotRestoreWithdrawnSharing',
+              'changedAndRestoredTaskDuringQueuedApprovalStillRequiresNewSelection',
+              'closedDraftCannotStartOrRedisplayAfterQueuedApproval',
+              'sourceRevokedBeforeApprovalIsRejectedWithoutImplicitSharing'
+          )}
+          required |= {('OwnerFactRevocationUiTest', name) for name in (
+              'confirmedDeletionRevokesSharedTeamBeforeQueuedLedgerWriteAndRejectsLateReply',
+              'confirmedDeletionRejectsPreviouslyQueuedSharedTeamBeforeEitherExecutorCompletes'
+          )}
+          required.add(('ChiefPatternE2ETest', 's4b_datedPrivateRecordsAndApprovedSharedFactsUseRealWorkerPrompts'))
+          required |= {('ChiefBotFollowupTest', name) for name in (
+              'completedProposalNeedsFreshApprovalAndRunsExactlyTwoNewWorkers',
+              'followupDoesNotInheritThePreviousSharedFactsOrGrant',
+              'chiefRejectsUnknownCapabilityRiskyToolsAndDuplicateGoal',
+              'currentModelAndPersistedBudgetAreCheckedBeforeNewAdmission',
+              'queuedDraftRejectsStopSessionProfileAndEditedGoal',
+              'deterministicFollowupIdentityPreventsReplayAfterReopen',
+              'deletedSourceAndChangedTeamCannotAuthorizeOldDraft',
+              'stopDuringFollowupRejectsLateModelResultAndFurtherReview',
+              'ownerSessionChangeRejectsAlreadyRunningLateResult'
+          )}
+          required |= {('ChiefWorkerFollowupTest', name) for name in (
+              'optionalEnvelopeIsStrictAndCannotImportAuthorityFields',
+              'typedProposalDefensivelyCopiesScopeAndRejectsMalformedText',
+              'realAgentJobReturnsOneTypedReportWithoutStartingTheProposedTask',
+              'rejectedEvaluationDoesNotDeliverWorkerFollowup',
+              'ephemeralScreenOutcomeCannotBecomeDurableFollowup'
+          )}
+          required |= {('ContinuumBotFollowupUiTest', name) for name in (
+              'actualResultCardOpensBoundNewDraftAndNeedsFreshUncheckedConsent',
+              'unsupportedToolProposalShowsChiefRejectionWithoutNewDraftOrWork',
+              'ownerSessionChangeInvalidatesVisibleApprovalBeforeCallback',
+              'stopBetweenAcceptedUiAndQueuedSubmitStartsNoNewModel',
+              'closingDuringChiefReviewCannotReopenOrExecuteTheOldDraft',
+              'stopDiscardMakesRetainedApprovalButtonInert'
+          )}
+          required |= {('OwnerAppPlanningContextUiTest', name) for name in (
+              'activityStopDiscardsUnsubmittedFollowupAndRejectsRetainedButton',
+              'actualNewConversationDiscardsTheOldFollowupDraft'
+          )}
+          required.add(('FirstThinkingRunE2ETest', 'schritt7b_workerProposalReachesChiefAndRunsOnlyAfterNewOwnerApproval'))
+          required |= {('RoutineCancelledClaimTest', name) for name in (
+              'interruptedPeriodicClaimPreservesStoreAndAllowsFreshRun',
+              'interruptedEventClaimPreservesStoreAndAllowsFreshRun',
+              'periodicAdmissionRechecksGenerationAfterBookWait',
+              'eventAdmissionRechecksGenerationAfterBookWait')}
+          required |= {('OwnerRoutineRuntimeUiTest', name) for name in (
+              'onStopJobDuringStartedClaimPreservesDurableState',
+              'onDestroyDuringStartedClaimPreservesDurableState')}
+          required |= {('ChiefPatternE2ETest', name) for name in (
+              's6_approvedRoutineKeepsItsScheduleAndDeliversOnlyNewLowReadingsAcrossReopen',
+              's7_urgentWorkerReportWakesChiefWhileInfoWaitsAndNeitherGrantsTools')}
+          required.add(('ChiefResourceAdmissionUiTest', 's8d_realResourceAdmissionStopsNewToolsButDeliversFinishedReports'))
+          required |= {('LocalModelHostMemoryUiTest', name) for name in (
+              'loadedChatRechecksLowMemoryBeforeNativeDelegation',
+              'loadedThinkingRechecksLowMemoryBeforeNativeDelegation',
+              'loadedToolContinuationRechecksLowMemoryBeforeNativeDelegation',
+              'unavailableOrUnreadableMemoryBlocksEveryEntryWithoutUnloading',
+              'unavailableThermalStatusStillChecksActualMemory',
+              'thermalAdmissionAndRunningCancellationRemainEffective',
+              'ownerCancellationStillReachesAnAlreadyRunningNativeGeneration',
+              'rejectedConcurrentCallerCannotReplaceTheRunningNativeOwner')}
+          required |= {('LocalModelThermalGuardTest', name) for name in (
+              'generationDoesNotStartWhileAndroidReportsSevereHeat',
+              'runningGenerationStopsWhenAndroidReportsSevereHeat',
+              'coolDeviceAndUnknownStatusKeepTheNormalPath',
+              'rejectedSecondStartKeepsTheHeatReasonForTheRunningAnswer',
+              'severeCallbackDuringSamplingRejectsStaleCoolReadingForEveryEntryPoint',
+              'heatBeforeNativeAdmissionStopsOnceAfterStartForEveryEntryPoint',
+              'admittedBlockingStartCanBeStoppedWithoutHoldingGuardLock',
+              'rejectedNativeStartReleasesOwnershipForCoolOwnerRetry',
+              'thermalCancellationKeepsOwnershipUntilNativeCancelReturns',
+              'latchedHeatRejectsSuccessWhenNativeCompletionWinsCancellation')}
+          required |= {('LocalModelLoadAdmissionTest', name) for name in (
+              'severeThermalStateRefusesNativeLoad',
+              'androidLowMemoryStateRefusesNativeLoad',
+              'modelThatCannotStayResidentInPhysicalRamIsRefused',
+              'missingTelemetryFailsClosedInsteadOfGuessing',
+              'healthyFold7ClassDeviceStillLoadsTheOriginalGemma',
+              'unknownThermalOnOldAndroidDoesNotBlockButMemoryStillChecked')}
           assert required <= names, f'Missing regression cases: {required - names}'
-          print(f'CODE58_REQUIRED_REGRESSIONS_PASS={len(required)}')
+          print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
-      - name: Android lint
+      - name: Full Android lint
         if: ${{ !cancelled() }}
         run: |
           set -euo pipefail
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
-            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=58 \
-            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true :app:lintDebug
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=59 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I .github/continuum/full-lint.init.gradle :app:lintDebug
       - name: Preserve real test and lint evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: Code58-Android-full-QA
+          name: Code59-Android-full-QA
           path: |
             app/build/test-results/testDebugUnitTest/
             app/build/reports/lint-results-debug.*
+            app/build/reports/code59-parity-*.log
           if-no-files-found: warn
           retention-days: 14
 
   node-backend:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code58-full-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -280,8 +625,8 @@ jobs:
       - name: Full Node QA and critical contracts
         run: |
           set -euo pipefail
-          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code58-critical"
-          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code58-full"
+          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code59-critical"
+          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code59-full"
       - name: Backend checks
         run: |
           set -euo pipefail
@@ -292,9 +637,369 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: Code58-Node-backend-QA
+          name: Code59-Node-backend-QA
           path: |
-            ${{ runner.temp }}/code58-critical/
-            ${{ runner.temp }}/code58-full/
+            ${{ runner.temp }}/code59-critical/
+            ${{ runner.temp }}/code59-full/
           if-no-files-found: warn
           retention-days: 14
+
+  native-runtime:
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/release/code59-complete-qa-20261114' || github.ref == 'refs/heads/diagnostic/code59-native-lint-20261114')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Freeze native probe source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        with:
+          gradle-version: '8.11.1'
+      - name: Install emulator debugger and local display
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo -n apt-get update
+          sudo -n apt-get install --yes --no-install-recommends gdb xvfb
+          debugger_evidence="$RUNNER_TEMP/code59-native-pdf"
+          mkdir -p "$debugger_evidence"
+          command -v gdb > "$debugger_evidence/gdb-installed-path.txt"
+          timeout 10 gdb --version > "$debugger_evidence/gdb-installed-version.txt" 2>&1
+          test -s "$debugger_evidence/gdb-installed-version.txt"
+          command -v Xvfb > "$debugger_evidence/xvfb-installed-path.txt"
+          dpkg-query --show --showformat='${Package} ${Version}\n' xvfb > "$debugger_evidence/xvfb-installed-version.txt"
+      - name: Install official native Android runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0' 'emulator' 'system-images;android-35;google_apis;x86_64'
+          emulator_archive="$RUNNER_TEMP/code59-emulator-37.1.11.zip"
+          emulator_root="$RUNNER_TEMP/code59-emulator-37.1.11"
+          emulator_evidence="$RUNNER_TEMP/code59-native-pdf"
+          mkdir -p "$emulator_root" "$emulator_evidence"
+          printf '%s\n' \
+            'version=37.1.11' \
+            'build=15917651' \
+            'url=https://dl.google.com/android/repository/emulator-linux_x64-15917651.zip' \
+            'sha256=95771e0ae431897b2a4bd2d97fa095f29a8b0624a7b216baf529f9306161c266' \
+            'pin_source=https://github.com/dotnet/android/blob/e766c8d60ad90114094fc053b978a40f3431306f/Configuration.props' \
+            'regression_source=https://chromium.googlesource.com/chromium/src/tools/android/+/0d2c7590ad90c5e3e5390a1d732ef2b2305d343d' \
+            > "$emulator_evidence/emulator-pin.txt"
+          curl --fail --location --retry 3 --connect-timeout 15 --max-time 180 \
+            --proto '=https' --proto-redir '=https' \
+            'https://dl.google.com/android/repository/emulator-linux_x64-15917651.zip' \
+            --output "$emulator_archive"
+          printf '%s  %s\n' '95771e0ae431897b2a4bd2d97fa095f29a8b0624a7b216baf529f9306161c266' \
+            "$emulator_archive" | sha256sum --check --strict
+          sha256sum "$emulator_archive" > "$emulator_evidence/emulator-archive-sha256.txt"
+          unzip -q "$emulator_archive" -d "$emulator_root"
+          test -x "$emulator_root/emulator/emulator"
+          grep -Eq '^Pkg.Revision[[:space:]]*=[[:space:]]*37\.1\.11[[:space:]]*$' \
+            "$emulator_root/emulator/source.properties"
+          export CODE59_EMULATOR_BIN="$emulator_root/emulator/emulator"
+          "$CODE59_EMULATOR_BIN" -no-window -version > "$emulator_evidence/emulator-pin-version.txt" 2>&1
+          grep -Eq 'Android emulator version 37\.1\.11(\.0)? \(build_id 15917651\)' \
+            "$emulator_evidence/emulator-pin-version.txt"
+          printf 'CODE59_EMULATOR_BIN=%s\n' "$CODE59_EMULATOR_BIN" >> "$GITHUB_ENV"
+          export ANDROID_USER_HOME="$RUNNER_TEMP/continuum-native-user"
+          export ANDROID_AVD_HOME="$ANDROID_USER_HOME/avd"
+          mkdir -p "$ANDROID_AVD_HOME"
+          printf 'ANDROID_USER_HOME=%s\n' "$ANDROID_USER_HOME" >> "$GITHUB_ENV"
+          printf 'ANDROID_AVD_HOME=%s\n' "$ANDROID_AVD_HOME" >> "$GITHUB_ENV"
+          printf 'no\n' | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd \
+            --name continuum-native-pdf --package 'system-images;android-35;google_apis;x86_64' \
+            --device pixel_7 --path "$ANDROID_AVD_HOME/continuum-native-pdf.avd"
+          test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
+          test "$("$CODE59_EMULATOR_BIN" -list-avds | tr -d '\r')" = continuum-native-pdf
+      - name: Verify surface evidence validator
+        run: |
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_hologram_*.py' -v
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_routines*.py' -v
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_web_offline.py' -v
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_xvfb.py' -v
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_app_navigation.py' -v
+      - name: Build disposable native test APKs
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            :app:assembleDebug :app:assembleDebugAndroidTest
+      - name: Verify native PDF, Filament and real app lifecycle
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/code59-native-pdf"
+          mkdir -p "$evidence"
+          : "${ANDROID_USER_HOME:?Native user directory missing}"
+          : "${ANDROID_AVD_HOME:?Native AVD directory missing}"
+          test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
+          test -s "$ANDROID_AVD_HOME/continuum-native-pdf.avd/config.ini"
+          test -c /dev/kvm
+          host_crash="$evidence/host-crash"
+          mkdir "$host_crash"
+          crash_database="$host_crash/database"
+          mkdir "$crash_database"
+          crashreport_bin="$(dirname "$CODE59_EMULATOR_BIN")/crashreport"
+          test -x "$crashreport_bin"
+          printf '%s  %s\n' '4bd4cfe83403c82ab618163f4311bf4aa2418d7c64029133f2627e50e4f65008' "$crashreport_bin" \
+            | sha256sum --check --strict > "$host_crash/tool-sha256-check.txt"
+          sha256sum "$crashreport_bin" > "$host_crash/tool-sha256.txt"
+          if timeout 10 "$crashreport_bin" -h > "$host_crash/tool-help.txt" 2>&1; then
+            printf '0\n' > "$host_crash/tool-help-exit.txt"
+          else
+            tool_exit=$?
+            printf '%s\n' "$tool_exit" > "$host_crash/tool-help-exit.txt"
+            exit "$tool_exit"
+          fi
+          cat /proc/sys/kernel/core_pattern > "$host_crash/core-pattern.txt"
+          ulimit -c > "$host_crash/core-limit.txt"
+          original_kvm_group="$(stat -c '%g' /dev/kvm)"
+          original_kvm_mode="$(stat -c '%a' /dev/kvm)"
+          emulator_pid=''
+          xvfb_pid=''
+          xvfb_bin="$(readlink -f "$(command -v Xvfb)")"
+          xvfb_evidence="$evidence/xvfb"
+          mkdir "$xvfb_evidence"
+          cleanup() {
+            native_exit=$?
+            if (( native_exit != 0 )) && [[ -f "$evidence/emulator.log" ]]; then
+              cat "$evidence/emulator.log" || true
+              python3 - "$host_crash" "$crashreport_bin" "$emulator_pid" "$native_exit" <<'PY' || true
+          import datetime, hashlib, json, os, pathlib, re, shutil, subprocess, sys
+          directory = pathlib.Path(sys.argv[1])
+          database = (directory / 'database').resolve()
+          report = {'emulator_pid': sys.argv[3], 'native_exit': int(sys.argv[4]),
+                    'scope': 'OWN_EMULATOR_CRASHPAD_ONLY', 'dumps': []}
+          try:
+              for dump in sorted(database.rglob('*.dmp')):
+                  if dump.is_symlink() or not dump.is_file() or not dump.resolve().is_relative_to(database):
+                      raise ValueError('Unexpected crash dump path')
+                  with dump.open('rb') as stream:
+                      digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+                  item = {'file': str(dump.relative_to(directory)), 'bytes': dump.stat().st_size,
+                          'sha256': digest}
+                  report['dumps'].append(item)
+                  try:
+                      result = subprocess.run([sys.argv[2], '-d', str(dump)],
+                          capture_output=True, text=True, errors='replace', timeout=30)
+                      item['processor_exit'] = result.returncode
+                      stack = result.stdout.partition('Module annotations:')[0]
+                      (directory / (dump.stem + '-stack.txt')).write_text(stack)
+                      (directory / (dump.stem + '-processor-stderr.txt')).write_text(result.stderr)
+                      item['annotations_omitted_from_stack'] = 'Module annotations:' in result.stdout
+                  except Exception as error:
+                      item['processor_error'] = str(error)
+              report['collection_status'] = 'CAPTURED' if report['dumps'] else 'NO_DUMP'
+          except Exception as error:
+              report['collection_status'] = 'FAILED'
+              report['collection_error'] = str(error)
+          systemd = {'status': 'NOT_NEEDED', 'commands': []}
+          report['systemd'] = systemd
+          if not report['dumps']:
+              systemd['status'] = 'NO_CORE'
+              def run_command(label, argv, seconds):
+                  item = {'name': label, 'argv': argv}
+                  systemd['commands'].append(item)
+                  try:
+                      with (directory / (label + '-stdout.txt')).open('w') as output, \
+                           (directory / (label + '-stderr.txt')).open('w') as error:
+                          result = subprocess.run(argv, stdout=output, stderr=error, timeout=seconds)
+                      item['exit'] = result.returncode
+                      return result.returncode
+                  except Exception as error:
+                      item['error'] = str(error)
+                      return None
+              try:
+                  ctl, debugger = shutil.which('coredumpctl'), shutil.which('gdb')
+                  systemd['tools'] = {'coredumpctl': ctl, 'gdb': debugger}
+                  if ctl:
+                      run_command('systemd-tool-version', [ctl, '--version'], 10)
+                  if debugger:
+                      run_command('systemd-debugger-version', [debugger, '--version'], 10)
+                  pid = (directory / 'emulator-pid.txt').read_text().strip()
+                  uid = (directory / 'emulator-uid.txt').read_text().strip()
+                  launch = (directory / 'emulator-launch-utc.txt').read_text().strip()
+                  datetime.datetime.strptime(launch, '%Y-%m-%d %H:%M:%S UTC')
+                  executable = pathlib.Path((directory / 'emulator-executable.txt').read_text().strip())
+                  assert re.fullmatch('[1-9][0-9]*', pid) and pid == sys.argv[3]
+                  assert uid == str(os.getuid()) and executable.is_absolute()
+                  assert executable.resolve().is_relative_to(pathlib.Path(sys.argv[2]).resolve().parent / 'qemu')
+                  matches = ['COREDUMP_PID=' + pid, 'COREDUMP_UID=' + uid, 'COREDUMP_EXE=' + str(executable)]
+                  systemd['matches'], systemd['since_utc'] = matches, launch
+                  if ctl is None:
+                      systemd['reason'] = 'coredumpctl unavailable'
+                  else:
+                      prefix = [] if os.geteuid() == 0 else ['sudo', '-n']
+                      base = [ctl, '--no-pager', '--since=' + launch]
+                      if run_command('systemd-info', prefix + base + ['info'] + matches, 30) == 0:
+                          systemd['status'] = 'CORE_INFO_CAPTURED'
+                          if debugger is None:
+                              systemd['reason'] = 'gdb unavailable; metadata retained'
+                          else:
+                              arguments = "-nx -q -batch -iex 'set auto-load off' " \
+                                  "-iex 'set debuginfod enabled off' -iex 'set print frame-arguments none' " \
+                                  "-iex 'set print entry-values no' -ex 'thread apply all bt 64'"
+                              timeout = shutil.which('timeout')
+                              assert timeout, 'GNU timeout unavailable'
+                              systemd['tools']['timeout'] = timeout
+                              systemd['debug_deadline_seconds'] = 45
+                              command = prefix + [timeout, '--signal=TERM', '--kill-after=2s', '43s'] + base
+                              code = run_command('systemd-debug', command + ['--debugger=' + debugger,
+                                  '--debugger-arguments=' + arguments, 'debug'] + matches, None)
+                              output = (directory / 'systemd-debug-stdout.txt').read_text(errors='replace')
+                              systemd['debug_has_frames'] = bool(re.search(r'^\s*#\d+\s', output, re.M))
+                              if code == 0 and systemd['debug_has_frames']:
+                                  systemd['status'] = 'STACK_CAPTURED'
+                      else:
+                          systemd['reason'] = 'matching core metadata not retrieved; inspect command status'
+              except Exception as error:
+                  systemd['error'] = str(error)
+          (directory / 'COLLECTION.json').write_text(json.dumps(report, indent=2) + '\n')
+          PY
+            fi
+            if [[ -n "$emulator_pid" ]]; then
+              timeout 10 "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 emu kill || true
+              kill "$emulator_pid" 2>/dev/null || true
+            fi
+            if [[ -n "$xvfb_pid" ]]; then
+              if python3 -B tools/code55-apk/native_xvfb.py stop "$xvfb_pid" "$xvfb_bin" "$xvfb_evidence"; then
+                if wait "$xvfb_pid"; then
+                  printf '0\n' > "$xvfb_evidence/reaped-exit.txt"
+                else
+                  printf '%s\n' "$?" > "$xvfb_evidence/reaped-exit.txt"
+                fi
+              elif (( native_exit == 0 )); then
+                native_exit=1
+              fi
+            fi
+            sudo chgrp "$original_kvm_group" /dev/kvm
+            sudo chmod "$original_kvm_mode" /dev/kvm
+            return "$native_exit"
+          }
+          trap cleanup EXIT
+          sudo chgrp "$(id -gn)" /dev/kvm
+          sudo chmod g+rw /dev/kvm
+          "$CODE59_EMULATOR_BIN" -no-window -version > "$evidence/emulator-version.txt"
+          if timeout 30 "$CODE59_EMULATOR_BIN" -no-window -help-gpu > "$evidence/emulator-gpu-help.txt" 2>&1; then
+            printf '0\n' > "$evidence/emulator-gpu-help-exit.txt"
+          else
+            printf '%s\n' "$?" > "$evidence/emulator-gpu-help-exit.txt"
+          fi
+          "$ANDROID_HOME/platform-tools/adb" start-server
+          env -u DISPLAY -u EGL_PLATFORM -u LD_LIBRARY_PATH \
+          "$xvfb_bin" -displayfd 3 -screen 0 1080x2400x24 -nolisten tcp \
+            3> "$xvfb_evidence/display.txt" > "$xvfb_evidence/server.log" 2>&1 &
+          xvfb_pid=$!
+          printf '%s\n' "$xvfb_pid" > "$xvfb_evidence/pid.txt"
+          python3 -B tools/code55-apk/native_xvfb.py ready "$xvfb_pid" "$xvfb_bin" "$xvfb_evidence"
+          native_display=":$(< "$xvfb_evidence/display.txt")"
+          id -u > "$host_crash/emulator-uid.txt"
+          date -u '+%Y-%m-%d %H:%M:%S UTC' > "$host_crash/emulator-launch-utc.txt"
+          ANDROID_EMU_CRASH_REPORTING_DATABASE="$crash_database" \
+          ANDROID_EMU_LAVAPIPE_GL_MODE_LLVMPIPE=1 \
+          DISPLAY="$native_display" \
+          env -u ANDROID_EMU_LAVAPIPE_GL_MODE_SWIFTSHADER -u EGL_PLATFORM \
+          "$CODE59_EMULATOR_BIN" -avd continuum-native-pdf -port 5554 -accel on \
+            -no-window -no-audio -no-boot-anim -no-snapshot -gpu lavapipe -memory 2048 -cores 2 \
+            > "$evidence/emulator.log" 2>&1 &
+          emulator_pid=$!
+          printf '%s\n' "$emulator_pid" > "$host_crash/emulator-pid.txt"
+          ready=false
+          deadline=$((SECONDS + 600))
+          while (( SECONDS < deadline )); do
+            kill -0 "$emulator_pid"
+            if [[ "$(timeout 10 "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 shell -n getprop sys.boot_completed 2>/dev/null | tr -d '\r' || true)" == 1 ]]; then
+              ready=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ready" = true
+          readlink "/proc/$emulator_pid/exe" > "$host_crash/emulator-executable.txt"
+          cat "/proc/$emulator_pid/maps" > "$host_crash/emulator-maps.txt"
+          export CODE59_HOST_IDENTITY="$evidence/host-live-identity.json"
+          python3 -B tools/code55-apk/native_hologram_host_stack.py "$emulator_pid" "$CODE59_EMULATOR_BIN" \
+            emulator-5554 "$GITHUB_SHA" "$CODE59_HOST_IDENTITY"
+          python3 - "$evidence/emulator.log" "$crash_database" "$emulator_pid" \
+              "$host_crash/emulator-maps.txt" "$CODE59_EMULATOR_BIN" <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          reports = re.findall(r'Storing crashdata in: (.*?), detection is (\w+) for process: (\d+)', log)
+          assert reports == [(sys.argv[2], 'enabled', sys.argv[3])], reports
+          assert 'Crash reports will be automatically uploaded' not in log
+          selected = re.findall(r'gles_mode_selected:([a-z0-9_]+)', log)
+          assert selected == ['llvmpipe'], ('Requested GLES backend not selected', selected)
+          vulkan = re.findall(r'vulkan_mode_selected:([a-z0-9_]+)', log)
+          assert vulkan == ['lavapipe'], ('Requested Vulkan backend not selected', vulkan)
+          assert "Forcing 'llvmpipe' mode for GLES" in log
+          adapters = [line for line in log.splitlines() if 'Graphics Adapter ' in line and 'Graphics Adapter Vendor ' not in line]
+          assert len(adapters) == 1 and 'llvmpipe' in adapters[0].lower(), adapters
+          assert 'swiftshader' not in adapters[0].lower() and 'angle (' not in adapters[0].lower(), adapters
+          maps = pathlib.Path(sys.argv[4]).read_text()
+          library_root = pathlib.Path(sys.argv[5]).resolve().parent / 'lib64/gles_llvmpipe'
+          for name in ('libEGL.so', 'libGLESv2.so', 'libgallium-25.2.4.so'):
+              assert str(library_root / name) in maps, ('Requested GLES library not mapped', name)
+          print('LLVMPIPE_GLES_LAVAPIPE_VULKAN_CONFIRMED')
+          PY
+          timeout 300 bash tools/code55-apk/native-pdf-emulator.sh emulator-5554 "$evidence"
+          timeout 300 bash tools/code55-apk/native-filament-emulator.sh emulator-5554 "$evidence/filament"
+          hologram_exit=0
+          if timeout 300 bash tools/code55-apk/native-hologram-emulator.sh emulator-5554 "$evidence/hologram"; then
+            hologram_exit=0
+          else
+            hologram_exit=$?
+          fi
+          if python3 -B tools/code55-apk/native_hologram_host_stack.py --verify-resume \
+              "$evidence/hologram" "$GITHUB_SHA" emulator-5554; then
+            :
+          else
+            resume_exit=$?
+            if (( hologram_exit != 0 )); then exit "$hologram_exit"; fi
+            exit "$resume_exit"
+          fi
+          routine_exit=0
+          if timeout 1500 bash tools/code55-apk/native-app-smoke.sh emulator-5554 "$evidence/routines" routines; then
+            routine_exit=0
+          else
+            routine_exit=$?
+          fi
+          # Bound navigation and captures.
+          app_exit=0
+          if timeout 1500 bash tools/code55-apk/native-app-smoke.sh emulator-5554 "$evidence/app"; then
+            app_exit=0
+          else
+            app_exit=$?
+          fi
+          python3 - "$evidence/probe-exits.json" "$GITHUB_SHA" "$hologram_exit" "$routine_exit" "$app_exit" <<'PY'
+          import json, pathlib, sys
+          pathlib.Path(sys.argv[1]).write_text(json.dumps({'source_sha': sys.argv[2],
+              'hologram': int(sys.argv[3]), 'routines': int(sys.argv[4]), 'app': int(sys.argv[5])}, indent=2) + '\n')
+          PY
+          if (( hologram_exit != 0 )); then exit "$hologram_exit"; fi
+          if (( routine_exit != 0 )); then exit "$routine_exit"; fi
+          exit "$app_exit"
+      - name: Preserve native proof
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Code59-native-runtime-QA
+          path: ${{ runner.temp }}/code59-native-pdf/
+          retention-days: 14
+          if-no-files-found: warn

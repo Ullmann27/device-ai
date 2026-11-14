@@ -14,7 +14,7 @@ internal class CockpitMonitorPainter {
     private val matrix = Matrix()
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val image = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-    private val label = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = android.graphics.Typeface.create("sans-serif-medium", 0) }
+    private val label = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL) }
     private val destination = RectF()
 
     fun draw(canvas: Canvas, frame: CockpitStageFrame, bitmap: Bitmap?, status: String, live: Boolean,

@@ -1,0 +1,53 @@
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app')
+    app.tasks.withType(org.gradle.api.tasks.testing.Test).matching {
+        it.name == 'testDebugUnitTest'
+    }.configureEach {
+        filter {
+            includeTestsMatching 'at.heinz.deviceai.ContinuumUiSnapshotUiTest'
+            includeTestsMatching 'at.heinz.deviceai.OwnerAppActionWorkSceneUiTest'
+            includeTestsMatching 'at.heinz.deviceai.OwnerFactRevocationUiTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.FirstThinkingRunE2ETest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefPatternE2ETest'
+            includeTestsMatching 'at.heinz.deviceai.avatar3d.AvatarLiveDiagnosticsTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.BoundedThinkingMemoryTest'
+            includeTestsMatching 'at.heinz.deviceai.learning.ContinuumThinkingMemoryTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.RoutineDeliveryTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.RoutineRestartIdentityTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.PersistentRoutineDeliveryTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.RoutineRevokedAdmissionContractTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.RoutineCancelledClaimTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefBrainWiringTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.ContinuumRoutinesTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.RoutineBookAdmissionTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.RoutineStateStoreTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.RoutineStoreIndependentContractTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.RoutineChatDeliveryTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalChatTranscriptStoreTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.OwnerRoutineCommandsTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.OwnerRoutineConditionalDeliveryTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.OwnerRoutineRuntimeUiTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.OwnerRoutineActivityUiTest'
+            includeTestsMatching 'at.heinz.deviceai.ShizukuBridgeLifecycleTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotConversationTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotPrivateMemoryTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotProfileStoreTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotPracticeConversationTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumBotRosterStorageUiTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotSharedKnowledgeTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumBotSharedKnowledgeUiTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotFollowupTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefWorkerFollowupTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumBotFollowupUiTest'
+            includeTestsMatching 'at.heinz.deviceai.OwnerAppPlanningContextUiTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefResourceAdmissionUiTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelHostMemoryUiTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelThermalGuardTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest'
+            failOnNoMatchingTests = true
+        }
+    }
+}

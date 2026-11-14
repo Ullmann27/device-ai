@@ -145,7 +145,7 @@ internal object OwnerComputerIntentParser {
         if (app != ComputerApp.WHATSAPP) return Result.Unsupported("Nachrichtenentwürfe sind für diese App noch nicht sicher angebunden.")
         var remaining = command
         appMatches.map { it.first }.sortedByDescending { it.length }.forEach { alias ->
-            remaining = remaining.replace(Regex("(?iu)\\s+(?:in|auf|über|ueber)\\s+${Regex.escape(alias)}(?![\\p{L}\\p{N}_])"), "")
+            remaining = remaining.replace(Regex("(?iu)\\s+(?:in|auf|per|via|über|ueber)\\s+${Regex.escape(alias)}(?![\\p{L}\\p{N}_])"), "")
         }
         remaining = remaining.replace(Regex("(?iu)^(?:bereite|verfasse|schreibe|schreib|sende|schicke)\\s+"), "")
             .replace(Regex("(?iu)^(?:eine\\s+)?(?:whatsapp[- ]?)?nachricht\\s+(?:an\\s+)?"), "")

@@ -1,6 +1,9 @@
 package at.heinz.deviceai.learning
 
 import java.io.File
+import java.io.FileOutputStream
+import java.util.WeakHashMap
+import java.util.concurrent.CancellationException
 import java.util.Base64
 import java.util.Locale
 
@@ -38,10 +41,18 @@ data class ThinkingRun(val runId:String, val goal:String, val lessons:List<Strin
  */
 class ContinuumThinkingMemory(appDirectory:File, private val core:ContinuumLearningCore,
                               private val nowMillis:()->Long = System::currentTimeMillis) {
-    private val file = File(File(appDirectory, "learning-core-v2"), FILE_NAME)
+    private val file = File(File(appDirectory, "learning-core-v2"), FILE_NAME).canonicalFile
     private val layers = ContinuumMemoryLayers(core)
+    private var revoked = false
 
-    fun recall(step:ThinkingStep):MemoryRecall {
+    init { synchronized(LOCK) { liveInstances[this] = Unit } }
+
+    internal fun <T> withCurrentLifetime(block: () -> T): T = synchronized(LOCK) {
+        if (revoked) throw CancellationException("Owner thinking memory revoked")
+        block()
+    }
+
+    fun recall(step:ThinkingStep):MemoryRecall = withCurrentLifetime {
         val query = step.query.ifBlank { step.goal }.take(500)
         val now = nowMillis()
         val items = mutableListOf<RecalledMemory>()
@@ -61,18 +72,20 @@ class ContinuumThinkingMemory(appDirectory:File, private val core:ContinuumLearn
                 items += RecalledMemory(RecallSource.HYPOTHESIS, "${e.runId}#${e.stepIndex}", e.text.take(MAX_TEXT), e.atMillis, false)
             }
         val bounded = items.distinctBy { it.source to it.id }.take(MAX_RECALL)
-        return MemoryRecall(step, bounded, bounded.isEmpty())
+        MemoryRecall(step, bounded, bounded.isEmpty())
     }
 
-    fun journal(step:ThinkingStep, outcome:StepOutcome):ThinkingJournalEntry {
-        val e = ThinkingJournalEntry(ThinkingEntryKind.STEP, step.runId, step.stepIndex, step.phase,
-            ThinkingEntryStatus.valueOf(outcome.status.name), nowMillis(), outcome.summary.trim().take(MAX_TEXT).ifBlank { "-" })
-        append(listOf(e)); return e
-    }
+    fun journal(step:ThinkingStep, outcome:StepOutcome, atMillis:Long = nowMillis()):ThinkingJournalEntry =
+        withCurrentLifetime {
+            require(atMillis >= 0L)
+            val e = ThinkingJournalEntry(ThinkingEntryKind.STEP, step.runId, step.stepIndex, step.phase,
+                ThinkingEntryStatus.valueOf(outcome.status.name), atMillis, outcome.summary.trim().take(MAX_TEXT).ifBlank { "-" })
+            append(listOf(e)); e
+        }
 
     /** Derives lessons from the run's journal (failures/blocks, or a clean run) plus [ThinkingRun.lessons];
      * all stored as HYPOTHESIS. Never touches the owner ledger. */
-    fun reflect(run:ThinkingRun):List<ThinkingJournalEntry> {
+    fun reflect(run:ThinkingRun):List<ThinkingJournalEntry> = withCurrentLifetime {
         require(run.runId.matches(Regex("[A-Za-z0-9_.:-]{1,64}")))
         val steps = runJournal(run.runId).filter { it.kind == ThinkingEntryKind.STEP }
         val at = nowMillis(); var idx = (steps.maxOfOrNull { it.stepIndex } ?: 0) + 1
@@ -81,19 +94,20 @@ class ContinuumThinkingMemory(appDirectory:File, private val core:ContinuumLearn
             texts += "Hypothese: Schritt ${it.stepIndex} (${it.phase.name}) ${if (it.status == ThinkingEntryStatus.BLOCKED) "blockiert" else "scheiterte"}: ${it.text}. Beim nächsten Mal vorher prüfen."
         }
         if (steps.isNotEmpty() && texts.isEmpty())
-            texts += "Hypothese: Der Ablauf für „${run.goal.take(120)}“ lief in ${steps.size} Schritten ohne Fehler."
+            texts += if (steps.any { it.status == ThinkingEntryStatus.SKIPPED })
+                "Hypothese: Beim Ablauf für „${run.goal.take(120)}“ blieb ein Ergebnis ungeprüft."
+            else "Hypothese: Der Ablauf für „${run.goal.take(120)}“ lief in ${steps.size} Schritten ohne Fehler."
         run.lessons.map { it.trim() }.filter { it.isNotEmpty() }.take(8).forEach { texts += "Hypothese (unbestätigt): ${it.take(300)}" }
         val out = texts.map { ThinkingJournalEntry(ThinkingEntryKind.REFLECTION, run.runId, idx++, ThinkingPhase.LEARN,
             ThinkingEntryStatus.HYPOTHESIS, at, it.take(MAX_TEXT)) }
-        append(out); return out
+        append(out); out
     }
 
     fun runJournal(runId:String):List<ThinkingJournalEntry> =
         read().filter { it.runId == runId }.sortedWith(compareBy<ThinkingJournalEntry> { it.atMillis }.thenBy { it.stepIndex })
 
-    private fun read():List<ThinkingJournalEntry> = synchronized(LOCK) {
-        if (!file.isFile) return emptyList()
-        file.readLines(Charsets.UTF_8).mapNotNull(::decode)
+    private fun read():List<ThinkingJournalEntry> = withCurrentLifetime {
+        if (!file.isFile) emptyList() else file.readLines(Charsets.UTF_8).mapNotNull(::decode)
     }
 
     private fun append(entries:List<ThinkingJournalEntry>) = synchronized(LOCK) {
@@ -113,7 +127,20 @@ class ContinuumThinkingMemory(appDirectory:File, private val core:ContinuumLearn
         const val MAX_RECALL = 6
         const val MAX_ENTRIES = 512
         private const val MAX_TEXT = 400
-        private val LOCK = Any()
+        private val LOCK = ContinuumLearningCore.CORE_LOCK
+        private val liveInstances = WeakHashMap<ContinuumThinkingMemory, Unit>()
+
+        internal fun revokeForOwnerMutation(directory: File) = synchronized(LOCK) {
+            val journal = File(directory, FILE_NAME).canonicalFile
+            liveInstances.keys.filter { it.file == journal }.forEach { it.revoked = true }
+            // Derived entries lack source IDs.
+            for (target in listOf(journal, File(journal.parentFile, "$FILE_NAME.tmp"))) {
+                if (target.exists()) {
+                    check(target.isFile) { "Thinking journal cannot be cleared" }
+                    FileOutputStream(target, false).use { it.fd.sync() }
+                }
+            }
+        }
         private val B64E = Base64.getUrlEncoder().withoutPadding()
         private val B64D = Base64.getUrlDecoder()
         private val STOP = setOf("wohin", "woher", "warum", "nochmal", "eine", "einen", "einem", "einer", "mein", "meine", "meinen", "nicht", "auch")

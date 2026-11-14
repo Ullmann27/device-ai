@@ -223,10 +223,12 @@ class ChiefBotProfileStore(
 
     fun workingContext(requesterId: String, agentId: String): String? {
         require(requesterId == agentId && ChiefBotProfile.ID.matches(agentId)) { "BOT_CONTEXT_SCOPE_REJECTED" }
-        return locked { workingContextLocked(read()[agentId] ?: throw IllegalArgumentException("BOT_NOT_REGISTERED")) }
+        return locked { workingContextLocked(read()[agentId] ?: throw IllegalArgumentException("BOT_NOT_REGISTERED"))?.value }
     }
 
-    private fun workingContextLocked(profile: ChiefBotProfile): String? {
+    private data class DatedContent<T>(val value: T, val createdAtMillis: Long)
+
+    private fun workingContextLocked(profile: ChiefBotProfile): DatedContent<String>? {
         val id = profile.contextObjectId ?: return null
         val directory = contextDirectory(profile)
         checkPlain(directory.resolve("$id.obj"))
@@ -239,7 +241,7 @@ class ChiefBotProfileStore(
         val size = input.readInt()
         require(size in 1..maxContextBytes && size == input.available())
         val bytes = ByteArray(size); input.readFully(bytes)
-        return decodeText(bytes)
+        return DatedContent(decodeText(bytes), stored.metadata.createdAtMillis)
     }
 
     /** One lock-consistent private snapshot. Not an owner-memory or external-tool grant. */
@@ -247,13 +249,48 @@ class ChiefBotProfileStore(
         require(ChiefBotProfile.ID.matches(agentId))
         return locked {
             val profile = read()[agentId] ?: throw IllegalArgumentException("BOT_NOT_REGISTERED")
-            ChiefBotConversationSnapshot(profile, workingContextLocked(profile), conversationLocked(profile))
+            conversationSnapshotLocked(profile)
+        }
+    }
+
+    private fun conversationSnapshotLocked(profile: ChiefBotProfile): ChiefBotConversationSnapshot {
+        val notes = workingContextLocked(profile)
+        val conversation = conversationLocked(profile)
+        return ChiefBotConversationSnapshot(profile, notes?.value,
+            conversation?.value ?: ChiefBotConversationHistory(emptyList()), notes?.createdAtMillis,
+            conversation?.createdAtMillis)
+    }
+
+    /** Searches active pointers under lock. */
+    fun privateRecords(requesterId: String, agentId: String, query: String = "",
+                       fromMillis: Long = 0, untilMillis: Long = Long.MAX_VALUE): ChiefBotPrivateMemorySnapshot {
+        require(requesterId == agentId && ChiefBotProfile.ID.matches(agentId)) { "BOT_CONTEXT_SCOPE_REJECTED" }
+        require(query.length <= 160 && fromMillis >= 0 && untilMillis >= fromMillis)
+        encodeText(query)
+        val search = query.trim()
+        return locked {
+            val profile = read()[agentId] ?: throw IllegalArgumentException("BOT_NOT_REGISTERED")
+            val snapshot = conversationSnapshotLocked(profile)
+            val records = buildList {
+                snapshot.workingContext?.let { text ->
+                    add(ChiefBotPrivateRecord(ChiefBotPrivateRecordKind.WORKING_NOTES,
+                        requireNotNull(profile.contextObjectId), requireNotNull(snapshot.workingContextCreatedAtMillis), text))
+                }
+                profile.conversationObjectId?.let { id ->
+                    add(ChiefBotPrivateRecord(ChiefBotPrivateRecordKind.CONVERSATION_SNAPSHOT,
+                        id, requireNotNull(snapshot.conversationCreatedAtMillis), snapshot.history.privateRecordText()))
+                }
+            }.filter { it.createdAtMillis >= fromMillis && it.createdAtMillis < untilMillis &&
+                (search.isEmpty() || it.text.contains(search, ignoreCase = true)) }
+                .sortedWith(compareBy<ChiefBotPrivateRecord> { it.createdAtMillis }.thenBy { it.kind.name })
+            ChiefBotPrivateMemorySnapshot(profile, records)
         }
     }
 
     fun loadConversation(requesterId: String, agentId: String): ChiefBotConversationHistory {
         require(requesterId == agentId && ChiefBotProfile.ID.matches(agentId)) { "BOT_CONTEXT_SCOPE_REJECTED" }
-        return locked { conversationLocked(read()[agentId] ?: throw IllegalArgumentException("BOT_NOT_REGISTERED")) }
+        return locked { conversationLocked(read()[agentId] ?: throw IllegalArgumentException("BOT_NOT_REGISTERED"))?.value
+            ?: ChiefBotConversationHistory(emptyList()) }
     }
 
     internal fun saveConversation(profile: ChiefBotProfile, history: ChiefBotConversationHistory,
@@ -287,14 +324,14 @@ class ChiefBotProfileStore(
         }
     }
 
-    private fun conversationLocked(profile: ChiefBotProfile): ChiefBotConversationHistory {
-        val id = profile.conversationObjectId ?: return ChiefBotConversationHistory(emptyList(), 0)
+    private fun conversationLocked(profile: ChiefBotProfile): DatedContent<ChiefBotConversationHistory>? {
+        val id = profile.conversationObjectId ?: return null
         val directory = conversationDirectory(profile)
         checkPlain(directory.resolve("$id.obj"))
         val stored = FileContinuumObjectStore(directory.toFile(), ChiefBotConversationCodec.MAX_BYTES, CONVERSATION_STORE_BYTES)
             .get(ContinuumObjectId(id)) ?: error("BOT_CONVERSATION_OBJECT_MISSING")
         require(stored.metadata.type == ContinuumObjectType.TASK_CHECKPOINT)
-        return ChiefBotConversationCodec.decode(profile, stored.payload)
+        return DatedContent(ChiefBotConversationCodec.decode(profile, stored.payload), stored.metadata.createdAtMillis)
     }
 
     private fun conversationDirectory(profile: ChiefBotProfile): java.nio.file.Path {
