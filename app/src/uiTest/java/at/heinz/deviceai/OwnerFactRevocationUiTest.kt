@@ -193,6 +193,40 @@ class OwnerFactRevocationUiTest {
         assertEquals(1, f.runtime.prompts.size)
     }
 
+    @Test fun confirmedDeletionClearsThinkingJournalAndRejectsLateReflection() = withFixture { f ->
+        val thinking = at.heinz.deviceai.learning.ContinuumThinkingMemory(f.activity.filesDir, f.core)
+        thinking.reflect(at.heinz.deviceai.learning.ThinkingRun("thinking-ui", REQUEST, listOf(FACT)))
+        val journal = File(f.activity.filesDir, "learning-core-v2/thinking-journal-v1.log")
+        assertTrue(journal.length() > 0L)
+        startOwnerTurn(f)
+        confirmDeletion(f)
+        assertErased(f)
+        assertFalse("Thinking sidecar must be empty after confirmed deletion",
+            journal.isFile && journal.length() > 0L)
+        f.runtime.complete(LocalInferenceEvent.TextDelta(LATE_REPLY))
+        assertNoOldOutput(f)
+        assertThrows(java.util.concurrent.CancellationException::class.java) {
+            thinking.reflect(at.heinz.deviceai.learning.ThinkingRun("thinking-ui", REQUEST, listOf(LATE_REPLY)))
+        }
+        val fresh = at.heinz.deviceai.learning.ContinuumThinkingMemory(f.activity.filesDir,
+            ContinuumLearningCore(f.activity.filesDir))
+        assertTrue(fresh.runJournal("thinking-ui").isEmpty())
+    }
+
+    @Test fun thinkingJournalFailureCannotReportSuccessfulOwnerRevocation() = withFixture { f ->
+        val before = f.core.activeOwnerFacts()
+        val journal = File(f.activity.filesDir, "learning-core-v2/thinking-journal-v1.log")
+        assertTrue(journal.mkdirs())
+        File(journal, "existing-entry").writeText("Blocked journal truncation")
+        confirmDeletion(f)
+        drain(f.activity, "learningIoExecutor")
+        val chat = texts(get(f.activity, "chatContainer") as View).joinToString("\n")
+        assertTrue(chat.contains("Widerruf im Continuum-Lernkern ist fehlgeschlagen"))
+        assertFalse(chat.contains("sie werden nicht mehr verwendet"))
+        assertEquals(before, ContinuumLearningCore(f.activity.filesDir).activeOwnerFacts())
+        assertEquals("Nachricht senden", (get(f.activity, "sendButton") as Button).contentDescription.toString())
+    }
+
     @Test fun confirmedDeletionCancelsPausedOwnerReply() = withFixture { f ->
         val cancellation = startOwnerTurn(f)
         confirmDeletion(f)
