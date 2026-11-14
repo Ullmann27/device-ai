@@ -422,9 +422,14 @@ try:
         spec.loader.exec_module(module)
         module.run(globals(), nodes, first_pid, portrait)
     else:
+        sys.dont_write_bytecode = True
+        sys.path.insert(0, str(repo / 'tools/code55-apk'))
+        import native_web_offline
+        establish_offline('conversation')
+        web_probe = native_web_offline.Probe(globals(), first_pid, portrait)
+        nodes = web_probe.prepare()
         conversation = ['Konversation öffnen', 'JARVIS: Konversation öffnen', 'Gespräch öffnen', 'Gespräch', 'Chat']
         assert tap(nodes, conversation), 'Conversation control missing'
-        establish_offline('conversation')
         nodes, _, display = snapshot('conversation-opened', record=False)
         editors = [n for n in nodes if n.get('class') == 'android.widget.EditText']
         assert len(editors) == 1, 'Composer missing'
@@ -453,6 +458,7 @@ try:
         keyboard = shell('dumpsys', 'input_method')
         save('conversation-dismissed-input-method.txt', keyboard)
         assert not keyboard_visible(keyboard), 'IME window still visible'
+        nodes = web_probe.run()
         assert tap(nodes, ['Zur Startseite mit allen KI-Bereichen']), 'START control missing'
         nodes, _, _ = snapshot('start-roundtrip')
         assert any(n.get('content-desc') in conversation or n.get('text') in conversation for n in nodes), 'Home not restored'
