@@ -93,7 +93,9 @@ class LiteRtLmLocalModelRuntime(
     private val cacheDirectory: File,
     private val systemPrompt: String = "You are Device AI, an on-device assistant.",
     /** Evaluated at load time (thermal budget, owner cooling mode); null keeps the LiteRT-LM default (all cores). */
-    private val cpuThreadCount: () -> Int? = { null }
+    private val cpuThreadCount: () -> Int? = { null },
+    /** Read-only load-time capacity choice; the conservative 4K remains the default. */
+    private val contextCapacitySelector: (Int) -> Int = LocalNativePromptBudget::contextCapacity
 ) : LocalModelRuntime {
     private val background = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "device-ai-local-model").apply { isDaemon = true }
@@ -175,7 +177,15 @@ class LiteRtLmLocalModelRuntime(
                     error("Cannot create LiteRT-LM cache directory.")
                 }
                 val threads = runCatching(cpuThreadCount).getOrNull()?.takeIf { it > 0 }
-                val contextCapacity = LocalNativePromptBudget.contextCapacity(capabilities.maxContextTokens)
+                val conservative = LocalNativePromptBudget.contextCapacity(capabilities.maxContextTokens)
+                val requestedContext = runCatching {
+                    contextCapacitySelector(capabilities.maxContextTokens)
+                }.getOrDefault(conservative)
+                val maxSafeContext = if (capabilities.maxContextTokens == 0) conservative
+                    else minOf(capabilities.maxContextTokens, 8_192)
+                val contextCapacity = requestedContext.takeIf {
+                    it in conservative..maxSafeContext
+                } ?: conservative
                 val newEngine = Engine(
                     EngineConfig(
                         modelPath = file.absolutePath,

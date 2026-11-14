@@ -26,7 +26,11 @@ object LocalModelHost {
             val catalog = LocalModelCatalog(File(app.filesDir, "local-models"), NativeLiteRtModelInspector())
             val power = app.getSystemService(Context.POWER_SERVICE) as? PowerManager
             val runtime = LiteRtLmLocalModelRuntime(catalog, File(app.cacheDir, "litertlm"),
-                cpuThreadCount = { inferenceThreads(app, power) })
+                cpuThreadCount = { inferenceThreads(app, power) },
+                contextCapacitySelector = { modelLimit ->
+                    LocalModelContextWindow.choose(modelLimit, app.localModelResourceSnapshot(),
+                        runCatching { power?.isPowerSaveMode }.getOrNull())
+                })
             Host(catalog, thermallyGuarded(app, runtime, power))
         }.also { host = it }
     }

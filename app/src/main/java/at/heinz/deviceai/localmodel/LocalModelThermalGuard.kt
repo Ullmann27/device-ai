@@ -57,6 +57,12 @@ object LocalModelThermalGuard {
         override fun stream(prompt: String, callback: LocalInferenceCallback) =
             guarded(callback) { delegate.stream(prompt, it) }
 
+        // Kotlin's "LocalModelRuntime by delegate" delegates even interface default
+        // methods. The newly added text-only path must not skip this exact same
+        // thermal/start/abort ownership gate used for tool-bearing inference.
+        override fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) =
+            guarded(callback) { delegate.streamTextOnly(prompt, it) }
+
         override fun streamThinking(prompt: String, callback: LocalInferenceCallback) =
             guarded(callback) { delegate.streamThinking(prompt, it) }
 
