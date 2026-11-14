@@ -69,6 +69,54 @@ saved = {(scope, name): shell('settings', 'get', scope, name) for scope, name in
 def save(name, data):
     (out / name).write_bytes(data if isinstance(data, bytes) else data.encode())
 
+def captured_device(label, *args, timeout=30):
+    argv = list(map(str, [adb, '-s', serial, *args]))
+    try:
+        result = subprocess.run(argv, capture_output=True, timeout=timeout)
+    except subprocess.TimeoutExpired as error:
+        save(label + '-stdout.txt', error.stdout or b'')
+        save(label + '-stderr.txt', error.stderr or b'')
+        save(label + '-command.json', json.dumps({'args': argv, 'timeout': timeout}))
+        raise
+    save(label + '-stdout.txt', result.stdout)
+    save(label + '-stderr.txt', result.stderr)
+    save(label + '-command.json', json.dumps({'args': argv, 'returncode': result.returncode}))
+    return result
+
+def read_hierarchy(label):
+    remote = '/sdcard/continuum-native-smoke.xml'
+    deadline = time.monotonic() + 45
+    def budget(maximum):
+        remaining = deadline - time.monotonic()
+        assert remaining > 0, f'{label}: UI hierarchy deadline exceeded'
+        return min(maximum, remaining)
+    transient = ('ERROR: null root node returned by UiTestAutomationBridge.',
+                 'ERROR: could not get idle state.')
+    for attempt in range(1, 4):
+        prefix = f'{label}-uiautomator-{attempt}'
+        shell('rm', '-f', remote, timeout=budget(5))
+        result = captured_device(prefix, 'shell', 'uiautomator', 'dump', '--compressed', remote,
+                                 timeout=budget(35))
+        output = (result.stdout + result.stderr).decode(errors='replace')
+        assert result.returncode == 0, f'{label}: UI dump failed: {output[-1000:]}'
+        present = captured_device(prefix + '-file', 'shell', 'test', '-s', remote, timeout=budget(5))
+        if present.returncode == 0:
+            content = captured_device(prefix + '-read', 'exec-out', 'cat', remote, timeout=budget(5))
+            save(label + '.xml', content.stdout)
+            assert content.returncode == 0, f'{label}: UI dump could not be read'
+            assert 'ERROR:' not in output, f'{label}: UI dump reported an error: {output[-1000:]}'
+            try:
+                hierarchy = ET.fromstring(content.stdout)
+            except ET.ParseError as error:
+                raise RuntimeError(f'{label}: UI dump is not XML; raw evidence saved') from error
+            assert hierarchy.tag == 'hierarchy', f'{label}: UI hierarchy root missing'
+            return hierarchy
+        assert present.returncode == 1, f'{label}: UI dump file check failed'
+        if not any(message in output for message in transient) or attempt == 3 or time.monotonic() >= deadline:
+            raise RuntimeError(f'{label}: UI dump file missing: {output[-1000:]}')
+        time.sleep(min(1, max(0, deadline - time.monotonic())))
+    raise RuntimeError(f'{label}: UI hierarchy unavailable')
+
 def snapshot(label, rotation=None):
     pid = shell('pidof', package, check=False)
     assert re.fullmatch(r'\d+(?: \d+)*', pid), f'{label}: app process missing'
@@ -76,12 +124,12 @@ def snapshot(label, rotation=None):
     save(label + '-activities.txt', activities)
     assert any(package + '/' in line and 'AgentActivity' in line for line in
                activities.splitlines() if 'ResumedActivity' in line), f'{label}: activity not resumed'
-    remote = '/sdcard/continuum-native-smoke.xml'
-    shell('rm', '-f', remote)
-    shell('uiautomator', 'dump', '--compressed', remote, timeout=35)
-    xml = device('exec-out', 'cat', remote)
-    save(label + '.xml', xml)
-    hierarchy = ET.fromstring(xml)
+    png = device('exec-out', 'screencap', '-p')
+    assert png.startswith(b'\x89PNG\r\n\x1a\n') and len(png) > 4096, f'{label}: invalid screenshot'
+    width, height = struct.unpack('>II', png[16:24])
+    assert min(width, height) >= 200, f'{label}: empty display'
+    save(label + '.png', png)
+    hierarchy = read_hierarchy(label)
     if rotation is not None:
         assert hierarchy.get('rotation') == str(rotation), f'{label}: rotation not applied'
     nodes = []
@@ -92,11 +140,6 @@ def snapshot(label, rotation=None):
             if x2 > x1 and y2 > y1:
                 nodes.append(node)
     assert any(n.get('text') or n.get('content-desc') for n in nodes), f'{label}: empty app UI'
-    png = device('exec-out', 'screencap', '-p')
-    assert png.startswith(b'\x89PNG\r\n\x1a\n') and len(png) > 4096, f'{label}: invalid screenshot'
-    width, height = struct.unpack('>II', png[16:24])
-    assert min(width, height) >= 200, f'{label}: empty display'
-    save(label + '.png', png)
     report['checks'].append({'name': label, 'status': 'PASS', 'pid': pid,
                              'bounded_app_nodes': len(nodes), 'display': [width, height]})
     return nodes, pid, (width, height)
