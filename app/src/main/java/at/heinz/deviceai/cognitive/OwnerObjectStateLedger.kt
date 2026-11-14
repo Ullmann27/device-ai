@@ -367,7 +367,13 @@ internal class OwnerObjectStateLedger {
         val original = text.trim()
         if (original.isEmpty()) return
         if (original.length > 4_000 || original.any { it.isISOControl() && it != '\n' }) { incomplete = true; return }
-        val clean = objectCorrectionBody(original) ?: original
+        // The owner may scope a factual object statement to this conversation rather than
+        // asking for a persistent fact. Strip ONLY this explicit wrapper. Other imperatives,
+        // quotations, questions and instructions retain the existing rejection policy.
+        val statement = original.replaceFirst(
+            Regex("""(?iu)^(?:merke|merk)\s+dir\s+für\s+(?:dieses|unser)\s+gespräch\s*:\s*(?=\p{L})"""), ""
+        )
+        val clean = objectCorrectionBody(statement) ?: statement
         if (quotedOrReported.containsMatchIn(clean)) return
         message++
         val toks = tokens(clean)
