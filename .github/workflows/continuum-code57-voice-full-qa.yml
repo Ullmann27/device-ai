@@ -543,6 +543,14 @@ jobs:
               'actualNewConversationDiscardsTheOldFollowupDraft'
           )}
           required.add(('FirstThinkingRunE2ETest', 'schritt7b_workerProposalReachesChiefAndRunsOnlyAfterNewOwnerApproval'))
+          required |= {('RoutineCancelledClaimTest', name) for name in (
+              'interruptedPeriodicClaimPreservesStoreAndAllowsFreshRun',
+              'interruptedEventClaimPreservesStoreAndAllowsFreshRun',
+              'periodicAdmissionRechecksGenerationAfterBookWait',
+              'eventAdmissionRechecksGenerationAfterBookWait')}
+          required |= {('OwnerRoutineRuntimeUiTest', name) for name in (
+              'onStopJobDuringStartedClaimPreservesDurableState',
+              'onDestroyDuringStartedClaimPreservesDurableState')}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY

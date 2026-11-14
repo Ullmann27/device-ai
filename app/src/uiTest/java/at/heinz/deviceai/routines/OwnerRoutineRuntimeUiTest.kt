@@ -114,6 +114,8 @@ class OwnerRoutineRuntimeUiTest {
     @Test fun onStopJobRevokesWaitingGenerationBeforeAnyDeviceRead() {
         val app = context(); battery(app, 18)
         val runtime = OwnerRoutineRuntime.get(app); register(runtime)
+        val store = FileRoutineStateStore(File(app.filesDir.canonicalFile, "routines"))
+        val before = store.load()
         val controller = Robolectric.buildService(OwnerRoutineJobService::class.java).create()
         val service = controller.get()
         val params = Shadow.newInstanceOf(JobParameters::class.java)
@@ -127,12 +129,62 @@ class OwnerRoutineRuntimeUiTest {
             }
             until("Stopped job leaves") { field(service, "worker") == null }
             assertEquals(0, app.batteryReads.get()); assertTrue(receipts(app).isEmpty())
+            assertEquals(before, store.load())
+            assertEquals(before.entries, runtime.book.registrations())
+            assertNull(runtime.lastProblem)
             assertFalse(shadowOf(service).isJobFinished)
             assertTrue(service.onStartJob(Shadow.newInstanceOf(JobParameters::class.java)))
             until("Fresh Android job may execute") { field(service, "worker") == null }
             assertEquals(1, app.batteryReads.get())
             assertEquals(ToolReceiptState.SUCCEEDED, receipts(app).single().state)
         } finally { controller.destroy() }
+    }
+
+    @Test fun onStopJobDuringStartedClaimPreservesDurableState() = stopDuringStartedClaim(false)
+
+    @Test fun onDestroyDuringStartedClaimPreservesDurableState() = stopDuringStartedClaim(true)
+
+    private fun stopDuringStartedClaim(destroy: Boolean) {
+        val app = context(); battery(app, 18)
+        val runtime = OwnerRoutineRuntime.get(app); register(runtime)
+        val store = FileRoutineStateStore(File(app.filesDir.canonicalFile, "routines"))
+        val before = store.load()
+        val storeLock = FileRoutineStateStore::class.java.getDeclaredField("LOCK").apply {
+            isAccessible = true
+        }.get(null)
+        val controller = Robolectric.buildService(OwnerRoutineJobService::class.java).create()
+        val service = controller.get()
+        val params = Shadow.newInstanceOf(JobParameters::class.java)
+        try {
+            synchronized(storeLock) {
+                assertTrue(service.onStartJob(params))
+                until("Claim already entered the real store") {
+                    val thread = field(service, "worker") as? Thread
+                    thread?.state == Thread.State.BLOCKED && thread.stackTrace.any {
+                        it.className == RoutineBook::class.java.name && it.methodName.startsWith("claimDue")
+                    }
+                }
+                if (destroy) controller.destroy() else assertTrue(service.onStopJob(params))
+                assertTrue((field(service, "cancellation") as AtomicBoolean).get())
+                assertFalse("Durable dispatch is not interrupted", (field(service, "worker") as Thread).isInterrupted)
+            }
+            until("Cancelled claim is released") { field(service, "worker") == null }
+            assertEquals(0, app.batteryReads.get())
+            assertTrue(receipts(app).isEmpty())
+            assertEquals(before.entries, store.load().entries)
+            assertEquals(before.entries, runtime.book.registrations())
+            assertTrue(runtime.book.pendingChatReports().isEmpty())
+            assertNull(runtime.lastProblem)
+            assertFalse(shadowOf(service).isJobFinished)
+            val nextController = Robolectric.buildService(OwnerRoutineJobService::class.java).create()
+            val next = nextController.get()
+            try {
+                assertTrue(next.onStartJob(Shadow.newInstanceOf(JobParameters::class.java)))
+                until("Fresh job after cancelled persistence") { field(next, "worker") == null }
+                assertEquals(1, app.batteryReads.get())
+                assertEquals(ToolReceiptState.SUCCEEDED, receipts(app).single().state)
+            } finally { nextController.destroy() }
+        } finally { if (!destroy) controller.destroy() }
     }
 
     @Test fun ownerStopDuringAndroidAdmissionPreventsTheActualBatteryRead() {

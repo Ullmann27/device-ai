@@ -149,6 +149,7 @@ class OwnerRoutineActivityUiTest {
         drain()
         val body = transcript().load(session(a)).single { it.text.startsWith("Routine ${row.routine.id}:") }.text
         assertTrue(body.contains("Aktueller Akkustand: 19 %"))
+        until("Main callback presents the persisted routine report") { texts(a).any { it == body } }
         assertEquals(1, texts(a).count { it == body })
         val ownerToken = DeliberationCancellation()
         set(a, "activeChatCancellation", ownerToken); set(a, "busy", true); set(a, "activeLocalRequest", true)
