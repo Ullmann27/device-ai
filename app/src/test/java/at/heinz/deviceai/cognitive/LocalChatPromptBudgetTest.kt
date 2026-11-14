@@ -66,4 +66,16 @@ class LocalChatPromptBudgetTest {
             LocalChatPromptBudget.acceptsCompleteTask(request))
     }
 
+
+    @Test fun explicitTenSentenceOrLongExplanationNeverGetsThreeSentenceFirstTurnInstruction() {
+        for (question in listOf(
+            "Bitte beschreibe mir in zehn Sätzen, wie du eine Frage bearbeitest.",
+            "Erzähle mir ausführlich, was du über die Funktionsweise eines Dialogs weißt.",
+            "Erkläre mir mit mindestens zwölf Absätzen deine interne Arbeitsweise."
+        )) {
+            assertEquals("Owner's long-form intent must not trigger a maximum of three short sentences",
+                LocalChatPromptBudget.FULL_CHARACTERS, budget(question))
+        }
+    }
+
 }
