@@ -332,6 +332,26 @@ jobs:
                        ('ContinuumContrastiveParityTest','actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds'),
                        ('Cre1InferenceEncoderTest','trainedNodeCheckpointMatchesKotlinFeaturesAndScores'),
                        ('DevelopmentBacklogRoundtripTest','kotlinChangesNodeWrittenBacklogWithTheSharedRules')}
+          required.add(('ChiefPatternE2ETest','s5b_textFileSkillLibraryRechecksApprovalBetweenWorkerStages'))
+          required |= {('AvatarLiveDiagnosticsTest', name) for name in (
+              'submittedFrameWithoutConsumerUpdateCannotClaimLive',
+              'deterministicProofCoversIdleBlinkGazeSpeechThinkingAndCard',
+              'proofOutputsStayBounded',
+              'proofCompletionRequiresCallbacksCanvasAndConsumerTrace',
+              'currentProofCannotBorrowLiveTraceFromAnEarlierRun',
+              'traceNamesTheBrokenStageInsteadOfGuessing',
+              'consumerEvidenceRequiresCallbackAndTimestampAdvanceOnTheBoundSurface',
+              'replacementAndReleaseRejectPreviousSurfaceEvidence',
+              'newSubmissionCannotBorrowEarlierConsumerUpdate',
+              'consumerReceiptExpiresWithTheBoundedTraceWindow',
+              'motionWindowReportsUpdatesAndTimestampProgressSeparately'
+          )}
+          required |= {('ContinuumAvatar3dLifecycleUiTest', name) for name in (
+              'legacyEnabledHeadUpgradesButExplicitOrbAnd2dStayChosen',
+              'defaultOrbAndPausedOptional3dNeverStartAssetOrNativeWork',
+              'actualFailureReportsUnavailabilityAndRetainsSingleLifecycleClock',
+              'pauseMotionAndReattachmentResumeOnlyFreshMonotonicGaze'
+          )}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY

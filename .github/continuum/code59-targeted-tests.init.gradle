@@ -10,6 +10,8 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.OwnerFactRevocationUiTest'
             includeTestsMatching 'at.heinz.deviceai.chief.FirstThinkingRunE2ETest'
             includeTestsMatching 'at.heinz.deviceai.chief.ChiefPatternE2ETest'
+            includeTestsMatching 'at.heinz.deviceai.avatar3d.AvatarLiveDiagnosticsTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest'
             failOnNoMatchingTests = true
         }
     }
