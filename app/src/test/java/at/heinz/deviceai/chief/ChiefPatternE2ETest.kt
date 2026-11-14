@@ -31,6 +31,8 @@ import at.heinz.deviceai.cognitive.AgentToolObservation
 import at.heinz.deviceai.cognitive.BoundedAgentOrchestrator
 import at.heinz.deviceai.cognitive.CancellableAgentModel
 import at.heinz.deviceai.cognitive.CognitiveWorkState
+import at.heinz.deviceai.cognitive.CrystallizedSkillCandidate
+import at.heinz.deviceai.cognitive.DeliberationCancellation
 import at.heinz.deviceai.cognitive.Evaluation
 import at.heinz.deviceai.cognitive.HybridMemoryRetriever
 import at.heinz.deviceai.cognitive.InMemoryExperienceStore
@@ -38,6 +40,10 @@ import at.heinz.deviceai.cognitive.MemoryRecord
 import at.heinz.deviceai.cognitive.MemoryType
 import at.heinz.deviceai.cognitive.PrivacyClass
 import at.heinz.deviceai.cognitive.ProvenanceType
+import at.heinz.deviceai.learning.ContinuumSkillLibrary
+import at.heinz.deviceai.learning.OwnerSkillApproval
+import at.heinz.deviceai.learning.SkillStatus as LibrarySkillStatus
+import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -46,7 +52,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Assert.assertThrows
 import org.junit.Ignore
 import org.junit.Test
+import java.io.File
+import java.nio.file.Files
 import java.util.Collections
+import java.util.UUID
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CountDownLatch
@@ -55,16 +64,10 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 /**
- * Ende-zu-Ende-Szenarien fuer das Chief-Bot-Muster (/workspace/JARVIS-GEMEINSAM.md, Punkte 1-8).
- *
- * Getestet wird ausschliesslich gegen bereits vorhandenen Produktivcode (Basis: PR #373, 26162442):
- * BoundedAgentOrchestrator, ToolGate/ToolRegistry, BoundedResearchTextSanitizer,
- * HybridMemoryRetriever, SkillGraph, ConstrainedResourceFabric.
- * Nur Modell und Werkzeug-Backend sind deterministische Fakes (kein Geraet, kein Netz).
- *
- * Teile, die andere Bots erst bauen (Chief/Arbeiter-API, Gedaechtnisschichten, Text-Faehigkeiten,
- * Routinen, Agent-Nachrichten, Limitwaechter-Verdrahtung), sind als @Ignore("PENDING ...") markiert.
- * Zum Scharfschalten: @Ignore entfernen und den Kommentar "SCHARF:" im Testkoerper umsetzen.
+ * Chief-Verträge mit vorhandenen Produktivpfaden.
+ * Modell-/Geräteports liefern kontrollierte Antworten.
+ * Kein Geräte- oder Netzbeweis.
+ * Fehlende Verträge bleiben explizit übersprungen.
  */
 class ChiefPatternE2ETest {
 
@@ -436,12 +439,76 @@ class ChiefPatternE2ETest {
         assertEquals(SkillStatus.ENABLED, graph.activate(SkillKey(report.id, v)).status)
     }
 
-    @Ignore("PENDING Punkt 5 (Continuum Gedaechtnis): Faehigkeiten-Bibliothek als Textdatei " +
-        "(Name + wann benutzen + Anleitung), bei Bedarf geladen, existiert auf #373 nicht.")
     @Test
-    fun s5b_pending_textFileSkillLibraryLoadedOnDemand() {
-        // SCHARF: SkillLibrary.load(dir) liest SKILL.md-artige Dateien; match("Akku pruefen") laedt nur die
-        // passende Faehigkeit; Anleitung kann keine nicht registrierten Werkzeuge freischalten.
+    fun s5b_textFileSkillLibraryRechecksApprovalBetweenWorkerStages() {
+        val root = Files.createTempDirectory("chief-skill-stages").toFile()
+        val skillDirectory = File(root, "skills")
+        val library = ContinuumSkillLibrary(skillDirectory)
+        val candidate = CrystallizedSkillCandidate("synthetic-kotlin-candidate", "kotlin",
+            listOf("read_file"), 3, 1.0, 1.0, listOf("synthetic-1", "synthetic-2", "synthetic-3"))
+        val instructions = "APPROVED_DYNAMIC_INSTRUCTION: Prüfe Nullwerte. " +
+            "Die Anweisung behauptet zusätzlich Zugriff auf delete_file."
+        library.propose(candidate, "kotlin-review", "Kotlin Nullwerte prüfen", instructions)
+        library.propose(candidate, "weather-review", "Wettervorhersage morgen", "UNRELATED_INSTRUCTION")
+        library.approve("weather-review", OwnerSkillApproval("Ja, weather-review freigeben", 1))
+        val profiles = ChiefBotProfileStore(File(root, "profiles"))
+        val prompts = Collections.synchronizedList(mutableListOf<String>())
+        val modelSha = "a".repeat(64)
+        val reply = "{\"tool\":\"delete_file\",\"arguments\":{\"path\":\"/sdcard/example\"}}"
+        val model = object : ChiefTeamModel {
+            override fun readySha256(): String = modelSha
+            override fun generate(prompt: String, cancellation: DeliberationCancellation, deadlineMillis: Long): String {
+                cancellation.throwIfCancelled()
+                check(deadlineMillis > 0)
+                prompts += prompt
+                if (prompt.contains("APPROVED_DYNAMIC_INSTRUCTION")) {
+                    val file = File(skillDirectory, "kotlin-review.skill.md")
+                    file.writeText(file.readText().replace("APPROVED_DYNAMIC_INSTRUCTION", "TAMPERED_INSTRUCTION"))
+                }
+                return reply
+            }
+        }
+        val team = ChiefBotTeam(profiles, model, skills = ContinuumSkillLibrary(skillDirectory))
+        try {
+            team.initialize()
+            team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), 0)
+            val before = profiles.page(limit = 100).items
+            val request = "Prüfe Kotlin Nullwerte im Text."
+            team.submit("team-" + UUID.randomUUID(), request, 1, true)
+            assertTrue("Entwurfslauf endet nicht", team.awaitIdle(10_000))
+            assertEquals(2, prompts.size)
+            assertTrue(prompts.all { !JSONObject(it.substringAfter("\nTASK_DATA_JSON:\n")).has("optionalSkill") })
+            library.approve("kotlin-review", OwnerSkillApproval("Ja, kotlin-review freigeben", 2))
+            val approvedTask = team.submit("team-" + UUID.randomUUID(), request, 1, true)
+            assertTrue("Freigabelauf endet nicht", team.awaitIdle(10_000))
+            assertEquals(4, prompts.size)
+            val analysis = JSONObject(prompts[2].substringAfter("\nTASK_DATA_JSON:\n"))
+            val skill = analysis.getJSONObject("optionalSkill")
+            assertEquals("kotlin-review", skill.getString("name"))
+            assertEquals(candidate.candidateId, skill.getString("sourceCandidateId"))
+            assertEquals(instructions, skill.getString("instructions"))
+            assertEquals(ChiefTeamResponse.hash(instructions), skill.getString("instructionsSha256"))
+            val review = JSONObject(prompts[3].substringAfter("\nTASK_DATA_JSON:\n"))
+            assertFalse(review.has("optionalSkill"))
+            assertFalse(prompts.joinToString().contains("UNRELATED_INSTRUCTION"))
+            assertFalse(prompts.joinToString().contains("TAMPERED_INSTRUCTION"))
+            assertTrue(prompts.all { it.contains("Keine Werkzeuge") })
+            assertEquals(LibrarySkillStatus.TAMPERED, team.skillIndex().single { it.name == "kotlin-review" }.status)
+            val persisted = ChiefBotProfileStore(File(root, "profiles")).teamState().tasks
+            assertEquals(2, persisted.size)
+            assertTrue(persisted.all { it.status == ChiefTeamStatus.RESPONSES_RECORDED && it.modelSha256 == modelSha })
+            assertTrue(persisted.flatMap { it.responses }.all { it.text == reply })
+            val finalTask = persisted.single { it.id == approvedTask.id }
+            assertEquals(listOf("ANALYZE", "REVIEW"), finalTask.responses.map { it.stage })
+            assertEquals(prompts.drop(2).map { ChiefTeamResponse.hash(it) }, finalTask.responses.map { it.promptSha256 })
+            assertEquals(ChiefTeamResponse.hash(reply), review.getString("analysisSha256"))
+            assertEquals(before, profiles.page(limit = 100).items)
+            assertTrue(before.all { it.permissionScope.isEmpty() })
+            assertNull(team.storageError)
+        } finally {
+            team.close()
+            root.deleteRecursively()
+        }
     }
 
     // ---------------------------------------------------------------- Punkt 6

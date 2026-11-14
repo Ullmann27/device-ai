@@ -1,7 +1,6 @@
 {
   "at.heinz.deviceai.chief.ChiefPatternE2ETest": [
     "s4b_pending_profileDiarySharedLayers",
-    "s5b_pending_textFileSkillLibraryLoadedOnDemand",
     "s6_pending_routineReportsOnlyWhenSomethingIsNew",
     "s7_pending_agentMessagesUrgentWakesInfoWaits",
     "s8d_pending_limitGuardIsWiredBeforeWorkerStart"
