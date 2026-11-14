@@ -287,7 +287,7 @@ internal object OwnerDocumentDialogue {
             raw.take(PAGE_ANSWER_CHARS).trimEnd() + " …" else raw
         // An extracted page can start with a heading; do not assert that a syntactic sentence
         // starts at the first character. This is a faithful quote, never a model inference.
-        return "Der erste ausgelesene Satz beziehungsweise Textanfang auf Seite $page lautet:\\n" +
+        return "Der erste ausgelesene Satz beziehungsweise Textanfang auf Seite $page lautet:\n" +
             "„" + clean(shown, PAGE_ANSWER_CHARS + 2, keepLines = true) + "“"
     }
 
