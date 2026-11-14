@@ -36,6 +36,8 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest'
             includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotPracticeConversationTest'
             includeTestsMatching 'at.heinz.deviceai.ContinuumBotRosterStorageUiTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotSharedKnowledgeTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumBotSharedKnowledgeUiTest'
             failOnNoMatchingTests = true
         }
     }

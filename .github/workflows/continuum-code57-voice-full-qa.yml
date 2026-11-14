@@ -483,6 +483,35 @@ jobs:
               'clearingNoteThroughExistingEditorRemovesItFromReopenedPrivateSearch',
               'closedPrivateSearchDoesNotPresentItsQueuedStorageResult'
           )}
+          required |= {('ChiefBotSharedKnowledgeTest', name) for name in (
+              'explicitSubsetReachesBothRealWorkerPromptsWithoutPrivateOrUnselectedContent',
+              'ownerTaskApprovalAloneNeverSharesStoredFacts',
+              'reviewExcludesHypothesesAndRevokedFactsAndNeedsExplicitSubsetApproval',
+              'changedRequestAndRecipientProfileRejectGrantBeforeAnyModelOrTask',
+              'invalidatedAdmissionAndChangedTeamRequireFreshDisplayedSelection',
+              'ownerRevocationInvalidatesQueuedGrantBeforeLedgerWriteWithoutCancellingOtherSelection',
+              'ownerRevocationInvalidatesPendingSelectionBeforeItsApprovalStarts',
+              'approvalCannotBeTransferredToReopenedTeamOrAnotherOwnerStore',
+              'selectedFactRevocationCancelsPausedModelAndRejectsActualLateReply',
+              'unrelatedFactAndOtherOwnerDirectoryDoNotCancelApprovedRun',
+              'withdrawnSelectionRejectsLateReplyWithoutChangingOwnerFacts',
+              'reconfirmingFactNeverRevivesOldGrantButAllowsFreshExplicitTask',
+              'revokedPreviewCannotApproveAndOversizedSelectionIsNeverSilentlyClipped'
+          )}
+          required |= {('ContinuumBotSharedKnowledgeUiTest', name) for name in (
+              'explicitFactSelectionAndSeparateTaskConsentReachActualTeamPrompts',
+              'cancellingFactPickerKeepsTaskApprovalFreeOfStoredFacts',
+              'editingAndRestoringTaskInvalidatesEarlierFactSelection',
+              'discardDuringQueuedApprovalCannotRestoreWithdrawnSharing',
+              'changedAndRestoredTaskDuringQueuedApprovalStillRequiresNewSelection',
+              'closedDraftCannotStartOrRedisplayAfterQueuedApproval',
+              'sourceRevokedBeforeApprovalIsRejectedWithoutImplicitSharing'
+          )}
+          required |= {('OwnerFactRevocationUiTest', name) for name in (
+              'confirmedDeletionRevokesSharedTeamBeforeQueuedLedgerWriteAndRejectsLateReply',
+              'confirmedDeletionRejectsPreviouslyQueuedSharedTeamBeforeEitherExecutorCompletes'
+          )}
+          required.add(('ChiefPatternE2ETest', 's4b_datedPrivateRecordsAndApprovedSharedFactsUseRealWorkerPrompts'))
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
