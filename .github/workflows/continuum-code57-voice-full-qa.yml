@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release/code59-complete-qa-20261114
+      - fix/code59-context-complete-20261114
       - diagnostic/code59-native-lint-20261114
   workflow_dispatch:
 
@@ -12,11 +13,11 @@ permissions:
 
 concurrency:
   group: code59-complete-qa-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.ref == 'refs/heads/fix/code59-context-complete-20261114' }}
 
 jobs:
   unsigned-arm64:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -101,7 +102,7 @@ jobs:
           retention-days: 14
 
   renderer-preflight:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -158,7 +159,7 @@ jobs:
           retention-days: 14
 
   full-android:
-    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/release/code59-complete-qa-20261114' || github.ref == 'refs/heads/diagnostic/code59-native-lint-20261114')
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114", "refs/heads/diagnostic/code59-native-lint-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 150
     steps:
@@ -186,7 +187,7 @@ jobs:
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
       - name: Full unfiltered Android and UI regression suite (motion exercised without PNG export)
-        if: github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+        if: contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
         env:
           CONTINUUM_BACKLOG_ROUNDTRIP_DIR: ${{ runner.temp }}/code59-backlog
           CONTINUUM_CONTRASTIVE_PARITY_DIR: ${{ runner.temp }}/code59-contrastive
@@ -221,10 +222,10 @@ jobs:
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
             -I .github/continuum/code59-targeted-tests.init.gradle :app:testDebugUnitTest
       - name: Require exact declared skip policy
-        if: ${{ always() && github.ref == 'refs/heads/release/code59-complete-qa-20261114' }}
+        if: ${{ always() && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) }}
         run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
       - name: Require Code59 regression coverage
-        if: ${{ always() && github.ref == 'refs/heads/release/code59-complete-qa-20261114' }}
+        if: ${{ always() && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) }}
         run: |
           python3 - <<'PY'
           import pathlib, xml.etree.ElementTree as ET
@@ -299,6 +300,40 @@ jobs:
               'destinationPrepositionsCannotBypassNegationOrAmbiguity'
           )}
           required.add(('OwnerComputerTaskGrantTest','parsedDestinationKeepsExistingDraftAndSendProtected'))
+          required |= {('LocalContextBudgetUiTest', name) for name in (
+              'optionalMemoriesCannotDisplaceCompleteOwnerTurns',
+              'longNonModelReportLeavesRoomForTheActualFollowUp',
+              'longCurrentRequestKeepsItsFinalNegationWithinNativeBudget'
+          )}
+          required |= {('OwnerAppActionWorkSceneUiTest', name) for name in (
+              'missingComputerSearchTermReachesExistingApprovalOnce',
+              'routineCommandInvalidatesPendingComputerSearch',
+              'newComputerCommandReplacesPendingSearchWithoutReinterpretation',
+              'stopAndNegationInvalidateComputerSearchQuestion'
+          )}
+          required |= {('LocalLongAnswerFlowTest', name) for name in (
+              'longStreamKeepsItsEndingAfterRestart',
+              'nativeTokenLimitCannotBecomeACompleteAnswer'
+          )}
+          required |= {('LocalModelResponseBoundaryTest', name) for name in (
+              'overrunKeepsEveryRemainingCharacterBeforeOutputLimit',
+              'truncationDoesNotSplitAnEmoji',
+              'reentrantStopKeepsAcceptedPrefixAndWinsOverOutputFailure'
+          )}
+          required |= {('LongOwnerTaskAdmissionTest', name) for name in (
+              'acceptedLongTaskReachesModelAndDiskWithoutLosingTheLastCorrection',
+              'invalidTaskCannotEraseAnExistingCheckpointOrInvokeModel'
+          )}
+          required.add(('LocalDialogueRetentionTest','continuationKeepsToolFreeRouteAfterRecreation'))
+          required |= {('LocalConversationContinuationChainTest', name) for name in (
+              'sixPartsRetainTheCompleteOriginalAndLatestAnswerEnd',
+              'rawTranscriptTurnsStaySeparateAndRestoreFoldsTheSameChain',
+              'missingOriginalCannotBeInventedFromContinuationReplies'
+          )}
+          required |= {('OwnerDialogueOutputTest', name) for name in (
+              'completeOwnerResponsePassesTheSameQualityGateWithoutLosingItsEnd',
+              'ownerFactoryRejectsUncapturedOverflowInsteadOfClipping'
+          )}
           required |= {('ContinuumUiSnapshotUiTest', name) for name in (
               'successfulSavePublishesClosedPngAndJson',
               'nullImageStreamRemovesPendingRow',
@@ -313,6 +348,9 @@ jobs:
               'oldAndroidDoesNotCreateRows'
           )}
           required |= {('OwnerFactRevocationUiTest', name) for name in (
+              'confirmedDeletionPersistsResetAfterFailedRestoreWithEmptyRam',
+              'confirmedDeletionResetKeepsItsSessionAndPrecedesLaterContextWrites',
+              'failedContextResetReportsIncompleteDeletionAndCanBeRetried',
               'confirmedDeletionCancelsPausedOwnerReply',
               'confirmedDeletionRejectsLateToolProposal',
               'cancelledDeletionPreservesPendingReplyAndFacts',
@@ -557,6 +595,7 @@ jobs:
           required.add(('ChiefResourceAdmissionUiTest', 's8d_realResourceAdmissionStopsNewToolsButDeliversFinishedReports'))
           required |= {('LocalModelHostMemoryUiTest', name) for name in (
               'loadedChatRechecksLowMemoryBeforeNativeDelegation',
+              'loadedTextOnlyRechecksLowMemoryBeforeNativeDelegation',
               'loadedThinkingRechecksLowMemoryBeforeNativeDelegation',
               'loadedToolContinuationRechecksLowMemoryBeforeNativeDelegation',
               'unavailableOrUnreadableMemoryBlocksEveryEntryWithoutUnloading',
@@ -582,6 +621,9 @@ jobs:
               'missingTelemetryFailsClosedInsteadOfGuessing',
               'healthyFold7ClassDeviceStillLoadsTheOriginalGemma',
               'unknownThermalOnOldAndroidDoesNotBlockButMemoryStillChecked')}
+          required |= {('LocalChatTranscriptStoreTest', name) for name in (
+              'contextResetRejectsInvalidExistingTargetsWithoutFalseSuccess',
+              'contextResetRejectsSymlinksWithoutChangingTheirTargets')}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
@@ -608,7 +650,7 @@ jobs:
           retention-days: 14
 
   node-backend:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -645,7 +687,7 @@ jobs:
           retention-days: 14
 
   native-runtime:
-    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/release/code59-complete-qa-20261114' || github.ref == 'refs/heads/diagnostic/code59-native-lint-20261114')
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114", "refs/heads/diagnostic/code59-native-lint-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:

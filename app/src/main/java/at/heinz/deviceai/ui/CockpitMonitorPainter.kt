@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.RectF
+import android.graphics.Typeface
 import at.heinz.deviceai.avatar3d.CockpitStageFrame
 
 /** Opaque pixels, shared perspective, no tint. */
@@ -14,7 +15,7 @@ internal class CockpitMonitorPainter {
     private val matrix = Matrix()
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val image = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-    private val label = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL) }
+    private val label = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL) }
     private val destination = RectF()
 
     fun draw(canvas: Canvas, frame: CockpitStageFrame, bitmap: Bitmap?, status: String, live: Boolean,

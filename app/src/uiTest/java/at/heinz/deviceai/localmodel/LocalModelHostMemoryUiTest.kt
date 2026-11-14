@@ -37,6 +37,7 @@ class LocalModelHostMemoryUiTest {
         override fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit) { loads++ }
         override fun unload(callback: (Result<Unit>) -> Unit) { unloads++ }
         override fun stream(prompt: String, callback: LocalInferenceCallback) = begin("stream:$prompt", callback)
+        override fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) = begin("text-only:$prompt", callback)
         override fun streamThinking(prompt: String, callback: LocalInferenceCallback) = begin("thinking:$prompt", callback)
         override fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) =
             begin("tools:" + responses.single().toolName + ":" + responses.single().response, callback)
@@ -88,13 +89,16 @@ class LocalModelHostMemoryUiTest {
         when (kind) {
             0 -> runtime.stream("owner-question", callback)
             1 -> runtime.streamThinking("worker-question", callback)
-            else -> runtime.respondToTools(listOf(LocalToolResponse("get_battery_info", "{}")), callback)
+            2 -> runtime.respondToTools(listOf(LocalToolResponse("get_battery_info", "{}")), callback)
+            3 -> runtime.streamTextOnly("text-question", callback)
+            else -> error("Unknown entry point")
         }
     }
 
     @Test fun loadedChatRechecksLowMemoryBeforeNativeDelegation() = changedMemory(0)
     @Test fun loadedThinkingRechecksLowMemoryBeforeNativeDelegation() = changedMemory(1)
     @Test fun loadedToolContinuationRechecksLowMemoryBeforeNativeDelegation() = changedMemory(2)
+    @Test fun loadedTextOnlyRechecksLowMemoryBeforeNativeDelegation() = changedMemory(3)
 
     private fun changedMemory(kind: Int) {
         val native = NativePort()
@@ -104,6 +108,8 @@ class LocalModelHostMemoryUiTest {
         start(runtime, kind, events)
         native.complete()
         val admitted = native.starts.single()
+        assertEquals(listOf("stream:owner-question", "thinking:worker-question",
+            "tools:get_battery_info:{}", "text-only:text-question")[kind], admitted)
         assertTrue(events.single() is LocalInferenceEvent.Completed)
         events.clear()
         memory(true, 256L shl 20)
@@ -142,9 +148,9 @@ class LocalModelHostMemoryUiTest {
             val native = NativePort()
             val runtime = runtime(native, context)
             val events = mutableListOf<LocalInferenceEvent>()
-            repeat(3) { start(runtime, it, events) }
+            repeat(4) { start(runtime, it, events) }
             assertTrue(native.starts.isEmpty())
-            assertEquals(List(3) { LocalInferenceEvent.Failed("LOCAL_MODEL_MEMORY_NO_MEASUREMENT") }, events)
+            assertEquals(List(4) { LocalInferenceEvent.Failed("LOCAL_MODEL_MEMORY_NO_MEASUREMENT") }, events)
             assertEquals("Keine neue Modellantwort gestartet: Die Arbeitsspeichermessung ist nicht verfügbar. " +
                 "Versuche es später erneut.", ContinuumUiCopy.modelFailure("LOCAL_MODEL_MEMORY_NO_MEASUREMENT"))
             assertEquals(LocalModelState.READY, runtime.state)
@@ -156,7 +162,7 @@ class LocalModelHostMemoryUiTest {
     }
 
     @Test @Config(sdk = [28]) fun unavailableThermalStatusStillChecksActualMemory() {
-        repeat(3) { changedMemory(it) }
+        repeat(4) { changedMemory(it) }
     }
 
     @Test fun thermalAdmissionAndRunningCancellationRemainEffective() {
@@ -165,9 +171,9 @@ class LocalModelHostMemoryUiTest {
         val events = mutableListOf<LocalInferenceEvent>()
         shadowOf(power).setCurrentThermalStatus(PowerManager.THERMAL_STATUS_SEVERE)
         shadowOf(Looper.getMainLooper()).idle()
-        repeat(3) { start(runtime, it, events) }
+        repeat(4) { start(runtime, it, events) }
         assertTrue(native.starts.isEmpty())
-        assertEquals(List(3) { LocalInferenceEvent.Failed("LOCAL_MODEL_PAUSED_THERMAL") }, events)
+        assertEquals(List(4) { LocalInferenceEvent.Failed("LOCAL_MODEL_PAUSED_THERMAL") }, events)
         shadowOf(power).setCurrentThermalStatus(PowerManager.THERMAL_STATUS_NONE)
         shadowOf(Looper.getMainLooper()).idle()
         events.clear()

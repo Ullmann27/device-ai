@@ -4,6 +4,15 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class LocalNativePromptBudgetTest {
+    @Test fun textOnlyBudgetReclaimsToolPrefaceWithoutClaimingMoreThan4096NativeTokens() {
+        val toolBound = LocalNativePromptBudget.promptByteBudget(4096, 2000, 2048)!!
+        val textOnly = LocalNativePromptBudget.toolFreePromptByteBudget(4096, 2048)!!
+        assertTrue("Tool-free text input should have significantly more room", textOnly > toolBound * 2)
+        assertTrue(textOnly > 0)
+        assertTrue(textOnly <= LocalToolContinuation.MAX_INPUT_BYTES)
+        assertEquals(null, LocalNativePromptBudget.toolFreePromptByteBudget(0, 2048))
+    }
+
     @Test fun explicitCapacityDoesNotIncreasePhoneContext() {
         assertEquals(4096, LocalNativePromptBudget.contextCapacity(0))
         assertEquals(4096, LocalNativePromptBudget.contextCapacity(32768))
@@ -71,5 +80,22 @@ class LocalNativePromptBudgetTest {
         assertFalse(LocalNativePromptBudget.completeContext(null, 4096))
         assertTrue(LocalNativePromptBudget.contextFailure("Input token ids are too long. Exceeding the maximum number of tokens allowed: 5000 >= 4096"))
         assertFalse(LocalNativePromptBudget.contextFailure("Native engine unavailable"))
+    }
+
+    @Test fun extendedTextOutputStillLeavesRoomForTheWholePrompt() {
+        for (capacity in listOf(4_096, 6_144, 8_192)) {
+            val requested = LocalModelGenerationPolicy.maxTextOnlyOutputTokens("gemma-4-e4b-it", capacity)
+            val short = LocalNativePromptBudget.plan(600, 1_800, 0, 512,
+                capacity, requested, true)!!
+            assertEquals(requested, short.maxOutputTokens)
+            assertTrue(short.plannedInputTokens + short.maxOutputTokens +
+                LocalNativePromptBudget.FRAMING_RESERVE <= capacity)
+            val long = LocalNativePromptBudget.plan(9_000, 10_500, 0, 512,
+                capacity, requested, true)!!
+            assertTrue(long.maxOutputTokens < requested)
+            assertTrue(long.plannedInputTokens + long.maxOutputTokens +
+                LocalNativePromptBudget.FRAMING_RESERVE <= capacity)
+            assertTrue(long.nativeFullInputCheckRequired)
+        }
     }
 }

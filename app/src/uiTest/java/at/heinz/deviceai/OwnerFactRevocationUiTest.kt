@@ -11,6 +11,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import at.heinz.deviceai.cognitive.CognitiveTurnTrace
 import at.heinz.deviceai.cognitive.DeliberationCancellation
+import at.heinz.deviceai.cognitive.LocalChatTranscriptStore
+import at.heinz.deviceai.cognitive.ConversationStartupNotice
 import at.heinz.deviceai.cognitive.LocalDialogueRetention
 import at.heinz.deviceai.cognitive.LocalGroundedRecall
 import at.heinz.deviceai.learning.ContinuumLearningCore
@@ -25,6 +27,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowAlertDialog
 import java.io.File
+import java.util.UUID
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
@@ -235,6 +238,109 @@ class OwnerFactRevocationUiTest {
         assertErased(f)
         f.runtime.complete(LocalInferenceEvent.TextDelta(LATE_REPLY))
         assertNoOldOutput(f)
+    }
+
+    @Test fun confirmedDeletionPersistsResetAfterFailedRestoreWithEmptyRam() = withFixture { f ->
+        val session = get(f.activity, "sessionId") as String
+        val directory = File(f.activity.filesDir.canonicalFile, "chat-history")
+        val store = LocalChatTranscriptStore(directory)
+        store.append(session, true, REQUEST, 1)
+        store.appendContextTurn(session, REQUEST, LATE_REPLY, 2)
+        call(f.activity, "persistContextInvalidations")
+        val entered = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        val blocker = AgentActivity.chatTranscriptIo.submit {
+            entered.countDown()
+            check(release.await(20, TimeUnit.SECONDS))
+        }
+        assertTrue(entered.await(5, TimeUnit.SECONDS))
+        try {
+            assertEquals(ConversationStartupNotice.ContextRestore.FAILED,
+                call(f.activity, "restoreModelContext"))
+        } finally {
+            release.countDown()
+            blocker.get(5, TimeUnit.SECONDS)
+        }
+        AgentActivity.chatTranscriptIo.submit {}.get(5, TimeUnit.SECONDS)
+        assertTrue(LocalDialogueRetention.context.priorUserTurns(session).isEmpty())
+        assertEquals(LATE_REPLY, store.loadContextHistory(session).single().response)
+        confirmDeletion(f)
+        assertErased(f)
+        AgentActivity.chatTranscriptIo.submit {}.get(5, TimeUnit.SECONDS)
+        LocalDialogueRetention.context.forgetForExit()
+        val next = Robolectric.buildActivity(AgentActivity::class.java).get()
+        val runtime = Runtime()
+        try {
+            prepareActivity(next, runtime, BootstrapMemoryStore(next),
+                FileToolExecutionReceiptStore(File(next.filesDir, "reset-restart-receipts")))
+            set(next, "sessionId", session)
+            assertEquals(ConversationStartupNotice.ContextRestore.NOTHING_STORED,
+                call(next, "restoreModelContext"))
+            assertTrue(LocalDialogueRetention.context.priorUserTurns(session).isEmpty())
+            assertTrue(LocalChatTranscriptStore(directory).loadContextHistory(session).isEmpty())
+            assertTrue(store.load(session).any { it.user && it.text == REQUEST })
+        } finally { closeActivity(next, runtime) }
+    }
+
+    @Test fun confirmedDeletionResetKeepsItsSessionAndPrecedesLaterContextWrites() = withFixture { f ->
+        val session = get(f.activity, "sessionId") as String
+        val other = UUID.randomUUID().toString()
+        val store = LocalChatTranscriptStore(File(f.activity.filesDir.canonicalFile, "chat-history"))
+        store.appendContextTurn(session, REQUEST, LATE_REPLY, 1)
+        store.appendContextTurn(other, "Anderes Gespräch.", "Andere Antwort.", 1)
+        val entered = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        val blocker = AgentActivity.chatTranscriptIo.submit {
+            entered.countDown()
+            check(release.await(20, TimeUnit.SECONDS))
+        }
+        assertTrue(entered.await(5, TimeUnit.SECONDS))
+        try {
+            confirmDeletion(f)
+            set(f.activity, "sessionId", other)
+            AgentActivity.chatTranscriptIo.execute {
+                store.appendContextTurn(session, "Neuer Auftrag.", "Neue Antwort.", 3)
+            }
+        } finally {
+            release.countDown()
+            blocker.get(5, TimeUnit.SECONDS)
+        }
+        assertErased(f)
+        AgentActivity.chatTranscriptIo.submit {}.get(5, TimeUnit.SECONDS)
+        assertEquals(listOf("Neuer Auftrag."), store.loadContextHistory(session).map { it.request })
+        assertEquals(listOf("Anderes Gespräch."), store.loadContextHistory(other).map { it.request })
+    }
+
+    @Test fun failedContextResetReportsIncompleteDeletionAndCanBeRetried() = withFixture { f ->
+        val session = get(f.activity, "sessionId") as String
+        val directory = File(f.activity.filesDir.canonicalFile, "chat-history")
+        val store = LocalChatTranscriptStore(directory)
+        store.appendContextTurn(session, REQUEST, LATE_REPLY, 1)
+        val target = File(directory, "$session.jsonl")
+        val original = target.readBytes()
+        assertTrue(target.delete())
+        assertTrue(target.mkdir())
+        try {
+            confirmDeletion(f)
+            assertErased(f)
+            AgentActivity.chatTranscriptIo.submit {}.get(5, TimeUnit.SECONDS)
+            val chat = texts(get(f.activity, "chatContainer") as View).joinToString("\n")
+            assertTrue(chat.contains("Löschung unvollständig"))
+            assertTrue(chat.contains("Gesprächskontext konnte nicht zurückgesetzt werden (IOException)"))
+            assertFalse(chat.contains("Alle gemerkten Fakten wurden"))
+            assertFalse(chat.contains("sie werden nicht mehr verwendet"))
+            assertEquals("Nachricht senden", (get(f.activity, "sendButton") as Button).contentDescription.toString())
+            assertTrue(target.isDirectory)
+        } finally {
+            assertTrue(target.delete())
+            target.writeBytes(original)
+        }
+        assertEquals(LATE_REPLY, store.loadContextHistory(session).single().response)
+        confirmDeletion(f)
+        assertErased(f)
+        AgentActivity.chatTranscriptIo.submit {}.get(5, TimeUnit.SECONDS)
+        assertTrue(LocalChatTranscriptStore(directory).loadContextHistory(session).isEmpty())
+        assertEquals("Nachricht senden", (get(f.activity, "sendButton") as Button).contentDescription.toString())
     }
 
     @Test fun confirmedDeletionRejectsLateToolProposal() = withFixture { f ->

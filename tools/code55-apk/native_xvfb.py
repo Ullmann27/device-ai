@@ -15,7 +15,7 @@ START_SECONDS = 5
 STOP_SECONDS = 2
 
 
-def identity(pid, parent):
+def identity(pid, parent, *, allow_empty_command=False):
     if pid <= 1 or pid == os.getpid():
         raise ValueError("Invalid display PID")
     root = Path(f"/proc/{pid}")
@@ -25,12 +25,14 @@ def identity(pid, parent):
     command = (root / "cmdline").read_bytes()
     if len(stat) < 20 or int(stat[1]) != parent or uids != [tuple([str(os.getuid())] * 4)]:
         raise ValueError("Display parent or UID changed")
+    process = {"pid": pid, "parent_pid": parent, "uid": os.getuid(),
+               "start_ticks": int(stat[19]), "process_group": int(stat[2]), "session": int(stat[3])}
+    if not command and allow_empty_command:
+        return dict(process, executable=None, argv=None)
     if not command.endswith(b"\0") or len(command) > 16384:
         raise ValueError("Display command unavailable")
-    return {"pid": pid, "parent_pid": parent, "uid": os.getuid(),
-            "start_ticks": int(stat[19]), "process_group": int(stat[2]), "session": int(stat[3]),
-            "executable": str((root / "exe").resolve(strict=True)),
-            "argv": command[:-1].decode("utf-8", "strict").split("\0")}
+    return dict(process, executable=str((root / "exe").resolve(strict=True)),
+                argv=command[:-1].decode("utf-8", "strict").split("\0"))
 
 
 def display_number(reply):
@@ -54,10 +56,14 @@ def ready(pid, executable, directory, report):
         while time.monotonic() < deadline:
             if exited(descriptor):
                 raise RuntimeError("Owned Xvfb exited during startup")
-            current = identity(pid, os.getppid())
+            current = identity(pid, os.getppid(), allow_empty_command="process" not in report)
+            process = {key: value for key, value in current.items() if key not in ("executable", "argv")}
+            if "startup_process" in report and report["startup_process"] != process:
+                raise ValueError("Owned display startup identity changed")
+            report["startup_process"] = process
+            if "process" in report and report["process"] != current:
+                raise ValueError("Owned display identity changed")
             if current["executable"] == str(binary) and current["argv"] == expected_command:
-                if "process" in report and report["process"] != current:
-                    raise ValueError("Owned display identity changed")
                 report["process"] = current
                 with (directory / "display.txt").open("rb") as stream:
                     reply = stream.read(17)
@@ -69,6 +75,8 @@ def ready(pid, executable, directory, report):
                         report["executable_sha256"] = hashlib.file_digest(stream, "sha256").hexdigest()
                     if exited(descriptor) or identity(pid, os.getppid()) != current:
                         raise RuntimeError("Owned display ended before readiness")
+                    if time.monotonic() >= deadline:
+                        raise TimeoutError("Owned Xvfb startup deadline")
                     report["status"] = "READY"
                     return
             exited(descriptor, min(0.05, max(0, deadline - time.monotonic())))
@@ -118,6 +126,10 @@ def stop(pid, executable, directory, report):
         start_path = directory / "ready.json"
         previous = json.loads(start_path.read_text()) if start_path.exists() else {}
         expected = previous.get("process") or identity(pid, os.getppid())
+        startup = previous.get("startup_process")
+        if startup is not None and startup != {
+                key: value for key, value in expected.items() if key not in ("executable", "argv")}:
+            raise ValueError("Owned display startup identity changed before cleanup")
         binary = str(Path(executable).resolve(strict=True))
         if expected["pid"] != pid or expected["executable"] != binary \
                 or expected["argv"] != [binary, *ARGUMENTS]:

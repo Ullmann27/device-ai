@@ -120,12 +120,13 @@ class LocalModelThermalGuardTest {
         when (kind) {
             0 -> runtime.stream("chat", callback)
             1 -> runtime.streamThinking("reasoning", callback)
-            else -> runtime.respondToTools(listOf(LocalToolResponse("get_battery_info", "{}")), callback)
+            2 -> runtime.respondToTools(listOf(LocalToolResponse("get_battery_info", "{}")), callback)
+            else -> runtime.streamTextOnly("text-only long answer", callback)
         }
     }
 
     @Test fun severeCallbackDuringSamplingRejectsStaleCoolReadingForEveryEntryPoint() {
-        repeat(3) { kind ->
+        repeat(4) { kind ->
             val native = NativeStandIn()
             lateinit var runtime: LocalModelRuntime
             runtime = LocalModelThermalGuard.wrap(native) {
@@ -142,7 +143,7 @@ class LocalModelThermalGuardTest {
     }
 
     @Test fun heatBeforeNativeAdmissionStopsOnceAfterStartForEveryEntryPoint() {
-        repeat(3) { kind ->
+        repeat(4) { kind ->
             val native = NativeStandIn()
             val runtime = LocalModelThermalGuard.wrap(native) { thermal }
             native.beforeAdmission = {
@@ -288,6 +289,33 @@ class LocalModelThermalGuardTest {
         runtime.stream("cool owner retry") { events += it }
         native.complete()
         assertTrue(events.last() is LocalInferenceEvent.Completed)
+        assertEquals(1, native.cancels)
+    }
+
+
+    /** The new tool-free chat entry must never bypass the existing thermal gate. */
+    @Test fun toolFreeChatDoesNotStartWhenAndroidReportsSevereHeat() {
+        val native = NativeStandIn()
+        val runtime = LocalModelThermalGuard.wrap(native) { thermal }
+        thermal = 3
+        val events = mutableListOf<LocalInferenceEvent>()
+        runtime.streamTextOnly("Erkläre mir das Dokument ausführlich.") { events += it }
+        assertEquals("tool-free text mode must not bypass native admission", emptyList<String>(), native.started)
+        assertEquals(listOf(LocalInferenceEvent.Failed(LocalModelThermalGuard.PAUSED_THERMAL)), events)
+    }
+
+    @Test fun runningToolFreeChatIsCancelledAndReportsActualHeat() {
+        val native = NativeStandIn()
+        val runtime = LocalModelThermalGuard.wrap(native) { thermal }
+        thermal = 0
+        val events = mutableListOf<LocalInferenceEvent>()
+        runtime.streamTextOnly("Lange Antwort in vielen Absätzen") { events += it }
+        assertEquals(listOf("Lange Antwort in vielen Absätzen"), native.started)
+        thermal = 3
+        LocalModelThermalGuard.onThermalStatus(runtime, 3)
+        assertEquals("a hot Fold7 must cancel tool-free native generation once", 1, native.cancels)
+        assertEquals(listOf(LocalInferenceEvent.Failed(LocalModelThermalGuard.STOPPED_THERMAL)), events)
+        LocalModelThermalGuard.onThermalStatus(runtime, 4)
         assertEquals(1, native.cancels)
     }
 

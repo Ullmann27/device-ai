@@ -18,6 +18,12 @@ internal object LocalNativePromptBudget {
 
     /** Answer tokens a prompt must leave free (or the model's own smaller output limit). */
     const val MIN_ANSWER_RESERVE = 512
+    // Conservative planning reserve, not a measured token count. Native checks remain final.
+    const val TOOL_FREE_PREFACE_RESERVE = 512
+    fun toolFreePromptByteBudget(contextTokens: Int, requestedOutput: Int): Int? =
+        promptByteBudget(contextTokens, TOOL_FREE_PREFACE_RESERVE, requestedOutput)
+            ?.coerceAtMost(LocalToolContinuation.MAX_INPUT_BYTES)
+
 
     /**
      * Code56 field P0: the app built prompts up to 15 500 characters although the measured preface (system

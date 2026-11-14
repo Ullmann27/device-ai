@@ -2,6 +2,7 @@ package at.heinz.deviceai.cognitive
 
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -28,15 +29,38 @@ class LocalDialogueRetentionTest {
 
     @Test fun lastLocalReplySurvivesRecreationOnlyForTheSameSession() {
         LocalDialogueRetention.retainReply(
-            LocalDialogueRetention.RetainedReply(session, "Wie viele Ringe?", "7 Ringe."))
+            LocalDialogueRetention.RetainedReply(session, "Wie viele Ringe?", "7 Ringe.", textOnly = true))
         LocalDialogueRetention.activityDestroyed(changingConfigurations = true)
         assertEquals("7 Ringe.", LocalDialogueRetention.replyFor(session)?.response)
+        assertTrue(LocalDialogueRetention.replyFor(session)?.textOnly == true)
         assertNull(LocalDialogueRetention.replyFor("ffffffff-1111-4222-8333-944455556666"))
+    }
+
+    @Test fun continuationKeepsToolFreeRouteAfterRecreation() {
+        LocalDialogueRetention.context.record(session, "Erkläre den Ablauf ausführlich.", "Teil eins …",
+            responseComplete = false)
+        LocalDialogueRetention.retainReply(LocalDialogueRetention.RetainedReply(
+            session, "Erkläre den Ablauf ausführlich.", "Teil eins …", textOnly = true))
+        LocalDialogueRetention.activityDestroyed(changingConfigurations = true)
+        assertTrue(LocalTextOnlyInferenceRoute.useToolFree("Weiter", false, false, false, false,
+            priorTextOnlyResponse = LocalDialogueRetention.replyFor(session)?.textOnly == true &&
+                LocalDialogueRetention.context.hasContinuation(session)))
+    }
+
+    @Test fun unknownRouteCannotBecomeATextOnlyContinuation() {
+        LocalDialogueRetention.context.record(session, "Prüfe das Gerät.", "Teil eins …",
+            responseComplete = false)
+        LocalDialogueRetention.retainReply(LocalDialogueRetention.RetainedReply(
+            session, "Prüfe das Gerät.", "Teil eins …"))
+        LocalDialogueRetention.activityDestroyed(changingConfigurations = true)
+        assertFalse(LocalTextOnlyInferenceRoute.useToolFree("Weiter", false, false, false, false,
+            priorTextOnlyResponse = LocalDialogueRetention.replyFor(session)?.textOnly == true &&
+                LocalDialogueRetention.context.hasContinuation(session)))
     }
 
     @Test fun realFinishForgetsTheEphemeralDialogue() {
         LocalDialogueRetention.context.record(session, "Geheime Zwischennotiz", "Ok.")
-        LocalDialogueRetention.retainReply(LocalDialogueRetention.RetainedReply(session, "a", "b"))
+        LocalDialogueRetention.retainReply(LocalDialogueRetention.RetainedReply(session, "a", "b", textOnly = true))
         LocalDialogueRetention.activityDestroyed(changingConfigurations = false)
         assertEquals(emptyList<String>(), LocalDialogueRetention.context.sessionEvidence(session))
         assertNull(LocalDialogueRetention.replyFor(session))

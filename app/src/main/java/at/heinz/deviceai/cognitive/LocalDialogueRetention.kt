@@ -16,7 +16,8 @@ package at.heinz.deviceai.cognitive
  * kills the process, the dialogue is gone as before.
  */
 object LocalDialogueRetention {
-    data class RetainedReply(val sessionId: String, val request: String, val response: String)
+    data class RetainedReply(val sessionId: String, val request: String, val response: String,
+                             val textOnly: Boolean = false)
 
     /** One instance per process; LocalConversationContext is internally synchronized. */
     val context: LocalConversationContext = LocalConversationContext()

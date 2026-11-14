@@ -111,4 +111,40 @@ class AiContextByteBudgetTest {
         }
         assertEquals("MANDATORY_CONTEXT_EXCEEDS_BUDGET", failure.message)
     }
+
+    @Test
+    fun reservedOwnerHistoryDisplacesOptionalMemoryBeforeTheCurrentRequest() {
+        val request = "Wo steht die Kiste von Maren jetzt?"
+        val memory = ContextIntegrityFixture.memory("large", "Maren: " + "Zusatz. ".repeat(140))
+        val input = ContextIntegrityFixture.input(request, listOf(memory))
+        val mandatory = compile(input.copy(memories = emptyList()))
+        val complete = compile(input)
+        assertEquals(listOf(memory.id), complete.includedMemoryIds)
+        val policy = noTools.copy(maxBytes = complete.text.toByteArray(Charsets.UTF_8).size)
+        val reserve = policy.maxBytes - mandatory.text.toByteArray(Charsets.UTF_8).size
+        val result = AiContextCompiler(policy, nowMillis = { 100L }).compile(input, reservedBytes = reserve)
+
+        assertEquals(mandatory.text, result.text)
+        assertTrue(result.text.contains(request))
+        assertTrue(result.includedMemoryIds.isEmpty())
+        assertTrue(result.truncated)
+        assertEquals(policy.maxBytes, result.text.toByteArray(Charsets.UTF_8).size + reserve)
+    }
+
+    @Test
+    fun reservationCannotClipRequiredCorrectionsOrGrowTheBudget() {
+        val input = ContextIntegrityFixture.input("Wo ist Maren?",
+            contradictions = listOf("Maren ist nicht in Graz."))
+        val complete = compile(input)
+        val policy = noTools.copy(maxBytes = complete.text.toByteArray(Charsets.UTF_8).size + 100)
+        val compiler = AiContextCompiler(policy)
+        assertEquals(complete.text, compiler.compile(input, reservedBytes = 100).text)
+        assertEquals("MANDATORY_CONTEXT_EXCEEDS_BUDGET", assertThrows(IllegalStateException::class.java) {
+            compiler.compile(input, reservedBytes = 101)
+        }.message)
+        assertEquals("MANDATORY_CONTEXT_EXCEEDS_BUDGET", assertThrows(IllegalStateException::class.java) {
+            compiler.compile(input, reservedBytes = Int.MAX_VALUE)
+        }.message)
+        assertThrows(IllegalArgumentException::class.java) { compiler.compile(input, reservedBytes = -1) }
+    }
 }

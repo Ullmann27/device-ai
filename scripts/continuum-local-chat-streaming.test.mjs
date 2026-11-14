@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 const activity = readFileSync(new URL('../app/src/main/java/at/heinz/deviceai/AgentActivity.kt', import.meta.url), 'utf8');
 const capture = readFileSync(new URL('../app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationCapture.kt', import.meta.url), 'utf8');
 const policy = readFileSync(new URL('../app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationDeadlinePolicy.kt', import.meta.url), 'utf8');
+const outputPolicy = readFileSync(new URL('../app/src/main/java/at/heinz/deviceai/localmodel/LocalModelGenerationPolicy.kt', import.meta.url), 'utf8');
 
 function section(source, start, end) {
   const from = source.indexOf(start);
@@ -59,7 +60,8 @@ function budgetConnected(a, c, p) {
   assert.doesNotMatch(generate, /generationDeadline = generationStartedNanos/);
   assert.match(p, /STARTUP_STALL_MILLIS = 180_000L/);
   assert.match(p, /STREAM_STALL_MILLIS = 120_000L/);
-  assert.match(p, /MAX_CAPTURED_CHARACTERS = 20_000/);
+  assert.match(p, /MAX_CAPTURED_CHARACTERS = LocalModelGenerationPolicy\.MAX_RESPONSE_CHARACTERS/);
+  assert.match(outputPolicy, /MAX_RESPONSE_CHARACTERS = 64_000/);
   assert.match(generate, /localRuntime\.inferenceProfiles\.lastOrNull\(\)\?\.safeSummary\(\)/);
 }
 

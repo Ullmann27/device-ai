@@ -1,5 +1,6 @@
 package at.heinz.deviceai.cognitive
 
+import at.heinz.deviceai.localmodel.LocalModelGenerationPolicy
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
@@ -43,7 +44,10 @@ class LocalChatTranscriptStore(private val dir: File) {
         require(ID.matches(id)) { "Conversation id" }
         if (text.isBlank()) return
         dir.mkdirs()
-        appendLine(id, JSONObject().put("u", user).put("t", text.take(MAX_TEXT)).put("at", atMillis).toString())
+        val end = minOf(text.length, MAX_TEXT).let {
+            if (it < text.length && text[it - 1].isHighSurrogate()) it - 1 else it
+        }
+        appendLine(id, JSONObject().put("u", user).put("t", text.substring(0, end)).put("at", atMillis).toString())
     }
 
     internal data class PreparedAppend(val conversationId: String, val offset: Long, val text: String)
@@ -179,8 +183,22 @@ class LocalChatTranscriptStore(private val dir: File) {
      */
     @Synchronized fun appendContextReset(id: String, atMillis: Long) {
         require(ID.matches(id)) { "Conversation id" }
-        if (!File(dir, "$id$SUFFIX").isFile) return
-        appendLine(id, JSONObject().put("k", CONTEXT_RESET).put("at", atMillis).toString())
+        val directory = dir.absoluteFile.toPath().normalize()
+        if (directory != dir.canonicalFile.toPath() || Files.exists(directory, NOFOLLOW_LINKS) &&
+            !Files.isDirectory(directory, NOFOLLOW_LINKS)) throw IOException("Unsafe chat directory.")
+        if (Files.notExists(File(dir, "$id$SUFFIX").toPath(), NOFOLLOW_LINKS)) return
+        val file = appendTarget(id, create = false)
+        val line = JSONObject().put("k", CONTEXT_RESET).put("at", atMillis).toString() + "\n"
+        FileChannel.open(file.toPath(), READ, WRITE, NOFOLLOW_LINKS).use { channel ->
+            val size = channel.size()
+            val last = ByteBuffer.allocate(1)
+            val needsBreak = size > 0 && channel.read(last, size - 1) == 1 && last[0].toInt() != '\n'.code
+            val bytes = ByteBuffer.wrap(strictUtf8((if (needsBreak) "\n" else "") + line))
+            channel.position(size)
+            while (bytes.hasRemaining()) channel.write(bytes)
+            channel.force(true)
+        }
+        forceDirectory()
     }
 
     /** The last [limit] context turns after the last reset marker, in order (the model context keeps at most four). */
@@ -305,7 +323,8 @@ class LocalChatTranscriptStore(private val dir: File) {
         private const val CONTEXT = "ctx"
         private const val CONTEXT_RESET = "ctx-reset"
         private const val SUFFIX = ".jsonl"
-        private const val MAX_TEXT = 32_000
+        // Keep the partial-answer status too.
+        private const val MAX_TEXT = LocalModelGenerationPolicy.MAX_RESPONSE_CHARACTERS + 4_096
         private const val CONTEXT_VERSION = 2
         private const val LEGACY_CONTEXT_REQUEST = 1_000
         private const val LEGACY_CONTEXT_RESPONSE = 2_000

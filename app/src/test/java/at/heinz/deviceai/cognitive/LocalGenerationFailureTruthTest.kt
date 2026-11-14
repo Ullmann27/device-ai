@@ -38,6 +38,16 @@ class LocalGenerationFailureTruthTest {
         assertNull(result.experience)
     }
 
+    @Test fun nativeOutputLimitKeepsPartialWithoutSuccessOrLearning() {
+        val result = runPartially("LOCAL_MODEL_OUTPUT_TOKEN_LIMIT")
+        assertFalse(result.responseComplete)
+        assertTrue(result.blocker.orEmpty().contains("Ausgabelimit wurde erreicht"))
+        assertTrue(result.response.contains("Teilweise Antwort"))
+        assertNull(result.experience)
+        assertFalse(result.taskEvidence!!.outcomeVerified)
+        assertFalse(result.blocker.orEmpty().contains("Gerätewärme"))
+    }
+
     @Test fun missingErrorReasonIsReportedAsUnknown() {
         val result = runPartially(null)
         assertFalse(result.responseComplete)
