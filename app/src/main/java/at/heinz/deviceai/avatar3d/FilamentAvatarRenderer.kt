@@ -345,8 +345,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_BEGIN) ?: 0
             try {
                 r.render(view!!)
-                receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_RENDERED) ?: 0
             } finally { r.endFrame() }
+            receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_SUBMITTED) ?: 0
             cockpitStage?.frameSubmitted(System.nanoTime())
         } catch (failure: Throwable) {
             cockpitStage?.frameFailed()

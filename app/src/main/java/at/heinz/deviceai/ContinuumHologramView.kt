@@ -36,6 +36,7 @@ import at.heinz.deviceai.avatar3d.AvatarFraming
 import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer
 import at.heinz.deviceai.avatar3d.AvatarFrameReceipt
 import at.heinz.deviceai.avatar3d.AvatarTraceRingBuffer
+import at.heinz.deviceai.avatar3d.AvatarConsumerSample
 import at.heinz.deviceai.avatar3d.AvatarProofFrame
 import at.heinz.deviceai.avatar3d.AvatarProofCompletion
 import at.heinz.deviceai.avatar3d.DeterministicAvatarProofRunner
@@ -579,6 +580,9 @@ class ContinuumHologramView @JvmOverloads constructor(
             nativeTexture = texture
             texture.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
                 override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+                    if (nativeTexture === texture) {
+                        avatarTrace.bindSurface(surface, runCatching { surface.timestamp }.getOrNull())
+                    }
                     nativeSurface = Surface(surface)
                     worldBufferWidth = 0; worldBufferHeight = 0
                     resizeWorldBuffer()
@@ -590,8 +594,11 @@ class ContinuumHologramView @JvmOverloads constructor(
                     resizeWorldBuffer()
                     invalidate()
                 }
-                override fun onSurfaceTextureUpdated(surface: SurfaceTexture) = Unit
+                override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
+                    avatarTrace.surfaceUpdated(surface, runCatching { surface.timestamp }.getOrNull())
+                }
                 override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                    avatarTrace.clearSurface(surface)
                     cockpitLiveFeed?.monitorSubmission?.invalidate()
                     documentStageBinding?.report(false)
                     native3d?.close(); native3d = null
@@ -768,6 +775,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     private fun release3d(clearAsset: Boolean) {
+        avatarTrace.clearSurface()
         cockpitLiveFeed?.monitorSubmission?.invalidate()
         onCockpitStatus?.invoke("3D-Szene angehalten", false)
         documentStageBinding?.report(false)
@@ -837,12 +845,13 @@ class ContinuumHologramView @JvmOverloads constructor(
         val activity = context as? android.app.Activity ?: return
         if (!foregroundActive || !isAttachedToWindow || !isShown || activity.isFinishing || activity.isDestroyed) return
         AlertDialog.Builder(context)
-            .setTitle(if (summary.live) "Avatar-Proof · LIVE" else "Avatar-Proof · Fehler gefunden")
+            .setTitle(if (summary.consumerObserved) "Avatar-Proof · Bildpuffer beobachtet" else "Avatar-Proof · Bildnachweis offen")
             .setMessage(
                 "15-Sekunden-Proof abgeschlossen.\n" +
                     "Animations-Callbacks: ${summary.callbackDelta}\n" +
                     "Wirkliche Canvas-Zeichnungen: ${summary.drawDelta}\n\n" +
                     summary.verdict +
+                    "\nPixelinhalt und sichtbarer Avatar wurden nicht geprüft." +
                     "\n\nKein Modell, Web, ASR oder TTS wurde für diesen Test verwendet."
             )
             .setPositiveButton("Schließen", null)
@@ -1091,9 +1100,17 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     /** No private content. Owner can inspect this by long-pressing the hologram. */
     /** Read only on the Android UI thread. Compares scheduled callbacks and real View draws. */
-    data class MotionSample(val callbackCount: Long, val drawCount: Long, val phase: Float, val reason: String)
+    data class MotionSample(
+        val callbackCount: Long,
+        val drawCount: Long,
+        val phase: Float,
+        val reason: String,
+        val consumer: AvatarConsumerSample
+    )
 
-    fun sampleMotion(): MotionSample = MotionSample(visibleFrameCount, drawnFrameCount, phase, motionDiagnostics())
+    fun sampleMotion(): MotionSample = MotionSample(
+        visibleFrameCount, drawnFrameCount, phase, motionDiagnostics(), avatarTrace.consumerSample()
+    )
 
     internal fun motionDiagnostics(): String = when {
         !animationsEnabled -> "Avatar: In-App-Animation ausgeschaltet"
@@ -1107,7 +1124,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             "Avatar: ESSENTIAL · Energiesparmodus · Dekoration pausiert · " + avatarTrace.diagnose()
         thermalStatus >= 3 -> "Hologramm: Temperatur hoch · Bewegung pausiert."
         powerManager.isPowerSaveMode -> "Hologramm: Energiesparmodus · Bewegung pausiert."
-        else -> "Avatar: LIVE · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)} · ${avatarTrace.diagnose()}"
+        else -> "Avatar: Animation · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)} · ${avatarTrace.diagnose()}"
     }
 
     private fun updateMotionPolicy() {

@@ -158,7 +158,8 @@ class ContinuumAvatar3dLifecycleUiTest {
             view.setNativeHeadEnabled(true)
             attachVisible(controller.get(), view)
             view.setForegroundActive(true)
-            assertTrue("Observed gaze requires a live visible head", view.motionDiagnostics().contains("LIVE"))
+            advanceFrames(16)
+            assertTrue("Observed gaze requires animation callbacks", view.sampleMotion().callbackCount > 0L)
             val reducer = field(view, "avatarPose") as AvatarPoseReducer
             val director = AvatarDirector(AvatarSink(view::onAvatarEvent), SystemClock::elapsedRealtime)
             fun observe() {

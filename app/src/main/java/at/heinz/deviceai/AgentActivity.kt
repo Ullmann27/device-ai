@@ -5653,8 +5653,7 @@ class AgentActivity : Activity() {
                 phaseDelta <= 0f ->
                     "ZEICHNUNG ERKANNT, ABER KEINE FORTSCHREITENDE PHASE. Uhr/Policy prüfen."
                 else ->
-                    "FRAMES UND PHASE LAUFEN. Falls die Kugel trotzdem starr wirkt, sichtbaren " +
-                        "Kernbereich und Compositing anhand echter Gerätebilder untersuchen."
+                    "ANIMATIONS-CALLBACKS UND CANVAS-PHASE LAUFEN."
             }
             AlertDialog.Builder(this)
                 .setTitle("Continuum · Hologramm-Gerätediagnose")
@@ -5665,7 +5664,8 @@ class AgentActivity : Activity() {
                         "Phasenänderung: ${"%.3f".format(java.util.Locale.ROOT, phaseDelta)}\n\n" +
                         "Start: ${first.reason}\n" +
                         "Ende: ${second.reason}\n\n" +
-                        verdict +
+                        verdict + "\n" + second.consumer.progressSince(first.consumer) +
+                        "\nPixelinhalt und sichtbarer Avatar wurden nicht geprüft." +
                         "\n\nKeine Daten verändert. Diese Anzeige fotografieren."
                 )
                 .setPositiveButton("Schließen", null)
