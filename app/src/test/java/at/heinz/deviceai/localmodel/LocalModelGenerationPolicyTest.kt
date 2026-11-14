@@ -4,6 +4,12 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class LocalModelGenerationPolicyTest {
+    @Test fun toolFreeAnswersMayRequestLongerGemmaOutputWithoutChangingDeviceTaskLimit() {
+        assertEquals(3_072, LocalModelGenerationPolicy.maxTextOnlyOutputTokens("gemma-4-e4b-it"))
+        assertEquals(1_024, LocalModelGenerationPolicy.maxTextOnlyOutputTokens("qwen3-coder"))
+        assertEquals(2_048, LocalModelGenerationPolicy.maxOutputTokens("gemma-4-e4b-it"))
+    }
+
     @Test fun gemma4E4bOnDeviceCatalogHasExtendedButBoundedBudget() {
         assertEquals(2_048, LocalModelGenerationPolicy.maxOutputTokens("gemma4-e4b-it"))
         assertEquals(2_048, LocalModelGenerationPolicy.maxOutputTokens("gemma-4-E4B-it"))

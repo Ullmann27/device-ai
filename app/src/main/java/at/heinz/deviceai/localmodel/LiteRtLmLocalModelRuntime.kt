@@ -70,6 +70,8 @@ interface LocalModelRuntime {
     val maxPromptUtf8Bytes: Int? get() = null
     /** Prompt bytes that fit the loaded engine's window after its measured preface; null when unknown. */
     val tokenAwarePromptUtf8Bytes: Int? get() = null
+    val toolFreePromptUtf8Bytes: Int? get() = null
+    fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) = stream(prompt, callback)
     fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)
     fun unload(callback: (Result<Unit>) -> Unit = {})
     fun stream(prompt: String, callback: LocalInferenceCallback)
@@ -119,6 +121,11 @@ class LiteRtLmLocalModelRuntime(
     override val tokenAwarePromptUtf8Bytes: Int? get() = loadedModel?.let { model ->
         LocalNativePromptBudget.promptByteBudget(configuredContextTokens, prefaceTokenCount,
             LocalModelGenerationPolicy.maxOutputTokens(model.id))
+    }
+
+    override val toolFreePromptUtf8Bytes: Int? get() = loadedModel?.let { model ->
+        LocalNativePromptBudget.toolFreePromptByteBudget(configuredContextTokens,
+            LocalModelGenerationPolicy.maxTextOnlyOutputTokens(model.id))
     }
 
     private var engine: Engine? = null
@@ -247,6 +254,16 @@ class LiteRtLmLocalModelRuntime(
             freshPrompt = true, payloadBytes = effectivePrompt.toByteArray(Charsets.UTF_8).size)
     }
 
+    override fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) {
+        require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS &&
+            prompt.toByteArray(Charsets.UTF_8).size <= LocalToolContinuation.MAX_INPUT_BYTES)
+        val effectivePrompt = LocalQwenPromptPolicy.directUserPrompt(
+            loadedModel?.id, prompt, MAX_PROMPT_CHARACTERS)
+        // One existing engine, but an isolated text-only native Conversation with zero tools.
+        streamMessage(Message.user(Contents.of(effectivePrompt)), effectivePrompt.length, callback, true,
+            payloadBytes = effectivePrompt.toByteArray(Charsets.UTF_8).size, textOnlyDialogue = true)
+    }
+
     override fun streamThinking(prompt: String, callback: LocalInferenceCallback) {
         require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS &&
             prompt.toByteArray(Charsets.UTF_8).size <= LocalToolContinuation.MAX_INPUT_BYTES)
@@ -275,9 +292,11 @@ class LiteRtLmLocalModelRuntime(
         callback: LocalInferenceCallback,
         isolatedThinking: Boolean,
         freshPrompt: Boolean = false,
-        payloadBytes: Int
+        payloadBytes: Int,
+        textOnlyDialogue: Boolean = false
     ) {
         val profile = inferenceProfiler.begin(when {
+            textOnlyDialogue -> LocalInferenceKind.CHAT
             isolatedThinking -> LocalInferenceKind.ISOLATED_THINKING
             freshPrompt -> LocalInferenceKind.CHAT
             else -> LocalInferenceKind.TOOL_CONTINUATION
@@ -296,13 +315,14 @@ class LiteRtLmLocalModelRuntime(
                     LocalInferenceStage.CONVERSATION_CREATE_EXIT) {
                     checkNotNull(engine).createConversation(
                         ConversationConfig(
-                            systemInstruction = Contents.of(
+                            systemInstruction = Contents.of(if (textOnlyDialogue) systemPrompt else
                                 "You are a data-only reasoning worker for Device AI. " +
-                                    "You have no tools and no authority to act."
-                            ),
+                                    "You have no tools and no authority to act."),
                         tools = emptyList(),
                         automaticToolCalling = false,
-                        maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
+                        maxOutputToken = if (textOnlyDialogue)
+                            LocalModelGenerationPolicy.maxTextOnlyOutputTokens(loadedModel?.id)
+                        else LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
                     )
                 )
                 }
@@ -426,9 +446,13 @@ class LiteRtLmLocalModelRuntime(
                 LocalNativePromptBudget.renderedUtf8Estimate(activeConversation.renderMessageIntoString(message))
             }.getOrNull()
             // Worker prefix is in its rendered input.
-            val prefix = if (isolatedThinking) 0 else prefaceTokenCount
+            val prefix = if (textOnlyDialogue) LocalNativePromptBudget.TOOL_FREE_PREFACE_RESERVE
+                else if (isolatedThinking) 0 else prefaceTokenCount
+            val requestedOutput = if (textOnlyDialogue)
+                LocalModelGenerationPolicy.maxTextOnlyOutputTokens(loadedModel?.id)
+                else LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
             val budget = LocalNativePromptBudget.plan(payloadBytes, renderedBytes, inputTokens, prefix,
-                configuredContextTokens, LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id),
+                configuredContextTokens, requestedOutput,
                 fresh = freshPrompt || isolatedThinking)
             if (budget == null) {
                 finish(LocalInferenceEvent.Failed("LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL"))

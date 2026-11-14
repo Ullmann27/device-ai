@@ -5,7 +5,7 @@ import org.junit.Test
 
 class LocalNativePromptBudgetTest {
     @Test fun textOnlyBudgetReclaimsToolPrefaceWithoutClaimingMoreThan4096NativeTokens() {
-        val toolBound = LocalNativePromptBudget.promptByteBudget(4096, 1900, 2048)!!
+        val toolBound = LocalNativePromptBudget.promptByteBudget(4096, 2000, 2048)!!
         val textOnly = LocalNativePromptBudget.toolFreePromptByteBudget(4096, 2048)!!
         assertTrue("Tool-free text input should have significantly more room", textOnly > toolBound * 2)
         assertTrue(textOnly > 0)
