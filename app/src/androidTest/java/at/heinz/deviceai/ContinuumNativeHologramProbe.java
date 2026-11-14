@@ -33,6 +33,8 @@ import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.FutureTask;
@@ -41,7 +43,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-/** Observes the existing stage. */
+/** Exercises the existing surface lifecycle. */
 public final class ContinuumNativeHologramProbe {
     private static final String PACKAGE = "at.heinz.deviceai.mentorpaired";
     private static final String ACTIVITY = "at.heinz.deviceai.AgentActivity";
@@ -170,6 +172,9 @@ public final class ContinuumNativeHologramProbe {
             phase("surface_pixel_copy");
             report.put("pixel_copy", copySurface());
             samples.put(onMain(this::sample));
+            persist();
+            phase("surface_resize_regression");
+            verifySurfaceResize();
             require(settled, "Loading state did not settle before deadline");
             complete = true;
         } catch (Throwable error) {
@@ -231,10 +236,12 @@ public final class ContinuumNativeHologramProbe {
                 .put("main_thread", Thread.currentThread().getName()).put("hologram", viewState(hologram))
                 .put("texture", texture == null ? JSONObject.NULL : viewState(texture))
                 .put("texture_available", texture != null && texture.isAvailable())
+                .put("texture_is_texture_view", texture instanceof TextureView)
                 .put("texture_parent_is_hologram", texture != null && texture.getParent() == hologram)
                 .put("surface_valid", surface != null && surface.isValid())
                 .put("surface_identity", surface == null ? JSONObject.NULL : System.identityHashCode(surface))
                 .put("renderer_present", nativeRenderer != null)
+                .put("native_renderer_identity", nativeRenderer == null ? JSONObject.NULL : System.identityHashCode(nativeRenderer))
                 .put("cockpit_ready", nativeRenderer != null && field(nativeRenderer, "cockpitStage") != null)
                 .put("callbacks", invoke(motion, "getCallbackCount")).put("draws", invoke(motion, "getDrawCount"))
                 .put("phase", invoke(motion, "getPhase")).put("reason", invoke(motion, "getReason"))
@@ -243,6 +250,10 @@ public final class ContinuumNativeHologramProbe {
         if (nativeRenderer != null) {
             state.put("viewport_width", field(nativeRenderer, "viewportWidth"))
                     .put("viewport_height", field(nativeRenderer, "viewportHeight"));
+            for (String name : new String[]{"engine", "asset", "scene", "renderer", "cockpitStage", "swapChain"}) {
+                Object value = field(nativeRenderer, name);
+                state.put(name + "_identity", value == null ? JSONObject.NULL : System.identityHashCode(value));
+            }
             Object scene = field(nativeRenderer, "scene");
             if (scene != null) {
                 require("com.google.android.filament.Scene".equals(scene.getClass().getName()), "Unexpected native scene class");
@@ -257,6 +268,9 @@ public final class ContinuumNativeHologramProbe {
         SurfaceTexture consumer = texture == null ? null : texture.getSurfaceTexture();
         state.put("surface_texture_identity", consumer == null ? JSONObject.NULL : System.identityHashCode(consumer));
         state.put("surface_texture_timestamp", consumer == null ? JSONObject.NULL : consumer.getTimestamp());
+        Object consumerSample = invoke(trace, "consumerSample");
+        state.put("consumer_generation", invoke(consumerSample, "getGeneration"));
+        state.put("consumer_updates", invoke(consumerSample, "getUpdateCount"));
         JSONArray parents = new JSONArray();
         ViewParent parent = hologram.getParent();
         while (parent instanceof View && parents.length() < 12) {
@@ -265,6 +279,189 @@ public final class ContinuumNativeHologramProbe {
         }
         state.put("ancestors", parents);
         return state;
+    }
+
+    private void verifySurfaceResize() throws Exception {
+        JSONObject proof = new JSONObject().put("status", "STARTED")
+                .put("started_elapsed_nanos", SystemClock.elapsedRealtimeNanos());
+        report.put("resize_regression", proof);
+        persist();
+        Map<String, Object> original = onMain(this::surfaceObjects);
+        Object frame = original.get("frame");
+        TextureView texture = (TextureView) original.get("texture");
+        Rect bounds = (Rect) original.get("bounds");
+        Method present = stagePresenter(frame.getClass());
+        Exception failure = null;
+        try {
+            JSONObject unchanged = onMain(() -> {
+                present.invoke(hologram, frame);
+                Map<String, Object> same = surfaceObjects();
+                requireSameSurfaceObjects(original, same);
+                require(original.get("swapChain") == same.get("swapChain"), "Unchanged stage rebuilt SwapChain");
+                present.invoke(hologram, copyStage(frame, 1f, true));
+                Map<String, Object> pose = surfaceObjects();
+                requireSameSurfaceObjects(original, pose);
+                require(original.get("swapChain") == pose.get("swapChain"), "Monitor pose rebuilt SwapChain");
+                return new JSONObject().put("same_dimensions_preserved", true).put("monitor_pose_preserved", true);
+            });
+            proof.put("unchanged", unchanged).put("before", original.get("state"));
+            persist();
+
+            Map<String, Object> stage = onMain(() -> {
+                float width = ((Number) field(frame, "width")).floatValue();
+                float height = ((Number) field(frame, "height")).floatValue();
+                present.invoke(hologram, copyStage(frame, Math.min(.5f, 640f / Math.max(width, height)), false));
+                Map<String, Object> resized = surfaceObjects();
+                requireRebuilt(original, resized);
+                JSONObject before = (JSONObject) original.get("state"), after = (JSONObject) resized.get("state");
+                require(before.getInt("worldBufferWidth") != after.getInt("worldBufferWidth")
+                        || before.getInt("worldBufferHeight") != after.getInt("worldBufferHeight"), "Stage buffer unchanged");
+                return resized;
+            });
+            JSONObject stageProof = new JSONObject().put("changed", stage.get("state"));
+            proof.put("stage", stageProof);
+            persist();
+            stageProof.put("rendered", awaitResizedFrame(stage));
+            persist();
+            Map<String, Object> restoredStage = onMain(() -> {
+                present.invoke(hologram, frame);
+                Map<String, Object> restored = surfaceObjects();
+                requireRebuilt(stage, restored);
+                return restored;
+            });
+            stageProof.put("restored", restoredStage.get("state"));
+            stageProof.put("restored_rendered", awaitResizedFrame(restoredStage));
+            persist();
+
+            Map<String, Object> layout = onMain(() -> {
+                require(bounds.width() > 2, "Texture too narrow for real resize");
+                texture.layout(bounds.left, bounds.top, bounds.right - 1, bounds.bottom);
+                Map<String, Object> resized = surfaceObjects();
+                requireRebuilt(restoredStage, resized);
+                require(texture.getWidth() == bounds.width() - 1, "Framework resize did not apply");
+                return resized;
+            });
+            JSONObject layoutProof = new JSONObject().put("changed", layout.get("state"));
+            proof.put("texture_layout", layoutProof);
+            persist();
+            layoutProof.put("rendered", awaitResizedFrame(layout));
+            persist();
+            Map<String, Object> restoredLayout = onMain(() -> {
+                texture.layout(bounds.left, bounds.top, bounds.right, bounds.bottom);
+                Map<String, Object> restored = surfaceObjects();
+                requireRebuilt(layout, restored);
+                return restored;
+            });
+            layoutProof.put("restored", restoredLayout.get("state"));
+            layoutProof.put("restored_rendered", awaitResizedFrame(restoredLayout));
+        } catch (Exception error) {
+            failure = error;
+            throw error;
+        } finally {
+            try {
+                onMain(() -> {
+                    present.invoke(hologram, frame);
+                    texture.layout(bounds.left, bounds.top, bounds.right, bounds.bottom);
+                    return null;
+                });
+            } catch (Exception cleanup) {
+                proof.put("restore_error", cleanup.toString());
+                if (failure == null) throw cleanup;
+            }
+            persist();
+        }
+        proof.put("status", "PASSED").put("finished_elapsed_nanos", SystemClock.elapsedRealtimeNanos());
+        persist();
+    }
+
+    private Map<String, Object> surfaceObjects() throws Exception {
+        Object renderer = field(hologram, "native3d");
+        require(renderer != null, "Actual native renderer required for resize");
+        Map<String, Object> objects = new LinkedHashMap<>();
+        objects.put("native_renderer", renderer);
+        for (String name : new String[]{"engine", "asset", "scene", "renderer", "cockpitStage", "swapChain"}) {
+            Object value = field(renderer, name);
+            require(value != null, "Actual " + name + " required for resize");
+            objects.put(name, value);
+        }
+        TextureView texture = (TextureView) field(hologram, "nativeTexture");
+        require(texture != null && texture.isAvailable(), "Actual TextureView required for resize");
+        objects.put("texture", texture);
+        objects.put("surface", field(hologram, "nativeSurface"));
+        objects.put("surface_texture", texture.getSurfaceTexture());
+        objects.put("bounds", new Rect(texture.getLeft(), texture.getTop(), texture.getRight(), texture.getBottom()));
+        Object frame = field(hologram, "cockpitWorldFrame");
+        require(frame != null, "Actual stage frame required for resize");
+        objects.put("frame", frame);
+        objects.put("state", sample());
+        return objects;
+    }
+
+    private static void requireSameSurfaceObjects(Map<String, Object> before, Map<String, Object> after) {
+        for (String key : new String[]{"native_renderer", "engine", "asset", "scene", "renderer", "cockpitStage",
+                "texture", "surface", "surface_texture"})
+            require(before.get(key) == after.get(key), "Resize replaced " + key);
+    }
+
+    private static void requireRebuilt(Map<String, Object> before, Map<String, Object> after) throws Exception {
+        requireSameSurfaceObjects(before, after);
+        require(before.get("swapChain") != after.get("swapChain"), "Resize retained old SwapChain");
+        JSONObject oldState = (JSONObject) before.get("state"), newState = (JSONObject) after.get("state");
+        require(!newState.getBoolean("native3dDrawn") && newState.getJSONObject("texture").getDouble("alpha") == 0,
+                "Resize retained old submission readiness");
+        require(newState.getLong("consumer_generation") > oldState.getLong("consumer_generation"),
+                "Resize retained old consumer generation");
+    }
+
+    private JSONObject awaitResizedFrame(Map<String, Object> resized) throws Exception {
+        JSONObject changed = (JSONObject) resized.get("state");
+        long deadline = SystemClock.elapsedRealtime() + MAIN_TIMEOUT_MS;
+        while (SystemClock.elapsedRealtime() < deadline) {
+            Map<String, Object> current = onMain(this::surfaceObjects);
+            requireSameSurfaceObjects(resized, current);
+            require(resized.get("swapChain") == current.get("swapChain"), "SwapChain changed while awaiting resized frame");
+            JSONObject state = (JSONObject) current.get("state");
+            require(state.getInt("worldBufferWidth") == changed.getInt("worldBufferWidth")
+                    && state.getInt("worldBufferHeight") == changed.getInt("worldBufferHeight"), "Resize buffer changed unexpectedly");
+            if (state.getBoolean("native3dDrawn") && state.getJSONObject("texture").getDouble("alpha") > 0
+                    && state.getInt("viewport_width") == changed.getInt("worldBufferWidth")
+                    && state.getInt("viewport_height") == changed.getInt("worldBufferHeight")
+                    && state.getLong("surface_texture_timestamp") > changed.getLong("surface_texture_timestamp")) return state;
+            SystemClock.sleep(100);
+        }
+        throw new IllegalStateException("No actual consumed frame after resize");
+    }
+
+    private Method stagePresenter(Class<?> frameClass) {
+        Method selected = null;
+        for (Method method : hologram.getClass().getDeclaredMethods()) {
+            String name = method.getName();
+            if ((name.equals("presentCockpitStage") || name.startsWith("presentCockpitStage$"))
+                    && Arrays.equals(method.getParameterTypes(), new Class<?>[]{frameClass})) {
+                require(selected == null, "Ambiguous stage presenter");
+                selected = method;
+            }
+        }
+        require(selected != null, "Existing stage presenter unavailable");
+        selected.setAccessible(true);
+        return selected;
+    }
+
+    private static Object copyStage(Object frame, float scale, boolean poseOnly) throws Exception {
+        String[] names = {"width", "height", "monitorLeft", "monitorTop", "monitorRight", "monitorBottom",
+                "yawDegrees", "pitchDegrees", "depthOffset"};
+        Object[] values = new Object[names.length];
+        Class<?>[] types = new Class<?>[names.length];
+        for (int i = 0; i < names.length; i++) {
+            float value = ((Number) field(frame, names[i])).floatValue();
+            if (i < 6 || i == 8) value *= scale;
+            if (i == 6 && poseOnly) value += value > 0 ? -.5f : .5f;
+            values[i] = value;
+            types[i] = float.class;
+        }
+        Object copy = frame.getClass().getDeclaredMethod("copy", types).invoke(frame, values);
+        require(Boolean.TRUE.equals(invoke(copy, "valid")), "Resized stage must remain valid");
+        return copy;
     }
 
     private static JSONObject viewState(View view) throws Exception {
