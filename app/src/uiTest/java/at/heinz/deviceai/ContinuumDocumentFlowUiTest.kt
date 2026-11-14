@@ -211,7 +211,7 @@ class ContinuumDocumentFlowUiTest {
         val episode = field(activity, "workEpisodeId") as String
         val journal = CockpitWorkJournal(activity.filesDir)
         until(root, "the document episode is recorded") { journal.all().any { it.id == episode } }
-        call(activity, "startDocumentDraft", doc)
+        call(activity, "startDocumentDraft", doc, false)
         until(root, "the draft reaches the model") { runtime.running }
         return Scene(doc, episode, journal)
     }
@@ -331,7 +331,7 @@ class ContinuumDocumentFlowUiTest {
         assertEquals("Auftrag angenommen · Bearbeitung läuft", strip.text.toString())
         val again = descendants(root).single { it.tag == "jarvis-document-start-draft" }
         assertFalse("ENTWURF ERSTELLEN is off while the draft runs", again.isEnabled)
-        call(activity, "startDocumentDraft", scene.doc)
+        call(activity, "startDocumentDraft", scene.doc, false)
         advance(64L)
         assertEquals("a second start changes nothing", 1, runtime.prompts.size)
         assertEquals("the window keeps saying what really happens", "Entwurf wird lokal erstellt …", status(root))
@@ -519,7 +519,7 @@ class ContinuumDocumentFlowUiTest {
         assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
 
         runtime.holdOnCancel = false
-        call(activity, "startDocumentDraft", scene.doc)
+        call(activity, "startDocumentDraft", scene.doc, false)
         until(root, "the restarted draft reaches the model") { runtime.running }
         runtime.fail(at.heinz.deviceai.localmodel.LocalModelThermalGuard.STOPPED_THERMAL)
         until(root, "the restarted run is over") { !(field(activity, "busy") as Boolean) }
@@ -557,7 +557,7 @@ class ContinuumDocumentFlowUiTest {
         assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
         until(root, "STOP is recorded") { state(scene) == CockpitWorkJournal.State.ABORTED }
         // The owner restarts the same draft (same request text) and it fails for a real reason.
-        call(activity, "startDocumentDraft", scene.doc)
+        call(activity, "startDocumentDraft", scene.doc, false)
         until(root, "the restarted draft reaches the model") { runtime.running }
         runtime.fail(at.heinz.deviceai.localmodel.LocalModelThermalGuard.STOPPED_THERMAL)
         until(root, "the restarted run is over") { !(field(activity, "busy") as Boolean) }

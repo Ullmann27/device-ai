@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - release/code59-complete-qa-20261114
+      - fix/code59-context-complete-20261114
   workflow_dispatch:
 
 permissions:
@@ -10,11 +11,11 @@ permissions:
 
 concurrency:
   group: code59-complete-qa-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.ref == 'refs/heads/fix/code59-context-complete-20261114' }}
 
 jobs:
   unsigned-arm64:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -81,7 +82,7 @@ jobs:
           retention-days: 14
 
   renderer-preflight:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -138,7 +139,7 @@ jobs:
           retention-days: 14
 
   full-android:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 150
     steps:
@@ -252,6 +253,35 @@ jobs:
               'destinationPrepositionsCannotBypassNegationOrAmbiguity'
           )}
           required.add(('OwnerComputerTaskGrantTest','parsedDestinationKeepsExistingDraftAndSendProtected'))
+          required |= {('LocalContextBudgetUiTest', name) for name in (
+              'optionalMemoriesCannotDisplaceCompleteOwnerTurns',
+              'longNonModelReportLeavesRoomForTheActualFollowUp',
+              'longCurrentRequestKeepsItsFinalNegationWithinNativeBudget'
+          )}
+          required |= {('OwnerAppActionWorkSceneUiTest', name) for name in (
+              'missingComputerSearchTermReachesExistingApprovalOnce',
+              'newComputerCommandReplacesPendingSearchWithoutReinterpretation',
+              'stopAndNegationInvalidateComputerSearchQuestion'
+          )}
+          required |= {('LocalLongAnswerFlowTest', name) for name in (
+              'longStreamKeepsItsEndingAfterRestart',
+              'nativeTokenLimitCannotBecomeACompleteAnswer'
+          )}
+          required |= {('LocalModelResponseBoundaryTest', name) for name in (
+              'overrunKeepsEveryRemainingCharacterBeforeOutputLimit',
+              'truncationDoesNotSplitAnEmoji',
+              'reentrantStopKeepsAcceptedPrefixAndWinsOverOutputFailure'
+          )}
+          required |= {('LongOwnerTaskAdmissionTest', name) for name in (
+              'acceptedLongTaskReachesModelAndDiskWithoutLosingTheLastCorrection',
+              'invalidTaskCannotEraseAnExistingCheckpointOrInvokeModel'
+          )}
+          required.add(('LocalDialogueRetentionTest','continuationKeepsToolFreeRouteAfterRecreation'))
+          required |= {('LocalConversationContinuationChainTest', name) for name in (
+              'sixPartsRetainTheCompleteOriginalAndLatestAnswerEnd',
+              'rawTranscriptTurnsStaySeparateAndRestoreFoldsTheSameChain',
+              'missingOriginalCannotBeInventedFromContinuationReplies'
+          )}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
@@ -277,7 +307,7 @@ jobs:
           retention-days: 14
 
   node-backend:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -314,7 +344,7 @@ jobs:
           retention-days: 14
 
   native-runtime:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:

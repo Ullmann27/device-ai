@@ -515,7 +515,15 @@ class LiteRtLmLocalModelRuntime(
                                 // must survive or prose and generated code are corrupted.
                                 if (text.text.isEmpty() || finished.get() || terminalOverrideRequested.get() || generationCancelled.get())
                                     return@forEach
-                                if (responseCharacters[0] + text.text.length > MAX_RESPONSE_CHARACTERS) {
+                                val remaining = (MAX_RESPONSE_CHARACTERS - responseCharacters[0]).coerceAtLeast(0)
+                                val accepted = LocalModelGenerationPolicy.responsePrefix(text.text, remaining)
+                                if (accepted.isNotEmpty()) {
+                                    responseCharacters[0] += accepted.length
+                                    chunks[0]++
+                                    if (firstTokenNanos == null) firstTokenNanos = System.nanoTime()
+                                    deliverGeneration(LocalInferenceEvent.TextDelta(accepted))
+                                }
+                                if (text.text.length > remaining) {
                                     if (outputLimitReached.compareAndSet(false, true)) {
                                         terminalOverrideRequested.set(true)
                                         profile.cancel(LocalInferenceCancelOrigin.OUTPUT_LIMIT) {
@@ -526,10 +534,6 @@ class LiteRtLmLocalModelRuntime(
                                     }
                                     return
                                 }
-                                responseCharacters[0] += text.text.length
-                                chunks[0]++
-                                if (firstTokenNanos == null) firstTokenNanos = System.nanoTime()
-                                deliverGeneration(LocalInferenceEvent.TextDelta(text.text))
                             }
                         }
                         } finally { drainDeliveries() }

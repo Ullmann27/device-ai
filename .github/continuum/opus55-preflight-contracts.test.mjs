@@ -61,7 +61,7 @@ test('animation success requires an actual supplied provider receipt', () => {
 });
 
 test('remaining source boundaries and the complete neck/head turn stay connected', () => {
-  assert.match(budget, /if \(task\.isBlank\(\) \|\| task\.length > 240 \|\| hasMemories/);
+  assert.match(budget, /if \(task\.isBlank\(\) \|\| task\.length > 240 \|\| detailedAnswer\.containsMatchIn\(task\) \|\| hasMemories/);
   assert.match(hologram, /release3d\(clearAsset = false\)/);
   assert.match(activity, /removeView\(head\)/);
   assert.match(filament, /rotate\("Neck", mapper\.neckPitch, mapper\.neckYaw\)\s*rotate\("Head", mapper\.headPitch - mapper\.neckPitch, mapper\.headYaw - mapper\.neckYaw\)/);

@@ -45,17 +45,38 @@ class OwnerAppActionWorkSceneUiTest {
         val entered = CountDownLatch(1)
         val release = CountDownLatch(1)
         val completed = CountDownLatch(1)
+        val cancelled = CountDownLatch(1)
         val calls = AtomicInteger()
+        @Volatile var lateCompletionAfterCancel = false
         var failure: String? = null
         override fun execute(call: ToolCallRequest, callback: (Result<String>) -> Unit) {
             calls.incrementAndGet()
             entered.countDown()
-            check(release.await(60, TimeUnit.SECONDS))
-            callback(failure?.let { Result.failure(IllegalStateException(it)) } ?: Result.success(
-                """{"schema":"CONTINUUM_DEVICE_ACTION_V1","action":"LAUNCH_APP","package":"$packageName","status":"VERIFIED_FOREGROUND","windowRevision":7}"""))
-            completed.countDown()
+            val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(60)
+            var interrupted = false
+            try {
+                while (true) {
+                    val remaining = deadline - System.nanoTime()
+                    check(remaining > 0) { "Controlled launch was not released" }
+                    try {
+                        check(release.await(remaining, TimeUnit.NANOSECONDS))
+                        break
+                    } catch (error: InterruptedException) {
+                        if (!lateCompletionAfterCancel) throw error
+                        interrupted = true
+                    }
+                }
+                callback(failure?.let { Result.failure(IllegalStateException(it)) } ?: Result.success(
+                    """{"schema":"CONTINUUM_DEVICE_ACTION_V1","action":"LAUNCH_APP","package":"$packageName","status":"VERIFIED_FOREGROUND","windowRevision":7}"""))
+                completed.countDown()
+            } finally {
+                if (interrupted) Thread.currentThread().interrupt()
+            }
         }
-        override fun cancelPending() { release.countDown() }
+        override fun cancelPending() {
+            cancelled.countDown()
+            if (!lateCompletionAfterCancel) release.countDown()
+        }
     }
 
     private var pump: CockpitHostFramePump? = null
@@ -287,12 +308,16 @@ class OwnerAppActionWorkSceneUiTest {
     @Config(sdk = [35], shadows = [OwnerAppPlanningContextUiTest.ProjectionConsentShadow::class])
     fun ownerStopDuringSplitScreenLaunchRejectsLateCallback() =
         withActivity("com.whatsapp", "WhatsApp") { a, port, lifecycle ->
+            port.lateCompletionAfterCancel = true
             shadowOf(a).setInMultiWindowMode(true)
             submit(a, "Öffne WhatsApp.", chat = false)
             approve(port)
             lifecycle.pause()
             (get(a, "input") as EditText).setText("Stopp")
             assertTrue((get(a, "sendButton") as Button).performClick())
+            assertEquals("STOP reaches the device boundary", 0L, port.cancelled.count)
+            assertEquals("Callback is still held after STOP", 1L, port.completed.count)
+            assertEquals("Only the test releases the late result", 1L, port.release.count)
             port.release.countDown()
             await { port.completed.count == 0L }
             advance(32)
@@ -302,6 +327,7 @@ class OwnerAppActionWorkSceneUiTest {
             assertNull(get(a, "computerController"))
             assertNull(shadowOf(a).nextStartedActivityForResult)
             assertEquals(false, get(a, "busy"))
+            assertEquals("No action is retried after STOP", 1, port.calls.get())
         }
 
     @Test

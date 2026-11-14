@@ -33,6 +33,12 @@ internal object LocalModelGenerationPolicy {
     fun isOutputLimit(message: String?): Boolean =
         message == OUTPUT_TOKEN_LIMIT || message == OUTPUT_CHARACTER_LIMIT
 
+    fun responsePrefix(text: String, remainingCharacters: Int): String {
+        var end = minOf(text.length, remainingCharacters.coerceAtLeast(0))
+        if (end < text.length && end > 0 && text[end - 1].isHighSurrogate()) end--
+        return if (end == text.length) text else text.substring(0, end)
+    }
+
     fun maxOutputTokens(modelId: String?): Int {
         val id = modelId?.lowercase(Locale.ROOT) ?: return DEFAULT_MAX_OUTPUT_TOKENS
         val isGemma4 = id.contains("gemma4") || id.contains("gemma-4")

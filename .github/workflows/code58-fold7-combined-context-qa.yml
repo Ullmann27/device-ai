@@ -60,7 +60,12 @@ jobs:
               ('at.heinz.deviceai.LocalContextBudgetUiTest', 'longCurrentRequestKeepsItsFinalNegationWithinNativeBudget'),
               ('at.heinz.deviceai.OwnerAppActionWorkSceneUiTest', 'missingComputerSearchTermReachesExistingApprovalOnce'),
               ('at.heinz.deviceai.cognitive.LocalLongAnswerFlowTest', 'longStreamKeepsItsEndingAfterRestart'),
-              ('at.heinz.deviceai.cognitive.LocalLongAnswerFlowTest', 'nativeTokenLimitCannotBecomeACompleteAnswer')
+              ('at.heinz.deviceai.cognitive.LocalLongAnswerFlowTest', 'nativeTokenLimitCannotBecomeACompleteAnswer'),
+              ('at.heinz.deviceai.localmodel.LocalModelResponseBoundaryTest', 'overrunKeepsEveryRemainingCharacterBeforeOutputLimit'),
+              ('at.heinz.deviceai.localmodel.LocalModelResponseBoundaryTest', 'truncationDoesNotSplitAnEmoji'),
+              ('at.heinz.deviceai.cognitive.LocalConversationContinuationChainTest', 'sixPartsRetainTheCompleteOriginalAndLatestAnswerEnd'),
+              ('at.heinz.deviceai.cognitive.LocalConversationContinuationChainTest', 'rawTranscriptTurnsStaySeparateAndRestoreFoldsTheSameChain'),
+              ('at.heinz.deviceai.cognitive.LocalConversationContinuationChainTest', 'missingOriginalCannotBeInventedFromContinuationReplies')
           }
           assert required <= names, f'Missing owner-path cases: {required - names}'
           assert any(c.get('classname') == 'at.heinz.deviceai.cognitive.LongOwnerTaskAdmissionTest' for c in cases)

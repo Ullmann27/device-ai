@@ -36,6 +36,11 @@ def device(*args, **options):
 def shell(*args, **options):
     return device('shell', *args, **options).decode(errors='replace').strip()
 
+def keyboard_visible(dump):
+    states = re.findall(r'^\s*mDecorViewVisible=(true|false)\b', dump, re.M)
+    assert len(states) == 1, 'Actual IME visibility missing or ambiguous'
+    return states[0] == 'true'
+
 # Validate before device mutations.
 assert shell('getprop', 'ro.kernel.qemu') == '1', 'Emulator required'
 assert shell('getprop', 'ro.build.version.sdk') == '35', 'API 35 required'
@@ -149,7 +154,7 @@ try:
     assert any(n.get('class') == 'android.widget.EditText' for n in nodes), 'Composer missing'
     keyboard = shell('dumpsys', 'input_method')
     save('conversation-input-method.txt', keyboard)
-    if re.search(r'(?:mInputShown|mIsInputViewShown)=true\b', keyboard):
+    if keyboard_visible(keyboard):
         shell('input', 'keyevent', 'KEYCODE_BACK')
     nodes, _, _ = snapshot('conversation-keyboard-dismissed')
     assert tap(nodes, ['Zur Startseite mit allen KI-Bereichen']), 'START control missing'

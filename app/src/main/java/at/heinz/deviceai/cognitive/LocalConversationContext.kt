@@ -84,14 +84,26 @@ class LocalConversationContext {
     private fun append(sessionId: String, turn: LocalChatTranscriptStore.ContextTurn, notify: Boolean = true) {
         if (session != sessionId) switchTo(sessionId)
         val bounded = turn.bounded()
-        turns.addLast(Turn(bounded.request, bounded.response,
-            bounded.request.takeIf { bounded.requestComplete }, responseComplete = bounded.responseComplete,
-            modelResponse = bounded.modelResponse, responseHasEnd = bounded.responseHasEnd))
+        val previous = turns.lastOrNull()
+        val continuation = bounded.requestComplete &&
+            LocalConversationFollowUpPolicy.requestsContinuation(bounded.request)
+        if (continuation && bounded.modelResponse && bounded.responseHasEnd && bounded.response.isNotBlank() &&
+            previous?.isOwnerTurn == true && previous.modelResponse && previous.responseHasEnd &&
+            previous.response.isNotBlank() && hasContinuation(sessionId)) {
+            turns.removeLast()
+            // Earlier response sections omitted.
+            turns.addLast(previous.copy(response = bounded.response, responseComplete = false))
+        } else {
+            turns.addLast(Turn(bounded.request, bounded.response,
+                bounded.request.takeIf { bounded.requestComplete }, responseComplete = bounded.responseComplete,
+                modelResponse = bounded.modelResponse, responseHasEnd = bounded.responseHasEnd))
+        }
         if (bounded.requestComplete) {
             situation.observeOwnerTurn(bounded.request)
             objects.observeOwnerTurn(bounded.request)
         } else objects.markIncomplete()
         while (turns.size > LocalDialogueContextLimits.MAX_TURNS) turns.removeFirst()
+        // Persist the original raw turn.
         if (notify) runCatching { onTurnRecorded?.invoke(sessionId, bounded) }
     }
 
@@ -233,6 +245,7 @@ class LocalConversationContext {
                             continuation: Boolean = false,
                             ownerTurnsInTask: Set<String> = emptySet()): String {
         if (session != sessionId || turns.isEmpty() && explicitFocus==null && research==null) return ""
+        if (continuation && !hasContinuation(sessionId)) return ""
         val prefix = historyPrefix(nowMillis, internetMode, ownerForbidsExternalNetwork, onlineApprovalActive)
         return LocalDialoguePromptHistory.render(retainedTurns(ownerOnly = false), maxBytes,
             requireCompleteOwnerHistory, continuation, prefix, ownerTurnsInTask)
@@ -245,6 +258,7 @@ class LocalConversationContext {
                                          continuation: Boolean = false,
                                          ownerTurnsInTask: Set<String> = emptySet()): Int? {
         if (session != sessionId) return if (continuation) null else 0
+        if (continuation && !hasContinuation(sessionId)) return null
         val prefix = historyPrefix(nowMillis, internetMode, ownerForbidsExternalNetwork, onlineApprovalActive)
         return LocalDialoguePromptHistory.requiredBytes(retainedTurns(ownerOnly = false), continuation,
             prefix, ownerTurnsInTask)
@@ -262,7 +276,24 @@ class LocalConversationContext {
     }
 
     @Synchronized fun hasContinuation(sessionId: String): Boolean =
-        session == sessionId && LocalDialoguePromptHistory.hasContinuation(retainedTurns(ownerOnly = true))
+        session == sessionId && LocalDialoguePromptHistory.hasContinuation(retainedTurns(ownerOnly = true)) &&
+            hasContinuationAnchor()
+
+    private fun hasContinuationAnchor(): Boolean {
+        for (turn in turns.reversed()) {
+            if (!turn.isOwnerTurn) continue
+            val owner = turn.originalUserRequest ?: return false
+            if (ContinuousConversationMode.command(owner) == ContinuousConversationMode.Command.STOP ||
+                OwnerCorrectionIntent.interruptsWork(owner)) return false
+            if (!turn.modelResponse) {
+                if (!turn.responseComplete) return false
+                continue
+            }
+            if (!turn.responseHasEnd || turn.response.isBlank()) return false
+            if (!LocalConversationFollowUpPolicy.requestsContinuation(owner)) return true
+        }
+        return false
+    }
 
     private fun retainedTurns(ownerOnly: Boolean): List<LocalChatTranscriptStore.ContextTurn> =
         turns.filter { !ownerOnly || it.isOwnerTurn }.map {

@@ -114,7 +114,7 @@ class AiContextByteBudgetTest {
 
     @Test
     fun reservedOwnerHistoryDisplacesOptionalMemoryBeforeTheCurrentRequest() {
-        val request = "Wo steht Marens Kiste jetzt?"
+        val request = "Wo steht die Kiste von Maren jetzt?"
         val memory = ContextIntegrityFixture.memory("large", "Maren: " + "Zusatz. ".repeat(140))
         val input = ContextIntegrityFixture.input(request, listOf(memory))
         val mandatory = compile(input.copy(memories = emptyList()))
@@ -122,7 +122,7 @@ class AiContextByteBudgetTest {
         assertEquals(listOf(memory.id), complete.includedMemoryIds)
         val policy = noTools.copy(maxBytes = complete.text.toByteArray(Charsets.UTF_8).size)
         val reserve = policy.maxBytes - mandatory.text.toByteArray(Charsets.UTF_8).size
-        val result = AiContextCompiler(policy).compile(input, reservedBytes = reserve)
+        val result = AiContextCompiler(policy, nowMillis = { 100L }).compile(input, reservedBytes = reserve)
 
         assertEquals(mandatory.text, result.text)
         assertTrue(result.text.contains(request))
