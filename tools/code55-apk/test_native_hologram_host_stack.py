@@ -13,7 +13,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 import native_hologram_host_stack
-from native_hologram_host_stack import HostStack, SCOPE, cleanup_group, group_members, process_start, read_process, validate_identity, verify_status
+from native_hologram_host_stack import HostStack, SCOPE, cleanup_group, group_members, process_start, read_process, validate_identity, verify_resumable, verify_status
 
 
 class HostStackIdentityTest(unittest.TestCase):
@@ -85,6 +85,7 @@ class HostStackIdentityTest(unittest.TestCase):
     def test_expired_handoff_never_launches_debugger(self):
         host = HostStack.__new__(HostStack)
         host.state = {"scope": SCOPE}
+        host.process = None
         host.directory = self.root
         host.safe_to_resume = True
         with patch("native_hologram_host_stack.subprocess.Popen") as process, self.assertRaises(TimeoutError):
@@ -214,6 +215,58 @@ class HostStackIdentityTest(unittest.TestCase):
         entry.__truediv__ = Mock(return_value=Mock(read_text=Mock(side_effect=ProcessLookupError(3, "No such process"))))
         with patch("native_hologram_host_stack.Path.iterdir", return_value=iter([entry])):
             self.assertEqual([], group_members({"pgid": 9002, "sid": 9001, "start_ticks": "100"}))
+
+    def restored_guest(self):
+        directory = self.root / "guest-stack"
+        directory.mkdir()
+        value = {"source_sha": self.source, "serial": "emulator-5554", "status": "FAILED",
+                 "adb_uid_before": "2000", "adb_uid_after": "2000", "started_unix_ns": 1, "finished_unix_ns": 2}
+        path = directory / "collection.json"
+        path.write_text(json.dumps(value))
+        return path, value
+
+    def test_restored_guest_with_no_started_host_capture_can_resume_other_probes(self):
+        self.restored_guest()
+        verify_resumable(self.root, self.source, "emulator-5554")
+
+    def test_missing_or_unproved_guest_cleanup_blocks_other_probes(self):
+        with self.assertRaises(FileNotFoundError):
+            verify_resumable(self.root, self.source, "emulator-5554")
+        path, value = self.restored_guest()
+        for change in ({"adb_uid_after": "0"}, {"restore_error": "debugger completion missing"},
+                       {"instrumentation_cleanup_error": "still running"}, {"request": {"pid": 1}},
+                       {"finished_unix_ns": None}, {"source_sha": "2" * 40}):
+            path.write_text(json.dumps(dict(value, **change)))
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                verify_resumable(self.root, self.source, "emulator-5554")
+
+    def test_started_host_capture_without_final_report_cannot_resume(self):
+        self.restored_guest()
+        directory = self.root / "host-stack"
+        directory.mkdir()
+        (directory / "gdb-stdout.txt").write_bytes(b"")
+        with self.assertRaisesRegex(ValueError, "no completion report"):
+            verify_resumable(self.root, self.source, "emulator-5554")
+        host = HostStack.__new__(HostStack)
+        host.directory, host.safe_to_resume = directory, False
+        host.state = {"source_sha": self.source, "status": "CAPTURING"}
+        host.save()
+        with self.assertRaisesRegex(ValueError, "detach unproved"):
+            verify_resumable(self.root, self.source, "emulator-5554")
+
+    def test_only_completed_detached_host_report_admits_other_probes(self):
+        self.restored_guest()
+        host = HostStack.__new__(HostStack)
+        host.directory = self.root / "host-stack"
+        host.directory.mkdir()
+        host.safe_to_resume = True
+        host.state = {"source_sha": self.source, "status": "FAILED", "finished_host_monotonic_nanos": 10}
+        host.save()
+        verify_resumable(self.root, self.source, "emulator-5554")
+        host.safe_to_resume = False
+        host.save()
+        with self.assertRaises(ValueError):
+            verify_resumable(self.root, self.source, "emulator-5554")
 
 
 if __name__ == "__main__":

@@ -165,6 +165,33 @@ def bind_host(pid, emulator, serial, source, destination):
         stream.write(json.dumps(value, indent=2) + "\n")
 
 
+def verify_resumable(evidence, source, serial):
+    if not re.fullmatch(r"[0-9a-f]{40}", source) or not re.fullmatch(r"emulator-[0-9]+", serial):
+        raise ValueError("Resume source and emulator required")
+    directory = Path(evidence)
+    guest = json.loads((directory / "guest-stack/collection.json").read_text())
+    if guest.get("source_sha") != source or guest.get("serial") != serial:
+        raise ValueError("Guest cleanup source changed")
+    if guest.get("restore_error") or guest.get("instrumentation_cleanup_error"):
+        raise ValueError("Guest cleanup failed")
+    if guest.get("adb_uid_before") not in ("0", "2000") or guest.get("adb_uid_after") != guest["adb_uid_before"]:
+        raise ValueError("Original adb identity was not restored")
+    if type(guest.get("finished_unix_ns")) is not int or guest["finished_unix_ns"] <= guest.get("started_unix_ns", 0):
+        raise ValueError("Guest cleanup completion missing")
+    if "request" in guest and (type(guest.get("guest_debugger_exit")) is not int or not 0 <= guest["guest_debugger_exit"] <= 255):
+        raise ValueError("Guest debugger completion missing")
+    host = directory / "host-stack"
+    report = host / "collection.json"
+    if report.exists():
+        value = json.loads(report.read_text())
+        if value.get("source_sha") != source or value.get("safe_to_resume") is not True \
+                or value.get("status") not in ("CAPTURED", "FAILED") \
+                or type(value.get("finished_host_monotonic_nanos")) is not int:
+            raise ValueError("Host debugger detach unproved")
+    elif host.exists() and any(path.name.startswith(("gdb-", "debugger-", "cleanup-", "collection.json")) for path in host.iterdir()):
+        raise ValueError("Started host capture has no completion report")
+
+
 class HostStack:
     def __init__(self, identity, emulator, serial, source, directory):
         self.identity = validate_identity(json.loads(Path(identity).read_text()), emulator, serial, source, os.getuid())
@@ -174,6 +201,15 @@ class HostStack:
         self.process = None
         self.state = {"scope": SCOPE, "source_sha": source, "status": "NOT_REQUESTED", "identity": self.identity}
         self.verify("bound")
+
+    def save(self):
+        value = dict(self.state, safe_to_resume=self.safe_to_resume)
+        temporary = self.directory / "collection.json.tmp"
+        with temporary.open("w") as stream:
+            stream.write(json.dumps(value, indent=2) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary.replace(self.directory / "collection.json")
 
     def verify(self, label):
         actual = read_process(self.identity["pid"], self.identity["uid"])
@@ -278,6 +314,8 @@ class HostStack:
                 sys.executable, str(Path(__file__).resolve()), "--launch-debugger", str(self.marker),
                 str(self.stop), self.nonce, json.dumps(self.driver_argv)]
             self.state.update(argv=argv, status="CAPTURING")
+            self.safe_to_resume = False
+            self.save()
             with (self.directory / "gdb-stdout.txt").open("wb") as output, \
                  (self.directory / "gdb-stderr.txt").open("wb") as error:
                 self.process = subprocess.Popen(argv, stdin=subprocess.DEVNULL, stdout=output, stderr=error,
@@ -294,11 +332,13 @@ class HostStack:
                 raise RuntimeError("Host stack incomplete; inspect raw debugger output")
             self.state["status"] = "CAPTURED"
         except Exception as error:
+            if self.process is None:
+                self.safe_to_resume = True
             self.state.update(status="FAILED", error=str(error))
             raise
         finally:
             self.state.update(safe_to_resume=self.safe_to_resume, finished_host_monotonic_nanos=time.monotonic_ns())
-            (self.directory / "collection.json").write_text(json.dumps(self.state, indent=2) + "\n")
+            self.save()
 
 
 def main():
@@ -317,5 +357,8 @@ if __name__ == "__main__":
         sys.exit(launch_debugger(sys.argv[2], sys.argv[3], sys.argv[4], json.loads(sys.argv[5])))
     if len(sys.argv) == 3 and sys.argv[1] == "--cleanup-group":
         cleanup_group(sys.argv[2])
+        sys.exit(0)
+    if len(sys.argv) == 5 and sys.argv[1] == "--verify-resume":
+        verify_resumable(sys.argv[2], sys.argv[3], sys.argv[4])
         sys.exit(0)
     main()

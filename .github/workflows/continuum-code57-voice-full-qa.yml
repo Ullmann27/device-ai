@@ -828,13 +828,8 @@ jobs:
           else
             hologram_exit=$?
           fi
-          if python3 - "$evidence/hologram/host-stack/collection.json" <<'PY'
-          import json, pathlib, sys
-          path = pathlib.Path(sys.argv[1])
-          if path.exists():
-              assert json.loads(path.read_text()).get('safe_to_resume') is True, 'Host debugger detach unproved'
-          PY
-          then
+          if python3 -B tools/code55-apk/native_hologram_host_stack.py --verify-resume \
+              "$evidence/hologram" "$GITHUB_SHA" emulator-5554; then
             :
           else
             resume_exit=$?
