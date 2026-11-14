@@ -302,7 +302,7 @@ def observation_environment(mode, env, output, meta, report, deadline):
         command = [str(executable), "-displayfd", str(write_fd), "-screen", "0", "1080x2400x24", "-nolisten", "tcp"]
         details["command"] = command
         details["started_monotonic"] = time.monotonic()
-        with (output / "xvfb-stdout.txt").open("wb") as stdout, (output / "xvfb-stderr.txt").open("wb") as stderr:
+        with (output / "xvfb-server-stdout.txt").open("wb") as stdout, (output / "xvfb-server-stderr.txt").open("wb") as stderr:
             process = subprocess.Popen(
                 command, env=host_env, stdin=subprocess.DEVNULL, stdout=stdout, stderr=stderr,
                 pass_fds=(write_fd,),
