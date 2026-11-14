@@ -356,12 +356,22 @@ jobs:
               'modelStepReadsChangedProviderAfterRealToolResult',
               'ownerRevocationClearsThinkingJournalBeforeFreshRecall',
               'revokedInstancesCannotAppendAndNewOwnerRunsRemainAllowed',
-              'unclearedThinkingJournalPreventsLedgerRevocation'
+              'unclearedThinkingJournalPreventsLedgerRevocation',
+              'ownerRecallRefreshesBetweenActualStepsAndJournalPreservesOutcomeScope',
+              'deniedToolCannotBecomeSuccessfulThinkingOutcome',
+              'replayedToolReceiptCannotCreateFreshThinkingEvidence',
+              'lateScreenObservationDiscardsEarlierBufferedThinkingSteps',
+              'incompleteOwnerResponseCreatesNoThinkingJournal',
+              'revocationDuringPausedModelRejectsLateToolAndBufferedJournal',
+              'journalWriteFailureRetainsRealTaskResultWithoutClaimingPersistence',
+              'ownerRecallAliasesCannotDisplaceExistingProviderEvidence'
           )}
           required |= {('OwnerFactRevocationUiTest', name) for name in (
               'confirmedDeletionClearsThinkingJournalAndRejectsLateReflection',
               'thinkingJournalFailureCannotReportSuccessfulOwnerRevocation'
           )}
+          required.add(('FirstThinkingRunE2ETest','schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch'))
+          required.add(('FirstThinkingRunE2ETest','schritt6b_lernen_hypotheseUndTagebuchEintrag'))
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY

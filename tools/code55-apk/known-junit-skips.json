@@ -6,8 +6,6 @@
     "s8d_pending_limitGuardIsWiredBeforeWorkerStart"
   ],
   "at.heinz.deviceai.chief.FirstThinkingRunE2ETest": [
-    "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
-    "schritt6b_lernen_hypotheseUndTagebuchEintrag",
     "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen"
   ],
   "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest": [
