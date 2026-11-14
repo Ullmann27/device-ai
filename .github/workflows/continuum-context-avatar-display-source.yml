@@ -1,0 +1,31 @@
+name: Continuum context-avatar-display source snapshot
+on:
+  push:
+    branches: [work/continuum-context-avatar-display-20261114]
+    paths: [.github/workflows/continuum-context-avatar-display-source.yml]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Export tracked source only
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          mkdir -p "$RUNNER_TEMP/continuum-source"
+          git archive --format=tar.gz --output="$RUNNER_TEMP/continuum-source/source.tar.gz" HEAD app/src/main/java app/src/main/res app/src/main/AndroidManifest.xml app/src/test app/src/uiTest .github scripts tools AGENTS.md app/build.gradle.kts build.gradle.kts settings.gradle.kts gradle.properties docs/handoff docs/research/omega/CONTINUUM-NEXT-AGENT-ENTRYPOINT.md
+          printf 'source_sha=%s\nbase_sha=1656443d137bb6787c2eabe69a3e91ff1b2275b2\n' "$GITHUB_SHA" > "$RUNNER_TEMP/continuum-source/SOURCE-INFO.txt"
+          cd "$RUNNER_TEMP/continuum-source"
+          sha256sum source.tar.gz > SHA256SUMS.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Continuum-context-avatar-display-source
+          path: ${{ runner.temp }}/continuum-source/
+          retention-days: 7
+          if-no-files-found: error
