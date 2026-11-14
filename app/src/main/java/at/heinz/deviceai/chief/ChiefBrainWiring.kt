@@ -175,7 +175,9 @@ class RoutineDispatcher(
             }
             val accepted = runCatching {
                 onAdmission(brief)
-                pool.submit(brief) { report -> onReport(claim, report) }
+                synchronized(book) {
+                    book.isCurrent(claim) && pool.submit(brief) { report -> onReport(claim, report) }
+                }
             }.getOrDefault(false)
             if (accepted) submitted++ else {
                 retire(claim)
