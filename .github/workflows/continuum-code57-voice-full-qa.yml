@@ -175,6 +175,9 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.22.2'
       - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
         with:
           gradle-version: '8.11.1'
@@ -184,6 +187,29 @@ jobs:
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
       - name: Full unfiltered Android and UI regression suite (motion exercised without PNG export)
         if: github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+        env:
+          CONTINUUM_BACKLOG_ROUNDTRIP_DIR: ${{ runner.temp }}/code59-backlog
+          CONTINUUM_CONTRASTIVE_PARITY_DIR: ${{ runner.temp }}/code59-contrastive
+          CONTINUUM_CRE1_PARITY_DIR: ${{ runner.temp }}/code59-cre1
+        run: |
+          set -euo pipefail
+          mkdir -p app/build/reports
+          node .github/continuum/backlog-fixtures.mjs roundtrip-prepare "$CONTINUUM_BACKLOG_ROUNDTRIP_DIR" | tee app/build/reports/code59-parity-prepare.log
+          node .github/continuum/contrastive-parity.mjs prepare "$CONTINUUM_CONTRASTIVE_PARITY_DIR" | tee -a app/build/reports/code59-parity-prepare.log
+          node .github/continuum/cre-parity.mjs prepare "$CONTINUUM_CRE1_PARITY_DIR" | tee -a app/build/reports/code59-parity-prepare.log
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=59 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            :app:testDebugUnitTest
+          node .github/continuum/backlog-fixtures.mjs roundtrip-verify "$CONTINUUM_BACKLOG_ROUNDTRIP_DIR" | tee app/build/reports/code59-parity-verify.log
+          node .github/continuum/contrastive-parity.mjs verify "$CONTINUUM_CONTRASTIVE_PARITY_DIR" | tee -a app/build/reports/code59-parity-verify.log
+          node .github/continuum/cre-parity.mjs verify "$CONTINUUM_CRE1_PARITY_DIR" | tee -a app/build/reports/code59-parity-verify.log
+      - name: Diagnose actual snapshot and launch regressions
+        if: github.ref == 'refs/heads/diagnostic/code59-native-lint-20261114'
         run: |
           set -euo pipefail
           unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
@@ -193,7 +219,8 @@ jobs:
             -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=59 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
-            :app:testDebugUnitTest
+            :app:testDebugUnitTest --tests at.heinz.deviceai.ContinuumUiSnapshotUiTest \
+            --tests at.heinz.deviceai.OwnerAppActionWorkSceneUiTest
       - name: Require exact declared skip policy
         if: ${{ always() && github.ref == 'refs/heads/release/code59-complete-qa-20261114' }}
         run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
@@ -273,6 +300,23 @@ jobs:
               'destinationPrepositionsCannotBypassNegationOrAmbiguity'
           )}
           required.add(('OwnerComputerTaskGrantTest','parsedDestinationKeepsExistingDraftAndSendProtected'))
+          required |= {('ContinuumUiSnapshotUiTest', name) for name in (
+              'successfulSavePublishesClosedPngAndJson',
+              'nullImageStreamRemovesPendingRow',
+              'imageAccessDenialLeavesNoPendingRow',
+              'failedPngEncodingRemovesPendingRow',
+              'imageStreamCloseFailureRemovesPendingRow',
+              'nullMetadataStreamRemovesBothRows',
+              'metadataWriteFailureRemovesBothRows',
+              'publishFailureRemovesBothRows',
+              'rollbackFailurePreservesCauseAndAttemptsOtherRow',
+              'unavailableOptionalMetadataKeepsValidImage',
+              'oldAndroidDoesNotCreateRows'
+          )}
+          required |= {('ContinuumContrastiveParityTest','actualNodeKotlinNodeTrainingParity'),
+                       ('ContinuumContrastiveParityTest','actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds'),
+                       ('Cre1InferenceEncoderTest','trainedNodeCheckpointMatchesKotlinFeaturesAndScores'),
+                       ('DevelopmentBacklogRoundtripTest','kotlinChangesNodeWrittenBacklogWithTheSharedRules')}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
@@ -294,6 +338,7 @@ jobs:
           path: |
             app/build/test-results/testDebugUnitTest/
             app/build/reports/lint-results-debug.*
+            app/build/reports/code59-parity-*.log
           if-no-files-found: warn
           retention-days: 14
 
