@@ -120,12 +120,13 @@ class LocalModelThermalGuardTest {
         when (kind) {
             0 -> runtime.stream("chat", callback)
             1 -> runtime.streamThinking("reasoning", callback)
-            else -> runtime.respondToTools(listOf(LocalToolResponse("get_battery_info", "{}")), callback)
+            2 -> runtime.respondToTools(listOf(LocalToolResponse("get_battery_info", "{}")), callback)
+            else -> runtime.streamTextOnly("text-only long answer", callback)
         }
     }
 
     @Test fun severeCallbackDuringSamplingRejectsStaleCoolReadingForEveryEntryPoint() {
-        repeat(3) { kind ->
+        repeat(4) { kind ->
             val native = NativeStandIn()
             lateinit var runtime: LocalModelRuntime
             runtime = LocalModelThermalGuard.wrap(native) {
@@ -142,7 +143,7 @@ class LocalModelThermalGuardTest {
     }
 
     @Test fun heatBeforeNativeAdmissionStopsOnceAfterStartForEveryEntryPoint() {
-        repeat(3) { kind ->
+        repeat(4) { kind ->
             val native = NativeStandIn()
             val runtime = LocalModelThermalGuard.wrap(native) { thermal }
             native.beforeAdmission = {
