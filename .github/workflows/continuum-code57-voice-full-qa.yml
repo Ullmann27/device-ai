@@ -669,17 +669,19 @@ jobs:
       - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
         with:
           gradle-version: '8.11.1'
-      - name: Install offline emulator debugger
+      - name: Install emulator debugger and local display
         shell: bash
         run: |
           set -euo pipefail
           sudo -n apt-get update
-          sudo -n apt-get install --yes --no-install-recommends gdb
+          sudo -n apt-get install --yes --no-install-recommends gdb xvfb
           debugger_evidence="$RUNNER_TEMP/code59-native-pdf"
           mkdir -p "$debugger_evidence"
           command -v gdb > "$debugger_evidence/gdb-installed-path.txt"
           timeout 10 gdb --version > "$debugger_evidence/gdb-installed-version.txt" 2>&1
           test -s "$debugger_evidence/gdb-installed-version.txt"
+          command -v Xvfb > "$debugger_evidence/xvfb-installed-path.txt"
+          dpkg-query --show --showformat='${Package} ${Version}\n' xvfb > "$debugger_evidence/xvfb-installed-version.txt"
       - name: Install official native Android runtime
         shell: bash
         run: |
@@ -727,6 +729,7 @@ jobs:
         run: |
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_hologram_*.py' -v
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_routines.py' -v
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_xvfb.py' -v
       - name: Build disposable native test APKs
         shell: bash
         run: |
@@ -768,6 +771,10 @@ jobs:
           original_kvm_group="$(stat -c '%g' /dev/kvm)"
           original_kvm_mode="$(stat -c '%a' /dev/kvm)"
           emulator_pid=''
+          xvfb_pid=''
+          xvfb_bin="$(readlink -f "$(command -v Xvfb)")"
+          xvfb_evidence="$evidence/xvfb"
+          mkdir "$xvfb_evidence"
           cleanup() {
             native_exit=$?
             if (( native_exit != 0 )) && [[ -f "$evidence/emulator.log" ]]; then
@@ -869,6 +876,17 @@ jobs:
               timeout 10 "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 emu kill || true
               kill "$emulator_pid" 2>/dev/null || true
             fi
+            if [[ -n "$xvfb_pid" ]]; then
+              if python3 -B tools/code55-apk/native_xvfb.py stop "$xvfb_pid" "$xvfb_bin" "$xvfb_evidence"; then
+                if wait "$xvfb_pid"; then
+                  printf '0\n' > "$xvfb_evidence/reaped-exit.txt"
+                else
+                  printf '%s\n' "$?" > "$xvfb_evidence/reaped-exit.txt"
+                fi
+              elif (( native_exit == 0 )); then
+                native_exit=1
+              fi
+            fi
             sudo chgrp "$original_kvm_group" /dev/kvm
             sudo chmod "$original_kvm_mode" /dev/kvm
             return "$native_exit"
@@ -883,11 +901,19 @@ jobs:
             printf '%s\n' "$?" > "$evidence/emulator-gpu-help-exit.txt"
           fi
           "$ANDROID_HOME/platform-tools/adb" start-server
+          env -u DISPLAY -u EGL_PLATFORM -u LD_LIBRARY_PATH \
+          "$xvfb_bin" -displayfd 3 -screen 0 1080x2400x24 -nolisten tcp \
+            3> "$xvfb_evidence/display.txt" > "$xvfb_evidence/server.log" 2>&1 &
+          xvfb_pid=$!
+          printf '%s\n' "$xvfb_pid" > "$xvfb_evidence/pid.txt"
+          python3 -B tools/code55-apk/native_xvfb.py ready "$xvfb_pid" "$xvfb_bin" "$xvfb_evidence"
+          native_display=":$(< "$xvfb_evidence/display.txt")"
           id -u > "$host_crash/emulator-uid.txt"
           date -u '+%Y-%m-%d %H:%M:%S UTC' > "$host_crash/emulator-launch-utc.txt"
           ANDROID_EMU_CRASH_REPORTING_DATABASE="$crash_database" \
           ANDROID_EMU_LAVAPIPE_GL_MODE_LLVMPIPE=1 \
-          env -u ANDROID_EMU_LAVAPIPE_GL_MODE_SWIFTSHADER \
+          DISPLAY="$native_display" \
+          env -u ANDROID_EMU_LAVAPIPE_GL_MODE_SWIFTSHADER -u EGL_PLATFORM \
           "$CODE59_EMULATOR_BIN" -avd continuum-native-pdf -port 5554 -accel on \
             -no-window -no-audio -no-boot-anim -no-snapshot -gpu lavapipe -memory 2048 -cores 2 \
             > "$evidence/emulator.log" 2>&1 &
