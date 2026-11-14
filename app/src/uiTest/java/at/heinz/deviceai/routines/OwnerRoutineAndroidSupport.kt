@@ -1,6 +1,5 @@
 package at.heinz.deviceai.routines
 
-import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.ContextWrapper
@@ -82,7 +81,7 @@ internal object OwnerRoutineAndroidSupport {
     }
 
     fun context(): ObservedContext {
-        val app = RuntimeEnvironment.getApplication<Application>()
+        val app = RuntimeEnvironment.getApplication()
         assertTrue(ContinuumAutonomyControl.setLevel(app, ContinuumAutonomyLevel.RESEARCH_AND_PROPOSALS))
         return ObservedContext(app)
     }
