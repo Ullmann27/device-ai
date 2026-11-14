@@ -143,6 +143,7 @@ class AgentActivity : Activity() {
     )
 
     companion object {
+        private val ownerFactDeletionPending = java.util.concurrent.atomic.AtomicBoolean(false)
         /** One ordered writer for the persistent central-chat transcript (#568), shared across Activity instances. */
         internal val chatTranscriptIo: java.util.concurrent.ExecutorService =
             java.util.concurrent.Executors.newSingleThreadExecutor { java.lang.Thread(it, "continuum-chat-transcript").apply { isDaemon = true } }
@@ -488,6 +489,7 @@ class AgentActivity : Activity() {
         override fun run() {
             if (!foregroundLearningActive || isFinishing || isDestroyed) return
             refreshDashboard()
+            refreshSendButtonPresentation()
             botRosterDialog?.refreshRuntimeStatus()
             mainHandler.postDelayed(this, 5_000L)
         }
@@ -502,6 +504,7 @@ class AgentActivity : Activity() {
     }
     private val sessionResetLifetime = java.util.concurrent.atomic.AtomicBoolean(true)
     private var busy = false
+        get() = field || ownerFactDeletionPending.get()
     private var activeLocalRequest = false
     private val internetConsent = at.heinz.deviceai.cognitive.InternetConsentPolicy()
     private val webToolGate = at.heinz.deviceai.cognitive.ApprovedWebToolGate(internetConsent)
@@ -570,6 +573,7 @@ class AgentActivity : Activity() {
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
     private var lastVisibleCognitiveTrace: Pair<String,String>? = null
     private var activeChatCancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null
+    private var activeOwnerFactCancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null
     // A queued coding candidate never reappears after leaving its foreground scope.
     private var codingPlanningEpoch = 0L
     @Volatile private var activeReasoningRouter: ChatReasoningRouter? = null
@@ -7149,6 +7153,7 @@ class AgentActivity : Activity() {
         input.text.clear()
         addUserMessage(request)
         activeChatCancellation = cancellation
+        activeOwnerFactCancellation = cancellation
         activeLocalRequest = true
         setBusy(true)
 
@@ -7259,6 +7264,7 @@ class AgentActivity : Activity() {
         val turnTrace=CognitiveTurnTrace(requestSessionId)
         val priorScopedTopic=scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic
         activeChatCancellation=cancellation
+        activeOwnerFactCancellation=cancellation
         activeLocalRequest=true
         setBusy(true)
         localAgentExecutor.execute {
@@ -7791,6 +7797,7 @@ class AgentActivity : Activity() {
         )
         activeBootstrapGate = gate
         activeChatCancellation = cancellation
+        activeOwnerFactCancellation = cancellation
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
             val result = runCatching { orchestrator.run(request) }
@@ -7803,7 +7810,8 @@ class AgentActivity : Activity() {
                 activeOrchestrator = null
                 activeLocalRequest = false
                 setBusy(false)
-                if (sessionId != actionSessionId) return@runOnUiThread
+                if (sessionId != actionSessionId || runCatching { cancellation.throwIfCancelled() }.isFailure)
+                    return@runOnUiThread
                 val value = result.fold(
                     onSuccess = { item ->
                         checkpointContinuumAsync()
@@ -9538,6 +9546,8 @@ class AgentActivity : Activity() {
 
     /** "Merke dir": app memory first, then the learning core; the reply says what actually happened. */
     private fun rememberOwnerFact(fact: String, note: String = "") {
+        val replyRevision = ownerReplyRevision
+        var rememberedAnswer: String? = null
         onLearningIo(work@{
             // H2: a hypothetical/uncertain/planned/questioned/reported statement never enters the
             // app fact list as owner-confirmed; the learning core keeps it as an unconfirmed statement.
@@ -9573,16 +9583,20 @@ class AgentActivity : Activity() {
                             .reply(last.input)
                     }.getOrNull()
                     else null
-                storedMessage + (if(resolved?.grounded==true)
-                    "\n\nZur vorherigen offenen Frage finde ich jetzt bestätigte Informationen:\n"+
-                    resolved.answer else "")
+                if (resolved?.grounded == true) rememberedAnswer = resolved.answer
+                storedMessage
             }, { e ->
                 "Im lokalen Lernspeicher gemerkt, aber der Continuum-Lernkern hat die Information nicht übernommen " +
                     "(${failureName(e)}). Wiederhole „Merke dir“, um es erneut zu versuchen."
             })
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." } +
-            (if (note.isNotBlank() && result.isSuccess) "\n\n$note" else ""),
-            preserveLocalContext = result.isFailure) }
+        }) { result ->
+            val current = replyRevision == ownerReplyRevision && !ownerFactDeletionPending.get()
+            val reply = if (current && result.isSuccess) rememberedAnswer else null
+            addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." } +
+                (reply?.let { "\n\nZur vorherigen offenen Frage finde ich jetzt bestätigte Informationen:\n$it" } ?: "") +
+                (if (current && note.isNotBlank() && result.isSuccess) "\n\n$note" else ""),
+                preserveLocalContext = result.isFailure)
+        }
     }
 
     /**
@@ -9613,24 +9627,50 @@ class AgentActivity : Activity() {
 
     /** Revokes in the learning core first, so a repeated deletion still reaches it. */
     private fun forgetOwnerFacts() {
-        onLearningIo(work@{
-            val revoked = runCatching { ContinuumLearningCore(filesDir).revokeAllOwnerFacts() }
-            val cleared = bootstrapMemory.clearFacts()
-            val core = revoked.fold({ "Im Continuum-Lernkern wurden $it Erinnerungen widerrufen; sie werden nicht mehr verwendet." },
-                { "Der Widerruf im Continuum-Lernkern ist fehlgeschlagen (${failureName(it)}); bitte „Fakten löschen“ wiederholen." })
-            (if (cleared) "Alle gemerkten Fakten wurden aus dem lokalen Lernspeicher gelöscht. "
-                else "Der lokale Lernspeicher konnte nicht geleert werden; bitte wiederholen. ") + core
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." },
-            preserveLocalContext = result.isFailure) }
+        if (!ownerFactDeletionPending.compareAndSet(false, true)) return
+        val affectedTurn = activeOwnerFactCancellation
+        activeOwnerFactCancellation = null
+        if (affectedTurn != null && activeChatCancellation === affectedTurn)
+            cancelLocalRequest(preserveContinuousMode = false, announceDraftStop = false)
+        ownerReplyRevision++
+        lastLocalReply = null
+        scopedLocalPromptSession = null
+        localConversationContext.clear()
+        at.heinz.deviceai.cognitive.LocalDialogueRetention.retainReply(null)
+        refreshSendButtonPresentation()
+        fun finish(result: Result<String>) {
+            ownerFactDeletionPending.set(false)
+            if (isFinishing || isDestroyed) return
+            refreshSendButtonPresentation()
+            addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." },
+                preserveLocalContext = result.isFailure)
+        }
+        try {
+            learningIoExecutor.execute {
+                val result = runCatching {
+                    val revoked = runCatching { ContinuumLearningCore(filesDir).revokeAllOwnerFacts() }
+                    val cleared = bootstrapMemory.clearFacts()
+                    val core = revoked.fold({ "Im Continuum-Lernkern wurden $it Erinnerungen widerrufen; sie werden nicht mehr verwendet." },
+                        { "Der Widerruf im Continuum-Lernkern ist fehlgeschlagen (${failureName(it)}); bitte „Fakten löschen“ wiederholen." })
+                    (if (cleared) "Alle gemerkten Fakten wurden aus dem lokalen Lernspeicher gelöscht. "
+                        else "Der lokale Lernspeicher konnte nicht geleert werden; bitte wiederholen. ") + core
+                }
+                runOnUiThread { finish(result) }
+            }
+        } catch (error: java.util.concurrent.RejectedExecutionException) {
+            finish(Result.failure(error))
+        }
     }
 
     private fun showBootstrapMemory() {
+        val replyRevision = ownerReplyRevision
         val legacyFacts = bootstrapMemory.facts().toList()
         onLearningIo({
             val core = ContinuumLearningCore.withAutomaticRecovery(filesDir)
             core.syncOwnerFacts(legacyFacts)
             core.activeOwnerFacts().map { it.content } to core.recoveredOwnerFactsForReview().facts.size
         }) { result ->
+            if (replyRevision != ownerReplyRevision || ownerFactDeletionPending.get()) return@onLearningIo
             val checked = result.getOrElse {
                 AlertDialog.Builder(this).setTitle("Gedächtnis derzeit nicht verfügbar")
                     .setMessage("Die aktuelle Bestätigung der Angaben konnte nicht sicher geprüft werden. " +
@@ -11080,6 +11120,7 @@ class AgentActivity : Activity() {
         localRuntimeError = null
         val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
         activeChatCancellation = cancellation
+        activeOwnerFactCancellation = if (botTask == null && codingPlanning == null) cancellation else null
         setBusy(true)
         if (botTask == null && codingPlanning == null && documentDraftTurn == null &&
             activeWorkArea == ContinuumWorkArea.CHAT && foregroundLearningActive &&
@@ -11583,6 +11624,7 @@ class AgentActivity : Activity() {
                 if (!ownerDeliveryCurrent) {
                     finishLocalConversationTurn(chiefTurn)
                     if (botTask == null && codingPlanning == null && sessionId == localSessionId &&
+                        activeOwnerFactCancellation === cancellation &&
                         !ephemeralScreenRun.get()) {
                         lastLocalReply = null
                         localConversationContext.recordUnanswered(localSessionId, text)
@@ -11831,8 +11873,9 @@ class AgentActivity : Activity() {
      */
     private fun evaluateAirbusPostMission(turnId: String) {
         val orchestrator = airbusCockpitOrchestrator ?: return
-        if (!foregroundLearningActive || localAgentExecutor.isShutdown) return
+        if (!foregroundLearningActive || localAgentExecutor.isShutdown || ownerFactDeletionPending.get()) return
         val expectedSession = sessionId
+        val expectedOwnerRevision = ownerReplyRevision
         try {
             localAgentExecutor.execute {
                 val records = (memoryStore.all() + ownerFactMemories()).distinctBy { it.id }
@@ -11841,6 +11884,7 @@ class AgentActivity : Activity() {
                 runOnUiThread {
                     if (airbusCockpitOrchestrator !== orchestrator ||
                         sessionId != expectedSession || !foregroundLearningActive ||
+                        ownerReplyRevision != expectedOwnerRevision || ownerFactDeletionPending.get() ||
                         isFinishing || isDestroyed
                     ) return@runOnUiThread
                     addToolActivity("MISSION $turnId · proaktiver bestätigter Gedächtnisimpuls")
