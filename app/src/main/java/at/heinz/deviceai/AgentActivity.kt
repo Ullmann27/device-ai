@@ -236,7 +236,8 @@ class AgentActivity : Activity() {
     @Volatile private var continuumStartupNote: String? = null
     private val contextCompiler by lazy {
         AiContextCompiler(
-            AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4, nativeToolCatalog = true)
+            AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4,
+                nativeToolCatalog = true, includeToolCatalog = false)
         ).withRecallObserver(ContinuumMemoryRecallPublisher(filesDir))
     }
 
