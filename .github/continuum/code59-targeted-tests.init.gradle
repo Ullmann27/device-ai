@@ -1,0 +1,13 @@
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app')
+    app.tasks.withType(org.gradle.api.tasks.testing.Test).matching {
+        it.name == 'testDebugUnitTest'
+    }.configureEach {
+        filter {
+            includeTestsMatching 'at.heinz.deviceai.ContinuumUiSnapshotUiTest'
+            includeTestsMatching 'at.heinz.deviceai.OwnerAppActionWorkSceneUiTest'
+            failOnNoMatchingTests = true
+        }
+    }
+}
