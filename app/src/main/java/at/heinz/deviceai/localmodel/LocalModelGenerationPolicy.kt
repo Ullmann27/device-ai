@@ -12,7 +12,7 @@ import java.util.Locale
  */
 internal object LocalModelGenerationPolicy {
     const val DEFAULT_MAX_OUTPUT_TOKENS = 1_024
-    const val GEMMA4_MAX_OUTPUT_TOKENS = 2_048
+    const val GEMMA4_MAX_OUTPUT_TOKENS = 3_072
 
     fun maxOutputTokens(modelId: String?): Int {
         val id = modelId?.lowercase(Locale.ROOT) ?: return DEFAULT_MAX_OUTPUT_TOKENS
