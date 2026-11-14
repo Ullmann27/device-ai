@@ -581,7 +581,7 @@ class ContinuumBotRosterDialog(
             filters = arrayOf(InputFilter.LengthFilter(1_800))
             setText(initial); hint = "Auftrag und zu prüfenden Text eingeben (max. 1800 Zeichen)"
             contentDescription = "Teamauftrag"; tag = "bot-team-request"
-            if (followup != null) { isFocusable = false; isCursorVisible = false; keyListener = null }
+            if (followup != null) { keyListener = null; isFocusable = false; isCursorVisible = false }
         }
         body.addView(text)
         var shared: SharedOwnerKnowledgeGrant? = null
