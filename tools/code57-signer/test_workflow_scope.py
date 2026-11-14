@@ -4,6 +4,7 @@ import ast
 import json
 import os
 import re
+import shutil
 import struct
 import subprocess
 import sys
@@ -15,6 +16,7 @@ import zlib
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools/code55-apk'))
 from test_native_hologram_evidence import HologramFixture
+import test_native_routines
 
 WORKFLOW = ROOT / '.github/workflows/continuum-code57-original-sign.yml'
 SCRIPT = ROOT / 'scripts/continuum-code57-original-signer.sh'
@@ -174,6 +176,21 @@ class NativeEvidenceTest(unittest.TestCase):
             'output_frames':'3','content_cleared':'true','panels_released':'true','engine_released':'true'})
         (self.root/'filament/surfaceflinger.txt').write_text('GLES: Synthetic SwiftShader fixture\n')
         self.hologram = HologramFixture(self.root/'hologram')
+        self.routine_fixture()
+
+    def routine_fixture(self):
+        fixture = test_native_routines.RoutineEvidenceTest()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        fixture.complete()
+        directory = self.root/'routines'
+        shutil.copytree(fixture.directory, directory)
+        report = dict(fixture.report, status='PASS', serial=self.report['serial'],
+                      apk_sha256=dict(self.report['apk_sha256']))
+        report['routine_checks'] = test_native_routines.proof.verify(directory, report, self.sha, self.tree)
+        (directory/'RESULT.json').write_text(json.dumps(report))
+        (self.root/'probe-exits.json').write_text(json.dumps({
+            'source_sha': self.sha, 'hologram': 0, 'routines': 0, 'app': 0}))
 
     def submitted_ui_fixture(self):
         reply = ('Continuum · Aktuelle App-Fähigkeiten Mein aktueller Stand auf diesem Gerät: '
@@ -229,6 +246,49 @@ class NativeEvidenceTest(unittest.TestCase):
         result = self.validate()
         self.assertEqual(result.returncode,0,result.stderr)
         self.assertIn('SOURCE_BOUND_NATIVE_RUNTIME_VERIFIED',result.stdout)
+
+    def test_missing_routine_evidence_fails(self):
+        (self.root/'routines/RESULT.json').unlink()
+        self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_routines_require_same_source_runtime_and_apks(self):
+        path = self.root/'routines/RESULT.json'
+        original = json.loads(path.read_text())
+        for key, value in (('source_sha', 'e'*40), ('source_tree', 'f'*40),
+                           ('serial', 'emulator-5556'), ('status', 'FAILED'),
+                           ('apk_sha256', {'app-debug.apk': 'e'*64, 'app-debug-androidTest.apk': 'd'*64}),
+                           ('cleanup_errors', ['Restore failed'])):
+            with self.subTest(key=key):
+                path.write_text(json.dumps(dict(original, **{key: value})))
+                self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_routine_worker_and_chat_bytes_are_recomputed(self):
+        receipt = self.root/'routines/after-start-receipts-stdout.txt'
+        original = receipt.read_bytes()
+        receipt.write_bytes(original[:-1] + bytes([original[-1] ^ 1]))
+        self.assertNotEqual(self.validate().returncode, 0)
+        receipt.write_bytes(original)
+        chat = self.root/'routines/after-start-chat-stdout.txt'
+        original = chat.read_bytes()
+        chat.write_bytes(original * 2)
+        self.assertNotEqual(self.validate().returncode, 0)
+        chat.write_bytes(original)
+        path = self.root/'routines/RESULT.json'
+        report = json.loads(path.read_text())
+        report['routine_checks']['periodic_due_worker_execution'] = 'PASS'
+        path.write_text(json.dumps(report))
+        self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_every_original_probe_exit_is_required(self):
+        path = self.root/'probe-exits.json'
+        original = json.loads(path.read_text())
+        for key, value in (('hologram', 1), ('routines', 1), ('app', 1),
+                           ('source_sha', 'e'*40), ('hologram', False)):
+            with self.subTest(key=key, value=value):
+                path.write_text(json.dumps(dict(original, **{key: value})))
+                self.assertNotEqual(self.validate().returncode, 0)
+        path.unlink()
+        self.assertNotEqual(self.validate().returncode, 0)
 
     def test_missing_hologram_evidence_fails(self):
         (self.root/'hologram/native-hologram.txt').unlink()
