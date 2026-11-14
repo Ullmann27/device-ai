@@ -23,14 +23,22 @@ sealed interface RoutineOutcome {
     data class Unchanged(val routineId: String) : RoutineOutcome
 }
 
+internal class RoutineClaim(val routine: Routine)
+internal class RoutineReport(
+    val claim: RoutineClaim,
+    val outcome: RoutineOutcome,
+    val digest: String
+)
+
 class RoutineBook(private val maxRoutines: Int = 32) {
     private data class Entry(
         val routine: Routine,
         var nextAtMillis: Long,
         var lastDigest: String? = null,
-        var inFlight: Boolean = false
+        var claim: RoutineClaim? = null
     )
     private val entries = LinkedHashMap<String, Entry>()
+    internal val capacity: Int get() = maxRoutines
 
     @Synchronized fun add(routine: Routine): Boolean {
         if (!ID.matches(routine.id) || routine.goal.isBlank() || routine.goal.length > 2_000) return false
@@ -51,37 +59,69 @@ class RoutineBook(private val maxRoutines: Int = 32) {
     /** Atomically claims due routines: repeated scheduler polls cannot dispatch the same run twice. */
     @Synchronized fun due(nowMillis: Long): List<Routine> =
         entries.values.filter {
-            !it.inFlight && it.routine.trigger is RoutineTrigger.Every && nowMillis >= it.nextAtMillis
-        }.onEach { it.inFlight = true }.map { it.routine }
+            it.claim == null && it.routine.trigger is RoutineTrigger.Every && nowMillis >= it.nextAtMillis
+        }.onEach { it.claim = RoutineClaim(it.routine) }.map { it.routine }
 
     /** Claim event-triggered routines once; the caller must report() or release() the claim. */
     @Synchronized fun triggered(event: String): List<Routine> =
         entries.values.filter {
-            !it.inFlight && (it.routine.trigger as? RoutineTrigger.OnEvent)?.name == event
-        }.onEach { it.inFlight = true }.map { it.routine }
+            it.claim == null && (it.routine.trigger as? RoutineTrigger.OnEvent)?.name == event
+        }.onEach { it.claim = RoutineClaim(it.routine) }.map { it.routine }
 
     /** Explicit retry gate after a failed/cancelled run; never auto-redeliver an unfinished job. */
     @Synchronized fun release(id: String): Boolean {
         val entry = entries[id] ?: return false
-        if (!entry.inFlight) return false
-        entry.inFlight = false
+        if (entry.claim == null) return false
+        entry.claim = null
+        return true
+    }
+
+    @Synchronized internal fun claimed(routine: Routine): RoutineClaim? =
+        entries[routine.id]?.takeIf { it.routine === routine }?.claim
+
+    @Synchronized internal fun claimDue(nowMillis: Long): List<RoutineClaim> =
+        due(nowMillis).mapNotNull(::claimed)
+
+    @Synchronized internal fun claimTriggered(event: String): List<RoutineClaim> =
+        triggered(event).mapNotNull(::claimed)
+
+    @Synchronized internal fun isCurrent(claim: RoutineClaim): Boolean =
+        entries[claim.routine.id]?.claim === claim
+
+    @Synchronized internal fun release(claim: RoutineClaim): Boolean =
+        if (isCurrent(claim)) release(claim.routine.id) else false
+
+    @Synchronized internal fun prepareReport(claim: RoutineClaim, result: String): RoutineReport? {
+        if (!isCurrent(claim)) return null
+        val e = entries.getValue(claim.routine.id)
+        val digest = result.trim().replace(Regex("\\s+"), " ")
+        val outcome = if (digest.isEmpty() || digest == e.lastDigest) RoutineOutcome.Unchanged(e.routine.id)
+            else RoutineOutcome.News(e.routine.id, digest.take(1_000))
+        return RoutineReport(claim, outcome, digest)
+    }
+
+    // Queue insertion only; no callbacks.
+    @Synchronized internal fun offerReport(report: RoutineReport, enqueue: () -> Boolean): Boolean? =
+        if (isCurrent(report.claim)) enqueue() else null
+
+    @Synchronized internal fun acknowledgeReport(report: RoutineReport, nowMillis: Long): Boolean {
+        if (!isCurrent(report.claim)) return false
+        val e = entries.getValue(report.claim.routine.id)
+        e.claim = null
+        (e.routine.trigger as? RoutineTrigger.Every)?.let {
+            e.nextAtMillis = if (nowMillis > Long.MAX_VALUE - it.periodMillis) Long.MAX_VALUE
+                else nowMillis + it.periodMillis
+        }
+        if (report.digest.isNotEmpty()) e.lastDigest = report.digest
         return true
     }
 
     /** Records a run; returns News only if the normalized result differs from the last one. */
     @Synchronized fun report(id: String, result: String, nowMillis: Long): RoutineOutcome {
-        val e = entries[id] ?: return RoutineOutcome.Unchanged(id)
-        if (!e.inFlight) return RoutineOutcome.Unchanged(id)
-        e.inFlight = false
-        (e.routine.trigger as? RoutineTrigger.Every)?.let {
-            // An unrepresentable future must not wrap into the past and fire again.
-            e.nextAtMillis = if (nowMillis > Long.MAX_VALUE - it.periodMillis) Long.MAX_VALUE
-                else nowMillis + it.periodMillis
-        }
-        val digest = result.trim().replace(Regex("\\s+"), " ")
-        if (digest.isEmpty() || digest == e.lastDigest) return RoutineOutcome.Unchanged(id)
-        e.lastDigest = digest
-        return RoutineOutcome.News(id, digest.take(1_000))
+        val claim = entries[id]?.claim ?: return RoutineOutcome.Unchanged(id)
+        val report = prepareReport(claim, result) ?: return RoutineOutcome.Unchanged(id)
+        acknowledgeReport(report, nowMillis)
+        return report.outcome
     }
 
     companion object {
@@ -113,6 +153,12 @@ class AgentMailbox(
     private var totalBytes = 0
 
     fun send(message: AgentMessage): Boolean {
+        if (!enqueue(message)) return false
+        notifyAccepted(message)
+        return true
+    }
+
+    internal fun enqueue(message: AgentMessage): Boolean {
         synchronized(this) {
             if (message.id.length !in 1..128 || message.from.length !in 1..64 ||
                 message.to.length !in 1..64 || message.body.isBlank() || message.body.length > 4_000) return false
@@ -128,9 +174,12 @@ class AgentMailbox(
             seen += message.id
             while (seen.size > 4_096) seen.remove(seen.first())
         }
+        return true
+    }
+
+    internal fun notifyAccepted(message: AgentMessage) {
         // Outside the lock; the message remains in the queue even if the wake callback fails.
         if (message.priority == AgentPriority.URGENT) runCatching { wake(message) }
-        return true
     }
 
     /** Urgent first, then arrival order. */

@@ -10,10 +10,11 @@ import at.heinz.deviceai.learning.JournalStatus
 import at.heinz.deviceai.routines.AgentMailbox
 import at.heinz.deviceai.routines.AgentMessage
 import at.heinz.deviceai.routines.AgentPriority
-import at.heinz.deviceai.routines.Routine
 import at.heinz.deviceai.routines.RoutineBook
+import at.heinz.deviceai.routines.RoutineClaim
 import at.heinz.deviceai.routines.RoutineOutcome
-import java.util.concurrent.ConcurrentHashMap
+import at.heinz.deviceai.routines.RoutineReport
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 /**
@@ -79,33 +80,64 @@ class RoutineDispatcher(
     private val chiefId: String = "chief",
     private val clock: () -> Long = System::currentTimeMillis
 ) {
-    private val inFlight: MutableSet<String> = ConcurrentHashMap.newKeySet()
+    private class Delivery(val report: RoutineReport, val message: AgentMessage?) {
+        val attempting = AtomicBoolean()
+    }
+    private val inFlight = LinkedHashMap<String, RoutineClaim>()
+    private val pending = LinkedHashMap<String, Delivery>()
     private val seq = AtomicLong()
 
-    fun tick(): Int = dispatch(book.due(clock()))
-    fun onEvent(name: String): Int = dispatch(book.triggered(name))
-    fun inFlight(): Set<String> = inFlight.toSet()
+    init { require(chiefId.length in 1..64) }
 
-    private fun dispatch(routines: List<Routine>): Int {
+    fun tick(): Int = poll(book.claimDue(clock()))
+    fun onEvent(name: String): Int = poll(book.claimTriggered(name))
+    fun inFlight(): Set<String> = synchronized(book) { inFlight.keys.toSet() }
+
+    private fun poll(claims: List<RoutineClaim>): Int {
+        val waiting = synchronized(book) {
+            discardRemovedClaims()
+            pending.values.toList()
+        }
+        waiting.forEach(::deliver)
+        return dispatch(claims)
+    }
+
+    private fun discardRemovedClaims() {
+        inFlight.values.filterNot(book::isCurrent).forEach(::retire)
+    }
+
+    private fun dispatch(claims: List<RoutineClaim>): Int {
         var submitted = 0
-        for (routine in routines) {
-            if (!inFlight.add(routine.id)) {
-                // The original dispatch still owns this claim: never release it here,
-                // otherwise a second scheduler poll could submit a duplicate worker.
-                continue
+        for (claim in claims) {
+            val routine = claim.routine
+            val admitted = synchronized(book) {
+                discardRemovedClaims()
+                when {
+                    !book.isCurrent(claim) || inFlight[routine.id] === claim -> false
+                    routine.id !in inFlight && inFlight.size >= book.capacity -> {
+                        book.release(claim)
+                        false
+                    }
+                    else -> {
+                        inFlight[routine.id] = claim
+                        pending.remove(routine.id)
+                        true
+                    }
+                }
             }
+            if (!admitted) continue
             val brief = runCatching {
                 WorkerBrief(briefId(routine.id), routine.goal, routine.allowedTools)
             }.getOrNull()
             if (brief == null) {
-                inFlight.remove(routine.id)
-                book.release(routine.id)
+                retire(claim)
+                book.release(claim)
                 continue
             }
-            val accepted = runCatching { pool.submit(brief) { report -> onReport(routine, report) } }.getOrDefault(false)
+            val accepted = runCatching { pool.submit(brief) { report -> onReport(claim, report) } }.getOrDefault(false)
             if (accepted) submitted++ else {
-                inFlight.remove(routine.id)
-                book.release(routine.id)
+                retire(claim)
+                book.release(claim)
             }
         }
         return submitted
@@ -114,30 +146,58 @@ class RoutineDispatcher(
     private fun briefId(routineId: String): String =
         ("rt-" + routineId.replace('.', '_')).take(48) + "-" + seq.incrementAndGet()
 
-    private fun onReport(routine: Routine, report: WorkerReport) {
+    private fun onReport(claim: RoutineClaim, report: WorkerReport) {
+        val now = clock()
+        val delivery = synchronized(book) {
+            val routine = claim.routine
+            if (inFlight[routine.id] !== claim || pending[routine.id] != null) return
+            val prepared = book.prepareReport(claim, if (report.status == WorkerStatus.DONE) report.summary else "")
+            if (prepared == null) {
+                retire(claim)
+                return
+            }
+            val message = when (report.status) {
+                WorkerStatus.DONE -> (prepared.outcome as? RoutineOutcome.News)?.let {
+                    message(claim, AgentPriority.INFO, it.summary, now)
+                }
+                WorkerStatus.BLOCKED -> message(claim, AgentPriority.URGENT,
+                    "Routine ${routine.id} braucht deine Freigabe: " + report.summary.take(500), now)
+                else -> message(claim, AgentPriority.INFO,
+                    "Routine ${routine.id}: ${report.status} – " + report.summary.take(300), now)
+            }
+            Delivery(prepared, message).also { pending[routine.id] = it }
+        }
+        deliver(delivery)
+    }
+
+    private fun deliver(delivery: Delivery) {
+        if (!delivery.attempting.compareAndSet(false, true)) return
         try {
             val now = clock()
-            when (report.status) {
-                WorkerStatus.DONE -> {
-                    val outcome = book.report(routine.id, report.summary, now)
-                    if (outcome is RoutineOutcome.News) send(routine, AgentPriority.INFO, outcome.summary, now)
-                }
-                WorkerStatus.BLOCKED -> {
-                    book.report(routine.id, "", now)
-                    send(routine, AgentPriority.URGENT, "Routine ${routine.id} braucht deine Freigabe: " + report.summary.take(500), now)
-                }
-                else -> {
-                    book.report(routine.id, "", now)
-                    send(routine, AgentPriority.INFO, "Routine ${routine.id}: ${report.status} – " + report.summary.take(300), now)
+            when (book.offerReport(delivery.report) {
+                delivery.message?.let(mailbox::enqueue) ?: true
+            }) {
+                null -> retire(delivery.report.claim)
+                false -> Unit
+                true -> {
+                    delivery.message?.let(mailbox::notifyAccepted)
+                    book.acknowledgeReport(delivery.report, now)
+                    retire(delivery.report.claim)
                 }
             }
         } finally {
-            inFlight.remove(routine.id)
+            delivery.attempting.set(false)
         }
     }
 
-    private fun send(routine: Routine, priority: AgentPriority, body: String, now: Long) {
-        if (body.isBlank()) return
-        mailbox.send(AgentMessage("routine-${routine.id}-$now-${seq.incrementAndGet()}", "routine:${routine.id}", chiefId, priority, body.take(4_000)))
+    private fun retire(claim: RoutineClaim) = synchronized(book) {
+        if (inFlight[claim.routine.id] === claim) {
+            inFlight.remove(claim.routine.id)
+            pending.remove(claim.routine.id)
+        }
     }
+
+    private fun message(claim: RoutineClaim, priority: AgentPriority, body: String, now: Long): AgentMessage =
+        AgentMessage("routine-${claim.routine.id}-$now-${seq.incrementAndGet()}",
+            "routine:${claim.routine.id}".take(64), chiefId, priority, body.take(4_000))
 }
