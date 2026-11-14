@@ -56,7 +56,7 @@ internal object OwnerAppLookupIntent {
     private val courtesy = Regex("(?iu)^(?:(?:bitte|mir|mal|kurz|eben)|für\\s+mich)\\s+")
     private val trailingCourtesy = Regex("(?iu)\\s+(?:bitte|für\\s+mich)$")
     private val reference = Regex("(?iu)^(?:sie|es|diese|diese\\s+app|die\\s+app|die|erste|zweite|dritte|vierte|fünfte|letzte|[1-9]|[1-9]\\.)$")
-    private val fileTarget = Regex("(?iu)\\b(datei|dateien|ordner|verzeichnis|download-ordner|downloads|pdf|dokument|dokumente)\\b|[/\\\\]|\\.(?:pdf|txt|docx|csv|json|jpg|png)\\b")
+    private val fileTarget = Regex("(?iu)\\b(datei|dateien|ordner|verzeichnis|download-ordner|downloadordner|downloads|download|pdf|dokument|dokumente)\\b|[/\\\\]|\\.(?:pdf|txt|docx|csv|json|jpg|png)\\b")
     private val messageAction = Regex("(?iu)\\b(schreib|schreibe|schreiben|sende|senden|schick|schicke|schicken|nachricht)\\b")
     private val explicitMessageApp = Regex(
         "(?iu)^(?:schreib|schreibe|sende|schick|schicke)\\s+(?:(?:in|über|auf)\\s+)?(?:(?:die|eine)\\s+)?" +

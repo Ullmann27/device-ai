@@ -579,6 +579,12 @@ class DeepResearchEngine(
                     continue
                 }
                 if (normalized in fetched) continue
+                // A search-result label alone does not prove the fetched page has the right topic.
+                if (candidate.discoveredBy == "general-web-search" &&
+                    !ResearchQuestionFocus.sourceTitleMatches(query.text, document.title)) {
+                    partialReason = partialReason ?: "Öffentliche Webquelle ohne passenden Themenbezug verworfen."
+                    continue
+                }
                 val finalDomain = URI(normalized).host.lowercase(Locale.ROOT)
                 if (finalDomain != domain) {
                     domainCounts[domain] = ((domainCounts[domain] ?: 1) - 1).coerceAtLeast(0)
@@ -817,6 +823,8 @@ class DeepResearchEngine(
                 val doc = retrieved.getOrThrow().documents.firstOrNull() ?: continue
                 val finalUrl = runCatching { ResearchUrlCanonicalizer.canonicalize(doc.url) }.getOrNull() ?: continue
                 if (runCatching { validateTarget(URI(finalUrl)) }.isFailure) continue
+                if (candidate.discoveredBy == "general-web-search" &&
+                    !ResearchQuestionFocus.sourceTitleMatches(path.query.text, doc.title)) continue
                 val finalDomain = URI(finalUrl).host
                 if (finalDomain != domain) {
                     domainCounts[domain] = ((domainCounts[domain] ?: 1) - 1).coerceAtLeast(0)
