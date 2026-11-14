@@ -435,6 +435,39 @@ jobs:
               'storageTimeDoesNotInventChangeButOriginalResultRemainsAvailable'
           )}
           required.add(('OwnerRoutineConditionalDeliveryTest', 'batteryThresholdKeepsSilentReadingsAndReportsOnlyNewLowReadings'))
+          required |= {('RoutineChatDeliveryTest', name) for name in (
+              'displayedCompleteRecordWithoutFinalNewlineKeepsItsReadBoundary',
+              'readSnapshotBoundaryDoesNotAdvanceWithLaterAppend'
+          )}
+          required.add(('ShizukuBridgeLifecycleTest', 'grantedOnlyBridgeNeverOpensPermissionDialogAfterRevocation'))
+          required |= {('OwnerRoutineRuntimeUiTest', name) for name in (
+              'realJobReadsLowBatteryAndKeepsPersistedDueTime',
+              'onStopJobRevokesWaitingGenerationBeforeAnyDeviceRead',
+              'ownerStopDuringAndroidAdmissionPreventsTheActualBatteryRead',
+              'notStopRecheckedAfterResourceObservationBlocksToolStart',
+              'realAndroidLowMemoryBlocksBeforeToolReceipt',
+              'deniedShizukuIsReportedWithoutRequestingNewPermission',
+              'actualThermalAdmissionBlocksBeforeWorkerTools',
+              'firstPausedProcessRestoresFinishedReportWithoutWorkerReplay',
+              'delayedShellDispatchCannotStartAfterRoutineRevocation',
+              'persistentFailureAfterPartialAdmissionCancelsTheFinishedJobGeneration',
+              'trustedFilesParentAliasWorksButInnerRoutineLinkIsRejected'
+          )}
+          required |= {('OwnerRoutineActivityUiTest', name) for name in (
+              'actualConfirmationCancelLeavesNoPersistentRoutine',
+              'actualConfirmationRunsBatteryAndListsThenStopsWithoutCancellingOwnerTurn',
+              'unsupportedConditionalGoalNeverOpensApprovalOrExecutes',
+              'explicitRoutineControlsEndTheRealAppNameQuestion',
+              'editableBotNamedRoutineKeepsColonAndCommaAddressingBeforeOwnerCommands',
+              'appendDuringPauseAppearsOnceWhenTheSameOwnerViewReturns',
+              'lateDeliveryStaysOutOfPrivateBotViewAndDifferentOwnerConversation',
+              'destroyedViewDropsLateCallbackAndReplacementRestoresDurableMessageOnce',
+              'recoveredCompleteJsonWithoutNewlineIsNotDisplayedTwice',
+              'deletedBoundChatDoesNotBlockIndependentLaterReport',
+              'urgentWakeDuringOlderDrainIsRetriedOnceAfterThatDrain',
+              'innerChatLinkIsRejectedWithoutWritingOutsideAppHistory',
+              'actualRotationAndSavedActivityRecreationDoNotTriggerAppStartAgain'
+          )}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
