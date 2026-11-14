@@ -13,15 +13,18 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: b8c31554ce7416540692f1d30b559be3712495d7
           fetch-depth: 0
           persist-credentials: false
       - name: Freeze native probe source
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "b8c31554ce7416540692f1d30b559be3712495d7"
-          test "$(git rev-parse HEAD^{tree})" = "0e07cb8a123e8f954ff6648333491e0c51af5d65"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --exit-code b8c31554ce7416540692f1d30b559be3712495d7 HEAD -- . \
+            ':(exclude).github/workflows/code59-native-evidence-read.yml' \
+            ':(exclude).github/workflows/code59-native-swiftshader-qa.yml'
+          printf 'FROZEN_PRODUCT_MATCH base=%s tested=%s app_tree=%s\n' \
+            b8c31554ce7416540692f1d30b559be3712495d7 "$GITHUB_SHA" "$(git rev-parse HEAD:app)"
           test -z "$(git status --porcelain --untracked-files=normal)"
       - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
         with:
