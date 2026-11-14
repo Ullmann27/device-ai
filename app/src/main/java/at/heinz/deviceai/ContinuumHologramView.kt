@@ -51,6 +51,8 @@ import at.heinz.deviceai.ui.TextStyle
 import kotlin.math.exp
 import kotlin.math.sqrt
 
+// Callback required; programmatic creation only.
+@android.annotation.SuppressLint("ViewConstructor")
 internal class FilamentTextureView(
     context: Context,
     private val beforeBufferResize: (TextureView) -> Unit
