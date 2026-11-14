@@ -205,6 +205,207 @@ def verify_job_absent(code, stdout, stderr, uid):
     assert stderr == f'Could not find job 620159 in package {PACKAGE} / user 0\n'.encode(), 'Stopped Android job still exists'
 
 
+def command_evidence(directory, label, serial, arguments):
+    command = json.loads((directory / (label + '-command.json')).read_text())
+    args = command['args']
+    assert len(args) == len(arguments) + 3 and Path(args[0]).name == 'adb'
+    assert args[1:] == ['-s', serial, *arguments], 'Unexpected scheduler observation command'
+    assert type(command['returncode']) is int and command['returncode'] == 0
+    assert not (directory / (label + '-stderr.txt')).read_bytes()
+    return (directory / (label + '-stdout.txt')).read_text()
+
+
+def parse_clock(text):
+    values = re.findall(r'^\s*nowRTC=([0-9]+)=[^\r\n]* nowELAPSED=([0-9]+)\s*$', text, re.M)
+    assert len(values) == 1, 'Actual Android clock pair missing'
+    rtc, elapsed = map(int, values[0])
+    assert rtc > 0 and elapsed > 0
+    return {'rtc_ms': rtc, 'elapsed_ms': elapsed}
+
+
+def clock_evidence(directory, label, serial):
+    result = parse_clock(command_evidence(directory, label, serial, ['shell', 'dumpsys', 'alarm']))
+    host = json.loads((directory / (label + '-host-time.json')).read_text())
+    assert set(host) == {'started_ns', 'finished_ns'} and all(type(n) is int and n > 0 for n in host.values())
+    assert 0 < host['finished_ns'] - host['started_ns'] <= 10_000_000_000
+    result.update(host)
+    return result
+
+
+def clock_follows(before, after):
+    assert after['started_ns'] >= before['finished_ns'], 'Host observation order changed'
+    assert after['elapsed_ms'] >= before['elapsed_ms'] and after['rtc_ms'] >= before['rtc_ms']
+    uncertainty = (before['finished_ns'] - before['started_ns'] +
+                   after['finished_ns'] - after['started_ns']) // 1_000_000 + 2
+    assert abs((after['rtc_ms'] - before['rtc_ms']) -
+               (after['elapsed_ms'] - before['elapsed_ms'])) <= uncertainty, 'Device wall clock jumped'
+
+
+def history_age(text):
+    if text == '0':
+        return 0
+    match = re.fullmatch(r'-(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?(?:(\d+)ms)?', text)
+    assert match and any(value is not None for value in match.groups()), 'Invalid scheduler history age'
+    return sum(int(value or 0) * scale for value, scale in zip(match.groups(), (86400000, 3600000, 60000, 1000, 1)))
+
+
+def periodic_history(text, uid):
+    sections = re.findall(r'(?ms)^[ \t]*Job history:\n(.*?)(?=\n[ \t]*\n|\Z)', text)
+    assert len(sections) == 1, 'Actual scheduler history missing'
+    service = PACKAGE + '/at.heinz.deviceai.routines.OwnerRoutineJobService'
+    pattern = (r'^[ \t]*(\S+)[ \t]+(START-P|STOP-P): #' + re.escape(uid) + r'/620159 ' +
+               re.escape(service) + r'(?: ([^\r\n]*))?[ \t]*$')
+    events = [(kind, history_age(age), reason or '')
+              for age, kind, reason in re.findall(pattern, sections[0], re.M)]
+    assert len(events) <= 100
+    return events
+
+
+def battery_receipt(tool, row):
+    assert tool['tool'] == 'get_battery_info' and tool['risk'] == 'READ_ONLY' and tool['arguments'] == {}
+    assert re.fullmatch('worker-rt-' + UUID + '-1', tool['call_id'])
+    assert tool['fingerprint'] == hashlib.sha256(b'').hexdigest()
+    assert tool['transitions'][-1][0] == 'SUCCEEDED'
+    assert any(state in ('STARTED', 'DISPATCH_COMMITTED') for state, _ in tool['transitions'])
+    prefix = 'Akku prüfen:\n'
+    assert row['last_result'].startswith(prefix)
+    output = row['last_result'][len(prefix):]
+    assert re.search(r'^Aktueller Akkustand: (?:100|[0-9]{1,2}) % \(Android-Batteriedienst\)\.$', output, re.M)
+    assert tool['output_sha256'] == hashlib.sha256(output.encode()).hexdigest()
+    assert tool['output_length'] == len(output.encode('utf-16-be')) // 2
+    assert row['approved_at'] <= tool['created'] <= tool['transitions'][-1][1] <= row['last_at']
+    assert tool['transitions'][-1][1] - tool['created'] <= 120000, 'Tool completion exceeded worker budget'
+
+
+def verify_periodic(directory, report, previous, conversation):
+    serial = report['serial']
+    first_state, last_state = stored(directory, 'periodic-first'), stored(directory, 'periodic-complete')
+    first, last = single(first_state), single(last_state)
+    assert not first_state['outbox'] and not last_state['outbox']
+    for key in ('id', 'goal', 'trigger', 'tools', 'approved_at', 'approval'):
+        assert first[key] == last[key], 'Periodic authorization changed'
+    assert first['goal'] == 'Prüfe Akku' and first['tools'] == ['get_battery_info']
+    assert first['trigger']['kind'] == 'periodic' and first['trigger']['period'] == 900000
+    assert first['trigger']['first'] <= first['approved_at'] <= first['last_at']
+    assert first['run_id'] is None and first['report'] is None and last['run_id'] is None and last['report'] is None
+    assert last_state['revision'] > first_state['revision']
+    assert first['next_at'] >= first['last_at'] + 900000 and last['next_at'] >= last['last_at'] + 900000
+    assert last['last_at'] >= first['next_at'] and last['next_at'] > first['next_at']
+    assert first['last_result'] == last['last_result'], 'Unchanged measurement proof needs identical battery output'
+    assert first['last_digest'] == last['last_digest'] == re.sub(r'\s+', ' ', first['last_result'].strip())
+    before = {row['call_id']: row for row in previous}
+    initial = {row['call_id']: row for row in receipts(directory, 'periodic-first')}
+    final = {row['call_id']: row for row in receipts(directory, 'periodic-complete')}
+    assert all(initial.get(key) == value for key, value in before.items()), 'Existing receipt changed'
+    assert all(final.get(key) == value for key, value in initial.items()), 'Initial receipt changed'
+    assert len(initial) == len(before) + 1 and len(final) == len(initial) + 1, 'Expected two distinct periodic reads'
+    first_tool = initial[(initial.keys() - before.keys()).pop()]
+    last_tool = final[(final.keys() - initial.keys()).pop()]
+    battery_receipt(first_tool, first)
+    battery_receipt(last_tool, last)
+    assert first_tool['created'] - first['approved_at'] < 120000, 'Initial execution was not separated'
+    assert last_tool['created'] >= first['next_at'], 'Second tool call preceded actual due time'
+    confirmation, _ = text_nodes(directory, 'periodic-confirmation')
+    assert 'Routine dauerhaft freigeben?' in confirmation and 'DAUERHAFT FREIGEBEN' in confirmation
+    assert any('Prüfe Akku' in text and '15 Minuten' in text and 'Akku prüfen' in text for text in confirmation)
+    body = f"Routine {first['id']}:\n{first['last_result']}"
+    assert chat_binding(directory, 'periodic-first', first, body) == conversation
+    assert chat_binding(directory, 'periodic-complete', first, body) == conversation
+    assert evidence_bytes(directory, 'periodic-first-chat') == evidence_bytes(directory, 'periodic-complete-chat'), 'Unchanged result appended another chat entry'
+    _, initial_ui = text_nodes(directory, 'periodic-first')
+    _, completed_ui = text_nodes(directory, 'periodic-complete')
+    assert initial_ui['app_pid_before'] == completed_ui['app_pid_before'], 'Period wait restarted app'
+    observation = json.loads((directory / 'periodic-observation.json').read_text())
+    assert observation['source_sha'] == report['source_sha'] and observation['source_tree'] == report['source_tree']
+    assert observation['routine_id'] == first['id']
+    start = clock_evidence(directory, 'periodic-wait-start', serial)
+    assert type(observation['probe_started_ns']) is int and 0 < observation['probe_started_ns'] <= start['started_ns']
+    assert start['finished_ns'] + 1_260_000_000_000 <= observation['probe_started_ns'] + 1_500_000_000_000, 'No time reserved for periodic completion and stop'
+    labels = observation['observations']
+    assert 1 <= len(labels) <= 110 and labels == [f'periodic-wait-{index}' for index in range(len(labels))]
+    prior = start
+    for label in labels:
+        current = clock_evidence(directory, label, serial)
+        clock_follows(prior, current)
+        assert command_evidence(directory, label + '-pid', serial, ['shell', 'pidof', PACKAGE]).strip() == initial_ui['app_pid_before']
+        observed = single(stored(directory, label))
+        assert observed['id'] == first['id'] and observed['approval'] == first['approval']
+        prior = current
+    assert observed == last, 'Final poll and completed state differ'
+    waited_ms = (prior['started_ns'] - start['finished_ns']) // 1_000_000
+    assert 900000 <= waited_ms <= 1020000, 'Real minimum period or worker deadline violated'
+    assert prior['elapsed_ms'] - start['elapsed_ms'] >= 900000 and prior['rtc_ms'] >= first['next_at']
+    statuses = command_evidence(directory, labels[-1] + '-job-state', serial,
+        ['shell', 'cmd', 'jobscheduler', 'get-job-state', '-u', '0', PACKAGE, '620159']).split()
+    assert statuses and set(statuses) <= {'ready', 'waiting'}, 'Completed job is still active or unavailable'
+    mode = observation['mode']
+    assert mode in ('NATURAL_SCHEDULER', 'SATISFIED_SCHEDULER_TEST_TRIGGER')
+    request = directory / 'periodic-run-s-command.json'
+    if mode == 'SATISFIED_SCHEDULER_TEST_TRIGGER':
+        ready = clock_evidence(directory, 'periodic-run-before', serial)
+        clock_follows(start, ready)
+        assert ready['rtc_ms'] >= first['next_at'] and ready['elapsed_ms'] - start['elapsed_ms'] >= 900000
+        assert (ready['started_ns'] - start['finished_ns']) // 1_000_000 >= 900000
+        assert command_evidence(directory, 'periodic-run-state', serial,
+            ['shell', 'cmd', 'jobscheduler', 'get-job-state', '-u', '0', PACKAGE, '620159']).strip() == 'ready'
+        assert command_evidence(directory, 'periodic-run-s', serial,
+            ['shell', 'cmd', 'jobscheduler', 'run', '-s', '-u', '0', PACKAGE, '620159']) == 'Running job\n'
+    else:
+        assert not request.exists(), 'Natural execution included a scheduler test trigger'
+    job_args = ['shell', 'dumpsys', 'jobscheduler', PACKAGE]
+    initial_job = command_evidence(directory, 'periodic-first-job', serial, job_args)
+    completed_job = command_evidence(directory, 'periodic-complete-job', serial, job_args)
+    uid = registered_job_uid(initial_job)
+    assert registered_job_uid(completed_job) == uid
+    due_job = command_evidence(directory, 'periodic-due-job', serial, job_args)
+    assert registered_job_uid(due_job) == uid
+    first_lower = clock_evidence(directory, 'periodic-first-job-before', serial)
+    first_upper = clock_evidence(directory, 'periodic-first-job-after', serial)
+    clock_follows(first_lower, first_upper)
+    clock_follows(first_upper, start)
+    assert first['last_at'] <= first_lower['rtc_ms']
+    lower = clock_evidence(directory, 'periodic-complete-job-before', serial)
+    upper = clock_evidence(directory, 'periodic-complete-job-after', serial)
+    due_lower = clock_evidence(directory, 'periodic-due-job-before', serial)
+    due_upper = clock_evidence(directory, 'periodic-due-job-after', serial)
+    clock_follows(start, due_lower)
+    clock_follows(due_lower, due_upper)
+    clock_follows(due_upper, lower)
+    assert due_lower['rtc_ms'] >= first['next_at']
+    clock_follows(prior, lower)
+    clock_follows(lower, upper)
+    history = periodic_history(completed_job, uid)
+    pairs = []
+    for begin, end in zip(history, history[1:]):
+        if begin[0] != 'START-P' or end[0] != 'STOP-P' or end[2] != 'app called jobFinished':
+            continue
+        assert begin[1] >= end[1], 'Scheduler stop preceded its start'
+        start_bounds = [lower['rtc_ms'] - begin[1], upper['rtc_ms'] - begin[1]]
+        stop_bounds = [lower['rtc_ms'] - end[1], upper['rtc_ms'] - end[1]]
+        if start_bounds[0] <= last_tool['created'] <= last['last_at'] <= stop_bounds[1]:
+            pairs.append((start_bounds, stop_bounds))
+    assert len(pairs) == 1, 'Due receipt is not bound to one completed Android service job'
+    assert command_evidence(directory, 'periodic-wake', serial,
+        ['shell', 'input', 'keyevent', 'KEYCODE_WAKEUP']) == ''
+    stopped = stored(directory, 'periodic-stopped')
+    assert not stopped['entries'] and not stopped['outbox']
+    assert {r['call_id']: r for r in receipts(directory, 'periodic-stopped')} == final
+    stopped_text, _ = text_nodes(directory, 'periodic-stopped')
+    assert f"Routine {first['id']} gestoppt und Freigabe entfernt." in stopped_text
+    stopped_command = json.loads((directory / 'periodic-after-stop-command.json').read_text())
+    assert stopped_command['args'][1:] == ['-s', serial, 'shell', 'cmd', 'jobscheduler',
+        'get-job-state', '-u', '0', PACKAGE, '620159']
+    assert Path(stopped_command['args'][0]).name == 'adb'
+    verify_job_absent(stopped_command['returncode'],
+        (directory / 'periodic-after-stop-stdout.txt').read_bytes(),
+        (directory / 'periodic-after-stop-stderr.txt').read_bytes(), uid)
+    return list(final.values()), {'periodic_due_worker_execution': 'PASS', 'periodic_due_trigger': mode,
+        'periodic_real_wait_ms': waited_ms, 'periodic_routine_id': first['id'],
+        'periodic_initial_call_id': first_tool['call_id'], 'periodic_due_call_id': last_tool['call_id'],
+        'periodic_job_start_rtc_bounds': pairs[0][0], 'periodic_job_stop_rtc_bounds': pairs[0][1],
+        'periodic_unchanged_chat': 'PASS', 'periodic_stop_removes_job': 'PASS'}
+
+
 def text_nodes(directory, label):
     xml = (directory / (label + '.xml')).read_bytes()
     root = ET.fromstring(xml)
@@ -317,10 +518,11 @@ def verify(directory, report, source_sha, source_tree):
     verify_job_absent(stopped['returncode'],
                       (directory / 'schedule-after-stop-stdout.txt').read_bytes(),
                       (directory / 'schedule-after-stop-stderr.txt').read_bytes(), uid)
+    _, periodic_checks = verify_periodic(directory, report, actual, conversation)
     return {'app_start_battery_worker': 'PASS', 'rotation_did_not_trigger_worker': 'PASS',
             'durable_owner_chat': 'PASS', 'stop_survives_process_restart': 'PASS',
             'missing_shizuku_blocks_dispatch': 'PASS', 'android_periodic_registration': 'PASS',
-            'periodic_due_worker_execution': 'NOT_RUN', 'battery_call_id': tool['call_id'],
+            **periodic_checks, 'battery_call_id': tool['call_id'],
             'owner_conversation_id': conversation, 'battery_routine_id': approved['id'],
             'downloads_routine_id': blocked['id']}
 
@@ -393,6 +595,97 @@ class Probe:
             self.private(label + '-chat', f'files/chat-history/{conversation}.jsonl', 2 * 1024 * 1024)
         return state
 
+    def clock(self, label):
+        started = time.monotonic_ns()
+        result = self.api['captured_device'](label, 'shell', 'dumpsys', 'alarm', timeout=10)
+        finished = time.monotonic_ns()
+        self.api['save'](label + '-host-time.json', json.dumps({'started_ns': started, 'finished_ns': finished}))
+        assert result.returncode == 0 and not result.stderr
+        return clock_evidence(self.api['out'], label, self.api['serial'])
+
+    def job_dump(self, label):
+        self.clock(label + '-before')
+        result = self.api['captured_device'](label, 'shell', 'dumpsys', 'jobscheduler', PACKAGE, timeout=10)
+        self.clock(label + '-after')
+        assert result.returncode == 0 and not result.stderr
+        return registered_job_uid(result.stdout.decode())
+
+    def periodic(self):
+        self.send('periodic', 'Routine alle 15 Minuten: Akku')
+        self.take('periodic-confirmation', await_text='Routine dauerhaft freigeben?')
+        self.tap(['DAUERHAFT FREIGEBEN'])
+        initial = single(self.wait_state('periodic-initial', lambda value: len(value['entries']) == 1 and
+            single(value)['last_result'] is not None and single(value)['run_id'] is None))
+        body = f"Routine {initial['id']}:\n{initial['last_result']}"
+        self.take('periodic-first', await_text=body)
+        first = single(self.files('periodic-first', chat=True))
+        assert first['next_at'] >= first['last_at'] + 900000
+        scheduled_uid = self.job_dump('periodic-first-job')
+        start = self.clock('periodic-wait-start')
+        assert start['finished_ns'] + 1_260_000_000_000 <= self.api['probe_started_ns'] + 1_500_000_000_000, 'Insufficient process time for periodic wait, result and stop'
+        deadline_ns = start['finished_ns'] + 1_020_000_000_000
+        observation = {'source_sha': self.api['source'], 'source_tree': self.api['report']['source_tree'],
+            'routine_id': first['id'], 'mode': 'NATURAL_SCHEDULER', 'observations': [],
+            'probe_started_ns': self.api['probe_started_ns']}
+        requested = False
+        due_job_observed = False
+        for index in range(110):
+            assert time.monotonic_ns() < deadline_ns, 'Periodic wait and worker deadline exceeded'
+            label = f'periodic-wait-{index}'
+            current = self.clock(label)
+            process = self.api['captured_device'](label + '-pid', 'shell', 'pidof', PACKAGE, timeout=10)
+            assert process.returncode == 0 and not process.stderr and process.stdout.decode().strip() == self.pid
+            state = single(self.state(label))
+            assert time.monotonic_ns() < deadline_ns, 'Periodic observation exceeded deadline'
+            assert state['id'] == first['id'] and state['approval'] == first['approval']
+            observation['observations'].append(label)
+            self.api['save']('periodic-observation.json', json.dumps(observation))
+            elapsed_ns = current['started_ns'] - start['finished_ns']
+            ready_time = elapsed_ns >= 900_000_000_000 and current['elapsed_ms'] - start['elapsed_ms'] >= 900000 and current['rtc_ms'] >= first['next_at']
+            if ready_time:
+                if not due_job_observed:
+                    assert self.job_dump('periodic-due-job') == scheduled_uid
+                    due_job_observed = True
+                result = self.api['captured_device'](label + '-job-state', 'shell', 'cmd', 'jobscheduler',
+                    'get-job-state', '-u', '0', PACKAGE, '620159', timeout=10)
+                assert result.returncode == 0 and not result.stderr
+                statuses = result.stdout.decode().split()
+                assert statuses and set(statuses) <= {'ready', 'waiting', 'active', 'pending'}, 'Android job unavailable'
+                assert time.monotonic_ns() < deadline_ns, 'Scheduler observation exceeded deadline'
+                complete = state['last_at'] > first['last_at'] and state['run_id'] is None and state['report'] is None
+                if complete and not {'active', 'pending'} & set(statuses):
+                    break
+                if not complete and state['run_id'] is None and not requested and statuses == ['ready']:
+                    trigger_clock = self.clock('periodic-run-before')
+                    assert trigger_clock['rtc_ms'] >= first['next_at']
+                    result = self.api['captured_device']('periodic-run-state', 'shell', 'cmd', 'jobscheduler',
+                        'get-job-state', '-u', '0', PACKAGE, '620159', timeout=10)
+                    assert result.returncode == 0 and not result.stderr
+                    if result.stdout.strip() == b'ready':
+                        result = self.api['captured_device']('periodic-run-s', 'shell', 'cmd', 'jobscheduler',
+                            'run', '-s', '-u', '0', PACKAGE, '620159', timeout=10)
+                        assert result.returncode == 0 and not result.stderr and result.stdout == b'Running job\n', 'Satisfied scheduler trigger was rejected'
+                        requested = True
+                        observation['mode'] = 'SATISFIED_SCHEDULER_TEST_TRIGGER'
+                        self.api['save']('periodic-observation.json', json.dumps(observation))
+            remaining = (deadline_ns - time.monotonic_ns()) / 1_000_000_000
+            assert remaining > 0, 'Periodic observation deadline exceeded'
+            time.sleep(min(10, remaining))
+        else:
+            raise AssertionError('Periodic observation count exhausted')
+        assert self.job_dump('periodic-complete-job') == scheduled_uid
+        result = self.api['captured_device']('periodic-wake', 'shell', 'input', 'keyevent', 'KEYCODE_WAKEUP')
+        assert result.returncode == 0 and not result.stdout and not result.stderr
+        self.take('periodic-complete', await_text=body)
+        self.files('periodic-complete', chat=True)
+        self.send('periodic-stop', 'Routine stoppen ' + first['id'])
+        self.wait_state('periodic-stopped', lambda value: not value['entries'] and not value['outbox'])
+        self.take('periodic-stopped', await_text=f"Routine {first['id']} gestoppt und Freigabe entfernt.")
+        self.files('periodic-stopped')
+        result = self.api['captured_device']('periodic-after-stop', 'shell', 'cmd', 'jobscheduler',
+            'get-job-state', '-u', '0', PACKAGE, '620159')
+        verify_job_absent(result.returncode, result.stdout, result.stderr, scheduled_uid)
+
     def restart(self, label):
         previous = self.pid
         self.api['shell']('am', 'force-stop', PACKAGE)
@@ -458,8 +751,9 @@ def run(api, nodes, pid, display):
     probe.files('final')
     result = api['captured_device']('schedule-after-stop', 'shell', 'cmd', 'jobscheduler', 'get-job-state', '-u', '0', PACKAGE, '620159')
     verify_job_absent(result.returncode, result.stdout, result.stderr, scheduled_uid)
+    probe.periodic()
     api['report']['routine_checks'] = verify(api['out'], api['report'], api['source'], api['report']['source_tree'])
-    api['report']['limits'].append('Periodic registration only; no due-period worker execution or clock manipulation')
+    api['report']['limits'].append('Periodic evidence distinguishes natural scheduling from an explicit constraint-satisfied scheduler test request; device time was not changed')
 
 
 if __name__ == '__main__':

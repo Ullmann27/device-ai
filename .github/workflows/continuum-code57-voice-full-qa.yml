@@ -728,7 +728,7 @@ jobs:
       - name: Verify surface evidence validator
         run: |
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_hologram_*.py' -v
-          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_routines.py' -v
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_routines*.py' -v
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_xvfb.py' -v
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_app_navigation.py' -v
       - name: Build disposable native test APKs

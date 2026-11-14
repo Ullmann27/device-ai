@@ -18,6 +18,7 @@ import sys
 import time
 import xml.etree.ElementTree as ET
 
+probe_started_ns = time.monotonic_ns()
 serial, destination = sys.argv[1:3]
 routine_mode = sys.argv[3:] == ['routines']
 sdk = Path(os.environ['ANDROID_HOME'])
@@ -142,7 +143,7 @@ def read_hierarchy(label, await_avatar_diagnostic=False, await_text=None):
 def snapshot(label, rotation=None, record=True, await_avatar_diagnostic=False, await_text=None):
     if routine_mode:
         report['capture_count'] = report.get('capture_count', 0) + 1
-        assert report['capture_count'] <= 28, 'Routine capture budget exceeded'
+        assert report['capture_count'] <= 36, 'Routine capture budget exceeded'
     pid = shell('pidof', package, check=False)
     assert re.fullmatch(r'\d+(?: \d+)*', pid), f'{label}: app process missing'
     activities = shell('dumpsys', 'activity', 'activities')
