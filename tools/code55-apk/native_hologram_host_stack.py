@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -64,13 +65,45 @@ def group_members(group):
             continue
         try:
             fields = process_fields(int(entry.name), (entry / "stat").read_text())
-        except FileNotFoundError:
+        except (FileNotFoundError, ProcessLookupError):
             continue
         if int(fields[2]) == group["pgid"]:
             if int(fields[3]) != group["sid"] or int(fields[19]) < int(group["start_ticks"]):
                 raise ValueError("Debugger process group identity changed")
             members.append({"pid": int(entry.name), "start_ticks": fields[19], "state": fields[0]})
     return members
+
+
+def cleanup_group(request_path):
+    request = json.loads(Path(request_path).read_text())
+    group, members = request["group"], request["members"]
+    if not hasattr(os, "pidfd_open") or not hasattr(signal, "pidfd_send_signal"):
+        raise RuntimeError("PID-bound debugger cleanup unavailable")
+    if os.geteuid() != group["uid"] or group["pgid"] != group["pid"] or group["pgid"] <= 1:
+        raise ValueError("Invalid cleanup identity")
+    results = []
+    for member in sorted(members, key=lambda item: item["pid"], reverse=True):
+        pid = member["pid"]
+        if type(pid) is not int or pid <= 1 or pid == request["emulator_pid"]:
+            raise ValueError("Invalid debugger member")
+        descriptor = None
+        try:
+            descriptor = os.pidfd_open(pid)
+            fields = process_fields(pid, Path(f"/proc/{pid}/stat").read_text())
+            if fields[19] != member["start_ticks"] or int(fields[2]) != group["pgid"] or int(fields[3]) != group["sid"]:
+                raise ValueError("Debugger member changed before privileged cleanup")
+            uids = re.findall(r"^Uid:\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s*$",
+                              Path(f"/proc/{pid}/status").read_text(), re.M)
+            if uids != [tuple([str(group["uid"])] * 4)]:
+                raise ValueError("Debugger member UID changed")
+            signal.pidfd_send_signal(descriptor, signal.SIGKILL)
+            results.append({"pid": pid, "start_ticks": fields[19], "status": "KILL_SENT"})
+        except (FileNotFoundError, ProcessLookupError):
+            results.append({"pid": pid, "status": "ALREADY_ENDED"})
+        finally:
+            if descriptor is not None:
+                os.close(descriptor)
+    print(json.dumps(results), flush=True)
 
 
 def verify_status(pid, uid, status):
@@ -153,10 +186,10 @@ class HostStack:
         for task in sorted(Path(f"/proc/{self.identity['pid']}/task").iterdir()):
             try:
                 status = (task / "status").read_text()
-            except FileNotFoundError:
+            except (FileNotFoundError, ProcessLookupError):
                 continue
-            verify_status(int(task.name), self.identity["uid"], status)
             (statuses / (task.name + "-status.txt")).write_text(status)
+            verify_status(int(task.name), self.identity["uid"], status)
             threads.append(int(task.name))
         if self.identity["pid"] not in threads:
             raise ValueError("Host emulator main thread missing")
@@ -194,12 +227,12 @@ class HostStack:
             members = group_members(group)
             self.state["debugger_group_before_cleanup"] = members
             if members:
-                kill = shutil.which("kill")
-                if not kill:
-                    raise RuntimeError("Scoped debugger cleanup unavailable")
+                request = self.directory / "cleanup-request.json"
+                request.write_text(json.dumps({"group": group, "members": members,
+                                               "emulator_pid": self.identity["pid"]}) + "\n")
                 argv = ([] if os.geteuid() == 0 else ["sudo", "-n", "--"]) + [
-                    self.driver_argv[0], "--signal=TERM", "--kill-after=1s", "1s", kill,
-                    "--signal", "KILL", "--", "-" + str(group["pgid"])]
+                    self.driver_argv[0], "--signal=TERM", "--kill-after=1s", "1s", sys.executable,
+                    str(Path(__file__).resolve()), "--cleanup-group", str(request)]
                 self.state["cleanup_argv"] = argv
                 result = subprocess.run(argv, capture_output=True, timeout=2.5, start_new_session=True)
                 self.state["cleanup_exit"] = result.returncode
@@ -282,4 +315,7 @@ def main():
 if __name__ == "__main__":
     if len(sys.argv) == 6 and sys.argv[1] == "--launch-debugger":
         sys.exit(launch_debugger(sys.argv[2], sys.argv[3], sys.argv[4], json.loads(sys.argv[5])))
+    if len(sys.argv) == 3 and sys.argv[1] == "--cleanup-group":
+        cleanup_group(sys.argv[2])
+        sys.exit(0)
     main()

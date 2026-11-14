@@ -1,4 +1,6 @@
 import json
+import contextlib
+import io
 import os
 from pathlib import Path
 import signal
@@ -11,7 +13,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 import native_hologram_host_stack
-from native_hologram_host_stack import HostStack, SCOPE, group_members, process_start, read_process, validate_identity, verify_status
+from native_hologram_host_stack import HostStack, SCOPE, cleanup_group, group_members, process_start, read_process, validate_identity, verify_status
 
 
 class HostStackIdentityTest(unittest.TestCase):
@@ -104,7 +106,7 @@ class HostStackIdentityTest(unittest.TestCase):
         self.assertEqual(group["pid"], group["pgid"])
         self.assertEqual([], group_members(group))
 
-    def test_actual_launcher_records_its_own_live_group(self):
+    def test_actual_launcher_and_pidfd_cleanup_keep_exact_process_identity(self):
         marker, stop = self.root / "live-group.json", self.root / "live-stop"
         command = [sys.executable, "-c", "import time; time.sleep(30)"]
         process = subprocess.Popen([sys.executable, native_hologram_host_stack.__file__, "--launch-debugger",
@@ -123,6 +125,16 @@ class HostStackIdentityTest(unittest.TestCase):
             self.assertTrue(any(member["pid"] == process.pid for member in members))
             with self.assertRaises(ValueError):
                 group_members(dict(group, sid=group["sid"] + 1))
+            request = self.root / "actual-cleanup.json"
+            forged = [dict(member, start_ticks=str(int(member["start_ticks"]) + 1)) for member in members]
+            request.write_text(json.dumps({"group": group, "members": forged, "emulator_pid": os.getpid()}))
+            with self.assertRaisesRegex(ValueError, "changed before privileged cleanup"):
+                cleanup_group(request)
+            self.assertIsNone(process.poll())
+            request.write_text(json.dumps({"group": group, "members": members, "emulator_pid": os.getpid()}))
+            with contextlib.redirect_stdout(io.StringIO()):
+                cleanup_group(request)
+            self.assertEqual(-signal.SIGKILL, process.wait(timeout=3))
         finally:
             if process.poll() is None:
                 os.killpg(process.pid, signal.SIGKILL)
@@ -165,8 +177,11 @@ class HostStackIdentityTest(unittest.TestCase):
             host.finish_debugger()
         argv = signaler.call_args.args[0]
         self.assertEqual(["sudo", "-n", "--"], argv[:3])
-        self.assertEqual("-9002", argv[-1])
-        self.assertNotIn("-3427", argv)
+        self.assertEqual("--cleanup-group", argv[-2])
+        request = json.loads(Path(argv[-1]).read_text())
+        self.assertEqual(9002, request["group"]["pgid"])
+        self.assertEqual([member], request["members"])
+        self.assertFalse(any(arg.startswith("-900") or arg == "-3427" for arg in argv))
         self.assertTrue(host.safe_to_resume)
         host.verify.assert_called_once_with("after")
         self.assertTrue(host.stop.exists())
@@ -192,6 +207,13 @@ class HostStackIdentityTest(unittest.TestCase):
             host.finish_debugger()
         self.assertFalse(host.safe_to_resume)
         host.verify.assert_not_called()
+
+    def test_unrelated_proc_exit_does_not_abort_group_cleanup(self):
+        entry = Mock()
+        entry.name = "9999"
+        entry.__truediv__ = Mock(return_value=Mock(read_text=Mock(side_effect=ProcessLookupError(3, "No such process"))))
+        with patch("native_hologram_host_stack.Path.iterdir", return_value=iter([entry])):
+            self.assertEqual([], group_members({"pgid": 9002, "sid": 9001, "start_ticks": "100"}))
 
 
 if __name__ == "__main__":
