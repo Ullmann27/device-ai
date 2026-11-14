@@ -13,6 +13,8 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.cognitive.LocalDecisionPromptFrameTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerObjectScopeCorrectionTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerDocumentIntentTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumHologramMotionUiTest'
             failOnNoMatchingTests = true
         }
     }
