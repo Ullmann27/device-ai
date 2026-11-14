@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Locale;
@@ -627,8 +628,17 @@ public final class ContinuumNativeHologramProbe {
 
     private void persist() throws Exception {
         if (directory == null) return;
-        try (FileOutputStream output = new FileOutputStream(new File(directory, "hologram-state.json"))) {
-            output.write(report.toString(2).getBytes(StandardCharsets.UTF_8));
+        byte[] bytes = report.toString(2).getBytes(StandardCharsets.UTF_8);
+        File pending = new File(directory, "hologram-state.json.tmp");
+        try {
+            try (FileOutputStream output = new FileOutputStream(pending)) {
+                output.write(bytes);
+                output.getFD().sync();
+            }
+            Files.move(pending.toPath(), new File(directory, "hologram-state.json").toPath(),
+                    StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } finally {
+            Files.deleteIfExists(pending.toPath());
         }
     }
 
