@@ -217,15 +217,23 @@ class HostStack:
             if self.identity[key] != value:
                 raise ValueError("Host emulator identity changed: " + key)
         threads = []
+        thread_cpu = {}
         statuses = self.directory / (label + "-threads")
         statuses.mkdir()
         for task in sorted(Path(f"/proc/{self.identity['pid']}/task").iterdir()):
             try:
                 status = (task / "status").read_text()
+                stat = (task / "stat").read_text()
             except (FileNotFoundError, ProcessLookupError):
                 continue
             (statuses / (task.name + "-status.txt")).write_text(status)
+            (statuses / (task.name + "-stat.txt")).write_text(stat)
             verify_status(int(task.name), self.identity["uid"], status)
+            fields = process_fields(int(task.name), stat)
+            if not all(fields[index].isdigit() for index in (11, 12)):
+                raise ValueError("Host thread CPU counters invalid")
+            thread_cpu[task.name] = {"start_ticks": fields[19], "user_ticks": int(fields[11]),
+                                     "system_ticks": int(fields[12])}
             threads.append(int(task.name))
         if self.identity["pid"] not in threads:
             raise ValueError("Host emulator main thread missing")
@@ -233,6 +241,7 @@ class HostStack:
         (self.directory / (label + "-status.txt")).write_bytes((process / "status").read_bytes())
         (self.directory / (label + "-stat.txt")).write_bytes((process / "stat").read_bytes())
         self.state[label] = {"host_monotonic_nanos": time.monotonic_ns(), "untraced_threads": threads,
+                             "thread_cpu": thread_cpu, "clock_ticks_per_second": os.sysconf("SC_CLK_TCK"),
                              "cpu_affinity": sorted(os.sched_getaffinity(self.identity["pid"])),
                              "host_cpu_count": os.cpu_count(), "loadavg": Path("/proc/loadavg").read_text().strip(),
                              "host_memory_kib": {key: int(value) for key, value in re.findall(
@@ -306,7 +315,8 @@ class HostStack:
                 "-iex", "set debuginfod enabled off", "-iex", "set pagination off",
                 "-iex", "set print frame-arguments none", "-iex", "set print entry-values no",
                 "-ex", f"attach {self.identity['pid']}", "-ex", "info threads",
-                "-ex", "thread apply all -c bt 64", "-ex", "detach", "-ex", "quit"]
+                "-ex", "info proc mappings", "-ex", "thread apply all -c bt 64",
+                "-ex", "thread apply all -c x/12i $pc", "-ex", "detach", "-ex", "quit"]
             self.nonce = uuid.uuid4().hex
             self.marker = self.directory / ("debugger-group-" + self.nonce + ".json")
             self.stop = self.directory / ("debugger-stop-" + self.nonce)

@@ -150,6 +150,12 @@ class HostStackIdentityTest(unittest.TestCase):
         self.assertEqual(set(host.state["observed"]["untraced_threads"]), {int(p.name.split("-")[0]) for p in paths})
         for path in paths:
             verify_status(int(path.name.split("-")[0]), os.getuid(), path.read_text())
+            tid = path.name.split("-")[0]
+            stat = path.with_name(tid + "-stat.txt").read_text()
+            fields = native_hologram_host_stack.process_fields(int(tid), stat)
+            self.assertEqual({"start_ticks": fields[19], "user_ticks": int(fields[11]),
+                              "system_ticks": int(fields[12])}, host.state["observed"]["thread_cpu"][tid])
+        self.assertEqual(os.sysconf("SC_CLK_TCK"), host.state["observed"]["clock_ticks_per_second"])
 
     def cleanup_fixture(self):
         host = HostStack.__new__(HostStack)
