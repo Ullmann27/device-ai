@@ -57,4 +57,12 @@ class LocalChatPromptBudgetTest {
         assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget("a".repeat(241)))
     }
 
+
+    @Test fun extendedFold7OwnerRequestKeepsAllWordsBeyondOld7900Boundary() {
+        val request = "Bitte analysiere diese vollständige Fragestellung: " + "Einzelheit ".repeat(850)
+        assertTrue("This request is deliberately larger than the old 7900 character limit", request.length > 7900)
+        assertTrue("An extended full question must not be rejected before native admission",
+            LocalChatPromptBudget.acceptsCompleteTask(request))
+    }
+
 }
