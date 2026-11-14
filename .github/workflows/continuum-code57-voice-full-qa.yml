@@ -561,7 +561,7 @@ jobs:
             if (( native_exit != 0 )) && [[ -f "$evidence/emulator.log" ]]; then
               cat "$evidence/emulator.log" || true
               python3 - "$host_crash" "$crashreport_bin" "$emulator_pid" "$native_exit" <<'PY' || true
-          import hashlib, json, pathlib, subprocess, sys
+          import datetime, hashlib, json, os, pathlib, re, shutil, subprocess, sys
           directory = pathlib.Path(sys.argv[1])
           database = (directory / 'database').resolve()
           report = {'emulator_pid': sys.argv[3], 'native_exit': int(sys.argv[4]),
@@ -589,6 +589,67 @@ jobs:
           except Exception as error:
               report['collection_status'] = 'FAILED'
               report['collection_error'] = str(error)
+          systemd = {'status': 'NOT_NEEDED', 'commands': []}
+          report['systemd'] = systemd
+          if not report['dumps']:
+              systemd['status'] = 'NO_CORE'
+              def run_command(label, argv, seconds):
+                  item = {'name': label, 'argv': argv}
+                  systemd['commands'].append(item)
+                  try:
+                      with (directory / (label + '-stdout.txt')).open('w') as output, \
+                           (directory / (label + '-stderr.txt')).open('w') as error:
+                          result = subprocess.run(argv, stdout=output, stderr=error, timeout=seconds)
+                      item['exit'] = result.returncode
+                      return result.returncode
+                  except Exception as error:
+                      item['error'] = str(error)
+                      return None
+              try:
+                  ctl, debugger = shutil.which('coredumpctl'), shutil.which('gdb')
+                  systemd['tools'] = {'coredumpctl': ctl, 'gdb': debugger}
+                  if ctl:
+                      run_command('systemd-tool-version', [ctl, '--version'], 10)
+                  if debugger:
+                      run_command('systemd-debugger-version', [debugger, '--version'], 10)
+                  pid = (directory / 'emulator-pid.txt').read_text().strip()
+                  uid = (directory / 'emulator-uid.txt').read_text().strip()
+                  launch = (directory / 'emulator-launch-utc.txt').read_text().strip()
+                  datetime.datetime.strptime(launch, '%Y-%m-%d %H:%M:%S UTC')
+                  executable = pathlib.Path((directory / 'emulator-executable.txt').read_text().strip())
+                  assert re.fullmatch('[1-9][0-9]*', pid) and pid == sys.argv[3]
+                  assert uid == str(os.getuid()) and executable.is_absolute()
+                  assert executable.resolve().is_relative_to(pathlib.Path(sys.argv[2]).resolve().parent / 'qemu')
+                  matches = ['COREDUMP_PID=' + pid, 'COREDUMP_UID=' + uid, 'COREDUMP_EXE=' + str(executable)]
+                  systemd['matches'], systemd['since_utc'] = matches, launch
+                  if ctl is None:
+                      systemd['reason'] = 'coredumpctl unavailable'
+                  else:
+                      prefix = [] if os.geteuid() == 0 else ['sudo', '-n']
+                      base = [ctl, '--no-pager', '--since=' + launch]
+                      if run_command('systemd-info', prefix + base + ['info'] + matches, 30) == 0:
+                          systemd['status'] = 'CORE_INFO_CAPTURED'
+                          if debugger is None:
+                              systemd['reason'] = 'gdb unavailable; metadata retained'
+                          else:
+                              arguments = "-nx -q -batch -iex 'set auto-load off' " \
+                                  "-iex 'set debuginfod enabled off' -iex 'set print frame-arguments none' " \
+                                  "-iex 'set print entry-values no' -ex 'thread apply all bt 64'"
+                              timeout = shutil.which('timeout')
+                              assert timeout, 'GNU timeout unavailable'
+                              systemd['tools']['timeout'] = timeout
+                              systemd['debug_deadline_seconds'] = 45
+                              command = prefix + [timeout, '--signal=TERM', '--kill-after=2s', '43s'] + base
+                              code = run_command('systemd-debug', command + ['--debugger=' + debugger,
+                                  '--debugger-arguments=' + arguments, 'debug'] + matches, None)
+                              output = (directory / 'systemd-debug-stdout.txt').read_text(errors='replace')
+                              systemd['debug_has_frames'] = bool(re.search(r'^\s*#\d+\s', output, re.M))
+                              if code == 0 and systemd['debug_has_frames']:
+                                  systemd['status'] = 'STACK_CAPTURED'
+                      else:
+                          systemd['reason'] = 'matching core metadata not retrieved; inspect command status'
+              except Exception as error:
+                  systemd['error'] = str(error)
           (directory / 'COLLECTION.json').write_text(json.dumps(report, indent=2) + '\n')
           PY
             fi
@@ -610,6 +671,8 @@ jobs:
             printf '%s\n' "$?" > "$evidence/emulator-gpu-help-exit.txt"
           fi
           "$ANDROID_HOME/platform-tools/adb" start-server
+          id -u > "$host_crash/emulator-uid.txt"
+          date -u '+%Y-%m-%d %H:%M:%S UTC' > "$host_crash/emulator-launch-utc.txt"
           ANDROID_EMU_CRASH_REPORTING_DATABASE="$crash_database" \
           "$CODE59_EMULATOR_BIN" -avd continuum-native-pdf -port 5554 -accel on \
             -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader -memory 2048 -cores 2 \
