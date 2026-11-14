@@ -415,6 +415,26 @@ jobs:
               'digestAdapterFailureStillProducesDurableCompletion'
           )}
           required.add(('RoutineRevokedAdmissionContractTest', 'admissionCallbackRevocationPreventsLaterToolStart'))
+          required |= {('RoutineChatDeliveryTest', name) for name in (
+              'durableMessageIsWrittenOnceAndAcknowledgedAfterAppend',
+              'completedAppendBeforeProcessLossIsProvedWithoutDuplicate',
+              'tornAppendIsCompletedAtItsOriginalOffset',
+              'failedAcknowledgementRetainsProofForLaterDelivery',
+              'revokedRoutineCannotWriteQueuedMessage',
+              'deletedConversationIsNotRecreatedByRecovery',
+              'conflictingTranscriptBytesArePreservedAndRemainUnacknowledged',
+              'tornOlderTailGetsOnlyOneSeparatorAndOneMessage',
+              'checkpointCannotWriteAdditionalRecordsOrMalformedUnicode'
+          )}
+          required |= {('OwnerRoutineCommandsTest', name) for name in (
+              'concreteIntervalAndConditionRemainBoundToTheApprovedGoal',
+              'unsupportedExtraWorkAndConditionsNeverBecomeSimpleBatteryReads',
+              'onlyTheExplicitAppStartEventAndLegalIntervalsAreAdmitted',
+              'actualReadOnlyPlanScopesAreFreshAndLimited',
+              'lowBatteryConditionRejectsUnverifiedOrNonmatchingMeasurements',
+              'storageTimeDoesNotInventChangeButOriginalResultRemainsAvailable'
+          )}
+          required.add(('OwnerRoutineConditionalDeliveryTest', 'batteryThresholdKeepsSilentReadingsAndReportsOnlyNewLowReadings'))
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
@@ -557,7 +577,7 @@ jobs:
           test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
           test "$("$CODE59_EMULATOR_BIN" -list-avds | tr -d '\r')" = continuum-native-pdf
       - name: Verify surface evidence validator
-        run: python3 -B -m unittest discover -s tools/code55-apk -p test_native_hologram_evidence.py -v
+        run: python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_hologram_*.py' -v
       - name: Build disposable native test APKs
         shell: bash
         run: |

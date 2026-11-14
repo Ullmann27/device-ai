@@ -56,9 +56,7 @@ for permission in CAMERA RECORD_AUDIO POST_NOTIFICATIONS; do
   "$adb" -s "$serial" shell pm revoke "$package" "android.permission.$permission"
 done
 "$adb" -s "$serial" logcat -b all -c
-timeout -k 2s 240s "$adb" -s "$serial" shell am instrument -w -r -e probe hologram \
-  "$test_package/at.heinz.deviceai.ContinuumVisualInstrumentation" \
-  | tee "$evidence/native-hologram.txt"
+python3 -B tools/code55-apk/native_hologram_stack.py "$adb" "$serial" "$evidence" "$(git rev-parse HEAD)"
 collect
 python3 -B tools/code55-apk/native_hologram_evidence.py "$evidence" \
   "$(git rev-parse HEAD)" "$(git rev-parse 'HEAD^{tree}')" \

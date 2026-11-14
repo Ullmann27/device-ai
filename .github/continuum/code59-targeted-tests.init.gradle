@@ -23,6 +23,10 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.routines.RoutineBookAdmissionTest'
             includeTestsMatching 'at.heinz.deviceai.routines.RoutineStateStoreTest'
             includeTestsMatching 'at.heinz.deviceai.routines.RoutineStoreIndependentContractTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.RoutineChatDeliveryTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalChatTranscriptStoreTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.OwnerRoutineCommandsTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.OwnerRoutineConditionalDeliveryTest'
             failOnNoMatchingTests = true
         }
     }

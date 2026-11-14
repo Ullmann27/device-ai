@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.FutureTask;
@@ -173,6 +174,7 @@ public final class ContinuumNativeHologramProbe {
             report.put("pixel_copy", copySurface());
             samples.put(onMain(this::sample));
             persist();
+            if (!settled) captureInitialStack();
             phase("surface_resize_regression");
             verifySurfaceResize();
             require(settled, "Loading state did not settle before deadline");
@@ -280,6 +282,32 @@ public final class ContinuumNativeHologramProbe {
         state.put("ancestors", parents);
         state.put("monotonic_nanos", System.nanoTime());
         return state;
+    }
+
+    private void captureInitialStack() throws Exception {
+        phase("pre_resize_native_stack");
+        String nonce = UUID.randomUUID().toString().replace("-", "");
+        JSONObject capture = new JSONObject().put("schema", 1).put("package", PACKAGE)
+                .put("pid", Process.myPid()).put("uid", Process.myUid()).put("nonce", nonce)
+                .put("requested_monotonic_nanos", System.nanoTime());
+        report.put("pre_resize_native_stack", new JSONObject().put("request", capture));
+        persist();
+        File temporary = new File(directory, "stack-request.tmp");
+        Files.write(temporary.toPath(), capture.toString().getBytes(StandardCharsets.UTF_8));
+        Files.move(temporary.toPath(), new File(directory, "stack-request.json").toPath());
+        File acknowledgement = new File(directory, "stack-ack.json");
+        long deadline = SystemClock.elapsedRealtime() + MAIN_TIMEOUT_MS;
+        while (!acknowledgement.isFile() && SystemClock.elapsedRealtime() < deadline) SystemClock.sleep(100);
+        require(acknowledgement.isFile() && acknowledgement.length() <= 4096, "Native stack acknowledgement missing");
+        JSONObject ack = new JSONObject(new String(Files.readAllBytes(acknowledgement.toPath()), StandardCharsets.UTF_8));
+        require(ack.getInt("schema") == 1 && ack.getInt("pid") == Process.myPid()
+                && nonce.equals(ack.getString("nonce")), "Native stack acknowledgement mismatch");
+        JSONObject evidence = report.getJSONObject("pre_resize_native_stack");
+        evidence.put("acknowledgement", ack).put("acknowledged_monotonic_nanos", System.nanoTime());
+        persist();
+        require("CAPTURED".equals(ack.getString("status")), "Native stack capture failed");
+        evidence.put("after_capture", onMain(this::sample));
+        persist();
     }
 
     private void verifySurfaceResize() throws Exception {
