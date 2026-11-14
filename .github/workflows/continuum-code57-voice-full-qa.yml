@@ -468,6 +468,21 @@ jobs:
               'innerChatLinkIsRejectedWithoutWritingOutsideAppHistory',
               'actualRotationAndSavedActivityRecreationDoNotTriggerAppStartAgain'
           )}
+          required |= {('ChiefBotConversationTest', name) for name in (
+              'privateNotePromptPreservesStoredSnapshotDate',
+              'retainedConversationPromptDatesWholeSnapshotAndNeverIndividualTurns'
+          )}
+          required |= {('ChiefBotPrivateMemoryTest', name) for name in (
+              'datedCurrentRecordsSurviveReopenAndRemainPrivate',
+              'searchUsesCurrentPointersAndNeverResurrectsClearedObjects',
+              'contentDedupKeepsOriginalDateAndSearchHonorsTimeBounds',
+              'corruptCurrentRecordFailsWithoutFallingBackToOlderPrivateContent'
+          )}
+          required |= {('ContinuumBotRosterStorageUiTest', name) for name in (
+              'privateSearchShowsActualDatesAndOnlyTheSelectedBotsCurrentRecords',
+              'clearingNoteThroughExistingEditorRemovesItFromReopenedPrivateSearch',
+              'closedPrivateSearchDoesNotPresentItsQueuedStorageResult'
+          )}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
@@ -610,7 +625,9 @@ jobs:
           test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
           test "$("$CODE59_EMULATOR_BIN" -list-avds | tr -d '\r')" = continuum-native-pdf
       - name: Verify surface evidence validator
-        run: python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_hologram_*.py' -v
+        run: |
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_hologram_*.py' -v
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_routines.py' -v
       - name: Build disposable native test APKs
         shell: bash
         run: |
@@ -805,9 +822,46 @@ jobs:
           PY
           timeout 300 bash tools/code55-apk/native-pdf-emulator.sh emulator-5554 "$evidence"
           timeout 300 bash tools/code55-apk/native-filament-emulator.sh emulator-5554 "$evidence/filament"
-          timeout 300 bash tools/code55-apk/native-hologram-emulator.sh emulator-5554 "$evidence/hologram"
+          hologram_exit=0
+          if timeout 300 bash tools/code55-apk/native-hologram-emulator.sh emulator-5554 "$evidence/hologram"; then
+            hologram_exit=0
+          else
+            hologram_exit=$?
+          fi
+          if python3 - "$evidence/hologram/host-stack/collection.json" <<'PY'
+          import json, pathlib, sys
+          path = pathlib.Path(sys.argv[1])
+          if path.exists():
+              assert json.loads(path.read_text()).get('safe_to_resume') is True, 'Host debugger detach unproved'
+          PY
+          then
+            :
+          else
+            resume_exit=$?
+            if (( hologram_exit != 0 )); then exit "$hologram_exit"; fi
+            exit "$resume_exit"
+          fi
+          routine_exit=0
+          if timeout 1500 bash tools/code55-apk/native-app-smoke.sh emulator-5554 "$evidence/routines" routines; then
+            routine_exit=0
+          else
+            routine_exit=$?
+          fi
           # Bound 26 capped UI captures.
-          timeout 1500 bash tools/code55-apk/native-app-smoke.sh emulator-5554 "$evidence/app"
+          app_exit=0
+          if timeout 1500 bash tools/code55-apk/native-app-smoke.sh emulator-5554 "$evidence/app"; then
+            app_exit=0
+          else
+            app_exit=$?
+          fi
+          python3 - "$evidence/probe-exits.json" "$GITHUB_SHA" "$hologram_exit" "$routine_exit" "$app_exit" <<'PY'
+          import json, pathlib, sys
+          pathlib.Path(sys.argv[1]).write_text(json.dumps({'source_sha': sys.argv[2],
+              'hologram': int(sys.argv[3]), 'routines': int(sys.argv[4]), 'app': int(sys.argv[5])}, indent=2) + '\n')
+          PY
+          if (( hologram_exit != 0 )); then exit "$hologram_exit"; fi
+          if (( routine_exit != 0 )); then exit "$routine_exit"; fi
+          exit "$app_exit"
       - name: Preserve native proof
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
