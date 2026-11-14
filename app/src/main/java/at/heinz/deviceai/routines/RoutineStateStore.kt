@@ -8,6 +8,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.ByteBuffer
+import java.nio.CharBuffer
 import java.nio.channels.FileChannel
 import java.nio.charset.CodingErrorAction
 import java.nio.file.Files
@@ -97,6 +98,8 @@ data class RoutineStoredState(
             require(it.message != null && !it.chatDelivered)
         }
         val pending = entries.mapNotNull { it.report } + outbox
+        val runIds = entries.mapNotNull { it.runId } + outbox.map { it.runId }
+        require(runIds.distinct().size == runIds.size)
         require(pending.map { it.runId }.distinct().size == pending.size)
         require(pending.mapNotNull { it.message?.id }.distinct().size == pending.count { it.message != null })
     }
@@ -106,15 +109,20 @@ data class RoutineStoredState(
         require(report.digest.length <= MAX_RESULT && report.result.length <= MAX_RESULT && report.atMillis >= 0)
         report.message?.let { m ->
             require(m.id.length in 1..128 && m.from.length in 1..64 && m.to == "chief")
+            require(m.from == ("routine:" + report.routineId).take(64))
             require(m.body.isNotBlank() && m.body.length <= 4_000)
             require(m.id == "routine-${report.routineId}-${report.atMillis}-${report.runId.replace("-", "")}")
         }
+        require(!report.chatDelivered || report.message != null && report.chatAppend != null)
         report.chatAppend?.let {
             require(report.message != null && it.conversationId.matches(RUN_ID) && it.offset >= 0)
             require(it.text.length in 1..32_000)
-            val entry = org.json.JSONObject(it.text.trim())
-            require(entry.length() == 3 && entry.get("u") == false &&
-                entry.getString("t") == report.message.body && entry.getLong("at") == report.atMillis)
+            require(it.text.endsWith("\n"))
+            val line = it.text.removePrefix("\n").removeSuffix("\n")
+            require('\n' !in line && '\r' !in line)
+            val entry = at.heinz.deviceai.learning.StrictJson.parseObject(line)
+            require(entry.keys == setOf("u", "t", "at") && entry["u"] == false &&
+                entry["t"] == report.message.body && entry["at"] == report.atMillis)
         }
     }
 
@@ -140,8 +148,11 @@ class FileRoutineStateStore(private val directory: File) : RoutineStateStore {
     override fun replace(expectedRevision: Long, state: RoutineStoredState) = guarded {
         check(read().revision == expectedRevision) { "Routine state changed; reload before continuing." }
         require(expectedRevision < Long.MAX_VALUE && state.revision == expectedRevision + 1)
-        state.validate()
-        val payload = encode(state)
+        val frozen = state.copy(entries = state.entries.map { entry ->
+            entry.copy(routine = entry.routine.copy(allowedTools = entry.routine.allowedTools.toSet()))
+        }, outbox = state.outbox.toList())
+        frozen.validate()
+        val payload = encode(frozen)
         require(payload.size <= MAX_BYTES)
         val temp = File.createTempFile("routine-", ".tmp", directory)
         try {
@@ -246,7 +257,13 @@ class FileRoutineStateStore(private val directory: File) : RoutineStateStore {
     }
 
     private fun DataOutputStream.string(value: String) {
-        val bytes = value.toByteArray(Charsets.UTF_8)
+        val encoded = try {
+            Charsets.UTF_8.newEncoder().onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT).encode(CharBuffer.wrap(value))
+        } catch (invalid: java.nio.charset.CharacterCodingException) {
+            throw IllegalArgumentException("Invalid routine Unicode.", invalid)
+        }
+        val bytes = ByteArray(encoded.remaining()).also(encoded::get)
         require(bytes.size <= MAX_STRING_BYTES)
         writeInt(bytes.size); write(bytes)
     }
