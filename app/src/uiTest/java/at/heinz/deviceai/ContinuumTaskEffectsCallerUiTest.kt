@@ -57,11 +57,26 @@ class ContinuumTaskEffectsCallerUiTest {
         .single {it.name==n && it.parameterCount==args.size}.apply {isAccessible=true}.invoke(a,*args)
     private fun field(o:Any,n:String)=o.javaClass.getDeclaredField(n).apply {isAccessible=true}.get(o)
     private fun pulses(h:ContinuumHologramView)=field(field(h,"taskEffects")!!,"pulses") as List<*>
+    private fun queuedBarriers(): Set<Int> {
+        val queue = Looper.getMainLooper().queue
+        val head = android.os.MessageQueue::class.java.getDeclaredField("mMessages").apply { isAccessible = true }
+        val next = android.os.Message::class.java.getDeclaredField("next").apply { isAccessible = true }
+        return synchronized(queue) {
+            val tokens = linkedSetOf<Int>()
+            var message = head.get(queue) as? android.os.Message
+            repeat(256) {
+                val current = message ?: return@synchronized tokens
+                if (current.target == null) tokens.add(current.arg1)
+                message = next.get(current) as? android.os.Message
+            }
+            error("Unexpected main queue size")
+        }
+    }
     private fun effectState(a: AgentActivity, h: ContinuumHologramView): String {
         val context = get(a, "currentTaskEffectContext")
         val effects = field(h, "taskEffects")!!
         val motion = h.sampleMotion()
-        return "uptime=${android.os.SystemClock.uptimeMillis()}, " +
+        return "uptime=${android.os.SystemClock.uptimeMillis()}, barriers=${queuedBarriers()}, " +
             "contextSession=${context?.let { field(it, "session") }}, session=${get(a, "sessionId")}, " +
             "contextScope=${context?.let { field(it, "scope") }}, effectScope=${field(effects, "scope")}, " +
             "foreground=${get(a, "foregroundLearningActive")}, finishing=${a.isFinishing}, destroyed=${a.isDestroyed}, " +
@@ -162,14 +177,28 @@ class ContinuumTaskEffectsCallerUiTest {
         val before = effectState(a, h)
         call(a,"showChiefWorkerStatus")
         val submitted = effectState(a, h)
+        val pendingTraversal = queuedBarriers()
         val pool=get(a,"chiefStatusPool") as at.heinz.deviceai.chief.ChiefWorkerPool
         assertTrue("Actual status worker did not finish", pool.awaitIdle(2000))
         val delivered = effectState(a, h)
         idle()
+        val beforeVsync = effectState(a, h)
+        val queuedReport = get(a, "lastChiefWorkerReport") as? at.heinz.deviceai.chief.WorkerReport
+        val uptimeBefore = android.os.SystemClock.uptimeMillis()
+        val motionBefore = h.sampleMotion()
+        advanceFrames(16)
         val completed = effectState(a, h)
         val report = get(a, "lastChiefWorkerReport") as? at.heinz.deviceai.chief.WorkerReport
         val trace = "before=[$before]; submitted=[$submitted]; delivered=[$delivered]; " +
+            "beforeVsync=[$beforeVsync]; queuedReport=${queuedReport?.id}/${queuedReport?.status}; " +
             "completed=[$completed]; report=${report?.id}/${report?.status}"
+        assertTrue("Scope invalidation did not schedule a traversal: $trace", pendingTraversal.isNotEmpty())
+        assertTrue("Next Vsync did not advance virtual uptime: $trace",
+            android.os.SystemClock.uptimeMillis() > uptimeBefore)
+        assertTrue("Original traversal barriers remain queued: $trace",
+            pendingTraversal.none { it in queuedBarriers() })
+        assertTrue("Visible host did not draw after traversal: $trace",
+            h.sampleMotion().drawCount > motionBefore.drawCount)
         assertNotNull("Actual WorkerReport missing: $trace", report)
         assertEquals("Actual WorkerJob did not succeed: $trace",
             at.heinz.deviceai.chief.WorkerStatus.DONE, report!!.status)
