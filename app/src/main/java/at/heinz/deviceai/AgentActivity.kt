@@ -6712,7 +6712,10 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
-        if (selectedBot == null && handleOwnerRoutineRequest(request)) return
+        if (selectedBot == null && OwnerRoutineCommands.parse(request) != null) {
+            if (!botRoutingChecked && routeBotInput(input.text.toString())) return
+            if (handleOwnerRoutineRequest(request)) return
+        }
         val clarifiedAppName = appNameClarification.consume(sessionId, ownerReplyRevision, request,
             at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
                 continuumState?.archive?.identityState?.chosenName))

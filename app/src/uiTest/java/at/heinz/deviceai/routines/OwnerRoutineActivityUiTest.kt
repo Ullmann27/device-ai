@@ -118,6 +118,7 @@ class OwnerRoutineActivityUiTest {
     @Test fun actualConfirmationCancelLeavesNoPersistentRoutine() {
         val a = activity()
         send(a, "Routine alle 15 Minuten: Akku unter 20 %")
+        until("Concrete routine confirmation after address lookup") { ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
         val dialog = requireNotNull(ShadowAlertDialog.getLatestAlertDialog())
         assertTrue(dialog.isShowing)
         assertTrue(shadowOf(dialog).message.toString().contains("unter 20 %"))
@@ -132,6 +133,7 @@ class OwnerRoutineActivityUiTest {
     @Test fun actualConfirmationRunsBatteryAndListsThenStopsWithoutCancellingOwnerTurn() {
         val a = activity()
         send(a, "Routine alle 15 Minuten: Akku unter 20 %")
+        until("Concrete routine confirmation after address lookup") { ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
         val dialog = requireNotNull(ShadowAlertDialog.getLatestAlertDialog())
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
         until("Concrete approved Android routine finishes") { runtime.book.registrations().singleOrNull()?.lastResult != null }
@@ -162,6 +164,7 @@ class OwnerRoutineActivityUiTest {
     @Test fun unsupportedConditionalGoalNeverOpensApprovalOrExecutes() {
         val a = activity()
         send(a, "Routine alle 15 Minuten: Akku unter 10 % und lösche Downloads")
+        until("Unsupported goal is answered after address lookup") { texts(a).any { it.contains("nicht unterstützt") } }
         assertTrue(runtime.book.registrations().isEmpty())
         assertEquals(0, app.batteryReads.get()); assertTrue(receipts(app).isEmpty())
         assertFalse(ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
@@ -185,6 +188,34 @@ class OwnerRoutineActivityUiTest {
             ShadowAlertDialog.getLatestAlertDialog().dismiss()
         }
         assertTrue(receipts(app).isEmpty())
+    }
+
+    @Test fun editableBotNamedRoutineKeepsColonAndCommaAddressingBeforeOwnerCommands() {
+        val a = activity()
+        val actualHost = at.heinz.deviceai.localmodel.LocalModelHost.get(a)
+        assertNull(actualHost.runtime.loadedModel)
+        set(a, "localRuntime", actualHost.runtime)
+        val profile = ChiefBotProfileStore(File(a.filesDir, "chief-bots"), trustedParentDirectory = a.filesDir)
+            .create("routine-agent", "Routine", "Textprüfung", "Kurz")
+        for (request in listOf("Routine: Hallo", "Routine, Hallo")) {
+            send(a, request)
+            until("Editable address reaches the existing private bot flow") {
+                (get(a, "selectedBot") as? at.heinz.deviceai.chief.ChiefBotProfile)?.agentId == profile.agentId &&
+                    texts(a).any { it.contains("Kein lokales Modell im Zustand BEREIT") }
+            }
+            assertTrue(texts(a).contains("Hallo"))
+            assertTrue(runtime.book.registrations().isEmpty())
+            assertTrue(receipts(app).isEmpty())
+            assertFalse(texts(a).any { it.contains("Nutze ‚Routine einrichten‘") })
+            send(a, "JARVIS")
+            assertNull(get(a, "selectedBot"))
+        }
+        send(a, "Routine alle 15 Minuten: Akku unter 20 %")
+        until("Absent editable addressee falls back to actual routine approval") {
+            ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true
+        }
+        assertTrue(shadowOf(ShadowAlertDialog.getLatestAlertDialog()).message.toString().contains("unter 20 %"))
+        assertTrue(runtime.book.registrations().isEmpty())
     }
 
     @Test fun appendDuringPauseAppearsOnceWhenTheSameOwnerViewReturns() {
