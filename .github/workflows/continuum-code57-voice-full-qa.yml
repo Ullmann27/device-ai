@@ -512,6 +512,37 @@ jobs:
               'confirmedDeletionRejectsPreviouslyQueuedSharedTeamBeforeEitherExecutorCompletes'
           )}
           required.add(('ChiefPatternE2ETest', 's4b_datedPrivateRecordsAndApprovedSharedFactsUseRealWorkerPrompts'))
+          required |= {('ChiefBotFollowupTest', name) for name in (
+              'completedProposalNeedsFreshApprovalAndRunsExactlyTwoNewWorkers',
+              'followupDoesNotInheritThePreviousSharedFactsOrGrant',
+              'chiefRejectsUnknownCapabilityRiskyToolsAndDuplicateGoal',
+              'currentModelAndPersistedBudgetAreCheckedBeforeNewAdmission',
+              'queuedDraftRejectsStopSessionProfileAndEditedGoal',
+              'deterministicFollowupIdentityPreventsReplayAfterReopen',
+              'deletedSourceAndChangedTeamCannotAuthorizeOldDraft',
+              'stopDuringFollowupRejectsLateModelResultAndFurtherReview',
+              'ownerSessionChangeRejectsAlreadyRunningLateResult'
+          )}
+          required |= {('ChiefWorkerFollowupTest', name) for name in (
+              'optionalEnvelopeIsStrictAndCannotImportAuthorityFields',
+              'typedProposalDefensivelyCopiesScopeAndRejectsMalformedText',
+              'realAgentJobReturnsOneTypedReportWithoutStartingTheProposedTask',
+              'rejectedEvaluationDoesNotDeliverWorkerFollowup',
+              'ephemeralScreenOutcomeCannotBecomeDurableFollowup'
+          )}
+          required |= {('ContinuumBotFollowupUiTest', name) for name in (
+              'actualResultCardOpensBoundNewDraftAndNeedsFreshUncheckedConsent',
+              'unsupportedToolProposalShowsChiefRejectionWithoutNewDraftOrWork',
+              'ownerSessionChangeInvalidatesVisibleApprovalBeforeCallback',
+              'stopBetweenAcceptedUiAndQueuedSubmitStartsNoNewModel',
+              'closingDuringChiefReviewCannotReopenOrExecuteTheOldDraft',
+              'stopDiscardMakesRetainedApprovalButtonInert'
+          )}
+          required |= {('OwnerAppPlanningContextUiTest', name) for name in (
+              'activityStopDiscardsUnsubmittedFollowupAndRejectsRetainedButton',
+              'actualNewConversationDiscardsTheOldFollowupDraft'
+          )}
+          required.add(('FirstThinkingRunE2ETest', 'schritt7b_workerProposalReachesChiefAndRunsOnlyAfterNewOwnerApproval'))
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY

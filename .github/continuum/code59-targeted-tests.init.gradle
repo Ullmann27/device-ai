@@ -38,6 +38,10 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.ContinuumBotRosterStorageUiTest'
             includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotSharedKnowledgeTest'
             includeTestsMatching 'at.heinz.deviceai.ContinuumBotSharedKnowledgeUiTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefBotFollowupTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefWorkerFollowupTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumBotFollowupUiTest'
+            includeTestsMatching 'at.heinz.deviceai.OwnerAppPlanningContextUiTest'
             failOnNoMatchingTests = true
         }
     }

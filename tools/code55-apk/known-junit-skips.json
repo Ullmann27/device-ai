@@ -4,9 +4,6 @@
     "s7_pending_agentMessagesUrgentWakesInfoWaits",
     "s8d_pending_limitGuardIsWiredBeforeWorkerStart"
   ],
-  "at.heinz.deviceai.chief.FirstThinkingRunE2ETest": [
-    "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen"
-  ],
   "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest": [
     "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
     "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox"
