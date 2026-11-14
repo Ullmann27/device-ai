@@ -248,32 +248,40 @@ class LocalChatTranscriptStore(private val dir: File) {
 
     /** The last [limit] readable entries in order; a torn last line (process death mid-write) is skipped. */
     @Synchronized fun load(id: String, limit: Int = 200): List<Entry> {
-        if (limit <= 0) return emptyList()
-        return lines(id).mapNotNull { line ->
+        return snapshot(id, limit).entries
+    }
+
+    internal data class Snapshot(val entries: List<Entry>, val endOffset: Long)
+
+    @Synchronized internal fun snapshot(id: String, limit: Int = 200): Snapshot {
+        if (limit <= 0) return Snapshot(emptyList(), 0)
+        val tail = tail(id)
+        val entries = tail.lines.mapNotNull { line ->
             runCatching {
                 val o = JSONObject(line)
                 if (o.has("k")) null else Entry(o.getBoolean("u"), o.getString("t"), o.optLong("at"))
             }.getOrNull()
         }.toList().takeLast(limit)
+        return Snapshot(entries, tail.endOffset)
     }
 
-    private fun lines(id: String): Sequence<String> = tail(id).lines
-
-    private class Tail(val lines: Sequence<String>, val truncated: Boolean)
+    private class Tail(val lines: Sequence<String>, val truncated: Boolean, val endOffset: Long = 0)
 
     private fun tail(id: String): Tail {
         if (!ID.matches(id)) return Tail(emptySequence(), false)
         val file = File(dir, "$id$SUFFIX")
         if (!file.isFile) return Tail(emptySequence(), false)
         var truncated = false
+        var endOffset = 0L
         val text = RandomAccessFile(file, "r").use { raf ->
-            val start = maxOf(0L, raf.length() - MAX_READ_BYTES)
+            endOffset = raf.length()
+            val start = maxOf(0L, endOffset - MAX_READ_BYTES)
             truncated = start > 0
             raf.seek(start)
-            ByteArray((raf.length() - start).toInt()).also { raf.readFully(it) }.toString(Charsets.UTF_8)
+            ByteArray((endOffset - start).toInt()).also { raf.readFully(it) }.toString(Charsets.UTF_8)
                 .let { if (start > 0) it.substringAfter('\n') else it }
         }
-        return Tail(text.lineSequence(), truncated)
+        return Tail(text.lineSequence(), truncated, endOffset)
     }
 
     @Synchronized fun conversations(): List<String> =

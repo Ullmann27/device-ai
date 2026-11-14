@@ -31,6 +31,7 @@ class ShizukuBridge(
     private val bindDeadlineMs = 15_000L
     private val permissionDeadlineMs = 20_000L
     @Volatile private var started = false
+    private var permissionRequestsAllowed = true
     private var permissionPending = false
     private var permissionTimeout: Runnable? = null
     private var activeConnection: ServiceConnection? = null
@@ -165,6 +166,13 @@ class ShizukuBridge(
         refresh()
     }
 
+    // Never requests new permission.
+    @Synchronized fun startGrantedOnly() {
+        permissionRequestsAllowed = false
+        clearPermissionPending()
+        start()
+    }
+
     @Synchronized fun refresh() {
         if (!started) return
         if (isReady()) {
@@ -247,6 +255,11 @@ class ShizukuBridge(
         executeCheckedInternal(command, identityProbe = false, callback)
     }
 
+    internal fun executeCheckedGuarded(command: String, guard: (() -> String) -> String,
+                                       callback: (Result<String>) -> Unit) {
+        executeCheckedInternal(command, identityProbe = false, callback, guard)
+    }
+
     fun probeCapabilities(callback: (Result<ShizukuCapabilities>) -> Unit) {
         val identity = runCatching { Shizuku.getUid() to Shizuku.getVersion() }
         if (identity.isFailure) {
@@ -254,21 +267,22 @@ class ShizukuBridge(
             return
         }
         val (uid, version) = identity.getOrThrow()
-        executeCheckedInternal(ShizukuCapabilityProbe.COMMAND, identityProbe = true) { result ->
+        executeCheckedInternal(ShizukuCapabilityProbe.COMMAND, identityProbe = true, callback = { result ->
             callback(result.mapCatching {
                 check(Shizuku.getUid() == uid && Shizuku.getVersion() == version) { "SHIZUKU_IDENTITY_CHANGED" }
                 ShizukuCapabilityProbe.parse(it, uid, Build.VERSION.SDK_INT, version)
             })
-        }
+        })
     }
 
-    private fun executeCheckedInternal(command: String, identityProbe: Boolean, callback: (Result<String>) -> Unit) {
+    private fun executeCheckedInternal(command: String, identityProbe: Boolean, callback: (Result<String>) -> Unit,
+                                       guard: (() -> String) -> String = { it() }) {
         val request = runCatching { ShellExecutionRequest(command, 15_000) }
         if (request.isFailure) { callback(Result.failure(request.exceptionOrNull()!!)); return }
         val service = shell
         if (service == null) { callback(Result.failure(IllegalStateException("Shizuku not ready."))); return }
         val sessionAtStart = checkedSession.get()
-        checkedCalls.execute({
+        checkedCalls.execute({ guard {
             check(checkedSession.get() == sessionAtStart && shell === service && isReady()) {
                 "Shizuku service changed or stopped."
             }
@@ -281,7 +295,7 @@ class ShizukuBridge(
                 "Shizuku service changed or stopped during execution."
             }
             ShellExecutionWire.decodeResult(raw).checkedOutput()
-        }, callback)
+        } }, callback)
     }
 
     @Synchronized private fun ensurePermissionAndBind(forceRequest: Boolean = false) {
@@ -299,6 +313,7 @@ class ShizukuBridge(
                     clearPermissionPending()
                     bindShellService()
                 }
+                !permissionRequestsAllowed -> reportStatus("Shizuku-Freigabe fehlt · Routine ist blockiert")
                 permissionPending -> reportStatus("Warte auf Shizuku-Freigabe …")
                 forceRequest || !Shizuku.shouldShowRequestPermissionRationale() -> {
                     permissionPending = true

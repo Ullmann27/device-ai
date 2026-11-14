@@ -118,6 +118,7 @@ class RoutineDispatcher(
 
     fun tick(): Int = poll(book.claimDue(clock()))
     fun onEvent(name: String): Int = poll(book.claimTriggered(name))
+    fun retryReports() { poll(emptyList()) }
     fun inFlight(): Set<String> = synchronized(book) { inFlight.keys.toSet() }
     fun activeWorkerIds(): Set<String> = synchronized(book) { inFlight.values.map { "rt-" + it.runId }.toSet() }
 

@@ -1,6 +1,14 @@
 package at.heinz.deviceai
 
 import at.heinz.deviceai.systemintelligence.*
+import at.heinz.deviceai.routines.OwnerRoutineCommand
+import at.heinz.deviceai.routines.OwnerRoutineCommands
+import at.heinz.deviceai.routines.OwnerRoutineDraft
+import at.heinz.deviceai.routines.OwnerRoutineRuntime
+import at.heinz.deviceai.routines.OwnerRoutineSchedule
+import at.heinz.deviceai.routines.OwnerRoutineTarget
+import at.heinz.deviceai.routines.RoutineChatDelivery
+import at.heinz.deviceai.routines.RoutineTrigger
 
 import at.heinz.deviceai.chief.ChiefBotPersonas
 import at.heinz.deviceai.chief.ChiefBotTaskIntake
@@ -500,8 +508,14 @@ class AgentActivity : Activity() {
     @Volatile private var sessionId = UUID.randomUUID().toString()
     private val lastBatteryObservation = at.heinz.deviceai.cognitive.PreviousBatteryObservation()
     private val chatTranscripts by lazy {
-        at.heinz.deviceai.cognitive.LocalChatTranscriptStore(java.io.File(filesDir, "chat-history"))
+        at.heinz.deviceai.cognitive.LocalChatTranscriptStore(java.io.File(filesDir.canonicalFile, "chat-history"))
     }
+    private var routineRuntime: OwnerRoutineRuntime? = null
+    private val routineDeliveryActive = java.util.concurrent.atomic.AtomicBoolean()
+    private val routineDeliveryRequested = java.util.concurrent.atomic.AtomicBoolean()
+    private val pendingRoutineBubbles = java.util.ArrayDeque<RoutineChatDelivery.Delivered>()
+    private var restoredRoutineBoundary: Pair<String, Long>? = null
+    private val routineWake: () -> Unit = { deliverRoutineMessages() }
     private val sessionResetLifetime = java.util.concurrent.atomic.AtomicBoolean(true)
     private var busy = false
         get() = field || ownerFactDeletionPending.get()
@@ -779,6 +793,8 @@ class AgentActivity : Activity() {
         if (::modelCatalog.isInitialized) reloadInstalledModels()
         refreshNeuralPracticeUi()
         foregroundLearningActive = true
+        restoreOwnerRoutines()
+        renderRoutineMessages()
         airbusCockpitOrchestrator?.setForeground(true)
         // Only the foreground Activity may advance the hologram's orbital clock.
         hologramView?.setForegroundActive(true)
@@ -829,6 +845,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        routineRuntime?.detachChief(routineWake)
         if (!isInMultiWindowMode) computerViewVisible = false
         if (!isInMultiWindowMode && computerController?.awaitingConsent != true) computerController?.stopForVisibilityLoss()
         appNameClarification.clear()
@@ -924,6 +941,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        routineRuntime?.detachChief(routineWake)
         pendingComputerLaunch = null
         computerController?.close()
         computerController = null
@@ -3388,6 +3406,8 @@ class AgentActivity : Activity() {
         input.hint = "Was soll ich auf deinem Gerät tun?"
         addBubble("JARVIS · Zentraler Dialog", false, persist = false)
         restoreChatTranscript()
+        renderRoutineMessages()
+        deliverRoutineMessages()
     }
 
     /** Addressing is metadata selection, never an action grant. Runs before owner-only routers. */
@@ -4403,6 +4423,7 @@ class AgentActivity : Activity() {
             CenterAction("ANLEITUNG · DEINE EIGENE KI") { showFirstStepsGuide() },
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
             CenterAction("MEIN KI-TEAM") { showBotRoster() },
+            CenterAction("ROUTINEN · EINRICHTEN UND STOPPEN") { showOwnerRoutines() },
             CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
             CenterAction("HANDY-BUILDER · TERMUX") { openMobileBuilder() },
             CenterAction("CCC1 · REPARATUR-AGENT (TERMUX)") { openMobileBuilder() },
@@ -4491,6 +4512,201 @@ class AgentActivity : Activity() {
         }
         refreshConversationLayout()
     }
+
+    private fun restoreOwnerRoutines() {
+        val first = OwnerRoutineRuntime.markOwnerAppEntry()
+        val app = applicationContext
+        onLearningIo({
+            val stored = java.io.File(java.io.File(app.filesDir.canonicalFile, "routines"), "owner-routines-v1.bin")
+            val runtime = OwnerRoutineRuntime.current() ?: if (stored.isFile) OwnerRoutineRuntime.get(app) else null
+            runtime?.also { it.ownerAppEntered(first) }
+        }) { result ->
+            result.onSuccess { runtime ->
+                routineRuntime = runtime
+                if (foregroundLearningActive) {
+                    runtime?.attachChief(routineWake)
+                    deliverRoutineMessages()
+                }
+            }.onFailure { addToolActivity("ROUTINEN · Speicher nicht lesbar (${failureName(it)})") }
+        }
+    }
+
+    private fun deliverRoutineMessages() {
+        if (!foregroundLearningActive || isFinishing || isDestroyed || selectedBot != null) return
+        renderRoutineMessages()
+        val runtime = routineRuntime ?: OwnerRoutineRuntime.current() ?: return
+        if (!routineDeliveryActive.compareAndSet(false, true)) {
+            routineDeliveryRequested.set(true)
+            return
+        }
+        val targetSession = sessionId
+        try {
+            chatTranscriptIo.execute {
+                val delivered = mutableListOf<RoutineChatDelivery.Delivered>()
+                var failed = 0
+                runCatching {
+                    val adapter = runtime.delivery(chatTranscripts)
+                    runtime.mailbox.peek("chief").forEach { message ->
+                        runCatching { adapter.deliver(message.id, targetSession)?.let(delivered::add) }
+                            .onFailure { failed++ }
+                    }
+                }.onFailure { failed++ }
+                runOnUiThread {
+                    routineDeliveryActive.set(false)
+                    if (isFinishing || isDestroyed) return@runOnUiThread
+                    delivered.forEach(pendingRoutineBubbles::addLast)
+                    renderRoutineMessages()
+                    if (failed != 0) addToolActivity("ROUTINEN · Zustellung bei $failed Berichten nicht dauerhaft " +
+                        "bestätigt. Gespeicherte Chat-Zielbindungen bleiben erhalten; Routinebestand prüfen.")
+                    if (routineDeliveryRequested.getAndSet(false)) deliverRoutineMessages()
+                }
+            }
+        } catch (_: java.util.concurrent.RejectedExecutionException) {
+            routineDeliveryActive.set(false)
+            addToolActivity("ROUTINEN · Chat-Zustellung derzeit nicht verfügbar")
+        }
+    }
+
+    private fun renderRoutineMessages() {
+        if (!foregroundLearningActive || isFinishing || isDestroyed || selectedBot != null) return
+        while (pendingRoutineBubbles.isNotEmpty()) {
+            val message = pendingRoutineBubbles.removeFirst()
+            if (message.conversationId != sessionId) continue
+            val restored = restoredRoutineBoundary
+            if (restored?.first == sessionId && restored.second >= message.endOffset - 1) continue
+            addBubble(message.text, false, persist = false)
+        }
+    }
+
+    private fun isRoutineControlWhileBusy(): Boolean {
+        if (!::input.isInitialized || selectedBot != null) return false
+        return when (OwnerRoutineCommands.parse(input.text.toString())) {
+            OwnerRoutineCommand.ListRoutines, OwnerRoutineCommand.StopAll, is OwnerRoutineCommand.Stop -> true
+            else -> false
+        }
+    }
+
+    private fun handleOwnerRoutineRequest(request: String): Boolean {
+        val command = OwnerRoutineCommands.parse(request) ?: return false
+        appNameClarification.clear()
+        input.text.clear()
+        addBubble(request, true)
+        when (command) {
+            OwnerRoutineCommand.ListRoutines -> showOwnerRoutines()
+            OwnerRoutineCommand.Choose -> chooseOwnerRoutine()
+            OwnerRoutineCommand.StopAll -> stopOwnerRoutine(null)
+            is OwnerRoutineCommand.Stop -> stopOwnerRoutine(command.id)
+            is OwnerRoutineCommand.Create -> confirmOwnerRoutine(command.draft)
+            is OwnerRoutineCommand.Unsupported -> addBubble(command.reason, false)
+        }
+        return true
+    }
+
+    private fun showOwnerRoutines() {
+        onLearningIo({
+            val runtime = OwnerRoutineRuntime.get(applicationContext)
+            Triple(runtime, runtime.book.registrations(), runtime.book.pendingChatReports().groupingBy { it.routineId }.eachCount())
+        }) { result ->
+            val (runtime, rows, pending) = result.getOrElse {
+                Toast.makeText(this, "Routinen nicht lesbar (${failureName(it)}).", Toast.LENGTH_LONG).show()
+                return@onLearningIo
+            }
+            routineRuntime = runtime
+            if (!foregroundLearningActive) return@onLearningIo
+            runtime.attachChief(routineWake)
+            val dialog = AlertDialog.Builder(this).setTitle("CONTINUUM · ROUTINEN")
+                .setNegativeButton("Schließen", null)
+                .setPositiveButton("EINRICHTEN") { _, _ -> chooseOwnerRoutine() }
+            if (rows.isEmpty()) dialog.setMessage("Noch keine dauerhafte Routine freigegeben.")
+            else {
+                dialog.setItems(rows.map { row ->
+                    row.routine.id + " · " + row.routine.goal + "\n" + routineTriggerText(row.routine.trigger) +
+                        (if (row.runId != null) " · Lauf aufgenommen" else "") +
+                        " · Berichte offen: " + (pending[row.routine.id] ?: 0)
+                }.toTypedArray()) { _, index ->
+                    val row = rows[index]
+                    val last = row.lastResult?.let { "\n\nLetzter Bericht (${routineTime(row.lastResultAtMillis)}):\n$it" }
+                        ?: "\n\nNoch kein abgeschlossener Bericht."
+                    AlertDialog.Builder(this).setTitle(row.routine.id)
+                        .setMessage(row.routine.goal + "\n" + routineTriggerText(row.routine.trigger) +
+                            (if (row.routine.trigger is RoutineTrigger.Every) "\nNächste gespeicherte Fälligkeit: " +
+                                routineTime(row.nextAtMillis) else "") + last +
+                            (runtime.lastProblem?.let { "\n\nLetzter Ausführungsfehler: $it" } ?: ""))
+                        .setPositiveButton("STOPPEN") { _, _ -> stopOwnerRoutine(row.routine.id) }
+                        .setNegativeButton("Zurück") { _, _ -> showOwnerRoutines() }.show()
+                }.setNeutralButton("ALLE STOPPEN") { _, _ -> stopOwnerRoutine(null) }
+            }
+            dialog.show()
+            deliverRoutineMessages()
+        }
+    }
+
+    private fun chooseOwnerRoutine() {
+        val targets = OwnerRoutineTarget.entries
+        AlertDialog.Builder(this).setTitle("Routine · lesendes Ziel")
+            .setItems(targets.map { it.title }.toTypedArray()) { _, index ->
+                val target = targets[index]
+                val periods = listOf(15 * 60_000L, 60 * 60_000L, 24 * 60 * 60_000L, null)
+                AlertDialog.Builder(this).setTitle(target.title)
+                    .setItems(arrayOf("Alle 15 Minuten", "Jede Stunde", "Alle 24 Stunden", "Beim Appstart")) { _, selected ->
+                        confirmOwnerRoutine(OwnerRoutineDraft(target, periods[selected]))
+                    }.setNegativeButton("Abbrechen", null).show()
+            }.setNegativeButton("Abbrechen", null).show()
+    }
+
+    private fun confirmOwnerRoutine(draft: OwnerRoutineDraft) {
+        val trigger = draft.routine("preview", System.currentTimeMillis()).trigger
+        val condition = if (draft.target == OwnerRoutineTarget.LOW_BATTERY)
+            "Neue Messergebnisse werden nur bei einem Akkustand unter 20 % gemeldet."
+            else "Nur neue Messergebnisse werden gemeldet."
+        AlertDialog.Builder(this).setTitle("Routine dauerhaft freigeben?")
+            .setMessage(draft.target.goal + "\n" + routineTriggerText(trigger) + "\n\n" + condition +
+                "\nLesender Umfang: " + draft.target.allowedTools.joinToString { ToolRegistry.label(it) } +
+                (if (draft.target.requiresShizuku) "\nDownloads: /sdcard/Download; bestehende Shizuku-Freigabe nötig." else "") +
+                "\n\nBerichte gehen an deinen Hauptchat. Android kann Läufe verschieben. " +
+                "NOT-STOPP, Ressourcen- und Werkzeuggrenzen bleiben wirksam. Unter ‚Routinen‘ jederzeit stoppen.")
+            .setNegativeButton("Abbrechen", null)
+            .setPositiveButton("DAUERHAFT FREIGEBEN") { _, _ ->
+                val ownerSession = sessionId
+                onLearningIo({ OwnerRoutineRuntime.get(applicationContext).confirm(draft) }) { result ->
+                    val text = result.fold({ saved ->
+                        "Routine ${saved.routine.id} dauerhaft gespeichert. " + when (saved.schedule) {
+                            OwnerRoutineSchedule.SCHEDULED -> "Android-Zeitplan registriert. Ergebnisse erscheinen im Hauptchat."
+                            OwnerRoutineSchedule.EVENT_ONLY -> "Auslöser ist die erste App-Öffnung in einem neuen Prozess; Rotation zählt nicht."
+                            OwnerRoutineSchedule.PAUSED -> "NOT-STOPP ist aktiv; Ausführung bleibt angehalten."
+                            OwnerRoutineSchedule.FAILED -> "Android-Zeitplanung fehlgeschlagen; Ausführung nicht bestätigt."
+                        }
+                    }, { "Routine nicht bestätigt (${failureName(it)}). Bestand unter ‚Routinen‘ prüfen." })
+                    if (sessionId == ownerSession && selectedBot == null) addBubble(text, false)
+                    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+                    routineRuntime = OwnerRoutineRuntime.current()
+                    if (foregroundLearningActive) routineRuntime?.attachChief(routineWake)
+                }
+            }.show()
+    }
+
+    private fun stopOwnerRoutine(id: String?) {
+        OwnerRoutineRuntime.current()?.signalStop(id)
+        val ownerSession = sessionId
+        onLearningIo({
+            val runtime = OwnerRoutineRuntime.get(applicationContext)
+            if (id == null) "Routinen gestoppt und Freigaben entfernt: ${runtime.stopAll().size}."
+            else if (runtime.stop(id)) "Routine $id gestoppt und Freigabe entfernt."
+            else "Routine $id ist nicht registriert."
+        }) { result ->
+            val text = result.getOrElse { "Stopp nicht dauerhaft bestätigt (${failureName(it)}); Routinebestand prüfen." }
+            if (sessionId == ownerSession && selectedBot == null) addBubble(text, false)
+            Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun routineTriggerText(trigger: RoutineTrigger): String = when (trigger) {
+        is RoutineTrigger.Every -> "Alle ${trigger.periodMillis / 60_000} Minuten; erste Prüfung ist nach Freigabe fällig"
+        is RoutineTrigger.OnEvent -> "Erste App-Öffnung in einem neuen Prozess; Bildschirmdrehen zählt nicht"
+    }
+
+    private fun routineTime(value: Long): String = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+        .withZone(java.time.ZoneId.systemDefault()).format(java.time.Instant.ofEpochMilli(value))
 
     private fun showChiefWorkerStatus() {
         // A spoken status request is presentation-only: keep the cockpit visible.
@@ -6103,7 +6319,7 @@ class AgentActivity : Activity() {
                 if (consumePendingResearchChatReply()) return@setOnClickListener
                 val chiefStatus = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
                     ContinuumWorkerChatCommand.ChiefStatus
-                if (busy && activeLocalRequest && !chiefStatus) cancelLocalRequest()
+                if (busy && activeLocalRequest && !chiefStatus && !isRoutineControlWhileBusy()) cancelLocalRequest()
                 else sendCurrentInput()
             }
         }
@@ -6476,6 +6692,7 @@ class AgentActivity : Activity() {
         // It must never cancel or queue behind the current model generation.
         val chiefStatusRequest = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
             ContinuumWorkerChatCommand.ChiefStatus
+        val routineControl = isRoutineControlWhileBusy()
         // „Nein, ich meinte den letzten Entwurf“ may interrupt a running draft: it starts no model turn of its own.
         val correction = at.heinz.deviceai.cognitive.OwnerCorrectionIntent.parse(input.text.toString().trim())
         if (correction != null && !botLookupPending) {
@@ -6485,8 +6702,8 @@ class AgentActivity : Activity() {
             applyOwnerCorrection(correction, spoken)
             return
         }
-        if (botLookupPending && !chiefStatusRequest) return
-        if (busy && !chiefStatusRequest) return
+        if (botLookupPending && !chiefStatusRequest && !routineControl) return
+        if (busy && !chiefStatusRequest && !routineControl) return
         // Barge-in: the user takes precedence over any previous spoken answer.
         voiceEngine?.stop()
         stopVoiceAnimation()
@@ -6495,6 +6712,7 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
+        if (selectedBot == null && handleOwnerRoutineRequest(request)) return
         val clarifiedAppName = appNameClarification.consume(sessionId, ownerReplyRevision, request,
             at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
                 continuumState?.archive?.identityState?.chosenName))
@@ -6522,6 +6740,7 @@ class AgentActivity : Activity() {
             return
         }
         if (clarifiedAppName == null && !botRoutingChecked && routeBotInput(input.text.toString())) return
+        if (selectedBot == null) deliverRoutineMessages()
         if (clarifiedAppName == null && selectedBot == null && tryStartComputerRequest(request)) return
         at.heinz.deviceai.cognitive.OwnerDeviceClockReply.answer(
             OwnerAppLookupIntent.stripAddress(request, continuumState?.archive?.identityState?.chosenName),
@@ -10179,12 +10398,20 @@ class AgentActivity : Activity() {
                 }
                 val jobs = getSystemService(android.app.job.JobScheduler::class.java)
                 if (chosen == at.heinz.deviceai.cognitive.ContinuumAutonomyLevel.PAUSED) {
+                    OwnerRoutineRuntime.current()?.pause()
+                    jobs.cancel(at.heinz.deviceai.routines.OwnerRoutineScheduler.JOB_ID)
                     at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this).disable()
                     jobs.cancel(at.heinz.deviceai.learning.ContinuumAutonomousScheduler.JOB_ID)
                     jobs.cancel(at.heinz.deviceai.learning.ContinuumDeviceTeamleaderScheduler.JOB_ID)
                     webToolGate.cancel()
                     activeWebResearchSession?.cancel()
                 } else {
+                    OwnerRoutineRuntime.current()?.let { runtime ->
+                        onLearningIo({ runtime.restoreSchedule() }) { result ->
+                            if (result.isFailure || result.getOrNull() == OwnerRoutineSchedule.FAILED)
+                                addToolActivity("ROUTINEN · Android-Zeitplanung nicht bestätigt")
+                        }
+                    }
                     at.heinz.deviceai.learning.ContinuumAutonomousScheduler(this).restore()
                     if (control.mayPropose(chosen))
                         at.heinz.deviceai.learning.ContinuumDeviceTeamleaderScheduler(this).restore()
@@ -13901,12 +14128,13 @@ class AgentActivity : Activity() {
     private fun restoreChatTranscript(): Int? {
         if (selectedBot != null) return 0
         val id = sessionId
-        val entries = runCatching {
-            chatTranscriptIo.submit(java.util.concurrent.Callable { chatTranscripts.load(id) })
+        val snapshot = runCatching {
+            chatTranscriptIo.submit(java.util.concurrent.Callable { chatTranscripts.snapshot(id) })
                 .get(2, java.util.concurrent.TimeUnit.SECONDS)
         }.getOrElse { return null }
-        entries.forEach { addBubble(it.text, it.user, persist = false) }
-        return entries.size
+        restoredRoutineBoundary = id to snapshot.endOffset
+        snapshot.entries.forEach { addBubble(it.text, it.user, persist = false) }
+        return snapshot.entries.size
     }
 
     private fun addBubble(value: String, user: Boolean, persist: Boolean = true) {
@@ -14007,15 +14235,17 @@ class AgentActivity : Activity() {
         sendButton.isEnabled = true
         val researchReply = pendingResearchChatApproval != null &&
             at.heinz.deviceai.cognitive.ResearchConsentReply.parse(input.text.toString()) != null
+        val routineControl = isRoutineControlWhileBusy()
         // The compact 48dp row cannot fit a four-letter STOP label at 200% text.
         // Preserve the cancellation action and spoken label with a standard stop icon.
-        sendButton.text = if (researchReply) "➤" else if (busy && activeLocalRequest) {
+        sendButton.text = if (researchReply || routineControl) "➤" else if (busy && activeLocalRequest) {
             if (usesStackedComposer()) "■" else "STOP"
         } else if (busy) "…" else "➤"
         sendButton.contentDescription = if (researchReply) "Recherchefreigabe senden"
+            else if (routineControl) "Routinenbefehl senden"
             else if (busy && activeLocalRequest) "Lokale Anfrage abbrechen"
             else if (busy) "Device AI arbeitet" else "Nachricht senden"
-        sendButton.alpha = if (!researchReply && busy && !activeLocalRequest) 0.65f else 1f
+        sendButton.alpha = if (!researchReply && !routineControl && busy && !activeLocalRequest) 0.65f else 1f
     }
 
     /** UI thread. One bounded visual scope for existing owner work, never a scheduler. */

@@ -9,7 +9,7 @@ internal class RoutineChatDelivery(
     private val transcript: LocalChatTranscriptStore
 ) {
     data class Delivered(val messageId: String, val conversationId: String, val text: String,
-                         val atMillis: Long, val appended: Boolean)
+                         val atMillis: Long, val appended: Boolean, val endOffset: Long)
 
     // Use the existing transcript executor.
     fun deliver(messageId: String, conversationId: String): Delivered? = synchronized(book) {
@@ -30,6 +30,7 @@ internal class RoutineChatDelivery(
             prepared.conversationId, prepared.offset, prepared.text))
         if (!book.acknowledgeChat(messageId)) throw IOException("Routine delivery could not be acknowledged.")
         mailbox.acknowledge("chief", messageId)
-        Delivered(messageId, prepared.conversationId, message.body, pending.atMillis, appended)
+        Delivered(messageId, prepared.conversationId, message.body, pending.atMillis, appended,
+            prepared.offset + prepared.text.toByteArray(Charsets.UTF_8).size)
     }
 }
