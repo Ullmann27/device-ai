@@ -29,8 +29,8 @@ established. Existing Code58 QA is the intended build path; no duplicate release
 Physical Fold7, live capture, real model quality and measured animation FPS remain
 NOT_RUN unless separately observed.
 
-Relevant register: EXP-05 (dialogue), EXP-06 (source provenance), EXP-07 (regressions),
-EXP-12 (continuity), EXP-15 (existing avatar/cockpit). No new database, renderer,
+Relevant register: EXP-06 (source provenance), EXP-07 (regressions), EXP-12 (continuity),
+EXP-14/EXP-16 (context). Existing cinema flag: EXP_09_FOCUS_BLINK. No new database, renderer,
 permission, source of action authority, model weight or signing mechanism.
 
 Each worker's commit is reviewed and integrated here before the common QA.

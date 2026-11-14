@@ -10,6 +10,17 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerResearchCommandTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.ResearchQuestionFocusTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ResearchTopicAuthorityTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalPoliteFollowUpTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalFollowUpTaskFrameTest'
+            includeTestsMatching 'at.heinz.deviceai.avatar3d.GazeBlinkPolicyTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LiveCaptureDiagnosticsTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LiveComputerFramesTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest'
+            includeTestsMatching 'at.heinz.deviceai.AndroidLiveNodePortTest'
             failOnNoMatchingTests = true
         }
     }

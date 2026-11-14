@@ -222,7 +222,8 @@ class ContinuumLiveProjectionService : Service() {
             sourceResetRequired = false
             LiveCaptureDiagnostics.reject(sessionId, LiveCaptureDiagnostics.Rejection.GEOMETRY_RESET)
             // New queue excludes frames from previous geometry.
-            updateSurface(force = true)
+            try { updateSurface(force = true) }
+            catch (_: Exception) { failCapture() }
             return null
         }
         // ticket() also runs after the GPU copy; recording here would count the same frame twice.

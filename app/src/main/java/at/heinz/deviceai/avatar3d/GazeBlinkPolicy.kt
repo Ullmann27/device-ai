@@ -9,8 +9,18 @@ internal class GazeBlinkPolicy {
     private var previousY = Float.NaN
     private var triggeredAt = Float.NaN
     private var lastEventAt = Float.NEGATIVE_INFINITY
+    private var lastSeconds = Float.NaN
 
     fun sample(x: Float, y: Float, seconds: Float, enabled: Boolean): Float {
+        if (seconds.isFinite()) {
+            if (seconds < lastSeconds) {
+                previousX = Float.NaN
+                previousY = Float.NaN
+                triggeredAt = Float.NaN
+                lastEventAt = Float.NEGATIVE_INFINITY
+            }
+            lastSeconds = seconds
+        }
         if (!enabled || !x.isFinite() || !y.isFinite() || !seconds.isFinite()) {
             previousX = Float.NaN
             previousY = Float.NaN

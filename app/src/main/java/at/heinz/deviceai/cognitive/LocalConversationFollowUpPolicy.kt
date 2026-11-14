@@ -36,6 +36,19 @@ internal object LocalConversationFollowUpPolicy {
     // refused as a follow-up without history (#565 review); „es“ is left out („Wie spät ist es?“, „Was kostet es?“),
     private val anaphoric = Regex(
         """(?u)^(?:(?i:und|aber|also)\s+)?(?:(?i:wo|wie|wann|was|wer|warum|wohin|woher|welche\p{L}*)\s+\p{L}+\s+(?:er|sie|ihn|ihm|ihnen|dort|dorthin)|(?i:kann|könnte|soll|sollte|darf|muss|müsste|wird|würde|hat|hatte|ist|war)\s+(?:er|sie|ihn|ihm|ihnen)(?!\p{L})|(?i:fass|lies|zeig|zeige|erklär|erkläre|vergleich|vergleiche|übersetz|übersetze)\s+(?:sie|ihn|ihm|ihnen))(?!\p{L})""")
+    // Whole questions; no inferred actions.
+    private const val politeStart =
+        """(?:(?:und|aber|also)\s+)?(?:kannst|könntest|würdest|magst)\s+du\s+"""
+    private const val politeModifiers =
+        """(?:(?:mir|bitte|kurz|genauer|einfacher|nochmal|noch\s+einmal|in\s+einfachen\s+worten)\s+){0,4}"""
+    private val politeReference = Regex(
+        """(?iu)^$politeStart$politeModifiers(?-i:sie|ihn|es|das|dies|dieses|diese)\s+""" +
+            """$politeModifiers(?:zusammenfassen|erklären|erläutern|beschreiben|vergleichen|übersetzen)(?:\s+bitte)?[.!?]*$""")
+    private val politeTopicReference = Regex(
+        """(?iu)^(?:$politeStart(?:mir\s+)?(?:bitte\s+)?(?:dazu|darüber|davon)\s+""" +
+            """(?:(?:bitte|mehr|etwas|genaueres|noch\s+etwas|noch\s+mehr)\s+){0,2}""" +
+            """(?:sagen|erzählen|erklären|berichten)|was\s+(?:kannst|könntest|würdest|magst)\s+du\s+""" +
+            """(?:mir\s+)?(?:dazu|darüber|davon)\s+(?:sagen|erzählen|berichten))(?:\s+bitte)?[.!?]*$""")
     // and asking again for something said before – only after a recall verb („Wie hieß der Handwerker nochmal?“), not
     // a polite repeat („Kannst du mir nochmal erklären …“) or a general question („Was war nochmal die Hauptstadt …“).
     private val again = Regex(
@@ -51,6 +64,7 @@ internal object LocalConversationFollowUpPolicy {
         return requestsContinuation(text) || correction.containsMatchIn(text) || previous.containsMatchIn(text) ||
             replacement.containsMatchIn(text) || elliptical.containsMatchIn(text) ||
             contrastive.containsMatchIn(text) || anaphoric.containsMatchIn(text) || again.containsMatchIn(text) ||
+            politeReference.matches(text) || politeTopicReference.matches(text) ||
             consequence.containsMatchIn(text) || conversationState.containsMatchIn(text)
     }
 

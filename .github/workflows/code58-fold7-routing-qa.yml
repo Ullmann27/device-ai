@@ -1,8 +1,9 @@
-name: "Code58 Fold7 downloads and web relevance regressions"
+name: "Code58 dialogue, avatar, capture and research regressions"
 on:
   push:
     branches:
       - fix/code57-fold7-downloads-research-20261114
+      - work/code58-three-agent-support-20261114
 permissions:
   contents: read
 jobs:
@@ -50,7 +51,15 @@ jobs:
           required = {('Fold7RoutingRegressionTest','spokenSingularDownloadUsesApprovedComputerPlan'),
                       ('Fold7RoutingRegressionTest','informalJusticeResearchRemovesSpokenFillerWithoutLosingSubject'),
                       ('Fold7RoutingRegressionTest','funeralAndUnrelatedWebClaimsCannotBecomeJusticeEvidence'),
-                      ('ResearchEngineTest','publicSearchRejectsUnrelatedFinalPageTitleAfterDiscovery')}
+                      ('ResearchEngineTest','publicSearchRejectsUnrelatedFinalPageTitleAfterDiscovery'),
+                      ('ResearchTopicAuthorityTest','counterEvidenceTemplatesCannotAdmitOffTopicSources'),
+                      ('ResearchTopicAuthorityTest','followUpClaimTextCannotReplaceOriginalTopic'),
+                      ('ResearchTopicAuthorityTest','titleGateUsesOriginatingSubquestion'),
+                      ('LocalPoliteFollowUpTest','politeFollowUpFramesCorrectionsInOriginalOrder'),
+                      ('GazeBlinkPolicyTest','animationClockWrapAdmitsFreshGazeBlinks'),
+                      ('ContinuumLiveProjectionServiceUiTest','geometryResetDetachFailureEndsCapture'),
+                      ('ContinuumLiveProjectionServiceUiTest','geometryResetAttachFailureEndsCapture'),
+                      ('ContinuumLiveProjectionServiceUiTest','successfulGeometryResetKeepsCaptureAndRejectsOldReader')}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'FOLD7_ROUTING_PASS={len(cases)} FAILED=0 SKIPPED=0')
           PY

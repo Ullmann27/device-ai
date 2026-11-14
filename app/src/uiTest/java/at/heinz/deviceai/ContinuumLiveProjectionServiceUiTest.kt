@@ -11,11 +11,16 @@ import android.content.ContextWrapper
 import android.content.ComponentName
 import android.content.pm.ServiceInfo
 import android.graphics.ColorSpace
+import android.graphics.Rect
 import android.hardware.HardwareBuffer
 import android.hardware.display.VirtualDisplay
+import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
+import android.os.SystemClock
 import android.view.Surface
+import android.view.WindowManager
+import android.view.accessibility.AccessibilityNodeInfo
 import at.heinz.deviceai.cognitive.LiveMonitorState
 import at.heinz.deviceai.cognitive.LiveFrameMeta
 import at.heinz.deviceai.cognitive.LiveFrameOffer
@@ -33,10 +38,10 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
 import org.robolectric.annotation.LooperMode
-import org.robolectric.shadows.ShadowAccessibilityService
 import org.robolectric.shadows.ShadowService
 import org.robolectric.shadow.api.Shadow
 import org.robolectric.util.ReflectionHelpers
+import org.robolectric.util.ReflectionHelpers.ClassParameter
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35], application = Application::class, manifest = Config.NONE,
@@ -44,7 +49,9 @@ import org.robolectric.util.ReflectionHelpers
         ContinuumLiveProjectionServiceUiTest.ObservationShadow::class,
         ContinuumLiveProjectionServiceUiTest.ProjectionManagerShadow::class,
         ContinuumLiveProjectionServiceUiTest.ProjectionShadow::class,
-        ContinuumLiveProjectionServiceUiTest.DisplayShadow::class])
+        ContinuumLiveProjectionServiceUiTest.DisplayShadow::class,
+        AndroidLiveNodePortTest.NodeShadow::class,
+        AndroidLiveNodePortTest.WindowShadow::class])
 @LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumLiveProjectionServiceUiTest {
     @Implements(Service::class)
@@ -83,7 +90,7 @@ class ContinuumLiveProjectionServiceUiTest {
     }
 
     @Implements(AccessibilityService::class)
-    class ObservationShadow : ShadowAccessibilityService() {
+    class ObservationShadow : AndroidLiveNodePortTest.ServiceShadow() {
         @Implementation
         protected fun getServiceInfo(): AccessibilityServiceInfo = AccessibilityServiceInfo().also {
             ReflectionHelpers.setField(it, "mCapabilities", AccessibilityServiceInfo.CAPABILITY_CAN_TAKE_SCREENSHOT)
@@ -113,10 +120,16 @@ class ContinuumLiveProjectionServiceUiTest {
 
     @Implements(VirtualDisplay::class)
     class DisplayShadow {
-        companion object { var assignments = 0; var releases = 0; var rejectSurface = false }
+        companion object {
+            var assignments = 0
+            var releases = 0
+            var rejectSurface = false
+            var rejectedAssignment = 0
+        }
         @Implementation protected fun setSurface(surface: Surface?) {
             assignments++
-            if (rejectSurface) throw IllegalStateException("Synthetic detached display")
+            if (rejectSurface || assignments == rejectedAssignment)
+                throw IllegalStateException("Synthetic detached display")
         }
         @Implementation protected fun release() { releases++ }
     }
@@ -135,7 +148,12 @@ class ContinuumLiveProjectionServiceUiTest {
         ProjectionManagerShadow.creationCalls = 0
         ProjectionShadow.stopCalls = 0; ProjectionShadow.rejectStop = false
         DisplayShadow.assignments = 0; DisplayShadow.releases = 0; DisplayShadow.rejectSurface = false
+        DisplayShadow.rejectedAssignment = 0
         observation = Robolectric.buildService(ContinuumScreenObservationService::class.java).get()
+        AndroidLiveNodePortTest.ServiceShadow.ownPackage = observation.packageName
+        AndroidLiveNodePortTest.ServiceShadow.target = null
+        AndroidLiveNodePortTest.ServiceShadow.overlay = false
+        AndroidLiveNodePortTest.ServiceShadow.resetGeometry()
         ScreenObservationBus.connect(observation)
         service = Robolectric.buildService(ContinuumLiveProjectionService::class.java).create().get()
     }
@@ -148,6 +166,9 @@ class ContinuumLiveProjectionServiceUiTest {
         ServiceShadow.rejectPromotion = false
         ProjectionShadow.rejectStop = false
         DisplayShadow.rejectSurface = false
+        DisplayShadow.rejectedAssignment = 0
+        AndroidLiveNodePortTest.ServiceShadow.target = null
+        AndroidLiveNodePortTest.ServiceShadow.resetGeometry()
     }
 
     private fun queuedCapture(task: String): Intent {
@@ -353,6 +374,71 @@ class ContinuumLiveProjectionServiceUiTest {
         assertNull(ReflectionHelpers.getField<Any?>(service, "reader"))
         assertNull(AndroidLiveComputer.projectionAccess(session))
         assertTrue(shadowOf(service).isStoppedBySelf)
+    }
+
+    private fun geometryResetFixture(task: String): Pair<Long, ImageReader> {
+        val intent = queuedCapture(task)
+        val session = intent.getLongExtra(ContinuumLiveProjectionService.SESSION, 0)
+        val bounds = service.getSystemService(WindowManager::class.java).maximumWindowMetrics.bounds
+        val middle = bounds.left + bounds.width() / 2
+        AndroidLiveNodePortTest.ServiceShadow.ownBounds = Rect(bounds.left, bounds.top, middle, bounds.bottom)
+        AndroidLiveNodePortTest.ServiceShadow.targetBounds = Rect(middle, bounds.top, bounds.right, bounds.bottom)
+        AndroidLiveNodePortTest.ServiceShadow.target = AccessibilityNodeInfo.obtain().apply {
+            packageName = "com.whatsapp"
+        }
+        val source = ReflectionHelpers.callInstanceMethod<ImageReader>(service, "newReader",
+            ClassParameter.from(Int::class.javaPrimitiveType, bounds.width()),
+            ClassParameter.from(Int::class.javaPrimitiveType, bounds.height()))
+        ReflectionHelpers.setField(service, "sessionId", session)
+        ReflectionHelpers.setField(service, "reader", source)
+        ReflectionHelpers.setField(service, "display", Shadow.newInstanceOf(VirtualDisplay::class.java))
+        ReflectionHelpers.setField(service, "capturedWidth", bounds.width())
+        ReflectionHelpers.setField(service, "capturedHeight", bounds.height())
+        ReflectionHelpers.setField(service, "visible", true)
+        ReflectionHelpers.setField(service, "protectionWindow", 42)
+        ReflectionHelpers.setField(service, "protectionAt", SystemClock.elapsedRealtime())
+        return session to source
+    }
+
+    private fun captureTicket(source: ImageReader): Any? = ReflectionHelpers.callInstanceMethod(service,
+        "ticket", ClassParameter.from(ImageReader::class.java, source))
+
+    private fun assertGeometryResetFailure(assignment: Int) {
+        val (session, source) = geometryResetFixture("geometry-reset-$assignment")
+        val (_, buffer) = offerFrame(session, System.nanoTime())
+        DisplayShadow.rejectedAssignment = assignment
+        assertNull(captureTicket(source))
+        assertEquals(1, DisplayShadow.releases)
+        assertTrue(buffer.isClosed)
+        assertNull(AndroidLiveComputer.projectionAccess(session))
+        assertEquals(LiveMonitorState.ENDED, AndroidLiveComputer.feed.status(System.nanoTime()).state)
+        assertNull(ReflectionHelpers.getField<Any?>(service, "reader"))
+        assertNull(ReflectionHelpers.getField<Any?>(service, "display"))
+        assertTrue(shadowOf(service).isStoppedBySelf)
+        val callback = ReflectionHelpers.getField<MediaProjection.Callback>(service, "callback")
+        val assignments = DisplayShadow.assignments
+        callback.onCapturedContentResize(600, 1000)
+        callback.onCapturedContentVisibilityChanged(true)
+        assertEquals(assignments, DisplayShadow.assignments)
+        assertEquals(LiveMonitorState.ENDED, AndroidLiveComputer.feed.status(System.nanoTime()).state)
+    }
+
+    @Test fun geometryResetDetachFailureEndsCapture() = assertGeometryResetFailure(1)
+
+    @Test fun geometryResetAttachFailureEndsCapture() = assertGeometryResetFailure(2)
+
+    @Test fun successfulGeometryResetKeepsCaptureAndRejectsOldReader() {
+        val (session, source) = geometryResetFixture("geometry-reset-success")
+        assertNull(captureTicket(source))
+        assertEquals(2, DisplayShadow.assignments)
+        val replacement = ReflectionHelpers.getField<ImageReader>(service, "reader")
+        assertNotSame(source, replacement)
+        assertNull(captureTicket(source))
+        assertNotNull(captureTicket(replacement))
+        assertEquals(2, DisplayShadow.assignments)
+        assertEquals(0, DisplayShadow.releases)
+        assertNotNull(AndroidLiveComputer.projectionAccess(session))
+        assertFalse(shadowOf(service).isStoppedBySelf)
     }
 
     @Test fun oldStopIntentCannotStopCurrentService() {
