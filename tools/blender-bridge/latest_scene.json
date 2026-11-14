@@ -1,0 +1,239 @@
+{
+  "job_id": "continuum-command-20261114-a1",
+  "title": "CONTINUUM Holo Control Deck",
+  "objects": [
+    {
+      "kind": "cube",
+      "name": "Blacksite Floor",
+      "location": [
+        0,
+        0,
+        -0.32
+      ],
+      "size": [
+        15,
+        9,
+        0.45
+      ],
+      "color": "#101827",
+      "metallic": 0.73,
+      "roughness": 0.21,
+      "bevel": 0.12
+    },
+    {
+      "kind": "cube",
+      "name": "Deep Glass Command Desk",
+      "location": [
+        -2.2,
+        -1.1,
+        0.05
+      ],
+      "size": [
+        6.2,
+        2.8,
+        0.16
+      ],
+      "color": "#23374C",
+      "metallic": 0.8,
+      "roughness": 0.12,
+      "bevel": 0.09
+    },
+    {
+      "kind": "monitor",
+      "name": "JARVIS Monitoring Station",
+      "location": [
+        -2.5,
+        0.1,
+        0.25
+      ],
+      "size": [
+        1.05,
+        1.05,
+        1
+      ],
+      "color": "#35E2FF"
+    },
+    {
+      "kind": "energy_orb",
+      "name": "CONTINUUM Core",
+      "location": [
+        3,
+        0.15,
+        2.1
+      ],
+      "size": [
+        0.82,
+        0.82,
+        0.82
+      ],
+      "color": "#42A9FF",
+      "spin": true
+    },
+    {
+      "kind": "cylinder",
+      "name": "Energy Base Pylon",
+      "location": [
+        3,
+        0.1,
+        0.4
+      ],
+      "size": [
+        1.75,
+        1.75,
+        0.8
+      ],
+      "color": "#263A51",
+      "metallic": 0.9,
+      "roughness": 0.18
+    },
+    {
+      "kind": "torus",
+      "name": "Energy Base Light",
+      "location": [
+        3,
+        0.1,
+        0.81
+      ],
+      "size": [
+        2,
+        2,
+        0.14
+      ],
+      "color": "#42D8FF",
+      "emission": 6,
+      "metallic": 0.1
+    },
+    {
+      "kind": "cube",
+      "name": "Staged Rear Server Backdrop",
+      "location": [
+        0,
+        3.8,
+        3
+      ],
+      "size": [
+        14,
+        0.35,
+        6.1
+      ],
+      "color": "#131F32",
+      "metallic": 0.6,
+      "roughness": 0.22
+    },
+    {
+      "kind": "cube",
+      "name": "Rear Holo Stripe One",
+      "location": [
+        -5,
+        3.56,
+        3.25
+      ],
+      "size": [
+        0.055,
+        0.065,
+        4.9
+      ],
+      "color": "#2876D7",
+      "emission": 4.5
+    },
+    {
+      "kind": "cube",
+      "name": "Rear Holo Stripe Two",
+      "location": [
+        5,
+        3.56,
+        3.25
+      ],
+      "size": [
+        0.055,
+        0.065,
+        4.9
+      ],
+      "color": "#2876D7",
+      "emission": 4.5
+    },
+    {
+      "kind": "cube",
+      "name": "Plinth Strip Front",
+      "location": [
+        0,
+        -4.3,
+        -0.075
+      ],
+      "size": [
+        13.4,
+        0.045,
+        0.065
+      ],
+      "color": "#22C8EF",
+      "emission": 5
+    },
+    {
+      "kind": "cube",
+      "name": "System Analytics Ribbon",
+      "location": [
+        -2,
+        3.57,
+        4.8
+      ],
+      "size": [
+        5.7,
+        0.025,
+        0.055
+      ],
+      "color": "#2CDBF8",
+      "emission": 5
+    },
+    {
+      "kind": "text",
+      "name": "COMMAND LABEL",
+      "text": "CONTINUUM / CONTROL",
+      "location": [
+        -2.7,
+        -2.8,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.32,
+        0.32,
+        0.32
+      ],
+      "color": "#82E8FA",
+      "emission": 2
+    }
+  ],
+  "lights": [
+    {
+      "location": [
+        -3,
+        -6,
+        7
+      ],
+      "color": "#D1EFFF",
+      "power": 1700
+    },
+    {
+      "location": [
+        5,
+        2,
+        6
+      ],
+      "color": "#4299FF",
+      "power": 1000
+    },
+    {
+      "location": [
+        -5,
+        1,
+        6
+      ],
+      "color": "#28E2F9",
+      "power": 850
+    }
+  ]
+}
