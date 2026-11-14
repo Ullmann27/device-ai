@@ -1,0 +1,143 @@
+name: "Code59 exact-source motion UI regression"
+on:
+  push:
+    branches:
+      - diagnostic/code59-motion-regression-20261114
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code59-motion-regression
+  cancel-in-progress: false
+
+jobs:
+  motion-ui:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/diagnostic/code59-motion-regression-20261114'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      SOURCE_SHA: "b104c0062503751c89a4ed3ea90239ec956843f1"
+      SOURCE_TREE: "5de831184b4bec6e388fc1b24cba80e450b3100c"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - name: Bind exact test source
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$(git rev-parse HEAD^{tree})" = "$SOURCE_TREE"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          mkdir -p "$RUNNER_TEMP/code59-motion-ui"
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          data = {
+              "scope": "TARGETED_ANDROID_UI_REGRESSION_ONLY",
+              "source_sha": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "source_tree": subprocess.check_output(["git", "rev-parse", "HEAD^{tree}"], text=True).strip(),
+              "harness_sha": os.environ["GITHUB_SHA"],
+              "run_id": os.environ["GITHUB_RUN_ID"],
+          }
+          pathlib.Path(os.environ["RUNNER_TEMP"], "code59-motion-ui", "source.json").write_text(json.dumps(data, indent=2) + "\n")
+          PY
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        with:
+          gradle-version: '8.11.1'
+      - name: Official Android SDK
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Execute actual motion and pixel regressions
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cat > "$RUNNER_TEMP/code59-motion-tests.init.gradle" <<'GRADLE'
+          gradle.projectsEvaluated {
+              def app = gradle.rootProject.findProject(':app')
+              if (app == null) throw new GradleException('Missing Android app project')
+              app.tasks.withType(org.gradle.api.tasks.testing.Test).matching {
+                  it.name == 'testDebugUnitTest'
+              }.configureEach {
+                  filter {
+                      includeTestsMatching 'at.heinz.deviceai.ContinuumAvatarNativeUiTest'
+                      includeTestsMatching 'at.heinz.deviceai.ContinuumHologramMotionUiTest'
+                      includeTestsMatching 'at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest'
+                      includeTestsMatching 'at.heinz.deviceai.ContinuumTaskEffectsUiTest'
+                      failOnNoMatchingTests = true
+                  }
+              }
+          }
+          GRADLE
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          set +e
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=59 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            -I "$RUNNER_TEMP/code59-motion-tests.init.gradle" :app:testDebugUnitTest \
+            2>&1 | tee "$RUNNER_TEMP/code59-motion-ui/gradle.log"
+          gradle_exit=${PIPESTATUS[0]}
+          set -e
+          printf '%s\n' "$gradle_exit" > "$RUNNER_TEMP/code59-motion-ui/gradle-exit.txt"
+          if test -d app/build/test-results/testDebugUnitTest; then
+            cp -a app/build/test-results/testDebugUnitTest "$RUNNER_TEMP/code59-motion-ui/junit"
+          fi
+          exit "$gradle_exit"
+      - name: Require all eighteen original methods
+        if: always()
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess, xml.etree.ElementTree as ET
+          evidence = pathlib.Path(os.environ["RUNNER_TEMP"], "code59-motion-ui")
+          source = json.loads((evidence / "source.json").read_text())
+          assert source["source_sha"] == os.environ["SOURCE_SHA"]
+          assert source["source_tree"] == os.environ["SOURCE_TREE"]
+          assert source["harness_sha"] == os.environ["GITHUB_SHA"]
+          assert subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip() == source["source_sha"]
+          assert subprocess.check_output(["git", "rev-parse", "HEAD^{tree}"], text=True).strip() == source["source_tree"]
+          assert not subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=normal"], text=True).strip(), "Test source changed"
+          expected = {tuple(x) for x in json.loads(r'''[["at.heinz.deviceai.ContinuumAvatarNativeUiTest","phoneAndFoldNativeHeadFollowsSpeechAndStopsOnInterruption"],["at.heinz.deviceai.ContinuumAvatarNativeUiTest","actualActivityStopClosesAvatarBeforeAnyAsynchronousTtsCallback"],["at.heinz.deviceai.ContinuumAvatarNativeUiTest","optionalHeadPersistsAndSharesOnePausedReducedMotionClock"],["at.heinz.deviceai.ContinuumHologramMotionUiTest","realFrameClockChangesPhoneAndFoldPixelsWithoutInjectingPhase"],["at.heinz.deviceai.ContinuumHologramMotionUiTest","thermalPressureStopsAndRecoversTheSameClock"],["at.heinz.deviceai.ContinuumHologramMotionUiTest","lateVsyncCannotRewindNewerAudioSamples"],["at.heinz.deviceai.ContinuumHologramMotionUiTest","foregroundAndReducedMotionHaveOneBoundedLifecycleClock"],["at.heinz.deviceai.ContinuumHologramMotionUiTest","differentOrbitalPhasesActuallyChangeRenderedPixels"],["at.heinz.deviceai.ContinuumHologramMotionUiTest","deviceMotionDiagnosticNeverReportsLiveBeforeForegroundActivation"],["at.heinz.deviceai.ContinuumHologramMotionUiTest","renderingAtRestDoesNotByItselfAdvanceTheOrbitClock"],["at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest","busyProposalAloneNeverAnimatesAnActualWorker"],["at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest","authorizedRealRunnerEntryAndExitReachTheVisibleSurface"],["at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest","deniedToolHasNoBackendAndNoArrival"],["at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest","actualChiefStatusWorkerProducesAWorkerArrival"],["at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest","actualActionButtonUsesBoundedFeedbackAndPendingSpeechMutesIt"],["at.heinz.deviceai.ContinuumTaskEffectsUiTest","actualOverlayDrawsAboveAnOpaqueChildWithoutASecondClock"],["at.heinz.deviceai.ContinuumTaskEffectsUiTest","pauseReducedMotionAndHeatDiscardEventsInsteadOfReplayingOnResume"],["at.heinz.deviceai.ContinuumTaskEffectsUiTest","productionCanvasSequenceUsesExplicitSyntheticEventsOnly"]]''')}
+          files = sorted((evidence / "junit").glob("TEST-*.xml"))
+          cases = []
+          for path in files:
+              root = ET.parse(path).getroot()
+              assert root.tag == "testsuite" and int(root.get("tests")) == len(root.findall("testcase"))
+              cases.extend(root.findall("testcase"))
+          found = [(c.get("classname"), c.get("name")) for c in cases]
+          problems = [{"class": c.get("classname"), "name": c.get("name"),
+                       "kind": p.tag, "message": p.get("message", ""), "detail": p.text}
+                      for c in cases for p in c if p.tag in ("failure", "error", "skipped")]
+          gradle_exit = int((evidence / "gradle-exit.txt").read_text())
+          passed = gradle_exit == 0 and len(cases) == 18 and len(found) == len(set(found)) and set(found) == expected and not problems
+          result = {**source, "status": "PASS" if passed else "FAIL", "gradle_exit": gradle_exit,
+                    "suite_files": len(files), "cases": len(cases), "expected": sorted(expected),
+                    "observed": found, "problems": problems,
+                    "full_suite": "NOT_RUN", "native_emulator": "NOT_RUN", "signing": "NOT_RUN"}
+          (evidence / "result.json").write_text(json.dumps(result, indent=2) + "\n")
+          print(json.dumps(result))
+          assert passed, "Exact eighteen-method Android regression failed"
+          PY
+      - name: Preserve original motion regression evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Code59-Motion-UI-regressions
+          path: ${{ runner.temp }}/code59-motion-ui/
+          if-no-files-found: error
+          retention-days: 14
+
