@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 import zlib
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -149,6 +150,7 @@ class NativeEvidenceTest(unittest.TestCase):
         (self.root/'app/permissions-before.txt').write_text('\n'.join(
             f'android.permission.{p}: granted=false' for p in ['CAMERA','RECORD_AUDIO','POST_NOTIFICATIONS']))
         (self.root/'app/offline-connectivity.txt').write_text('Active default network: none\n')
+        self.submitted_ui_fixture()
         for log in ['logcat.txt','crash-logcat.txt']:
             (self.root/'app'/log).write_text('')
         for directory in [self.root,self.root/'filament']:
@@ -163,6 +165,39 @@ class NativeEvidenceTest(unittest.TestCase):
             'native_textures':'2','upload_completions':'1','rendered_frames':'3','presented_frames':'3',
             'output_frames':'3','content_cleared':'true','panels_released':'true','engine_released':'true'})
         (self.root/'filament/surfaceflinger.txt').write_text('GLES: Synthetic SwiftShader fixture\n')
+
+    def submitted_ui_fixture(self):
+        reply = ('Continuum · Aktuelle App-Fähigkeiten Mein aktueller Stand auf diesem Gerät: '
+                 'Lokales Sprachmodell: keines geladen. Diese Statusantwort startet kein Modell, '
+                 'keine Recherche, kein Mikrofon und keinen Entwicklungsauftrag.')
+        def nodes(name, values, rotation='0'):
+            root = ET.Element('hierarchy', rotation=rotation)
+            for item in values:
+                ET.SubElement(root, 'node', {'package':self.package, **item})
+            ET.ElementTree(root).write(self.root/'app'/name, encoding='unicode')
+        editor = {'class':'android.widget.EditText', 'bounds':'[10,10][300,80]'}
+        nodes('conversation-input.xml', [{**editor, 'text':'Was kannst du?'}])
+        nodes('conversation.xml', [{**editor, 'text':''},
+              {'class':'android.widget.TextView', 'bounds':'[10,100][300,300]', 'text':reply}])
+        self.report['checks'][1]['bounded_app_nodes'] = 2
+        self.report['conversation_submission'] = {'question':'Was kannst du?', 'response_text':reply,
+            'input_evidence':'conversation-input.xml', 'response_evidence':'conversation.xml',
+            'offline_evidence':'conversation-connectivity.txt'}
+        (self.root/'app/conversation-connectivity.txt').write_text('Active default network: none\n')
+        labels = ['Konversation öffnen','Start','Gespräch','Gedächtnis','Forschung',
+                  'Aufgaben','Internet','Lernen','Geräte']
+        controls = {label:[20+83*i,20,85+83*i,70] for i,label in enumerate(labels)}
+        nodes('rotation.xml', [{'class':'android.widget.Button', 'text':label,
+            'bounds':f'[{b[0]},{b[1]}][{b[2]},{b[3]}]', 'enabled':'true','clickable':'true'}
+            for label,b in controls.items()], rotation='1')
+        self.report['checks'][4]['bounded_app_nodes'] = len(labels)
+        gesture = [400,340,400,80,700]
+        self.report['landscape_navigation'] = {'scroll_gestures':[gesture], 'visible_controls':controls,
+            'controls_evidence':'rotation.xml', 'conversation_evidence':'landscape-conversation.xml'}
+        nodes('landscape-conversation.xml', [{**editor, 'text':'Schreibe eine Nachricht …'}], rotation='1')
+        (self.root/'app/rotation-scroll-1-input-command.json').write_text(json.dumps({
+            'returncode':0, 'args':['/sdk/platform-tools/adb','-s','emulator-5554',
+                                  'shell','input','swipe',*map(str,gesture)]}))
 
     @staticmethod
     def png(width,height):
@@ -244,6 +279,40 @@ class NativeEvidenceTest(unittest.TestCase):
         path.write_text(old)
         path = self.root/'filament/native-filament.txt'
         path.write_text(path.read_text().replace('engine_released=true','engine_released=false'))
+        self.assertNotEqual(self.validate().returncode,0)
+
+    def test_missing_or_fabricated_submission_fails(self):
+        submission = self.report.pop('conversation_submission')
+        self.assertNotEqual(self.validate().returncode,0)
+        self.report['conversation_submission'] = submission
+        submission['response_text'] = 'An answer not present in the actual UI'
+        self.assertNotEqual(self.validate().returncode,0)
+
+    def test_chat_requires_offline_state_and_cleared_input(self):
+        path = self.root/'app/conversation-connectivity.txt'
+        path.write_text('Active default network: 100\n')
+        self.assertNotEqual(self.validate().returncode,0)
+        path.write_text('Active default network: none\n')
+        tree = ET.parse(self.root/'app/conversation.xml')
+        tree.getroot().find('node').set('text','Was kannst du?')
+        tree.write(self.root/'app/conversation.xml',encoding='unicode')
+        self.assertNotEqual(self.validate().returncode,0)
+
+    def test_landscape_requires_actual_swipe_and_visible_controls(self):
+        path = self.root/'app/rotation-scroll-1-input-command.json'
+        before = path.read_text()
+        command = json.loads(before)
+        command['returncode'] = 1
+        path.write_text(json.dumps(command))
+        self.assertNotEqual(self.validate().returncode,0)
+        path.write_text(before)
+        tree = ET.parse(self.root/'app/rotation.xml')
+        tree.getroot().find('node').set('bounds','[0,401][200,451]')
+        tree.write(self.root/'app/rotation.xml',encoding='unicode')
+        self.assertNotEqual(self.validate().returncode,0)
+
+    def test_landscape_requires_reached_composer(self):
+        (self.root/'app/landscape-conversation.xml').write_text('<hierarchy/>')
         self.assertNotEqual(self.validate().returncode,0)
 
 

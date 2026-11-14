@@ -161,6 +161,54 @@ for permission in ('CAMERA','RECORD_AUDIO','POST_NOTIFICATIONS'):
     assert re.search(r'^\s*android\.permission\.'+permission+r': granted=false\b',permissions,re.M)
 network=(root/'app/offline-connectivity.txt').read_text()
 assert re.search(r'(?:Active default network:|mActiveDefaultNetwork=)\s*(?:none|null)(?:\s|$)',network,re.I)
+# Recompute submitted chat and reachable controls.
+def app_nodes(name):
+    return [n for n in ET.parse(root/'app'/name).getroot().iter('node') if n.get('package')==report['package']]
+def editors(nodes):
+    return [n for n in nodes if n.get('class')=='android.widget.EditText']
+submission=report['conversation_submission']
+assert submission['question']=='Was kannst du?'
+assert submission['input_evidence']=='conversation-input.xml' and submission['response_evidence']=='conversation.xml'
+assert submission['offline_evidence']=='conversation-connectivity.txt'
+typed=editors(app_nodes('conversation-input.xml'))
+assert len(typed)==1 and typed[0].get('text')==submission['question']
+nodes=app_nodes('conversation.xml')
+prefix='Continuum · Aktuelle App-Fähigkeiten Mein aktueller Stand auf diesem Gerät:'
+replies=[re.sub(r'\s+',' ',n.get('text','')).strip() for n in nodes]
+replies=[t for t in replies if t.startswith(prefix)]
+assert len(replies)==1 and replies[0]==submission['response_text']
+assert 'Lokales Sprachmodell: keines geladen.' in replies[0]
+assert 'Diese Statusantwort startet kein Modell, keine Recherche, kein Mikrofon und keinen Entwicklungsauftrag.' in replies[0]
+cleared=editors(nodes)
+assert len(cleared)==1 and cleared[0].get('text','') in ('','Schreibe eine Nachricht …')
+network=(root/'app/conversation-connectivity.txt').read_text()
+assert re.search(r'(?:Active default network:|mActiveDefaultNetwork=)\s*(?:none|null)(?:\s|$)',network,re.I)
+navigation=report['landscape_navigation']
+assert navigation['controls_evidence']=='rotation.xml' and navigation['conversation_evidence']=='landscape-conversation.xml'
+gestures=navigation['scroll_gestures']
+assert type(gestures) is list and 1<=len(gestures)<=3
+width,height=rotated['display']
+for index,gesture in enumerate(gestures,1):
+    assert len(gesture)==5 and all(type(v) is int for v in gesture)
+    x1,y1,x2,y2,duration=gesture
+    assert 0<=x1<width and x1==x2 and 0<=y2<y1<height and duration==700
+    command=json.loads((root/'app'/f'rotation-scroll-{index}-input-command.json').read_text())
+    assert command['returncode']==0 and command['args'][1:3]==['-s',report['serial']]
+    assert command['args'][3:]==['shell','input','swipe',*map(str,gesture)]
+def visible_bounds(node):
+    match=re.fullmatch(r'\[(-?\d+),(-?\d+)\]\[(-?\d+),(-?\d+)\]',node.get('bounds',''))
+    if not match: return None
+    bounds=list(map(int,match.groups()))
+    x1,y1,x2,y2=bounds
+    return bounds if 0<=x1<x2<=width and 0<=y1<y2<=height else None
+labels={'Konversation öffnen','Start','Gespräch','Gedächtnis','Forschung','Aufgaben','Internet','Lernen','Geräte'}
+assert set(navigation['visible_controls'])==labels
+nodes=app_nodes('rotation.xml')
+for label in labels:
+    controls=[n for n in nodes if n.get('enabled')=='true' and n.get('clickable')=='true'
+              and label in (n.get('text'),n.get('content-desc')) and visible_bounds(n)]
+    assert len(controls)==1 and visible_bounds(controls[0])==navigation['visible_controls'][label]
+assert any(visible_bounds(n) for n in editors(app_nodes('landscape-conversation.xml')))
 crashes=(root/'app/crash-logcat.txt').read_text()
 assert report['package'] not in crashes
 for log in ('logcat.txt','crash-logcat.txt'):
