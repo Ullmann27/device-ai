@@ -387,6 +387,23 @@ jobs:
               'urgentRetryKeepsStableMessageAndClaimThroughReentrantWake',
               'delayedDeliveryAdvancesScheduleOnlyAfterMailboxAccepts'
           )}
+          required |= {('RoutineStateStoreTest', name) for name in (
+              'approvedScopeAndCompletedReportSurviveReopen',
+              'changedGoalScopeOrTriggerInvalidatesOriginalApproval',
+              'staleWriterCannotRestoreStoppedRoutine',
+              'alteredPayloadFailsClosedWithoutDeletingEvidence',
+              'symlinkCannotRedirectRoutineWrites',
+              'nonReadOnlyScopeAndMismatchedRunAreRejected',
+              'pendingMessageAndAppendCheckpointRemainBoundToOriginalReport'
+          )}
+          required |= {('RoutineStoreIndependentContractTest', name) for name in (
+              'secondJsonLineCannotPiggybackOnBoundAssistantLine',
+              'trailingTextCannotPiggybackOnBoundAssistantLine',
+              'senderMustMatchStoredRoutineIdentity',
+              'activeRunsCannotShareDurableIdentity',
+              'deliveryCannotBeAcknowledgedWithoutBoundAppendBytes',
+              'invalidSurrogateIsRejectedBeforeReplacingReadableState'
+          )}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY

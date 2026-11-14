@@ -19,6 +19,8 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.chief.ChiefBrainWiringTest'
             includeTestsMatching 'at.heinz.deviceai.routines.ContinuumRoutinesTest'
             includeTestsMatching 'at.heinz.deviceai.routines.RoutineBookAdmissionTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.RoutineStateStoreTest'
+            includeTestsMatching 'at.heinz.deviceai.routines.RoutineStoreIndependentContractTest'
             failOnNoMatchingTests = true
         }
     }
