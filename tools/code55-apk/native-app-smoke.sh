@@ -211,6 +211,12 @@ def establish_offline(label):
         assert time.monotonic() < deadline, 'No-network state not established'
         time.sleep(1)
 
+def keyboard_visible(dump):
+    # API 35 visibility state.
+    states = re.findall(r'^\s*mDecorViewVisible=(true|false)\b', dump, re.M)
+    assert len(states) == 1, 'Actual IME visibility missing or ambiguous'
+    return states[0] == 'true'
+
 def capability_response(nodes):
     texts = [re.sub(r'\s+', ' ', n.get('text', '')).strip() for n in nodes]
     prefix = 'Continuum · Aktuelle App-Fähigkeiten Mein aktueller Stand auf diesem Gerät:'
@@ -306,7 +312,7 @@ try:
     shell('input', 'text', "'Was%skannst%sdu?'")
     keyboard = shell('dumpsys', 'input_method')
     save('conversation-typing-input-method.txt', keyboard)
-    if re.search(r'(?:mInputShown|mIsInputViewShown)=true\b', keyboard):
+    if keyboard_visible(keyboard):
         shell('input', 'keyevent', 'KEYCODE_BACK')
     nodes, _, display = snapshot('conversation-input', record=False)
     editors = [n for n in nodes if n.get('class') == 'android.widget.EditText']
@@ -319,9 +325,12 @@ try:
         'offline_evidence': 'conversation-connectivity.txt'}
     keyboard = shell('dumpsys', 'input_method')
     save('conversation-input-method.txt', keyboard)
-    if re.search(r'(?:mInputShown|mIsInputViewShown)=true\b', keyboard):
+    if keyboard_visible(keyboard):
         shell('input', 'keyevent', 'KEYCODE_BACK')
     nodes, _, _ = snapshot('conversation-keyboard-dismissed')
+    keyboard = shell('dumpsys', 'input_method')
+    save('conversation-dismissed-input-method.txt', keyboard)
+    assert not keyboard_visible(keyboard), 'IME window still visible'
     assert tap(nodes, ['Zur Startseite mit allen KI-Bereichen']), 'START control missing'
     nodes, _, _ = snapshot('start-roundtrip')
     assert any(n.get('content-desc') in conversation or n.get('text') in conversation for n in nodes), 'Home not restored'
