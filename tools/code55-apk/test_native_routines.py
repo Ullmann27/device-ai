@@ -20,11 +20,17 @@ class RoutineEvidenceTest(unittest.TestCase):
         fixture = json.loads(Path(__file__).with_name('native-routines-fixture.json').read_text())
         self.payloads = {key: base64.b64decode(value) for key, value in fixture['payloads'].items()}
         self.expected = fixture['expected']
+        periodic = json.loads(Path(__file__).with_name('native-periodic-fixture.json').read_text())
+        self.periodic_payloads = {key: base64.b64decode(value) for key, value in periodic['payloads'].items()}
+        self.periodic_expected = periodic['expected']
         self.report = {'mode': 'routines', 'package': proof.PACKAGE, 'sdk': 35, 'abi': 'x86_64',
-                       'source_sha': 'a' * 40, 'source_tree': 'b' * 40}
+                       'source_sha': 'a' * 40, 'source_tree': 'b' * 40, 'serial': 'emulator-5554'}
 
-    def raw(self, label, data, code=0, error=b''):
-        (self.directory / (label + '-command.json')).write_text(json.dumps({'returncode': code}))
+    def raw(self, label, data, code=0, error=b'', arguments=None):
+        command = {'returncode': code}
+        if arguments is not None:
+            command['args'] = ['/sdk/platform-tools/adb', '-s', self.report['serial'], *arguments]
+        (self.directory / (label + '-command.json')).write_text(json.dumps(command))
         (self.directory / (label + '-stdout.txt')).write_bytes(data or b'')
         (self.directory / (label + '-stderr.txt')).write_bytes(error)
 
@@ -54,6 +60,8 @@ class RoutineEvidenceTest(unittest.TestCase):
         (self.directory / (label + '.png')).write_bytes(png)
 
     def complete(self):
+        for path in self.directory.iterdir():
+            path.unlink()
         e = self.expected
         for label, fixture in [('approved', 'approved'), ('rotated', 'approved'), ('after-start', 'completed'),
                                ('stopped', 'empty'), ('stopped-restart', 'empty'), ('blocked', 'blocked'), ('final', 'empty')]:
@@ -80,6 +88,58 @@ class RoutineEvidenceTest(unittest.TestCase):
         self.raw('schedule-dump', f'  JOB #u0a209/620159: test\n    Service: {service}\n    PERIODIC: interval=+15m0s0ms flex=+15m0s0ms\n    PERSISTED\n'.encode())
         self.raw('schedule-after-stop', b'unknown(u0a209/jid620159)\n', 23,
                  f'Could not find job 620159 in package {proof.PACKAGE} / user 0\n'.encode())
+        self.periodic()
+
+    def clock(self, label, rtc):
+        self.raw(label, f'  nowRTC={rtc}=synthetic nowELAPSED={rtc - 900000}\n'.encode(),
+                 arguments=['shell', 'dumpsys', 'alarm'])
+        start = 100_000_000_000 + (rtc - 1000300) * 1_000_000
+        (self.directory / (label + '-host-time.json')).write_text(json.dumps(
+            {'started_ns': start, 'finished_ns': start + 1_000_000}))
+
+    def periodic(self):
+        e = self.periodic_expected
+        body = f"Routine {e['id']}:\n{e['result']}"
+        for label, key in [('periodic-first', 'first'), ('periodic-complete', 'complete'),
+                           ('periodic-wait-0', 'first'), ('periodic-wait-1', 'complete')]:
+            self.raw(label + '-routines', self.periodic_payloads[key])
+        for label, key in [('periodic-first', 'first-receipts'), ('periodic-complete', 'final-receipts'),
+                           ('periodic-stopped', 'final-receipts')]:
+            self.raw(label + '-receipts', self.periodic_payloads[key])
+        for label in ('periodic-first', 'periodic-complete'):
+            self.ui(label, [body], pid='30')
+            self.raw(label + '-conversation', b'44444444-4444-4444-8444-444444444444')
+            self.raw(label + '-chat', (json.dumps({'u': False, 't': body, 'at': 1000100}, ensure_ascii=False) + '\n').encode())
+        self.ui('periodic-confirmation', ['Routine dauerhaft freigeben?', 'DAUERHAFT FREIGEBEN',
+                'Prüfe Akku\nAlle 15 Minuten\nAkku prüfen'])
+        self.ui('periodic-stopped', [f"Routine {e['id']} gestoppt und Freigabe entfernt."], pid='30')
+        self.raw('periodic-stopped-routines', self.payloads['empty'])
+        job = ['shell', 'cmd', 'jobscheduler', 'get-job-state', '-u', '0', proof.PACKAGE, '620159']
+        self.raw('periodic-after-stop', b'unknown(u0a209/jid620159)\n', 23,
+                 f'Could not find job 620159 in package {proof.PACKAGE} / user 0\n'.encode(), arguments=job)
+        service = proof.PACKAGE + '/at.heinz.deviceai.routines.OwnerRoutineJobService'
+        registration = f'  JOB #u0a209/620159: test\n    Service: {service}\n    PERIODIC: interval=+15m0s0ms flex=+15m0s0ms\n    PERSISTED\n'
+        self.raw('periodic-first-job', registration.encode(),
+                 arguments=['shell', 'dumpsys', 'jobscheduler', proof.PACKAGE])
+        self.raw('periodic-due-job', registration.encode(),
+                 arguments=['shell', 'dumpsys', 'jobscheduler', proof.PACKAGE])
+        history = f'\nJob history:\n   -601ms START-P: #u0a209/620159 {service}\n   -351ms STOP-P: #u0a209/620159 {service} app called jobFinished\n\nPending queue:\n'
+        self.raw('periodic-complete-job', (registration + history).encode(),
+                 arguments=['shell', 'dumpsys', 'jobscheduler', proof.PACKAGE])
+        for label, at in [('periodic-first-job-before', 1000210), ('periodic-first-job-after', 1000212),
+                          ('periodic-wait-start', 1000300), ('periodic-wait-0', 1000400),
+                          ('periodic-wait-1', 1900800), ('periodic-due-job-before', 1900850),
+                          ('periodic-due-job-after', 1900852), ('periodic-complete-job-before', 1900900),
+                          ('periodic-complete-job-after', 1900902)]:
+            self.clock(label, at)
+        for label in ('periodic-wait-0', 'periodic-wait-1'):
+            self.raw(label + '-pid', b'30\n', arguments=['shell', 'pidof', proof.PACKAGE])
+        self.raw('periodic-wait-1-job-state', b'waiting\n', arguments=job)
+        self.raw('periodic-wake', b'', arguments=['shell', 'input', 'keyevent', 'KEYCODE_WAKEUP'])
+        observation = {'source_sha': self.report['source_sha'], 'source_tree': self.report['source_tree'],
+            'routine_id': e['id'], 'mode': 'NATURAL_SCHEDULER', 'probe_started_ns': 1_000_000_000,
+            'observations': ['periodic-wait-0', 'periodic-wait-1']}
+        (self.directory / 'periodic-observation.json').write_text(json.dumps(observation))
 
     def verify(self):
         return proof.verify(self.directory, self.report, 'a' * 40, 'b' * 40)
@@ -91,11 +151,13 @@ class RoutineEvidenceTest(unittest.TestCase):
         self.assertEqual(self.expected['call_id'], receipt['call_id'])
         self.assertEqual(hashlib.sha256(self.expected['output'].encode()).hexdigest(), receipt['output_sha256'])
 
-    def test_complete_synthetic_contract_keeps_periodic_worker_unproved(self):
+    def test_complete_synthetic_contract_binds_distinct_due_worker(self):
         self.complete()
         result = self.verify()
         self.assertEqual('PASS', result['app_start_battery_worker'])
-        self.assertEqual('NOT_RUN', result['periodic_due_worker_execution'])
+        self.assertEqual('PASS', result['periodic_due_worker_execution'])
+        self.assertEqual('NATURAL_SCHEDULER', result['periodic_due_trigger'])
+        self.assertNotEqual(result['periodic_initial_call_id'], result['periodic_due_call_id'])
 
     def test_corrupt_or_extended_store_is_rejected(self):
         original = self.payloads['approved']

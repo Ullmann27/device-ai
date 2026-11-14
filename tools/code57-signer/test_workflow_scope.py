@@ -423,7 +423,7 @@ class NativeEvidenceTest(unittest.TestCase):
         chat.write_bytes(original)
         path = self.root/'routines/RESULT.json'
         report = json.loads(path.read_text())
-        report['routine_checks']['periodic_due_worker_execution'] = 'PASS'
+        report['routine_checks']['periodic_due_worker_execution'] = 'NOT_RUN'
         path.write_text(json.dumps(report))
         self.assertNotEqual(self.validate().returncode, 0)
 
@@ -436,6 +436,30 @@ class NativeEvidenceTest(unittest.TestCase):
                 path.write_text(json.dumps(dict(original, **{key: value})))
                 self.assertNotEqual(self.validate().returncode, 0)
         path.unlink()
+        self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_due_periodic_receipt_and_history_are_revalidated(self):
+        receipt = self.root/'routines/periodic-complete-receipts-stdout.txt'
+        original = receipt.read_bytes()
+        receipt.write_bytes((self.root/'routines/periodic-first-receipts-stdout.txt').read_bytes())
+        self.assertNotEqual(self.validate().returncode, 0)
+        receipt.write_bytes(original)
+        history = self.root/'routines/periodic-complete-job-stdout.txt'
+        original = history.read_text()
+        history.write_text(original.replace('app called jobFinished', 'canceled'))
+        self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_periodic_pass_requires_real_minimum_wait(self):
+        path = self.root/'routines/periodic-wait-1-host-time.json'
+        value = json.loads(path.read_text())
+        value['started_ns'] -= 1_000_000_000
+        value['finished_ns'] -= 1_000_000_000
+        path.write_text(json.dumps(value))
+        self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_periodic_unchanged_result_cannot_duplicate_chat(self):
+        path = self.root/'routines/periodic-complete-chat-stdout.txt'
+        path.write_bytes(path.read_bytes() * 2)
         self.assertNotEqual(self.validate().returncode, 0)
 
     def test_missing_hologram_evidence_fails(self):
