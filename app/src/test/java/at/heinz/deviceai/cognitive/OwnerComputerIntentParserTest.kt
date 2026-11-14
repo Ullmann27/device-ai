@@ -179,4 +179,29 @@ class OwnerComputerIntentParserTest {
         assertEquals("Die Kamera funktioniert nicht.", intent.draft)
         assertFalse(intent.steps.contains(ComputerPlanStep.REQUIRE_SEND_APPROVAL))
     }
+
+    @Test fun fold7SpokenDownloadsPresentationUsesExistingOwnerApprovedWorkflow() {
+        val requests = listOf(
+            "Öffne meinen Downloads-Ordner und zeige ihn im virtuellen Computer.",
+            "Öffne meinen Downloadordner",
+            "Öffne den Downloads-Ordner und zeige ihn im virtuellen Computer"
+        )
+        for (command in requests) {
+            val intent = ready(command)
+            assertEquals(command, ComputerApp.FILES, intent.app)
+            assertEquals(command, ComputerGoal.OPEN_DOWNLOADS, intent.goal)
+            assertEquals(command, listOf(ComputerPlanStep.OPEN_APP, ComputerPlanStep.OBSERVE_APP,
+                ComputerPlanStep.OPEN_FOLDER, ComputerPlanStep.VERIFY_FOLDER), intent.steps)
+        }
+        assertFalse(OwnerComputerIntentParser.parse(
+            "Öffne meinen Downloads-Ordner und lösche sämtliche Dateien"
+        ) is OwnerComputerIntentParser.Result.Ready)
+        assertFalse(OwnerComputerIntentParser.parse(
+            "Öffne meinen Downloads-Ordner und sende die Dateien"
+        ) is OwnerComputerIntentParser.Result.Ready)
+        assertFalse(OwnerComputerIntentParser.parse(
+            "Öffne nicht meinen Downloads-Ordner"
+        ) is OwnerComputerIntentParser.Result.Ready)
+    }
+
 }

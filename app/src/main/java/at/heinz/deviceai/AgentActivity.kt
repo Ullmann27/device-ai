@@ -236,7 +236,8 @@ class AgentActivity : Activity() {
     @Volatile private var continuumStartupNote: String? = null
     private val contextCompiler by lazy {
         AiContextCompiler(
-            AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4, nativeToolCatalog = true)
+            AiContextPolicy(maxBytes = 13_500, memoryLimit = 8, researchSourceLimit = 4,
+                nativeToolCatalog = true, includeToolCatalog = false)
         ).withRecallObserver(ContinuumMemoryRecallPublisher(filesDir))
     }
 
@@ -11174,7 +11175,7 @@ class AgentActivity : Activity() {
                         situationHint.toByteArray(Charsets.UTF_8).size +
                         (groundedRecall?.render()?.toByteArray(Charsets.UTF_8)?.size ?: 0)
                     val available = localRuntime.toolFreePromptUtf8Bytes ?: 6_000
-                    val contextBytes = (available - extraBytes - 1_200).coerceIn(1_024, 6_800)
+                    val contextBytes = (available - extraBytes - 1_200).coerceIn(1_024, 13_500)
                     AiContextCompiler(AiContextPolicy(maxBytes = contextBytes,
                         memoryLimit = 8, researchSourceLimit = 4, includeToolCatalog = false))
                         .withRecallObserver(ContinuumMemoryRecallPublisher(filesDir))
