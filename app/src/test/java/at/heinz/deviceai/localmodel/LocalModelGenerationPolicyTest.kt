@@ -19,4 +19,9 @@ class LocalModelGenerationPolicyTest {
     @Test fun machineLocaleDoesNotChangeFamilyDetection() {
         assertEquals(2_048, LocalModelGenerationPolicy.maxOutputTokens("GEMMA-4-E4B-IT"))
     }
+
+    @Test fun gemma4ExtendedContextCanReserveAThreeThousandTokenReply() {
+        assertEquals(3_072, LocalModelGenerationPolicy.maxOutputTokens("gemma4-e4b-it"))
+    }
+
 }
