@@ -102,6 +102,12 @@ object ContinuumUiCopy {
             "Deine Eingabe bleibt stehen."
 
     fun modelFailure(problem: String?): String = when {
+        problem == at.heinz.deviceai.localmodel.LocalModelHost.PAUSED_MEMORY ->
+            "Keine neue Modellantwort gestartet: Android meldet zu wenig Arbeitsspeicher. " +
+                "Schließe andere Apps und frage erneut."
+        problem == at.heinz.deviceai.localmodel.LocalModelHost.MEMORY_NO_MEASUREMENT ->
+            "Keine neue Modellantwort gestartet: Die Arbeitsspeichermessung ist nicht verfügbar. " +
+                "Versuche es später erneut."
         problem == "LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT" ->
             "Die lokale Modellantwort überschreitet das Ausgabelimit. " +
                 "Bitte fordere eine kürzere Antwort an oder teile die Aufgabe in kleinere Schritte."
