@@ -1,0 +1,573 @@
+{
+  "version": 1,
+  "job_id": "continuum-deep-command-20261114-01",
+  "project": "Continuum",
+  "title": "Continuum Deep Command Studio",
+  "objects": [
+    {
+      "kind": "cube",
+      "name": "Bodenplattform / Basalt",
+      "location": [
+        0,
+        0,
+        -0.42
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        12.5,
+        7,
+        0.62
+      ],
+      "color": "#111A2B",
+      "metallic": 0.78,
+      "roughness": 0.3,
+      "bevel": 0.11
+    },
+    {
+      "kind": "cube",
+      "name": "Zentralpodest / Titanium",
+      "location": [
+        0,
+        -0.2,
+        -0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        10.2,
+        5.6,
+        0.12
+      ],
+      "color": "#2C425A",
+      "metallic": 0.84,
+      "roughness": 0.27,
+      "bevel": 0.06
+    },
+    {
+      "kind": "monitor",
+      "name": "Hauptdisplay - 3D",
+      "location": [
+        -2.6,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.94,
+        0.94,
+        0.94
+      ],
+      "color": "#36D8FF"
+    },
+    {
+      "kind": "monitor",
+      "name": "Nebendisplay / Diagnostik",
+      "location": [
+        -5,
+        1.9,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        -18
+      ],
+      "size": [
+        0.38,
+        0.38,
+        0.38
+      ],
+      "color": "#7D9CFF"
+    },
+    {
+      "kind": "energy_orb",
+      "name": "Continuum Energiekern",
+      "location": [
+        2.5,
+        0,
+        2.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.95,
+        0.95,
+        0.95
+      ],
+      "color": "#4CEAFF",
+      "spin": true
+    },
+    {
+      "kind": "torus",
+      "name": "Aeusserer Energiering 1",
+      "location": [
+        2.5,
+        0,
+        2.3
+      ],
+      "rotation": [
+        65,
+        0,
+        20
+      ],
+      "size": [
+        3.1,
+        3.1,
+        3.1
+      ],
+      "color": "#66DBFF",
+      "emission": 2.4,
+      "metallic": 0.34
+    },
+    {
+      "kind": "torus",
+      "name": "Aeusserer Energiering 2",
+      "location": [
+        2.5,
+        0,
+        2.3
+      ],
+      "rotation": [
+        12,
+        80,
+        30
+      ],
+      "size": [
+        3.3,
+        3.3,
+        3.3
+      ],
+      "color": "#B4F1FF",
+      "emission": 1.6
+    },
+    {
+      "kind": "cube",
+      "name": "Interaktive Konsole",
+      "location": [
+        -1.1,
+        -1.9,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        3.2,
+        1.3,
+        0.28
+      ],
+      "color": "#192A3F",
+      "metallic": 0.74,
+      "roughness": 0.18,
+      "bevel": 0.08
+    },
+    {
+      "kind": "cube",
+      "name": "Konsole - Glaspanel",
+      "location": [
+        -1.1,
+        -2.12,
+        0.51
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        2.96,
+        0.94,
+        0.03
+      ],
+      "color": "#074C72",
+      "emission": 0.4,
+      "metallic": 0.35,
+      "roughness": 0.1
+    },
+    {
+      "kind": "cube",
+      "name": "Holo Statusbalken 1",
+      "location": [
+        -2.28,
+        -2.26,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.13,
+        0.58,
+        0.03
+      ],
+      "color": "#48E8F6",
+      "emission": 2
+    },
+    {
+      "kind": "cube",
+      "name": "Holo Statusbalken 2",
+      "location": [
+        -1.84,
+        -2.26,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.13,
+        0.58,
+        0.03
+      ],
+      "color": "#48E8F6",
+      "emission": 2
+    },
+    {
+      "kind": "cube",
+      "name": "Holo Statusbalken 3",
+      "location": [
+        -1.4,
+        -2.26,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.13,
+        0.58,
+        0.03
+      ],
+      "color": "#48E8F6",
+      "emission": 2
+    },
+    {
+      "kind": "cube",
+      "name": "Holo Statusbalken 4",
+      "location": [
+        -0.96,
+        -2.26,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.13,
+        0.58,
+        0.03
+      ],
+      "color": "#48E8F6",
+      "emission": 2
+    },
+    {
+      "kind": "cube",
+      "name": "Holo Statusbalken 5",
+      "location": [
+        -0.52,
+        -2.26,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.13,
+        0.58,
+        0.03
+      ],
+      "color": "#F9B768",
+      "emission": 0.8
+    },
+    {
+      "kind": "cube",
+      "name": "Holo Statusbalken 6",
+      "location": [
+        0,
+        -2.26,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.13,
+        0.58,
+        0.03
+      ],
+      "color": "#F9B768",
+      "emission": 0.8
+    },
+    {
+      "kind": "cube",
+      "name": "Rechter Energietisch",
+      "location": [
+        2.8,
+        -1.86,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        3,
+        1.2,
+        0.24
+      ],
+      "color": "#1A2A3D",
+      "metallic": 0.7,
+      "bevel": 0.07
+    },
+    {
+      "kind": "cube",
+      "name": "Energieplateau / Lichtkante",
+      "location": [
+        2.8,
+        -1.9,
+        0.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        2.64,
+        0.92,
+        0.03
+      ],
+      "color": "#46B8ED",
+      "emission": 1.4,
+      "metallic": 0.3
+    },
+    {
+      "kind": "cylinder",
+      "name": "Leuchtende Energiebruecke",
+      "location": [
+        0.42,
+        -0.2,
+        1.2
+      ],
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "size": [
+        0.075,
+        0.075,
+        4.4
+      ],
+      "color": "#45BBF9",
+      "emission": 2.4
+    },
+    {
+      "kind": "cylinder",
+      "name": "Sekundaere Energiebruecke",
+      "location": [
+        0.42,
+        -0.5,
+        1
+      ],
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "size": [
+        0.04,
+        0.04,
+        4.4
+      ],
+      "color": "#91C3F3",
+      "emission": 1.7
+    },
+    {
+      "kind": "text",
+      "name": "CONTINUUM Schriftzug",
+      "location": [
+        0,
+        -3.18,
+        0.02
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.45,
+        0.45,
+        0.45
+      ],
+      "color": "#75DDFF",
+      "emission": 2.8,
+      "text": "CONTINUUM / DEEP COMMAND"
+    },
+    {
+      "kind": "text",
+      "name": "Systemkennung",
+      "location": [
+        0,
+        2.9,
+        0.02
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.24,
+        0.24,
+        0.24
+      ],
+      "color": "#789DBE",
+      "emission": 0.4,
+      "text": "SECURE VISUAL COMPUTE - LUMO / JARVIS"
+    },
+    {
+      "kind": "cube",
+      "name": "Boden LED 1",
+      "location": [
+        -4.4,
+        -2.8,
+        -0.07
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.85,
+        0.035,
+        0.03
+      ],
+      "color": "#5BEEFF",
+      "emission": 2.3
+    },
+    {
+      "kind": "cube",
+      "name": "Boden LED 2",
+      "location": [
+        -3,
+        -2.8,
+        -0.07
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.85,
+        0.035,
+        0.03
+      ],
+      "color": "#F5B960",
+      "emission": 2.3
+    },
+    {
+      "kind": "cube",
+      "name": "Boden LED 3",
+      "location": [
+        3,
+        -2.8,
+        -0.07
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.85,
+        0.035,
+        0.03
+      ],
+      "color": "#5BEEFF",
+      "emission": 2.3
+    },
+    {
+      "kind": "cube",
+      "name": "Boden LED 4",
+      "location": [
+        4.4,
+        -2.8,
+        -0.07
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        0.85,
+        0.035,
+        0.03
+      ],
+      "color": "#F5B960",
+      "emission": 2.3
+    }
+  ],
+  "lights": [
+    {
+      "location": [
+        -6,
+        -6,
+        9
+      ],
+      "color": "#BCDFFF",
+      "power": 2200
+    },
+    {
+      "location": [
+        5,
+        2,
+        6
+      ],
+      "color": "#47B7FF",
+      "power": 1200
+    },
+    {
+      "location": [
+        2,
+        -5,
+        4
+      ],
+      "color": "#FFCC85",
+      "power": 400
+    }
+  ]
+}
