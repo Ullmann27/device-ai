@@ -83,9 +83,29 @@ def captured_device(label, *args, timeout=30):
     save(label + '-command.json', json.dumps({'args': argv, 'returncode': result.returncode}))
     return result
 
+def focused_hierarchy(label, displays):
+    assert displays.tag == 'displays', f'{label}: window dump root missing'
+    windows = []
+    for display in displays.findall('display'):
+        if display.get('id') != '0':
+            continue
+        for window in display.iter('window'):
+            if window.get('focused') != 'true' or window.get('type') != 'TYPE_APPLICATION':
+                continue
+            windows.append(window)
+    assert len(windows) == 1, f'{label}: focused application window not unique'
+    window = windows[0]
+    hierarchies = window.findall('hierarchy')
+    assert len(hierarchies) == 1, f'{label}: focused application hierarchy missing'
+    hierarchy = hierarchies[0]
+    assert any(node.get('package') == package for node in hierarchy.iter('node')), f'{label}: focused window is not QA app'
+    save(label + '-window.json', json.dumps(window.attrib, ensure_ascii=False))
+    return hierarchy
+
 def read_hierarchy(label):
     remote = '/sdcard/continuum-native-smoke.xml'
     deadline = time.monotonic() + 45
+    all_windows = False
     def budget(maximum):
         remaining = deadline - time.monotonic()
         assert remaining > 0, f'{label}: UI hierarchy deadline exceeded'
@@ -95,25 +115,31 @@ def read_hierarchy(label):
     for attempt in range(1, 4):
         prefix = f'{label}-uiautomator-{attempt}'
         shell('rm', '-f', remote, timeout=budget(5))
-        result = captured_device(prefix, 'shell', 'uiautomator', 'dump', '--compressed', remote,
+        options = ['--compressed', '--windows'] if all_windows else ['--compressed']
+        result = captured_device(prefix, 'shell', 'uiautomator', 'dump', *options, remote,
                                  timeout=budget(35))
         output = (result.stdout + result.stderr).decode(errors='replace')
         assert result.returncode == 0, f'{label}: UI dump failed: {output[-1000:]}'
         present = captured_device(prefix + '-file', 'shell', 'test', '-s', remote, timeout=budget(5))
         if present.returncode == 0:
             content = captured_device(prefix + '-read', 'exec-out', 'cat', remote, timeout=budget(5))
-            save(label + '.xml', content.stdout)
+            save(label + ('-windows.xml' if all_windows else '.xml'), content.stdout)
             assert content.returncode == 0, f'{label}: UI dump could not be read'
             assert 'ERROR:' not in output, f'{label}: UI dump reported an error: {output[-1000:]}'
             try:
                 hierarchy = ET.fromstring(content.stdout)
             except ET.ParseError as error:
                 raise RuntimeError(f'{label}: UI dump is not XML; raw evidence saved') from error
+            if all_windows:
+                hierarchy = focused_hierarchy(label, hierarchy)
+                save(label + '.xml', ET.tostring(hierarchy, encoding='utf-8', xml_declaration=True))
             assert hierarchy.tag == 'hierarchy', f'{label}: UI hierarchy root missing'
             return hierarchy
         assert present.returncode == 1, f'{label}: UI dump file check failed'
         if not any(message in output for message in transient) or attempt == 3 or time.monotonic() >= deadline:
             raise RuntimeError(f'{label}: UI dump file missing: {output[-1000:]}')
+        if transient[0] in output:
+            all_windows = True
         time.sleep(min(1, max(0, deadline - time.monotonic())))
     raise RuntimeError(f'{label}: UI hierarchy unavailable')
 
