@@ -12,6 +12,12 @@ internal object LocalConversationFollowUpPolicy {
     fun requestsContinuation(request: String): Boolean =
         request.length <= 160 && !request.any { it.isISOControl() } && continuation.matches(request.trim())
 
+    // Exact clarification; no tool action.
+    private val shortClarification = Regex(
+        """(?iu)^(?:(?:und|aber|also)\s+)?(?:(?:warum|wieso|weshalb)(?:\s+(?:denn|genau|eigentlich))?|""" +
+            """wie\s+meinst\s+du\s+(?:das|es)|was\s+meinst\s+du\s+damit|""" +
+            """(?:das\s+verstehe\s+ich|ich\s+verstehe\s+das)\s+(?:noch\s+)?nicht)[.!?]*$""")
+
     private val correction = Regex("""(?iu)^(?:korrektur|berichtigung|richtigstellung|änderung)\s*:""")
     private val previous = Regex("""(?iu)\b(?:ursprünglich|vorher|vorherigen|zuvor|davor|anfangs|vorhin|damals)\b""")
     private val replacement = Regex("""(?iu)\b(?:nun|jetzt|mittlerweile)\b[^.!?\n]{0,160}\b(?:statt|anstelle)\b""")
@@ -61,7 +67,8 @@ internal object LocalConversationFollowUpPolicy {
         val text = request.trim()
         if (text.isEmpty() || text.length > 1_000 || text.any { it.isISOControl() }) return false
         if (definition.containsMatchIn(text) || namedDefinition.containsMatchIn(text)) return false
-        return requestsContinuation(text) || correction.containsMatchIn(text) || previous.containsMatchIn(text) ||
+        return requestsContinuation(text) || shortClarification.matches(text) ||
+            correction.containsMatchIn(text) || previous.containsMatchIn(text) ||
             replacement.containsMatchIn(text) || elliptical.containsMatchIn(text) ||
             contrastive.containsMatchIn(text) || anaphoric.containsMatchIn(text) || again.containsMatchIn(text) ||
             politeReference.matches(text) || politeTopicReference.matches(text) ||
