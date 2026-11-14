@@ -131,6 +131,25 @@ checks=report['checks'];names=[c['name'] for c in checks]
 assert len(names)==len(set(names)) and required<=set(names)
 assert set(names)<=required|{'setup-dismissed','camera-declined'}
 observed={}
+captures=list((root/'app').glob('*-window.json'))
+capture_names={p.name.removesuffix('-window.json') for p in captures}
+assert (set(names)|{'conversation-input','landscape-conversation'})<=capture_names
+for path in captures:
+    capture=json.loads(path.read_text())
+    name=path.name.removesuffix('-window.json')
+    raw=(root/'app'/f'{name}-ui-automation-stdout.txt').read_text()
+    time_keys=('capture_started_ms','hierarchy_finished_ms','screenshot_finished_ms','capture_finished_ms')
+    for key in ('status','elapsed_ms')+time_keys:
+        value=capture[key]
+        assert isinstance(value,str)
+        assert re.findall(r'^INSTRUMENTATION_RESULT: '+key+r'=(.*?)\r?$',raw,re.M)==[value]
+        assert value=='ok' if key=='status' else re.fullmatch(r'0|[1-9][0-9]*',value)
+    assert re.findall(r'^INSTRUMENTATION_CODE: (.*?)\r?$',raw,re.M)==['-1']
+    assert 'INSTRUMENTATION_FAILED' not in raw
+    elapsed=int(capture['elapsed_ms'])
+    assert 0<elapsed<45000, f'Capture exceeded deadline: {path.name}'
+    times=[int(capture[key]) for key in time_keys]
+    assert 0<times[0]<=times[1]<=times[2]<=times[3] and times[3]-times[0]<=elapsed
 for check in checks:
     name=check['name']
     assert check['status']=='PASS' and re.fullmatch(r'[0-9]+(?: [0-9]+)*',check['pid'])

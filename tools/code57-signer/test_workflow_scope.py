@@ -151,6 +151,11 @@ class NativeEvidenceTest(unittest.TestCase):
             f'android.permission.{p}: granted=false' for p in ['CAMERA','RECORD_AUDIO','POST_NOTIFICATIONS']))
         (self.root/'app/offline-connectivity.txt').write_text('Active default network: none\n')
         self.submitted_ui_fixture()
+        for name in labels+['conversation-input','landscape-conversation']:
+            capture={'status':'ok','elapsed_ms':'100','capture_started_ms':'20',
+                     'hierarchy_finished_ms':'30','screenshot_finished_ms':'40','capture_finished_ms':'50'}
+            (self.root/'app'/f'{name}-window.json').write_text(json.dumps(capture))
+            self.instrumentation(f'app/{name}-ui-automation-stdout.txt',capture)
         for log in ['logcat.txt','crash-logcat.txt']:
             (self.root/'app'/log).write_text('')
         for directory in [self.root,self.root/'filament']:
@@ -314,6 +319,68 @@ class NativeEvidenceTest(unittest.TestCase):
     def test_landscape_requires_reached_composer(self):
         (self.root/'app/landscape-conversation.xml').write_text('<hierarchy/>')
         self.assertNotEqual(self.validate().returncode,0)
+
+    def test_capture_deadline_rejects_boundary_and_real_overrun(self):
+        path=self.root/'app/conversation-window.json'
+        capture=json.loads(path.read_text())
+        for elapsed in ('45000','48113'):
+            with self.subTest(elapsed=elapsed):
+                capture['elapsed_ms']=elapsed
+                path.write_text(json.dumps(capture))
+                self.instrumentation('app/conversation-ui-automation-stdout.txt',capture)
+                self.assertNotEqual(self.validate().returncode,0)
+        capture['elapsed_ms']='44999'
+        path.write_text(json.dumps(capture))
+        self.instrumentation('app/conversation-ui-automation-stdout.txt',capture)
+        result=self.validate()
+        self.assertEqual(result.returncode,0,result.stderr)
+
+    def test_missing_or_inconsistent_capture_receipt_fails(self):
+        path=self.root/'app/conversation-window.json'
+        original=path.read_text()
+        capture=json.loads(original)
+        capture['elapsed_ms']='99'
+        path.write_text(json.dumps(capture))
+        self.assertNotEqual(self.validate().returncode,0)
+        path.write_text(original)
+        capture=json.loads(original)
+        capture['capture_finished_ms']='121'
+        path.write_text(json.dumps(capture))
+        self.instrumentation('app/conversation-ui-automation-stdout.txt',capture)
+        self.assertNotEqual(self.validate().returncode,0)
+        path.unlink()
+        self.assertNotEqual(self.validate().returncode,0)
+
+    def test_capture_fields_require_matching_original_results(self):
+        path=self.root/'app/conversation-window.json'
+        capture=json.loads(path.read_text())
+        for key in capture:
+            with self.subTest(key=key):
+                changed={**capture,key:'failed' if key=='status' else '999999'}
+                self.instrumentation('app/conversation-ui-automation-stdout.txt',changed)
+                self.assertNotEqual(self.validate().returncode,0)
+        self.instrumentation('app/conversation-ui-automation-stdout.txt',capture)
+        result=self.validate()
+        self.assertEqual(result.returncode,0,result.stderr)
+
+    def test_capture_fields_require_unique_decimal_results(self):
+        path=self.root/'app/conversation-window.json'
+        raw=self.root/'app/conversation-ui-automation-stdout.txt'
+        capture=json.loads(path.read_text())
+        original=raw.read_text()
+        for key,value in capture.items():
+            with self.subTest(key=key):
+                line=f'INSTRUMENTATION_RESULT: {key}={value}\n'
+                raw.write_text(original+line)
+                self.assertNotEqual(self.validate().returncode,0)
+                raw.write_text(original.replace(line,''))
+                self.assertNotEqual(self.validate().returncode,0)
+        for value in ('+20','020','2e1','20.0',20):
+            with self.subTest(value=value):
+                changed={**capture,'capture_started_ms':value}
+                path.write_text(json.dumps(changed))
+                self.instrumentation('app/conversation-ui-automation-stdout.txt',changed)
+                self.assertNotEqual(self.validate().returncode,0)
 
 
 if __name__ == '__main__':
