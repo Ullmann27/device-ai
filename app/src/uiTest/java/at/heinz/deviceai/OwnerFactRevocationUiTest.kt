@@ -45,6 +45,7 @@ class OwnerFactRevocationUiTest {
         val prompts = CopyOnWriteArrayList<String>()
         val continuations = CopyOnWriteArrayList<List<LocalToolResponse>>()
         val cancellations = AtomicInteger()
+        var holdThinking = false
         private val pending = AtomicReference<LocalInferenceCallback?>()
         val running get() = pending.get() != null
 
@@ -52,7 +53,8 @@ class OwnerFactRevocationUiTest {
             error("Unexpected model load")
         override fun unload(callback: (Result<Unit>) -> Unit) = error("Unexpected model unload")
         override fun streamThinking(prompt: String, callback: LocalInferenceCallback) {
-            callback.onEvent(LocalInferenceEvent.Failed("CONTROLLED_OPTIONAL_ADVISORY_UNAVAILABLE"))
+            if (holdThinking) stream(prompt, callback)
+            else callback.onEvent(LocalInferenceEvent.Failed("CONTROLLED_OPTIONAL_ADVISORY_UNAVAILABLE"))
         }
         override fun stream(prompt: String, callback: LocalInferenceCallback) {
             prompts += prompt
@@ -103,16 +105,8 @@ class OwnerFactRevocationUiTest {
         (get(activity, name) as ExecutorService).submit {}.get(10, TimeUnit.SECONDS)
         shadowOf(Looper.getMainLooper()).idle()
     }
-    private fun withFixture(body: (Fixture) -> Unit) {
-        LocalDialogueRetention.context.clear()
-        val activity = Robolectric.buildActivity(AgentActivity::class.java).get()
-        val runtime = Runtime()
-        val memory = BootstrapMemoryStore(activity).apply { voiceEnabled = false }
-        val core = ContinuumLearningCore(activity.filesDir)
-        val receipts = FileToolExecutionReceiptStore(File(activity.filesDir, "revocation-receipts"))
-        assertTrue(memory.addFact(FACT))
-        core.confirmOwnerFact(FACT)
-        assertTrue(core.activeOwnerFacts().any { it.content == FACT })
+    private fun prepareActivity(activity: AgentActivity, runtime: Runtime,
+                                memory: BootstrapMemoryStore, receipts: FileToolExecutionReceiptStore) {
         set(activity, "localRuntime", runtime)
         set(activity, "bootstrapMemory", memory)
         set(activity, "receiptStore", receipts)
@@ -123,15 +117,31 @@ class OwnerFactRevocationUiTest {
         set(activity, "voiceEnabled", false)
         set(activity, "foregroundLearningActive", true)
         call(activity, "buildComposer")
+    }
+    private fun closeActivity(activity: AgentActivity, runtime: Runtime) {
+        (get(activity, "activeChatCancellation") as? DeliberationCancellation)?.cancel()
+        if (runtime.running) runtime.complete(LocalInferenceEvent.Cancelled)
+        runCatching { drain(activity, "localAgentExecutor") }
+        runCatching { drain(activity, "learningIoExecutor") }
+        ShadowAlertDialog.getLatestAlertDialog()?.dismiss()
+        (get(activity, "mainHandler") as Handler).removeCallbacksAndMessages(null)
+        for (name in listOf("localAgentExecutor", "backlogExecutor", "learningIoExecutor", "documentIoExecutor"))
+            (get(activity, name) as ExecutorService).shutdownNow()
+    }
+    private fun withFixture(body: (Fixture) -> Unit) {
+        LocalDialogueRetention.context.clear()
+        val activity = Robolectric.buildActivity(AgentActivity::class.java).get()
+        val runtime = Runtime()
+        val memory = BootstrapMemoryStore(activity).apply { voiceEnabled = false }
+        val core = ContinuumLearningCore(activity.filesDir)
+        val receipts = FileToolExecutionReceiptStore(File(activity.filesDir, "revocation-receipts"))
+        assertTrue(memory.addFact(FACT))
+        core.confirmOwnerFact(FACT)
+        assertTrue(core.activeOwnerFacts().any { it.content == FACT })
+        prepareActivity(activity, runtime, memory, receipts)
         try { body(Fixture(activity, runtime, memory, core, receipts)) }
         finally {
-            (get(activity, "activeChatCancellation") as? DeliberationCancellation)?.cancel()
-            if (runtime.running) runtime.complete(LocalInferenceEvent.Cancelled)
-            runCatching { drain(activity, "localAgentExecutor") }
-            ShadowAlertDialog.getLatestAlertDialog()?.dismiss()
-            (get(activity, "mainHandler") as Handler).removeCallbacksAndMessages(null)
-            for (name in listOf("localAgentExecutor", "backlogExecutor", "learningIoExecutor", "documentIoExecutor"))
-                (get(activity, name) as ExecutorService).shutdownNow()
+            closeActivity(activity, runtime)
             LocalDialogueRetention.context.clear()
         }
     }
@@ -148,6 +158,11 @@ class OwnerFactRevocationUiTest {
         call(f.activity, "showMemoryCenter")
         val center = checkNotNull(ShadowAlertDialog.getLatestAlertDialog())
         assertTrue(center.isShowing)
+        val decor = center.window!!.decorView
+        val metrics = f.activity.resources.displayMetrics
+        decor.measure(View.MeasureSpec.makeMeasureSpec(metrics.widthPixels, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(metrics.heightPixels, View.MeasureSpec.EXACTLY))
+        decor.layout(0, 0, decor.measuredWidth, decor.measuredHeight)
         val delete = descendants(center.window!!.decorView).single {
             it is TextView && it.text.toString() == "FAKTEN LÖSCHEN" && it.isClickable
         }
@@ -160,6 +175,7 @@ class OwnerFactRevocationUiTest {
     }
     private fun confirmDeletion(f: Fixture) {
         assertTrue(deletionDialog(f).getButton(AlertDialog.BUTTON_POSITIVE).performClick())
+        shadowOf(Looper.getMainLooper()).idle()
     }
     private fun assertErased(f: Fixture) {
         drain(f.activity, "learningIoExecutor")
@@ -171,6 +187,7 @@ class OwnerFactRevocationUiTest {
         val chat = get(f.activity, "chatContainer") as LinearLayout
         assertFalse(texts(chat).any { it.contains(LATE_REPLY) })
         assertNull(get(f.activity, "lastLocalReply"))
+        assertTrue(LocalDialogueRetention.context.priorUserTurns(get(f.activity, "sessionId") as String).isEmpty())
         assertTrue(f.receipts.all().isEmpty())
         assertTrue(f.runtime.continuations.isEmpty())
         assertEquals(1, f.runtime.prompts.size)
@@ -225,7 +242,8 @@ class OwnerFactRevocationUiTest {
             f.runtime.complete(LocalInferenceEvent.Cancelled)
             drain(f.activity, "localAgentExecutor")
             assertTrue("The deletion still owns the pending I/O", FACT in f.memory.facts())
-            assertTrue("Old worker completion must not reopen admission", get(f.activity, "busy") as Boolean)
+            assertEquals("Old worker completion must not reopen admission", "Device AI arbeitet",
+                (get(f.activity, "sendButton") as Button).contentDescription.toString())
             val input = get(f.activity, "input") as EditText
             input.setText(NEXT_REQUEST)
             assertTrue((get(f.activity, "sendButton") as Button).performClick())
@@ -238,6 +256,137 @@ class OwnerFactRevocationUiTest {
         }
         assertErased(f)
         until("The completed deletion releases admission") { get(f.activity, "busy") == false }
+    }
+
+    @Test fun replacementActivityWaitsForOriginalDeletionAndCanRememberAgain() = withFixture { f ->
+        val entered = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        val blocker = (get(f.activity, "learningIoExecutor") as ExecutorService).submit {
+            entered.countDown()
+            check(release.await(20, TimeUnit.SECONDS))
+        }
+        assertTrue(entered.await(5, TimeUnit.SECONDS))
+        val next = Robolectric.buildActivity(AgentActivity::class.java).get()
+        val runtime = Runtime()
+        try {
+            confirmDeletion(f)
+            f.activity.finish()
+            assertTrue(f.activity.isFinishing)
+            prepareActivity(next, runtime, BootstrapMemoryStore(next),
+                FileToolExecutionReceiptStore(File(next.filesDir, "replacement-receipts")))
+            val input = get(next, "input") as EditText
+            input.setText("Merke dir: $FACT")
+            assertTrue((get(next, "sendButton") as Button).performClick())
+            shadowOf(Looper.getMainLooper()).idle()
+            assertEquals("Merke dir: $FACT", input.text.toString())
+            assertTrue(runtime.prompts.isEmpty())
+            release.countDown()
+            blocker.get(5, TimeUnit.SECONDS)
+            assertErased(f)
+            assertTrue("A finished Activity emits no deletion reply",
+                texts(get(f.activity, "chatContainer") as View).none { it.contains("wurden aus dem lokalen") })
+            assertTrue((get(next, "sendButton") as Button).performClick())
+            until("A fresh explicit statement reactivates the fact") {
+                FACT in BootstrapMemoryStore(next).facts() &&
+                    ContinuumLearningCore(next.filesDir).activeOwnerFacts().any { it.content == FACT }
+            }
+            assertTrue(runtime.prompts.isEmpty())
+        } finally {
+            release.countDown()
+            blocker.get(5, TimeUnit.SECONDS)
+            closeActivity(next, runtime)
+        }
+    }
+
+    @Test fun failedLedgerDeletionReleasesAdmissionAndCanBeRetried() = withFixture { f ->
+        val ledger = File(f.activity.filesDir, "learning-core-v2/experiences-v2.bin")
+        val original = ledger.readBytes()
+        ledger.writeBytes(original.copyOf().also { it[it.lastIndex] = (it.last().toInt() xor 0x55).toByte() })
+        try {
+            confirmDeletion(f)
+            drain(f.activity, "learningIoExecutor")
+            val chat = texts(get(f.activity, "chatContainer") as View).joinToString("\n")
+            assertTrue(chat.contains("Widerruf im Continuum-Lernkern ist fehlgeschlagen"))
+            assertFalse(chat.contains("sie werden nicht mehr verwendet"))
+            assertEquals("Nachricht senden", (get(f.activity, "sendButton") as Button).contentDescription.toString())
+        } finally { ledger.writeBytes(original) }
+        confirmDeletion(f)
+        assertErased(f)
+        assertEquals(0, f.runtime.cancellations.get())
+    }
+
+    @Test fun unrelatedModelDiagnosticSurvivesDeletion() = withFixture { f ->
+        call(f.activity, "runLocalSmokeTest", true)
+        until("The isolated model diagnostic starts") { f.runtime.running }
+        val cancellation = get(f.activity, "activeChatCancellation") as DeliberationCancellation
+        val cancellations = f.runtime.cancellations.get()
+        assertFalse(f.runtime.prompts.single().contains(FACT))
+        confirmDeletion(f)
+        assertErased(f)
+        cancellation.throwIfCancelled()
+        assertEquals(cancellations, f.runtime.cancellations.get())
+        assertTrue(f.runtime.running)
+        f.runtime.complete(LocalInferenceEvent.TextDelta("Der Roboter untersucht Steine auf dem Mond."))
+        drain(f.activity, "localAgentExecutor")
+        assertTrue(texts(get(f.activity, "chatContainer") as View).any { it.contains("Der Roboter untersucht") })
+    }
+
+    @Test fun unrelatedCodingPlanningSurvivesDeletion() = withFixture { f ->
+        f.runtime.holdThinking = true
+        val goal = "Bewahre negative Ergebnisse."
+        val planning = checkNotNull(ContinuumCodingPlanning.create(goal, "a".repeat(40),
+            listOf("lib/distance.mjs"), ContinuumCodingTask.Limits(1, 8192)))
+        call(f.activity, "runLocal", goal, goal, null,
+            CognitiveTurnTrace(get(f.activity, "sessionId") as String), planning, null)
+        until("The independent coding plan starts") { f.runtime.running }
+        val cancellation = get(f.activity, "activeChatCancellation") as DeliberationCancellation
+        val cancellations = f.runtime.cancellations.get()
+        assertFalse(f.runtime.prompts.single().contains(FACT))
+        confirmDeletion(f)
+        assertErased(f)
+        cancellation.throwIfCancelled()
+        assertEquals(cancellations, f.runtime.cancellations.get())
+        assertTrue(f.runtime.running)
+        f.runtime.complete(LocalInferenceEvent.TextDelta(
+            """{"schema":"continuum-coding-plan","version":1,"kind":"BUGFIX","goal":"Bewahre negative Ergebnisse.","acceptance":["Negative Werte bleiben negativ"]}"""))
+        drain(f.activity, "localAgentExecutor")
+        val review = checkNotNull(ShadowAlertDialog.getLatestAlertDialog())
+        assertTrue(review.isShowing)
+        assertTrue(descendants(review.window!!.decorView).filterIsInstance<EditText>()
+            .any { it.text.toString() == goal })
+        assertNull(shadowOf(f.activity).nextStartedActivity)
+    }
+
+    private fun queueRememberedAnswer(f: Fixture) {
+        assertTrue(f.memory.clearFacts())
+        f.core.revokeAllOwnerFacts()
+        val question = at.heinz.deviceai.learning.ContinuumCognitiveRuntime(f.activity.filesDir, f.core,
+            conversationId = get(f.activity, "sessionId") as String).reply("Wo wohne ich?")
+        assertFalse(question.grounded)
+        call(f.activity, "rememberOwnerFact", FACT, "Gemerkt: $FACT")
+        (get(f.activity, "learningIoExecutor") as ExecutorService).submit {}.get(10, TimeUnit.SECONDS)
+        assertTrue(f.core.dialogueHistory().last().grounded)
+        assertTrue(f.core.dialogueHistory().last().answer.contains("Kronenbrunn"))
+    }
+
+    @Test fun queuedRememberedAnswerCannotOutliveRevocation() = withFixture { f ->
+        queueRememberedAnswer(f)
+        // Confirm before queued reply delivery.
+        call(f.activity, "forgetOwnerFacts")
+        assertErased(f)
+        val chat = texts(get(f.activity, "chatContainer") as View).joinToString("\n")
+        assertFalse(chat.contains("Kronenbrunn"))
+        assertFalse(chat.contains("Zur vorherigen offenen Frage"))
+    }
+
+    @Test fun newerOwnerRequestKeepsActualMemoryWriteReceipt() = withFixture { f ->
+        queueRememberedAnswer(f)
+        call(f.activity, "addUserMessage", NEXT_REQUEST)
+        shadowOf(Looper.getMainLooper()).idle()
+        val chat = texts(get(f.activity, "chatContainer") as View).joinToString("\n")
+        assertTrue(chat.contains("Gemerkt."))
+        assertTrue(f.core.activeOwnerFacts().any { it.content == FACT })
+        assertFalse(chat.contains("Zur vorherigen offenen Frage"))
     }
 
     companion object {
