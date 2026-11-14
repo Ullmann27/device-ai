@@ -46,14 +46,27 @@ class OwnerAppActionWorkSceneUiTest {
         val release = CountDownLatch(1)
         val completed = CountDownLatch(1)
         val calls = AtomicInteger()
+        val successfulReturns = AtomicInteger()
+        var completeAfterCancellation = false
         var failure: String? = null
         override fun execute(call: ToolCallRequest, callback: (Result<String>) -> Unit) {
             calls.incrementAndGet()
             entered.countDown()
-            check(release.await(60, TimeUnit.SECONDS))
-            callback(failure?.let { Result.failure(IllegalStateException(it)) } ?: Result.success(
-                """{"schema":"CONTINUUM_DEVICE_ACTION_V1","action":"LAUNCH_APP","package":"$packageName","status":"VERIFIED_FOREGROUND","windowRevision":7}"""))
-            completed.countDown()
+            var interrupted = false
+            try {
+                try { check(release.await(60, TimeUnit.SECONDS)) }
+                catch (error: InterruptedException) {
+                    if (!completeAfterCancellation || release.count != 0L) throw error
+                    interrupted = true
+                }
+                val outcome = failure?.let { Result.failure<String>(IllegalStateException(it)) } ?: Result.success(
+                    """{"schema":"CONTINUUM_DEVICE_ACTION_V1","action":"LAUNCH_APP","package":"$packageName","status":"VERIFIED_FOREGROUND","windowRevision":7}""")
+                callback(outcome)
+                if (outcome.isSuccess) successfulReturns.incrementAndGet()
+            } finally {
+                if (interrupted) Thread.currentThread().interrupt()
+                completed.countDown()
+            }
         }
         override fun cancelPending() { release.countDown() }
     }
@@ -230,6 +243,7 @@ class OwnerAppActionWorkSceneUiTest {
     @Config(sdk = [35], shadows = [OwnerAppPlanningContextUiTest.ProjectionConsentShadow::class])
     fun ownerStopDuringSplitScreenLaunchRejectsLateCallback() =
         withActivity("com.whatsapp", "WhatsApp") { a, port, lifecycle ->
+            port.completeAfterCancellation = true
             shadowOf(a).setInMultiWindowMode(true)
             submit(a, "Öffne WhatsApp.", chat = false)
             approve(port)
@@ -240,6 +254,7 @@ class OwnerAppActionWorkSceneUiTest {
             await { port.completed.count == 0L }
             advance(32)
 
+            assertEquals("Late native success returned", 1, port.successfulReturns.get())
             assertNull(get(a, "activeOwnerAppFlow"))
             assertNull(get(a, "pendingComputerLaunch"))
             assertNull(get(a, "computerController"))
