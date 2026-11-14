@@ -8,6 +8,7 @@ import at.heinz.deviceai.cognitive.LiveMonitorFeed
 import android.view.Surface
 import at.heinz.deviceai.avatar.AvatarPose
 import com.google.android.filament.*
+import com.google.android.filament.android.FilamentHelper
 import com.google.android.filament.gltfio.*
 import java.nio.ByteBuffer
 
@@ -87,6 +88,19 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     }
     private var bloomSettings: com.google.android.filament.View.BloomOptions? = null
     private var reducedQuality = false
+
+    internal fun synchronizePendingFrames() {
+        engine?.let(FilamentHelper::synchronizePendingFrames)
+    }
+
+    internal fun recreateSwapChain() {
+        val e = engine ?: return
+        invalidateCockpitSubmission()
+        lastFrameSkipped = false
+        swapChain?.let(e::destroySwapChain)
+        swapChain = null
+        swapChain = e.createSwapChain(surface, SwapChainFlags.CONFIG_TRANSPARENT)
+    }
 
     private fun initialize(bytes: ByteArray, metadata: AvatarGlbContract.Metadata) {
         Gltfio.init()

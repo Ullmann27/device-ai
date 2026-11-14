@@ -51,6 +51,16 @@ import at.heinz.deviceai.ui.TextStyle
 import kotlin.math.exp
 import kotlin.math.sqrt
 
+internal class FilamentTextureView(
+    context: Context,
+    private val beforeBufferResize: (TextureView) -> Unit
+) : TextureView(context) {
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        if (w != oldw || h != oldh) beforeBufferResize(this)
+        super.onSizeChanged(w, h, oldw, oldh)
+    }
+}
+
 /**
  * Hardware accelerated living Continuum core. Drawing is done by [ContinuumHologramRenderer] (shared with the JVM
  * preview); this view keeps the real state, speech energy, reduced-motion and power-save policies.
@@ -572,7 +582,10 @@ class ContinuumHologramView @JvmOverloads constructor(
             return
         }
         if (nativeTexture == null) {
-            val texture = TextureView(context).apply {
+            val texture = FilamentTextureView(context) { resizing ->
+                if (nativeTexture === resizing)
+                    runCatching { native3d?.synchronizePendingFrames() }.onFailure { fail3d() }
+            }.apply {
                 isOpaque = false
                 alpha = 0f
                 importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
@@ -589,9 +602,10 @@ class ContinuumHologramView @JvmOverloads constructor(
                     ensure3dRenderer(); invalidate()
                 }
                 override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
-                    native3d?.invalidateCockpitSubmission()
+                    if (nativeTexture !== texture) return
                     worldBufferWidth = 0; worldBufferHeight = 0
-                    resizeWorldBuffer()
+                    resizeWorldBuffer(rebuildSwapChain = false)
+                    runCatching { rebuildNativeSwapChain(surface) }.onFailure { fail3d() }
                     invalidate()
                 }
                 override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
@@ -653,15 +667,28 @@ class ContinuumHologramView @JvmOverloads constructor(
         invalidate()
     }
 
-    private fun resizeWorldBuffer() {
+    private fun resizeWorldBuffer(rebuildSwapChain: Boolean = true) {
         if (!layeredCockpit) return
         val surface = nativeTexture?.surfaceTexture ?: return
         val size = cockpitWorldFrame?.bufferSize() ?: return
         if (worldBufferWidth != size.first || worldBufferHeight != size.second) {
-            surface.setDefaultBufferSize(size.first, size.second)
-            worldBufferWidth = size.first
-            worldBufferHeight = size.second
+            runCatching {
+                native3d?.synchronizePendingFrames()
+                surface.setDefaultBufferSize(size.first, size.second)
+                worldBufferWidth = size.first
+                worldBufferHeight = size.second
+                if (rebuildSwapChain) rebuildNativeSwapChain(surface)
+            }.onFailure { fail3d() }
         }
+    }
+
+    private fun rebuildNativeSwapChain(surface: SurfaceTexture) {
+        val native = native3d ?: return
+        native3dDrawn = false
+        nativeTexture?.alpha = 0f
+        cockpitLiveFeed?.monitorSubmission?.invalidate()
+        avatarTrace.bindSurface(surface, runCatching { surface.timestamp }.getOrNull())
+        native.recreateSwapChain()
     }
 
     internal fun setCockpitLiveFeed(feed: at.heinz.deviceai.cognitive.LiveMonitorFeed<AndroidLiveFrame>?) {
