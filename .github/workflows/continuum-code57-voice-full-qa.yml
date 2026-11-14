@@ -499,7 +499,7 @@ jobs:
           import pathlib, sys
           log = pathlib.Path(sys.argv[1]).read_text()
           assert 'gles_mode_selected:swiftshader' in log, 'Requested backend not selected'
-          adapters = [line for line in log.splitlines() if 'Graphics Adapter ' in line]
+          adapters = [line for line in log.splitlines() if 'Graphics Adapter ' in line and 'Graphics Adapter Vendor ' not in line]
           assert len(adapters) == 1 and 'SwiftShader' in adapters[0] and 'ANGLE (' not in adapters[0], adapters
           print('DIRECT_SWIFTSHADER_BACKEND_CONFIRMED')
           PY
