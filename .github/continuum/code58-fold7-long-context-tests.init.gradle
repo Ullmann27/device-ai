@@ -1,0 +1,19 @@
+// Fold7 context capacity and long-answer tests, real Android source in debug QA mode.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app')
+    app.tasks.withType(org.gradle.api.tasks.testing.Test).matching { it.name == 'testDebugUnitTest' }.configureEach {
+        filter {
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelContextWindowTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalNativePromptBudgetTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelGenerationPolicyTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalChatPromptBudgetTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalPromptFrameTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.AiContextCompilerTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalDecisionPromptFrameTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerObjectScopeCorrectionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerDocumentIntentTest'
+            failOnNoMatchingTests = true
+        }
+    }
+}
