@@ -1,8 +1,11 @@
 import copy
 import json
+import time
+from types import SimpleNamespace
 import unittest
+from unittest.mock import Mock
 
-from native_hologram_stack import PACKAGE, handoff_deadline, request_response, validate_request, verify_process
+from native_hologram_stack import PACKAGE, Session, handoff_deadline, request_response, validate_request, verify_process
 
 
 class StackIdentityTest(unittest.TestCase):
@@ -61,6 +64,41 @@ class StackIdentityTest(unittest.TestCase):
         for stat in (self.stat.replace("4134", "4135", 1), "4134 (QA) S 0", self.stat.rsplit(" ", 1)[0] + " missing"):
             with self.subTest(stat=stat), self.assertRaises(ValueError):
                 verify_process(self.request, "4134", PACKAGE.encode(), self.status, stat)
+
+    def failed_host_session(self, detached):
+        session = Session.__new__(Session)
+        session.state = {}
+        session.instrumentation_deadline = time.monotonic() + 240
+        session.native_pending = False
+        session.device = Mock()
+        session.read = Mock(return_value="0")
+        session.identity = Mock(return_value="9321")
+        session.host = SimpleNamespace(safe_to_resume=detached,
+                                       capture=Mock(side_effect=TimeoutError("Host stack incomplete")))
+        def guest_done():
+            session.native_pending = False
+            session.state["guest_debugger_exit"] = 0
+            return 0
+        session.native_exit = guest_done
+        session.command = Mock(return_value=SimpleNamespace(returncode=0, stdout=b"guest backtrace"))
+        return session
+
+    def test_unproved_host_detach_cannot_acknowledge_or_resume_probe(self):
+        session = self.failed_host_session(False)
+        with self.assertRaisesRegex(RuntimeError, "Host debugger detach unproved"):
+            session.capture(self.request, time.monotonic())
+        self.assertEqual(["native"], [c.args[0] for c in session.command.call_args_list])
+        self.assertEqual("FAILED", session.state["status"])
+
+    def test_detached_incomplete_host_capture_acknowledges_only_failure(self):
+        session = self.failed_host_session(True)
+        session.capture(self.request, time.monotonic())
+        acknowledgement = session.command.call_args_list[-1]
+        self.assertEqual("ack", acknowledgement.args[0])
+        value = json.loads(acknowledgement.kwargs["payload"])
+        self.assertEqual("FAILED", value["status"])
+        self.assertEqual(self.request["nonce"], value["nonce"])
+        self.assertEqual("FAILED", session.state["status"])
 
 
 if __name__ == "__main__":

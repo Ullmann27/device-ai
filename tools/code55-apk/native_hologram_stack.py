@@ -11,6 +11,8 @@ import subprocess
 import sys
 import time
 
+from native_hologram_host_stack import HostStack
+
 PACKAGE = "at.heinz.deviceai.mentorpaired"
 CACHE = "cache/code59-hologram-diagnostic"
 
@@ -67,7 +69,7 @@ def verify_process(request, pidof, cmdline, status, stat):
 
 
 class Session:
-    def __init__(self, adb, serial, evidence, source):
+    def __init__(self, adb, serial, evidence, source, host_identity, emulator):
         if not re.fullmatch(r"emulator-[0-9]+", serial) or not re.fullmatch(r"[0-9a-f]{40}", source):
             raise ValueError("Disposable emulator and source required")
         self.adb = [adb, "-s", serial]
@@ -80,6 +82,7 @@ class Session:
         self.exit_probes = 0
         self.capture_deadline = None
         self.instrumentation_deadline = None
+        self.host = HostStack(host_identity, emulator, serial, source, Path(evidence) / "host-stack")
 
     def command(self, label, *args, timeout=5, payload=None):
         if self.capture_deadline is not None:
@@ -166,6 +169,9 @@ class Session:
                 raise RuntimeError("QA app process restarted")
             if result.returncode or self.state["guest_debugger_exit"] or not result.stdout.strip():
                 raise RuntimeError(f"Native debugger failed ({result.returncode})")
+            self.host.capture(self.capture_deadline)
+            if self.identity(request, "after-host") != before:
+                raise RuntimeError("QA app restarted during host capture")
             self.state["status"] = "CAPTURED"
             acknowledgement["status"] = "CAPTURED"
         except Exception as error:
@@ -174,6 +180,8 @@ class Session:
             try:
                 if self.native_pending:
                     raise RuntimeError("Guest debugger completion unproved; no acknowledgement")
+                if not self.host.safe_to_resume:
+                    raise RuntimeError("Host debugger detach unproved; no acknowledgement")
                 shell = f"cat > {CACHE}/stack-ack.tmp && mv {CACHE}/stack-ack.tmp {CACHE}/stack-ack.json"
                 result = self.command("ack", "shell", "run-as", PACKAGE, "sh", "-c", shlex.quote(shell),
                                       payload=(json.dumps(acknowledgement) + "\n").encode())
@@ -259,6 +267,8 @@ class Session:
             try:
                 if self.native_pending:
                     self.native_exit()
+                if not self.host.safe_to_resume:
+                    raise RuntimeError("Host debugger detach unproved; adb restart withheld")
                 if root_attempted:
                     self.read("adb-unroot", "unroot", timeout=15)
                     self.read("adb-unroot-wait", "wait-for-device", timeout=15)
@@ -281,8 +291,10 @@ def main():
     parser.add_argument("serial")
     parser.add_argument("evidence")
     parser.add_argument("source")
+    parser.add_argument("host_identity")
+    parser.add_argument("emulator")
     args = parser.parse_args()
-    return Session(args.adb, args.serial, args.evidence, args.source).run(args.evidence)
+    return Session(args.adb, args.serial, args.evidence, args.source, args.host_identity, args.emulator).run(args.evidence)
 
 
 if __name__ == "__main__":

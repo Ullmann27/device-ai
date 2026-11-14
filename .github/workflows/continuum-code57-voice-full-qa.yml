@@ -788,6 +788,9 @@ jobs:
           test "$ready" = true
           readlink "/proc/$emulator_pid/exe" > "$host_crash/emulator-executable.txt"
           cat "/proc/$emulator_pid/maps" > "$host_crash/emulator-maps.txt"
+          export CODE59_HOST_IDENTITY="$evidence/host-live-identity.json"
+          python3 -B tools/code55-apk/native_hologram_host_stack.py "$emulator_pid" "$CODE59_EMULATOR_BIN" \
+            emulator-5554 "$GITHUB_SHA" "$CODE59_HOST_IDENTITY"
           python3 - "$evidence/emulator.log" "$crash_database" "$emulator_pid" <<'PY'
           import pathlib, re, sys
           log = pathlib.Path(sys.argv[1]).read_text()

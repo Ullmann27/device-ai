@@ -10,6 +10,8 @@ evidence="$2"
 [[ "$serial" =~ ^emulator-[0-9]+$ ]]
 test -z "$(git status --porcelain --untracked-files=normal)"
 : "${ANDROID_HOME:?Android SDK required}"
+: "${CODE59_HOST_IDENTITY:?Owned emulator identity required}"
+: "${CODE59_EMULATOR_BIN:?Pinned emulator required}"
 adb="$ANDROID_HOME/platform-tools/adb"
 aapt="$ANDROID_HOME/build-tools/35.0.0/aapt"
 [[ "$("$adb" -s "$serial" shell getprop ro.kernel.qemu | tr -d '\r')" == 1 ]]
@@ -58,7 +60,8 @@ for permission in CAMERA RECORD_AUDIO POST_NOTIFICATIONS; do
   "$adb" -s "$serial" shell pm revoke "$package" "android.permission.$permission"
 done
 "$adb" -s "$serial" logcat -b all -c
-python3 -B tools/code55-apk/native_hologram_stack.py "$adb" "$serial" "$evidence" "$(git rev-parse HEAD)"
+python3 -B tools/code55-apk/native_hologram_stack.py "$adb" "$serial" "$evidence" "$(git rev-parse HEAD)" \
+  "$CODE59_HOST_IDENTITY" "$CODE59_EMULATOR_BIN"
 collect
 python3 -B tools/code55-apk/native_hologram_evidence.py "$evidence" \
   "$(git rev-parse HEAD)" "$(git rev-parse 'HEAD^{tree}')" \
