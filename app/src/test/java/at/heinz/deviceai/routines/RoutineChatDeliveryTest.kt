@@ -68,6 +68,35 @@ class RoutineChatDeliveryTest {
         assertTrue(f.state.load().outbox.isEmpty())
     }
 
+    @Test fun displayedCompleteRecordWithoutFinalNewlineKeepsItsReadBoundary() {
+        val f = Fixture(temporary.newFolder())
+        val checkpoint = prepared(f, f.book())
+        val bytes = checkpoint.text.toByteArray(Charsets.UTF_8)
+        val file = File(f.chatDirectory, "$conversation.jsonl")
+        file.writeBytes(bytes.copyOf(bytes.size - 1))
+        val shown = f.transcript.snapshot(conversation)
+        assertEquals(listOf(f.message.body), shown.entries.map { it.text })
+        assertEquals(bytes.size - 1L, shown.endOffset)
+        val result = requireNotNull(f.delivery().deliver(f.message.id, conversation))
+        assertTrue(result.appended)
+        assertEquals(shown.endOffset + 1, result.endOffset)
+        assertEquals(result.endOffset, file.length())
+        assertArrayEquals(bytes, file.readBytes())
+        assertEquals(1, f.transcript.load(conversation).size)
+    }
+
+    @Test fun readSnapshotBoundaryDoesNotAdvanceWithLaterAppend() {
+        val f = Fixture(temporary.newFolder())
+        f.transcript.append(conversation, true, "Vorher", 1)
+        val shown = f.transcript.snapshot(conversation)
+        val originalLength = File(f.chatDirectory, "$conversation.jsonl").length()
+        val result = requireNotNull(f.delivery().deliver(f.message.id, conversation))
+        assertEquals(originalLength, shown.endOffset)
+        assertTrue(shown.endOffset < result.endOffset - 1)
+        assertEquals(listOf("Vorher"), shown.entries.map { it.text })
+        assertEquals(listOf("Vorher", f.message.body), f.transcript.load(conversation).map { it.text })
+    }
+
     @Test fun tornAppendIsCompletedAtItsOriginalOffset() {
         val f = Fixture(temporary.newFolder())
         f.transcript.append(conversation, true, "Vorher", 1)
