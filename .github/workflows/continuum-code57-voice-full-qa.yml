@@ -333,6 +333,7 @@ jobs:
                        ('Cre1InferenceEncoderTest','trainedNodeCheckpointMatchesKotlinFeaturesAndScores'),
                        ('DevelopmentBacklogRoundtripTest','kotlinChangesNodeWrittenBacklogWithTheSharedRules')}
           required.add(('ChiefPatternE2ETest','s5b_textFileSkillLibraryRechecksApprovalBetweenWorkerStages'))
+          required.add(('RoutineRestartIdentityTest','recreatedDispatcherNeverReusesRunOrMessageIdentity'))
           required |= {('AvatarLiveDiagnosticsTest', name) for name in (
               'submittedFrameWithoutConsumerUpdateCannotClaimLive',
               'deterministicProofCoversIdleBlinkGazeSpeechThinkingAndCard',

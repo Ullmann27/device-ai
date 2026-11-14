@@ -15,6 +15,7 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.cognitive.BoundedThinkingMemoryTest'
             includeTestsMatching 'at.heinz.deviceai.learning.ContinuumThinkingMemoryTest'
             includeTestsMatching 'at.heinz.deviceai.chief.RoutineDeliveryTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.RoutineRestartIdentityTest'
             includeTestsMatching 'at.heinz.deviceai.chief.ChiefBrainWiringTest'
             includeTestsMatching 'at.heinz.deviceai.routines.ContinuumRoutinesTest'
             includeTestsMatching 'at.heinz.deviceai.routines.RoutineBookAdmissionTest'
