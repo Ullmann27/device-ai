@@ -87,15 +87,21 @@ class ContinuumTaskEffectsCallerUiTest {
             h = ContinuumHologramView(a).apply { setNativeHeadEnabled(false) }
             set(a,"hologramView",h);set(a,"foregroundLearningActive",true)
             set(a,"chatContainer",android.widget.LinearLayout(a))
-            host!!.get().setContentView(h,ViewGroup.LayoutParams(412,307));advance()
+            host!!.get().setContentView(h,ViewGroup.LayoutParams(412,307))
+            framePump = CockpitHostFramePump { host.get().window.decorView }
+            advance()
             assertEquals(412,h.width);assertEquals(307,h.height)
         }
         set(a,"receiptStore",FileToolExecutionReceiptStore(java.io.File(a.filesDir,"effects-"+UUID.randomUUID())))
         assertTrue("Caller fixture must be attached to its real host window",h.isAttachedToWindow)
         assertTrue("Caller fixture must be shown",h.isShown)
         assertTrue("Caller surface must be measured", h.width > 0 && h.height > 0)
-        h.setForegroundActive(true);advance()
-        assertTrue("Caller events require a live foreground clock",h.motionDiagnostics().contains("LIVE"))
+        val before = h.sampleMotion()
+        h.setForegroundActive(true);advanceFrames(200)
+        val active = h.sampleMotion()
+        assertTrue("Caller events require actual frame callbacks",active.callbackCount > before.callbackCount)
+        assertTrue("Caller events require actual phase progress",active.phase > before.phase)
+        assertTrue("Caller events require an actual host Canvas draw",active.drawCount > before.drawCount)
         assertEquals("Positive control: the actual host window must be visible",View.VISIBLE,h.windowVisibility)
         try {block(a,h)} finally {
             (get(a,"chiefStatusPool") as? at.heinz.deviceai.chief.ChiefWorkerPool)?.shutdown()
