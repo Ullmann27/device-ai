@@ -69,6 +69,7 @@ internal object OwnerDocumentDialogue {
         object Size : Ask()
         data class Heading(val page: Int) : Ask()
         data class PageText(val page: Int) : Ask()
+        data class FirstSentence(val page: Int) : Ask()
     }
 
     private const val MAX_ATTRIBUTED_PAGES = 64
@@ -108,6 +109,11 @@ internal object OwnerDocumentDialogue {
     private val size = Regex("(?iu)^(?:und\\s+)?wie\\s+groß\\s+(?:ist|war)\\s+(?:sie|es|$DET\\s+$NOUN$OPENED)$")
     private val heading = Regex("(?iu)^(?:und\\s+)?(?:was|wie)\\s+(?:steht|lautet|heißt|heisst|ist)\\s+" +
         "(?:(?:in|auf)\\s+)?(?:der|die|den|dem)\\s+(?:überschrift|titel|titelzeile)$E")
+    private val firstSentence = Regex(
+        "(?iu)^(?:was\\s+steht|wie\\s+lautet)\\s+(?:im|in\\s+dem|der|den)\\s+ersten\\s+satz\\s+" +
+            "(?:auf|in)\\s+(?:der\\s+)?(?:ersten\\s+seite|seite\\s+1)" +
+            "(?:\\s+(?:der|des)\\s+$NOUN)?$"
+    )
     private val pageText = Regex("(?iu)^(?:und\\s+)?was\\s+steht\\s+(?:(?:auf|in)\\s+(?:der\\s+)?)?" +
         "(?:seite\\s+$NUMBER|$ORDINAL\\s+seite)" +
         "(?:\\s+(?:der|des|in\\s+der|im)\\s+$NOUN)?$")
@@ -183,6 +189,7 @@ internal object OwnerDocumentDialogue {
         if (size.matches(part)) asks += Ask.Size
         val page = pageOf(part, pageCount)
         if (page != null && page < 1) return null
+        if (firstSentence.matches(part)) asks += Ask.FirstSentence(1)
         if (heading.containsMatchIn(part)) {
             // A heading question names the file, a page or nothing else („Wie lautet die Überschrift?“) –
             // „Was ist der Titel des Films …?“ is not about the PDF.
@@ -223,6 +230,7 @@ internal object OwnerDocumentDialogue {
             ?: "Die Dateigröße hat Android für $quoted nicht angegeben."
         asks.filterIsInstance<Ask.Heading>().forEach { parts += headingAnswer(reference, it.page) }
         asks.filterIsInstance<Ask.PageText>().forEach { parts += pageAnswer(reference, it.page) }
+        asks.filterIsInstance<Ask.FirstSentence>().forEach { parts += firstSentenceAnswer(reference, it.page) }
         return parts.joinToString(" ")
     }
 
@@ -264,6 +272,23 @@ internal object OwnerDocumentDialogue {
         val shown = if (line.length > HEADING_CHARS) line.take(HEADING_CHARS).trimEnd() + " …" else line
         return "Die erste Textzeile auf Seite $page lautet: „${clean(shown, HEADING_CHARS + 2)}“. " +
             "(Aus dem gelesenen Text der Seite; die Schriftgröße sehe ich darin nicht, daher nenne ich die erste Zeile.)"
+    }
+
+    private fun firstSentenceAnswer(reference: Reference, page: Int): String {
+        unreadable(reference, page)?.let { return it }
+        val text = reference.pageText(page).orEmpty().trim()
+        if (text.isEmpty()) return "Auf Seite $page liegt kein auslesbarer Text vor."
+        val iterator = java.text.BreakIterator.getSentenceInstance(Locale.GERMAN)
+        iterator.setText(text)
+        val end = iterator.next().takeIf { it != java.text.BreakIterator.DONE && it > 0 }
+            ?: text.length
+        val raw = text.substring(0, end).trim()
+        val shown = if (raw.length > PAGE_ANSWER_CHARS)
+            raw.take(PAGE_ANSWER_CHARS).trimEnd() + " …" else raw
+        // An extracted page can start with a heading; do not assert that a syntactic sentence
+        // starts at the first character. This is a faithful quote, never a model inference.
+        return "Der erste ausgelesene Satz beziehungsweise Textanfang auf Seite $page lautet:\n" +
+            "„" + clean(shown, PAGE_ANSWER_CHARS + 2, keepLines = true) + "“"
     }
 
     private fun pageAnswer(reference: Reference, page: Int): String {

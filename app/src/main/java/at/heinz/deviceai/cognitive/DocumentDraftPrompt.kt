@@ -6,18 +6,22 @@ package at.heinz.deviceai.cognitive
  * the complete-task budget of [LocalChatPromptBudget] (characters and UTF-8 bytes); a longer document is cut on a word
  * boundary and [coveredChars] says how much of it the draft is based on – the surface shows that, nothing is implied.
  */
-internal data class DocumentDraftPrompt(val request: String, val question: String, val coveredChars: Int, val totalChars: Int) {
+internal data class DocumentDraftPrompt(val request: String, val question: String, val coveredChars: Int, val totalChars: Int,
+    val firstPageOnly: Boolean = false) {
     val complete: Boolean get() = coveredChars >= totalChars
 
     companion object {
         private const val OPEN = "<<<DOKUMENT"
         private const val CLOSE = "DOKUMENT>>>"
 
-        fun build(name: String, text: String, budget: Int = LocalChatPromptBudget.MAX_TASK_CHARACTERS): DocumentDraftPrompt? {
+        fun build(name: String, text: String, budget: Int = LocalChatPromptBudget.MAX_TASK_CHARACTERS,
+            firstPageOnly: Boolean = false): DocumentDraftPrompt? {
             val clean = text.trim()
             if (clean.isEmpty()) return null
             val shown = name.trim().ifEmpty { "Dokument" }.take(80)
-            val head = "Erstelle einen Entwurf: eine Zusammenfassung des Dokuments „$shown“ auf Deutsch. " +
+            val head = (if (firstPageOnly) "Fasse ausschließlich Seite 1 des Dokuments „$shown“ auf Deutsch zusammen. " +
+                "Keine Informationen aus anderen Seiten verwenden. " else
+                "Erstelle einen Entwurf: eine Zusammenfassung des Dokuments „$shown“ auf Deutsch. ") +
                 "Verwende ausschließlich Aussagen aus dem Text zwischen den Markierungen; erfinde nichts und " +
                 "kennzeichne Unklares als offen. Gliederung: Kernaussagen als Stichpunkte, danach eine kurze Zusammenfassung.\n" +
                 "$OPEN\n"
@@ -25,7 +29,9 @@ internal data class DocumentDraftPrompt(val request: String, val question: Strin
             val room = budget - bytes(head) - bytes(tail)
             if (room < 200) return null
             val excerpt = fit(clean, room)
-            return DocumentDraftPrompt("Entwurf: Zusammenfassung von „$shown“", head + excerpt + tail, excerpt.length, clean.length)
+            return DocumentDraftPrompt(if (firstPageOnly) "Entwurf: Seite 1 von „$shown“" else
+                "Entwurf: Zusammenfassung von „$shown“", head + excerpt + tail,
+                excerpt.length, clean.length, firstPageOnly)
         }
 
         private fun bytes(s: String) = s.toByteArray(Charsets.UTF_8).size

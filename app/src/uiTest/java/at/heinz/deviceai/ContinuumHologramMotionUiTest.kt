@@ -268,4 +268,23 @@ class ContinuumHologramMotionUiTest {
             assertFalse(pending(view))
         } finally {controller.pause().stop().destroy()}
     }
+
+    @Test fun diagnosticProofDoesNotSilentlyEnableOrPersistNative3d() {
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
+        val activity = controller.get()
+        val view = ContinuumHologramView(activity)
+        try {
+            attachOrb(activity, view)
+            view.setForegroundActive(true)
+            val prefs = activity.getSharedPreferences("continuum-avatar-appearance", android.content.Context.MODE_PRIVATE)
+            assertFalse("Owner selected orb, not 3D", view.isNative3dEnabled())
+            assertFalse(prefs.getBoolean("native-head-3d", false))
+            val start = ContinuumHologramView::class.java.getDeclaredMethod("startAvatarProof")
+            start.isAccessible = true
+            start.invoke(view)
+            assertFalse("A read-only proof must not change the live 3D selection", view.isNative3dEnabled())
+            assertFalse("A read-only proof must not alter persisted owner appearance", prefs.getBoolean("native-head-3d", false))
+        } finally { controller.pause().stop().destroy() }
+    }
+
 }
