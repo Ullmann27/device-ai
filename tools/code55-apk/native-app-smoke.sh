@@ -304,7 +304,32 @@ def capability_response(nodes):
     assert len(editors) == 1 and editors[0].get('text', '') in ('', 'Schreibe eine Nachricht …'), 'Submitted input not cleared'
     return reply
 
+def system_status_scroll(nodes, display):
+    scrolls = [n for n in nodes if n.get('class') == 'android.widget.ScrollView'
+               and n.get('scrollable') == 'true' and n.get('enabled') == 'true'
+               and visible_bounds(n, display)
+               and not n.get('content-desc', '').startswith('Continuum-Cockpit, vertikal scrollbar')]
+    assert len(scrolls) == 1, 'Unique system-status scroll container missing'
+    return scrolls[0]
+
+def scroll_geometry(scroll, display):
+    rows = []
+    def visit(parent, path):
+        for child in parent:
+            index = child.get('index', '')
+            assert re.fullmatch(r'\d+', index), 'Scroll child identity missing'
+            identity = (*path, int(index))
+            bounds = visible_bounds(child, display)
+            if bounds:
+                rows.append((identity, child.get('class'), bounds))
+            visit(child, identity)
+    visit(scroll, ())
+    assert rows, 'System-status scroll content missing'
+    return tuple(rows)
+
 def collect_avatar_diagnostic(nodes, pid, display):
+    started = time.monotonic()
+    deadline = started + 900
     buttons = [n for n in nodes if n.get('enabled') == 'true' and n.get('clickable') == 'true'
                and n.get('content-desc', '').startswith('Systemstatus: Gedächtnis:')
                and visible_bounds(n, display)]
@@ -314,24 +339,36 @@ def collect_avatar_diagnostic(nodes, pid, display):
     assert current == pid, 'Avatar diagnostic changed process'
     gestures = []
     label = 'HOLOGRAMM · LIVE-FRAMES PRÜFEN'
-    for attempt in range(7):
-        if control(nodes, label, display) is not None:
+    seen = set()
+    viewport = None
+    while True:
+        assert time.monotonic() < deadline, 'Avatar diagnostic navigation deadline exceeded'
+        scroll = system_status_scroll(nodes, display)
+        bounds = visible_bounds(scroll, display)
+        assert viewport is None or bounds == viewport, 'System-status scroll container moved'
+        viewport = bounds
+        content = [n for n in scroll.iter('node') if n in nodes]
+        targets = [n for n in content if n.get('enabled') == 'true' and n.get('clickable') == 'true'
+                   and label in (n.get('text'), n.get('content-desc')) and visible_bounds(n, display)]
+        assert len(targets) <= 1, 'Avatar diagnostic action ambiguous'
+        if targets:
             break
-        assert attempt < 6, 'Avatar diagnostic action unreachable after scrolling'
-        scrolls = [n for n in nodes if n.get('class') == 'android.widget.ScrollView'
-                   and n.get('scrollable') == 'true' and visible_bounds(n, display)
-                   and not n.get('content-desc', '').startswith('Continuum-Cockpit, vertikal scrollbar')]
-        assert len(scrolls) == 1, 'Unique system-status scroll container missing'
-        x1, y1, x2, y2 = visible_bounds(scrolls[0], display)
+        geometry = scroll_geometry(scroll, display)
+        assert geometry not in seen, 'System-status scroll made no progress or cycled'
+        seen.add(geometry)
+        attempt = len(gestures) + 1
+        x1, y1, x2, y2 = bounds
         x = (x1+x2)//2
         start_y, end_y = y2-(y2-y1)//6, y1+(y2-y1)//6
-        result = captured_device(f'avatar-system-scroll-{attempt+1}-input', 'shell', 'input', 'swipe',
+        result = captured_device(f'avatar-system-scroll-{attempt}-input', 'shell', 'input', 'swipe',
                                  str(x), str(start_y), str(x), str(end_y), '700')
         assert result.returncode == 0, 'System-status swipe failed'
         gestures.append([x, start_y, x, end_y, 700])
-        nodes, current, _ = snapshot(f'avatar-system-scroll-{attempt+1}', rotation=1, record=False)
+        nodes, current, actual_display = snapshot(f'avatar-system-scroll-{attempt}', rotation=1, record=False)
         assert current == pid, 'Avatar diagnostic changed process'
-    assert tap(nodes, [label], display), 'Avatar diagnostic action missing'
+        assert actual_display == display, 'Avatar diagnostic changed display'
+    navigation_ms = int((time.monotonic() - started) * 1000)
+    assert tap(content, [label], display), 'Avatar diagnostic action missing'
     nodes, current, _ = snapshot('avatar-diagnostic', rotation=1, record=False, await_avatar_diagnostic=True)
     assert current == pid, 'Avatar diagnostic changed process'
     texts = [n.get('text', '') for n in nodes if n.get('text')]
@@ -341,6 +378,7 @@ def collect_avatar_diagnostic(nodes, pid, display):
                                             'Phasenänderung:', 'Start:', 'Ende:']), 'Avatar diagnostic incomplete'
     report['avatar_diagnostic'] = {'status': 'OBSERVED', 'text': text,
         'stage_evidence': 'rotation-top.png', 'dialog_evidence': 'avatar-diagnostic.xml',
+        'navigation_elapsed_ms': navigation_ms, 'navigation_deadline_ms': 900000,
         'scroll_gestures': gestures, 'limit': 'Read-only report; no visible-avatar or performance certification'}
     assert tap(nodes, ['Schließen', 'SCHLIESSEN'], display), 'Avatar diagnostic close control missing'
     nodes, current, _ = snapshot('avatar-return', rotation=1, record=False)
