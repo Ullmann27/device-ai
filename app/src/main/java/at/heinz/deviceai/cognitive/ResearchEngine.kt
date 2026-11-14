@@ -672,8 +672,10 @@ class DeepResearchEngine(
         val contradictions = graph.relationships.filter { it.relation == ClaimRelation.CONTRADICTS }
         contradictions.forEach { edge ->
             claims.firstOrNull { it.id == edge.fromClaimId }?.let { claim ->
+                val question = plan.questions.maxBy { lexicalOverlap(claim.text, it.text) }
+                if (lexicalOverlap(claim.text, question.text) < 0.12) return@let
                 gaps += ResearchGap(
-                    "q0", "Conflicting evidence needs checking.",
+                    question.id, "Conflicting evidence needs checking.",
                     "Find counter-evidence for: ${claim.text}".take(512), counterEvidence = true
                 )
             }

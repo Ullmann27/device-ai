@@ -55,6 +55,8 @@ jobs:
                       ('ResearchTopicAuthorityTest','counterEvidenceTemplatesCannotAdmitOffTopicSources'),
                       ('ResearchTopicAuthorityTest','followUpClaimTextCannotReplaceOriginalTopic'),
                       ('ResearchTopicAuthorityTest','titleGateUsesOriginatingSubquestion'),
+                      ('ResearchTopicAuthorityTest','contradictionFollowUpKeepsItsMatchingSubquestion'),
+                      ('ResearchTopicAuthorityTest','unrelatedContradictionsCannotInventCounterQueries'),
                       ('LocalPoliteFollowUpTest','politeFollowUpFramesCorrectionsInOriginalOrder'),
                       ('GazeBlinkPolicyTest','animationClockWrapAdmitsFreshGazeBlinks'),
                       ('ContinuumLiveProjectionServiceUiTest','geometryResetDetachFailureEndsCapture'),

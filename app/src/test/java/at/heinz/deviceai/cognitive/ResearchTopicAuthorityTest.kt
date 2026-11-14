@@ -80,6 +80,64 @@ class ResearchTopicAuthorityTest {
         assertFalse(dossier.graph.claims.any { wrongTopic.url in it.sourceReferences })
     }
 
+    @Test
+    fun contradictionFollowUpKeepsItsMatchingSubquestion() {
+        val justice = document("justice", "Justiz Österreich",
+            "Die Justiz in Österreich umfasst Gerichte und Staatsanwaltschaften.")
+        val positive = document("positive", "Wireless charging support",
+            "The phone supports wireless charging and lasts ten hours.")
+        val negative = document("negative", "Wireless charging support",
+            "The phone does not support wireless charging and lasts ten hours.")
+        val followUp = document("manual", "Wireless charging – manual",
+            "The manual confirms that wireless charging is not supported.")
+        val counterQuestionIds = mutableListOf<String>()
+        val discovery = discovery { query ->
+            when {
+                query.counterEvidence -> {
+                    counterQuestionIds += query.questionId
+                    listOf(followUp)
+                }
+                query.questionId == "q0" -> listOf(justice)
+                else -> listOf(positive, negative)
+            }
+        }
+        val dossier = DeepResearchEngine(
+            discovery = discovery,
+            provider = SimulatedResearchProvider(
+                listOf(justice, positive, negative, followUp).associateBy { it.url }
+            ),
+            validateTarget = {}
+        ).research("Justiz Österreich sowie wireless charging support", ResearchMode.STANDARD)
+
+        assertTrue(counterQuestionIds.isNotEmpty())
+        assertTrue(counterQuestionIds.all { it == "q1" })
+        assertEquals(setOf(justice.url, positive.url, negative.url, followUp.url),
+            dossier.sources.map { it.canonicalUrl }.toSet())
+    }
+
+    @Test
+    fun unrelatedContradictionsCannotInventCounterQueries() {
+        val positive = document("positive", "Justiz Österreich",
+            "The phone supports wireless charging and lasts ten hours.")
+        val negative = document("negative", "Justiz Österreich",
+            "The phone does not support wireless charging and lasts ten hours.")
+        val observed = mutableListOf<ResearchQuery>()
+        val discovery = discovery { query ->
+            observed += query
+            if (observed.size == 1) listOf(positive, negative) else emptyList()
+        }
+        val dossier = DeepResearchEngine(
+            discovery = discovery,
+            provider = SimulatedResearchProvider(listOf(positive, negative).associateBy { it.url }),
+            validateTarget = {}
+        ).research("Justiz Österreich sowie Solarzellen", ResearchMode.STANDARD)
+
+        assertTrue(dossier.graph.relationships.any { it.relation == ClaimRelation.CONTRADICTS })
+        assertTrue(dossier.rounds.any { it.number == 2 })
+        assertFalse(observed.any { it.counterEvidence })
+        assertEquals(setOf("q0", "q1"), observed.map { it.questionId }.toSet())
+    }
+
     private fun discovery(select: (ResearchQuery) -> List<ResearchDocument>) =
         object : ResearchDiscoveryProvider {
             override val isGeneralSearchAvailable = true

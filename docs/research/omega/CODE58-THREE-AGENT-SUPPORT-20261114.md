@@ -1,6 +1,8 @@
 # Code58 support — 2026-11-14
 
-Status: WIP / UNVERIFIED. No device or APK claim.
+Status: PORTIERT / HOST-VERIFIZIERT / ANDROID-QA-PENDING.
+This source checkpoint precedes the combined Android run. PR #839 records its
+exact-source completion receipt. No device claim.
 
 ## Integration
 
@@ -20,12 +22,27 @@ Status: WIP / UNVERIFIED. No device or APK claim.
    reuse the existing failure/cleanup path and reject stale callbacks.
 4. Integration review: verify PR #836's title filter against composed counter-evidence
    queries and untrusted follow-up text; keep the owner's research topic authoritative.
+   Counter-evidence selects a matching original subquestion using the existing
+   lexical relevance measure and its 0.12 threshold. Unrelated contradictions do
+   not invent a new counter-query; original question-gap searches remain available.
+   This bounded lexical policy is not a semantic fact verifier.
 
 ## Verification and compatibility
 
-Use targeted Kotlin/JUnit and Android/Robolectric regressions on the combined source.
-Local Java 21 and Kotlin compiler are present. Android SDK availability is not yet
-established. Existing Code58 QA is the intended build path; no duplicate release lane.
+Completed host tests use Java 21, Kotlin 2.2.0 and actual JUnit 4.13.2:
+
+- Context: 37 tests, five baseline failures, zero after repair.
+- Avatar: seven tests, four baseline failures, zero after repair.
+- Research: three new baseline failures; independent review found two further
+  subquestion regressions. The repaired engine and existing suites pass 23/23.
+- Research and context tests compile their actual production graph with necessary
+  declarations extracted verbatim from large aggregate source files. No stubs.
+- actionlint and git diff --check pass.
+
+Android SDK is unavailable locally. The existing Code58 workflow compiles full
+Android sources, executes all affected JUnit/Robolectric suites, requires the new
+named cases, and then builds an unsigned ARM64 candidate. This is the same build
+path as #836; no duplicate release lane. The reviewed source is stored in #839.
 Physical Fold7, live capture, real model quality and measured animation FPS remain
 NOT_RUN unless separately observed.
 
@@ -35,3 +52,8 @@ permission, source of action authority, model weight or signing mechanism.
 
 Each worker's commit is reviewed and integrated here before the common QA.
 Rollback is a revert of the bounded support commits; the parent remains reachable.
+
+Research source SHA-256:
+`54128187b48d6f803990d3f97fc4c1915573ee0eecda8b9621282bb1219887fa`.
+Research regression SHA-256:
+`343d7fe2fce2618050bfe1361a2dac61ead7d65575792e4b6945d764bad11814`.
