@@ -134,6 +134,25 @@ class HologramEvidenceTest(unittest.TestCase):
         self.assertEqual(result['copied_surface_size'], [2, 2])
         self.assertEqual(result['renderer_viewport'], [1, 2])
 
+    def test_verified_texture_view_subclass_is_supported(self):
+        for sample in self.fixture.report['samples']:
+            sample['texture']['class'] = 'at.heinz.deviceai.ContinuumHologramView$texture$1'
+            sample['texture_is_texture_view'] = True
+        self.assertEqual(self.fixture.validate()['status'], 'SURFACE_FRAMES_VERIFIED')
+
+    def test_subclass_name_without_runtime_type_evidence_fails(self):
+        self.fixture.report['samples'][0]['texture']['class'] = 'example.TextureView'
+        with self.assertRaises(AssertionError):
+            self.fixture.validate()
+
+    def test_false_or_nonboolean_runtime_type_evidence_fails(self):
+        sample = self.fixture.report['samples'][0]
+        for evidence in (False, None, 1, 'true'):
+            with self.subTest(evidence=evidence):
+                sample['texture_is_texture_view'] = evidence
+                with self.assertRaises(AssertionError):
+                    self.fixture.validate()
+
     def test_submission_without_consumer_progress_fails(self):
         for timestamps in ((0, 0, 0), (0, 100, 200), (100, 100, 100), (100, 200, 0)):
             with self.subTest(timestamps=timestamps):
