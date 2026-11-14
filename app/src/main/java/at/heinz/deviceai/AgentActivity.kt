@@ -1825,10 +1825,15 @@ class AgentActivity : Activity() {
         if (root.width <= 0 || root.height <= 0) return
         val bitmap = at.heinz.deviceai.ui.ContinuumUiSnapshot.render(root)
         val metrics = at.heinz.deviceai.ui.ContinuumUiSnapshot.metrics(this, homeView?.wide == true, homeView?.layoutScale)
-        onLearningIo({ at.heinz.deviceai.ui.ContinuumUiSnapshot.save(this, bitmap, metrics) }) { result ->
+        onLearningIo({
+            try { at.heinz.deviceai.ui.ContinuumUiSnapshot.save(this, bitmap, metrics) }
+            finally { bitmap.recycle() }
+        }) { result ->
             val saved = result.getOrNull()
             if (saved == null) {
-                Toast.makeText(this, "Abnahme-Bild braucht Android 10 oder neuer.", Toast.LENGTH_LONG).show()
+                val message = if (result.isFailure) "Abnahme-Bild konnte nicht gespeichert werden."
+                    else "Abnahme-Bild braucht Android 10 oder neuer."
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(this, "Gesichert: Bilder/Continuum/${saved.fileName}.png", Toast.LENGTH_LONG).show()
                 runCatching { startActivity(at.heinz.deviceai.ui.ContinuumUiSnapshot.shareIntent(saved)) }
