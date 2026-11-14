@@ -6197,7 +6197,7 @@ class AgentActivity : Activity() {
                     if (computerIntent != null && launched != null && approvedAt != null) {
                         val pending = PendingComputerLaunch(ownerSession, generation, launched.packageName,
                             computerIntent, approvedAt, request, allowMaya, ownerRevision)
-                        if (foregroundLearningActive) startComputerSession(pending)
+                        if (computerSessionVisible()) startComputerSession(pending)
                         else pendingComputerLaunch = pending
                         return
                     }
@@ -6286,14 +6286,16 @@ class AgentActivity : Activity() {
             .setOnCancelListener { finish(false) }.show()
     }
 
+    private fun computerSessionVisible(): Boolean = !isFinishing && !isDestroyed &&
+        (foregroundLearningActive || (computerViewVisible && isInMultiWindowMode))
+
     private fun startComputerSession(pending: PendingComputerLaunch) {
         if (pending.session != sessionId || pending.generation != appLookupGeneration || isFinishing || isDestroyed) return
         val controller = computerController ?: OwnerComputerSessionController(this, cockpitBus, avatarDirector,
             localAgentExecutor,
             setFeed = { feed -> homeView?.setLiveComputerFeed(feed) },
             setBusy = { value -> activeLocalRequest = value; setBusy(value) },
-            visible = { !isFinishing && !isDestroyed &&
-                (foregroundLearningActive || (computerViewVisible && isInMultiWindowMode)) },
+            visible = ::computerSessionVisible,
             playClick = { playUiFeedback(at.heinz.deviceai.ui.ContinuumUiFeedback.Cue.BUTTON) },
             stopClick = { uiFeedback?.stop() },
             setPanels = { panel -> homeView?.let { home ->

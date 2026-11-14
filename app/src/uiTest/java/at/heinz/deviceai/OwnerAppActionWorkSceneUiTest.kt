@@ -92,7 +92,7 @@ class OwnerAppActionWorkSceneUiTest {
         while (!condition() && System.nanoTime() < end) { advance(16); Thread.sleep(5) }
         assertTrue("Expected real callback", condition())
     }
-    private fun withActivity(packageName: String = "org.example.signal", label: String = "Signal",
+    private fun withActivity(appPackage: String = "org.example.signal", label: String = "Signal",
                              body: (AgentActivity, Port, ActivityController<AgentActivity>) -> Unit) {
         val app = RuntimeEnvironment.getApplication()
         LocalDialogueRetention.context.clear()
@@ -103,7 +103,7 @@ class OwnerAppActionWorkSceneUiTest {
         app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
             .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
         app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
-        val info = ApplicationInfo().apply { this.packageName = packageName; nonLocalizedLabel = label }
+        val info = ApplicationInfo().apply { packageName = appPackage; nonLocalizedLabel = label }
         shadowOf(app.packageManager).installPackage(PackageInfo().apply {
             packageName = info.packageName; applicationInfo = info
         })
@@ -113,7 +113,7 @@ class OwnerAppActionWorkSceneUiTest {
                 nonLocalizedLabel = label
             })
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
-        val port = Port(packageName)
+        val port = Port(appPackage)
         try {
             controller.setup().visible()
             val a = controller.get()
