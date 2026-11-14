@@ -102,8 +102,8 @@ class ContinuumBotSharedKnowledgeUiTest {
         team.initialize()
         team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), 0)
         roster = ContinuumBotRosterDialog(activity, store, io, team = team,
-            onTeamSubmit = { id, text, revision, shared ->
-                io.execute { team.submit(id, text, revision, true, shared = shared) }
+            onTeamSubmit = { id, text, revision, shared, followup ->
+                io.execute { team.submit(id, text, revision, true, shared = shared, followup = followup) }
                 true
             })
         roster.show(); io.drain()

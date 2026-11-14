@@ -490,7 +490,7 @@ class OwnerFactRevocationUiTest {
             val review = team.reviewSharedKnowledge(id, request, 1)
             val grant = review.approve(setOf(review.facts.single { it.text == FACT }.id), true)
             set(f.activity, "botTeam", team)
-            assertEquals(true, call(f.activity, "submitBotTeam", id, request, 1L, grant))
+            assertEquals(true, call(f.activity, "submitBotTeam", id, request, 1L, grant, null))
             assertTrue(profiles.teamState().tasks.isEmpty())
             confirmDeletion(f)
             assertTrue(f.core.activeOwnerFacts().any { it.content == FACT })

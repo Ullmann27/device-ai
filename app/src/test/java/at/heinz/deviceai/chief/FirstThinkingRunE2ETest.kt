@@ -39,7 +39,6 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
-import org.junit.Ignore
 import org.junit.Test
 import java.util.Collections
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -447,10 +446,51 @@ class FirstThinkingRunE2ETest {
         assertEquals(yes.events.indices.toList(), yes.events.map { it.sequence })
     }
 
-    @Ignore("PENDING – wartet auf Lumo: Aufgabenschleife (chief/) muss einen strukturierten naechsten Schritt " +
-        "liefern und selbststaendig den naechsten Durchlauf anstossen; heute steht er nur im Modelltext.")
     @Test
-    fun schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen() {}
+    fun schritt7b_workerProposalReachesChiefAndRunsOnlyAfterNewOwnerApproval() {
+        val root = Files.createTempDirectory("chief-next-contract-").toFile()
+        val profiles = ChiefBotProfileStore(root)
+        val prompts = java.util.concurrent.CopyOnWriteArrayList<String>()
+        val next = "Prüfe die zweite Behauptung: Jede Raute ist ein Quadrat."
+        val model = object : ChiefTeamModel {
+            override fun readySha256() = "a".repeat(64)
+            override fun generate(prompt: String, cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation,
+                                  deadlineMillis: Long): String {
+                cancellation.throwIfCancelled(); prompts += prompt
+                return if (prompts.size == 2) org.json.JSONObject()
+                    .put("schema", at.heinz.deviceai.cognitive.AgentFollowupEnvelope.SCHEMA)
+                    .put("answer", "Die erste Behauptung wurde anhand des Textes betrachtet, nicht unabhängig verifiziert.")
+                    .put("next", org.json.JSONObject().put("goal", next).put("capability", "text.analyze")
+                        .put("tools", org.json.JSONArray()).put("reason", "Die zweite Behauptung ist offen.")).toString()
+                else "Ungeprüfte Modellbewertung ${prompts.size}."
+            }
+        }
+        val team = ChiefBotTeam(profiles, model)
+        try {
+            team.initialize(); team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), 0)
+            val initial = "team-" + java.util.UUID.randomUUID()
+            team.submit(initial, "Prüfe: Jedes Quadrat ist eine Raute.", 1, ownerApproved = true)
+            assertTrue(team.awaitIdle(10_000))
+            val decision = team.prepareFollowup(initial, "REVIEW")
+            assertEquals(ChiefFollowupDecisionCode.OWNER_APPROVAL_REQUIRED, decision.code)
+            val review = requireNotNull(decision.review)
+            assertEquals(next, review.proposal.goal)
+            assertTrue(review.proposal.requestedTools.isEmpty())
+            assertEquals(2, prompts.size)
+            assertThrows(IllegalStateException::class.java) {
+                team.submit(review.requestId, next, 1, ownerApproved = false, followup = review)
+            }
+            assertEquals(1, profiles.teamState().tasks.size)
+            team.submit(review.requestId, next, 1, ownerApproved = true, followup = review)
+            assertTrue(team.awaitIdle(10_000))
+            assertEquals(4, prompts.size)
+            assertEquals(listOf(initial, review.requestId), profiles.teamState().tasks.map { it.id })
+            assertTrue(profiles.teamState().tasks.all {
+                it.status == ChiefTeamStatus.RESPONSES_RECORDED && it.responses.size == 2
+            })
+            assertEquals(ChiefFollowupDecisionCode.ALREADY_SUBMITTED, team.prepareFollowup(initial, "REVIEW").code)
+        } finally { team.close(); root.deleteRecursively() }
+    }
 
     // ------------------------------------------------------------ Gesamte Kette
     /** Die ganze Kette in einem Durchlauf (Ja-Fall) – das Sprint-Ziel, soweit heute echt pruefbar. */
