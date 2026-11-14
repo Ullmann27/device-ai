@@ -43,6 +43,8 @@ class LocalConversationContext {
         if(Regex("(?iu)^was hast du (?:(?:dadurch|jetzt|daraus) )?verstanden[?!.]?$").matches(text))
             return ContextDirective(ContextDirectiveKind.CONTEXT_REPORT,explicitFocus)
         val correction=Regex("(?iu)^(?:nein[,!:]?\\s+)?(?:ich (?:meinte|meine)|gemeint war)\\s+(.+)$").matchEntire(text)?:return null
+        // Keep bound object corrections contextual.
+        if (objects.isObjectCorrection(text)) return null
         // A scope correction invalidates every old topic channel, including typed
         // research and its freshness evidence, not only the visible dialogue turns.
         dropTurns();research=null

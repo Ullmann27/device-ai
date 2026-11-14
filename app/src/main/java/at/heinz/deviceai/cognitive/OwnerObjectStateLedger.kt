@@ -65,6 +65,27 @@ internal class OwnerObjectStateLedger {
 
     fun hasState(): Boolean = items.isNotEmpty()
 
+    /** Recognizes updates without changing state. */
+    fun isObjectCorrection(text: String): Boolean = objectCorrectionBody(text.trim()) != null
+
+    private fun objectCorrectionBody(text: String): String? {
+        if (incomplete || items.isEmpty() || text.length > 512) return null
+        val body = objectCorrection.matchEntire(text)?.groupValues?.get(1)?.trim() ?: return null
+        if (quotedOrReported.containsMatchIn(body) || questionSentences(body).isNotEmpty()) return null
+        val words = tokens(body)
+        if (correctionQualification.containsMatchIn(words.joinToString(" ") { it.low })) return null
+        if (words.isEmpty() || words.any { it.low in hedges || it.low in conditionals ||
+                it.low in correctionActions } || words.groupBy { it.sentence }.values.any { !supportedStatement(it) })
+            return null
+        val candidate = copy().also { it.observeOwnerTurn(body) }
+        if (candidate.incomplete || candidate.unresolved != unresolved || candidate.items.keys != items.keys)
+            return null
+        val updated = candidate.items.values.any { item -> item.slots.values.any {
+            it.events.lastOrNull()?.message == candidate.message
+        } }
+        return body.takeIf { updated }
+    }
+
     private fun copy(): OwnerObjectStateLedger = OwnerObjectStateLedger().also { c ->
         items.forEach { (k, v) -> c.items[k] = v.copy() }
         c.message = message; c.incomplete = incomplete; c.unresolved += unresolved
@@ -343,9 +364,10 @@ internal class OwnerObjectStateLedger {
     // ---------------------------------------------------------------- fold
 
     fun observeOwnerTurn(text: String) {
-        val clean = text.trim()
-        if (clean.isEmpty()) return
-        if (clean.length > 4_000 || clean.any { it.isISOControl() && it != '\n' }) { incomplete = true; return }
+        val original = text.trim()
+        if (original.isEmpty()) return
+        if (original.length > 4_000 || original.any { it.isISOControl() && it != '\n' }) { incomplete = true; return }
+        val clean = objectCorrectionBody(original) ?: original
         if (quotedOrReported.containsMatchIn(clean)) return
         message++
         val toks = tokens(clean)
@@ -977,6 +999,12 @@ internal class OwnerObjectStateLedger {
     }
 
     private companion object {
+        val objectCorrection = Regex(
+            "(?iu)^(?:nein[,!:]?\\s+)?(?:ich (?:meinte|meine)|gemeint war)\\s+(.+)$")
+        val correctionActions = setOf("öffne", "öffnen", "starte", "installiere", "lösche", "sende", "schicke",
+            "schick", "suche", "recherchiere", "ignoriere", "kopiere", "kaufe", "bestelle")
+        val correctionQualification = Regex(
+            """(?iu)(?<![\p{L}\p{N}])(?:sofern|vorausgesetzt|es sei denn|stimmt|stimmte|falsch|unwahr|unsicher|unklar|denke|vermute|ich (?:weiß|weiss|wüsste)|(?:weiß|weiss|wüsste) ich)(?![\p{L}\p{N}])""")
         const val MAX_ITEMS = 6
         const val MAX_EVENTS = 24
         const val MAX_SLOTS = 6

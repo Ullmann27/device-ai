@@ -4,6 +4,7 @@ on:
     branches:
       - fix/code57-fold7-downloads-research-20261114
       - work/code58-three-agent-support-20261114
+      - work/code58-deep-tech-20261114
 permissions:
   contents: read
 jobs:
@@ -68,6 +69,28 @@ jobs:
                       ('ContinuumLiveProjectionServiceUiTest','geometryResetDetachFailureEndsCapture'),
                       ('ContinuumLiveProjectionServiceUiTest','geometryResetAttachFailureEndsCapture'),
                       ('ContinuumLiveProjectionServiceUiTest','successfulGeometryResetKeepsCaptureAndRejectsOldReader')}
+          required |= {('OwnerObjectScopeCorrectionTest','laterRetractionNeverBecomesAnObjectCorrection'),
+                       ('OwnerObjectScopeCorrectionTest','literalWhiteRemainsAValidColorCorrection'),
+                       ('AvatarFramePacingTest','budgetStaysBoundedAcrossRefreshRates'),
+                       ('ContinuumHologramMotionUiTest','lateVsyncCannotRewindNewerAudioSamples'),
+                       ('ContinuumLiveProjectionServiceUiTest','staleStartCannotStopRunningReplacement'),
+                       ('LiveActionCancellationBoundaryTest','cancellationAfterAdmissionAllowsOnlyFreshRetry'),
+                       ('LiveActionCancellationBoundaryTest','cancellationAfterDispatchStillForbidsFreshRetry'),
+                       ('ProactiveMemoryDateTest','explicitYearMustMatchToday'),
+                       ('ProactiveMemoryDateTest','explicitClockTailDoesNotBecomeAShortYear')}
+          required |= {('ContinuumProjectionCommandIsolationUiTest','staleStartCannotStopAlreadyBoundCapture'),
+                       ('ContinuumProjectionCommandIsolationUiTest','nullStartCannotStopAlreadyBoundCapture'),
+                       ('ContinuumProjectionCommandIsolationUiTest','duplicateStartCannotRepromoteOrReuseConsent'),
+                       ('ContinuumProjectionCommandIsolationUiTest','staleStopStillCannotStopAlreadyBoundCapture'),
+                       ('ContinuumProjectionCommandIsolationUiTest','matchingStopStillEndsAlreadyBoundCapture'),
+                       ('ContinuumLiveProjectionServiceUiTest','nullStartCannotStopRunningCapture'),
+                       ('ContinuumLiveProjectionServiceUiTest','supersededQueuedStartKeepsReplacementCaptureBinding'),
+                       ('ContinuumLiveProjectionServiceUiTest','disconnectedObservationRejectsQueuedStartAfterPromotion'),
+                       ('ContinuumLiveProjectionServiceUiTest','promotionFailureClosesAndUsesItsStartId'),
+                       ('ContinuumLiveProjectionServiceUiTest','projectionCallbackRevocationEndsSessionAndForeground'),
+                       ('LocalShortClarificationTest','shortClarificationsRequireTheirConversation'),
+                       ('LocalShortClarificationTest','namedQuestionsQuotesAndCommandsRemainIndependent'),
+                       ('LocalShortClarificationTest','clarificationNeverAuthorizesContinuationOrDeviceActions')}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'FOLD7_ROUTING_PASS={len(cases)} FAILED=0 SKIPPED=0')
           PY

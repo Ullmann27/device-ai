@@ -23,6 +23,7 @@ import android.provider.Settings
 import android.util.AttributeSet
 import android.widget.Toast
 import android.view.View
+import android.view.Choreographer
 import android.view.TextureView
 import android.view.Surface
 import android.graphics.SurfaceTexture
@@ -142,6 +143,8 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var visibleFrameCount = 0L
     private var drawnFrameCount = 0L
     private var framePending = false
+    private val framePacing = at.heinz.deviceai.ui.AvatarFramePacing()
+    private val choreographer by lazy { Choreographer.getInstance() }
     private var observersRegistered = false
     private var lastFrameMs = 0L
     private var phase = .4f
@@ -178,21 +181,23 @@ class ContinuumHologramView @JvmOverloads constructor(
         thermalListener = null
     }
 
-    private val drawFrame = Runnable {
+    private val drawFrame = Choreographer.FrameCallback { frameTimeNanos ->
         framePending = false
         if (canAnimateFrame()) {
-            visibleFrameCount++
-            // The motion clock advances independently of a completed Canvas draw.
-            // Invalidation requests only rendering, not the next state transition.
-            advanceFrame()
-            if (memoryScene.isActive) {
-                if (memorySceneHostReady?.invoke() != true) clearMemoryScene()
-                else {
-                    if (memoryScene.sample(memorySceneTime()) == null) clearMemoryScene()
-                    memorySceneInvalidation?.invoke()
+            if (framePacing.admit(frameTimeNanos, renderBudget().frameDelayMillis)) {
+                visibleFrameCount++
+                // Advance independently of Canvas draws.
+                // Invalidation only requests rendering.
+                advanceFrame(frameTimeNanos / 1_000_000L)
+                if (memoryScene.isActive) {
+                    if (memorySceneHostReady?.invoke() != true) clearMemoryScene()
+                    else {
+                        if (memoryScene.sample(memorySceneTime()) == null) clearMemoryScene()
+                        memorySceneInvalidation?.invoke()
+                    }
                 }
+                postInvalidateOnAnimation()
             }
-            postInvalidateOnAnimation()
             scheduleFrame()
         }
     }
@@ -201,9 +206,9 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun scheduleFrame() {
         if (canAnimateFrame() && !framePending) {
             framePending = true
-            // Vsync-paced with a positive delay; moderate heat reduces requests, severe heat stops them.
-            val delay = (renderBudget().frameDelayMillis - 16L).coerceAtLeast(0L)
-            postOnAnimationDelayed(drawFrame, delay)
+            val delay = framePacing.delayMillis(System.nanoTime(), renderBudget().frameDelayMillis,
+                display?.refreshRate ?: 60f)
+            choreographer.postFrameCallbackDelayed(drawFrame, delay)
         }
     }
     private val motionObserver = object : ContentObserver(mainHandler) {
@@ -1005,7 +1010,8 @@ class ContinuumHologramView @JvmOverloads constructor(
             avatarPose.clearSpeech()
             avatarPose.clearObservedGaze(SystemClock.elapsedRealtime())
         }
-        removeCallbacks(drawFrame)
+        choreographer.removeFrameCallback(drawFrame)
+        framePacing.reset()
         framePending = false
         lastFrameMs = 0L
         audio.reset()
@@ -1115,7 +1121,8 @@ class ContinuumHologramView @JvmOverloads constructor(
             avatarEnabled = headEnabled,
             budget = policyBudget
         )
-        removeCallbacks(drawFrame)
+        choreographer.removeFrameCallback(drawFrame)
+        framePacing.reset()
         framePending = false
         lastFrameMs = 0L
         if (!canAnimateFrame()) {
@@ -1434,9 +1441,8 @@ class ContinuumHologramView @JvmOverloads constructor(
         ).also { headFadeShaders = it; headFadeShaderBounds.set(b) }
     }
 
-    private fun advanceFrame() {
+    private fun advanceFrame(now: Long) {
         if (!canAnimateFrame()) return
-        val now = SystemClock.uptimeMillis()
         entranceMotion.advance(now)
         val previousCameraProgress = cameraMotion.progress
         cameraMotion.advance(now, hasWindowFocus(), Settings.Global.getFloat(context.contentResolver,
@@ -1457,7 +1463,8 @@ class ContinuumHologramView @JvmOverloads constructor(
             audio.submit(pendingAudioLevel, sampleTime)
             consumedAudioMs = sampleTime
         }
-        audioEnergy = if (currentState == State.SPEAKING) sqrt(audio.valueAt(now)) else 0f
+        // Audio samples use arrival time.
+        audioEnergy = if (currentState == State.SPEAKING) sqrt(audio.valueAt(SystemClock.uptimeMillis())) else 0f
         val targetEnergy = if (currentState == State.SPEAKING) .12f + audioEnergy * .88f else stateEnergy(currentState)
         energy += (targetEnergy - energy) * (1f - exp(-delta * 9f))
         if (renderBudget().animate) phase = (phase + delta * (.28f + energy * .72f)) % 1000f

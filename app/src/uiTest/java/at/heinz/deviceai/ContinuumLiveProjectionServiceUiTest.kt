@@ -196,8 +196,9 @@ class ContinuumLiveProjectionServiceUiTest {
     private fun assertRejectedAfterPromotion(intent: Intent?, requested: Long) {
         assertEquals(Service.START_NOT_STICKY, service.onStartCommand(intent, 0, 7))
         assertEquals(listOf("startForeground:55:${ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION}",
-            "stopSelf"), ServiceShadow.calls)
+            "stopSelf:7"), ServiceShadow.calls)
         assertTrue(shadowOf(service).isStoppedBySelf)
+        assertEquals(7, shadowOf(service).stopSelfId)
         assertEquals(0, ProjectionManagerShadow.creationCalls)
         val pending = requireNotNull(ServiceShadow.notification).actions.single().actionIntent
         assertTrue(pending.isImmutable)
@@ -309,6 +310,35 @@ class ContinuumLiveProjectionServiceUiTest {
         assertNotEquals(oldSession, newSession)
         assertRejectedAfterPromotion(oldIntent, oldSession)
         assertNotNull(AndroidLiveComputer.projectionAccess(newSession))
+    }
+
+    @Test fun staleStartCannotStopRunningReplacement() {
+        val oldIntent = queuedCapture("old-capture")
+        assertRunningCaptureSurvives(oldIntent)
+    }
+
+    @Test fun nullStartCannotStopRunningCapture() {
+        assertRunningCaptureSurvives(null)
+    }
+
+    private fun assertRunningCaptureSurvives(stale: Intent?) {
+        val current = queuedCapture("running-replacement")
+        val session = current.getLongExtra(ContinuumLiveProjectionService.SESSION, 0)
+        ReflectionHelpers.callInstanceMethod<Void>(service, "createNotification",
+            ClassParameter.from(Long::class.javaPrimitiveType, session))
+        ReflectionHelpers.setField(service, "sessionId", session)
+        val notification = requireNotNull(ServiceShadow.notification)
+        ServiceShadow.calls.clear()
+
+        assertEquals(Service.START_NOT_STICKY, service.onStartCommand(stale, 0, 11))
+
+        assertTrue(ServiceShadow.calls.isEmpty())
+        assertSame(notification, ServiceShadow.notification)
+        assertFalse(shadowOf(service).isStoppedBySelf)
+        assertNotNull(AndroidLiveComputer.projectionAccess(session))
+        assertEquals(0, ProjectionManagerShadow.creationCalls)
+        val stop = shadowOf(notification.actions.single().actionIntent).savedIntent
+        assertEquals(session, stop.getLongExtra(ContinuumLiveProjectionService.SESSION, -1))
     }
 
     @Test

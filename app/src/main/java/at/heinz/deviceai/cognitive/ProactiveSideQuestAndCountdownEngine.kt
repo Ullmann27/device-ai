@@ -1,8 +1,8 @@
 package at.heinz.deviceai.cognitive
 
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 
@@ -151,9 +151,21 @@ class ProactiveSideQuestAndCountdownEngine(
             return recordDay == today && EVENT_KEYWORDS.containsMatchIn(content)
         }
 
-        val numericDate = DateTimeFormatter.ofPattern("d.M.", Locale.GERMANY).format(today)
-        val paddedDate = DateTimeFormatter.ofPattern("dd.MM.", Locale.GERMANY).format(today)
-        val explicitDate = content.contains(numericDate) || content.contains(paddedDate)
+        val explicitDate = NUMERIC_DATE.findAll(content).any { match ->
+            val next = content.getOrNull(match.range.last + 1)
+            if (next != null && (next.isLetterOrDigit() || next in "/-" ||
+                    next == '.' && content.getOrNull(match.range.last + 2)?.isDigit() == true)) return@any false
+            val yearText = match.groupValues[3]
+            val timeTail = if (yearText.length in 1..2 && yearText.toInt() in 0..23)
+                TIME_TAIL.matchAt(content, match.range.last + 1) else null
+            val isTime = timeTail != null && (timeTail.groupValues[1].isEmpty() ||
+                timeTail.groupValues[1].toInt() in 0..59)
+            if (yearText.isNotEmpty() && !isTime && yearText.length != 4) return@any false
+            val year = if (isTime || yearText.isEmpty()) today.year else yearText.toInt()
+            runCatching {
+                LocalDate.of(year, match.groupValues[2].toInt(), match.groupValues[1].toInt())
+            }.getOrNull() == today
+        }
         return explicitDate && EVENT_KEYWORDS.containsMatchIn(content)
     }
 
@@ -191,6 +203,12 @@ class ProactiveSideQuestAndCountdownEngine(
 
         private val RELATIVE_TODAY =
             Regex("""(?iu)\b(?:heute(?:\s+abend)?|today|tonight)\b""")
+
+        private val NUMERIC_DATE =
+            Regex("""(?<![\p{L}\p{N}./-])([0-9]{1,2})\.([0-9]{1,2})\.(?:[ \t]*([0-9]+))?""")
+
+        private val TIME_TAIL =
+            Regex("""(?iu)(?::([0-9]{2})(?:[ \t]+Uhr)?|[ \t]+Uhr)(?![\p{L}\p{N}:])""")
 
         private val EVENT_KEYWORDS =
             Regex("""(?iu)\b(?:abendessen|geburtstag|termin|treffen|abholen|reservierung|geschenk|arzt|schule|feier|essen)\b""")

@@ -311,10 +311,11 @@ internal class VerifiedNodeAction(private val journal: LiveActionJournal, privat
             if (admission != LiveActionJournal.Admission.ALLOWED) return refused("JOURNAL_" + admission.name, true, stamp)
             var accepted: Boolean? = null
             var after: ObservationStamp? = null
-            var verdict = EffectVerdict.UNCLEAR_DISPATCH
+            var verdict = EffectVerdict.NOT_DISPATCHED
             var reason = "DISPATCH_FAILED"
             try {
                 port.checkActive()
+                verdict = EffectVerdict.UNCLEAR_DISPATCH
                 accepted = try { port.performOnce(request, target) } catch (e: Exception) { reason = "DISPATCH_FAILED:" + (e.message ?: e.javaClass.simpleName).take(80); null }
                 if (accepted == true) {
                     events.emit(LiveActionEvent.Dispatched(request.taskId, request.stepId, request.kind, request.packageName,

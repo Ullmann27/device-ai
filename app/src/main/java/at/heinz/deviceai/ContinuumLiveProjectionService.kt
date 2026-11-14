@@ -100,6 +100,9 @@ class ContinuumLiveProjectionService : Service() {
             }
             return START_NOT_STICKY
         }
+        // Preserve the valid bound capture.
+        if (sessionId != 0L && !closed &&
+            AndroidLiveComputer.projectionAccess(sessionId) != null) return START_NOT_STICKY
         try {
             createNotification(requested)
         } catch (_: Exception) {
@@ -111,7 +114,7 @@ class ContinuumLiveProjectionService : Service() {
         if (requested == sessionId && sessionId != 0L && !closed) return START_NOT_STICKY
         if (sessionId != 0L || requested == 0L || AndroidLiveComputer.projectionAccess(requested) == null) {
             AndroidLiveComputer.endProjection(requested, LiveMonitorReason.SOURCE_UNVERIFIED)
-            stopSelf()
+            stopSelf(startId)
             return START_NOT_STICKY
         }
         sessionId = requested
