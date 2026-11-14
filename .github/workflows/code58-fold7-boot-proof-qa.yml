@@ -46,10 +46,7 @@ jobs:
             -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=58 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
-            :app:testDebugUnitTest \
-            --tests 'at.heinz.deviceai.ContinuumHologramMotionUiTest' \
-            --tests 'at.heinz.deviceai.ContinuumGemmaRestorePolicyTest' \
-            --tests 'at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest'
+            -I .github/continuum/code58-boot-proof-tests.init.gradle :app:testDebugUnitTest
       - name: Keep genuine test results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
