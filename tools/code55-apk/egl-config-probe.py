@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Observe pinned host EGL configuration; no Android acceptance."""
 import ctypes as C
+import contextlib
 import hashlib
 import json
 import os
@@ -8,6 +9,7 @@ import pathlib
 import platform
 import re
 import resource
+import select
 import signal
 import subprocess
 import sys
@@ -60,11 +62,13 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 def observe(mode, sdk, output):
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     resource.setrlimit(resource.RLIMIT_FSIZE, (2 * 1024 * 1024, 2 * 1024 * 1024))
-    if mode not in ("default", "surfaceless"):
+    if mode not in ("default", "surfaceless", "xvfb"):
         raise ValueError("Unknown mode")
     actual_platform = os.environ.get("EGL_PLATFORM")
-    if actual_platform != (None if mode == "default" else "surfaceless"):
+    if actual_platform != ("surfaceless" if mode == "surfaceless" else None):
         raise ValueError("Unexpected EGL_PLATFORM")
+    if mode == "xvfb" and not re.fullmatch(r":[0-9]{1,5}", os.environ.get("DISPLAY", "")):
+        raise ValueError("Own Xvfb display missing")
     sdk = sdk.resolve(strict=True)
     output.mkdir()
     gl = sdk / "lib64" / "gles_llvmpipe"
@@ -76,6 +80,7 @@ def observe(mode, sdk, output):
         "mode": mode, "pid": os.getpid(), "uid": os.getuid(),
         "started_monotonic": time.monotonic(), "limitation": LIMITATION,
         "egl_platform": actual_platform, "events": [], "map_snapshots": [],
+        "display": os.environ.get("DISPLAY"),
         "required_libraries": [
             {"path": str(p), "size": p.stat().st_size, "sha256": file_hash(p)}
             for p in required
@@ -237,6 +242,117 @@ def stop_own_child(process):
         except ProcessLookupError:
             pass
         process.wait(timeout=2)
+
+
+def own_server_identity(process, command, executable, output, label):
+    if process.poll() is not None:
+        raise RuntimeError("Own Xvfb exited before identity capture")
+    root = pathlib.Path("/proc") / str(process.pid)
+    raw = {name: (root / name).read_bytes() for name in ("stat", "status", "cmdline")}
+    for name, data in raw.items():
+        (output / ("xvfb-" + label + "-" + name + ".txt")).write_bytes(data)
+    fields = raw["stat"].decode().rsplit(") ", 1)[1].split()
+    uids = re.search(rb"^Uid:\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s*$", raw["status"], re.M)
+    actual_command = [value.decode("utf-8", "strict") for value in raw["cmdline"].rstrip(b"\0").split(b"\0")]
+    actual_executable = (root / "exe").resolve(strict=True)
+    identity = {
+        "pid": process.pid, "uid": int(uids[1]) if uids else None,
+        "parent_pid": int(fields[1]), "process_group": int(fields[2]),
+        "session": int(fields[3]), "start_ticks": int(fields[19]),
+        "command": actual_command, "executable": str(actual_executable),
+        "sampled_monotonic": time.monotonic(),
+    }
+    if not uids or any(int(value) != os.getuid() for value in uids.groups()):
+        raise ValueError("Own Xvfb UID mismatch")
+    if (identity["parent_pid"] != os.getpid()
+            or identity["process_group"] != os.getpgrp() or identity["session"] != os.getsid(0)
+            or actual_command != command or actual_executable != executable):
+        raise ValueError("Own Xvfb process binding mismatch")
+    return identity
+
+
+@contextlib.contextmanager
+def observation_environment(mode, env, output, meta, report, deadline):
+    child_env = dict(env)
+    if mode != "xvfb":
+        if mode == "surfaceless":
+            child_env["EGL_PLATFORM"] = "surfaceless"
+        yield child_env
+        return
+    details = {
+        "startup_limit_seconds": 5, "term_grace_seconds": 2,
+        "sources": [
+            "https://manpages.ubuntu.com/manpages/noble/man1/Xserver.1.html",
+            "https://manpages.ubuntu.com/manpages/noble/man1/Xvfb.1.html",
+        ],
+    }
+    meta["own_xvfb"] = details
+    write_json(report, meta)
+    process, read_fd, write_fd = None, None, None
+    try:
+        if deadline - time.monotonic() < 30:
+            raise TimeoutError("Insufficient own Xvfb comparison deadline")
+        executable = pathlib.Path("/usr/bin/Xvfb").resolve(strict=True)
+        if not executable.is_file() or not os.access(executable, os.X_OK):
+            raise FileNotFoundError("Installed Ubuntu Xvfb unavailable")
+        details["executable"] = str(executable)
+        details["executable_sha256"] = file_hash(executable)
+        host_env = {key: os.environ[key] for key in ("PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "XDG_RUNTIME_DIR") if key in os.environ}
+        read_fd, write_fd = os.pipe()
+        command = [str(executable), "-displayfd", str(write_fd), "-screen", "0", "1080x2400x24", "-nolisten", "tcp"]
+        details["command"] = command
+        details["started_monotonic"] = time.monotonic()
+        with (output / "xvfb-stdout.txt").open("wb") as stdout, (output / "xvfb-stderr.txt").open("wb") as stderr:
+            process = subprocess.Popen(
+                command, env=host_env, stdin=subprocess.DEVNULL, stdout=stdout, stderr=stderr,
+                pass_fds=(write_fd,),
+            )
+            os.close(write_fd)
+            write_fd = None
+            details["pid"] = process.pid
+            write_json(report, meta)
+            ready_deadline = details["started_monotonic"] + 5
+            reply = b""
+            while b"\n" not in reply:
+                remaining = ready_deadline - time.monotonic()
+                if remaining <= 0:
+                    raise TimeoutError("Own Xvfb startup deadline")
+                if process.poll() is not None:
+                    raise RuntimeError("Own Xvfb exited during startup")
+                if select.select([read_fd], [], [], min(remaining, 0.1))[0]:
+                    value = os.read(read_fd, 17 - len(reply))
+                    reply += value
+                    if not value or len(reply) > 16:
+                        raise ValueError("Invalid own Xvfb display response")
+            (output / "xvfb-display-response.txt").write_bytes(reply)
+            if not re.fullmatch(rb"(?:0|[1-9][0-9]{0,4})\n", reply) or int(reply) > 65535:
+                raise ValueError("Invalid own Xvfb display number")
+            details["bound"] = own_server_identity(process, command, executable, output, "bound")
+            details["display"] = ":" + reply.decode().strip()
+            child_env["DISPLAY"] = details["display"]
+            details["probe_environment_difference"] = {"DISPLAY": details["display"]}
+            details["ready_monotonic"] = time.monotonic()
+            write_json(report, meta)
+            yield child_env
+            details["after_probe"] = own_server_identity(process, command, executable, output, "after")
+            if details["after_probe"]["start_ticks"] != details["bound"]["start_ticks"]:
+                raise ValueError("Own Xvfb lifetime changed")
+    except BaseException as error:
+        details["error"] = {"type": type(error).__name__, "message": str(error)}
+        raise
+    finally:
+        for fd in (read_fd, write_fd):
+            if fd is not None:
+                os.close(fd)
+        if process is not None:
+            details["stop_started_monotonic"] = time.monotonic()
+            try:
+                stop_own_child(process)
+            finally:
+                details["exit_code"] = process.returncode
+                details["reaped"] = process.returncode is not None
+                details["stop_finished_monotonic"] = time.monotonic()
+        write_json(report, meta)
 
 
 def loader_preflight(sdk, output, env, deadline):
@@ -408,46 +524,44 @@ def collect():
             "GBM_BACKENDS_PATH": str(gl / "gbm"), "EGL_LOG_LEVEL": "debug",
         })
         meta["common_probe_environment"] = env
-        meta["probe_environment_difference"] = {"default": None, "surfaceless": "surfaceless"}
+        meta["probe_environment_difference"] = {"default": None, "surfaceless": "surfaceless", "xvfb": None}
         write_json(report, meta)
         meta["loader_preflight"] = loader_preflight(sdk, output, env, deadline)
         write_json(report, meta)
-        for mode in ("default", "surfaceless"):
+        for mode in ("default", "surfaceless", "xvfb"):
             if deadline - time.monotonic() < 20:
                 raise TimeoutError("Insufficient probe deadline")
-            child_env = dict(env)
-            if mode == "surfaceless":
-                child_env["EGL_PLATFORM"] = "surfaceless"
-            command = [sys.executable, "-I", "-B", str(pathlib.Path(__file__).resolve()), "--observe", mode, str(sdk), str(output / mode)]
-            entry = {"mode": mode, "command": command, "started_monotonic": time.monotonic(), "wall_limit_seconds": 15, "term_grace_seconds": 2}
-            meta["processes"].append(entry)
-            write_json(report, meta)
-            process = None
-            with (output / (mode + "-stdout.txt")).open("wb") as stdout, (output / (mode + "-stderr.txt")).open("wb") as stderr:
-                try:
-                    process = subprocess.Popen(
-                        command, env=child_env, stdin=subprocess.DEVNULL, stdout=stdout, stderr=stderr,
-                        start_new_session=True,
-                    )
-                    entry["pid"] = process.pid
-                    write_json(report, meta)
+            with observation_environment(mode, env, output, meta, report, deadline) as child_env:
+                command = [sys.executable, "-I", "-B", str(pathlib.Path(__file__).resolve()), "--observe", mode, str(sdk), str(output / mode)]
+                entry = {"mode": mode, "command": command, "started_monotonic": time.monotonic(), "wall_limit_seconds": 15, "term_grace_seconds": 2}
+                meta["processes"].append(entry)
+                write_json(report, meta)
+                process = None
+                with (output / (mode + "-stdout.txt")).open("wb") as stdout, (output / (mode + "-stderr.txt")).open("wb") as stderr:
                     try:
-                        entry["exit_code"] = process.wait(timeout=15)
-                        entry["wall_timeout"] = False
-                    except subprocess.TimeoutExpired:
-                        entry["wall_timeout"] = True
-                        stop_own_child(process)
-                        entry["exit_code"] = process.returncode
-                finally:
-                    if process is not None:
-                        stop_own_child(process)
-                    entry["finished_monotonic"] = time.monotonic()
-                    write_json(report, meta)
-            observation = output / mode / "observation.json"
-            entry["observation_file_present"] = observation.is_file()
-            if observation.is_file():
-                entry["observation_sha256"] = file_hash(observation)
-            print("EGL_OBSERVATION " + json.dumps(entry, sort_keys=True), flush=True)
+                        process = subprocess.Popen(
+                            command, env=child_env, stdin=subprocess.DEVNULL, stdout=stdout, stderr=stderr,
+                            start_new_session=True,
+                        )
+                        entry["pid"] = process.pid
+                        write_json(report, meta)
+                        try:
+                            entry["exit_code"] = process.wait(timeout=15)
+                            entry["wall_timeout"] = False
+                        except subprocess.TimeoutExpired:
+                            entry["wall_timeout"] = True
+                            stop_own_child(process)
+                            entry["exit_code"] = process.returncode
+                    finally:
+                        if process is not None:
+                            stop_own_child(process)
+                        entry["finished_monotonic"] = time.monotonic()
+                        write_json(report, meta)
+                observation = output / mode / "observation.json"
+                entry["observation_file_present"] = observation.is_file()
+                if observation.is_file():
+                    entry["observation_sha256"] = file_hash(observation)
+                print("EGL_OBSERVATION " + json.dumps(entry, sort_keys=True), flush=True)
         meta["collection_finished"] = True
     except Exception as error:
         meta["collection_error"] = {"type": type(error).__name__, "message": str(error)}
