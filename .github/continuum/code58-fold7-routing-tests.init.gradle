@@ -11,6 +11,7 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.cognitive.ResearchQuestionFocusTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.ResearchTopicAuthorityTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ResearchTopicAuthorityLengthTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.LocalPoliteFollowUpTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.LocalShortClarificationTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest'

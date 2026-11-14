@@ -47,7 +47,7 @@ Local `git diff --check`: PASS. Android/JUnit execution: NOT_RUN locally; no
 Android SDK or Robolectric dependencies are available.
 
 First actual GitHub run `43566195472`, job `132360472369`, integrated source
-`547ab9d1c68afbd3b48d872b369149ba6727348f`: projection class 21 cases,
+`8982225c0b32429a5c8ebd4332dbd0b9061b2676`: projection class 21 cases,
 18 passed, 3 failed, zero skips. The three new cases failed during fixture
 creation with `IllegalArgumentException: The image dimensions must be positive`;
 the service-only Robolectric context returned 0x0 maximum window bounds.
@@ -60,7 +60,11 @@ their agreement. Both accessibility application windows occupy disjoint
 600x1000 halves. The existing source/crop/cleanup assertions are unchanged.
 This uses the same custom WindowManager shadow approach as AndroidX Camera's
 `TestShadowWindowManager`; no production display geometry is changed.
-Corrected-fixture Android rerun: PENDING through the root integrator.
+Corrected-fixture Android run `43566865117`, job `132362508543`, source
+`c6ca29c92f34a6204d9151f08ab8e4f783663558`: 181/181 selected Android/Robolectric
+cases PASS, zero failures and skips. The required-case gate explicitly checks
+all three new geometry-reset tests. This verifies the capture failure lifecycle
+in the real service methods under controlled Android boundaries.
 Fold7 capture/GPU/rotation: NOT_RUN. No installed-device success is claimed.
 
 Compatibility: EXP-12 identity/checkpoint continuity; existing capture-session
@@ -69,6 +73,6 @@ Rollback: revert this worker patch. Next step: integrate, execute the complete
 projection test class, then verify real Fold7 capture and a geometry change.
 
 PORTIERT: worker source ready for integration.
-VERIFIZIERT: whitespace PASS; first Android run exposed the corrected fixture;
-corrected Android execution pending.
+VERIFIZIERT: whitespace PASS; corrected Android/Robolectric execution PASS at
+the exact source above. PR #839 carries the final combined-source receipt.
 GERÄTEBESTÄTIGT: NOT_RUN.

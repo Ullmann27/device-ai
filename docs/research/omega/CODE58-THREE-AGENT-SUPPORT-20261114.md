@@ -22,9 +22,11 @@ exact-source completion receipt. No device claim.
    reuse the existing failure/cleanup path and reject stale callbacks.
 4. Integration review: verify PR #836's title filter against composed counter-evidence
    queries and untrusted follow-up text; keep the owner's research topic authoritative.
-   Counter-evidence selects a matching original subquestion using the existing
-   lexical relevance measure and its 0.12 threshold. Unrelated contradictions do
-   not invent a new counter-query; original question-gap searches remain available.
+   Counter-evidence first selects original subquestions with the existing
+   substantive topic anchors; lexical overlap only ranks matching questions.
+   Long relevant claims and questions retain counter-evidence searches without
+   a length-dependent admission threshold. Unrelated contradictions do not invent
+   a new counter-query; original question-gap searches remain available.
    This bounded lexical policy is not a semantic fact verifier.
 
 ## Verification and compatibility
@@ -34,7 +36,8 @@ Completed host tests use Java 21, Kotlin 2.2.0 and actual JUnit 4.13.2:
 - Context: 37 tests, five baseline failures, zero after repair.
 - Avatar: seven tests, four baseline failures, zero after repair.
 - Research: three new baseline failures; independent review found two further
-  subquestion regressions. The repaired engine and existing suites pass 23/23.
+  subquestion regressions and two length regressions. The repaired engine and
+  existing suites pass 26/26, including an off-topic single-question control.
 - Research and context tests compile their actual production graph with necessary
   declarations extracted verbatim from large aggregate source files. No stubs.
 - actionlint and git diff --check pass.
@@ -43,6 +46,9 @@ Android SDK is unavailable locally. The existing Code58 workflow compiles full
 Android sources, executes all affected JUnit/Robolectric suites, requires the new
 named cases, and then builds an unsigned ARM64 candidate. This is the same build
 path as #836; no duplicate release lane. The reviewed source is stored in #839.
+Run 43566865117 verified 181/181 Android/Robolectric cases on c6ca29c92f34a6204d9151f08ab8e4f783663558,
+including all new display cases. The subsequent length fix adds three tests;
+its final combined-source Android/build receipt must be read from PR #839.
 Physical Fold7, live capture, real model quality and measured animation FPS remain
 NOT_RUN unless separately observed.
 
@@ -54,6 +60,8 @@ Each worker's commit is reviewed and integrated here before the common QA.
 Rollback is a revert of the bounded support commits; the parent remains reachable.
 
 Research source SHA-256:
-`54128187b48d6f803990d3f97fc4c1915573ee0eecda8b9621282bb1219887fa`.
+`33d28a03ff5ff3303bb80eae47b356a965c3210c264fd9b053af01fd0a7b54b8`.
 Research regression SHA-256:
 `343d7fe2fce2618050bfe1361a2dac61ead7d65575792e4b6945d764bad11814`.
+Research length regression SHA-256:
+`513be6df66e55875c7ccc3d3d5cec70ca05205b34c5019b072977d21d9412f04`.
