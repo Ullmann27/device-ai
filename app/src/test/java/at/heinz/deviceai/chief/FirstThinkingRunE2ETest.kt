@@ -25,6 +25,14 @@ import at.heinz.deviceai.cognitive.ProvenanceType
 import at.heinz.deviceai.cognitive.ValidationState
 import at.heinz.deviceai.learning.OwnerStatementModality
 import at.heinz.deviceai.learning.StatementModality
+import at.heinz.deviceai.learning.ContinuumLearningCore
+import at.heinz.deviceai.learning.ContinuumMemoryLayers
+import at.heinz.deviceai.learning.ContinuumThinkingMemory
+import at.heinz.deviceai.learning.RecallSource
+import at.heinz.deviceai.learning.ThinkingEntryKind
+import at.heinz.deviceai.learning.ThinkingEntryStatus
+import at.heinz.deviceai.learning.ThinkingPhase
+import at.heinz.deviceai.learning.ThinkingStep
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -35,6 +43,7 @@ import org.junit.Ignore
 import org.junit.Test
 import java.util.Collections
 import java.util.concurrent.ConcurrentLinkedQueue
+import java.nio.file.Files
 
 /**
  * SPRINT-98: EIN Ende-zu-Ende-Test "erster Denk-Durchlauf" auf dem Integrationszweig von Continuum 1.
@@ -64,6 +73,7 @@ class FirstThinkingRunE2ETest {
     private class Trace {
         val events = Collections.synchronizedList(mutableListOf<AgentCognitiveEvent>())
         val modelSawMemoryIds = mutableListOf<List<String>>()
+        val modelSawMemories = mutableListOf<List<MemoryRecord>>()
         val proposals = mutableListOf<String>()
         val backendCalls = mutableListOf<String>()
         val approvalsAsked = mutableListOf<Pair<String, Risk>>()
@@ -75,12 +85,15 @@ class FirstThinkingRunE2ETest {
     /** Ein vollstaendiger Durchlauf; [ownerSaysYes] = Antwort des Besitzers auf die Freigabefrage. */
     private fun thinkingRun(
         ownerSaysYes: Boolean,
-        observer: (AgentCognitiveEvent) -> Unit = {}
+        observer: (AgentCognitiveEvent) -> Unit = {},
+        thinkingMemory: ContinuumThinkingMemory? = null,
+        records: List<MemoryRecord> = memory
     ): Trace {
         val t = Trace()
-        val mem = memory.toMutableList()
+        val mem = records.toMutableList()
         val model = AgentModel { _, memories, _, obs ->
             t.modelSawMemoryIds += memories.map { it.id }
+            t.modelSawMemories += memories.toList()
             when (obs.size) {
                 0 -> AgentModelOutput("skript", "", ToolProposal("get_large_files", mapOf("roots" to "Download", "limit" to 3)))
                     .also { t.proposals += "get_large_files" }
@@ -105,6 +118,7 @@ class FirstThinkingRunE2ETest {
         val agent = BoundedAgentOrchestrator(
             model = model,
             memories = { mem.toList() },
+            thinkingMemory = thinkingMemory?.let { { it } },
             toolGate = ToolGate(ToolPolicy(readOnlyEnabled = true), backend),
             evaluator = AgentEvaluator { response, record ->
                 Evaluation(record?.status == ToolExecutionStatus.SUCCEEDED && response.startsWith("Verschoben"), 0.9, "pruefung")
@@ -176,11 +190,30 @@ class FirstThinkingRunE2ETest {
         assertEquals(listOf("mem-archiv"), yes.result.experience!!.memoryIds.filter { it == "mem-archiv" })
     }
 
-    @Ignore("PENDING – wartet auf Continuum Gedaechtnis + HAUPT: MemoryLayers.shared()/search() und " +
-        "Anbindung 'jeder Schleifenschritt liest relevantes Gedaechtnis' existieren in keinem Zweig.")
     @Test
     fun schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch() {
-        // SCHARF: layers.shared().put(...) von Agent A; Durchlauf von Agent B findet es ueber layers.search(goal).
+        val dir = Files.createTempDirectory("thinking-shared-owner").toFile()
+        try {
+            val core = ContinuumLearningCore(dir) { now }
+            val ownerText = "Mein Download-Ordner liegt im Archiv."
+            core.confirmOwnerFact(ownerText)
+            val facts = core.activeOwnerFacts()
+            val layers = ContinuumMemoryLayers(core)
+            assertEquals(ownerText, layers.shared().facts().single().text)
+            assertTrue(layers.search("Download Archiv", now).hits.any { it.confirmed && it.entry.text == ownerText })
+            val trace = thinkingRun(true, thinkingMemory = ContinuumThinkingMemory(dir, core) { now },
+                records = emptyList())
+            assertEquals(3, trace.modelSawMemories.size)
+            trace.modelSawMemories.forEach { recalled ->
+                assertTrue(recalled.any {
+                    it.content == ownerText && "thinking-recall" in it.tags && "owner-confirmed" in it.tags &&
+                        it.sourceReference?.endsWith(facts.single().id) == true
+                })
+            }
+            assertEquals(listOf("get_large_files", "move_file"), trace.backendCalls)
+            assertTrue(trace.memoryAfter.isEmpty())
+            assertEquals(facts, core.activeOwnerFacts())
+        } finally { dir.deleteRecursively() }
     }
 
     // ------------------------------------------------------------ 4 Handeln
@@ -364,12 +397,44 @@ class FirstThinkingRunE2ETest {
         assertFalse(OwnerStatementModality.mayBecomeConfirmedFact(OwnerStatementModality.classify(lesson)))
     }
 
-    @Ignore("PENDING – wartet auf Continuum Gedaechtnis: Reflexionsschritt 'was habe ich gelernt' -> " +
-        "Hypothesen-Speicher + datierter Tagebuch-Eintrag pro Schleifenschritt (keine Klasse im Integrationszweig).")
     @Test
     fun schritt6b_lernen_hypotheseUndTagebuchEintrag() {
-        // SCHARF: nach dem Lauf: diary.entries(day) enthaelt je Schritt einen Eintrag mit Datum;
-        // hypotheses.all().single().status == UNBESTAETIGT; layers.search("Archiv") findet sie, aber nicht als Owner-Fakt.
+        val dir = Files.createTempDirectory("thinking-outcome-journal").toFile()
+        try {
+            val core = ContinuumLearningCore(dir) { now }
+            core.confirmOwnerFact("Mein Download-Ordner liegt im Archiv.")
+            val facts = core.activeOwnerFacts()
+            val memory = ContinuumThinkingMemory(dir, core) { now }
+            val trace = thinkingRun(true, thinkingMemory = memory, records = emptyList())
+            val entries = memory.runJournal("denk-ja:0")
+            val steps = entries.filter { it.kind == ThinkingEntryKind.STEP }
+            assertEquals(listOf(ThinkingPhase.PLAN, ThinkingPhase.ACT, ThinkingPhase.PLAN,
+                ThinkingPhase.ACT, ThinkingPhase.PLAN, ThinkingPhase.CHECK), steps.map { it.phase })
+            assertEquals((1..6).toList(), steps.map { it.stepIndex })
+            assertTrue(steps.all { it.atMillis == now && it.status == ThinkingEntryStatus.OK })
+            val actions = steps.filter { it.phase == ThinkingPhase.ACT }
+            trace.result.taskEvidence!!.calls.zip(actions).forEach { (call, action) ->
+                assertTrue(action.text.contains("tool=${call.toolName};"))
+                assertTrue(action.text.contains("output-sha256=${call.outputSha256}"))
+                assertTrue(call.freshOutput && call.outputSha256 != null)
+            }
+            val hypothesis = entries.single { it.kind == ThinkingEntryKind.REFLECTION }
+            assertEquals(ThinkingEntryStatus.HYPOTHESIS, hypothesis.status)
+            val recalled = memory.recall(ThinkingStep("next", 1, ThinkingPhase.RECALL, "Download", "Download"))
+                .items.single { it.source == RecallSource.HYPOTHESIS }
+            assertEquals(hypothesis.text, recalled.text)
+            assertFalse(recalled.confirmed)
+            val denied = thinkingRun(false, thinkingMemory = memory, records = emptyList())
+            assertTrue(denied.modelSawMemories.first().any {
+                "hypothesis" in it.tags && it.provenance == ProvenanceType.UNVERIFIED &&
+                    it.validationState == ValidationState.UNVERIFIED && "UNBESTÄTIGTE DATEN" in it.content
+            })
+            assertEquals(listOf("get_large_files"), denied.backendCalls)
+            assertTrue(memory.runJournal("denk-nein:0").any {
+                it.phase == ThinkingPhase.ACT && it.status == ThinkingEntryStatus.BLOCKED
+            })
+            assertEquals(facts, core.activeOwnerFacts())
+        } finally { dir.deleteRecursively() }
     }
 
     // ------------------------------------------------------------ 7 Naechster Schritt
