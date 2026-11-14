@@ -44,10 +44,13 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
     private Thread captureThread;
     private Thread watchdog;
     private boolean awaitAvatarDiagnostic;
+    private String awaitText;
 
     @Override public void onCreate(Bundle arguments) {
         super.onCreate(arguments);
         awaitAvatarDiagnostic = arguments != null && "true".equals(arguments.getString("await_avatar_diagnostic"));
+        String encoded = arguments == null ? null : arguments.getString("await_text_base64");
+        awaitText = encoded == null ? null : new String(Base64.decode(encoded, Base64.DEFAULT), StandardCharsets.UTF_8);
         start();
     }
 
@@ -63,6 +66,7 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
             require(Build.VERSION.SDK_INT == 35, "API 35 required");
             require(java.util.Arrays.asList(Build.SUPPORTED_ABIS).contains("x86_64"), "x86_64 required");
             require("ranchu".equals(Build.HARDWARE) || "goldfish".equals(Build.HARDWARE), "Emulator required");
+            require(awaitText == null || (!awaitText.isEmpty() && awaitText.length() <= 4000), "Invalid expected text");
             startDeadlineWatcher();
             setPhase("connect");
             UiAutomation automation = getUiAutomation();
@@ -269,11 +273,24 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
         setPhase("refresh");
         boolean current = root.refresh();
         checkDeadline();
-        if (!current || !awaitAvatarDiagnostic) return current;
-        setPhase("avatar_title");
-        boolean ready = hasAvatarDiagnosticTitle(root);
-        checkDeadline();
-        return ready;
+        if (!current) return false;
+        if (awaitAvatarDiagnostic) {
+            setPhase("avatar_title");
+            boolean ready = hasAvatarDiagnosticTitle(root);
+            checkDeadline();
+            if (!ready) return false;
+        }
+        if (awaitText == null) return true;
+        setPhase("expected_text");
+        List<AccessibilityNodeInfo> matches = root.findAccessibilityNodeInfosByText(awaitText);
+        try {
+            checkDeadline();
+            for (AccessibilityNodeInfo match : matches) {
+                if (match.isVisibleToUser() && APP_PACKAGE.equals(text(match.getPackageName()))
+                        && awaitText.equals(text(match.getText()))) return true;
+            }
+            return false;
+        } finally { for (AccessibilityNodeInfo match : matches) match.recycle(); }
     }
 
     private static String stack(StackTraceElement[] frames) {
