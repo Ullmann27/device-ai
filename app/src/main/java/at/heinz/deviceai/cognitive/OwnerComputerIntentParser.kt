@@ -55,6 +55,11 @@ internal object OwnerComputerIntentParser {
     private val OPEN_ONLY_APPS = setOf(ComputerApp.CHROME, ComputerApp.SETTINGS,
         ComputerApp.CAMERA, ComputerApp.GALLERY, ComputerApp.CALENDAR)
     private val otherAction = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:und|dann|danach)\\s+(?:sende?|schicke?|lösche?|loesche?|poste?|teile?|kaufe?|rufe?|öffne?|oeffne?|starte?|suche?)(?![\\p{L}\\p{N}_])")
+    /** The optional suffix is presentation only, never a second device action. */
+    private val downloadsOpen = Regex(
+        "(?iu)^(?:(?:den|meinen)\\s+)?downloads?(?:[- ]?ordner)?" +
+            "(?:\\s+und\\s+zeig(?:e)?\\s+(?:ihn|den\\s+ordner)\\s+im\\s+virtuellen\\s+computer)?$"
+    )
     private val searchLabel = Regex("(?iu)^(?:und\\s+)?(?:suche|such|suche nach|such nach)\\s+(?:nach\\s+)?(.+)$")
     private val negation = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:nicht|keinesfalls|niemals|kein(?:e|en|em|er|es)?)(?![\\p{L}\\p{N}_])")
 
@@ -83,7 +88,7 @@ internal object OwnerComputerIntentParser {
         text = text.trimEnd('.', '?', '!').trim()
         Regex("(?iu)^(?:öffne|oeffne|starte|open|wechsle\\s+zu|wechsel\\s+zu)\\s+(.+)$").matchEntire(text)?.let { match ->
             val rest = match.groupValues[1].replace(Regex("(?iu)^bitte\\s+"), "")
-            if (rest.matches(Regex("(?iu)(?:den\\s+)?downloads?(?:[- ]?ordner)?"))) {
+            if (downloadsOpen.matches(rest)) {
                 return Result.Ready(OwnerComputerIntent(ComputerApp.FILES, ComputerGoal.OPEN_DOWNLOADS))
             }
             val found = appPrefix(rest) ?: return Result.NotComputerCommand
