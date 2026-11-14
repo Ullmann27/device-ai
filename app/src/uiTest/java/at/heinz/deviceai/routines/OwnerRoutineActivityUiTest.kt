@@ -269,7 +269,9 @@ class OwnerRoutineActivityUiTest {
     }
 
     @Test fun urgentWakeDuringOlderDrainIsRetriedOnceAfterThatDrain() {
-        val info = report(); val urgent = report(OwnerRoutineTarget.DOWNLOADS)
+        val info = report()
+        ShizukuBridgeLifecycleTest.Server.granted = false
+        val urgent = report(OwnerRoutineTarget.DOWNLOADS)
         val message = requireNotNull(urgent.message)
         assertEquals(AgentPriority.URGENT, message.priority)
         reset(); runtime = OwnerRoutineRuntime.get(app)
