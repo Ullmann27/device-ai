@@ -514,6 +514,24 @@ jobs:
           test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
           test -s "$ANDROID_AVD_HOME/continuum-native-pdf.avd/config.ini"
           test -c /dev/kvm
+          host_crash="$evidence/host-crash"
+          mkdir "$host_crash"
+          crash_database="$host_crash/database"
+          mkdir "$crash_database"
+          crashreport_bin="$(dirname "$CODE59_EMULATOR_BIN")/crashreport"
+          test -x "$crashreport_bin"
+          printf '%s  %s\n' '4bd4cfe83403c82ab618163f4311bf4aa2418d7c64029133f2627e50e4f65008' "$crashreport_bin" \
+            | sha256sum --check --strict > "$host_crash/tool-sha256-check.txt"
+          sha256sum "$crashreport_bin" > "$host_crash/tool-sha256.txt"
+          if timeout 10 "$crashreport_bin" -h > "$host_crash/tool-help.txt" 2>&1; then
+            printf '0\n' > "$host_crash/tool-help-exit.txt"
+          else
+            tool_exit=$?
+            printf '%s\n' "$tool_exit" > "$host_crash/tool-help-exit.txt"
+            exit "$tool_exit"
+          fi
+          cat /proc/sys/kernel/core_pattern > "$host_crash/core-pattern.txt"
+          ulimit -c > "$host_crash/core-limit.txt"
           original_kvm_group="$(stat -c '%g' /dev/kvm)"
           original_kvm_mode="$(stat -c '%a' /dev/kvm)"
           emulator_pid=''
@@ -521,6 +539,37 @@ jobs:
             native_exit=$?
             if (( native_exit != 0 )) && [[ -f "$evidence/emulator.log" ]]; then
               cat "$evidence/emulator.log" || true
+              python3 - "$host_crash" "$crashreport_bin" "$emulator_pid" "$native_exit" <<'PY' || true
+          import hashlib, json, pathlib, subprocess, sys
+          directory = pathlib.Path(sys.argv[1])
+          database = (directory / 'database').resolve()
+          report = {'emulator_pid': sys.argv[3], 'native_exit': int(sys.argv[4]),
+                    'scope': 'OWN_EMULATOR_CRASHPAD_ONLY', 'dumps': []}
+          try:
+              for dump in sorted(database.rglob('*.dmp')):
+                  if dump.is_symlink() or not dump.is_file() or not dump.resolve().is_relative_to(database):
+                      raise ValueError('Unexpected crash dump path')
+                  with dump.open('rb') as stream:
+                      digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+                  item = {'file': str(dump.relative_to(directory)), 'bytes': dump.stat().st_size,
+                          'sha256': digest}
+                  report['dumps'].append(item)
+                  try:
+                      result = subprocess.run([sys.argv[2], '-d', str(dump)],
+                          capture_output=True, text=True, errors='replace', timeout=30)
+                      item['processor_exit'] = result.returncode
+                      stack = result.stdout.partition('Module annotations:')[0]
+                      (directory / (dump.stem + '-stack.txt')).write_text(stack)
+                      (directory / (dump.stem + '-processor-stderr.txt')).write_text(result.stderr)
+                      item['annotations_omitted_from_stack'] = 'Module annotations:' in result.stdout
+                  except Exception as error:
+                      item['processor_error'] = str(error)
+              report['collection_status'] = 'CAPTURED' if report['dumps'] else 'NO_DUMP'
+          except Exception as error:
+              report['collection_status'] = 'FAILED'
+              report['collection_error'] = str(error)
+          (directory / 'COLLECTION.json').write_text(json.dumps(report, indent=2) + '\n')
+          PY
             fi
             if [[ -n "$emulator_pid" ]]; then
               timeout 10 "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 emu kill || true
@@ -540,10 +589,12 @@ jobs:
             printf '%s\n' "$?" > "$evidence/emulator-gpu-help-exit.txt"
           fi
           "$ANDROID_HOME/platform-tools/adb" start-server
+          ANDROID_EMU_CRASH_REPORTING_DATABASE="$crash_database" \
           "$CODE59_EMULATOR_BIN" -avd continuum-native-pdf -port 5554 -accel on \
             -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader -memory 2048 -cores 2 \
             > "$evidence/emulator.log" 2>&1 &
           emulator_pid=$!
+          printf '%s\n' "$emulator_pid" > "$host_crash/emulator-pid.txt"
           ready=false
           deadline=$((SECONDS + 600))
           while (( SECONDS < deadline )); do
@@ -555,9 +606,14 @@ jobs:
             sleep 2
           done
           test "$ready" = true
-          python3 - "$evidence/emulator.log" <<'PY'
-          import pathlib, sys
+          readlink "/proc/$emulator_pid/exe" > "$host_crash/emulator-executable.txt"
+          cat "/proc/$emulator_pid/maps" > "$host_crash/emulator-maps.txt"
+          python3 - "$evidence/emulator.log" "$crash_database" "$emulator_pid" <<'PY'
+          import pathlib, re, sys
           log = pathlib.Path(sys.argv[1]).read_text()
+          reports = re.findall(r'Storing crashdata in: (.*?), detection is (\w+) for process: (\d+)', log)
+          assert reports == [(sys.argv[2], 'enabled', sys.argv[3])], reports
+          assert 'Crash reports will be automatically uploaded' not in log
           assert 'gles_mode_selected:swiftshader' in log, 'Requested backend not selected'
           adapters = [line for line in log.splitlines() if 'Graphics Adapter ' in line and 'Graphics Adapter Vendor ' not in line]
           assert len(adapters) == 1 and 'SwiftShader' in adapters[0] and 'ANGLE (' not in adapters[0], adapters
