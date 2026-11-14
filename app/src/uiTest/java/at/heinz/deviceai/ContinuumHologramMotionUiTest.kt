@@ -157,6 +157,36 @@ class ContinuumHologramMotionUiTest {
         } finally { controller.pause().stop().destroy() }
     }
 
+    @Test fun lateVsyncCannotRewindNewerAudioSamples() {
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
+        val view = ContinuumHologramView(controller.get())
+        try {
+            attachOrb(controller.get(), view)
+            view.setForegroundActive(true)
+            view.setState(ContinuumHologramView.State.SPEAKING)
+            advanceFrames(32)
+            val now = android.os.SystemClock.uptimeMillis()
+            val audioField = ContinuumHologramView::class.java.getDeclaredField("audio")
+                .apply { isAccessible = true }
+            val envelope = audioField.get(view) as HologramAudioEnvelope
+            val expected = HologramAudioEnvelope()
+            for (audio in listOf(envelope, expected)) {
+                audio.reset()
+                audio.submit(1f, now - 20)
+                audio.valueAt(now - 10)
+            }
+            view.setAudioLevel(1f)
+            expected.submit(1f, now)
+            expected.valueAt(now)
+            ContinuumHologramView::class.java.getDeclaredMethod("advanceFrame", Long::class.javaPrimitiveType)
+                .apply { isAccessible = true }.invoke(view, now - 10)
+            val clock = HologramAudioEnvelope::class.java.getDeclaredField("lastFrameMs")
+                .apply { isAccessible = true }
+            assertEquals(now, clock.getLong(envelope))
+            assertEquals(expected.valueAt(now + 6), envelope.valueAt(now + 6), .000001f)
+        } finally { controller.pause().stop().destroy() }
+    }
+
     @Test fun foregroundAndReducedMotionHaveOneBoundedLifecycleClock() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val activity = controller.get()

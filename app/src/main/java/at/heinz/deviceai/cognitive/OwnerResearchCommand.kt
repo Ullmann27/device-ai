@@ -49,7 +49,7 @@ internal object OwnerResearchCommand {
     private val negation = Regex("(?iu)(?<![\\p{L}])(nicht|niemals|kein|keine|keinen|ohne|offline)(?![\\p{L}])")
     private val leadingFiller = Regex("(?iu)^(?:bitte|mal|mir|kurz|doch|jetzt|noch|für\\s+mich|im\\s+internet|im\\s+netz|" +
         "im\\s+web|online)\\s+")
-    private val leadingPreposition = Regex("(?iu)^(?:nach|zu|über|ueber|zum\\s+thema|betreffend)\\s+")
+    private val leadingPreposition = Regex("(?iu)^(?:zu\\s+(?:(?:dem|den|denn|diesem)\\s+)?thema|nach|zu|über|ueber|zum\\s+thema|betreffend)\\s+")
     private val leadingArticle = Regex("(?iu)^(?:die|der|das|den|dem|des)\\s+")
     private val trailingFiller = Regex("(?iu)\\s+(?:bitte|für\\s+mich|im\\s+internet|im\\s+netz|im\\s+web|online|danke)$")
     private val linkOrPath = Regex("(?i)(https?://|www\\.|[/\\\\]|@)")

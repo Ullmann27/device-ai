@@ -1,24 +1,24 @@
-name: "Code57 - voice-repaired exact-source full QA and unsigned ARM64 APK"
+name: "Code58 - integrated exact-source full QA and unsigned ARM64 APK"
 on:
   push:
     branches:
-      - release/code57-voice-qa-20261113
+      - release/code58-full-qa-20261114
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: code57-voice-qa-v1-20261113
-  cancel-in-progress: false
+  group: code58-full-qa-v1-20261114
+  cancel-in-progress: true
 
 jobs:
   unsigned-arm64:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code57-voice-qa-20261113'
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code58-full-qa-20261114'
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -30,11 +30,11 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=normal)"
           test -f app/src/main/assets/cinema3d/monitor-rear-details.glb
           test -f tools/cockpit-workstation/build_monitor_rear.py
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
         with:
           distribution: temurin
           java-version: '21'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
         with:
           gradle-version: '8.11.1'
       - name: Install official Android SDK
@@ -42,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
-      - name: Assemble Code57 from verified source without signing credentials
+      - name: Assemble Code58 from verified source without signing credentials
         shell: bash
         run: |
           set -euo pipefail
@@ -50,7 +50,7 @@ jobs:
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
-            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=57 \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=58 \
             -PcontinuumLocalRenderUnsigned=true :app:assembleRelease
       - name: Check exact version, ARM64, alignment, signing status and SHA-256
         shell: bash
@@ -59,33 +59,33 @@ jobs:
           apk=app/build/outputs/apk/release/app-release-unsigned.apk
           tools="$ANDROID_HOME/build-tools/35.0.0"
           test -s "$apk"
-          "$tools/aapt2" dump badging "$apk" > /tmp/code57-badging.txt
-          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='57' versionName='0.3.56'" /tmp/code57-badging.txt
-          grep -Fxq "native-code: 'arm64-v8a'" /tmp/code57-badging.txt
+          "$tools/aapt2" dump badging "$apk" > /tmp/code58-badging.txt
+          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='58' versionName='0.3.57'" /tmp/code58-badging.txt
+          grep -Fxq "native-code: 'arm64-v8a'" /tmp/code58-badging.txt
           "$tools/zipalign" -c -P 16 -v 4 "$apk" > /dev/null
           if "$tools/apksigner" verify "$apk" > /dev/null 2>&1; then
             echo "Refusing unexpectedly signed test artifact" >&2
             exit 1
           fi
-          mkdir -p code57-evidence
-          cp "$apk" code57-evidence/Continuum-Code57-UNSIGNED-NOT-INSTALLABLE.apk
-          sha256sum code57-evidence/Continuum-Code57-UNSIGNED-NOT-INSTALLABLE.apk > code57-evidence/SHA256SUMS.txt
-          printf 'source=%s\nsource_tree=%s\nversionCode=57\nversionName=0.3.56\npackage=at.heinz.deviceai.continuumlocal\nabi=arm64-v8a\nstatus=UNSIGNED_NOT_INSTALLABLE\nfold7_test=NOT_RUN\n' "$GITHUB_SHA" "$(git rev-parse HEAD^{tree})" > code57-evidence/BUILD-INFO.txt
+          mkdir -p code58-evidence
+          cp "$apk" code58-evidence/Continuum-Code58-UNSIGNED-NOT-INSTALLABLE.apk
+          sha256sum code58-evidence/Continuum-Code58-UNSIGNED-NOT-INSTALLABLE.apk > code58-evidence/SHA256SUMS.txt
+          printf 'source=%s\nsource_tree=%s\nversionCode=58\nversionName=0.3.57\npackage=at.heinz.deviceai.continuumlocal\nabi=arm64-v8a\nstatus=UNSIGNED_NOT_INSTALLABLE\nfold7_test=NOT_RUN\n' "$GITHUB_SHA" "$(git rev-parse HEAD^{tree})" > code58-evidence/BUILD-INFO.txt
       - name: Save verified unsigned APK
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: Code57-UNSIGNED-NOT-INSTALLABLE
-          path: code57-evidence/
+          name: Code58-UNSIGNED-NOT-INSTALLABLE
+          path: code58-evidence/
           if-no-files-found: error
           retention-days: 14
 
   renderer-preflight:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code57-voice-qa-20261113'
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code58-full-qa-20261114'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
       - name: Source identity
@@ -93,28 +93,29 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test -z "$(git status --porcelain --untracked-files=normal)"
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
         with:
           distribution: temurin
           java-version: '21'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
         with:
           gradle-version: '8.11.1'
       - name: Android SDK
         run: |
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
-      - name: Actual Android compilation and renderer regressions
+      - name: Actual Android compilation, renderer and date regressions
         run: |
           set -euo pipefail
           unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
-            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=57 \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=58 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
-            -I .github/continuum/code56-renderer-tests.init.gradle :app:testDebugUnitTest
+            -I .github/continuum/code56-renderer-tests.init.gradle \
+            -I .github/continuum/code58-date-tail-tests.init.gradle :app:testDebugUnitTest
           python3 - <<'PY'
           import pathlib, xml.etree.ElementTree as ET
           files = list(pathlib.Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'))
@@ -123,23 +124,25 @@ jobs:
           assert not any(c.find(x) is not None for c in cases for x in ('failure', 'error', 'skipped'))
           repair = [c for c in cases if c.attrib.get('classname') == 'at.heinz.deviceai.avatar3d.CockpitMonitorPresentationTest']
           assert len(repair) == 6, f'Missing monitor regression cases: {len(repair)}'
-          print(f'CODE57_RENDERER_PREFLIGHT_PASS cases={len(cases)} repair_cases={len(repair)}')
+          date_cases = [c for c in cases if c.attrib.get('classname') == 'at.heinz.deviceai.cognitive.ProactiveDateTailRegressionTest']
+          assert len(date_cases) == 9, f'Missing date-tail regressions: {len(date_cases)}'
+          print(f'CODE58_RENDERER_PREFLIGHT_PASS cases={len(cases)} repair_cases={len(repair)} date_cases={len(date_cases)}')
           PY
       - name: Preserve renderer JUnit evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: Code57-Renderer-regressions
+          name: Code58-Renderer-regressions
           path: app/build/test-results/testDebugUnitTest/
           if-no-files-found: warn
           retention-days: 14
 
   full-android:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code57-voice-qa-20261113'
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code58-full-qa-20261114'
     runs-on: ubuntu-latest
     timeout-minutes: 150
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -148,11 +151,11 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test -z "$(git status --porcelain --untracked-files=normal)"
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
         with:
           distribution: temurin
           java-version: '21'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
         with:
           gradle-version: '8.11.1'
       - name: Android SDK
@@ -166,13 +169,79 @@ jobs:
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
-            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=57 \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=58 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
             :app:testDebugUnitTest
       - name: Require exact declared skip policy
         if: always()
         run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
+      - name: Require Code58 regression coverage
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import pathlib, xml.etree.ElementTree as ET
+          xmls = pathlib.Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml')
+          cases = [c for x in xmls for c in ET.parse(x).getroot().iter('testcase')]
+          assert cases and not any(c.find(n) is not None for c in cases for n in ('failure','error'))
+          names = {(c.get('classname','').split('.')[-1],c.get('name')) for c in cases if c.find('skipped') is None}
+          required = {('Fold7RoutingRegressionTest','spokenSingularDownloadUsesApprovedComputerPlan'),
+                      ('Fold7RoutingRegressionTest','informalJusticeResearchRemovesSpokenFillerWithoutLosingSubject'),
+                      ('Fold7RoutingRegressionTest','funeralAndUnrelatedWebClaimsCannotBecomeJusticeEvidence'),
+                      ('ResearchEngineTest','publicSearchRejectsUnrelatedFinalPageTitleAfterDiscovery'),
+                      ('ResearchTopicAuthorityTest','counterEvidenceTemplatesCannotAdmitOffTopicSources'),
+                      ('ResearchTopicAuthorityTest','followUpClaimTextCannotReplaceOriginalTopic'),
+                      ('ResearchTopicAuthorityTest','titleGateUsesOriginatingSubquestion'),
+                      ('ResearchTopicAuthorityTest','contradictionFollowUpKeepsItsMatchingSubquestion'),
+                      ('ResearchTopicAuthorityTest','unrelatedContradictionsCannotInventCounterQueries'),
+                      ('ResearchTopicAuthorityLengthTest','aLongRelevantClaimRetainsCounterResearch'),
+                      ('ResearchTopicAuthorityLengthTest','aLongOriginalQuestionRetainsCounterResearch'),
+                      ('ResearchTopicAuthorityLengthTest','aSingleQuestionStillRejectsOffTopicContradictions'),
+                      ('LocalPoliteFollowUpTest','politeFollowUpFramesCorrectionsInOriginalOrder'),
+                      ('LocalPoliteFollowUpTest','stretchedContinuationVariantsKeepConversationContext'),
+                      ('LocalPoliteFollowUpTest','stretchedContinuationRetainsOriginalRequestAndCorrections'),
+                      ('LocalPoliteFollowUpTest','repetitionDoesNotTurnOtherWordsOrActionsIntoContinuation'),
+                      ('GazeBlinkPolicyTest','animationClockWrapAdmitsFreshGazeBlinks'),
+                      ('ContinuumLiveProjectionServiceUiTest','geometryResetDetachFailureEndsCapture'),
+                      ('ContinuumLiveProjectionServiceUiTest','geometryResetAttachFailureEndsCapture'),
+                      ('ContinuumLiveProjectionServiceUiTest','successfulGeometryResetKeepsCaptureAndRejectsOldReader')}
+          required |= {('OwnerObjectScopeCorrectionTest','laterRetractionNeverBecomesAnObjectCorrection'),
+                       ('OwnerObjectScopeCorrectionTest','literalWhiteRemainsAValidColorCorrection'),
+                       ('AvatarFramePacingTest','budgetStaysBoundedAcrossRefreshRates'),
+                       ('ContinuumHologramMotionUiTest','lateVsyncCannotRewindNewerAudioSamples'),
+                       ('ContinuumLiveProjectionServiceUiTest','staleStartCannotStopRunningReplacement'),
+                       ('LiveActionCancellationBoundaryTest','cancellationAfterAdmissionAllowsOnlyFreshRetry'),
+                       ('LiveActionCancellationBoundaryTest','cancellationAfterDispatchStillForbidsFreshRetry'),
+                       ('ProactiveMemoryDateTest','explicitYearMustMatchToday'),
+                       ('ProactiveMemoryDateTest','explicitClockTailDoesNotBecomeAShortYear')}
+          required |= {('ContinuumProjectionCommandIsolationUiTest','staleStartCannotStopAlreadyBoundCapture'),
+                       ('ContinuumProjectionCommandIsolationUiTest','nullStartCannotStopAlreadyBoundCapture'),
+                       ('ContinuumProjectionCommandIsolationUiTest','duplicateStartCannotRepromoteOrReuseConsent'),
+                       ('ContinuumProjectionCommandIsolationUiTest','staleStopStillCannotStopAlreadyBoundCapture'),
+                       ('ContinuumProjectionCommandIsolationUiTest','matchingStopStillEndsAlreadyBoundCapture'),
+                       ('ContinuumLiveProjectionServiceUiTest','nullStartCannotStopRunningCapture'),
+                       ('ContinuumLiveProjectionServiceUiTest','supersededQueuedStartKeepsReplacementCaptureBinding'),
+                       ('ContinuumLiveProjectionServiceUiTest','disconnectedObservationRejectsQueuedStartAfterPromotion'),
+                       ('ContinuumLiveProjectionServiceUiTest','promotionFailureClosesAndUsesItsStartId'),
+                       ('ContinuumLiveProjectionServiceUiTest','projectionCallbackRevocationEndsSessionAndForeground'),
+                       ('LocalShortClarificationTest','shortClarificationsRequireTheirConversation'),
+                       ('LocalShortClarificationTest','namedQuestionsQuotesAndCommandsRemainIndependent'),
+                       ('LocalShortClarificationTest','clarificationNeverAuthorizesContinuationOrDeviceActions')}
+          required.add(('LocalPoliteFollowUpTest','stretchedContinuationAssemblesPromptAndClearsSession'))
+          required |= {('ProactiveDateTailRegressionTest', name) for name in (
+              'dottedClockValuesPreserveToday',
+              'quantitiesStaySeparateFromTheYear',
+              'invalidClocksAndIdentifiersDoNotBecomeQuantities',
+              'explicitYearAndCalendarDayRemainAuthoritative',
+              'trustAndRelativeFreshnessAreNotRelaxed',
+              'correctedDateStillRespectsAnnouncementCooldown',
+              'shortYearsWithProseAreNotCounts',
+              'clockUnitsCannotHideInvalidTails',
+              'countUnitsCannotHideIdentifiers'
+          )}
+          assert required <= names, f'Missing regression cases: {required - names}'
+          print(f'CODE58_REQUIRED_REGRESSIONS_PASS={len(required)}')
+          PY
       - name: Android lint
         if: ${{ !cancelled() }}
         run: |
@@ -180,13 +249,13 @@ jobs:
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
-            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=57 \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=58 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true :app:lintDebug
       - name: Preserve real test and lint evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: Code57-Android-full-QA
+          name: Code58-Android-full-QA
           path: |
             app/build/test-results/testDebugUnitTest/
             app/build/reports/lint-results-debug.*
@@ -194,25 +263,25 @@ jobs:
           retention-days: 14
 
   node-backend:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code57-voice-qa-20261113'
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code58-full-qa-20261114'
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
       - name: Verify source identity
         run: |
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test -z "$(git status --porcelain --untracked-files=normal)"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '24.22.2'
       - name: Full Node QA and critical contracts
         run: |
           set -euo pipefail
-          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code57-critical"
-          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code57-full"
+          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code58-critical"
+          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code58-full"
       - name: Backend checks
         run: |
           set -euo pipefail
@@ -221,11 +290,11 @@ jobs:
           npm --prefix backend test
       - name: Preserve exact Node QA evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: Code57-Node-backend-QA
+          name: Code58-Node-backend-QA
           path: |
-            ${{ runner.temp }}/code57-critical/
-            ${{ runner.temp }}/code57-full/
+            ${{ runner.temp }}/code58-critical/
+            ${{ runner.temp }}/code58-full/
           if-no-files-found: warn
           retention-days: 14

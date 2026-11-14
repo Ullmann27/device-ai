@@ -83,7 +83,7 @@ internal object OwnerComputerIntentParser {
         text = text.trimEnd('.', '?', '!').trim()
         Regex("(?iu)^(?:öffne|oeffne|starte|open|wechsle\\s+zu|wechsel\\s+zu)\\s+(.+)$").matchEntire(text)?.let { match ->
             val rest = match.groupValues[1].replace(Regex("(?iu)^bitte\\s+"), "")
-            if (rest.matches(Regex("(?iu)(?:den\\s+)?download[- ]?ordner|downloads"))) {
+            if (rest.matches(Regex("(?iu)(?:den\\s+)?downloads?(?:[- ]?ordner)?"))) {
                 return Result.Ready(OwnerComputerIntent(ComputerApp.FILES, ComputerGoal.OPEN_DOWNLOADS))
             }
             val found = appPrefix(rest) ?: return Result.NotComputerCommand

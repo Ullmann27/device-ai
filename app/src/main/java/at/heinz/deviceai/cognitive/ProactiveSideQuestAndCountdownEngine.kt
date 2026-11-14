@@ -1,8 +1,8 @@
 package at.heinz.deviceai.cognitive
 
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 
@@ -151,9 +151,25 @@ class ProactiveSideQuestAndCountdownEngine(
             return recordDay == today && EVENT_KEYWORDS.containsMatchIn(content)
         }
 
-        val numericDate = DateTimeFormatter.ofPattern("d.M.", Locale.GERMANY).format(today)
-        val paddedDate = DateTimeFormatter.ofPattern("dd.MM.", Locale.GERMANY).format(today)
-        val explicitDate = content.contains(numericDate) || content.contains(paddedDate)
+        val explicitDate = NUMERIC_DATE.findAll(content).any { match ->
+            val yearText = match.groupValues[3]
+            val numberStart = match.groups[3]?.range?.first
+            val separated = numberStart != null && content.getOrNull(numberStart - 1)?.isWhitespace() == true
+            val timeTail = if (separated && yearText.length in 1..2 && yearText.toInt() in 0..23)
+                TIME_TAIL.matchAt(content, match.range.last + 1) else null
+            val isTime = timeTail != null && (timeTail.groupValues[1].isEmpty() ||
+                timeTail.groupValues[1].toInt() in 0..59)
+            val isCount = separated && yearText.length in 1..3 &&
+                COUNT_TAIL.matchAt(content, match.range.last + 1) != null
+            val next = content.getOrNull(match.range.last + 1)
+            if (!isTime && next != null && (next.isLetterOrDigit() || next in "/-" ||
+                    next == '.' && content.getOrNull(match.range.last + 2)?.isDigit() == true)) return@any false
+            if (yearText.isNotEmpty() && !isTime && !isCount && yearText.length != 4) return@any false
+            val year = if (isTime || isCount || yearText.isEmpty()) today.year else yearText.toInt()
+            runCatching {
+                LocalDate.of(year, match.groupValues[2].toInt(), match.groupValues[1].toInt())
+            }.getOrNull() == today
+        }
         return explicitDate && EVENT_KEYWORDS.containsMatchIn(content)
     }
 
@@ -191,6 +207,15 @@ class ProactiveSideQuestAndCountdownEngine(
 
         private val RELATIVE_TODAY =
             Regex("""(?iu)\b(?:heute(?:\s+abend)?|today|tonight)\b""")
+
+        private val NUMERIC_DATE =
+            Regex("""(?<![\p{L}\p{N}./-])([0-9]{1,2})\.([0-9]{1,2})\.(?:[ \t]*([0-9]+))?""")
+
+        private val TIME_TAIL =
+            Regex("""(?iu)(?:[:.]([0-9]{2})(?:[ \t]+Uhr)?+|[ \t]+Uhr)(?![\p{L}\p{N}:/-]|\.[0-9])""")
+
+        private val COUNT_TAIL =
+            Regex("""(?iu)[ \t]+(?:gast|gäste|gaeste|person|personen|kind|kinder)(?![\p{L}\p{N}:/-]|\.[0-9])""")
 
         private val EVENT_KEYWORDS =
             Regex("""(?iu)\b(?:abendessen|geburtstag|termin|treffen|abholen|reservierung|geschenk|arzt|schule|feier|essen)\b""")

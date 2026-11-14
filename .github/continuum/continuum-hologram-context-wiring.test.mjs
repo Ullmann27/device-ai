@@ -18,14 +18,18 @@ const segment=(src,start,end)=>{
 };
 
 test('single hologram frame callback advances phase independently of Canvas onDraw',()=>{
- const callback=segment(orb,'private val drawFrame = Runnable {','/** Owns the single visible-view frame callback');
- const draw=segment(orb,'override fun onDraw(canvas: Canvas) {','private fun advanceFrame()');
- assert.ok(callback.includes('advanceFrame()'));
- assert.ok(callback.includes('postInvalidateOnAnimation()'));
- assert.ok(callback.includes('scheduleFrame()'));
- assert.ok(!draw.includes('advanceFrame()'), 'onDraw must not drive the motion clock');
- assert.ok(!draw.includes('scheduleFrame()'), 'onDraw must not queue duplicate callbacks');
- assert.ok(orb.includes('if (canAnimateFrame() && !framePending)'));
+ const callback=segment(orb,'private val drawFrame = Choreographer.FrameCallback {','/** Owns the single visible-view frame callback');
+ const draw=segment(orb,'override fun onDraw(canvas: Canvas) {','private fun advanceFrame(now: Long)');
+ const schedule=segment(orb,'private fun scheduleFrame() {','private val motionObserver');
+ assert.match(callback,/frameTimeNanos ->\s*framePending = false\s*if \(canAnimateFrame\(\)\) \{\s*if \(framePacing\.admit\(frameTimeNanos, renderBudget\(\)\.frameDelayMillis\)\) \{\s*visibleFrameCount\+\+/);
+ assert.match(callback,/visibleFrameCount\+\+[\s\S]*?advanceFrame\(frameTimeNanos \/ 1_000_000L\)[\s\S]*?postInvalidateOnAnimation\(\)\s*}\s*scheduleFrame\(\)\s*}\s*}\s*$/);
+ assert.equal((callback.match(/\badvanceFrame\s*\(/g)||[]).length,1);
+ assert.equal((callback.match(/\bscheduleFrame\s*\(/g)||[]).length,1);
+ assert.doesNotMatch(draw,/\badvanceFrame\s*\(/, 'onDraw must not drive the motion clock');
+ assert.doesNotMatch(draw,/\bscheduleFrame\s*\(/, 'onDraw must not queue duplicate callbacks');
+ assert.match(schedule,/^private fun scheduleFrame\(\) \{\s*if \(canAnimateFrame\(\) && !framePending\) \{\s*framePending = true/);
+ assert.match(schedule,/framePending = true\s*val delay = framePacing\.delayMillis\(System\.nanoTime\(\), renderBudget\(\)\.frameDelayMillis,\s*display\?\.refreshRate \?: 60f\)\s*choreographer\.postFrameCallbackDelayed\(drawFrame, delay\)\s*}\s*}\s*$/);
+ assert.equal((orb.match(/\bchoreographer\.postFrameCallback(?:Delayed)?\s*\(\s*drawFrame\b/g)||[]).length,1);
 });
 test('Android window visibility and focus can restore orbital clock without cached view visibility',()=>{
  assert.ok(orb.includes('override fun onVisibilityChanged(changedView: View, visibility: Int)'));
@@ -57,10 +61,8 @@ test('foreground lifecycle explicitly pauses, cancels, and resumes hologram whil
  assert.ok(activity.includes('it.setForegroundActive(foregroundLearningActive || computerFeedbackActive())'),
    'Fold/home rebuild must inherit current foreground status');
  assert.ok(orb.includes('foregroundActive && motionAllowed && isAttachedToWindow'));
- assert.ok(policy.includes('removeCallbacks(drawFrame)'));
- assert.ok(policy.includes('framePending = false'));
- assert.ok(policy.includes('lastFrameMs = 0L'));
- assert.ok(policy.includes('scheduleFrame()'));
+ assert.match(policy,/choreographer\.removeFrameCallback\(drawFrame\)\s*framePacing\.reset\(\)\s*framePending = false\s*lastFrameMs = 0L\s*if \(!canAnimateFrame\(\)\) \{/);
+ assert.match(policy,/invalidate\(\)\s*scheduleFrame\(\)\s*}\s*$/);
  assert.ok(orb.includes('ValueAnimator.areAnimatorsEnabled()'));
  assert.ok(orb.includes('powerManager.isPowerSaveMode'));
  assert.ok(policy.includes('AvatarEssentialMotionPolicy.frameLoopAllowed'));

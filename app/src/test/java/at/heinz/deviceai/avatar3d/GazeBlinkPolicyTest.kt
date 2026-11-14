@@ -24,4 +24,60 @@ class GazeBlinkPolicyTest {
         assertEquals(0f, p.sample(Float.POSITIVE_INFINITY, 0f, 1.3f, true), 0f)
         assertEquals(0f, p.sample(0f, 0f, Float.NaN, true), 0f)
     }
+
+    @Test fun animationClockWrapAdmitsFreshGazeBlinks() {
+        val p = GazeBlinkPolicy()
+        p.sample(-.6f, 0f, 459f, true)
+        p.sample(.6f, 0f, 459.1f, true)
+        assertTrue(p.sample(.6f, 0f, 459.155f, true) > .9f)
+        assertEquals(0f, p.sample(.6f, 0f, .02f, true), 0f)
+        assertEquals(0f, p.sample(-.6f, 0f, .1f, true), 0f)
+        assertTrue(p.sample(-.6f, 0f, .155f, true) > .9f)
+    }
+
+    @Test fun clockRollbackCannotReplayAnExpiredBlink() {
+        val p = GazeBlinkPolicy()
+        p.sample(-.6f, 0f, 1f, true)
+        p.sample(.6f, 0f, 1.1f, true)
+        assertTrue(p.sample(.6f, 0f, 1.155f, true) > .9f)
+        assertEquals(0f, p.sample(.6f, 0f, 2f, true), 0f)
+        assertEquals(0f, p.sample(-.6f, 0f, .2f, true), 0f)
+        assertEquals(0f, p.sample(-.6f, 0f, 1.155f, true), 0f)
+    }
+
+    @Test fun disablingWithinTheSameEpochPreservesCooldown() {
+        val p = GazeBlinkPolicy()
+        p.sample(-.6f, 0f, 1f, true)
+        p.sample(.6f, 0f, 1.1f, true)
+        assertEquals(0f, p.sample(.6f, 0f, 1.2f, false), 0f)
+        p.sample(.6f, 0f, 1.3f, true)
+        p.sample(-.6f, 0f, 1.4f, true)
+        assertEquals(0f, p.sample(-.6f, 0f, 1.455f, true), 0f)
+        p.sample(.6f, 0f, 3f, true)
+        assertTrue(p.sample(.6f, 0f, 3.055f, true) > .9f)
+    }
+
+    @Test fun wrapDuringDisabledFramesDoesNotRetainTheOldCooldown() {
+        val p = GazeBlinkPolicy()
+        p.sample(-.6f, 0f, 459f, true)
+        p.sample(.6f, 0f, 459.1f, true)
+        p.sample(.6f, 0f, 459.2f, false)
+        p.sample(.6f, 0f, .02f, false)
+        assertEquals(0f, p.sample(.6f, 0f, .1f, true), 0f)
+        p.sample(-.6f, 0f, .2f, true)
+        assertTrue(p.sample(-.6f, 0f, .255f, true) > .9f)
+    }
+
+    @Test fun invalidSamplesCannotConcealAClockRollback() {
+        for ((x, time) in listOf(Float.NaN to 459.2f, .6f to Float.NaN,
+            Float.POSITIVE_INFINITY to 459.2f, .6f to Float.POSITIVE_INFINITY)) {
+            val p = GazeBlinkPolicy()
+            p.sample(-.6f, 0f, 459f, true)
+            p.sample(.6f, 0f, 459.1f, true)
+            assertEquals(0f, p.sample(x, 0f, time, true), 0f)
+            assertEquals(0f, p.sample(.6f, 0f, .1f, true), 0f)
+            p.sample(-.6f, 0f, .2f, true)
+            assertTrue(p.sample(-.6f, 0f, .255f, true) > .9f)
+        }
+    }
 }

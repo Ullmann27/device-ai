@@ -29,7 +29,7 @@ internal object ResearchQuestionFocus {
         "suche", "such", "finde", "recherchiere", "recherchier", "prüfe", "prüfen", "zeige",
         "nenne", "nenn", "online", "aktuell", "aktuelle", "aktuellen",
         "aktueller", "fassung", "quelle", "quellen", "konkrete",
-        "konkreten", "link", "im"
+        "konkreten", "link", "im", "zu", "denn", "thema", "themen"
     )
 
     private fun tokens(text: String): List<String> =
@@ -62,6 +62,21 @@ internal object ResearchQuestionFocus {
         if (!isQuestion(cleaned)) return cleaned.take(180)
         val focus = meaningfulTokens(cleaned)
         return (if (focus.isEmpty()) cleaned else focus.joinToString(" ")).take(180)
+    }
+
+    /** Public search evidence must match substantive topic words, even without a question mark. */
+    fun sourceTitleMatches(topic: String, fetchedTitle: String?): Boolean {
+        val terms = meaningfulTokens(topic).map(::stem).filter { it.length >= 3 }.distinct()
+        if (terms.isEmpty()) return false
+        val locationTerms = setOf("österreich", "oesterreich", "austria", "deutschland", "germany")
+        val anchors = terms.filterNot { it in locationTerms }.ifEmpty { terms }
+        val titleWords = fetchedTitle?.let(::tokens)?.map(::stem).orEmpty()
+        return anchors.any { term ->
+            titleWords.any { word ->
+                word == term || (term.length >= 5 && word.startsWith(term)) ||
+                    (word.length >= 5 && term.startsWith(word))
+            }
+        }
     }
 
     fun titleMatches(question: String, title: String?): Boolean {

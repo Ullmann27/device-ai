@@ -445,6 +445,37 @@ class ResearchEngineTest {
         assertEquals(0, requests)
     }
 
+    @Test
+    fun publicSearchRejectsUnrelatedFinalPageTitleAfterDiscovery() {
+        val unrelated = document(
+            "https://wimmer.example.org/sterbefaelle", "wimmer.example.org",
+            "Bestattung Wimmer bietet Traueranzeigen und Bestattungsprodukte.", 10L
+        ).copy(title = "Aktuelle Sterbefälle – Bestattung Wimmer aus Weng")
+        val relevant = document(
+            "https://justiz.example.org/information", "justiz.example.org",
+            "Die Justiz in Österreich umfasst die Gerichte und Staatsanwaltschaften.", 11L
+        ).copy(title = "Justiz in Österreich")
+        fun check(source: ResearchDocument): ResearchDossier {
+            val discovery = object : ResearchDiscoveryProvider {
+                override val isGeneralSearchAvailable = true
+                override fun discover(query: ResearchQuery) = listOf(
+                    ResearchSourceCandidate(source.url, "Justiz Österreich – Suchtreffer", "general-web-search")
+                )
+            }
+            return DeepResearchEngine(
+                discovery = discovery,
+                provider = SimulatedResearchProvider(mapOf(source.url to source)),
+                validateTarget = {}
+            ).research("Justiz Österreich", ResearchMode.QUICK)
+        }
+        val irrelevantDossier = check(unrelated)
+        assertTrue(irrelevantDossier.sources.isEmpty())
+        assertFalse(irrelevantDossier.synthesis!!.text.contains("Bestattung"))
+        val relevantDossier = check(relevant)
+        assertEquals(1, relevantDossier.sources.size)
+        assertEquals(relevant.url, relevantDossier.sources.single().canonicalUrl)
+    }
+
     private fun document(url: String, domain: String, text: String, retrievedAt: Long) = ResearchDocument(
         url, "Source", retrievedAt, contentHash(text), "text/plain",
         SourceIdentity(domain, domain), text

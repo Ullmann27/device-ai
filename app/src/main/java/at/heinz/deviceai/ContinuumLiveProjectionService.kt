@@ -100,6 +100,9 @@ class ContinuumLiveProjectionService : Service() {
             }
             return START_NOT_STICKY
         }
+        // Preserve the valid bound capture.
+        if (sessionId != 0L && !closed &&
+            AndroidLiveComputer.projectionAccess(sessionId) != null) return START_NOT_STICKY
         try {
             createNotification(requested)
         } catch (_: Exception) {
@@ -111,7 +114,7 @@ class ContinuumLiveProjectionService : Service() {
         if (requested == sessionId && sessionId != 0L && !closed) return START_NOT_STICKY
         if (sessionId != 0L || requested == 0L || AndroidLiveComputer.projectionAccess(requested) == null) {
             AndroidLiveComputer.endProjection(requested, LiveMonitorReason.SOURCE_UNVERIFIED)
-            stopSelf()
+            stopSelf(startId)
             return START_NOT_STICKY
         }
         sessionId = requested
@@ -222,7 +225,8 @@ class ContinuumLiveProjectionService : Service() {
             sourceResetRequired = false
             LiveCaptureDiagnostics.reject(sessionId, LiveCaptureDiagnostics.Rejection.GEOMETRY_RESET)
             // New queue excludes frames from previous geometry.
-            updateSurface(force = true)
+            try { updateSurface(force = true) }
+            catch (_: Exception) { failCapture() }
             return null
         }
         // ticket() also runs after the GPU copy; recording here would count the same frame twice.

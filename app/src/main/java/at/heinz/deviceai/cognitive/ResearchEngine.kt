@@ -579,6 +579,13 @@ class DeepResearchEngine(
                     continue
                 }
                 if (normalized in fetched) continue
+                // A search-result label alone does not prove the fetched page has the right topic.
+                val topic = plan.questions.firstOrNull { it.id == query.questionId }?.text ?: plan.question
+                if (candidate.discoveredBy == "general-web-search" &&
+                    !ResearchQuestionFocus.sourceTitleMatches(topic, document.title)) {
+                    partialReason = partialReason ?: "Öffentliche Webquelle ohne passenden Themenbezug verworfen."
+                    continue
+                }
                 val finalDomain = URI(normalized).host.lowercase(Locale.ROOT)
                 if (finalDomain != domain) {
                     domainCounts[domain] = ((domainCounts[domain] ?: 1) - 1).coerceAtLeast(0)
@@ -665,8 +672,11 @@ class DeepResearchEngine(
         val contradictions = graph.relationships.filter { it.relation == ClaimRelation.CONTRADICTS }
         contradictions.forEach { edge ->
             claims.firstOrNull { it.id == edge.fromClaimId }?.let { claim ->
+                val question = plan.questions
+                    .filter { ResearchQuestionFocus.sourceTitleMatches(it.text, claim.text) }
+                    .maxByOrNull { lexicalOverlap(claim.text, it.text) } ?: return@let
                 gaps += ResearchGap(
-                    "q0", "Conflicting evidence needs checking.",
+                    question.id, "Conflicting evidence needs checking.",
                     "Find counter-evidence for: ${claim.text}".take(512), counterEvidence = true
                 )
             }
@@ -817,6 +827,9 @@ class DeepResearchEngine(
                 val doc = retrieved.getOrThrow().documents.firstOrNull() ?: continue
                 val finalUrl = runCatching { ResearchUrlCanonicalizer.canonicalize(doc.url) }.getOrNull() ?: continue
                 if (runCatching { validateTarget(URI(finalUrl)) }.isFailure) continue
+                val topic = plan.questions.firstOrNull { it.id == path.query.questionId }?.text ?: plan.question
+                if (candidate.discoveredBy == "general-web-search" &&
+                    !ResearchQuestionFocus.sourceTitleMatches(topic, doc.title)) continue
                 val finalDomain = URI(finalUrl).host
                 if (finalDomain != domain) {
                     domainCounts[domain] = ((domainCounts[domain] ?: 1) - 1).coerceAtLeast(0)
