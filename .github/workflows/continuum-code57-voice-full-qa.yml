@@ -847,8 +847,10 @@ jobs:
           id -u > "$host_crash/emulator-uid.txt"
           date -u '+%Y-%m-%d %H:%M:%S UTC' > "$host_crash/emulator-launch-utc.txt"
           ANDROID_EMU_CRASH_REPORTING_DATABASE="$crash_database" \
+          ANDROID_EMU_LAVAPIPE_GL_MODE_LLVMPIPE=1 \
+          env -u ANDROID_EMU_LAVAPIPE_GL_MODE_SWIFTSHADER \
           "$CODE59_EMULATOR_BIN" -avd continuum-native-pdf -port 5554 -accel on \
-            -no-window -no-audio -no-boot-anim -no-snapshot -gpu swangle -memory 2048 -cores 2 \
+            -no-window -no-audio -no-boot-anim -no-snapshot -gpu lavapipe -memory 2048 -cores 2 \
             > "$evidence/emulator.log" 2>&1 &
           emulator_pid=$!
           printf '%s\n' "$emulator_pid" > "$host_crash/emulator-pid.txt"
@@ -868,17 +870,26 @@ jobs:
           export CODE59_HOST_IDENTITY="$evidence/host-live-identity.json"
           python3 -B tools/code55-apk/native_hologram_host_stack.py "$emulator_pid" "$CODE59_EMULATOR_BIN" \
             emulator-5554 "$GITHUB_SHA" "$CODE59_HOST_IDENTITY"
-          python3 - "$evidence/emulator.log" "$crash_database" "$emulator_pid" <<'PY'
+          python3 - "$evidence/emulator.log" "$crash_database" "$emulator_pid" \
+              "$host_crash/emulator-maps.txt" "$CODE59_EMULATOR_BIN" <<'PY'
           import pathlib, re, sys
           log = pathlib.Path(sys.argv[1]).read_text()
           reports = re.findall(r'Storing crashdata in: (.*?), detection is (\w+) for process: (\d+)', log)
           assert reports == [(sys.argv[2], 'enabled', sys.argv[3])], reports
           assert 'Crash reports will be automatically uploaded' not in log
           selected = re.findall(r'gles_mode_selected:([a-z0-9_]+)', log)
-          assert selected == ['swangle'], ('Requested backend not selected', selected)
+          assert selected == ['llvmpipe'], ('Requested GLES backend not selected', selected)
+          vulkan = re.findall(r'vulkan_mode_selected:([a-z0-9_]+)', log)
+          assert vulkan == ['lavapipe'], ('Requested Vulkan backend not selected', vulkan)
+          assert "Forcing 'llvmpipe' mode for GLES" in log
           adapters = [line for line in log.splitlines() if 'Graphics Adapter ' in line and 'Graphics Adapter Vendor ' not in line]
-          assert len(adapters) == 1 and 'SwiftShader' in adapters[0] and 'ANGLE (' in adapters[0], adapters
-          print('SWANGLE_BACKEND_CONFIRMED')
+          assert len(adapters) == 1 and 'llvmpipe' in adapters[0].lower(), adapters
+          assert 'swiftshader' not in adapters[0].lower() and 'angle (' not in adapters[0].lower(), adapters
+          maps = pathlib.Path(sys.argv[4]).read_text()
+          library_root = pathlib.Path(sys.argv[5]).resolve().parent / 'lib64/gles_llvmpipe'
+          for name in ('libEGL.so', 'libGLESv2.so', 'libgallium-25.2.4.so'):
+              assert str(library_root / name) in maps, ('Requested GLES library not mapped', name)
+          print('LLVMPIPE_GLES_LAVAPIPE_VULKAN_CONFIRMED')
           PY
           timeout 300 bash tools/code55-apk/native-pdf-emulator.sh emulator-5554 "$evidence"
           timeout 300 bash tools/code55-apk/native-filament-emulator.sh emulator-5554 "$evidence/filament"
