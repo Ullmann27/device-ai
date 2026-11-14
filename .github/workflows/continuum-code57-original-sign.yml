@@ -1,0 +1,81 @@
+name: "Code57 original-signierter APK-Testentwurf (Besitzerfreigabe)"
+on:
+  push:
+    branches:
+      - chatgpt/code52-owner-signing-20261109
+    paths:
+      - .github/workflows/continuum-code57-original-sign.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-original-sign-only
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    name: "Code57 Quell-SHA b61c5f3cd7bad29a17396b0cd4cd62294e365161 vollständig prüfen"
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-owner-signing-20261109'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+      actions: read
+    env:
+      SOURCE_SHA: "b61c5f3cd7bad29a17396b0cd4cd62294e365161"
+      OWNER_APPROVED_SHA: "b61c5f3cd7bad29a17396b0cd4cd62294e365161"
+      QA_RUN_ID: "43480692570"
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Official Android SDK build tools
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"'
+      - name: Strict Code57 preflight without original signing key
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/continuum-code57-original-signer.sh
+          bash scripts/continuum-code57-original-signer.sh preflight
+
+  sign-draft-original:
+    name: "Code57 b61c5f3cd7bad29a17396b0cd4cd62294e365161 originalsignieren – vorher Besitzerfreigabe"
+    needs: preflight
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-owner-signing-20261109'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    environment: continuum-original-signing
+    permissions:
+      contents: write
+      actions: read
+    env:
+      SOURCE_SHA: "b61c5f3cd7bad29a17396b0cd4cd62294e365161"
+      OWNER_APPROVED_SHA: "b61c5f3cd7bad29a17396b0cd4cd62294e365161"
+      QA_RUN_ID: "43480692570"
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Official Android SDK build tools
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"'
+      - name: Verify exact source, sign with original key, retain unpublished draft only
+        shell: bash
+        env:
+          ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
+          ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}
+        run: |
+          set -Eeuo pipefail
+          bash scripts/continuum-code57-original-signer.sh sign
