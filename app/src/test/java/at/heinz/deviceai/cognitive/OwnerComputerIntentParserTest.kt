@@ -30,6 +30,46 @@ class OwnerComputerIntentParserTest {
         assertFalse(intent.steps.contains(ComputerPlanStep.REQUIRE_SEND_APPROVAL))
     }
 
+    @Test fun messageDestinationPrepositionsDoNotBecomeRecipientText() {
+        for (preposition in listOf("in", "auf", "per", "via", "über", "ueber")) {
+            for (alias in listOf("WhatsApp", "Whats App")) {
+                for (request in listOf("Schreib Anna $preposition $alias: Hallo",
+                    "Bereite $preposition $alias eine Nachricht an Anna vor: Hallo")) {
+                    val intent = ready(request)
+                    assertEquals(request, ComputerApp.WHATSAPP, intent.app)
+                    assertEquals(request, ComputerGoal.DRAFT_MESSAGE, intent.goal)
+                    assertEquals(request, "Anna", intent.query)
+                    assertEquals(request, "Hallo", intent.draft)
+                    assertFalse(intent.steps.contains(ComputerPlanStep.REQUIRE_SEND_APPROVAL))
+                }
+            }
+        }
+    }
+
+    @Test fun perAndViaPreserveDraftBodyAndSeparateSendApproval() {
+        for (preposition in listOf("per", "via")) {
+            val body = "Nicht per WhatsApp;  bitte via Telefon: morgen!"
+            val intent = ready("Sende Anna $preposition WhatsApp: $body")
+            assertEquals(ComputerGoal.SEND_MESSAGE, intent.goal)
+            assertEquals("Anna", intent.query)
+            assertEquals(body, intent.draft)
+            assertEquals(ComputerPlanStep.REQUIRE_SEND_APPROVAL, intent.steps.last())
+        }
+    }
+
+    @Test fun destinationPrepositionsCannotBypassNegationOrAmbiguity() {
+        for (preposition in listOf("per", "via")) {
+            assertTrue(OwnerComputerIntentParser.parse("Schreib Anna nicht $preposition WhatsApp: Hallo")
+                is OwnerComputerIntentParser.Result.Unsupported)
+            assertTrue(OwnerComputerIntentParser.parse("Schreib Anna $preposition WhatsApp und per Facebook: Hallo")
+                is OwnerComputerIntentParser.Result.Ask)
+            assertTrue(OwnerComputerIntentParser.parse("Schreib Anna $preposition WhatsApp")
+                is OwnerComputerIntentParser.Result.Ask)
+            assertTrue(OwnerComputerIntentParser.parse("Schreib Anna $preposition WhatsApp: " + "x".repeat(501))
+                is OwnerComputerIntentParser.Result.Unsupported)
+        }
+    }
+
     @Test fun sendIntentStillRequiresSeparateApproval() {
         val intent = ready("Sende eine Nachricht an Anna auf WhatsApp: Bis bald.")
         assertEquals(ComputerGoal.SEND_MESSAGE, intent.goal)

@@ -11,6 +11,8 @@ const policy = readFileSync(
 );
 const capture = readFileSync(
   resolve(import.meta.dirname, '../app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationCapture.kt'), 'utf8');
+const outputPolicy = readFileSync(
+  resolve(import.meta.dirname, '../app/src/main/java/at/heinz/deviceai/localmodel/LocalModelGenerationPolicy.kt'), 'utf8');
 
 function section(source, start, end) {
   const from = source.indexOf(start);
@@ -33,7 +35,8 @@ function watchdogConnected(a, c, p) {
   assert.match(poll, /return finish\(if \(reason == LocalGenerationDeadlinePolicy\.StallReason\.OUTPUT_LIMIT\)\s*LocalGenerationCompletion\.OUTPUT_LIMIT else LocalGenerationCompletion\.STALLED, reason\.name\)/);
   assert.match(p, /STREAM_STALL_MILLIS = 120_000L/);
   assert.match(p, /STARTUP_STALL_MILLIS = 180_000L/);
-  assert.match(p, /MAX_CAPTURED_CHARACTERS = 20_000/);
+  assert.match(p, /MAX_CAPTURED_CHARACTERS = LocalModelGenerationPolicy\.MAX_RESPONSE_CHARACTERS/);
+  assert.match(outputPolicy, /MAX_RESPONSE_CHARACTERS = 64_000/);
   assert.match(p, /if \(capturedCharacters > MAX_CAPTURED_CHARACTERS\) return StallReason\.OUTPUT_LIMIT/);
   assert.match(p, /elapsedMillis - lastTextMillis >= STREAM_STALL_MILLIS/);
   assert.doesNotMatch(generate, /generationDeadline = generationStartedNanos/);

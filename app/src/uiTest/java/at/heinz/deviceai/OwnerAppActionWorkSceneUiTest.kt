@@ -41,9 +41,10 @@ import java.util.concurrent.atomic.AtomicInteger
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class OwnerAppActionWorkSceneUiTest {
-    private class Port : DeviceAppActionPort {
+    private class Port(val packageName: String) : DeviceAppActionPort {
         val entered = CountDownLatch(1)
         val release = CountDownLatch(1)
+        val completed = CountDownLatch(1)
         val calls = AtomicInteger()
         var failure: String? = null
         override fun execute(call: ToolCallRequest, callback: (Result<String>) -> Unit) {
@@ -51,7 +52,8 @@ class OwnerAppActionWorkSceneUiTest {
             entered.countDown()
             check(release.await(60, TimeUnit.SECONDS))
             callback(failure?.let { Result.failure(IllegalStateException(it)) } ?: Result.success(
-                """{"schema":"CONTINUUM_DEVICE_ACTION_V1","action":"LAUNCH_APP","package":"org.example.signal","status":"VERIFIED_FOREGROUND","windowRevision":7}"""))
+                """{"schema":"CONTINUUM_DEVICE_ACTION_V1","action":"LAUNCH_APP","package":"$packageName","status":"VERIFIED_FOREGROUND","windowRevision":7}"""))
+            completed.countDown()
         }
         override fun cancelPending() { release.countDown() }
     }
@@ -90,7 +92,8 @@ class OwnerAppActionWorkSceneUiTest {
         while (!condition() && System.nanoTime() < end) { advance(16); Thread.sleep(5) }
         assertTrue("Expected real callback", condition())
     }
-    private fun withActivity(body: (AgentActivity, Port, ActivityController<AgentActivity>) -> Unit) {
+    private fun withActivity(appPackage: String = "org.example.signal", label: String = "Signal",
+                             body: (AgentActivity, Port, ActivityController<AgentActivity>) -> Unit) {
         val app = RuntimeEnvironment.getApplication()
         LocalDialogueRetention.context.clear()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
@@ -100,17 +103,17 @@ class OwnerAppActionWorkSceneUiTest {
         app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
             .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
         app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
-        val info = ApplicationInfo().apply { packageName = "org.example.signal"; nonLocalizedLabel = "Signal" }
+        val info = ApplicationInfo().apply { packageName = appPackage; nonLocalizedLabel = label }
         shadowOf(app.packageManager).installPackage(PackageInfo().apply {
             packageName = info.packageName; applicationInfo = info
         })
         shadowOf(app.packageManager).addResolveInfoForIntent(
             Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER), ResolveInfo().apply {
                 activityInfo = ActivityInfo().apply { packageName = info.packageName; name = "Main"; applicationInfo = info }
-                nonLocalizedLabel = "Signal"
+                nonLocalizedLabel = label
             })
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
-        val port = Port()
+        val port = Port(appPackage)
         try {
             controller.setup().visible()
             val a = controller.get()
@@ -151,7 +154,7 @@ class OwnerAppActionWorkSceneUiTest {
     }
     private fun approve(port: Port): AlertDialog {
         await { ShadowAlertDialog.getLatestAlertDialog()?.let {
-            it.isShowing && shadowOf(it).message.toString().contains("org.example.signal")
+            it.isShowing && shadowOf(it).message.toString().contains(port.packageName)
         } == true }
         return ShadowAlertDialog.getLatestAlertDialog().also {
             it.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
@@ -160,6 +163,163 @@ class OwnerAppActionWorkSceneUiTest {
     }
     private fun pose(a: AgentActivity) = (get(get(a, "hologramView")!!, "avatarPose") as AvatarPoseReducer)
         .pose(android.os.SystemClock.elapsedRealtime())
+
+    @Test fun missingComputerSearchTermReachesExistingApprovalOnce() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, _ ->
+            val before = lookupGeneration(a)
+            val request = "Suche in WhatsApp"
+            submit(a, request, chat = false)
+            assertEquals(before, lookupGeneration(a))
+            assertEquals(0, port.calls.get())
+            val context = get(a, "localConversationContext") as at.heinz.deviceai.cognitive.LocalConversationContext
+            assertEquals(1, context.priorUserTurns(get(a, "sessionId") as String).count { it == request })
+            submit(a, "Elena Müller", chat = false)
+            await { lookupGeneration(a) > before && ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
+            val approval = ShadowAlertDialog.getLatestAlertDialog()
+            val message = shadowOf(approval).message.toString()
+            assertTrue(message, message.contains("com.whatsapp"))
+            assertTrue(message, message.contains("nach „Elena Müller“ suchen"))
+            assertEquals("A search term grants no launch", 0, port.calls.get())
+            approval.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+            await { get(a, "busy") == false }
+            val after = lookupGeneration(a)
+            submit(a, "Elena Müller", chat = false)
+            await { get(a, "busy") == false && get(a, "botLookupPending") == false }
+            assertEquals("Consumed reply cannot replay", after, lookupGeneration(a))
+            assertEquals(0, port.calls.get())
+        }
+
+    @Test fun newComputerCommandReplacesPendingSearchWithoutReinterpretation() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, _ ->
+            submit(a, "Suche in WhatsApp", chat = false)
+            submit(a, "Öffne WhatsApp", chat = false)
+            await { ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
+            val approval = ShadowAlertDialog.getLatestAlertDialog()
+            val message = shadowOf(approval).message.toString()
+            assertTrue(message, message.contains("App öffnen und das echte App-Fenster anzeigen."))
+            assertFalse(message, message.contains("nach „Öffne"))
+            assertEquals(0, port.calls.get())
+            approval.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+            await { get(a, "busy") == false }
+        }
+
+    @Test fun stopAndNegationInvalidateComputerSearchQuestion() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, _ ->
+            for (stop in listOf(true, false)) {
+                submit(a, "Suche in WhatsApp", chat = false)
+                if (stop) AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest")
+                    .apply { isAccessible = true }.invoke(a)
+                else submit(a, "Nicht Elena", chat = false)
+                await { get(a, "busy") == false && get(a, "botLookupPending") == false }
+                val after = lookupGeneration(a)
+                submit(a, "Elena", chat = false)
+                await { get(a, "busy") == false && get(a, "botLookupPending") == false }
+                assertEquals(after, lookupGeneration(a))
+                assertNull(get(a, "activeOwnerAppFlow"))
+                assertEquals(0, port.calls.get())
+                assertFalse(ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
+            }
+        }
+
+    @Test
+    @Config(sdk = [35], shadows = [OwnerAppPlanningContextUiTest.ProjectionConsentShadow::class])
+    fun approvedSplitScreenLaunchStartsComputerWithoutRefocusingCockpit() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, lifecycle ->
+            shadowOf(a).setInMultiWindowMode(true)
+            submit(a, "Öffne WhatsApp.", chat = false)
+            assertEquals(0, port.calls.get())
+            approve(port)
+            lifecycle.pause()
+            assertEquals(false, get(a, "foregroundLearningActive"))
+            assertEquals(true, get(a, "computerViewVisible"))
+            port.release.countDown()
+            await { get(a, "activeOwnerAppFlow") == null }
+
+            assertNull("Visible cockpit needs no resume", get(a, "pendingComputerLaunch"))
+            val computer = get(a, "computerController") as? OwnerComputerSessionController
+            assertNotNull("Approved launch reaches controller", computer)
+            assertTrue(requireNotNull(computer).active)
+            assertTrue(computer.awaitingConsent)
+            assertEquals("fixture.COMPUTER_CAPTURE_CONSENT",
+                shadowOf(a).nextStartedActivityForResult?.intent?.action)
+            assertEquals("Only approved launch dispatched", 1, port.calls.get())
+
+            (get(a, "input") as EditText).setText("Stopp")
+            assertTrue((get(a, "sendButton") as Button).performClick())
+            assertFalse(computer.active)
+            assertFalse(computer.awaitingConsent)
+        }
+
+    @Test
+    @Config(sdk = [35], shadows = [OwnerAppPlanningContextUiTest.ProjectionConsentShadow::class])
+    fun approvedLaunchDoesNotStartComputerAfterCockpitStops() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, lifecycle ->
+            shadowOf(a).setInMultiWindowMode(true)
+            submit(a, "Öffne WhatsApp.", chat = false)
+            approve(port)
+            lifecycle.pause().stop()
+            assertEquals(false, get(a, "computerViewVisible"))
+            port.release.countDown()
+            await { get(a, "activeOwnerAppFlow") == null }
+
+            assertNotNull("Hidden launch waits for return", get(a, "pendingComputerLaunch"))
+            assertNull(get(a, "computerController"))
+            assertNull(shadowOf(a).nextStartedActivityForResult)
+        }
+
+    @Test
+    @Config(sdk = [35], shadows = [OwnerAppPlanningContextUiTest.ProjectionConsentShadow::class])
+    fun approvedFullscreenLaunchWaitsForCockpitReturn() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, lifecycle ->
+            submit(a, "Öffne WhatsApp.", chat = false)
+            approve(port)
+            lifecycle.pause()
+            assertEquals(false, get(a, "computerViewVisible"))
+            port.release.countDown()
+            await { get(a, "activeOwnerAppFlow") == null }
+
+            assertNotNull(get(a, "pendingComputerLaunch"))
+            assertNull(get(a, "computerController"))
+            assertNull(shadowOf(a).nextStartedActivityForResult)
+        }
+
+    @Test
+    @Config(sdk = [35], shadows = [OwnerAppPlanningContextUiTest.ProjectionConsentShadow::class])
+    fun ownerStopDuringSplitScreenLaunchRejectsLateCallback() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, lifecycle ->
+            shadowOf(a).setInMultiWindowMode(true)
+            submit(a, "Öffne WhatsApp.", chat = false)
+            approve(port)
+            lifecycle.pause()
+            (get(a, "input") as EditText).setText("Stopp")
+            assertTrue((get(a, "sendButton") as Button).performClick())
+            port.release.countDown()
+            await { port.completed.count == 0L }
+            advance(32)
+
+            assertNull(get(a, "activeOwnerAppFlow"))
+            assertNull(get(a, "pendingComputerLaunch"))
+            assertNull(get(a, "computerController"))
+            assertNull(shadowOf(a).nextStartedActivityForResult)
+            assertEquals(false, get(a, "busy"))
+        }
+
+    @Test
+    @Config(sdk = [35], shadows = [OwnerAppPlanningContextUiTest.ProjectionConsentShadow::class])
+    fun failedSplitScreenLaunchCannotRequestComputerConsent() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, lifecycle ->
+            shadowOf(a).setInMultiWindowMode(true)
+            port.failure = "ACCESSIBILITY_OBSERVATION_NOT_GRANTED"
+            submit(a, "Öffne WhatsApp.", chat = false)
+            approve(port)
+            lifecycle.pause()
+            port.release.countDown()
+            await { get(a, "activeOwnerAppFlow") == null }
+
+            assertNull(get(a, "pendingComputerLaunch"))
+            assertNull(get(a, "computerController"))
+            assertNull(shadowOf(a).nextStartedActivityForResult)
+        }
 
     @Test fun installedVerbFinalNameUsesExistingConsentBeforeLaunch() = withActivity { a, port, _ ->
         submit(a, "Signal öffnen", chat = false)

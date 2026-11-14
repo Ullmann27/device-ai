@@ -16,7 +16,7 @@ class LocalGenerationCaptureTest {
     }
 
     @Test fun exactCapCompletesBeforeWatchdogPoll() {
-        val answer = "x".repeat(20_000)
+        val answer = "x".repeat(64_000)
         val capture = LocalGenerationCapture()
         capture.append(answer, 10)
         capture.complete()
@@ -26,7 +26,7 @@ class LocalGenerationCaptureTest {
     }
 
     @Test fun exactCapCompletesAfterWatchdogPoll() {
-        val answer = "x".repeat(20_000)
+        val answer = "x".repeat(64_000)
         val capture = LocalGenerationCapture()
         capture.append(answer, 10)
         assertFalse(capture.poll(250).terminal)
@@ -37,24 +37,24 @@ class LocalGenerationCaptureTest {
 
     @Test fun oversizedChunkCannotBecomeComplete() {
         val capture = LocalGenerationCapture()
-        val overflow = capture.append("x".repeat(20_001), 10)
+        val overflow = capture.append("x".repeat(64_001), 10)
         assertEquals(LocalGenerationCompletion.OUTPUT_LIMIT, overflow.completion)
-        assertEquals("x".repeat(20_000), overflow.response)
+        assertEquals("x".repeat(64_000), overflow.response)
         assertFalse(overflow.responseComplete)
         assertEquals(overflow, capture.complete())
     }
 
     @Test fun overflowAfterExactCapPreservesTheBoundedDraft() {
         val capture = LocalGenerationCapture()
-        capture.append("x".repeat(20_000), 10)
+        capture.append("x".repeat(64_000), 10)
         val result = capture.append("y", 11)
         assertEquals(LocalGenerationCompletion.OUTPUT_LIMIT, result.completion)
-        assertEquals("x".repeat(20_000), result.response)
+        assertEquals("x".repeat(64_000), result.response)
         assertEquals(result, capture.poll(250))
     }
 
     @Test fun splitOverflowDoesNotSplitASupplementaryCharacter() {
-        val prefix = "x".repeat(19_999)
+        val prefix = "x".repeat(63_999)
         val capture = LocalGenerationCapture()
         capture.append(prefix, 10)
         val result = capture.append("🙂z", 11)

@@ -37,4 +37,23 @@ class LocalTextOnlyInferenceRouteTest {
         assertFalse(LocalTextOnlyInferenceRoute.useToolFree(question, false, false, false, true))
         assertFalse(LocalTextOnlyInferenceRoute.useToolFree("", false, false, false, false))
     }
+
+    @Test fun continuationRetainsTheConfirmedTextOnlyRoute() {
+        for (request in listOf("Weiter", "Bitte weiterrrr!", "Schreibe weiter", "Kannst du fortsetzen?")) {
+            assertTrue(request, LocalTextOnlyInferenceRoute.useToolFree(request,
+                false, false, false, false, priorTextOnlyResponse = true))
+            assertFalse(request, LocalTextOnlyInferenceRoute.useToolFree(request,
+                false, false, false, false, priorTextOnlyResponse = false))
+        }
+    }
+
+    @Test fun previousTextNeverOverridesToolWorkOrCurrentActions() {
+        for (index in 0..3) {
+            val flags = List(4) { it == index }
+            assertFalse(LocalTextOnlyInferenceRoute.useToolFree("Weiter", flags[0], flags[1],
+                flags[2], flags[3], priorTextOnlyResponse = true))
+        }
+        assertFalse(LocalTextOnlyInferenceRoute.useToolFree("Weiter und öffne WhatsApp",
+            false, false, false, false, priorTextOnlyResponse = true))
+    }
 }

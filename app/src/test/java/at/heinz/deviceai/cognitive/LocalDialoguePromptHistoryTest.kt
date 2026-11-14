@@ -82,4 +82,59 @@ class LocalDialoguePromptHistoryTest {
         assertFalse(rendered.contains('\uFFFD'))
         assertTrue(rendered.toByteArray(Charsets.UTF_8).size <= 900)
     }
+
+    @Test fun largeLocalReportCannotDisplaceOwnerCorrection() {
+        val report = "Alte Messwerte: " + "Temperatur 31 Grad. ".repeat(500) + "Keine aktuelle Messung."
+        val turns = listOf(turn("Analysiere mein Handy.", report).copy(modelResponse = false),
+            turn("Korrektur: Die aktuelle Temperatur ist nicht bekannt.", "Keine aktuelle Prüfung."))
+        val rendered = LocalDialoguePromptHistory.render(turns, 1_200, true, false)
+        assertTrue(rendered.contains(turns.first().request))
+        assertTrue(rendered.contains(turns.last().request))
+        assertTrue(rendered.contains("Auskunft fehlt; keine Messwerte daraus ableiten"))
+        assertFalse(rendered.contains("Temperatur 31 Grad"))
+        assertTrue(rendered.toByteArray(Charsets.UTF_8).size <= 1_200)
+        assertTrue(LocalDialoguePromptHistory.render(turns, 16_000, true, false).contains(report))
+    }
+
+    @Test fun continuationKeepsRealAnswerEndBeforeLaterOptionalLocalReport() {
+        val response = "Einleitung. " + "Langer Abschnitt. ".repeat(500) + "Hier setzt die nächste Erklärung an."
+        val turns = listOf(turn("Erkläre den Ablauf.", response),
+            turn("Prüfe den Speicher.", "Diagnosedaten. ".repeat(300)).copy(modelResponse = false))
+        val reserve = requireNotNull(LocalDialoguePromptHistory.requiredBytes(turns, true))
+        val rendered = LocalDialoguePromptHistory.render(turns, reserve, true, true)
+        assertTrue(rendered.contains("Hier setzt die nächste Erklärung an."))
+        assertTrue(rendered.contains("Endabschnitt"))
+        assertTrue(rendered.contains("Auskunft fehlt"))
+        assertTrue(rendered.toByteArray(Charsets.UTF_8).size <= reserve)
+    }
+
+    @Test fun requiredByteCountReservesAllUnicodeOwnersAndPrefix() {
+        val turns = listOf(turn("Die Kiste ist in 東京, nicht in Graz.", "Lange Antwort. ".repeat(300)),
+            turn("Korrektur: Sie steht in Wien.", "Neue Antwort. ".repeat(300)))
+        val prefix = "Korrigierter Fokus: Kiste.\n"
+        val reserve = requireNotNull(LocalDialoguePromptHistory.requiredBytes(turns, false, prefix))
+        val rendered = LocalDialoguePromptHistory.render(turns, reserve, true, false, prefix)
+        assertEquals(reserve, rendered.toByteArray(Charsets.UTF_8).size)
+        assertTrue(rendered.startsWith(prefix))
+        turns.forEach { assertTrue(rendered.contains(it.request)) }
+        assertNull(LocalDialoguePromptHistory.requiredBytes(
+            turns + turn("", "Fehlt.").copy(requestComplete = false), false))
+    }
+
+    @Test fun shortOwnerDeduplicationNeverEnlargesTheHistory() {
+        val turns = listOf(turn("Rot.", "Antwort."))
+        val original = requireNotNull(LocalDialoguePromptHistory.requiredBytes(turns, false))
+        val deduplicated = requireNotNull(LocalDialoguePromptHistory.requiredBytes(turns, false,
+            ownerTurnsInTask = setOf("Rot.")))
+        assertTrue(deduplicated <= original)
+        assertTrue(LocalDialoguePromptHistory.render(turns, original, true, false,
+            ownerTurnsInTask = setOf("Rot.")).contains("Rot."))
+    }
+
+    @Test fun quotedOmissionLabelIsStillAnActualAnswer() {
+        val response = "Der Text lautet: (Antwort nicht im Kontext). Danach folgt der nächste Absatz."
+        val rendered = LocalDialoguePromptHistory.render(listOf(turn("Beschreibe den Text.", response)),
+            1_200, true, true)
+        assertTrue(rendered.contains(response))
+    }
 }

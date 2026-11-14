@@ -53,6 +53,17 @@ class LocalChatPromptBudgetTest {
         assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget(query))
     }
 
+    @Test fun shortRequestsForDetailNeverUseThreeSentenceBudget() {
+        for (question in listOf(
+            "Erkläre das ausführlich.",
+            "Ich möchte eine detaillierte Erklärung.",
+            "Erkläre bitte Schritt für Schritt.",
+            "Beschreibe den Ablauf im Detail.",
+            "Gib mir eine lange Antwort.",
+            "Beschreibe den Ablauf vollständig."
+        )) assertEquals(question, LocalChatPromptBudget.FULL_CHARACTERS, budget(question))
+    }
+
     @Test fun lengthBoundaryKeeps240BriefAnd241Full() {
         assertEquals(LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS, budget("a".repeat(240)))
         assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget("a".repeat(241)))

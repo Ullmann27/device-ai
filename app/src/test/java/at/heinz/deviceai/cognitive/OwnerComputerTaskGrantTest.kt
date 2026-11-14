@@ -100,6 +100,26 @@ class OwnerComputerTaskGrantTest {
         }
     }
 
+    @Test fun parsedDestinationKeepsExistingDraftAndSendProtected() {
+        for (preposition in listOf("per", "via")) {
+            val intent = (OwnerComputerIntentParser.parse("Sende Anna $preposition WhatsApp: Hallo")
+                as OwnerComputerIntentParser.Result.Ready).intent
+            assertEquals("Anna", intent.query)
+            val call = request(selector = NodeSelector(label = "Nachricht"), text = intent.draft)
+            for (existing in listOf("Privater bestehender Entwurf", null)) {
+                denied { grant(intent).authorize(call,
+                    frame(node("Nachricht", editable = true, text = existing), node("Anna", heading = true))) }
+            }
+            denied { grant(intent).authorize(call,
+                frame(node("Nachricht", editable = true, text = ""), node("Hanna", heading = true))) }
+            grant(intent).authorize(call,
+                frame(node("Nachricht", editable = true, text = ""), node("Anna", heading = true)))
+            denied { grant(intent).authorize(request(kind = NodeActionKind.SEND,
+                selector = NodeSelector(label = "Senden"), text = intent.draft),
+                frame(node("Senden", clickable = true))) }
+        }
+    }
+
     @Test fun sameStepAndSameQueryCannotBeDispatchedTwice() {
         val permission = grant(draft())
         permission.authorize(request(), frame(node("Suchen", editable = true)))

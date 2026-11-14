@@ -18,12 +18,13 @@ internal object LocalTextOnlyInferenceRoute {
         entwurf\s*:)(?!\p{L})""".replace("\n", "").replace(Regex("""\s{2,}"""), "")
     )
     fun useToolFree(request: String, hasObservations: Boolean, hasReflection: Boolean,
-                    assignedBot: Boolean, codingTask: Boolean): Boolean {
+                    assignedBot: Boolean, codingTask: Boolean, priorTextOnlyResponse: Boolean = false): Boolean {
         if (hasObservations || hasReflection || assignedBot || codingTask) return false
         val text = request.trim()
         if (text.length !in 4..LocalDialogueContextLimits.MAX_OWNER_CHARACTERS ||
             text.any { it.isISOControl() && it != '\n' }) return false
         if (deviceTerms.containsMatchIn(text)) return false
+        if (LocalConversationFollowUpPolicy.requestsContinuation(text)) return priorTextOnlyResponse
         return textStart.containsMatchIn(text) || text.endsWith('?')
     }
 }

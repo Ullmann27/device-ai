@@ -1,5 +1,6 @@
 package at.heinz.deviceai.cognitive
 
+import at.heinz.deviceai.localmodel.LocalModelGenerationPolicy
 import org.json.JSONObject
 import java.io.File
 import java.io.RandomAccessFile
@@ -33,7 +34,10 @@ class LocalChatTranscriptStore(private val dir: File) {
         require(ID.matches(id)) { "Conversation id" }
         if (text.isBlank()) return
         dir.mkdirs()
-        appendLine(id, JSONObject().put("u", user).put("t", text.take(MAX_TEXT)).put("at", atMillis).toString())
+        val end = minOf(text.length, MAX_TEXT).let {
+            if (it < text.length && text[it - 1].isHighSurrogate()) it - 1 else it
+        }
+        appendLine(id, JSONObject().put("u", user).put("t", text.substring(0, end)).put("at", atMillis).toString())
     }
 
     private fun appendLine(id: String, line: String) {
@@ -211,7 +215,8 @@ class LocalChatTranscriptStore(private val dir: File) {
         private const val CONTEXT = "ctx"
         private const val CONTEXT_RESET = "ctx-reset"
         private const val SUFFIX = ".jsonl"
-        private const val MAX_TEXT = 32_000
+        // Keep the partial-answer status too.
+        private const val MAX_TEXT = LocalModelGenerationPolicy.MAX_RESPONSE_CHARACTERS + 4_096
         private const val CONTEXT_VERSION = 2
         private const val LEGACY_CONTEXT_REQUEST = 1_000
         private const val LEGACY_CONTEXT_RESPONSE = 2_000

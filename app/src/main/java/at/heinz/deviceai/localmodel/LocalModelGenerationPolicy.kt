@@ -14,10 +14,24 @@ internal object LocalModelGenerationPolicy {
     const val DEFAULT_MAX_OUTPUT_TOKENS = 1_024
     const val GEMMA4_MAX_OUTPUT_TOKENS = 2_048
     const val GEMMA4_TOOL_FREE_OUTPUT_TOKENS = 3_072
+    const val MAX_RESPONSE_CHARACTERS = 64_000
+    const val OUTPUT_TOKEN_LIMIT = "LOCAL_MODEL_OUTPUT_TOKEN_LIMIT"
+    const val OUTPUT_CHARACTER_LIMIT = "Local model response exceeded the output limit."
 
-    fun maxTextOnlyOutputTokens(modelId: String?): Int =
-        if (maxOutputTokens(modelId) == GEMMA4_MAX_OUTPUT_TOKENS) GEMMA4_TOOL_FREE_OUTPUT_TOKENS
-        else maxOutputTokens(modelId)
+    fun maxTextOnlyOutputTokens(modelId: String?, contextTokens: Int = 4_096): Int {
+        val ordinaryLimit = maxOutputTokens(modelId)
+        if (ordinaryLimit != GEMMA4_MAX_OUTPUT_TOKENS) return ordinaryLimit
+        // Scale only an already-loaded window.
+        val capacity = contextTokens.takeIf { it in 1..8_192 } ?: 4_096
+        return (capacity * GEMMA4_TOOL_FREE_OUTPUT_TOKENS / 4_096).coerceAtLeast(1)
+    }
+
+    fun outputLimitReached(nativeOutputTokens: Int?, requestedOutput: Int, contextTokens: Int): Boolean =
+        requestedOutput > 0 && contextTokens > 0 && nativeOutputTokens != null &&
+            nativeOutputTokens in requestedOutput..contextTokens
+
+    fun isOutputLimit(message: String?): Boolean =
+        message == OUTPUT_TOKEN_LIMIT || message == OUTPUT_CHARACTER_LIMIT
 
     fun maxOutputTokens(modelId: String?): Int {
         val id = modelId?.lowercase(Locale.ROOT) ?: return DEFAULT_MAX_OUTPUT_TOKENS

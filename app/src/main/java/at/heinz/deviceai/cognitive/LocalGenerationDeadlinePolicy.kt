@@ -1,5 +1,7 @@
 package at.heinz.deviceai.cognitive
 
+import at.heinz.deviceai.localmodel.LocalModelGenerationPolicy
+
 /**
  * A native on-device language model may stream for substantially longer than
  * two minutes on a phone. Active progress is never stopped by a wall clock.
@@ -11,7 +13,7 @@ package at.heinz.deviceai.cognitive
 internal object LocalGenerationDeadlinePolicy {
     const val STARTUP_STALL_MILLIS = 180_000L
     const val STREAM_STALL_MILLIS = 120_000L
-    const val MAX_CAPTURED_CHARACTERS = 20_000
+    const val MAX_CAPTURED_CHARACTERS = LocalModelGenerationPolicy.MAX_RESPONSE_CHARACTERS
 
     enum class StallReason { NO_FIRST_TEXT, NO_RECENT_TEXT, OUTPUT_LIMIT }
 

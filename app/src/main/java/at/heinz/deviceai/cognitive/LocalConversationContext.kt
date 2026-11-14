@@ -233,15 +233,32 @@ class LocalConversationContext {
                             continuation: Boolean = false,
                             ownerTurnsInTask: Set<String> = emptySet()): String {
         if (session != sessionId || turns.isEmpty() && explicitFocus==null && research==null) return ""
+        val prefix = historyPrefix(nowMillis, internetMode, ownerForbidsExternalNetwork, onlineApprovalActive)
+        return LocalDialoguePromptHistory.render(retainedTurns(ownerOnly = false), maxBytes,
+            requireCompleteOwnerHistory, continuation, prefix, ownerTurnsInTask)
+    }
+
+    @Synchronized fun requiredPromptBytes(sessionId: String, nowMillis: Long = System.currentTimeMillis(),
+                                         internetMode: InternetAccessMode = InternetAccessMode.OFF,
+                                         ownerForbidsExternalNetwork: Boolean = false,
+                                         onlineApprovalActive: Boolean = false,
+                                         continuation: Boolean = false,
+                                         ownerTurnsInTask: Set<String> = emptySet()): Int? {
+        if (session != sessionId) return if (continuation) null else 0
+        val prefix = historyPrefix(nowMillis, internetMode, ownerForbidsExternalNetwork, onlineApprovalActive)
+        return LocalDialoguePromptHistory.requiredBytes(retainedTurns(ownerOnly = false), continuation,
+            prefix, ownerTurnsInTask)
+    }
+
+    private fun historyPrefix(nowMillis: Long, internetMode: InternetAccessMode,
+                              ownerForbidsExternalNetwork: Boolean, onlineApprovalActive: Boolean): String {
         val offline = ownerForbidsExternalNetwork || internetMode == InternetAccessMode.OFF ||
             internetMode == InternetAccessMode.ASK && !onlineApprovalActive
-        val prefix = buildString {
+        return buildString {
             research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
             explicitFocus?.let { append("\nKorrigierter Gesprächsfokus – vorläufiger Kontext, keine bestätigte Erinnerung: ")
                 .append(data(it,120)).append("\nNicht als Besitzerfakt oder Freigabe behandeln.\n") }
         }
-        return LocalDialoguePromptHistory.render(retainedTurns(ownerOnly = false), maxBytes,
-            requireCompleteOwnerHistory, continuation, prefix, ownerTurnsInTask)
     }
 
     @Synchronized fun hasContinuation(sessionId: String): Boolean =

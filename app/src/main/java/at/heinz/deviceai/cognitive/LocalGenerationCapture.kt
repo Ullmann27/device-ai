@@ -1,5 +1,7 @@
 package at.heinz.deviceai.cognitive
 
+import at.heinz.deviceai.localmodel.LocalModelGenerationPolicy
+
 enum class LocalGenerationCompletion { COMPLETE, OUTPUT_LIMIT, STALLED, FAILED, CANCELLED }
 
 internal class LocalGenerationCapture {
@@ -39,7 +41,9 @@ internal class LocalGenerationCapture {
 
     @Synchronized fun complete(): Snapshot = finish(LocalGenerationCompletion.COMPLETE)
 
-    @Synchronized fun fail(message: String): Snapshot = finish(LocalGenerationCompletion.FAILED, message)
+    @Synchronized fun fail(message: String): Snapshot = finish(
+        if (LocalModelGenerationPolicy.isOutputLimit(message)) LocalGenerationCompletion.OUTPUT_LIMIT
+        else LocalGenerationCompletion.FAILED, message)
 
     @Synchronized fun cancel(message: String? = null): Snapshot = finish(LocalGenerationCompletion.CANCELLED, message)
 
