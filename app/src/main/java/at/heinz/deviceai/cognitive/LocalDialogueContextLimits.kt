@@ -2,7 +2,7 @@ package at.heinz.deviceai.cognitive
 
 /** Storage bounds, not inference grants. */
 internal object LocalDialogueContextLimits {
-    const val MAX_OWNER_CHARACTERS = 7_900
+    const val MAX_OWNER_CHARACTERS = 11_500
     const val MAX_RESPONSE_CHARACTERS = 20_000
     const val MAX_TURNS = 4
 
