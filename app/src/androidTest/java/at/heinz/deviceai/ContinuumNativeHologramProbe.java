@@ -60,6 +60,7 @@ public final class ContinuumNativeHologramProbe {
     private File directory;
     private Activity activity;
     private View hologram;
+    private boolean cameraDeclined;
 
     private ContinuumNativeHologramProbe(Instrumentation instrumentation) {
         this.instrumentation = instrumentation;
@@ -103,6 +104,7 @@ public final class ContinuumNativeHologramProbe {
                 visible = onMain(() -> {
                     require(!activity.isFinishing() && !activity.isDestroyed(), "Activity closed");
                     if (closeExistingDialog()) return false;
+                    if (!cameraDeclined) return false;
                     Object existing = field(activity, "hologramView");
                     if (!(existing instanceof View)) return false;
                     View view = (View) existing;
@@ -219,6 +221,7 @@ public final class ContinuumNativeHologramProbe {
             Button actual = findButton(root, button);
             require(actual != null && actual.isEnabled() && actual.isShown() && actual.isClickable(), "Actual dialog button unavailable");
             require(actual.performClick(), "Actual dialog button rejected click");
+            if ("NEIN".equals(button)) cameraDeclined = true;
             actions.put(new JSONObject().put("button", button).put("elapsed_nanos", SystemClock.elapsedRealtimeNanos()));
             return true;
         }
@@ -228,6 +231,7 @@ public final class ContinuumNativeHologramProbe {
     private JSONObject sample() throws Exception {
         require(Looper.myLooper() == Looper.getMainLooper(), "Mainthread sampling required");
         require(field(activity, "hologramView") == hologram, "Hologram instance replaced");
+        require(cameraDeclined && hologram.hasWindowFocus(), "Home stage lost window focus");
         Object nativeRenderer = field(hologram, "native3d");
         TextureView texture = (TextureView) field(hologram, "nativeTexture");
         Surface surface = (Surface) field(hologram, "nativeSurface");

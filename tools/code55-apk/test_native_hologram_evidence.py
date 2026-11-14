@@ -29,7 +29,7 @@ class HologramFixture:
         (self.root / 'source-tree.txt').write_text(self.tree + '\n')
         (self.root / 'apk-sha256.txt').write_text(''.join(f'{digest}  app/build/{name}\n' for name, digest in self.apks.items()))
         view = {'identity': 10, 'class': 'at.heinz.deviceai.ContinuumHologramView', 'attached': True,
-                'shown': True, 'intersects_display': True, 'visibility': 0, 'window_visibility': 0,
+                'shown': True, 'intersects_display': True, 'window_focus': True, 'visibility': 0, 'window_visibility': 0,
                 'alpha': 1, 'scale_x': 1, 'scale_y': 1, 'width': 2, 'height': 2}
         sample = {'main_thread': 'main', 'hologram': view,
                   'texture': {**view, 'class': 'android.view.TextureView', 'identity': 11},
@@ -54,7 +54,7 @@ class HologramFixture:
             'sdk': 35, 'hardware': 'ranchu', 'pid': 100, 'loading_observation_complete': True,
             'comparison_first_sample': 0, 'comparison_second_sample': 1, 'samples': samples,
             'started_elapsed_nanos': 900_000_000, 'finished_elapsed_nanos': 8_000_000_000,
-            'actions': [{'button': 'NEIN'}], 'texture_readback': {'thread': 'main',
+            'actions': [{'button': 'NEIN', 'elapsed_nanos': 950_000_000}], 'texture_readback': {'thread': 'main',
                 'queued_elapsed_nanos': 3_300_000_000, 'returned_elapsed_nanos': 3_400_000_000},
             'pixel_copy': {'status': 0, 'source_identity': 13, 'started_elapsed_nanos': 3_500_000_000,
                            'finished_elapsed_nanos': 3_600_000_000}}
@@ -168,6 +168,30 @@ class HologramEvidenceTest(unittest.TestCase):
         self.assertEqual(result['status'], 'SURFACE_FRAMES_VERIFIED')
         self.assertEqual(result['avatar_content'], 'REQUIRES_IMAGE_REVIEW')
         self.assertEqual(result['resize'], 'SWAPCHAIN_RESIZE_VERIFIED')
+
+    def test_camera_decline_must_precede_sampling(self):
+        first = self.fixture.report['samples'][0]['elapsed_nanos']
+        invalid = ([], [{'button': 'SCHLIESSEN', 'elapsed_nanos': 950_000_000}],
+                   [{'button': 'NEIN'}], [{'button': 'NEIN', 'elapsed_nanos': True}],
+                   [{'button': 'NEIN', 'elapsed_nanos': 0}],
+                   [{'button': 'NEIN', 'elapsed_nanos': first}],
+                   [{'button': 'NEIN', 'elapsed_nanos': first + 1}])
+        for actions in invalid:
+            with self.subTest(actions=actions):
+                self.fixture.report['actions'] = actions
+                with self.assertRaises((AssertionError, KeyError)):
+                    self.fixture.validate()
+
+    def test_focus_loss_after_first_sample_fails(self):
+        sample = self.fixture.report['samples'][1]
+        targets = (sample['hologram'], sample['texture'], sample['ancestors'][0],
+                   self.fixture.report['resize_regression']['stage']['rendered']['texture'])
+        for index, target in enumerate(targets):
+            with self.subTest(target=index):
+                target['window_focus'] = False
+                with self.assertRaises(AssertionError):
+                    self.fixture.validate()
+                target['window_focus'] = True
 
     def test_missing_or_incomplete_resize_evidence_fails(self):
         proof = self.fixture.report.pop('resize_regression')

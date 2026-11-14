@@ -96,7 +96,7 @@ def bound_image(directory, metadata, name):
 
 def visible(view):
     return (isinstance(view, dict)
-            and all(view.get(key) is True for key in ('attached', 'shown', 'intersects_display'))
+            and all(view.get(key) is True for key in ('attached', 'shown', 'intersects_display', 'window_focus'))
             and view.get('visibility') == 0 and view.get('window_visibility') == 0
             and view.get('alpha', 0) > 0 and view.get('scale_x', 0) > 0 and view.get('scale_y', 0) > 0
             and view.get('width', 0) > 0 and view.get('height', 0) > 0)
@@ -200,6 +200,10 @@ def verify_hologram(directory, source_sha, source_tree, expected_apks=None):
     samples = report['samples']
     assert 2 <= len(samples) <= 100
     assert all(s['hologram']['class'] == 'at.heinz.deviceai.ContinuumHologramView' for s in samples)
+    assert all(s['hologram'].get('window_focus') is True for s in samples), 'Stage lost window focus'
+    declines = [action['elapsed_nanos'] for action in report['actions'] if action['button'] == 'NEIN']
+    assert declines and all(type(value) is int and report['started_elapsed_nanos'] <= value < samples[0]['elapsed_nanos']
+                            for value in declines), 'Camera refusal must precede sampling'
     assert len({s['hologram']['identity'] for s in samples}) == 1
     assert all(s['main_thread'] == 'main' for s in samples)
     assert all(a['elapsed_nanos'] <= b['elapsed_nanos'] for a, b in zip(samples, samples[1:]))
