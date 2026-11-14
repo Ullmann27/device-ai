@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   preflight:
-    name: "Code58 Quell-SHA 0343cd6234c607bfba856d448ec09d79cc0129ea vollständig prüfen"
+    name: "Code58 Quell-SHA d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684 vollständig prüfen"
     if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-owner-signing-20261109'
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -23,9 +23,9 @@ jobs:
       contents: read
       actions: read
     env:
-      SOURCE_SHA: "0343cd6234c607bfba856d448ec09d79cc0129ea"
-      OWNER_APPROVED_SHA: "0343cd6234c607bfba856d448ec09d79cc0129ea"
-      QA_RUN_ID: "43572572579"
+      SOURCE_SHA: "d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684"
+      OWNER_APPROVED_SHA: "d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684"
+      QA_RUN_ID: "43574440992"
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -46,7 +46,7 @@ jobs:
           bash scripts/continuum-code57-original-signer.sh preflight
 
   sign-draft-original:
-    name: "Code58 0343cd6234c607bfba856d448ec09d79cc0129ea originalsignieren – vorher Besitzerfreigabe"
+    name: "Code58 d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684 originalsignieren – vorher Besitzerfreigabe"
     needs: preflight
     if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-owner-signing-20261109'
     runs-on: ubuntu-latest
@@ -56,9 +56,9 @@ jobs:
       contents: write
       actions: read
     env:
-      SOURCE_SHA: "0343cd6234c607bfba856d448ec09d79cc0129ea"
-      OWNER_APPROVED_SHA: "0343cd6234c607bfba856d448ec09d79cc0129ea"
-      QA_RUN_ID: "43572572579"
+      SOURCE_SHA: "d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684"
+      OWNER_APPROVED_SHA: "d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684"
+      QA_RUN_ID: "43574440992"
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4

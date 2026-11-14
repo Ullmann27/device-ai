@@ -54,9 +54,9 @@ class WorkflowScopeTest(unittest.TestCase):
 
     def test_exact_product_and_qa_stay_pinned(self):
         for line in [
-            '      SOURCE_SHA: "0343cd6234c607bfba856d448ec09d79cc0129ea"',
-            '      OWNER_APPROVED_SHA: "0343cd6234c607bfba856d448ec09d79cc0129ea"',
-            '      QA_RUN_ID: "43572572579"',
+            '      SOURCE_SHA: "d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684"',
+            '      OWNER_APPROVED_SHA: "d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684"',
+            '      QA_RUN_ID: "43574440992"',
         ]:
             self.assertEqual(self.text.count(line), 2)
 
