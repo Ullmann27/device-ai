@@ -14,6 +14,7 @@ import at.heinz.deviceai.routines.RoutineBook
 import at.heinz.deviceai.routines.RoutineClaim
 import at.heinz.deviceai.routines.RoutineOutcome
 import at.heinz.deviceai.routines.RoutineReport
+import at.heinz.deviceai.routines.Routine
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -77,19 +78,47 @@ class RoutineDispatcher(
     private val pool: ChiefWorkerPool,
     private val mailbox: AgentMailbox,
     private val chiefId: String = "chief",
-    private val clock: () -> Long = System::currentTimeMillis
+    private val clock: () -> Long = System::currentTimeMillis,
+    private val resultDigest: (Routine, String) -> String = { _, value -> value },
+    private val onAdmission: (WorkerBrief) -> Unit = {},
+    private val onRetired: (String) -> Unit = {},
+    private val onStorageFailure: (Exception) -> Unit = {}
 ) {
-    private class Delivery(val report: RoutineReport, val message: AgentMessage?) {
+    private class Delivery(
+        val report: RoutineReport,
+        val message: AgentMessage?,
+        val result: String,
+        val atMillis: Long,
+        var retained: Boolean = false
+    ) {
         val attempting = AtomicBoolean()
     }
     private val inFlight = LinkedHashMap<String, RoutineClaim>()
     private val pending = LinkedHashMap<String, Delivery>()
 
-    init { require(chiefId.length in 1..64) }
+    init {
+        require(chiefId.length in 1..64)
+        require(!book.persistent || chiefId == "chief")
+        for ((claim, stored) in book.takeRestoredClaims()) {
+            inFlight[claim.routine.id] = claim
+            val delivery = if (stored != null) {
+                Delivery(RoutineReport(claim, RoutineOutcome.Unchanged(claim.routine.id), stored.digest),
+                    stored.message, stored.result, stored.atMillis, retained = true)
+            } else {
+                val now = clock()
+                val text = "Routine ${claim.routine.id}: Voriger Lauf nach Prozessneustart unterbrochen. " +
+                    "Ergebnis nicht bestätigt; keine Wiederholung. Lauf ${claim.runId}. Werkzeugquittungen prüfen."
+                Delivery(RoutineReport(claim, RoutineOutcome.Unchanged(claim.routine.id), ""),
+                    message(claim, AgentPriority.URGENT, text, now), text, now)
+            }
+            pending[claim.routine.id] = delivery
+        }
+    }
 
     fun tick(): Int = poll(book.claimDue(clock()))
     fun onEvent(name: String): Int = poll(book.claimTriggered(name))
     fun inFlight(): Set<String> = synchronized(book) { inFlight.keys.toSet() }
+    fun activeWorkerIds(): Set<String> = synchronized(book) { inFlight.values.map { "rt-" + it.runId }.toSet() }
 
     private fun poll(claims: List<RoutineClaim>): Int {
         val waiting = synchronized(book) {
@@ -97,6 +126,18 @@ class RoutineDispatcher(
             pending.values.toList()
         }
         waiting.forEach(::deliver)
+        if (book.persistent) {
+            val held = synchronized(book) { inFlight.values.map { it.runId }.toSet() }
+            book.pendingChatReports().filter { it.runId !in held }.forEach { saved ->
+                val message = saved.message ?: return@forEach
+                var newlyQueued = false
+                val accepted = book.offerChatReport(saved) {
+                    mailbox.peek(chiefId).any { it.id == message.id } ||
+                        mailbox.enqueue(message).also { newlyQueued = it }
+                }
+                if (accepted == true && newlyQueued) mailbox.notifyAccepted(message)
+            }
+        }
         return dispatch(claims)
     }
 
@@ -132,7 +173,10 @@ class RoutineDispatcher(
                 book.release(claim)
                 continue
             }
-            val accepted = runCatching { pool.submit(brief) { report -> onReport(claim, report) } }.getOrDefault(false)
+            val accepted = runCatching {
+                onAdmission(brief)
+                pool.submit(brief) { report -> onReport(claim, report) }
+            }.getOrDefault(false)
             if (accepted) submitted++ else {
                 retire(claim)
                 book.release(claim)
@@ -143,24 +187,34 @@ class RoutineDispatcher(
 
     private fun onReport(claim: RoutineClaim, report: WorkerReport) {
         val now = clock()
+        val compared = if (report.status == WorkerStatus.DONE) runCatching {
+            resultDigest(claim.routine, report.summary).also {
+                require(!book.persistent || it.length <= at.heinz.deviceai.routines.RoutineStoredState.MAX_RESULT)
+            }
+        } else Result.success("")
         val delivery = synchronized(book) {
             val routine = claim.routine
             if (inFlight[routine.id] !== claim || pending[routine.id] != null) return
-            val prepared = book.prepareReport(claim, if (report.status == WorkerStatus.DONE) report.summary else "")
+            val prepared = book.prepareReport(claim, compared.getOrDefault(""))
             if (prepared == null) {
                 retire(claim)
                 return
             }
-            val message = when (report.status) {
+            val message = if (compared.isFailure) message(claim, AgentPriority.INFO,
+                "Routine ${routine.id}: Ergebnisvergleich fehlgeschlagen " +
+                    "(${compared.exceptionOrNull()!!.javaClass.simpleName}). Messwert bleibt unbewertet.", now)
+            else when (report.status) {
                 WorkerStatus.DONE -> (prepared.outcome as? RoutineOutcome.News)?.let {
-                    message(claim, AgentPriority.INFO, it.summary, now)
+                    message(claim, AgentPriority.INFO, if (book.persistent)
+                        "Routine ${routine.id}:\n" + report.summary else it.summary, now)
                 }
                 WorkerStatus.BLOCKED -> message(claim, AgentPriority.URGENT,
-                    "Routine ${routine.id} braucht deine Freigabe: " + report.summary.take(500), now)
+                    (if (book.persistent) "Routine ${routine.id} ist blockiert: "
+                    else "Routine ${routine.id} braucht deine Freigabe: ") + report.summary.take(500), now)
                 else -> message(claim, AgentPriority.INFO,
                     "Routine ${routine.id}: ${report.status} – " + report.summary.take(300), now)
             }
-            Delivery(prepared, message).also { pending[routine.id] = it }
+            Delivery(prepared, message, report.summary, now).also { pending[routine.id] = it }
         }
         deliver(delivery)
     }
@@ -168,18 +222,30 @@ class RoutineDispatcher(
     private fun deliver(delivery: Delivery) {
         if (!delivery.attempting.compareAndSet(false, true)) return
         try {
+            if (!delivery.retained) {
+                if (!book.retainReport(delivery.report, delivery.message, delivery.result, delivery.atMillis)) {
+                    retire(delivery.report.claim)
+                    return
+                }
+                delivery.retained = true
+            }
             val now = clock()
+            var newlyQueued = false
             when (book.offerReport(delivery.report) {
-                delivery.message?.let(mailbox::enqueue) ?: true
+                if (book.chatDelivered(delivery.report)) true else delivery.message?.let { message ->
+                    mailbox.peek(chiefId).any { it.id == message.id } ||
+                        mailbox.enqueue(message).also { newlyQueued = it }
+                } ?: true
             }) {
                 null -> retire(delivery.report.claim)
                 false -> Unit
                 true -> {
-                    delivery.message?.let(mailbox::notifyAccepted)
-                    book.acknowledgeReport(delivery.report, now)
-                    retire(delivery.report.claim)
+                    if (newlyQueued) delivery.message?.let(mailbox::notifyAccepted)
+                    if (book.acknowledgeReport(delivery.report, now)) retire(delivery.report.claim)
                 }
             }
+        } catch (error: Exception) {
+            onStorageFailure(error)
         } finally {
             delivery.attempting.set(false)
         }
@@ -189,6 +255,7 @@ class RoutineDispatcher(
         if (inFlight[claim.routine.id] === claim) {
             inFlight.remove(claim.routine.id)
             pending.remove(claim.routine.id)
+            onRetired("rt-" + claim.runId)
         }
     }
 

@@ -3,6 +3,7 @@ package at.heinz.deviceai.chief
 import at.heinz.deviceai.ToolGate
 import at.heinz.deviceai.ToolPolicy
 import at.heinz.deviceai.ToolRunner
+import at.heinz.deviceai.ToolExecutionReceiptStore
 import at.heinz.deviceai.cognitive.AgentEvaluator
 import at.heinz.deviceai.cognitive.AgentLimits
 import at.heinz.deviceai.cognitive.AgentModel
@@ -35,7 +36,8 @@ data class ChiefJobDeps(
     // Only an independently allocated model/session may receive cancelGeneration().
     // A shared LiteRT-LM runtime may have other Chief/worker turns in flight and sticky cancellation state.
     val modelOwnedByJob: Boolean = false,
-    val onResult: (at.heinz.deviceai.cognitive.AgentRunResult) -> Unit = {}
+    val onResult: (at.heinz.deviceai.cognitive.AgentRunResult) -> Unit = {},
+    val receiptStore: ToolExecutionReceiptStore? = null
 )
 
 /**
@@ -64,7 +66,8 @@ object ChiefJobs {
                 val orchestrator = BoundedAgentOrchestrator(
                     model = model,
                     memories = { deps.memory?.let { ChiefMemory.recall(it, brief.goal, deps.clock()) } ?: emptyList() },
-                    toolGate = ToolGate(deps.policy, WorkerScope.runner(brief, deps.runner)),
+                    toolGate = ToolGate(deps.policy, WorkerScope.runner(brief, deps.runner),
+                        receiptStore = deps.receiptStore, receiptClock = deps.clock),
                     evaluator = deps.evaluator,
                     experienceStore = deps.experienceStore,
                     approvalProvider = deps.approvalProvider,

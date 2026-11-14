@@ -31,49 +31,106 @@ internal class RoutineReport(
     val digest: String
 )
 
-class RoutineBook(private val maxRoutines: Int = 32) {
+class RoutineBook(
+    private val maxRoutines: Int = 32,
+    private val stateStore: RoutineStateStore? = null
+) {
     private data class Entry(
         val routine: Routine,
-        var nextAtMillis: Long,
-        var lastDigest: String? = null,
-        var claim: RoutineClaim? = null
+        val nextAtMillis: Long,
+        val lastDigest: String? = null,
+        val approval: RoutineOwnerApproval? = null,
+        val claim: RoutineClaim? = null,
+        val report: StoredRoutineReport? = null,
+        val lastResult: String? = null,
+        val lastResultAtMillis: Long = 0
     )
-    private val entries = LinkedHashMap<String, Entry>()
+    private var entries = LinkedHashMap<String, Entry>()
+    private var outbox = emptyList<StoredRoutineReport>()
+    private var revision = 0L
+    private var restoredClaims = emptyList<RoutineClaim>()
     internal val capacity: Int get() = maxRoutines
+    internal val persistent: Boolean get() = stateStore != null
 
-    @Synchronized fun add(routine: Routine): Boolean {
+    init {
+        require(maxRoutines in 1..RoutineStoredState.MAX_ROUTINES)
+        stateStore?.load()?.let { state ->
+            state.validate()
+            require(state.entries.size <= maxRoutines)
+            revision = state.revision
+            outbox = state.outbox
+            for (stored in state.entries) {
+                val routine = freeze(stored.routine)
+                entries[routine.id] = Entry(routine, stored.nextAtMillis, stored.lastDigest,
+                    stored.approval, stored.runId?.let { RoutineClaim(routine, it) }, stored.report,
+                    stored.lastResult, stored.lastResultAtMillis)
+            }
+            restoredClaims = entries.values.mapNotNull { it.claim }
+        }
+    }
+
+    @Synchronized fun add(routine: Routine): Boolean = admit(routine, null)
+
+    @Synchronized fun addApproved(routine: Routine, approval: RoutineOwnerApproval): Boolean =
+        admit(routine, approval)
+
+    private fun admit(routine: Routine, approval: RoutineOwnerApproval?): Boolean {
         if (!ID.matches(routine.id) || routine.goal.isBlank() || routine.goal.length > 2_000) return false
         if (routine.id in entries || entries.size >= maxRoutines) return false
         val next = when (val t = routine.trigger) {
             is RoutineTrigger.Every -> if (t.periodMillis < MIN_PERIOD_MILLIS || t.firstAtMillis < 0) return false else t.firstAtMillis
             is RoutineTrigger.OnEvent -> if (!ID.matches(t.name)) return false else Long.MAX_VALUE
         }
-        // Admission owns the approved scope; neither the caller's mutable set nor
-        // a returned claim may add tools to this registered routine later.
-        val admitted = routine.copy(allowedTools = Collections.unmodifiableSet(LinkedHashSet(routine.allowedTools)))
-        entries[routine.id] = Entry(admitted, next)
+        val admitted = freeze(routine)
+        if (approval != null && !approval.matches(admitted) || persistent && approval == null) return false
+        val changed = LinkedHashMap(entries)
+        changed[admitted.id] = Entry(admitted, next, approval = approval)
+        commit(changed)
         return true
     }
 
-    @Synchronized fun remove(id: String): Boolean = entries.remove(id) != null
+    @Synchronized fun remove(id: String): Boolean {
+        if (id !in entries) return false
+        val changed = LinkedHashMap(entries).also { it.remove(id) }
+        commit(changed, outbox.filterNot { it.routineId == id })
+        return true
+    }
 
-    /** Atomically claims due routines: repeated scheduler polls cannot dispatch the same run twice. */
-    @Synchronized fun due(nowMillis: Long): List<Routine> =
-        entries.values.filter {
-            it.claim == null && it.routine.trigger is RoutineTrigger.Every && nowMillis >= it.nextAtMillis
-        }.onEach { it.claim = RoutineClaim(it.routine) }.map { it.routine }
+    @Synchronized fun removeAll(): List<String> {
+        val removed = entries.keys.toList()
+        if (removed.isNotEmpty() || outbox.isNotEmpty()) commit(LinkedHashMap(), emptyList())
+        return removed
+    }
 
-    /** Claim event-triggered routines once; the caller must report() or release() the claim. */
-    @Synchronized fun triggered(event: String): List<Routine> =
-        entries.values.filter {
-            it.claim == null && (it.routine.trigger as? RoutineTrigger.OnEvent)?.name == event
-        }.onEach { it.claim = RoutineClaim(it.routine) }.map { it.routine }
+    @Synchronized fun registrations(): List<StoredRoutine> {
+        requireCurrentStore()
+        return entries.values.mapNotNull { e -> e.approval?.let { stored(e, it) } }
+    }
 
-    /** Explicit retry gate after a failed/cancelled run; never auto-redeliver an unfinished job. */
+    @Synchronized fun due(nowMillis: Long): List<Routine> = claim {
+        it.routine.trigger is RoutineTrigger.Every && nowMillis >= it.nextAtMillis
+    }
+
+    @Synchronized fun triggered(event: String): List<Routine> = claim {
+        (it.routine.trigger as? RoutineTrigger.OnEvent)?.name == event
+    }
+
+    private fun claim(matches: (Entry) -> Boolean): List<Routine> {
+        requireCurrentStore()
+        val slots = if (persistent) (RoutineStoredState.MAX_OUTBOX - outbox.size -
+            entries.values.count { it.claim != null }).coerceAtLeast(0) else maxRoutines
+        val due = entries.values.filter { it.claim == null && matches(it) }.take(slots)
+        if (due.isEmpty()) return emptyList()
+        val changed = LinkedHashMap(entries)
+        due.forEach { changed[it.routine.id] = it.copy(claim = RoutineClaim(it.routine)) }
+        commit(changed)
+        return due.map { it.routine }
+    }
+
     @Synchronized fun release(id: String): Boolean {
         val entry = entries[id] ?: return false
-        if (entry.claim == null) return false
-        entry.claim = null
+        if (entry.claim == null || entry.report != null) return false
+        commit(LinkedHashMap(entries).also { it[id] = entry.copy(claim = null) })
         return true
     }
 
@@ -87,19 +144,46 @@ class RoutineBook(private val maxRoutines: Int = 32) {
         triggered(event).mapNotNull(::claimed)
 
     @Synchronized internal fun isCurrent(claim: RoutineClaim): Boolean =
-        entries[claim.routine.id]?.claim === claim
+        entries[claim.routine.id]?.claim === claim &&
+            (stateStore == null || stateStore.load().revision == revision)
 
     @Synchronized internal fun release(claim: RoutineClaim): Boolean =
         if (isCurrent(claim)) release(claim.routine.id) else false
 
+    @Synchronized fun authorizedRun(runId: String): StoredRoutine? {
+        requireCurrentStore()
+        val entry = entries.values.singleOrNull { it.claim?.runId == runId && it.report == null } ?: return null
+        val approval = entry.approval?.takeIf { it.matches(entry.routine) } ?: return null
+        return stored(entry, approval)
+    }
+
+    @Synchronized internal fun takeRestoredClaims(): List<Pair<RoutineClaim, StoredRoutineReport?>> =
+        restoredClaims.map { it to entries[it.routine.id]?.report }.also { restoredClaims = emptyList() }
+
     @Synchronized internal fun prepareReport(claim: RoutineClaim, result: String): RoutineReport? {
-        if (!isCurrent(claim)) return null
-        val e = entries.getValue(claim.routine.id)
+        if (entries[claim.routine.id]?.claim !== claim) return null
+        val entry = entries.getValue(claim.routine.id)
         val digest = result.trim().replace(Regex("\\s+"), " ")
-        val outcome = if (digest.isEmpty() || digest == e.lastDigest) RoutineOutcome.Unchanged(e.routine.id)
-            else RoutineOutcome.News(e.routine.id, digest.take(1_000))
+        val outcome = if (digest.isEmpty() || digest == entry.lastDigest) RoutineOutcome.Unchanged(entry.routine.id)
+            else RoutineOutcome.News(entry.routine.id, digest.take(1_000))
         return RoutineReport(claim, outcome, digest)
     }
+
+    @Synchronized internal fun retainReport(
+        report: RoutineReport, message: AgentMessage?, result: String, atMillis: Long
+    ): Boolean {
+        if (!isCurrent(report.claim)) return false
+        if (!persistent) return true
+        val entry = entries.getValue(report.claim.routine.id)
+        val retained = StoredRoutineReport(entry.routine.id, report.claim.runId, report.digest,
+            message, result, atMillis)
+        entry.report?.let { return it.copy(chatAppend = null, chatDelivered = false) == retained }
+        commit(LinkedHashMap(entries).also { it[entry.routine.id] = entry.copy(report = retained) })
+        return true
+    }
+
+    @Synchronized internal fun chatDelivered(report: RoutineReport): Boolean =
+        entries[report.claim.routine.id]?.takeIf { it.claim === report.claim }?.report?.chatDelivered == true
 
     // Queue insertion only; no callbacks.
     @Synchronized internal fun offerReport(report: RoutineReport, enqueue: () -> Boolean): Boolean? =
@@ -108,22 +192,84 @@ class RoutineBook(private val maxRoutines: Int = 32) {
     @Synchronized internal fun acknowledgeReport(report: RoutineReport, nowMillis: Long): Boolean {
         if (!isCurrent(report.claim)) return false
         val e = entries.getValue(report.claim.routine.id)
-        e.claim = null
-        (e.routine.trigger as? RoutineTrigger.Every)?.let {
-            e.nextAtMillis = if (nowMillis > Long.MAX_VALUE - it.periodMillis) Long.MAX_VALUE
-                else nowMillis + it.periodMillis
-        }
-        if (report.digest.isNotEmpty()) e.lastDigest = report.digest
+        if (persistent && e.report?.digest != report.digest) return false
+        val next = (e.routine.trigger as? RoutineTrigger.Every)?.let {
+            if (nowMillis > Long.MAX_VALUE - it.periodMillis) Long.MAX_VALUE else nowMillis + it.periodMillis
+        } ?: e.nextAtMillis
+        val finished = e.copy(claim = null, report = null, nextAtMillis = next,
+            lastDigest = report.digest.takeIf { it.isNotEmpty() } ?: e.lastDigest,
+            lastResult = e.report?.result ?: e.lastResult,
+            lastResultAtMillis = e.report?.atMillis ?: e.lastResultAtMillis)
+        val queued = e.report?.takeIf { it.message != null && !it.chatDelivered }
+        commit(LinkedHashMap(entries).also { it[e.routine.id] = finished },
+            if (queued == null) outbox else outbox + queued)
         return true
     }
 
-    /** Records a run; returns News only if the normalized result differs from the last one. */
+    @Synchronized fun pendingChatReports(): List<StoredRoutineReport> {
+        requireCurrentStore()
+        return (outbox + entries.values.mapNotNull { it.report }).filter { it.message != null && !it.chatDelivered }
+    }
+
+    @Synchronized internal fun offerChatReport(report: StoredRoutineReport, enqueue: () -> Boolean): Boolean? =
+        if (report in pendingChatReports()) enqueue() else null
+
+    @Synchronized fun prepareChatAppend(messageId: String, append: RoutineChatAppend): Boolean =
+        updateChatReport(messageId) { current ->
+            if (current.chatAppend != null && current.chatAppend != append) null
+            else current.copy(chatAppend = append)
+        }
+
+    @Synchronized fun acknowledgeChat(messageId: String): Boolean = updateChatReport(messageId) {
+        if (it.chatAppend == null) null else it.copy(chatDelivered = true)
+    }
+
+    private fun updateChatReport(messageId: String, update: (StoredRoutineReport) -> StoredRoutineReport?): Boolean {
+        val inEntry = entries.values.firstOrNull { it.report?.message?.id == messageId }
+        if (inEntry != null) {
+            val changed = update(inEntry.report!!) ?: return false
+            commit(LinkedHashMap(entries).also { it[inEntry.routine.id] = inEntry.copy(report = changed) })
+            return true
+        }
+        val index = outbox.indexOfFirst { it.message?.id == messageId }
+        if (index < 0) return false
+        val changed = update(outbox[index]) ?: return false
+        commit(entries, outbox.toMutableList().also {
+            if (changed.chatDelivered) it.removeAt(index) else it[index] = changed
+        })
+        return true
+    }
+
     @Synchronized fun report(id: String, result: String, nowMillis: Long): RoutineOutcome {
+        check(!persistent) { "Persistent routines require a retained worker report." }
         val claim = entries[id]?.claim ?: return RoutineOutcome.Unchanged(id)
         val report = prepareReport(claim, result) ?: return RoutineOutcome.Unchanged(id)
         acknowledgeReport(report, nowMillis)
         return report.outcome
     }
+
+    private fun requireCurrentStore() {
+        check(stateStore == null || stateStore.load().revision == revision) { "Routine state changed; reload required." }
+    }
+
+    private fun commit(changed: Map<String, Entry>, messages: List<StoredRoutineReport> = outbox) {
+        stateStore?.let { store ->
+            check(revision < Long.MAX_VALUE)
+            val next = RoutineStoredState(revision + 1, changed.values.map {
+                stored(it, requireNotNull(it.approval))
+            }, messages.toList())
+            store.replace(revision, next)
+            revision = next.revision
+        }
+        entries = LinkedHashMap(changed)
+        outbox = messages.toList()
+    }
+
+    private fun stored(e: Entry, approval: RoutineOwnerApproval) = StoredRoutine(e.routine, approval,
+        e.nextAtMillis, e.lastDigest, e.lastResult, e.lastResultAtMillis, e.claim?.runId, e.report)
+
+    private fun freeze(routine: Routine): Routine = routine.copy(
+        allowedTools = Collections.unmodifiableSet(LinkedHashSet(routine.allowedTools)))
 
     companion object {
         const val MIN_PERIOD_MILLIS = 15 * 60_000L
@@ -192,4 +338,17 @@ class AgentMailbox(
     }
 
     @Synchronized fun pending(agent: String): Int = queues[agent]?.size ?: 0
+
+    @Synchronized fun peek(agent: String): List<AgentMessage> =
+        queues[agent]?.sortedBy { if (it.priority == AgentPriority.URGENT) 0 else 1 }.orEmpty()
+
+    @Synchronized fun acknowledge(agent: String, messageId: String): Boolean {
+        val queue = queues[agent] ?: return false
+        val message = queue.firstOrNull { it.id == messageId } ?: return false
+        queue.remove(message)
+        totalMessages--
+        totalBytes -= message.body.toByteArray(Charsets.UTF_8).size
+        if (queue.isEmpty()) queues.remove(agent)
+        return true
+    }
 }
