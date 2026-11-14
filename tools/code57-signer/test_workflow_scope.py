@@ -174,7 +174,7 @@ class NativeEvidenceTest(unittest.TestCase):
             'context':'SYNTHETIC FILAMENT TEST; fixture', 'native_quads':'2','native_materials':'2',
             'native_textures':'2','upload_completions':'1','rendered_frames':'3','presented_frames':'3',
             'output_frames':'3','content_cleared':'true','panels_released':'true','engine_released':'true'})
-        (self.root/'filament/surfaceflinger.txt').write_text('GLES: Synthetic SwiftShader fixture\n')
+        self.backend_fixture()
         self.hologram = HologramFixture(self.root/'hologram')
         self.routine_fixture()
 
@@ -191,6 +191,92 @@ class NativeEvidenceTest(unittest.TestCase):
         (directory/'RESULT.json').write_text(json.dumps(report))
         (self.root/'probe-exits.json').write_text(json.dumps({
             'source_sha': self.sha, 'hologram': 0, 'routines': 0, 'app': 0}))
+
+    def backend_fixture(self):
+        executable = '/sdk/emulator/qemu/linux-x86_64/qemu-system-x86_64-headless'
+        adapter = 'Android Emulator OpenGL ES Translator (llvmpipe (LLVM 21.0.0, 256 bits))'
+        (self.root/'filament/surfaceflinger.txt').write_text(
+            f'GLES: Google (Mesa), {adapter}, OpenGL ES 3.1 (OpenGL ES 3.2 Mesa 25.2.4)\n')
+        (self.root/'emulator.log').write_text(
+            "INFO | Forcing 'llvmpipe' mode for GLES\n"
+            'INFO | vulkan_mode_selected:lavapipe gles_mode_selected:llvmpipe\n'
+            'INFO | Graphics Adapter Vendor Google (Mesa)\n'
+            f'INFO | Graphics Adapter {adapter}\n')
+        (self.root/'host-crash').mkdir(exist_ok=True)
+        for name, value in [('executable', executable), ('pid', '42'), ('uid', '1001')]:
+            (self.root/'host-crash'/f'emulator-{name}.txt').write_text(value+'\n')
+        (self.root/'host-crash/emulator-maps.txt').write_text('\n'.join(
+            f'1000-2000 r-xp 00000000 00:01 1 /sdk/emulator/lib64/gles_llvmpipe/{name}'
+            for name in ('libEGL.so', 'libGLESv2.so', 'libgallium-25.2.4.so'))+'\n')
+        (self.root/'host-live-identity.json').write_text(json.dumps({
+            'pid': 42, 'uid': 1001, 'source_sha': self.sha, 'serial': self.report['serial'],
+            'executable': executable}))
+
+    def test_current_llvmpipe_backend_contract_passes(self):
+        self.backend_fixture()
+        result = self.validate()
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_unexpected_or_ambiguous_backend_selection_fails(self):
+        path = self.root/'emulator.log'
+        original = path.read_text()
+        invalid = [original.replace('gles_mode_selected:llvmpipe', 'gles_mode_selected:swangle'),
+                   original.replace('vulkan_mode_selected:lavapipe', 'vulkan_mode_selected:swiftshader'),
+                   original.replace("Forcing 'llvmpipe' mode for GLES", 'No explicit GLES mode'),
+                   original+'INFO | gles_mode_selected:llvmpipe\n',
+                   original+'INFO | vulkan_mode_selected:lavapipe\n',
+                   original+'INFO | Graphics Adapter llvmpipe\n']
+        for text in invalid:
+            with self.subTest(log=text):
+                path.write_text(text)
+                self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_actual_gles_must_match_selected_mesa_adapter(self):
+        path = self.root/'filament/surfaceflinger.txt'
+        original = path.read_text()
+        for text in ('', original*2, 'GLES: Synthetic SwiftShader fixture\n',
+                     original.replace('llvmpipe', 'ANGLE (Vulkan)'),
+                     original.replace('Google (Mesa)', 'Unknown vendor'),
+                     original.replace('LLVM 21.0.0', 'different adapter'),
+                     original.replace('OpenGL ES 3.1', 'OpenGL ES 2.0')):
+            with self.subTest(gles=text):
+                path.write_text(text)
+                self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_backend_maps_require_exact_sdk_library_paths(self):
+        path = self.root/'host-crash/emulator-maps.txt'
+        original = path.read_text()
+        invalid = [original.replace('/sdk/emulator/', '/different-sdk/emulator/'),
+                   original.replace('gles_llvmpipe', 'gles_swiftshader'),
+                   original.replace('libgallium-25.2.4.so', 'libgallium-unknown.so'),
+                   original.replace('libEGL.so', 'libEGL.so.backup')]
+        invalid += ['\n'.join(line for line in original.splitlines() if name not in line)
+                    for name in ('libEGL.so', 'libGLESv2.so', 'libgallium-25.2.4.so')]
+        for text in invalid:
+            with self.subTest(maps=text):
+                path.write_text(text)
+                self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_backend_identity_is_bound_to_source_serial_and_process(self):
+        path = self.root/'host-live-identity.json'
+        original = json.loads(path.read_text())
+        for key, value in [('source_sha', 'e'*40), ('serial', 'emulator-5556'),
+                           ('pid', 43), ('uid', 1002), ('pid', True),
+                           ('executable', '/different-sdk/emulator/qemu/linux-x86_64/qemu-system-x86_64-headless')]:
+            with self.subTest(key=key, value=value):
+                path.write_text(json.dumps(dict(original, **{key: value})))
+                self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_missing_backend_evidence_is_rejected(self):
+        for name in ['emulator.log', 'host-live-identity.json', 'host-crash/emulator-maps.txt',
+                     'host-crash/emulator-executable.txt', 'host-crash/emulator-pid.txt',
+                     'host-crash/emulator-uid.txt']:
+            with self.subTest(name=name):
+                path = self.root/name
+                original = path.read_bytes()
+                path.unlink()
+                self.assertNotEqual(self.validate().returncode, 0)
+                path.write_bytes(original)
 
     def submitted_ui_fixture(self):
         reply = ('Continuum · Aktuelle App-Fähigkeiten Mein aktueller Stand auf diesem Gerät: '

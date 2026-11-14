@@ -258,8 +258,32 @@ assert all(filament.get(n)=='2' for n in ('native_quads','native_materials','nat
 assert filament['upload_completions']=='1'
 assert all(int(filament[n])>0 for n in ('rendered_frames','presented_frames','output_frames'))
 assert all(filament.get(n)=='true' for n in ('content_cleared','panels_released','engine_released'))
-gles=[line.strip() for line in (root/'filament/surfaceflinger.txt').read_text().splitlines() if line.strip().startswith('GLES:')]
-assert len(gles)==1 and 'swiftshader' in gles[0].lower()
+def verify_emulator_backend(root,sha,serial):
+    log=(root/'emulator.log').read_text()
+    assert re.findall(r'gles_mode_selected:([a-z0-9_]+)',log)==['llvmpipe']
+    assert re.findall(r'vulkan_mode_selected:([a-z0-9_]+)',log)==['lavapipe']
+    assert "Forcing 'llvmpipe' mode for GLES" in log
+    adapters=[line.split('Graphics Adapter ',1)[1].strip() for line in log.splitlines()
+              if 'Graphics Adapter ' in line and 'Graphics Adapter Vendor ' not in line]
+    assert len(adapters)==1 and adapters[0].startswith('Android Emulator OpenGL ES Translator (llvmpipe (')
+    assert adapters[0].endswith('))') and 'swiftshader' not in adapters[0].lower() and 'angle (' not in adapters[0].lower()
+    gles=[line.strip() for line in (root/'filament/surfaceflinger.txt').read_text().splitlines()
+          if line.strip().startswith('GLES:')]
+    assert len(gles)==1 and re.fullmatch(r'GLES: Google \(Mesa\), '+re.escape(adapters[0])+r', OpenGL ES 3\.[0-9]+ \([^\r\n]+\)',gles[0])
+    identity=json.loads((root/'host-live-identity.json').read_text())
+    assert identity['source_sha']==sha and identity['serial']==serial
+    assert type(identity['pid']) is int and identity['pid']>0
+    assert type(identity['uid']) is int and identity['uid']>=0
+    for key in ('pid','uid','executable'):
+        assert (root/'host-crash'/f'emulator-{key}.txt').read_text().strip()==str(identity[key])
+    executable=pathlib.PurePosixPath(identity['executable'])
+    assert executable.is_absolute() and '..' not in executable.parts
+    assert executable.parts[-3:]==('qemu','linux-x86_64','qemu-system-x86_64-headless')
+    library_root=executable.parents[2]/'lib64/gles_llvmpipe'
+    paths={fields[5] for line in (root/'host-crash/emulator-maps.txt').read_text().splitlines()
+           if len(fields:=line.split(maxsplit=5))==6}
+    assert all(str(library_root/name) in paths for name in ('libEGL.so','libGLESv2.so','libgallium-25.2.4.so'))
+verify_emulator_backend(root,sha,report['serial'])
 surface=verify_hologram(root/'hologram',sha,tree,apk_hashes)
 assert surface['status']=='SURFACE_FRAMES_VERIFIED'
 routine=json.loads((root/'routines/RESULT.json').read_text())
