@@ -387,7 +387,7 @@ class Probe:
         assert self.pid != previous, 'Actual process restart missing'
 
     def close_list(self, label, expected):
-        self.tap(['Schließen'])
+        self.tap(['Schließen', 'SCHLIESSEN'])
         self.take(label, await_text=expected)
 
 
