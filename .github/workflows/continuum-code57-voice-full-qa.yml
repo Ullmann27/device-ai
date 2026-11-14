@@ -312,6 +312,18 @@ jobs:
               'unavailableOptionalMetadataKeepsValidImage',
               'oldAndroidDoesNotCreateRows'
           )}
+          required |= {('OwnerFactRevocationUiTest', name) for name in (
+              'confirmedDeletionCancelsPausedOwnerReply',
+              'confirmedDeletionRejectsLateToolProposal',
+              'cancelledDeletionPreservesPendingReplyAndFacts',
+              'queuedDeletionBlocksReplacementRequestUntilRevocation',
+              'replacementActivityWaitsForOriginalDeletionAndCanRememberAgain',
+              'failedLedgerDeletionReleasesAdmissionAndCanBeRetried',
+              'unrelatedModelDiagnosticSurvivesDeletion',
+              'unrelatedCodingPlanningSurvivesDeletion',
+              'queuedRememberedAnswerCannotOutliveRevocation',
+              'newerOwnerRequestKeepsActualMemoryWriteReceipt'
+          )}
           required |= {('ContinuumContrastiveParityTest','actualNodeKotlinNodeTrainingParity'),
                        ('ContinuumContrastiveParityTest','actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds'),
                        ('Cre1InferenceEncoderTest','trainedNodeCheckpointMatchesKotlinFeaturesAndScores'),
