@@ -473,6 +473,17 @@ jobs:
       - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
         with:
           gradle-version: '8.11.1'
+      - name: Install offline emulator debugger
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo -n apt-get update
+          sudo -n apt-get install --yes --no-install-recommends gdb
+          debugger_evidence="$RUNNER_TEMP/code59-native-pdf"
+          mkdir -p "$debugger_evidence"
+          command -v gdb > "$debugger_evidence/gdb-installed-path.txt"
+          timeout 10 gdb --version > "$debugger_evidence/gdb-installed-version.txt" 2>&1
+          test -s "$debugger_evidence/gdb-installed-version.txt"
       - name: Install official native Android runtime
         shell: bash
         run: |
