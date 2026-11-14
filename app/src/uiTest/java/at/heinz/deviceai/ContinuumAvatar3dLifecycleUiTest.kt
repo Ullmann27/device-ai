@@ -3,10 +3,14 @@ package at.heinz.deviceai
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.SurfaceTexture
 import android.os.Looper
 import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
+import android.view.TextureView
+import android.widget.FrameLayout
 import at.heinz.deviceai.avatar.AvatarEvent
 import at.heinz.deviceai.avatar.AvatarDirector
 import at.heinz.deviceai.avatar.AvatarPoseReducer
@@ -66,6 +70,75 @@ class ContinuumAvatar3dLifecycleUiTest {
         assertEquals(307, view.height)
         return Bitmap.createBitmap(412, 307, Bitmap.Config.ARGB_8888).also { view.draw(Canvas(it)) }
     }
+
+    @Test fun textureResizeSynchronizesBeforeFrameworkSurfaceCallback() {
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
+        val surface = SurfaceTexture(0)
+        val events = mutableListOf<String>()
+        val texture = FilamentTextureView(controller.get()) { events += "before" }
+        try {
+            texture.surfaceTexture = surface
+            texture.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+                override fun onSurfaceTextureAvailable(value: SurfaceTexture, width: Int, height: Int) = Unit
+                override fun onSurfaceTextureSizeChanged(value: SurfaceTexture, width: Int, height: Int) {
+                    assertSame(surface, value)
+                    events += "resized:$width:$height"
+                }
+                override fun onSurfaceTextureDestroyed(value: SurfaceTexture) = true
+                override fun onSurfaceTextureUpdated(value: SurfaceTexture) = Unit
+            }
+            texture.layout(0, 0, 300, 200)
+            assertEquals(listOf("before", "resized:300:200"), events)
+            events.clear()
+            texture.layout(0, 0, 300, 200)
+            assertTrue("Unchanged dimensions require no synchronization", events.isEmpty())
+            texture.layout(0, 0, 640, 360)
+            assertEquals(listOf("before", "resized:640:360"), events)
+        } finally {
+            texture.surfaceTextureListener = null
+            surface.release()
+            controller.pause().stop().destroy()
+        }
+    }
+
+    @Test fun headAndStageLayoutsResizeOnlyChangedTextureDimensions() {
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
+        val hologram = ContinuumHologramView(controller.get())
+        val sizes = mutableListOf<Pair<Int, Int>>()
+        val texture = FilamentTextureView(controller.get()) { sizes += it.width to it.height }
+        fun layout() {
+            hologram.measure(View.MeasureSpec.makeMeasureSpec(600, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(450, View.MeasureSpec.EXACTLY))
+            hologram.layout(0, 0, 600, 450)
+        }
+        try {
+            hologram.setAnimationsEnabled(false)
+            hologram.setNativeHeadEnabled(true)
+            hologram.addView(texture, FrameLayout.LayoutParams(-1, -1))
+            ContinuumHologramView::class.java.getDeclaredField("nativeTexture")
+                .apply { isAccessible = true }.set(hologram, texture)
+            val head = Rect(10, 20, 310, 420)
+            val orb = Rect(330, 20, 570, 420)
+            hologram.setCockpitRegions(head, orb)
+            layout()
+            assertEquals(listOf(300 to 400), sizes)
+            hologram.setCockpitRegions(head, orb, layered = true)
+            layout()
+            assertEquals(listOf(300 to 400, 600 to 450), sizes)
+            val frame = at.heinz.deviceai.avatar3d.CockpitStageFrame(600f, 450f, 100f, 200f, 500f, 430f)
+            hologram.presentCockpitStage(frame)
+            layout()
+            hologram.presentCockpitStage(frame.copy(yawDegrees = 3f, pitchDegrees = 4f, depthOffset = 10f))
+            layout()
+            assertEquals("Monitor pose does not resize the TextureView", listOf(300 to 400, 600 to 450), sizes)
+            assertNull("Layout coverage initializes no native renderer", field(hologram, "native3d"))
+            assertEquals(false, field(hologram, "assetLoading"))
+        } finally {
+            hologram.setNativeHeadEnabled(false)
+            controller.pause().stop().destroy()
+        }
+    }
+
     @Test fun legacyEnabledHeadUpgradesButExplicitOrbAnd2dStayChosen() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val context = controller.get()

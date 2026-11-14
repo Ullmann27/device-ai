@@ -165,6 +165,26 @@ class AvatarLiveDiagnosticsTest {
         assertTrue(ring.diagnoseSince(proofStart).startsWith("CONSUMER_FRAME_OBSERVED"))
     }
 
+    @Test fun resizedSameSurfaceCannotReusePreviousGenerationReceipts() {
+        val ring = AvatarTraceRingBuffer(32)
+        val surface = Any()
+        ring.bindSurface(surface, 0L)
+        submitted(ring)
+        ring.surfaceUpdated(surface, 10L)
+        val beforeResize = ring.consumerSample()
+        assertTrue(ring.diagnose().startsWith("CONSUMER_FRAME_OBSERVED"))
+        ring.bindSurface(surface, 10L)
+        assertTrue(ring.diagnose().startsWith("BROKEN_AT_ROOT"))
+        assertEquals(0L, ring.consumerSample().updateCount)
+        assertTrue(ring.consumerSample().generation > beforeResize.generation)
+        assertTrue(ring.consumerSample().progressSince(beforeResize).contains("Surface im Messfenster geändert"))
+        submitted(ring)
+        ring.surfaceUpdated(surface, 10L)
+        assertTrue("Unchanged timestamp cannot revive the old receipt", ring.diagnose().startsWith("RENDER_SUBMITTED"))
+        ring.surfaceUpdated(surface, 20L)
+        assertTrue(ring.diagnose().startsWith("CONSUMER_FRAME_OBSERVED"))
+    }
+
     @Test fun consumerReceiptExpiresWithTheBoundedTraceWindow() {
         val ring = AvatarTraceRingBuffer(16)
         val surface = Any()
