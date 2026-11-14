@@ -100,6 +100,9 @@ class ContinuumLiveProjectionService : Service() {
             }
             return START_NOT_STICKY
         }
+        // Preserve the valid bound capture.
+        if (sessionId != 0L && !closed &&
+            AndroidLiveComputer.projectionAccess(sessionId) != null) return START_NOT_STICKY
         try {
             createNotification(requested)
         } catch (_: Exception) {
