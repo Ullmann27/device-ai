@@ -444,6 +444,34 @@ jobs:
         run: |
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0' 'emulator' 'system-images;android-35;google_apis;x86_64'
+          emulator_archive="$RUNNER_TEMP/code59-emulator-37.1.11.zip"
+          emulator_root="$RUNNER_TEMP/code59-emulator-37.1.11"
+          emulator_evidence="$RUNNER_TEMP/code59-native-pdf"
+          mkdir -p "$emulator_root" "$emulator_evidence"
+          printf '%s\n' \
+            'version=37.1.11' \
+            'build=15917651' \
+            'url=https://dl.google.com/android/repository/emulator-linux_x64-15917651.zip' \
+            'sha256=95771e0ae431897b2a4bd2d97fa095f29a8b0624a7b216baf529f9306161c266' \
+            'pin_source=https://github.com/dotnet/android/blob/e766c8d60ad90114094fc053b978a40f3431306f/Configuration.props' \
+            'regression_source=https://chromium.googlesource.com/chromium/src/tools/android/+/0d2c7590ad90c5e3e5390a1d732ef2b2305d343d' \
+            > "$emulator_evidence/emulator-pin.txt"
+          curl --fail --location --retry 3 --connect-timeout 15 --max-time 180 \
+            --proto '=https' --proto-redir '=https' \
+            'https://dl.google.com/android/repository/emulator-linux_x64-15917651.zip' \
+            --output "$emulator_archive"
+          printf '%s  %s\n' '95771e0ae431897b2a4bd2d97fa095f29a8b0624a7b216baf529f9306161c266' \
+            "$emulator_archive" | sha256sum --check --strict
+          sha256sum "$emulator_archive" > "$emulator_evidence/emulator-archive-sha256.txt"
+          unzip -q "$emulator_archive" -d "$emulator_root"
+          test -x "$emulator_root/emulator/emulator"
+          grep -Eq '^Pkg.Revision[[:space:]]*=[[:space:]]*37\.1\.11[[:space:]]*$' \
+            "$emulator_root/emulator/source.properties"
+          export CODE59_EMULATOR_BIN="$emulator_root/emulator/emulator"
+          "$CODE59_EMULATOR_BIN" -no-window -version > "$emulator_evidence/emulator-pin-version.txt" 2>&1
+          grep -Eq 'Android emulator version 37\.1\.11(\.0)? \(build_id 15917651\)' \
+            "$emulator_evidence/emulator-pin-version.txt"
+          printf 'CODE59_EMULATOR_BIN=%s\n' "$CODE59_EMULATOR_BIN" >> "$GITHUB_ENV"
           export ANDROID_USER_HOME="$RUNNER_TEMP/continuum-native-user"
           export ANDROID_AVD_HOME="$ANDROID_USER_HOME/avd"
           mkdir -p "$ANDROID_AVD_HOME"
@@ -453,7 +481,7 @@ jobs:
             --name continuum-native-pdf --package 'system-images;android-35;google_apis;x86_64' \
             --device pixel_7 --path "$ANDROID_AVD_HOME/continuum-native-pdf.avd"
           test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
-          test "$("$ANDROID_HOME/emulator/emulator" -list-avds | tr -d '\r')" = continuum-native-pdf
+          test "$("$CODE59_EMULATOR_BIN" -list-avds | tr -d '\r')" = continuum-native-pdf
       - name: Build disposable native test APKs
         shell: bash
         run: |
@@ -493,14 +521,14 @@ jobs:
           trap cleanup EXIT
           sudo chgrp "$(id -gn)" /dev/kvm
           sudo chmod g+rw /dev/kvm
-          "$ANDROID_HOME/emulator/emulator" -no-window -version > "$evidence/emulator-version.txt"
-          if timeout 30 "$ANDROID_HOME/emulator/emulator" -no-window -help-gpu > "$evidence/emulator-gpu-help.txt" 2>&1; then
+          "$CODE59_EMULATOR_BIN" -no-window -version > "$evidence/emulator-version.txt"
+          if timeout 30 "$CODE59_EMULATOR_BIN" -no-window -help-gpu > "$evidence/emulator-gpu-help.txt" 2>&1; then
             printf '0\n' > "$evidence/emulator-gpu-help-exit.txt"
           else
             printf '%s\n' "$?" > "$evidence/emulator-gpu-help-exit.txt"
           fi
           "$ANDROID_HOME/platform-tools/adb" start-server
-          "$ANDROID_HOME/emulator/emulator" -avd continuum-native-pdf -port 5554 -accel on \
+          "$CODE59_EMULATOR_BIN" -avd continuum-native-pdf -port 5554 -accel on \
             -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader -memory 2048 -cores 2 \
             > "$evidence/emulator.log" 2>&1 &
           emulator_pid=$!
