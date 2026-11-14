@@ -352,6 +352,16 @@ jobs:
               'actualFailureReportsUnavailabilityAndRetainsSingleLifecycleClock',
               'pauseMotionAndReattachmentResumeOnlyFreshMonotonicGaze'
           )}
+          required |= {('BoundedThinkingMemoryTest', name) for name in (
+              'modelStepReadsChangedProviderAfterRealToolResult',
+              'ownerRevocationClearsThinkingJournalBeforeFreshRecall',
+              'revokedInstancesCannotAppendAndNewOwnerRunsRemainAllowed',
+              'unclearedThinkingJournalPreventsLedgerRevocation'
+          )}
+          required |= {('OwnerFactRevocationUiTest', name) for name in (
+              'confirmedDeletionClearsThinkingJournalAndRejectsLateReflection',
+              'thinkingJournalFailureCannotReportSuccessfulOwnerRevocation'
+          )}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY

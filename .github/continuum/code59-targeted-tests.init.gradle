@@ -12,6 +12,7 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.chief.ChiefPatternE2ETest'
             includeTestsMatching 'at.heinz.deviceai.avatar3d.AvatarLiveDiagnosticsTest'
             includeTestsMatching 'at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.BoundedThinkingMemoryTest'
             failOnNoMatchingTests = true
         }
     }
