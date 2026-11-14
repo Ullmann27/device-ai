@@ -7,7 +7,7 @@ package at.heinz.deviceai.cognitive
  */
 internal object LocalConversationFollowUpPolicy {
     private val continuation = Regex(
-        """(?iu)^(?:bitte\s+|und\s+)?(?:weiter|fortsetzen|(?:mach|mache|schreib|schreibe)\s+(?:bitte\s+)?weiter|(?:fahr|fahre)\s+(?:bitte\s+)?fort|(?:setz|setze)\s+(?:(?:die|deine)\s+antwort\s+)?(?:bitte\s+)?fort|kannst\s+du\s+(?:bitte\s+)?(?:weiterschreiben|fortsetzen))(?:\s+bitte)?[.!?]*$""")
+        """(?iu)^(?:bitte\s+|und\s+)?(?:w+e+i+t+e+r+|fortsetzen|(?:mach|mache|schreib|schreibe)\s+(?:bitte\s+)?w+e+i+t+e+r+|(?:fahr|fahre)\s+(?:bitte\s+)?fort|(?:setz|setze)\s+(?:(?:die|deine)\s+antwort\s+)?(?:bitte\s+)?fort|kannst\s+du\s+(?:bitte\s+)?(?:weiterschreiben|fortsetzen))(?:\s+bitte)?[.!?]*$""")
 
     fun requestsContinuation(request: String): Boolean =
         request.length <= 160 && !request.any { it.isISOControl() } && continuation.matches(request.trim())

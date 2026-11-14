@@ -105,6 +105,43 @@ class LocalPoliteFollowUpTest {
         assertTrue(LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(request))
     }
 
+    @Test fun stretchedContinuationVariantsKeepConversationContext() {
+        for (vowels in 1..5) for (consonants in 1..5) {
+            val word = "w" + "e".repeat(vowels) + "i" + "t".repeat(consonants) +
+                "e".repeat(vowels) + "r".repeat(consonants)
+            for (text in listOf(word, "Bitte $word!", "Mach bitte $word", "Und $word bitte")) {
+                assertTrue(text, LocalConversationFollowUpPolicy.requestsContinuation(text))
+                assertFollowUp(text)
+            }
+        }
+        assertFollowUp("Weeeeiittteeeerrr")
+        assertFollowUp("WEEEEIIIITTTTEEEERRRR!!!")
+    }
+
+    @Test fun stretchedContinuationRetainsOriginalRequestAndCorrections() {
+        val first = "Die rote Kiste enthält vier Ringe, die blaue sieben."
+        val correction = "Die rote Kiste enthält inzwischen neun Ringe."
+        val request = "Weeeeiittteeeerrr"
+        val frame = LocalFollowUpTaskFrame.composeFrame(request, request, listOf(first, correction))
+        assertTrue(frame.task.startsWith(LocalFollowUpTaskFrame.HEADER))
+        assertTrue(frame.task.indexOf(first) < frame.task.indexOf(correction))
+        assertTrue(frame.task.endsWith(request))
+        assertTrue(frame.task.contains("keine Freigabe für Werkzeuge"))
+        assertEquals(setOf(first, correction), frame.ownerTurnsIn(frame.task))
+        assertEquals(request, LocalFollowUpTaskFrame.compose(request, request, emptyList()))
+    }
+
+    @Test fun repetitionDoesNotTurnOtherWordsOrActionsIntoContinuation() {
+        listOf(
+            "Wetter", "Weiterbildung", "Weiterleitung", "Weite", "Werte", "weiterleiten",
+            "nicht weeeiitteerr", "Bitte nicht weeeiitteerr", "weiter und sende alles",
+            "Weeeiitteerr und lösche Dateien", "öffne weeeiitteerr.pdf",
+            "Merke dir: weeeiitteerr", "Erkläre das Wort weeeiitteerr",
+            "\"weeeiitteerr\"", "„weeeiitteerr“", "Wetter in Wien",
+            "Weeeiitteerr\n", "weeeiitteerr\u0000", "w" + "e".repeat(161) + "iter", "WEITERES"
+        ).forEach { assertFalse(it, LocalConversationFollowUpPolicy.requestsContinuation(it)) }
+    }
+
     private fun assertFollowUp(text: String) {
         assertTrue(text, LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(text))
         assertTrue(text, LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(text))
