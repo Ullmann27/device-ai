@@ -188,6 +188,23 @@ def single(state):
     return state['entries'][0]
 
 
+def registered_job_uid(job):
+    service = PACKAGE + '/at.heinz.deviceai.routines.OwnerRoutineJobService'
+    sections = re.split(r'(?m)^\s*JOB #', job)
+    matches = [section for section in sections if re.match(r'[^\n]*/620159:', section) and 'Service: ' + service in section]
+    assert len(matches) == 1 and 'PERSISTED' in matches[0]
+    assert re.search(r'PERIODIC: interval=\+15m0s0ms\b', matches[0]), 'Wrong Android job interval'
+    identity = re.match(r'(u0a[0-9]+)/620159:', matches[0])
+    assert identity, 'Android job UID missing'
+    return identity.group(1)
+
+
+def verify_job_absent(code, stdout, stderr, uid):
+    assert type(code) is int and code == 23, 'Android job absence not observed'
+    assert stdout == f'unknown({uid}/jid620159)\n'.encode(), 'Stopped Android job identity differs'
+    assert stderr == f'Could not find job 620159 in package {PACKAGE} / user 0\n'.encode(), 'Stopped Android job still exists'
+
+
 def text_nodes(directory, label):
     xml = (directory / (label + '.xml')).read_bytes()
     root = ET.fromstring(xml)
@@ -289,20 +306,17 @@ def verify(directory, report, source_sha, source_tree):
     assert chat_binding(directory, 'blocked', blocked, blocked_body) == conversation
     command = json.loads((directory / 'schedule-state-command.json').read_text())
     assert command['returncode'] == 0, 'Android job registration not observed'
-    job = (directory / 'schedule-dump-stdout.txt').read_text()
-    service = PACKAGE + '/at.heinz.deviceai.routines.OwnerRoutineJobService'
-    sections = re.split(r'(?m)^\s*JOB #', job)
-    matches = [section for section in sections if re.match(r'[^\n]*/620159:', section) and 'Service: ' + service in section]
-    assert len(matches) == 1 and 'PERSISTED' in matches[0]
-    assert re.search(r'PERIODIC: interval=\+15m0s0ms\b', matches[0]), 'Wrong Android job interval'
+    dump = json.loads((directory / 'schedule-dump-command.json').read_text())
+    assert dump['returncode'] == 0, 'Android job dump failed'
+    uid = registered_job_uid((directory / 'schedule-dump-stdout.txt').read_text())
     assert stored(directory, 'final')['entries'] == [] and stored(directory, 'final')['outbox'] == []
     assert receipts(directory, 'final') == actual
     stopped_texts, _ = text_nodes(directory, 'routines-stopped')
     assert 'Routinen gestoppt und Freigaben entfernt: 1.' in stopped_texts
     stopped = json.loads((directory / 'schedule-after-stop-command.json').read_text())
-    stopped_text = b''.join((directory / ('schedule-after-stop-' + stream + '.txt')).read_bytes()
-                            for stream in ('stdout', 'stderr')).decode().strip()
-    assert stopped['returncode'] != 0 and stopped_text == f'Could not find job 620159 in package {PACKAGE} / user 0'
+    verify_job_absent(stopped['returncode'],
+                      (directory / 'schedule-after-stop-stdout.txt').read_bytes(),
+                      (directory / 'schedule-after-stop-stderr.txt').read_bytes(), uid)
     return {'app_start_battery_worker': 'PASS', 'rotation_did_not_trigger_worker': 'PASS',
             'durable_owner_chat': 'PASS', 'stop_survives_process_restart': 'PASS',
             'missing_shizuku_blocks_dispatch': 'PASS', 'android_periodic_registration': 'PASS',
@@ -435,6 +449,7 @@ def run(api, nodes, pid, display):
     assert result.returncode == 0, 'Actual Android job not registered'
     result = api['captured_device']('schedule-dump', 'shell', 'dumpsys', 'jobscheduler')
     assert result.returncode == 0
+    scheduled_uid = registered_job_uid(result.stdout.decode())
     probe.send('list-downloads', 'Routinen')
     probe.take('downloads-list', await_text='CONTINUUM · ROUTINEN')
     probe.tap(['ALLE STOPPEN'])
@@ -442,8 +457,7 @@ def run(api, nodes, pid, display):
     probe.take('routines-stopped', await_text='Routinen gestoppt und Freigaben entfernt: 1.')
     probe.files('final')
     result = api['captured_device']('schedule-after-stop', 'shell', 'cmd', 'jobscheduler', 'get-job-state', '-u', '0', PACKAGE, '620159')
-    expected = f'Could not find job 620159 in package {PACKAGE} / user 0'
-    assert result.returncode != 0 and (result.stdout + result.stderr).decode().strip() == expected, 'Stopped Android job still exists'
+    verify_job_absent(result.returncode, result.stdout, result.stderr, scheduled_uid)
     api['report']['routine_checks'] = verify(api['out'], api['report'], api['source'], api['report']['source_tree'])
     api['report']['limits'].append('Periodic registration only; no due-period worker execution or clock manipulation')
 
