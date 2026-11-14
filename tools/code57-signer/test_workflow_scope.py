@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools/code55-apk'))
 from test_native_hologram_evidence import HologramFixture
 import test_native_routines
+import test_native_web_offline
 
 WORKFLOW = ROOT / '.github/workflows/continuum-code57-original-sign.yml'
 SCRIPT = ROOT / 'scripts/continuum-code57-original-signer.sh'
@@ -239,6 +240,16 @@ class NativeEvidenceTest(unittest.TestCase):
         self.backend_fixture()
         self.hologram = HologramFixture(self.root/'hologram')
         self.routine_fixture()
+        self.offline_web_fixture()
+
+    def offline_web_fixture(self):
+        fixture = test_native_web_offline.OfflineWebEvidenceTest()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        for path in fixture.directory.iterdir():
+            shutil.copyfile(path, self.root/'app'/path.name)
+        self.report['offline_web'] = test_native_web_offline.proof.verify(
+            self.root/'app', self.report, self.sha, self.tree)
 
     def routine_fixture(self):
         fixture = test_native_routines.RoutineEvidenceTest()
@@ -447,6 +458,26 @@ class NativeEvidenceTest(unittest.TestCase):
         history = self.root/'routines/periodic-complete-job-stdout.txt'
         original = history.read_text()
         history.write_text(original.replace('app called jobFinished', 'canceled'))
+        self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_offline_web_requires_actual_new_receipt(self):
+        (self.root/'app/web-after-receipts-stdout.txt').unlink()
+        self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_offline_web_requires_one_time_owner_action(self):
+        path = self.root/'app/web-observation.json'
+        value = json.loads(path.read_text())
+        value['actions'] = [action for action in value['actions'] if action['name'] != 'web-allow-once']
+        path.write_text(json.dumps(value))
+        self.assertNotEqual(self.validate().returncode, 0)
+
+    def test_offline_web_requires_final_off_and_raw_dossier(self):
+        path = self.root/'app/web-mode-final-stdout.txt'
+        original = path.read_bytes()
+        path.write_bytes(original.replace(b'OFF', b'ASK'))
+        self.assertNotEqual(self.validate().returncode, 0)
+        path.write_bytes(original)
+        (self.root/'app/web-after-dossier-stdout.txt').unlink()
         self.assertNotEqual(self.validate().returncode, 0)
 
     def test_periodic_pass_requires_real_minimum_wait(self):
