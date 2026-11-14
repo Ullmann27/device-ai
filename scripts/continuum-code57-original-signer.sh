@@ -123,6 +123,7 @@ import json,pathlib,re,struct,sys,xml.etree.ElementTree as ET
 root=pathlib.Path(sys.argv[1]);sha=sys.argv[2];tree=sys.argv[3]
 sys.path.insert(0,str(pathlib.Path(sys.argv[4])/'tools/code55-apk'))
 from native_hologram_evidence import verify_hologram
+from native_routines import verify as verify_routines
 report=json.loads((root/'app/RESULT.json').read_text())
 assert report['status']=='PASS' and report['source_sha']==sha and report['source_tree']==tree
 assert report['package']=='at.heinz.deviceai.mentorpaired' and report['sdk']==35 and report['abi']=='x86_64'
@@ -261,6 +262,16 @@ gles=[line.strip() for line in (root/'filament/surfaceflinger.txt').read_text().
 assert len(gles)==1 and 'swiftshader' in gles[0].lower()
 surface=verify_hologram(root/'hologram',sha,tree,apk_hashes)
 assert surface['status']=='SURFACE_FRAMES_VERIFIED'
+routine=json.loads((root/'routines/RESULT.json').read_text())
+assert routine['status']=='PASS' and not routine.get('error') and not routine.get('cleanup_errors')
+assert routine['serial']==report['serial'] and routine['apk_sha256']==apk_hashes
+routine_checks=verify_routines(root/'routines',routine,sha,tree)
+assert routine_checks==routine['routine_checks']
+assert routine_checks['periodic_due_worker_execution']=='NOT_RUN'
+exits=json.loads((root/'probe-exits.json').read_text())
+assert set(exits)=={'source_sha','hologram','routines','app'} and exits['source_sha']==sha
+assert all(type(exits[name]) is int and exits[name]==0 for name in ('hologram','routines','app'))
+print('CHECKPOINT=SOURCE_BOUND_NATIVE_ROUTINES_VERIFIED')
 print('CHECKPOINT=SOURCE_BOUND_NATIVE_RUNTIME_VERIFIED')
 PY
 
