@@ -100,6 +100,7 @@ def read_hierarchy(label, await_avatar_diagnostic=False):
     pairs = re.findall(r'^INSTRUMENTATION_RESULT: ([a-z_][a-z0-9_]*)=(.*?)\r?$', output, re.M)
     values = dict(pairs)
     assert len(values) == len(pairs) and values.get('status') == 'ok', f'{label}: invalid snapshot result'
+    assert 0 < int(values['elapsed_ms']) < 45000, f'{label}: snapshot deadline exceeded'
     assert values.get('helper_package') == package + '.test', f'{label}: wrong snapshot process package'
     assert re.fullmatch(r'\d+', values.get('helper_pid', '')), f'{label}: helper process missing'
     assert values['helper_pid'] not in before.split(), f'{label}: helper instrumented app process'
@@ -216,6 +217,69 @@ def keyboard_visible(dump):
     states = re.findall(r'^\s*mDecorViewVisible=(true|false)\b', dump, re.M)
     assert len(states) == 1, 'Actual IME visibility missing or ambiguous'
     return states[0] == 'true'
+
+def collect_failure_threads():
+    state = {'status': 'UNAVAILABLE', 'source_sha': source, 'serial': serial,
+             'started_unix_ns': time.time_ns(), 'primary_error': report.get('error')}
+    original_uid = None
+    root_attempted = False
+
+    def read(label, *args, timeout=15):
+        result = captured_device('failure-threads-' + label, *args, timeout=timeout)
+        assert result.returncode == 0, f'{label}: command failed ({result.returncode})'
+        return result.stdout.decode(errors='replace').strip()
+
+    def identity(label):
+        for prop, value in [('ro.kernel.qemu', '1'), ('ro.build.version.sdk', '35'),
+                            ('ro.product.cpu.abi', 'x86_64')]:
+            assert read(label + '-' + prop, 'shell', 'getprop', prop) == value, 'Disposable emulator changed'
+
+    try:
+        identity('before')
+        original_uid = read('uid-before', 'shell', 'id', '-u')
+        state['adb_uid_before'] = original_uid
+        assert original_uid in ('0', '2000'), 'Unexpected adb UID'
+        pid = read('pid-before', 'shell', 'pidof', package)
+        assert re.fullmatch(r'[1-9]\d*', pid), 'Unique QA app process missing'
+        state['app_pid'] = pid
+        if original_uid == '2000':
+            root_attempted = True
+            read('root', 'root')
+            read('root-wait', 'wait-for-device')
+        assert read('uid-root', 'shell', 'id', '-u') == '0', 'Root stack diagnosis unavailable'
+        identity('root')
+        assert read('pid-root', 'shell', 'pidof', package) == pid, 'QA app process changed'
+        cmdline = read('cmdline', 'shell', 'cat', '/proc/' + pid + '/cmdline').rstrip('\x00')
+        assert cmdline == package, 'QA app process identity mismatch'
+        state['dumps'] = {}
+        for label, flag in [('java', '-j'), ('native', '-b')]:
+            try:
+                assert read(label + '-pid', 'shell', 'pidof', package) == pid, 'QA app process changed'
+                output = read(label, 'shell', 'debuggerd', flag, pid, timeout=20)
+                assert output, 'Empty thread dump'
+                state['dumps'][label] = 'CAPTURED'
+            except BaseException as error:
+                state['dumps'][label] = 'UNAVAILABLE'
+                state.setdefault('errors', []).append(str(error))
+        state['status'] = 'CAPTURED' if all(v == 'CAPTURED' for v in state['dumps'].values()) else 'INCOMPLETE'
+    except BaseException as error:
+        state.setdefault('errors', []).append(str(error))
+    finally:
+        restore = [('unroot', ('unroot',)), ('unroot-wait', ('wait-for-device',))] if root_attempted else []
+        if original_uid in ('0', '2000'):
+            restore.append(('uid-after', ('shell', 'id', '-u')))
+        for label, args in restore:
+            try:
+                value = read(label, *args)
+                if label == 'uid-after':
+                    state['adb_uid_after'] = value
+                    assert value == original_uid, 'Original adb UID not restored'
+            except BaseException as error:
+                state.setdefault('errors', []).append(str(error))
+                report.setdefault('cleanup_errors', []).append(str(error))
+                state['status'] = 'INCOMPLETE'
+        state['finished_unix_ns'] = time.time_ns()
+        save('failure-threads.json', json.dumps(state, ensure_ascii=False, indent=2) + '\n')
 
 def capability_response(nodes):
     texts = [re.sub(r'\s+', ' ', n.get('text', '')).strip() for n in nodes]
@@ -403,6 +467,11 @@ finally:
         except BaseException as error:
             failure = failure or error
             report.setdefault('error', str(error))
+    if failure:
+        try:
+            collect_failure_threads()
+        except BaseException as error:
+            report['thread_diagnostic_error'] = str(error)
     for (scope, name), value in saved.items():
         try:
             if name in ['airplane_mode_on', 'wifi_on', 'mobile_data']:

@@ -26,13 +26,23 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Captures windows from test process. */
 public final class ContinuumWindowSnapshotInstrumentation extends Instrumentation {
     private static final String TEST_PACKAGE = "at.heinz.deviceai.mentorpaired.test";
     private static final String APP_PACKAGE = "at.heinz.deviceai.mentorpaired";
     private static final long TIMEOUT_MS = 45000;
-    private int nodes;
+    private static final int PREFETCH = AccessibilityNodeInfo.FLAG_PREFETCH_DESCENDANTS_DEPTH_FIRST
+            | AccessibilityNodeInfo.FLAG_PREFETCH_UNINTERRUPTIBLE;
+    private final AtomicBoolean completed = new AtomicBoolean();
+    private volatile int nodes;
+    private volatile String phase = "setup";
+    private volatile String operation = "setup";
+    private long started;
+    private long deadline;
+    private Thread captureThread;
+    private Thread watchdog;
     private boolean awaitAvatarDiagnostic;
 
     @Override public void onCreate(Bundle arguments) {
@@ -44,23 +54,29 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
     @Override public void onStart() {
         Bundle result = new Bundle();
         int code = Activity.RESULT_CANCELED;
-        long started = SystemClock.uptimeMillis();
+        started = SystemClock.uptimeMillis();
+        deadline = started + TIMEOUT_MS;
+        captureThread = Thread.currentThread();
         try {
             require(TEST_PACKAGE.equals(getContext().getPackageName()), "Wrong test package");
             require(TEST_PACKAGE.equals(getTargetContext().getPackageName()), "Self target required");
             require(Build.VERSION.SDK_INT == 35, "API 35 required");
             require(java.util.Arrays.asList(Build.SUPPORTED_ABIS).contains("x86_64"), "x86_64 required");
             require("ranchu".equals(Build.HARDWARE) || "goldfish".equals(Build.HARDWARE), "Emulator required");
+            startDeadlineWatcher();
+            setPhase("connect");
             UiAutomation automation = getUiAutomation();
+            checkDeadline();
             AccessibilityServiceInfo info = automation.getServiceInfo();
             info.flags |= AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS;
             automation.setServiceInfo(info);
-            long deadline = started + TIMEOUT_MS;
             int sample = 0;
             while (SystemClock.uptimeMillis() < deadline) {
+                setPhase("windows");
                 SparseArray<List<AccessibilityWindowInfo>> displays = automation.getWindowsOnAllDisplays();
                 AccessibilityNodeInfo root = null;
                 try {
+                    checkDeadline();
                     JSONArray state = new JSONArray();
                     AccessibilityWindowInfo focused = null;
                     int focusedCount = 0;
@@ -84,11 +100,15 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
                     observation.putInt("sample", ++sample);
                     observation.putLong("elapsed_ms", SystemClock.uptimeMillis() - started);
                     observation.putString("windows", state.toString());
-                    if (focusedCount == 1) root = focused.getRoot();
+                    if (focusedCount == 1) {
+                        setPhase("root");
+                        root = focused.getRoot(PREFETCH);
+                        checkDeadline();
+                    }
                     observation.putBoolean("root_present", root != null);
                     sendStatus(1, observation);
-                    if (root != null && APP_PACKAGE.equals(text(root.getPackageName())) && root.refresh()
-                            && (!awaitAvatarDiagnostic || hasAvatarDiagnosticTitle(root))) {
+                    if (rootReady(root)) {
+                        setPhase("capture_setup");
                         long captureStarted = SystemClock.uptimeMillis();
                         Display display = getContext().getSystemService(DisplayManager.class)
                                 .getDisplay(Display.DEFAULT_DISPLAY);
@@ -101,25 +121,31 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
                         xml.startTag("", "hierarchy");
                         xml.attribute("", "rotation", Integer.toString(rotation));
                         nodes = 0;
+                        setPhase("hierarchy");
                         writeNode(xml, root, 0);
                         xml.endTag("", "hierarchy");
                         xml.endDocument();
                         byte[] bytes = writer.toString().getBytes(StandardCharsets.UTF_8);
                         require(bytes.length <= 262144, "Hierarchy exceeds evidence limit");
                         long hierarchyFinished = SystemClock.uptimeMillis();
+                        setPhase("screenshot");
                         Bitmap screenshot = automation.takeScreenshot();
                         require(screenshot != null, "Screenshot unavailable");
                         long screenshotFinished = SystemClock.uptimeMillis();
                         File screenshotFile = new File(getTargetContext().getCacheDir(), "continuum-window-snapshot.png");
                         try {
+                            setPhase("image_write");
                             result.putInt("screenshot_width", screenshot.getWidth());
                             result.putInt("screenshot_height", screenshot.getHeight());
                             try (FileOutputStream output = new FileOutputStream(screenshotFile)) {
                                 require(screenshot.compress(Bitmap.CompressFormat.PNG, 100, output), "Screenshot write failed");
+                                checkDeadline();
                             }
                         } finally { screenshot.recycle(); }
+                        setPhase("windows_after");
                         SparseArray<List<AccessibilityWindowInfo>> after = automation.getWindowsOnAllDisplays();
                         try {
+                            checkDeadline();
                             int matches = 0;
                             int focusedAfter = -1;
                             JSONArray stateAfter = new JSONArray();
@@ -143,6 +169,7 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
                                 for (AccessibilityWindowInfo window : after.valueAt(d)) window.recycle();
                             }
                         }
+                        setPhase("hash");
                         byte[] digest = MessageDigest.getInstance("SHA-256").digest(java.nio.file.Files.readAllBytes(screenshotFile.toPath()));
                         StringBuilder hash = new StringBuilder();
                         for (byte value : digest) hash.append(String.format(java.util.Locale.ROOT, "%02x", value & 255));
@@ -159,6 +186,7 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
                         result.putInt("helper_pid", Process.myPid());
                         result.putString("helper_package", getTargetContext().getPackageName());
                         result.putString("status", "ok");
+                        checkDeadline();
                         code = Activity.RESULT_OK;
                         break;
                     }
@@ -174,10 +202,84 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
         } catch (Throwable failure) {
             result.putString("status", "failed");
             result.putString("error", failure.toString());
+            result.putString("capture_stack_base64", stack(failure.getStackTrace()));
             code = Activity.RESULT_CANCELED;
         }
-        result.putLong("elapsed_ms", SystemClock.uptimeMillis() - started);
+        complete(code, result);
+    }
+
+    private void startDeadlineWatcher() {
+        watchdog = new Thread(() -> {
+            try {
+                long remaining;
+                while ((remaining = deadline - SystemClock.uptimeMillis()) > 0) Thread.sleep(remaining);
+            } catch (InterruptedException ignored) { return; }
+            if (completed.get()) return;
+            Bundle result = progress();
+            result.putString("status", "failed");
+            result.putString("error", "Capture deadline exceeded");
+            result.putString("capture_stack_base64", stack(captureThread.getStackTrace()));
+            complete(Activity.RESULT_CANCELED, result);
+        }, "continuum-snapshot-deadline");
+        watchdog.setDaemon(true);
+        watchdog.start();
+    }
+
+    private void complete(int code, Bundle result) {
+        long elapsed = SystemClock.uptimeMillis() - started;
+        if (code == Activity.RESULT_OK && elapsed >= TIMEOUT_MS) {
+            code = Activity.RESULT_CANCELED;
+            result.putString("status", "failed");
+            result.putString("error", "Capture completed after deadline");
+        }
+        if (!completed.compareAndSet(false, true)) return;
+        if (watchdog != null && watchdog != Thread.currentThread()) watchdog.interrupt();
+        result.putString("phase", phase);
+        result.putString("operation", operation);
+        result.putInt("observed_nodes", nodes);
+        result.putLong("elapsed_ms", elapsed);
+        if (code != Activity.RESULT_OK) sendStatus(3, result);
         finish(code, result);
+    }
+
+    private Bundle progress() {
+        Bundle state = new Bundle();
+        state.putString("phase", phase);
+        state.putString("operation", operation);
+        state.putInt("observed_nodes", nodes);
+        state.putLong("elapsed_ms", SystemClock.uptimeMillis() - started);
+        return state;
+    }
+
+    private void setPhase(String next) {
+        checkDeadline();
+        phase = next;
+        operation = next;
+        sendStatus(2, progress());
+        checkDeadline();
+    }
+
+    private void checkDeadline() {
+        require(!completed.get() && SystemClock.uptimeMillis() < deadline,
+                "Capture deadline exceeded at " + phase + "/" + operation);
+    }
+
+    private boolean rootReady(AccessibilityNodeInfo root) {
+        if (root == null || !APP_PACKAGE.equals(text(root.getPackageName()))) return false;
+        setPhase("refresh");
+        boolean current = root.refresh();
+        checkDeadline();
+        if (!current || !awaitAvatarDiagnostic) return current;
+        setPhase("avatar_title");
+        boolean ready = hasAvatarDiagnosticTitle(root);
+        checkDeadline();
+        return ready;
+    }
+
+    private static String stack(StackTraceElement[] frames) {
+        StringBuilder text = new StringBuilder();
+        for (StackTraceElement frame : frames) text.append(frame).append('\n');
+        return Base64.encodeToString(text.toString().getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP);
     }
 
     private boolean hasAvatarDiagnosticTitle(AccessibilityNodeInfo root) {
@@ -193,7 +295,10 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
     }
 
     private void writeNode(XmlSerializer xml, AccessibilityNodeInfo node, int index) throws Exception {
+        checkDeadline();
         require(++nodes <= 4096, "Hierarchy node limit exceeded");
+        operation = "node_fields";
+        if (nodes % 16 == 0) sendStatus(2, progress());
         Rect bounds = new Rect();
         node.getBoundsInScreen(bounds);
         xml.startTag("", "node");
@@ -215,10 +320,13 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
         xml.attribute("", "selected", Boolean.toString(node.isSelected()));
         xml.attribute("", "bounds", bounds.toShortString());
         for (int i = 0; i < node.getChildCount(); i++) {
-            AccessibilityNodeInfo child = node.getChild(i);
-            if (child == null) continue;
-            try { if (child.isVisibleToUser()) writeNode(xml, child, i); }
-            finally { child.recycle(); }
+            checkDeadline();
+            operation = "child_" + nodes + "_" + i;
+            AccessibilityNodeInfo child = node.getChild(i, PREFETCH);
+            try {
+                checkDeadline();
+                if (child != null && child.isVisibleToUser()) writeNode(xml, child, i);
+            } finally { if (child != null) child.recycle(); }
         }
         xml.endTag("", "node");
     }
