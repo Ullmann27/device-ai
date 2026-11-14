@@ -10,7 +10,8 @@ import org.junit.Test
 
 class OwnerDialogueOutputTest {
     @Test fun completeOwnerResponsePassesTheSameQualityGateWithoutLosingItsEnd() {
-        for (size in listOf(8_000, 8_001, 20_000)) {
+        for (size in listOf(8_000, 8_001, 20_000, 20_001,
+            LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS)) {
             val suffix = " NICHT AUSFÜHREN. Ö."
             val answer = "x".repeat(size - suffix.length) + suffix
             val fixture = Fixture { AgentModelOutput.ownerDialogue("fixture-model", answer) }
@@ -33,7 +34,8 @@ class OwnerDialogueOutputTest {
 
     @Test fun ownerFactoryRejectsUncapturedOverflowInsteadOfClipping() {
         assertThrows(IllegalArgumentException::class.java) {
-            AgentModelOutput.ownerDialogue("fixture-model", "x".repeat(20_001))
+            AgentModelOutput.ownerDialogue("fixture-model",
+                "x".repeat(LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS + 1))
         }
     }
 

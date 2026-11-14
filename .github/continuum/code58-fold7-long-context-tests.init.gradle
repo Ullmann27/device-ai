@@ -27,6 +27,7 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicyTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.LocalGenerationFailureTruthTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerDialogueOutputTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.LocalChatTranscriptStoreTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerComputerClarificationTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerComputerTaskGrantTest'

@@ -282,6 +282,10 @@ jobs:
               'rawTranscriptTurnsStaySeparateAndRestoreFoldsTheSameChain',
               'missingOriginalCannotBeInventedFromContinuationReplies'
           )}
+          required |= {('OwnerDialogueOutputTest', name) for name in (
+              'completeOwnerResponsePassesTheSameQualityGateWithoutLosingItsEnd',
+              'ownerFactoryRejectsUncapturedOverflowInsteadOfClipping'
+          )}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY

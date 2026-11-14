@@ -55,6 +55,8 @@ jobs:
           assert not any(c.find(t) is not None for c in cases for t in ('failure', 'error', 'skipped'))
           names = {(c.get('classname'), c.get('name')) for c in cases}
           required = {
+              ('at.heinz.deviceai.cognitive.OwnerDialogueOutputTest', 'completeOwnerResponsePassesTheSameQualityGateWithoutLosingItsEnd'),
+              ('at.heinz.deviceai.cognitive.OwnerDialogueOutputTest', 'ownerFactoryRejectsUncapturedOverflowInsteadOfClipping'),
               ('at.heinz.deviceai.LocalContextBudgetUiTest', 'optionalMemoriesCannotDisplaceCompleteOwnerTurns'),
               ('at.heinz.deviceai.LocalContextBudgetUiTest', 'longNonModelReportLeavesRoomForTheActualFollowUp'),
               ('at.heinz.deviceai.LocalContextBudgetUiTest', 'longCurrentRequestKeepsItsFinalNegationWithinNativeBudget'),
