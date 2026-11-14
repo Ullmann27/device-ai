@@ -19,6 +19,14 @@ internal object LocalChatPromptBudget {
     const val FULL_CHARACTERS = 15_500
     const val BRIEF_FIRST_TURN_CHARACTERS = 6_000
 
+    // Brief-first-turn is a speed optimization, never an instruction to
+    // contradict an owner's explicit long-form answer request. This changes
+    // prompt framing only; the loaded native context/output limits still apply.
+    private val longReplyCue = Regex(
+        """(?iu)(?<!\p{L})(?:ausführlich\p{L}*|detailliert\p{L}*|umfangreich\p{L}*|""" +
+            """(?:in|mindestens)\s+(?:[4-9]|\d{2,}|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|dreizehn|vierzehn|fünfzehn|zwanzig)\s+(?:sätzen?|absätzen?|punkten?))(?!\p{L})"""
+    )
+
     /** The prompt frame never exceeds the loaded model's native window budget (Code56); unknown keeps [cap]. */
     fun withNativeBudget(cap: Int, nativeBytes: Int?): Int =
         if (nativeBytes == null) cap else minOf(cap, nativeBytes).coerceAtLeast(1)
@@ -32,7 +40,8 @@ internal object LocalChatPromptBudget {
         hasReflection: Boolean
     ): Int {
         if (task.isBlank() || task.length > 240 || hasMemories || hasConversationContext ||
-            hasGroundedEvidence || hasObservations || hasReflection) return FULL_CHARACTERS
+            hasGroundedEvidence || hasObservations || hasReflection || longReplyCue.containsMatchIn(task))
+            return FULL_CHARACTERS
         val assessment = ContinuumTaskClassifier.classify(task)
         if (assessment.expectedToolUse || assessment.freshnessNeeded ||
             assessment.verifyExistingAnswer || assessment.complexity > 0.35)
