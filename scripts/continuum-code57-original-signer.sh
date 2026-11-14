@@ -96,25 +96,35 @@ proof Code59-Node-backend-QA node
 proof Code59-native-runtime-QA native
 echo CHECKPOINT=SHA_BOUND_ARTIFACTS_VERIFIED
 
-# Recompute actual JUnit results and preserve the declared 17-skip contract.
+# Require exactly two container skips.
 python3 -B - "$tmp/android" "$tmp/source" "$source_sha" <<'PY' || fail JUNIT_LINT_EVIDENCE
 import json,os,pathlib,subprocess,sys,xml.etree.ElementTree as ET
 root=pathlib.Path(sys.argv[1]);source=pathlib.Path(sys.argv[2]);sha=sys.argv[3]
+def verify_skip_contract(skipped):
+    expected={
+        ('at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest',
+         'actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations'),
+        ('at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest',
+         'cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox'),
+    }
+    observed=[tuple(case) for case in skipped]
+    assert len(observed)==2 and set(observed)==expected
 xmls=sorted(root.rglob('TEST-*.xml'))
 assert len(xmls)>500
 cases=[c for x in xmls for c in ET.parse(x).getroot().iter('testcase')]
 assert len(cases)>5400
 assert not any(c.find('failure') is not None or c.find('error') is not None for c in cases)
-assert sum(c.find('skipped') is not None for c in cases)==17
+verify_skip_contract([(c.get('classname'),c.get('name')) for c in cases if c.find('skipped') is not None])
 summary=subprocess.run([sys.executable,'-B',str(source/'tools/code55-apk/junit-summary.py'),str(xmls[0].parent),'--strict-skips'],
     env={**os.environ,'GITHUB_SHA':sha},text=True,capture_output=True,check=True)
 data=json.loads(summary.stdout)
-assert data['errors']==0 and data['failures']==0 and data['skipped']==17
+assert data['source_sha']==sha and data['errors']==0 and data['failures']==0 and data['skipped']==2
+verify_skip_contract(data['skipped_cases'])
 lint=list(root.rglob('lint-results-debug.xml'))
 assert len(lint)==1
 result=ET.parse(lint[0]).getroot()
 assert result.tag=='issues' and not [v for v in result.findall('issue') if v.get('severity') in ('Fatal','Error')]
-print('CHECKPOINT=STRICT_JUNIT_17_SKIPS_AND_LINT_VERIFIED')
+print('CHECKPOINT=STRICT_JUNIT_TWO_CONTAINER_SKIPS_AND_LINT_VERIFIED')
 PY
 
 # Revalidate native, source-bound evidence.

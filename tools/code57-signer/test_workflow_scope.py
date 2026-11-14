@@ -118,6 +118,68 @@ class WorkflowScopeTest(unittest.TestCase):
         self.assertIn('CODE59_SIGN_WRONG_SIGN_BRANCH', result.stderr)
 
 
+class JunitSkipContractTest(unittest.TestCase):
+    """Synthetic identities exercise skip validation."""
+    expected = [
+        ('at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest',
+         'actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations'),
+        ('at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest',
+         'cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox'),
+    ]
+
+    @classmethod
+    def setUpClass(cls):
+        match = re.search(r"<<'PY' \|\| fail JUNIT_LINT_EVIDENCE\n(.*?)\nPY", SCRIPT.read_text(), re.S)
+        assert match is not None
+        cls.validator = match.group(1)
+        tree = ast.parse(cls.validator)
+        definitions = [node for node in tree.body
+                       if isinstance(node, ast.FunctionDef) and node.name == 'verify_skip_contract']
+        assert len(definitions) == 1
+        scope = {}
+        exec(compile(ast.Module(body=definitions, type_ignores=[]), str(SCRIPT), 'exec'), scope)
+        cls.verify = staticmethod(scope['verify_skip_contract'])
+
+    def test_exact_container_identities_pass_in_both_orders(self):
+        self.verify(self.expected)
+        self.verify([list(case) for case in reversed(self.expected)])
+
+    def test_matching_count_cannot_hide_an_unknown_method(self):
+        for index in range(2):
+            with self.subTest(index=index):
+                changed = list(self.expected)
+                changed[index] = (changed[index][0], 'unexpectedSkippedTest')
+                with self.assertRaises(AssertionError):
+                    self.verify(changed)
+
+    def test_matching_method_cannot_hide_a_different_class(self):
+        changed = [('at.heinz.deviceai.OtherHostTest', case[1]) for case in self.expected]
+        with self.assertRaises(AssertionError):
+            self.verify(changed)
+
+    def test_duplicate_identity_is_not_two_container_contracts(self):
+        for case in self.expected:
+            with self.subTest(case=case):
+                with self.assertRaises(AssertionError):
+                    self.verify([case, case])
+
+    def test_missing_extra_and_legacy_seventeen_skips_fail(self):
+        for count in (0, 1, 3, 17):
+            with self.subTest(count=count):
+                observed = (self.expected * 9)[:count]
+                with self.assertRaises(AssertionError):
+                    self.verify(observed)
+
+    def test_original_xml_and_fresh_source_summary_are_both_checked(self):
+        self.assertIn("verify_skip_contract([(c.get('classname'),c.get('name')) for c in cases if c.find('skipped') is not None])", self.validator)
+        self.assertIn("verify_skip_contract(data['skipped_cases'])", self.validator)
+        self.assertIn("str(source/'tools/code55-apk/junit-summary.py')", self.validator)
+        self.assertIn("'--strict-skips'", self.validator)
+        self.assertIn("data['source_sha']==sha", self.validator)
+        self.assertIn("data['errors']==0 and data['failures']==0 and data['skipped']==2", self.validator)
+        self.assertIn("not any(c.find('failure') is not None or c.find('error') is not None for c in cases)", self.validator)
+
+
 class NativeEvidenceTest(unittest.TestCase):
     """Synthetic receipts exercise native validation."""
     sha = 'a'*40
