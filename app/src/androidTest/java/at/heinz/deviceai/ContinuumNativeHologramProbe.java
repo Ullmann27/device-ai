@@ -278,6 +278,7 @@ public final class ContinuumNativeHologramProbe {
             parent = parent.getParent();
         }
         state.put("ancestors", parents);
+        state.put("monotonic_nanos", System.nanoTime());
         return state;
     }
 
@@ -321,7 +322,7 @@ public final class ContinuumNativeHologramProbe {
             JSONObject stageProof = new JSONObject().put("changed", stage.get("state"));
             proof.put("stage", stageProof);
             persist();
-            stageProof.put("rendered", awaitResizedFrame(stage));
+            stageProof.put("rendered", awaitResizedFrame(stage, stageProof, "rendered"));
             persist();
             Map<String, Object> restoredStage = onMain(() -> {
                 present.invoke(hologram, frame);
@@ -330,7 +331,7 @@ public final class ContinuumNativeHologramProbe {
                 return restored;
             });
             stageProof.put("restored", restoredStage.get("state"));
-            stageProof.put("restored_rendered", awaitResizedFrame(restoredStage));
+            stageProof.put("restored_rendered", awaitResizedFrame(restoredStage, stageProof, "restored_rendered"));
             persist();
 
             Map<String, Object> layout = onMain(() -> {
@@ -344,7 +345,7 @@ public final class ContinuumNativeHologramProbe {
             JSONObject layoutProof = new JSONObject().put("changed", layout.get("state"));
             proof.put("texture_layout", layoutProof);
             persist();
-            layoutProof.put("rendered", awaitResizedFrame(layout));
+            layoutProof.put("rendered", awaitResizedFrame(layout, layoutProof, "rendered"));
             persist();
             Map<String, Object> restoredLayout = onMain(() -> {
                 texture.layout(bounds.left, bounds.top, bounds.right, bounds.bottom);
@@ -353,7 +354,7 @@ public final class ContinuumNativeHologramProbe {
                 return restored;
             });
             layoutProof.put("restored", restoredLayout.get("state"));
-            layoutProof.put("restored_rendered", awaitResizedFrame(restoredLayout));
+            layoutProof.put("restored_rendered", awaitResizedFrame(restoredLayout, layoutProof, "restored_rendered"));
         } catch (Exception error) {
             failure = error;
             throw error;
@@ -413,23 +414,42 @@ public final class ContinuumNativeHologramProbe {
                 "Resize retained old consumer generation");
     }
 
-    private JSONObject awaitResizedFrame(Map<String, Object> resized) throws Exception {
+    private JSONObject awaitResizedFrame(Map<String, Object> resized, JSONObject proof, String key) throws Exception {
         JSONObject changed = (JSONObject) resized.get("state");
+        JSONArray progress = new JSONArray();
+        proof.put(key + "_progress", progress);
+        // Android EGL defaults to monotonic.
+        require(changed.getLong("surface_texture_timestamp") <= changed.getLong("monotonic_nanos"),
+                "Unexpected EGL resize timestamp clock");
+        long timestamp = Math.max(changed.getLong("monotonic_nanos"), changed.getLong("surface_texture_timestamp"));
+        long updates = changed.getLong("consumer_updates");
         long deadline = SystemClock.elapsedRealtime() + MAIN_TIMEOUT_MS;
         while (SystemClock.elapsedRealtime() < deadline) {
-            Map<String, Object> current = onMain(this::surfaceObjects);
+            Map<String, Object> current = onMain(this::surfaceObjects,
+                    Math.max(1, deadline - SystemClock.elapsedRealtime()));
             requireSameSurfaceObjects(resized, current);
             require(resized.get("swapChain") == current.get("swapChain"), "SwapChain changed while awaiting resized frame");
             JSONObject state = (JSONObject) current.get("state");
+            proof.put(key + "_last_observed", state);
+            require(state.getLong("consumer_generation") == changed.getLong("consumer_generation"),
+                    "Consumer generation changed while awaiting resized frame");
+            require(state.getLong("surface_texture_timestamp") <= state.getLong("monotonic_nanos"),
+                    "Unexpected EGL timestamp clock");
             require(state.getInt("worldBufferWidth") == changed.getInt("worldBufferWidth")
                     && state.getInt("worldBufferHeight") == changed.getInt("worldBufferHeight"), "Resize buffer changed unexpectedly");
             if (state.getBoolean("native3dDrawn") && state.getJSONObject("texture").getDouble("alpha") > 0
                     && state.getInt("viewport_width") == changed.getInt("worldBufferWidth")
                     && state.getInt("viewport_height") == changed.getInt("worldBufferHeight")
-                    && state.getLong("surface_texture_timestamp") > changed.getLong("surface_texture_timestamp")) return state;
-            SystemClock.sleep(100);
+                    && state.getLong("surface_texture_timestamp") > timestamp
+                    && state.getLong("consumer_updates") > updates) {
+                progress.put(state);
+                timestamp = state.getLong("surface_texture_timestamp");
+                updates = state.getLong("consumer_updates");
+                if (progress.length() == 2) return state;
+            }
+            SystemClock.sleep(Math.max(0, Math.min(100, deadline - SystemClock.elapsedRealtime())));
         }
-        throw new IllegalStateException("No actual consumed frame after resize");
+        throw new IllegalStateException("Two fresh consumed frames required after resize");
     }
 
     private Method stagePresenter(Class<?> frameClass) {
@@ -533,6 +553,10 @@ public final class ContinuumNativeHologramProbe {
     }
 
     private <T> T onMain(Callable<T> operation) throws Exception {
+        return onMain(operation, MAIN_TIMEOUT_MS);
+    }
+
+    private <T> T onMain(Callable<T> operation, long timeoutMillis) throws Exception {
         long queued = SystemClock.elapsedRealtimeNanos();
         AtomicBoolean expired = new AtomicBoolean(false);
         AtomicReference<Bitmap> pendingBitmap = new AtomicReference<>();
@@ -549,7 +573,7 @@ public final class ContinuumNativeHologramProbe {
         });
         require(main.post(task), "Mainthread unavailable");
         try {
-            T value = task.get(MAIN_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+            T value = task.get(timeoutMillis, TimeUnit.MILLISECONDS);
             pendingBitmap.set(null);
             return value;
         }

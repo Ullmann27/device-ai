@@ -46,7 +46,9 @@ class HologramFixture:
         sample.update(dict.fromkeys(('native3dFailed', 'cockpitWorldFailed', 'assetLoading'), False))
         samples = []
         for index, elapsed in enumerate((1_000_000_000, 3_000_000_000, 3_700_000_000)):
-            samples.append({**copy.deepcopy(sample), 'elapsed_nanos': elapsed, 'surface_texture_timestamp': (index + 1) * 100})
+            samples.append({**copy.deepcopy(sample), 'elapsed_nanos': elapsed,
+                            'monotonic_nanos': elapsed - 500_000_000,
+                            'surface_texture_timestamp': (index + 1) * 100})
         self.report = {'schema': 1, 'scope': 'EXISTING_HOME_STAGE_DIAGNOSTIC_ONLY',
             'outcome': 'DIAGNOSTIC_CAPTURED', 'package': 'at.heinz.deviceai.mentorpaired',
             'sdk': 35, 'hardware': 'ranchu', 'pid': 100, 'loading_observation_complete': True,
@@ -65,7 +67,8 @@ class HologramFixture:
                 self.report[key] = metadata
         self.report['screen'].update(started_elapsed_nanos=3_100_000_000, finished_elapsed_nanos=3_200_000_000)
         before = copy.deepcopy(samples[-1])
-        before.update(elapsed_nanos=4_100_000_000, texture_is_texture_view=True)
+        before.update(elapsed_nanos=4_100_000_000, monotonic_nanos=3_600_000_000,
+                      texture_is_texture_view=True)
         proof = {'status': 'PASSED', 'started_elapsed_nanos': 4_000_000_000,
                  'finished_elapsed_nanos': 7_000_000_000, 'before': before,
                  'unchanged': {'same_dimensions_preserved': True, 'monitor_pose_preserved': True},
@@ -76,15 +79,26 @@ class HologramFixture:
                 ('texture_layout', 'changed', 'rendered'), ('texture_layout', 'restored', 'restored_rendered'))):
             changed = copy.deepcopy(previous)
             changed.update(elapsed_nanos=4_300_000_000 + index * 600_000_000,
+                           monotonic_nanos=3_800_000_000 + index * 600_000_000,
                            swapChain_identity=30 + index, consumer_generation=2 + index,
-                           native3dDrawn=False, worldBufferWidth=1 if index == 0 else 2)
+                           consumer_updates=0, native3dDrawn=False,
+                           worldBufferWidth=1 if index == 0 else 2)
             changed['texture'].update(alpha=0, width=1 if index == 2 else 2)
+            first = copy.deepcopy(changed)
+            first.update(elapsed_nanos=changed['elapsed_nanos'] + 100_000_000,
+                         monotonic_nanos=changed['monotonic_nanos'] + 100_000_000,
+                         native3dDrawn=True, consumer_updates=1,
+                         viewport_width=changed['worldBufferWidth'],
+                         surface_texture_timestamp=changed['monotonic_nanos'] + 20_000_000)
+            first['texture']['alpha'] = 1
             rendered = copy.deepcopy(changed)
             rendered.update(elapsed_nanos=changed['elapsed_nanos'] + 300_000_000,
-                            native3dDrawn=True, viewport_width=changed['worldBufferWidth'],
-                            surface_texture_timestamp=changed['surface_texture_timestamp'] + 100)
+                            monotonic_nanos=changed['monotonic_nanos'] + 300_000_000,
+                            native3dDrawn=True, consumer_updates=2, viewport_width=changed['worldBufferWidth'],
+                            surface_texture_timestamp=changed['monotonic_nanos'] + 200_000_000)
             rendered['texture']['alpha'] = 1
             proof[group][changed_key], proof[group][rendered_key] = changed, rendered
+            proof[group][rendered_key + '_progress'] = [first, rendered]
             previous = rendered
         self.report['resize_regression'] = proof
         self.save()
@@ -179,6 +193,49 @@ class HologramEvidenceTest(unittest.TestCase):
     def test_resized_submission_without_new_consumed_frame_fails(self):
         stage = self.fixture.report['resize_regression']['stage']
         stage['rendered']['surface_texture_timestamp'] = stage['changed']['surface_texture_timestamp']
+        with self.assertRaises(AssertionError):
+            self.fixture.validate()
+
+    def test_resize_cannot_credit_queued_old_timestamps(self):
+        stage = self.fixture.report['resize_regression']['stage']
+        boundary = stage['changed']['monotonic_nanos']
+        for index, state in enumerate(stage['rendered_progress']):
+            state['surface_texture_timestamp'] = boundary - 2 + index
+        with self.assertRaises(AssertionError):
+            self.fixture.validate()
+
+    def test_resize_requires_two_distinct_new_consumptions(self):
+        original = copy.deepcopy(self.fixture.report['resize_regression'])
+        for fault in ('missing_second', 'same_timestamp', 'same_update_count'):
+            with self.subTest(fault=fault):
+                self.fixture.report['resize_regression'] = copy.deepcopy(original)
+                stage = self.fixture.report['resize_regression']['stage']
+                first, second = stage['rendered_progress']
+                if fault == 'missing_second':
+                    stage['rendered_progress'] = [second]
+                elif fault == 'same_timestamp':
+                    second['surface_texture_timestamp'] = first['surface_texture_timestamp']
+                else:
+                    second['consumer_updates'] = first['consumer_updates']
+                with self.assertRaises(AssertionError):
+                    self.fixture.validate()
+
+    def test_resize_progress_cannot_change_generation(self):
+        stage = self.fixture.report['resize_regression']['stage']
+        stage['rendered_progress'][0]['consumer_generation'] += 99
+        with self.assertRaises(AssertionError):
+            self.fixture.validate()
+
+    def test_resize_timestamp_cannot_borrow_elapsed_clock(self):
+        proof = self.fixture.report['resize_regression']
+        previous = proof['before']['surface_texture_timestamp']
+        for group, changed, rendered in (
+                ('stage', 'changed', 'rendered'), ('stage', 'restored', 'restored_rendered'),
+                ('texture_layout', 'changed', 'rendered'), ('texture_layout', 'restored', 'restored_rendered')):
+            proof[group][changed]['surface_texture_timestamp'] = previous
+            for state in proof[group][rendered + '_progress']:
+                state['surface_texture_timestamp'] = state['elapsed_nanos'] - 1
+            previous = proof[group][rendered]['surface_texture_timestamp']
         with self.assertRaises(AssertionError):
             self.fixture.validate()
 
