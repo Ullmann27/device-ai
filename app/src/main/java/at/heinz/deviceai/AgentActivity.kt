@@ -5629,6 +5629,7 @@ class AgentActivity : Activity() {
                 .setPositiveButton("Schließen", null).show()
             return
         }
+        val startedAt = android.os.SystemClock.elapsedRealtime()
         val first = target.sampleMotion()
         mainHandler.postDelayed({
             if (isFinishing || isDestroyed) return@postDelayed
@@ -5640,6 +5641,7 @@ class AgentActivity : Activity() {
                 return@postDelayed
             }
             val second = target.sampleMotion()
+            val elapsedMillis = (android.os.SystemClock.elapsedRealtime() - startedAt).coerceAtLeast(0L)
             val callbackDelta = (second.callbackCount - first.callbackCount).coerceAtLeast(0)
             val drawnDelta = (second.drawCount - first.drawCount).coerceAtLeast(0)
             val phaseDelta = second.phase - first.phase
@@ -5657,7 +5659,7 @@ class AgentActivity : Activity() {
             AlertDialog.Builder(this)
                 .setTitle("Continuum · Hologramm-Gerätediagnose")
                 .setMessage(
-                    "Messdauer: 1,6 Sekunden\n" +
+                    "Messdauer: $elapsedMillis ms\n" +
                         "Animations-Callbacks: $callbackDelta\n" +
                         "Wirkliche Canvas-Zeichnungen: $drawnDelta\n" +
                         "Phasenänderung: ${"%.3f".format(java.util.Locale.ROOT, phaseDelta)}\n\n" +
