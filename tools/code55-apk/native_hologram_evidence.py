@@ -117,11 +117,16 @@ def verify_resize(report, baseline):
     texture_size = lambda state: (state['texture']['width'], state['texture']['height'])
     previous = before
     times = [baseline['elapsed_nanos'], proof['started_elapsed_nanos'], before['elapsed_nanos']]
+    clocks = [baseline.get('monotonic_nanos'), before.get('monotonic_nanos')]
+    assert all(type(value) is int and value > 0 for value in clocks), 'Monotonic sample clock required'
     for group, changed_key, rendered_key in (
             ('stage', 'changed', 'rendered'), ('stage', 'restored', 'restored_rendered'),
             ('texture_layout', 'changed', 'rendered'), ('texture_layout', 'restored', 'restored_rendered')):
         changed, rendered = proof[group][changed_key], proof[group][rendered_key]
-        for state in (changed, rendered):
+        progress = proof[group].get(rendered_key + '_progress')
+        assert isinstance(progress, list) and len(progress) == 2, 'Two fresh consumption samples required'
+        assert progress[-1] == rendered, 'Final consumption sample mismatch'
+        for state in (changed, *progress):
             assert all(state[key] == before[key] for key in stable), 'Resize replaced renderer or surface'
             assert state['hologram']['identity'] == before['hologram']['identity']
             assert state['texture']['identity'] == before['texture']['identity']
@@ -133,23 +138,36 @@ def verify_resize(report, baseline):
         assert type(changed['swapChain_identity']) is int and changed['swapChain_identity'] != 0
         assert rendered['swapChain_identity'] == changed['swapChain_identity'], 'Unstable resized SwapChain'
         assert changed['consumer_generation'] > previous['consumer_generation'], 'Stale resize generation'
-        assert rendered['consumer_generation'] == changed['consumer_generation']
         assert changed['native3dDrawn'] is False and changed['texture']['alpha'] == 0
-        assert rendered['native3dDrawn'] is True and visible(rendered['texture'])
-        assert rendered['surface_texture_timestamp'] > changed['surface_texture_timestamp']
         assert changed['surface_texture_timestamp'] >= previous['surface_texture_timestamp']
-        assert sizes(rendered) == sizes(changed) == (rendered['viewport_width'], rendered['viewport_height'])
+        boundary = changed['monotonic_nanos']
+        assert type(boundary) is int and boundary > 0, 'Missing monotonic resize boundary'
+        timestamp, updates = changed['surface_texture_timestamp'], changed['consumer_updates']
+        assert type(timestamp) is int and 0 <= timestamp <= boundary and type(updates) is int and updates >= 0
+        for state in progress:
+            assert state['swapChain_identity'] == changed['swapChain_identity'], 'Unstable resized SwapChain'
+            assert state['consumer_generation'] == changed['consumer_generation'], 'Unstable consumer generation'
+            assert state['native3dDrawn'] is True and visible(state['texture'])
+            current, current_updates = state['surface_texture_timestamp'], state['consumer_updates']
+            clock = state['monotonic_nanos']
+            assert type(clock) is int and clock > boundary, 'Invalid monotonic consumption capture'
+            assert type(current) is int and max(boundary, timestamp) < current <= clock, 'Stale or future resize buffer'
+            assert type(current_updates) is int and current_updates > updates, 'No new consumer callback'
+            assert sizes(state) == sizes(changed) == (state['viewport_width'], state['viewport_height'])
+            timestamp, updates = current, current_updates
         if group == 'stage' and changed_key == 'changed':
             assert sizes(changed) != sizes(before), 'Stage buffer did not change'
         else:
             assert sizes(changed) == sizes(before), 'Stage buffer was not restored'
         expected_texture = ((texture_size(before)[0] - 1, texture_size(before)[1])
                             if group == 'texture_layout' and changed_key == 'changed' else texture_size(before))
-        assert texture_size(changed) == texture_size(rendered) == expected_texture
-        times.extend((changed['elapsed_nanos'], rendered['elapsed_nanos']))
+        assert all(texture_size(state) == expected_texture for state in (changed, *progress))
+        times.extend(state['elapsed_nanos'] for state in (changed, *progress))
+        clocks.extend(state['monotonic_nanos'] for state in (changed, *progress))
         previous = rendered
     times.extend((proof['finished_elapsed_nanos'], report['finished_elapsed_nanos']))
     assert all(type(value) is int and value > 0 for value in times) and times == sorted(times), 'Resize time sequence mismatch'
+    assert all(type(value) is int and value > 0 for value in clocks) and clocks == sorted(clocks), 'Resize monotonic sequence mismatch'
 
 
 def verify_hologram(directory, source_sha, source_tree, expected_apks=None):
