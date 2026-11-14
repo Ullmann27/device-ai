@@ -15,7 +15,6 @@ import at.heinz.deviceai.routines.RoutineClaim
 import at.heinz.deviceai.routines.RoutineOutcome
 import at.heinz.deviceai.routines.RoutineReport
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicLong
 
 /**
  * Integration seams (Jarvis Integration, 2026-11-03). Only adapters – no core logic of
@@ -85,7 +84,6 @@ class RoutineDispatcher(
     }
     private val inFlight = LinkedHashMap<String, RoutineClaim>()
     private val pending = LinkedHashMap<String, Delivery>()
-    private val seq = AtomicLong()
 
     init { require(chiefId.length in 1..64) }
 
@@ -127,7 +125,7 @@ class RoutineDispatcher(
             }
             if (!admitted) continue
             val brief = runCatching {
-                WorkerBrief(briefId(routine.id), routine.goal, routine.allowedTools)
+                WorkerBrief("rt-" + claim.runId, routine.goal, routine.allowedTools)
             }.getOrNull()
             if (brief == null) {
                 retire(claim)
@@ -142,9 +140,6 @@ class RoutineDispatcher(
         }
         return submitted
     }
-
-    private fun briefId(routineId: String): String =
-        ("rt-" + routineId.replace('.', '_')).take(48) + "-" + seq.incrementAndGet()
 
     private fun onReport(claim: RoutineClaim, report: WorkerReport) {
         val now = clock()
@@ -198,6 +193,6 @@ class RoutineDispatcher(
     }
 
     private fun message(claim: RoutineClaim, priority: AgentPriority, body: String, now: Long): AgentMessage =
-        AgentMessage("routine-${claim.routine.id}-$now-${seq.incrementAndGet()}",
+        AgentMessage("routine-${claim.routine.id}-$now-${claim.runId.replace("-", "")}",
             "routine:${claim.routine.id}".take(64), chiefId, priority, body.take(4_000))
 }

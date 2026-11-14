@@ -1,6 +1,7 @@
 package at.heinz.deviceai.routines
 
 import java.util.Collections
+import java.util.UUID
 
 /**
  * Chief-Muster Punkt 6 (Routinen) und 7 (Agent-zu-Agent-Nachrichten) – reiner, JVM-testbarer Kern.
@@ -23,7 +24,7 @@ sealed interface RoutineOutcome {
     data class Unchanged(val routineId: String) : RoutineOutcome
 }
 
-internal class RoutineClaim(val routine: Routine)
+internal class RoutineClaim(val routine: Routine, val runId: String = UUID.randomUUID().toString())
 internal class RoutineReport(
     val claim: RoutineClaim,
     val outcome: RoutineOutcome,
