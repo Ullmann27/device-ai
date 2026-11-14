@@ -1,4 +1,4 @@
-name: "Code58 original-signierter APK-Testentwurf (Besitzerfreigabe)"
+name: "Code59 original-signierter APK-Testentwurf (Besitzerfreigabe)"
 on:
   push:
     branches:
@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   preflight:
-    name: "Code58 Quell-SHA d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684 vollständig prüfen"
+    name: "Code59 Quell-SHA c5e2faeabed5b421796c83afde19d5ea391c5f63 vollständig prüfen"
     if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-owner-signing-20261109'
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -23,9 +23,9 @@ jobs:
       contents: read
       actions: read
     env:
-      SOURCE_SHA: "d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684"
-      OWNER_APPROVED_SHA: "d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684"
-      QA_RUN_ID: "43574440992"
+      SOURCE_SHA: "c5e2faeabed5b421796c83afde19d5ea391c5f63"
+      OWNER_APPROVED_SHA: "c5e2faeabed5b421796c83afde19d5ea391c5f63"
+      QA_RUN_ID: "43579602223"
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -38,7 +38,7 @@ jobs:
           java-version: '21'
       - name: Official Android SDK build tools
         run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"'
-      - name: Strict Code58 preflight without original signing key
+      - name: Strict Code59 preflight without original signing key
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -46,7 +46,7 @@ jobs:
           bash scripts/continuum-code57-original-signer.sh preflight
 
   sign-draft-original:
-    name: "Code58 d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684 originalsignieren – vorher Besitzerfreigabe"
+    name: "Code59 c5e2faeabed5b421796c83afde19d5ea391c5f63 originalsignieren – vorher Besitzerfreigabe"
     needs: preflight
     if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-owner-signing-20261109'
     runs-on: ubuntu-latest
@@ -56,9 +56,9 @@ jobs:
       contents: write
       actions: read
     env:
-      SOURCE_SHA: "d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684"
-      OWNER_APPROVED_SHA: "d3bdd5c61d10dd9b2b1f2d13c40f7bab797c3684"
-      QA_RUN_ID: "43574440992"
+      SOURCE_SHA: "c5e2faeabed5b421796c83afde19d5ea391c5f63"
+      OWNER_APPROVED_SHA: "c5e2faeabed5b421796c83afde19d5ea391c5f63"
+      QA_RUN_ID: "43579602223"
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
