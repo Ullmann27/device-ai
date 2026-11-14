@@ -41,10 +41,12 @@ data class AgentModelOutput private constructor(
     val proposal: ToolProposal?,
     val responseCompletion: LocalGenerationCompletion,
     private val ownerDialogue: Boolean,
-    val failureCause: LocalGenerationFailureCause?
+    val failureCause: LocalGenerationFailureCause?,
+    val followup: AgentFollowupProposal?
 ) {
-    constructor(modelId: String, response: String, proposal: ToolProposal? = null) :
-        this(modelId, response, proposal, LocalGenerationCompletion.COMPLETE, false, null)
+    constructor(modelId: String, response: String, proposal: ToolProposal? = null,
+                followup: AgentFollowupProposal? = null) :
+        this(modelId, response, proposal, LocalGenerationCompletion.COMPLETE, false, null, followup)
 
     val responseComplete: Boolean get() = responseCompletion == LocalGenerationCompletion.COMPLETE
 
@@ -55,6 +57,7 @@ data class AgentModelOutput private constructor(
         require(!ownerDialogue || proposal == null)
         require(ownerDialogue || responseComplete)
         require(responseCompletion != LocalGenerationCompletion.CANCELLED)
+        require(followup == null || (!ownerDialogue && responseComplete && proposal == null))
     }
 
     companion object {
@@ -63,7 +66,7 @@ data class AgentModelOutput private constructor(
             failure: String? = null): AgentModelOutput =
             AgentModelOutput(modelId, response, null, completion, true,
                 if (completion == LocalGenerationCompletion.COMPLETE) null
-                else LocalGenerationFailureCause.classify(completion, failure))
+                else LocalGenerationFailureCause.classify(completion, failure), null)
     }
 }
 
@@ -190,7 +193,8 @@ data class AgentRunResult(
     val experience: Experience?,
     val blocker: String? = null,
     val taskEvidence: AgentTaskEvidence? = null,
-    val responseCompletion: LocalGenerationCompletion = LocalGenerationCompletion.COMPLETE
+    val responseCompletion: LocalGenerationCompletion = LocalGenerationCompletion.COMPLETE,
+    val followup: AgentFollowupProposal? = null
 ) {
     val responseComplete: Boolean get() = responseCompletion == LocalGenerationCompletion.COMPLETE
 }
@@ -638,7 +642,10 @@ class BoundedAgentOrchestrator(
                 audit.toList(),
                 resultExperience.takeUnless { ephemeralScreenContext },
                 blocker,
-                proof(verifiedOutcome, resultExperience.id.takeIf { verifiedOutcome && experienceStored })
+                proof(verifiedOutcome, resultExperience.id.takeIf { verifiedOutcome && experienceStored }),
+                followup = chosen?.followup?.takeIf {
+                    blocker == null && chosen?.responseComplete == true && !ephemeralScreenContext
+                }
             )
             checkpointStore?.clear()
             return finishThinking(result)

@@ -18,8 +18,11 @@ import at.heinz.deviceai.chief.ChiefBotTaskRequest
 import at.heinz.deviceai.chief.ChiefBotTaskMode
 import at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum
 import at.heinz.deviceai.chief.ChiefBotTeam
+import at.heinz.deviceai.chief.ChiefFollowupDecisionCode
+import at.heinz.deviceai.chief.ChiefFollowupReview
 import at.heinz.deviceai.chief.ChiefTeamStatus
 import at.heinz.deviceai.chief.ChiefTeamTask
+import at.heinz.deviceai.cognitive.AgentFollowupEnvelope
 import at.heinz.deviceai.learning.SharedOwnerKnowledgeGrant
 import at.heinz.deviceai.ui.JarvisDesign
 import java.util.UUID
@@ -38,7 +41,7 @@ class ContinuumBotRosterDialog(
     private val onContextChanging: ((String) -> Unit)? = null,
     private val onAssign: ((ChiefBotTaskRequest) -> Boolean)? = null,
     private val team: ChiefBotTeam? = null,
-    private val onTeamSubmit: ((String, String, Long, SharedOwnerKnowledgeGrant?) -> Boolean)? = null,
+    private val onTeamSubmit: ((String, String, Long, SharedOwnerKnowledgeGrant?, ChiefFollowupReview?) -> Boolean)? = null,
     private val onTeamStop: ((String) -> Unit)? = null
 ) {
     private var dialog: AlertDialog? = null
@@ -53,6 +56,10 @@ class ContinuumBotRosterDialog(
 
     fun show() {
         if (!activity.isFinishing && !activity.isDestroyed) showPage(null)
+    }
+
+    fun discardTeamDraft() {
+        if (abandonDraft != null) close()
     }
 
     /** Invalidates presentation only. Accepted storage writes and independent coding jobs continue. */
@@ -489,13 +496,31 @@ class ContinuumBotRosterDialog(
                 card.addView(label(task.request, 17f))
                 card.addView(label("${task.id}\n${teamStatus(task)}\n${task.diagnostic}"))
                 task.responses.forEach { response ->
+                    val proposed = AgentFollowupEnvelope.parse(response.text)
                     card.addView(ui.label("${response.agentId} · ${response.stage}", 14f, JarvisDesign.Colors.cyan))
-                    card.addView(label(response.text))
+                    card.addView(label(proposed?.answer ?: response.text))
                     card.addView(ui.label("Ausführung aufgezeichnet · Inhalt NICHT unabhängig geprüft\n" +
                         "Modell SHA-256: ${task.modelSha256}\n" +
                         "Eingabe SHA-256: ${response.promptSha256}\n" +
                         "Ausgabe SHA-256: ${response.outputSha256}\nDauer: ${response.elapsedMillis} ms",
                         12f, JarvisDesign.Colors.textSecondary))
+                    if (proposed != null) {
+                        card.addView(label("Folgevorschlag · noch nicht beauftragt\n${proposed.proposal.goal}\n" +
+                            "Begründung des Workers: ${proposed.proposal.reason}"))
+                        val feedback = label("")
+                        card.addView(feedback)
+                        card.addView(action("Folgevorschlag prüfen") {
+                            if (live(token)) load(token, body, { currentTeam.prepareFollowup(task.id, response.stage) }) { decision ->
+                                val review = decision.review
+                                if (review != null && currentTeam.isFollowupContextCurrent(review))
+                                    showTeamDraft(review.proposal.goal, review)
+                                else {
+                                    review?.revoke()
+                                    feedback.text = followupDecisionText(decision.code)
+                                }
+                            }
+                        }.apply { isEnabled = task.status == ChiefTeamStatus.RESPONSES_RECORDED })
+                    }
                 }
                 listOf(task.analystId, task.reviewerId).forEach { id ->
                     card.addView(action("Bot $id öffnen") { if (live(token)) showProfile(id) })
@@ -524,22 +549,43 @@ class ContinuumBotRosterDialog(
         render()
     }
 
-    private fun showTeamDraft(initial: String = "") {
+    private fun followupDecisionText(code: ChiefFollowupDecisionCode): String = when (code) {
+        ChiefFollowupDecisionCode.UNSUPPORTED_CAPABILITY -> "Nicht angenommen: Dafür ist kein freigegebener Textprüfablauf angeschlossen."
+        ChiefFollowupDecisionCode.TOOLS_NOT_AUTHORIZED -> "Nicht angenommen: Der Vorschlag verlangt Werkzeuge außerhalb dieses Textauftrags."
+        ChiefFollowupDecisionCode.MODEL_UNAVAILABLE -> "Nicht angenommen: Das lokale Modell ist nicht bereit."
+        ChiefFollowupDecisionCode.MODEL_BUDGET_UNAVAILABLE -> "Nicht angenommen: Das Profilbudget erlaubt keinen weiteren Modellaufruf."
+        ChiefFollowupDecisionCode.DUPLICATE_GOAL, ChiefFollowupDecisionCode.ALREADY_SUBMITTED ->
+            "Nicht erneut beauftragt: Dieser Vorschlag oder dieses Ziel ist bereits im Teamverlauf."
+        ChiefFollowupDecisionCode.TEAM_BUSY -> "Nicht angenommen: Ein Teamauftrag läuft noch."
+        ChiefFollowupDecisionCode.HISTORY_FULL -> "Nicht angenommen: Der Teamverlauf ist voll."
+        ChiefFollowupDecisionCode.SOURCE_NOT_COMPLETE -> "Nicht angenommen: Analyse und Gegenprüfung sind noch nicht vollständig gespeichert."
+        ChiefFollowupDecisionCode.SOURCE_CHANGED, ChiefFollowupDecisionCode.NO_PROPOSAL,
+        ChiefFollowupDecisionCode.OWNER_APPROVAL_REQUIRED -> "Vorschlag oder Sitzung geändert. Bitte erneut prüfen."
+    }
+
+    private fun showTeamDraft(initial: String = "", followup: ChiefFollowupReview? = null) {
         val currentTeam = team ?: return
         val selection = currentTeam.snapshot()
-        val requestId = "team-" + UUID.randomUUID()
+        val requestId = followup?.requestId ?: ("team-" + UUID.randomUUID())
         val body = column()
         val token = open("Chefbot · Textprüfung freigeben", body)
         body.addView(label("Dein Text geht ausschließlich an die zwei ausgewählten Spezialisten. " +
             "Private Bot-Gespräche und Arbeitsnotizen werden nicht geteilt. " +
             "Dies prüft Text; es kompiliert keinen Code und baut keine APK."))
+        followup?.let { body.addView(label("Geprüfter Folgevorschlag: neuer Auftrag, zwei neue Modellaufrufe, " +
+            "höchstens zwei Minuten innerhalb der Profilbudgets, keine Werkzeuge. " +
+            "Bisherige Freigaben und gespeicherte Angaben werden nicht übernommen. " +
+            "Analyse: ${selection.specialistIds.getOrNull(0)} · Gegenprüfung: ${selection.specialistIds.getOrNull(1)}. " +
+            "Das gebundene Ziel ist nicht bearbeitbar; für Änderungen einen normalen neuen Entwurf öffnen.")) }
         val text = ui.editor(multiline = true).apply {
             filters = arrayOf(InputFilter.LengthFilter(1_800))
             setText(initial); hint = "Auftrag und zu prüfenden Text eingeben (max. 1800 Zeichen)"
             contentDescription = "Teamauftrag"; tag = "bot-team-request"
+            if (followup != null) { isFocusable = false; isCursorVisible = false; keyListener = null }
         }
         body.addView(text)
         var shared: SharedOwnerKnowledgeGrant? = null
+        var pendingFollowup = followup
         var sharingRevision = 0L
         var selectionDialog: AlertDialog? = null
         val sharedSummary = label("Keine gespeicherten Angaben für diesen Auftrag freigegeben.")
@@ -547,6 +593,8 @@ class ContinuumBotRosterDialog(
             sharingRevision++
             shared?.revoke()
             shared = null
+            pendingFollowup?.revoke()
+            pendingFollowup = null
             selectionDialog?.dismiss()
             selectionDialog = null
         }
@@ -649,10 +697,14 @@ class ContinuumBotRosterDialog(
             if (!live(token)) return@setOnClickListener
             if (!consent.isChecked || text.text.isBlank() || text.text.length > 1_800) {
                 feedback.text = "Bitte einen Text mit 1–1800 Zeichen eingeben und die Freigabe bestätigen."
+            } else if (followup != null && (!currentTeam.isFollowupContextCurrent(followup) ||
+                    text.text.toString() != followup.proposal.goal)) {
+                feedback.text = "Der Folgevorschlag ist nicht mehr gültig. Bitte erneut prüfen."
             } else {
                 submit.isEnabled = false
-                if (onTeamSubmit?.invoke(requestId, text.text.toString(), selection.revision, shared) == true) {
+                if (onTeamSubmit?.invoke(requestId, text.text.toString(), selection.revision, shared, pendingFollowup) == true) {
                     shared = null
+                    pendingFollowup = null
                     showTeam()
                 }
                 else { submit.isEnabled = true; feedback.text = "Nicht angenommen. Ein anderer Modelllauf ist noch belegt." }

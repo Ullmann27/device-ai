@@ -47,6 +47,7 @@ data class ChiefJobDeps(
 object ChiefJobs {
     fun agentJob(brief: WorkerBrief, deps: ChiefJobDeps): WorkerJob {
         val cancellation = DeliberationCancellation()
+        val followup = AtomicReference<at.heinz.deviceai.cognitive.AgentFollowupProposal?>()
         val active = AtomicReference<BoundedAgentOrchestrator?>()
         val scoped = WorkerScope.model(brief, deps.model)
         val model = object : CancellableAgentModel {
@@ -85,6 +86,7 @@ object ChiefJobs {
                     val result = orchestrator.run(brief.goal)
                     result.blocker?.let { throw WorkerBlocked(it) }
                     deps.onResult(result)
+                    followup.set(result.followup)
                     return result.response
                 } finally {
                     active.compareAndSet(orchestrator, null)
@@ -94,8 +96,12 @@ object ChiefJobs {
             override fun cancel() {
                 // Cancel the shared token first, then the live model generation AND ToolGate.
                 cancellation.cancel()
+                followup.set(null)
                 active.get()?.cancel()
             }
+
+            override fun followupProposal(): at.heinz.deviceai.cognitive.AgentFollowupProposal? =
+                if (runCatching { cancellation.throwIfCancelled() }.isSuccess) followup.get() else null
         }
     }
 }

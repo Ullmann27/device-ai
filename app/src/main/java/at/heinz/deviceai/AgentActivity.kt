@@ -3095,7 +3095,7 @@ class AgentActivity : Activity() {
                 }
             }, changed = { runOnUiThread { refreshBotTeam() } },
             skills = at.heinz.deviceai.learning.ContinuumSkillLibrary(java.io.File(filesDir, "skills")),
-            sharedKnowledge = ContinuumLearningCore(filesDir)
+            sharedKnowledge = ContinuumLearningCore(filesDir), ownerSession = { sessionId }
         ).also { botTeam = it }
         val roster = botRosterDialog ?: ContinuumBotRosterDialog(this,
             botProfiles, backlogExecutor,
@@ -3116,10 +3116,12 @@ class AgentActivity : Activity() {
     }
 
     private fun submitBotTeam(id: String, text: String, revision: Long,
-                              shared: at.heinz.deviceai.learning.SharedOwnerKnowledgeGrant?): Boolean {
+                              shared: at.heinz.deviceai.learning.SharedOwnerKnowledgeGrant?,
+                              followup: at.heinz.deviceai.chief.ChiefFollowupReview?): Boolean {
         if (busy || botLookupPending || isFinishing || isDestroyed || backlogExecutor.isShutdown) return false
         if (shared != null && ownerFactDeletionPending.get()) return false
         val team = botTeam ?: return false
+        if (followup != null && !team.isFollowupContextCurrent(followup)) return false
         val admissionToken = team.admissionToken()
         cancelSpeechInputScope()
         pendingTeamReply = if (selectedBot == null && team.snapshot().tasks.none { it.id == id }) {
@@ -3130,7 +3132,7 @@ class AgentActivity : Activity() {
         activeLocalRequest = true
         setBusy(true)
         onBacklog({ team.submit(id, text, revision, ownerApproved = true, admissionToken = admissionToken,
-            shared = shared) }) { result ->
+            shared = shared, followup = followup) }) { result ->
             if (result.isFailure) {
                 pendingTeamReply?.takeIf { it.taskId == id }?.let { pendingTeamReply = null }
                 Toast.makeText(this, "Teamauftrag nicht angenommen oder Speicherung unklar. Verlauf prüfen.",
@@ -3173,9 +3175,12 @@ class AgentActivity : Activity() {
         val complete = task.status == at.heinz.deviceai.chief.ChiefTeamStatus.RESPONSES_RECORDED
         val reply = if (complete) {
             val review = task.responses.single { it.stage == "REVIEW" }
+            val proposed = at.heinz.deviceai.cognitive.AgentFollowupEnvelope.parse(review.text)
             "KI-Team · Auftrag ${task.id.takeLast(8)}\n" +
                 "Analyse und Gegenprüfung sind gespeichert. Der Inhalt ist nicht unabhängig geprüft.\n\n" +
-                "Gegenprüfung:\n${review.text}"
+                "Gegenprüfung:\n${proposed?.answer ?: review.text}" +
+                (proposed?.let { "\n\nFolgevorschlag · noch nicht beauftragt:\n${it.proposal.goal}\n" +
+                    "Unter KI-Team → Teamaufträge und Ergebnisse prüfen und gegebenenfalls neu freigeben." } ?: "")
         } else "KI-Team · Auftrag ${task.id.takeLast(8)}\n" + when (task.status) {
             at.heinz.deviceai.chief.ChiefTeamStatus.BLOCKED ->
                 "Der Auftrag ist blockiert. Keine vollständige Gegenprüfung bestätigt."
@@ -12669,6 +12674,7 @@ class AgentActivity : Activity() {
 
     private fun cancelLocalRequest(preserveContinuousMode: Boolean, announceDraftStop: Boolean) {
         cancelSpeechInputScope(preserveContinuousMode)
+        if (announceDraftStop) botRosterDialog?.discardTeamDraft()
         pendingComputerLaunch = null
         computerController?.stop()
         appNameClarification.clear()
@@ -13935,6 +13941,7 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
             return
         }
+        botRosterDialog?.discardTeamDraft()
         pendingComputerLaunch = null
         computerController?.stop()
         appNameClarification.clear()
