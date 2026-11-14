@@ -1,9 +1,4 @@
 {
-  "at.heinz.deviceai.chief.ChiefPatternE2ETest": [
-    "s6_pending_routineReportsOnlyWhenSomethingIsNew",
-    "s7_pending_agentMessagesUrgentWakesInfoWaits",
-    "s8d_pending_limitGuardIsWiredBeforeWorkerStart"
-  ],
   "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest": [
     "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
     "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox"

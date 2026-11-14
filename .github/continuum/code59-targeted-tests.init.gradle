@@ -43,6 +43,10 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.chief.ChiefWorkerFollowupTest'
             includeTestsMatching 'at.heinz.deviceai.ContinuumBotFollowupUiTest'
             includeTestsMatching 'at.heinz.deviceai.OwnerAppPlanningContextUiTest'
+            includeTestsMatching 'at.heinz.deviceai.chief.ChiefResourceAdmissionUiTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelHostMemoryUiTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelThermalGuardTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest'
             failOnNoMatchingTests = true
         }
     }

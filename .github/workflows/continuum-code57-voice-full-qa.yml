@@ -551,6 +551,37 @@ jobs:
           required |= {('OwnerRoutineRuntimeUiTest', name) for name in (
               'onStopJobDuringStartedClaimPreservesDurableState',
               'onDestroyDuringStartedClaimPreservesDurableState')}
+          required |= {('ChiefPatternE2ETest', name) for name in (
+              's6_approvedRoutineKeepsItsScheduleAndDeliversOnlyNewLowReadingsAcrossReopen',
+              's7_urgentWorkerReportWakesChiefWhileInfoWaitsAndNeitherGrantsTools')}
+          required.add(('ChiefResourceAdmissionUiTest', 's8d_realResourceAdmissionStopsNewToolsButDeliversFinishedReports'))
+          required |= {('LocalModelHostMemoryUiTest', name) for name in (
+              'loadedChatRechecksLowMemoryBeforeNativeDelegation',
+              'loadedThinkingRechecksLowMemoryBeforeNativeDelegation',
+              'loadedToolContinuationRechecksLowMemoryBeforeNativeDelegation',
+              'unavailableOrUnreadableMemoryBlocksEveryEntryWithoutUnloading',
+              'unavailableThermalStatusStillChecksActualMemory',
+              'thermalAdmissionAndRunningCancellationRemainEffective',
+              'ownerCancellationStillReachesAnAlreadyRunningNativeGeneration',
+              'rejectedConcurrentCallerCannotReplaceTheRunningNativeOwner')}
+          required |= {('LocalModelThermalGuardTest', name) for name in (
+              'generationDoesNotStartWhileAndroidReportsSevereHeat',
+              'runningGenerationStopsWhenAndroidReportsSevereHeat',
+              'coolDeviceAndUnknownStatusKeepTheNormalPath',
+              'rejectedSecondStartKeepsTheHeatReasonForTheRunningAnswer',
+              'severeCallbackDuringSamplingRejectsStaleCoolReadingForEveryEntryPoint',
+              'heatBeforeNativeAdmissionStopsOnceAfterStartForEveryEntryPoint',
+              'admittedBlockingStartCanBeStoppedWithoutHoldingGuardLock',
+              'rejectedNativeStartReleasesOwnershipForCoolOwnerRetry',
+              'thermalCancellationKeepsOwnershipUntilNativeCancelReturns',
+              'latchedHeatRejectsSuccessWhenNativeCompletionWinsCancellation')}
+          required |= {('LocalModelLoadAdmissionTest', name) for name in (
+              'severeThermalStateRefusesNativeLoad',
+              'androidLowMemoryStateRefusesNativeLoad',
+              'modelThatCannotStayResidentInPhysicalRamIsRefused',
+              'missingTelemetryFailsClosedInsteadOfGuessing',
+              'healthyFold7ClassDeviceStillLoadsTheOriginalGemma',
+              'unknownThermalOnOldAndroidDoesNotBlockButMemoryStillChecked')}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
