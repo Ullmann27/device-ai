@@ -397,6 +397,38 @@ cmp -s "$tmp/$apk" "$tmp/readback/$apk" || fail DRAFT_BYTES_MISMATCH
 "$tools/apksigner" verify --verbose --print-certs "$tmp/readback/$apk" > "$tmp/draft-cert" || fail DRAFT_SIGNATURE_INVALID
 grep -Fqx "Signer #1 certificate SHA-256 digest: $cert" "$tmp/draft-cert" || fail DRAFT_CERT_MISMATCH
 [[ "$(gh api "repos/$repo/releases/latest" --jq '.tag_name')" == "$latest" ]] || fail UNAUTHORIZED_PUBLICATION
+
+# Retain only verified delivery bytes.
+retain_verified_draft() {
+  local readback_apk="$1" build_info="$2" expected_digest="$3"
+  local runner_temp="${RUNNER_TEMP:-}" output filename bytes
+  [[ "$expected_digest" =~ ^[0-9a-f]{64}$ ]] || fail HANDOFF_DIGEST_INVALID
+  [[ -n "$runner_temp" && "$runner_temp" == /* && "$runner_temp" != / \
+     && -d "$runner_temp" && ! -L "$runner_temp" ]] || fail HANDOFF_RUNNER_TEMP_INVALID
+  [[ "$runner_temp" == "$(cd -- "$runner_temp" && pwd -P)" ]] || fail HANDOFF_RUNNER_TEMP_INVALID
+  filename="Continuum-Lokal-$expected_digest.apk"
+  [[ -f "$readback_apk" && -s "$readback_apk" && ! -L "$readback_apk" \
+     && "${readback_apk##*/}" == "$filename" \
+     && -f "$build_info" && -s "$build_info" && ! -L "$build_info" ]] || fail HANDOFF_INPUT_INVALID
+  [[ "$(sha256sum "$readback_apk"|cut -d' ' -f1)" == "$expected_digest" ]] || fail HANDOFF_SOURCE_DIGEST
+  bytes="$(stat -c %s "$readback_apk")"
+  for field in "apk_sha256=$expected_digest" "apk_bytes=$bytes" "status=ORIGINAL_SIGNED_UNPUBLISHED_DRAFT"; do
+    [[ "$(grep -Fxc -- "$field" "$build_info")" == 1 ]] || fail HANDOFF_BUILD_INFO_INVALID
+  done
+  output="$runner_temp/continuum-code59-signed-draft"
+  [[ ! -e "$output" && ! -L "$output" ]] || fail HANDOFF_DESTINATION_EXISTS
+  mkdir -m 700 -- "$output" || fail HANDOFF_DIRECTORY
+  cp -- "$readback_apk" "$output/$filename" || fail HANDOFF_APK_COPY
+  cp -- "$build_info" "$output/BUILD-INFO.txt" || fail HANDOFF_INFO_COPY
+  [[ -f "$output/$filename" && ! -L "$output/$filename" \
+     && -f "$output/BUILD-INFO.txt" && ! -L "$output/BUILD-INFO.txt" ]] || fail HANDOFF_OUTPUT_INVALID
+  [[ "$(find "$output" -mindepth 1 -maxdepth 1 -printf '.\n' | wc -l)" == 2 ]] || fail HANDOFF_OUTPUT_FILES
+  [[ "$(sha256sum "$output/$filename"|cut -d' ' -f1)" == "$expected_digest" ]] || fail HANDOFF_COPY_DIGEST
+  cmp -s "$readback_apk" "$output/$filename" || fail HANDOFF_APK_BYTES
+  cmp -s "$build_info" "$output/BUILD-INFO.txt" || fail HANDOFF_INFO_BYTES
+}
+retain_verified_draft "$tmp/readback/$apk" "$tmp/BUILD-INFO.txt" "$digest"
+echo CHECKPOINT=CODE59_SIGNED_READBACK_ARTIFACT_STAGED
 echo CHECKPOINT=CODE59_SIGNED_GITHUB_DRAFT_READBACK_VERIFIED
 echo STATUS=SIGNED_DRAFT_NOT_PUBLISHED
 echo "DRAFT_RELEASE_TAG=$tag"

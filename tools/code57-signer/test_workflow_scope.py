@@ -1,6 +1,7 @@
 """Static contracts for the protected signing workflow."""
 from pathlib import Path
 import ast
+import hashlib
 import json
 import os
 import re
@@ -56,6 +57,7 @@ class WorkflowScopeTest(unittest.TestCase):
             'actions/checkout@11d5960a326750d5838078e36cf38b85af677262',
             'actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3',
         ] * 2
+        expected.append('actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02')
         self.assertCountEqual(uses, expected)
 
     def test_unused_node_setup_is_absent(self):
@@ -84,6 +86,39 @@ class WorkflowScopeTest(unittest.TestCase):
         body = signer_step(self.text).group(1)
         self.assertEqual(self.text.count('bash scripts/continuum-code57-original-signer.sh sign\n'), 1)
         self.assertIn('bash scripts/continuum-code57-original-signer.sh sign\n', body)
+
+    def test_upload_contains_only_successful_signed_draft_handoff(self):
+        self.assertIn('        id: signed_draft\n', signer_step(self.text).group(1))
+        upload = re.search(r'(?ms)^      - uses: actions/upload-artifact@[^\n]+\n(.*?)(?=^      - |^  [^ ]|\Z)', self.text)
+        self.assertIsNotNone(upload)
+        self.assertGreater(upload.start(), signer_step(self.text).end() - 1)
+        self.assertIn("        if: success() && steps.signed_draft.outcome == 'success'\n", upload.group(1))
+        paths = re.search(r'(?ms)^          path: \|\n((?:            [^\n]+\n)+)', upload.group(1))
+        self.assertEqual(paths.group(1).splitlines(), [
+            '            ${{ runner.temp }}/continuum-code59-signed-draft/Continuum-Lokal-*.apk',
+            '            ${{ runner.temp }}/continuum-code59-signed-draft/BUILD-INFO.txt',
+        ])
+        self.assertIn('          name: Code59-ORIGINAL-SIGNED-DRAFT\n', upload.group(1))
+        self.assertIn('          if-no-files-found: error\n', upload.group(1))
+        self.assertIn('          retention-days: 14\n', upload.group(1))
+        self.assertIn('          compression-level: 6\n', upload.group(1))
+        self.assertNotIn('continue-on-error:', self.text)
+        self.assertNotIn('always()', upload.group(1))
+
+    def test_artifact_handoff_follows_readback_signature_and_publication_checks(self):
+        call = 'retain_verified_draft "$tmp/readback/$apk" "$tmp/BUILD-INFO.txt" "$digest"'
+        self.assertEqual(self.script.count(call), 1)
+        before = self.script[:self.script.index(call)]
+        for gate in (
+            'cmp -s "$tmp/$apk" "$tmp/readback/$apk" || fail DRAFT_BYTES_MISMATCH',
+            '"$tools/apksigner" verify --verbose --print-certs "$tmp/readback/$apk" > "$tmp/draft-cert" || fail DRAFT_SIGNATURE_INVALID',
+            'grep -Fqx "Signer #1 certificate SHA-256 digest: $cert" "$tmp/draft-cert" || fail DRAFT_CERT_MISMATCH',
+            '[[ "$(gh api "repos/$repo/releases/latest" --jq \'.tag_name\')" == "$latest" ]] || fail UNAUTHORIZED_PUBLICATION',
+            '[[ "$mode" == sign ]] || { echo STATUS=AWAITING_OWNER_REVIEW;exit 0; }',
+        ):
+            self.assertIn(gate, before)
+        self.assertEqual(self.script.count('"$tools/apksigner" sign '), 1)
+        self.assertIn("trap 'rm -rf -- \"$tmp\"' EXIT", self.script)
 
     def test_five_jobs_and_native_artifact_are_required(self):
         self.assertIn('.total_count==5 and (.jobs|length)==5', self.script)
@@ -117,6 +152,137 @@ class WorkflowScopeTest(unittest.TestCase):
             capture_output=True, text=True, timeout=10)
         self.assertEqual(result.returncode, 69)
         self.assertIn('CODE59_SIGN_WRONG_SIGN_BRANCH', result.stderr)
+
+
+class SignedArtifactHandoffTest(unittest.TestCase):
+    """Synthetic bytes; no signing access."""
+    @classmethod
+    def setUpClass(cls):
+        script = SCRIPT.read_text()
+        function = re.search(r'(?ms)^retain_verified_draft\(\) \{\n.*?^\}', script)
+        failure = re.search(r'(?m)^fail\(\)\{[^\n]+$', script)
+        assert function is not None and failure is not None
+        cls.body = 'set -Eeuo pipefail\numask 077\n' + failure.group() + '\n' + function.group() + '\n'
+
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.runner = self.root / 'runner temp'
+        self.runner.mkdir()
+        self.private = self.root / 'signer-private'
+        self.private.mkdir()
+        self.readback = self.private / 'readback'
+        self.readback.mkdir()
+        self.apk_bytes = b'PK\x03\x04synthetic verified signed APK\x00'
+        self.digest = hashlib.sha256(self.apk_bytes).hexdigest()
+        self.filename = f'Continuum-Lokal-{self.digest}.apk'
+        self.apk = self.readback / self.filename
+        self.apk.write_bytes(self.apk_bytes)
+        self.info = self.private / 'BUILD-INFO.txt'
+        self.info_bytes = (
+            f'source_sha={"a"*40}\nsource_tree={"b"*40}\nversionCode=59\nversionName=0.3.58\n'
+            'package=at.heinz.deviceai.continuumlocal\n'
+            'original_signer_sha256=6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23\n'
+            f'apk_sha256={self.digest}\napk_bytes={len(self.apk_bytes)}\nqa_run_id=12345678\n'
+            'native_runtime=EMULATOR_API35_DISPOSABLE_PACKAGE_PASS\nfold7_test=NOT_RUN\n'
+            'status=ORIGINAL_SIGNED_UNPUBLISHED_DRAFT\n').encode()
+        self.info.write_bytes(self.info_bytes)
+        (self.private / 'original.p12').write_bytes(b'SYNTHETIC PRIVATE FILE MUST NOT BE COPIED')
+        (self.private / 'verification.log').write_bytes(b'SYNTHETIC LOG MUST NOT BE COPIED')
+        self.output = self.runner / 'continuum-code59-signed-draft'
+
+    def run_handoff(self, runner=None, digest=None, prefix=''):
+        return subprocess.run(['bash', '-c', self.body + prefix + '\nretain_verified_draft "$1" "$2" "$3"',
+                               'synthetic-handoff', str(self.apk), str(self.info), digest or self.digest],
+            cwd=self.root, env={'PATH': os.environ['PATH'], 'RUNNER_TEMP': str(self.runner) if runner is None else runner},
+            capture_output=True, text=True, timeout=10)
+
+    def rejected(self, result, reason):
+        self.assertEqual(69, result.returncode, result.stderr)
+        self.assertIn('CODE59_SIGN_' + reason, result.stderr)
+
+    def test_only_exact_readback_apk_and_build_info_are_retained(self):
+        result = self.run_handoff()
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual({self.filename, 'BUILD-INFO.txt'}, {p.name for p in self.output.iterdir()})
+        self.assertEqual(self.apk_bytes, (self.output / self.filename).read_bytes())
+        self.assertEqual(self.info_bytes, (self.output / 'BUILD-INFO.txt').read_bytes())
+        self.assertEqual(self.digest, hashlib.sha256((self.output / self.filename).read_bytes()).hexdigest())
+        self.assertEqual(0o700, self.output.stat().st_mode & 0o777)
+        self.assertTrue((self.private / 'original.p12').exists())
+
+    def test_changed_readback_bytes_are_rejected_before_output(self):
+        self.apk.write_bytes(self.apk_bytes + b'changed')
+        self.rejected(self.run_handoff(), 'HANDOFF_SOURCE_DIGEST')
+        self.assertFalse(self.output.exists())
+
+    def test_invalid_digest_cannot_form_an_upload_path(self):
+        for value in ('../escape', 'a'*63, 'A'*64):
+            with self.subTest(value=value):
+                self.rejected(self.run_handoff(digest=value), 'HANDOFF_DIGEST_INVALID')
+                self.assertFalse(self.output.exists())
+
+    def test_build_info_requires_matching_bytes_hash_and_draft_status(self):
+        for old, new in (
+            (self.digest, 'c'*64),
+            (f'apk_bytes={len(self.apk_bytes)}', 'apk_bytes=1'),
+            ('ORIGINAL_SIGNED_UNPUBLISHED_DRAFT', 'PUBLISHED'),
+            (f'apk_sha256={self.digest}\n', f'apk_sha256={self.digest}\napk_sha256={self.digest}\n'),
+        ):
+            with self.subTest(old=old):
+                self.info.write_text(self.info_bytes.decode().replace(old, new))
+                self.rejected(self.run_handoff(), 'HANDOFF_BUILD_INFO_INVALID')
+                self.assertFalse(self.output.exists())
+
+    def test_missing_or_linked_inputs_are_rejected(self):
+        for path in (self.apk, self.info):
+            original = path.read_bytes()
+            path.unlink()
+            self.rejected(self.run_handoff(), 'HANDOFF_INPUT_INVALID')
+            target = path.with_name(path.name + '.target')
+            target.write_bytes(original)
+            path.symlink_to(target)
+            self.rejected(self.run_handoff(), 'HANDOFF_INPUT_INVALID')
+            path.unlink()
+            path.write_bytes(original)
+            self.assertFalse(self.output.exists())
+
+    def test_runner_temp_must_be_a_fixed_physical_directory(self):
+        alias = self.root / 'runner-alias'
+        alias.symlink_to(self.runner, target_is_directory=True)
+        for value in ('', '/', 'relative', str(self.root / 'missing'), str(alias), str(self.runner) + '/../runner temp'):
+            with self.subTest(value=value):
+                self.rejected(self.run_handoff(runner=value), 'HANDOFF_RUNNER_TEMP_INVALID')
+                self.assertFalse(self.output.exists())
+
+    def test_existing_or_linked_destination_is_never_overwritten(self):
+        self.output.mkdir()
+        sentinel = self.output / 'keep.txt'
+        sentinel.write_bytes(b'unchanged')
+        self.rejected(self.run_handoff(), 'HANDOFF_DESTINATION_EXISTS')
+        self.assertEqual(b'unchanged', sentinel.read_bytes())
+        sentinel.unlink()
+        self.output.rmdir()
+        self.output.symlink_to(self.private, target_is_directory=True)
+        self.rejected(self.run_handoff(), 'HANDOFF_DESTINATION_EXISTS')
+        self.assertEqual(self.info_bytes, self.info.read_bytes())
+
+    def test_apk_corruption_during_copy_is_rejected(self):
+        injection = 'cp(){ command cp "$@"; if [[ "${@: -1}" == *.apk ]]; then printf corrupt > "${@: -1}"; fi; }'
+        self.rejected(self.run_handoff(prefix=injection), 'HANDOFF_COPY_DIGEST')
+
+    def test_build_info_corruption_during_copy_is_rejected(self):
+        injection = 'cp(){ command cp "$@"; if [[ "${@: -1}" == */BUILD-INFO.txt ]]; then printf corrupt > "${@: -1}"; fi; }'
+        self.rejected(self.run_handoff(prefix=injection), 'HANDOFF_INFO_BYTES')
+
+    def test_copy_failure_cannot_complete_handoff(self):
+        self.rejected(self.run_handoff(prefix='cp(){ return 1; }'), 'HANDOFF_APK_COPY')
+        self.assertEqual([], list(self.output.iterdir()))
+
+    def test_extra_upload_candidate_cannot_complete_handoff(self):
+        injection = 'cp(){ command cp "$@"; printf unexpected > "$RUNNER_TEMP/continuum-code59-signed-draft/extra.apk"; }'
+        self.rejected(self.run_handoff(prefix=injection), 'HANDOFF_OUTPUT_FILES')
 
 
 class JunitSkipContractTest(unittest.TestCase):

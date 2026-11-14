@@ -72,6 +72,7 @@ jobs:
       - name: Official Android SDK build tools
         run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"'
       - name: Verify exact source, sign with original key, retain unpublished draft only
+        id: signed_draft
         shell: bash
         env:
           ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
@@ -79,3 +80,13 @@ jobs:
         run: |
           set -Eeuo pipefail
           bash scripts/continuum-code57-original-signer.sh sign
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: success() && steps.signed_draft.outcome == 'success'
+        with:
+          name: Code59-ORIGINAL-SIGNED-DRAFT
+          path: |
+            ${{ runner.temp }}/continuum-code59-signed-draft/Continuum-Lokal-*.apk
+            ${{ runner.temp }}/continuum-code59-signed-draft/BUILD-INFO.txt
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
