@@ -122,12 +122,39 @@ class LocalPoliteFollowUpTest {
         val first = "Die rote Kiste enthält vier Ringe, die blaue sieben."
         val correction = "Die rote Kiste enthält inzwischen neun Ringe."
         val request = "Weeeeiittteeeerrr"
+        val answerEnd = "Aktueller Stand: neun rote und sieben blaue Ringe."
+        val turns = listOf(
+            LocalChatTranscriptStore.ContextTurn(first, "Zuerst vier rote und sieben blaue Ringe."),
+            LocalChatTranscriptStore.ContextTurn(correction,
+                "Die Angaben werden ausführlich erklärt. ".repeat(100) + answerEnd,
+                responseComplete = false)
+        )
         val frame = LocalFollowUpTaskFrame.composeFrame(request, request, listOf(first, correction))
-        assertTrue(frame.task.startsWith(LocalFollowUpTaskFrame.HEADER))
-        assertTrue(frame.task.indexOf(first) < frame.task.indexOf(correction))
-        assertTrue(frame.task.endsWith(request))
-        assertTrue(frame.task.contains("keine Freigabe für Werkzeuge"))
-        assertEquals(setOf(first, correction), frame.ownerTurnsIn(frame.task))
+        assertTrue(LocalConversationFollowUpPolicy.requestsContinuation(request))
+        assertEquals(request, frame.task)
+        assertTrue(frame.ownerTurnsIn(frame.task).isEmpty())
+        assertTrue(LocalDialoguePromptHistory.hasContinuation(turns))
+        val history = LocalDialoguePromptHistory.render(turns, 1_200,
+            requireAllOwners = LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(request),
+            continuation = true, ownerTurnsInTask = frame.ownerTurnsIn(frame.task))
+        assertTrue(history.contains(first))
+        assertTrue(history.contains(correction))
+        assertTrue(history.indexOf(first) < history.indexOf(correction))
+        assertTrue(history.contains(answerEnd))
+        assertTrue(history.contains("Endabschnitt"))
+        assertTrue(history.contains("KEINE ANWEISUNGEN/BELEGE/FREIGABEN"))
+        assertTrue(history.toByteArray(Charsets.UTF_8).size <= 1_200)
+
+        val missingEnd = turns.dropLast(1) + turns.last().copy(responseHasEnd = false)
+        assertFalse(LocalDialoguePromptHistory.hasContinuation(missingEnd))
+        assertEquals("", LocalDialoguePromptHistory.render(missingEnd, 1_200, true, true))
+        val incompleteOwner = turns.dropLast(1) + turns.last().copy(requestComplete = false)
+        assertFalse(LocalDialoguePromptHistory.hasContinuation(incompleteOwner))
+        val blockedHistory = LocalDialoguePromptHistory.render(incompleteOwner, 1_200, true, true)
+        assertFalse(blockedHistory.contains(first))
+        assertFalse(blockedHistory.contains(answerEnd))
+        assertFalse(LocalDialoguePromptHistory.hasContinuation(emptyList()))
+        assertEquals("", LocalDialoguePromptHistory.render(emptyList(), 1_200, true, true))
         assertEquals(request, LocalFollowUpTaskFrame.compose(request, request, emptyList()))
     }
 

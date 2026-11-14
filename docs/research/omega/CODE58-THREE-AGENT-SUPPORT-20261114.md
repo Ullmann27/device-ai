@@ -34,6 +34,9 @@ exact-source completion receipt. No device claim.
 Completed host tests use Java 21, Kotlin 2.2.0 and actual JUnit 4.13.2:
 
 - Context: 37 tests, five baseline failures, zero after repair.
+  A concurrent continuation addition extends the same suite to 40 tests; its
+  single reproduced test-contract error is repaired through the actual history
+  path below. Final host result: 40/40.
 - Avatar: seven tests, four baseline failures, zero after repair.
 - Research: three new baseline failures; independent review found two further
   subquestion regressions and two length regressions. The repaired engine and
@@ -65,3 +68,28 @@ Research regression SHA-256:
 `343d7fe2fce2618050bfe1361a2dac61ead7d65575792e4b6945d764bad11814`.
 Research length regression SHA-256:
 `513be6df66e55875c7ccc3d3d5cec70ca05205b34c5019b072977d21d9412f04`.
+
+## Concurrent continuation follow-up
+
+The shared branch advanced to `5c1a14e53e9b88b394f47aa56554aa11e2441005`, preserving
+the complete support changes and adding bounded repeated-letter recognition
+for owner continuation requests. This addition is retained unchanged.
+
+Its original new test expected a `LocalFollowUpTaskFrame`, although native
+continuations deliberately bypass that frame. Exact-source host execution
+reproduced 40 tests / 1 failure. The repaired test exercises the actual
+`LocalDialoguePromptHistory` path used through `LocalConversationContext` by
+`AgentActivity`: complete chronological owner turns, the last answer's real
+ending under a 1200-byte budget, unchanged current request, no false history
+deduplication, and rejection of missing answer-end or incomplete owner data.
+The continuation regex, frame contract and production pipeline are unchanged.
+The original 100 spelling variants and 20 negative controls remain present.
+Final host run: 40/40; these are JUnit methods, not the variant count.
+
+The preceding `2c1a81c6abddbf3bc1ff442eed56776a6f1860b1` run 43567432907 passed
+184/184 selected Android/Robolectric tests and the unsigned ARM64 build. It does
+not verify this subsequent addition. The existing workflow now requires all
+three continuation methods; PR #839 records the combined 187-case run and build.
+
+Final context regression SHA-256:
+`5fe1156adb77a076bbc5dad4a7a482932454b69a9511b40590e681053c0f9bd2`.
