@@ -8,8 +8,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: code58-fold7-boot-proof
-  cancel-in-progress: true
+  group: code58-fold7-boot-proof-${{ github.sha }}
+  cancel-in-progress: false
 
 jobs:
   android-regression:

@@ -4,6 +4,15 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class LocalNativePromptBudgetTest {
+    @Test fun textOnlyBudgetReclaimsToolPrefaceWithoutClaimingMoreThan4096NativeTokens() {
+        val toolBound = LocalNativePromptBudget.promptByteBudget(4096, 1900, 2048)!!
+        val textOnly = LocalNativePromptBudget.toolFreePromptByteBudget(4096, 2048)!!
+        assertTrue("Tool-free text input should have significantly more room", textOnly > toolBound * 2)
+        assertTrue(textOnly > 0)
+        assertTrue(textOnly <= LocalToolContinuation.MAX_INPUT_BYTES)
+        assertEquals(null, LocalNativePromptBudget.toolFreePromptByteBudget(0, 2048))
+    }
+
     @Test fun explicitCapacityDoesNotIncreasePhoneContext() {
         assertEquals(4096, LocalNativePromptBudget.contextCapacity(0))
         assertEquals(4096, LocalNativePromptBudget.contextCapacity(32768))

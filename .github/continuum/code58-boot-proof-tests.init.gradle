@@ -10,6 +10,8 @@ gradle.projectsEvaluated {
             includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerDocumentIntentTest'
             includeTestsMatching 'at.heinz.deviceai.cognitive.DocumentDraftPromptTest'
             includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalTextOnlyInferenceRouteTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalNativePromptBudgetTest'
             failOnNoMatchingTests = true
         }
     }
