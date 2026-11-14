@@ -35,6 +35,10 @@ class HologramFixture:
                   'texture': {**view, 'class': 'android.view.TextureView', 'identity': 11},
                   'ancestors': [{**view, 'class': 'com.android.internal.policy.DecorView', 'identity': 12}],
                   'surface_identity': 13, 'surface_texture_identity': 14,
+                  'native_renderer_identity': 15, 'engine_identity': 16, 'asset_identity': 17,
+                  'scene_identity': 18, 'renderer_identity': 19, 'cockpitStage_identity': 20,
+                  'swapChain_identity': 21, 'consumer_generation': 1,
+                  'worldBufferWidth': 2, 'worldBufferHeight': 2,
                   'viewport_width': 2, 'viewport_height': 2, 'scene_entities': 2}
         sample.update(dict.fromkeys(('texture_available', 'texture_parent_is_hologram', 'surface_valid',
                       'renderer_present', 'cockpit_ready', 'native3dDrawn', 'headEnabled', 'head3dEnabled',
@@ -47,7 +51,7 @@ class HologramFixture:
             'outcome': 'DIAGNOSTIC_CAPTURED', 'package': 'at.heinz.deviceai.mentorpaired',
             'sdk': 35, 'hardware': 'ranchu', 'pid': 100, 'loading_observation_complete': True,
             'comparison_first_sample': 0, 'comparison_second_sample': 1, 'samples': samples,
-            'started_elapsed_nanos': 900_000_000, 'finished_elapsed_nanos': 4_000_000_000,
+            'started_elapsed_nanos': 900_000_000, 'finished_elapsed_nanos': 8_000_000_000,
             'actions': [{'button': 'NEIN'}], 'texture_readback': {'thread': 'main',
                 'queued_elapsed_nanos': 3_300_000_000, 'returned_elapsed_nanos': 3_400_000_000},
             'pixel_copy': {'status': 0, 'source_identity': 13, 'started_elapsed_nanos': 3_500_000_000,
@@ -60,6 +64,29 @@ class HologramFixture:
             else:
                 self.report[key] = metadata
         self.report['screen'].update(started_elapsed_nanos=3_100_000_000, finished_elapsed_nanos=3_200_000_000)
+        before = copy.deepcopy(samples[-1])
+        before.update(elapsed_nanos=4_100_000_000, texture_is_texture_view=True)
+        proof = {'status': 'PASSED', 'started_elapsed_nanos': 4_000_000_000,
+                 'finished_elapsed_nanos': 7_000_000_000, 'before': before,
+                 'unchanged': {'same_dimensions_preserved': True, 'monitor_pose_preserved': True},
+                 'stage': {}, 'texture_layout': {}}
+        previous = before
+        for index, (group, changed_key, rendered_key) in enumerate((
+                ('stage', 'changed', 'rendered'), ('stage', 'restored', 'restored_rendered'),
+                ('texture_layout', 'changed', 'rendered'), ('texture_layout', 'restored', 'restored_rendered'))):
+            changed = copy.deepcopy(previous)
+            changed.update(elapsed_nanos=4_300_000_000 + index * 600_000_000,
+                           swapChain_identity=30 + index, consumer_generation=2 + index,
+                           native3dDrawn=False, worldBufferWidth=1 if index == 0 else 2)
+            changed['texture'].update(alpha=0, width=1 if index == 2 else 2)
+            rendered = copy.deepcopy(changed)
+            rendered.update(elapsed_nanos=changed['elapsed_nanos'] + 300_000_000,
+                            native3dDrawn=True, viewport_width=changed['worldBufferWidth'],
+                            surface_texture_timestamp=changed['surface_texture_timestamp'] + 100)
+            rendered['texture']['alpha'] = 1
+            proof[group][changed_key], proof[group][rendered_key] = changed, rendered
+            previous = rendered
+        self.report['resize_regression'] = proof
         self.save()
 
     def image(self, name, pixels=None):
@@ -126,6 +153,49 @@ class HologramEvidenceTest(unittest.TestCase):
         result = self.fixture.validate()
         self.assertEqual(result['status'], 'SURFACE_FRAMES_VERIFIED')
         self.assertEqual(result['avatar_content'], 'REQUIRES_IMAGE_REVIEW')
+        self.assertEqual(result['resize'], 'SWAPCHAIN_RESIZE_VERIFIED')
+
+    def test_missing_or_incomplete_resize_evidence_fails(self):
+        proof = self.fixture.report.pop('resize_regression')
+        with self.assertRaises(KeyError):
+            self.fixture.validate()
+        self.fixture.report['resize_regression'] = proof
+        for status in ('STARTED', 'FAILED', None):
+            proof['status'] = status
+            with self.assertRaises(AssertionError):
+                self.fixture.validate()
+
+    def test_replaced_engine_or_retained_swapchain_fails(self):
+        state = self.fixture.report['resize_regression']['stage']['changed']
+        for key, value in (('engine_identity', 99), ('native_renderer_identity', 99),
+                           ('swapChain_identity', 21), ('consumer_generation', 1)):
+            with self.subTest(key=key):
+                old = state[key]
+                state[key] = value
+                with self.assertRaises(AssertionError):
+                    self.fixture.validate()
+                state[key] = old
+
+    def test_resized_submission_without_new_consumed_frame_fails(self):
+        stage = self.fixture.report['resize_regression']['stage']
+        stage['rendered']['surface_texture_timestamp'] = stage['changed']['surface_texture_timestamp']
+        with self.assertRaises(AssertionError):
+            self.fixture.validate()
+
+    def test_incomplete_resize_restore_fails(self):
+        proof = self.fixture.report['resize_regression']
+        proof['restore_error'] = 'Restore failed'
+        with self.assertRaises(AssertionError):
+            self.fixture.validate()
+        del proof['restore_error']
+        proof['texture_layout']['restored_rendered']['texture']['width'] = 1
+        with self.assertRaises(AssertionError):
+            self.fixture.validate()
+
+    def test_resize_after_report_finished_fails(self):
+        self.fixture.report['resize_regression']['finished_elapsed_nanos'] = 9_000_000_000
+        with self.assertRaises(AssertionError):
+            self.fixture.validate()
 
     def test_pixelcopy_source_size_is_separate_from_viewport(self):
         for sample in self.fixture.report['samples']:
