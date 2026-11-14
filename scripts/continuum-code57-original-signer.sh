@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
-# Code57 original-certificate APK: protected owner-approved draft only, never publishes.
+# Code58 original-certificate APK: protected owner-approved draft only, never publishes.
 set -Eeuo pipefail
 set +x
 umask 077
-fail(){ printf '::error::CODE57_SIGN_%s\n' "$1" >&2; exit 69; }
+fail(){ printf '::error::CODE58_SIGN_%s\n' "$1" >&2; exit 69; }
 mode="$1"
 [[ "$mode" == preflight || "$mode" == sign ]] || fail BAD_MODE
 repo=Ullmann27/device-ai
 sign_branch=chatgpt/code52-owner-signing-20261109
-source_branch=release/code57-voice-qa-20261113
+source_branch=release/code58-full-qa-20261114
 qa_workflow=.github/workflows/continuum-code57-voice-full-qa.yml
 source_sha="$SOURCE_SHA"
 approved_sha="$OWNER_APPROVED_SHA"
 qa_run="$QA_RUN_ID"
 cert=6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23
 pkg=at.heinz.deviceai.continuumlocal
-unsigned_name=Continuum-Code57-UNSIGNED-NOT-INSTALLABLE.apk
-tag="continuum-local-code57-$source_sha"
+unsigned_name=Continuum-Code58-UNSIGNED-NOT-INSTALLABLE.apk
+tag="continuum-local-code58-$source_sha"
 [[ "$GITHUB_REPOSITORY" == "$repo" ]] || fail WRONG_REPOSITORY
 [[ "$GITHUB_REF" == "refs/heads/$sign_branch" ]] || fail WRONG_SIGN_BRANCH
 [[ "$GITHUB_EVENT_NAME" == push ]] || fail WRONG_EVENT
@@ -38,7 +38,7 @@ gh api "repos/$repo/environments/continuum-original-signing/deployment-branch-po
 jq -e --arg b "$sign_branch" '.branch_policies|length==1 and .[0].name==$b and .[0].type=="branch"' "$tmp/branch.json" >/dev/null || fail EXACT_SIGN_BRANCH_REQUIRED
 echo CHECKPOINT=OWNER_REVIEW_AND_BRANCH_POLICY_VERIFIED
 
-# The exact four-job, push-triggered Code57 QA run must be fully successful.
+# The exact four-job, push-triggered Code58 QA run must be fully successful.
 gh api "repos/$repo/actions/runs/$qa_run" > "$tmp/run.json" || fail QA_RUN_READ
 jq -e --arg s "$source_sha" --arg b "$source_branch" --arg w "$qa_workflow" --argjson id "$qa_run" '
  .id==$id and .head_sha==$s and .head_branch==$b and .repository.full_name=="Ullmann27/device-ai"
@@ -90,9 +90,9 @@ with zipfile.ZipFile(archive) as z:
         with z.open(e) as a,t.open('xb') as b: shutil.copyfileobj(a,b)
 PY
 }
-proof Code57-UNSIGNED-NOT-INSTALLABLE unsigned
-proof Code57-Android-full-QA android
-proof Code57-Node-backend-QA node
+proof Code58-UNSIGNED-NOT-INSTALLABLE unsigned
+proof Code58-Android-full-QA android
+proof Code58-Node-backend-QA node
 echo CHECKPOINT=SHA_BOUND_ARTIFACTS_VERIFIED
 
 # Recompute actual JUnit results and preserve the declared 17-skip contract.
@@ -117,30 +117,30 @@ print('CHECKPOINT=STRICT_JUNIT_17_SKIPS_AND_LINT_VERIFIED')
 PY
 
 # Verify original APK package and immutable version.
-unsigned="$(find "$tmp/unsigned" -type f -name Continuum-Code57-UNSIGNED-NOT-INSTALLABLE.apk -print -quit)"
+unsigned="$(find "$tmp/unsigned" -type f -name Continuum-Code58-UNSIGNED-NOT-INSTALLABLE.apk -print -quit)"
 [[ -n "$unsigned" && -s "$unsigned" ]] || fail UNSIGNED_APK_MISSING
-[[ "$(find "$tmp/unsigned" -type f -name Continuum-Code57-UNSIGNED-NOT-INSTALLABLE.apk|wc -l)" == 1 ]] || fail DUPLICATE_APK
+[[ "$(find "$tmp/unsigned" -type f -name Continuum-Code58-UNSIGNED-NOT-INSTALLABLE.apk|wc -l)" == 1 ]] || fail DUPLICATE_APK
 info="$(find "$tmp/unsigned" -type f -name BUILD-INFO.txt -print -quit)"
 hashes="$(find "$tmp/unsigned" -type f -name SHA256SUMS.txt -print -quit)"
 [[ -s "$info" && -s "$hashes" ]] || fail APK_RECEIPT_MISSING
 for field in "source=$source_sha" "source_tree=$source_tree" "package=$pkg" \
-  "versionCode=57" "versionName=0.3.56" "abi=arm64-v8a" \
+  "versionCode=58" "versionName=0.3.57" "abi=arm64-v8a" \
   "status=UNSIGNED_NOT_INSTALLABLE" "fold7_test=NOT_RUN"; do
     grep -Fxq "$field" "$info" || fail SOURCE_APK_RECEIPT_INVALID
 done
 unsigned_sha="$(sha256sum "$unsigned"|cut -d' ' -f1)"
-grep -Eq "^$unsigned_sha[[:space:]]+.*Continuum-Code57-UNSIGNED-NOT-INSTALLABLE[.]apk$" "$hashes" || fail APK_CHECKSUM_INVALID
+grep -Eq "^$unsigned_sha[[:space:]]+.*Continuum-Code58-UNSIGNED-NOT-INSTALLABLE[.]apk$" "$hashes" || fail APK_CHECKSUM_INVALID
 tools="$ANDROID_HOME/build-tools/35.0.0"
 [[ -x "$tools/aapt2" && -x "$tools/apksigner" && -x "$tools/zipalign" ]] || fail SIGNING_TOOLS_MISSING
 "$tools/aapt2" dump badging "$unsigned" > "$tmp/badging" || fail UNSIGNED_BADGING
-grep -Fq "package: name='$pkg' versionCode='57' versionName='0.3.56'" "$tmp/badging" || fail PACKAGE_MISMATCH
+grep -Fq "package: name='$pkg' versionCode='58' versionName='0.3.57'" "$tmp/badging" || fail PACKAGE_MISMATCH
 grep -Fxq "native-code: 'arm64-v8a'" "$tmp/badging" || fail ABI_MISMATCH
 "$tools/zipalign" -c -P 16 -v 4 "$unsigned" >/dev/null || fail ALIGNMENT_INVALID
 if "$tools/apksigner" verify "$unsigned" >/dev/null 2>&1;then fail UNEXPECTED_SIGNED_APK;fi
 latest="$(gh api "repos/$repo/releases/latest" --jq '.tag_name')" || fail LATEST_READ
 [[ "$latest" == continuum-local-code55-889e06d47fffd2230fa5b062dd1f31b65992e728 ]] || fail LATEST_BASELINE_CHANGED
-if gh release view "$tag" --repo "$repo" >/dev/null 2>&1;then fail DUPLICATE_CODE57_RELEASE;fi
-echo CHECKPOINT=CODE57_SIGNING_PREFLIGHT_VALID
+if gh release view "$tag" --repo "$repo" >/dev/null 2>&1;then fail DUPLICATE_CODE58_RELEASE;fi
+echo CHECKPOINT=CODE58_SIGNING_PREFLIGHT_VALID
 [[ "$mode" == sign ]] || { echo STATUS=AWAITING_OWNER_REVIEW;exit 0; }
 
 # Secrets only in the environment-protected job after exact-owner approval.
@@ -166,15 +166,15 @@ grep -Fqx 'Verified using v2 scheme (APK Signature Scheme v2): true' "$tmp/verif
 grep -Fqx "Signer #1 certificate SHA-256 digest: $cert" "$tmp/verification" || fail SIGNER_CERT_MISMATCH
 "$tools/zipalign" -c -P 16 -v 4 "$tmp/signed.apk" >/dev/null || fail SIGNED_ALIGNMENT
 "$tools/aapt2" dump badging "$tmp/signed.apk" > "$tmp/signed-badging"
-grep -Fq "package: name='$pkg' versionCode='57' versionName='0.3.56'" "$tmp/signed-badging" || fail SIGNED_BADGING
+grep -Fq "package: name='$pkg' versionCode='58' versionName='0.3.57'" "$tmp/signed-badging" || fail SIGNED_BADGING
 digest="$(sha256sum "$tmp/signed.apk"|cut -d' ' -f1)"
 apk="Continuum-Lokal-$digest.apk"
 mv "$tmp/signed.apk" "$tmp/$apk"
 cat > "$tmp/BUILD-INFO.txt" <<INFO
 source_sha=$source_sha
 source_tree=$source_tree
-versionCode=57
-versionName=0.3.56
+versionCode=58
+versionName=0.3.57
 package=$pkg
 original_signer_sha256=$cert
 apk_sha256=$digest
@@ -184,22 +184,22 @@ fold7_test=NOT_RUN
 status=ORIGINAL_SIGNED_UNPUBLISHED_DRAFT
 INFO
 cat > "$tmp/notes.txt" <<NOTES
-Continuum 0.3.56 (Code57), originalsignierter Besitzer-Testkandidat.
+Continuum 0.3.57 (Code58), originalsignierter Besitzer-Testkandidat.
 Quell-SHA: $source_sha
 GitHub-QA: https://github.com/$repo/actions/runs/$qa_run
-Paket: $pkg / versionCode 57 / originaler Fingerabdruck $cert.
+Paket: $pkg / versionCode 58 / originaler Fingerabdruck $cert.
 Fold7-Realtests nicht ausgefuehrt. Bestehende App-Daten nicht loeschen, nur als Update installieren.
 Nicht veroeffentlicht; nur fuer den Besitzer freigegebener Testentwurf.
 NOTES
 gh release create "$tag" "$tmp/$apk" "$tmp/BUILD-INFO.txt" --repo "$repo" --target "$source_sha" \
-  --title 'Continuum Lokal 0.3.56 (Code57)' --notes-file "$tmp/notes.txt" --draft --latest=false >/dev/null || fail GITHUB_DRAFT_CREATE
+  --title 'Continuum Lokal 0.3.57 (Code58)' --notes-file "$tmp/notes.txt" --draft --latest=false >/dev/null || fail GITHUB_DRAFT_CREATE
 mkdir "$tmp/readback"
 gh release download "$tag" --repo "$repo" --pattern "$apk" --dir "$tmp/readback" >/dev/null || fail DRAFT_DOWNLOAD
 cmp -s "$tmp/$apk" "$tmp/readback/$apk" || fail DRAFT_BYTES_MISMATCH
 "$tools/apksigner" verify --verbose --print-certs "$tmp/readback/$apk" > "$tmp/draft-cert" || fail DRAFT_SIGNATURE_INVALID
 grep -Fqx "Signer #1 certificate SHA-256 digest: $cert" "$tmp/draft-cert" || fail DRAFT_CERT_MISMATCH
 [[ "$(gh api "repos/$repo/releases/latest" --jq '.tag_name')" == "$latest" ]] || fail UNAUTHORIZED_PUBLICATION
-echo CHECKPOINT=CODE57_SIGNED_GITHUB_DRAFT_READBACK_VERIFIED
+echo CHECKPOINT=CODE58_SIGNED_GITHUB_DRAFT_READBACK_VERIFIED
 echo STATUS=SIGNED_DRAFT_NOT_PUBLISHED
 echo "DRAFT_RELEASE_TAG=$tag"
 echo "APK_SHA256=$digest"
