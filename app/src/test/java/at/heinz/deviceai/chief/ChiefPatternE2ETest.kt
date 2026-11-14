@@ -10,6 +10,7 @@ import at.heinz.deviceai.SkillKey
 import at.heinz.deviceai.SkillStatus
 import at.heinz.deviceai.SkillVersion
 import at.heinz.deviceai.ToolCallRequest
+import at.heinz.deviceai.ToolBackendFailure
 import at.heinz.deviceai.ToolExecutionStatus
 import at.heinz.deviceai.ToolGate
 import at.heinz.deviceai.ToolInvocation
@@ -46,6 +47,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Ignore
 import org.junit.Test
 import java.util.Collections
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutionException
@@ -195,14 +197,85 @@ class ChiefPatternE2ETest {
         }
     }
 
-    @Ignore("PENDING Punkt 2 (HAUPT): Es gibt noch keine Chief/Arbeiter-API mit eigenem Auftrag, eigener " +
-        "Werkzeug-Whitelist und strukturiertem Bericht zurueck. Heute ist ein 'Arbeiter' nur ein zweiter " +
-        "BoundedAgentOrchestrator-Lauf; docs/CHIEF-PATTERN.md existiert auf #373 noch nicht.")
     @Test
     fun s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack() {
-        // SCHARF: Chief.delegate(brief, allowedTools = setOf("get_storage_info")) -> WorkerReport;
-        // erwarten: Arbeiter darf kein Werkzeug ausserhalb seiner Whitelist vorschlagen/ausfuehren,
-        // Bericht kommt genau einmal an den Chief, Chief beendet die Nutzerrunde mit dem Bericht.
+        val briefs = ConcurrentLinkedQueue<WorkerBrief>()
+        val tasks = ConcurrentLinkedQueue<Pair<String, String>>()
+        val backendCalls = ConcurrentLinkedQueue<String>()
+        val approvals = ConcurrentLinkedQueue<String>()
+        val reports = ConcurrentLinkedQueue<WorkerReport>()
+        val ownerReplies = ConcurrentLinkedQueue<String>()
+        val runner = ToolRunner { call -> backendCalls += call.name; "128 GB frei" }
+        val pool = ChiefWorkerPool(1, 0) { brief ->
+            briefs += brief
+            ChiefJobs.agentJob(brief, ChiefJobDeps(
+                model = AgentModel { task, _, _, observations ->
+                    tasks += brief.id to task
+                    when {
+                        brief.id == "storage-outside" -> AgentModelOutput("worker", "",
+                            ToolProposal("get_battery_info", emptyMap()))
+                        observations.isEmpty() -> AgentModelOutput("worker", "",
+                            ToolProposal("get_storage_info", emptyMap()))
+                        else -> AgentModelOutput("worker", "Speicher: ${observations.single().output}")
+                    }
+                },
+                runner = runner, policy = ToolPolicy(readOnlyEnabled = true), memory = null,
+                evaluator = AgentEvaluator { _, record ->
+                    Evaluation(record?.status == ToolExecutionStatus.SUCCEEDED, 0.9)
+                },
+                experienceStore = InMemoryExperienceStore(),
+                approvalProvider = { proposal, _ ->
+                    approvals += proposal.toolName
+                    AgentToolApproval(false)
+                }
+            ))
+        }
+        try {
+            val chief = ChiefDelegationCoordinator(pool, approveSpecialist = { true })
+            assertTrue(chief.register(ChiefSpecialist("storage-worker", setOf("storage"),
+                setOf("get_storage_info", "get_battery_info"))))
+            val requests = listOf(
+                ChiefDelegation("storage-read", "Prüfe freien Speicher.", "storage", setOf("get_storage_info")),
+                ChiefDelegation("storage-outside", "Prüfe Speicher erneut.", "storage", setOf("get_storage_info"))
+            )
+            for (request in requests) {
+                val turn = TurnLifecycle(request.taskId)
+                assertEquals(TurnLifecycle.ACK_TEXT, turn.acknowledge())
+                val receive: (WorkerReport) -> Unit = { report ->
+                    reports += report
+                    if (turn.deliver()) ownerReplies += report.summary
+                }
+                assertEquals(ChiefDispatchOutcome.SUBMITTED, chief.delegate(request, receive))
+                assertTrue("Workerbericht fehlt", pool.awaitIdle(5_000))
+                assertEquals(ChiefDispatchOutcome.DUPLICATE_TASK, chief.delegate(request, receive))
+                assertEquals(TurnPhase.ENDED, turn.phase)
+                assertFalse(turn.deliver())
+            }
+
+            assertEquals(requests.map { WorkerBrief(it.taskId, it.goal, it.requestedTools, it.deadlineMillis) },
+                briefs.toList())
+            assertEquals(listOf(requests[0].taskId to requests[0].goal,
+                requests[0].taskId to requests[0].goal, requests[1].taskId to requests[1].goal), tasks.toList())
+            assertEquals(listOf("get_storage_info"), backendCalls.toList())
+            assertTrue(approvals.isEmpty())
+            assertEquals(listOf(WorkerStatus.DONE, WorkerStatus.BLOCKED), reports.map { it.status })
+            assertEquals(requests.map { it.taskId }, reports.map { it.id })
+            assertEquals("Speicher: 128 GB frei", reports.first().summary)
+            assertEquals("Werkzeug get_battery_info ist für Auftrag storage-outside nicht freigegeben.",
+                reports.last().summary)
+            assertEquals(reports.map { it.summary }, ownerReplies.toList())
+            assertTrue(chief.activeAssignments().isEmpty())
+
+            val refused = assertThrows(ToolBackendFailure::class.java) {
+                WorkerScope.runner(briefs.first(), runner).execute(
+                    ToolCallRequest("scope-backend", "get_battery_info", emptyMap()))
+            }
+            assertEquals(ToolExecutionStatus.FAILED, refused.status)
+            assertEquals(listOf("get_storage_info"), backendCalls.toList())
+            assertEquals(2, reports.size)
+        } finally {
+            pool.shutdown()
+        }
     }
 
     // ---------------------------------------------------------------- Punkt 3
