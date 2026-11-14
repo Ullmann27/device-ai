@@ -11495,6 +11495,10 @@ class AgentActivity : Activity() {
             },
             // the same confirmed owner facts the chat answers from, plus the agent's own memories
             memories = { if(codingPlanning == null && botTask == null) memoryStore.all() + ownerFactMemories() else emptyList() },
+            thinkingMemory = if (codingPlanning == null && botTask == null) {
+                { at.heinz.deviceai.learning.ContinuumThinkingMemory(filesDir,
+                    ContinuumLearningCore.withAutomaticRecovery(filesDir)) }
+            } else null,
             toolGate = createToolGate(ownerTurn = text, consentRevisionAtTurnStart = internetRevisionAtTurnStart,
                 ephemeralScreenContext = ephemeralScreenRun::get, botTask = botTask),
             evaluator = AgentEvaluator { response, _ ->

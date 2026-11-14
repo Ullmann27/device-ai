@@ -779,6 +779,7 @@ class ContinuumLearningCore private constructor(
         }
 
     fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) { signedOwnerMutation {
+        ContinuumThinkingMemory.revokeForOwnerMutation(directory)
         dialogue.clear()
         store.updateMatching(
             LearningExperienceType.USER_FACT,content.trim(),
@@ -787,6 +788,7 @@ class ContinuumLearningCore private constructor(
     } }
 
     fun revokeAllOwnerFacts():Int=synchronized(CORE_LOCK) { signedOwnerMutation {
+        ContinuumThinkingMemory.revokeForOwnerMutation(directory)
         dialogue.clear()
         store.updateMatching(
             LearningExperienceType.USER_FACT,null,
@@ -1235,7 +1237,7 @@ class ContinuumLearningCore private constructor(
         /** (hits, misses) of the ledger-view cache, process-wide. */
         internal fun ledgerViewCacheStats():Pair<Long,Long> = viewCacheHits.get() to viewCacheMisses.get()
 
-        private val CORE_LOCK=Any()
+        internal val CORE_LOCK=Any()
 
         private data class StatusHoldouts(
             val checkpoint:ByteArray?,
