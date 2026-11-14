@@ -82,7 +82,8 @@ class RoutineDispatcher(
     private val resultDigest: (Routine, String) -> String = { _, value -> value },
     private val onAdmission: (WorkerBrief) -> Unit = {},
     private val onRetired: (String) -> Unit = {},
-    private val onStorageFailure: (Exception) -> Unit = {}
+    private val onStorageFailure: (Exception) -> Unit = {},
+    private val reportWhen: (Routine, String) -> Boolean = { _, _ -> true }
 ) {
     private class Delivery(
         val report: RoutineReport,
@@ -192,12 +193,12 @@ class RoutineDispatcher(
         val compared = if (report.status == WorkerStatus.DONE) runCatching {
             resultDigest(claim.routine, report.summary).also {
                 require(!book.persistent || it.length <= at.heinz.deviceai.routines.RoutineStoredState.MAX_RESULT)
-            }
-        } else Result.success("")
+            } to reportWhen(claim.routine, report.summary)
+        } else Result.success("" to true)
         val delivery = synchronized(book) {
             val routine = claim.routine
             if (inFlight[routine.id] !== claim || pending[routine.id] != null) return
-            val prepared = book.prepareReport(claim, compared.getOrDefault(""))
+            val prepared = book.prepareReport(claim, compared.getOrNull()?.first ?: "")
             if (prepared == null) {
                 retire(claim)
                 return
@@ -206,7 +207,9 @@ class RoutineDispatcher(
                 "Routine ${routine.id}: Ergebnisvergleich fehlgeschlagen " +
                     "(${compared.exceptionOrNull()!!.javaClass.simpleName}). Messwert bleibt unbewertet.", now)
             else when (report.status) {
-                WorkerStatus.DONE -> (prepared.outcome as? RoutineOutcome.News)?.let {
+                WorkerStatus.DONE -> (prepared.outcome as? RoutineOutcome.News)?.takeIf {
+                    compared.getOrThrow().second
+                }?.let {
                     message(claim, AgentPriority.INFO, if (book.persistent)
                         "Routine ${routine.id}:\n" + report.summary else it.summary, now)
                 }
