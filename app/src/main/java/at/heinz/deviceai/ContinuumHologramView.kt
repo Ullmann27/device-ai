@@ -814,7 +814,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             return
         }
         cancelAvatarProof()
-        setNative3dEnabled(true)
+        // A diagnostic must never change the owner's native 3D selection or persist preferences.
         avatarProofStartCallbacks = visibleFrameCount
         avatarProofStartDraws = drawnFrameCount
         avatarProofStartTraceFrame = avatarTrace.frameNumber()
