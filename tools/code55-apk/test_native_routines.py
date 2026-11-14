@@ -78,7 +78,7 @@ class RoutineEvidenceTest(unittest.TestCase):
         self.raw('schedule-state', b'waiting\n')
         service = proof.PACKAGE + '/at.heinz.deviceai.routines.OwnerRoutineJobService'
         self.raw('schedule-dump', f'  JOB #u0a209/620159: test\n    Service: {service}\n    PERIODIC: interval=+15m0s0ms flex=+15m0s0ms\n    PERSISTED\n'.encode())
-        self.raw('schedule-after-stop', b'', 23,
+        self.raw('schedule-after-stop', b'unknown(u0a209/jid620159)\n', 23,
                  f'Could not find job 620159 in package {proof.PACKAGE} / user 0\n'.encode())
 
     def verify(self):
@@ -156,6 +156,32 @@ class RoutineEvidenceTest(unittest.TestCase):
         self.raw('schedule-after-stop', b'waiting\n')
         with self.assertRaises(AssertionError):
             self.verify()
+
+    def test_job_absence_requires_exact_channels_and_exit(self):
+        stdout = b'unknown(u0a209/jid620159)\n'
+        stderr = f'Could not find job 620159 in package {proof.PACKAGE} / user 0\n'.encode()
+        invalid = [(0, stdout, stderr), (1, stdout, stderr), (False, stdout, stderr),
+                   (23, b'', stderr), (23, stdout + stderr, b''), (23, stderr, stdout),
+                   (23, b'waiting\n', stderr), (23, stdout, b'device offline\n'),
+                   (23, stdout, stderr.replace(b'user 0', b'user 1')),
+                   (23, stdout, stderr.replace(proof.PACKAGE.encode(), b'wrong.package')),
+                   (23, stdout.replace(b'620159', b'620160'), stderr)]
+        for code, out, err in invalid:
+            with self.subTest(code=code, stdout=out, stderr=err):
+                self.complete()
+                self.raw('schedule-after-stop', out, code, err)
+                with self.assertRaises(AssertionError):
+                    self.verify()
+
+    def test_job_absence_must_match_registered_uid(self):
+        self.complete()
+        path = self.directory / 'schedule-after-stop-stdout.txt'
+        path.write_bytes(b'unknown(u0a210/jid620159)\n')
+        with self.assertRaisesRegex(AssertionError, 'identity'):
+            self.verify()
+        dump = self.directory / 'schedule-dump-stdout.txt'
+        dump.write_bytes(dump.read_bytes().replace(b'u0a209', b'u0a210'))
+        self.assertEqual('PASS', self.verify()['android_periodic_registration'])
 
     def test_derived_window_metadata_cannot_replace_original_stdout(self):
         self.complete()
