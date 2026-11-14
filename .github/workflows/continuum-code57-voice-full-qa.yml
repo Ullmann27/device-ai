@@ -372,6 +372,17 @@ jobs:
           )}
           required.add(('FirstThinkingRunE2ETest','schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch'))
           required.add(('FirstThinkingRunE2ETest','schritt6b_lernen_hypotheseUndTagebuchEintrag'))
+          required |= {('RoutineDeliveryTest', name) for name in (
+              'fullMailboxRetainsCompletedEventResult',
+              'fullMailboxRetainsBlockedEventResult',
+              'fullMailboxRetainsFailedEventResult',
+              'pendingDeliveryKeepsRoutineClaimAndPreventsWorkerReplay',
+              'allValidLongRoutineIdsDeliverWithinExistingMailboxBounds',
+              'removingAndReaddingRoutineDiscardsOnlyItsOldPendingReport',
+              'lateRemovedWorkerCannotAcknowledgeReplacementClaim',
+              'urgentRetryKeepsStableMessageAndClaimThroughReentrantWake',
+              'delayedDeliveryAdvancesScheduleOnlyAfterMailboxAccepts'
+          )}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
