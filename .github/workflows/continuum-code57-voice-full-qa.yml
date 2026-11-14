@@ -404,6 +404,17 @@ jobs:
               'deliveryCannotBeAcknowledgedWithoutBoundAppendBytes',
               'invalidSurrogateIsRejectedBeforeReplacingReadableState'
           )}
+          required |= {('PersistentRoutineDeliveryTest', name) for name in (
+              'completedResultRestoresWithoutRepeatingTool',
+              'fullMailboxRetainsOriginalResultAndClaimAcrossReopen',
+              'restoredRunningClaimIsReportedUncertainWithoutRedispatch',
+              'completionWriteFailureRetriesOnlyTheFinishedReport',
+              'ownerStopRevokesRunningClaimBeforeLateResult',
+              'nextPeriodUsesFreshPlanAndUniqueDurableReceipts',
+              'restoredOutboxRechecksRevocationAfterUrgentWake',
+              'digestAdapterFailureStillProducesDurableCompletion'
+          )}
+          required.add(('RoutineRevokedAdmissionContractTest', 'admissionCallbackRevocationPreventsLaterToolStart'))
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
