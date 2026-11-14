@@ -28,7 +28,7 @@ jobs:
             source: ca2c59a89864efc6ad54645ff6099d2e2b9e6b17
     env:
       MEMORY_PHASE: ${{ matrix.phase }}
-      EVIDENCE_DIR: ${{ runner.temp }}/code59-memory-${{ matrix.phase }}
+      EVIDENCE_DIR: ${{ github.workspace }}/code59-memory-${{ matrix.phase }}
     steps:
       - name: Checkout exact harness
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
