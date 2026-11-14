@@ -64,12 +64,30 @@ jobs:
           "$tools/aapt2" dump badging "$apk" > /tmp/code59-badging.txt
           grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='59' versionName='0.3.58'" /tmp/code59-badging.txt
           grep -Fxq "native-code: 'arm64-v8a'" /tmp/code59-badging.txt
+          grep -Eq "^(sdkVersion|minSdkVersion):'26'$" /tmp/code59-badging.txt
+          grep -Fxq "targetSdkVersion:'36'" /tmp/code59-badging.txt
+          if grep -q '^application-debuggable' /tmp/code59-badging.txt; then exit 1; fi
           "$tools/zipalign" -c -P 16 -v 4 "$apk" > /dev/null
           if "$tools/apksigner" verify "$apk" > /dev/null 2>&1; then
             echo "Refusing unexpectedly signed test artifact" >&2
             exit 1
           fi
           mkdir -p code59-evidence
+          python3 -B - "$apk" <<'ELF'
+          import importlib.util, json, os, pathlib, zipfile
+          spec = importlib.util.spec_from_file_location('apk_validator', 'tools/code55-apk/validator.py')
+          validator = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(validator)
+          import sys
+          with zipfile.ZipFile(sys.argv[1]) as archive:
+              assert archive.testzip() is None, 'APK archive integrity'
+              libraries = {n for n in archive.namelist() if n.startswith('lib/') and n.endswith('.so')}
+              assert libraries == validator.EXPECTED_LIBRARIES, libraries
+              results = [validator.check_elf(archive.read(n), n) for n in sorted(libraries)]
+          pathlib.Path('code59-evidence/NATIVE-LIBRARIES.json').write_text(json.dumps({
+              'source_sha': os.environ['GITHUB_SHA'], 'status': 'PASS', 'libraries': results}, indent=2) + '\n')
+          print('CODE59_NATIVE_ELF_16K_PASS', len(results))
+          ELF
           cp "$apk" code59-evidence/Continuum-Code59-UNSIGNED-NOT-INSTALLABLE.apk
           sha256sum code59-evidence/Continuum-Code59-UNSIGNED-NOT-INSTALLABLE.apk > code59-evidence/SHA256SUMS.txt
           printf 'source=%s\nsource_tree=%s\nversionCode=59\nversionName=0.3.58\npackage=at.heinz.deviceai.continuumlocal\nabi=arm64-v8a\nstatus=UNSIGNED_NOT_INSTALLABLE\nfold7_test=NOT_RUN\n' "$GITHUB_SHA" "$(git rev-parse HEAD^{tree})" > code59-evidence/BUILD-INFO.txt
