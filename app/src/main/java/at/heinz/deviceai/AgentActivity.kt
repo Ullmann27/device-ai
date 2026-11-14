@@ -3094,7 +3094,8 @@ class AgentActivity : Activity() {
                     return generated.response
                 }
             }, changed = { runOnUiThread { refreshBotTeam() } },
-            skills = at.heinz.deviceai.learning.ContinuumSkillLibrary(java.io.File(filesDir, "skills"))
+            skills = at.heinz.deviceai.learning.ContinuumSkillLibrary(java.io.File(filesDir, "skills")),
+            sharedKnowledge = ContinuumLearningCore(filesDir)
         ).also { botTeam = it }
         val roster = botRosterDialog ?: ContinuumBotRosterDialog(this,
             botProfiles, backlogExecutor,
@@ -3114,8 +3115,10 @@ class AgentActivity : Activity() {
         roster.show()
     }
 
-    private fun submitBotTeam(id: String, text: String, revision: Long): Boolean {
+    private fun submitBotTeam(id: String, text: String, revision: Long,
+                              shared: at.heinz.deviceai.learning.SharedOwnerKnowledgeGrant?): Boolean {
         if (busy || botLookupPending || isFinishing || isDestroyed || backlogExecutor.isShutdown) return false
+        if (shared != null && ownerFactDeletionPending.get()) return false
         val team = botTeam ?: return false
         val admissionToken = team.admissionToken()
         cancelSpeechInputScope()
@@ -3126,7 +3129,8 @@ class AgentActivity : Activity() {
         botTeamOwnsLane = true
         activeLocalRequest = true
         setBusy(true)
-        onBacklog({ team.submit(id, text, revision, ownerApproved = true, admissionToken = admissionToken) }) { result ->
+        onBacklog({ team.submit(id, text, revision, ownerApproved = true, admissionToken = admissionToken,
+            shared = shared) }) { result ->
             if (result.isFailure) {
                 pendingTeamReply?.takeIf { it.taskId == id }?.let { pendingTeamReply = null }
                 Toast.makeText(this, "Teamauftrag nicht angenommen oder Speicherung unklar. Verlauf prüfen.",
@@ -9828,6 +9832,8 @@ class AgentActivity : Activity() {
      * changed; if the app memory then refuses the change, the revocation is undone.
      */
     private fun reviseOwnerFact(previous: String, replacement: String?) {
+        if (botTeam?.invalidateSharedKnowledge(previous) == true && botTeamOwnsLane && ::localRuntime.isInitialized)
+            localRuntime.cancel()
         onLearningIo(work@{
             val core = ContinuumLearningCore(filesDir)
             val revoked = try { core.revokeOwnerFact(previous) } catch (e: Exception) {
@@ -9852,6 +9858,8 @@ class AgentActivity : Activity() {
     /** Revokes in the learning core first, so a repeated deletion still reaches it. */
     private fun forgetOwnerFacts() {
         if (!ownerFactDeletionPending.compareAndSet(false, true)) return
+        if (botTeam?.invalidateSharedKnowledge() == true && botTeamOwnsLane && ::localRuntime.isInitialized)
+            localRuntime.cancel()
         val affectedTurn = activeOwnerFactCancellation
         activeOwnerFactCancellation = null
         if (affectedTurn != null && activeChatCancellation === affectedTurn)

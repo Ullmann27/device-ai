@@ -20,6 +20,7 @@ import at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum
 import at.heinz.deviceai.chief.ChiefBotTeam
 import at.heinz.deviceai.chief.ChiefTeamStatus
 import at.heinz.deviceai.chief.ChiefTeamTask
+import at.heinz.deviceai.learning.SharedOwnerKnowledgeGrant
 import at.heinz.deviceai.ui.JarvisDesign
 import java.util.UUID
 import java.util.concurrent.Executor
@@ -37,7 +38,7 @@ class ContinuumBotRosterDialog(
     private val onContextChanging: ((String) -> Unit)? = null,
     private val onAssign: ((ChiefBotTaskRequest) -> Boolean)? = null,
     private val team: ChiefBotTeam? = null,
-    private val onTeamSubmit: ((String, String, Long) -> Boolean)? = null,
+    private val onTeamSubmit: ((String, String, Long, SharedOwnerKnowledgeGrant?) -> Boolean)? = null,
     private val onTeamStop: ((String) -> Unit)? = null
 ) {
     private var dialog: AlertDialog? = null
@@ -47,6 +48,7 @@ class ContinuumBotRosterDialog(
     private val statusViews = mutableListOf<Pair<ChiefBotProfile, TextView>>()
     private var pendingRosterSearch: (() -> Unit)? = null
     private var teamRefresh: (() -> Unit)? = null
+    private var abandonDraft: (() -> Unit)? = null
     private val ui = ContinuumBotDialogStyle(activity)
 
     fun show() {
@@ -56,6 +58,7 @@ class ContinuumBotRosterDialog(
     /** Invalidates presentation only. Accepted storage writes and independent coding jobs continue. */
     fun close() {
         revision++
+        releaseDraft()
         pendingRosterSearch = null
         teamRefresh = null
         taskDialog?.close()
@@ -84,7 +87,14 @@ class ContinuumBotRosterDialog(
 
     private fun action(text: String, click: () -> Unit) = ui.action(text, click = click)
 
+    private fun releaseDraft() {
+        val cleanup = abandonDraft
+        abandonDraft = null
+        cleanup?.invoke()
+    }
+
     private fun open(title: String, content: LinearLayout): Long {
+        releaseDraft()
         taskDialog?.close()
         taskDialog = null
         pendingRosterSearch = null
@@ -99,6 +109,7 @@ class ContinuumBotRosterDialog(
             .setNegativeButton("Schließen", null).create().also { current ->
                 current.setOnDismissListener {
                     if (dialog === current) {
+                        releaseDraft()
                         revision++
                         dialog = null
                         pendingRosterSearch = null
@@ -528,6 +539,105 @@ class ContinuumBotRosterDialog(
             contentDescription = "Teamauftrag"; tag = "bot-team-request"
         }
         body.addView(text)
+        var shared: SharedOwnerKnowledgeGrant? = null
+        var sharingRevision = 0L
+        var selectionDialog: AlertDialog? = null
+        val sharedSummary = label("Keine gespeicherten Angaben für diesen Auftrag freigegeben.")
+        abandonDraft = {
+            sharingRevision++
+            shared?.revoke()
+            shared = null
+            selectionDialog?.dismiss()
+            selectionDialog = null
+        }
+        if (currentTeam.supportsSharedKnowledge()) {
+            body.addView(sharedSummary)
+            body.addView(action("Bestätigte Angaben auswählen") {
+                if (!live(token)) return@action
+                val request = text.text.toString()
+                if (request.isBlank()) {
+                    sharedSummary.text = "Zuerst den konkreten Auftrag eingeben."
+                    return@action
+                }
+                val selectedRevision = ++sharingRevision
+                shared?.revoke()
+                shared = null
+                sharedSummary.text = "Bestätigte Angaben werden geprüft …"
+                load(token, body, { currentTeam.reviewSharedKnowledge(requestId, request, selection.revision) }) { review ->
+                    if (sharingRevision != selectedRevision) return@load
+                    if (!review.scope.matchesRequest(requestId, text.text.toString())) {
+                        sharedSummary.text = "Der Auftrag wurde geändert. Angaben bitte neu auswählen."
+                        return@load
+                    }
+                    if (review.facts.isEmpty()) {
+                        sharedSummary.text = "Keine aktiven bestätigten Angaben vorhanden."
+                        return@load
+                    }
+                    val selected = BooleanArray(review.facts.size)
+                    val recipients = review.scope.recipients.joinToString(", ") { "${it.displayName} (${it.agentId})" }
+                    selectionDialog = AlertDialog.Builder(activity)
+                        .setCustomTitle(label("Angaben für $recipients\nNur für diesen Auftrag; höchstens fünf kurze Angaben. " +
+                            "Kein Zugriff auf private Botnotizen oder Gespräche.").apply {
+                            setPadding(dp(16), dp(12), dp(16), dp(8))
+                        })
+                        .setMultiChoiceItems(review.facts.map { it.text }.toTypedArray(), selected) { _, which, checked ->
+                            selected[which] = checked
+                        }
+                        .setNegativeButton("Nicht teilen", null)
+                        .setPositiveButton("Für diesen Auftrag freigeben") { _, _ ->
+                            if (!live(token) || sharingRevision != selectedRevision) return@setPositiveButton
+                            val ids = review.facts.filterIndexed { index, _ -> selected[index] }.map { it.id }.toSet()
+                            if (ids.isEmpty()) {
+                                sharedSummary.text = "Keine gespeicherten Angaben freigegeben."
+                                return@setPositiveButton
+                            }
+                            load(token, body, { runCatching { review.approve(ids, ownerApproved = true) } }) { result ->
+                                result.fold({ grant ->
+                                    if (sharingRevision != selectedRevision) {
+                                        grant.revoke()
+                                        return@fold
+                                    }
+                                    if (!grant.scope.matchesRequest(requestId, text.text.toString())) {
+                                        grant.revoke()
+                                        sharedSummary.text = "Der Auftrag wurde geändert. Angaben bitte neu auswählen."
+                                    } else {
+                                        shared = grant
+                                        sharedSummary.text = "Für $recipients freigegeben, nur für diesen Auftrag:\n" +
+                                            grant.facts.joinToString("\n") { it.text } +
+                                            "\nPassende Angaben dürfen als Kontext abgerufen werden. " +
+                                            "Auftrag stoppen oder die betroffene Erinnerung widerrufen beendet diese Freigabe."
+                                    }
+                                }, { error ->
+                                    if (sharingRevision != selectedRevision) return@fold
+                                    sharedSummary.text = if (error.message == "BOT_SHARED_CONTEXT_BUDGET")
+                                        "Bitte höchstens fünf kürzere Angaben wählen; der Kontext wurde nicht gekürzt oder freigegeben."
+                                    else "Angaben geändert, widerrufen oder nicht sicher lesbar. Bitte neu auswählen."
+                                })
+                            }
+                        }.show()
+                }
+            })
+            body.addView(action("Angabenauswahl verwerfen") {
+                if (live(token)) {
+                    sharingRevision++
+                    shared?.revoke()
+                    shared = null
+                    sharedSummary.text = "Keine gespeicherten Angaben freigegeben."
+                }
+            })
+            text.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    sharingRevision++
+                    if (shared != null) {
+                        shared?.revoke()
+                        shared = null
+                        sharedSummary.text = "Der Auftrag wurde geändert. Angaben bitte neu auswählen."
+                    }
+                }
+                override fun afterTextChanged(s: Editable?) = Unit
+            })
+        }
         val consent = android.widget.CheckBox(activity).apply {
             this.text = "Diese Textprüfung mit zwei Spezialisten freigeben"
             setTextColor(JarvisDesign.Colors.text); minHeight = dp(48); tag = "bot-team-consent"
@@ -541,7 +651,10 @@ class ContinuumBotRosterDialog(
                 feedback.text = "Bitte einen Text mit 1–1800 Zeichen eingeben und die Freigabe bestätigen."
             } else {
                 submit.isEnabled = false
-                if (onTeamSubmit?.invoke(requestId, text.text.toString(), selection.revision) == true) showTeam()
+                if (onTeamSubmit?.invoke(requestId, text.text.toString(), selection.revision, shared) == true) {
+                    shared = null
+                    showTeam()
+                }
                 else { submit.isEnabled = true; feedback.text = "Nicht angenommen. Ein anderer Modelllauf ist noch belegt." }
             }
         }
