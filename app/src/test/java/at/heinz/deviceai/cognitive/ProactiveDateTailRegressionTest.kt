@@ -60,7 +60,8 @@ class ProactiveDateTailRegressionTest {
             record(text).copy(provenance = ProvenanceType.MODEL_GENERATED),
             record(text).copy(validationState = ValidationState.CONTRADICTED),
             record(text).copy(privacyClass = PrivacyClass.SENSITIVE),
-            record("Heute Abend Termin").copy(updatedAt = now - 86_400_000L)
+            record("Heute Abend Termin").copy(
+                createdAt = now - 86_400_000L, updatedAt = now - 86_400_000L)
         )) assertNull(engine.findTimelySideQuestOrNull(listOf(memory), now))
         assertNotNull(engine.findTimelySideQuestOrNull(listOf(record(text)), now))
     }
