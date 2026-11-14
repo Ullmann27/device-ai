@@ -13,6 +13,7 @@ import at.heinz.deviceai.chief.ChiefBotProfile
 import at.heinz.deviceai.chief.ChiefBotPersonas
 import at.heinz.deviceai.chief.ChiefBotProfilePage
 import at.heinz.deviceai.chief.ChiefBotProfileStore
+import at.heinz.deviceai.chief.ChiefBotPrivateRecordKind
 import at.heinz.deviceai.chief.ChiefBotTaskRequest
 import at.heinz.deviceai.chief.ChiefBotTaskMode
 import at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum
@@ -375,6 +376,9 @@ class ContinuumBotRosterDialog(
             profile.contextObjectId?.let { hash ->
                 body.addView(label("Gespeicherte Arbeitsnotiz · Objekt $hash"))
             }
+            body.addView(action("Private Aufzeichnungen suchen") {
+                if (live(token)) showPrivateRecords(profile.agentId)
+            })
             body.addView(label("Arbeitsnotiz für ${profile.displayName}"))
             val editor = edit(notes, 4_000, multiline = true)
             editor.contentDescription = "Arbeitsnotiz für ${profile.displayName}"
@@ -394,6 +398,46 @@ class ContinuumBotRosterDialog(
             body.addView(action("Namen ändern") { editProfile(profile) })
             body.addView(action("Rolle und Arbeitsstil bearbeiten") { editDescription(profile) })
             body.addView(action("Zur Teamübersicht") { show() })
+        }
+    }
+
+    private fun showPrivateRecords(agentId: String, query: String = "") {
+        val body = column()
+        body.addView(label("Private Aufzeichnungen werden geladen …"))
+        val token = open("Bot · Private Aufzeichnungen", body)
+        load(token, body, { store.privateRecords(agentId, agentId, query) }) { snapshot ->
+            body.removeAllViews()
+            body.addView(ui.identity(snapshot.profile))
+            body.addView(label("Aktuelle Arbeitsnotiz und gespeicherter Gesprächsstand dieses Bots. " +
+                "Die Inhalte sind unbestätigt und werden nicht an andere Bots weitergegeben."))
+            body.addView(label("Das Datum bezeichnet die erste Speicherung des gesamten Inhaltsstands, " +
+                "nicht einzelner Aussagen. Gelöschte und ersetzte Stände werden nicht durchsucht."))
+            val search = edit(query, 160).apply {
+                hint = "Text in privaten Aufzeichnungen suchen"
+                contentDescription = "Private Aufzeichnungen durchsuchen"
+            }
+            body.addView(search)
+            body.addView(action("Suchen") {
+                if (live(token)) showPrivateRecords(agentId, search.text.toString())
+            })
+            if (query.isNotEmpty()) body.addView(action("Alle aktuellen Aufzeichnungen") {
+                if (live(token)) showPrivateRecords(agentId)
+            })
+            if (snapshot.records.isEmpty()) body.addView(label(if (query.isBlank())
+                "Keine aktuellen privaten Aufzeichnungen gespeichert."
+            else "Keine aktuelle private Aufzeichnung enthält diesen Suchtext."))
+            val date = java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss z", java.util.Locale.getDefault())
+            snapshot.records.forEach { record ->
+                body.addView(ui.label(when (record.kind) {
+                    ChiefBotPrivateRecordKind.WORKING_NOTES -> "ARBEITSNOTIZ"
+                    ChiefBotPrivateRecordKind.CONVERSATION_SNAPSHOT -> "GESPRÄCHSSTAND"
+                }, 12f, ui.accent(snapshot.profile)))
+                body.addView(label("Erste Speicherung dieses Gesamtstands: " + date.format(java.util.Date(record.createdAtMillis))))
+                body.addView(label(record.text))
+            }
+            body.addView(action("Zurück zum Arbeitsbereich") {
+                if (live(token)) showProfile(agentId)
+            })
         }
     }
 
