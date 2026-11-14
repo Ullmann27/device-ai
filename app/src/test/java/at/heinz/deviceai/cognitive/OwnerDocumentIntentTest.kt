@@ -25,7 +25,7 @@ class OwnerDocumentIntentTest {
 
 
     @Test fun choosePdfAndSummarizeFirstPageOpensOwnerPicker() {
-        assertEquals(OwnerDocumentIntent.Request(wantsDraft = true, reuse = false),
+        assertEquals(OwnerDocumentIntent.Request(wantsDraft = true, reuse = false, firstPageOnly = true),
             OwnerDocumentIntent.parse("Ich möchte eine PDF auswählen und die erste Seite zusammenfassen."))
     }
 

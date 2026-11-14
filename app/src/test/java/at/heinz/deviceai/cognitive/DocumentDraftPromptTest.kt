@@ -29,6 +29,19 @@ class DocumentDraftPromptTest {
         assertTrue("cut between words", text[excerpt.length] == ' ')
     }
 
+    @Test fun pageOneOnlyDraftExplicitlyLimitsThePromptAndDoesNotUseOtherPages() {
+        val pageOne = "Seite eins: Der Rechenfehler wurde korrigiert."
+        val nextPage = "Seite zwei: andere Zahlen"
+        val prompt = requireNotNull(DocumentDraftPrompt.build("Prüfung.pdf", pageOne,
+            firstPageOnly = true))
+        assertTrue(prompt.firstPageOnly)
+        assertTrue(prompt.complete)
+        assertTrue(prompt.question.contains("ausschließlich Seite 1"))
+        assertTrue(prompt.question.contains("<<<DOKUMENT\n" + pageOne + "\nDOKUMENT>>>"))
+        assertFalse(prompt.question.contains(nextPage))
+        assertEquals(pageOne.length, prompt.coveredChars)
+    }
+
     @Test fun noTextNoDraft() {
         assertNull(DocumentDraftPrompt.build("Scan.pdf", "  \n "))
     }

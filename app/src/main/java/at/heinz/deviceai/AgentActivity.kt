@@ -2494,9 +2494,11 @@ class AgentActivity : Activity() {
     private fun localModelReady() = localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null
 
     /** Starts the local model on the document's own text only (DocumentDraftPrompt); honest when it cannot run. */
-    private fun startDocumentDraft(doc: PdfDocumentIntake.Document) {
+    private fun startDocumentDraft(doc: PdfDocumentIntake.Document, firstPageOnly: Boolean = false) {
         val inCockpit = workWindowHost.isShowing
-        val prompt = at.heinz.deviceai.cognitive.DocumentDraftPrompt.build(doc.name, doc.text)
+        val sourceText = if (firstPageOnly) doc.pageTexts.firstOrNull().orEmpty() else doc.text
+        val prompt = at.heinz.deviceai.cognitive.DocumentDraftPrompt.build(doc.name, sourceText,
+            firstPageOnly = firstPageOnly)
         when {
             // A second tap while this draft runs changes nothing: the window keeps saying what really happens.
             documentDraftTurn != null -> addAssistantMessage("Der Entwurf läuft bereits – mit STOP brichst du ihn ab.",
@@ -2854,7 +2856,10 @@ class AgentActivity : Activity() {
                 "Der Textauszug braucht Android 15 oder neuer. Das Seitenbild ist echt."
         }
         val wantsDraft = pendingDocumentDraft
-        val hasText = doc.textState == PdfDocumentIntake.TextState.EXTRACTED
+        val request = pendingDocumentRequest.ifBlank { "PDF lesen" }
+        val firstPageOnly = at.heinz.deviceai.cognitive.OwnerDocumentIntent.parse(request)?.firstPageOnly == true
+        val hasText = doc.textState == PdfDocumentIntake.TextState.EXTRACTED &&
+            (!firstPageOnly || doc.pageTexts.firstOrNull()?.isNotBlank() == true)
         val draftLine = when {
             !hasText -> if (wantsDraft) "Für einen Entwurf fehlt der Dokumenttext." else null
             !localModelReady() -> if (wantsDraft) "Entwurf: Lokales Modell nicht geladen · in der Modellverwaltung laden." else null
@@ -2862,7 +2867,6 @@ class AgentActivity : Activity() {
             else -> null
         }
         pendingDocumentDraft = false
-        val request = pendingDocumentRequest.ifBlank { "PDF lesen" }
         pendingDocumentRequest = ""
         val startState = when {
             !wantsDraft -> at.heinz.deviceai.cognitive.CockpitWorkJournal.State.READ
@@ -2961,7 +2965,7 @@ class AgentActivity : Activity() {
             }
             offerDocumentNextSteps(window, episode.id, offer, ownerReplyAllowsMaya)
         }
-        if (wantsDraft && hasText && localModelReady()) startDocumentDraft(doc)
+        if (wantsDraft && hasText && localModelReady()) startDocumentDraft(doc, firstPageOnly)
     }
 
     /** Wait for real first geometry. */
