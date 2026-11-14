@@ -296,11 +296,12 @@ try:
         nodes, _, _ = snapshot('camera-declined')
     conversation = ['Konversation öffnen', 'JARVIS: Konversation öffnen', 'Gespräch öffnen', 'Gespräch', 'Chat']
     assert tap(nodes, conversation), 'Conversation control missing'
+    establish_offline('conversation')
     nodes, _, display = snapshot('conversation-opened', record=False)
     editors = [n for n in nodes if n.get('class') == 'android.widget.EditText']
     assert len(editors) == 1, 'Composer missing'
-    establish_offline('conversation')
-    tap_node(editors[0], display)
+    assert editors[0].get('focused') == 'true', 'Composer not focused'
+    assert editors[0].get('text', '') in ('', 'Schreibe eine Nachricht …'), 'Composer not empty'
     question = 'Was kannst du?'
     shell('input', 'text', "'Was%skannst%sdu?'")
     keyboard = shell('dumpsys', 'input_method')

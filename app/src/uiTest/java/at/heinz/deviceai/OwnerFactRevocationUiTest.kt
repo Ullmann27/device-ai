@@ -148,6 +148,11 @@ class OwnerFactRevocationUiTest {
         call(f.activity, "showMemoryCenter")
         val center = checkNotNull(ShadowAlertDialog.getLatestAlertDialog())
         assertTrue(center.isShowing)
+        val decor = center.window!!.decorView
+        val metrics = f.activity.resources.displayMetrics
+        decor.measure(View.MeasureSpec.makeMeasureSpec(metrics.widthPixels, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(metrics.heightPixels, View.MeasureSpec.EXACTLY))
+        decor.layout(0, 0, decor.measuredWidth, decor.measuredHeight)
         val delete = descendants(center.window!!.decorView).single {
             it is TextView && it.text.toString() == "FAKTEN LÖSCHEN" && it.isClickable
         }
@@ -160,6 +165,7 @@ class OwnerFactRevocationUiTest {
     }
     private fun confirmDeletion(f: Fixture) {
         assertTrue(deletionDialog(f).getButton(AlertDialog.BUTTON_POSITIVE).performClick())
+        shadowOf(Looper.getMainLooper()).idle()
     }
     private fun assertErased(f: Fixture) {
         drain(f.activity, "learningIoExecutor")
