@@ -77,7 +77,7 @@ class ContinuumAvatar3dLifecycleUiTest {
         val events = mutableListOf<String>()
         val texture = FilamentTextureView(controller.get()) { events += "before" }
         try {
-            texture.surfaceTexture = surface
+            texture.setSurfaceTexture(surface)
             texture.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
                 override fun onSurfaceTextureAvailable(value: SurfaceTexture, width: Int, height: Int) = Unit
                 override fun onSurfaceTextureSizeChanged(value: SurfaceTexture, width: Int, height: Int) {
