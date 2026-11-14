@@ -391,6 +391,128 @@ class OwnerFactRevocationUiTest {
         assertNull(shadowOf(f.activity).nextStartedActivity)
     }
 
+    @Test fun confirmedDeletionRevokesSharedTeamBeforeQueuedLedgerWriteAndRejectsLateReply() = withFixture { f ->
+        val profiles = at.heinz.deviceai.chief.ChiefBotProfileStore(File(f.activity.filesDir, "shared-team"))
+        val entered = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        val returned = CountDownLatch(1)
+        val token = AtomicReference<DeliberationCancellation>()
+        val calls = AtomicInteger()
+        val team = at.heinz.deviceai.chief.ChiefBotTeam(profiles,
+            object : at.heinz.deviceai.chief.ChiefTeamModel {
+                override fun readySha256() = "a".repeat(64)
+                override fun generate(prompt: String, cancellation: DeliberationCancellation, deadlineMillis: Long): String {
+                    assertTrue(prompt.contains(FACT))
+                    token.set(cancellation)
+                    calls.incrementAndGet()
+                    entered.countDown()
+                    val end = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
+                    while (release.count > 0 && System.nanoTime() < end) {
+                        try { release.await(50, TimeUnit.MILLISECONDS) } catch (_: InterruptedException) { }
+                    }
+                    check(release.count == 0L)
+                    returned.countDown()
+                    return LATE_REPLY
+                }
+            }, sharedKnowledge = f.core)
+        val writeRelease = CountDownLatch(1)
+        val writeEntered = CountDownLatch(1)
+        val blocked = (get(f.activity, "learningIoExecutor") as ExecutorService).submit {
+            writeEntered.countDown()
+            check(writeRelease.await(10, TimeUnit.SECONDS))
+        }
+        try {
+            assertTrue(writeEntered.await(5, TimeUnit.SECONDS))
+            team.initialize()
+            team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), 0)
+            val id = "team-" + java.util.UUID.randomUUID()
+            val request = "Prüfe meine bestätigte Wohnangabe in Kronenbrunn."
+            val review = team.reviewSharedKnowledge(id, request, 1)
+            val grant = review.approve(setOf(review.facts.single { it.text == FACT }.id), true)
+            set(f.activity, "botTeam", team)
+            set(f.activity, "botTeamOwnsLane", true)
+            call(f.activity, "setBusy", true)
+            team.submit(id, request, 1, true, shared = grant)
+            assertTrue(entered.await(5, TimeUnit.SECONDS))
+            val priorCancellations = f.runtime.cancellations.get()
+            confirmDeletion(f)
+            assertThrows(java.util.concurrent.CancellationException::class.java) { token.get().throwIfCancelled() }
+            assertTrue(f.core.activeOwnerFacts().any { it.content == FACT })
+            assertEquals(priorCancellations + 1, f.runtime.cancellations.get())
+            writeRelease.countDown()
+            blocked.get(5, TimeUnit.SECONDS)
+            assertErased(f)
+            release.countDown()
+            assertTrue(returned.await(5, TimeUnit.SECONDS))
+            assertTrue(team.awaitIdle(10_000))
+            assertEquals(1, calls.get())
+            assertTrue(profiles.teamState().tasks.single().responses.isEmpty())
+            assertFalse(texts(get(f.activity, "chatContainer") as View).any { it.contains(LATE_REPLY) })
+        } finally {
+            writeRelease.countDown()
+            release.countDown()
+            team.close()
+            set(f.activity, "botTeam", null)
+            set(f.activity, "botTeamOwnsLane", false)
+        }
+    }
+
+    @Test fun confirmedDeletionRejectsPreviouslyQueuedSharedTeamBeforeEitherExecutorCompletes() = withFixture { f ->
+        val profiles = at.heinz.deviceai.chief.ChiefBotProfileStore(File(f.activity.filesDir, "queued-shared-team"))
+        val calls = AtomicInteger()
+        val team = at.heinz.deviceai.chief.ChiefBotTeam(profiles,
+            object : at.heinz.deviceai.chief.ChiefTeamModel {
+                override fun readySha256() = "a".repeat(64)
+                override fun generate(prompt: String, cancellation: DeliberationCancellation, deadlineMillis: Long): String {
+                    calls.incrementAndGet()
+                    return LATE_REPLY
+                }
+            }, sharedKnowledge = f.core)
+        val backlogRelease = CountDownLatch(1)
+        val writeRelease = CountDownLatch(1)
+        val backlogEntered = CountDownLatch(1)
+        val writeEntered = CountDownLatch(1)
+        val backlog = (get(f.activity, "backlogExecutor") as ExecutorService).submit {
+            backlogEntered.countDown()
+            check(backlogRelease.await(10, TimeUnit.SECONDS))
+        }
+        val write = (get(f.activity, "learningIoExecutor") as ExecutorService).submit {
+            writeEntered.countDown()
+            check(writeRelease.await(10, TimeUnit.SECONDS))
+        }
+        try {
+            assertTrue(backlogEntered.await(5, TimeUnit.SECONDS))
+            assertTrue(writeEntered.await(5, TimeUnit.SECONDS))
+            team.initialize()
+            team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), 0)
+            val id = "team-" + java.util.UUID.randomUUID()
+            val request = "Prüfe meine bestätigte Wohnangabe in Kronenbrunn."
+            val review = team.reviewSharedKnowledge(id, request, 1)
+            val grant = review.approve(setOf(review.facts.single { it.text == FACT }.id), true)
+            set(f.activity, "botTeam", team)
+            assertEquals(true, call(f.activity, "submitBotTeam", id, request, 1L, grant))
+            assertTrue(profiles.teamState().tasks.isEmpty())
+            confirmDeletion(f)
+            assertTrue(f.core.activeOwnerFacts().any { it.content == FACT })
+            backlogRelease.countDown()
+            backlog.get(5, TimeUnit.SECONDS)
+            drain(f.activity, "backlogExecutor")
+            assertTrue(team.awaitIdle(10_000))
+            assertEquals(0, calls.get())
+            assertTrue(profiles.teamState().tasks.isEmpty())
+            assertTrue(f.core.activeOwnerFacts().any { it.content == FACT })
+            writeRelease.countDown()
+            write.get(5, TimeUnit.SECONDS)
+            assertErased(f)
+        } finally {
+            backlogRelease.countDown()
+            writeRelease.countDown()
+            team.close()
+            set(f.activity, "botTeam", null)
+            set(f.activity, "botTeamOwnsLane", false)
+        }
+    }
+
     private fun queueRememberedAnswer(f: Fixture) {
         assertTrue(f.memory.clearFacts())
         f.core.revokeAllOwnerFacts()

@@ -410,14 +410,73 @@ class ChiefPatternE2ETest {
         assertTrue("Chief muss relevante Erinnerung an das Modell geben", "m-old" in modelSaw)
     }
 
-    @Ignore("PENDING Punkt 4 (Continuum Gedaechtnis): Schichten Profil/Tagebuch/geteiltes Wissen fuer alle " +
-        "Agenten gibt es auf #373 nicht als API. Vorhanden sind nur MemoryType (SELF/EPISODIC/SEMANTIC) und " +
-        "HybridMemoryRetriever; ein agentenuebergreifender Speicher fehlt.")
     @Test
-    fun s4b_pending_profileDiarySharedLayers() {
-        // SCHARF: profile.put("wohnort","Wien"); diary.append(date, "..."); shared.publish(agentA, fact);
-        // erwarten: agentB sieht shared-Fakt, aber nicht agentA-Tagebuch; Profil ueberlebt Neustart;
-        // Tagebuch ist datiert und per Suche ueber aeltere Eintraege findbar.
+    fun s4b_datedPrivateRecordsAndApprovedSharedFactsUseRealWorkerPrompts() {
+        val root = Files.createTempDirectory("chief-memory-layers-").toFile()
+        val profileRoot = File(root, "profiles")
+        val original = ChiefBotProfileStore(profileRoot)
+        original.seedDefaults()
+        val profile = original.get("bot-kora")!!
+        val noted = original.saveWorkingContext(profile.agentId, profile.agentId,
+            "PRIVATE_DIARY_ENTRY: Prüfung Kupferplan", profile.profileVersion)
+        val objectId = requireNotNull(noted.contextObjectId)
+        val content = requireNotNull(at.heinz.deviceai.cognitive.FileContinuumObjectStore(
+            File(profileRoot, "working-context/${profile.memoryNamespace}"))
+            .get(at.heinz.deviceai.cognitive.ContinuumObjectId(objectId)))
+        val profiles = ChiefBotProfileStore(profileRoot)
+        assertEquals(noted, profiles.get(profile.agentId))
+        val found = profiles.privateRecords(profile.agentId, profile.agentId, "Kupferplan").records.single()
+        assertEquals(content.metadata.createdAtMillis, found.createdAtMillis)
+        assertEquals(objectId, found.objectId)
+        assertTrue(profiles.privateRecords("bot-lint", "bot-lint", "Kupferplan").records.isEmpty())
+        assertThrows(IllegalArgumentException::class.java) {
+            profiles.privateRecords("bot-lint", profile.agentId, "Kupferplan")
+        }
+        val ownerRoot = File(root, "owner")
+        val fact = "Ich wohne in Steyr."
+        at.heinz.deviceai.learning.ContinuumLearningCore(ownerRoot) { 1_000L }.confirmOwnerFact(fact)
+        val core = at.heinz.deviceai.learning.ContinuumLearningCore(ownerRoot)
+        assertEquals(fact, core.activeOwnerFacts().single().content)
+        val prompts = java.util.concurrent.CopyOnWriteArrayList<String>()
+        val team = ChiefBotTeam(profiles, object : ChiefTeamModel {
+            override fun readySha256() = "a".repeat(64)
+            override fun generate(prompt: String, cancellation: DeliberationCancellation, deadlineMillis: Long): String {
+                cancellation.throwIfCancelled()
+                prompts += prompt
+                return "Kontrollierte Textantwort; nicht unabhängig verifiziert."
+            }
+        }, sharedKnowledge = core)
+        try {
+            team.initialize()
+            team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), 0)
+            val request = "Prüfe die bestätigte Wohnangabe in Steyr."
+            team.submit("team-" + UUID.randomUUID(), request, 1, true)
+            assertTrue(team.awaitIdle(10_000))
+            assertEquals(2, prompts.size)
+            assertTrue(prompts.none { it.contains(fact) || it.contains("PRIVATE_DIARY_ENTRY") })
+            val id = "team-" + UUID.randomUUID()
+            val review = team.reviewSharedKnowledge(id, request, 1)
+            val shared = review.approve(setOf(review.facts.single().id), ownerApproved = true)
+            team.submit(id, request, 1, true, shared = shared)
+            assertTrue(team.awaitIdle(10_000))
+            assertEquals(4, prompts.size)
+            prompts.drop(2).forEach { prompt ->
+                val facts = JSONObject(prompt.substringAfter("\nTASK_DATA_JSON:\n"))
+                    .getJSONArray("ownerApprovedSharedFacts")
+                assertEquals(1, facts.length())
+                assertEquals(fact, facts.getJSONObject(0).getString("text"))
+                assertEquals(1_000L, facts.getJSONObject(0).getLong("ownerStatementStoredAtMillis"))
+                assertFalse(prompt.contains("PRIVATE_DIARY_ENTRY"))
+            }
+            assertEquals(found, ChiefBotProfileStore(profileRoot)
+                .privateRecords(profile.agentId, profile.agentId, "Kupferplan").records.single())
+            core.revokeOwnerFact(fact)
+            assertTrue(team.reviewSharedKnowledge("team-" + UUID.randomUUID(), request, 1).facts.isEmpty())
+            val current = profiles.get(profile.agentId)!!
+            profiles.saveWorkingContext(profile.agentId, profile.agentId, "", current.profileVersion)
+            assertTrue(ChiefBotProfileStore(profileRoot)
+                .privateRecords(profile.agentId, profile.agentId, "Kupferplan").records.isEmpty())
+        } finally { team.close(); root.deleteRecursively() }
     }
 
     // ---------------------------------------------------------------- Punkt 5

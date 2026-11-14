@@ -200,8 +200,9 @@ class OwnerAppPlanningContextUiTest {
 
     private fun submitTeam(activity: AgentActivity, team: at.heinz.deviceai.chief.ChiefBotTeam) {
         val accepted = AgentActivity::class.java.getDeclaredMethod("submitBotTeam", String::class.java,
-            String::class.java, Long::class.javaPrimitiveType).apply { isAccessible = true }.invoke(activity,
-            "team-" + java.util.UUID.randomUUID(), TEAM_REQUEST, team.snapshot().revision)
+            String::class.java, Long::class.javaPrimitiveType,
+            at.heinz.deviceai.learning.SharedOwnerKnowledgeGrant::class.java).apply { isAccessible = true }.invoke(activity,
+            "team-" + java.util.UUID.randomUUID(), TEAM_REQUEST, team.snapshot().revision, null)
         assertEquals(true, accepted)
     }
 
