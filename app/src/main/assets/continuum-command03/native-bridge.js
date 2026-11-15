@@ -190,8 +190,15 @@
     if(!snapshot || !document || document.sessionId!==session) return;
     if(typeof document.name!=='string' || document.name.length>120 ||
        !Number.isInteger(document.pageCount) || document.pageCount < 0) return;
-    currentDocument=document;
-    renderDocument();
+    const set = () => {
+      currentDocument=document;
+      renderDocument();
+    };
+    // Reuse the ORIGINAL 950ms interruptible flight/FLIP controller from PR #850.
+    // No second CSS animation or stale timer can overwrite a newer native document.
+    if (typeof window.ContinuumWorkspaceMotion?.transition === 'function') {
+      window.ContinuumWorkspaceMotion.transition(set,{kind:'open',duration:950});
+    } else set();
   }
 
   const workspace=$('#workspace');

@@ -47,6 +47,8 @@ assert.ok(bridge.includes('data-native-chat'),'Native chat rows not rendered');
 assert.ok(bridge.includes('window.ContinuumNative'),'Native state bridge missing');
 assert.ok(bridge.includes('snapshot.workRows'),'Computer result panel does not use real Android state');
 assert.ok(bridge.includes('document:documentOpened'),'Real selected PDF is not bound to HTML');
+assert.ok(bridge.includes("ContinuumWorkspaceMotion.transition(set,{kind:'open',duration:950})"),
+  'Native documents must reuse the approved reversible 950ms HTML window flight');
 assert.ok(bridge.includes('native-document-panel'),'Projected PDF work surface absent');
 assert.ok(bridge.includes('textContent=actual?doc.text.slice(0,12000)'),
   'PDF data must be rendered as text, not injected into HTML');
