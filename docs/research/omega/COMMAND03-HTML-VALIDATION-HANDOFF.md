@@ -28,6 +28,19 @@ den tatsächlichen Uhrbefehl, Busy-Ablehnung und den asynchronen lokalen
 Botwechsel mit einem währenddessen bearbeiteten Entwurf. Diese neuen
 Android-Regressionen sind bis zu einem erfolgreichen echten Lauf `NOT_RUN`.
 
+Die Gegenprüfung fand außerdem eine pauschale Busy-Sperre vor dem vorhandenen
+nativen Sendeknopf. Sie blockierte auch bereits erlaubte Status-/Routinenbefehle,
+Besitzerkorrekturen und Antworten auf eine konkrete Recherchefreigabe. Die
+enge Korrektur lässt ausschließlich diese bestehenden Steuerpfade anhand der
+vorhandenen Parser zum nativen Handler durch. Normale neue Aufträge bleiben
+während laufender Arbeit abgelehnt; eine noch ausstehende HTML-Übergabe oder
+ein Gesprächswechsel bleiben ebenfalls gesperrt. Die ergänzten Regressionen
+verwenden echte Activity-Routen und eine rein lokale Freigabe ohne Netzaufruf.
+Die gezielte HTML-Auswahl enthält jetzt zehn Activity- und vier WebView-Fälle.
+Drei bestehende klassische UI-Fixtures wählen ihren beabsichtigten nativen
+Modus ausdrücklich; ihre Assertions bleiben unverändert. Das neue HTML-Fixture
+wählt weiterhin ausdrücklich die Original-HTML-Hauptbühne.
+
 ## Erster Reparaturstand
 
 Die getrennten Android-Adapter erhalten nun die PDF-Projektion bei laufenden

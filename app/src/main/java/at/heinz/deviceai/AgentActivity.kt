@@ -2240,7 +2240,8 @@ class AgentActivity : Activity() {
             complete(false, "unavailable"); return
         }
         if (request.sessionId != sessionId) { complete(false, "stale-session"); return }
-        if (busy || botLookupPending || pendingConversationSelection != null || pendingCommand03Input != null) {
+        if (botLookupPending || pendingConversationSelection != null || pendingCommand03Input != null ||
+            (busy && !isCommand03BusyControl(request.text))) {
             complete(false, "busy"); return
         }
         Command03BridgeContract.commandFailure(request.text)?.let { complete(false, it); return }
@@ -2248,13 +2249,25 @@ class AgentActivity : Activity() {
         pendingCommand03Input = pending
         deferredCommand03Draft = null
         input.setText(request.text)
-        // The same listener retains all existing stop, correction, consent and owner-action gates.
+        // Recognized in-flight controls use the existing listener and its consent/cancellation handlers.
+        // Other busy submissions were rejected above so a new message cannot press the native Stop button.
         if (!sendButton.performClick()) {
             finishCommand03Input(pending, false, "unavailable")
             return
         }
         if (botLookupPending) pending.lookupRevision = botLookupRevision
         settleCommand03Input()
+    }
+
+    private fun isCommand03BusyControl(text: String): Boolean {
+        val spoken = text.trim()
+        val addressed = OwnerAppLookupIntent.stripAddress(spoken,
+            continuumState?.archive?.identityState?.chosenName)
+        if (at.heinz.deviceai.cognitive.OwnerCorrectionIntent.interruptsWork(addressed)) return true
+        if (pendingResearchChatApproval != null &&
+            at.heinz.deviceai.cognitive.ResearchConsentReply.parse(spoken) != null) return true
+        return ContinuumWorkerChatRouter.parse(text) == ContinuumWorkerChatCommand.ChiefStatus ||
+            isRoutineControlWhileBusy(text)
     }
 
     private fun settleCommand03Input() {
@@ -5080,9 +5093,12 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun isRoutineControlWhileBusy(): Boolean {
-        if (!::input.isInitialized || selectedBot != null) return false
-        return when (OwnerRoutineCommands.parse(input.text.toString())) {
+    private fun isRoutineControlWhileBusy(): Boolean =
+        ::input.isInitialized && isRoutineControlWhileBusy(input.text.toString())
+
+    private fun isRoutineControlWhileBusy(text: String): Boolean {
+        if (selectedBot != null) return false
+        return when (OwnerRoutineCommands.parse(text)) {
             OwnerRoutineCommand.ListRoutines, OwnerRoutineCommand.StopAll, is OwnerRoutineCommand.Stop -> true
             else -> false
         }

@@ -121,6 +121,9 @@ class ContinuumReferenceCockpitUiTest {
         val previousFont = RuntimeEnvironment.getFontScale()
         RuntimeEnvironment.setFontScale(font)
         val app = RuntimeEnvironment.getApplication()
+        // This fixture exercises the classic native surface.
+        app.getSharedPreferences("continuum-command03", Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
             .putBoolean("voice_enabled", false).commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()

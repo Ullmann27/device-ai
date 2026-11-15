@@ -48,6 +48,9 @@ class ContinuumAdaptiveAvatarNavigationUiTest {
         RuntimeEnvironment.setFontScale(font)
         try {
             val activity = Robolectric.buildActivity(AgentActivity::class.java).get()
+            // This fixture exercises the classic native surface.
+            activity.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+                .putBoolean("original_html_main", false).commit()
             set(activity, "bootstrapMemory", BootstrapMemoryStore(activity))
             set(activity, "foregroundLearningActive", true)
             set(activity, "renderedWindowWidthDp", width.toFloat())
