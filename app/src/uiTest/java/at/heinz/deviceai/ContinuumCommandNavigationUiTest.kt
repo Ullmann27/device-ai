@@ -205,8 +205,8 @@ class ContinuumCommandNavigationUiTest {
         val dashboard = field(a, "dashboardSection") as View
         val chat = field(a, "chatColumn") as View
         val parents = generateSequence(input.parent) { it.parent }.toList()
-        assertFalse(parents.contains(dashboard))
-        assertFalse(parents.contains(chat))
+        assertFalse(parents.any { it === dashboard })
+        assertFalse(parents.any { it === chat })
         assertEquals(1, all(a.window.decorView).filterIsInstance<EditText>().count { it === input })
         assertTrue(input.isShown)
         call(a, "focusChatComposer")
