@@ -90,6 +90,12 @@ object JarvisCockpitPanels {
     }
 
     fun drawDocumentPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false) {
+        val telemetry = if (workstation) CommandWorkstationInstruments.telemetryBox(b) else null
+        drawDocumentContent(p, if (telemetry == null) b else CommandWorkstationInstruments.contentBox(b), s, workstation)
+        if (telemetry != null) CommandWorkstationInstruments.drawCpu(p, telemetry, s.system)
+    }
+
+    private fun drawDocumentContent(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean) {
         if (workstation && s.computer == null && DocumentBlueprintView.visible(s.document) == null) {
             drawComputerRows(p, b, "Projekte", Icon.CODE, ContinuumWorkspaceSummary.projects(s), true)
             return
@@ -134,6 +140,12 @@ object JarvisCockpitPanels {
     }
 
     fun drawDraftPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false) {
+        val telemetry = if (workstation) CommandWorkstationInstruments.telemetryBox(b) else null
+        drawDraftContent(p, if (telemetry == null) b else CommandWorkstationInstruments.contentBox(b), s, workstation)
+        if (telemetry != null) CommandWorkstationInstruments.drawMemory(p, telemetry, s.system)
+    }
+
+    private fun drawDraftContent(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean) {
         if (workstation && s.computer == null && DocumentBlueprintView.visible(s.document) == null) {
             drawComputerRows(p, b, "Offene Arbeit", Icon.DOCUMENT, ContinuumWorkspaceSummary.work(s), true)
             return

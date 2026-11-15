@@ -22,4 +22,8 @@ Native geometry and interaction tests, existing widget tests, Kotlin compile and
 
 ## Current checkpoint
 
-Repository, current branch/ref, published release, original assets, instructions and current UI call paths inspected. No native implementation or tests claimed at this initial checkpoint.
+The first implementation checkpoint contains the approved Manrope/Space Grotesk assets and their licences, native header/glass styling without the former emblem, and actual app-CPU/device-RAM instruments. The instruments retain unknown readings, preserve gaps in the measured history, and never generate a demonstration curve. Canvas and native computer-panel content share the measured source.
+
+Parallel work on responsive geometry, existing function navigation and persistent conversation switching is still in progress. Compiler, JVM/UI tests and the source-bound ARM64 build are **NOT_RUN** at this checkpoint. No device, frame-rate, signing or installation result is claimed.
+
+The available local JDK 21/Gradle 8.11.1/SDK 36 toolchain has been verified. Its isolated runner targets this checkout and rejects stale evidence or source changes during a run. A local Android emulator and `/dev/kvm` are unavailable; JVM rendering cannot establish Filament/Fold7 hardware performance.

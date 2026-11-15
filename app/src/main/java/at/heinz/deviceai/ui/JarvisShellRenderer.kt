@@ -301,7 +301,8 @@ object JarvisShellRenderer {
                 if (cinema.contentAlpha < 1f) p.saveAlpha(cinema.contentAlpha)
                 when {
                     slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
-                    slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
+                    slot == Slot.NAV_RAIL -> if (!shell.workstation)
+                        JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
                     slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
                         selected = JarvisTiles.bottomNav.indexOfFirst { it.target == selectedDockTarget },
                         timeMs = if (animatorScale > 0f) materialTimeMs else 0L,

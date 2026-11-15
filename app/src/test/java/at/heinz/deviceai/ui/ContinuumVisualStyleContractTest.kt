@@ -14,21 +14,21 @@ import org.junit.Test
  */
 class ContinuumVisualStyleContractTest {
 
-    @Test fun displayTypeUsesBundledOflExo2AndKeepsReadableText() {
-        assertTrue(ContinuumFonts.assetPath(FontFamily.DISPLAY, 300).endsWith("Exo2-Light.ttf"))
-        assertTrue(ContinuumFonts.assetPath(FontFamily.DISPLAY, 400).endsWith("Exo2-Regular.ttf"))
-        assertTrue(ContinuumFonts.assetPath(FontFamily.DISPLAY, 500).endsWith("Exo2-Medium.ttf"))
-        assertTrue(ContinuumFonts.assetPath(FontFamily.DISPLAY, 600).endsWith("Exo2-SemiBold.ttf"))
-        assertTrue(ContinuumFonts.assetPath(FontFamily.TEXT, 400).endsWith("Roboto-Regular.ttf"))
+    @Test fun approvedCommandFontsAreBundledWithTheirOpenLicences() {
+        assertTrue(ContinuumFonts.assetPath(FontFamily.DISPLAY, 300).endsWith("SpaceGrotesk-Regular.ttf"))
+        assertTrue(ContinuumFonts.assetPath(FontFamily.DISPLAY, 400).endsWith("SpaceGrotesk-Regular.ttf"))
+        assertTrue(ContinuumFonts.assetPath(FontFamily.DISPLAY, 500).endsWith("SpaceGrotesk-Medium.ttf"))
+        assertTrue(ContinuumFonts.assetPath(FontFamily.DISPLAY, 600).endsWith("SpaceGrotesk-Bold.ttf"))
+        assertTrue(ContinuumFonts.assetPath(FontFamily.TEXT, 400).endsWith("Manrope-Regular.ttf"))
         val root = File("app/src/main/assets")
         val assets = if (root.isDirectory) root else File("src/main/assets")
         for (path in ContinuumFonts.allAssets) {
             assertTrue("missing $path", File(assets, path).isFile)
         }
-        assertTrue(File(assets, "fonts/OFL-Exo2.txt").isFile)
-        assertTrue(
-            File(assets, "fonts/OFL-Exo2.txt").readText().contains("SIL Open Font License")
-        )
+        for (name in listOf("OFL-Manrope.txt", "OFL-SpaceGrotesk.txt")) {
+            assertTrue(File(assets, "fonts/$name").isFile)
+            assertTrue(File(assets, "fonts/$name").readText().contains("OPEN FONT LICENSE", ignoreCase = true))
+        }
     }
 
     @Test fun brainOrbPaintsGlassCoreOrbitsPedestalAndStaysFinite() {
