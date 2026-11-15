@@ -1,6 +1,6 @@
 # Device AI Continuum – bewegter Arbeitsraum mit den vorhandenen Originalen
 
-Diese isolierte Gestaltungsfassung setzt das gewünschte Raster um: Chats und Projekte links, Werkzeuge oben, Avatar und Linkleiste in der Mitte, Diagramme und Quellen rechts. Sie verbindet den vorhandenen Kopf und Kugelrenderer mit kontinuierlicher Atmosphäre, räumlichen Arbeitsflächen und einer bedienbaren Argon4-Demonstration.
+Diese isolierte Gestaltungsfassung setzt das gewünschte Raster um: Chats und Projekte links, Werkzeuge oben, Avatar und Linkleiste in der Mitte, Diagramme und Quellen rechts. In Präsenz 02 steht der Originalavatar mittig vor der geometrisch ruhenden Originalkugel. Zwei neue interaktive Hologramme flankieren diese Einheit. Sie verbindet den vorhandenen Kopf und Kugelrenderer mit kontinuierlicher Atmosphäre, räumlichen Arbeitsflächen und einer bedienbaren Argon4-Demonstration.
 
 ## Öffnen
 
@@ -51,3 +51,7 @@ Die native Figma-Datei zeigt den früheren Entwurf. Ihr späterer Codeupload wur
 - `tools/package-continuum.py`: vollständige Projekt- und Webexportarchive erstellen; dafür werden die gerenderten 3D-Dateien und die Raumstudie aus dem Downloadpaket oder den dokumentierten Buildern benötigt.
 
 Die Änderungen bleiben auf einem eigenen Designbranch; dieser PR ist ein Entwurf für Prüfung und spätere Integration.
+
+## Präsenz 02
+
+Der genehmigte Stil und beide Schriften bleiben erhalten. Die Originalkugel wird im festen Modus einmal je Layout/Qualität gerastert und reagiert nur mit weicher Belichtung. Der Avatar bleibt proportional, mit neutralerem Gesichtslicht und Blick auf tatsächlich ausgewählte Diagrammpunkte. Neue SVG-Hologramme teilen sich die Phasendaten mit dem bestehenden Arbeitsraum; das Layout folgt der verfügbaren Bühnenbreite. Drei atmosphärische Tiefen, schräge Lichtstrahlen und sechs langsame Lichtadern bewegen den Hintergrund. Die Module sind unter `presence-layout.css`, `presence-instruments.css` und `presence-instruments.js` getrennt.

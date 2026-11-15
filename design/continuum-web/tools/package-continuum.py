@@ -39,7 +39,8 @@ manifest = {
 project_files = list(app_files)
 for directory in ['interop', 'handoff-3d', 'qa']:
     for p in sorted((ROOT/directory).rglob('*')):
-        if allowed(p): project_files.append(p)
+        if allowed(p) and not (directory == 'interop' and p.suffix == '.png' and any(part.startswith('qa-') for part in p.parts)):
+            project_files.append(p)
 for name in ['Continuum_Designuebergabe.md', 'Continuum_Toolkette_und_Uebergabe.md', 'Continuum_Quellennachweis.json', 'Continuum_Vorschau.build.json', 'Continuum_Praesenz_02.mp4', 'Continuum_Praesenz_02.png', 'tools/build-standalone.py', 'tools/package-continuum.py']:
     p=ROOT/name
     if not p.is_file(): raise FileNotFoundError(p)

@@ -1,0 +1,196 @@
+{
+  "title": "Continuum · Präsenz 02",
+  "renderer": "Native Canvas2D/SVG via @napi-rs/canvas, not a browser capture",
+  "sourceRepository": "https://github.com/Ullmann27/device-ai",
+  "sourceCommit": "1b90611388cc2b1978ddfe32064a25dd3a08cee1",
+  "sourceSha256": {
+    "index.html": "3c7cab9190eb9d5092a728420558107c6abf81060ea1479201b083491fa75f7b",
+    "app.js": "12f19ac69cef10ece3caadd538ab6a63053053e9f22faa58b6010783f7db2dd0",
+    "scene.js": "b4c5b6dcfae1a6c135f847cdf18c2f9327ecd55e48bc929f2f5690e114ae8da1",
+    "presence-instruments.js": "dafefe13775e19a65236417aebb2b5d89f0173defbd068d2444fffe142ebc622",
+    "presence-instruments.css": "2ae9918bdbee95ee8fb055ed428804f1cdb16629d5ffb906bc45653ad19209ef"
+  },
+  "originalAvatarSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "avatar": "Unchanged original Blender PNG, static and labelled as such",
+  "orb": {
+    "mode": "fixed",
+    "phase": 0.4,
+    "energy": 0.18,
+    "audio": 0,
+    "metrics": {
+      "width": 500,
+      "height": 450,
+      "centerX": 250,
+      "centerY": 189,
+      "radius": 140.4,
+      "nodeCount": 224,
+      "edgeCount": 381,
+      "dustCount": 420,
+      "outerRings": 5,
+      "innerRings": 2
+    }
+  },
+  "instrumentDataSource": "Actual app.js and presence-instruments.js executed in jsdom; actual SVG plus computed styles rasterized",
+  "phases": [
+    {
+      "id": "attention",
+      "name": "Aufmerksamkeit",
+      "short": "Aufmerken",
+      "start": 0,
+      "end": 120,
+      "detail": "Die Kugel verdichtet ihr Licht. Ein erster Impuls erreicht den Raum.",
+      "source": "source-attention"
+    },
+    {
+      "id": "space",
+      "name": "Raum schaffen",
+      "short": "Raum",
+      "start": 90,
+      "end": 260,
+      "detail": "Seitliche Elemente treten zurück. Die Arbeitszone öffnet sich.",
+      "source": "source-attention"
+    },
+    {
+      "id": "outline",
+      "name": "Licht wird Form",
+      "short": "Kontur",
+      "start": 180,
+      "end": 480,
+      "detail": "Ein Lichtfaden zeichnet die Kontur. Glas und Fassung entstehen in getrennten Schichten.",
+      "source": "source-formation"
+    },
+    {
+      "id": "flight",
+      "name": "Einflug",
+      "short": "Einflug",
+      "start": 360,
+      "end": 760,
+      "detail": "Das Display richtet sich aus einer räumlichen Drehung zum Nutzer aus.",
+      "source": "source-formation"
+    },
+    {
+      "id": "content",
+      "name": "Inhalt",
+      "short": "Inhalt",
+      "start": 620,
+      "end": 900,
+      "detail": "Orientierung erscheint zuerst. Der eigentliche Inhalt und passende Aktionen folgen.",
+      "source": "source-content"
+    },
+    {
+      "id": "work",
+      "name": "Arbeit",
+      "short": "Arbeit",
+      "start": 900,
+      "end": 950,
+      "detail": "Die Inszenierung geht in die Arbeit über. Die tatsächliche Arbeitsdauer bleibt unabhängig.",
+      "source": "source-content"
+    }
+  ],
+  "selectedPhase": 2,
+  "sourceGroups": [
+    "source-attention",
+    "source-formation",
+    "source-content"
+  ],
+  "labels": {
+    "leftHeading": "Phasenverlauf",
+    "rightHeading": "Quellennetz",
+    "currentName": "Kontur",
+    "currentEnd": "480",
+    "document": "Argon4Demonstration",
+    "proof": "Licht wird Form",
+    "phaseButtons": [
+      {
+        "text": "01120 ms",
+        "number": "01",
+        "value": "120 ms",
+        "selected": false
+      },
+      {
+        "text": "02260 ms",
+        "number": "02",
+        "value": "260 ms",
+        "selected": false
+      },
+      {
+        "text": "03480 ms",
+        "number": "03",
+        "value": "480 ms",
+        "selected": true
+      },
+      {
+        "text": "04760 ms",
+        "number": "04",
+        "value": "760 ms",
+        "selected": false
+      },
+      {
+        "text": "05900 ms",
+        "number": "05",
+        "value": "900 ms",
+        "selected": false
+      },
+      {
+        "text": "06950 ms",
+        "number": "06",
+        "value": "950 ms",
+        "selected": false
+      }
+    ],
+    "sourceButtons": [
+      {
+        "number": "01",
+        "label": "Quelle",
+        "selected": false
+      },
+      {
+        "number": "02",
+        "label": "Quelle",
+        "selected": true
+      },
+      {
+        "number": "03",
+        "label": "Quelle",
+        "selected": false
+      }
+    ]
+  },
+  "video": {
+    "width": 1200,
+    "height": 720,
+    "fps": 24,
+    "frames": 192,
+    "seconds": 8,
+    "audio": false
+  },
+  "scope": "A composed room study of the central layout, not a full UI screenshot, GPU benchmark, speech recording or real PDF analysis.",
+  "ffprobe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1200,
+        "height": 720,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "24/1",
+        "nb_frames": "192"
+      }
+    ],
+    "format": {
+      "duration": "8.000000",
+      "size": "294620"
+    }
+  },
+  "decoded_frame_check": {
+    "timeSeconds": 4,
+    "file": "Continuum_Praesenz_02_Kontrolle.png",
+    "visuallyChecked": true,
+    "nativeGradientURLsNormalized": true
+  },
+  "videoSha256": "484c8957d2aeaea0ec6ed8f8313359b993b6f476661a60daa8aac6ecdb13aa36",
+  "avatarPngSha256": "af71726f13cbbd0514f4ccea6b2e5c2c32217125400b2b93543f6cd2cf22a471",
+  "svgFreezeNote": "Final rerender loaded source after the host-attribute fix. Source hashes identify the exact inputs; composition is not a browser screenshot."
+}

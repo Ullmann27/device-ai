@@ -2,7 +2,7 @@
 
 ## Sofort ansehen
 
-Öffne die bestätigte private Webvorschau aus der Auslieferungsnachricht. Alle Projektdateien stehen dort unter „Projektdateien“. Die gesondert gelieferte Continuum_Vorschau.html enthält die vollständige Offlineansicht.
+Öffne die bestätigte private Webvorschau aus der Auslieferungsnachricht. Alle Projektdateien stehen dort unter „Projektdateien“. Die gesondert gelieferte Continuum_Vorschau.html enthält die vollständige Offlineansicht. Die neue Fassung trägt oben die Kennung PRÄSENZ / 02.
 
 ## Bearbeitbare App starten
 

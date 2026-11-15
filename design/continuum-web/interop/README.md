@@ -41,3 +41,15 @@ npm run build:avatar --prefix interop
 ```
 
 Die originale Avatar-Datei liegt unter `continuum-preview/assets/continuum-avatar.glb`. Herkunft, Integritätsprüfung und Blender-Aufruf sind in `../handoff-3d/Originalavatar_Import_und_Webintegration.md` dokumentiert. Das zusätzliche Arbeitsdisplay besitzt ein eigenes reproduzierbares Skript und eine eigene README unter `handoff-3d`.
+
+## Präsenz 02
+
+Die neue Mitte verwendet eine feste Originalkugel hinter dem proportional eingepassten Avatar. Die seitlichen SVG-Instrumente beziehen Werte und Auswahl aus derselben App-Datenquelle. Zusätzliche gezielte Befehle:
+
+```sh
+npm run verify:orb-fixed --prefix interop
+npm run verify:presence --prefix interop
+npm run render:presence --prefix interop
+```
+
+Die QA-Raster werden von den Prüfskripten neu erzeugt; im Downloadpaket liegen ihre Berichte und Quellen. Der Film zur zentralen Anordnung ist eine native Canvas-/SVG-Raumstudie mit ruhig gerendertem Originalkopf, kein Browserrecording.

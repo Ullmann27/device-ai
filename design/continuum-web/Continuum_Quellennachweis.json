@@ -1,5 +1,8 @@
 {
-  "project": "Device AI Continuum – Gestaltung mit erhaltenen Originalen",
+  "project": "Device AI Continuum – Präsenz 02 mit erhaltenen Originalen",
+  "presentationRevision": "presence02",
+  "orbMotion": "fixed",
+  "presentation": "Mittiger Avatar vor ruhender Originalkugel, seitliche verknüpfte Hologramme, gestaffelte Atmosphäre",
   "sourceRepository": "https://github.com/Ullmann27/device-ai",
   "sourceCommit": "1b90611388cc2b1978ddfe32064a25dd3a08cee1",
   "designBranch": "design/continuum-fui-web-20261115",
@@ -10,6 +13,9 @@
   "qa": {
     "domPassed": 21,
     "domFailed": 0,
+    "presenceInstrumentsPassed": 10,
+    "presenceInstrumentsFailed": 0,
+    "fixedOrbGeometryVerified": true,
     "browserGpuVerified": false,
     "foldDeviceVerified": false
   },
@@ -18,18 +24,18 @@
     "Android-KI, Mikrofon und TTS sind nicht verbunden.",
     "Der Sprechzustand allein erzeugt keine Lippenbewegung.",
     "Native Figmaframes zeigen den früheren Stand; zusätzlicher Codeupload fehlgeschlagen.",
-    "Die Video-Raumstudie verwendet einen ruhig gerenderten Originalkopf."
+    "Die zentrale Video-Raumstudie verwendet einen ruhig gerenderten Originalkopf; sie ist kein Browserrecording."
   ],
   "runtimeFiles": [
     {
       "path": "continuum-preview/README_DE.md",
-      "bytes": 2616,
-      "sha256": "1ad22ea4de287a9ece0b15b8df8302be11b64d8446cb4c4cc5af636b950b84c4"
+      "bytes": 2806,
+      "sha256": "d5e6cd21bc16d8e80527d82029d2ae7598f888f734a95568247939d8f06e28dc"
     },
     {
       "path": "continuum-preview/app.js",
-      "bytes": 39134,
-      "sha256": "886f73fb0d319f887b5300008cfd690736f4a9c1041552f58a0e6057540c98d9"
+      "bytes": 39558,
+      "sha256": "12f19ac69cef10ece3caadd538ab6a63053053e9f22faa58b6010783f7db2dd0"
     },
     {
       "path": "continuum-preview/assets/LICENSE.ASSETS.md",
@@ -118,23 +124,23 @@
     },
     {
       "path": "continuum-preview/avatar3d.js",
-      "bytes": 632138,
-      "sha256": "42e5005148b96f64fea56583871fd8b55a1ac49fac9b662305af8271ee9373dc"
+      "bytes": 633158,
+      "sha256": "7a0f371dea3d125a27fbfd08f65fa6ce665d79e9ca7f29eec5bd6885ec3a5738"
     },
     {
       "path": "continuum-preview/index.html",
-      "bytes": 9992,
-      "sha256": "3046802fe8140a8945f44638e17b190dfa3b81ae729270ef788f967af89af382"
+      "bytes": 10722,
+      "sha256": "3c7cab9190eb9d5092a728420558107c6abf81060ea1479201b083491fa75f7b"
     },
     {
       "path": "continuum-preview/orb-original.js",
-      "bytes": 30275,
-      "sha256": "9aa1607a31a8a080f18a7685435e29b9514f1b149eac7a76c4ee54f4449acec3"
+      "bytes": 31032,
+      "sha256": "f9ee074ce59ac23ec9b3c9a6975381bd987dbd2bea4944d927b1f8b43ce262b4"
     },
     {
       "path": "continuum-preview/package.json",
-      "bytes": 498,
-      "sha256": "864f5aa23da4e67d5be854b703512327d464b8a5a241c178f9d759e5c8f0c740"
+      "bytes": 544,
+      "sha256": "334b165d59ede4cfeec46c8258483a797acd4493ebe31f2dc36bb951f8644fff"
     },
     {
       "path": "continuum-preview/prepare-assets.mjs",
@@ -142,14 +148,29 @@
       "sha256": "4e73e4132b82b842c0dc4e6c89d13fd1820a8a5e195e6a1541b7c1e38195fcd5"
     },
     {
+      "path": "continuum-preview/presence-instruments.css",
+      "bytes": 15246,
+      "sha256": "2ae9918bdbee95ee8fb055ed428804f1cdb16629d5ffb906bc45653ad19209ef"
+    },
+    {
+      "path": "continuum-preview/presence-instruments.js",
+      "bytes": 12196,
+      "sha256": "dafefe13775e19a65236417aebb2b5d89f0173defbd068d2444fffe142ebc622"
+    },
+    {
+      "path": "continuum-preview/presence-layout.css",
+      "bytes": 7439,
+      "sha256": "fc29d4837493061c861b611cdc3e463c84af079d508421c50cabada866075be6"
+    },
+    {
       "path": "continuum-preview/projekt.html",
-      "bytes": 8594,
-      "sha256": "d285d3248ef1143a773badef14c138059883fc3f856bbc4336b4597c13177dfe"
+      "bytes": 8764,
+      "sha256": "1947b767ea02fe586ac80dbf757fd82b1bee1b58ded7903628169aa45dd42e97"
     },
     {
       "path": "continuum-preview/scene.js",
-      "bytes": 32296,
-      "sha256": "d9ceaabcbabd14a1335360d268605ec42abe1824f3474f9b5cd774a06f4d348f"
+      "bytes": 38269,
+      "sha256": "b4c5b6dcfae1a6c135f847cdf18c2f9327ecd55e48bc929f2f5690e114ae8da1"
     },
     {
       "path": "continuum-preview/serve.mjs",

@@ -1,8 +1,8 @@
 {
-  "htmlBytes": 22365600,
-  "htmlMiB": 21.329,
+  "htmlBytes": 22409311,
+  "htmlMiB": 21.371,
   "under25MiB": true,
-  "htmlSha256": "30cc3426569fad86ed4045f85ee69aa431d84cd14ede6bcd333ef1d07432189d",
+  "htmlSha256": "a74fcefab2f6f10c8a69b5ead09c1c51cf8f67985f79e03aca439fcba2b9667c",
   "model": {
     "bytes": 12038416,
     "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
@@ -16,7 +16,8 @@
     "scene.js",
     "orb-original.js",
     "avatar3d.js",
-    "app.js"
+    "app.js",
+    "presence-instruments.js"
   ],
   "runtimeAssetsProvided": [
     "avatarFallback",
@@ -37,8 +38,8 @@
   "inputs": [
     {
       "path": "app.js",
-      "bytes": 39134,
-      "sha256": "886f73fb0d319f887b5300008cfd690736f4a9c1041552f58a0e6057540c98d9"
+      "bytes": 39558,
+      "sha256": "12f19ac69cef10ece3caadd538ab6a63053053e9f22faa58b6010783f7db2dd0"
     },
     {
       "path": "assets/continuum-avatar-NOTICE.json",
@@ -122,23 +123,38 @@
     },
     {
       "path": "avatar3d.js",
-      "bytes": 632138,
-      "sha256": "42e5005148b96f64fea56583871fd8b55a1ac49fac9b662305af8271ee9373dc"
+      "bytes": 633158,
+      "sha256": "7a0f371dea3d125a27fbfd08f65fa6ce665d79e9ca7f29eec5bd6885ec3a5738"
     },
     {
       "path": "index.html",
-      "bytes": 9992,
-      "sha256": "3046802fe8140a8945f44638e17b190dfa3b81ae729270ef788f967af89af382"
+      "bytes": 10722,
+      "sha256": "3c7cab9190eb9d5092a728420558107c6abf81060ea1479201b083491fa75f7b"
     },
     {
       "path": "orb-original.js",
-      "bytes": 30275,
-      "sha256": "9aa1607a31a8a080f18a7685435e29b9514f1b149eac7a76c4ee54f4449acec3"
+      "bytes": 31032,
+      "sha256": "f9ee074ce59ac23ec9b3c9a6975381bd987dbd2bea4944d927b1f8b43ce262b4"
+    },
+    {
+      "path": "presence-instruments.css",
+      "bytes": 15246,
+      "sha256": "2ae9918bdbee95ee8fb055ed428804f1cdb16629d5ffb906bc45653ad19209ef"
+    },
+    {
+      "path": "presence-instruments.js",
+      "bytes": 12196,
+      "sha256": "dafefe13775e19a65236417aebb2b5d89f0173defbd068d2444fffe142ebc622"
+    },
+    {
+      "path": "presence-layout.css",
+      "bytes": 7439,
+      "sha256": "fc29d4837493061c861b611cdc3e463c84af079d508421c50cabada866075be6"
     },
     {
       "path": "scene.js",
-      "bytes": 32296,
-      "sha256": "d9ceaabcbabd14a1335360d268605ec42abe1824f3474f9b5cd774a06f4d348f"
+      "bytes": 38269,
+      "sha256": "b4c5b6dcfae1a6c135f847cdf18c2f9327ecd55e48bc929f2f5690e114ae8da1"
     },
     {
       "path": "style.css",

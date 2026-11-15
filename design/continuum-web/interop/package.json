@@ -9,7 +9,10 @@
     "verify:avatar": "node verify-avatar-contract.mjs",
     "verify:orb": "node verify-orb-original.mjs",
     "verify:dom": "node ../qa/continuum-dom.cjs",
-    "render:room": "node render-original-room.mjs"
+    "render:room": "node render-original-room.mjs",
+    "verify:orb-fixed": "node verify-orb-fixed.mjs",
+    "verify:presence": "node ../qa/presence-instruments-dom.cjs",
+    "render:presence": "node render-central-presence.mjs"
   },
   "dependencies": {
     "three": "0.187.0"
