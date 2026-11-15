@@ -233,7 +233,11 @@ jobs:
           cases = [c for x in xmls for c in ET.parse(x).getroot().iter('testcase')]
           assert cases and not any(c.find(n) is not None for c in cases for n in ('failure','error'))
           names = {(c.get('classname','').split('.')[-1],c.get('name')) for c in cases if c.find('skipped') is None}
-          required = {('Fold7RoutingRegressionTest','spokenSingularDownloadUsesApprovedComputerPlan'),
+          required = {('ContinuumCompactComposerUiTest','shortLandscapeKeepsEditorAndSendFullyVisible'),
+                      ('ContinuumCompactComposerUiTest','heightChangesKeepDraftSelectionAndOriginalControls'),
+                      ('ContinuumCompactComposerUiTest','narrowLargeTextKeepsEditingAndOriginalSend'),
+                      ('ContinuumCompactComposerUiTest','overflowPreservesActionsLongPressesAndDisabledState'),
+                      ('Fold7RoutingRegressionTest','spokenSingularDownloadUsesApprovedComputerPlan'),
                       ('Fold7RoutingRegressionTest','informalJusticeResearchRemovesSpokenFillerWithoutLosingSubject'),
                       ('Fold7RoutingRegressionTest','funeralAndUnrelatedWebClaimsCannotBecomeJusticeEvidence'),
                       ('ResearchEngineTest','publicSearchRejectsUnrelatedFinalPageTitleAfterDiscovery'),
@@ -787,7 +791,7 @@ jobs:
           config.write_text('\n'.join(lines) + '\n')
           pathlib.Path(sys.argv[2]).write_text(json.dumps({'source_sha': __import__('os').environ['GITHUB_SHA'],
               'scope': 'SOFTWARE_GPU_EMULATOR_ONLY', 'baseline': original, 'selected': selected,
-              'logical_layout_preserved': True, 'pixel_count_ratio': 0.25,
+              'nominal_display_dp_preserved': True, 'pixel_count_ratio': 0.25,
               'reason': 'Reduce software rasterization load; retain frame, resize and runtime acceptance checks.'}, indent=2) + '\n')
           PY
       - name: Verify surface evidence validator

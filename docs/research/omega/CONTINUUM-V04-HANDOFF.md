@@ -1,5 +1,55 @@
 # Device AI Continuum – Bunker V04
 
+## Querformat-Eingabe und vollständige Vorläufer-QA, 15.11.2026
+
+Der abgeschlossene Lauf 43678716957 auf
+`37493320a7d535350ace78f9b74d9a3aeaeaadf2` bestätigt die vollständige Android-
+Suite: 5.830 Fälle, davon 5.828 bestanden und zwei deklarierte Host-Container-
+Auslassungen; keine Fehler. Lint: keine Fehler, 292 Warnungen. Renderer 32/32,
+Node 2.474 bestanden mit 37 erklärten Auslassungen, kritisches Profil 137/137,
+Backend 64/64. Die Archive wurden heruntergeladen, nach Größe/SHA-256 geprüft
+und die JUnit-XMLs erneut ausgezählt.
+
+Die reale native 3D-Ausgabe und der komplette Offline-Web-Pfad bestehen auf
+diesem Stand. Die App-Abnahme fand jedoch einen echten Querformatfehler: Bei
+geöffneter Tastatur waren nur Startkopf und Modusreihe sichtbar; Editor und
+Senden lagen unter der Tastatur. Zwei neue Tests gegen die unveränderten
+Releaseklassen reproduzierten beide den abgeschnittenen Editor.
+
+Die tatsächliche nutzbare Fensterhöhe steuert jetzt eine kompakte Gesprächs-
+ansicht. Der vorhandene Editor und dieselbe Senden-Schaltfläche bleiben in
+einer Zeile. Zusatzfunktionen und Moduswahl werden über ein natives Menü mit
+ihren bestehenden Klickpfaden bedient; Diktat, Stimmauswahl und Entwicklung
+behalten ihre bisherigen Langdruckaktionen. Deaktivierte Aktionen bleiben
+gesperrt, auch nach dem Öffnen des Menüs. Entwurf, Auswahl und Eingabefokus
+bleiben bestehen. Beim Vergrößern werden dieselben Ansichten und ursprünglichen
+Layoutparameter wieder eingesetzt. Die Schrifteinstellung bleibt erhalten;
+die Senden-Schaltfläche misst ihren Platz auch bei doppelter Schriftgröße.
+Der Originalavatar und sein Controller bleiben bestehen. Der vorhandene 2D-
+Avatar wird nur im sehr niedrigen Gesprächsbereich ausgeblendet und anschließend
+wieder angezeigt; der native 3D-Avatar bleibt im bisherigen Home-Container.
+
+Lokale Abnahme: vollständiger ARM64-Releasebau bestanden; 64 JVM-/Robolectric-
+Fälle gegen die vollständig kompilierten Releaseklassen bestanden (SDK28),
+einschließlich vier neuer UI-Fälle und bestehender Routinen-, Avatar-, Monitor-,
+Dashboard-, Insets- und Entwurfsprüfungen. Kein Test wurde ausgelassen.
+Workflow-YAML und Python-Abnahmeblock wurden erfolgreich geparst.
+Die vier neuen UI-Fälle sind zusätzlich im verpflichtenden Voll-QA-Register
+enthalten. Die reduzierte Emulatorauflösung garantiert lediglich gleiche
+nominelle Display-dp; Systemeinrückungen und nutzbare App-Höhe unterscheiden
+sich. Die Metadaten verwenden dafür jetzt den präzisen Namen
+`nominal_display_dp_preserved`.
+
+Der periodische Routinenjob wurde in Lauf 43678716957 innerhalb der begrenzten
+17-Minuten-Beobachtung nicht erneut ausgeführt. Der erfolgreiche natürliche
+Start des Vorlaufs b0fd4492 nach 976.638 ms bleibt ein anderer Quellbeleg.
+Android garantiert für `JobInfo.Builder.setPeriodic` keine exakte Startzeit
+innerhalb des Intervalls (Primärquelle: https://developer.android.com/reference/android/app/job/JobInfo.Builder#setPeriodic(long)).
+Die neue Korrektur ändert den Scheduler nicht. Kein Timer wurde vorgedreht,
+keine unerfüllte Bedingung erzwungen und kein fehlgeschlagener Lauf als bestanden
+ausgegeben. Der nächste echte Lauf des geänderten Appcodes muss den gesamten
+nativen Pfad erneut belegen. Originalsignierung bleibt separat offen.
+
 ## Nachgewiesener nativer Fortschritt und letzter Web-Prüferbefund
 
 Stand `b0fd4492db12526eff239b93b609a979eca9a038`, Lauf `43676184729`:

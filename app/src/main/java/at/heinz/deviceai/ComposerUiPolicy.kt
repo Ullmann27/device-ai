@@ -5,6 +5,9 @@ enum class DraftSubmission { READY, NEEDS_LOCAL_MODEL, NEEDS_CLOUD_SETUP }
 data class ComposerViewport(val top: Int, val bottom: Int, val compactDashboard: Boolean)
 
 object ComposerUiPolicy {
+    fun compactConversation(availableHeightDp: Float, fontScale: Float): Boolean =
+        availableHeightDp < 240f * fontScale.coerceAtLeast(1f)
+
     fun viewport(systemTop: Int, navigationBottom: Int, imeBottom: Int,
                  imeVisible: Boolean, wide: Boolean): ComposerViewport {
         require(systemTop >= 0 && navigationBottom >= 0 && imeBottom >= 0)

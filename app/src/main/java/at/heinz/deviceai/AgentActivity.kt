@@ -443,6 +443,9 @@ class AgentActivity : Activity() {
     private var conversationActive = false
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
+    private var compactConversationChrome = false
+    private var conversationPadding: IntArray? = null
+    private var adaptComposer: ((Boolean) -> Unit)? = null
     // Navigation is presentation-only; no learning-state or tool permission mutation.
     private var activeWorkArea = ContinuumWorkArea.START
     private var bottomWorkAreaBar: View? = null
@@ -1134,6 +1137,7 @@ class AgentActivity : Activity() {
             val availableHeightDp = (root.height - root.paddingTop - root.paddingBottom)
                 .coerceAtLeast(1) / resources.displayMetrics.density
             renderedWindowHeightDp = availableHeightDp
+            if (compactConversationChrome != needsCompactConversation()) refreshConversationLayout()
             // Insets and height-only resize change bounds, never the dialog, audio or renderer ownership.
             homeView?.updateAvailableViewport(availableHeightDp)
         }
@@ -1409,6 +1413,7 @@ class AgentActivity : Activity() {
             setPadding(if (wide) dp(22) else dp(14), if (wide) dp(20) else dp(14), if (wide) dp(22) else dp(14), dp(14))
         }
         chatColumn = column
+        conversationPadding = intArrayOf(column.paddingLeft, column.paddingTop, column.paddingRight, column.paddingBottom)
         keyboardTitle = textView("‹ START   ·   Continuum", 14f, CYAN, true).apply {
             visibility = View.GONE
             minimumHeight = dp(44)
@@ -3595,6 +3600,7 @@ class AgentActivity : Activity() {
             continuousConversation.active, keepCockpitDuringHandsFree, activeWorkArea == ContinuumWorkArea.START)
 
     private fun refreshConversationLayout() {
+        compactConversationChrome = needsCompactConversation()
         val dashboardWasVisible = dashboardSection?.visibility == View.VISIBLE
         val chat = !currentToolScene() && at.heinz.deviceai.cognitive.CockpitConversationPresentation.showChat(
             explicitChatSelected = activeWorkArea == ContinuumWorkArea.CHAT,
@@ -3608,15 +3614,27 @@ class AgentActivity : Activity() {
         dashboardSection?.visibility = if (chat) View.GONE else View.VISIBLE
         chatColumn?.visibility = if (chat) View.VISIBLE else View.GONE
         syncConversationAvatar(chat)
-        modeSection?.visibility = if (chat) View.VISIBLE else View.GONE
+        modeSection?.visibility = if (chat && !compactConversationChrome) View.VISIBLE else View.GONE
         keyboardTitle?.visibility = if (chat) View.VISIBLE else View.GONE
+        conversationPadding?.let { padding ->
+            chatColumn?.setPadding(padding[0], if (compactConversationChrome) dp(4) else padding[1],
+                padding[2], if (compactConversationChrome) dp(4) else padding[3])
+        }
+        adaptComposer?.invoke(compactConversationChrome)
         if (::chatScroll.isInitialized) chatScroll.visibility = if (chat) View.VISIBLE else View.GONE
         val training = learningVisualActive || activeNeuralCancellation != null
-        if (::neuralMonitor.isInitialized) neuralMonitor.visibility = if (chat || training) View.VISIBLE else View.GONE
-        if (::neuralProgress.isInitialized) neuralProgress.visibility = if (training) View.VISIBLE else View.GONE
+        if (::neuralMonitor.isInitialized) neuralMonitor.visibility =
+            if ((chat || training) && !compactConversationChrome) View.VISIBLE else View.GONE
+        if (::neuralProgress.isInitialized) neuralProgress.visibility =
+            if (training && !compactConversationChrome) View.VISIBLE else View.GONE
         syncPhoneNavigation?.invoke()
         if (!chat && !dashboardWasVisible) refreshDashboard()
     }
+
+    private fun needsCompactConversation(): Boolean = ComposerUiPolicy.compactConversation(
+        renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat(),
+        resources.configuration.fontScale
+    )
 
     /** Move the existing live surface; there is still only one renderer, clock and Director. */
     private fun syncConversationAvatar(chat: Boolean) {
@@ -3641,6 +3659,7 @@ class AgentActivity : Activity() {
             avatarDirector.attach(head)
         }
         val mountedInChat = head.parent === column
+        head.visibility = if (mountedInChat && compactConversationChrome) View.GONE else View.VISIBLE
         if (mountedInChat && head.layoutParams.height != height) {
             head.layoutParams = head.layoutParams.apply { this.height = height }
         }
@@ -6375,6 +6394,69 @@ class AgentActivity : Activity() {
                     android.widget.FrameLayout.LayoutParams.WRAP_CONTENT))
             }, matchWidth(top = 6))
         } else shell.addView(actions, matchWidth(top = 8))
+        val submit = sendButton
+        val editor = input
+        val originalParent = submit.parent as LinearLayout
+        val originalIndex = originalParent.indexOfChild(submit)
+        val originalParams = submit.layoutParams
+        val originalLines = editor.maxLines
+        val secondary = (0 until shell.childCount).map { shell.getChildAt(it) }
+            .filter { it !== inputRow }.associateWith { it.visibility }
+        val inlineActions = (0 until inputRow.childCount).map { inputRow.getChildAt(it) }
+            .filter { it !== editor }.associateWith { it.visibility }
+        val more = actionButton("⋯", compact = true).apply {
+            contentDescription = "Weitere Gesprächsfunktionen"
+            setOnClickListener {
+                val popup = android.widget.PopupMenu(this@AgentActivity, this)
+                val added = mutableSetOf<Button>()
+                fun addAction(view: Button, label: String, longPress: Boolean = false) {
+                    popup.menu.add(android.view.Menu.NONE, popup.menu.size() + 1, android.view.Menu.NONE, label)
+                        .setEnabled(view.isEnabled).setOnMenuItemClickListener {
+                        if (view.isEnabled) {
+                            if (longPress) view.performLongClick() else view.performClick()
+                        }
+                        true
+                    }
+                }
+                fun addActions(view: View) {
+                    if (view is Button && view !== submit && added.add(view)) {
+                        val label = view.text.toString().takeIf { it.length > 3 }
+                            ?: view.contentDescription?.toString() ?: view.text.toString()
+                        addAction(view, label)
+                        if (view === mic) addAction(view, "Text diktieren", longPress = true)
+                        if (view === voiceButton) addAction(view, "Stimme wählen", longPress = true)
+                        if (view.text.toString() == "⌁ Datei")
+                            addAction(view, "App entwickeln", longPress = true)
+                    } else if (view is android.view.ViewGroup) {
+                        for (index in 0 until view.childCount) addActions(view.getChildAt(index))
+                    }
+                }
+                inlineActions.keys.forEach(::addActions)
+                secondary.keys.forEach(::addActions)
+                modeSection?.let(::addActions)
+                popup.show()
+            }
+        }
+        var applied = false
+        adaptComposer = { compact ->
+            if (applied != compact) {
+                applied = compact
+                (submit.parent as android.view.ViewGroup).removeView(submit)
+                if (compact) {
+                    inputRow.addView(more, LinearLayout.LayoutParams(dp(48), LinearLayout.LayoutParams.WRAP_CONTENT)
+                        .apply { marginStart = dp(4) })
+                    inputRow.addView(submit, LinearLayout.LayoutParams(dp(56), LinearLayout.LayoutParams.WRAP_CONTENT)
+                        .apply { marginStart = dp(4) })
+                } else {
+                    inputRow.removeView(more)
+                    originalParent.addView(submit, originalIndex, originalParams)
+                }
+                inlineActions.forEach { (view, visibility) -> view.visibility = if (compact) View.GONE else visibility }
+                secondary.forEach { (view, visibility) -> view.visibility = if (compact) View.GONE else visibility }
+                editor.maxLines = if (compact) 1 else originalLines
+                shell.setPadding(dp(7), dp(if (compact) 4 else 8), dp(7), dp(if (compact) 4 else 8))
+            }
+        }
         refreshSendButtonPresentation()
         return shell
     }
