@@ -7,14 +7,106 @@
   const actions = Object.freeze({home:'home',settings:'settings',agents:'agents',
     'new-chat':'new-chat','quick-files':'files','quick-memory':'memory',
     'research-demo':'research','open-demo':'files',document:'files',
+    'local-file':'files','quick-source':'research','run-agents':'agents',
+    'run-computer':'device','stop-agents':'stop','stop-computer':'stop',
     listen:'voice-input',cancel:'stop','memory-source':'memory'});
+  const layoutActions = new Set(['expand','toggle-chats','toggle-instruments','close-panels']);
+  const chatId = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
+  const DEFAULT_COMMAND_LIMIT = 11500, MAX_MESSAGE = 68096, MAX_DRAFT = 262144, HISTORY = 36;
   const $ = selector => document.querySelector(selector);
+  // Keep the approved composer slot and attributes. A real textarea is required
+  // because HTML input.value silently removes line breaks during native restore.
+  const originalInput=$('#command-input');
+  if(originalInput?.tagName==='INPUT') {
+    const field=document.createElement('textarea');
+    for(const attribute of originalInput.attributes)
+      if(attribute.name!=='type')field.setAttribute(attribute.name,attribute.value);
+    field.rows=1;field.value=originalInput.value;field.setAttribute('aria-multiline','true');
+    originalInput.replaceWith(field);
+  }
   let snapshot = null, session = '', lines = [], rendering = false, currentDocument = null;
-  function send(kind,value) {
-    if (kind === 'route' && !routes.has(value)) return;
-    if (kind === 'command' && (!value || value.length > 2000)) return;
+  let pendingCommand = null, requestNumber = 0, dirtyDraft = false, lastDraft = '';
+  let telemetryAt = null, lastScene = null, feedRevision = 0, latestDraftRevision = -1;
+  const readings = [], nativeMeters = new Map();
+  const feedVersions = new WeakMap();
+  function send(kind,value,extra = {}) {
+    if (kind === 'route' && !routes.has(value)) return false;
+    const query = new URLSearchParams({value,...extra});
     window.location.assign('continuum-native://action/' + kind +
-      '?value=' + encodeURIComponent(value));
+      '?' + query.toString());
+    return true;
+  }
+  function notice(text) {
+    const target = $('#toast');
+    if (target) {target.textContent=text;target.classList.add('show');}
+  }
+  function labelWithIcons(node,label) {
+    if(!node)return;
+    const texts=[...node.childNodes].filter(child=>child.nodeType===3 && child.textContent.trim());
+    if(texts.length) {
+      if(texts[0].textContent.trim()!==label)texts[0].textContent=' '+label+' ';
+      texts.slice(1).forEach(child=>{child.textContent='';});
+    } else node.appendChild(document.createTextNode(' '+label));
+  }
+  function fitComposer() {
+    const field=$('#command-input');
+    if(!field)return;
+    const style=window.getComputedStyle(field);
+    const min=parseFloat(style.minHeight)||29, max=parseFloat(style.maxHeight)||116;
+    field.style.height='0px';
+    field.style.height=Math.max(min,Math.min(max,field.scrollHeight))+'px';
+  }
+  function commandLimits() {
+    return {
+      chars: Number.isInteger(snapshot?.maxCommandChars) && snapshot.maxCommandChars>0 ?
+        Math.min(DEFAULT_COMMAND_LIMIT,snapshot.maxCommandChars) : DEFAULT_COMMAND_LIMIT,
+      bytes: Number.isInteger(snapshot?.maxCommandBytes) && snapshot.maxCommandBytes>0 ?
+        Math.min(DEFAULT_COMMAND_LIMIT,snapshot.maxCommandBytes) : DEFAULT_COMMAND_LIMIT
+    };
+  }
+  function inputError(value) {
+    const limit = commandLimits();
+    if (value.length>limit.chars || new TextEncoder().encode(value).length>limit.bytes)
+      return 'Der Auftrag ist zu lang. Dein Entwurf bleibt erhalten.';
+    if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f]/.test(value))
+      return 'Der Text enthält ein nicht unterstütztes Steuerzeichen. Dein Entwurf bleibt erhalten.';
+    return '';
+  }
+  function syncDraft() {
+    const field = $('#command-input');
+    if (!field || !chatId.test(session)) return;
+    const value=field.value;
+    // Oversized edits stay in the page. Never silently truncate them to make a
+    // different command appear accepted by the existing native context budget.
+    if (value.length>MAX_DRAFT || new TextEncoder().encode(value).length>MAX_DRAFT) {
+      notice('Der Entwurf ist zu groß für die Übergabe. Bitte kürze ihn vor dem Ansichtswechsel.');
+      return;
+    }
+    const start=field.selectionStart ?? value.length, end=field.selectionEnd ?? start;
+    const key=JSON.stringify([session,value,start,end]);
+    if (key===lastDraft) return;
+    lastDraft=key;
+    send('draft',value,{sessionId:session,selectionStart:String(start),selectionEnd:String(end)});
+  }
+  function commandResult(result) {
+    if (!result || !pendingCommand || result.id!==pendingCommand.id ||
+      result.sessionId!==pendingCommand.sessionId || result.sessionId!==session) return;
+    const request=pendingCommand;pendingCommand=null;
+    if (result.accepted===true) {
+      const field=$('#command-input');
+      if (field && field.value===request.draft) {
+        field.value='';dirtyDraft=false;fitComposer();syncDraft();
+      }
+      clearDocument();
+      $('#toast')?.classList.remove('show');
+      return;
+    }
+    const reasons={busy:'Ein Auftrag läuft noch. Dein Entwurf bleibt erhalten.',
+      'stale-session':'Das Gespräch wurde gewechselt. Dein Entwurf wurde nicht gesendet.',
+      'too-long':'Der Auftrag ist zu lang. Dein Entwurf bleibt erhalten.',
+      'invalid-input':'Dieser Text konnte nicht übernommen werden. Dein Entwurf bleibt erhalten.',
+      unavailable:'Die Eingabe ist noch nicht bereit. Dein Entwurf bleibt erhalten.'};
+    notice(reasons[result.reason] || 'Der Auftrag wurde nicht übernommen. Dein Entwurf bleibt erhalten.');
   }
   function chatRow(row) {
     const button = document.createElement('button');
@@ -36,7 +128,7 @@
     const target = $('#chat-list');
     if (!target || !snapshot || rendering) return;
     const rows = (Array.isArray(snapshot.chats) ? snapshot.chats : []).filter(row =>
-      row && /^[a-f0-9-]{36}$/.test(row.id) && typeof row.title === 'string').slice(0,100);
+      row && chatId.test(row.id) && typeof row.title === 'string').slice(0,100);
     const current = [...target.querySelectorAll(':scope > button[data-native-chat]')];
     if (current.length === rows.length && target.children.length === rows.length &&
       current.every((node,i) => node.dataset.nativeChat === rows[i].id &&
@@ -65,10 +157,78 @@
     bottom.textContent=actual?note:'Messung nicht verfügbar';
     el.append(caption,figure,track,bottom);
   }
+  function stopDemoTelemetry() {
+    const telemetry=window.ContinuumTelemetry;
+    if (!telemetry?.getStatus().active) return;
+    for (const [channel,selector] of [['cpu','[data-telemetry-left]'],['ram','[data-telemetry-right]']]) {
+      const host=$(selector), panel=host?.querySelector('.ct-panel');
+      if (panel) nativeMeters.set(channel,{host,panel});
+    }
+    // The public lifecycle API also cancels its rAF sampler and long-task observer.
+    telemetry.destroy();
+    for (const [channel,{host,panel}] of nativeMeters) {
+      host.querySelector('.native-meter')?.remove();
+      panel.classList.add('native-telemetry-panel');
+      panel.querySelector('.ct-mode-toggle')?.remove();
+      panel.querySelector('h3').textContent=channel==='cpu'?'APP-CPU':'GERÄTE-RAM';
+      panel.querySelector('strong').textContent='—';
+      panel.querySelector('.ct-tag').textContent='ANDROID';
+      panel.querySelector('.ct-caption span').textContent='Messung startet …';
+      panel.querySelector('.ct-caption small').textContent='Noch kein Messwert';
+      panel.querySelector('.ct-trace')?.setAttribute('d','');
+      panel.querySelector('.ct-area')?.setAttribute('d','');
+      panel.querySelector('.ct-endpoint')?.setAttribute('visibility','hidden');
+      host.appendChild(panel);
+    }
+  }
+  function validPercent(value) {
+    return Number.isFinite(value) && value>=0 && value<=100 ? value : null;
+  }
+  function telemetryPath(channel) {
+    const first=readings[0]?.at, last=readings.at(-1)?.at;
+    let path='', previous=null;
+    for (const item of readings) {
+      const value=item[channel];
+      if (value===null) {previous=null;continue;}
+      const x=last===first?277:3+(item.at-first)/(last-first)*274;
+      const y=42-value*.39;
+      path+=(previous!==null && item.at-previous<=7500?' L':' M')+x.toFixed(2)+','+y.toFixed(2);
+      previous=item.at;
+    }
+    return path.trim();
+  }
   function renderMeters() {
     if (!snapshot) return;
-    meter('[data-telemetry-left]','APP-CPU',snapshot.cpu,'Anteil dieser App');
-    meter('[data-telemetry-right]','GERÄTE-RAM',snapshot.ram,'Belegt im Gerät');
+    stopDemoTelemetry();
+    const at=snapshot.telemetryAtElapsedMs;
+    if (Number.isFinite(at) && at>=0 && at!==telemetryAt) {
+      if (telemetryAt!==null && at<telemetryAt) readings.length=0;
+      telemetryAt=at;
+      readings.push({at,cpu:validPercent(snapshot.cpu),ram:validPercent(snapshot.ram)});
+      if (readings.length>HISTORY) readings.shift();
+    }
+    for (const [channel,label,note] of [['cpu','APP-CPU','Anteil dieser App'],['ram','GERÄTE-RAM','Belegt im Gerät']]) {
+      const view=nativeMeters.get(channel), percent=validPercent(snapshot[channel]);
+      if (!view) {
+        meter(channel==='cpu'?'[data-telemetry-left]':'[data-telemetry-right]',label,percent,note);
+        continue;
+      }
+      const {panel}=view;
+      const text=(selector,value)=>{const node=panel.querySelector(selector);if(node)node.textContent=value;};
+      panel.dataset.mode='android';panel.dataset.available=String(percent!==null);
+      panel.dataset.samples=String(readings.length);panel.dataset.paused='false';
+      text('h3',label);text('.ct-tag','ANDROID');text('strong',percent===null?'—':String(percent));
+      text('.ct-unit','%');text('.ct-caption span',note);
+      text('.ct-caption small',percent===null?'Nicht verfügbar':'Gemessen');
+      text('.ct-empty',readings.length?'':'Messverlauf startet …');
+      text('.ct-meta>span:first-child','Messverlauf');text('.ct-detail','0–100 % · Gerätedaten');
+      text('.ct-sr',label+': '+(percent===null?'Messung nicht verfügbar':percent+' Prozent')+'. '+note+'.');
+      panel.title=label+' · '+note+' · gemessene Werte';
+      panel.querySelector('.ct-trace')?.setAttribute('d',telemetryPath(channel));
+      panel.querySelector('.ct-area')?.setAttribute('d','');
+      panel.querySelector('.ct-endpoint')?.setAttribute('visibility','hidden');
+      panel.querySelector('.ct-plot')?.setAttribute('aria-label',label+' · echte Messwerte; Lücken bleiben leer');
+    }
   }
   function renderFeed() {
     if (!snapshot) return;
@@ -76,8 +236,8 @@
     if (!workspace) return;
     const show=lines.length>0 || snapshot.busy===true ||
       (Array.isArray(snapshot.workRows) && snapshot.workRows.length>0);
-    workspace.classList.toggle('native-work-active',show);
-    if (!show) return;
+    workspace.classList.toggle('native-work-active',show && !currentDocument);
+    if (!show) {workspace.querySelector('#native-live-panel')?.remove();return;}
     let panel=workspace.querySelector('#native-live-panel');
     if (!panel) {
       panel=document.createElement('section');
@@ -87,11 +247,13 @@
       workspace.appendChild(panel);
     }
     const feed=panel.querySelector('.native-transcript');
-    const entries=lines.slice(-24).map(line=>{
+    const signature=feedRevision+'|'+JSON.stringify(snapshot.workRows);
+    if (feedVersions.get(feed)!==signature) {
+      const entries=lines.slice(-60).map(line=>{
       const item=document.createElement('article');
       item.className='native-chat-line '+(line.user?'native-owner':'native-assistant');
       const label=document.createElement('small');label.textContent=line.user?'DU':'CONTINUUM';
-      const content=document.createElement('p');content.textContent=String(line.text||'').slice(0,6000);
+      const content=document.createElement('p');content.textContent=boundedMessage(line.text);
       item.append(label,content);return item;
     });
     if (Array.isArray(snapshot.workRows)) snapshot.workRows.slice(0,20).forEach(row=>{
@@ -104,12 +266,15 @@
       content.textContent=row.value.slice(0,500);
       item.append(label,content);entries.push(item);
     });
-    feed.replaceChildren(...entries);
+      const pinned=feed.scrollHeight-feed.scrollTop-feed.clientHeight<40;
+      feed.replaceChildren(...entries);feedVersions.set(feed,signature);
+      if(pinned)feed.scrollTop=feed.scrollHeight;
+    }
     panel.querySelector('.native-lane-state').textContent=snapshot.busy?
       'AUFTRAG WIRD BEARBEITET · STATUS VON ANDROID':
       (snapshot.status||'BEREIT · LOKALER GESPRÄCHSVERLAUF');
     const caption=$('#workspace-footnote');
-    if(caption)caption.textContent='Echte lokale Gesprächsdaten · Berechtigungen bleiben in Android';
+    if(caption && !currentDocument)caption.textContent='Dein Gespräch und deine Arbeitsschritte';
   }
 
   /**
@@ -177,7 +342,7 @@
     workspace.classList.add('native-document-active');
     workspace.classList.remove('native-work-active');
     const foot=$('#workspace-footnote');
-    if(foot)foot.textContent='Echte PDF · nur lesend geöffnet · kein Upload · Quelle: Android';
+    if(foot)foot.textContent='PDF · '+String(doc.name||'Dokument.pdf');
   }
   function clearDocument() {
     currentDocument=null;
@@ -201,39 +366,119 @@
     } else set();
   }
 
+  function nativeLabels() {
+    if(!snapshot)return;
+    for(const [action,label] of [['open-demo','PDF öffnen'],['research-demo','Recherche öffnen'],
+      ['local-file','Datei öffnen']]) {
+      document.querySelectorAll('[data-action="'+action+'"]').forEach(button=>{
+        if([...button.childNodes].some(node=>node.nodeType===3 && node.textContent.trim()))labelWithIcons(button,label);
+      });
+    }
+    const set=(selector,text)=>{const node=$(selector);if(node && node.textContent!==text)node.textContent=text;};
+    labelWithIcons($('.preview-badge'),'ANDROID · LOKAL');set('.sidebar-note small','Gespeicherte Gespräche auf deinem Gerät.');
+    set('.project-button small','Deine Gespräche');set('.input-hint','LOKAL');
+    set('#workspace-meta',currentDocument?'PDF':snapshot.busy?'AUFTRAG AKTIV':'LOKAL');
+    set('#workspace-footnote',currentDocument?'PDF · '+currentDocument.name:
+      lines.length?'Dein Gespräch und deine Arbeitsschritte':'Bereit für deinen Auftrag');
+    $('#command-input')?.setAttribute('aria-label','Dein Auftrag');
+    $('#command-input')?.setAttribute('placeholder','Schreibe deinen Auftrag …');
+    $('#listen-button')?.setAttribute('aria-label',snapshot.listening?'Zuhören beenden':'Spracheingabe starten');
+    $('.send-button')?.setAttribute('aria-label','Auftrag senden');
+  }
   const workspace=$('#workspace');
   if(workspace)new MutationObserver(()=>{
     if(snapshot && (lines.length || snapshot.busy || snapshot.workRows?.length) && !workspace.querySelector('#native-live-panel'))renderFeed();
     if(currentDocument && !workspace.querySelector('#native-document-panel'))renderDocument();
+    nativeLabels();
   }).observe(workspace,{childList:true});
   function receive(state) {
     if(!state||typeof state!=='object')return;
     snapshot=state;
-    if(typeof state.sessionId==='string') {
-      if(session && session!==state.sessionId){lines=[];clearDocument();}
+    if(typeof state.sessionId==='string' && chatId.test(state.sessionId)) {
+      const changed=session!==state.sessionId;
+      const initial=!session;
+      if(changed) {
+        lines=[];feedRevision++;currentDocument=null;pendingCommand=null;lastDraft='';
+        latestDraftRevision=-1;
+        $('#workspace')?.classList.remove('native-document-active');
+        $('#native-document-panel')?.remove();
+        if(!initial)dirtyDraft=false;
+      }
       session=state.sessionId;
+      const revision=Number.isSafeInteger(state.draftRevision) && state.draftRevision>=0?
+        state.draftRevision:null;
+      const newerDraft=revision===null?latestDraftRevision<0:revision>latestDraftRevision;
+      // Even ignored snapshots advance the observed revision, so the submitted
+      // draft cannot reappear after its later acceptance acknowledgement.
+      if(revision!==null)latestDraftRevision=Math.max(latestDraftRevision,revision);
+      if(state.draft && typeof state.draft.text==='string' && !dirtyDraft &&
+        !pendingCommand && state.commandPending!==true && newerDraft) {
+        const field=$('#command-input');
+        if(field && state.draft.text.length<=MAX_DRAFT) {
+          field.value=state.draft.text;
+          const start=Number.isInteger(state.draft.selectionStart)?state.draft.selectionStart:field.value.length;
+          const end=Number.isInteger(state.draft.selectionEnd)?state.draft.selectionEnd:start;
+          field.setSelectionRange(Math.max(0,start),Math.max(0,end));
+          fitComposer();
+        }
+      }
     }
-    renderChats();renderMeters();renderFeed();
+    window.ContinuumOperations?.detach();
+    renderChats();renderMeters();renderFeed();nativeLabels();
+    const scene=state.speaking===true?'speaking':state.listening===true?'listening':state.busy===true?'working':'idle';
+    if(scene!==lastScene) {
+      lastScene=scene;document.body.dataset.state=scene;
+      window.ContinuumScene?.setState(scene);
+      document.querySelectorAll('[data-scene]').forEach(button=>{
+        button.classList.toggle('active',button.dataset.scene===scene);
+        button.setAttribute('aria-current',button.dataset.scene===scene?'step':'false');
+        button.setAttribute('aria-disabled','true');
+      });
+    }
     const orb=$('#orb-status');
-    if(orb)orb.textContent=state.busy?'ARBEITET':state.listening?'HÖRT ZU':'BEREIT';
+    if(orb)orb.textContent=state.speaking?'SPRICHT':state.listening?'HÖRT ZU':state.busy?'ARBEITET':'BEREIT';
+    const caption=$('#scene-caption');
+    if(caption)caption.textContent=state.status||'Bereit';
+    // Typing can precede the first Android snapshot. Bind that existing edit now
+    // so an immediate return to the classic view retains it without another key.
+    if(dirtyDraft)syncDraft();
+  }
+  function boundedMessage(value) {
+    const text=typeof value==='string'?value:'';
+    const bounded=text.slice(0,MAX_MESSAGE);
+    return /[\uD800-\uDBFF]$/.test(bounded)?bounded.slice(0,-1):bounded;
   }
   function transcript(data) {
     if(!data||data.sessionId!==session||!Array.isArray(data.entries))return;
-    lines=data.entries.filter(e=>e&&typeof e.user==='boolean'&&typeof e.text==='string').slice(-60);
+    const rows=data.entries.filter(e=>e&&typeof e.user==='boolean'&&typeof e.text==='string')
+      .map(e=>({user:e.user,text:boundedMessage(e.text)}));
+    lines=(data.append===true?lines.concat(rows):rows).slice(-60);feedRevision++;
     renderFeed();
   }
   function message(line) {
-    if(!line||typeof line.user!=='boolean'||typeof line.text!=='string')return;
-    lines.push({user:line.user,text:line.text.slice(0,6000)});
+    if(!line||line.sessionId!==session||typeof line.user!=='boolean'||typeof line.text!=='string')return;
+    lines.push({user:line.user,text:boundedMessage(line.text)});feedRevision++;
     if(lines.length>60)lines.shift();
     renderFeed();
   }
+  function closePanels() {
+    document.body.classList.remove('chats-open','instruments-open');
+    document.querySelectorAll('[data-action="toggle-chats"],[data-action="toggle-instruments"]')
+      .forEach(button=>button.setAttribute('aria-expanded','false'));
+  }
   function section(name) {
     if(!routes.has(name))return;
+    closePanels();
     document.body.dataset.nativeSection=name;
+    const original=name==='home'||name==='chat'?'conversation':name==='device'?'computer':name;
+    if(document.querySelector('.nav-button[data-section="'+original+'"]'))
+      document.querySelectorAll('.nav-button[data-section]').forEach(button=>{
+        const selected=button.dataset.section===original;
+        button.classList.toggle('active',selected);button.setAttribute('aria-current',selected?'page':'false');
+      });
     if(name==='chat')$('#command-input')?.focus({preventScroll:true});
   }
-  window.ContinuumNative=Object.freeze({receive,transcript,message,section,document:documentOpened,clearDocument});
+  window.ContinuumNative=Object.freeze({receive,transcript,message,section,document:documentOpened,clearDocument,commandResult});
   document.addEventListener('click',e=>{
     const pdf=e.target.closest('[data-native-pdf]');
     if(pdf){
@@ -245,6 +490,7 @@
     const own=e.target.closest('[data-native-chat]');
     if(own) {
       e.preventDefault();e.stopImmediatePropagation();
+      closePanels();
       send('select-chat',own.dataset.nativeChat);return;
     }
     const fake=e.target.closest('[data-chat]');
@@ -265,15 +511,42 @@
     if(value) {
       e.preventDefault();e.stopImmediatePropagation();
       send('route',value);section(value);
+      return;
+    }
+    if(action && action.dataset.action==='close') {
+      e.preventDefault();e.stopImmediatePropagation();clearDocument();return;
+    }
+    if((action && !layoutActions.has(action.dataset.action)) ||
+      e.target.closest('[data-scene],[data-phase],[data-source],[data-op-action],[data-op-view],[data-op-source],[data-op-step],[data-op-paragraph]')) {
+      // Demo handlers are never allowed to fabricate a task, source or result in
+      // the Android session. Pure layout controls keep their original behavior.
+      e.preventDefault();e.stopImmediatePropagation();
+    }
+  },true);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape' && !document.body.classList.contains('chats-open') &&
+      !document.body.classList.contains('instruments-open')) {
+      e.preventDefault();e.stopImmediatePropagation();clearDocument();
     }
   },true);
   $('#command-form')?.addEventListener('submit',e=>{
     e.preventDefault();e.stopImmediatePropagation();
     const field=$('#command-input'), text=field?.value?.trim()||'';
-    if(text && text.length<=2000){clearDocument();send('command',text);field.value='';}
+    if(!text)return;
+    const error=inputError(text);
+    if(error){notice(error);return;}
+    if(!chatId.test(session)){notice('Die Android-Verbindung startet. Dein Entwurf bleibt erhalten.');return;}
+    if(pendingCommand || snapshot?.commandPending===true){notice('Die Eingabe wird übernommen. Dein Entwurf bleibt erhalten.');return;}
+    pendingCommand={id:'command-'+(++requestNumber),sessionId:session,draft:field.value};
+    send('command',text,{id:pendingCommand.id,sessionId:session});
   },true);
+  const input=$('#command-input');
+  input?.addEventListener('input',()=>{dirtyDraft=true;fitComposer();syncDraft();});
+  for(const event of ['select','keyup','click','blur'])input?.addEventListener(event,syncDraft);
+  window.addEventListener('load',stopDemoTelemetry,{once:true});
+  window.addEventListener('resize',fitComposer);
   const badge=$('.preview-badge');
-  if(badge)badge.textContent='ANDROID · ORIGINALDESIGN';
+  labelWithIcons(badge,'ANDROID · LOKAL');
   const note=$('#workspace-footnote');
-  if(note)note.textContent='Design aus PR #850 · echte Android-Routen · Gerätetest offen';
+  if(note)note.textContent='Verbindung wird hergestellt …';
 })();

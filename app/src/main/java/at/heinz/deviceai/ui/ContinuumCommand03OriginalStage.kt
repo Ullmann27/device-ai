@@ -14,11 +14,12 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
- * WIP visual-parity renderer for the owner's exact Kommando-03 HTML source.
+ * Local presentation of the owner's exact Kommando-03 HTML source.
  *
  * The source files are byte-identical to PR #850 (verified by the lock manifest).
- * This WebView is for the explicitly opened visual review stage, NOT the default
- * Android scene until native event/display parity and on-device QA are complete.
+ * The current integration mounts this as the default Activity presentation, with
+ * an explicit return to the existing native view. Device/WebGL acceptance remains
+ * separate from source and host tests.
  *
  * No JavascriptInterface, file:// origin, WebView internet access, secret or
  * model/tool API exposure. Native actions are top-level allowlisted navigations
@@ -27,6 +28,8 @@ import org.json.JSONObject
 internal class ContinuumCommand03OriginalStage(
     context: Context,
     private val onNativeAction: (route: String, value: String?) -> Unit,
+    private val onNativeCommand: (Command03Command, (Boolean, String?) -> Unit) -> Unit,
+    private val onNativeDraft: (Command03Draft) -> Unit,
     private val onReady: () -> Unit = {}
 ) : WebView(context) {
     companion object {
@@ -36,7 +39,6 @@ internal class ContinuumCommand03OriginalStage(
         private val SAFE_PATH = Regex("[A-Za-z0-9_./-]{1,200}")
         private val ROUTES = setOf("home", "chat", "chats", "new-chat", "files",
             "research", "agents", "memory", "device", "settings", "voice-input", "stop")
-        private val CHAT_ID = Regex("[a-f0-9-]{36}")
         private fun denied(): WebResourceResponse = WebResourceResponse(
             "text/plain", "UTF-8", 403, "Forbidden", emptyMap(),
             ByteArrayInputStream(ByteArray(0))
@@ -59,11 +61,18 @@ internal class ContinuumCommand03OriginalStage(
     }
 
     private var pageReady = false
+    private var disposed = false
     private var queuedState: String? = null
     private var queuedDocument: String? = null
+    private var queuedTranscript: Pair<String, JSONArray>? = null
+    private val queuedMessages = ArrayDeque<JSONObject>()
+    private data class CommandReceipt(val request: Command03Command, var result: JSONObject? = null)
+    private val commands = linkedMapOf<String, CommandReceipt>()
+    private val queuedResults = linkedMapOf<String, JSONObject>()
 
     /** Native -> local page only. Never grant JavaScript direct Android capabilities. */
     fun present(state: JSONObject) {
+        if (disposed) return
         val data = state.toString()
         if (!pageReady) queuedState = data
         else evaluateJavascript("window.ContinuumNative?.receive($data);", null)
@@ -75,31 +84,120 @@ internal class ContinuumCommand03OriginalStage(
      * becomes available to JavaScript, and nothing is sent to the network.
      */
     fun presentDocument(document: JSONObject) {
+        if (disposed) return
         val data = document.toString()
         if (!pageReady) queuedDocument = data
         else evaluateJavascript("window.ContinuumNative?.document($data);", null)
     }
 
     fun clearDocument() {
+        if (disposed) return
         queuedDocument = null
         if (pageReady) evaluateJavascript("window.ContinuumNative?.clearDocument();", null)
     }
 
     fun presentTranscript(sessionId: String, entries: JSONArray) {
-        if (!pageReady || !CHAT_ID.matches(sessionId)) return
-        val data = JSONObject().put("sessionId", sessionId).put("entries", entries).toString()
-        evaluateJavascript("window.ContinuumNative?.transcript($data);", null)
+        if (disposed || !Command03BridgeContract.validSession(sessionId)) return
+        if (!pageReady) {
+            queuedTranscript = sessionId to entries
+            queuedMessages.removeAll { it.optString("sessionId") == sessionId }
+            return
+        }
+        // Full stored messages can exceed the former 6,000-character preview.
+        // Bound each Binder/evaluateJavascript call instead of cutting their text.
+        var batch = JSONArray()
+        var characters = 0
+        var append = false
+        fun flush() {
+            val data = JSONObject().put("sessionId", sessionId).put("entries", batch)
+                .put("append", append).toString()
+            evaluateJavascript("window.ContinuumNative?.transcript($data);", null)
+            append = true
+            batch = JSONArray()
+            characters = 0
+        }
+        for (index in maxOf(0, entries.length() - 60) until entries.length()) {
+            val entry = entries.optJSONObject(index) ?: continue
+            val clean = JSONObject().put("user", entry.optBoolean("user"))
+                .put("text", Command03BridgeContract.messageText(entry.optString("text")))
+            val length = clean.toString().length
+            if (batch.length() > 0 && characters + length > 120_000) flush()
+            batch.put(clean)
+            characters += length
+        }
+        if (batch.length() > 0 || !append) flush()
     }
 
-    fun presentMessage(user: Boolean, text: String) {
-        if (!pageReady || text.isBlank()) return
-        val data = JSONObject().put("user", user).put("text", text.take(6000)).toString()
+    fun presentMessage(sessionId: String, user: Boolean, text: String) {
+        if (disposed || text.isBlank() || !Command03BridgeContract.validSession(sessionId)) return
+        val message = JSONObject().put("sessionId", sessionId).put("user", user)
+            .put("text", Command03BridgeContract.messageText(text))
+        if (!pageReady) {
+            queuedMessages.addLast(message)
+            while (queuedMessages.size > 60) queuedMessages.removeFirst()
+            return
+        }
+        val data = message.toString()
         evaluateJavascript("window.ContinuumNative?.message($data);", null)
     }
 
     fun showSection(section: String) {
-        if (!pageReady || section !in ROUTES) return
+        if (disposed || !pageReady || section !in ROUTES) return
         evaluateJavascript("window.ContinuumNative?.section(" + JSONObject.quote(section) + ");", null)
+    }
+
+    private fun commandResult(request: Command03Command, accepted: Boolean, reason: String?) {
+        if (disposed) return
+        val result = JSONObject().put("id", request.id).put("sessionId", request.sessionId)
+            .put("accepted", accepted).put("reason", reason ?: JSONObject.NULL)
+        if (!pageReady) queuedResults[request.id] = result
+        else evaluateJavascript("window.ContinuumNative?.commandResult($result);", null)
+    }
+
+    private fun submitCommand(uri: Uri) {
+        val request = Command03Command(uri.getQueryParameter("id").orEmpty(),
+            uri.getQueryParameter("sessionId").orEmpty(), uri.getQueryParameter("value").orEmpty())
+        if (!Command03BridgeContract.validRequest(request.id) ||
+            !Command03BridgeContract.validSession(request.sessionId)) {
+            commandResult(request, false, "invalid-input")
+            return
+        }
+        Command03BridgeContract.commandFailure(request.text)?.let {
+            commandResult(request, false, it)
+            return
+        }
+        val key = request.sessionId + ":" + request.id
+        commands[key]?.let { previous ->
+            if (previous.request != request) commandResult(request, false, "invalid-input")
+            else previous.result?.let { result ->
+                commandResult(request, result.optBoolean("accepted"), result.optString("reason").takeUnless { it == "null" })
+            }
+            return
+        }
+        while (commands.size >= 64) {
+            val completed = commands.entries.firstOrNull { it.value.result != null } ?: break
+            commands.remove(completed.key)
+        }
+        if (commands.size >= 64) { commandResult(request, false, "busy"); return }
+        val receipt = CommandReceipt(request)
+        commands[key] = receipt
+        onNativeCommand(request) { accepted, reason ->
+            if (disposed || receipt.result != null) return@onNativeCommand
+            receipt.result = JSONObject().put("accepted", accepted).put("reason", reason ?: JSONObject.NULL)
+            commandResult(request, accepted, reason)
+        }
+    }
+
+    override fun destroy() {
+        disposed = true
+        pageReady = false
+        queuedState = null
+        queuedDocument = null
+        queuedTranscript = null
+        queuedMessages.clear()
+        commands.clear()
+        queuedResults.clear()
+        super.destroy()
     }
 
     init {
@@ -119,18 +217,26 @@ internal class ContinuumCommand03OriginalStage(
         }
         webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                if (disposed) return true
                 val uri = request.url
                 if (request.isForMainFrame && uri.scheme == "continuum-native" &&
-                    uri.host == "action") {
+                    uri.host == "action" && uri.port == -1 && uri.userInfo == null && request.method == "GET") {
                     val command = uri.pathSegments.singleOrNull().orEmpty()
                     val value = uri.getQueryParameter("value").orEmpty()
                     if (command == "route" && value in ROUTES) {
                         onNativeAction(value, null)
-                    } else if (command == "select-chat" && CHAT_ID.matches(value)) {
+                    } else if (command == "select-chat" && Command03BridgeContract.validSession(value)) {
                         onNativeAction("select-chat", value)
-                    } else if (command == "command" && value.isNotBlank() &&
-                        value.length <= 2_000 && value.none(Char::isISOControl)) {
-                        onNativeAction("command", value)
+                    } else if (command == "command") {
+                        submitCommand(uri)
+                    } else if (command == "draft") {
+                        val session = uri.getQueryParameter("sessionId").orEmpty()
+                        val start = uri.getQueryParameter("selectionStart")?.toIntOrNull()
+                        val end = uri.getQueryParameter("selectionEnd")?.toIntOrNull()
+                        if (Command03BridgeContract.validSession(session) && Command03BridgeContract.validDraft(value) &&
+                            start != null && end != null && start in 0..value.length && end in start..value.length) {
+                            onNativeDraft(Command03Draft(session, value, start, end))
+                        }
                     }
                     return true
                 }
@@ -157,7 +263,7 @@ internal class ContinuumCommand03OriginalStage(
             }
 
             override fun onPageFinished(view: WebView, url: String) {
-                if (url != INDEX) return
+                if (disposed || url != INDEX) return
                 // The Android-only bridge was loaded BEFORE the unchanged
                 // demo scripts by index.android.html. No post-load race.
                 pageReady = true
@@ -165,10 +271,22 @@ internal class ContinuumCommand03OriginalStage(
                     view.evaluateJavascript("window.ContinuumNative?.receive($json);", null)
                     queuedState = null
                 }
+                queuedTranscript?.let { (session, entries) ->
+                    queuedTranscript = null
+                    presentTranscript(session, entries)
+                }
+                queuedMessages.toList().forEach { message ->
+                    view.evaluateJavascript("window.ContinuumNative?.message($message);", null)
+                }
+                queuedMessages.clear()
                 queuedDocument?.let { json ->
                     view.evaluateJavascript("window.ContinuumNative?.document($json);", null)
                     queuedDocument = null
                 }
+                queuedResults.values.forEach { result ->
+                    view.evaluateJavascript("window.ContinuumNative?.commandResult($result);", null)
+                }
+                queuedResults.clear()
                 onReady()
             }
 

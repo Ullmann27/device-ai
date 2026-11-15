@@ -92,6 +92,40 @@ Only fresh JUnit XML from this invocation is counted. Missing selected results,
 no executed tests, failures, source drift, or a changed test-source hash cannot
 produce a successful test receipt.
 
+## Original HTML bridge behavior
+
+`native-bridge-behavior.test.mjs` executes the original Android HTML and the
+unchanged page, operation, instrument, telemetry, and workspace-motion scripts
+with the separate native adapter. It uses jsdom 26.1.0 for DOM behavior. Install
+this test-only dependency outside the checkout; no application dependency or
+Android runtime package changes are needed.
+
+```sh
+npm install --ignore-scripts --prefix /tmp/command03-dom jsdom@26.1.0
+COMMAND03_DOM_MODULE=/tmp/command03-dom/node_modules/jsdom/lib/api.js \
+  node --test tools/command03-native-qa/native-bridge-behavior.test.mjs
+node tools/command03-native-qa/check-visual-source.mjs
+```
+
+The DOM checks exercise document visibility after repeated native updates,
+rejection and acceptance of commands, draft/session boundaries, and the
+separation of native actions and telemetry from the original demonstration.
+The clock, graphics seams, and Android navigation transport are test doubles;
+these checks do not demonstrate Chromium/WebView pixels, a GPU frame, actual
+speech synchronization, or Fold7 behavior. The separate source lock verifies
+the original 35 asset bytes and the two-include Android entry point.
+
+The actual Android Activity/WebView routing checks are in
+`at.heinz.deviceai.ContinuumCommand03BridgeUiTest`. Run that physical test class
+with the existing harness on a clean, pinned source, for example:
+
+```sh
+python tools/command03-native-qa/run.py --config /absolute/path/native-qa-config.json \
+  --mode ui-tests --test at.heinz.deviceai.ContinuumCommand03BridgeUiTest \
+  --focus-test-sources --version-code 60 --label command03-html-ui-01 \
+  --expected-sha "$CONTINUUM_SOURCE_SHA"
+```
+
 ## Actual Activity captures
 
 Use the existing outer CLI and fixture; do not replace them with a mock layout.

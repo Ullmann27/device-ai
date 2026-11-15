@@ -20,7 +20,7 @@ async function fixture() {
     url: 'https://appassets.androidplatform.net/assets/continuum-command03/index.android.html',
     pretendToBeVisual: true, runScripts: 'outside-only'
   });
-  const window = dom.window, navigations = [], scheduled = new Map();
+  const window = dom.window, navigations = [], scheduled = new Map(), scenes = [];
   let serial = 0, now = 100;
   const schedule = fn => {scheduled.set(++serial, fn); return serial;};
   const cancel = id => scheduled.delete(id);
@@ -36,7 +36,7 @@ async function fixture() {
     }
   });
   window.matchMedia = () => ({matches: false, addEventListener() {}, removeEventListener() {}});
-  window.ContinuumScene = {setState() {}, setIntensity() {}, setQuality() {}, resize() {}};
+  window.ContinuumScene = {setState(value) {scenes.push(value);}, setIntensity() {}, setQuality() {}, resize() {}};
   const context = vm.createContext({
     window: proxy, document: window.document, console, URL, URLSearchParams, TextEncoder,
     CustomEvent: window.CustomEvent, MouseEvent: window.MouseEvent, Event: window.Event,
@@ -66,7 +66,7 @@ async function fixture() {
     field.value = text;field.dispatchEvent(new window.Event('input', {bubbles: true}));
     return field;
   };
-  return {dom, window, document: window.document, navigations, state, click, submit, input,
+  return {dom, window, document: window.document, navigations, scenes, state, click, submit, input,
     advance(ms) {now += ms;}, close() {dom.window.close();}};
 }
 
@@ -173,5 +173,170 @@ test('long real commands and input selections use the native session and UTF-8 b
     f.input('ö'.repeat(6000));f.submit();
     assert.equal(f.navigations.filter(url => url.pathname === '/command').length, count);
     assert.equal(field.value, 'ö'.repeat(6000));
+  } finally {f.close();}
+});
+
+test('actual busy, listening and speaking transitions drive the original scene without demo timers', async () => {
+  const f = await fixture();
+  try {
+    f.state();f.state({busy: true});assert.equal(f.scenes.at(-1), 'working');
+    f.click(f.document.querySelector('[data-scene="speaking"]'));
+    assert.equal(f.scenes.at(-1), 'working');
+    f.state({listening: true});assert.equal(f.scenes.at(-1), 'listening');
+    f.state({speaking: true});assert.equal(f.scenes.at(-1), 'speaking');
+    f.state();assert.equal(f.scenes.at(-1), 'idle');
+    assert.equal(f.document.querySelector('#orb-status').textContent, 'BEREIT');
+    assert.equal(f.window.ContinuumOperations.getState(), null);
+  } finally {f.close();}
+});
+
+test('telemetry history advances only for new actual measurements and preserves unavailable gaps', async () => {
+  const f = await fixture();
+  try {
+    f.state({telemetryAtElapsedMs: 100, cpu: 10});
+    const panel=f.document.querySelector('[data-telemetry-left] .ct-panel');
+    assert.ok(panel, 'The original chart panel is retained');
+    assert.equal(panel.dataset.samples, '1');
+    f.state({telemetryAtElapsedMs: 100, busy: true});assert.equal(panel.dataset.samples, '1');
+    f.state({telemetryAtElapsedMs: 5100, cpu: null});
+    f.state({telemetryAtElapsedMs: 10100, cpu: 40});
+    const trace=panel.querySelector('.ct-trace').getAttribute('d');
+    assert.equal((trace.match(/M/g)||[]).length, 2, 'Unknown CPU sample splits the trace');
+    assert.equal((trace.match(/L/g)||[]).length, 0);
+    f.state({telemetryAtElapsedMs: 50100, cpu: 50});
+    assert.equal((panel.querySelector('.ct-trace').getAttribute('d').match(/M/g)||[]).length, 3,
+      'A long collection gap is never presented as continuous measured work');
+  } finally {f.close();}
+});
+
+test('empty native history and native-ready captions replace demo content while retaining button icons', async () => {
+  const f = await fixture();
+  try {
+    const button=f.document.querySelector('#hero-action'), icon=button.querySelector('svg');
+    const badgeIndicator=f.document.querySelector('.preview-badge i');
+    assert.ok(f.document.querySelector('#chat-list [data-chat]'), 'Original fixture has sample chats');
+    f.state();
+    assert.equal(f.document.querySelector('#chat-list').children.length, 0);
+    assert.match(button.textContent, /Recherche öffnen/);assert.equal(button.querySelector('svg'), icon);
+    assert.equal(f.document.querySelector('.preview-badge i'), badgeIndicator);
+    assert.equal(f.document.querySelector('#workspace-footnote').textContent, 'Bereit für deinen Auftrag');
+    assert.doesNotMatch(f.document.querySelector('.input-hint').textContent, /VORSCHAU/);
+    assert.doesNotMatch(f.document.querySelector('.sidebar-note').textContent, /Beispielchats/);
+  } finally {f.close();}
+});
+
+test('late message and document callbacks cannot cross conversation boundaries', async () => {
+  const f = await fixture();
+  try {
+    f.state();f.window.ContinuumNative.message({sessionId, user: false, text: 'Private alte Antwort'});
+    assert.match(f.document.querySelector('#native-live-panel').textContent, /Private alte Antwort/);
+    f.state({sessionId: anotherSession});
+    assert.equal(f.document.querySelector('#native-live-panel'), null);
+    f.window.ContinuumNative.message({sessionId, user: false, text: 'Verspätete alte Antwort'});
+    f.window.ContinuumNative.document({sessionId, name: 'Alt.pdf', pageCount: 1, textState: 'EXTRACTED', text: 'Alte Daten'});
+    assert.equal(f.document.querySelector('#native-live-panel'), null);
+    assert.equal(f.document.querySelector('#native-document-panel'), null);
+  } finally {f.close();}
+});
+
+test('chunked transcripts preserve long model responses and user scroll nodes on status refresh', async () => {
+  const f = await fixture();
+  try {
+    const response='Das ist der vollständige Text. '.repeat(450);
+    f.state();
+    f.window.ContinuumNative.transcript({sessionId, append: false, entries: [{user: true, text: 'Frage'}]});
+    f.window.ContinuumNative.transcript({sessionId, append: true, entries: [{user: false, text: response}]});
+    const row=f.document.querySelector('.native-assistant p');
+    assert.equal(row.textContent,response);assert.ok(row.textContent.length>6000);
+    f.state({cpu: 23});assert.equal(f.document.querySelector('.native-assistant p'),row,
+      'A CPU refresh must not replace messages and lose selection or scroll state');
+    assert.equal(f.document.querySelectorAll('.native-chat-line').length,2);
+  } finally {f.close();}
+});
+
+test('native restore does not overwrite a local draft and oversize commands keep their synchronized draft', async () => {
+  const f = await fixture();
+  try {
+    f.state({draft:{text:'Gespeicherter Entwurf',selectionStart:4,selectionEnd:8}});
+    const field=f.document.querySelector('#command-input');
+    assert.equal(field.value,'Gespeicherter Entwurf');assert.equal(field.selectionStart,4);assert.equal(field.selectionEnd,8);
+    f.input('Meine neue Eingabe');
+    f.state({draft:{text:'Alter Snapshot',selectionStart:0,selectionEnd:0}});
+    assert.equal(field.value,'Meine neue Eingabe');
+    const large='ö'.repeat(6000);f.input(large);f.submit();
+    const draft=f.navigations.findLast(url=>url.pathname==='/draft');
+    assert.equal(draft.searchParams.get('value'),large);
+    assert.equal(f.navigations.filter(url=>url.pathname==='/command').length,0);
+    assert.equal(field.value,large);
+  } finally {f.close();}
+});
+
+test('selecting a stored conversation closes the existing mobile drawer without replacing its controls', async () => {
+  const f = await fixture();
+  try {
+    f.state({chats:[{id:sessionId,title:'Gespeicherter Chat'}]});
+    const toggle=f.document.querySelector('[data-action="toggle-chats"]');
+    f.click(toggle);assert.equal(f.document.body.classList.contains('chats-open'),true);
+    const entry=f.document.querySelector('[data-native-chat]');f.click(entry);
+    assert.equal(f.document.body.classList.contains('chats-open'),false);
+    assert.equal(toggle.getAttribute('aria-expanded'),'false');
+    assert.equal(f.document.querySelector('[data-action="toggle-chats"]'),toggle);
+    assert.equal(f.navigations.at(-1).pathname,'/select-chat');
+    assert.equal(f.navigations.at(-1).searchParams.get('value'),sessionId);
+  } finally {f.close();}
+});
+
+test('the original composer slot supports exact multiline paste, submit and native restore', async () => {
+  const f = await fixture();
+  try {
+    const text='Erste Zeile\n'+ 'a'.repeat(3200)+'\nDritte Zeile\tmit Tab';
+    f.state({draft:{text,selectionStart:3,selectionEnd:20}});
+    const field=f.document.querySelector('#command-input');
+    assert.equal(field.tagName,'TEXTAREA');assert.equal(field.rows,1);
+    assert.equal(f.document.querySelectorAll('#command-input').length,1);
+    assert.equal(field.parentElement.className,'command-field');
+    assert.equal(field.value,text);assert.equal(field.selectionStart,3);assert.equal(field.selectionEnd,20);
+    field.dispatchEvent(new f.window.Event('blur'));
+    assert.equal(f.navigations.findLast(url=>url.pathname==='/draft').searchParams.get('value'),text);
+    f.submit();const command=f.navigations.findLast(url=>url.pathname==='/command');
+    assert.equal(command.searchParams.get('value'),text);
+    assert.equal(field.value,text,'No newline or pasted text is lost before native acceptance');
+    const next='Neue Frage\nZweite Zeile';f.input(next);
+    f.window.ContinuumNative.commandResult({id:command.searchParams.get('id'),sessionId,accepted:true});
+    assert.equal(field.value,next);
+  } finally {f.close();}
+});
+
+test('typing before Android is ready is synchronized as soon as the first native session arrives', async () => {
+  const f = await fixture();
+  try {
+    const text='Schon getippt\nvor der Verbindung';f.input(text);
+    assert.equal(f.navigations.length,0);
+    f.state({draft:{text:'Alter nativer Entwurf',selectionStart:0,selectionEnd:0}});
+    const draft=f.navigations.findLast(url=>url.pathname==='/draft');
+    assert.ok(draft);assert.equal(draft.searchParams.get('value'),text);
+    assert.equal(draft.searchParams.get('sessionId'),sessionId);
+    assert.equal(f.document.querySelector('#command-input').value,text);
+  } finally {f.close();}
+});
+
+test('native draft revisions cannot restore consumed text or reset a newer local selection', async () => {
+  const f = await fixture();
+  try {
+    f.state({draftRevision:1,draft:{text:'Wiederhergestellt',selectionStart:1,selectionEnd:1}});
+    const field=f.document.querySelector('#command-input');field.setSelectionRange(5,5);
+    f.state({draftRevision:1,draft:{text:'Wiederhergestellt',selectionStart:1,selectionEnd:1}});
+    assert.equal(field.selectionStart,5,'Same revision must not rewind a selection');
+    f.submit();const command=f.navigations.findLast(url=>url.pathname==='/command');
+    f.state({commandPending:true,draftRevision:2,draft:{text:'',selectionStart:0,selectionEnd:0}});
+    assert.equal(field.value,'Wiederhergestellt','A pending snapshot is not a send acknowledgement');
+    f.window.ContinuumNative.commandResult({id:command.searchParams.get('id'),sessionId,accepted:true});
+    assert.equal(field.value,'');
+    f.state({draftRevision:1,draft:{text:'Wiederhergestellt',selectionStart:1,selectionEnd:1}});
+    assert.equal(field.value,'');
+    f.state({draftRevision:2,draft:{text:'Wiederhergestellt',selectionStart:1,selectionEnd:1}});
+    assert.equal(field.value,'');
+    f.state({draftRevision:3,draft:{text:'Neuer nativer Entwurf',selectionStart:2,selectionEnd:4}});
+    assert.equal(field.value,'Neuer nativer Entwurf');assert.equal(field.selectionEnd,4);
   } finally {f.close();}
 });

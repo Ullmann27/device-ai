@@ -44,6 +44,9 @@ import at.heinz.deviceai.cognitive.OwnerAppClarification
 import at.heinz.deviceai.cognitive.OwnerDeviceRequestSafety
 import at.heinz.deviceai.cognitive.NativeAppCandidate
 import at.heinz.deviceai.ui.ToolWorkSceneLease
+import at.heinz.deviceai.ui.Command03BridgeContract
+import at.heinz.deviceai.ui.Command03Command
+import at.heinz.deviceai.ui.Command03Draft
 import android.content.Intent
 import android.content.ActivityNotFoundException
 import android.graphics.Color
@@ -813,8 +816,9 @@ class AgentActivity : Activity() {
         foregroundLearningActive = true
         restoreOwnerRoutines()
         renderRoutineMessages()
-        val nativeStageVisible = command03MainStage == null
+        val nativeStageVisible = nativeStagePresentationActive()
         command03MainStage?.onResume()
+        scheduleCommand03HtmlState()
         airbusCockpitOrchestrator?.setForeground(nativeStageVisible)
         // While WebGL renders the original art, the old Filament scene stays idle.
         hologramView?.setForegroundActive(nativeStageVisible)
@@ -867,6 +871,8 @@ class AgentActivity : Activity() {
 
     override fun onPause() {
         command03MainStage?.onPause()
+        mainHandler.removeCallbacks(command03HtmlStateTick)
+        command03HtmlStateScheduled = false
         cancelPendingConversationSelection()
         routineRuntime?.detachChief(routineWake)
         if (!isInMultiWindowMode) computerViewVisible = false
@@ -913,8 +919,8 @@ class AgentActivity : Activity() {
         readinessVoiceResult = "Hörtest noch nicht bestätigt."
         foregroundLearningActive = false
         updateUiFeedbackPolicy()
-        hologramView?.setForegroundActive(computerFeedbackActive())
-        homeView?.setForegroundActive(computerFeedbackActive())
+        hologramView?.setForegroundActive(nativeStagePresentationActive())
+        homeView?.setForegroundActive(nativeStagePresentationActive())
         liveHardwareGauges?.setForegroundActive(false)
         brainScene?.setForegroundActive(false)
         stopVoiceAnimation()
@@ -966,6 +972,8 @@ class AgentActivity : Activity() {
 
     override fun onDestroy() {
         closeCommand03HtmlStage()
+        pendingCommand03Input?.let { finishCommand03Input(it, false, "unavailable", restoreDraft = false) }
+        mainHandler.removeCallbacks(command03InputTick)
         cancelPendingConversationSelection()
         conversationIndexRevision++
         conversationListDialog?.dismiss()
@@ -1140,7 +1148,8 @@ class AgentActivity : Activity() {
         syncPhoneNavigation = {
             val homeOwnsNavigation = homeView?.jarvisShellStage == true &&
                 homeView?.isConversationPresence != true && dashboardSection?.visibility == View.VISIBLE
-            val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(wide, keyboardCompact) && !homeOwnsNavigation
+            val showNavigation = !usesCommand03HtmlDesign() &&
+                ContinuumWorkAreaNavigationSpec.showBottomBar(wide, keyboardCompact) && !homeOwnsNavigation
             bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
             val navigationPane = phonePane
             if (navigationPane != null) {
@@ -1309,7 +1318,7 @@ class AgentActivity : Activity() {
             (it.parent as? android.view.ViewGroup)?.removeView(it)
             hologramView = it
             avatarDirector.attach(it)
-            it.setForegroundActive(foregroundLearningActive || computerFeedbackActive())
+            it.setForegroundActive(nativeStagePresentationActive())
         }
         val home = at.heinz.deviceai.ui.ContinuumHomeView(this, liveHologram) { slot, x, y ->
             // Landscape action bar → Kern's CockpitActionHandler (same screens, plus the area-change event).
@@ -1328,7 +1337,8 @@ class AgentActivity : Activity() {
         home.onNewConversation = ::newCentralConversation
         home.setConversations(conversationIndex, sessionId)
         home.setJarvisShellStage(true)
-        home.setForegroundActive(foregroundLearningActive || computerFeedbackActive())
+        home.setForegroundActive(nativeStagePresentationActive())
+        home.jarvisShell.ambientMotionEnabled = !usesCommand03HtmlDesign()
         homeView = home
         home.onComputerPresentationChanged = { computerController?.refreshGaze() }
         computerController?.restoreFeed()
@@ -1372,7 +1382,7 @@ class AgentActivity : Activity() {
             },
             onPostMission = ::evaluateAirbusPostMission
         ).also {
-            it.setForeground(foregroundLearningActive)
+            it.setForeground(nativeStagePresentationActive())
             airbusCockpitOrchestrator = it
         }
         cockpitSubscriptions = listOf(
@@ -1647,7 +1657,8 @@ class AgentActivity : Activity() {
     /** Visible telemetry consumers only. */
     private fun refreshDashboard() {
         if (dashboardCollecting || !foregroundLearningActive || isFinishing || isDestroyed) return
-        if (homeView?.isShown != true && liveHardwareGauges?.isShown != true) return
+        if (homeView?.isShown != true && liveHardwareGauges?.isShown != true &&
+            command03MainStage?.isShown != true) return
         dashboardCollecting = true
         val dashboardSnapshotAtElapsedMs = android.os.SystemClock.elapsedRealtime()
         val modelReady = ::localRuntime.isInitialized && localRuntime.loadedModel != null &&
@@ -1675,7 +1686,7 @@ class AgentActivity : Activity() {
                 capabilityDashboard = state
                 capabilityDashboardAtElapsedMs = dashboardSnapshotAtElapsedMs
                 if (!foregroundLearningActive) return@onSuccess
-                homeView?.takeIf { it.isShown }?.let { home ->
+                homeView?.takeIf { it.isShown || command03MainStage?.isShown == true }?.let { home ->
                     home.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
                         computer = home.state.computer,
                         memoryActivity = memoryActivitySnapshot(state.memory),
@@ -1685,6 +1696,7 @@ class AgentActivity : Activity() {
                 navigationView?.takeIf { it.isShown }?.state = state
                 railView?.takeIf { it.isShown }?.state = state
                 announceNewIssues(open)
+                scheduleCommand03HtmlState()
             }
         }
     }
@@ -2095,14 +2107,21 @@ class AgentActivity : Activity() {
         }
     }
 
-    /**
-     * Exact HTML design inspection stays separate from the native cockpit until screen,
-     * work-window and interaction parity is demonstrated on the device.
-     */
-
+    /** One local page shares the existing Android input, history and owner-gated tools. */
     private var command03MainStage: at.heinz.deviceai.ui.ContinuumCommand03OriginalStage? = null
     private var command03HtmlSession: String? = null
     private var command03HtmlHistoryRevision = 0L
+    private var command03HtmlMessageRevision = 0L
+    private var command03DraftRevision = 0L
+    private data class PendingCommand03Input(
+        val request: Command03Command,
+        val deadline: Long,
+        val complete: (Boolean, String?) -> Unit,
+        var lookupRevision: Long? = null
+    )
+    private var pendingCommand03Input: PendingCommand03Input? = null
+    private var deferredCommand03Draft: Command03Draft? = null
+    private val command03InputTick = Runnable { settleCommand03Input() }
     private var command03HtmlStateScheduled = false
     private val command03HtmlStateTick = Runnable {
         command03HtmlStateScheduled = false
@@ -2110,7 +2129,7 @@ class AgentActivity : Activity() {
     }
 
     private fun scheduleCommand03HtmlState() {
-        if (command03MainStage != null && !command03HtmlStateScheduled) {
+        if (foregroundLearningActive && command03MainStage != null && !command03HtmlStateScheduled) {
             command03HtmlStateScheduled = true
             mainHandler.postDelayed(command03HtmlStateTick, 150L)
         }
@@ -2118,8 +2137,8 @@ class AgentActivity : Activity() {
 
     private fun syncCommand03HtmlState() {
         val stage = command03MainStage ?: return
-        if (isFinishing || isDestroyed) return
-        val system = homeView?.state?.system
+        if (!foregroundLearningActive || isFinishing || isDestroyed) return
+        val system = capabilityDashboard?.system
         val workRows = org.json.JSONArray()
         homeView?.state?.computer?.let { computer ->
             (computer.planningRows() + computer.resultRows()).take(20).forEach { row ->
@@ -2138,32 +2157,146 @@ class AgentActivity : Activity() {
             .put("chats", chats)
             .put("workRows", workRows)
             .put("busy", busy)
+            .put("commandPending", pendingCommand03Input != null)
             .put("listening", voiceListening)
             .put("speaking", voiceSpeaking)
+            .put("telemetryAtElapsedMs", capabilityDashboardAtElapsedMs ?: org.json.JSONObject.NULL)
             .put("cpu", system?.appCpuPercent?.takeIf { it in 0..100 } ?: org.json.JSONObject.NULL)
             .put("ram", system?.memoryPercent?.takeIf { it in 0..100 } ?: org.json.JSONObject.NULL)
+            .put("maxCommandChars", Command03BridgeContract.MAX_COMMAND_CHARACTERS)
+            .put("maxCommandBytes", Command03BridgeContract.MAX_COMMAND_BYTES)
+            .put("maxDraftChars", Command03BridgeContract.MAX_DRAFT_CHARACTERS)
+            .put("maxDraftBytes", Command03BridgeContract.MAX_DRAFT_BYTES)
+            .put("maxMessageChars", Command03BridgeContract.MAX_MESSAGE_CHARACTERS)
+            .put("draftRevision", command03DraftRevision)
             .put("status", workStatusView?.text?.toString()?.take(280) ?: "Bereit")
+        val draft = deferredCommand03Draft?.takeIf { it.sessionId == sessionId }
+        if (draft != null) data.put("draft", org.json.JSONObject().put("text", draft.text)
+            .put("selectionStart", draft.selectionStart).put("selectionEnd", draft.selectionEnd))
+        else if (::input.isInitialized) data.put("draft", org.json.JSONObject()
+            .put("text", input.text.toString()).put("selectionStart", input.selectionStart.coerceAtLeast(0))
+            .put("selectionEnd", input.selectionEnd.coerceAtLeast(0)))
         stage.present(data)
         if (command03HtmlSession != sessionId) {
             command03HtmlSession = sessionId
             val id = sessionId
             val revision = ++command03HtmlHistoryRevision
+            val messageRevision = command03HtmlMessageRevision
             chatTranscriptIo.execute {
                 val history = runCatching { chatTranscripts.load(id, 60) }
                 runOnUiThread {
                     if (isFinishing || isDestroyed || command03HtmlHistoryRevision != revision ||
                         sessionId != id || command03MainStage !== stage) return@runOnUiThread
+                    // An append queued after this read must not be replaced by the older snapshot.
+                    if (messageRevision != command03HtmlMessageRevision) {
+                        command03HtmlSession = null
+                        scheduleCommand03HtmlState()
+                        return@runOnUiThread
+                    }
                     history.onSuccess { messages ->
                         val entries = org.json.JSONArray()
                         messages.forEach { entry ->
                             entries.put(org.json.JSONObject().put("user", entry.user)
-                                .put("text", entry.text.take(6000)))
+                                .put("text", Command03BridgeContract.messageText(entry.text)))
                         }
                         stage.presentTranscript(id, entries)
                     }
                 }
             }
         }
+    }
+
+    private fun usesCommand03HtmlDesign(): Boolean =
+        getSharedPreferences("continuum-command03", MODE_PRIVATE).getBoolean("original_html_main", true)
+
+    /** Reflow, resume and conversation changes use the same native-render ownership decision. */
+    private fun nativeStagePresentationActive(): Boolean = !usesCommand03HtmlDesign() &&
+        (foregroundLearningActive || computerFeedbackActive())
+
+    private fun receiveCommand03Draft(draft: Command03Draft) {
+        if (isFinishing || isDestroyed || draft.sessionId != sessionId || !::input.isInitialized) return
+        if (pendingCommand03Input != null) {
+            // The existing asynchronous bot router reads the submitted native text until it consumes it.
+            // Preserve newer edits without changing that in-flight input or starting another request.
+            deferredCommand03Draft = draft
+            command03DraftRevision++
+            return
+        }
+        applyCommand03Draft(draft)
+    }
+
+    private fun applyCommand03Draft(draft: Command03Draft) {
+        if (draft.sessionId != sessionId || !::input.isInitialized) return
+        if (input.text.toString() != draft.text) input.setText(draft.text)
+        input.setSelection(draft.selectionStart.coerceIn(0, input.text.length),
+            draft.selectionEnd.coerceIn(0, input.text.length))
+        command03DraftRevision++
+        scheduleCommand03HtmlState()
+    }
+
+    private fun submitCommand03Input(request: Command03Command, complete: (Boolean, String?) -> Unit) {
+        if (isFinishing || isDestroyed || !foregroundLearningActive || !::input.isInitialized ||
+            !::sendButton.isInitialized || !sendButton.isEnabled) {
+            complete(false, "unavailable"); return
+        }
+        if (request.sessionId != sessionId) { complete(false, "stale-session"); return }
+        if (busy || botLookupPending || pendingConversationSelection != null || pendingCommand03Input != null) {
+            complete(false, "busy"); return
+        }
+        Command03BridgeContract.commandFailure(request.text)?.let { complete(false, it); return }
+        val pending = PendingCommand03Input(request, android.os.SystemClock.uptimeMillis() + 15_000L, complete)
+        pendingCommand03Input = pending
+        deferredCommand03Draft = null
+        input.setText(request.text)
+        // The same listener retains all existing stop, correction, consent and owner-action gates.
+        if (!sendButton.performClick()) {
+            finishCommand03Input(pending, false, "unavailable")
+            return
+        }
+        if (botLookupPending) pending.lookupRevision = botLookupRevision
+        settleCommand03Input()
+    }
+
+    private fun settleCommand03Input() {
+        val pending = pendingCommand03Input ?: return
+        if (isFinishing || isDestroyed || pending.request.sessionId != sessionId) {
+            finishCommand03Input(pending, false, "stale-session", restoreDraft = false)
+        } else if (::input.isInitialized && input.text.isEmpty()) {
+            finishCommand03Input(pending, true, null)
+        } else if (foregroundLearningActive && botLookupPending &&
+            android.os.SystemClock.uptimeMillis() < pending.deadline) {
+            mainHandler.removeCallbacks(command03InputTick)
+            mainHandler.postDelayed(command03InputTick, 100L)
+            scheduleCommand03HtmlState()
+        } else {
+            // Expire only the lookup created by this submission; a late disk result cannot send it afterward.
+            if (botLookupPending && pending.lookupRevision == botLookupRevision) {
+                botLookupRevision++
+                botLookupPending = false
+            }
+            finishCommand03Input(pending, false, "unavailable")
+        }
+    }
+
+    private fun finishCommand03Input(pending: PendingCommand03Input, accepted: Boolean,
+        reason: String?, restoreDraft: Boolean = true) {
+        if (pendingCommand03Input !== pending) return
+        val edited = deferredCommand03Draft
+        pendingCommand03Input = null
+        deferredCommand03Draft = null
+        mainHandler.removeCallbacks(command03InputTick)
+        if (restoreDraft && pending.request.sessionId == sessionId) {
+            val text = when {
+                edited != null && (!accepted || edited.text != pending.request.text) -> edited.text
+                accepted -> ""
+                else -> pending.request.text
+            }
+            applyCommand03Draft(Command03Draft(sessionId, text,
+                edited?.selectionStart?.coerceAtMost(text.length) ?: text.length,
+                edited?.selectionEnd?.coerceAtMost(text.length) ?: text.length))
+        }
+        pending.complete(accepted, reason)
+        scheduleCommand03HtmlState()
     }
 
     private fun closeCommand03HtmlStage() {
@@ -2218,15 +2351,6 @@ class AgentActivity : Activity() {
                 command03MainStage?.showSection("chat")
             }
             "select-chat" -> value?.let(::selectStoredConversation)
-            "command" -> {
-                if (busy || pendingConversationSelection != null || value.isNullOrBlank()) {
-                    Toast.makeText(this, "Ein Auftrag läuft noch oder die Eingabe ist leer.",
-                        Toast.LENGTH_SHORT).show()
-                } else if (::input.isInitialized && ::sendButton.isInitialized) {
-                    input.setText(value)
-                    sendButton.performClick()
-                }
-            }
             "new-chat" -> newCentralConversation()
             "stop" -> cancelLocalRequest()
             "voice-input" -> onChatMicrophoneTap()
@@ -2236,11 +2360,21 @@ class AgentActivity : Activity() {
 
     private fun attachCommand03MainStage(root: android.widget.FrameLayout) {
         closeCommand03HtmlStage()
-        if (!getSharedPreferences("continuum-command03", MODE_PRIVATE)
-                .getBoolean("original_html_main", true)) return
+        if (!usesCommand03HtmlDesign()) return
         val web = at.heinz.deviceai.ui.ContinuumCommand03OriginalStage(this,
-            ::routeCommand03HtmlAction, onReady = { syncCommand03HtmlState() })
+            onNativeAction = ::routeCommand03HtmlAction,
+            onNativeCommand = ::submitCommand03Input,
+            onNativeDraft = ::receiveCommand03Draft,
+            onReady = {
+                command03HtmlSession = null
+                command03HtmlHistoryRevision++
+                syncCommand03HtmlState()
+            })
         command03MainStage = web
+        web.tag = "continuum-command03-main-stage"
+        // Covered siblings still report isShown=true. INVISIBLE stops their presentation and input while
+        // retaining measured geometry for existing native tool dialogs and the reversible view switch.
+        for (index in 0 until root.childCount) root.getChildAt(index).visibility = View.INVISIBLE
         root.addView(web, android.widget.FrameLayout.LayoutParams(
             android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
             android.widget.FrameLayout.LayoutParams.MATCH_PARENT))
@@ -3975,7 +4109,7 @@ class AgentActivity : Activity() {
         }
         head.setGeometry(if (mountedInChat) at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.PHONE
             else home.intendedGeometry)
-        head.setForegroundActive(foregroundLearningActive || computerFeedbackActive())
+        head.setForegroundActive(nativeStagePresentationActive())
         currentTaskEffectContext?.takeIf { it.session == sessionId && foregroundLearningActive }
             ?.let { head.setTaskEffectScope(it.scope) }
     }
@@ -6608,7 +6742,11 @@ class AgentActivity : Activity() {
         input.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-            override fun afterTextChanged(s: android.text.Editable?) { refreshSendButtonPresentation() }
+            override fun afterTextChanged(s: android.text.Editable?) {
+                refreshSendButtonPresentation()
+                command03DraftRevision++
+                scheduleCommand03HtmlState()
+            }
         })
         inputRow.addView(input, LinearLayout.LayoutParams(0,
             LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
@@ -14884,6 +15022,7 @@ class AgentActivity : Activity() {
     }
 
     private fun addBubble(value: String, user: Boolean, persist: Boolean = true) {
+        command03HtmlMessageRevision++
         // Central chat only; bot dialogues have their own ChiefBotProfileStore history.
         if (persist && selectedBot == null) {
             val id = sessionId; val at = System.currentTimeMillis()
@@ -14932,7 +15071,7 @@ class AgentActivity : Activity() {
             row,
             matchWidth(top = 8)
         )
-        command03MainStage?.presentMessage(user, value)
+        command03MainStage?.presentMessage(sessionId, user, value)
         scrollToBottom()
     }
 

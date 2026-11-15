@@ -2,7 +2,7 @@
 body[data-design="command03"] .native-history-glyph {
  color:#60d2ef;font-size:16px;padding:0 8px 0 2px;
 }
-body[data-design="command03"] #workspace.native-work-active>:not(#native-live-panel) {display:none!important;}
+body[data-design="command03"] #workspace.native-work-active:not(.native-document-active)>:not(#native-live-panel) {display:none!important;}
 body[data-design="command03"] .native-live-panel {width:100%;min-height:230px;display:flex;flex-direction:column;}
 body[data-design="command03"] .native-transcript {
  min-height:145px;max-height:360px;overflow:auto;padding:12px 3px;
@@ -42,8 +42,29 @@ body[data-design="command03"] .native-meter-track span {
  display:block;height:100%;background:linear-gradient(90deg,#275d80,#6deaff);
  transition:width .25s ease;
 }
-body[data-design="command03"] [data-telemetry-left]>:not(.native-meter),
-body[data-design="command03"] [data-telemetry-right]>:not(.native-meter) {display:none!important;}
+body[data-design="command03"] [data-telemetry-left]>:not(.native-meter):not(.native-telemetry-panel),
+body[data-design="command03"] [data-telemetry-right]>:not(.native-meter):not(.native-telemetry-panel) {display:none!important;}
+body[data-design="command03"] .native-telemetry-panel .ct-mode-toggle,
+body[data-design="command03"] #sequence-button,
+body[data-design="command03"] .format-preview-link,
+body[data-design="command03"] .project-download-link {display:none!important;}
+body[data-design="command03"] [data-scene][aria-disabled="true"] {cursor:default;}
+/* Same original command slot and type scale, with lossless multiline editing. */
+body[data-design="command03"] .center-stage .command-field textarea {
+ border:0;color:#e2f4ff;background:none;outline:none;padding:0;margin:0;
+ font:400 16px/29px Manrope,sans-serif;width:100%;min-width:0;
+ height:29px;min-height:29px;max-height:116px;display:block;resize:none;
+ overflow-y:auto;box-sizing:border-box;
+}
+body[data-design="command03"] .command-field textarea::placeholder {color:#809eb3;}
+body[data-design="command03"] .command-field textarea:focus-visible {
+ outline:2px solid #b6edf6;outline-offset:4px;
+}
+@media(max-width:760px) {
+ body[data-design="command03"] .center-stage .command-field textarea {
+  height:28px;min-height:28px;line-height:28px;max-height:112px;
+ }
+}
 
 /* The actual owner-selected PDF uses the same projected room and stays read-only. */
 body[data-design="command03"] #workspace.native-document-active>:not(#native-document-panel) {display:none!important;}

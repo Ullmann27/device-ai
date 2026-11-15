@@ -1,5 +1,39 @@
 # Kommando 03: Fortsetzung der HTML-/Android-Anbindung
 
+## Erster Reparaturstand
+
+Die getrennten Android-Adapter erhalten nun die PDF-Projektion bei laufenden
+Statusmeldungen, benutzen ausschließlich echte Messungen in den vorhandenen
+Diagrammen und blockieren Beispielaktionen im Android-Betrieb. Die vorhandene
+Szene erhält die wirklichen Zustände Arbeiten, Zuhören und Sprechen. Die 35
+Originaldateien bleiben bytegleich.
+
+Die Eingabe verwendet denselben Platz als mehrzeiliges Feld. Der bestehende
+native Composer übernimmt Entwürfe und Auswahlpositionen. Befehlsbestätigungen
+sind an Sitzung und Anfrage gebunden; Ablehnung oder ein verspätetes Ergebnis
+löschen keinen neuen Entwurf. Die bestehende 11.500-Zeichen-/UTF-8-Byte-Grenze
+bleibt erhalten, statt der zusätzlichen 2.000-Zeichen-Grenze der alten Bridge.
+Lange Antworten werden bis zur vorhandenen Speichergrenze übertragen, bei
+Transkripten in begrenzten Paketen statt mit der bisherigen 6.000-Zeichen-Kappung.
+Verdeckte native Darstellung bleibt bei Resume und Layoutwechsel angehalten;
+die Original-HTML-Darstellung bleibt der aktive Vordergrund.
+
+Vor diesem Checkpoint frisch ausgeführt: 16 DOM-Verhaltenstests bestanden,
+JavaScript-Syntax und Originalasset-Vertrag bestanden. Sechs isolierte Kotlin-
+Vertragstests bestanden; OriginalStage und Vertrag wurden gegen das echte
+Android-36-SDK kompiliert. Das ist noch kein erfolgreicher kompletter
+AgentActivity-/Gradle- oder Geräte-Lauf. Zwei tatsächliche Gradleversuche auf
+der unveränderten Ausgangsproduktion verloren ihren Daemon ohne
+Compilerdiagnosen; der zweite lief 133,081 Sekunden und führte null Tests aus.
+Sie gelten ausdrücklich nicht als funktionaler RED-Nachweis. Der DOM-RED-Lauf
+reproduzierte sechs Fehler vor der Reparatur.
+
+Nächste Prüfung: beide tatsächlichen Activity-/WebView-UI-Klassen auf einem
+sauberen, eingefrorenen Quellstand; danach die relevanten bestehenden
+Regressionen und der unsignierte lokale APK-Prüfbau. Der normale Gradle-
+Compiler bleibt aktiv. Vorhandene geprüfte inkrementelle Compilerartefakte
+dürfen als Buildcache dienen, niemals als Ersatz für frische Testergebnisse.
+
 ## Verbindliche Quelle und Integrationsziel
 
 - Ausgangspunkt: `6987b3399dd3589805374f2d7d1d4965587e546c`, PR #851.
@@ -7,7 +41,8 @@
 - Einziger Integrationszielzweig: `integrate/continuum-command03-android-20261115`.
 - Koordination und Zusammenführung: Root; drei begrenzte Agenten für Kotlin/Activity,
   HTML-Adapter und unabhängige Android-Buildprüfung. Keine weiteren Agenten.
-- Dieser Checkpoint enthält eine Wiederaufnahme, noch keine behauptete Reparatur.
+- Der erste Checkpoint `ff7e88338df747c0b4ea1c9eae8002ddd2fe3188`
+  enthielt ausschließlich Wiederaufnahme und Tests auf unveränderter Produktion.
 
 ## Reproduzierbarer Ausgangsbefund
 
@@ -37,8 +72,9 @@ Quellcheckout getrennten QA-Ausgabeverzeichnis.
 
 ## Beleg- und Sicherheitsgrenzen
 
-Aktuell `PORTIERT`: vorhandene HTML-Hauptbühne aus PR #851. `VERIFIZIERT`:
-ausschließlich der oben genannte Asset-/Quellvertrag. `GERÄTEBESTÄTIGT`: NOT_RUN.
+Aktuell `PORTIERT`: vorhandene HTML-Hauptbühne aus PR #851 und die oben
+beschriebenen Adapterreparaturen. `VERIFIZIERT`: genannte DOM-, isolierte
+Kotlin- und Assetprüfungen mit ihren Grenzen. `GERÄTEBESTÄTIGT`: NOT_RUN.
 Der alte Code60-Build aus `533eb104` belegt diesen HTML-Stand nicht.
 Keine Signierung, Veröffentlichung, Installation oder Main-Integration ist Teil
 dieses Checkpoints. Kein zweiter Renderer, ToolGate, Gesprächsspeicher oder
