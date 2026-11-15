@@ -10,6 +10,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import java.io.ByteArrayInputStream
 import java.io.FileNotFoundException
+import org.json.JSONArray
+import org.json.JSONObject
 
 /**
  * WIP visual-parity renderer for the owner's exact Kommando-03 HTML source.
@@ -24,7 +26,8 @@ import java.io.FileNotFoundException
  */
 internal class ContinuumCommand03OriginalStage(
     context: Context,
-    private val onNativeAction: (route: String, value: String?) -> Unit
+    private val onNativeAction: (route: String, value: String?) -> Unit,
+    private val onReady: () -> Unit = {}
 ) : WebView(context) {
     companion object {
         const val LOCAL_HOST = "appassets.androidplatform.net"
@@ -33,6 +36,7 @@ internal class ContinuumCommand03OriginalStage(
         private val SAFE_PATH = Regex("[A-Za-z0-9_./-]{1,200}")
         private val ROUTES = setOf("home", "chat", "chats", "new-chat", "files",
             "research", "agents", "memory", "device", "settings", "voice-input", "stop")
+        private val CHAT_ID = Regex("[a-f0-9-]{36}")
         private fun denied(): WebResourceResponse = WebResourceResponse(
             "text/plain", "UTF-8", 403, "Forbidden", emptyMap(),
             ByteArrayInputStream(ByteArray(0))
@@ -52,6 +56,33 @@ internal class ContinuumCommand03OriginalStage(
             "txt", "md" -> "text/plain"
             else -> "application/octet-stream"
         }
+    }
+
+    private var pageReady = false
+    private var queuedState: String? = null
+
+    /** Native -> local page only. Never grant JavaScript direct Android capabilities. */
+    fun present(state: JSONObject) {
+        val data = state.toString()
+        if (!pageReady) queuedState = data
+        else evaluateJavascript("window.ContinuumNative?.receive($data);", null)
+    }
+
+    fun presentTranscript(sessionId: String, entries: JSONArray) {
+        if (!pageReady || !CHAT_ID.matches(sessionId)) return
+        val data = JSONObject().put("sessionId", sessionId).put("entries", entries).toString()
+        evaluateJavascript("window.ContinuumNative?.transcript($data);", null)
+    }
+
+    fun presentMessage(user: Boolean, text: String) {
+        if (!pageReady || text.isBlank()) return
+        val data = JSONObject().put("user", user).put("text", text.take(6000)).toString()
+        evaluateJavascript("window.ContinuumNative?.message($data);", null)
+    }
+
+    fun showSection(section: String) {
+        if (!pageReady || section !in ROUTES) return
+        evaluateJavascript("window.ContinuumNative?.section(" + JSONObject.quote(section) + ");", null)
     }
 
     init {
@@ -78,6 +109,8 @@ internal class ContinuumCommand03OriginalStage(
                     val value = uri.getQueryParameter("value").orEmpty()
                     if (command == "route" && value in ROUTES) {
                         onNativeAction(value, null)
+                    } else if (command == "select-chat" && CHAT_ID.matches(value)) {
+                        onNativeAction("select-chat", value)
                     } else if (command == "command" && value.isNotBlank() &&
                         value.length <= 2_000 && value.none(Char::isISOControl)) {
                         onNativeAction("command", value)
@@ -112,7 +145,16 @@ internal class ContinuumCommand03OriginalStage(
                     context.assets.open("continuum-command03/native-bridge.js")
                         .bufferedReader(Charsets.UTF_8).use { it.readText() }
                 }.getOrNull() ?: return
-                view.evaluateJavascript(script, null)
+                view.evaluateJavascript("""(function(){var e=document.createElement('link');
+                    e.rel='stylesheet';e.href='native-layer.css';document.head.appendChild(e);})();""", null)
+                view.evaluateJavascript(script) {
+                    pageReady = true
+                    queuedState?.let { json ->
+                        view.evaluateJavascript("window.ContinuumNative?.receive($json);", null)
+                        queuedState = null
+                    }
+                    onReady()
+                }
             }
         }
         loadUrl(INDEX)

@@ -5,7 +5,7 @@
   "source_pr": 850,
   "android_branch": "integrate/continuum-command03-android-20261115",
   "html_root": "app/src/main/assets/continuum-command03",
-  "mode": "BYTE_IDENTICAL_WEB_ART_ASSET_STAGING_NOT_ACTIVE_UI",
+  "mode": "HTML_ASSETS_EXACT_MAIN_STAGE_WIP_NOT_DEVICE_VERIFIED",
   "files": {
     "app.js": {
       "git_blob_sha": "07a29fb45783cf942e05be174f4690c03eb23a60",
@@ -147,5 +147,7 @@
       "git_blob_sha": "8ada2a5f982916b0ba4b7a0aa7de347587e745d7",
       "bytes": 1081
     }
-  }
+  },
+  "android_activity_main_surface": "ContinuumCommand03OriginalStage in AgentActivity.buildUi (opt-out preference)",
+  "owner_signing": "BLOCKED_PENDING_NATIVE_FUNCTIONAL_AND_VISUAL_QA"
 }

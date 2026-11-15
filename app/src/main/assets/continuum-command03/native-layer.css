@@ -1,0 +1,46 @@
+/* Additional Android state styles; original web design CSS stays byte-identical. */
+body[data-design="command03"] .native-history-glyph {
+ color:#60d2ef;font-size:16px;padding:0 8px 0 2px;
+}
+body[data-design="command03"] #workspace.native-work-active>:not(#native-live-panel) {display:none!important;}
+body[data-design="command03"] .native-live-panel {width:100%;min-height:230px;display:flex;flex-direction:column;}
+body[data-design="command03"] .native-transcript {
+ min-height:145px;max-height:360px;overflow:auto;padding:12px 3px;
+ display:flex;flex-direction:column;gap:8px;
+}
+body[data-design="command03"] .native-chat-line {
+ padding:12px 15px;border-radius:9px;border:1px solid rgba(101,210,249,.22);
+ background:linear-gradient(115deg,rgba(3,22,39,.76),rgba(28,22,51,.55));
+}
+body[data-design="command03"] .native-chat-line.native-owner {margin-left:13%;border-color:rgba(126,145,234,.4);}
+body[data-design="command03"] .native-chat-line small {
+ display:block;color:#78dff0;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.14em;
+}
+body[data-design="command03"] .native-chat-line p {
+ font:400 13px/1.55 Manrope,system-ui,sans-serif;white-space:pre-wrap;
+ overflow-wrap:anywhere;margin:5px 0 0;
+}
+body[data-design="command03"] .native-lane-state {
+ padding:10px;color:#a6d1dc;border-top:1px solid rgba(101,210,249,.2);
+ font:600 11px Manrope,system-ui,sans-serif;letter-spacing:.03em;
+}
+body[data-design="command03"] .native-meter {
+ display:flex;flex-direction:column;gap:7px;padding:12px 14px;width:100%;
+ background:linear-gradient(145deg,rgba(4,20,34,.91),rgba(20,20,43,.86));
+ border:1px solid rgba(88,184,222,.32);border-radius:8px;
+}
+body[data-design="command03"] .native-meter small {
+ color:#a7cbd7;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.11em;
+}
+body[data-design="command03"] .native-meter strong {
+ color:#e5fcff;font:500 26px 'Space Grotesk',system-ui,sans-serif;
+}
+body[data-design="command03"] .native-meter-track {
+ height:6px;background:rgba(73,103,132,.25);overflow:hidden;border-radius:3px;
+}
+body[data-design="command03"] .native-meter-track span {
+ display:block;height:100%;background:linear-gradient(90deg,#275d80,#6deaff);
+ transition:width .25s ease;
+}
+body[data-design="command03"] [data-telemetry-left]>:not(.native-meter),
+body[data-design="command03"] [data-telemetry-right]>:not(.native-meter) {display:none!important;}

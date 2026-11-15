@@ -813,10 +813,12 @@ class AgentActivity : Activity() {
         foregroundLearningActive = true
         restoreOwnerRoutines()
         renderRoutineMessages()
-        airbusCockpitOrchestrator?.setForeground(true)
-        // Only the foreground Activity may advance the hologram's orbital clock.
-        hologramView?.setForegroundActive(true)
-        homeView?.setForegroundActive(true)
+        val nativeStageVisible = command03MainStage == null
+        command03MainStage?.onResume()
+        airbusCockpitOrchestrator?.setForeground(nativeStageVisible)
+        // While WebGL renders the original art, the old Filament scene stays idle.
+        hologramView?.setForegroundActive(nativeStageVisible)
+        homeView?.setForegroundActive(nativeStageVisible)
         liveHardwareGauges?.setForegroundActive(true)
         brainScene?.setForegroundActive(true)
         refreshHologramState()
@@ -863,6 +865,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        command03MainStage?.onPause()
         cancelPendingConversationSelection()
         routineRuntime?.detachChief(routineWake)
         if (!isInMultiWindowMode) computerViewVisible = false
@@ -961,6 +964,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        closeCommand03HtmlStage()
         command03OriginalDialog?.dismiss()
         cancelPendingConversationSelection()
         conversationIndexRevision++
@@ -1287,6 +1291,7 @@ class AgentActivity : Activity() {
             override fun onViewDetachedFromWindow(v: View) { stopReadinessCamera() }
         })
         syncPhoneNavigation?.invoke()
+        attachCommand03MainStage(root)
         publishConversationNavigation()
         return root
     }
@@ -1751,6 +1756,7 @@ class AgentActivity : Activity() {
             document = airbusCockpitOrchestrator?.documentSnapshot())
         // The running turn's steps dock into the open work window instead of covering the avatar and the orb.
         workWindowHost.showStatus(cockpitTriggers.activeTimeline())
+        scheduleCommand03HtmlState()
     }
 
     private fun presentationStatus() = at.heinz.deviceai.ui.ContinuumDashboardState.PresentationStatus(
@@ -2094,6 +2100,119 @@ class AgentActivity : Activity() {
      * work-window and interaction parity is demonstrated on the device.
      */
     private var command03OriginalDialog: AlertDialog? = null
+
+    private var command03MainStage: at.heinz.deviceai.ui.ContinuumCommand03OriginalStage? = null
+    private var command03HtmlSession: String? = null
+    private var command03HtmlHistoryRevision = 0L
+    private var command03HtmlStateScheduled = false
+    private val command03HtmlStateTick = Runnable {
+        command03HtmlStateScheduled = false
+        syncCommand03HtmlState()
+    }
+
+    private fun scheduleCommand03HtmlState() {
+        if (command03MainStage != null && !command03HtmlStateScheduled) {
+            command03HtmlStateScheduled = true
+            mainHandler.postDelayed(command03HtmlStateTick, 150L)
+        }
+    }
+
+    private fun syncCommand03HtmlState() {
+        val stage = command03MainStage ?: return
+        if (isFinishing || isDestroyed) return
+        val system = homeView?.state?.system
+        val chats = org.json.JSONArray()
+        conversationIndex.take(100).forEach { item ->
+            chats.put(org.json.JSONObject().put("id", item.id)
+                .put("title", item.title.take(96)))
+        }
+        val data = org.json.JSONObject()
+            .put("sessionId", sessionId)
+            .put("chats", chats)
+            .put("busy", busy)
+            .put("listening", voiceListening)
+            .put("speaking", voiceSpeaking)
+            .put("cpu", system?.appCpuPercent?.takeIf { it in 0..100 } ?: org.json.JSONObject.NULL)
+            .put("ram", system?.memoryPercent?.takeIf { it in 0..100 } ?: org.json.JSONObject.NULL)
+            .put("status", workStatusView?.text?.toString()?.take(280) ?: "Bereit")
+        stage.present(data)
+        if (command03HtmlSession != sessionId) {
+            command03HtmlSession = sessionId
+            val id = sessionId
+            val revision = ++command03HtmlHistoryRevision
+            chatTranscriptIo.execute {
+                val history = runCatching { chatTranscripts.load(id, 60) }
+                runOnUiThread {
+                    if (isFinishing || isDestroyed || command03HtmlHistoryRevision != revision ||
+                        sessionId != id || command03MainStage !== stage) return@runOnUiThread
+                    history.onSuccess { messages ->
+                        val entries = org.json.JSONArray()
+                        messages.forEach { entry ->
+                            entries.put(org.json.JSONObject().put("user", entry.user)
+                                .put("text", entry.text.take(6000)))
+                        }
+                        stage.presentTranscript(id, entries)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun closeCommand03HtmlStage() {
+        command03HtmlHistoryRevision++
+        command03HtmlSession = null
+        mainHandler.removeCallbacks(command03HtmlStateTick)
+        command03HtmlStateScheduled = false
+        command03MainStage?.let { stage ->
+            (stage.parent as? android.view.ViewGroup)?.removeView(stage)
+            stage.destroy()
+        }
+        command03MainStage = null
+    }
+
+    private fun routeCommand03HtmlAction(route: String, value: String?) {
+        if (isFinishing || isDestroyed) return
+        when (route) {
+            "home" -> { showHomeDashboard(); command03MainStage?.showSection("home") }
+            "chat" -> {
+                activeWorkArea = ContinuumWorkArea.CHAT
+                conversationActive = true
+                refreshWorkAreaSelection()
+                refreshConversationLayout()
+                command03MainStage?.showSection("chat")
+            }
+            "select-chat" -> value?.let(::selectStoredConversation)
+            "command" -> {
+                if (busy || pendingConversationSelection != null || value.isNullOrBlank()) {
+                    Toast.makeText(this, "Ein Auftrag läuft noch oder die Eingabe ist leer.",
+                        Toast.LENGTH_SHORT).show()
+                } else if (::input.isInitialized && ::sendButton.isInitialized) {
+                    input.setText(value)
+                    sendButton.performClick()
+                }
+            }
+            "new-chat" -> newCentralConversation()
+            "stop" -> cancelLocalRequest()
+            "voice-input" -> onChatMicrophoneTap()
+            else -> navigateDashboardTarget(route)
+        }
+    }
+
+    private fun attachCommand03MainStage(root: android.widget.FrameLayout) {
+        closeCommand03HtmlStage()
+        if (!getSharedPreferences("continuum-command03", MODE_PRIVATE)
+                .getBoolean("original_html_main", true)) return
+        val web = at.heinz.deviceai.ui.ContinuumCommand03OriginalStage(this,
+            ::routeCommand03HtmlAction, onReady = { syncCommand03HtmlState() })
+        command03MainStage = web
+        root.addView(web, android.widget.FrameLayout.LayoutParams(
+            android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+            android.widget.FrameLayout.LayoutParams.MATCH_PARENT))
+        hologramView?.setForegroundActive(false)
+        homeView?.setForegroundActive(false)
+        airbusCockpitOrchestrator?.setForeground(false)
+    }
+
 
     private fun showKommando03OriginalStage() {
         if (isFinishing || isDestroyed) return
@@ -14286,6 +14405,7 @@ class AgentActivity : Activity() {
         }
         val enabled = !conversationSelectionLoading
         homeView?.setConversations(conversationIndex, sessionId, enabled, status)
+        scheduleCommand03HtmlState()
         externalConversationRail?.update(conversationIndex, sessionId, enabled, status)
         conversationDialogRail?.update(conversationIndex, sessionId, enabled, status)
         if (::input.isInitialized) input.isEnabled = pendingConversationSelection == null
@@ -14754,6 +14874,7 @@ class AgentActivity : Activity() {
             row,
             matchWidth(top = 8)
         )
+        command03MainStage?.presentMessage(user, value)
         scrollToBottom()
     }
 
@@ -14802,6 +14923,7 @@ class AgentActivity : Activity() {
             workTool = null
         }
         busy = value
+        scheduleCommand03HtmlState()
         botRosterDialog?.refreshRuntimeStatus()
         if(!value) learningVisualActive = false
         refreshConversationLayout()
