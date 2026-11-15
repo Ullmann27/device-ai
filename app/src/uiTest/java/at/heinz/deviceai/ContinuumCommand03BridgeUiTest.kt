@@ -4,10 +4,14 @@ import android.content.Context
 import android.net.Uri
 import android.os.Looper
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.EditText
+import android.widget.TextView
 import at.heinz.deviceai.cognitive.LocalDialogueRetention
+import at.heinz.deviceai.ui.ContinuumCommand03OriginalStage
+import org.json.JSONObject
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -19,7 +23,10 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowChoreographer
+import org.robolectric.shadows.ShadowDisplayManager
 import java.time.Duration
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
 /** Actual Activity/WebView navigation and lifecycle. No WebGL or Fold-device claim. */
@@ -46,6 +53,8 @@ class ContinuumCommand03BridgeUiTest {
 
     private fun field(a: AgentActivity, name: String): Any? =
         AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }.get(a)
+    private fun stageField(stage: WebView, name: String): Any? =
+        ContinuumCommand03OriginalStage::class.java.getDeclaredField(name).apply { isAccessible = true }.get(stage)
     private fun call(a: AgentActivity, name: String, vararg args: Pair<Class<*>, Any?>): Any? =
         AgentActivity::class.java.getDeclaredMethod(name, *args.map { it.first }.toTypedArray())
             .apply { isAccessible = true }.invoke(a, *args.map { it.second }.toTypedArray())
@@ -59,17 +68,56 @@ class ContinuumCommand03BridgeUiTest {
         override fun getRequestHeaders() = emptyMap<String, String>()
     }
     private fun action(a: AgentActivity, kind: String, value: String, session: String? = null,
-        id: String = "request-1", mainFrame: Boolean = true): Boolean {
+        id: String = "request-1", mainFrame: Boolean = true,
+        selectionStart: Int = value.length, selectionEnd: Int = value.length): Boolean {
         val uri = Uri.Builder().scheme("continuum-native").authority("action").appendPath(kind)
             .appendQueryParameter("value", value)
             .appendQueryParameter("sessionId", session ?: field(a, "sessionId") as String)
             .appendQueryParameter("id", id)
-            .appendQueryParameter("selectionStart", value.length.toString())
-            .appendQueryParameter("selectionEnd", value.length.toString()).build()
+            .appendQueryParameter("selectionStart", selectionStart.toString())
+            .appendQueryParameter("selectionEnd", selectionEnd.toString()).build()
         return stage(a).webViewClient.shouldOverrideUrlLoading(stage(a), request(uri, mainFrame))
     }
     private fun active(view: Any): Boolean = view.javaClass.getDeclaredField("foregroundActive")
         .apply { isAccessible = true }.getBoolean(view)
+    private fun all(view: View): List<View> = listOf(view) + if (view is ViewGroup)
+        (0 until view.childCount).flatMap { all(view.getChildAt(it)) } else emptyList()
+    private fun messages(a: AgentActivity) = all(field(a, "chatContainer") as View)
+        .filterIsInstance<TextView>().map { it.text.toString() }
+    private fun ready(a: AgentActivity) = stage(a).webViewClient.onPageFinished(stage(a),
+        ContinuumCommand03OriginalStage.INDEX)
+    private fun acknowledgement(a: AgentActivity): JSONObject {
+        val script = shadowOf(stage(a)).lastEvaluatedJavascript
+        val prefix = "window.ContinuumNative?.commandResult("
+        assertTrue("Native result must be acknowledged through the actual WebView: $script", script.startsWith(prefix))
+        return JSONObject(script.removePrefix(prefix).removeSuffix(");"))
+    }
+    private fun receipt(a: AgentActivity, id: String): JSONObject? {
+        val receipts = stageField(stage(a), "commands") as Map<*, *>
+        val record = receipts["${field(a, "sessionId")}:$id"] ?: return null
+        return record.javaClass.getDeclaredField("result").apply { isAccessible = true }.get(record) as? JSONObject
+    }
+    private fun advance() = shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
+    private fun await(description: String, condition: () -> Boolean) {
+        val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(8)
+        while (!condition() && System.nanoTime() < deadline) { advance(); Thread.sleep(5) }
+        assertTrue(description, condition())
+    }
+    private fun measure(view: View, width: Int, height: Int) {
+        view.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
+        view.layout(0, 0, width, height)
+        repeat(3) { advance() }
+    }
+    private fun resizeWindow(a: AgentActivity, width: Int, height: Int) {
+        ShadowDisplayManager.changeDisplay(0, "w${width}dp-h${height}dp-mdpi")
+        a.window.setLayout(width, height)
+        // Follow the real posted reflow; its root can change between measure passes.
+        repeat(3) {
+            measure(a.window.decorView, width, height)
+            measure(field(a, "uiWindowRoot") as View, width, height)
+        }
+    }
     private fun withActivity(block: (org.robolectric.android.controller.ActivityController<AgentActivity>, AgentActivity) -> Unit) {
         val controller = Robolectric.buildActivity(AgentActivity::class.java).setup().visible()
         try {
@@ -113,5 +161,106 @@ class ContinuumCommand03BridgeUiTest {
         assertEquals("Aktueller Entwurf", editor.text.toString())
         action(a, "draft", "Unterframe", mainFrame = false)
         assertEquals("Aktueller Entwurf", editor.text.toString())
+    }
+
+    @Test fun actualPhoneFoldPhoneReflowKeepsTheSameReadyPageAndDraftSelection() = withActivity { _, a ->
+        resizeWindow(a, 392, 852)
+        ready(a)
+        val web = stage(a)
+        val url = web.url
+        val draft = "Erster Absatz\nDer ungesendete Entwurf bleibt beim Falten erhalten."
+        action(a, "draft", draft, selectionStart = 4, selectionEnd = 15)
+        for ((width, height) in listOf(904 to 768, 392 to 852)) {
+            val previousRoot = field(a, "uiWindowRoot")
+            resizeWindow(a, width, height)
+            assertNotSame("The fixture must exercise the real root replacement", previousRoot, field(a, "uiWindowRoot"))
+            assertEquals(width.toFloat(), (field(a, "renderedWindowWidthDp") as Float), .1f)
+            assertSame("Width-only reflow must keep the live document and request page", web, stage(a))
+            assertEquals(url, web.url)
+            assertEquals(false, stageField(web, "disposed"))
+            assertEquals(true, stageField(web, "pageReady"))
+            assertTrue(web.isAttachedToWindow)
+            assertEquals(1, all(a.window.decorView).count { it is WebView })
+            val editor = field(a, "input") as EditText
+            assertEquals(draft, editor.text.toString())
+            assertEquals(4, editor.selectionStart)
+            assertEquals(15, editor.selectionEnd)
+            assertFalse(active(field(a, "hologramView")!!))
+            assertFalse(active(field(a, "homeView")!!))
+        }
+    }
+
+    @Test fun realClockCommandConsumesTheComposerAndAcknowledgesOnlyOneSubmission() = withActivity { _, a ->
+        ready(a)
+        val text = "Wie spät ist es?"
+        val before = messages(a).count { it == text }
+        action(a, "draft", text)
+        assertTrue(action(a, "command", text, id = "clock-1"))
+        val result = acknowledgement(a)
+        assertEquals("clock-1", result.getString("id"))
+        assertEquals(field(a, "sessionId"), result.getString("sessionId"))
+        assertTrue(result.getBoolean("accepted"))
+        assertTrue((field(a, "input") as EditText).text.isEmpty())
+        assertNull(field(a, "pendingCommand03Input"))
+        assertEquals(before + 1, messages(a).count { it == text })
+        assertTrue(messages(a).any { Regex("Es ist \\d{2}:\\d{2} Uhr\\. \\(Geräteuhr · .+\\)").matches(it) })
+        assertFalse(field(a, "busy") as Boolean)
+        assertFalse(field(a, "activeLocalRequest") as Boolean)
+        assertTrue(action(a, "command", text, id = "clock-1"))
+        assertEquals(result.toString(), acknowledgement(a).toString())
+        assertEquals("An identical navigation must not create another real user message", before + 1,
+            messages(a).count { it == text })
+    }
+
+    @Test fun busyRejectionPreservesTheActualNativeDraftAndDoesNotSubmit() = withActivity { _, a ->
+        ready(a)
+        val text = "Dieser Auftrag bleibt editierbar.\nZweite Zeile."
+        action(a, "draft", text)
+        val before = messages(a)
+        call(a, "setBusy", Boolean::class.javaPrimitiveType!! to true)
+        try {
+            assertTrue(action(a, "command", text, id = "busy-1"))
+            val result = acknowledgement(a)
+            assertFalse(result.getBoolean("accepted"))
+            assertEquals("busy", result.getString("reason"))
+            assertEquals(text, (field(a, "input") as EditText).text.toString())
+            assertEquals(before, messages(a))
+            assertNull(field(a, "pendingCommand03Input"))
+        } finally { call(a, "setBusy", Boolean::class.javaPrimitiveType!! to false) }
+    }
+
+    @Test fun asynchronousBotLookupAcknowledgesConsumptionAndPreservesNewerTyping() = withActivity { _, a ->
+        ready(a)
+        val executor = field(a, "backlogExecutor") as ExecutorService
+        val entered = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        executor.execute { entered.countDown(); release.await(8, TimeUnit.SECONDS) }
+        assertTrue("The existing serial lookup executor must really be held", entered.await(2, TimeUnit.SECONDS))
+        val request = "wechsle zu Atlas"
+        val nextDraft = "Ein neuer Entwurf\nbleibt während der Zuordnung erhalten."
+        try {
+            action(a, "draft", request)
+            assertTrue(action(a, "command", request, id = "bot-select-1"))
+            assertNotNull(field(a, "pendingCommand03Input"))
+            assertTrue(field(a, "botLookupPending") as Boolean)
+            assertNull("Dispatching a lookup is not yet acceptance", receipt(a, "bot-select-1"))
+            action(a, "draft", nextDraft, selectionStart = 3, selectionEnd = 12)
+            assertEquals("Typing must not invalidate the native router's in-flight text", request,
+                (field(a, "input") as EditText).text.toString())
+        } finally { release.countDown() }
+        await("The actual local bot lookup consumes and acknowledges its input") {
+            receipt(a, "bot-select-1") != null && field(a, "pendingCommand03Input") == null
+        }
+        assertTrue(requireNotNull(receipt(a, "bot-select-1")).getBoolean("accepted"))
+        await("The existing bot-selection callback completes") {
+            (field(a, "selectedBot") as? at.heinz.deviceai.chief.ChiefBotProfile)?.agentId == "bot-atlas"
+        }
+        val editor = field(a, "input") as EditText
+        assertEquals(nextDraft, editor.text.toString())
+        assertEquals(3, editor.selectionStart)
+        assertEquals(12, editor.selectionEnd)
+        assertNull(field(a, "deferredCommand03Draft"))
+        assertFalse(field(a, "busy") as Boolean)
+        assertFalse(field(a, "activeLocalRequest") as Boolean)
     }
 }

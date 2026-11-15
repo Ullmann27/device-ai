@@ -2359,9 +2359,13 @@ class AgentActivity : Activity() {
     }
 
     private fun attachCommand03MainStage(root: android.widget.FrameLayout) {
-        closeCommand03HtmlStage()
-        if (!usesCommand03HtmlDesign()) return
-        val web = at.heinz.deviceai.ui.ContinuumCommand03OriginalStage(this,
+        if (!usesCommand03HtmlDesign()) {
+            closeCommand03HtmlStage()
+            return
+        }
+        // A Fold/width reflow replaces the native layout, not the local page. Keep its document,
+        // scroll state and request receipts; only the explicit native-view switch destroys it.
+        val web = command03MainStage ?: at.heinz.deviceai.ui.ContinuumCommand03OriginalStage(this,
             onNativeAction = ::routeCommand03HtmlAction,
             onNativeCommand = ::submitCommand03Input,
             onNativeDraft = ::receiveCommand03Draft,
@@ -2372,6 +2376,7 @@ class AgentActivity : Activity() {
             })
         command03MainStage = web
         web.tag = "continuum-command03-main-stage"
+        (web.parent as? android.view.ViewGroup)?.removeView(web)
         // Covered siblings still report isShown=true. INVISIBLE stops their presentation and input while
         // retaining measured geometry for existing native tool dialogs and the reversible view switch.
         for (index in 0 until root.childCount) root.getChildAt(index).visibility = View.INVISIBLE

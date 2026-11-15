@@ -1,5 +1,33 @@
 # Kommando 03: Fortsetzung der HTML-/Android-Anbindung
 
+## Aktueller Prüfblocker und Fold-Korrektur
+
+Auf Reparaturquelle `12c38b751ac1a2de1450f5df7c18f25445b603d3`
+bestanden erneut 16/16 DOM-Tests ohne Skips, JavaScript-Syntax und alle 35
+Originalasset-Pins. Der dritte echte Gradle-Lauf
+`html-bridge-fixed-small-01` brach nach 121,133 Sekunden während
+`compileDebugKotlin` mit verlorenem Daemon ab: keine Compilerdiagnosen,
+null ausgeführte Android-Tests. Das ist kein Nachweis eines Quellfehlers
+und keine bestandene Android-Prüfung. Eine OOM-Ursache ist nicht belegt.
+
+Der vorhandene Compiler-Cache wurde korrekt in ein isoliertes Verzeichnis
+kopiert und per SHA-256 geprüft. Gradle verwarf ihn aufgrund der im Verlauf
+gespeicherten absoluten Ausgabeorte und verlangte einen vollständigen Compile.
+Der nächste begründete Versuch verwendet deshalb den ursprünglichen
+Build-Ausgabeort mit normalem Gradle, gesicherten historischen Nachweisen und
+frischer, unveränderter Quelle. Keine alten Testergebnisse werden als neue
+Nachweise übernommen; keine Compiler- oder Quellprüfung wird umgangen.
+
+Ein zusätzlicher Quellbefund betrifft echte Breitenwechsel: Die Activity bleibt
+bestehen, baut aber ihre nativen Container neu. Das bisherige bedingungslose
+Schließen der HTML-Stage zerstört dabei die offene PDF und den DOM-Zustand.
+Die begrenzte Korrektur hängt dieselbe WebView an den neuen Container und
+schließt sie weiterhin beim ausdrücklichen Klassikwechsel oder Activity-Ende.
+Gezielte Activity-Regressionen prüfen die Lebensdauer über 392/904/392 dp,
+den tatsächlichen Uhrbefehl, Busy-Ablehnung und den asynchronen lokalen
+Botwechsel mit einem währenddessen bearbeiteten Entwurf. Diese neuen
+Android-Regressionen sind bis zu einem erfolgreichen echten Lauf `NOT_RUN`.
+
 ## Erster Reparaturstand
 
 Die getrennten Android-Adapter erhalten nun die PDF-Projektion bei laufenden
