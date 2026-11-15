@@ -1,0 +1,37 @@
+{
+  "runtime": "Node + native Canvas; no browser or server",
+  "results": [
+    {
+      "check": "fixed geometry pixels, ring orientation, position, cache, light-only state response, local layering, resize and phone DPR",
+      "passed": true
+    },
+    {
+      "check": "original-only fallback stays inside the orb anchor",
+      "passed": true
+    },
+    {
+      "check": "native atmosphere phone",
+      "passed": true,
+      "cssWidth": 430,
+      "cssHeight": 932,
+      "pixelRatio": 1.4,
+      "layers": 3,
+      "rayCount": 3,
+      "changedPixelsAfter10Seconds": 348162,
+      "changedPixelRatio": 0.4432,
+      "retiredOrbCannotReturn": true
+    },
+    {
+      "check": "native atmosphere desktop",
+      "passed": true,
+      "cssWidth": 1440,
+      "cssHeight": 980,
+      "pixelRatio": 1.65,
+      "layers": 3,
+      "rayCount": 5,
+      "changedPixelsAfter10Seconds": 2418359,
+      "changedPixelRatio": 0.6295,
+      "retiredOrbCannotReturn": true
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "suite": "presence-instruments-dom",
+  "runtime": "jsdom",
+  "visualOrGPUVerification": false,
+  "cssMinimumsAreNotLayoutMeasurement": true,
+  "tests": [
+    {
+      "name": "API supplies all six intervals and three grouped source relations",
+      "passed": true
+    },
+    {
+      "name": "Every phase action opens real workspace and synchronizes both hero instruments",
+      "passed": true
+    },
+    {
+      "name": "Enter and Space preserve focused phase controls through root rendering",
+      "passed": true
+    },
+    {
+      "name": "Each source button opens and focuses its actual document passage",
+      "passed": true
+    },
+    {
+      "name": "Scene and tool changes keep diagram values fixed and buttons stable",
+      "passed": true
+    },
+    {
+      "name": "API events rebuild only changed data, retain focus and escape supplied labels",
+      "passed": true
+    },
+    {
+      "name": "Source grouping follows changed API source IDs without fixed relationships",
+      "passed": true
+    },
+    {
+      "name": "Gaze command and semantic pointer targets reach existing scene consumers unchanged",
+      "passed": true
+    },
+    {
+      "name": "Controls have 44px minimum CSS dimensions, unique labels and safe SVG structure",
+      "passed": true
+    },
+    {
+      "name": "Disposed module unsubscribes and reinitialization does not duplicate live controls",
+      "passed": true
+    }
+  ],
+  "passed": 10,
+  "failed": 0
+}

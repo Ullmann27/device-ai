@@ -1,0 +1,93 @@
+{
+  "suite": "continuum-dom",
+  "runtime": "jsdom",
+  "visualOrGPUVerification": false,
+  "tests": [
+    {
+      "name": "Bootstrap: 7 tools, 7 scenes, 3 instruments and no duplicate IDs",
+      "passed": true
+    },
+    {
+      "name": "All seven tool buttons render their actual workspace",
+      "passed": true
+    },
+    {
+      "name": "All seven scene controls update content, selection and scene bridge",
+      "passed": true
+    },
+    {
+      "name": "Argon4 opens only after the 950 ms formation completes",
+      "passed": true
+    },
+    {
+      "name": "Four sidebar examples route to their intended task",
+      "passed": true
+    },
+    {
+      "name": "New chats keep isolated histories and recover them on selection",
+      "passed": true
+    },
+    {
+      "name": "Right instrument phase selection opens and synchronizes the document",
+      "passed": true
+    },
+    {
+      "name": "Right source selection closes drawer and focuses the real passage",
+      "passed": true
+    },
+    {
+      "name": "Source paragraph selection updates both diagrams",
+      "passed": true
+    },
+    {
+      "name": "Keyboard selection retains focus for rail, phone buttons and SVG",
+      "passed": true
+    },
+    {
+      "name": "Phone drawers are exclusive; Escape closes drawer without cancelling task",
+      "passed": true
+    },
+    {
+      "name": "Cancel during formation prevents the late document opening",
+      "passed": true
+    },
+    {
+      "name": "Closing followed by navigation clears returning and cancels stale navigation",
+      "passed": true
+    },
+    {
+      "name": "Negated opens and PDF stop commands never open a document",
+      "passed": true
+    },
+    {
+      "name": "Nicht abbrechen preserves the actual in-flight formation timer",
+      "passed": true
+    },
+    {
+      "name": "Escape terminates agent state and all pending handoffs",
+      "passed": true
+    },
+    {
+      "name": "Escape terminates computer state and all pending steps",
+      "passed": true
+    },
+    {
+      "name": "Full seven-scene sequence completes and clears play status",
+      "passed": true
+    },
+    {
+      "name": "HTML input is literal text in both message and sidebar title",
+      "passed": true
+    },
+    {
+      "name": "Local settings affect bridge and survive a new DOM session",
+      "passed": true
+    },
+    {
+      "name": "Successful agent and computer examples finish without claiming backend work",
+      "passed": true
+    }
+  ],
+  "passed": 21,
+  "failed": 0
+}

@@ -1,0 +1,25 @@
+{
+  "revision": "command03",
+  "date": "2026-11-15",
+  "environment": "Managed Sites preview through documented cloud browser API",
+  "verified": [
+    "Actual rendered larger central original avatar fallback and original orb; R removed",
+    "Research action mounts projected computer and source selection updates rendered explanation",
+    "Real local file via browser file chooser: 44 words, 8 lines, 4 paragraphs",
+    "Paragraph bar selects and focuses matching third paragraph",
+    "Argon4 open, close and immediate research open preserve the new task"
+  ],
+  "screenshots": [
+    "Continuum_Kommando_03.jpg",
+    "Continuum_Recherche_03.jpg"
+  ],
+  "limits": [
+    "WebGL avatar used original PNG fallback in this browser; no browser 3D rig check",
+    "Later format-preview navigation encountered browser protocol timeouts; narrow/Fold visual inspection incomplete",
+    "No device FPS or Android test"
+  ],
+  "fixedDuringReview": [
+    "Status node selector originally collided with panel dataset and overwrote DOM; renamed dataset and added full-timeline regression",
+    "Selected source now updates its displayed domain"
+  ]
+}

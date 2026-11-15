@@ -1,0 +1,50 @@
+{
+  "sourceCommit": "1b90611388cc2b1978ddfe32064a25dd3a08cee1",
+  "runtime": "Node + @napi-rs/canvas; no browser",
+  "checks": [
+    {
+      "name": "continuous depth-split orbit geometry at five phases",
+      "passed": true
+    },
+    {
+      "name": "fixed graph with spatial motion: PHONE",
+      "passed": true,
+      "nodes": 204,
+      "edges": 339,
+      "dust": 420
+    },
+    {
+      "name": "fixed graph with spatial motion: FOLD",
+      "passed": true,
+      "nodes": 248,
+      "edges": 421,
+      "dust": 420
+    },
+    {
+      "name": "fixed graph with spatial motion: FOLD_PORTRAIT",
+      "passed": true,
+      "nodes": 248,
+      "edges": 421,
+      "dust": 420
+    },
+    {
+      "name": "fixed graph with spatial motion: REFERENCE_COCKPIT",
+      "passed": true,
+      "nodes": 224,
+      "edges": 381,
+      "dust": 420
+    },
+    {
+      "name": "original state crossfades, uninterrupted phase, measured-only speech and stale-audio release",
+      "passed": true
+    },
+    {
+      "name": "18 native raster frames, six original modes, phone and desktop anchors, transparent bounds",
+      "passed": true
+    },
+    {
+      "name": "DOM contract: own layer, anchor resize, state events, continuous clock, cleanup and original-only fallback",
+      "passed": true
+    }
+  ]
+}

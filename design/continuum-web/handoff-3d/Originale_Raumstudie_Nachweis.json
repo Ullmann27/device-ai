@@ -1,0 +1,72 @@
+{
+  "title": "Continuum · Raumstudie · Originale",
+  "renderer": "@napi-rs/canvas native Canvas2D; not a browser recording",
+  "originalRepository": "https://github.com/Ullmann27/device-ai",
+  "originalCommit": "1b90611388cc2b1978ddfe32064a25dd3a08cee1",
+  "avatarSource": "byte-identical original GLB rendered in Blender; intentionally static PNG presence",
+  "avatarSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "orbSource": "interop/orb-original-source.js, ContinuumOriginalClock and original geometry/material/state port",
+  "orbMetrics": {
+    "width": 340,
+    "height": 320,
+    "centerX": 170,
+    "centerY": 134.4,
+    "radius": 99.84,
+    "nodeCount": 224,
+    "edgeCount": 381,
+    "dustCount": 420,
+    "outerRings": 5,
+    "innerRings": 2
+  },
+  "roomSource": "continuum-preview/scene.js with replacement orb disabled",
+  "video": {
+    "width": 960,
+    "height": 600,
+    "fps": 24,
+    "frames": 192,
+    "durationSeconds": 8,
+    "audio": false
+  },
+  "notes": [
+    "The head is a labelled still image, not evidence of live facial animation.",
+    "No fake audio samples were supplied.",
+    "Panels illustrate light/material/transition; they do not claim real document processing.",
+    "Original orb has continuous phase across state transitions."
+  ],
+  "ffprobe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 960,
+        "height": 600,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "24/1",
+        "nb_frames": "192"
+      }
+    ],
+    "format": {
+      "duration": "8.000000",
+      "size": "1463861"
+    }
+  },
+  "decoded_frame_check": {
+    "times_seconds": [
+      0.25,
+      7.75
+    ],
+    "size": [
+      960,
+      600
+    ],
+    "mean_absolute_rgb_difference": [
+      6.053244791666667,
+      7.220321180555556,
+      7.231390625
+    ],
+    "visually_checked": true
+  },
+  "video_sha256": "4e5cdb3c2682e927686ccfec4181625565372831442bbfad1d752da3ec02620e"
+}

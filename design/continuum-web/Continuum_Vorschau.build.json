@@ -1,0 +1,205 @@
+{
+  "htmlBytes": 22514248,
+  "htmlMiB": 21.471,
+  "under25MiB": true,
+  "htmlSha256": "e8001c69cc6142b5527a1bde946bcd380ced4a15d61f6ea392ce3d953c88f7eb",
+  "model": {
+    "bytes": 12038416,
+    "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+    "base64RoundtripExact": true,
+    "externalBuffersOrImages": 0
+  },
+  "localHtmlReferences": [],
+  "unresolvedCssUrls": [],
+  "scriptSyntaxChecked": [
+    "continuum-embedded-assets",
+    "scene.js",
+    "orb-original.js",
+    "avatar3d.js",
+    "workspace-motion.js",
+    "app.js",
+    "presence-instruments.js",
+    "telemetry.js",
+    "operations.js"
+  ],
+  "runtimeAssetsProvided": [
+    "avatarFallback",
+    "avatarModel",
+    "orbFallback"
+  ],
+  "runtimeDefaultPathsCoveredByOverridesOrSelfContainedGlb": [
+    "orb-original.js: assets/continuum-orb-original.png",
+    "avatar3d.js: assets/",
+    "avatar3d.js: assets/continuum-avatar-original.png",
+    "avatar3d.js: assets/continuum-avatar.glb"
+  ],
+  "output": "Continuum_Vorschau.html",
+  "sourceDirectory": "continuum-preview",
+  "projectLinksReplaced": 0,
+  "projectLinkTarget": "https://device-ai-continuum-heinz.electemu.chatgpt.site",
+  "embeddedAssetCount": 10,
+  "inputs": [
+    {
+      "path": "app.js",
+      "bytes": 41955,
+      "sha256": "01ad3ab36f321c041af8a3319adafb53dc6d3677f83f3e5fbff49d6573b6a26a"
+    },
+    {
+      "path": "assets/continuum-avatar-NOTICE.json",
+      "bytes": 4254,
+      "sha256": "f32229b321c3be99752686e7730f5dcbb570d22d1800aa9125a5b113a0c6ed9d"
+    },
+    {
+      "path": "assets/continuum-avatar-original.png",
+      "bytes": 1283790,
+      "sha256": "af71726f13cbbd0514f4ccea6b2e5c2c32217125400b2b93543f6cd2cf22a471"
+    },
+    {
+      "path": "assets/continuum-avatar.glb",
+      "bytes": 12038416,
+      "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+    },
+    {
+      "path": "assets/continuum-orb-original.png",
+      "bytes": 955980,
+      "sha256": "d057d39300e4b588328c3d825ad97f19006e0d38d3a3dc23ba5a9cf00beaa6ac"
+    },
+    {
+      "path": "assets/fonts/manrope-0.ttf",
+      "bytes": 96200,
+      "sha256": "ed335894f8d954263675f7e457bf657374d8b7be629be4dc43aef97c309ad3ae"
+    },
+    {
+      "path": "assets/fonts/manrope-1.ttf",
+      "bytes": 96300,
+      "sha256": "437dc9f921739a6893128fa4dfc299424951148475815a9a213a46457878c42b"
+    },
+    {
+      "path": "assets/fonts/manrope-2.ttf",
+      "bytes": 96348,
+      "sha256": "68ed4be49ec7d32f07b42f9232dc01ca1df7a77be1d9b0731aac74db58235f34"
+    },
+    {
+      "path": "assets/fonts/manrope-3.ttf",
+      "bytes": 96188,
+      "sha256": "ea1f264039fed13fd36e6d6f49fcae4fe7007def02cf2972b5c7f6d6f1349d06"
+    },
+    {
+      "path": "assets/fonts/space-grotesk-4.ttf",
+      "bytes": 69360,
+      "sha256": "ec926d5065eaca49a48f96e312bbae0bbc5733c24215cf5dfabbdccee926fef7"
+    },
+    {
+      "path": "assets/fonts/space-grotesk-5.ttf",
+      "bytes": 69416,
+      "sha256": "3e699ead1876244fa392243054ddefe7cf631b488438828a8a100731a22ab995"
+    },
+    {
+      "path": "assets/fonts/space-grotesk-6.ttf",
+      "bytes": 69308,
+      "sha256": "3e756954468ff1cb302dae0414262e72f76a67d87bef3fa1f3226cd0fb9b2d85"
+    },
+    {
+      "path": "assets/licenses/Manrope_NOTICE.txt",
+      "bytes": 120,
+      "sha256": "db4655ca31e41546fe3596eabf75a39d6d1a37a02724ce3bff0d67a16b86c754"
+    },
+    {
+      "path": "assets/licenses/Manrope_OFL.txt",
+      "bytes": 4387,
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "path": "assets/licenses/Space_Grotesk_NOTICE.txt",
+      "bytes": 135,
+      "sha256": "8e5c4fa25381f0b9772f6ac29eb38d15cf88b623414d4fb6bfba5caa2db6d5cb"
+    },
+    {
+      "path": "assets/licenses/Space_Grotesk_OFL.txt",
+      "bytes": 4495,
+      "sha256": "564ce565c371c5e5bbf286006565a7c9aa55a9f56e7ca58d56e05d649dd61a72"
+    },
+    {
+      "path": "assets/licenses/Three_MIT.txt",
+      "bytes": 1081,
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+    },
+    {
+      "path": "avatar3d.js",
+      "bytes": 634422,
+      "sha256": "d971058633a5a1fa10bbbb1da97583b920ab7895b7fb1199a27a78f01f62bb5b"
+    },
+    {
+      "path": "command-layout.css",
+      "bytes": 10866,
+      "sha256": "1c0d3ac7c386497b41f8812b29b0b453fe4d8bedee8cba3666b2f6d2aede76d7"
+    },
+    {
+      "path": "index.html",
+      "bytes": 11777,
+      "sha256": "98141c7fa9b324567d38c0a955241c1461e367653ad4afc727c1dc79e4eca2c1"
+    },
+    {
+      "path": "operations.css",
+      "bytes": 14784,
+      "sha256": "0cb564808fe92abee89a19ccea9f4ee32636f09a70fef5f3674e36a7dc818964"
+    },
+    {
+      "path": "operations.js",
+      "bytes": 24554,
+      "sha256": "005381f1a7eaf68c08a04df552e7c9b65f3cadb94ffc54f85fe711ff9a53a9b9"
+    },
+    {
+      "path": "orb-original.js",
+      "bytes": 31032,
+      "sha256": "f9ee074ce59ac23ec9b3c9a6975381bd987dbd2bea4944d927b1f8b43ce262b4"
+    },
+    {
+      "path": "presence-instruments.css",
+      "bytes": 15246,
+      "sha256": "2ae9918bdbee95ee8fb055ed428804f1cdb16629d5ffb906bc45653ad19209ef"
+    },
+    {
+      "path": "presence-instruments.js",
+      "bytes": 12196,
+      "sha256": "dafefe13775e19a65236417aebb2b5d89f0173defbd068d2444fffe142ebc622"
+    },
+    {
+      "path": "presence-layout.css",
+      "bytes": 7439,
+      "sha256": "fc29d4837493061c861b611cdc3e463c84af079d508421c50cabada866075be6"
+    },
+    {
+      "path": "scene.js",
+      "bytes": 43393,
+      "sha256": "91ca6dc5fdea2d5449cded440585e5f1cad46d6a5fe8a3ceefd34143a3a5835b"
+    },
+    {
+      "path": "style.css",
+      "bytes": 66811,
+      "sha256": "df251199ccf49be377b8cb1790d60cf25230b0f6cd63d6d5d52e77a1e1b3dc95"
+    },
+    {
+      "path": "telemetry.css",
+      "bytes": 4893,
+      "sha256": "8ca22d80d566df947e614ed73d0a8d8059bf0b0dfc99119d46eb1cd088bb2d1c"
+    },
+    {
+      "path": "telemetry.js",
+      "bytes": 16738,
+      "sha256": "d8883eaa93776ad87b5c4ff902ce212437d8eb5801591f344dfa8a8b015c544c"
+    },
+    {
+      "path": "workspace-motion.css",
+      "bytes": 4937,
+      "sha256": "791e9f226d2de5a671c9cc7d6f21b725e83d56b629ead84bd7eb314aa2f4f66d"
+    },
+    {
+      "path": "workspace-motion.js",
+      "bytes": 18355,
+      "sha256": "43e2628c6d9203a82b691c594cb171173614c002e9febb69d427bba87d1143a0"
+    }
+  ],
+  "appSourcesModified": false,
+  "browserOrServerUsed": false
+}

@@ -1,0 +1,81 @@
+{
+  "repository": "Ullmann27/device-ai",
+  "commit": "1b90611388cc2b1978ddfe32064a25dd3a08cee1",
+  "branch": "claude/code55-cinematic-evolution-20261112",
+  "sourceFormat": "Kotlin platform-free ContinuumPainter/Canvas renderer",
+  "browserRuntime": "Canvas 2D",
+  "originals": [
+    {
+      "file": "originals/AndroidContinuumPainter.kt",
+      "repositoryPath": "app/src/main/java/at/heinz/deviceai/ui/AndroidContinuumPainter.kt",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/1b90611388cc2b1978ddfe32064a25dd3a08cee1/app/src/main/java/at/heinz/deviceai/ui/AndroidContinuumPainter.kt",
+      "bytes": 9127,
+      "gitBlob": "3d9949fd033c2fb67761607491e276f5e4dc4257",
+      "sha256": "156889f9e9a6952578d8e326782b9d47c4b17a2f5153a9665a46a1afacc40e11"
+    },
+    {
+      "file": "originals/ContinuumHologramPlexus.kt",
+      "repositoryPath": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramPlexus.kt",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/1b90611388cc2b1978ddfe32064a25dd3a08cee1/app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramPlexus.kt",
+      "bytes": 9592,
+      "gitBlob": "fb89a6329cafec8f18d5068bf41447c1e31b753b",
+      "sha256": "3ce63bfb8ae0a656b20eca5a388dc5b8202a4e8128e7797d4f0cef3a258e1027"
+    },
+    {
+      "file": "originals/ContinuumHologramRenderer.kt",
+      "repositoryPath": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/1b90611388cc2b1978ddfe32064a25dd3a08cee1/app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+      "bytes": 41926,
+      "gitBlob": "c9c6cf6602557abaa6cbb4595f0360c36a938fdb",
+      "sha256": "0dd2e9a54dc901035b31407f95dc3fcc5727cdd7c1f3b369e86ac5fec2b3a5a9"
+    },
+    {
+      "file": "originals/ContinuumHologramView.kt",
+      "repositoryPath": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/1b90611388cc2b1978ddfe32064a25dd3a08cee1/app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "bytes": 68857,
+      "gitBlob": "7349c43dc31ccd789327342730455ec67b632c2a",
+      "sha256": "3cef9cc211471ee3ad99b211bc70dbff9d7d76db02893dbe207b5a9662401b1a"
+    },
+    {
+      "file": "originals/ContinuumOrbitalRing.kt",
+      "repositoryPath": "app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/1b90611388cc2b1978ddfe32064a25dd3a08cee1/app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt",
+      "bytes": 3294,
+      "gitBlob": "35a92c7a8587e22d6e5dfaa93550407371d5e304",
+      "sha256": "97ea8358c09c23ac688fbdc7eed4579b3a88ce80d3b3a010890df84406a3a46b"
+    },
+    {
+      "file": "originals/ContinuumPainter.kt",
+      "repositoryPath": "app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/1b90611388cc2b1978ddfe32064a25dd3a08cee1/app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt",
+      "bytes": 7749,
+      "gitBlob": "35f594f0b96130cdd1f60fe750f3d67cf2b27167",
+      "sha256": "9f3d0b53d4c68581332be7ceb75bf9be0d7ebc41e3ae41a21ce21a2d7ae5164d"
+    },
+    {
+      "file": "originals/ContinuumTheme.kt",
+      "repositoryPath": "app/src/main/java/at/heinz/deviceai/ui/ContinuumTheme.kt",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/1b90611388cc2b1978ddfe32064a25dd3a08cee1/app/src/main/java/at/heinz/deviceai/ui/ContinuumTheme.kt",
+      "bytes": 2388,
+      "gitBlob": "684699818cc387d845681955fae2b7316a44f922",
+      "sha256": "09a9174238a21fe1765358ee9abe4cb46907eabd21c5656a7e28489d91eed661"
+    },
+    {
+      "file": "originals/HologramAudio.kt",
+      "repositoryPath": "app/src/main/java/at/heinz/deviceai/HologramAudio.kt",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/1b90611388cc2b1978ddfe32064a25dd3a08cee1/app/src/main/java/at/heinz/deviceai/HologramAudio.kt",
+      "bytes": 2899,
+      "gitBlob": "313530d45824a01ccf3b551891c71f327ecb0403",
+      "sha256": "671fe68134834778c218291c4593520db51d411be5ec3fc9d5a9ed265fa14bf8"
+    }
+  ],
+  "port": "orb-original-source.js",
+  "bundle": "../continuum-preview/orb-original.js",
+  "fallback": "../continuum-preview/assets/continuum-orb-original.png",
+  "verification": "qa-orb/verification.json",
+  "qualification": "Geometry and materials translated from the original; no Android/browser pixel identity or real-device frame-rate claim.",
+  "presentationRevision": "Praesenz 02",
+  "fixedModeVerification": "qa-orb-fixed/verification.json",
+  "presentationPolicy": "Original geometry cached and held fixed behind the centered avatar; only overall light exposure responds to state. Live mode remains available explicitly."
+}

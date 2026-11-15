@@ -1,0 +1,29 @@
+{
+  "name": "continuum-original-asset-adapters",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Local adapters for the preserved Device AI Continuum avatar and original orb renderer",
+  "scripts": {
+    "build:avatar": "esbuild avatar3d-source.js --bundle --minify --format=iife --target=es2020 --legal-comments=eof --outfile=../continuum-preview/avatar3d.js",
+    "verify:avatar": "node verify-avatar-contract.mjs",
+    "verify:orb": "node verify-orb-original.mjs",
+    "verify:dom": "node ../qa/continuum-dom.cjs",
+    "render:room": "node render-original-room.mjs",
+    "verify:orb-fixed": "node verify-orb-fixed.mjs",
+    "verify:presence": "node ../qa/presence-instruments-dom.cjs",
+    "render:presence": "node render-central-presence.mjs"
+  },
+  "dependencies": {
+    "three": "0.187.0"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "1.1.1",
+    "continuum-native-canvas": "npm:@napi-rs/canvas@0.1.100",
+    "esbuild": "0.28.2",
+    "jsdom": "31.0.1"
+  },
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  }
+}
