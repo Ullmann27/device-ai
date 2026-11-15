@@ -27,12 +27,16 @@ for (const section of ['presence-system','presence-core','presence-wing-left','p
 const activity = readFileSync(resolve(root,'app/src/main/java/at/heinz/deviceai/AgentActivity.kt'),'utf8');
 assert.ok(activity.includes('attachCommand03MainStage(root)'),'HTML not mounted as main Activity surface');
 assert.ok(activity.includes('sendButton.performClick()'),'Native owner-gated command dispatch missing');
+assert.ok(activity.includes('ALTE ANSICHT ÖFFNEN'),'No owner-visible fallback');
+assert.ok(activity.includes('ambientMotionEnabled = false'),'Hidden native HUD still animating');
+assert.ok(activity.includes('.put("workRows", workRows)'),'Real computer result rows not wired');
 const bridge = readFileSync(resolve(root,lock.html_root,'native-bridge.js'),'utf8');
 assert.ok(bridge.includes('stopImmediatePropagation()'),'Native bridge must prevent fake demo execution');
 assert.ok(!bridge.includes('addJavascriptInterface'));
 assert.ok(bridge.includes('select-chat'),'Actual transcript selection route missing');
 assert.ok(bridge.includes('data-native-chat'),'Native chat rows not rendered');
 assert.ok(bridge.includes('window.ContinuumNative'),'Native state bridge missing');
+assert.ok(bridge.includes('snapshot.workRows'),'Computer result panel does not use real Android state');
 assert.ok(readFileSync(resolve(root,lock.html_root,'native-layer.css'),'utf8').includes('native-work-active'));
 
 const android = readFileSync(resolve(root,'app/src/main/java/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.kt'),'utf8');

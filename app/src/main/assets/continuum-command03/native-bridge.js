@@ -74,7 +74,8 @@
     if (!snapshot) return;
     const workspace=$('#workspace');
     if (!workspace) return;
-    const show=lines.length>0 || snapshot.busy===true;
+    const show=lines.length>0 || snapshot.busy===true ||
+      (Array.isArray(snapshot.workRows) && snapshot.workRows.length>0);
     workspace.classList.toggle('native-work-active',show);
     if (!show) return;
     let panel=workspace.querySelector('#native-live-panel');
@@ -93,6 +94,16 @@
       const content=document.createElement('p');content.textContent=String(line.text||'').slice(0,6000);
       item.append(label,content);return item;
     });
+    if (Array.isArray(snapshot.workRows)) snapshot.workRows.slice(0,20).forEach(row=>{
+      if(!row || typeof row.label !== 'string' || typeof row.value !== 'string')return;
+      const item=document.createElement('article');
+      item.className='native-chat-line native-computer-result';
+      const label=document.createElement('small');
+      label.textContent='ANDROID-COMPUTER · '+row.label.slice(0,100);
+      const content=document.createElement('p');
+      content.textContent=row.value.slice(0,500);
+      item.append(label,content);entries.push(item);
+    });
     feed.replaceChildren(...entries);
     panel.querySelector('.native-lane-state').textContent=snapshot.busy?
       'AUFTRAG WIRD BEARBEITET · STATUS VON ANDROID':
@@ -102,7 +113,7 @@
   }
   const workspace=$('#workspace');
   if(workspace)new MutationObserver(()=>{
-    if(snapshot && (lines.length || snapshot.busy) && !workspace.querySelector('#native-live-panel'))renderFeed();
+    if(snapshot && (lines.length || snapshot.busy || snapshot.workRows?.length) && !workspace.querySelector('#native-live-panel'))renderFeed();
   }).observe(workspace,{childList:true});
   function receive(state) {
     if(!state||typeof state!=='object')return;

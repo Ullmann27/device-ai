@@ -819,6 +819,7 @@ class AgentActivity : Activity() {
         // While WebGL renders the original art, the old Filament scene stays idle.
         hologramView?.setForegroundActive(nativeStageVisible)
         homeView?.setForegroundActive(nativeStageVisible)
+        homeView?.jarvisShell?.ambientMotionEnabled = nativeStageVisible
         liveHardwareGauges?.setForegroundActive(true)
         brainScene?.setForegroundActive(true)
         refreshHologramState()
@@ -2121,6 +2122,14 @@ class AgentActivity : Activity() {
         val stage = command03MainStage ?: return
         if (isFinishing || isDestroyed) return
         val system = homeView?.state?.system
+        val workRows = org.json.JSONArray()
+        homeView?.state?.computer?.let { computer ->
+            (computer.planningRows() + computer.resultRows()).take(20).forEach { row ->
+                workRows.put(org.json.JSONObject()
+                    .put("label", row.label.take(100))
+                    .put("value", row.value.take(500)))
+            }
+        }
         val chats = org.json.JSONArray()
         conversationIndex.take(100).forEach { item ->
             chats.put(org.json.JSONObject().put("id", item.id)
@@ -2129,6 +2138,7 @@ class AgentActivity : Activity() {
         val data = org.json.JSONObject()
             .put("sessionId", sessionId)
             .put("chats", chats)
+            .put("workRows", workRows)
             .put("busy", busy)
             .put("listening", voiceListening)
             .put("speaking", voiceSpeaking)
@@ -2210,6 +2220,7 @@ class AgentActivity : Activity() {
             android.widget.FrameLayout.LayoutParams.MATCH_PARENT))
         hologramView?.setForegroundActive(false)
         homeView?.setForegroundActive(false)
+        homeView?.jarvisShell?.ambientMotionEnabled = false
         airbusCockpitOrchestrator?.setForeground(false)
     }
 
@@ -2218,7 +2229,7 @@ class AgentActivity : Activity() {
         if (isFinishing || isDestroyed) return
         command03OriginalDialog?.dismiss()
         lateinit var dialog: AlertDialog
-        val web = at.heinz.deviceai.ui.ContinuumCommand03OriginalStage(this) { route, content ->
+        val web = at.heinz.deviceai.ui.ContinuumCommand03OriginalStage(this, onNativeAction = { route, content ->
             runOnUiThread {
                 if (!dialog.isShowing || isFinishing || isDestroyed) return@runOnUiThread
                 dialog.dismiss()
@@ -2239,7 +2250,7 @@ class AgentActivity : Activity() {
                     else -> navigateDashboardTarget(route)
                 }
             }
-        }
+        })
         dialog = AlertDialog.Builder(this)
             .setTitle("KOMMANDO 03 · ORIGINALDESIGN / ANDROID-VISUALTEST")
             .setView(web)
@@ -4364,7 +4375,32 @@ class AgentActivity : Activity() {
 
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
-        if (workWindowHost.isShowing) workWindowHost.close() else super.onBackPressed()
+        if (workWindowHost.isShowing) {
+            workWindowHost.close()
+        } else if (command03MainStage != null) {
+            AlertDialog.Builder(this)
+                .setTitle("Continuum · Ansicht wählen")
+                .setMessage("Das Originaldesign bleibt standardmäßig aktiv. Für eine technische Rückkehr kann die ältere native Oberfläche eingeschaltet werden. Dein gespeicherter Chat wird nicht gelöscht.")
+                .setNegativeButton("ORIGINALDESIGN BEHALTEN", null)
+                .setPositiveButton("ALTE ANSICHT ÖFFNEN") { _, _ ->
+                    val draft = if (::input.isInitialized) input.text.toString() else ""
+                    val visibleRows = mutableListOf<View>()
+                    if (::chatContainer.isInitialized) {
+                        while (chatContainer.childCount > 0) {
+                            val row = chatContainer.getChildAt(0)
+                            chatContainer.removeViewAt(0)
+                            visibleRows.add(row)
+                        }
+                    }
+                    getSharedPreferences("continuum-command03", MODE_PRIVATE).edit()
+                        .putBoolean("original_html_main", false).apply()
+                    setContentView(buildUi())
+                    visibleRows.forEach { chatContainer.addView(it) }
+                    if (::input.isInitialized) input.setText(draft)
+                    refreshConversationLayout()
+                    refreshWorkAreaSelection()
+                }.show()
+        } else super.onBackPressed()
     }
 
     private fun learningIoStatus(read: () -> String): ((String) -> Unit) -> Unit = { done ->
