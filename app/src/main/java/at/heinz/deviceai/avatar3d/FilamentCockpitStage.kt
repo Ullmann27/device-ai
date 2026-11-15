@@ -25,6 +25,11 @@ internal class FilamentCockpitStage(
     /** Code56 rear housing details (vents, VESA, arm, I/O, cables); follows the monitor matrix every frame. */
     private var monitorRear: FilamentAsset? = null
     private var monitorRearTransform = 0
+    private var bunker: FilamentAsset? = null
+    private var bunkerTransform = 0
+    private var deskTransform = 0
+    private var engineeringTransform = 0
+    private val hiddenTransform = FloatArray(16).apply { this[15] = 1f }
     private var monitorMaterial: Material? = null
     private var ambientLight: IndirectLight? = null
     private var studioReflections: Texture? = null
@@ -65,6 +70,21 @@ internal class FilamentCockpitStage(
                     runCatching { namedTransform(loaded, "monitor-rear-details") }
                         .onSuccess { monitorRear = loaded; monitorRearTransform = it }
                         .onFailure { runCatching { scene.removeEntities(loaded.entities); loader.destroyAsset(loaded) } }
+                }
+            }
+            assets.bunker?.let { bytes ->
+                runCatching { load(bytes) }.onSuccess { loaded ->
+                    runCatching {
+                        val room = namedTransform(loaded, "continuum-bunker")
+                        val desk = namedTransform(loaded, "continuum-mission-desk")
+                        val rear = namedTransform(loaded, "continuum-monitor-engineering")
+                        bunkerTransform = room
+                        deskTransform = desk
+                        engineeringTransform = rear
+                        bunker = loaded
+                    }.onFailure {
+                        runCatching { scene.removeEntities(loaded.entities); loader.destroyAsset(loaded) }
+                    }
                 }
             }
             orbTransform = namedTransform(requireNotNull(orb), "continuum-orb")
@@ -160,13 +180,19 @@ internal class FilamentCockpitStage(
                monitorTurnDegrees: Float = 0f) {
         require(frame.valid())
         CockpitWorldTransforms.room(frame, transform)
-        transformUpdates.setTransform(roomTransform, transform)
+        transformUpdates.setTransform(roomTransform, if (bunker != null) hiddenTransform else transform)
         if (frame.monitorWidth / frame.width > .70f) {
             transform[0] = 0f
             transform[5] = 0f
             transform[10] = 0f
         }
         transformUpdates.setTransform(sideMonitorTransform, transform)
+        if (bunker != null) {
+            CockpitBunkerTransforms.room(frame, transform)
+            transformUpdates.setTransform(bunkerTransform, transform)
+            CockpitBunkerTransforms.desk(frame, transform)
+            transformUpdates.setTransform(deskTransform, transform)
+        }
         if (!contextPanelsFailed) runCatching {
             if (contextPanels == null && contextContent != null && panelBytes != null && panelPainter != null &&
                 frame.monitorWidth / frame.width <= .70f) {
@@ -181,7 +207,9 @@ internal class FilamentCockpitStage(
         }
         val monitorMatrix = frame.monitorTransform(monitorTurnDegrees)
         transformUpdates.setTransform(monitorTransform, monitorMatrix)
-        if (monitorRearTransform != 0) transformUpdates.setTransform(monitorRearTransform, monitorMatrix)
+        if (monitorRearTransform != 0) transformUpdates.setTransform(monitorRearTransform,
+            if (bunker != null) hiddenTransform else monitorMatrix)
+        if (engineeringTransform != 0) transformUpdates.setTransform(engineeringTransform, monitorMatrix)
         CockpitWorldTransforms.orb(frame, orbBounds.left, orbBounds.top, orbBounds.right, orbBounds.bottom, transform)
         transformUpdates.setTransform(orbTransform, transform)
         orbitTransforms.forEachIndexed { index, (instance, rest) ->
@@ -199,10 +227,11 @@ internal class FilamentCockpitStage(
         runCatching { pixels?.close() }; pixels = null
         runCatching { contextPanels?.close() }; contextPanels = null
         contextContent = null
-        for (loaded in listOfNotNull(workstation, orb, monitorRear)) {
+        for (loaded in listOfNotNull(workstation, orb, monitorRear, bunker)) {
             runCatching { scene.removeEntities(loaded.entities); loader.destroyAsset(loaded) }
         }
         workstation = null; orb = null; monitorRear = null; monitorRearTransform = 0
+        bunker = null; bunkerTransform = 0; deskTransform = 0; engineeringTransform = 0
         runCatching { monitorInstance?.let(engine::destroyMaterialInstance) }; monitorInstance = null
         runCatching { monitorMaterial?.let(engine::destroyMaterial) }; monitorMaterial = null
         runCatching { scene.indirectLight = null }

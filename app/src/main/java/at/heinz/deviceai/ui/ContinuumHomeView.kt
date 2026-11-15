@@ -184,9 +184,12 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until
             val taskChanged = JarvisCockpitPanels.isOwnerTaskRunning(field) !=
                 JarvisCockpitPanels.isOwnerTaskRunning(value)
+            val workContextChanged = (field.document == null && field.computer == null) !=
+                (value.document == null && value.computer == null)
             field = value
             updateCockpitPanels()
-            if (taskChanged) requestLayout()
+            virtualMonitor.updateWorkspace(ContinuumWorkspaceSummary.lines(value))
+            if (taskChanged || workContextChanged) requestLayout()
             liveTabs.updateState(value)
             views.values.forEach { it.refresh() }
             if (jarvisShellStage) jarvisShell.tiles = shellTiles(value)
@@ -600,6 +603,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     init {
         setWillNotDraw(false)
+        virtualMonitor.updateWorkspace(ContinuumWorkspaceSummary.lines(state))
         jarvisShell.content = JarvisShellContent.forState({ state }, grid = { jarvisShell.shell?.grid },
             shell = { jarvisShell.shell }) + mapOf(
                 JarvisShellLayout.Slot.WORK_DOCUMENT to contextualPanel(false),
@@ -624,7 +628,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         addView(hologram)
         addView(virtualMonitor)
         hologram.onCockpitStatus = { label, ready ->
-            virtualMonitor.updateStatus(label, ready)
+            virtualMonitor.updateStatus(label, ready, hologram.cockpitAtRest)
             val panels = ready && hologram.cockpitPanelsVisible
             if (nativePanelsVisible != panels) {
                 nativePanelsVisible = panels
@@ -905,6 +909,12 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
                     box.copy(bottom = Math.nextUp(box.top + minimumHeight)) else box
             }
             add("panel:$slot", target, label, touchBox)
+        }
+        if (shell.workstation && state.document == null && state.computer == null) {
+            add("workspace:projects", "tasks", "Projekte und Aufgaben öffnen",
+                shell[JarvisShellLayout.Slot.WORK_DOCUMENT])
+            add("workspace:work", "tasks", "Offene Aufgaben öffnen",
+                shell[JarvisShellLayout.Slot.WORK_DRAFT])
         }
         shell.grid?.areas?.get(JarvisCockpitGrid.Area.BRAND)?.let { box ->
             val h = maxOf(48f, box.height)

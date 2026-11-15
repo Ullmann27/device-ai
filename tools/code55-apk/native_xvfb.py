@@ -13,6 +13,7 @@ import time
 ARGUMENTS = ["-displayfd", "3", "-screen", "0", "1080x2400x24", "-nolisten", "tcp"]
 START_SECONDS = 5
 STOP_SECONDS = 2
+PROCESS_FIELDS = ("pid", "parent_pid", "uid", "start_ticks", "process_group", "session")
 
 
 def identity(pid, parent, *, allow_empty_command=False):
@@ -56,14 +57,18 @@ def ready(pid, executable, directory, report):
         while time.monotonic() < deadline:
             if exited(descriptor):
                 raise RuntimeError("Owned Xvfb exited during startup")
-            current = identity(pid, os.getppid(), allow_empty_command="process" not in report)
-            process = {key: value for key, value in current.items() if key not in ("executable", "argv")}
+            current = identity(pid, os.getppid(), allow_empty_command=True)
+            process = {key: current[key] for key in PROCESS_FIELDS}
             if "startup_process" in report and report["startup_process"] != process:
-                raise ValueError("Owned display startup identity changed")
+                raise ValueError("Owned display startup identity changed: process changed during startup")
             report["startup_process"] = process
+            if exited(descriptor):
+                raise RuntimeError("Owned Xvfb exited during startup")
             if "process" in report and report["process"] != current:
                 raise ValueError("Owned display identity changed")
-            if current["executable"] == str(binary) and current["argv"] == expected_command:
+            if current["argv"] is None:
+                report["empty_command_observations"] = report.get("empty_command_observations", 0) + 1
+            elif current["executable"] == str(binary) and current["argv"] == expected_command:
                 report["process"] = current
                 with (directory / "display.txt").open("rb") as stream:
                     reply = stream.read(17)
@@ -127,9 +132,8 @@ def stop(pid, executable, directory, report):
         previous = json.loads(start_path.read_text()) if start_path.exists() else {}
         expected = previous.get("process") or identity(pid, os.getppid())
         startup = previous.get("startup_process")
-        if startup is not None and startup != {
-                key: value for key, value in expected.items() if key not in ("executable", "argv")}:
-            raise ValueError("Owned display startup identity changed before cleanup")
+        if startup is not None and startup != {key: expected[key] for key in PROCESS_FIELDS}:
+            raise ValueError("Owned display startup identity changed: process changed before cleanup")
         binary = str(Path(executable).resolve(strict=True))
         if expected["pid"] != pid or expected["executable"] != binary \
                 or expected["argv"] != [binary, *ARGUMENTS]:

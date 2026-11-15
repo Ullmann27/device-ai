@@ -41,7 +41,7 @@ internal class OwnerRoutineRuntime private constructor(private val app: Context)
     val book = RoutineBook(stateStore = FileRoutineStateStore(File(files, "routines")))
     private val handler = Handler(Looper.getMainLooper())
     private val chief = AtomicReference<(() -> Unit)?>()
-    val mailbox = AgentMailbox(wake = { handler.post { chief.get()?.invoke() } })
+    val mailbox = AgentMailbox(onAccepted = { handler.post { chief.get()?.invoke() } })
     private val receipts = FileToolExecutionReceiptStore(File(files, "tool-receipts"))
     private val bridge = ShizukuBridge(app) { }
     @Volatile private var bridgeNeeded = book.registrations().any {

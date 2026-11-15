@@ -233,6 +233,32 @@ class OwnerRoutineActivityUiTest {
         assertEquals(1, app.batteryReads.get())
     }
 
+    @Test fun normalReportArrivesWithoutOwnerInputOrCancellingActiveTurn() {
+        val a = activity()
+        val ownerToken = DeliberationCancellation()
+        set(a, "activeChatCancellation", ownerToken)
+        set(a, "busy", true); set(a, "activeLocalRequest", true)
+        @Suppress("UNCHECKED_CAST")
+        val listener = get(a, "routineWake") as () -> Unit
+        runtime.attachChief(listener)
+        try {
+            val saved = report()
+            val message = requireNotNull(saved.message)
+            val body = message.body
+            assertEquals(AgentPriority.INFO, message.priority)
+            until("Passive owner receives the completed report") { texts(a).contains(body) }
+            drain()
+            assertEquals(1, texts(a).count { it == body })
+            assertEquals(1, transcript().load(session(a)).count { it.text == body })
+            assertTrue(runtime.book.pendingChatReports().isEmpty())
+            ownerToken.throwIfCancelled()
+            assertSame(ownerToken, get(a, "activeChatCancellation"))
+            assertEquals(true, get(a, "busy"))
+            assertEquals(true, get(a, "activeLocalRequest"))
+            assertEquals(1, app.batteryReads.get())
+        } finally { runtime.detachChief(listener) }
+    }
+
     @Test fun lateDeliveryStaysOutOfPrivateBotViewAndDifferentOwnerConversation() {
         val a = activity(); val original = session(a); val body = requireNotNull(report().message).body
         call(a, "deliverRoutineMessages")
