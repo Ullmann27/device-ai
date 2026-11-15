@@ -36,3 +36,13 @@ Die lokale Android-Startdatei `index.android.html` ist die exakte HTML-Originald
 ## Kein zweiter 3D-Dialog
 
 Der alte separate HTML-Designtest-Dialog wurde entfernt. Die Ansicht wird in der vorhandenen Activity an genau einer Stelle montiert. Im Originaldesign zeigt die Android-Zurück-Taste den Rückfall zur klassischen Oberfläche; von dort schaltet **Mehr → KOMMANDO 03 · ORIGINALDESIGN ALS STARTSEITE** wieder in die HTML-Hauptoberfläche. Dabei bleiben sichtbare Chatzeilen und der aktuelle Eingabeentwurf beim Activity-Neuaufbau erhalten. Ein Geräte- oder Langzeittest dieses Wechsels ist offen.
+
+## P0-Fortsetzung: echte PDF im originalen projizierten Display (WIP)
+
+Der bereits vorhandene `PdfDocumentIntake` öffnet ausschließlich vom Besitzer ausgewählte PDFs über Androids lesenden Dokumentpicker. Der neue Pfad `AgentActivity.projectCommand03Document(doc)` wird erst **nach einem erfolgreichen echten PDF-Read** aufgerufen; eine gespeicherte Argon4-Demo ist keine Datenquelle. Die PDF-Metadaten, die ersten maximal 12.000 wirklich extrahierten Zeichen und – soweit vorhanden – eine Kopie der bereits gerenderten ersten Seite werden an die lokale HTML-Projektion übergeben.
+
+Die JPEG-Erzeugung erfolgt begrenzt auf **280.000 Bytes** im vorhandenen seriellen Dokument-I/O-Executor; das Bild wird nicht als freigegebene Datei/Content-URI an JavaScript übergeben. Eine echte Bitmap-Kopie wird nach der Kodierung recycelt. Vor Anzeige muss Chat-ID, aktuelle Dokument-Lesegeneration, noch aktive WebView und Activity übereinstimmen; alte Rückmeldungen werden verworfen. Wenn das Seitenbild nicht zur Verfügung steht oder zu groß ist, zeigt das projizierte Dokument nur die echten Metadaten/Textinformationen. Bei fehlender Textschicht/älterem Android meldet die Ansicht dies ausdrücklich, statt eine Zusammenfassung vorzutäuschen. Alle fremden Textdaten werden mit DOM-`textContent` eingefügt; externe Webzugriffe sind gesperrt.
+
+Das zusätzliche HTML-Markup und die CSS-Zeichenwege stehen vollständig in **separaten Android-Dateien** (`native-bridge.js`, `native-layer.css`); die 35 freigegebenen Originalblobs sind weiterhin byteidentisch. Zwei native Schaltflächen erlauben ausschließlich „Andere PDF öffnen“ über den echten Picker oder das Schließen der lokalen Projektion.
+
+**Grenzen:** Die erste Seite kann gezeigt werden, aber weitere Seiten werden noch nicht visuell gerendert; OCR ist nicht integriert. Ein lokaler JavaScript-Parser- und Quellvertrag ist nicht gleichbedeutend mit Kotlin-Build, GPU-Renderprüfung oder Fold7-Test. Der vollständige Animations- und Dateiarbeitsablauf muss auf Hardware noch geprüft werden. **Kein signierter Code60-Release.**

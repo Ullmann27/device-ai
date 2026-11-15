@@ -46,6 +46,24 @@ assert.ok(bridge.includes('select-chat'),'Actual transcript selection route miss
 assert.ok(bridge.includes('data-native-chat'),'Native chat rows not rendered');
 assert.ok(bridge.includes('window.ContinuumNative'),'Native state bridge missing');
 assert.ok(bridge.includes('snapshot.workRows'),'Computer result panel does not use real Android state');
+assert.ok(bridge.includes('document:documentOpened'),'Real selected PDF is not bound to HTML');
+assert.ok(bridge.includes('native-document-panel'),'Projected PDF work surface absent');
+assert.ok(bridge.includes('textContent=actual?doc.text.slice(0,12000)'),
+  'PDF data must be rendered as text, not injected into HTML');
+assert.ok(bridge.includes('currentDocument.sessionId !== session'),
+  'Document must be scoped to its owning conversation');
+assert.ok(bridge.includes('doc.previewDataUri.length <= 400000'),
+  'Oversize document image must be rejected by the view');
+assert.ok(bridge.includes('clearDocument()'),'Document cannot be dismissed');
+assert.ok(activity.includes('projectCommand03Document(doc)'),'Native PDF read not projected');
+assert.ok(activity.includes('doc.firstPage?.copy('),'Preview must own the image copy');
+assert.ok(activity.includes('sessionId != session'),'Old session PDF must be rejected');
+assert.ok(activity.includes('documentReadGeneration != readRevision'),
+  'Superseded document content must be rejected');
+assert.ok(activity.includes('output.size() > 280_000'),
+  'Generated PDF image exceeds the safe byte budget');
+assert.ok(!bridge.includes('innerHTML=doc.text'),'PDF text must never become HTML markup');
+
 assert.ok(readFileSync(resolve(root,lock.html_root,'native-layer.css'),'utf8').includes('native-work-active'));
 
 const android = readFileSync(resolve(root,'app/src/main/java/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.kt'),'utf8');

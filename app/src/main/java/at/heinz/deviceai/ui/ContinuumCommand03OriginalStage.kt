@@ -60,12 +60,29 @@ internal class ContinuumCommand03OriginalStage(
 
     private var pageReady = false
     private var queuedState: String? = null
+    private var queuedDocument: String? = null
 
     /** Native -> local page only. Never grant JavaScript direct Android capabilities. */
     fun present(state: JSONObject) {
         val data = state.toString()
         if (!pageReady) queuedState = data
         else evaluateJavascript("window.ContinuumNative?.receive($data);", null)
+    }
+
+    /**
+     * Show the read-only first page and extracted text of the actual owner-selected PDF.
+     * This is native-to-page presentation only; no file/content URI or tool permission
+     * becomes available to JavaScript, and nothing is sent to the network.
+     */
+    fun presentDocument(document: JSONObject) {
+        val data = document.toString()
+        if (!pageReady) queuedDocument = data
+        else evaluateJavascript("window.ContinuumNative?.document($data);", null)
+    }
+
+    fun clearDocument() {
+        queuedDocument = null
+        if (pageReady) evaluateJavascript("window.ContinuumNative?.clearDocument();", null)
     }
 
     fun presentTranscript(sessionId: String, entries: JSONArray) {
@@ -147,6 +164,10 @@ internal class ContinuumCommand03OriginalStage(
                 queuedState?.let { json ->
                     view.evaluateJavascript("window.ContinuumNative?.receive($json);", null)
                     queuedState = null
+                }
+                queuedDocument?.let { json ->
+                    view.evaluateJavascript("window.ContinuumNative?.document($json);", null)
+                    queuedDocument = null
                 }
                 onReady()
             }

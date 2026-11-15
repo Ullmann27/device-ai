@@ -3075,6 +3075,60 @@ class AgentActivity : Activity() {
         }
     }
 
+
+    /**
+     * Actual owner-selected PDF -> already mounted WebGL work surface.
+     * No Android content URI is sent to JavaScript. The first page is a bounded
+     * in-memory JPEG preview; extracted text is provided as evidence only.
+     * The old document/agent context and owner-gated draft flow remain unchanged.
+     */
+    private fun projectCommand03Document(doc: PdfDocumentIntake.Document) {
+        val stage = command03MainStage ?: return
+        val session = sessionId
+        val readRevision = documentReadGeneration
+        val data = org.json.JSONObject()
+            .put("sessionId", session)
+            .put("name", doc.name.take(120))
+            .put("pageCount", doc.pageCount)
+            .put("textState", doc.textState.name)
+            .put("text", doc.text.take(PdfDocumentIntake.MAX_TEXT_CHARS))
+        val page = runCatching {
+            doc.firstPage?.copy(android.graphics.Bitmap.Config.ARGB_8888, false)
+        }.getOrNull()
+        if (page == null) {
+            stage.presentDocument(data)
+            return
+        }
+        if (documentIoExecutor.isShutdown) {
+            page.recycle()
+            stage.presentDocument(data)
+            return
+        }
+        try {
+            documentIoExecutor.execute {
+                val thumbnail = runCatching {
+                    java.io.ByteArrayOutputStream().use { output ->
+                        if (!page.compress(android.graphics.Bitmap.CompressFormat.JPEG, 75, output) ||
+                            output.size() > 280_000) null
+                        else "data:image/jpeg;base64," +
+                            android.util.Base64.encodeToString(output.toByteArray(),
+                                android.util.Base64.NO_WRAP)
+                    }
+                }.getOrNull()
+                page.recycle()
+                runOnUiThread {
+                    if (isFinishing || isDestroyed || sessionId != session ||
+                        documentReadGeneration != readRevision || command03MainStage !== stage) return@runOnUiThread
+                    data.put("previewDataUri", thumbnail ?: org.json.JSONObject.NULL)
+                    stage.presentDocument(data)
+                }
+            }
+        } catch (_: java.util.concurrent.RejectedExecutionException) {
+            page.recycle()
+            stage.presentDocument(data)
+        }
+    }
+
     /**
      * Document scene (owner flow 06.11.2026): the real first page rides the light trail in, the work window forms beside
      * the face, the deck makes room and JARVIS looks at it. Shown are only facts of this file – name, size, pages, the
@@ -3085,6 +3139,7 @@ class AgentActivity : Activity() {
     private fun presentDocumentScene(doc: PdfDocumentIntake.Document, documentUri: String?) {
         if (activeWorkArea == ContinuumWorkArea.CHAT) showHomeDashboard()
         if (awaitDocumentCockpitLayout(doc, documentUri)) return
+        projectCommand03Document(doc)
         val pages = if (doc.pageCount == 1) "1 Seite" else "${doc.pageCount} Seiten"
         val size = doc.sizeBytes?.let { android.text.format.Formatter.formatShortFileSize(this, it) }
         val meta = listOfNotNull(pages, size, doc.name).joinToString(" · ")

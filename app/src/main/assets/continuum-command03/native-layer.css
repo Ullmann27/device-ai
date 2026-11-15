@@ -44,3 +44,50 @@ body[data-design="command03"] .native-meter-track span {
 }
 body[data-design="command03"] [data-telemetry-left]>:not(.native-meter),
 body[data-design="command03"] [data-telemetry-right]>:not(.native-meter) {display:none!important;}
+
+/* The actual owner-selected PDF uses the same projected room and stays read-only. */
+body[data-design="command03"] #workspace.native-document-active>:not(#native-document-panel) {display:none!important;}
+body[data-design="command03"] #workspace.native-document-active #native-document-panel {
+ display:flex;flex-direction:column;gap:12px;min-height:260px;width:100%;
+}
+body[data-design="command03"] .native-document-heading {
+ display:flex;flex-direction:column;gap:4px;padding:10px 2px;
+ border-bottom:1px solid rgba(110,226,248,.25);
+}
+body[data-design="command03"] .native-document-heading small {
+ color:#67d4e8;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.13em;
+}
+body[data-design="command03"] .native-document-title {
+ color:#e7f9ff;font:600 clamp(17px,2.1vw,25px) 'Space Grotesk',system-ui,sans-serif;
+ margin:0;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-document-facts {
+ display:grid;grid-template-columns:minmax(150px,40%) minmax(0,1fr);align-items:start;
+ gap:18px;min-height:180px;
+}
+body[data-design="command03"] .native-document-image {
+ display:block;width:100%;height:auto;max-height:470px;object-fit:contain;
+ border:1px solid rgba(95,224,249,.35);box-shadow:0 10px 35px rgba(0,5,14,.45);
+ background:#fff;border-radius:4px;
+}
+body[data-design="command03"] .native-document-image[hidden] {display:none!important;}
+body[data-design="command03"] .native-document-text {
+ display:flex;flex-direction:column;gap:8px;min-width:0;
+}
+body[data-design="command03"] .native-document-text small {
+ color:#8db8c9;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.07em;
+}
+body[data-design="command03"] .native-document-text p {
+ color:#bedce7;font:400 12px/1.5 Manrope,system-ui,sans-serif;margin:0;
+}
+body[data-design="command03"] .native-document-excerpt {
+ white-space:pre-wrap;overflow-wrap:anywhere;max-height:370px;overflow:auto;
+ margin:0;padding:12px;border:1px solid rgba(79,170,209,.23);
+ background:rgba(3,14,27,.67);border-radius:5px;
+ color:#e2f5f8;font:400 12px/1.6 Manrope,system-ui,sans-serif;
+}
+@media(max-width:660px) {
+ body[data-design="command03"] .native-document-facts {grid-template-columns:1fr;}
+ body[data-design="command03"] .native-document-image {max-height:340px;}
+ body[data-design="command03"] .native-document-excerpt {max-height:300px;}
+}
