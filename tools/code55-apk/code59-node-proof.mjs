@@ -20,14 +20,21 @@ export function selectChecks(report, expected) {
   return report.checks.filter(check => expected.includes(check.id));
 }
 
+export function releaseProfile(branch) {
+  if (branch === 'fix/code59-context-complete-20261114') return '59';
+  if (branch === 'integrate/continuum-command03-android-20261115') return '60';
+  throw Error('Unsupported release branch');
+}
+
 export function verify(directory, sha, branch) {
-  require(directory && /^[a-f0-9]{40}$/.test(sha) && branch === 'fix/code59-context-complete-20261114');
+  const release = releaseProfile(branch);
+  require(directory && /^[a-f0-9]{40}$/.test(sha));
   const inventory = spawnSync('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard'],
     {encoding: 'utf8', timeout: 10000, maxBuffer: 16 * 1024 * 1024});
   require(inventory.status === 0);
   const names = inventory.stdout.split('\0').filter(Boolean).sort();
   for (const profile of ['critical', 'full-node']) {
-    const folder = profile === 'critical' ? 'code59-critical' : 'code59-full';
+    const folder = profile === 'critical' ? `code${release}-critical` : `code${release}-full`;
     const files = walk(directory).filter(file => path.basename(file) === 'report.json'
       && path.basename(path.dirname(file)) === folder);
     require(files.length === 1);

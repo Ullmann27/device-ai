@@ -1,4 +1,4 @@
-"""Recheck downloaded Code59 release evidence."""
+"""Recheck downloaded evidence for the fixed Code59 and manual Code60 profiles."""
 import hashlib
 import json
 import os
@@ -20,6 +20,60 @@ import validator
 def require(condition, message):
     if not condition:
         raise ValueError(message)
+
+
+def release_profile(code=59):
+    require(type(code) is int and code in (59, 60), "Unsupported release profile")
+    return {"code": str(code), "version": {59: "0.3.58", 60: "0.3.59"}[code],
+            "apk": f"Continuum-Code{code}-UNSIGNED-NOT-INSTALLABLE.apk",
+            "evidence": f"code{code}-evidence", "prefix": f"code{code}"}
+
+
+def required_host_cases(code=59):
+    release_profile(code)
+    composer = "at.heinz.deviceai.ContinuumCompactComposerUiTest"
+    required = [(composer, name) for name in (
+        "shortLandscapeKeepsEditorAndSendFullyVisible",
+        "heightChangesKeepDraftSelectionAndOriginalControls",
+        "narrowLargeTextKeepsEditingAndOriginalSend",
+        "overflowPreservesActionsLongPressesAndDisabledState")]
+    if code == 60:
+        required += [("at.heinz.deviceai.ContinuumCommandNavigationUiTest", name) for name in (
+            "sevenRealToolsAndFilePickerKeepAndroidReadOnlyPermission",
+            "realRailSelectionRestoresOnlyTheSelectedContextAndKeepsTheSameAvatar",
+            "rapidSelectionsRejectAnOlderQueuedReadAndItsPersistentPointer",
+            "missingConversationLeavesVisibleChatContextAndSelectionIntact",
+            "runningLocalRequestIsCancelledButTheChatWaitsForItsActualEnd",
+            "pauseInvalidatesQueuedSelectionWithoutChangingTheStoredActiveChat",
+            "newChatRetainsThePreviousSavedContextAndCanReopenIt",
+            "theSingleRealComposerLivesOutsideBothScrollablePresentations",
+            "responsiveInstrumentsStayOnCanvasBeforeFirstMeasureAndAfterRendererCallbacks",
+            "conversationKeepsOneMountedPresenceAndBoundFeedWithoutHiddenTargets",
+            "largeTextAndKeyboardKeepPresenceAndTheSingleEditorReachable",
+        )]
+        required += [("at.heinz.deviceai.ui.ContinuumChatHistoryTest", name) for name in (
+            "indexContainsOnlyStoredMessagesInActualRecencyOrder",
+            "readRestoresExactlyOneConversationWithoutChangingSelectionOrAppending",
+            "missingEmptyAndTraversalSelectionsLeaveTheExistingConversationIntact",
+            "navigationDoesNotPersistAResetOrLeakTheOtherChatsContext",
+            "titleSurvivesTheRestoreWindowAndAHistoryRestart",
+            "appendUpdatesOnlyItsCachedConversationUntilAnExplicitRefresh",
+            "firstOwnerMessageReplacesGreetingButLaterMessagesDoNotRenameIt",
+            "initialIndexOpensOnlyTheHundredMostRecentlyModifiedTranscripts",
+        )]
+        required += [("at.heinz.deviceai.ui.CinematicWorkstationLayoutTest", name) for name in (
+            "conversationStripContainsOriginalPosedFaceAndCompleteRestRings",
+            "conversationPresenceRetainsAValidMonitorFrameWithoutGhostControls",
+            "originalSphereSurroundsTheSolidPosedHead",
+            "completeMonitorFlightClearsActualPosedFaceAndSideWindows",
+            "compactBadgesRemainReadableAtMaximumFontScale",
+            "instrumentsFlankLargeStagesAndReflowBelowTheHeadOnSmallFold",
+            "sevenNativeDestinationsSitAboveTheSceneWithSharedTouchGeometry",
+            "formerDockFunctionsRemainReachable",
+            "resizingAndLargeTextKeepPositiveBoundsAndAllowScrolling",
+            "compactWorkstationKeepsShorterGeometryAndAllNativeRoutes",
+        )]
+    return tuple(required)
 
 
 def pairs(values):
@@ -99,15 +153,16 @@ def junit(directory, minimum, *, skipped=False, required=()):
             "skipped": len(omitted), "skipped_cases": omitted, "suite_files": len(files)}
 
 
-def check_apk(directory, sha, tree, tools, repo, output):
-    apk = one(directory, "Continuum-Code59-UNSIGNED-NOT-INSTALLABLE.apk")
+def check_apk(directory, sha, tree, tools, repo, output, code=59):
+    profile = release_profile(code)
+    apk = one(directory, profile["apk"])
     require(fields(one(directory, "BUILD-INFO.txt")) == {
-        "source": sha, "source_tree": tree, "versionCode": "59", "versionName": "0.3.58",
+        "source": sha, "source_tree": tree, "versionCode": profile["code"], "versionName": profile["version"],
         "package": "at.heinz.deviceai.continuumlocal", "abi": "arm64-v8a",
         "status": "UNSIGNED_NOT_INSTALLABLE", "fold7_test": "NOT_RUN"}, "APK receipt mismatch")
     digest = validator.digest_file(apk)
     require(one(directory, "SHA256SUMS.txt").read_text() ==
-            digest + "  code59-evidence/" + apk.name + "\n", "APK checksum mismatch")
+            digest + "  " + profile["evidence"] + "/" + apk.name + "\n", "APK checksum mismatch")
     with tempfile.TemporaryDirectory(prefix="source-audit-", dir=output) as temporary:
         audit = Path(temporary)
         assets = repo / "app/src/main/assets"
@@ -151,7 +206,7 @@ def check_apk(directory, sha, tree, tools, repo, output):
     badging = subprocess.run([str(tools / "aapt2"), "dump", "badging", str(apk)],
                              text=True, capture_output=True, check=True).stdout
     require(re.findall(r"^package: name='([^']+)' versionCode='([^']+)' versionName='([^']*)'",
-                       badging, re.M) == [("at.heinz.deviceai.continuumlocal", "59", "0.3.58")],
+                       badging, re.M) == [("at.heinz.deviceai.continuumlocal", profile["code"], profile["version"])],
             "APK identity mismatch")
     require(re.findall(r"^native-code: (.+)$", badging, re.M) == ["'arm64-v8a'"], "APK ABI mismatch")
     require(re.findall(r"^(?:minSdkVersion|sdkVersion):'([^']+)'$", badging, re.M) == ["26"], "Wrong minSdk")
@@ -224,17 +279,13 @@ def native(directory, sha, tree):
             "routines": routine, "app": "PASS", "offline_web": web, "physical_device": "NOT_RUN"}
 
 
-def verify(root, sha, tree, tools, repo):
+def verify(root, sha, tree, tools, repo, code=59):
+    profile = release_profile(code)
     require(re.fullmatch("[a-f0-9]{40}", sha) and re.fullmatch("[a-f0-9]{40}", tree), "Invalid source IDs")
     before = validator.source_identity(repo, os.environ.copy(), sha, tree)
     for path in root.rglob("*.json"):
         read_json(path)
-    composer = "at.heinz.deviceai.ContinuumCompactComposerUiTest"
-    required = [(composer, name) for name in (
-        "shortLandscapeKeepsEditorAndSendFullyVisible",
-        "heightChangesKeepDraftSelectionAndOriginalControls",
-        "narrowLargeTextKeepsEditingAndOriginalSend",
-        "overflowPreservesActionsLongPressesAndDisabledState")]
+    required = required_host_cases(code)
     host = junit(root / "host", 5832, skipped=True, required=required)
     context = junit(root / "context", 400, required=[
         ("at.heinz.deviceai.cognitive.OwnerDialogueOutputTest", "ownerFactoryRejectsUncapturedOverflowInsteadOfClipping"),
@@ -243,21 +294,21 @@ def verify(root, sha, tree, tools, repo):
     lint = ET.parse(one(root / "host", "lint-results-debug.xml")).getroot()
     require(lint.tag == "issues" and not any(issue.get("severity") in ("Error", "Fatal")
             for issue in lint.findall("issue")), "Android lint failed")
-    apk, proof = check_apk(root / "unsigned", sha, tree, tools, repo, root)
+    apk, proof = check_apk(root / "unsigned", sha, tree, tools, repo, root, code)
     runtime = native(root / "native", sha, tree)
     require(validator.source_identity(repo, os.environ.copy(), sha, tree) == before, "Source changed during proof")
     require(validator.digest_file(apk) == proof["sha256"], "APK changed during proof")
     result = {"status": "PASS", "source": sha, "tree": tree, "android": host,
               "context": context, "renderer": renderer, "native": runtime, "apk": proof}
-    (root / "code59-unsigned-path.txt").write_text(str(apk.resolve()) + "\n")
-    validator.write_json(root / "code59-apk-proof.json", proof)
-    validator.write_json(root / "code59-junit.json", host)
-    validator.write_json(root / "code59-evidence.json", result)
+    (root / (profile["prefix"] + "-unsigned-path.txt")).write_text(str(apk.resolve()) + "\n")
+    validator.write_json(root / (profile["prefix"] + "-apk-proof.json"), proof)
+    validator.write_json(root / (profile["prefix"] + "-junit.json"), host)
+    validator.write_json(root / (profile["prefix"] + "-evidence.json"), result)
     return result
 
 
 if __name__ == "__main__":
-    require(len(sys.argv) == 5, "Expected evidence, SHA, tree, build tools")
-    result = verify(Path(sys.argv[1]), sys.argv[2], sys.argv[3], Path(sys.argv[4]), Path.cwd())
+    require(len(sys.argv) in (5, 6), "Expected evidence, SHA, tree, build tools and optional fixed profile")
+    result = verify(Path(sys.argv[1]), sys.argv[2], sys.argv[3], Path(sys.argv[4]), Path.cwd(), int(sys.argv[5]) if len(sys.argv) == 6 else 59)
     print(json.dumps({"status": result["status"], "source": result["source"],
                       "android": result["android"], "unsigned_sha256": result["apk"]["sha256"]}))

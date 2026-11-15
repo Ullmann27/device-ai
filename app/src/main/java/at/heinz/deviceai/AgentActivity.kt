@@ -526,7 +526,6 @@ class AgentActivity : Activity() {
     private var conversationSelectionRevision = 0L
     private var pendingConversationSelection: PendingConversationSelection? = null
     private var conversationSelectionLoading = false
-    private val refreshConversationIndexTask = Runnable { refreshConversationIndex() }
     private val drainConversationSelectionTask = Runnable { drainConversationSelection() }
     private var routineRuntime: OwnerRoutineRuntime? = null
     private val routineDeliveryActive = java.util.concurrent.atomic.AtomicBoolean()
@@ -964,7 +963,6 @@ class AgentActivity : Activity() {
     override fun onDestroy() {
         cancelPendingConversationSelection()
         conversationIndexRevision++
-        mainHandler.removeCallbacks(refreshConversationIndexTask)
         conversationListDialog?.dismiss()
         conversationListDialog = null
         conversationDialogRail = null
@@ -14650,9 +14648,20 @@ class AgentActivity : Activity() {
         // Central chat only; bot dialogues have their own ChiefBotProfileStore history.
         if (persist && selectedBot == null) {
             val id = sessionId; val at = System.currentTimeMillis()
-            chatTranscriptIo.execute { runCatching { chatTranscripts.append(id, user, value, at) } }
-            mainHandler.removeCallbacks(refreshConversationIndexTask)
-            mainHandler.postDelayed(refreshConversationIndexTask, 250L)
+            val revision = ++conversationIndexRevision
+            chatTranscriptIo.execute {
+                val saved = runCatching { chatTranscripts.append(id, user, value, at) }
+                val updated = saved.mapCatching { chatHistory.afterAppend(id, user, value, at) }
+                runOnUiThread {
+                    if (revision != conversationIndexRevision || isFinishing || isDestroyed) return@runOnUiThread
+                    updated.onSuccess { conversationIndex = it }
+                    publishConversationNavigation(when {
+                        saved.isFailure -> "Nachricht konnte nicht gespeichert werden."
+                        updated.isFailure -> "Gesprächsliste konnte nicht aktualisiert werden."
+                        else -> null
+                    })
+                }
+            }
         }
         val row = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL

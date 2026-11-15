@@ -74,4 +74,57 @@ class ContinuumChatHistoryTest {
         assertEquals(1, store.loadContextHistory(first).size)
         assertEquals(1, store.loadContextHistory(second).size)
     }
+
+    @Test fun titleSurvivesTheRestoreWindowAndAHistoryRestart() {
+        val store = LocalChatTranscriptStore(folder.root)
+        store.append(first, false, "Willkommen", 0)
+        store.append(first, true, "Ursprüngliches Gesprächsthema", 1)
+        repeat(350) { store.append(first, it % 2 == 0, "Spätere Nachricht $it", it + 2L) }
+        assertFalse(store.load(first).any { it.text == "Ursprüngliches Gesprächsthema" })
+        assertEquals("Ursprüngliches Gesprächsthema", ContinuumChatHistory(store).index().single().title)
+        assertEquals("Ursprüngliches Gesprächsthema",
+            ContinuumChatHistory(LocalChatTranscriptStore(folder.root)).index().single().title)
+    }
+
+    @Test fun appendUpdatesOnlyItsCachedConversationUntilAnExplicitRefresh() {
+        val store = LocalChatTranscriptStore(folder.root)
+        store.append(first, true, "Erster Chat", 1)
+        store.append(second, true, "Zweiter Chat", 2)
+        val history = ContinuumChatHistory(store)
+        assertEquals(listOf(second, first), history.index().map { it.id })
+        // A rescan would now remove this other entry; a message update must not read the archive.
+        assertTrue(store.delete(second))
+        store.append(first, false, "Neue Antwort", 3)
+        val updated = history.afterAppend(first, false, "Neue Antwort", 3)
+        assertEquals(listOf(first, second), updated.map { it.id })
+        assertEquals("Erster Chat", updated.first().title)
+        assertEquals(3L, updated.first().updatedAt)
+        assertEquals(listOf(first), history.index().map { it.id })
+    }
+
+    @Test fun firstOwnerMessageReplacesGreetingButLaterMessagesDoNotRenameIt() {
+        val store = LocalChatTranscriptStore(folder.root)
+        val history = ContinuumChatHistory(store)
+        store.append(first, false, "Willkommen", 1)
+        assertEquals("Willkommen", history.afterAppend(first, false, "Willkommen", 1).single().title)
+        store.append(first, true, "Mein\nProjekt", 2)
+        assertEquals("Mein Projekt", history.afterAppend(first, true, "Mein\nProjekt", 2).single().title)
+        store.append(first, true, "Nächste Frage", 3)
+        assertEquals("Mein Projekt", history.afterAppend(first, true, "Nächste Frage", 3).single().title)
+        assertEquals("Mein Projekt", ContinuumChatHistory(store).index().single().title)
+    }
+
+    @Test fun initialIndexOpensOnlyTheHundredMostRecentlyModifiedTranscripts() {
+        val store = LocalChatTranscriptStore(folder.root)
+        val ids = (0..100).map { String.format("%08x-1111-4111-8111-111111111111", it) }
+        ids.forEachIndexed { i, id ->
+            store.append(id, true, "Gespräch $i", i.toLong())
+            assertTrue(folder.root.resolve("$id.jsonl").setLastModified(10_000L + i * 1_000L))
+        }
+        val result = ContinuumChatHistory(store).index()
+        assertEquals(100, result.size)
+        assertFalse(result.any { it.id == ids.first() })
+        assertEquals(ids.last(), result.first().id)
+        assertEquals(101, store.conversations().size)
+    }
 }

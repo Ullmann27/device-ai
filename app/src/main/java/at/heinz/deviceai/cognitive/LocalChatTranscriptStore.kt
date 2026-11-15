@@ -306,6 +306,42 @@ class LocalChatTranscriptStore(private val dir: File) {
         dir.listFiles { f -> f.isFile && f.name.endsWith(SUFFIX) }.orEmpty()
             .map { it.name.removeSuffix(SUFFIX) }.filter { ID.matches(it) }.sorted()
 
+    /** Bound the navigation's initial reads before opening transcript contents. */
+    @Synchronized internal fun recentConversations(limit: Int): List<String> {
+        require(limit in 1..100)
+        return dir.listFiles { f ->
+            f.isFile && f.name.endsWith(SUFFIX) && ID.matches(f.name.removeSuffix(SUFFIX))
+        }.orEmpty().sortedWith(compareByDescending<File> { it.lastModified() }.thenBy { it.name })
+            .take(limit).map { it.name.removeSuffix(SUFFIX) }
+    }
+
+    /**
+     * A navigation title comes from the beginning, never the moving 200-message restore window.
+     * This bounded read neither changes the transcript nor creates an index/database alongside it.
+     */
+    @Synchronized internal fun firstVisibleEntry(id: String): Entry? {
+        if (!ID.matches(id)) return null
+        val file = File(dir, "$id$SUFFIX")
+        if (!file.isFile) return null
+        val text = RandomAccessFile(file, "r").use { input ->
+            val size = minOf(input.length(), MAX_READ_BYTES).toInt()
+            val truncated = size.toLong() < input.length()
+            val prefix = ByteArray(size).also(input::readFully).toString(Charsets.UTF_8)
+            if (truncated) prefix.substringBeforeLast('\n', "") else prefix
+        }
+        var first: Entry? = null
+        for (line in text.lineSequence()) {
+            val entry = runCatching {
+                val record = JSONObject(line)
+                if (record.has("k")) null else
+                    Entry(record.getBoolean("u"), record.getString("t"), record.optLong("at"))
+            }.getOrNull()?.takeIf { it.text.isNotBlank() } ?: continue
+            if (entry.user) return entry
+            if (first == null) first = entry
+        }
+        return first
+    }
+
     /** Explicit owner deletion of one conversation; clears the active pointer when it named it. */
     @Synchronized fun delete(id: String): Boolean {
         if (!ID.matches(id)) return false
