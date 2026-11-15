@@ -1,6 +1,6 @@
 # Device AI Continuum
 
-Diese Fassung verbindet das vorhandene Originalmodell und die Originalkugel aus `Ullmann27/device-ai` mit dem gewünschten Raster: Chats links, Werkzeuge oben, Arbeitsraum in der Mitte, Diagramme und Quellen rechts.
+Diese Fassung verbindet das vorhandene Originalmodell und die Originalkugel aus `Ullmann27/device-ai` mit dem gewünschten Raster: Chats links, Werkzeuge oben, Arbeitsraum in der Mitte, Diagramme und Quellen rechts. Die Bühne der Fassung „Präsenz 02“ zeigt zusätzlich den mittigen Originalavatar vor einer feststehenden Originalkugel und zwei interaktive Hologramme direkt links und rechts daneben.
 
 ## Öffnen
 

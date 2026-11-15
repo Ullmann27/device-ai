@@ -91,8 +91,10 @@ export class OriginalAvatarMotion {
     const task = this.state === 'working' || this.state === 'forming';
     const smooth = 1 - Math.exp(-dt / .4);
     this.work += ((task ? 1 : 0) - this.work) * smooth;
-    let gx = this.idleGaze.x * (1 - this.work) + .43 * this.work;
-    let gy = this.idleGaze.y * (1 - this.work) - .25 * this.work;
+    // The centered bust watches the work below it; a selected side instrument
+    // supplies its actual screen direction through the existing gaze override.
+    let gx = this.idleGaze.x * (1 - this.work) + .08 * this.work;
+    let gy = this.idleGaze.y * (1 - this.work) - .2 * this.work;
     if (this.state === 'listening') { gx *= .3; gy *= .3; }
     if (this.directedGaze && seconds <= this.directedGaze.until) {
       gx = this.directedGaze.x; gy = this.directedGaze.y;
@@ -137,7 +139,7 @@ export class OriginalAvatarMotion {
     const blink = blinkPhase >= 0 && blinkPhase <= 1 ? Math.pow(Math.sin(Math.PI * blinkPhase), 1.2) : 0;
     weights.BlinkLeft = blink;
     weights.BlinkRight = blink;
-    const browTarget = this.state === 'listening' ? .18 : task ? .035 : .045;
+    const browTarget = this.state === 'listening' ? .14 : task ? .035 : .045;
     this.brow += (browTarget - this.brow) * smooth;
     weights.BrowUp = Math.max(this.brow, this.speechAccent * .14);
     weights.BrowDown = this.work * .06;

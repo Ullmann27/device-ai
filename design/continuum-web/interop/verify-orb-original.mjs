@@ -92,7 +92,7 @@ function fakeHost(noContext = false) {
   let now = 0, scheduled = null;
   const host = new EventTarget(), doc = new EventTarget(), children = [];
   const rect = { left: 700, top: 120, width: 225, height: 217, bottom: 337 };
-  const anchor = { dataset: {}, getBoundingClientRect: () => ({ ...rect }) };
+  const anchor = { dataset: {}, getBoundingClientRect: () => ({ ...rect }), appendChild: node => children.push(node) };
   const element = tag => {
     const node = tag === 'canvas' ? createCanvas(1, 1) : {};
     if (tag === 'canvas' && noContext) node.getContext = () => null;
@@ -100,7 +100,7 @@ function fakeHost(noContext = false) {
     return node;
   };
   doc.createElement = element; doc.querySelector = () => anchor; doc.hidden = false;
-  doc.body = { appendChild: node => children.push(node) };
+  doc.body = { appendChild: () => { throw new Error('The orb must stay inside its local anchor.'); } };
   Object.assign(host, { document: doc, performance: { now: () => now }, innerWidth: 1440, innerHeight: 980, devicePixelRatio: 2, CustomEvent,
     requestAnimationFrame: callback => { scheduled = callback; return 1; }, cancelAnimationFrame: () => { scheduled = null; },
     ContinuumScene: { getStatus: () => ({ state: 'idle', quality: 1, intensity: 1, audioLevel: null, audioSampleAt: 0 }),

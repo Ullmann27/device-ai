@@ -1,6 +1,6 @@
 {
   "name": "device-ai-continuum-design",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "description": "Continuum-Webgestaltung mit erhaltenen GitHub-Originalen",
@@ -9,7 +9,9 @@
     "start": "node serve.mjs",
     "predev": "node prepare-assets.mjs",
     "dev": "node serve.mjs",
-    "check": "node --check app.js && node --check scene.js && node --check orb-original.js && node --check avatar3d.js"
+    "check": "node --check app.js && node --check scene.js && node --check orb-original.js && node --check avatar3d.js && node --check presence-instruments.js"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

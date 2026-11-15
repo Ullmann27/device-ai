@@ -10,6 +10,9 @@ import { AVATAR_TARGETS, OriginalAvatarMotion } from './avatar-motion.js';
 
 const SOURCE_SHA256 = 'c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a';
 const SOURCE_BYTES = 12038416;
+// The unchanged Blender fallback uses an orthographic 0.6 × 0.45 m window.
+// Fitting that same window keeps the full bust proportional at any host size.
+const PORTRAIT = Object.freeze({ width: .6, height: .45, centerY: .215, centerZ: .025, distance: 1.45 });
 const SCRIPT_BASE = new URL('.', document.currentScript?.src || document.baseURI);
 // Optional data: URLs support the separately packaged single-file preview.
 const GLB_URL = window.CONTINUUM_ASSETS?.avatarModel || new URL('assets/continuum-avatar.glb', SCRIPT_BASE).href;
@@ -33,6 +36,9 @@ let sceneGroup = null;
 let keyLight = null;
 let cyanLight = null;
 let violetLight = null;
+let taskLight = 0;
+let lastRenderTime = null;
+let framing = null;
 let frame = 0;
 let running = false;
 let failed = false;
@@ -63,7 +69,7 @@ function showFallback(reason) {
   if (crop) {
     crop.style.backgroundImage = `url("${FALLBACK_URL}")`;
     crop.style.backgroundPosition = '50% 50%';
-    crop.style.backgroundSize = 'cover';
+    crop.style.backgroundSize = crop.dataset.avatarFit === 'cover' ? 'cover' : 'contain';
     crop.style.backgroundRepeat = 'no-repeat';
     crop.dataset.avatarRenderer = 'original-png';
     crop.setAttribute('aria-label', 'Original-Continuum-Avatar – aus dem unveränderten 3D-Modell gerendert');
@@ -76,7 +82,12 @@ function fitCamera() {
   if (!renderer || !camera || !crop) return;
   const width = Math.max(1, crop.clientWidth || 272);
   const height = Math.max(1, crop.clientHeight || 299);
-  const halfHeight = .225;
+  const aspect = width / height;
+  const referenceAspect = PORTRAIT.width / PORTRAIT.height;
+  const mode = crop.dataset.avatarFit === 'cover' ? 'cover' : 'contain';
+  const fit = mode === 'cover' ? Math.min(1, referenceAspect / aspect) : Math.max(1, referenceAspect / aspect);
+  const halfHeight = PORTRAIT.height * .5 * fit;
+  framing = { width, height, mode, halfHeight, halfWidth: halfHeight * aspect };
   camera.left = -halfHeight * width / height;
   camera.right = halfHeight * width / height;
   camera.top = halfHeight;
@@ -112,11 +123,16 @@ function render(now) {
     sceneGroup.rotation.z = pose.breathRoll;
     const seconds = now * .001;
     const work = state === 'forming' || state === 'working';
+    const dt = lastRenderTime === null ? 1 / 60 : Math.max(0, Math.min(.1, (now - lastRenderTime) * .001));
+    lastRenderTime = now;
+    taskLight += ((work ? 1 : 0) - taskLight) * (1 - Math.exp(-dt / .55));
     const energy = .92 + Math.sin(seconds * .67) * .045 + Math.sin(seconds * 1.17) * .025;
-    cyanLight.intensity = (work ? .72 : .5) * energy * (.7 + intensity * .3);
+    // A neutral face key stays present in front of the bright background orb;
+    // coloured accents remain restrained and approach task changes smoothly.
+    cyanLight.intensity = (.28 + taskLight * .1) * energy * (.8 + intensity * .2);
     cyanLight.position.x = .38 + Math.sin(seconds * .19) * .025;
-    violetLight.intensity = .26 + Math.sin(seconds * .31 + .7) * .025;
-    keyLight.intensity = .92 + Math.sin(seconds * .43) * .018;
+    violetLight.intensity = .17 + Math.sin(seconds * .31 + .7) * .012;
+    keyLight.intensity = 1.25 + Math.sin(seconds * .43) * .012;
     renderer.render(scene, camera);
     if (firstFrame && (renderer.getContext().isContextLost() || renderer.info.render.calls === 0)) {
       throw new Error('Original avatar did not produce a drawable WebGL frame.');
@@ -172,7 +188,7 @@ window.ContinuumAvatar = Object.freeze({
   resize: fitCamera,
   getStatus: () => ({ renderer: !failed && loaded && !firstFrame ? 'original-webgl' : 'original-png',
     state, loaded, sourceVerified, sourceVerification, sourceSha256: SOURCE_SHA256,
-    morphMeshCount: morphMeshes.length, frames, lastError,
+    morphMeshCount: morphMeshes.length, frames, lastError, framing,
     speechSource: 'external-viseme-events-only' }),
   dispose,
 });
@@ -198,9 +214,17 @@ async function boot() {
     if (Number.isFinite(x) && Number.isFinite(y)) motion.setGaze(x, y, durationMs);
   });
   listen(document, 'pointerdown', event => {
-    if (event.target instanceof Element && event.target.closest('.workspace-body, .chart-panel, .document-pane')) {
-      motion.setGaze(.48, -.28, 2200);
-    }
+    if (!(event.target instanceof Element)) return;
+    const target = event.target.closest('[data-phase], [data-source]') ||
+      event.target.closest('.presence-instrument-left, .presence-instrument-right, .workspace-body, .chart-panel, .document-pane');
+    if (!target) return;
+    const chosen = target.getBoundingClientRect();
+    const portrait = crop.getBoundingClientRect();
+    const centerX = portrait.left + portrait.width * .5;
+    const centerY = portrait.top + portrait.height * .43;
+    const gazeX = THREE.MathUtils.clamp((chosen.left + chosen.width * .5 - centerX) / Math.max(240, window.innerWidth * .5), -.55, .55);
+    const gazeY = THREE.MathUtils.clamp((centerY - chosen.top - chosen.height * .5) / Math.max(320, window.innerHeight * .55), -.38, .32);
+    motion.setGaze(gazeX, gazeY, 2200);
   }, { passive: true });
 
   try {
@@ -216,21 +240,31 @@ async function boot() {
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = .92;
+    renderer.toneMappingExposure = 1;
     crop.appendChild(canvas);
     scene = new THREE.Scene();
-    camera = new THREE.OrthographicCamera(-.2, .2, .225, -.225, .01, 8);
-    camera.position.set(0, .215, 1.45);
-    camera.lookAt(0, .215, .025);
-    scene.add(new THREE.HemisphereLight(0xc3d8ec, 0x101528, .35));
-    keyLight = new THREE.DirectionalLight(0xeaf2ff, .92);
-    keyLight.position.set(-.38, .62, .6);
+    camera = new THREE.OrthographicCamera(-.3, .3, .225, -.225, .05, 4);
+    camera.position.set(0, PORTRAIT.centerY, PORTRAIT.distance);
+    camera.lookAt(0, PORTRAIT.centerY, PORTRAIT.centerZ);
+    const faceFocus = new THREE.Object3D();
+    faceFocus.position.set(0, .27, .03);
+    scene.add(faceFocus);
+    scene.add(new THREE.HemisphereLight(0xe3ecf8, 0x11182b, .4));
+    keyLight = new THREE.DirectionalLight(0xf5f7ff, 1.25);
+    keyLight.position.set(-.36, .48, .74);
+    keyLight.target = faceFocus;
     scene.add(keyLight);
-    cyanLight = new THREE.DirectionalLight(0x58cfff, .5);
+    const faceFill = new THREE.DirectionalLight(0xe9f1fc, .23);
+    faceFill.position.set(.22, .25, .9);
+    faceFill.target = faceFocus;
+    scene.add(faceFill);
+    cyanLight = new THREE.DirectionalLight(0x8bd9fb, .28);
     cyanLight.position.set(.38, .35, .18);
+    cyanLight.target = faceFocus;
     scene.add(cyanLight);
-    violetLight = new THREE.DirectionalLight(0x9874ff, .26);
+    violetLight = new THREE.DirectionalLight(0xac94f4, .17);
     violetLight.position.set(-.3, .36, -.15);
+    violetLight.target = faceFocus;
     scene.add(violetLight);
     fitCamera();
 

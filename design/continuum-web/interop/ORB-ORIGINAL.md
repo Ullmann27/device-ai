@@ -62,3 +62,7 @@ Der Prüfablauf benötigt für die Rasterbilder `@napi-rs/canvas` in der geteste
 Prüfergebnisse liegen unter `qa-orb/verification.json`. Abgedeckt sind geschlossene Tiefenabschnitte der Ringe, feste Netzverbindungen bei räumlicher Bewegung, alle sechs Zustände, echte Audiowerte samt Ausklingen, fortlaufende Phasen beim Zustands- und Layoutwechsel, 18 native Rasterframes sowie der DOM-Vertrag für Anker, Ereignisse, Aufräumen und Original-Fallback. Das Kontaktblatt `qa-orb/original-orb-six-modes.png` wurde visuell geprüft.
 
 Diese Prüfung verwendet Node und einen nativen Canvas-Rasterizer. Sie ist kein Browser- oder Android-Gerätetest und belegt keine Smartphone-Bildrate.
+
+## Präsenz 02: feste Kugel hinter dem Avatar
+
+Die zentrale Bühne setzt `data-orb-motion="fixed"`. Der originale Renderer zeichnet seine Bereitschaftsgeometrie einmal je Größe/Qualität. Ringwinkel, Netz, Radius und Schwebeoffset bleiben fest; eine getrennte Belichtung reagiert weich auf Zustände. `setMotionMode("live")` bleibt für andere Szenen verfügbar. Canvas und Original-Fallback liegen lokal im Orb-Anker unter der Avatar-Ebene. Die Atmosphäre bewegt sich unabhängig weiter. Die enge Prüfung steht in `qa-orb-fixed/verification.json`.

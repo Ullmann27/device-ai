@@ -51,6 +51,12 @@
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
   const sprites = Object.create(null);
   const lightFields = Object.create(null);
+  const atmosphereTextures = Object.create(null);
+  const atmospherePlanes = [
+    { depth: 0.17, haze: "far", y: 0.23, width: 1.24, height: 0.19, speed: 0.0117, phase: 0.8, alpha: 0.14 },
+    { depth: 0.48, haze: "middle", y: 0.49, width: 1.16, height: 0.23, speed: 0.0183, phase: 3.1, alpha: 0.105 },
+    { depth: 0.86, haze: "near", y: 0.77, width: 1.38, height: 0.21, speed: 0.0269, phase: 5.4, alpha: 0.075 },
+  ];
   const stars = [];
   const dust = [];
   const orbitalDust = [];
@@ -64,10 +70,10 @@
   }
 
   for (let i = 0; i < 112; i++) {
-    stars.push({ x: random(), y: random(), z: random(), phase: random() * TAU, radius: 0.4 + random() * 0.8 });
+    stars.push({ x: random(), y: random(), z: random(), layer: i % 3, phase: random() * TAU, radius: 0.4 + random() * 0.8 });
   }
   for (let i = 0; i < 84; i++) {
-    dust.push({ x: random(), y: random(), z: random(), speed: 0.002 + random() * 0.006, phase: random() * TAU });
+    dust.push({ x: random(), y: random(), z: random(), layer: i % 3, speed: 0.002 + random() * 0.006, phase: random() * TAU });
   }
   for (let i = 0; i < 48; i++) {
     orbitalDust.push({ theta: random() * TAU, inclination: random() * Math.PI, radius: 0.62 + random() * 0.76, phase: random() * TAU, speed: 0.06 + random() * 0.14, size: 0.45 + random() * 1.25 });
@@ -113,10 +119,44 @@
     ctx.globalAlpha = 1;
   }
 
+  function makeAtmosphereTextures() {
+    // Small reusable rasters give the fog soft edges without full-screen blur
+    // passes, shader compilation or per-frame texture allocations on phones.
+    for (const [name, rgb, seed] of [["far", "38,73,137", 1.3], ["middle", "32,112,147", 3.7], ["near", "73,62,123", 7.1]]) {
+      const surface = document.createElement("canvas"); surface.width = 384; surface.height = 160;
+      const context = surface.getContext("2d");
+      context.globalCompositeOperation = "screen";
+      for (let i = 0; i < 7; i++) {
+        const x = 40 + i * 51, y = 77 + Math.sin(i * 1.47 + seed) * 22;
+        const radius = 53 + (i % 3) * 9;
+        const cloud = context.createRadialGradient(x, y, 0, x, y, radius);
+        cloud.addColorStop(0, `rgba(${rgb},.46)`); cloud.addColorStop(.42, `rgba(${rgb},.2)`); cloud.addColorStop(1, `rgba(${rgb},0)`);
+        context.fillStyle = cloud; context.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+      }
+      atmosphereTextures[name] = surface;
+    }
+    for (const [name, rgb] of [["rayBlue", "64,139,211"], ["rayCyan", "58,183,211"], ["rayViolet", "115,99,192"]]) {
+      const surface = document.createElement("canvas"); surface.width = 96; surface.height = 512;
+      const context = surface.getContext("2d");
+      const falloff = context.createLinearGradient(0, 0, 0, 512);
+      falloff.addColorStop(0, `rgba(${rgb},0)`); falloff.addColorStop(.1, `rgba(${rgb},.6)`);
+      falloff.addColorStop(.36, `rgba(${rgb},.85)`); falloff.addColorStop(.7, `rgba(${rgb},.3)`); falloff.addColorStop(1, `rgba(${rgb},0)`);
+      context.fillStyle = falloff; context.fillRect(0, 0, 96, 512);
+      context.globalCompositeOperation = "destination-in";
+      const edge = context.createLinearGradient(0, 0, 96, 0);
+      edge.addColorStop(0, "rgba(255,255,255,0)"); edge.addColorStop(.22, "rgba(255,255,255,.2)");
+      edge.addColorStop(.5, "rgba(255,255,255,1)"); edge.addColorStop(.78, "rgba(255,255,255,.2)"); edge.addColorStop(1, "rgba(255,255,255,0)");
+      context.fillStyle = edge; context.fillRect(0, 0, 96, 512);
+      context.beginPath(); context.moveTo(35, 0); context.lineTo(61, 0); context.lineTo(96, 512); context.lineTo(0, 512); context.closePath();
+      context.globalCompositeOperation = "destination-in"; context.fillStyle = "#fff"; context.fill();
+      atmosphereTextures[name] = surface;
+    }
+  }
+
   function updateAnchors() {
     orbAnchor = document.querySelector("[data-orb-anchor]");
     workAnchor = document.querySelector("[data-work-anchor]");
-    phone = width < 700;
+    phone = width <= 760;
     const compact = width < 1060;
     let x = width * (phone ? 0.76 : 0.73);
     let y = phone ? 176 : compact ? 240 : 260;
@@ -125,8 +165,8 @@
       const bounds = orbAnchor.getBoundingClientRect();
       if (bounds.width > 0 && bounds.height > 0) {
         x = bounds.left + bounds.width / 2;
-        y = bounds.top + bounds.height / 2;
-        r = clamp(Math.min(bounds.width, bounds.height) * 0.365, 40, 172);
+        y = bounds.top + bounds.height * 0.42;
+        r = Math.min(bounds.width * 0.32, bounds.height * 0.30) * 1.04;
       }
     }
     orb = { x, y, r };
@@ -144,7 +184,8 @@
     const bounds = canvas.getBoundingClientRect();
     width = Math.max(1, bounds.width || window.innerWidth);
     height = Math.max(1, bounds.height || window.innerHeight);
-    const maximumRatio = quality < 0.7 ? 1.25 : phone ? 1.65 : 1.8;
+    phone = width <= 760;
+    const maximumRatio = quality < 0.7 ? 1.15 : phone ? 1.4 : 1.65;
     pixelRatio = Math.min(window.devicePixelRatio || 1, maximumRatio);
     canvas.width = Math.round(width * pixelRatio);
     canvas.height = Math.round(height * pixelRatio);
@@ -153,81 +194,110 @@
     window.dispatchEvent(new CustomEvent("continuum:sceneresize"));
   }
 
-  function atmosphere(t) {
+  function drawHazePlane(index, t, light) {
+    const plane = atmospherePlanes[index], surface = atmosphereTextures[plane.haze];
+    if (!surface) return;
+    const sway = Math.sin(t * plane.speed + plane.phase), curl = Math.cos(t * (plane.speed * 0.61) + plane.phase * 1.3);
+    const w = width * plane.width, h = height * plane.height;
+    const x = width * (.5 + sway * .065) + pointer.x * plane.depth * 24;
+    const y = height * (plane.y + curl * .037) + pointer.y * plane.depth * 13;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(.035 * sway + (index - 1) * .055);
+    ctx.globalAlpha = plane.alpha * light; ctx.drawImage(surface, -w / 2, -h / 2, w, h);
+    if (index === 1) { ctx.globalAlpha = plane.alpha * .5 * light; ctx.drawImage(surface, -w * .72, h * .13, w * 1.25, h * .76); }
+    ctx.restore();
+  }
+
+  function drawVolumetricRays(t, light) {
+    const count = phone ? 3 : 5;
+    for (let i = 0; i < count; i++) {
+      const x = width * (.05 + i * (phone ? .44 : .245)) + Math.sin(t * (.0131 + i * .0037) + i * 1.7) * width * .035;
+      const y = -height * (.12 + (i % 2) * .08);
+      const length = height * (1.05 + (i % 2) * .2), spread = width * (phone ? .19 : .12);
+      const angle = (i % 2 === 0 ? -.25 : .24) + Math.sin(t * (.0089 + i * .0023) + i) * .025;
+      ctx.save(); ctx.translate(x + pointer.x * (3 + i), y); ctx.rotate(angle);
+      ctx.globalAlpha = (phone ? .075 : .088) * (.93 + Math.sin(t * (.0211 + i * .0031) + i * 2.1) * .07) * light;
+      ctx.drawImage(atmosphereTextures[i % 3 === 0 ? "rayCyan" : i % 3 === 1 ? "rayBlue" : "rayViolet"], -spread / 2, 0, spread, length);
+      ctx.restore();
+    }
+  }
+
+  function drawLightVeins(layer, t, light) {
+    const depth = atmospherePlanes[layer].depth;
+    for (let j = 0; j < 2; j++) {
+      const i = layer * 2 + j, phase = t * (.0107 + i * .0031) + i * 1.73;
+      const y = height * (.15 + i * .124) + Math.sin(phase) * height * .018 + pointer.y * depth * 15;
+      const a = { x: -width * .08, y: y - 23 }, b = { x: width * .24, y: y + Math.cos(phase * .63) * 47 };
+      const c = { x: width * .72, y: y - 32 }, d = { x: width * 1.08, y: y + 23 };
+      const shift = pointer.x * depth * 18;
+      ctx.save(); ctx.translate(shift, 0); ctx.globalAlpha = 1;
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.bezierCurveTo(b.x, b.y, c.x, c.y, d.x, d.y);
+      ctx.strokeStyle = `rgba(${i % 2 ? "105,99,192" : "51,164,192"},${(.028 + depth * .026) * light})`;
+      ctx.lineWidth = .55 + depth * .45; ctx.stroke();
+      const progress = (t * (.0061 + i * .0013) + i * .217) % 1;
+      const from = curvePoint(progress, a, b, c, d), to = curvePoint(Math.min(1, progress + .026), a, b, c, d);
+      const fade = Math.sin(progress * Math.PI) ** 2;
+      ctx.beginPath(); ctx.moveTo(from.x, from.y); ctx.lineTo(to.x, to.y);
+      ctx.strokeStyle = `rgba(114,215,236,${(.1 + depth * .09) * fade * light})`;
+      ctx.lineWidth = .8 + depth * .55; ctx.stroke();
+      glow(from.x, from.y, 5 + depth * 5, .075 * fade * light, i % 2 ? "violet" : "cyan");
+      ctx.restore();
+    }
+  }
+
+  function drawDepthParticles(layer, t, light) {
+    const depth = atmospherePlanes[layer].depth;
+    const starCount = Math.floor((phone ? 66 : stars.length) * quality);
+    for (let i = 0; i < starCount; i++) {
+      const s = stars[i]; if (s.layer !== layer) continue;
+      const sx = s.x * width + pointer.x * (2 + depth * 11);
+      const sy = s.y * height + pointer.y * (1 + depth * 8);
+      const alpha = (.105 + depth * .16) * (.82 + Math.sin(t * (.113 + s.z * .127) + s.phase) * .18) * light;
+      ctx.fillStyle = `rgba(146,195,222,${alpha})`; ctx.beginPath(); ctx.arc(sx, sy, s.radius * (.55 + depth * .35), 0, TAU); ctx.fill();
+      if (i % 23 === 0) glow(sx, sy, 6 + depth * 7, alpha * .4, "blue");
+    }
+    const dustCount = Math.floor((phone ? 45 : dust.length) * quality);
+    for (let i = 0; i < dustCount; i++) {
+      const p = dust[i]; if (p.layer !== layer) continue;
+      const travel = p.speed * (.055 + depth * .09);
+      const x = (p.x + t * travel) % 1, y = (p.y - t * travel * (.5 + depth * .2) + 1000) % 1;
+      const sx = x * (width + 30) - 15 + Math.sin(t * (.031 + depth * .019) + p.phase) * (4 + depth * 9) + pointer.x * depth * 23;
+      const sy = y * (height + 30) - 15 + Math.cos(t * (.024 + depth * .013) + p.phase) * (3 + depth * 8) + pointer.y * depth * 12;
+      const edge = Math.min(1, Math.max(0, sx / 25), Math.max(0, (width - sx) / 25), Math.max(0, sy / 25), Math.max(0, (height - sy) / 25));
+      glow(sx, sy, 1.5 + depth * (3.2 + p.z * 2), (.09 + depth * .12) * edge * light, i % 29 === 0 ? "amber" : i % 4 === 0 ? "violet" : "cyan");
+    }
+  }
+
+  function atmosphere(elapsed) {
     ctx.globalCompositeOperation = "source-over";
     ctx.globalAlpha = 1;
     ctx.fillStyle = "#030810";
     ctx.fillRect(0, 0, width, height);
 
-    // These broad, independently drifting fields describe the distant room.
-    const drift = reducedMotion ? 0.35 : 1;
-    softLight(width * (0.65 + Math.sin(t / 43.7) * 0.05 * drift), 160, width * 0.59, "19,39,87", 0.22);
-    softLight(width * 0.29, height * (0.26 + Math.sin(t / 71.3) * 0.04 * drift), width * 0.44, "8,97,121", 0.13);
-    softLight(width * 0.83, height * 0.42, width * 0.44, "66,28,122", 0.12);
+    // One uninterrupted timebase, independent incommensurate layer frequencies.
+    // No state transition starts or resets atmosphere phases.
+    const t = elapsed * (reducedMotion ? .35 : 1), light = intensity * (.87 + energy * .13);
+    softLight(width * (.61 + Math.sin(t / 43.7) * .05), height * .22, width * .65, "17,39,84", .27 * light);
+    softLight(width * .22, height * (.34 + Math.sin(t / 71.3) * .04), width * .49, "9,78,105", .22 * light);
+    softLight(width * (.84 + Math.cos(t / 59.9) * .025), height * .47, width * .46, "55,29,104", .18 * light);
 
     ctx.save();
     ctx.globalCompositeOperation = "screen";
     // Architectural arches remain quieter than the objects they enclose.
     for (let i = 0; i < 5; i++) {
       const inset = i * (phone ? 15 : 29);
-      const x = width * 0.5 + pointer.x * (2 + i);
+      const x = width * 0.5 + pointer.x * (2 + i * 1.3);
       const y = phone ? 260 : 370;
       ctx.beginPath();
       ctx.ellipse(x, y, width * 0.72 - inset, (phone ? 320 : 475) - inset, -0.03, Math.PI * 1.02, Math.PI * 1.98);
-      ctx.strokeStyle = i === 1 ? "rgba(70,184,221,.095)" : "rgba(51,101,151,.042)";
+      ctx.strokeStyle = i === 1 ? `rgba(70,184,221,${.105 * light})` : `rgba(51,101,151,${.037 * light})`;
       ctx.lineWidth = i === 1 ? 1.1 : 3;
       ctx.stroke();
     }
 
-    // Long narrow beams suggest light passing through thin atmospheric haze.
-    for (let i = 0; i < 4; i++) {
-      const bx = width * (0.1 + i * 0.27) + Math.sin(t * 0.023 + i) * 20;
-      const beam = ctx.createLinearGradient(bx, 20, bx - 90, Math.min(height, 650));
-      beam.addColorStop(0, "rgba(77,170,225,.005)");
-      beam.addColorStop(0.3, `rgba(48,115,173,${0.024 + Math.sin(t * 0.051 + i) * 0.006})`);
-      beam.addColorStop(1, "rgba(24,79,116,0)");
-      ctx.fillStyle = beam;
-      ctx.beginPath();
-      ctx.moveTo(bx - 15, 0);
-      ctx.lineTo(bx + 11, 0);
-      ctx.lineTo(bx - 70, height * 0.77);
-      ctx.lineTo(bx - 210, height * 0.77);
-      ctx.closePath();
-      ctx.fill();
-    }
-
-    const starCount = Math.floor(stars.length * quality);
-    for (let i = 0; i < starCount; i++) {
-      const s = stars[i];
-      const sx = s.x * width + pointer.x * s.z * 11;
-      const sy = s.y * height + pointer.y * s.z * 8;
-      const alpha = (0.13 + s.z * 0.33) * (0.76 + Math.sin(t * (0.32 + s.z * 0.3) + s.phase) * 0.24);
-      ctx.fillStyle = `rgba(153,209,237,${alpha})`;
-      ctx.beginPath();
-      ctx.arc(sx, sy, s.radius * (phone ? 0.7 : 1), 0, TAU);
-      ctx.fill();
-      if (i % 19 === 0) glow(sx, sy, 9 + s.z * 7, alpha * 0.55, "blue");
-    }
-
-    const dustCount = Math.floor(dust.length * quality);
-    for (let i = 0; i < dustCount; i++) {
-      const p = dust[i];
-      const sx = ((p.x + t * p.speed * 0.12) % 1) * width + Math.sin(t * 0.07 + p.phase) * 14 + pointer.x * p.z * 18;
-      const sy = ((p.y - t * p.speed * 0.15 + 100) % 1) * height + Math.cos(t * 0.05 + p.phase) * 10;
-      const alpha = 0.13 + p.z * 0.28;
-      glow(sx, sy, 2.4 + p.z * 5, alpha, i % 11 === 0 ? "amber" : i % 4 === 0 ? "violet" : "cyan");
-    }
-
-    // Fine light veins cross different depths and never restart with app state.
-    for (let i = 0; i < 5; i++) {
-      const baseY = height * (0.18 + i * 0.145);
-      const phase = t * (0.035 + i * 0.007) + i * 1.7;
-      ctx.beginPath();
-      ctx.moveTo(-50, baseY + Math.sin(phase) * 25);
-      ctx.bezierCurveTo(width * 0.22, baseY - 55, width * 0.66, baseY + 55, width + 50, baseY - 42);
-      ctx.strokeStyle = `rgba(${i % 2 ? "103,88,183" : "46,153,185"},${0.035 + i * 0.003})`;
-      ctx.lineWidth = 0.7;
-      ctx.stroke();
+    drawHazePlane(0, t, light); drawLightVeins(0, t, light); drawDepthParticles(0, t, light);
+    drawVolumetricRays(t, light);
+    for (let layer = 1; layer < 3; layer++) {
+      drawHazePlane(layer, t, light); drawLightVeins(layer, t, light); drawDepthParticles(layer, t, light);
     }
     ctx.restore();
   }
@@ -594,13 +664,14 @@
     warmth = mix(warmth, STATES[state].warmth, ease);
     pointer.x = mix(pointer.x, pointer.tx, 1 - Math.exp(-dt * 2.5));
     pointer.y = mix(pointer.y, pointer.ty, 1 - Math.exp(-dt * 2.5));
-    const center = {
+    const anchored = orbAnchor?.dataset.orbMotion === "fixed" || orbAnchor?.dataset.orbMotion === "anchored";
+    const center = anchored ? { x: orb.x, y: orb.y } : {
       x: orb.x + pointer.x * (phone ? 2 : 4),
       y: orb.y + Math.sin(t * TAU / 9.73) * (reducedMotion ? 0.35 : phone ? 1.6 : 2.8) + pointer.y * 2,
     };
     const radius = orb.r;
     const voiceActive = state === "listening" || state === "speaking";
-    const voice = voiceActive ? audioLevel === null ? (Math.sin(t * 7.3) * Math.sin(t * 4.13) + 1) * 0.28 : audioLevel : 0;
+    const voice = voiceActive && audioLevel !== null ? audioLevel : 0;
 
     atmosphere(t);
     drawConnection(t, center, radius, elapsed);
@@ -708,6 +779,7 @@
     makeSprite("blue", "57,109,255");
     makeSprite("violet", "152,86,255");
     makeSprite("amber", "255,180,90");
+    makeAtmosphereTextures();
     resize();
     window.addEventListener("resize", resize, { passive: true });
     window.addEventListener("pointermove", onPointer, { passive: true });
@@ -731,8 +803,9 @@
     setState,
     resize,
     setQuality,
-    setOrbVisible(value) {
-      orbVisible = Boolean(value);
+    setOrbVisible() {
+      // Compatibility hook only: the procedural replacement is retired.
+      orbVisible = false;
     },
     setIntensity(value) {
       const numeric = Number(value);
@@ -748,7 +821,9 @@
       emitSceneChange();
     },
     getState() { return state; },
-    getStatus() { return { active, state, quality, intensity, audioLevel, audioSampleAt, orbVisible, width, height, elapsedSeconds: (performance.now() - started) / 1000 }; },
+    getStatus() { return { active, state, quality, intensity, audioLevel, audioSampleAt, orbVisible, width, height, pixelRatio,
+      atmosphereLayers: 3, dustLayers: 3, rayCount: phone ? 3 : 5,
+      elapsedSeconds: (performance.now() - started) / 1000 }; },
     destroy,
   });
 

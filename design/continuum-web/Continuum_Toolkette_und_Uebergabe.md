@@ -17,7 +17,7 @@ cd continuum-preview
 npm start
 ```
 
-Die ausgegebene Adresse öffnen. Der Betrieb benötigt keine zusätzlichen npm-Pakete. Änderungen am Avataradapter werden separat gebaut und geprüft; dafür wieder von der Projektwurzel ausgehen:
+Die ausgegebene Adresse öffnen. Der Betrieb benötigt keine zusätzlichen npm-Pakete. Änderungen am Avataradapter werden separat gebaut und geprüft; dafür gelten die neueren Node-Versionen aus `interop/README.md`. Wieder von der Projektwurzel ausgehen:
 
 ```sh
 cd interop
@@ -53,7 +53,7 @@ Spline kann [eigene GLB-Assets importieren](https://docs.spline.design/importing
 
 **Figma – native Frames angleichen:**
 
-> Verwende `continuum-preview/index.html`, `style.css` und die Original-PNGs als aktuellen Gestaltungsstand. Baue Chats links, Plugins oben, Avatar mit Linkleiste und Arbeitsfläche mittig sowie Diagramme rechts als getrennte editierbare Elemente nach. Erhalte deutsche Texte, Manrope/Space Grotesk, lesbare Inhalte und responsive Seitenbereiche. Ersetze das frühere Sheet-Gesicht durch das nachgewiesene Original. Prüfe beide Formate visuell. Bezeichne statische Frames nicht als dauerhaft laufende 3D-Szene.
+> Verwende `continuum-preview/index.html`, `style.css` und die Original-PNGs als aktuellen Gestaltungsstand. Baue Chats links, Plugins oben, Avatar vor der feststehenden Kugel mittig, Linkleiste darunter, Hologramme beidseits und weitere Diagramme rechts als getrennte editierbare Elemente nach. Erhalte deutsche Texte, Manrope/Space Grotesk, lesbare Inhalte und responsive Seitenbereiche. Ersetze das frühere Sheet-Gesicht durch das nachgewiesene Original. Prüfe beide Formate visuell. Bezeichne statische Frames nicht als dauerhaft laufende 3D-Szene.
 
 **Blender/Spline – Material- und Raumarbeit:**
 

@@ -74,5 +74,8 @@
   "bundle": "../continuum-preview/orb-original.js",
   "fallback": "../continuum-preview/assets/continuum-orb-original.png",
   "verification": "qa-orb/verification.json",
-  "qualification": "Geometry and materials translated from the original; no Android/browser pixel identity or real-device frame-rate claim."
+  "qualification": "Geometry and materials translated from the original; no Android/browser pixel identity or real-device frame-rate claim.",
+  "presentationRevision": "Praesenz 02",
+  "fixedModeVerification": "qa-orb-fixed/verification.json",
+  "presentationPolicy": "Original geometry cached and held fixed behind the centered avatar; only overall light exposure responds to state. Live mode remains available explicitly."
 }

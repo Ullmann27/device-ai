@@ -652,18 +652,24 @@ export function mountContinuumOriginalOrb(options = {}) {
   if (!anchor) return null;
   const original = createContinuumOriginalRenderer({ geometry: GEOMETRY.REFERENCE_COCKPIT });
   const clock = new ContinuumOriginalClock();
+  const fixedFrame = { phase: .4, energy: .18, audio: 0, weights: Float32Array.of(1, 0, 0, 0, 0, 0) };
+  const normaliseMotion = mode => mode === "fixed" || mode === "anchored" ? "fixed" : mode === "live" ? "live" : null;
+  let motion = normaliseMotion(options.motion || anchor.dataset.orbMotion) || "live";
   const canvas = doc.createElement("canvas");
   canvas.id = "continuum-original-orb"; canvas.setAttribute("aria-hidden", "true");
-  Object.assign(canvas.style, { position: "fixed", zIndex: "1", pointerEvents: "none", opacity: "0", contain: "strict" });
-  doc.body.appendChild(canvas);
+  Object.assign(canvas.style, { position: "absolute", zIndex: "0", display: "block", pointerEvents: "none", opacity: "0", contain: "strict" });
+  // Keep the orb inside its own stacking context. The host puts this anchor
+  // behind the avatar; no body-level canvas can cover dialogs or other tools.
+  anchor.appendChild(canvas);
   let context = null;
   try { context = canvas.getContext("2d", { alpha: true, desynchronized: true }); } catch { /* The original PNG remains available below. */ }
   const painter = context ? new BrowserContinuumPainter(context) : null;
   let active = true, failed = false, ready = false, animationFrame = 0, frames = 0;
   let width = 0, height = 0, bleed = 0, ratio = 1, quality = 1, intensity = 1;
-  let left = 0, top = 0, boundsDirty = true, visible = true, lastError = null, lastAudioSampleAt = -1;
+  let boundsDirty = true, pixelsDirty = true, visible = true, lastError = null, lastAudioSampleAt = -1;
+  let appliedExposure = null;
   let layoutTrackingUntil = 0;
-  let fallback = null, observer = null;
+  let fallback = null, observer = null, motionObserver = null;
   const removers = [];
   const listen = (target, event, handler, eventOptions) => {
     target.addEventListener(event, handler, eventOptions);
@@ -671,9 +677,23 @@ export function mountContinuumOriginalOrb(options = {}) {
   };
   function setIntensity(value) {
     if (Number.isFinite(value)) intensity = clamp(value, .35, 1.6);
-    // CSS group exposure leaves every original colour stop and draw alpha intact.
-    canvas.style.filter = intensity === 1 ? "none" : `brightness(${intensity})`;
+    updateExposure();
+  }
+  function updateExposure() {
+    // A fixed orb changes light only: its original ready-state pixels, projected
+    // rings, float position, sphere radius and internal network stay unchanged.
+    const response = motion === "fixed" ? 1 + (clock.frame.energy - .18) * .18 : 1;
+    const exposure = Math.round(intensity * response * 1000) / 1000;
+    if (exposure === appliedExposure) return;
+    appliedExposure = exposure;
+    canvas.style.filter = exposure === 1 ? "none" : `brightness(${exposure})`;
     if (fallback) fallback.style.filter = canvas.style.filter;
+  }
+  function setMotionMode(value) {
+    const next = normaliseMotion(value);
+    if (!next) return false;
+    if (next !== motion) { motion = next; pixelsDirty = true; updateExposure(); }
+    return true;
   }
   function readScene(detail) {
     if (!detail) return;
@@ -692,16 +712,19 @@ export function mountContinuumOriginalOrb(options = {}) {
     visible = rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < hostWindow.innerHeight;
     if (!visible) { canvas.style.visibility = "hidden"; if (fallback) fallback.style.visibility = "hidden"; return; }
     canvas.style.visibility = "visible";
-    left = rect.left; top = rect.top;
-    const nextRatio = min(hostWindow.devicePixelRatio || 1, quality < .7 ? 1.25 : hostWindow.innerWidth <= 760 ? 1.65 : 1.8);
-    if (width !== rect.width || height !== rect.height || ratio !== nextRatio) {
-      width = rect.width; height = rect.height; ratio = nextRatio; bleed = min(width, height) * .48;
+    // Render in the anchor's local CSS units; parent translations and any scale
+    // apply once to both avatar and orb instead of being applied again here.
+    const anchorWidth = anchor.clientWidth || rect.width, anchorHeight = anchor.clientHeight || rect.height;
+    const nextRatio = min(hostWindow.devicePixelRatio || 1, quality < .7 ? 1.25 : hostWindow.innerWidth <= 760 ? 1.5 : 1.8);
+    if (width !== anchorWidth || height !== anchorHeight || ratio !== nextRatio) {
+      width = anchorWidth; height = anchorHeight; ratio = nextRatio; bleed = min(width, height) * .48;
       canvas.width = Math.ceil((width + bleed * 2) * ratio); canvas.height = Math.ceil((height + bleed * 2) * ratio);
       canvas.style.width = `${width + bleed * 2}px`; canvas.style.height = `${height + bleed * 2}px`;
       original.layout(width, height);
+      pixelsDirty = true;
     }
-    canvas.style.left = `${left - bleed}px`; canvas.style.top = `${top - bleed}px`;
-    if (fallback) Object.assign(fallback.style, { left: `${left - bleed}px`, top: `${top - bleed}px`, width: `${width + bleed * 2}px`, height: `${height + bleed * 2}px`, visibility: "visible" });
+    canvas.style.left = `${-bleed}px`; canvas.style.top = `${-bleed}px`;
+    if (fallback) Object.assign(fallback.style, { left: `${-bleed}px`, top: `${-bleed}px`, width: `${width + bleed * 2}px`, height: `${height + bleed * 2}px`, visibility: "visible" });
     boundsDirty = false;
   }
   function showFallback(error) {
@@ -710,8 +733,8 @@ export function mountContinuumOriginalOrb(options = {}) {
     if (!fallback) {
       fallback = doc.createElement("img"); fallback.alt = ""; fallback.setAttribute("aria-hidden", "true");
       fallback.src = options.fallbackUrl || "assets/continuum-orb-original.png";
-      Object.assign(fallback.style, { position: "fixed", pointerEvents: "none", zIndex: "1", objectFit: "contain", filter: canvas.style.filter });
-      doc.body.appendChild(fallback);
+      Object.assign(fallback.style, { position: "absolute", pointerEvents: "none", zIndex: "0", objectFit: "contain", filter: canvas.style.filter });
+      anchor.appendChild(fallback);
     }
     boundsDirty = true; position();
     anchor.dataset.orbRenderer = "original-png";
@@ -722,22 +745,24 @@ export function mountContinuumOriginalOrb(options = {}) {
     if (!active) return;
     if (boundsDirty || now < layoutTrackingUntil) position();
     const f = clock.advance(now);
-    if (!failed && visible && !doc.hidden) {
+    updateExposure();
+    if (!failed && visible && !doc.hidden && (motion === "live" || pixelsDirty || !ready)) {
       try {
         context.setTransform(1, 0, 0, 1, 0, 0); context.clearRect(0, 0, canvas.width, canvas.height);
         context.setTransform(ratio, 0, 0, ratio, bleed * ratio, bleed * ratio);
-        painter.begin(); original.draw(painter, f, true); frames++;
+        painter.begin(); original.draw(painter, motion === "fixed" ? fixedFrame : f, true); frames++;
+        pixelsDirty = false;
         if (!ready) {
           ready = true; canvas.style.opacity = "1"; anchor.dataset.orbRenderer = "original-canvas";
           hostWindow.ContinuumScene?.setOrbVisible?.(false);
-          hostWindow.dispatchEvent(new hostWindow.CustomEvent("continuum:orbready", { detail: { sourceCommit: ORIGINAL_COMMIT, renderer: "original-canvas" } }));
+          hostWindow.dispatchEvent(new hostWindow.CustomEvent("continuum:orbready", { detail: { sourceCommit: ORIGINAL_COMMIT, renderer: "original-canvas", motion } }));
         }
       } catch (error) { showFallback(error); }
     }
     animationFrame = hostWindow.requestAnimationFrame(draw);
   }
   function dispose() {
-    active = false; hostWindow.cancelAnimationFrame(animationFrame); observer?.disconnect();
+    active = false; hostWindow.cancelAnimationFrame(animationFrame); observer?.disconnect(); motionObserver?.disconnect();
     removers.splice(0).forEach(remove => remove()); canvas.remove(); fallback?.remove();
     delete anchor.dataset.orbRenderer;
   }
@@ -747,6 +772,10 @@ export function mountContinuumOriginalOrb(options = {}) {
   listen(hostWindow, "scroll", resize, { passive: true, capture: true });
   listen(doc, "visibilitychange", resize);
   if (hostWindow.ResizeObserver) { observer = new hostWindow.ResizeObserver(resize); observer.observe(anchor); }
+  if (hostWindow.MutationObserver) {
+    motionObserver = new hostWindow.MutationObserver(() => setMotionMode(anchor.dataset.orbMotion || "live"));
+    motionObserver.observe(anchor, { attributes: true, attributeFilter: ["data-orb-motion"] });
+  }
   // Parent layout changes can move an unchanged-sized anchor during transitions.
   listen(doc, "transitionrun", trackLayout, true); listen(doc, "transitionend", resize, true);
   readScene(hostWindow.ContinuumScene?.getStatus?.()); position();
@@ -754,11 +783,13 @@ export function mountContinuumOriginalOrb(options = {}) {
   if (!context) showFallback("Canvas 2D unavailable");
   animationFrame = hostWindow.requestAnimationFrame(draw);
   return Object.freeze({
-    resize, dispose, setState: state => clock.setState(state),
+    resize, dispose, setMotionMode, setState: state => clock.setState(state),
     setAudioLevel: value => clock.submitAudio(Number(value) || 0, hostWindow.performance.now()),
     getStatus: () => ({ active, ready, renderer: failed ? "original-png" : "original-canvas", sourceCommit: ORIGINAL_COMMIT,
-      state: clock.state, mode: clock.mode, phase: clock.frame.phase, energy: clock.frame.energy, audio: clock.frame.audio,
-      frames, quality, intensity, lastError, ...original.getMetrics() }),
+      state: clock.state, mode: clock.mode, motion, geometryFixed: motion === "fixed",
+      phase: motion === "fixed" ? fixedFrame.phase : clock.frame.phase, clockPhase: clock.frame.phase,
+      energy: clock.frame.energy, audio: clock.frame.audio, exposure: appliedExposure,
+      frames, quality, intensity, pixelRatio: ratio, localLayer: true, lastError, ...original.getMetrics() }),
   });
 }
 
