@@ -961,6 +961,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        command03OriginalDialog?.dismiss()
         cancelPendingConversationSelection()
         conversationIndexRevision++
         conversationListDialog?.dismiss()
@@ -2088,8 +2089,68 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun showMoreWorkAreas() =
-        showDashboardCategory("Mehr", ContinuumWorkAreaNavigationSpec.moreEntries)
+    /**
+     * Exact HTML design inspection stays separate from the native cockpit until screen,
+     * work-window and interaction parity is demonstrated on the device.
+     */
+    private var command03OriginalDialog: AlertDialog? = null
+
+    private fun showKommando03OriginalStage() {
+        if (isFinishing || isDestroyed) return
+        command03OriginalDialog?.dismiss()
+        lateinit var dialog: AlertDialog
+        val web = at.heinz.deviceai.ui.ContinuumCommand03OriginalStage(this) { route, content ->
+            runOnUiThread {
+                if (!dialog.isShowing || isFinishing || isDestroyed) return@runOnUiThread
+                dialog.dismiss()
+                when (route) {
+                    "home" -> showHomeDashboard()
+                    "chat" -> focusChatComposer()
+                    "command" -> {
+                        if (busy || content.isNullOrBlank()) {
+                            Toast.makeText(this, "Ein Auftrag läuft noch oder die Eingabe ist leer.",
+                                Toast.LENGTH_SHORT).show()
+                        } else {
+                            focusChatComposer()
+                            input.setText(content)
+                            // Real existing owner-gated send listener, not the HTML example handler.
+                            sendButton.performClick()
+                        }
+                    }
+                    else -> navigateDashboardTarget(route)
+                }
+            }
+        }
+        dialog = AlertDialog.Builder(this)
+            .setTitle("KOMMANDO 03 · ORIGINALDESIGN / ANDROID-VISUALTEST")
+            .setView(web)
+            .setNegativeButton("ZUR APP", null)
+            .create()
+        dialog.setOnDismissListener {
+            web.stopLoading()
+            web.destroy()
+            if (command03OriginalDialog === dialog) command03OriginalDialog = null
+        }
+        command03OriginalDialog = dialog
+        dialog.show()
+        dialog.window?.setLayout(
+            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+            (resources.displayMetrics.heightPixels * .92f).toInt()
+        )
+    }
+
+    private fun showMoreWorkAreas() {
+        val entries = ContinuumWorkAreaNavigationSpec.moreEntries
+        val titles = listOf("KOMMANDO 03 · HTML-ORIGINAL (DESIGNTEST)") + entries.map { it.title }
+        AlertDialog.Builder(this)
+            .setTitle("Mehr")
+            .setItems(titles.toTypedArray()) { _, selection ->
+                if (selection == 0) showKommando03OriginalStage()
+                else navigateDashboardTarget(entries[selection - 1].target)
+            }
+            .setNegativeButton("Schließen", null)
+            .show()
+    }
 
     private fun showDashboardCategory(title: String, entries: List<ContinuumWorkAreaNavigationSpec.CategoryEntry>) {
         AlertDialog.Builder(this)
