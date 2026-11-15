@@ -90,6 +90,10 @@ object JarvisCockpitPanels {
     }
 
     fun drawDocumentPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false) {
+        if (workstation && s.computer == null && DocumentBlueprintView.visible(s.document) == null) {
+            drawComputerRows(p, b, "Projekte", Icon.CODE, ContinuumWorkspaceSummary.projects(s), true)
+            return
+        }
         s.computer?.let { computer ->
             val agents = s.cockpit.workers?.takeIf { it.any { worker -> worker.running } }
                 ?.let { agentRows(s).take(2) }.orEmpty()
@@ -130,6 +134,10 @@ object JarvisCockpitPanels {
     }
 
     fun drawDraftPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false) {
+        if (workstation && s.computer == null && DocumentBlueprintView.visible(s.document) == null) {
+            drawComputerRows(p, b, "Offene Arbeit", Icon.DOCUMENT, ContinuumWorkspaceSummary.work(s), true)
+            return
+        }
         s.computer?.let { computer ->
             drawComputerRows(p, b, "Ergebnis", Icon.DOCUMENT, computer.resultRows(), workstation)
             return

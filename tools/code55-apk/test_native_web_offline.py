@@ -150,6 +150,44 @@ class OfflineWebEvidenceTest(unittest.TestCase):
         self.assertEqual('ALWAYS_ON', result['original_mode'])
         self.assertEqual('OFF', result['final_mode'])
 
+    def settings_nodes(self):
+        path = Path(__file__).with_name('native-web-settings-fixture.xml')
+        return list(ET.parse(path).iter('node'))
+
+    def test_recorded_android_radio_row_is_actionable_without_clickable_flag(self):
+        nodes = self.settings_nodes()
+        node = proof.control_node(nodes, proof.OFF, (1080, 2400))
+        self.assertEqual('false', node.get('clickable'))
+        self.assertEqual('true', node.get('checkable'))
+        self.assertEqual((70, 1283, 1010, 1409), proof.visible(node, (1080, 2400)))
+
+    def test_android_plain_list_choice_uses_the_same_visible_row_contract(self):
+        nodes = self.settings_nodes()
+        row = next(n for n in nodes if n.get('text') == proof.OFF)
+        row.set('class', 'android.widget.TextView')
+        row.set('checkable', 'false')
+        row.set('text', proof.QUICK)
+        self.assertIs(row, proof.control_node(nodes, proof.QUICK, (1080, 2400)))
+
+    def test_radio_row_requires_enabled_visible_bound_dialog_parent(self):
+        for change in ('disabled-row', 'disabled-parent', 'unbound-parent', 'outside-parent', 'detached'):
+            with self.subTest(change=change):
+                nodes = self.settings_nodes()
+                row = next(n for n in nodes if n.get('text') == proof.OFF)
+                parent = next(n for n in nodes if row in list(n))
+                if change == 'disabled-row': row.set('enabled', 'false')
+                elif change == 'disabled-parent': parent.set('enabled', 'false')
+                elif change == 'unbound-parent': parent.set('resource-id', 'custom:list')
+                elif change == 'outside-parent': row.set('bounds', '[70,1450][1010,1550]')
+                else: parent.remove(row)
+                with self.assertRaises(AssertionError): proof.control_node(nodes, proof.OFF, (1080, 2400))
+
+    def test_duplicate_radio_labels_are_rejected(self):
+        nodes = self.settings_nodes()
+        rows = [n for n in nodes if n.get('checkable') == 'true']
+        rows[0].set('text', proof.OFF)
+        with self.assertRaises(AssertionError): proof.control_node(nodes, proof.OFF, (1080, 2400))
+
     def test_active_default_network_is_rejected(self):
         (self.directory / 'web-before-network-stdout.txt').write_text('Active default network: 100\n')
         self.reject()
@@ -219,6 +257,22 @@ class OfflineWebEvidenceTest(unittest.TestCase):
 
     def test_busy_composer_is_rejected(self):
         self.mutate_ui('web-result', lambda nodes: nodes[2].set('content-desc', 'Device AI arbeitet'))
+        self.reject()
+
+    def test_actual_owner_composer_hint_is_accepted(self):
+        hint = 'Was soll ich auf deinem Gerät tun?'
+        source = Path(__file__).resolve().parents[2] / 'app/src/main/java/at/heinz/deviceai/AgentActivity.kt'
+        self.assertIn('input.hint = "' + hint + '"', source.read_text())
+        self.mutate_ui('web-result', lambda nodes: nodes[1].set('text', hint))
+        self.assertEqual('PASS', self.verify()['composer_idle'])
+
+    def test_pending_owner_text_is_not_an_empty_composer(self):
+        self.mutate_ui('web-result', lambda nodes: nodes[1].set('text', 'Diesen Auftrag behalten'))
+        self.reject()
+
+    def test_disabled_owner_composer_with_valid_hint_is_rejected(self):
+        self.mutate_ui('web-result', lambda nodes: nodes[1].attrib.update(
+            {'text': 'Was soll ich auf deinem Gerät tun?', 'enabled': 'false'}))
         self.reject()
 
     def test_final_off_must_be_saved_after_ui_action(self):

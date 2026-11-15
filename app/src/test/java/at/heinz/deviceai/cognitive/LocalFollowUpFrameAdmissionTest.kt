@@ -39,7 +39,7 @@ class LocalFollowUpFrameAdmissionTest {
     }
 
     @Test fun failedFrameDoesNotClaimAnyDeduplicatedOwnerEvidence() {
-        val oversized = "x".repeat(7_850)
+        val oversized = "x".repeat(LocalChatPromptBudget.MAX_TASK_CHARACTERS - 50)
         val frame = LocalFollowUpTaskFrame.composeFrame(current, current, listOf(oversized))
         assertEquals(current, frame.task)
         assertTrue(frame.ownerTurnsIn(current).isEmpty())

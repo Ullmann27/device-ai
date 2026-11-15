@@ -6,6 +6,24 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class LocalDialogueQualityGateTest {
+    @Test fun detailedAnswerIsNotRejectedOnlyForPassingTheOldTwentyThousandLimit() {
+        val answer = (1..420).joinToString("\n\n") {
+            "Abschnitt $it: Diese Erklärung enthält einen eigenen nachvollziehbaren Schritt mit Begründung."
+        } + "\nAbschließende Einschränkung: Die vorgeschlagene Aktion NICHT AUSFÜHREN."
+        assertTrue(answer.length in 32_001..64_000)
+        val result = LocalDialogueQualityGate.evaluate("Erkläre das ausführlich in vielen Abschnitten.", answer)
+        assertTrue(result.notes, result.success)
+        assertTrue(result.notes.contains("NICHT bestätigt"))
+        assertFalse(LocalDialogueQualityGate.evaluate("Erkläre das ausführlich.", "x".repeat(64_001)).success)
+    }
+
+    @Test fun longAnswerStillCannotExposeInternalFrames() {
+        val answer = "Einordnung. ".repeat(2_000) + " UNTRUSTED EVIDENCE DATA "
+        val result = LocalDialogueQualityGate.evaluate("Erkläre das ausführlich.", answer)
+        assertFalse(result.success)
+        assertTrue(result.notes.contains("Interner Recherche-Platzhalter"))
+    }
+
     private val originalQuestion =
         "Erkläre mir in drei einfachen Sätzen, wie Solarzellen aus Sonnenlicht Strom erzeugen."
     private val originalAnswer =

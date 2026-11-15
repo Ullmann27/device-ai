@@ -59,7 +59,7 @@ class LocalContextRoundTripTest {
             onTurnRecorded = { id, turn -> store.appendContextTurn(id, turn, 1) }
         }
         context.record(session, "Emma ist in Berg.", "Unbestätigt.")
-        context.recordUnanswered(session, "x".repeat(7_900) + " nicht Berg.")
+        context.recordUnanswered(session, "x".repeat(LocalDialogueContextLimits.MAX_OWNER_CHARACTERS) + " nicht Berg.")
         val restored = LocalConversationContext()
         store.loadContextTurns(session).forEach { restored.restore(session, it) }
         assertNull(restored.sessionEvidence(session))
@@ -79,5 +79,24 @@ class LocalContextRoundTripTest {
             NonModelReplyKind.MEMORY_CHANGE)
         assertEquals(emptyList<String>(), context.sessionEvidence(session))
         assertTrue(LocalChatTranscriptStore(directory).loadContextTurns(session).isEmpty())
+    }
+
+    @Test fun requiredHistoryBudgetSurvivesRestartAndRetainsTheActualAnswerEnd() {
+        val store = LocalChatTranscriptStore(tmp.newFolder())
+        val context = LocalConversationContext().apply {
+            onTurnRecorded = { id, turn -> store.appendContextTurn(id, turn, 1L) }
+        }
+        context.record(session, "Erkläre die Kiste ausführlich.", "Abschnitt. ".repeat(900) + "Ende: Nun folgt Teil zwei.")
+        context.recordToolResult(session, "Prüfe mein Handy.", "diagnose_device", "Messdaten. ".repeat(300))
+        val required = requireNotNull(context.requiredPromptBytes(session, continuation = true))
+        val restored = LocalConversationContext()
+        store.loadContextTurns(session).forEach { restored.restore(session, it) }
+        assertEquals(required, restored.requiredPromptBytes(session, continuation = true))
+        val rendered = restored.render(session, maxBytes = required, continuation = true)
+        assertTrue(rendered.contains("Ende: Nun folgt Teil zwei."))
+        assertTrue(rendered.contains("Erkläre die Kiste ausführlich."))
+        assertTrue(rendered.contains("Prüfe mein Handy."))
+        assertTrue(rendered.toByteArray(Charsets.UTF_8).size <= required)
+        assertNull(restored.requiredPromptBytes("different-session", continuation = true))
     }
 }

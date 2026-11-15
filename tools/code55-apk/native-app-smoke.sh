@@ -75,6 +75,36 @@ saved = {(scope, name): shell('settings', 'get', scope, name) for scope, name in
 def save(name, data):
     (out / name).write_bytes(data if isinstance(data, bytes) else data.encode())
 
+def collect_anr_diagnostics(log):
+    limit = 2 * 1024 * 1024
+    reads = [('activity-lastanr.txt', 'dumpsys -t 5 activity lastanr'),
+             ('dropbox-data-app-anr.txt', 'dumpsys -t 5 dropbox --print data_app_anr')]
+    traces = list(dict.fromkeys(re.findall(
+        r'/data/anr/(?:anr_|temp_anr_)[A-Za-z0-9_.-]+', log)))
+    reads.extend((f'anr-trace-{index}.txt', f'cat {path}')
+                 for index, path in enumerate(traces[-2:], 1))
+    diagnostics = []
+    for name, read in reads:
+        details = {'file': name, 'read': read, 'limit_bytes': limit}
+        stdout, stderr = b'', b''
+        try:
+            result = subprocess.run(
+                [str(adb), '-s', serial, 'shell', f'{read} 2>&1 | head -c {limit + 1}'],
+                capture_output=True, timeout=8)
+            stdout, stderr = result.stdout, result.stderr
+            details['returncode'] = result.returncode
+        except subprocess.TimeoutExpired as error:
+            stdout, stderr = error.stdout or b'', error.stderr or b''
+            details['timed_out'] = True
+        except OSError as error:
+            details['error'] = str(error)
+        save(name, stdout[:limit])
+        save(name + '.stderr.txt', stderr[:4096])
+        details.update(bytes_saved=min(len(stdout), limit), truncated=len(stdout) > limit,
+                       stderr_truncated=len(stderr) > 4096)
+        diagnostics.append(details)
+    report['anr_diagnostics'] = diagnostics
+
 def captured_device(label, *args, timeout=30):
     argv = list(map(str, [adb, '-s', serial, *args]))
     try:
@@ -518,20 +548,28 @@ except BaseException as error:
     failure = error
     report['error'] = str(error)
 finally:
+    diagnostic_log = ''
     for filename, args in [('logcat.txt', ['logcat', '-d', '-b', 'main', '-b', 'system', '-v', 'threadtime']),
                            ('crash-logcat.txt', ['logcat', '-d', '-b', 'crash', '-v', 'threadtime'])]:
         try:
             data = device(*args)
             save(filename, data)
             text = data.decode(errors='replace')
+            if filename == 'logcat.txt':
+                diagnostic_log = text
             if filename == 'crash-logcat.txt' and package in text:
                 raise RuntimeError('QA app crash in crash buffer')
             if re.search(r'ANR in ' + re.escape(package) + r'\b', text):
+                report['anr_detected'] = True
                 raise RuntimeError('QA app ANR')
         except BaseException as error:
             failure = failure or error
             report.setdefault('error', str(error))
     if failure:
+        try:
+            collect_anr_diagnostics(diagnostic_log)
+        except BaseException as error:
+            report['diagnostic_error'] = str(error)
         try:
             collect_failure_threads()
         except BaseException as error:

@@ -1,6 +1,7 @@
 package at.heinz.deviceai.cognitive
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class LocalChatPromptBudgetTest {
@@ -52,9 +53,28 @@ class LocalChatPromptBudgetTest {
         assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget(query))
     }
 
+    @Test fun shortRequestsForDetailNeverUseThreeSentenceBudget() {
+        for (question in listOf(
+            "Erkläre das ausführlich.",
+            "Ich möchte eine detaillierte Erklärung.",
+            "Erkläre bitte Schritt für Schritt.",
+            "Beschreibe den Ablauf im Detail.",
+            "Gib mir eine lange Antwort.",
+            "Beschreibe den Ablauf vollständig."
+        )) assertEquals(question, LocalChatPromptBudget.FULL_CHARACTERS, budget(question))
+    }
+
     @Test fun lengthBoundaryKeeps240BriefAnd241Full() {
         assertEquals(LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS, budget("a".repeat(240)))
         assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget("a".repeat(241)))
+    }
+
+
+    @Test fun extendedFold7OwnerRequestKeepsAllWordsBeyondOld7900Boundary() {
+        val request = "Bitte analysiere diese vollständige Fragestellung: " + "Einzelheit ".repeat(850)
+        assertTrue("This request is deliberately larger than the old 7900 character limit", request.length > 7900)
+        assertTrue("An extended full question must not be rejected before native admission",
+            LocalChatPromptBudget.acceptsCompleteTask(request))
     }
 
 }

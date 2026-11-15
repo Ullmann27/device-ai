@@ -29,7 +29,9 @@ class SessionRevisionRoutingTest {
     @Test fun omittedOversizedCorrectionCannotLeakAnOldAffirmativePrompt() {
         val context = LocalConversationContext()
         context.record("s", "Anna ist in Graz.", "Graz.")
-        context.record("s", "Beilage. ".repeat(1_000) + "Das stimmt nicht.", "Unklar.")
+        val oversized = "Beilage. ".repeat(LocalDialogueContextLimits.MAX_OWNER_CHARACTERS / 9 + 1) + "Das stimmt nicht."
+        assertFalse(LocalDialogueContextLimits.completeOwner(oversized))
+        context.record("s", oversized, "Unklar.")
         assertNull(context.sessionEvidence("s"))
         assertFalse(context.render("s").contains("Anna ist in Graz."))
         assertTrue(context.render("s").contains("UNVOLLSTÄNDIG"))

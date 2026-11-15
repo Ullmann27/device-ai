@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release/code59-complete-qa-20261114
+      - fix/code59-context-complete-20261114
       - diagnostic/code59-native-lint-20261114
   workflow_dispatch:
 
@@ -12,11 +13,11 @@ permissions:
 
 concurrency:
   group: code59-complete-qa-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.ref == 'refs/heads/fix/code59-context-complete-20261114' }}
 
 jobs:
   unsigned-arm64:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -101,7 +102,7 @@ jobs:
           retention-days: 14
 
   renderer-preflight:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -158,7 +159,7 @@ jobs:
           retention-days: 14
 
   full-android:
-    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/release/code59-complete-qa-20261114' || github.ref == 'refs/heads/diagnostic/code59-native-lint-20261114')
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114", "refs/heads/diagnostic/code59-native-lint-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 150
     steps:
@@ -186,7 +187,7 @@ jobs:
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
       - name: Full unfiltered Android and UI regression suite (motion exercised without PNG export)
-        if: github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+        if: contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
         env:
           CONTINUUM_BACKLOG_ROUNDTRIP_DIR: ${{ runner.temp }}/code59-backlog
           CONTINUUM_CONTRASTIVE_PARITY_DIR: ${{ runner.temp }}/code59-contrastive
@@ -221,10 +222,10 @@ jobs:
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
             -I .github/continuum/code59-targeted-tests.init.gradle :app:testDebugUnitTest
       - name: Require exact declared skip policy
-        if: ${{ always() && github.ref == 'refs/heads/release/code59-complete-qa-20261114' }}
+        if: ${{ always() && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) }}
         run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
       - name: Require Code59 regression coverage
-        if: ${{ always() && github.ref == 'refs/heads/release/code59-complete-qa-20261114' }}
+        if: ${{ always() && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) }}
         run: |
           python3 - <<'PY'
           import pathlib, xml.etree.ElementTree as ET
@@ -232,7 +233,11 @@ jobs:
           cases = [c for x in xmls for c in ET.parse(x).getroot().iter('testcase')]
           assert cases and not any(c.find(n) is not None for c in cases for n in ('failure','error'))
           names = {(c.get('classname','').split('.')[-1],c.get('name')) for c in cases if c.find('skipped') is None}
-          required = {('Fold7RoutingRegressionTest','spokenSingularDownloadUsesApprovedComputerPlan'),
+          required = {('ContinuumCompactComposerUiTest','shortLandscapeKeepsEditorAndSendFullyVisible'),
+                      ('ContinuumCompactComposerUiTest','heightChangesKeepDraftSelectionAndOriginalControls'),
+                      ('ContinuumCompactComposerUiTest','narrowLargeTextKeepsEditingAndOriginalSend'),
+                      ('ContinuumCompactComposerUiTest','overflowPreservesActionsLongPressesAndDisabledState'),
+                      ('Fold7RoutingRegressionTest','spokenSingularDownloadUsesApprovedComputerPlan'),
                       ('Fold7RoutingRegressionTest','informalJusticeResearchRemovesSpokenFillerWithoutLosingSubject'),
                       ('Fold7RoutingRegressionTest','funeralAndUnrelatedWebClaimsCannotBecomeJusticeEvidence'),
                       ('ResearchEngineTest','publicSearchRejectsUnrelatedFinalPageTitleAfterDiscovery'),
@@ -299,6 +304,40 @@ jobs:
               'destinationPrepositionsCannotBypassNegationOrAmbiguity'
           )}
           required.add(('OwnerComputerTaskGrantTest','parsedDestinationKeepsExistingDraftAndSendProtected'))
+          required |= {('LocalContextBudgetUiTest', name) for name in (
+              'optionalMemoriesCannotDisplaceCompleteOwnerTurns',
+              'longNonModelReportLeavesRoomForTheActualFollowUp',
+              'longCurrentRequestKeepsItsFinalNegationWithinNativeBudget'
+          )}
+          required |= {('OwnerAppActionWorkSceneUiTest', name) for name in (
+              'missingComputerSearchTermReachesExistingApprovalOnce',
+              'routineCommandInvalidatesPendingComputerSearch',
+              'newComputerCommandReplacesPendingSearchWithoutReinterpretation',
+              'stopAndNegationInvalidateComputerSearchQuestion'
+          )}
+          required |= {('LocalLongAnswerFlowTest', name) for name in (
+              'longStreamKeepsItsEndingAfterRestart',
+              'nativeTokenLimitCannotBecomeACompleteAnswer'
+          )}
+          required |= {('LocalModelResponseBoundaryTest', name) for name in (
+              'overrunKeepsEveryRemainingCharacterBeforeOutputLimit',
+              'truncationDoesNotSplitAnEmoji',
+              'reentrantStopKeepsAcceptedPrefixAndWinsOverOutputFailure'
+          )}
+          required |= {('LongOwnerTaskAdmissionTest', name) for name in (
+              'acceptedLongTaskReachesModelAndDiskWithoutLosingTheLastCorrection',
+              'invalidTaskCannotEraseAnExistingCheckpointOrInvokeModel'
+          )}
+          required.add(('LocalDialogueRetentionTest','continuationKeepsToolFreeRouteAfterRecreation'))
+          required |= {('LocalConversationContinuationChainTest', name) for name in (
+              'sixPartsRetainTheCompleteOriginalAndLatestAnswerEnd',
+              'rawTranscriptTurnsStaySeparateAndRestoreFoldsTheSameChain',
+              'missingOriginalCannotBeInventedFromContinuationReplies'
+          )}
+          required |= {('OwnerDialogueOutputTest', name) for name in (
+              'completeOwnerResponsePassesTheSameQualityGateWithoutLosingItsEnd',
+              'ownerFactoryRejectsUncapturedOverflowInsteadOfClipping'
+          )}
           required |= {('ContinuumUiSnapshotUiTest', name) for name in (
               'successfulSavePublishesClosedPngAndJson',
               'nullImageStreamRemovesPendingRow',
@@ -313,6 +352,9 @@ jobs:
               'oldAndroidDoesNotCreateRows'
           )}
           required |= {('OwnerFactRevocationUiTest', name) for name in (
+              'confirmedDeletionPersistsResetAfterFailedRestoreWithEmptyRam',
+              'confirmedDeletionResetKeepsItsSessionAndPrecedesLaterContextWrites',
+              'failedContextResetReportsIncompleteDeletionAndCanBeRetried',
               'confirmedDeletionCancelsPausedOwnerReply',
               'confirmedDeletionRejectsLateToolProposal',
               'cancelledDeletionPreservesPendingReplyAndFacts',
@@ -557,6 +599,7 @@ jobs:
           required.add(('ChiefResourceAdmissionUiTest', 's8d_realResourceAdmissionStopsNewToolsButDeliversFinishedReports'))
           required |= {('LocalModelHostMemoryUiTest', name) for name in (
               'loadedChatRechecksLowMemoryBeforeNativeDelegation',
+              'loadedTextOnlyRechecksLowMemoryBeforeNativeDelegation',
               'loadedThinkingRechecksLowMemoryBeforeNativeDelegation',
               'loadedToolContinuationRechecksLowMemoryBeforeNativeDelegation',
               'unavailableOrUnreadableMemoryBlocksEveryEntryWithoutUnloading',
@@ -582,6 +625,9 @@ jobs:
               'missingTelemetryFailsClosedInsteadOfGuessing',
               'healthyFold7ClassDeviceStillLoadsTheOriginalGemma',
               'unknownThermalOnOldAndroidDoesNotBlockButMemoryStillChecked')}
+          required |= {('LocalChatTranscriptStoreTest', name) for name in (
+              'contextResetRejectsInvalidExistingTargetsWithoutFalseSuccess',
+              'contextResetRejectsSymlinksWithoutChangingTheirTargets')}
           assert required <= names, f'Missing regression cases: {required - names}'
           print(f'CODE59_REQUIRED_REGRESSIONS_PASS={len(required)}')
           PY
@@ -608,7 +654,7 @@ jobs:
           retention-days: 14
 
   node-backend:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code59-complete-qa-20261114'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -645,7 +691,7 @@ jobs:
           retention-days: 14
 
   native-runtime:
-    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/release/code59-complete-qa-20261114' || github.ref == 'refs/heads/diagnostic/code59-native-lint-20261114')
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114", "refs/heads/diagnostic/code59-native-lint-20261114"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -725,11 +771,35 @@ jobs:
             --device pixel_7 --path "$ANDROID_AVD_HOME/continuum-native-pdf.avd"
           test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
           test "$("$CODE59_EMULATOR_BIN" -list-avds | tr -d '\r')" = continuum-native-pdf
+          python3 - "$ANDROID_AVD_HOME/continuum-native-pdf.avd/config.ini" "$emulator_evidence/display-profile.json" <<'PY'
+          import json, pathlib, sys
+          config = pathlib.Path(sys.argv[1])
+          lines = config.read_text().splitlines()
+          original = {'hw.lcd.width': 1080, 'hw.lcd.height': 2400, 'hw.lcd.density': 420}
+          selected = {'hw.lcd.width': 540, 'hw.lcd.height': 1200, 'hw.lcd.density': 210}
+          found = {}
+          for index, line in enumerate(lines):
+              key, separator, value = line.partition('=')
+              key = key.strip()
+              if separator and key in original:
+                  assert key not in found, ('Duplicate display property', key)
+                  found[key] = int(value.strip())
+                  lines[index] = key + ' = ' + str(selected[key])
+          assert found == original, ('Unexpected baseline display', found)
+          assert all(selected[key] * original['hw.lcd.density'] == original[key] * selected['hw.lcd.density']
+                     for key in ('hw.lcd.width', 'hw.lcd.height'))
+          config.write_text('\n'.join(lines) + '\n')
+          pathlib.Path(sys.argv[2]).write_text(json.dumps({'source_sha': __import__('os').environ['GITHUB_SHA'],
+              'scope': 'SOFTWARE_GPU_EMULATOR_ONLY', 'baseline': original, 'selected': selected,
+              'nominal_display_dp_preserved': True, 'pixel_count_ratio': 0.25,
+              'reason': 'Reduce software rasterization load; retain frame, resize and runtime acceptance checks.'}, indent=2) + '\n')
+          PY
       - name: Verify surface evidence validator
         run: |
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_hologram_*.py' -v
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_routines*.py' -v
-          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_web_offline.py' -v
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_code59_signing*.py' -v
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_web*.py' -v
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_xvfb.py' -v
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_app_navigation.py' -v
       - name: Build disposable native test APKs
@@ -932,6 +1002,14 @@ jobs:
             sleep 2
           done
           test "$ready" = true
+          "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 shell wm size > "$evidence/display-size.txt"
+          "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 shell wm density > "$evidence/display-density.txt"
+          python3 - "$evidence" <<'PY'
+          import pathlib, sys
+          directory = pathlib.Path(sys.argv[1])
+          assert (directory / 'display-size.txt').read_text().strip() == 'Physical size: 540x1200'
+          assert (directory / 'display-density.txt').read_text().strip() == 'Physical density: 210'
+          PY
           readlink "/proc/$emulator_pid/exe" > "$host_crash/emulator-executable.txt"
           cat "/proc/$emulator_pid/maps" > "$host_crash/emulator-maps.txt"
           export CODE59_HOST_IDENTITY="$evidence/host-live-identity.json"
@@ -975,7 +1053,7 @@ jobs:
             exit "$resume_exit"
           fi
           routine_exit=0
-          if timeout 1500 bash tools/code55-apk/native-app-smoke.sh emulator-5554 "$evidence/routines" routines; then
+          if timeout 2400 bash tools/code55-apk/native-app-smoke.sh emulator-5554 "$evidence/routines" routines; then
             routine_exit=0
           else
             routine_exit=$?

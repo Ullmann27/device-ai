@@ -87,7 +87,9 @@ class AiContextCompiler(
     internal fun permitsPrivateBotFrame(): Boolean = !policy.includeIdentityDetails && !policy.includeToolCatalog &&
         policy.memoryLimit == 0 && policy.researchSourceLimit == 0
 
-    fun compile(input: AiContextInput): CompiledAiContext {
+    fun compile(input: AiContextInput, reservedBytes: Int = 0): CompiledAiContext {
+        require(reservedBytes >= 0)
+        val availableBytes = (policy.maxBytes - reservedBytes).coerceAtLeast(0)
         val buffer = StringBuilder()
         var usedBytes = 0
         val includedMemoryIds = mutableListOf<String>()
@@ -106,7 +108,7 @@ class AiContextCompiler(
             val prefix = if (buffer.isEmpty()) "" else "\n\n"
             val candidate = prefix + "## " + title + "\n" + sanitized
             val candidateBytes = utf8Size(candidate)
-            if (candidateBytes <= policy.maxBytes - usedBytes) {
+            if (candidateBytes <= availableBytes - usedBytes) {
                 buffer.append(candidate)
                 // ASCII section separators prevent surrogate pairs across appends.
                 usedBytes += candidateBytes

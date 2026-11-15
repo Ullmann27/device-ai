@@ -1,0 +1,89 @@
+name: "Code59 Fold7 - Context, long answers and clarification QA"
+on:
+  push:
+    paths: [app/**, .github/continuum/**, .github/workflows/code58-fold7-combined-context-qa.yml]
+    branches:
+      - fix/code59-context-complete-20261114
+permissions:
+  contents: read
+concurrency:
+  group: code59-context-complete-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  android-context-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Exact SHA and clean worktree
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        with:
+          gradle-version: '8.11.1'
+      - name: Install Android SDK
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Run actual source-bound model and dialogue regression tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=59 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            -I .github/continuum/code58-fold7-long-context-tests.init.gradle \
+            :app:testDebugUnitTest
+      - name: Require repaired owner paths
+        if: always()
+        run: |
+          python3 - <<'PYTEST'
+          import pathlib, xml.etree.ElementTree as ET
+          cases = [c for p in pathlib.Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml')
+                   for c in ET.parse(p).getroot().iter('testcase')]
+          assert cases, 'Missing actual JUnit results'
+          assert not any(c.find(t) is not None for c in cases for t in ('failure', 'error', 'skipped'))
+          names = {(c.get('classname'), c.get('name')) for c in cases}
+          required = {
+              ('at.heinz.deviceai.OwnerFactRevocationUiTest', 'confirmedDeletionPersistsResetAfterFailedRestoreWithEmptyRam'),
+              ('at.heinz.deviceai.OwnerFactRevocationUiTest', 'confirmedDeletionResetKeepsItsSessionAndPrecedesLaterContextWrites'),
+              ('at.heinz.deviceai.OwnerFactRevocationUiTest', 'failedContextResetReportsIncompleteDeletionAndCanBeRetried'),
+              ('at.heinz.deviceai.cognitive.LocalChatTranscriptStoreTest', 'contextResetRejectsInvalidExistingTargetsWithoutFalseSuccess'),
+              ('at.heinz.deviceai.cognitive.LocalChatTranscriptStoreTest', 'contextResetRejectsSymlinksWithoutChangingTheirTargets'),
+              ('at.heinz.deviceai.localmodel.LocalModelHostMemoryUiTest', 'loadedTextOnlyRechecksLowMemoryBeforeNativeDelegation'),
+              ('at.heinz.deviceai.cognitive.OwnerDialogueOutputTest', 'completeOwnerResponsePassesTheSameQualityGateWithoutLosingItsEnd'),
+              ('at.heinz.deviceai.cognitive.OwnerDialogueOutputTest', 'ownerFactoryRejectsUncapturedOverflowInsteadOfClipping'),
+              ('at.heinz.deviceai.LocalContextBudgetUiTest', 'optionalMemoriesCannotDisplaceCompleteOwnerTurns'),
+              ('at.heinz.deviceai.LocalContextBudgetUiTest', 'longNonModelReportLeavesRoomForTheActualFollowUp'),
+              ('at.heinz.deviceai.LocalContextBudgetUiTest', 'longCurrentRequestKeepsItsFinalNegationWithinNativeBudget'),
+              ('at.heinz.deviceai.OwnerAppActionWorkSceneUiTest', 'missingComputerSearchTermReachesExistingApprovalOnce'),
+              ('at.heinz.deviceai.OwnerAppActionWorkSceneUiTest', 'routineCommandInvalidatesPendingComputerSearch'),
+              ('at.heinz.deviceai.cognitive.LocalLongAnswerFlowTest', 'longStreamKeepsItsEndingAfterRestart'),
+              ('at.heinz.deviceai.cognitive.LocalLongAnswerFlowTest', 'nativeTokenLimitCannotBecomeACompleteAnswer'),
+              ('at.heinz.deviceai.localmodel.LocalModelResponseBoundaryTest', 'overrunKeepsEveryRemainingCharacterBeforeOutputLimit'),
+              ('at.heinz.deviceai.localmodel.LocalModelResponseBoundaryTest', 'truncationDoesNotSplitAnEmoji'),
+              ('at.heinz.deviceai.cognitive.LocalConversationContinuationChainTest', 'sixPartsRetainTheCompleteOriginalAndLatestAnswerEnd'),
+              ('at.heinz.deviceai.cognitive.LocalConversationContinuationChainTest', 'rawTranscriptTurnsStaySeparateAndRestoreFoldsTheSameChain'),
+              ('at.heinz.deviceai.cognitive.LocalConversationContinuationChainTest', 'missingOriginalCannotBeInventedFromContinuationReplies')
+          }
+          assert required <= names, f'Missing owner-path cases: {required - names}'
+          assert any(c.get('classname') == 'at.heinz.deviceai.cognitive.LongOwnerTaskAdmissionTest' for c in cases)
+          print(f'CODE59_OWNER_PATHS_PASS cases={len(cases)}')
+          PYTEST
+      - name: Retain exact JUnit proof
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: fold7-long-context-junit
+          path: app/build/test-results/testDebugUnitTest/
+          if-no-files-found: warn

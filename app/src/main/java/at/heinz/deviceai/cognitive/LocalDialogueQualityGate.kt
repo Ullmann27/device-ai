@@ -1,5 +1,6 @@
 package at.heinz.deviceai.cognitive
 
+import at.heinz.deviceai.localmodel.LocalModelGenerationPolicy
 import java.util.Locale
 
 /**
@@ -48,7 +49,7 @@ object LocalDialogueQualityGate {
         if (candidate.isEmpty()) {
             return Evaluation(false, 0.0, "Keine Antwort erzeugt. Beantworte die aktuelle Frage oder benenne die Wissenslücke.")
         }
-        if (candidate.length > 20_000) {
+        if (candidate.length > LocalModelGenerationPolicy.MAX_RESPONSE_CHARACTERS) {
             return Evaluation(false, 0.1, "Antwort übermäßig lang. Kürze sie und beantworte die Frage direkt.")
         }
         OwnerLanguageStyle.outputFeedback(request, candidate)?.let {

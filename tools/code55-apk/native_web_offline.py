@@ -24,6 +24,8 @@ SUFFIX = ('\n\nDirekte genehmigte HTTPS-Quelle.'
           '\n\nTipp: Ein konkreter Suchbegriff oder ein direkter HTTPS-Link kann helfen.'
           '\n\nHinweis: Deterministische Rechercheausgabe (NO_USABLE_EVIDENCE); keine bestätigte Gemma-Antwort.')
 QUICK_BUDGET = [2, 1, 3, 64000, 128000, 32, 1, 5000, 15000, 0, 0, 2]
+MAX_CENTER_SCROLLS = 6
+MAX_CAPTURES = 18 + 2 * MAX_CENTER_SCROLLS
 
 
 def java_length(value):
@@ -130,6 +132,81 @@ def visible(node, size):
     return None
 
 
+def control_node(nodes, control, size):
+    parents = {child: parent for parent in nodes for child in parent}
+    candidates = []
+    for node in nodes:
+        bounds = visible(node, size)
+        if (not bounds or node.get('enabled') != 'true' or control.casefold() not in
+                (node.get('text', '').casefold(), node.get('content-desc', '').casefold())):
+            continue
+        if node.get('clickable') == 'true':
+            candidates.append(node)
+            continue
+        parent = parents.get(node)
+        if (parent is None or parent.get('class') != 'android.widget.ListView'
+                or parent.get('resource-id') != 'android:id/select_dialog_listview'
+                or parent.get('enabled') != 'true' or node.get('resource-id') != 'android:id/text1'):
+            continue
+        kind = node.get('class')
+        if not (kind == 'android.widget.TextView' or
+                (kind == 'android.widget.CheckedTextView' and node.get('checkable') == 'true')):
+            continue
+        area = visible(parent, size)
+        if (area and area[0] <= bounds[0] < bounds[2] <= area[2]
+                and area[1] <= bounds[1] < bounds[3] <= area[3]):
+            candidates.append(node)
+    assert len(candidates) == 1, 'Required visible web control missing or ambiguous: ' + control
+    return candidates[0]
+
+
+def center_scroll(nodes, size):
+    candidates = [n for n in nodes if n.get('class') == 'android.widget.ScrollView'
+                  and n.get('enabled') == 'true'
+                  and visible(n, size) and not n.get('content-desc', '').startswith(
+                      'Continuum-Cockpit, vertikal scrollbar')]
+    assert len(candidates) == 1, 'Unique web-center scroll container missing'
+    return candidates[0]
+
+
+def center_settings(scroll, nodes, size):
+    x1, y1, x2, y2 = visible(scroll, size)
+    targets = []
+    for node in scroll.iter('node'):
+        bounds = visible(node, size)
+        if (node in nodes and bounds and node.get('enabled') == 'true'
+                and node.get('clickable') == 'true' and 'internetfreigabe' in
+                (node.get('text', '').casefold(), node.get('content-desc', '').casefold())
+                and x1 <= bounds[0] < bounds[2] <= x2
+                and y1 <= bounds[1] < bounds[3] <= y2):
+            targets.append(node)
+    assert len(targets) <= 1, 'Web settings action ambiguous'
+    return targets
+
+
+def center_geometry(scroll, nodes, size):
+    rows = []
+    def visit(parent, path):
+        for child in parent:
+            index = child.get('index', '')
+            assert re.fullmatch(r'\d+', index), 'Web-center child identity missing'
+            identity = (*path, int(index))
+            bounds = visible(child, size)
+            if child in nodes and bounds:
+                rows.append((identity, child.get('class'), bounds))
+            visit(child, identity)
+    visit(scroll, ())
+    assert rows, 'Web-center scroll content missing'
+    return tuple(rows)
+
+
+def center_swipe(scroll, size):
+    x1, y1, x2, y2 = visible(scroll, size)
+    x = (x1 + x2) // 2
+    return [str(x), str(y2 - (y2 - y1) // 6),
+            str(x), str(y1 + (y2 - y1) // 6), '700']
+
+
 def verify(directory, report, source_sha, source_tree):
     directory = Path(directory)
     assert report['source_sha'] == source_sha and report['source_tree'] == source_tree
@@ -146,13 +223,46 @@ def verify(directory, report, source_sha, source_tree):
         nodes_by_label[label] = [n for n in ET.parse(directory / (label + '.xml')).iter('node')
                                  if n.get('package') == PACKAGE]
         windows[label] = window
-    assert len(windows) <= 18
+    assert len(windows) <= MAX_CAPTURES
     starts = [check for check in report['checks'] if check['name'] == 'fresh-empty-no-permissions']
     assert len(starts) == 1 and re.fullmatch(r'\d+', starts[0]['pid'])
     assert {window['app_pid_before'] for window in windows.values()} == {starts[0]['pid']}
+    settings = observation.get('settings_snapshots', {
+        'initial': 'web-center-initial', 'final': 'web-center-final'})
+    assert set(settings) == {'initial', 'final'}
+    scrolls = observation.get('scrolls', [])
+    assert len(scrolls) <= 2 * MAX_CENTER_SCROLLS
+    for suffix in ('initial', 'final'):
+        current = 'web-center-' + suffix
+        seen = set()
+        steps = [step for step in scrolls if step['suffix'] == suffix]
+        assert len(steps) <= MAX_CENTER_SCROLLS
+        for index, step in enumerate(steps):
+            target = 'web-center-' + suffix + '-scroll-' + chr(97 + index)
+            assert step == {'suffix': suffix, 'before': current, 'after': target, 'name': target + '-input'}
+            before = nodes_by_label[current]
+            after = nodes_by_label[target]
+            size = (int(windows[current]['screenshot_width']), int(windows[current]['screenshot_height']))
+            assert size == (int(windows[target]['screenshot_width']), int(windows[target]['screenshot_height']))
+            first, second = center_scroll(before, size), center_scroll(after, size)
+            assert first.get('scrollable') == 'true', 'Web-center does not scroll'
+            assert visible(first, size) == visible(second, size)
+            seen.add(center_geometry(first, before, size))
+            geometry = center_geometry(second, after, size)
+            assert geometry not in seen, 'Web-center scroll made no progress or cycled'
+            seen.add(geometry)
+            assert command_evidence(directory, step['name'], serial,
+                ['shell', 'input', 'swipe', *center_swipe(first, size)]) == ''
+            current = target
+        assert settings[suffix] == current
+        if 'settings_snapshots' in observation:
+            nodes = nodes_by_label[current]
+            size = (int(windows[current]['screenshot_width']), int(windows[current]['screenshot_height']))
+            assert center_settings(center_scroll(nodes, size), nodes, size), 'Web settings action missing'
+    assert all(step['suffix'] in ('initial', 'final') for step in scrolls)
     expected_actions = [
         ('web-open-center-initial', 'Internet', 'web-home-initial'),
-        ('web-open-settings-initial', 'INTERNETFREIGABE', 'web-center-initial'),
+        ('web-open-settings-initial', 'INTERNETFREIGABE', settings['initial']),
         ('web-select-off-initial', OFF, 'web-settings-initial'),
         ('web-open', 'Recherche nur nach Freigabe', 'web-chat-before'),
         ('web-select-ask', 'Auf Nachfrage', 'web-off-prompt'),
@@ -161,7 +271,7 @@ def verify(directory, report, source_sha, source_tree):
         ('web-allow-once', 'Einmal erlauben', 'web-approval'),
         ('web-home-final', 'Zur Startseite mit allen KI-Bereichen', 'web-result'),
         ('web-open-center-final', 'Internet', 'web-home-final'),
-        ('web-open-settings-final', 'INTERNETFREIGABE', 'web-center-final'),
+        ('web-open-settings-final', 'INTERNETFREIGABE', settings['final']),
         ('web-select-off-final', OFF, 'web-settings-final'),
         ('web-return-chat', 'Konversation öffnen', 'web-off-final')]
     actions = observation['actions']
@@ -169,11 +279,8 @@ def verify(directory, report, source_sha, source_tree):
     for action in actions:
         window = windows[action['snapshot']]
         size = (int(window['screenshot_width']), int(window['screenshot_height']))
-        candidates = [n for n in nodes_by_label[action['snapshot']] if n.get('enabled') == 'true'
-                      and n.get('clickable') == 'true' and visible(n, size)
-                      and action['control'].casefold() in (n.get('text', '').casefold(), n.get('content-desc', '').casefold())]
-        assert len(candidates) == 1, 'Bound UI control missing or ambiguous'
-        x1, y1, x2, y2 = visible(candidates[0], size)
+        node = control_node(nodes_by_label[action['snapshot']], action['control'], size)
+        x1, y1, x2, y2 = visible(node, size)
         assert command_evidence(directory, action['name'], serial,
             ['shell', 'input', 'tap', str((x1 + x2) // 2), str((y1 + y2) // 2)]) == ''
     for label in ('web-before-network', 'web-after-network'):
@@ -223,7 +330,8 @@ def verify(directory, report, source_sha, source_tree):
     size = (int(windows['web-result']['screenshot_width']), int(windows['web-result']['screenshot_height']))
     assert sum(n.get('text') == result_body(dossier) and bool(visible(n, size)) for n in result) == 1, 'Honest partial result absent or duplicated'
     editors = [n for n in result if n.get('class') == 'android.widget.EditText' and visible(n, size)]
-    assert len(editors) == 1 and editors[0].get('enabled') == 'true' and editors[0].get('text', '') in ('', 'Schreibe eine Nachricht …')
+    assert len(editors) == 1 and editors[0].get('enabled') == 'true' and editors[0].get('text', '') in (
+        '', 'Schreibe eine Nachricht …', 'Was soll ich auf deinem Gerät tun?'), 'Owner composer is not empty and enabled'
     assert sum(n.get('content-desc') == 'Nachricht senden' and n.get('enabled') == 'true'
                and n.get('clickable') == 'true' and bool(visible(n, size)) for n in result) == 1
     assert all(n.get('content-desc') != 'Device AI arbeitet' for n in result)
@@ -248,15 +356,12 @@ class Probe:
         assert pid == self.pid, 'Web test changed app process'
         self.label = label
         self.observation['captures'].append(label)
-        assert len(self.observation['captures']) <= 18
+        assert len(self.observation['captures']) <= MAX_CAPTURES
         self.save()
 
     def press(self, name, control):
-        candidates = [n for n in self.nodes if n.get('enabled') == 'true' and n.get('clickable') == 'true'
-                      and visible(n, self.display) and control.casefold() in
-                      (n.get('text', '').casefold(), n.get('content-desc', '').casefold())]
-        assert len(candidates) == 1, 'Required visible web control missing: ' + control
-        x1, y1, x2, y2 = visible(candidates[0], self.display)
+        node = control_node(self.nodes, control, self.display)
+        x1, y1, x2, y2 = visible(node, self.display)
         result = self.api['captured_device'](name, 'shell', 'input', 'tap', str((x1+x2)//2), str((y1+y2)//2))
         assert result.returncode == 0 and not result.stdout and not result.stderr
         self.observation['actions'].append({'name': name, 'control': control, 'snapshot': self.label})
@@ -272,9 +377,39 @@ class Probe:
             return None
         return result.stdout
 
+    def seek_settings(self, suffix):
+        size = self.display
+        seen = set()
+        viewport = None
+        for attempt in range(MAX_CENTER_SCROLLS + 1):
+            scroll = center_scroll(self.nodes, size)
+            bounds = visible(scroll, size)
+            assert viewport is None or viewport == bounds, 'Web-center scroll container moved'
+            viewport = bounds
+            if center_settings(scroll, self.nodes, size):
+                self.observation.setdefault('settings_snapshots', {})[suffix] = self.label
+                self.save()
+                return
+            assert scroll.get('scrollable') == 'true', 'Web-center does not scroll'
+            geometry = center_geometry(scroll, self.nodes, size)
+            assert geometry not in seen, 'Web-center scroll made no progress or cycled'
+            seen.add(geometry)
+            assert attempt < MAX_CENTER_SCROLLS, 'Web-center scroll limit reached'
+            label = 'web-center-' + suffix + '-scroll-' + chr(97 + attempt)
+            result = self.api['captured_device'](label + '-input', 'shell', 'input', 'swipe',
+                                                 *center_swipe(scroll, size))
+            assert result.returncode == 0 and not result.stdout and not result.stderr, 'Web-center swipe failed'
+            before = self.label
+            self.take(label)
+            assert self.display == size, 'Web-center display changed'
+            self.observation.setdefault('scrolls', []).append({
+                'suffix': suffix, 'before': before, 'after': label, 'name': label + '-input'})
+            self.save()
+
     def settings_off(self, suffix):
         self.press('web-open-center-' + suffix, 'Internet')
-        self.take('web-center-' + suffix, await_text='INTERNETFREIGABE')
+        self.take('web-center-' + suffix, await_text='Web und Quellen')
+        self.seek_settings(suffix)
         self.press('web-open-settings-' + suffix, 'INTERNETFREIGABE')
         self.take('web-settings-' + suffix, await_text='Continuum · Internetzugang')
         if suffix == 'initial':

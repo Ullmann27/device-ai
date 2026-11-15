@@ -57,7 +57,7 @@ class LocalPromptSizeAndStabilityTest {
             assertTrue("missing source marker: $end", finish >= 0)
             return source.substring(begin + start.length, finish)
         }
-        val body = section("val promptBody = buildString {", "val promptCap =")
+        val body = section("fun buildPromptBody(compiledText: String?): String = buildString {", "val requestedPromptCap =")
         assertFalse("time anchor must not be inside promptBody", body.contains("LocalClockIntent.promptAnchor"))
         val tail = section("val promptEnd =", "val continuingAnswer =")
         assertTrue("promptEnd must retain the required tail and trusted clock", Regex(

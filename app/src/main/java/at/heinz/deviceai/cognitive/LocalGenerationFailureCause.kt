@@ -1,6 +1,7 @@
 package at.heinz.deviceai.cognitive
 
 import at.heinz.deviceai.localmodel.LocalModelThermalGuard
+import at.heinz.deviceai.localmodel.LocalModelGenerationPolicy
 
 /** Safe terminal reason from the native boundary, never an inferred diagnosis. */
 enum class LocalGenerationFailureCause(val ownerMessage: String) {
@@ -18,6 +19,8 @@ enum class LocalGenerationFailureCause(val ownerMessage: String) {
                 LocalGenerationCompletion.OUTPUT_LIMIT -> OUTPUT_LIMIT
                 LocalGenerationCompletion.STALLED -> STALLED
                 LocalGenerationCompletion.FAILED -> when (failure) {
+                    LocalModelGenerationPolicy.OUTPUT_TOKEN_LIMIT,
+                    LocalModelGenerationPolicy.OUTPUT_CHARACTER_LIMIT -> OUTPUT_LIMIT
                     LocalModelThermalGuard.PAUSED_THERMAL -> THERMAL_PAUSED
                     LocalModelThermalGuard.STOPPED_THERMAL -> THERMAL_STOPPED
                     "LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL" -> CONTEXT_UNVERIFIED

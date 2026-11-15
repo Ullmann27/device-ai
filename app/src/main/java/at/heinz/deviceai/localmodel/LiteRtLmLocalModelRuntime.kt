@@ -70,6 +70,8 @@ interface LocalModelRuntime {
     val maxPromptUtf8Bytes: Int? get() = null
     /** Prompt bytes that fit the loaded engine's window after its measured preface; null when unknown. */
     val tokenAwarePromptUtf8Bytes: Int? get() = null
+    val toolFreePromptUtf8Bytes: Int? get() = null
+    fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) = stream(prompt, callback)
     fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)
     fun unload(callback: (Result<Unit>) -> Unit = {})
     fun stream(prompt: String, callback: LocalInferenceCallback)
@@ -91,7 +93,9 @@ class LiteRtLmLocalModelRuntime(
     private val cacheDirectory: File,
     private val systemPrompt: String = "You are Device AI, an on-device assistant.",
     /** Evaluated at load time (thermal budget, owner cooling mode); null keeps the LiteRT-LM default (all cores). */
-    private val cpuThreadCount: () -> Int? = { null }
+    private val cpuThreadCount: () -> Int? = { null },
+    /** Read-only load-time capacity choice; the conservative 4K remains the default. */
+    private val contextCapacitySelector: (Int) -> Int = LocalNativePromptBudget::contextCapacity
 ) : LocalModelRuntime {
     private val background = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "device-ai-local-model").apply { isDaemon = true }
@@ -119,6 +123,11 @@ class LiteRtLmLocalModelRuntime(
     override val tokenAwarePromptUtf8Bytes: Int? get() = loadedModel?.let { model ->
         LocalNativePromptBudget.promptByteBudget(configuredContextTokens, prefaceTokenCount,
             LocalModelGenerationPolicy.maxOutputTokens(model.id))
+    }
+
+    override val toolFreePromptUtf8Bytes: Int? get() = loadedModel?.let { model ->
+        LocalNativePromptBudget.toolFreePromptByteBudget(configuredContextTokens,
+            LocalModelGenerationPolicy.maxTextOnlyOutputTokens(model.id, configuredContextTokens))
     }
 
     private var engine: Engine? = null
@@ -168,7 +177,15 @@ class LiteRtLmLocalModelRuntime(
                     error("Cannot create LiteRT-LM cache directory.")
                 }
                 val threads = runCatching(cpuThreadCount).getOrNull()?.takeIf { it > 0 }
-                val contextCapacity = LocalNativePromptBudget.contextCapacity(capabilities.maxContextTokens)
+                val conservative = LocalNativePromptBudget.contextCapacity(capabilities.maxContextTokens)
+                val requestedContext = runCatching {
+                    contextCapacitySelector(capabilities.maxContextTokens)
+                }.getOrDefault(conservative)
+                val maxSafeContext = if (capabilities.maxContextTokens == 0) conservative
+                    else minOf(capabilities.maxContextTokens, 8_192)
+                val contextCapacity = requestedContext.takeIf {
+                    it in conservative..maxSafeContext
+                } ?: conservative
                 val newEngine = Engine(
                     EngineConfig(
                         modelPath = file.absolutePath,
@@ -247,6 +264,16 @@ class LiteRtLmLocalModelRuntime(
             freshPrompt = true, payloadBytes = effectivePrompt.toByteArray(Charsets.UTF_8).size)
     }
 
+    override fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) {
+        require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS &&
+            prompt.toByteArray(Charsets.UTF_8).size <= LocalToolContinuation.MAX_INPUT_BYTES)
+        val effectivePrompt = LocalQwenPromptPolicy.directUserPrompt(
+            loadedModel?.id, prompt, MAX_PROMPT_CHARACTERS)
+        // One existing engine, but an isolated text-only native Conversation with zero tools.
+        streamMessage(Message.user(Contents.of(effectivePrompt)), effectivePrompt.length, callback, true,
+            payloadBytes = effectivePrompt.toByteArray(Charsets.UTF_8).size, textOnlyDialogue = true)
+    }
+
     override fun streamThinking(prompt: String, callback: LocalInferenceCallback) {
         require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS &&
             prompt.toByteArray(Charsets.UTF_8).size <= LocalToolContinuation.MAX_INPUT_BYTES)
@@ -275,9 +302,11 @@ class LiteRtLmLocalModelRuntime(
         callback: LocalInferenceCallback,
         isolatedThinking: Boolean,
         freshPrompt: Boolean = false,
-        payloadBytes: Int
+        payloadBytes: Int,
+        textOnlyDialogue: Boolean = false
     ) {
         val profile = inferenceProfiler.begin(when {
+            textOnlyDialogue -> LocalInferenceKind.CHAT
             isolatedThinking -> LocalInferenceKind.ISOLATED_THINKING
             freshPrompt -> LocalInferenceKind.CHAT
             else -> LocalInferenceKind.TOOL_CONTINUATION
@@ -296,13 +325,14 @@ class LiteRtLmLocalModelRuntime(
                     LocalInferenceStage.CONVERSATION_CREATE_EXIT) {
                     checkNotNull(engine).createConversation(
                         ConversationConfig(
-                            systemInstruction = Contents.of(
+                            systemInstruction = Contents.of(if (textOnlyDialogue) systemPrompt else
                                 "You are a data-only reasoning worker for Device AI. " +
-                                    "You have no tools and no authority to act."
-                            ),
+                                    "You have no tools and no authority to act."),
                         tools = emptyList(),
                         automaticToolCalling = false,
-                        maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
+                        maxOutputToken = if (textOnlyDialogue)
+                            LocalModelGenerationPolicy.maxTextOnlyOutputTokens(loadedModel?.id, configuredContextTokens)
+                        else LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
                     )
                 )
                 }
@@ -426,9 +456,13 @@ class LiteRtLmLocalModelRuntime(
                 LocalNativePromptBudget.renderedUtf8Estimate(activeConversation.renderMessageIntoString(message))
             }.getOrNull()
             // Worker prefix is in its rendered input.
-            val prefix = if (isolatedThinking) 0 else prefaceTokenCount
+            val prefix = if (textOnlyDialogue) LocalNativePromptBudget.TOOL_FREE_PREFACE_RESERVE
+                else if (isolatedThinking) 0 else prefaceTokenCount
+            val requestedOutput = if (textOnlyDialogue)
+                LocalModelGenerationPolicy.maxTextOnlyOutputTokens(loadedModel?.id, configuredContextTokens)
+                else LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
             val budget = LocalNativePromptBudget.plan(payloadBytes, renderedBytes, inputTokens, prefix,
-                configuredContextTokens, LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id),
+                configuredContextTokens, requestedOutput,
                 fresh = freshPrompt || isolatedThinking)
             if (budget == null) {
                 finish(LocalInferenceEvent.Failed("LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL"))
@@ -481,21 +515,25 @@ class LiteRtLmLocalModelRuntime(
                                 // must survive or prose and generated code are corrupted.
                                 if (text.text.isEmpty() || finished.get() || terminalOverrideRequested.get() || generationCancelled.get())
                                     return@forEach
-                                if (responseCharacters[0] + text.text.length > MAX_RESPONSE_CHARACTERS) {
+                                val remaining = (MAX_RESPONSE_CHARACTERS - responseCharacters[0]).coerceAtLeast(0)
+                                val accepted = LocalModelGenerationPolicy.responsePrefix(text.text, remaining)
+                                if (accepted.isNotEmpty()) {
+                                    responseCharacters[0] += accepted.length
+                                    chunks[0]++
+                                    if (firstTokenNanos == null) firstTokenNanos = System.nanoTime()
+                                    deliverGeneration(LocalInferenceEvent.TextDelta(accepted))
+                                }
+                                if (text.text.length > remaining) {
                                     if (outputLimitReached.compareAndSet(false, true)) {
                                         terminalOverrideRequested.set(true)
                                         profile.cancel(LocalInferenceCancelOrigin.OUTPUT_LIMIT) {
                                             runCatching { activeConversation.cancelProcess() }
                                         }
                                         finish(LocalInferenceEvent.Failed(
-                                            "Local model response exceeded the output limit."))
+                                            LocalModelGenerationPolicy.OUTPUT_CHARACTER_LIMIT))
                                     }
                                     return
                                 }
-                                responseCharacters[0] += text.text.length
-                                chunks[0]++
-                                if (firstTokenNanos == null) firstTokenNanos = System.nanoTime()
-                                deliverGeneration(LocalInferenceEvent.TextDelta(text.text))
                             }
                         }
                         } finally { drainDeliveries() }
@@ -508,9 +546,18 @@ class LiteRtLmLocalModelRuntime(
                                 if (finished.get() || terminalOverrideRequested.get()) return
                                 val elapsed = (System.nanoTime() - startNanos).coerceAtLeast(0) / 1_000_000
                                 val nativeTokens = runCatching { activeConversation.getTokenCount() }.getOrNull()
+                                val benchmark = runCatching { activeConversation.getBenchmarkInfo() }.getOrNull()
+                                val decodedTokens = benchmark?.lastDecodeTokenCount
+                                    ?.takeIf { it in 0..configuredContextTokens }
                                 if (!LocalNativePromptBudget.completeContext(nativeTokens, configuredContextTokens)) {
                                     if (!isolatedThinking) synchronized(lock) { conversationContextInvalid = true }
                                     finish(LocalInferenceEvent.Failed("LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL"))
+                                    return
+                                }
+                                if (LocalModelGenerationPolicy.outputLimitReached(
+                                        decodedTokens, budget.maxOutputTokens, configuredContextTokens)) {
+                                    if (!isolatedThinking) synchronized(lock) { conversationContextInvalid = true }
+                                    finish(LocalInferenceEvent.Failed(LocalModelGenerationPolicy.OUTPUT_TOKEN_LIMIT))
                                     return
                                 }
                                 finish(
@@ -519,9 +566,9 @@ class LiteRtLmLocalModelRuntime(
                                             promptCharacters = promptCharacters,
                                             responseCharacters = responseCharacters[0],
                                             streamedChunks = chunks[0],
-                                            // KV includes newly prefilled input.
-                                            inputTokens = null,
-                                            outputTokens = null,
+                                            inputTokens = benchmark?.lastPrefillTokenCount
+                                                ?.takeIf { it in 0..configuredContextTokens },
+                                            outputTokens = decodedTokens,
                                             firstTokenLatencyMillis = firstTokenNanos?.let {
                                                 (it - startNanos).coerceAtLeast(0) / 1_000_000
                                             },
@@ -706,7 +753,7 @@ class LiteRtLmLocalModelRuntime(
 
     private companion object {
         const val MAX_PROMPT_CHARACTERS = 16_000
-        const val MAX_RESPONSE_CHARACTERS = 64_000
+        const val MAX_RESPONSE_CHARACTERS = LocalModelGenerationPolicy.MAX_RESPONSE_CHARACTERS
         const val MAX_TOOL_RESPONSES = 4
     }
 }

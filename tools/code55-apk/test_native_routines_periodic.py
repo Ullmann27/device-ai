@@ -66,7 +66,7 @@ class PeriodicEvidenceTest(unittest.TestCase):
                     self.fixture.verify()
 
     def test_actual_worker_deadline_remains_bounded(self):
-        self.fixture.clock('periodic-wait-1', 2020400)
+        self.fixture.clock('periodic-wait-1', 1000300 + proof.PERIODIC_MAX_WAIT_MS + 100)
         with self.assertRaisesRegex(AssertionError, 'deadline'):
             self.fixture.verify()
 

@@ -34,7 +34,10 @@ class LocalChatTranscriptIntegrityTest {
     @Test fun oversizedUnicodeOwnerTurnPersistsAnIncompleteMarker() {
         val store = LocalChatTranscriptStore(tmp.newFolder())
         store.appendContextTurn(id, "Emma ist in Berg.", "Altantwort.", 1)
-        store.appendContextTurn(id, "東京".repeat(1_600) + "Nicht mehr Berg.", "Antwort.", 2)
+        val oversized = "東京".repeat(LocalDialogueContextLimits.MAX_OWNER_CHARACTERS / 6 + 1) + "Nicht mehr Berg."
+        assertTrue(oversized.length <= LocalDialogueContextLimits.MAX_OWNER_CHARACTERS)
+        assertFalse(LocalDialogueContextLimits.completeOwner(oversized))
+        store.appendContextTurn(id, oversized, "Antwort.", 2)
         val turns = store.loadContextTurns(id)
         assertEquals(2, turns.size)
         assertFalse(turns.last().requestComplete)
@@ -83,7 +86,8 @@ class LocalChatTranscriptIntegrityTest {
 
     @Test fun explicitResetClearsIncompleteHistoryBeforeNewTurns() {
         val store = LocalChatTranscriptStore(tmp.newFolder())
-        store.appendContextTurn(id, "x".repeat(8_000), "Antwort.", 1)
+        store.appendContextTurn(id, "x".repeat(LocalDialogueContextLimits.MAX_OWNER_CHARACTERS + 1), "Antwort.", 1)
+        assertFalse(store.loadContextTurns(id).single().requestComplete)
         store.appendContextReset(id, 2)
         store.appendContextTurn(id, "Neues Thema.", "Neue Antwort.", 3)
         assertEquals(listOf(LocalChatTranscriptStore.ContextTurn("Neues Thema.", "Neue Antwort.")),

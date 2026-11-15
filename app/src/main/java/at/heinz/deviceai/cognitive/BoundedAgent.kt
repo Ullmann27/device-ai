@@ -121,7 +121,7 @@ data class AgentCheckpoint(
 ) {
     init {
         require(schemaVersion == 1)
-        require(task.isNotBlank() && task.length <= 8_000)
+        require(LocalChatPromptBudget.acceptsCompleteTask(task)) { "LOCAL_TASK_EXCEEDS_BUDGET" }
         require(steps in 0..64 && toolCalls in 0..16 && retries in 0..2)
         require(auditTrail.size <= 64)
         require(auditTrail.map { it.sequence } == auditTrail.indices.toList())
@@ -245,6 +245,7 @@ class BoundedAgentOrchestrator(
 
     fun run(task: String): AgentRunResult {
         cancellation.throwIfCancelled()
+        require(LocalChatPromptBudget.acceptsCompleteTask(task)) { "LOCAL_TASK_EXCEEDS_BUDGET" }
         checkpointStore?.clear()
         return runFrom(task, null)
     }
@@ -275,7 +276,7 @@ class BoundedAgentOrchestrator(
     }
 
     private fun runFrom(task: String, checkpoint: AgentCheckpoint?): AgentRunResult {
-        require(task.isNotBlank() && task.length <= 8_000)
+        require(LocalChatPromptBudget.acceptsCompleteTask(task)) { "LOCAL_TASK_EXCEEDS_BUDGET" }
         require(checkpoint == null || checkpoint.task == task)
         audit.clear()
         steps = checkpoint?.steps ?: 0

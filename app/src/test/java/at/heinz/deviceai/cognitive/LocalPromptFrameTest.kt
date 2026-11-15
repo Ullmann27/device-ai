@@ -72,11 +72,14 @@ class LocalPromptFrameTest {
         val completeAscii = "x".repeat(LocalChatPromptBudget.MAX_TASK_CHARACTERS)
         assertTrue(LocalChatPromptBudget.acceptsCompleteTask(completeAscii))
         assertFalse(LocalChatPromptBudget.acceptsCompleteTask(completeAscii + "x"))
-        val cjk = "東京".repeat(3_000) // 6,000 UTF-16 chars; 9,000 UTF-8 bytes.
+        val cjk = "東京".repeat(LocalChatPromptBudget.MAX_TASK_CHARACTERS / 3 + 1)
+        // Must exceed the active UTF-8 limit, not the obsolete 7900-byte cap.
         assertTrue(cjk.length < LocalChatPromptBudget.MAX_TASK_CHARACTERS)
+        assertTrue(cjk.toByteArray(Charsets.UTF_8).size > LocalChatPromptBudget.MAX_TASK_CHARACTERS)
         assertFalse(LocalChatPromptBudget.acceptsCompleteTask(cjk))
-        val emoji = "🧠".repeat(2_000) // 4,000 UTF-16 chars; 8,000 UTF-8 bytes.
+        val emoji = "🧠".repeat(LocalChatPromptBudget.MAX_TASK_CHARACTERS / 4 + 1)
         assertTrue(emoji.length < LocalChatPromptBudget.MAX_TASK_CHARACTERS)
+        assertTrue(emoji.toByteArray(Charsets.UTF_8).size > LocalChatPromptBudget.MAX_TASK_CHARACTERS)
         assertFalse(LocalChatPromptBudget.acceptsCompleteTask(emoji))
         assertTrue(LocalChatPromptBudget.acceptsCompleteTask("Bitte nicht mehr Graz."))
     }

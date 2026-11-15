@@ -25,7 +25,11 @@ class BootstrapLongDialogueRegressionTest {
     }
 
     @Test fun unicodeAndTotalTaskOverflowStayBlockedBeforeLocalInference() {
-        for (request in listOf("x".repeat(7_901), "東京".repeat(1_600))) {
+        val max = LocalChatPromptBudget.MAX_TASK_CHARACTERS
+        val unicode = "東京".repeat(max / 6 + 1)
+        assertTrue(unicode.length <= max)
+        for (request in listOf("x".repeat(max + 1), unicode)) {
+            assertFalse(LocalChatPromptBudget.acceptsCompleteTask(request))
             val decision = BootstrapBrain.decide(request, emptyList())
             assertEquals(BootstrapKind.REPLY, decision.kind)
             assertFalse(decision.allowNeuralRecall)

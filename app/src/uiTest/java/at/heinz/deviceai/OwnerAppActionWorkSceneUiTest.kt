@@ -45,19 +45,27 @@ class OwnerAppActionWorkSceneUiTest {
         val entered = CountDownLatch(1)
         val release = CountDownLatch(1)
         val completed = CountDownLatch(1)
+        val cancelled = CountDownLatch(1)
         val calls = AtomicInteger()
+        @Volatile var lateCompletionAfterCancel = false
         val successfulReturns = AtomicInteger()
-        var completeAfterCancellation = false
         var failure: String? = null
         override fun execute(call: ToolCallRequest, callback: (Result<String>) -> Unit) {
             calls.incrementAndGet()
             entered.countDown()
+            val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(60)
             var interrupted = false
             try {
-                try { check(release.await(60, TimeUnit.SECONDS)) }
-                catch (error: InterruptedException) {
-                    if (!completeAfterCancellation || release.count != 0L) throw error
-                    interrupted = true
+                while (true) {
+                    val remaining = deadline - System.nanoTime()
+                    check(remaining > 0) { "Controlled launch was not released" }
+                    try {
+                        check(release.await(remaining, TimeUnit.NANOSECONDS))
+                        break
+                    } catch (error: InterruptedException) {
+                        if (!lateCompletionAfterCancel) throw error
+                        interrupted = true
+                    }
                 }
                 val outcome = failure?.let { Result.failure<String>(IllegalStateException(it)) } ?: Result.success(
                     """{"schema":"CONTINUUM_DEVICE_ACTION_V1","action":"LAUNCH_APP","package":"$packageName","status":"VERIFIED_FOREGROUND","windowRevision":7}""")
@@ -68,7 +76,10 @@ class OwnerAppActionWorkSceneUiTest {
                 completed.countDown()
             }
         }
-        override fun cancelPending() { release.countDown() }
+        override fun cancelPending() {
+            cancelled.countDown()
+            if (!lateCompletionAfterCancel) release.countDown()
+        }
     }
 
     private var pump: CockpitHostFramePump? = null
@@ -177,6 +188,88 @@ class OwnerAppActionWorkSceneUiTest {
     private fun pose(a: AgentActivity) = (get(get(a, "hologramView")!!, "avatarPose") as AvatarPoseReducer)
         .pose(android.os.SystemClock.elapsedRealtime())
 
+    @Test fun missingComputerSearchTermReachesExistingApprovalOnce() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, _ ->
+            val before = lookupGeneration(a)
+            val request = "Suche in WhatsApp"
+            submit(a, request, chat = false)
+            assertEquals(before, lookupGeneration(a))
+            assertEquals(0, port.calls.get())
+            val context = get(a, "localConversationContext") as at.heinz.deviceai.cognitive.LocalConversationContext
+            assertEquals(1, context.priorUserTurns(get(a, "sessionId") as String).count { it == request })
+            submit(a, "Elena Müller", chat = false)
+            await { lookupGeneration(a) > before && ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
+            val approval = ShadowAlertDialog.getLatestAlertDialog()
+            val message = shadowOf(approval).message.toString()
+            assertTrue(message, message.contains("com.whatsapp"))
+            assertTrue(message, message.contains("nach „Elena Müller“ suchen"))
+            assertEquals("A search term grants no launch", 0, port.calls.get())
+            approval.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+            await { get(a, "busy") == false }
+            val after = lookupGeneration(a)
+            submit(a, "Elena Müller", chat = false)
+            await { get(a, "busy") == false && get(a, "botLookupPending") == false }
+            assertEquals("Consumed reply cannot replay", after, lookupGeneration(a))
+            assertEquals(0, port.calls.get())
+        }
+
+    @Test fun newComputerCommandReplacesPendingSearchWithoutReinterpretation() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, _ ->
+            submit(a, "Suche in WhatsApp", chat = false)
+            submit(a, "Öffne WhatsApp", chat = false)
+            await { ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
+            val approval = ShadowAlertDialog.getLatestAlertDialog()
+            val message = shadowOf(approval).message.toString()
+            assertTrue(message, message.contains("App öffnen und das echte App-Fenster anzeigen."))
+            assertFalse(message, message.contains("nach „Öffne"))
+            assertEquals(0, port.calls.get())
+            approval.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+            await { get(a, "busy") == false }
+        }
+
+    @Test fun stopAndNegationInvalidateComputerSearchQuestion() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, _ ->
+            for (stop in listOf(true, false)) {
+                submit(a, "Suche in WhatsApp", chat = false)
+                if (stop) AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest")
+                    .apply { isAccessible = true }.invoke(a)
+                else submit(a, "Nicht Elena", chat = false)
+                await { get(a, "busy") == false && get(a, "botLookupPending") == false }
+                val after = lookupGeneration(a)
+                submit(a, "Elena", chat = false)
+                await { get(a, "busy") == false && get(a, "botLookupPending") == false }
+                assertEquals(after, lookupGeneration(a))
+                assertNull(get(a, "activeOwnerAppFlow"))
+                assertEquals(0, port.calls.get())
+                assertFalse(ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
+            }
+        }
+
+    @Test fun routineCommandInvalidatesPendingComputerSearch() =
+        withActivity("com.whatsapp", "WhatsApp") { a, port, _ ->
+            submit(a, "Suche in WhatsApp", chat = false)
+            val clarification = requireNotNull(get(a, "computerClarification"))
+            assertNotNull("Search term is pending", get(clarification, "pending"))
+            val before = lookupGeneration(a)
+            submit(a, "Routine alle 15 Minuten: Akku unter 10 %", chat = false)
+            await {
+                val chat = get(a, "chatContainer") as View
+                get(a, "botLookupPending") == false && descendants(chat).filterIsInstance<TextView>()
+                    .any { it.text.toString().contains("Dieses Routineziel oder diese Bedingung ist nicht unterstützt.") }
+            }
+            assertEquals("Routine performs no app lookup", before, lookupGeneration(a))
+            assertEquals(0, port.calls.get())
+            assertFalse(ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
+
+            submit(a, "Elena", chat = false)
+            await { get(a, "busy") == false && get(a, "botLookupPending") == false }
+            assertEquals("Old search cannot revive", before, lookupGeneration(a))
+            assertNull(get(clarification, "pending"))
+            assertNull(get(a, "activeOwnerAppFlow"))
+            assertEquals(0, port.calls.get())
+            assertFalse(ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
+        }
+
     @Test
     @Config(sdk = [35], shadows = [OwnerAppPlanningContextUiTest.ProjectionConsentShadow::class])
     fun approvedSplitScreenLaunchStartsComputerWithoutRefocusingCockpit() =
@@ -243,13 +336,16 @@ class OwnerAppActionWorkSceneUiTest {
     @Config(sdk = [35], shadows = [OwnerAppPlanningContextUiTest.ProjectionConsentShadow::class])
     fun ownerStopDuringSplitScreenLaunchRejectsLateCallback() =
         withActivity("com.whatsapp", "WhatsApp") { a, port, lifecycle ->
-            port.completeAfterCancellation = true
+            port.lateCompletionAfterCancel = true
             shadowOf(a).setInMultiWindowMode(true)
             submit(a, "Öffne WhatsApp.", chat = false)
             approve(port)
             lifecycle.pause()
             (get(a, "input") as EditText).setText("Stopp")
             assertTrue((get(a, "sendButton") as Button).performClick())
+            assertEquals("STOP reaches the device boundary", 0L, port.cancelled.count)
+            assertEquals("Callback is still held after STOP", 1L, port.completed.count)
+            assertEquals("Only the test releases the late result", 1L, port.release.count)
             port.release.countDown()
             await { port.completed.count == 0L }
             advance(32)
@@ -260,6 +356,7 @@ class OwnerAppActionWorkSceneUiTest {
             assertNull(get(a, "computerController"))
             assertNull(shadowOf(a).nextStartedActivityForResult)
             assertEquals(false, get(a, "busy"))
+            assertEquals("No action is retried after STOP", 1, port.calls.get())
         }
 
     @Test

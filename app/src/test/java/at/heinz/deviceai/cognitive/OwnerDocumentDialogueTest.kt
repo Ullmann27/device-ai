@@ -30,6 +30,16 @@ class OwnerDocumentDialogueTest {
             if (state == OwnerDocumentDialogue.TextState.EXTRACTED) pages.filter { it.isNotBlank() }.joinToString("\n\n") else "",
             7L)
 
+    @Test fun shortFirstSentenceQuestionUsesReadPageOneWithoutNativeModelOrLongHistory() {
+        val firstPage = "Der erste Satz beschreibt die Reparatur. Danach folgt eine andere Aussage."
+        val ref = reference(attributed = listOf(firstPage) + pages.drop(1))
+        val answer = OwnerDocumentDialogue.answer(ref,
+            "Was steht im ersten Satz auf der ersten Seite der PDF?")
+        assertNotNull("A direct page-one sentence should not hit the native context budget", answer)
+        assertTrue(answer, answer!!.contains("Der erste Satz beschreibt die Reparatur."))
+        assertFalse("Do not quote a second sentence", answer.contains("Danach folgt"))
+    }
+
     @Test fun theOpenedFileIsNamedFromTheReadDocument() {
         for (q in listOf("Welche PDF hast du gerade geöffnet?", "Jarvis, welche Datei ist gerade offen?",
                 "Wie heißt die PDF?", "Wie heißt das Dokument, das du geöffnet hast?", "Was ist der Name der PDF?")) {

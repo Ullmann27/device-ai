@@ -1,4 +1,4 @@
-name: "Continuum Code51/55 — Originalsignierung und GitHub-Release"
+name: "Continuum Code51/55/59 — Originalsignierung und GitHub-Release"
 
 # Existing registered path; manual owner sign-and-publish approval remains mandatory.
 # Nur manueller Start. Die Kanalwahl ersetzt NICHT die ausdrückliche SHA-Freigabe des Besitzers:
@@ -14,11 +14,15 @@ on:
         required: true
         type: string
       qa_run_id:
-        description: "Exakter grüner Voll-QA-Lauf: Code51 historischer Pfad oder Code55 full-qa"
+        description: "Exakter grüner Voll-QA-Lauf für Code51, Code55 oder Code59"
         required: true
         type: string
       apk_run_id:
-        description: "Code55: grüner owner-apk-Lauf desselben SHA; für Code51 leer lassen"
+        description: "Code55: grüner owner-apk-Lauf desselben SHA; sonst leer lassen"
+        required: false
+        type: string
+      context_run_id:
+        description: "Code59: grüner Kontext-QA-Lauf desselben SHA; sonst leer lassen"
         required: false
         type: string
       owner_approved_sha:
@@ -35,27 +39,28 @@ concurrency:
 
 jobs:
   preflight:
-    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/copilot/code51-master-integrator-20261108' || github.ref == 'refs/heads/integrate/code55-apk-fable-20261112')
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/copilot/code51-master-integrator-20261108' || github.ref == 'refs/heads/integrate/code55-apk-fable-20261112' || github.ref == 'refs/heads/fix/code59-context-complete-20261114')
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     permissions:
       contents: read
       actions: read
     steps:
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-java@v4
-        if: github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+        if: github.ref != 'refs/heads/copilot/code51-master-integrator-20261108'
         with:
           distribution: temurin
           java-version: "21"
       - uses: actions/setup-node@v4
-        if: github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+        if: github.ref != 'refs/heads/copilot/code51-master-integrator-20261108'
         with:
           node-version: "24.22.2"
-      - name: Prepare Code55 public verification tools
-        if: github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+      - name: Prepare public verification tools
+        if: github.ref != 'refs/heads/copilot/code51-master-integrator-20261108'
         shell: bash
         run: |
           set -euo pipefail
@@ -67,6 +72,7 @@ jobs:
           SOURCE_SHA: ${{ inputs.source_sha }}
           QA_RUN_ID: ${{ inputs.qa_run_id }}
           APK_RUN_ID: ${{ inputs.apk_run_id }}
+          CONTEXT_RUN_ID: ${{ inputs.context_run_id }}
           OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}
         run: |
           set -euo pipefail
@@ -74,7 +80,7 @@ jobs:
 
   release-original-signed:
     needs: preflight
-    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/copilot/code51-master-integrator-20261108' || github.ref == 'refs/heads/integrate/code55-apk-fable-20261112')
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/copilot/code51-master-integrator-20261108' || github.ref == 'refs/heads/integrate/code55-apk-fable-20261112' || github.ref == 'refs/heads/fix/code59-context-complete-20261114')
     runs-on: ubuntu-latest
     timeout-minutes: 35
     environment: continuum-original-signing
@@ -84,13 +90,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
       - uses: actions/setup-node@v4
-        if: github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+        if: github.ref != 'refs/heads/copilot/code51-master-integrator-20261108'
         with:
           node-version: "24.22.2"
       - name: Prepare official Android 35 signing tools
@@ -105,6 +112,7 @@ jobs:
           SOURCE_SHA: ${{ inputs.source_sha }}
           QA_RUN_ID: ${{ inputs.qa_run_id }}
           APK_RUN_ID: ${{ inputs.apk_run_id }}
+          CONTEXT_RUN_ID: ${{ inputs.context_run_id }}
           OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}
           ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
           ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}

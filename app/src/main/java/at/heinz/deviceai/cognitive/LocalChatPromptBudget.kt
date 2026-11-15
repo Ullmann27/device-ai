@@ -18,6 +18,7 @@ internal object LocalChatPromptBudget {
 
     const val FULL_CHARACTERS = 15_500
     const val BRIEF_FIRST_TURN_CHARACTERS = 6_000
+    private val detailedAnswer = Regex("""(?iu)(?<!\p{L})(?:ausführlich\p{L}*|detailliert\p{L}*|umfassend\p{L}*|gründlich\p{L}*|vollständig\p{L}*|im\s+detail|lang(?:e[rsnm]?)?\s+(?:antwort|erklärung|text)|schritt\s+für\s+schritt)(?!\p{L})""")
 
     /** The prompt frame never exceeds the loaded model's native window budget (Code56); unknown keeps [cap]. */
     fun withNativeBudget(cap: Int, nativeBytes: Int?): Int =
@@ -31,7 +32,7 @@ internal object LocalChatPromptBudget {
         hasObservations: Boolean,
         hasReflection: Boolean
     ): Int {
-        if (task.isBlank() || task.length > 240 || hasMemories || hasConversationContext ||
+        if (task.isBlank() || task.length > 240 || detailedAnswer.containsMatchIn(task) || hasMemories || hasConversationContext ||
             hasGroundedEvidence || hasObservations || hasReflection) return FULL_CHARACTERS
         val assessment = ContinuumTaskClassifier.classify(task)
         if (assessment.expectedToolUse || assessment.freshnessNeeded ||

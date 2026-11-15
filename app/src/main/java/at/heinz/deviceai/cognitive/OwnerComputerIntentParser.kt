@@ -45,7 +45,7 @@ internal data class OwnerComputerIntent(
 internal object OwnerComputerIntentParser {
     sealed interface Result {
         data class Ready(val intent: OwnerComputerIntent) : Result
-        data class Ask(val question: String) : Result
+        data class Ask(val question: String, val searchApp: ComputerApp? = null) : Result
         data class Unsupported(val reason: String) : Result
         data object NotComputerCommand : Result
     }
@@ -55,7 +55,12 @@ internal object OwnerComputerIntentParser {
     private val OPEN_ONLY_APPS = setOf(ComputerApp.CHROME, ComputerApp.SETTINGS,
         ComputerApp.CAMERA, ComputerApp.GALLERY, ComputerApp.CALENDAR)
     private val otherAction = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:und|dann|danach)\\s+(?:sende?|schicke?|lösche?|loesche?|poste?|teile?|kaufe?|rufe?|öffne?|oeffne?|starte?|suche?)(?![\\p{L}\\p{N}_])")
-    private val searchLabel = Regex("(?iu)^(?:und\\s+)?(?:suche|such|suche nach|such nach)\\s+(?:nach\\s+)?(.+)$")
+    /** The optional suffix is presentation only, never a second device action. */
+    private val downloadsOpen = Regex(
+        "(?iu)^(?:(?:den|meinen)\\s+)?downloads?(?:[- ]?ordner)?" +
+            "(?:\\s+und\\s+zeig(?:e)?\\s+(?:ihn|den\\s+ordner)\\s+im\\s+virtuellen\\s+computer)?$"
+    )
+    private val searchLabel = Regex("(?iu)^(?:und\\s+)?(?:suche|such)(?:\\s+nach)?(?:\\s+(.+))?$")
     private val negation = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:nicht|keinesfalls|niemals|kein(?:e|en|em|er|es)?)(?![\\p{L}\\p{N}_])")
 
     fun parse(raw: String, contextApp: ComputerApp? = null): Result {
@@ -83,7 +88,7 @@ internal object OwnerComputerIntentParser {
         text = text.trimEnd('.', '?', '!').trim()
         Regex("(?iu)^(?:öffne|oeffne|starte|open|wechsle\\s+zu|wechsel\\s+zu)\\s+(.+)$").matchEntire(text)?.let { match ->
             val rest = match.groupValues[1].replace(Regex("(?iu)^bitte\\s+"), "")
-            if (rest.matches(Regex("(?iu)(?:den\\s+)?downloads?(?:[- ]?ordner)?"))) {
+            if (downloadsOpen.matches(rest)) {
                 return Result.Ready(OwnerComputerIntent(ComputerApp.FILES, ComputerGoal.OPEN_DOWNLOADS))
             }
             val found = appPrefix(rest) ?: return Result.NotComputerCommand
@@ -99,7 +104,7 @@ internal object OwnerComputerIntentParser {
         Regex("(?iu)^(?:suche|such)\\s+(?:in|auf)\\s+(.+)$").matchEntire(text)?.let { match ->
             val found = appPrefix(match.groupValues[1]) ?: return Result.NotComputerCommand
             val query = match.groupValues[1].substring(found.first.length).trim()
-                .replace(Regex("(?iu)^nach\\s+"), "")
+                .replace(Regex("(?iu)^nach(?:\\s+|$)"), "")
             return search(found.second, query)
         }
         apps.firstOrNull { lower == "${it.first} öffnen" || lower == "${it.first} oeffnen" }?.let {
@@ -112,7 +117,7 @@ internal object OwnerComputerIntentParser {
         if (app in OPEN_ONLY_APPS)
             return Result.Unsupported("In ${app.discoveryQuery} ist nur das bestätigte Öffnen mit Livebild freigegeben.")
         val query = raw.trim().trim('"', '„', '“').trim()
-        if (query.isBlank()) return Result.Ask("Wonach soll ich in ${app.discoveryQuery} suchen?")
+        if (query.isBlank()) return Result.Ask("Wonach soll ich in ${app.discoveryQuery} suchen?", app)
         if (query.length > 200 || otherAction.containsMatchIn(query)) {
             return Result.Unsupported("Bitte nenne einen eindeutigen Suchauftrag ohne weitere Aktion.")
         }
@@ -147,10 +152,10 @@ internal object OwnerComputerIntentParser {
         appMatches.map { it.first }.sortedByDescending { it.length }.forEach { alias ->
             remaining = remaining.replace(Regex("(?iu)\\s+(?:in|auf|per|via|über|ueber)\\s+${Regex.escape(alias)}(?![\\p{L}\\p{N}_])"), "")
         }
-        remaining = remaining.replace(Regex("(?iu)^(?:bereite|verfasse|schreibe|schreib|sende|schicke)\\s+"), "")
-            .replace(Regex("(?iu)^(?:eine\\s+)?(?:whatsapp[- ]?)?nachricht\\s+(?:an\\s+)?"), "")
-            .replace(Regex("(?iu)^an\\s+"), "")
-            .replace(Regex("(?iu)\\s+vor$"), "").trim()
+        remaining = remaining.replace(Regex("(?iu)^(?:bereite|verfasse|schreibe|schreib|sende|schicke)(?:\\s+|$)"), "")
+            .replace(Regex("(?iu)^(?:eine\\s+)?(?:whatsapp[- ]?)?nachricht(?:\\s+(?:an(?:\\s+|$))?|$)"), "")
+            .replace(Regex("(?iu)^an(?:\\s+|$)"), "")
+            .replace(Regex("(?iu)(?:^|\\s+)vor$"), "").trim()
         if (remaining.isBlank()) return Result.Ask("An wen soll ich den Entwurf vorbereiten?")
         if (remaining.length > 120 || otherAction.containsMatchIn(remaining)) return Result.Unsupported("Der Empfänger ist nicht eindeutig beschrieben.")
         if (draft.isNullOrBlank()) return Result.Ask("Welchen Text soll ich als Entwurf eintragen?")

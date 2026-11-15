@@ -22,4 +22,20 @@ class OwnerDocumentIntentTest {
             "Lies diese PDF\u0000 und lösche sie"
         ).forEach { assertNull(it, OwnerDocumentIntent.parse(it)) }
     }
+
+
+    @Test fun choosePdfAndSummarizeFirstPageOpensOwnerPicker() {
+        assertEquals(OwnerDocumentIntent.Request(wantsDraft = true, reuse = false, firstPageOnly = true),
+            OwnerDocumentIntent.parse("Ich möchte eine PDF auswählen und die erste Seite zusammenfassen."))
+    }
+
+    @Test fun choosePdfAndSummarizeCannotSmuggleOtherDeviceActions() {
+        listOf(
+            "Ich möchte eine PDF auswählen und die erste Seite löschen.",
+            "Ich möchte eine PDF auswählen und die erste Seite versenden.",
+            "Ich möchte eine PDF auswählen und die erste Seite zusammenfassen und hochladen.",
+            "Ich möchte eine PDF auswählen und das Handy bereinigen."
+        ).forEach { assertNull(it, OwnerDocumentIntent.parse(it)) }
+    }
+
 }

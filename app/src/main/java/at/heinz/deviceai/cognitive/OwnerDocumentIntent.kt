@@ -7,7 +7,7 @@ package at.heinz.deviceai.cognitive
  */
 internal object OwnerDocumentIntent {
     /** [reuse]: the owner means the PDF chosen before („die ausgewählte/letzte/gleiche PDF“), not a new choice. */
-    data class Request(val wantsDraft: Boolean, val reuse: Boolean = false)
+    data class Request(val wantsDraft: Boolean, val reuse: Boolean = false, val firstPageOnly: Boolean = false)
 
     // Word edges as Unicode lookarounds: `\b` is ASCII-only on the JVM since JDK 19 („Öffne“) but Unicode on Android.
     private const val START = "(?<![\\p{L}\\p{N}_])"
@@ -17,6 +17,12 @@ internal object OwnerDocumentIntent {
     )
     private val namedPdf = Regex(
         "(?iu)^(lies|lese|öffne|zeige)\\s+(?:die\\s+)?datei\\s+[\\p{L}\\p{N} _-]{1,80}\\.pdf[.!?]*$"
+    )
+    /** Read-only Android picker followed by a draft restricted to the actual first page. */
+    private val chooseFirstPage = Regex(
+        "(?iu)^(?:ich\\s+(?:möchte|will|würde\\s+gern(?:e)?)|(?:kannst|könntest|würdest)\\s+du)\\s+" +
+            "(?:(?:mir|bitte)\\s+)*(?:(?:eine|die|meine|diese)\\s+)?pdf(?:-datei|-dokument)?\\s+" +
+            "auswählen\\s+und\\s+(?:(?:bitte|mir)\\s+)*(?:die\\s+)?erste\\s+seite\\s+zusammenfassen[.!?]*$"
     )
     private const val COURTESY = "(?:(?:bitte|mir|mal|kurz|eben|für\\s+mich)\\s+)*"
     private val politeRead = Regex(
@@ -65,6 +71,7 @@ internal object OwnerDocumentIntent {
             .replace(Regex("(?iu)^bitte\\s+"), "")
         if (prohibited.containsMatchIn(original)) return null
         val text = original.replace(presentationTail, "").trimEnd()
+        if (chooseFirstPage.matches(text)) return Request(wantsDraft = true, firstPageOnly = true)
         val direct = read.find(text) ?: namedPdf.matchEntire(text)
         if (findPdf.matches(text)) return Request(wantsDraft = false, reuse = false)
         if (direct == null && !politeRead.matches(text)) return null

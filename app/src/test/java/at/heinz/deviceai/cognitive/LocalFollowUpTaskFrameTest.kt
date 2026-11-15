@@ -61,10 +61,8 @@ class LocalFollowUpTaskFrameTest {
         assertEquals(1, Regex(Regex.escape("Nun hat die rote Kiste 9")).findAll(task).count())
     }
 
-    // M3 / Review #369 + #370 Punkt 3: der echte Budget-Rückfall. Die Folgefrage-Policy lässt nur
-    // currentRequest <= 1.000 Zeichen zu; überlaufen kann der Rahmen deshalb real nur über (A) eine lange
-    // aufgelöste Frage (resolvedQuestion) oder (B) die UTF-8-Bytegrenze bei umlautreichen Turns.
-    // Beide Fälle: Auftrag allein zulässig, Kombination > 7.900 → exakt unverändert, kein Teilprefix.
+    // Vollständiger Auftrag bleibt unverändert.
+    // Rahmen überschreitet das echte Budget.
     @Test fun realTaskBudgetOverflowReturnsTheExactUnchangedRequest() {
         val max = LocalChatPromptBudget.MAX_TASK_CHARACTERS
         val longResolved = "$t3 Bezug: " + "Kontext ".repeat((max - 1_000) / 8)
@@ -74,12 +72,12 @@ class LocalFollowUpTaskFrameTest {
         val a = LocalFollowUpTaskFrame.compose(t3, longResolved, prior)
         assertEquals(longResolved, a)
 
-        val umlauts = List(4) { "Die rote Kiste hat 9 Ringe. " + "ä".repeat(970) }
-        assertTrue(umlauts.all { it.length <= 1_000 })
-        assertTrue(umlauts.sumOf { it.toByteArray(Charsets.UTF_8).size } + t3.length > max - 400)
-        assertEquals(t3, LocalFollowUpTaskFrame.compose(t3, t3, umlauts))
-        // Control: the same question with fewer turns IS framed, so both results above are the budget branch.
-        assertTrue(LocalFollowUpTaskFrame.compose(t3, t3, umlauts.take(2)).startsWith("Anschlussfrage"))
+        val unicodeTurns = List(4) { "Die rote Kiste hat 9 Ringe. " + "東".repeat(970) }
+        assertTrue(unicodeTurns.all { it.length <= 1_000 && LocalChatPromptBudget.acceptsCompleteTask(it) })
+        assertTrue(unicodeTurns.sumOf { it.toByteArray(Charsets.UTF_8).size } + t3.toByteArray(Charsets.UTF_8).size > max)
+        assertEquals(t3, LocalFollowUpTaskFrame.compose(t3, t3, unicodeTurns))
+        // Zwei Turns passen weiterhin.
+        assertTrue(LocalFollowUpTaskFrame.compose(t3, t3, unicodeTurns.take(2)).startsWith("Anschlussfrage"))
     }
 
     // M3 / Review #370 Punkt 1: sensible oder verändernde frühere Anweisungen werden nicht reaktiviert.
