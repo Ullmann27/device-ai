@@ -15,6 +15,11 @@ STATE_PATH = 'files/routines/owner-routines-v1.bin'
 RECEIPT_PATH = 'files/tool-receipts/tool-execution-receipts.bin'
 ACTIVE_PATH = 'files/chat-history/active-conversation'
 STATE_MAGIC = b'CONTINUUM-ROUTINES-1\n'
+PERIODIC_MIN_WAIT_MS = 900000
+PERIODIC_MAX_WAIT_MS = 1920000
+PERIODIC_FINISH_RESERVE_MS = 240000
+ROUTINE_PROBE_MS = 2400000
+PERIODIC_MAX_OBSERVATIONS = 200
 
 
 def mutf(value):
@@ -320,9 +325,10 @@ def verify_periodic(directory, report, previous, conversation):
     assert observation['routine_id'] == first['id']
     start = clock_evidence(directory, 'periodic-wait-start', serial)
     assert type(observation['probe_started_ns']) is int and 0 < observation['probe_started_ns'] <= start['started_ns']
-    assert start['finished_ns'] + 1_260_000_000_000 <= observation['probe_started_ns'] + 1_500_000_000_000, 'No time reserved for periodic completion and stop'
+    reserved = (PERIODIC_MAX_WAIT_MS + PERIODIC_FINISH_RESERVE_MS) * 1_000_000
+    assert start['finished_ns'] + reserved <= observation['probe_started_ns'] + ROUTINE_PROBE_MS * 1_000_000, 'No time reserved for periodic completion and stop'
     labels = observation['observations']
-    assert 1 <= len(labels) <= 110 and labels == [f'periodic-wait-{index}' for index in range(len(labels))]
+    assert 1 <= len(labels) <= PERIODIC_MAX_OBSERVATIONS and labels == [f'periodic-wait-{index}' for index in range(len(labels))]
     prior = start
     for label in labels:
         current = clock_evidence(directory, label, serial)
@@ -333,7 +339,7 @@ def verify_periodic(directory, report, previous, conversation):
         prior = current
     assert observed == last, 'Final poll and completed state differ'
     waited_ms = (prior['started_ns'] - start['finished_ns']) // 1_000_000
-    assert 900000 <= waited_ms <= 1020000, 'Real minimum period or worker deadline violated'
+    assert PERIODIC_MIN_WAIT_MS <= waited_ms <= PERIODIC_MAX_WAIT_MS, 'Real minimum period or worker deadline violated'
     assert prior['elapsed_ms'] - start['elapsed_ms'] >= 900000 and prior['rtc_ms'] >= first['next_at']
     statuses = command_evidence(directory, labels[-1] + '-job-state', serial,
         ['shell', 'cmd', 'jobscheduler', 'get-job-state', '-u', '0', PACKAGE, '620159']).split()
@@ -632,14 +638,15 @@ class Probe:
         assert first['next_at'] >= first['last_at'] + 900000
         scheduled_uid = self.job_dump('periodic-first-job')
         start = self.clock('periodic-wait-start')
-        assert start['finished_ns'] + 1_260_000_000_000 <= self.api['probe_started_ns'] + 1_500_000_000_000, 'Insufficient process time for periodic wait, result and stop'
-        deadline_ns = start['finished_ns'] + 1_020_000_000_000
+        reserved = (PERIODIC_MAX_WAIT_MS + PERIODIC_FINISH_RESERVE_MS) * 1_000_000
+        assert start['finished_ns'] + reserved <= self.api['probe_started_ns'] + ROUTINE_PROBE_MS * 1_000_000, 'Insufficient process time for periodic wait, result and stop'
+        deadline_ns = start['finished_ns'] + PERIODIC_MAX_WAIT_MS * 1_000_000
         observation = {'source_sha': self.api['source'], 'source_tree': self.api['report']['source_tree'],
             'routine_id': first['id'], 'mode': 'NATURAL_SCHEDULER', 'observations': [],
             'probe_started_ns': self.api['probe_started_ns']}
         requested = False
         due_job_observed = False
-        for index in range(110):
+        for index in range(PERIODIC_MAX_OBSERVATIONS):
             assert time.monotonic_ns() < deadline_ns, 'Periodic wait and worker deadline exceeded'
             label = f'periodic-wait-{index}'
             current = self.clock(label)

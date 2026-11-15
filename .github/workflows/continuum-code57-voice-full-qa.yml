@@ -1053,7 +1053,7 @@ jobs:
             exit "$resume_exit"
           fi
           routine_exit=0
-          if timeout 1500 bash tools/code55-apk/native-app-smoke.sh emulator-5554 "$evidence/routines" routines; then
+          if timeout 2400 bash tools/code55-apk/native-app-smoke.sh emulator-5554 "$evidence/routines" routines; then
             routine_exit=0
           else
             routine_exit=$?

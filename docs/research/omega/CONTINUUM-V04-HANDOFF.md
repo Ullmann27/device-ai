@@ -33,7 +33,10 @@ It has the original package and certificate
 `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`.
 
 Parent `95dbfa85ec7174ef2668a74adf0a9e1dcd789c4d`, full run `43682795173`:
-unsigned build, Node/backend and renderer jobs passed. Context run `43682795141`
+unsigned build, Node/backend, renderer and full Android jobs passed. The downloaded
+Android artifact `14150777921` was verified by size, SHA-256 and ZIP CRC. Actual
+JUnit: 5,834 cases, 5,832 passed, two declared skips, no failures or errors.
+Lint has no errors and 292 warnings. Context run `43682795141`
 passed all 400 tests. Native artifact `14148798551` has a passing real application
 probe, including the repaired landscape composer, restart, offline flow and live
 hologram frames/resizes. Its routines probe **failed** before sending a command:
@@ -47,6 +50,19 @@ input delivery; the production routine, scheduler interval, constraints, clock,
 approval and text editor remain unchanged from the parent. The new exact source
 must complete its own native test before any signing.
 
+The preceding `37493320` artifact recorded an Android scheduler window with
+earliest execution about 15 minutes and latest about 30 minutes after the initial
+run; `TIMING_DELAY` was still unsatisfied when the old 17-minute observation
+expired. The probe now permits 32 minutes of observation, bounded by a 40-minute
+process budget with four minutes reserved for result verification and stopping.
+The 15-minute minimum, two distinct actual tool receipts, unchanged owner approval,
+real host/device clocks, unchanged chat and normal job removal remain mandatory.
+No clock, production interval or scheduler constraint is changed. A satisfied
+`run -s` test request remains explicitly distinguished from natural scheduling.
+This is a longer test observation, not a promise of exact device execution time.
+Primary reference, checked 2026-11-15:
+https://developer.android.com/reference/android/app/job/JobInfo.Builder#setPeriodic(long)
+
 Local verification: 20 new signing-evidence/preflight tests passed, including
 rejection of false approval, missing reviewer, foreign source, failed native job,
 stale/tampered archives and green metadata without real evidence. The 26 existing
@@ -55,12 +71,20 @@ The preserved validator's inherited gates passed. The new APK verifier separatel
 rechecked the actual parent APK and the actual context/renderer evidence. These
 checks do not constitute a green final Code59 release run or a physical device test.
 
+Additional local check on preparation commit
+`4d6059eeeffbcb764de5d92d803b9b9686d0d56b`: the complete Node suite passed 2,475
+cases with 37 declared skips, and critical checks passed 137 cases. Both actual
+reports were accepted by the corrected Node proof verifier after full source-file
+hash comparison. Six tests ensure that the report's explicit out-of-scope
+Gradle/APK/device declarations stay `NOT_RUN`, and cannot be invented as successes.
+The initial local full run failed because the sparse checkout omitted historical
+test fixtures; the complete checkout was restored before the passing repeat.
+
 Status: `PORTIERT` for signing preparation and routine test input; local tests
 `VERIFIZIERT`; complete exact-source CI pending; original signing and installation
 `NOT_RUN`; Fold7/smartphone/tablet `GERÄTEBESTÄTIGT = NO`.
 
-Next: finish the parent's remaining Android job without cancelling its evidence;
-publish this tested preparation on the common branch, inspect the new complete
+Next: publish this tested preparation on the common branch, inspect the new complete
 source-bound runs, then obtain the protected exact-SHA owner approval. Never label
 an unsigned artifact as the finished installation APK.
 
