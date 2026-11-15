@@ -767,11 +767,34 @@ jobs:
             --device pixel_7 --path "$ANDROID_AVD_HOME/continuum-native-pdf.avd"
           test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
           test "$("$CODE59_EMULATOR_BIN" -list-avds | tr -d '\r')" = continuum-native-pdf
+          python3 - "$ANDROID_AVD_HOME/continuum-native-pdf.avd/config.ini" "$emulator_evidence/display-profile.json" <<'PY'
+          import json, pathlib, sys
+          config = pathlib.Path(sys.argv[1])
+          lines = config.read_text().splitlines()
+          original = {'hw.lcd.width': 1080, 'hw.lcd.height': 2400, 'hw.lcd.density': 420}
+          selected = {'hw.lcd.width': 540, 'hw.lcd.height': 1200, 'hw.lcd.density': 210}
+          found = {}
+          for index, line in enumerate(lines):
+              key, separator, value = line.partition('=')
+              key = key.strip()
+              if separator and key in original:
+                  assert key not in found, ('Duplicate display property', key)
+                  found[key] = int(value.strip())
+                  lines[index] = key + ' = ' + str(selected[key])
+          assert found == original, ('Unexpected baseline display', found)
+          assert all(selected[key] * original['hw.lcd.density'] == original[key] * selected['hw.lcd.density']
+                     for key in ('hw.lcd.width', 'hw.lcd.height'))
+          config.write_text('\n'.join(lines) + '\n')
+          pathlib.Path(sys.argv[2]).write_text(json.dumps({'source_sha': __import__('os').environ['GITHUB_SHA'],
+              'scope': 'SOFTWARE_GPU_EMULATOR_ONLY', 'baseline': original, 'selected': selected,
+              'logical_layout_preserved': True, 'pixel_count_ratio': 0.25,
+              'reason': 'Reduce software rasterization load; retain frame, resize and runtime acceptance checks.'}, indent=2) + '\n')
+          PY
       - name: Verify surface evidence validator
         run: |
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_hologram_*.py' -v
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_routines*.py' -v
-          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_web_offline.py' -v
+          python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_web*.py' -v
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_xvfb.py' -v
           python3 -B -m unittest discover -s tools/code55-apk -p 'test_native_app_navigation.py' -v
       - name: Build disposable native test APKs
@@ -974,6 +997,14 @@ jobs:
             sleep 2
           done
           test "$ready" = true
+          "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 shell wm size > "$evidence/display-size.txt"
+          "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 shell wm density > "$evidence/display-density.txt"
+          python3 - "$evidence" <<'PY'
+          import pathlib, sys
+          directory = pathlib.Path(sys.argv[1])
+          assert (directory / 'display-size.txt').read_text().strip() == 'Physical size: 540x1200'
+          assert (directory / 'display-density.txt').read_text().strip() == 'Physical density: 210'
+          PY
           readlink "/proc/$emulator_pid/exe" > "$host_crash/emulator-executable.txt"
           cat "/proc/$emulator_pid/maps" > "$host_crash/emulator-maps.txt"
           export CODE59_HOST_IDENTITY="$evidence/host-live-identity.json"

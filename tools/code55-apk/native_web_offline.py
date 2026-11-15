@@ -132,6 +132,34 @@ def visible(node, size):
     return None
 
 
+def control_node(nodes, control, size):
+    parents = {child: parent for parent in nodes for child in parent}
+    candidates = []
+    for node in nodes:
+        bounds = visible(node, size)
+        if (not bounds or node.get('enabled') != 'true' or control.casefold() not in
+                (node.get('text', '').casefold(), node.get('content-desc', '').casefold())):
+            continue
+        if node.get('clickable') == 'true':
+            candidates.append(node)
+            continue
+        parent = parents.get(node)
+        if (parent is None or parent.get('class') != 'android.widget.ListView'
+                or parent.get('resource-id') != 'android:id/select_dialog_listview'
+                or parent.get('enabled') != 'true' or node.get('resource-id') != 'android:id/text1'):
+            continue
+        kind = node.get('class')
+        if not (kind == 'android.widget.TextView' or
+                (kind == 'android.widget.CheckedTextView' and node.get('checkable') == 'true')):
+            continue
+        area = visible(parent, size)
+        if (area and area[0] <= bounds[0] < bounds[2] <= area[2]
+                and area[1] <= bounds[1] < bounds[3] <= area[3]):
+            candidates.append(node)
+    assert len(candidates) == 1, 'Required visible web control missing or ambiguous: ' + control
+    return candidates[0]
+
+
 def center_scroll(nodes, size):
     candidates = [n for n in nodes if n.get('class') == 'android.widget.ScrollView'
                   and n.get('enabled') == 'true'
@@ -251,11 +279,8 @@ def verify(directory, report, source_sha, source_tree):
     for action in actions:
         window = windows[action['snapshot']]
         size = (int(window['screenshot_width']), int(window['screenshot_height']))
-        candidates = [n for n in nodes_by_label[action['snapshot']] if n.get('enabled') == 'true'
-                      and n.get('clickable') == 'true' and visible(n, size)
-                      and action['control'].casefold() in (n.get('text', '').casefold(), n.get('content-desc', '').casefold())]
-        assert len(candidates) == 1, 'Bound UI control missing or ambiguous'
-        x1, y1, x2, y2 = visible(candidates[0], size)
+        node = control_node(nodes_by_label[action['snapshot']], action['control'], size)
+        x1, y1, x2, y2 = visible(node, size)
         assert command_evidence(directory, action['name'], serial,
             ['shell', 'input', 'tap', str((x1 + x2) // 2), str((y1 + y2) // 2)]) == ''
     for label in ('web-before-network', 'web-after-network'):
@@ -334,11 +359,8 @@ class Probe:
         self.save()
 
     def press(self, name, control):
-        candidates = [n for n in self.nodes if n.get('enabled') == 'true' and n.get('clickable') == 'true'
-                      and visible(n, self.display) and control.casefold() in
-                      (n.get('text', '').casefold(), n.get('content-desc', '').casefold())]
-        assert len(candidates) == 1, 'Required visible web control missing: ' + control
-        x1, y1, x2, y2 = visible(candidates[0], self.display)
+        node = control_node(self.nodes, control, self.display)
+        x1, y1, x2, y2 = visible(node, self.display)
         result = self.api['captured_device'](name, 'shell', 'input', 'tap', str((x1+x2)//2), str((y1+y2)//2))
         assert result.returncode == 0 and not result.stdout and not result.stderr
         self.observation['actions'].append({'name': name, 'control': control, 'snapshot': self.label})

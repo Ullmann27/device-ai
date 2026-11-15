@@ -1,5 +1,51 @@
 # Device AI Continuum – Bunker V04
 
+## Native Nachprüfung des gebauten Code59, 15.11.2026
+
+PR #849 ist in `fix/code59-context-complete-20261114` integriert. Der gemeinsame
+Stand `b80ce6dad82608534434b5885195131b6f28f9f3` erzeugt lokal und in GitHub eine
+byteidentische ARM64-APK: 104.422.309 Bytes, SHA-256
+`96423410880694dd65d13251124737c2b056430887d74d85ae19b52cc2e0560a`.
+Die ausdrücklich unsignierte Datei wurde im beauftragten Drive-Ordner gespeichert
+und vollständig zurückgelesen; Größe und SHA-256 stimmen überein. Sie ist kein
+installierbares Besitzerupdate. Alle 47 eingebetteten Quelldateien, die fünf
+nativen Bibliotheken und die ursprünglichen Avatar-/Orb-/Material-Pins wurden
+geprüft. Renderer-Vorprüfung: 32 bestanden. Node-Vollprofil: 2.474 ausgeführt und
+bestanden, 37 deklarierte Auslassungen. Die vollständige Android-QA lief zum
+Zeitpunkt dieses Prüfpatches noch; kein Gesamterfolg wird behauptet.
+
+Die native QA von b80 meldet drei konkrete offene Ergebnisse: kein konsumierter
+erster Filament-Frame innerhalb des Beobachtungsfensters, ANR beim Schließen der
+Einrichtung vor Beginn der Routinenprüfung und ein falsch abgewiesener sichtbarer
+Android-Listeneintrag. Der Web-Probe erreicht inzwischen die Internetfreigabe.
+Die aufgezeichnete XML zeigt einen aktivierten `CheckedTextView` in
+`android:id/select_dialog_listview`; Android delegiert dessen Klick an die Liste.
+Der gemeinsame Resolver für Bedienung und Evidenzprüfung akzeptiert nun genau
+diesen sichtbaren, vollständig im aktivierten Dialogcontainer liegenden Eintrag.
+Ausgeschaltete, mehrdeutige, außerhalb liegende oder abgetrennte Einträge bleiben
+unzulässig. Die vorhandenen Zustimmungs-, Modus-, Quell- und Ergebnisprüfungen
+bleiben erhalten. 172 Host-Helferfälle bestehen, darunter 30 Webfälle. Die reale
+Dialog-XML ist als reproduzierbare Fixture enthalten. Der Workflow führt auch
+die bisher nur lokal ausgeführten Web-Navigationsfälle aus.
+
+Der einzige zusätzliche Emulatorversuch verwendet 540 × 1200 Pixel bei 210 dpi
+statt 1080 × 2400 bei 420 dpi. Die logische Fläche bleibt rechnerisch gleich;
+die Pixelzahl sinkt auf ein Viertel. Originalkonfiguration und tatsächliche
+Startauflösung werden geprüft und als Evidenz gespeichert. Anlass sind die
+beobachtete Software-GPU-Last und ein historischer erster Frame erst nach etwa
+86 Sekunden. Das ist eine begrenzte Infrastrukturdiagnose, keine bewiesene
+Ursachenbehebung und kein Fold7-Leistungsnachweis. Renderer, Avatar, Szene,
+90-Sekunden-Beobachtung, PixelCopy, konsumierte Zeitstempel, vier Größenwechsel,
+Routinenlauf und Web-Zustimmung bleiben unverändert. Erst der neue Lauf kann
+die Wirkung belegen; bis dahin bleibt native QA offen.
+
+Originalsignierung ist für Code59 noch nicht ausführbar: Der registrierte
+Signiervertrag unterstützt Code51/55 und verlangt exakte grüne Quell-QA,
+SHA-spezifische Besitzerfreigabe und den geschützten Besitzerreview. Es wurden
+keine Schlüssel gelesen, keine Signiergrenzen geändert und kein Release
+veröffentlicht. Einstiegspunkt bleibt dieser gemeinsame Branch; nächste
+Abnahme sind die unveränderten nativen Prüfungen des neuen Quellstands.
+
 ## Fortsetzung: gemeinsamer Code59-APK-Bau, 15.11.2026
 
 Integrationsziel bleibt `fix/code59-context-complete-20261114` über PR #849.
