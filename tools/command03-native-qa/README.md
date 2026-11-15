@@ -116,15 +116,32 @@ speech synchronization, or Fold7 behavior. The separate source lock verifies
 the original 35 asset bytes and the two-include Android entry point.
 
 The actual Android Activity/WebView routing checks are in
-`at.heinz.deviceai.ContinuumCommand03BridgeUiTest`. Run that physical test class
-with the existing harness on a clean, pinned source, for example:
+`at.heinz.deviceai.ContinuumCommand03BridgeUiTest` (ten cases) and
+`at.heinz.deviceai.ContinuumCommand03StageUiTest` (four cases). They cover
+request acknowledgements, pending bot lookup, existing controls during busy
+work, draft restoration and preservation of the same WebView across actual
+native root replacement. Run both physical test classes with the existing
+harness on a clean, pinned source, for example:
 
 ```sh
 python tools/command03-native-qa/run.py --config /absolute/path/native-qa-config.json \
   --mode ui-tests --test at.heinz.deviceai.ContinuumCommand03BridgeUiTest \
+  --test at.heinz.deviceai.ContinuumCommand03StageUiTest \
   --focus-test-sources --version-code 60 --label command03-html-ui-01 \
   --expected-sha "$CONTINUUM_SOURCE_SHA"
 ```
+
+The existing `command03-ui` selection tests the classic native return path.
+Its Activity fixtures explicitly choose that mode; the HTML bridge fixture
+explicitly chooses the original HTML main stage. Use the existing selection
+to include its two physical test helpers, rather than copying only its filters.
+
+Successful runs and the independently checked unsigned APK for source
+`f79d57546516b92788bd83c6039ce474955da8ea` are recorded in
+`docs/research/omega/COMMAND03-HTML-VALIDATION-HANDOFF.md` with twelve fresh
+JUnit XML files. The normal Gradle incremental history at the original source
+and build output paths was reused. Relocating copied caches triggered a full
+compile in this constrained workspace; those failed attempts are documented.
 
 ## Actual Activity captures
 
@@ -143,6 +160,8 @@ python tools/capture/capture_jarvis.py \
 These cases use actual `AgentActivity`, its real composer/work window, and
 Robolectric API28 native Canvas at 392×852dp or 904×768dp. The fixture explicitly
 selects the existing 2D head and disables animation for deterministic stills.
+These are historical native-view captures; they are not a visual comparison
+of the new original HTML surface, and no new capture result is claimed here.
 This does **not** verify Filament, the original 3D head on a GPU, foldable hardware,
 speech synchronization, installation, or physical-device performance. The outer
 CLI checks the source commit and per-frame PNG hashes and rejects missing frames.

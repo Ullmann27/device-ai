@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.JarvisReferenceHitTargetsUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-15T20:32:00" hostname="731a0110a54f" time="0.986">
+  <properties/>
+  <testcase name="movingOutsideOrCancellingTheGestureNeverNavigates" classname="at.heinz.deviceai.JarvisReferenceHitTargetsUiTest" time="0.092"/>
+  <testcase name="heightOnlyUpdateReservesTheExternalBottomBarExactlyOnce" classname="at.heinz.deviceai.JarvisReferenceHitTargetsUiTest" time="0.055"/>
+  <testcase name="inputActionsAndConversationRouteRealTouchesAcrossWindowReflow" classname="at.heinz.deviceai.JarvisReferenceHitTargetsUiTest" time="0.369"/>
+  <testcase name="unavailableSpecialActionsAreDisabledInsteadOfPretendingToStartCapture" classname="at.heinz.deviceai.JarvisReferenceHitTargetsUiTest" time="0.065"/>
+  <testcase name="wideCardsAndInputHeaderActionsHaveSeparateNativeControls" classname="at.heinz.deviceai.JarvisReferenceHitTargetsUiTest" time="0.119"/>
+  <testcase name="responsiveRemeasureKeepsOneNavigationSurfaceAndEveryRealRoute" classname="at.heinz.deviceai.JarvisReferenceHitTargetsUiTest" time="0.155"/>
+  <testcase name="heightOnlyViewportChangesPreserveChildrenAndAreIdempotent" classname="at.heinz.deviceai.JarvisReferenceHitTargetsUiTest" time="0.067"/>
+  <testcase name="compactCinemaDockRoutesAndExposesRealState" classname="at.heinz.deviceai.JarvisReferenceHitTargetsUiTest" time="0.061"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
