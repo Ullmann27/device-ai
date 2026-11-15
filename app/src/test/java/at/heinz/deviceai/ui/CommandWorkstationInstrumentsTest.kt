@@ -59,6 +59,20 @@ class CommandWorkstationInstrumentsTest {
         assertFalse(lines.any { it[4] == 1.1f })
     }
 
+    @Test fun enlargedTextHasItsOwnMeterSpaceWithoutCrossingContent() {
+        val box = JarvisShellLayout.Box(10f, 20f, 280f, 436f)
+        val meter = requireNotNull(CommandWorkstationInstruments.telemetryBox(box, 2f))
+        val content = CommandWorkstationInstruments.contentBox(box, 2f)
+        assertTrue(content.bottom < meter.top)
+        assertTrue(content.height >= 48f)
+        val lines = mutableListOf<List<Float>>()
+        val painter = JarvisTextScalePainter(recorder(lines)).apply { fontScale = 2f }
+        CommandWorkstationInstruments.drawCpu(painter, meter,
+            ContinuumDashboardState.SystemStatus(appCpuPercent = 30, activity = listOf(0f, 100f, 30f)))
+        assertTrue(lines.all { it[1] in meter.top..meter.bottom && it[3] in meter.top..meter.bottom })
+        assertTrue(lines.filter { it[4] == 1.1f }.all { it[1].isFinite() && it[3].isFinite() })
+    }
+
     private fun recorder(lines: MutableList<List<Float>>): ContinuumPainter =
         Proxy.newProxyInstance(ContinuumPainter::class.java.classLoader,
             arrayOf(ContinuumPainter::class.java)) { _, method, values ->

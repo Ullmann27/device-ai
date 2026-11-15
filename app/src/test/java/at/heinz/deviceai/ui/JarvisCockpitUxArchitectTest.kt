@@ -18,16 +18,17 @@ class JarvisCockpitUxArchitectTest {
     private val tablet = 1280f to 800f
     private val phone = 412f to 915f
 
-    @Test fun toolDockReplacesTheLeftRailAndKeepsEveryRailTarget() {
-        assertEquals(CockpitGlassButtons.buttons.map { it.target }, JarvisTiles.bottomNav.map { it.target })
-        assertEquals(listOf("home", "chat", "memory", "research", "tasks", "web",
-            "learning", "device"), JarvisTiles.bottomNav.map { it.target })
+    @Test fun sevenToolsAndMoreKeepEveryExistingDestination() {
+        assertEquals(listOf("chat", "files", "research", "agents", "memory", "device", "settings"),
+            JarvisTiles.bottomNav.map { it.target })
         assertEquals(listOf("logic", "agents", "system"), CockpitGlassButtons.secondaryTargets)
         assertTrue(at.heinz.deviceai.ContinuumWorkAreaNavigationSpec.moreEntries.map { it.target }
             .containsAll(CockpitGlassButtons.secondaryTargets))
-        for (item in JarvisTiles.bottomNav) assertTrue(item.target in JarvisShellContent.routes)
-        assertFalse("Dateien is not a real route", JarvisTiles.bottomNav.any { it.label == "Dateien" })
-        assertFalse("PDF is not a real route", JarvisTiles.bottomNav.any { it.label.equals("PDF", true) })
+        for (item in JarvisTiles.bottomNav) assertTrue(JarvisShellContent.hasNativeRoute(item.target))
+        assertTrue("Dateien opens the real Activity picker", "files" in JarvisShellContent.activityRoutes)
+        assertTrue((JarvisTiles.bottomNav.map { it.target } +
+            at.heinz.deviceai.ContinuumWorkAreaNavigationSpec.moreEntries.map { it.target })
+            .containsAll(JarvisTiles.railNav.map { it.target }))
     }
 
     @Test fun foldInnerAndTabletExposeTheDockWithoutARail() {

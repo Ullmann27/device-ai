@@ -32,7 +32,7 @@ class JarvisShellContentTest {
         assertEquals(na, tiles.first { it.target == "memory" }.displayText)
         val live = ContinuumDashboardState(system = ContinuumDashboardState.SystemStatus(batteryPercent = 64))
         assertEquals("Akku 64 %", JarvisShellContent.tileValue("device", live, 0L))
-        for (item in JarvisTiles.railNav + JarvisTiles.bottomNav) assertTrue(item.target in JarvisShellContent.routes)
+        for (item in JarvisTiles.railNav + JarvisTiles.bottomNav) assertTrue(JarvisShellContent.hasNativeRoute(item.target))
     }
 
     @Test fun hitTestRoutesAllFeatureCardsWithoutAFixedRailAcrossWindowSizes() {

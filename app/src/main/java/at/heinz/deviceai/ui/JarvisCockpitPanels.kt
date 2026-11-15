@@ -89,9 +89,10 @@ object JarvisCockpitPanels {
         return s.cockpit.steps.isEmpty() && s.cockpit.openWork.isEmpty()
     }
 
-    fun drawDocumentPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false) {
-        val telemetry = if (workstation) CommandWorkstationInstruments.telemetryBox(b) else null
-        drawDocumentContent(p, if (telemetry == null) b else CommandWorkstationInstruments.contentBox(b), s, workstation)
+    fun drawDocumentPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false,
+                            fontScale: Float = 1f) {
+        val telemetry = if (workstation) CommandWorkstationInstruments.telemetryBox(b, fontScale) else null
+        drawDocumentContent(p, if (telemetry == null) b else CommandWorkstationInstruments.contentBox(b, fontScale), s, workstation)
         if (telemetry != null) CommandWorkstationInstruments.drawCpu(p, telemetry, s.system)
     }
 
@@ -139,9 +140,10 @@ object JarvisCockpitPanels {
         }
     }
 
-    fun drawDraftPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false) {
-        val telemetry = if (workstation) CommandWorkstationInstruments.telemetryBox(b) else null
-        drawDraftContent(p, if (telemetry == null) b else CommandWorkstationInstruments.contentBox(b), s, workstation)
+    fun drawDraftPreview(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, workstation: Boolean = false,
+                         fontScale: Float = 1f) {
+        val telemetry = if (workstation) CommandWorkstationInstruments.telemetryBox(b, fontScale) else null
+        drawDraftContent(p, if (telemetry == null) b else CommandWorkstationInstruments.contentBox(b, fontScale), s, workstation)
         if (telemetry != null) CommandWorkstationInstruments.drawMemory(p, telemetry, s.system)
     }
 

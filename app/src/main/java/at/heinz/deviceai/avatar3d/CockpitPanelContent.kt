@@ -35,8 +35,8 @@ internal class CockpitPanelContent private constructor(
                 (computer.planningRows() + agents).toList(), computer.resultRows().toList(), density, font,
                 state.system.copy(activity = state.system.activity.takeLast(24).toList()))
             return CockpitPanelContent(key, computer.snapshot.observationRevision, { painter, box, result ->
-                val telemetry = at.heinz.deviceai.ui.CommandWorkstationInstruments.telemetryBox(box)
-                val content = at.heinz.deviceai.ui.CommandWorkstationInstruments.contentBox(box)
+                val telemetry = at.heinz.deviceai.ui.CommandWorkstationInstruments.telemetryBox(box, key.fontScale)
+                val content = at.heinz.deviceai.ui.CommandWorkstationInstruments.contentBox(box, key.fontScale)
                 JarvisCockpitPanels.drawComputerRows(painter, content, if (result) "Ergebnis" else "Auftrag",
                     Icon.DOCUMENT, if (result) key.results else key.planning, true)
                 if (telemetry != null) {

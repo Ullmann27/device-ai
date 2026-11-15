@@ -17,8 +17,8 @@ import android.os.Looper
 
 internal object JarvisHomeTestRoutes {
     val features = listOf("chat", "memory", "logic", "research", "agents", "tasks", "web", "learning", "device", "system")
-    val dockTargets = listOf("home", "chat", "memory", "research", "tasks", "web", "learning", "device")
-    val moreTargets = listOf("logic", "agents", "system")
+    val dockTargets = listOf("chat", "files", "research", "agents", "memory", "device", "settings")
+    val moreTargets = listOf("home", "logic", "tasks", "web", "learning", "system")
     private val rows = listOf("ROW_AGENTS", "ROW_TASKS", "ROW_MEMORY", "ROW_MODEL")
 
     private fun descendants(view: View): List<View> = listOf(view) + if (view is ViewGroup)
@@ -41,7 +41,7 @@ internal object JarvisHomeTestRoutes {
         val cards = all.filter { it.tag?.toString()?.startsWith("jarvis-tile:") == true }
         val dock = all.filter { it.tag?.toString()?.startsWith("jarvis-bottom:") == true }
         val rails = all.filter { it.tag?.toString()?.startsWith("jarvis-rail:") == true }
-        assertNull("Home has no fixed navigation rail", shell[JarvisShellLayout.Slot.NAV_RAIL])
+        if (!shell.workstation) assertNull("Legacy Home has no fixed navigation rail", shell[JarvisShellLayout.Slot.NAV_RAIL])
         assertTrue("Home removes native rail duplicates", rails.isEmpty())
         val nav = if (shell.hasFeatureTiles) {
             assertNotNull(shell[JarvisShellLayout.Slot.TILES])
@@ -51,10 +51,10 @@ internal object JarvisHomeTestRoutes {
             cards
         } else {
             assertNotNull(shell[JarvisShellLayout.Slot.BOTTOM_NAV])
-            assertEquals("Eight owner destinations retain their native dock order",
+            assertEquals("Seven native destinations retain their dock order",
                 dockTargets.map { "jarvis-bottom:$it" }, dock.map { it.tag })
-            assertEquals("More preserves former destinations", features.toSet(),
-                (dockTargets.filterNot { it == "home" } + moreTargets).toSet())
+            assertTrue("More preserves former destinations",
+                (dockTargets + moreTargets).toSet().containsAll(features))
             assertTrue(ContinuumWorkAreaNavigationSpec.moreEntries.map { it.target }.containsAll(moreTargets))
             val headerMore = all.singleOrNull { it.tag == "jarvis-header:more" }
             if (shell.workstation) assertNotNull("New cockpit exposes More in its header", headerMore)

@@ -213,19 +213,28 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     }
 
     private var nativePanelsVisible = false
+    private val usesCanvasWorkstationPanels: Boolean
+        get() = jarvisShellStage && jarvisShell.shell?.workstation == true
 
     private fun updateCockpitPanels() {
+        // The responsive workstation owns these instruments and their native hit boxes. The
+        // legacy Filament side panels have fixed world positions; retain only its central monitor.
+        if (usesCanvasWorkstationPanels) {
+            hologram.setCockpitPanels(null)
+            nativePanelsVisible = false
+            return
+        }
         hologram.setCockpitPanels(at.heinz.deviceai.avatar3d.CockpitPanelContent.from(
             state, density, resources.configuration.fontScale, hologram::postInvalidateOnAnimation))
         nativePanelsVisible = hologram.cockpitPanelsVisible
     }
 
     private fun contextualPanel(result: Boolean) = object : JarvisShellRenderer.SlotContent {
-        override val drawnInScene: Boolean get() = nativePanelsVisible
+        override val drawnInScene: Boolean get() = !usesCanvasWorkstationPanels && nativePanelsVisible
         override fun draw(p: ContinuumPainter, box: JarvisShellLayout.Box) {
             val workstation = jarvisShell.shell?.workstation == true
-            if (result) JarvisCockpitPanels.drawDraftPreview(p, box, state, workstation)
-            else JarvisCockpitPanels.drawDocumentPreview(p, box, state, workstation)
+            if (result) JarvisCockpitPanels.drawDraftPreview(p, box, state, workstation, resources.configuration.fontScale)
+            else JarvisCockpitPanels.drawDocumentPreview(p, box, state, workstation, resources.configuration.fontScale)
         }
     }
 
@@ -410,16 +419,26 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     /** Existing Activity navigator, including explicit microphone / camera / appearance actions. */
     var onNavigateTarget: ((String) -> Unit)? = null
         set(value) { field = value; refreshShellActionDescriptions() }
+    internal var onSelectConversation: ((String) -> Unit)? = null
+    internal var onNewConversation: (() -> Unit)? = null
+    internal fun setConversations(entries: List<ContinuumChatHistory.Entry>, active: String?,
+                                  enabled: Boolean = true, status: String? = null) {
+        conversationRail.update(entries, active, enabled, status)
+    }
     private var selectedJarvisTarget = "home"
     private var activatingShellAction: ShellActionView? = null
     private val shellActions = linkedMapOf<String, ShellActionView>()
     private var shellActionBounds: Map<String, JarvisShellLayout.Box> = emptyMap()
     private val shellRailList = ShellRailList(context)
+    private val conversationRail = ContinuumConversationRailView(context,
+        onNew = { onNewConversation?.invoke() },
+        onSelect = { onSelectConversation?.invoke(it) },
+        onNavigate = ::openJarvisTarget)
     private val shellRailScroll = android.widget.ScrollView(context).apply {
         isFillViewport = true
         isVerticalScrollBarEnabled = false
         clipToPadding = true
-        contentDescription = "Navigation"
+        contentDescription = "Gespeicherte Gespräche und Projekte"
         addView(shellRailList, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
     }
 
@@ -629,7 +648,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         addView(virtualMonitor)
         hologram.onCockpitStatus = { label, ready ->
             virtualMonitor.updateStatus(label, ready, hologram.cockpitAtRest)
-            val panels = ready && hologram.cockpitPanelsVisible
+            val panels = !usesCanvasWorkstationPanels && ready && hologram.cockpitPanelsVisible
             if (nativePanelsVisible != panels) {
                 nativePanelsVisible = panels
                 shellForeground.invalidate()
@@ -640,6 +659,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         addView(memoryFullStage)
         addView(shellForeground)
         addView(liveTabs)
+        addView(shellRailScroll)
         hologram.memorySceneHostReady = {
             jarvisShellStage && hologram.parent === this && isPresentationActive() &&
                 memoryFullStage.isShown && width > 0 && height > 0
@@ -912,9 +932,19 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
         if (shell.workstation && state.document == null && state.computer == null) {
             add("workspace:projects", "tasks", "Projekte und Aufgaben öffnen",
-                shell[JarvisShellLayout.Slot.WORK_DOCUMENT])
+                shell[JarvisShellLayout.Slot.WORK_DOCUMENT]?.let {
+                    CommandWorkstationInstruments.contentBox(it, resources.configuration.fontScale) })
             add("workspace:work", "tasks", "Offene Aufgaben öffnen",
-                shell[JarvisShellLayout.Slot.WORK_DRAFT])
+                shell[JarvisShellLayout.Slot.WORK_DRAFT]?.let {
+                    CommandWorkstationInstruments.contentBox(it, resources.configuration.fontScale) })
+        }
+        if (shell.workstation) {
+            add("instrument:cpu", "system", "App-CPU · Systemstatus öffnen",
+                shell[JarvisShellLayout.Slot.WORK_DOCUMENT]?.let {
+                    CommandWorkstationInstruments.telemetryBox(it, resources.configuration.fontScale) })
+            add("instrument:ram", "system", "Geräte-RAM · Systemstatus öffnen",
+                shell[JarvisShellLayout.Slot.WORK_DRAFT]?.let {
+                    CommandWorkstationInstruments.telemetryBox(it, resources.configuration.fontScale) })
         }
         shell.grid?.areas?.get(JarvisCockpitGrid.Area.BRAND)?.let { box ->
             val h = maxOf(48f, box.height)
@@ -927,7 +957,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             add("header:mode", "avatar-appearance", "JARVIS-Modus: Darstellung", box.copy(top = top, bottom = top + h))
         }
         shell.headerActionBoxes().forEach { (target, box) ->
-            val label = when (target) { "notifications" -> "Benachrichtigungen"; "settings" -> "Einstellungen"; else -> "Mehr" }
+            val label = when (target) { "chats" -> "Gespeicherte Gespräche öffnen"; "notifications" -> "Benachrichtigungen";
+                "settings" -> "Einstellungen"; else -> "Mehr" }
             add("header:$target", target, label, box)
         }
         shell[JarvisShellLayout.Slot.BOTTOM_NAV]?.let { b ->
@@ -955,6 +986,11 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
                 MeasureSpec.makeMeasureSpec(py.toInt().coerceAtLeast(1), MeasureSpec.EXACTLY))
         }
         shellRailBounds = shell[JarvisShellLayout.Slot.NAV_RAIL]
+        val railContent = if (shell.workstation) conversationRail else shellRailList
+        if (shellRailScroll.getChildAt(0) !== railContent) {
+            shellRailScroll.removeAllViews()
+            shellRailScroll.addView(railContent, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
+        }
         shellRailScroll.visibility = if (shellRailBounds != null) View.VISIBLE else View.GONE
         shellRailBounds?.let { box ->
             shellRailList.labelled = shell.rail != JarvisShellLayout.Rail.ICONS
@@ -1032,7 +1068,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
 
         fun refresh() {
-            val available = target in JarvisShellContent.routes || onNavigateTarget != null
+            val available = target in JarvisShellContent.routes ||
+                onNavigateTarget != null && JarvisShellContent.hasNativeRoute(target)
             isEnabled = available
             isSelected = target == selectedJarvisTarget
             val value = when {
@@ -1045,6 +1082,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
                 }
                 key == "panel:COCKPIT_SECONDARY" -> JarvisCockpitGridContent.modules(state)
                     .joinToString("; ") { "${it.label}: ${it.value}" }
+                key == "instrument:cpu" -> CommandWorkstationInstruments.cpu(state.system).value
+                key == "instrument:ram" -> CommandWorkstationInstruments.memory(state.system).value
                 else -> null
             }
             contentDescription = label + (value?.let { ": $it" } ?: "") + if (available) "" else ": nicht verfügbar"

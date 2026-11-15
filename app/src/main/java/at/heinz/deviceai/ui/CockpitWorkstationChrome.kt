@@ -65,10 +65,11 @@ object CockpitWorkstationChrome {
         JarvisReferenceHud.surface(p, b, 5f, Colors.cyan, Colors.cyanDeep)
         val x = b.left + 14f
         val end = actions.values.minOfOrNull { it.left } ?: (b.right - 12f)
-        val base = TextStyle(FontFamily.DISPLAY, 500, 22f * fontScale, 1.1f)
+        // JarvisTextScalePainter already applies the user's accessibility text scale.
+        val base = TextStyle(FontFamily.DISPLAY, 500, 22f, 1.1f)
         val style = JarvisShellRenderer.shrinkToFit(p, "DEVICE AI", base,
             (end - x - 8f).coerceAtLeast(1f), minScale = .55f)
-        val caption = TextStyle(FontFamily.DISPLAY, 400, 10f * fontScale, 1.8f)
+        val caption = TextStyle(FontFamily.DISPLAY, 400, 10f, 1.8f)
         val line = JarvisShellRenderer.shrinkToFit(p, "CONTINUUM", caption,
             (end - x - 8f).coerceAtLeast(1f), minScale = .7f)
         val titleCap = p.capHeight(style)

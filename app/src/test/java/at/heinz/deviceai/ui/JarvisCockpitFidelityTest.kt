@@ -94,7 +94,8 @@ class JarvisCockpitFidelityTest {
                 JarvisTiles.bottomNavItemBoxes(dock).map { box ->
                     JarvisShellContent.hitTarget(shell, JarvisTiles.reference, box.centerX, box.centerY)
                 })
-            assertFalse(JarvisTiles.bottomNav.any { it.label == "Dateien" })
+            assertTrue(JarvisTiles.bottomNav.any { it.label == "Dateien" && it.target == "files" })
+            assertTrue("The PDF picker is an explicit Activity adapter", "files" in JarvisShellContent.activityRoutes)
         }
     }
 

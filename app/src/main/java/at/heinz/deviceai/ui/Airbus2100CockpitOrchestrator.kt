@@ -174,6 +174,21 @@ class Airbus2100CockpitOrchestrator(
     internal fun phaseRankForTest(): Int = synchronized(this) { phase.rank }
     internal fun activeTurnForTest(): String? = synchronized(this) { activeTurnId }
 
+    /** UI conversation selection: discard the previous chat's presentation, never a tool or memory record. */
+    @Synchronized
+    fun clearConversationPresentation() {
+        if (closed) return
+        cancelTick()
+        activeTurnId?.let { sideQuestEngine.stopMissionCountdown(it, clockNanos()) }
+        activeTurnId = null
+        phase = Phase.IDLE
+        document.reset()
+        documentTurnId = null
+        swarmWorkers.clear()
+        onLiveData(null)
+        onTelemetry(null)
+    }
+
     @Synchronized
     override fun close() {
         if (closed) return

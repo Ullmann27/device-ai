@@ -82,6 +82,8 @@ object JarvisShellLayout {
 
         /** Shared drawing and touch bounds. */
         fun dialogControlBoxes(): List<Box> {
+            // The workstation uses AgentActivity's single pinned native composer.
+            if (workstation && boxes[Slot.INPUT] == null) return emptyList()
             boxes[Slot.INPUT]?.let { input ->
                 val y = input.centerY - 24f
                 return listOf(input.left + 4f, input.right - 52f)

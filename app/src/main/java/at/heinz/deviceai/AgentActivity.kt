@@ -516,6 +516,18 @@ class AgentActivity : Activity() {
     private val chatTranscripts by lazy {
         at.heinz.deviceai.cognitive.LocalChatTranscriptStore(java.io.File(filesDir.canonicalFile, "chat-history"))
     }
+    private val chatHistory by lazy { at.heinz.deviceai.ui.ContinuumChatHistory(chatTranscripts) }
+    private var conversationIndex = emptyList<at.heinz.deviceai.ui.ContinuumChatHistory.Entry>()
+    private var conversationIndexRevision = 0L
+    private var externalConversationRail: at.heinz.deviceai.ui.ContinuumConversationRailView? = null
+    private var conversationListDialog: AlertDialog? = null
+    private var conversationDialogRail: at.heinz.deviceai.ui.ContinuumConversationRailView? = null
+    private data class PendingConversationSelection(val source: String, val target: String, val revision: Long)
+    private var conversationSelectionRevision = 0L
+    private var pendingConversationSelection: PendingConversationSelection? = null
+    private var conversationSelectionLoading = false
+    private val refreshConversationIndexTask = Runnable { refreshConversationIndex() }
+    private val drainConversationSelectionTask = Runnable { drainConversationSelection() }
     private var routineRuntime: OwnerRoutineRuntime? = null
     private val routineDeliveryActive = java.util.concurrent.atomic.AtomicBoolean()
     private val routineDeliveryRequested = java.util.concurrent.atomic.AtomicBoolean()
@@ -790,6 +802,7 @@ class AgentActivity : Activity() {
         savedInstanceState?.getString("chief_bot_selection_v1")?.takeIf {
             Regex("[a-z][a-z0-9-]{2,63}").matches(it)
         }?.let { selectBot(it) }
+        refreshConversationIndex()
     }
 
     override fun onResume() {
@@ -851,6 +864,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        cancelPendingConversationSelection()
         routineRuntime?.detachChief(routineWake)
         if (!isInMultiWindowMode) computerViewVisible = false
         if (!isInMultiWindowMode && computerController?.awaitingConsent != true) computerController?.stopForVisibilityLoss()
@@ -948,6 +962,12 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        cancelPendingConversationSelection()
+        conversationIndexRevision++
+        mainHandler.removeCallbacks(refreshConversationIndexTask)
+        conversationListDialog?.dismiss()
+        conversationListDialog = null
+        conversationDialogRail = null
         routineRuntime?.detachChief(routineWake)
         pendingComputerLaunch = null
         computerController?.close()
@@ -1064,6 +1084,7 @@ class AgentActivity : Activity() {
         navigationView = null
         railView = null
         conversationRail = null
+        externalConversationRail = null
         // The start pane must occupy the screen independently of its contents.
         // A weighted vertical LinearLayout previously collapsed the phone pane
         // on the owner's real Fold screen, placing the navigation at the top.
@@ -1267,6 +1288,7 @@ class AgentActivity : Activity() {
             override fun onViewDetachedFromWindow(v: View) { stopReadinessCamera() }
         })
         syncPhoneNavigation?.invoke()
+        publishConversationNavigation()
         return root
     }
 
@@ -1298,6 +1320,9 @@ class AgentActivity : Activity() {
         home.configure(windowWidth, wide, railOffset = 0f, windowHeightDp = windowHeight,
             externalBottomBarHeightDp = 0f)
         home.onNavigateTarget = ::navigateDashboardTarget
+        home.onSelectConversation = ::selectStoredConversation
+        home.onNewConversation = ::newCentralConversation
+        home.setConversations(conversationIndex, sessionId)
         home.setJarvisShellStage(true)
         home.setForegroundActive(foregroundLearningActive || computerFeedbackActive())
         homeView = home
@@ -1416,7 +1441,7 @@ class AgentActivity : Activity() {
         conversationPadding = intArrayOf(column.paddingLeft, column.paddingTop, column.paddingRight, column.paddingBottom)
         keyboardTitle = textView("‹ START   ·   Continuum", 14f, CYAN, true).apply {
             visibility = View.GONE
-            minimumHeight = dp(44)
+            minimumHeight = dp(48)
             gravity = Gravity.CENTER_VERTICAL
             contentDescription = "Zur Startseite mit allen KI-Bereichen"
             isClickable = true
@@ -1424,7 +1449,18 @@ class AgentActivity : Activity() {
             setPadding(dp(4), dp(3), 0, dp(6))
             setOnClickListener { showHomeDashboard() }
         }
-        column.addView(keyboardTitle, matchWidth())
+        val conversationHeader = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            addView(keyboardTitle, LinearLayout.LayoutParams(0, -2, 1f))
+            addView(actionButton("Chats", compact = true).apply {
+                tag = "continuum-chat-list"
+                contentDescription = "Gespeicherte Gespräche öffnen"
+                minHeight = dp(48)
+                setOnClickListener { showStoredConversations() }
+            }, LinearLayout.LayoutParams(-2, dp(48)))
+        }
+        column.addView(conversationHeader, matchWidth())
         column.addView(buildModeRow().also { modeSection = it }, matchWidth(top = 4))
 
         neuralMonitor = textView("NEURON · Bereit · Training per Knopf starten", 11f, CYAN, true).apply {
@@ -1462,8 +1498,10 @@ class AgentActivity : Activity() {
         }
         chatScroll.addView(chatContainer, matchWidth())
         column.addView(chatScroll, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
-        column.addView(buildComposer(), matchWidth())
+        val composer = buildComposer()
         pane.addView(column, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+        // One existing editor for both presentations. It remains reachable while the tall phone scene scrolls.
+        pane.addView(composer, matchWidth())
         refreshConversationLayout()
         return pane
     }
@@ -1472,7 +1510,8 @@ class AgentActivity : Activity() {
     private fun railWidthPx(): Int {
         val widthDp = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
         val railWidthDp = if (widthDp >= at.heinz.deviceai.ui.JarvisWindowProfile.MEDIUM_MIN_DP)
-            at.heinz.deviceai.ui.ContinuumHomeLayout.railWidthDp(widthDp) else 0f
+            at.heinz.deviceai.ui.CinematicWorkstationLayout.chatRailWidth(widthDp,
+                resources.configuration.fontScale) else 0f
         return Math.round(railWidthDp * resources.displayMetrics.density)
     }
 
@@ -1489,61 +1528,19 @@ class AgentActivity : Activity() {
         return at.heinz.deviceai.ui.JarvisDeviceStatus(name, time, date)
     }
 
-    /** ref5 side rail (open Fold7, both orientations): the 11 ref5 entries, each through [menuNavigator]. */
+    /** The chat pane owns one native history rail; the home pane has the same list in its NAV_RAIL slot. */
     private fun buildRail(): View {
-        val element = at.heinz.deviceai.ui.JarvisMenuRailElement(
-            at.heinz.deviceai.ui.JarvisMenu.railIndex(menuNavigator.current).coerceAtLeast(0),
-            resources.configuration.fontScale.coerceIn(.85f, 1.3f), device = currentDeviceStatus())
-        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element, 1f) { _, _ -> }.apply {
-            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-            isClickable = false
-        }
-        // Clock/date of the rail header follow the real system time (one redraw per minute while attached).
-        val tick = object : Runnable {
-            override fun run() {
-                element.device = currentDeviceStatus(); drawn.invalidate()
-                drawn.postDelayed(this, 60_000L - System.currentTimeMillis() % 60_000L)
-            }
-        }
-        drawn.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-            override fun onViewAttachedToWindow(v: View) { v.post(tick) }
-            override fun onViewDetachedFromWindow(v: View) { v.removeCallbacks(tick) }
-        })
-        railView = drawn
-        val density = resources.displayMetrics.density
-        val entries = at.heinz.deviceai.ui.JarvisMenu.railEntries
-        val container = object : android.widget.FrameLayout(this) {
-            override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-                // Keep every rail destination at least 48dp tall when the IME reduces the window.
-                val minPx = dp(kotlin.math.ceil(at.heinz.deviceai.ui.JarvisMenuRail.minHeightDp(entries.size)).toInt())
-                super.onMeasure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(
-                    maxOf(View.MeasureSpec.getSize(heightMeasureSpec), minPx), View.MeasureSpec.EXACTLY))
-            }
-            override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-                super.onLayout(changed, l, t, r, b)
-                val rows = at.heinz.deviceai.ui.JarvisMenuRail.rows((b - t) / density, entries.size)
-                for (i in 1 until childCount) {
-                    val (top, bottom) = rows[i - 1]
-                    getChildAt(i).layout(0, (top * density).toInt(), r - l, (bottom * density).toInt())
-                }
-            }
-        }
-        container.addView(drawn, android.widget.FrameLayout.LayoutParams(
-            android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.MATCH_PARENT))
-        for (entry in entries) {
-            container.addView(View(this).apply {
-                contentDescription = entry.label
-                tag = entry.target
-                at.heinz.deviceai.ui.ContinuumControls.feedback(this, 12f)
-                isClickable = true
-                isFocusable = true
-                setOnClickListener { menuNavigator.navigate(entry.target) }
-            }, android.widget.FrameLayout.LayoutParams(1, 1))
+        val list = at.heinz.deviceai.ui.ContinuumConversationRailView(this,
+            onNew = ::newCentralConversation, onSelect = ::selectStoredConversation,
+            onNavigate = ::navigateDashboardTarget).also {
+            it.update(conversationIndex, sessionId)
+            externalConversationRail = it
         }
         return ScrollView(this).apply {
             isFillViewport = true
-            isVerticalScrollBarEnabled = false
-            addView(container, android.widget.FrameLayout.LayoutParams(
+            isVerticalScrollBarEnabled = true
+            contentDescription = "Gespeicherte Gespräche und Projekte"
+            addView(list, android.widget.FrameLayout.LayoutParams(
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
                 android.widget.FrameLayout.LayoutParams.WRAP_CONTENT))
         }
@@ -2078,9 +2075,11 @@ class AgentActivity : Activity() {
 
     /** All responsive presentations enter the existing owner-gated routes through this one adapter. */
     private fun navigateDashboardTarget(target: String) {
+        if (target != "chats") cancelPendingConversationSelection()
         if (target !in setOf("system", "device", "voice-input", "camera-settings")) workWindowHost.close(immediate = true)
         touchedCockpitTarget = target
         try { navigateDashboardTargetNow(target) } finally { touchedCockpitTarget = null }
+        if (at.heinz.deviceai.ui.JarvisTiles.bottomNav.any { it.target == target }) homeView?.selectJarvisTarget(target)
         if (target in setOf("avatar-appearance", "notifications", "settings", "more",
                 "model-management", "privacy", "brain")) avatarDirector.onWindowPresented()
     }
@@ -3051,6 +3050,13 @@ class AgentActivity : Activity() {
 
     private fun navigateDashboardTargetNow(target: String) {
         when (target) {
+            "chats" -> showStoredConversations()
+            "new-chat" -> newCentralConversation()
+            "files" -> {
+                if (busy) Toast.makeText(this, "Ein Auftrag läuft noch. Stoppe ihn oder öffne die Datei danach.", Toast.LENGTH_LONG).show()
+                else { showHomeDashboard(); openPdfDocumentPicker(wantsDraft = false, request = "PDF öffnen") }
+            }
+            "device" -> showComputerCenter()
             "voice-input" -> onChatMicrophoneTap()
             "camera-settings" -> toggleConversationCamera()
             "avatar-appearance" -> hologramView?.showAppearanceChooser()
@@ -4966,6 +4972,24 @@ class AgentActivity : Activity() {
             "Privater App-Speicher; nichts davon wird automatisch hochgeladen."
     }
 
+    /** The actual Android-computer entry. Opening it never opens/controls another app by itself. */
+    private fun showComputerCenter() = showCenter(
+        "Android-Computer",
+        "Beschreibe, welche App du öffnen oder bedienen möchtest. Die vorhandene App-Auswahl und " +
+            "Android-Bildschirmfreigabe bleiben erforderlich. Ein Live-Bild erscheint nur aus einer verbundenen Android-Ansicht.",
+        { done ->
+            val panel = homeView?.state?.computer
+            val rows = panel?.let { it.planningRows() + it.resultRows() }.orEmpty()
+            done(if (rows.isEmpty()) "Kein Computer-Auftrag verbunden."
+                else rows.joinToString("\n") { "${it.label}: ${it.value}" })
+        },
+        listOf(
+            CenterAction("COMPUTER-AUFTRAG SCHREIBEN", accent = true) { focusChatComposer() },
+            CenterAction("SYSTEMSTATUS UND FREIGABEN") { showSystemCenter() }
+        ) + if (computerController?.active == true)
+            listOf(CenterAction("COMPUTER-AUFTRAG STOPPEN") { cancelLocalRequest() }) else emptyList()
+    )
+
     private fun showSystemCenter() = showCenter(
         "Systemstatus",
         "Dienste, Hintergrundjobs und Freigaben. Internet und Cloud nur nach ausdrücklicher Freigabe.",
@@ -6783,6 +6807,7 @@ class AgentActivity : Activity() {
     }
 
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
+        if (pendingConversationSelection != null) return
         if (consumeOwnerWorkInterruption()) return
         if (computerController?.active == true && input.text.toString().trim().lowercase() in
             setOf("stopp", "stop", "computer stoppen", "live-bild stoppen")) {
@@ -12832,7 +12857,10 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun cancelLocalRequest() = cancelLocalRequest(preserveContinuousMode = false, announceDraftStop = true)
+    private fun cancelLocalRequest() {
+        cancelPendingConversationSelection()
+        cancelLocalRequest(preserveContinuousMode = false, announceDraftStop = true)
+    }
 
     private fun cancelLocalRequest(preserveContinuousMode: Boolean, announceDraftStop: Boolean) {
         cancelSpeechInputScope(preserveContinuousMode)
@@ -14098,7 +14126,222 @@ class AgentActivity : Activity() {
         }
     }
 
+    /** Refreshes only local metadata, on the same serial writer as transcript append/restore. */
+    private fun refreshConversationIndex() {
+        if (isFinishing || isDestroyed) return
+        val revision = ++conversationIndexRevision
+        chatTranscriptIo.execute {
+            val result = runCatching { chatHistory.index() }
+            runOnUiThread {
+                if (revision != conversationIndexRevision || isFinishing || isDestroyed) return@runOnUiThread
+                result.onSuccess { conversationIndex = it }
+                publishConversationNavigation(if (result.isFailure) "Gesprächsliste konnte nicht gelesen werden." else null)
+            }
+        }
+    }
+
+    private fun publishConversationNavigation(problem: String? = null) {
+        val status = problem ?: when {
+            conversationSelectionLoading -> "Gespräch wird gelesen …"
+            pendingConversationSelection != null -> "Chatwechsel wartet auf das Ende des Auftrags."
+            else -> null
+        }
+        val enabled = !conversationSelectionLoading
+        homeView?.setConversations(conversationIndex, sessionId, enabled, status)
+        externalConversationRail?.update(conversationIndex, sessionId, enabled, status)
+        conversationDialogRail?.update(conversationIndex, sessionId, enabled, status)
+        if (::input.isInitialized) input.isEnabled = pendingConversationSelection == null
+        refreshSendButtonPresentation()
+    }
+
+    private fun showStoredConversations() {
+        conversationListDialog?.dismiss()
+        val list = at.heinz.deviceai.ui.ContinuumConversationRailView(this,
+            onNew = { conversationListDialog?.dismiss(); newCentralConversation() },
+            onSelect = { id -> conversationListDialog?.dismiss(); selectStoredConversation(id) },
+            onNavigate = { target -> conversationListDialog?.dismiss(); navigateDashboardTarget(target) })
+        conversationDialogRail = list
+        list.update(conversationIndex, sessionId)
+        val scroll = ScrollView(this).apply {
+            isFillViewport = true
+            addView(list, android.widget.FrameLayout.LayoutParams(-1, -2))
+        }
+        val dialog = AlertDialog.Builder(this).setTitle("Gespeicherte Gespräche")
+            .setView(scroll).setNegativeButton("Schließen", null).create()
+        dialog.setOnDismissListener {
+            if (conversationListDialog === dialog) {
+                conversationListDialog = null
+                conversationDialogRail = null
+            }
+        }
+        conversationListDialog = dialog
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(BG))
+        dialog.window?.setLayout(minOf(dp(460), resources.displayMetrics.widthPixels),
+            (resources.displayMetrics.heightPixels * .78f).toInt())
+        refreshConversationIndex()
+    }
+
+    /** Central history controls never reset a selected helper bot's private conversation. */
+    private fun newCentralConversation() {
+        cancelPendingConversationSelection()
+        if (busy) {
+            Toast.makeText(this, "Ein Auftrag läuft noch. Stoppe ihn vor einem neuen Chat.", Toast.LENGTH_LONG).show()
+            return
+        }
+        if (selectedBot != null) returnToJarvis()
+        newSession()
+    }
+
+    private fun cancelPendingConversationSelection() {
+        if (pendingConversationSelection == null && !conversationSelectionLoading) return
+        conversationSelectionRevision++
+        pendingConversationSelection = null
+        conversationSelectionLoading = false
+        mainHandler.removeCallbacks(drainConversationSelectionTask)
+        publishConversationNavigation()
+    }
+
+    /** Selecting history is never a model/tool command. A running native lane must actually finish first. */
+    private fun selectStoredConversation(id: String) {
+        if (!at.heinz.deviceai.cognitive.LocalChatTranscriptStore.ID.matches(id) ||
+            isFinishing || isDestroyed || !foregroundLearningActive) return
+        if (id == sessionId && selectedBot == null) {
+            cancelPendingConversationSelection()
+            focusChatComposer()
+            return
+        }
+        cancelPendingConversationSelection()
+        val selection = PendingConversationSelection(sessionId, id, ++conversationSelectionRevision)
+        pendingConversationSelection = selection
+        cancelSpeechInputScope()
+        voiceEngine?.stop()
+        stopVoiceAnimation()
+        ownerReplyRevision++
+        researchApprovalPresentationRevision++
+        pendingResearchChatApproval?.invalidate?.invoke()
+        pendingResearchChatApproval = null
+        webToolGate.cancel()
+        approvedModelWebSession.getAndSet(null)?.cancel()
+        botRosterDialog?.discardTeamDraft()
+        botLookupRevision++
+        botLookupPending = false
+        pendingComputerLaunch = null
+        appNameClarification.clear()
+        computerClarification.clear()
+        supersedeDocumentRequest()
+        pendingDocumentSelection = null
+        pendingReturnedDocument = null
+        pendingDocumentFailure = null
+        pendingDocumentDraft = false
+        pendingDocumentRequest = ""
+        workPresentationGeneration++
+        workWindowHost.close(immediate = true)
+        // Cloud/non-cancellable work keeps its existing lane until its real completion callback.
+        // Local/model/computer work uses the one existing cancellation path and is still awaited.
+        if (activeLocalRequest || computerController?.active == true || activeBotId != null ||
+            activeChatCancellation != null || activeResearchCancellation != null || activeBotTask != null ||
+            botTeamOwnsLane) {
+            cancelLocalRequest(preserveContinuousMode = false, announceDraftStop = false)
+        }
+        publishConversationNavigation()
+        drainConversationSelection()
+    }
+
+    private fun conversationSelectionCurrent(selection: PendingConversationSelection): Boolean =
+        pendingConversationSelection === selection && selection.revision == conversationSelectionRevision &&
+            selection.source == sessionId && foregroundLearningActive && !isFinishing && !isDestroyed
+
+    private fun conversationLaneOccupied(): Boolean = busy || activeLocalRequest || botLookupPending ||
+        activeChatCancellation != null || activeResearchCancellation != null || activeOrchestrator != null ||
+        activeDevCoordinator != null || activeBotTask != null || botTeamOwnsLane ||
+        (::localRuntime.isInitialized && localRuntime.state == LocalModelState.GENERATING)
+
+    private fun drainConversationSelection() {
+        mainHandler.removeCallbacks(drainConversationSelectionTask)
+        val selection = pendingConversationSelection ?: return
+        if (!conversationSelectionCurrent(selection)) { cancelPendingConversationSelection(); return }
+        if (conversationLaneOccupied()) {
+            mainHandler.postDelayed(drainConversationSelectionTask, 100L)
+            return
+        }
+        if (conversationSelectionLoading) return
+        conversationSelectionLoading = true
+        publishConversationNavigation()
+        chatTranscriptIo.execute {
+            val result = runCatching { chatHistory.read(selection.target) }
+            runOnUiThread {
+                if (!conversationSelectionCurrent(selection)) return@runOnUiThread
+                conversationSelectionLoading = false
+                if (conversationLaneOccupied()) { drainConversationSelection(); return@runOnUiThread }
+                result.fold({ restored ->
+                    // Commit only the accepted selection. This small atomic ID write happens before replacing
+                    // any visible/context state; an obsolete asynchronous read can never change the pointer.
+                    val committed = runCatching {
+                        check(restored.id in chatTranscripts.conversations()) { "Gespräch nicht mehr vorhanden" }
+                        chatTranscripts.setActive(restored.id)
+                    }
+                    if (committed.isFailure) {
+                        cancelPendingConversationSelection()
+                        Toast.makeText(this, "Gespräch konnte nicht ausgewählt werden. Der bisherige Chat bleibt offen.",
+                            Toast.LENGTH_LONG).show()
+                        return@fold
+                    }
+                    pendingConversationSelection = null
+                    conversationSelectionRevision++
+                    botConversation.select(null)
+                    selectedBot = null
+                    sessionId = restored.id
+                    ownerReplyRevision++
+                    ownerReplyAllowsMaya = true
+                    scopedLocalPromptSession = null
+                    lastLocalReply = null
+                    at.heinz.deviceai.cognitive.LocalDialogueRetention.retainReply(null)
+                    // Unlike clear(), this does not persist a reset marker in the conversation being left.
+                    localConversationContext.forgetForExit()
+                    restored.context.forEach { localConversationContext.restore(restored.id, it) }
+                    clearConversationPresentation()
+                    restoredRoutineBoundary = restored.id to restored.endOffset
+                    chatContainer.removeAllViews()
+                    restored.entries.forEach { addBubble(it.text, it.user, persist = false) }
+                    restored.entries.takeLast(4).forEach { recordCockpitDialog(it.user, it.text) }
+                    input.text.clear()
+                    input.hint = "Was soll ich auf deinem Gerät tun?"
+                    publishConversationNavigation()
+                    focusChatComposer()
+                    renderRoutineMessages()
+                    deliverRoutineMessages()
+                    addToolActivity("Gespeichertes Gespräch geöffnet · kein Auftrag erneut ausgeführt")
+                }, {
+                    cancelPendingConversationSelection()
+                    Toast.makeText(this, "Der gespeicherte Chat ließ sich nicht vollständig lesen. Der bisherige Chat bleibt offen.",
+                        Toast.LENGTH_LONG).show()
+                    refreshConversationIndex()
+                })
+            }
+        }
+    }
+
+    private fun clearConversationPresentation() {
+        // A finished computer task can retain a review feed after its worker is gone. Close its
+        // existing capture/grant owner before showing another conversation's presentation.
+        computerController?.stop()
+        workWindowHost.close(immediate = true)
+        airbusCockpitOrchestrator?.clearConversationPresentation()
+        cockpitDialog.clear()
+        workEpisodeId = null
+        documentDraftStatus = null
+        documentDraftAction = null
+        decisionFocus = null
+        workOutcome = null; workTool = null; workToolCall = null
+        workStarted = null; workElapsed = 0L
+        homeView?.let { it.state = it.state.copy(document = null, computer = null) }
+        refreshWorkPresentation()
+        pushCockpitState()
+    }
+
     private fun newSession() {
+        cancelPendingConversationSelection()
         cancelSpeechInputScope()
         if (busy) {
             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
@@ -14148,13 +14391,17 @@ class AgentActivity : Activity() {
             refreshWorkPresentation()
             scopedLocalPromptSession=null
             lastLocalReply=null
-            localConversationContext.clear()
+            // A different chat clears RAM, not the saved context of the conversation the owner may reopen.
+            localConversationContext.forgetForExit()
+            at.heinz.deviceai.cognitive.LocalDialogueRetention.retainReply(null)
+            clearConversationPresentation()
             agentLoops = 0
             planCard.visibility = View.GONE
             chatContainer.removeAllViews()
             showHomeDashboard()
             addHomeGreeting("Neue Sitzung gestartet. Was soll ich tun?", persist = false)
             addToolActivity("Neue Sitzung")
+            refreshConversationIndex()
         }
     }
 
@@ -14325,6 +14572,8 @@ class AgentActivity : Activity() {
         if (persist && selectedBot == null) {
             val id = sessionId; val at = System.currentTimeMillis()
             chatTranscriptIo.execute { runCatching { chatTranscripts.append(id, user, value, at) } }
+            mainHandler.removeCallbacks(refreshConversationIndexTask)
+            mainHandler.postDelayed(refreshConversationIndexTask, 250L)
         }
         val row = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -14411,10 +14660,20 @@ class AgentActivity : Activity() {
         refreshHologramState()
         refreshSendButtonPresentation()
         if (::modelCatalog.isInitialized && ::localBadge.isInitialized) refreshLocalModelUi()
+        if (!value && pendingConversationSelection != null) {
+            mainHandler.removeCallbacks(drainConversationSelectionTask)
+            mainHandler.post(drainConversationSelectionTask)
+        }
     }
 
     private fun refreshSendButtonPresentation() {
         if (!::sendButton.isInitialized) return
+        if (pendingConversationSelection != null && !busy) {
+            sendButton.isEnabled = false
+            sendButton.contentDescription = "Gespeichertes Gespräch wird geöffnet"
+            sendButton.text = "…"
+            return
+        }
         sendButton.isEnabled = true
         val researchReply = pendingResearchChatApproval != null &&
             at.heinz.deviceai.cognitive.ResearchConsentReply.parse(input.text.toString()) != null
@@ -14561,6 +14820,7 @@ class AgentActivity : Activity() {
 
     /** Tap: start hands-free conversation, or speak now / resume while it is active. */
     private fun onChatMicrophoneTap() {
+        cancelPendingConversationSelection()
         // A resumed conversation can return from a text chat to the home stage.
         if (!conversationActive && activeWorkArea == ContinuumWorkArea.START)
             keepCockpitDuringHandsFree = true

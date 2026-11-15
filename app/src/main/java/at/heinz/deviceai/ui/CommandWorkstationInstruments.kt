@@ -21,10 +21,13 @@ object CommandWorkstationInstruments {
     }
 
     /** Shared with native hit targets. Short panels keep their complete original content. */
-    fun telemetryBox(box: Box): Box? = if (box.height >= 208f && box.width >= 96f)
-        Box(box.left, box.bottom - 116f, box.right, box.bottom) else null
+    fun telemetryBox(box: Box, fontScale: Float = 1f): Box? {
+        val font = if (fontScale.isFinite()) fontScale.coerceIn(1f, 2f) else 1f
+        return if (box.height >= 208f * font && box.width >= 96f)
+            Box(box.left, box.bottom - 116f * font, box.right, box.bottom) else null
+    }
 
-    fun contentBox(box: Box): Box = telemetryBox(box)?.let {
+    fun contentBox(box: Box, fontScale: Float = 1f): Box = telemetryBox(box, fontScale)?.let {
         Box(box.left, box.top, box.right, it.top - 8f)
     } ?: box
 
@@ -81,11 +84,15 @@ object CommandWorkstationInstruments {
         p.drawLine(b.left + 9f, b.top, b.right - 9f, b.top, .7f, Fill.Solid(Colors.rim), .75f)
         val label = TextStyle(FontFamily.TEXT, 600, 10.5f, .5f)
         val figure = TextStyle(FontFamily.DISPLAY, 500, 25f)
+        val note = TextStyle(FontFamily.TEXT, 400, 10.5f)
+        val labelY = b.top + 10f + p.capHeight(label)
+        val figureY = labelY + 9f + p.capHeight(figure)
+        val noteY = figureY + 6f + p.capHeight(note)
         p.drawText(JarvisShellRenderer.fit(p, reading.label, label, b.width - 20f),
-            b.left + 10f, b.top + 18f, label, Fill.Solid(Colors.textSecondary))
-        p.drawText(reading.value, b.left + 10f, b.top + 46f, figure, Fill.Solid(Colors.text))
-        caption(p, reading.note, b.left + 10f, b.top + 61f, b.width - 20f)
-        return Box(b.left + 10f, b.top + 69f, b.right - 10f, b.bottom - 23f)
+            b.left + 10f, labelY, label, Fill.Solid(Colors.textSecondary))
+        p.drawText(reading.value, b.left + 10f, figureY, figure, Fill.Solid(Colors.text))
+        caption(p, reading.note, b.left + 10f, noteY, b.width - 20f)
+        return Box(b.left + 10f, noteY + 8f, b.right - 10f, b.bottom - 15f - p.capHeight(note))
     }
 
     private fun drawGrid(p: ContinuumPainter, b: Box) {

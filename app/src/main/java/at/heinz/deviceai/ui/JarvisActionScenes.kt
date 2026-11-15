@@ -46,6 +46,7 @@ object JarvisActionScenes {
     private val centres = mapOf(
         "Systemstatus" to (Kind.STATUS to "system"),
         "Systemdiagnose" to (Kind.STATUS to "system"),
+        "Android-Computer" to (Kind.APP to "device"),
         "Gedächtniszentrum" to (Kind.MEMORY to "memory"),
         "Logik und Planung" to (Kind.PLANNING to "logic"),
         "Web und Quellen" to (Kind.WEB to "web"),
