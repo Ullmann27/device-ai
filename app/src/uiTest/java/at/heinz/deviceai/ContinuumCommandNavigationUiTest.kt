@@ -101,6 +101,16 @@ class ContinuumCommandNavigationUiTest {
         assertEquals(listOf("Gespräch", "Dateien", "Recherche", "Agenten", "Gedächtnis", "Computer", "Einstellungen"),
             JarvisTiles.bottomNav.map { it.label })
         val home = field(a, "homeView") as ContinuumHomeView
+        call(a, "showHomeDashboard")
+        // Foreground lifecycle precedes the measure pass that creates the native dock buttons.
+        await("All seven real tools are visible and measured on START") {
+            field(a, "activeWorkArea") == ContinuumWorkArea.START && !home.isConversationPresence &&
+                JarvisTiles.bottomNav.all { item ->
+                    home.findViewWithTag<View>("jarvis-bottom:${item.target}")?.let {
+                        it.isShown && it.width > 0 && it.height > 0
+                    } == true
+                }
+        }
         val files = requireNotNull(home.findViewWithTag<View>("jarvis-bottom:files"))
         assertTrue(files.isEnabled && files.isClickable && files.isFocusable)
         assertTrue(files.performClick())
