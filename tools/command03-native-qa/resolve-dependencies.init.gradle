@@ -1,3 +1,5 @@
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+
 // Only used by an explicitly authorized online compile. These are the app's
 // existing dependency configurations, not substitute SDKs, repositories or stubs.
 // The requested task remains compileDebugKotlin, preserving the repository gate.
@@ -17,7 +19,12 @@ gradle.projectsEvaluated {
                 if (configuration == null || !configuration.canBeResolved) {
                     throw new GradleException('Required dependency configuration is unavailable: ' + name)
                 }
-                def count = configuration.files.size()
+                // Unit classpaths also refer back to :app. Its many Android
+                // artifacts must be selected by the normal Android tasks,
+                // not by this external-module download preparation.
+                def count = configuration.incoming.artifactView {
+                    componentFilter { id -> id instanceof ModuleComponentIdentifier }
+                }.files.size()
                 println('PROJECT_DEPENDENCIES_RESOLVED configuration=' + name + ' files=' + count)
             }
         }

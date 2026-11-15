@@ -25,6 +25,13 @@
         "physical_files": 2,
         "source_paths_resolved": true
       }
+    },
+    "dependency_prefetch_correction": {
+      "status": "API_PRESENT_IN_ACTUAL_GRADLE_8_11_1",
+      "method": "ArtifactView.ViewConfiguration.componentFilter(Spec<ComponentIdentifier>)",
+      "filter_type": "ModuleComponentIdentifier",
+      "scope": "Prefetch external modules only; Android project artifacts and assertions unchanged",
+      "runtime_verification": "NOT_YET_RUN_AFTER_CORRECTION"
     }
   },
   "files": [
@@ -60,8 +67,8 @@
     },
     {
       "path": "resolve-dependencies.init.gradle",
-      "bytes": 1403,
-      "sha256": "3849a5feeca5c2894bbd3b7aa6ec93bcaff70af6ae14c634bb251ed7e67720ae"
+      "bytes": 1821,
+      "sha256": "1b82d75d0a06f8513d01c2758bae00facd4a29d385194b3ed05ec916fdb4086a"
     },
     {
       "path": "run.py",
