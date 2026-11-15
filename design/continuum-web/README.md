@@ -1,33 +1,53 @@
-# Continuum · räumliche Webgestaltung
+# Device AI Continuum – bewegter Arbeitsraum mit den vorhandenen Originalen
 
-Arbeitsstand: 15. November 2026. Verantwortlich für diesen abgegrenzten Gestaltungsschritt: ChatGPT / Astra.
+Diese isolierte Gestaltungsfassung setzt das gewünschte Raster um: Chats und Projekte links, Werkzeuge oben, Avatar und Linkleiste in der Mitte, Diagramme und Quellen rechts. Sie verbindet den vorhandenen Kopf und Kugelrenderer mit kontinuierlicher Atmosphäre, räumlichen Arbeitsflächen und einer bedienbaren Argon4-Demonstration.
 
-## Auftrag und Grundlage
+## Öffnen
 
-Die vorhandene Continuum-Identität bleibt erhalten: Originalkopf und Originalkugel aus dem bestehenden Repository. Das neue Raster umfasst Chats links, Werkzeuge oben, Avatar und Arbeitsfläche in der Mitte, Diagramme und Quellen rechts sowie eine erreichbare Eingabe.
+- Private Webvorschau und Projektdateien: https://device-ai-continuum-heinz.electemu.chatgpt.site
+- Zugehöriger Draft-PR: https://github.com/Ullmann27/device-ai/pull/850
+- Figma, früherer nativer Designstand: https://www.figma.com/design/rN6yiKiRwzeOPxnqEuaN7O
 
-Ausgangsbranch: `claude/code55-cinematic-evolution-20261112`.
-Quell-Pin: `1b90611388cc2b1978ddfe32064a25dd3a08cee1`.
-Ziel dieser Übernahme: `design/continuum-fui-web-20261115`, als überprüfbarer Vorschlag gegen den Code55-Gestaltungsstand.
+Der bestätigte Bereitstellungsstatus steht in der Auslieferungsnachricht. Für den direkten lokalen Betrieb aus diesem Repository:
 
-## Bewahrte Originale
+```sh
+cd design/continuum-web/continuum-preview
+npm start
+```
 
-- `app/src/main/assets/avatar3d/continuum-avatar.glb`: 12.038.416 Byte; SHA-256 `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`. Bestehende Geometrie, Materialien, Rig und Morph-Ziele werden nicht ersetzt.
-- `ContinuumHologramRenderer.kt`, `ContinuumOrbitalRing.kt`, `ContinuumHologramPlexus.kt`: vorhandene Kugel mit fünf äußeren Ringen, Kernringen, Netz, Partikeln und Unendlichkeitszeichen.
-- Bestehende Android-Aufrufwege `AvatarDirector`, `AvatarMorphMapper`, `FilamentAvatarRenderer` und `HollywoodFui*` bleiben Bezugspunkte der Gestaltung.
+Node.js 20 oder neuer genügt für den lokalen Server; für den Betrieb werden keine Pakete installiert. Das vollständige Originalmodell und die Schriften sind enthalten. Die Entwicklungswerkzeuge unter `interop` haben einen separat dokumentierten Node-Versionsbereich.
 
-## Aktueller Integrationsstatus
+## Herkunft und Erhaltung
 
-Dieser erste Checkpoint sichert Auftrag und Herkunft. Die Webdateien und Portierungen folgen in derselben Linie. Der vollständige neue Kopf- und Kugelverbund ist hier noch **WIP / UNVERIFIED**.
+Ausgangsbasis ist `claude/code55-cinematic-evolution-20261112`, Commit `1b90611388cc2b1978ddfe32064a25dd3a08cee1`.
 
-Die bereits lokal ausführbare Oberfläche hat 21 DOM-Integrationsprüfungen bestanden: Navigation, isolierte Chatverläufe, Phasen-/Quellenverbindung, Unterbrechung, Negation und Einstellungen. Das belegt die geprüfte Weblogik; Browserlayout, WebGL und Fold7 sind dadurch nicht freigegeben.
+- `continuum-preview/assets/continuum-avatar.glb` ist **byteidentisch** zum vorhandenen Android-Asset: 12.038.416 Bytes, SHA-256 `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`. Geometrie, Gesicht, vorhandenes Rig, 21 Morph-Ziele und Materialbestand wurden nicht ersetzt.
+- `interop/orb-original-source.js` überträgt den tatsächlichen `ContinuumHologramRenderer.kt` und seinen `ContinuumPainter`-Vertrag. Acht Originalquellen und ihre Hashes liegen bei. Die alte Ersatzkugel ist abgeschaltet.
+- Blender verändert am Originalkopf nur die Szenenbeleuchtung und Kamera. Der neue Displaykörper ist ein separates Exportasset. Seine `.blend` und `.glb` liegen im vollständigen Downloadpaket; Builder und Prüfdaten liegen hier.
 
-## Abnahme und Anschluss
+## Was die Fassung enthält
 
-- PORTIERT: erst nach tatsächlich abgelegtem Original-Renderer-Port und angebundenem GLB.
-- VERIFIZIERT: getrennte Belege für DOM, Originaldatei-Hashes, Canvas-Render, Blender-Rig-Erhaltung und Paketintegrität.
-- GERÄTEBESTÄTIGT: offen, bis der konkrete Fold7-Lauf beobachtet wurde.
-- Backendaktionen bleiben in der Gestaltungsfassung als Demonstration beschriftet. Keine erfundenen Downloads, echten Agentenaufträge oder KI-Antworten.
-- Keine Änderung an Android-Paketidentität, Signierung, Modellgewichten, ToolGate oder produktiven Nutzerdaten. Kein Main-Merge und keine APK-Veröffentlichung.
+Sieben Szenen und sieben Bereiche; getrennte lokale Chatverläufe; Seitenleisten als Schubladen auf schmalen Displays; rechts gekoppelte Phasen, Erklärungen und Quellen; abbrechbaren 950-ms-Aufbau; Materialstärke und Rückkehr der Arbeitsfläche; unregelmäßige Blick-, Blink- und Haltungsanimation; unabhängige Kugel-, Partikel- und Lichtbewegung.
 
-Der aktuelle Nutzerauftrag betrifft die tatsächlich bedienbare visuelle Ausarbeitung und den Austausch zwischen geeigneten Designwerkzeugen. Es wird kein Fortschritt bei EXP-00 bis EXP-16 behauptet; bestehende Auftrags-, Speicher- und Modellverträge bleiben kompatibel und unangetastet.
+Die Lippenanimation nimmt echte Viseme-Ereignisse entgegen. Der Sprechzustand allein erfindet keine Mundformen. Ohne WebGL zeigt die Fassung ein Blender-Bild desselben Originalkopfs; die Kugel und Atmosphäre bleiben separat bewegt.
+
+## Nachweise und Grenzen
+
+**VERIFIZIERT:** 21 gezielte DOM-Prüfungen ohne Fehler, Original-GLB mit tatsächlichem GLTFLoader geparst, Morph-/Blick-/Sprechvertrag geprüft, Original-Kugel in sechs Zuständen und 18 Rasterbildern geprüft, Blender-Front- und Rückansicht des separaten Displays tatsächlich gerendert. Die Einzeldatei enthält alle notwendigen Laufzeitassets und bewahrt die Modellprüfsumme.
+
+**PORTIERT:** visuelle Webfassung und Darstellungsadapter. Kein Android-Backend, kein Mikrofon und keine TTS-Verbindung; Argon4 ist eine gekennzeichnete Demonstration. Der separate Display-GLB wird im Web noch durch einen bedienbaren CSS-Displaykörper dargestellt.
+
+**GERÄTEBESTÄTIGT:** nicht behauptet. Kein Fold7-GPU-, thermischer, Laufzeit- oder hörbarer Lippensynchronitätstest. Kein APK gebaut oder installiert, keine Signaturänderung, keine Änderung an den bestehenden Android-Renderern oder Experimentstatus.
+
+Die native Figma-Datei zeigt den früheren Entwurf. Ihr späterer Codeupload wurde mit HTTP 400 abgewiesen und hat keinen Code-Layer erzeugt. Aktuelles Grid und Originale liegen in dieser Webfassung.
+
+## Weiterarbeiten
+
+- `Continuum_Designuebergabe.md`: Gestaltung, Licht- und Bewegungsentscheidungen.
+- `Continuum_Toolkette_und_Uebergabe.md`: kostenlose Werkzeuge, Importwege und fertige Arbeitsanweisungen.
+- `interop/README.md`: reproduzierbare Builds und Prüfungen.
+- `handoff-3d/`: Blender-Builder, Herkunft, Displaystruktur und Importanweisungen.
+- `tools/build-standalone.py`: eigenständige HTML-Datei erstellen.
+- `tools/package-continuum.py`: vollständige Projekt- und Webexportarchive erstellen; dafür werden die gerenderten 3D-Dateien und die Raumstudie aus dem Downloadpaket oder den dokumentierten Buildern benötigt.
+
+Die Änderungen bleiben auf einem eigenen Designbranch; dieser PR ist ein Entwurf für Prüfung und spätere Integration.

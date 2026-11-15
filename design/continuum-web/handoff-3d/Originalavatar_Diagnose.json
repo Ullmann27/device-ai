@@ -1,0 +1,870 @@
+{
+  "source_repository": "https://github.com/Ullmann27/device-ai",
+  "source_commit": "1b90611388cc2b1978ddfe32064a25dd3a08cee1",
+  "source_path": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+  "source_bytes": 12038416,
+  "source_sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "source_git_blob_sha1": "3498c003a8bf186a8abb47048e2d36be4810b88c",
+  "coordinate_system": "glTF source: Y up, metre-scale. Blender import: Z up; front camera looks along Blender +Y.",
+  "gltf_nodes": [
+    {
+      "index": 0,
+      "name": "AvatarRoot",
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "index": 1,
+      "name": "Neck",
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "index": 2,
+      "name": "Head",
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "index": 3,
+      "name": "EyeLeft",
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "index": 4,
+      "name": "EyeRight",
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "index": 5,
+      "name": "Jaw",
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "index": 6,
+      "name": "EyeballLeft",
+      "mesh": 0,
+      "skin": null
+    },
+    {
+      "index": 7,
+      "name": "EyeballRight",
+      "mesh": 1,
+      "skin": null
+    },
+    {
+      "index": 8,
+      "name": "Face",
+      "mesh": 2,
+      "skin": 0
+    },
+    {
+      "index": 9,
+      "name": "IrisLeft",
+      "mesh": 3,
+      "skin": null
+    },
+    {
+      "index": 10,
+      "name": "IrisRight",
+      "mesh": 4,
+      "skin": null
+    },
+    {
+      "index": 11,
+      "name": "MouthInterior",
+      "mesh": 5,
+      "skin": null
+    },
+    {
+      "index": 12,
+      "name": "NeuralThreads",
+      "mesh": 6,
+      "skin": 0
+    },
+    {
+      "index": 13,
+      "name": "PupilLeft",
+      "mesh": 7,
+      "skin": null
+    },
+    {
+      "index": 14,
+      "name": "PupilRight",
+      "mesh": 8,
+      "skin": null
+    },
+    {
+      "index": 15,
+      "name": "ToothLower0",
+      "mesh": 9,
+      "skin": null
+    },
+    {
+      "index": 16,
+      "name": "ToothLower1",
+      "mesh": 10,
+      "skin": null
+    },
+    {
+      "index": 17,
+      "name": "ToothLower2",
+      "mesh": 11,
+      "skin": null
+    },
+    {
+      "index": 18,
+      "name": "ToothLower3",
+      "mesh": 12,
+      "skin": null
+    },
+    {
+      "index": 19,
+      "name": "ToothLower4",
+      "mesh": 13,
+      "skin": null
+    },
+    {
+      "index": 20,
+      "name": "ToothLower5",
+      "mesh": 14,
+      "skin": null
+    },
+    {
+      "index": 21,
+      "name": "ToothLower6",
+      "mesh": 15,
+      "skin": null
+    },
+    {
+      "index": 22,
+      "name": "ToothLower7",
+      "mesh": 16,
+      "skin": null
+    },
+    {
+      "index": 23,
+      "name": "ToothUpper0",
+      "mesh": 17,
+      "skin": null
+    },
+    {
+      "index": 24,
+      "name": "ToothUpper1",
+      "mesh": 18,
+      "skin": null
+    },
+    {
+      "index": 25,
+      "name": "ToothUpper2",
+      "mesh": 19,
+      "skin": null
+    },
+    {
+      "index": 26,
+      "name": "ToothUpper3",
+      "mesh": 20,
+      "skin": null
+    },
+    {
+      "index": 27,
+      "name": "ToothUpper4",
+      "mesh": 21,
+      "skin": null
+    },
+    {
+      "index": 28,
+      "name": "ToothUpper5",
+      "mesh": 22,
+      "skin": null
+    },
+    {
+      "index": 29,
+      "name": "ToothUpper6",
+      "mesh": 23,
+      "skin": null
+    },
+    {
+      "index": 30,
+      "name": "ToothUpper7",
+      "mesh": 24,
+      "skin": null
+    }
+  ],
+  "gltf_skins": [
+    {
+      "name": "BustSkin",
+      "joint_names": [
+        "AvatarRoot",
+        "Neck",
+        "Head"
+      ]
+    }
+  ],
+  "gltf_meshes": [
+    {
+      "name": "EyeballLeftMesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "EyeballRightMesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "FaceMesh",
+      "primitives": 1,
+      "targets": [
+        "SIL",
+        "PP",
+        "FF",
+        "TH",
+        "DD",
+        "KK",
+        "CH",
+        "SS",
+        "NN",
+        "RR",
+        "AA",
+        "E",
+        "I",
+        "O",
+        "U",
+        "BlinkLeft",
+        "BlinkRight",
+        "BrowUp",
+        "BrowDown",
+        "Smile",
+        "JawOpen"
+      ]
+    },
+    {
+      "name": "IrisLeftMesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "IrisRightMesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "MouthInteriorMesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "NeuralThreadsMesh",
+      "primitives": 2,
+      "targets": [
+        "SIL",
+        "PP",
+        "FF",
+        "TH",
+        "DD",
+        "KK",
+        "CH",
+        "SS",
+        "NN",
+        "RR",
+        "AA",
+        "E",
+        "I",
+        "O",
+        "U",
+        "BlinkLeft",
+        "BlinkRight",
+        "BrowUp",
+        "BrowDown",
+        "Smile",
+        "JawOpen"
+      ]
+    },
+    {
+      "name": "PupilLeftMesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "PupilRightMesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothLower0Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothLower1Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothLower2Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothLower3Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothLower4Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothLower5Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothLower6Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothLower7Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothUpper0Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothUpper1Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothUpper2Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothUpper3Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothUpper4Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothUpper5Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothUpper6Mesh",
+      "primitives": 1,
+      "targets": []
+    },
+    {
+      "name": "ToothUpper7Mesh",
+      "primitives": 1,
+      "targets": []
+    }
+  ],
+  "gltf_materials": [
+    {
+      "name": "NaturalSclera",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.006,
+          0.022,
+          0.055,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.18
+      },
+      "doubleSided": true,
+      "emissiveFactor": [
+        0.0015,
+        0.005,
+        0.015
+      ]
+    },
+    {
+      "name": "DeepIndigoSkin",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.16,
+          0.16,
+          0.16,
+          1
+        ],
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.08,
+        "roughnessFactor": 0.52
+      },
+      "doubleSided": true,
+      "alphaMode": "OPAQUE",
+      "emissiveFactor": [
+        1,
+        1,
+        1
+      ],
+      "emissiveTexture": {
+        "index": 0
+      },
+      "extensions": {
+        "KHR_materials_emissive_strength": {
+          "emissiveStrength": 1.35
+        }
+      }
+    },
+    {
+      "name": "CyanIris",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.16,
+          0.16,
+          0.16,
+          1
+        ],
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.08,
+        "roughnessFactor": 0.52
+      },
+      "doubleSided": true,
+      "emissiveFactor": [
+        1,
+        1,
+        1
+      ],
+      "emissiveTexture": {
+        "index": 0
+      },
+      "extensions": {
+        "KHR_materials_emissive_strength": {
+          "emissiveStrength": 1.35
+        }
+      },
+      "alphaMode": "OPAQUE"
+    },
+    {
+      "name": "MouthInterior",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.013000000268220901,
+          0.004999999888241291,
+          0.014999999664723873,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.8999999761581421
+      },
+      "doubleSided": true
+    },
+    {
+      "name": "VioletThreads",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "metallicFactor": 0.05,
+        "roughnessFactor": 0.48
+      },
+      "doubleSided": true,
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "alphaMode": "MASK",
+      "alphaCutoff": 0.5
+    },
+    {
+      "name": "CyanThreads",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "metallicFactor": 0.05,
+        "roughnessFactor": 0.48
+      },
+      "doubleSided": true,
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "alphaMode": "MASK",
+      "alphaCutoff": 0.5
+    },
+    {
+      "name": "Pupil",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.0010000000474974513,
+          0.003000000026077032,
+          0.007000000216066837,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.25
+      },
+      "doubleSided": true
+    },
+    {
+      "name": "NaturalTeeth",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.41999998688697815,
+          0.4000000059604645,
+          0.3400000035762787,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.4300000071525574
+      },
+      "doubleSided": true
+    }
+  ],
+  "gltf_animations": [],
+  "gltf_embedded_images": 1,
+  "notes": [
+    "The source GLB is byte-identical to the inspected Code55 GitHub asset.",
+    "No new face, geometry, rig, morph target, material, texture or GLB export is produced.",
+    "Lighting and camera are separate Blender scene objects.",
+    "The source atlas already contains portrait lighting and emissive color; this study preserves both.",
+    "This is an offline Blender rendering study, not a native Android/Filament or Fold7 performance test."
+  ],
+  "blender_version": "4.3.2",
+  "blender_import": {
+    "objects": 30,
+    "meshes": [
+      {
+        "name": "EyeballLeft",
+        "vertices": 266,
+        "polygons": 528,
+        "shape_keys": [],
+        "materials": [
+          "NaturalSclera"
+        ]
+      },
+      {
+        "name": "IrisLeft",
+        "vertices": 394,
+        "polygons": 528,
+        "shape_keys": [],
+        "materials": [
+          "CyanIris"
+        ]
+      },
+      {
+        "name": "PupilLeft",
+        "vertices": 266,
+        "polygons": 528,
+        "shape_keys": [],
+        "materials": [
+          "Pupil"
+        ]
+      },
+      {
+        "name": "EyeballRight",
+        "vertices": 266,
+        "polygons": 528,
+        "shape_keys": [],
+        "materials": [
+          "NaturalSclera"
+        ]
+      },
+      {
+        "name": "IrisRight",
+        "vertices": 394,
+        "polygons": 528,
+        "shape_keys": [],
+        "materials": [
+          "CyanIris"
+        ]
+      },
+      {
+        "name": "PupilRight",
+        "vertices": 266,
+        "polygons": 528,
+        "shape_keys": [],
+        "materials": [
+          "Pupil"
+        ]
+      },
+      {
+        "name": "MouthInterior",
+        "vertices": 266,
+        "polygons": 528,
+        "shape_keys": [],
+        "materials": [
+          "MouthInterior"
+        ]
+      },
+      {
+        "name": "ToothLower0",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothLower1",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothLower2",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothLower3",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothLower4",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothLower5",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothLower6",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothLower7",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothUpper0",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothUpper1",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothUpper2",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothUpper3",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothUpper4",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothUpper5",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothUpper6",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "ToothUpper7",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": [
+          "NaturalTeeth"
+        ]
+      },
+      {
+        "name": "Face",
+        "vertices": 16650,
+        "polygons": 25924,
+        "shape_keys": [
+          "Basis",
+          "SIL",
+          "PP",
+          "FF",
+          "TH",
+          "DD",
+          "KK",
+          "CH",
+          "SS",
+          "NN",
+          "RR",
+          "AA",
+          "E",
+          "I",
+          "O",
+          "U",
+          "BlinkLeft",
+          "BlinkRight",
+          "BrowUp",
+          "BrowDown",
+          "Smile",
+          "JawOpen"
+        ],
+        "materials": [
+          "DeepIndigoSkin"
+        ]
+      },
+      {
+        "name": "NeuralThreads",
+        "vertices": 13854,
+        "polygons": 26100,
+        "shape_keys": [
+          "Basis",
+          "SIL",
+          "PP",
+          "FF",
+          "TH",
+          "DD",
+          "KK",
+          "CH",
+          "SS",
+          "NN",
+          "RR",
+          "AA",
+          "E",
+          "I",
+          "O",
+          "U",
+          "BlinkLeft",
+          "BlinkRight",
+          "BrowUp",
+          "BrowDown",
+          "Smile",
+          "JawOpen"
+        ],
+        "materials": [
+          "VioletThreads",
+          "CyanThreads"
+        ]
+      },
+      {
+        "name": "Icosphere",
+        "vertices": 42,
+        "polygons": 80,
+        "shape_keys": [],
+        "materials": []
+      }
+    ],
+    "armatures": [
+      {
+        "object": "BustSkin",
+        "bones": [
+          "AvatarRoot",
+          "Neck",
+          "Head"
+        ]
+      }
+    ],
+    "bounds": {
+      "x": [
+        -0.9510578513145447,
+        0.9510578513145447
+      ],
+      "y": [
+        -0.9999999403953552,
+        0.9999999403953552
+      ],
+      "z": [
+        -1.0,
+        1.0
+      ]
+    }
+  },
+  "preservation": {
+    "imported_mesh_and_morph_fingerprint_before": "13869abb707b1e61dc6d439e0445a42de981fd35399851acfddda07c546e6664",
+    "imported_mesh_and_morph_fingerprint_after": "13869abb707b1e61dc6d439e0445a42de981fd35399851acfddda07c546e6664",
+    "source_sha256_after": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+    "materials_modified": false,
+    "source_glb_reexported": false
+  }
+}

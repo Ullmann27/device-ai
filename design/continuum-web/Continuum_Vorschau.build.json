@@ -1,0 +1,151 @@
+{
+  "htmlBytes": 22365600,
+  "htmlMiB": 21.329,
+  "under25MiB": true,
+  "htmlSha256": "30cc3426569fad86ed4045f85ee69aa431d84cd14ede6bcd333ef1d07432189d",
+  "model": {
+    "bytes": 12038416,
+    "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+    "base64RoundtripExact": true,
+    "externalBuffersOrImages": 0
+  },
+  "localHtmlReferences": [],
+  "unresolvedCssUrls": [],
+  "scriptSyntaxChecked": [
+    "continuum-embedded-assets",
+    "scene.js",
+    "orb-original.js",
+    "avatar3d.js",
+    "app.js"
+  ],
+  "runtimeAssetsProvided": [
+    "avatarFallback",
+    "avatarModel",
+    "orbFallback"
+  ],
+  "runtimeDefaultPathsCoveredByOverridesOrSelfContainedGlb": [
+    "orb-original.js: assets/continuum-orb-original.png",
+    "avatar3d.js: assets/",
+    "avatar3d.js: assets/continuum-avatar-original.png",
+    "avatar3d.js: assets/continuum-avatar.glb"
+  ],
+  "output": "Continuum_Vorschau.html",
+  "sourceDirectory": "continuum-preview",
+  "projectLinksReplaced": 0,
+  "projectLinkTarget": "https://device-ai-continuum-heinz.electemu.chatgpt.site",
+  "embeddedAssetCount": 10,
+  "inputs": [
+    {
+      "path": "app.js",
+      "bytes": 39134,
+      "sha256": "886f73fb0d319f887b5300008cfd690736f4a9c1041552f58a0e6057540c98d9"
+    },
+    {
+      "path": "assets/continuum-avatar-NOTICE.json",
+      "bytes": 4254,
+      "sha256": "f32229b321c3be99752686e7730f5dcbb570d22d1800aa9125a5b113a0c6ed9d"
+    },
+    {
+      "path": "assets/continuum-avatar-original.png",
+      "bytes": 1283790,
+      "sha256": "af71726f13cbbd0514f4ccea6b2e5c2c32217125400b2b93543f6cd2cf22a471"
+    },
+    {
+      "path": "assets/continuum-avatar.glb",
+      "bytes": 12038416,
+      "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+    },
+    {
+      "path": "assets/continuum-orb-original.png",
+      "bytes": 955980,
+      "sha256": "d057d39300e4b588328c3d825ad97f19006e0d38d3a3dc23ba5a9cf00beaa6ac"
+    },
+    {
+      "path": "assets/fonts/manrope-0.ttf",
+      "bytes": 96200,
+      "sha256": "ed335894f8d954263675f7e457bf657374d8b7be629be4dc43aef97c309ad3ae"
+    },
+    {
+      "path": "assets/fonts/manrope-1.ttf",
+      "bytes": 96300,
+      "sha256": "437dc9f921739a6893128fa4dfc299424951148475815a9a213a46457878c42b"
+    },
+    {
+      "path": "assets/fonts/manrope-2.ttf",
+      "bytes": 96348,
+      "sha256": "68ed4be49ec7d32f07b42f9232dc01ca1df7a77be1d9b0731aac74db58235f34"
+    },
+    {
+      "path": "assets/fonts/manrope-3.ttf",
+      "bytes": 96188,
+      "sha256": "ea1f264039fed13fd36e6d6f49fcae4fe7007def02cf2972b5c7f6d6f1349d06"
+    },
+    {
+      "path": "assets/fonts/space-grotesk-4.ttf",
+      "bytes": 69360,
+      "sha256": "ec926d5065eaca49a48f96e312bbae0bbc5733c24215cf5dfabbdccee926fef7"
+    },
+    {
+      "path": "assets/fonts/space-grotesk-5.ttf",
+      "bytes": 69416,
+      "sha256": "3e699ead1876244fa392243054ddefe7cf631b488438828a8a100731a22ab995"
+    },
+    {
+      "path": "assets/fonts/space-grotesk-6.ttf",
+      "bytes": 69308,
+      "sha256": "3e756954468ff1cb302dae0414262e72f76a67d87bef3fa1f3226cd0fb9b2d85"
+    },
+    {
+      "path": "assets/licenses/Manrope_NOTICE.txt",
+      "bytes": 120,
+      "sha256": "db4655ca31e41546fe3596eabf75a39d6d1a37a02724ce3bff0d67a16b86c754"
+    },
+    {
+      "path": "assets/licenses/Manrope_OFL.txt",
+      "bytes": 4387,
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "path": "assets/licenses/Space_Grotesk_NOTICE.txt",
+      "bytes": 135,
+      "sha256": "8e5c4fa25381f0b9772f6ac29eb38d15cf88b623414d4fb6bfba5caa2db6d5cb"
+    },
+    {
+      "path": "assets/licenses/Space_Grotesk_OFL.txt",
+      "bytes": 4495,
+      "sha256": "564ce565c371c5e5bbf286006565a7c9aa55a9f56e7ca58d56e05d649dd61a72"
+    },
+    {
+      "path": "assets/licenses/Three_MIT.txt",
+      "bytes": 1081,
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+    },
+    {
+      "path": "avatar3d.js",
+      "bytes": 632138,
+      "sha256": "42e5005148b96f64fea56583871fd8b55a1ac49fac9b662305af8271ee9373dc"
+    },
+    {
+      "path": "index.html",
+      "bytes": 9992,
+      "sha256": "3046802fe8140a8945f44638e17b190dfa3b81ae729270ef788f967af89af382"
+    },
+    {
+      "path": "orb-original.js",
+      "bytes": 30275,
+      "sha256": "9aa1607a31a8a080f18a7685435e29b9514f1b149eac7a76c4ee54f4449acec3"
+    },
+    {
+      "path": "scene.js",
+      "bytes": 32296,
+      "sha256": "d9ceaabcbabd14a1335360d268605ec42abe1824f3474f9b5cd774a06f4d348f"
+    },
+    {
+      "path": "style.css",
+      "bytes": 66811,
+      "sha256": "df251199ccf49be377b8cb1790d60cf25230b0f6cd63d6d5d52e77a1e1b3dc95"
+    }
+  ],
+  "appSourcesModified": false,
+  "browserOrServerUsed": false
+}

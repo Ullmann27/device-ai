@@ -1,0 +1,55 @@
+{
+  "status": "passed",
+  "container": "GLB 2.0",
+  "bytes": 3656980,
+  "nodes": 64,
+  "meshes": 63,
+  "materials": 14,
+  "triangles": 103508,
+  "all_buffer_views_in_bounds": true,
+  "single_embedded_buffer": true,
+  "external_resources": false,
+  "studio_excluded": true,
+  "world_dimensions_m_Y_up": [
+    1.2,
+    0.74,
+    0.04725
+  ],
+  "glass": {
+    "alphaMode": "BLEND",
+    "transmission": 0.7200000286102295,
+    "roughness": 0.07500000298023224
+  },
+  "phase_values_ms": [
+    [
+      0,
+      120
+    ],
+    [
+      90,
+      260
+    ],
+    [
+      180,
+      480
+    ],
+    [
+      360,
+      760
+    ],
+    [
+      620,
+      900
+    ],
+    [
+      900,
+      950
+    ]
+  ],
+  "extensions_used": [
+    "KHR_materials_clearcoat",
+    "KHR_materials_transmission",
+    "KHR_materials_emissive_strength",
+    "KHR_materials_ior"
+  ]
+}

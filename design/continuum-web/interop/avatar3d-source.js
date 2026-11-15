@@ -1,0 +1,293 @@
+/**
+ * Continuum original-avatar web adapter.
+ * Source: Ullmann27/device-ai, Code55 1b90611388cc2b1978ddfe32064a25dd3a08cee1.
+ * The GLB, geometry, textures, materials and authored morphs stay unchanged.
+ * No artificial lip motion is inferred from a UI state or from a sine wave.
+ */
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { AVATAR_TARGETS, OriginalAvatarMotion } from './avatar-motion.js';
+
+const SOURCE_SHA256 = 'c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a';
+const SOURCE_BYTES = 12038416;
+const SCRIPT_BASE = new URL('.', document.currentScript?.src || document.baseURI);
+// Optional data: URLs support the separately packaged single-file preview.
+const GLB_URL = window.CONTINUUM_ASSETS?.avatarModel || new URL('assets/continuum-avatar.glb', SCRIPT_BASE).href;
+const FALLBACK_URL = window.CONTINUUM_ASSETS?.avatarFallback || new URL('assets/continuum-avatar-original.png', SCRIPT_BASE).href;
+const DEG = Math.PI / 180;
+const Y_AXIS = new THREE.Vector3(0, 1, 0);
+const X_AXIS = new THREE.Vector3(1, 0, 0);
+const yawRotation = new THREE.Quaternion();
+const pitchRotation = new THREE.Quaternion();
+const motion = new OriginalAvatarMotion();
+let state = 'idle';
+let intensity = .7;
+let renderer = null;
+let canvas = null;
+let scene = null;
+let camera = null;
+let root = null;
+let crop = null;
+let joints = null;
+let sceneGroup = null;
+let keyLight = null;
+let cyanLight = null;
+let violetLight = null;
+let frame = 0;
+let running = false;
+let failed = false;
+let loaded = false;
+let sourceVerified = false;
+let sourceVerification = 'pending';
+let lastError = null;
+let frames = 0;
+let observer = null;
+let morphMeshes = [];
+let firstFrame = true;
+const listeners = [];
+
+function listen(target, event, handler, options) {
+  target.addEventListener(event, handler, options);
+  listeners.push(() => target.removeEventListener(event, handler, options));
+}
+
+function announce(mode) {
+  window.dispatchEvent(new CustomEvent('continuum:avatarchange', { detail: {
+    mode, state, loaded, sourceVerified, sourceVerification,
+    sourceSha256: SOURCE_SHA256, frames, error: lastError,
+  } }));
+}
+
+function showFallback(reason) {
+  if (reason) lastError = String(reason);
+  if (crop) {
+    crop.style.backgroundImage = `url("${FALLBACK_URL}")`;
+    crop.style.backgroundPosition = '50% 50%';
+    crop.style.backgroundSize = 'cover';
+    crop.style.backgroundRepeat = 'no-repeat';
+    crop.dataset.avatarRenderer = 'original-png';
+    crop.setAttribute('aria-label', 'Original-Continuum-Avatar – aus dem unveränderten 3D-Modell gerendert');
+  }
+  if (canvas) canvas.style.opacity = '0';
+  announce('original-png');
+}
+
+function fitCamera() {
+  if (!renderer || !camera || !crop) return;
+  const width = Math.max(1, crop.clientWidth || 272);
+  const height = Math.max(1, crop.clientHeight || 299);
+  const halfHeight = .225;
+  camera.left = -halfHeight * width / height;
+  camera.right = halfHeight * width / height;
+  camera.top = halfHeight;
+  camera.bottom = -halfHeight;
+  camera.updateProjectionMatrix();
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(width, height, false);
+}
+
+function rotate(name, pitch, yaw) {
+  const joint = joints[name];
+  yawRotation.setFromAxisAngle(Y_AXIS, yaw * DEG);
+  pitchRotation.setFromAxisAngle(X_AXIS, pitch * DEG);
+  joint.object.quaternion.copy(joint.rest).multiply(yawRotation).multiply(pitchRotation);
+}
+
+function render(now) {
+  if (!running || failed || !loaded) return;
+  try {
+    const pose = motion.update(now);
+    rotate('Neck', pose.neckPitch, pose.neckYaw);
+    rotate('Head', pose.headPitch, pose.headYaw);
+    rotate('EyeLeft', pose.eyePitch, pose.eyeYaw);
+    rotate('EyeRight', pose.eyePitch, pose.eyeYaw);
+    rotate('Jaw', pose.jawPitch, 0);
+    for (const mesh of morphMeshes) {
+      for (const name of AVATAR_TARGETS) {
+        const index = mesh.morphTargetDictionary[name];
+        mesh.morphTargetInfluences[index] = pose.weights[name];
+      }
+    }
+    sceneGroup.position.y = pose.breathOffset;
+    sceneGroup.rotation.z = pose.breathRoll;
+    const seconds = now * .001;
+    const work = state === 'forming' || state === 'working';
+    const energy = .92 + Math.sin(seconds * .67) * .045 + Math.sin(seconds * 1.17) * .025;
+    cyanLight.intensity = (work ? .72 : .5) * energy * (.7 + intensity * .3);
+    cyanLight.position.x = .38 + Math.sin(seconds * .19) * .025;
+    violetLight.intensity = .26 + Math.sin(seconds * .31 + .7) * .025;
+    keyLight.intensity = .92 + Math.sin(seconds * .43) * .018;
+    renderer.render(scene, camera);
+    if (firstFrame && (renderer.getContext().isContextLost() || renderer.info.render.calls === 0)) {
+      throw new Error('Original avatar did not produce a drawable WebGL frame.');
+    }
+    frames++;
+    if (firstFrame) {
+      firstFrame = false;
+      canvas.style.opacity = '1';
+      crop.style.backgroundImage = 'none';
+      crop.style.animation = 'none';
+      crop.dataset.avatarRenderer = 'original-webgl';
+      crop.setAttribute('aria-label', 'Original-Continuum-Avatar mit aktivem 3D-Rig und Augenbewegung');
+      announce('original-webgl');
+    }
+  } catch (error) {
+    failed = true;
+    running = false;
+    showFallback(error?.message || error);
+    return;
+  }
+  frame = requestAnimationFrame(render);
+}
+
+function setState(next) {
+  motion.setState(next);
+  state = motion.state;
+}
+
+function dispose() {
+  running = false;
+  cancelAnimationFrame(frame);
+  observer?.disconnect();
+  for (const remove of listeners.splice(0)) remove();
+  if (root) root.traverse(object => {
+    if (!object.isMesh) return;
+    object.geometry?.dispose();
+    for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
+      for (const value of Object.values(material)) if (value?.isTexture) value.dispose();
+      material.dispose();
+    }
+  });
+  renderer?.dispose();
+  canvas?.remove();
+  showFallback();
+}
+
+window.ContinuumAvatar = Object.freeze({
+  setState,
+  setGaze: (x, y, durationMs) => motion.setGaze(x, y, durationMs),
+  /** Actual speech event: {viseme:'AA', weight:0..1, jawOpen:0..1, durationMs:20..500}. */
+  setSpeechFrame: frame => motion.setSpeechFrame(frame),
+  clearSpeech: () => motion.clearSpeech(),
+  resize: fitCamera,
+  getStatus: () => ({ renderer: !failed && loaded && !firstFrame ? 'original-webgl' : 'original-png',
+    state, loaded, sourceVerified, sourceVerification, sourceSha256: SOURCE_SHA256,
+    morphMeshCount: morphMeshes.length, frames, lastError,
+    speechSource: 'external-viseme-events-only' }),
+  dispose,
+});
+
+async function boot() {
+  crop = document.querySelector('.avatar-zone .avatar-crop') || document.querySelector('.avatar-crop');
+  if (!crop) { lastError = 'Avatar container missing'; return; }
+  // The inspected original is also the fallback. Never show a different portrait.
+  showFallback();
+  const initial = window.ContinuumScene?.getStatus?.();
+  if (initial?.state) setState(initial.state);
+  if (Number.isFinite(initial?.intensity)) intensity = initial.intensity;
+  listen(window, 'continuum:scenechange', event => {
+    const detail = event.detail || {};
+    if (detail.state) setState(detail.state);
+    if (Number.isFinite(detail.intensity)) intensity = Math.min(1.8, Math.max(.1, detail.intensity));
+  });
+  listen(window, 'continuum:sceneresize', fitCamera);
+  listen(window, 'continuum:viseme', event => motion.setSpeechFrame(event.detail));
+  listen(window, 'continuum:speechend', () => motion.clearSpeech());
+  listen(window, 'continuum:gaze', event => {
+    const { x, y, durationMs } = event.detail || {};
+    if (Number.isFinite(x) && Number.isFinite(y)) motion.setGaze(x, y, durationMs);
+  });
+  listen(document, 'pointerdown', event => {
+    if (event.target instanceof Element && event.target.closest('.workspace-body, .chart-panel, .document-pane')) {
+      motion.setGaze(.48, -.28, 2200);
+    }
+  }, { passive: true });
+
+  try {
+    canvas = document.createElement('canvas');
+    canvas.className = 'avatar-original-canvas';
+    canvas.setAttribute('aria-hidden', 'true');
+    Object.assign(canvas.style, { position: 'absolute', inset: '0', display: 'block',
+      width: '100%', height: '100%', pointerEvents: 'none', opacity: '0', transition: 'opacity .4s ease' });
+    const context = canvas.getContext('webgl2', { alpha: true, antialias: true,
+      premultipliedAlpha: true, powerPreference: 'high-performance', preserveDrawingBuffer: false });
+    if (!context) throw new Error('WebGL2 unavailable; using the verified original PNG.');
+    renderer = new THREE.WebGLRenderer({ canvas, context, alpha: true, antialias: true });
+    renderer.setClearColor(0x000000, 0);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = .92;
+    crop.appendChild(canvas);
+    scene = new THREE.Scene();
+    camera = new THREE.OrthographicCamera(-.2, .2, .225, -.225, .01, 8);
+    camera.position.set(0, .215, 1.45);
+    camera.lookAt(0, .215, .025);
+    scene.add(new THREE.HemisphereLight(0xc3d8ec, 0x101528, .35));
+    keyLight = new THREE.DirectionalLight(0xeaf2ff, .92);
+    keyLight.position.set(-.38, .62, .6);
+    scene.add(keyLight);
+    cyanLight = new THREE.DirectionalLight(0x58cfff, .5);
+    cyanLight.position.set(.38, .35, .18);
+    scene.add(cyanLight);
+    violetLight = new THREE.DirectionalLight(0x9874ff, .26);
+    violetLight.position.set(-.3, .36, -.15);
+    scene.add(violetLight);
+    fitCamera();
+
+    const response = await fetch(GLB_URL, { cache: 'force-cache' });
+    if (!response.ok) throw new Error(`Original avatar HTTP ${response.status}`);
+    const buffer = await response.arrayBuffer();
+    if (buffer.byteLength !== SOURCE_BYTES) throw new Error('Original avatar byte length differs from the verified asset.');
+    if (globalThis.crypto?.subtle) {
+      const digest = await crypto.subtle.digest('SHA-256', buffer);
+      const sha = Array.from(new Uint8Array(digest), n => n.toString(16).padStart(2, '0')).join('');
+      if (sha !== SOURCE_SHA256) throw new Error('Original avatar integrity check failed.');
+      sourceVerified = true;
+      sourceVerification = 'sha256';
+    } else {
+      sourceVerification = 'byte-length-and-model-contract; sha256-verified-at-build';
+    }
+    const gltf = await new GLTFLoader().parseAsync(buffer, new URL('assets/', SCRIPT_BASE).href);
+    root = gltf.scene;
+    joints = {};
+    for (const name of ['AvatarRoot', 'Neck', 'Head', 'EyeLeft', 'EyeRight', 'Jaw']) {
+      const object = root.getObjectByName(name);
+      if (!object) throw new Error(`Original rig node missing: ${name}`);
+      joints[name] = { object, rest: object.quaternion.clone() };
+    }
+    root.traverse(object => {
+      if (object.isMesh && object.morphTargetDictionary) {
+        if (!AVATAR_TARGETS.every(name => Number.isInteger(object.morphTargetDictionary[name]))) {
+          throw new Error(`Original morph contract differs on ${object.name}`);
+        }
+        morphMeshes.push(object);
+      }
+    });
+    if (morphMeshes.length !== 3) throw new Error(`Expected three original morph primitives; received ${morphMeshes.length}`);
+    sceneGroup = new THREE.Group();
+    sceneGroup.name = 'ContinuumPresentationOnly';
+    sceneGroup.add(root);
+    scene.add(sceneGroup);
+    loaded = true;
+    // Original materials and embedded textures are deliberately left untouched.
+    listen(canvas, 'webglcontextlost', event => {
+      event.preventDefault();
+      running = false;
+      failed = true;
+      cancelAnimationFrame(frame);
+      showFallback('WebGL context lost; original PNG remains available.');
+    });
+    observer = new ResizeObserver(fitCamera);
+    observer.observe(crop);
+    running = true;
+    frame = requestAnimationFrame(render);
+  } catch (error) {
+    failed = true;
+    running = false;
+    renderer?.dispose();
+    showFallback(error?.message || error);
+  }
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+else boot();

@@ -1,0 +1,518 @@
+{
+  "blender_version": "4.3.2",
+  "asset": "Continuum_Arbeitsdisplay",
+  "dimensions_m": {
+    "width": 1.2,
+    "height": 0.74,
+    "nominal_depth": 0.047
+  },
+  "collections": [
+    "01_Metallfassung_und_Materialstaerke",
+    "02_Optisches_Rauchglas",
+    "03_Rueckplatte_und_Bahnen",
+    "04_Inhalt_Sechs_Phasen_ENTWURFSWERTE",
+    "05_Cyan_Lichtkanten"
+  ],
+  "objects": [
+    {
+      "name": "CONTINUUM_ARBEITSDISPLAY_ROOT",
+      "type": "EMPTY",
+      "materials": []
+    },
+    {
+      "name": "FRAME_Primary_ObsidianMetal",
+      "type": "MESH",
+      "materials": [
+        "METAL_Obsidian_Titanium"
+      ]
+    },
+    {
+      "name": "FRAME_Front_BrushedBezel",
+      "type": "MESH",
+      "materials": [
+        "METAL_Brushed_Graphite_Bezel"
+      ]
+    },
+    {
+      "name": "FRAME_Inner_OpticalLip",
+      "type": "MESH",
+      "materials": [
+        "METAL_Polished_Edge"
+      ]
+    },
+    {
+      "name": "WALL_Separate_MaterialThickness",
+      "type": "MESH",
+      "materials": [
+        "METAL_Polished_Edge"
+      ]
+    },
+    {
+      "name": "GLASS_Separate_BlueSmoke_Front",
+      "type": "MESH",
+      "materials": [
+        "GLASS_Blue_Smoke_Transmission"
+      ]
+    },
+    {
+      "name": "REAR_Structural_GraphitePlate",
+      "type": "MESH",
+      "materials": [
+        "METAL_Rear_DarkGraphite"
+      ]
+    },
+    {
+      "name": "REAR_Perimeter_Inlay",
+      "type": "MESH",
+      "materials": [
+        "INLAY_Deep_Obsidian"
+      ]
+    },
+    {
+      "name": "REAR_Trace_01",
+      "type": "CURVE",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    },
+    {
+      "name": "REAR_Trace_02",
+      "type": "CURVE",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    },
+    {
+      "name": "REAR_Trace_03",
+      "type": "CURVE",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    },
+    {
+      "name": "REAR_Trace_04",
+      "type": "CURVE",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    },
+    {
+      "name": "REAR_Trace_05",
+      "type": "CURVE",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    },
+    {
+      "name": "REAR_Trace_06",
+      "type": "CURVE",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    },
+    {
+      "name": "REAR_Fastener_-0.548_-0.312",
+      "type": "MESH",
+      "materials": [
+        "METAL_Polished_Edge"
+      ]
+    },
+    {
+      "name": "REAR_Fastener_-0.548_+0.312",
+      "type": "MESH",
+      "materials": [
+        "METAL_Polished_Edge"
+      ]
+    },
+    {
+      "name": "REAR_Fastener_+0.548_-0.312",
+      "type": "MESH",
+      "materials": [
+        "METAL_Polished_Edge"
+      ]
+    },
+    {
+      "name": "REAR_Fastener_+0.548_+0.312",
+      "type": "MESH",
+      "materials": [
+        "METAL_Polished_Edge"
+      ]
+    },
+    {
+      "name": "REAR_Thermal_Inset_01",
+      "type": "MESH",
+      "materials": [
+        "INLAY_Deep_Obsidian"
+      ]
+    },
+    {
+      "name": "REAR_Thermal_Inset_02",
+      "type": "MESH",
+      "materials": [
+        "INLAY_Deep_Obsidian"
+      ]
+    },
+    {
+      "name": "REAR_Thermal_Inset_03",
+      "type": "MESH",
+      "materials": [
+        "INLAY_Deep_Obsidian"
+      ]
+    },
+    {
+      "name": "REAR_Thermal_Inset_04",
+      "type": "MESH",
+      "materials": [
+        "INLAY_Deep_Obsidian"
+      ]
+    },
+    {
+      "name": "REAR_Thermal_Inset_05",
+      "type": "MESH",
+      "materials": [
+        "INLAY_Deep_Obsidian"
+      ]
+    },
+    {
+      "name": "REAR_Identity",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "REAR_Identity_Subline",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "REAR_Material_Identification",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_Recessed_Panel",
+      "type": "MESH",
+      "materials": [
+        "CONTENT_Recessed_DeepBlue"
+      ]
+    },
+    {
+      "name": "CONTENT_Header",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Ice_White"
+      ]
+    },
+    {
+      "name": "CONTENT_Subtitle",
+      "type": "FONT",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    },
+    {
+      "name": "CONTENT_Provenance",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_HeaderRule",
+      "type": "CURVE",
+      "materials": [
+        "PLOT_Quiet_Grid"
+      ]
+    },
+    {
+      "name": "CONTENT_Axis_0000",
+      "type": "CURVE",
+      "materials": [
+        "PLOT_Quiet_Grid"
+      ]
+    },
+    {
+      "name": "CONTENT_AxisLabel_0000",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_Axis_0250",
+      "type": "CURVE",
+      "materials": [
+        "PLOT_Quiet_Grid"
+      ]
+    },
+    {
+      "name": "CONTENT_AxisLabel_0250",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_Axis_0500",
+      "type": "CURVE",
+      "materials": [
+        "PLOT_Quiet_Grid"
+      ]
+    },
+    {
+      "name": "CONTENT_AxisLabel_0500",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_Axis_0750",
+      "type": "CURVE",
+      "materials": [
+        "PLOT_Quiet_Grid"
+      ]
+    },
+    {
+      "name": "CONTENT_AxisLabel_0750",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_Axis_1000",
+      "type": "CURVE",
+      "materials": [
+        "PLOT_Quiet_Grid"
+      ]
+    },
+    {
+      "name": "CONTENT_AxisLabel_1000",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseLabel_01",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseBar_01_0_120ms",
+      "type": "MESH",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    },
+    {
+      "name": "CONTENT_EndValue_01",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Ice_White"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseLabel_02",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseBar_02_90_260ms",
+      "type": "MESH",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    },
+    {
+      "name": "CONTENT_EndValue_02",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Ice_White"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseLabel_03",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Ice_White"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseBar_03_180_480ms",
+      "type": "MESH",
+      "materials": [
+        "LIGHT_Electric_Cyan"
+      ]
+    },
+    {
+      "name": "CONTENT_EndValue_03",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Ice_White"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseLabel_04",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseBar_04_360_760ms",
+      "type": "MESH",
+      "materials": [
+        "LIGHT_Indigo_Secondary"
+      ]
+    },
+    {
+      "name": "CONTENT_EndValue_04",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Ice_White"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseLabel_05",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseBar_05_620_900ms",
+      "type": "MESH",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    },
+    {
+      "name": "CONTENT_EndValue_05",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Ice_White"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseLabel_06",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_PhaseBar_06_900_950ms",
+      "type": "MESH",
+      "materials": [
+        "LIGHT_Amber_Confirmation"
+      ]
+    },
+    {
+      "name": "CONTENT_EndValue_06",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Ice_White"
+      ]
+    },
+    {
+      "name": "CONTENT_Footnote",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "CONTENT_Units",
+      "type": "FONT",
+      "materials": [
+        "TYPE_Muted_Blue"
+      ]
+    },
+    {
+      "name": "LIGHT_Front_Perimeter_Cyan",
+      "type": "MESH",
+      "materials": [
+        "LIGHT_Electric_Cyan"
+      ]
+    },
+    {
+      "name": "LIGHT_Inner_Optical_Cyan",
+      "type": "MESH",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    },
+    {
+      "name": "LIGHT_Rear_Edge_Cyan",
+      "type": "MESH",
+      "materials": [
+        "LIGHT_Cyan_Technical_Traces"
+      ]
+    }
+  ],
+  "materials": [
+    "frame",
+    "bezel",
+    "edge",
+    "rear",
+    "inlay",
+    "glass",
+    "content",
+    "cyan",
+    "cyan_soft",
+    "violet",
+    "amber",
+    "white",
+    "muted",
+    "plot"
+  ],
+  "phases": [
+    {
+      "name": "Aufmerksamkeit",
+      "start_ms": 0,
+      "end_ms": 120
+    },
+    {
+      "name": "Raum schaffen",
+      "start_ms": 90,
+      "end_ms": 260
+    },
+    {
+      "name": "Licht wird Form",
+      "start_ms": 180,
+      "end_ms": 480
+    },
+    {
+      "name": "Einflug",
+      "start_ms": 360,
+      "end_ms": 760
+    },
+    {
+      "name": "Inhalt",
+      "start_ms": 620,
+      "end_ms": 900
+    },
+    {
+      "name": "Arbeit",
+      "start_ms": 900,
+      "end_ms": 950
+    }
+  ],
+  "notes": [
+    "Timing values are design choreography, not measured device or AI performance.",
+    "Avatar and energy sphere were not loaded or modified.",
+    "Studio lights, camera and floor are excluded from GLB.",
+    "BLEND preserves editable text, curves, bevels and distinct layers."
+  ]
+}
