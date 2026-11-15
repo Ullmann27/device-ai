@@ -93,7 +93,7 @@ test('All seven scene controls update content, selection and scene bridge', f =>
 });
 
 test('Argon4 opens only after the 950 ms formation completes', f => {
-  f.click('#hero-action');
+  f.click('.presence-copy [data-action="open-demo"]');
   assert.equal(f.state().state, 'forming');
   f.advance(949);
   assert.equal(f.state().state, 'forming');
@@ -186,7 +186,7 @@ test('Phone drawers are exclusive; Escape closes drawer without cancelling task'
 }, { width: 430 });
 
 test('Cancel during formation prevents the late document opening', f => {
-  f.click('#hero-action'); f.advance(300);
+  f.click('.presence-copy [data-action="open-demo"]'); f.advance(300);
   f.click('#workspace [data-action="cancel"]');
   assert.equal(f.state().state, 'idle');
   f.advance(2000);
@@ -214,7 +214,7 @@ test('Negated opens and PDF stop commands never open a document', f => {
 });
 
 test('Nicht abbrechen preserves the actual in-flight formation timer', f => {
-  f.click('#hero-action'); f.advance(100);
+  f.click('.presence-copy [data-action="open-demo"]'); f.advance(100);
   f.submit('nicht abbrechen');
   assert.equal(f.state().state, 'forming');
   f.advance(849); assert.equal(f.state().state, 'forming');

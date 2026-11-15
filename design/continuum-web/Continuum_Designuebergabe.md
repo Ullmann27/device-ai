@@ -1,56 +1,53 @@
-# Device AI Continuum – Designübergabe
+# Device AI Continuum – Kommando 03
 
-Stand: 15. November 2026 · Präsenz 02. Maßgeblich ist die weiterentwickelte Webgestaltung mit den Originalen aus GitHub. Öffnen: private Webvorschau, gesonderte Offline-HTML oder `npm start`; bestätigter Bereitstellungslink und Zugriffsstatus stehen in der Auslieferungsnachricht.
+## Ergebnis
 
-## 1. Aufbau und gestalterischer Zusammenhang
+Die bestehende Webgestaltung wurde auf Heinz' neue Anweisung überarbeitet. Originalavatar und Originalkugel bleiben erhalten. Die Mitte ist deutlich größer, der bedeutungslose Buchstabe R am Titel ist entfernt. Präzise Kanten, geradere Fassungen, ruhige technische Beschriftungen und gezielte Amber-Akzente geben der Oberfläche einen strengeren Kommandocharakter. Manrope und Space Grotesk bleiben die Schriftfamilien.
 
-Das aktuelle Raster ordnet **Chats und Projekte links, Plugins oben, Avatar mit Linkleiste und Arbeitsraum in der Mitte sowie Diagramme und Quellen rechts** an. Der Originalavatar steht jetzt exakt mittig vor der größeren Originalkugel. Deren Geometrie und Ringorientierung bleiben auf Wunsch fest; weiche Lichtantworten verbinden sie mit der Szene. Links und rechts dieser zentralen Einheit stehen ein holografisches Phaseninstrument und ein räumlich gestaffeltes Quellennetz. Dateien, Recherche, Agenten, Gedächtnis, Android-Computer und Einstellungen verwenden dieselbe Material- und Lichtwelt. Auf schmalen Displays werden die Seitenbereiche über „Chats & Projekte“ beziehungsweise „Diagramme“ geöffnet; Eingabe und aktive Arbeitsfläche bleiben erreichbar.
+Die private Vorschau: https://device-ai-continuum-heinz.electemu.chatgpt.site
+Formate ausprobieren: https://device-ai-continuum-heinz.electemu.chatgpt.site/ausprobieren.html
+GitHub-Entwurf: https://github.com/Ullmann27/device-ai/pull/850
 
-Obsidian, Nachtblau, Graphit und blaues Rauchglas bilden den Raum. Cyan führt Interaktion und Energie; Eisblau zeichnet Kanten, Violett schafft Tiefe, Amber markiert Aufmerksamkeit. Manrope trägt Inhalte und Bedienung, Space Grotesk die technischen Überschriften. Helle Energiequellen, zurückhaltende Flächen und scharfe Schrift sichern Orientierung.
+## Neue Bedienmöglichkeiten
 
-Displays besitzen getrennte Fassung, Glas, Inhaltsfläche und Rückkörper. Der Blender-Bestand enthält ein eigenständiges Arbeitsdisplay mit sichtbarer Stärke und Vorder-/Rückansicht. Dieses neue Arbeitsobjekt ersetzt weder Avatar noch Kugel. Texte und Trefferflächen bleiben stabil; Licht, Reflexionen und Umgebung bewegen sich weiter. Containerabhängige Layouts ordnen auf schmalen Flächen den Avatar über den beiden Instrumenten an. Die Hologramme übernehmen ihre Werte aus derselben Phasendatenquelle wie das Dokument; jede Auswahl synchronisiert alle Ansichten.
+- Recherche erleben: projizierter Computer mit fünf nachvollziehbaren Schritten, Suchanfrage, Quellenkarten, Zusammenhang und Ergebnis.
+- Pause, Fortsetzen, direktes Anwählen eines Schritts, drei Geschwindigkeiten und Neustart.
+- Drei gespeicherte, verlinkte Fachquellen. Der eingegebene Auftrag ändert die Darstellung, nicht die gespeicherte Recherche. Die Oberfläche nennt diese Grenze ausdrücklich.
+- Ergebnis als Markdown herunterladen.
+- Eigene TXT-, Markdown-, CSV- und JSON-Dateien bis 2 MB lokal lesen. Tatsächliche Wort-, Zeilen- und Absatzanzahl; Abschnittsbalken verknüpfen Diagramm und Textstelle. Keine externe Übertragung und keine KI-Zusammenfassung.
+- Seitliche CPU/RAM-Lastdemo, eindeutig als Simulation bezeichnet. Wechsel zur Browsermessung: rAF-Frameabstände, lange Aufgaben soweit unterstützt und JS-Heap-Schätzung soweit verfügbar. Kein vorgetäuschter Zugriff auf die gesamte Geräte-CPU oder den Geräte-RAM.
+- Separate Formatvorschau mit demselben Index in einem 1440/904/392 CSS-Pixel breiten Rahmen; reale Innenviewport-Abfragen bleiben wirksam. Die breite Ansicht passt sich der verfügbaren Fläche an.
 
-## 2. Verbindliche Originale
+## Fenster und laufende Szene
 
-Quelle: [Ullmann27/device-ai](https://github.com/Ullmann27/device-ai), Code55-Commit `1b90611388cc2b1978ddfe32064a25dd3a08cee1`.
+Ein gemeinsamer Controller übernimmt die Arbeitsfläche. Einflug 950 ms, Rückflug 650 ms; Unterbrechungen übernehmen Pose und Bewegungsrichtung. Die Rückplatte und Materialseiten haben eigene Tiefen. Eine FLIP-Hülle gleicht Inhalts- und Größenwechsel aus. Die eigentliche Animation verwendet Transform und Deckkraft. Die Geometrie wird an Änderungsgrenzen gemessen, nicht fortlaufend je Bild.
 
-**Avatar:** `app/src/main/assets/avatar3d/continuum-avatar.glb`, 12.038.416 Bytes, SHA-256:
+Der Hintergrund berechnet ruhige Beleuchtungs- und Architekturanteile vor. Drei bewegte Tiefenebenen bleiben aktiv. Renderpuffer reagieren auf anhaltenden Zeitdruck; die Bewegung wird dabei nicht pausiert. Beim Avatar werden Pose und Morphzuordnung wiederverwendet, unveränderte Puffergrößen nicht erneut angelegt und Shader vor dem Einblenden vorbereitet. Der Blick folgt auch der gewählten Recherchequelle.
 
-```text
-c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a
-```
+Die Kugelgeometrie und Ringorientierung bleiben wie gewünscht fest. Lichtintensität, Avatar und Umgebung reagieren weiterhin.
 
-Die Vorschau verwendet genau dieses unveränderte Modell. Es besitzt das bestehende Hals-/Kopf-Rig und 21 Morphziele. Der Webadapter berücksichtigt Augen-vor-Kopf, den ursprünglichen Halsanteil von 65 % und dieselben Morphziele in Gesicht und NeuralThreads. Ohne WebGL erscheint das in Blender aus diesem Modell gerenderte PNG. PNG und WebGL werden nach demselben proportionalen Kameraausschnitt eingepasst; Kopf und Schultern werden nicht gestreckt. Ein neutraleres Hauptlicht hebt das Gesicht vor dem Halo hervor. Berührte Diagrammpunkte steuern den Blick auf die tatsächliche Auswahlposition. Das zuvor verwendete andere Sheet-Gesicht ist kein aktueller Avatarbestand.
+## Originalbestand
 
-**Kugel:** Der Originalbestand ist Kotlin-/Canvas-Code, keine Kugel-GLB. `orb-original.js` überträgt `ContinuumHologramRenderer`, `ContinuumPainter`, Ringgeometrie, Plexus und Zustandsuhr. Die übernommenen Quelldateien, Commit- und Dateihashes stehen in `interop/orb-port-provenance.json`. Android- und Browser-Rasterisierung werden nicht als pixelidentisch bezeichnet.
+Quelle: Ullmann27/device-ai, Code55 `1b90611388cc2b1978ddfe32064a25dd3a08cee1`.
+Originalavatar: 12.038.416 Bytes, SHA-256 `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`.
+Die Kugel basiert auf den tatsächlichen Kotlin-Originalquellen in `interop/originals/`. Modell, Texturen, Rig und Identität bleiben erhalten. Der Display-GLB und bearbeitbare Blender-Dateien liegen weiterhin im Gesamtpaket.
 
-## 3. Bewegung und Bedienung
+## Prüfung und Grenzen
 
-Sieben Gestaltungsmomente führen durch Bereitschaft, Zuhören, Displayentstehung, Dokumentarbeit, Diagrammvergrößerung, Erklärung und Ergebnis/Rückkehr. Raum, Lichtschleier, Partikel und Avatar laufen über Zustandswechsel hinweg weiter. Der Originalkern bleibt räumlich und geometrisch fest hinter der Büste; sein zwischengespeichertes Bild vermeidet unnötige Neuberechnung. Der Avatar zeigt zurückhaltende Präsenz; seine vorhandene Büste ist keine vollständige Körper-, Haar- oder Stoffsimulation.
+63 gezielte DOM-/Ablaufprüfungen: 21 App, 10 Präsenzinstrumente, 13 Fensterbewegung, 10 Telemetrie, 9 Computer/Dateien. Hinzu kommen Originalmodell-/Rigvertrag und die native Renderbudgetprüfung.
 
-Die Displaychoreografie überlappt Aufmerksamkeit, Raumbildung, Kontur, Einflug und Inhalt innerhalb ungefähr 950 ms. Das ist ein Gestaltungsziel, keine gemessene KI-Laufzeit. Ein echtes Werkzeugergebnis muss später aus der tatsächlichen Verarbeitung stammen.
+Tatsächlich im Browser geprüft: neue Anordnung, Titel ohne R, Recherche öffnen, Quellen auswählen, echte Textdatei lesen (44 Wörter, 8 Zeilen, 4 Absätze), Abschnitt per Diagramm anwählen, Fenster schließen und anschließend einen neuen Auftrag öffnen. Ein Statusselektor-Konflikt wurde dabei gefunden, behoben und mit einer vollständigen Timeline-Prüfung abgesichert.
 
-`ContinuumAvatar.setSpeechFrame()` nimmt ausschließlich tatsächliche Viseme-Ereignisse an. Ohne solche Ereignisse bleibt der Mund neutral, auch wenn die Oberfläche „Sprechen“ darstellt. Vorhandene Mundöffnung wird kompensiert; P/B/M schließen die Lippen, veraltete Ereignisse laufen aus.
+Im Prüfbrowser wurde das Original-PNG als Avatar-Fallback angezeigt. Seine 3D-GPU-Ausgabe wurde dort nicht bestätigt. Bei der späteren Formatprüfung traten Browser-Protokollzeitüberschreitungen auf; Fold/Schmal wurden daher nicht vollständig visuell abgenommen. Kein Fold-FPS-Benchmark. Die neue Screenshotdatei ist ein tatsächlicher Browser-Screenshot; die alte Raumstudie 02 dokumentiert ausschließlich den früheren Stand.
 
-## 4. Dateien, Nachweise und Arbeitsstand
+## Übernahme in die App
 
-| Bestand | Verwendung |
-|---|---|
-| `continuum-preview/` | Bedienbare HTML/CSS/JS-Gestaltung mit Originalassets |
-| `interop/` | Lesbare Adapterquellen, gepinnter Build, Herkunft und Vertragsprüfungen |
-| `handoff-3d/` | Echte Blender-Dateien, Display-GLB, Originalavatar-PNG, Skripte und Diagnosen |
-| `Continuum_Praesenz_02.mp4` | Aktualisierte Canvas-Raumstudie mit zentralem Kopf, fester Kugel und beiden echten Diagrammen |
+Der aktuelle Quellstand liegt in `design/continuum-web/` im bestehenden Entwurfs-PR. Die Webmodule sind vollständig verbunden. Die Android-Übernahme folgt erst nach Heinz' Designfreigabe. Dabei bleiben originale Assets, konkrete Abmessungen, Typografie, Datenbindungen und die Zustands-/Abbruchsemantik maßgeblich. Der Rechercheablauf der Vorschau ist noch keine Verbindung zum Android-KI-Dienst.
 
-Der Film kennzeichnet den Kopf ausdrücklich als ruhiges Blenderbild; er zeigt die neue Anordnung und die Bewegung von Raum, Licht und Diagrammverbindungen. Er ersetzt keinen Live-Gesichtsanimationstest. Die erste Raumstudie mit seitlicher Anordnung dokumentiert den vorherigen Stand und ist kein Nachweis der aktuellen Anordnung.
+## Quellen der eingebetteten Recherche
 
-Codeübergabe: [Draft-PR 850](https://github.com/Ullmann27/device-ai/pull/850), Branch `design/continuum-fui-web-20261115`, Basis `claude/code55-cinematic-evolution-20261112`. Ein Draft-PR ist kein Merge und kein neuer APK-Stand.
+Geprüft am 15.11.2026:
 
-## 5. Figma und ehrliche Grenzen
-
-Die [native Figma-Datei](https://www.figma.com/design/rN6yiKiRwzeOPxnqEuaN7O) enthält den früheren Entwurf. Wegen des erreichten Aufrufquotums wurden ihre ursprünglichen Frames noch nicht auf das neue Raster und den Originalkopf umgestellt. Ein gesonderter Codeimport aktualisiert diese nativen Frames nicht automatisch; sein bestätigter Stand gehört zur Auslieferung.
-
-Argon4 ist eine gekennzeichnete Demonstration; eine Original-PDF lag nicht vor. Lokale KI, Android-Werkzeuge, Mikrofon und echte TTS sind hier nicht verbunden. Blender-Rendering, Modellvertrag und Canvas-Nachweise wurden geprüft; GPU-Leistung, Android-Filament-Gleichheit und Fold-Framerate wurden nicht gemessen.
-
-### Abschluss des zusätzlichen Figma-Codeimports
-
-Der separate Codeupload wurde mit HTTP 400 abgewiesen. Es wurde kein neuer Code-Layer importiert. Die bestehende Figma-Datei bleibt ein früherer Designstand; das aktuelle Raster und die Originale sind in der Webfassung und im Projektpaket enthalten.
+- MDN, Web Animations API: https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
+- web.dev, effiziente CSS-Animationen: https://web.dev/articles/animations-guide
+- MDN, PerformanceObserver: https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver

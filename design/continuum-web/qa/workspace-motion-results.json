@@ -1,0 +1,62 @@
+{
+  "suite": "workspace-motion",
+  "runtime": "jsdom + controlled clock",
+  "waapi": "test model, not browser execution",
+  "visualOrGPUVerification": false,
+  "tests": [
+    {
+      "name": "One persistent shell and stable controls survive nested mutations",
+      "passed": true
+    },
+    {
+      "name": "Open is a 950ms continuous rear/side reveal with no frame-by-frame layout reads",
+      "passed": true
+    },
+    {
+      "name": "Open→close→open preserves exact current pose and cancels stale completions",
+      "passed": true
+    },
+    {
+      "name": "Close lasts 650ms and its completed ID becomes stale after a new intent",
+      "passed": true
+    },
+    {
+      "name": "Duplicate open and nested resize calls retain one active opening deadline",
+      "passed": true
+    },
+    {
+      "name": "FLIP preserves the presented rectangle and can reverse while expanding",
+      "passed": true
+    },
+    {
+      "name": "Reduced motion keeps rotation flat and fades without changing app timing",
+      "passed": true
+    },
+    {
+      "name": "Changing reduced-motion preference cancels flight and settles from current pose",
+      "passed": true
+    },
+    {
+      "name": "WAAPI tracks contain only transform/opacity and share a clock",
+      "passed": true
+    },
+    {
+      "name": "A failing WAAPI backend releases effects and uses the actual RAF fallback",
+      "passed": true
+    },
+    {
+      "name": "Real app: navigate→forming retains the entry; 950ms state and abort still work",
+      "passed": true
+    },
+    {
+      "name": "Real expand action uses FLIP without replacing the workspace shell",
+      "passed": true
+    },
+    {
+      "name": "Disposal cancels outstanding work and restores the same DOM nodes",
+      "passed": true
+    }
+  ],
+  "passed": 13,
+  "failed": 0
+}

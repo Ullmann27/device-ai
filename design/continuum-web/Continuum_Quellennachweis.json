@@ -1,8 +1,8 @@
 {
-  "project": "Device AI Continuum – Präsenz 02 mit erhaltenen Originalen",
-  "presentationRevision": "presence02",
+  "project": "Device AI Continuum – Kommando 03 mit erhaltenen Originalen",
+  "presentationRevision": "command03",
   "orbMotion": "fixed",
-  "presentation": "Mittiger Avatar vor ruhender Originalkugel, seitliche verknüpfte Hologramme, gestaffelte Atmosphäre",
+  "presentation": "Größerer mittiger Avatar vor ruhender Originalkugel, CPU/RAM-Instrumente, projizierter Computer, unterbrechbare räumliche Fenster",
   "sourceRepository": "https://github.com/Ullmann27/device-ai",
   "sourceCommit": "1b90611388cc2b1978ddfe32064a25dd3a08cee1",
   "designBranch": "design/continuum-fui-web-20261115",
@@ -16,6 +16,10 @@
     "presenceInstrumentsPassed": 10,
     "presenceInstrumentsFailed": 0,
     "fixedOrbGeometryVerified": true,
+    "workspaceMotionPassed": 13,
+    "telemetryPassed": 10,
+    "operationsPassed": 9,
+    "browserInteractionVerified": true,
     "browserGpuVerified": false,
     "foldDeviceVerified": false
   },
@@ -24,7 +28,7 @@
     "Android-KI, Mikrofon und TTS sind nicht verbunden.",
     "Der Sprechzustand allein erzeugt keine Lippenbewegung.",
     "Native Figmaframes zeigen den früheren Stand; zusätzlicher Codeupload fehlgeschlagen.",
-    "Die zentrale Video-Raumstudie verwendet einen ruhig gerenderten Originalkopf; sie ist kein Browserrecording."
+    "Die aktuelle Browserprüfung verwendet den Originalbild-Fallback; die spätere Formatprüfung war durch Browser-Zeitüberschreitungen begrenzt."
   ],
   "runtimeFiles": [
     {
@@ -34,8 +38,8 @@
     },
     {
       "path": "continuum-preview/app.js",
-      "bytes": 39558,
-      "sha256": "12f19ac69cef10ece3caadd538ab6a63053053e9f22faa58b6010783f7db2dd0"
+      "bytes": 41955,
+      "sha256": "01ad3ab36f321c041af8a3319adafb53dc6d3677f83f3e5fbff49d6573b6a26a"
     },
     {
       "path": "continuum-preview/assets/LICENSE.ASSETS.md",
@@ -123,14 +127,34 @@
       "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
     },
     {
+      "path": "continuum-preview/ausprobieren.html",
+      "bytes": 3135,
+      "sha256": "436c98f25b0d19797d899d2857f611c0d50a04699f2b648890648b3118758d6b"
+    },
+    {
       "path": "continuum-preview/avatar3d.js",
-      "bytes": 633158,
-      "sha256": "7a0f371dea3d125a27fbfd08f65fa6ce665d79e9ca7f29eec5bd6885ec3a5738"
+      "bytes": 634422,
+      "sha256": "d971058633a5a1fa10bbbb1da97583b920ab7895b7fb1199a27a78f01f62bb5b"
+    },
+    {
+      "path": "continuum-preview/command-layout.css",
+      "bytes": 10866,
+      "sha256": "1c0d3ac7c386497b41f8812b29b0b453fe4d8bedee8cba3666b2f6d2aede76d7"
     },
     {
       "path": "continuum-preview/index.html",
-      "bytes": 10722,
-      "sha256": "3c7cab9190eb9d5092a728420558107c6abf81060ea1479201b083491fa75f7b"
+      "bytes": 11777,
+      "sha256": "98141c7fa9b324567d38c0a955241c1461e367653ad4afc727c1dc79e4eca2c1"
+    },
+    {
+      "path": "continuum-preview/operations.css",
+      "bytes": 14784,
+      "sha256": "0cb564808fe92abee89a19ccea9f4ee32636f09a70fef5f3674e36a7dc818964"
+    },
+    {
+      "path": "continuum-preview/operations.js",
+      "bytes": 24554,
+      "sha256": "005381f1a7eaf68c08a04df552e7c9b65f3cadb94ffc54f85fe711ff9a53a9b9"
     },
     {
       "path": "continuum-preview/orb-original.js",
@@ -139,8 +163,8 @@
     },
     {
       "path": "continuum-preview/package.json",
-      "bytes": 544,
-      "sha256": "334b165d59ede4cfeec46c8258483a797acd4493ebe31f2dc36bb951f8644fff"
+      "bytes": 639,
+      "sha256": "321ec23dc512abed4d8e2d5ac8d439f4f167dd642860de68a2909a331172bb3b"
     },
     {
       "path": "continuum-preview/prepare-assets.mjs",
@@ -164,13 +188,13 @@
     },
     {
       "path": "continuum-preview/projekt.html",
-      "bytes": 8764,
-      "sha256": "1947b767ea02fe586ac80dbf757fd82b1bee1b58ded7903628169aa45dd42e97"
+      "bytes": 9039,
+      "sha256": "5cd8d67a1e2d65eafa0b7b879d247757946a92c9c7c3057ed43d31cebe0a779b"
     },
     {
       "path": "continuum-preview/scene.js",
-      "bytes": 38269,
-      "sha256": "b4c5b6dcfae1a6c135f847cdf18c2f9327ecd55e48bc929f2f5690e114ae8da1"
+      "bytes": 43393,
+      "sha256": "91ca6dc5fdea2d5449cded440585e5f1cad46d6a5fe8a3ceefd34143a3a5835b"
     },
     {
       "path": "continuum-preview/serve.mjs",
@@ -181,6 +205,26 @@
       "path": "continuum-preview/style.css",
       "bytes": 66811,
       "sha256": "df251199ccf49be377b8cb1790d60cf25230b0f6cd63d6d5d52e77a1e1b3dc95"
+    },
+    {
+      "path": "continuum-preview/telemetry.css",
+      "bytes": 4893,
+      "sha256": "8ca22d80d566df947e614ed73d0a8d8059bf0b0dfc99119d46eb1cd088bb2d1c"
+    },
+    {
+      "path": "continuum-preview/telemetry.js",
+      "bytes": 16738,
+      "sha256": "d8883eaa93776ad87b5c4ff902ce212437d8eb5801591f344dfa8a8b015c544c"
+    },
+    {
+      "path": "continuum-preview/workspace-motion.css",
+      "bytes": 4937,
+      "sha256": "791e9f226d2de5a671c9cc7d6f21b725e83d56b629ead84bd7eb314aa2f4f66d"
+    },
+    {
+      "path": "continuum-preview/workspace-motion.js",
+      "bytes": 18355,
+      "sha256": "43e2628c6d9203a82b691c594cb171173614c002e9febb69d427bba87d1143a0"
     }
   ]
 }

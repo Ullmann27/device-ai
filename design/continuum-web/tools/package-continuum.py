@@ -19,10 +19,10 @@ def allowed(path):
 app_files = [p for p in sorted(APP.rglob('*')) if allowed(p)]
 assert hashlib.sha256((APP/'assets/continuum-avatar.glb').read_bytes()).hexdigest() == ORIGINAL_HASH
 manifest = {
-    'project': 'Device AI Continuum – Präsenz 02 mit erhaltenen Originalen',
-    'presentationRevision': 'presence02',
+    'project': 'Device AI Continuum – Kommando 03 mit erhaltenen Originalen',
+    'presentationRevision': 'command03',
     'orbMotion': 'fixed',
-    'presentation': 'Mittiger Avatar vor ruhender Originalkugel, seitliche verknüpfte Hologramme, gestaffelte Atmosphäre',
+    'presentation': 'Größerer mittiger Avatar vor ruhender Originalkugel, CPU/RAM-Instrumente, projizierter Computer, unterbrechbare räumliche Fenster',
     'sourceRepository': 'https://github.com/Ullmann27/device-ai',
     'sourceCommit': SOURCE_COMMIT,
     'designBranch': 'design/continuum-fui-web-20261115',
@@ -30,8 +30,8 @@ manifest = {
     'originalAvatarSha256': ORIGINAL_HASH,
     'originalAvatarBytes': 12038416,
     'originalOrb': 'interop/originals/ContinuumHologramRenderer.kt',
-    'qa': {'domPassed': 21, 'domFailed': 0, 'presenceInstrumentsPassed': 10, 'presenceInstrumentsFailed': 0, 'fixedOrbGeometryVerified': True, 'browserGpuVerified': False, 'foldDeviceVerified': False},
-    'limits': ['Argon4 ist eine gekennzeichnete Demonstration.', 'Android-KI, Mikrofon und TTS sind nicht verbunden.', 'Der Sprechzustand allein erzeugt keine Lippenbewegung.', 'Native Figmaframes zeigen den früheren Stand; zusätzlicher Codeupload fehlgeschlagen.', 'Die zentrale Video-Raumstudie verwendet einen ruhig gerenderten Originalkopf; sie ist kein Browserrecording.'],
+    'qa': {'domPassed': 21, 'domFailed': 0, 'presenceInstrumentsPassed': 10, 'presenceInstrumentsFailed': 0, 'fixedOrbGeometryVerified': True, 'workspaceMotionPassed': 13, 'telemetryPassed': 10, 'operationsPassed': 9, 'browserInteractionVerified': True, 'browserGpuVerified': False, 'foldDeviceVerified': False},
+    'limits': ['Argon4 ist eine gekennzeichnete Demonstration.', 'Android-KI, Mikrofon und TTS sind nicht verbunden.', 'Der Sprechzustand allein erzeugt keine Lippenbewegung.', 'Native Figmaframes zeigen den früheren Stand; zusätzlicher Codeupload fehlgeschlagen.', 'Die aktuelle Browserprüfung verwendet den Originalbild-Fallback; die spätere Formatprüfung war durch Browser-Zeitüberschreitungen begrenzt.'],
     'runtimeFiles': [{'path': str(p.relative_to(ROOT)), 'bytes': p.stat().st_size, 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in app_files],
 }
 (ROOT/'Continuum_Quellennachweis.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n')
@@ -41,7 +41,7 @@ for directory in ['interop', 'handoff-3d', 'qa']:
     for p in sorted((ROOT/directory).rglob('*')):
         if allowed(p) and not (directory == 'interop' and p.suffix == '.png' and any(part.startswith('qa-') for part in p.parts)):
             project_files.append(p)
-for name in ['Continuum_Designuebergabe.md', 'Continuum_Toolkette_und_Uebergabe.md', 'Continuum_Quellennachweis.json', 'Continuum_Vorschau.build.json', 'Continuum_Praesenz_02.mp4', 'Continuum_Praesenz_02.png', 'tools/build-standalone.py', 'tools/package-continuum.py']:
+for name in ['Continuum_Designuebergabe.md', 'Continuum_Toolkette_und_Uebergabe.md', 'Continuum_Quellennachweis.json', 'Continuum_Vorschau.build.json', 'Continuum_Kommando_03.jpg', 'Continuum_Recherche_03.jpg', 'tools/build-standalone.py', 'tools/package-continuum.py']:
     p=ROOT/name
     if not p.is_file(): raise FileNotFoundError(p)
     project_files.append(p)
@@ -49,7 +49,7 @@ start = '''# Device AI Continuum – hier beginnen
 
 ## Sofort ansehen
 
-Öffne die bestätigte private Webvorschau aus der Auslieferungsnachricht. Alle Projektdateien stehen dort unter „Projektdateien“. Die gesondert gelieferte Continuum_Vorschau.html enthält die vollständige Offlineansicht. Die neue Fassung trägt oben die Kennung PRÄSENZ / 02.
+Öffne die bestätigte private Webvorschau aus der Auslieferungsnachricht. Alle Projektdateien stehen dort unter „Projektdateien“. Die gesondert gelieferte Continuum_Vorschau.html enthält die vollständige Offlineansicht. Die neue Fassung trägt oben die Kennung KOMMANDO / 03. Mit „Recherche erleben“ startet ein steuerbarer Beispielablauf; „Eigene Datei öffnen“ liest tatsächliche lokale Textdateien. Die Seite ausprobieren.html bietet Breit-, Fold- und Schmalansicht.
 
 ## Bearbeitbare App starten
 

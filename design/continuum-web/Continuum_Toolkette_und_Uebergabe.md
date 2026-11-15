@@ -1,3 +1,7 @@
+# Aktueller Einstieg – Kommando 03
+
+Stand 15.11.2026: Die aktuelle bedienbare Oberfläche steht unter https://device-ai-continuum-heinz.electemu.chatgpt.site bereit. Die unten dokumentierte Werkzeugkette bleibt zur Weiterverarbeitung verwendbar. Neue Laufzeitmodule: workspace-motion.js, telemetry.js und operations.js, jeweils mit CSS. Der Projektordner enthält die aktuelle Implementierung, originale Assets und bearbeitbare Blender-Dateien. Die Figma-Datei zeigt den früheren Entwurf.
+
 # Continuum – Toolkette und nächste Übergabe
 
 Stand: 15. November 2026. „Von App zu App“ bedeutet hier: überprüfbare Moduldateien, Quellen und Zustandsverträge weiterreichen. Ein Import überträgt nicht automatisch die gesamte App. Der Originalavatar behält den in `Continuum_Designuebergabe.md` festgehaltenen SHA-256; die Originalkugel bleibt ihr nachgewiesener Renderer.

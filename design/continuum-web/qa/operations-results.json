@@ -1,0 +1,44 @@
+{
+  "suite": "operations-dom",
+  "passed": 9,
+  "failed": 0,
+  "browserOrGPU": false,
+  "tests": [
+    {
+      "name": "Research starts from real app action, full timeline retains the live computer DOM",
+      "passed": true
+    },
+    {
+      "name": "Pause holds the exact timeline and resume keeps progress",
+      "passed": true
+    },
+    {
+      "name": "Every timeline step and source is selectable, with original HTTPS source URLs",
+      "passed": true
+    },
+    {
+      "name": "Tab keyboard navigation and arbitrary query input are safe and labelled",
+      "passed": true
+    },
+    {
+      "name": "Navigation cancels running playback and prevents a late result replacing another screen",
+      "passed": true
+    },
+    {
+      "name": "A real local file produces exact word, line and paragraph counts without HTML execution",
+      "passed": true
+    },
+    {
+      "name": "Pending file reads cannot replace a later navigation",
+      "passed": true
+    },
+    {
+      "name": "Invalid types and oversized files are rejected while empty files remain readable",
+      "passed": true
+    },
+    {
+      "name": "Research command in the composer is routed and negated document commands remain safe",
+      "passed": true
+    }
+  ]
+}

@@ -1,3 +1,15 @@
+# Device AI Continuum – Kommando 03
+
+Die aktuelle Vorschau und der vollständige Funktions-/Prüfstand stehen in [Continuum_Designuebergabe.md](Continuum_Designuebergabe.md). Einstieg: [private App](https://device-ai-continuum-heinz.electemu.chatgpt.site), [Bildschirmformate](https://device-ai-continuum-heinz.electemu.chatgpt.site/ausprobieren.html).
+
+## Aktueller Stand
+
+Größere Originalpräsenz ohne R-Marke, CPU/RAM-Instrumente, projizierter Computer, lokal lesbare eigene Textdateien und ein unterbrechbarer räumlicher Fenstercontroller. Der Rechercheablauf ist als gespeicherte Simulation gekennzeichnet; die lokale Dateiauswertung verwendet tatsächliche Inhalte.
+
+63 gezielte Prüfungen bestanden. Browser-Bedienwege und tatsächlicher Dateiimport geprüft; Originalbild-Fallback aktiv, kein Fold-FPS-Nachweis. Weitere Details und Browsergrenzen stehen im Übergabedokument.
+
+## Vorheriger Stand und Bestand
+
 # Device AI Continuum – bewegter Arbeitsraum mit den vorhandenen Originalen
 
 Diese isolierte Gestaltungsfassung setzt das gewünschte Raster um: Chats und Projekte links, Werkzeuge oben, Avatar und Linkleiste in der Mitte, Diagramme und Quellen rechts. In Präsenz 02 steht der Originalavatar mittig vor der geometrisch ruhenden Originalkugel. Zwei neue interaktive Hologramme flankieren diese Einheit. Sie verbindet den vorhandenen Kopf und Kugelrenderer mit kontinuierlicher Atmosphäre, räumlichen Arbeitsflächen und einer bedienbaren Argon4-Demonstration.

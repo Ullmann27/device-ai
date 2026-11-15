@@ -48,7 +48,16 @@ let sourceVerification = 'pending';
 let lastError = null;
 let frames = 0;
 let observer = null;
+let resizeFrame = 0;
 let morphMeshes = [];
+const morphBindings = [];
+let resolutionScale = 1;
+let budgetSampleAt = 0;
+let budgetChangedAt = 0;
+let intervalAverage = 16.7;
+let renderCpuAverage = 0;
+let pressureSamples = 0;
+let bufferResizes = 0;
 let firstFrame = true;
 const listeners = [];
 
@@ -85,16 +94,51 @@ function fitCamera() {
   const aspect = width / height;
   const referenceAspect = PORTRAIT.width / PORTRAIT.height;
   const mode = crop.dataset.avatarFit === 'cover' ? 'cover' : 'contain';
+  // Preserve the authored portrait projection. Only raster resolution adapts;
+  // a larger CSS portrait must not grow into an unlimited DPR=2 render target.
+  const compact = window.innerWidth <= 760;
+  const maximumPixels = compact ? 280000 : 460000;
+  const pixelRatio = Math.max(.75, Math.min(window.devicePixelRatio || 1,
+    compact ? 1.5 : 1.7, Math.sqrt(maximumPixels / (width * height))) * resolutionScale);
+  if (framing && framing.width === width && framing.height === height &&
+      framing.mode === mode && Math.abs(framing.pixelRatio - pixelRatio) < .001) return;
   const fit = mode === 'cover' ? Math.min(1, referenceAspect / aspect) : Math.max(1, referenceAspect / aspect);
   const halfHeight = PORTRAIT.height * .5 * fit;
-  framing = { width, height, mode, halfHeight, halfWidth: halfHeight * aspect };
+  framing = { width, height, mode, halfHeight, halfWidth: halfHeight * aspect, pixelRatio };
   camera.left = -halfHeight * width / height;
   camera.right = halfHeight * width / height;
   camera.top = halfHeight;
   camera.bottom = -halfHeight;
   camera.updateProjectionMatrix();
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setSize(width, height, false);
+  // setDrawingBufferSize changes dimensions and DPR together, avoiding the
+  // duplicate buffer reset caused by setPixelRatio followed by setSize.
+  renderer.setDrawingBufferSize(width, height, pixelRatio);
+  bufferResizes++;
+}
+
+function queueCameraFit() {
+  if (resizeFrame || failed || !renderer) return;
+  resizeFrame = requestAnimationFrame(() => { resizeFrame = 0; fitCamera(); });
+}
+
+function sampleBudget(now, intervalMs, cpuMs) {
+  // CPU duration is an enqueue measurement, not GPU completion or measured fps.
+  // Frame intervals also cover the rest of the app; sustained pressure lowers
+  // only this raster's resolution. Motion still evaluates on every RAF.
+  if (intervalMs > 0 && intervalMs < 120) intervalAverage += (intervalMs - intervalAverage) * .035;
+  renderCpuAverage += (cpuMs - renderCpuAverage) * .035;
+  if (frames < 90 || now - budgetSampleAt < 1800) return;
+  budgetSampleAt = now;
+  const pressured = intervalAverage > 24 || renderCpuAverage > 10;
+  pressureSamples = pressured ? pressureSamples + 1 : 0;
+  if (pressureSamples >= 2 && resolutionScale > .7) {
+    resolutionScale = Math.max(.7, resolutionScale - .1);
+    pressureSamples = 0; budgetChangedAt = now; queueCameraFit();
+  } else if (!pressured && intervalAverage < 18 && renderCpuAverage < 5 &&
+      now - budgetChangedAt > 12000 && resolutionScale < 1) {
+    resolutionScale = Math.min(1, resolutionScale + .05);
+    budgetChangedAt = now; queueCameraFit();
+  }
 }
 
 function rotate(name, pitch, yaw) {
@@ -106,6 +150,8 @@ function rotate(name, pitch, yaw) {
 
 function render(now) {
   if (!running || failed || !loaded) return;
+  const cpuStarted = performance.now();
+  const intervalMs = lastRenderTime === null ? 16.7 : now - lastRenderTime;
   try {
     const pose = motion.update(now);
     rotate('Neck', pose.neckPitch, pose.neckYaw);
@@ -113,11 +159,9 @@ function render(now) {
     rotate('EyeLeft', pose.eyePitch, pose.eyeYaw);
     rotate('EyeRight', pose.eyePitch, pose.eyeYaw);
     rotate('Jaw', pose.jawPitch, 0);
-    for (const mesh of morphMeshes) {
-      for (const name of AVATAR_TARGETS) {
-        const index = mesh.morphTargetDictionary[name];
-        mesh.morphTargetInfluences[index] = pose.weights[name];
-      }
+    for (const binding of morphBindings) {
+      const value = pose.weights[binding.name];
+      if (binding.influences[binding.index] !== value) binding.influences[binding.index] = value;
     }
     sceneGroup.position.y = pose.breathOffset;
     sceneGroup.rotation.z = pose.breathRoll;
@@ -147,6 +191,7 @@ function render(now) {
       crop.setAttribute('aria-label', 'Original-Continuum-Avatar mit aktivem 3D-Rig und Augenbewegung');
       announce('original-webgl');
     }
+    sampleBudget(now, intervalMs, performance.now() - cpuStarted);
   } catch (error) {
     failed = true;
     running = false;
@@ -161,9 +206,24 @@ function setState(next) {
   state = motion.state;
 }
 
+function gazeAtElement(target, durationMs = 2200) {
+  if (!(target instanceof Element) || !crop) return false;
+  // Selection-time layout reads only; no geometry queries in the render loop.
+  const chosen = target.getBoundingClientRect();
+  const portrait = crop.getBoundingClientRect();
+  if (chosen.width <= 0 || chosen.height <= 0 || portrait.width <= 0 || portrait.height <= 0) return false;
+  const centerX = portrait.left + portrait.width * .5;
+  const centerY = portrait.top + portrait.height * .43;
+  const gazeX = THREE.MathUtils.clamp((chosen.left + chosen.width * .5 - centerX) / Math.max(240, window.innerWidth * .5), -.55, .55);
+  const gazeY = THREE.MathUtils.clamp((centerY - chosen.top - chosen.height * .5) / Math.max(320, window.innerHeight * .55), -.38, .32);
+  motion.setGaze(gazeX, gazeY, durationMs);
+  return true;
+}
+
 function dispose() {
   running = false;
   cancelAnimationFrame(frame);
+  cancelAnimationFrame(resizeFrame);
   observer?.disconnect();
   for (const remove of listeners.splice(0)) remove();
   if (root) root.traverse(object => {
@@ -185,10 +245,12 @@ window.ContinuumAvatar = Object.freeze({
   /** Actual speech event: {viseme:'AA', weight:0..1, jawOpen:0..1, durationMs:20..500}. */
   setSpeechFrame: frame => motion.setSpeechFrame(frame),
   clearSpeech: () => motion.clearSpeech(),
-  resize: fitCamera,
+  resize: queueCameraFit,
   getStatus: () => ({ renderer: !failed && loaded && !firstFrame ? 'original-webgl' : 'original-png',
     state, loaded, sourceVerified, sourceVerification, sourceSha256: SOURCE_SHA256,
     morphMeshCount: morphMeshes.length, frames, lastError, framing,
+    resolutionScale, bufferResizes, renderCpuAverageMs: renderCpuAverage,
+    frameIntervalAverageMs: intervalAverage,
     speechSource: 'external-viseme-events-only' }),
   dispose,
 });
@@ -206,25 +268,20 @@ async function boot() {
     if (detail.state) setState(detail.state);
     if (Number.isFinite(detail.intensity)) intensity = Math.min(1.8, Math.max(.1, detail.intensity));
   });
-  listen(window, 'continuum:sceneresize', fitCamera);
+  listen(window, 'continuum:sceneresize', queueCameraFit);
   listen(window, 'continuum:viseme', event => motion.setSpeechFrame(event.detail));
   listen(window, 'continuum:speechend', () => motion.clearSpeech());
   listen(window, 'continuum:gaze', event => {
-    const { x, y, durationMs } = event.detail || {};
+    const { x, y, durationMs, target } = event.detail || {};
+    if (target && gazeAtElement(target, durationMs)) return;
     if (Number.isFinite(x) && Number.isFinite(y)) motion.setGaze(x, y, durationMs);
   });
   listen(document, 'pointerdown', event => {
     if (!(event.target instanceof Element)) return;
-    const target = event.target.closest('[data-phase], [data-source]') ||
+    const target = event.target.closest('[data-phase], [data-source], [data-op-source]') ||
       event.target.closest('.presence-instrument-left, .presence-instrument-right, .workspace-body, .chart-panel, .document-pane');
     if (!target) return;
-    const chosen = target.getBoundingClientRect();
-    const portrait = crop.getBoundingClientRect();
-    const centerX = portrait.left + portrait.width * .5;
-    const centerY = portrait.top + portrait.height * .43;
-    const gazeX = THREE.MathUtils.clamp((chosen.left + chosen.width * .5 - centerX) / Math.max(240, window.innerWidth * .5), -.55, .55);
-    const gazeY = THREE.MathUtils.clamp((centerY - chosen.top - chosen.height * .5) / Math.max(320, window.innerHeight * .55), -.38, .32);
-    motion.setGaze(gazeX, gazeY, 2200);
+    gazeAtElement(target);
   }, { passive: true });
 
   try {
@@ -295,6 +352,8 @@ async function boot() {
           throw new Error(`Original morph contract differs on ${object.name}`);
         }
         morphMeshes.push(object);
+        for (const name of AVATAR_TARGETS) morphBindings.push({ name,
+          index: object.morphTargetDictionary[name], influences: object.morphTargetInfluences });
       }
     });
     if (morphMeshes.length !== 3) throw new Error(`Expected three original morph primitives; received ${morphMeshes.length}`);
@@ -302,6 +361,9 @@ async function boot() {
     sceneGroup.name = 'ContinuumPresentationOnly';
     sceneGroup.add(root);
     scene.add(sceneGroup);
+    // Compile the unchanged material programs while the original PNG remains
+    // visible; supported parallel shader compilation avoids a reveal-time hitch.
+    await renderer.compileAsync(scene, camera);
     loaded = true;
     // Original materials and embedded textures are deliberately left untouched.
     listen(canvas, 'webglcontextlost', event => {
@@ -311,7 +373,7 @@ async function boot() {
       cancelAnimationFrame(frame);
       showFallback('WebGL context lost; original PNG remains available.');
     });
-    observer = new ResizeObserver(fitCamera);
+    observer = new ResizeObserver(queueCameraFit);
     observer.observe(crop);
     running = true;
     frame = requestAnimationFrame(render);

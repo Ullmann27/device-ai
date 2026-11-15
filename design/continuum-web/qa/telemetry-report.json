@@ -1,0 +1,45 @@
+{
+  "runtime": "Node + jsdom with explicitly supplied measurement fixtures; no device or browser performance claim",
+  "tests": [
+    {
+      "name": "default instrument titles and every source label explicitly identify simulation",
+      "passed": true
+    },
+    {
+      "name": "frame collection performs no DOM writes and samples at most twice per second",
+      "passed": true
+    },
+    {
+      "name": "browser mode reports supplied frame timing and JS heap without CPU percentages",
+      "passed": true
+    },
+    {
+      "name": "missing, rejected or invalid APIs stay unavailable instead of becoming zero values",
+      "passed": true
+    },
+    {
+      "name": "simulation is deterministic and responds only illustratively to operation events",
+      "passed": true
+    },
+    {
+      "name": "operation payloads never fabricate live CPU/RAM readings or insert HTML",
+      "passed": true
+    },
+    {
+      "name": "mode changes synchronize both instruments, preserve DOM controls and drop demo history",
+      "passed": true
+    },
+    {
+      "name": "hidden pages stop collectors and avoid treating the hidden gap as frame time",
+      "passed": true
+    },
+    {
+      "name": "controls keep 44px hit height, numbers are at least 24px and labels at least 11px",
+      "passed": true
+    },
+    {
+      "name": "destroy disconnects observers, callbacks, event listeners and only its own DOM",
+      "passed": true
+    }
+  ]
+}

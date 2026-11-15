@@ -39,15 +39,34 @@
   let audioSampleAt = 0;
   let orbVisible = false;
   let averageFrame = 16.7;
+  let averageCpu = 0;
   let qualitySample = 0;
+  let resolutionScale = 1;
+  let budgetChangedAt = 0;
+  let pressureSamples = 0;
+  let resizeTimer = 0;
+  let resizeObserver = null;
+  let bufferResizes = 0;
+  let backdrop = null;
+  let backdropWidth = 0;
+  let backdropHeight = 0;
+  let backdropBuilds = 0;
+  let audioEventPending = false;
+  let lastAudioEventAt = -Infinity;
   let reducedMotion = false;
   let destroyed = false;
   let active = false;
+  let renderedFrames = 0;
   let anchorTimer = 0;
   let orbAnchor = null;
   let workAnchor = null;
   let orb = { x: 0, y: 0, r: 0 };
   let work = { x: 0, y: 0 };
+  const center = { x: 0, y: 0 };
+  const curveA = { x: 0, y: 0 }, curveB = { x: 0, y: 0 };
+  const curveC = { x: 0, y: 0 }, curveD = { x: 0, y: 0 };
+  const curveFrom = { x: 0, y: 0 }, curveTo = { x: 0, y: 0 };
+  const connectionSamples = new Float32Array(61 * 3);
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
   const sprites = Object.create(null);
   const lightFields = Object.create(null);
@@ -169,29 +188,81 @@
         r = Math.min(bounds.width * 0.32, bounds.height * 0.30) * 1.04;
       }
     }
-    orb = { x, y, r };
-    work = { x: width * (phone ? 0.57 : 0.52), y: phone ? 326 : 440 };
+    let wx = width * (phone ? 0.57 : 0.52), wy = phone ? 326 : 440;
     if (workAnchor) {
       const bounds = workAnchor.getBoundingClientRect();
       if (bounds.width > 0 && bounds.height > 0) {
-        work = { x: bounds.left + bounds.width * 0.56, y: bounds.top + Math.min(36, bounds.height * 0.08) };
+        wx = bounds.left + bounds.width * 0.56;
+        wy = bounds.top + Math.min(36, bounds.height * 0.08);
       }
     }
+    const changed = x !== orb.x || y !== orb.y || r !== orb.r || wx !== work.x || wy !== work.y;
+    orb.x = x; orb.y = y; orb.r = r; work.x = wx; work.y = wy;
+    return changed;
+  }
+
+  function buildBackdrop() {
+    // The broad diffuse lights and quiet architecture are one reusable raster.
+    // Fog, rays, veins and particles retain their own continuous motion above it.
+    if (!backdrop) backdrop = document.createElement("canvas");
+    const margin = 32;
+    backdropWidth = width + margin * 2; backdropHeight = height + margin * 2;
+    const scale = Math.min(1, Math.sqrt(1100000 / (backdropWidth * backdropHeight)));
+    backdrop.width = Math.ceil(backdropWidth * scale);
+    backdrop.height = Math.ceil(backdropHeight * scale);
+    const context = backdrop.getContext("2d");
+    context.setTransform(scale, 0, 0, scale, margin * scale, margin * scale);
+    context.fillStyle = "#030810";
+    context.fillRect(-margin, -margin, backdropWidth, backdropHeight);
+    const fields = [[.61, .22, .65, "17,39,84", .27], [.22, .34, .49, "9,78,105", .22], [.865, .47, .46, "55,29,104", .18]];
+    for (const [x, y, radius, rgb, alpha] of fields) {
+      const cx = width * x, cy = height * y, r = width * radius;
+      const light = context.createRadialGradient(cx, cy, 0, cx, cy, r);
+      light.addColorStop(0, `rgba(${rgb},${alpha * intensity})`);
+      light.addColorStop(.45, `rgba(${rgb},${alpha * intensity * .36})`);
+      light.addColorStop(1, `rgba(${rgb},0)`);
+      context.fillStyle = light; context.fillRect(cx - r, cy - r, r * 2, r * 2);
+    }
+    context.globalCompositeOperation = "screen";
+    for (let i = 0; i < 5; i++) {
+      const inset = i * (phone ? 15 : 29);
+      context.beginPath();
+      context.ellipse(width * .5, phone ? 260 : 370, Math.max(1, width * .72 - inset),
+        (phone ? 320 : 475) - inset, -.03, Math.PI * 1.02, Math.PI * 1.98);
+      context.strokeStyle = i === 1 ? `rgba(70,184,221,${.105 * intensity})` : `rgba(51,101,151,${.037 * intensity})`;
+      context.lineWidth = i === 1 ? 1.1 : 3; context.stroke();
+    }
+    backdropBuilds++;
   }
 
   function resize() {
     if (!canvas || destroyed) return;
     const bounds = canvas.getBoundingClientRect();
-    width = Math.max(1, bounds.width || window.innerWidth);
-    height = Math.max(1, bounds.height || window.innerHeight);
+    const nextWidth = Math.max(1, bounds.width || window.innerWidth);
+    const nextHeight = Math.max(1, bounds.height || window.innerHeight);
+    const sizeChanged = nextWidth !== width || nextHeight !== height;
+    width = nextWidth; height = nextHeight;
     phone = width <= 760;
-    const maximumRatio = quality < 0.7 ? 1.15 : phone ? 1.4 : 1.65;
-    pixelRatio = Math.min(window.devicePixelRatio || 1, maximumRatio);
-    canvas.width = Math.round(width * pixelRatio);
-    canvas.height = Math.round(height * pixelRatio);
-    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    updateAnchors();
-    window.dispatchEvent(new CustomEvent("continuum:sceneresize"));
+    const maximumRatio = quality < .7 ? 1.05 : phone ? 1.2 : 1.3;
+    const pixelBudget = phone ? 580000 : 1550000;
+    const nextRatio = Math.min(window.devicePixelRatio || 1, maximumRatio,
+      Math.sqrt(pixelBudget / (width * height))) * resolutionScale;
+    const pixelsWide = Math.round(width * nextRatio), pixelsHigh = Math.round(height * nextRatio);
+    const bufferChanged = canvas.width !== pixelsWide || canvas.height !== pixelsHigh;
+    pixelRatio = nextRatio;
+    if (bufferChanged) {
+      canvas.width = pixelsWide; canvas.height = pixelsHigh;
+      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      bufferResizes++;
+    }
+    if (sizeChanged || !backdrop) buildBackdrop();
+    const anchorChanged = updateAnchors();
+    if (sizeChanged || bufferChanged || anchorChanged) window.dispatchEvent(new CustomEvent("continuum:sceneresize"));
+  }
+
+  function queueResize() {
+    if (resizeTimer || destroyed) return;
+    resizeTimer = requestAnimationFrame(() => { resizeTimer = 0; resize(); });
   }
 
   function drawHazePlane(index, t, light) {
@@ -226,15 +297,16 @@
     for (let j = 0; j < 2; j++) {
       const i = layer * 2 + j, phase = t * (.0107 + i * .0031) + i * 1.73;
       const y = height * (.15 + i * .124) + Math.sin(phase) * height * .018 + pointer.y * depth * 15;
-      const a = { x: -width * .08, y: y - 23 }, b = { x: width * .24, y: y + Math.cos(phase * .63) * 47 };
-      const c = { x: width * .72, y: y - 32 }, d = { x: width * 1.08, y: y + 23 };
+      const a = curveA, b = curveB, c = curveC, d = curveD;
+      a.x = -width * .08; a.y = y - 23; b.x = width * .24; b.y = y + Math.cos(phase * .63) * 47;
+      c.x = width * .72; c.y = y - 32; d.x = width * 1.08; d.y = y + 23;
       const shift = pointer.x * depth * 18;
       ctx.save(); ctx.translate(shift, 0); ctx.globalAlpha = 1;
       ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.bezierCurveTo(b.x, b.y, c.x, c.y, d.x, d.y);
       ctx.strokeStyle = `rgba(${i % 2 ? "105,99,192" : "51,164,192"},${(.028 + depth * .026) * light})`;
       ctx.lineWidth = .55 + depth * .45; ctx.stroke();
       const progress = (t * (.0061 + i * .0013) + i * .217) % 1;
-      const from = curvePoint(progress, a, b, c, d), to = curvePoint(Math.min(1, progress + .026), a, b, c, d);
+      const from = curvePoint(progress, a, b, c, d, curveFrom), to = curvePoint(Math.min(1, progress + .026), a, b, c, d, curveTo);
       const fade = Math.sin(progress * Math.PI) ** 2;
       ctx.beginPath(); ctx.moveTo(from.x, from.y); ctx.lineTo(to.x, to.y);
       ctx.strokeStyle = `rgba(114,215,236,${(.1 + depth * .09) * fade * light})`;
@@ -252,9 +324,11 @@
       const sx = s.x * width + pointer.x * (2 + depth * 11);
       const sy = s.y * height + pointer.y * (1 + depth * 8);
       const alpha = (.105 + depth * .16) * (.82 + Math.sin(t * (.113 + s.z * .127) + s.phase) * .18) * light;
-      ctx.fillStyle = `rgba(146,195,222,${alpha})`; ctx.beginPath(); ctx.arc(sx, sy, s.radius * (.55 + depth * .35), 0, TAU); ctx.fill();
+      ctx.fillStyle = "#92c3de"; ctx.globalAlpha = alpha;
+      ctx.beginPath(); ctx.arc(sx, sy, s.radius * (.55 + depth * .35), 0, TAU); ctx.fill();
       if (i % 23 === 0) glow(sx, sy, 6 + depth * 7, alpha * .4, "blue");
     }
+    ctx.globalAlpha = 1;
     const dustCount = Math.floor((phone ? 45 : dust.length) * quality);
     for (let i = 0; i < dustCount; i++) {
       const p = dust[i]; if (p.layer !== layer) continue;
@@ -268,32 +342,21 @@
   }
 
   function atmosphere(elapsed) {
-    ctx.globalCompositeOperation = "source-over";
+    // The opaque cached raster covers the viewport. Copy also retires the
+    // previous frame explicitly rather than retaining a compositing history.
+    ctx.globalCompositeOperation = "copy";
     ctx.globalAlpha = 1;
-    ctx.fillStyle = "#030810";
-    ctx.fillRect(0, 0, width, height);
 
     // One uninterrupted timebase, independent incommensurate layer frequencies.
     // No state transition starts or resets atmosphere phases.
     const t = elapsed * (reducedMotion ? .35 : 1), light = intensity * (.87 + energy * .13);
-    softLight(width * (.61 + Math.sin(t / 43.7) * .05), height * .22, width * .65, "17,39,84", .27 * light);
-    softLight(width * .22, height * (.34 + Math.sin(t / 71.3) * .04), width * .49, "9,78,105", .22 * light);
-    softLight(width * (.84 + Math.cos(t / 59.9) * .025), height * .47, width * .46, "55,29,104", .18 * light);
+    const driftX = Math.sin(t / 43.7) * 7 + pointer.x * 3;
+    const driftY = Math.sin(t / 71.3) * 4 + pointer.y * 2;
+    ctx.drawImage(backdrop, -32 + driftX, -32 + driftY, backdropWidth, backdropHeight);
+    ctx.globalCompositeOperation = "source-over";
 
     ctx.save();
     ctx.globalCompositeOperation = "screen";
-    // Architectural arches remain quieter than the objects they enclose.
-    for (let i = 0; i < 5; i++) {
-      const inset = i * (phone ? 15 : 29);
-      const x = width * 0.5 + pointer.x * (2 + i * 1.3);
-      const y = phone ? 260 : 370;
-      ctx.beginPath();
-      ctx.ellipse(x, y, width * 0.72 - inset, (phone ? 320 : 475) - inset, -0.03, Math.PI * 1.02, Math.PI * 1.98);
-      ctx.strokeStyle = i === 1 ? `rgba(70,184,221,${.105 * light})` : `rgba(51,101,151,${.037 * light})`;
-      ctx.lineWidth = i === 1 ? 1.1 : 3;
-      ctx.stroke();
-    }
-
     drawHazePlane(0, t, light); drawLightVeins(0, t, light); drawDepthParticles(0, t, light);
     drawVolumetricRays(t, light);
     for (let layer = 1; layer < 3; layer++) {
@@ -594,28 +657,37 @@
     ctx.restore();
   }
 
-  function curvePoint(u, a, b, c, d) {
+  function curvePoint(u, a, b, c, d, out = curveFrom) {
     const v = 1 - u;
-    return { x: v * v * v * a.x + 3 * v * v * u * b.x + 3 * v * u * u * c.x + u * u * u * d.x,
-      y: v * v * v * a.y + 3 * v * v * u * b.y + 3 * v * u * u * c.y + u * u * u * d.y };
+    out.x = v * v * v * a.x + 3 * v * v * u * b.x + 3 * v * u * u * c.x + u * u * u * d.x;
+    out.y = v * v * v * a.y + 3 * v * v * u * b.y + 3 * v * u * u * c.y + u * u * u * d.y;
+    return out;
   }
 
   function drawConnection(t, center, radius, elapsed) {
-    const a = { x: center.x - radius * 0.45, y: center.y + radius * 0.55 };
-    const d = work;
-    const b = { x: a.x - radius * 0.35, y: a.y + radius * 0.93 };
-    const c = { x: d.x + radius * 0.58, y: d.y - radius * 0.28 };
+    const a = curveA, b = curveB, c = curveC, d = work;
+    a.x = center.x - radius * .45; a.y = center.y + radius * .55;
+    b.x = a.x - radius * .35; b.y = a.y + radius * .93;
+    c.x = d.x + radius * .58; c.y = d.y - radius * .28;
     const reveal = state === "forming" ? smooth(0.18, 0.63, elapsed) : 1;
     const alpha = connection * intensity;
+    // Evaluate the shared cubic once, then reuse its points for all strands.
+    for (let i = 0; i <= 60; i++) {
+      const u = i / 60 * reveal;
+      curvePoint(u, a, b, c, d, curveFrom);
+      connectionSamples[i * 3] = curveFrom.x;
+      connectionSamples[i * 3 + 1] = curveFrom.y;
+      connectionSamples[i * 3 + 2] = Math.sin(u * Math.PI) * (phone ? 2.7 : 5.7);
+    }
     ctx.save();
     ctx.globalCompositeOperation = "screen";
     for (let line = 0; line < 3; line++) {
       ctx.beginPath();
       for (let i = 0; i <= 60; i++) {
         const u = i / 60 * reveal;
-        const point = curvePoint(u, a, b, c, d);
-        const wave = Math.sin(u * TAU * 1.7 - t * (0.5 + line * 0.12) + line) * Math.sin(u * Math.PI) * (phone ? 2.7 : 5.7);
-        if (!i) ctx.moveTo(point.x + wave, point.y + line * 2); else ctx.lineTo(point.x + wave, point.y + line * 2);
+        const wave = Math.sin(u * TAU * 1.7 - t * (0.5 + line * 0.12) + line) * connectionSamples[i * 3 + 2];
+        const x = connectionSamples[i * 3] + wave, y = connectionSamples[i * 3 + 1] + line * 2;
+        if (!i) ctx.moveTo(x, y); else ctx.lineTo(x, y);
       }
       ctx.strokeStyle = line === 1 ? `rgba(127,110,255,${alpha * 0.25})` : `rgba(76,208,255,${alpha * (line === 0 ? 0.5 : 0.14)})`;
       ctx.lineWidth = line === 2 ? 5.5 : 0.85;
@@ -624,8 +696,8 @@
     for (let i = 0; i < 5; i++) {
       const u = (t * 0.2 + i / 5) % 1;
       if (u > reveal) continue;
-      const point = curvePoint(u, a, b, c, d);
-      const tail = curvePoint(Math.max(0, u - 0.06), a, b, c, d);
+      const point = curvePoint(u, a, b, c, d, curveFrom);
+      const tail = curvePoint(Math.max(0, u - 0.06), a, b, c, d, curveTo);
       ctx.beginPath();
       ctx.moveTo(tail.x, tail.y);
       ctx.lineTo(point.x, point.y);
@@ -654,6 +726,8 @@
 
   function render(timestamp) {
     if (destroyed || !ctx) return;
+    const cpuStarted = performance.now();
+    const interval = timestamp - previousTime;
     const dt = clamp((timestamp - previousTime) / 1000, 0.001, 0.06);
     previousTime = timestamp;
     const t = (timestamp - started) / 1000;
@@ -665,10 +739,8 @@
     pointer.x = mix(pointer.x, pointer.tx, 1 - Math.exp(-dt * 2.5));
     pointer.y = mix(pointer.y, pointer.ty, 1 - Math.exp(-dt * 2.5));
     const anchored = orbAnchor?.dataset.orbMotion === "fixed" || orbAnchor?.dataset.orbMotion === "anchored";
-    const center = anchored ? { x: orb.x, y: orb.y } : {
-      x: orb.x + pointer.x * (phone ? 2 : 4),
-      y: orb.y + Math.sin(t * TAU / 9.73) * (reducedMotion ? 0.35 : phone ? 1.6 : 2.8) + pointer.y * 2,
-    };
+    center.x = orb.x + (anchored ? 0 : pointer.x * (phone ? 2 : 4));
+    center.y = orb.y + (anchored ? 0 : Math.sin(t * TAU / 9.73) * (reducedMotion ? .35 : phone ? 1.6 : 2.8) + pointer.y * 2);
     const radius = orb.r;
     const voiceActive = state === "listening" || state === "speaking";
     const voice = voiceActive && audioLevel !== null ? audioLevel : 0;
@@ -703,17 +775,26 @@
     if (state === "result") resultWave(elapsed, center, radius);
     }
 
-    // Adapt only detail density. Every depth and motion system remains present.
-    averageFrame = mix(averageFrame, dt * 1000, 0.035);
-    if (!explicitQuality && timestamp - qualitySample > 6000 && t > 5) {
+    renderedFrames++;
+    // Every depth and motion system remains active. Even the explicit "high"
+    // density mode adapts its raster size to sustained frame-budget pressure.
+    // These are CPU submission/RAF observations, never a GPU-time estimate.
+    if (interval > 0 && interval < 120) averageFrame = mix(averageFrame, interval, .035);
+    averageCpu = mix(averageCpu, performance.now() - cpuStarted, .035);
+    if (timestamp - qualitySample > 1800 && t > 3) {
       qualitySample = timestamp;
-      const next = averageFrame > 30 ? Math.max(0.6, quality - 0.1) : averageFrame < 19 ? Math.min(1, quality + 0.05) : quality;
-      if (next !== quality) {
-        quality = next;
-        resize();
-        emitSceneChange();
+      const pressured = averageFrame > 24 || averageCpu > 9;
+      pressureSamples = pressured ? pressureSamples + 1 : 0;
+      if (pressureSamples >= 2 && resolutionScale > .7) {
+        resolutionScale = Math.max(.7, resolutionScale - .1);
+        pressureSamples = 0; budgetChangedAt = timestamp; queueResize();
+      } else if (!pressured && averageFrame < 18 && averageCpu < 5 &&
+          timestamp - budgetChangedAt > 12000 && resolutionScale < 1) {
+        resolutionScale = Math.min(1, resolutionScale + .05);
+        budgetChangedAt = timestamp; queueResize();
       }
     }
+    if (audioEventPending && performance.now() - lastAudioEventAt >= 33) emitSceneChange();
     animationFrame = requestAnimationFrame(render);
   }
 
@@ -722,12 +803,14 @@
     if (state !== next) {
       state = next;
       stateStarted = (performance.now() - started) / 1000;
+      emitSceneChange();
     }
-    emitSceneChange();
     return true;
   }
 
   function emitSceneChange() {
+    audioEventPending = false;
+    lastAudioEventAt = performance.now();
     window.dispatchEvent(new CustomEvent("continuum:scenechange", {
       detail: { state, intensity, quality, audioLevel, audioSampleAt },
     }));
@@ -736,15 +819,19 @@
   function setQuality(value) {
     const presets = { low: 0.6, medium: 0.8, high: 1 };
     if (value === "auto") {
+      if (!explicitQuality) return;
       explicitQuality = false;
       emitSceneChange();
       return;
     }
     const numeric = typeof value === "string" ? presets[value] : Number(value);
     if (!Number.isFinite(numeric)) return;
+    const next = clamp(numeric, .6, 1);
+    const changed = quality !== next || !explicitQuality;
     explicitQuality = true;
-    quality = clamp(numeric, 0.6, 1);
-    resize();
+    if (!changed) return;
+    quality = next;
+    queueResize();
     emitSceneChange();
   }
 
@@ -781,7 +868,11 @@
     makeSprite("amber", "255,180,90");
     makeAtmosphereTextures();
     resize();
-    window.addEventListener("resize", resize, { passive: true });
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(queueResize);
+      resizeObserver.observe(canvas);
+    }
+    window.addEventListener("resize", queueResize, { passive: true });
     window.addEventListener("pointermove", onPointer, { passive: true });
     document.addEventListener("pointerleave", onPointerLeave, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -793,7 +884,9 @@
     destroyed = true;
     cancelAnimationFrame(animationFrame);
     cancelAnimationFrame(anchorTimer);
-    window.removeEventListener("resize", resize);
+    cancelAnimationFrame(resizeTimer);
+    resizeObserver?.disconnect();
+    window.removeEventListener("resize", queueResize);
     window.removeEventListener("pointermove", onPointer);
     document.removeEventListener("pointerleave", onPointerLeave);
     window.removeEventListener("scroll", onScroll);
@@ -801,7 +894,7 @@
 
   window.ContinuumScene = Object.freeze({
     setState,
-    resize,
+    resize: queueResize,
     setQuality,
     setOrbVisible() {
       // Compatibility hook only: the procedural replacement is retired.
@@ -810,19 +903,26 @@
     setIntensity(value) {
       const numeric = Number(value);
       if (Number.isFinite(numeric)) {
-        intensity = clamp(numeric, 0.35, 1.6);
+        const next = clamp(numeric, .35, 1.6);
+        if (next === intensity) return;
+        intensity = next;
+        if (backdrop) buildBackdrop();
         emitSceneChange();
       }
     },
     setAudioLevel(value) {
-      if (value === null) audioLevel = null;
+      if (value === null) { if (audioLevel === null) return; audioLevel = null; }
       else if (Number.isFinite(Number(value))) audioLevel = clamp(Number(value), 0, 1);
+      else return;
       audioSampleAt = performance.now();
-      emitSceneChange();
+      if (value === null || audioSampleAt - lastAudioEventAt >= 33) emitSceneChange();
+      else audioEventPending = true;
     },
     getState() { return state; },
     getStatus() { return { active, state, quality, intensity, audioLevel, audioSampleAt, orbVisible, width, height, pixelRatio,
       atmosphereLayers: 3, dustLayers: 3, rayCount: phone ? 3 : 5,
+      resolutionScale, adaptiveResolution: true, detailMode: explicitQuality ? "selected" : "auto", renderedFrames,
+      bufferResizes, backdropBuilds, renderCpuAverageMs: averageCpu, frameIntervalAverageMs: averageFrame,
       elapsedSeconds: (performance.now() - started) / 1000 }; },
     destroy,
   });

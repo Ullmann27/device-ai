@@ -36,7 +36,7 @@ ASSET_OVERRIDES = {
     "avatarFallback": "assets/continuum-avatar-original.png",
     "orbFallback": "assets/continuum-orb-original.png",
 }
-APP_SCRIPTS = ["scene.js", "orb-original.js", "avatar3d.js", "app.js", "presence-instruments.js"]
+APP_SCRIPTS = ["scene.js", "orb-original.js", "avatar3d.js", "workspace-motion.js", "app.js", "presence-instruments.js", "telemetry.js", "operations.js"]
 CSS_URL = re.compile(r"url\(\s*(?:\"([^\"]*)\"|'([^']*)'|([^\s)]+))\s*\)", re.I)
 SCRIPT_TAG = re.compile(r"<script\b([^>]*)>(.*?)</script\s*>", re.I | re.S)
 TAG = re.compile(r"<([a-zA-Z][\w:-]*)\b([^<>]*?)/?>", re.S)

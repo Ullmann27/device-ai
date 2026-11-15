@@ -15,6 +15,7 @@ const OPENING = Object.freeze({ SIL: 0, PP: 0, FF: .06 / .8, TH: .18 / .8,
   O: .36 / .8, U: .10 / .8 });
 const clamp = (v, lo, hi) => Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : 0;
 const move = (v, to, step) => v < to ? Math.min(to, v + step) : Math.max(to, v - step);
+const SILENCE = Object.freeze({ viseme: 'SIL', weight: 0, jawOpen: 0 });
 
 class CriticalSpring {
   constructor() { this.value = 0; this.velocity = 0; }
@@ -46,6 +47,12 @@ export class OriginalAvatarMotion {
     this.eyeYaw = new CriticalSpring();
     this.eyePitch = new CriticalSpring();
     this.visemeBlend = Object.fromEntries(VISEMES.map(name => [name, 0]));
+    // The renderer consumes this pose immediately. Reuse it instead of making
+    // 21 name/value pairs and a new result object on every animation frame.
+    this.weights = Object.fromEntries(AVATAR_TARGETS.map(name => [name, 0]));
+    this.pose = { weights: this.weights, neckYaw: 0, neckPitch: 0,
+      headYaw: 0, headPitch: 0, eyeYaw: 0, eyePitch: 0, jawPitch: 0,
+      breathOffset: 0, breathRoll: 0, activeSpeech: false };
     this.brow = 0;
     this.work = 0;
     this.speechAccent = 0;
@@ -84,8 +91,8 @@ export class OriginalAvatarMotion {
     }
     if (seconds >= this.nextGaze) {
       const direct = this.random() < .7;
-      this.idleGaze = { x: direct ? (this.random() - .5) * .055 : (this.random() - .5) * .22,
-        y: direct ? (this.random() - .5) * .035 : (this.random() - .5) * .13 };
+      this.idleGaze.x = direct ? (this.random() - .5) * .055 : (this.random() - .5) * .22;
+      this.idleGaze.y = direct ? (this.random() - .5) * .035 : (this.random() - .5) * .13;
       this.nextGaze = seconds + 1.1 + this.random() * 4.9;
     }
     const task = this.state === 'working' || this.state === 'forming';
@@ -107,13 +114,13 @@ export class OriginalAvatarMotion {
     const eyePitch = this.eyePitch.step(clamp(-gy * 8 + targetPitch - headPitch, -20, 20), dt, 54.44);
 
     const activeSpeech = this.speech && seconds <= this.speech.until;
-    const cue = activeSpeech ? this.speech : { viseme: 'SIL', weight: 0, jawOpen: 0 };
+    const cue = activeSpeech ? this.speech : SILENCE;
     const close = cue.viseme === 'PP' && cue.weight > 0;
     if (cue.viseme === 'SIL' || cue.weight <= 0 || close) {
       for (const name of VISEMES) this.visemeBlend[name] = 0;
       if (close) this.visemeBlend.PP = cue.weight;
     }
-    const weights = Object.fromEntries(AVATAR_TARGETS.map(name => [name, 0]));
+    const weights = this.weights;
     let renderedOpening = 0;
     for (const name of VISEMES) {
       const target = name === cue.viseme && name !== 'SIL' ? cue.weight : 0;
@@ -151,18 +158,17 @@ export class OriginalAvatarMotion {
     const extraYaw = .36 * Math.sin(seconds * Math.PI * 2 / 7.7) + .11 * Math.sin(seconds * Math.PI * 2 / 13.1);
     const totalYaw = headYaw + extraYaw;
     const totalPitch = headPitch + extraPitch;
-    return {
-      weights,
-      neckYaw: totalYaw * .65,
-      neckPitch: totalPitch * .65,
-      headYaw: totalYaw * .35,
-      headPitch: totalPitch * .35,
-      eyeYaw: clamp(eyeYaw - extraYaw * .8, -30, 30),
-      eyePitch: clamp(eyePitch - extraPitch * .8, -20, 20),
-      jawPitch: opening * 15,
-      breathOffset: breath * breathEnvelope * .00065,
-      breathRoll: .0017 * Math.sin(seconds * Math.PI * 2 / 9.1),
-      activeSpeech: Boolean(activeSpeech),
-    };
+    const pose = this.pose;
+    pose.neckYaw = totalYaw * .65;
+    pose.neckPitch = totalPitch * .65;
+    pose.headYaw = totalYaw * .35;
+    pose.headPitch = totalPitch * .35;
+    pose.eyeYaw = clamp(eyeYaw - extraYaw * .8, -30, 30);
+    pose.eyePitch = clamp(eyePitch - extraPitch * .8, -20, 20);
+    pose.jawPitch = opening * 15;
+    pose.breathOffset = breath * breathEnvelope * .00065;
+    pose.breathRoll = .0017 * Math.sin(seconds * Math.PI * 2 / 9.1);
+    pose.activeSpeech = Boolean(activeSpeech);
+    return pose;
   }
 }

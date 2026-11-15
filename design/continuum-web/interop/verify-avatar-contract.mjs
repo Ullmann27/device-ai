@@ -20,6 +20,8 @@ assert.equal(gltf.meshes.filter(mesh => mesh.extras?.targetNames).reduce((n, mes
 
 const quiet = new OriginalAvatarMotion();
 quiet.setState('speaking');
+const stablePose = quiet.update(0);
+assert.equal(quiet.update(1), stablePose, 'Animation must reuse its pose rather than allocate one each frame.');
 let maxBlink = 0;
 let minBreath = Infinity;
 let maxBreath = -Infinity;
@@ -61,17 +63,29 @@ assert.ok(Math.abs(pose.neckYaw / (pose.neckYaw + pose.headYaw) - .65) < .000001
 // Execute the actual bundled adapter on the no-WebGL path. This is a DOM
 // harness, not a browser/GPU rendering test.
 const crop = { style: {}, dataset: {}, clientWidth: 272, clientHeight: 299,
-  setAttribute() {}, appendChild() {} };
+  setAttribute() {}, appendChild() {},
+  getBoundingClientRect: () => ({ left: 400, top: 100, width: 272, height: 299 }) };
+const windowEvents = new Map();
+class TestElement {
+  constructor(rect) { this.rect = rect; this.reads = 0; }
+  getBoundingClientRect() { this.reads++; return this.rect; }
+}
 const dom = { readyState: 'complete', baseURI: 'https://preview.invalid/', currentScript: null,
   querySelector: () => crop, addEventListener() {}, removeEventListener() {},
   createElement: () => ({ style: {}, setAttribute() {}, getContext: () => null }) };
-const browser = { document: dom, addEventListener() {}, removeEventListener() {}, dispatchEvent() {},
+const browser = { document: dom, addEventListener: (name, fn) => windowEvents.set(name, fn), removeEventListener() {}, dispatchEvent() {},
+  innerWidth: 1200, innerHeight: 800,
   CONTINUUM_ASSETS: { avatarModel: 'data:model/gltf-binary;base64,AA==', avatarFallback: 'data:image/png;base64,b3JpZ2luYWw=' } };
-const context = vm.createContext({ window: browser, document: dom, URL, performance,
+const context = vm.createContext({ window: browser, document: dom, URL, performance, Element: TestElement,
   console, CustomEvent: class { constructor(type, options) { this.type = type; Object.assign(this, options); } } });
 vm.runInContext(await fs.readFile(new URL('../continuum-preview/avatar3d.js', import.meta.url), 'utf8'), context);
 assert.equal(crop.dataset.avatarRenderer, 'original-png');
 assert.match(crop.style.backgroundImage, /data:image\/png/);
 assert.match(browser.ContinuumAvatar.getStatus().lastError, /WebGL2 unavailable/);
 assert.equal(browser.ContinuumAvatar.getStatus().frames, 0);
-console.log('PASS: exact GLB SHA-256, original rig and all morph primitives, neutral mouth without actual speech, opening compensation, bilabial closure, stale-cue expiry, eyes-before-head, 65% neck share, live presence, bundled no-WebGL fallback and data-URL override.');
+const sourceTarget = new TestElement({ left: 880, top: 250, width: 160, height: 48 });
+windowEvents.get('continuum:gaze')({ detail: { target: sourceTarget } });
+assert.equal(sourceTarget.reads, 1, 'An operation target must be measured once when selected.');
+const hiddenTarget = new TestElement({ left: 0, top: 0, width: 0, height: 0 });
+assert.doesNotThrow(() => windowEvents.get('continuum:gaze')({ detail: { target: hiddenTarget } }));
+console.log('PASS: exact GLB SHA-256, original rig and all morph primitives, neutral mouth without actual speech, opening compensation, bilabial closure, stale-cue expiry, eyes-before-head, 65% neck share, live presence, reusable poses, target-element gaze, bundled no-WebGL fallback and data-URL override.');
