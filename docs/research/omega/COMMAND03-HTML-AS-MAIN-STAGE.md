@@ -28,3 +28,7 @@ Die 35 Originalblobs wurden mit identischen Git-BLOB-SHAs unter `app/src/main/as
 5. Kotlin-Compile, gezielte und vollständige Android-Tests, Source-bound GitHub-QA, originale Signierung und echte Geräteannahme. Vorher **keine** Code60-Fertigmeldung, kein Main-Merge und kein installierbarer Release.
 
 Reproduzierbare Quellprüfung: `node tools/command03-native-qa/check-visual-source.mjs`. Sie prüft die Quellen und Adapterverträge, **nicht** Android-Renderqualität oder Installation. Die 112 älteren grünen Hosttests gehören zu einem früheren SHA; sie wurden auf diesem neuen SHA nicht wiederholt.
+
+## Frühzeitige Demo-Blockierung
+
+Die lokale Android-Startdatei `index.android.html` ist die exakte HTML-Originaldatei plus **zwei** zusätzliche Asset-Links: `native-layer.css` im Kopf und `native-bridge.js` vor den originalen Seiten-Skripten. Die Original-`index.html` selbst bleibt byteidentisch. Dadurch sind die Navigations- und Formular-Interceptoren bereits registriert, bevor die Beispiel-Eventhandler der unveränderten Webdemo laufen. Die vorherige späte `onPageFinished`-Einfügung wird nicht mehr verwendet. Der Node-Quelltest verlangt, dass nach Entfernen genau dieser beiden Include-Zeilen die bytegenaue Originaldatei zurückbleibt. Das ist ein Quellvertrag, noch kein Geräte-Nachweis.

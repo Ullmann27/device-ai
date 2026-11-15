@@ -24,6 +24,13 @@ for (const section of ['presence-system','presence-core','presence-wing-left','p
   'orb-zone','avatar-crop','workspace-shell','floating-dock','chat-sidebar']) {
   assert.ok(html.includes(section),'Original-Element fehlt: '+section);
 }
+const nativeHtml = readFileSync(resolve(root,lock.html_root,'index.android.html'),'utf8');
+const extraCss = '  <link rel="stylesheet" href="native-layer.css">'+String.fromCharCode(10);
+const extraJs = '  <script src="native-bridge.js"></script>'+String.fromCharCode(10);
+assert.equal(nativeHtml.replace(extraCss,'').replace(extraJs,''),html,
+  'Android HTML must differ only by loading two separate local adapter files');
+assert.ok(nativeHtml.indexOf('native-bridge.js') < nativeHtml.indexOf('app.js'),
+  'Android bridge must intercept navigation before preview scripts');
 const activity = readFileSync(resolve(root,'app/src/main/java/at/heinz/deviceai/AgentActivity.kt'),'utf8');
 assert.ok(activity.includes('attachCommand03MainStage(root)'),'HTML not mounted as main Activity surface');
 assert.ok(activity.includes('sendButton.performClick()'),'Native owner-gated command dispatch missing');
@@ -43,5 +50,6 @@ const android = readFileSync(resolve(root,'app/src/main/java/at/heinz/deviceai/u
 assert.ok(android.includes('blockNetworkLoads = true'));
 assert.ok(android.includes('allowFileAccess = false'));
 assert.ok(android.includes('uri.host == LOCAL_HOST'));
+assert.ok(android.includes('index.android.html'),'The hardened early-bridge page must be the Android entry');
 console.log('COMMAND03_ORIGINAL_SOURCE_LOCK_PASS assets='+Object.keys(lock.files).length+' bytes='+bytes+
   ' scope=ORIGINAL_ARTWORK_AND_MAIN_STAGE_SOURCE_CONTRACT_ONLY (NOT compiled/visual/device/release acceptance)');

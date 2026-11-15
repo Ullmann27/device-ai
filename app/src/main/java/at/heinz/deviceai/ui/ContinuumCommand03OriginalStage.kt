@@ -32,7 +32,7 @@ internal class ContinuumCommand03OriginalStage(
     companion object {
         const val LOCAL_HOST = "appassets.androidplatform.net"
         const val ASSET_PATH = "/assets/continuum-command03/"
-        const val INDEX = "https://" + LOCAL_HOST + ASSET_PATH + "index.html"
+        const val INDEX = "https://" + LOCAL_HOST + ASSET_PATH + "index.android.html"
         private val SAFE_PATH = Regex("[A-Za-z0-9_./-]{1,200}")
         private val ROUTES = setOf("home", "chat", "chats", "new-chat", "files",
             "research", "agents", "memory", "device", "settings", "voice-input", "stop")
@@ -117,8 +117,8 @@ internal class ContinuumCommand03OriginalStage(
                     }
                     return true
                 }
-                // The renderer cannot navigate to external websites or rebind the origin.
-                return !local(uri)
+                // Only the local Android-enhanced original page is navigable.
+                return uri.toString() != INDEX
             }
 
             override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse {
@@ -141,21 +141,16 @@ internal class ContinuumCommand03OriginalStage(
 
             override fun onPageFinished(view: WebView, url: String) {
                 if (url != INDEX) return
-                val script = runCatching {
-                    context.assets.open("continuum-command03/native-bridge.js")
-                        .bufferedReader(Charsets.UTF_8).use { it.readText() }
-                }.getOrNull() ?: return
-                view.evaluateJavascript("""(function(){var e=document.createElement('link');
-                    e.rel='stylesheet';e.href='native-layer.css';document.head.appendChild(e);})();""", null)
-                view.evaluateJavascript(script) {
-                    pageReady = true
-                    queuedState?.let { json ->
-                        view.evaluateJavascript("window.ContinuumNative?.receive($json);", null)
-                        queuedState = null
-                    }
-                    onReady()
+                // The Android-only bridge was loaded BEFORE the unchanged
+                // demo scripts by index.android.html. No post-load race.
+                pageReady = true
+                queuedState?.let { json ->
+                    view.evaluateJavascript("window.ContinuumNative?.receive($json);", null)
+                    queuedState = null
                 }
+                onReady()
             }
+
         }
         loadUrl(INDEX)
     }
