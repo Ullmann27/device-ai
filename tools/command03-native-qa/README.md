@@ -1,0 +1,129 @@
+# Command03 native host QA
+
+This harness invokes the existing Android project, its original SDK dependencies,
+and its unchanged tests. It does not install tools, sign or install an APK,
+dispatch CI, change repository gates, or connect to a device.
+
+The harness was reconstructed after an executor reset on 2026-11-15. Historical
+observations are in `historical-observations-before-reset.json`. Those observations
+are not newly verified results and the original local evidence was lost. The
+recovery manifest records script checks only; new build/test evidence must come
+from an actual later run.
+
+## Configuration
+
+Use Python 3.11 or newer on Linux. Copy `toolchain.example.json` to a configuration
+file beside your checkout and toolchain directories, then adjust it to the
+already verified local tools. Relative configuration paths are resolved against
+the configuration file's directory. No machine-specific configuration belongs in
+the repository.
+
+Pass `--config /absolute/path/native-qa-config.json` or set
+`CONTINUUM_QA_CONFIG` to that path. Individual overrides include `--repo`,
+`--output-dir`, `--build-dir`, `--java-home`, `--android-sdk`,
+`--android-user-home`, `--gradle-home`, and `--gradle-user-home`.
+The corresponding task-specific environment variables begin `CONTINUUM_QA_`.
+
+When this directory is stored at `tools/command03-native-qa`, the repository can
+also be found by walking its ancestors. Evidence defaults to a sibling directory
+named `<checkout-name>-native-qa-output`; build files, Gradle project cache,
+resource samples, and captures remain outside the checkout. This avoids filling
+tmpfs and ensures generated evidence cannot dirty the source being checked.
+
+The project currently pins Gradle 8.11.1, Android SDK 36, and Java bytecode 17.
+Use a complete JDK with `javac`, not a system JRE. Toolchain installation and
+archive verification are separate responsibilities. The runner records the
+paths used and refuses missing tools or assets rather than installing substitutes.
+
+## Compile and dependency preparation
+
+Every invocation requires an explicit candidate version code and a unique label.
+Use the exact frozen 40-character source commit with `--expected-sha`.
+All source must be clean by default. `--allow-dirty` is an explicitly separate
+diagnostic and cannot produce a source-bound result or a capture.
+
+```sh
+python tools/command03-native-qa/run.py --config /absolute/path/native-qa-config.json \
+  --mode compile --version-code 60 --label command03-recovery-compile-01 \
+  --expected-sha "$CONTINUUM_SOURCE_SHA" --resolve-dependencies \
+  --heap-mib 2048 --metaspace-mib 512 --resource-sample-seconds 2
+```
+
+Offline is the default. `--resolve-dependencies` explicitly permits the normal
+project repositories for that invocation. For compile mode only, the adjacent
+init script also resolves the app's existing debug, unit-test, and Robolectric
+configurations before compilation. It adds no repository, substitute SDK, stub,
+task-name exemption, or assertion change. The original `compileDebugKotlin` task
+still runs. Normal model preparation performs its pinned downloads; the runner
+then independently checks YuNet, SFace, and OpenCV bytes against the repository
+lockfile. Missing or mismatched pins fail the result. Subsequent runs omit this
+flag and remain offline; a missing dependency is reported rather than fetched.
+
+`--plan` validates and prints the intended command without launching Gradle.
+An empty cache requires `--resolve-dependencies` even for a dependency-preparation
+plan. The flag is always recorded in the receipt.
+
+## Focused unchanged tests
+
+```sh
+python tools/command03-native-qa/run.py --config /absolute/path/native-qa-config.json \
+  --mode unit-tests --selection command03-unit --version-code 60 \
+  --label command03-recovery-unit-01 --expected-sha "$CONTINUUM_SOURCE_SHA" \
+  --heap-mib 1536 --metaspace-mib 384 --resource-sample-seconds 2
+
+python tools/command03-native-qa/run.py --config /absolute/path/native-qa-config.json \
+  --mode ui-tests --selection command03-ui --version-code 60 \
+  --label command03-recovery-ui-01 --expected-sha "$CONTINUUM_SOURCE_SHA" \
+  --heap-mib 1536 --metaspace-mib 384 --resource-sample-seconds 2
+```
+
+The unit selection contains 11 classes plus three existing test helpers; the UI
+selection contains seven class/method selections plus two existing helpers.
+`selections.json` is an explicit, reviewable list. Each run records every physical
+source path, size, and SHA256; the Kotlin task verifies its actual source set
+against that list before compiling. Main sources, Android resources, classpaths,
+test bodies, and assertions remain unchanged. These are **focused host tests**,
+not the complete suite or release QA. `--full-suite` is a separate deliberate
+choice, never implied by a focused result.
+
+Test execution uses Gradle's existing `Test.filter.includeTestsMatching` API. Raw
+`--tests` arguments do not pass through the project's early task-name allowlist.
+Only fresh JUnit XML from this invocation is counted. Missing selected results,
+no executed tests, failures, source drift, or a changed test-source hash cannot
+produce a successful test receipt.
+
+## Actual Activity captures
+
+Use the existing outer CLI and fixture; do not replace them with a mock layout.
+Set `CONTINUUM_QA_CONFIG` and `CONTINUUM_NATIVE_VERSION_CODE=60` for the adapter.
+The output must be a fresh directory beneath the configured `output_dir/captures`.
+
+```sh
+python tools/capture/capture_jarvis.py \
+  --gradle-runner tools/command03-native-qa/capture-runner.py \
+  --output-dir /absolute/path/native-qa-output/captures/command03-01 \
+  --case commandPhone392 --case commandFold904 --case commandComputer904 \
+  --timeout-seconds 900
+```
+
+These cases use actual `AgentActivity`, its real composer/work window, and
+Robolectric API28 native Canvas at 392×852dp or 904×768dp. The fixture explicitly
+selects the existing 2D head and disables animation for deterministic stills.
+This does **not** verify Filament, the original 3D head on a GPU, foldable hardware,
+speech synchronization, installation, or physical-device performance. The outer
+CLI checks the source commit and per-frame PNG hashes and rejects missing frames.
+
+## Evidence and boundaries
+
+A serial file lock prevents overlapping runs through this harness. Each run writes
+its command, source before/after, resource samples, compiler errors, fresh test
+counts, and exit status under `output_dir/runs`. Memory sampling does not prove an
+OOM cause. A source change invalidates the result. Interrupts terminate the
+runner's own Gradle process group; the capture adapter keeps the outer timeout
+contract.
+
+The `unsigned` mode is only for an authorized local transport artifact. It checks
+package/version, ARM64-only ABI, SDK levels, non-debuggable status, ZIP integrity,
+16KiB alignment, original avatar hash, and absence of signatures. An unsigned APK
+is never presented as an installable owner update. Original signing, exact-source
+release workflows, owner approval, and device acceptance remain separate gates.

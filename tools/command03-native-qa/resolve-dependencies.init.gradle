@@ -1,0 +1,25 @@
+// Only used by an explicitly authorized online compile. These are the app's
+// existing dependency configurations, not substitute SDKs, repositories or stubs.
+// The requested task remains compileDebugKotlin, preserving the repository gate.
+if (gradle.startParameter.offline || gradle.startParameter.taskNames != [':app:compileDebugKotlin']) {
+    throw new GradleException('Dependency preparation requires the explicit online compile mode')
+}
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app')
+    def names = ['debugCompileClasspath', 'debugRuntimeClasspath',
+                 'debugUnitTestCompileClasspath', 'debugUnitTestRuntimeClasspath',
+                 'uiTestAndroidSdk', 'uiTestResourceSdk', 'ownerFaceOpenCvAar']
+    app.tasks.named('compileDebugKotlin').configure { task ->
+        task.doFirst {
+            names.each { name ->
+                def configuration = app.configurations.findByName(name)
+                if (configuration == null || !configuration.canBeResolved) {
+                    throw new GradleException('Required dependency configuration is unavailable: ' + name)
+                }
+                def count = configuration.files.size()
+                println('PROJECT_DEPENDENCIES_RESOLVED configuration=' + name + ' files=' + count)
+            }
+        }
+    }
+}
