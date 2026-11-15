@@ -1,0 +1,32 @@
+{
+  "kind": "SYNTHETIC_FIXTURE_FROM_ACTUAL_DNS_ENGINE_RUNNER_AND_STORES",
+  "source_sha": "bc3d5fc552ee1e2fca7ccfa141d5a1a42cd69b33",
+  "source_hashes": {
+    "app/src/main/java/at/heinz/deviceai/ApprovedWebResearchToolRunner.kt": "1f8ea24853f8e6c5ad922378c700f56fde4b76acc5933c8cc24352cd6245afa7",
+    "app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt": "2751814783f6d1c14df7d90bd077f4451cff2bdb31029a3ca968aea93485e1e9",
+    "app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt": "30b9d4cf451898330fb7a15e856b7189a8c90c9a9f57e4e28900bfe8bec15ab3",
+    "app/src/main/java/at/heinz/deviceai/cognitive/NetworkTurnConstraint.kt": "c552f6156e59bbbe261049b1066de0ae5c9673822a88eed5551cc4cf4f0766fe",
+    "app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt": "9396e01878d8c451924464fa0987690742fd939a0d9cfbbbc4f6a64cf5588059",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerChatIntentRouter.kt": "f81abc4fd75b9723c216fa050eabb0ba3ede1c31e72e4258abeb47e800ddf5cf",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalClockIntent.kt": "85db929f317255cf38c694ce9496f3f65d3af0076d9cd08ef3b954cdd45315e9",
+    "app/src/main/java/at/heinz/deviceai/cognitive/ResearchDossierStore.kt": "57db323241d02090a51cbe48475d93bf5f8dca9bb5a602b3901c9d75189a8547",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt": "5a476d2f7c41cd59e5a9148aa6329dd5330a620e7515c1b6b359600293d7fe23",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt": "a81c7a218124a4c38a82678739b35b7d9b9ba27f54e973462bf9f224991e9e78",
+    "app/src/main/java/at/heinz/deviceai/cognitive/NativeAppLookup.kt": "1320ea3e28a0ce0e5c8b17af794b5755f89a1d1d194dd39c5372b3d7e203d730",
+    "app/src/main/java/at/heinz/deviceai/systemintelligence/SystemDiagnosis.kt": "46f8e2d1193b4b0aa2b299eb736bb57cf013bc72855b955e51d0da48d4f4f4aa",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt": "f792dca638d33e96e0159b73095d40829dff8a4d47551c236b1cbcca242d9055"
+  },
+  "expected": {
+    "reason": "Research host could not be resolved.",
+    "kind": "SYNTHETIC_OFFLINE_DNS_FIXTURE",
+    "formatted": "Keine auswertbaren Quellen gefunden. Verbindung und HTTPS-Quellen prüfen.\n\nKeine abrufbaren Quellen; keine Antwort erfunden.\n\nTeilrecherche: Research host could not be resolved.",
+    "created": 1794687239127,
+    "dns_calls": 1,
+    "updated": 1794687239339,
+    "url": "https://example.com/"
+  },
+  "payloads": {
+    "dossier": "ABJERVZJQ0VfQUlfUkVTRUFSQ0gAAAADAAACUwAAACAzOTg4ZmYwODBkZmM0YjQ2NzAyZTNhZTFjNTVmMWI1YQAAAaHbsgPXAAABoduyBKsAAAAAAAAAFGh0dHBzOi8vZXhhbXBsZS5jb20vAAAAAgAAAAJxMAAAAA9odHRwczovL2V4YW1wbGUAAAADAAAAAnExAAAABGNvbS8AAAACAAAAAgAAAAhzZWFyY2gtMAAAAA9odHRwczovL2V4YW1wbGUAAAACcTAAAAAACHNlYXJjaC0xAAAABGNvbS8AAAACcTEAAAAAAgAAAAEAAAADAAD6AAAB9AAAAAAgAAAAAQAAE4gAAAAAAAA6mAAAAAAAAAAAAAAAAgAAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAnEwAAAAJE5vIGNsZWFybHkgcmVsZXZhbnQgZXh0cmFjdGVkIGNsYWltLgAAAA9odHRwczovL2V4YW1wbGUAAAAAAnExAAAAJE5vIGNsZWFybHkgcmVsZXZhbnQgZXh0cmFjdGVkIGNsYWltLgAAAARjb20vAAEAAABKS2VpbmUgYXVzd2VydGJhcmVuIFF1ZWxsZW4gZ2VmdW5kZW4uIFZlcmJpbmR1bmcgdW5kIEhUVFBTLVF1ZWxsZW4gcHLDvGZlbi4AAAAAAAEAAAAkUmVzZWFyY2ggaG9zdCBjb3VsZCBub3QgYmUgcmVzb2x2ZWQuAAAAAQAAAAEAAAAJAAAAAgAAAAhzZWFyY2gtMAAAAAhzZWFyY2gtMQAAAAAAAAGh27ID1wEAAAGh27IETQAAAAF1b+x7C/cR5F4bpKaUmIRxVJtdoBWABMKusGstbnI9jA==",
+    "receipts": "ABdERVZJQ0VfQUlfVE9PTF9SRUNFSVBUUwAAAAEAAAFdAAAAAQAod2ViLTY2NjY2NjY2LTY2NjYtNDY2Ni04NjY2LTY2NjY2NjY2NjY2NgAId2ViX3JlYWQAQDQ1MzIzMTczZTY4ZDUyNzhjMDk0YmEzZDdjMzAzNDZmYzJmNWM0M2M1MjZiNWM5YmVmNTdmMmU4N2FkNzI0ODgAB0NPTkZJUk0AAAGh27IC/AAAAAEAA3VybAQAEVtTVFJJTkcgMjAgY2hhcnNdAAAABQAIUFJPUE9TRUQAAAGh27IC/AAIQVBQUk9WRUQAAAGh27IDZAANU1RBUlRfUEVORElORwAAAaHbsgN8ABJESVNQQVRDSF9DT01NSVRURUQAAAGh27IDlwAJU1VDQ0VFREVEAAABoduyBRYAAACxAQBAMzRlOTg2ZDhlNGRhNGJjZDA0OWQxODA1YjBkYWJjYzI0YTU2NDNiZmJhYzVhY2JjZWZmOGZlMzI5NmNiMDYwN/RvYv2nMJRQCNScRd2yrAkWkofI5B8Nw28EzOTmIVi+"
+  }
+}

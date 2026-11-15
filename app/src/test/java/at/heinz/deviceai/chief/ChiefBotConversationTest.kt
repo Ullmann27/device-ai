@@ -33,6 +33,48 @@ class ChiefBotConversationTest {
     private fun profileData(turn: ChiefBotConversationTurn): JSONObject = JSONObject(
         turn.prompt.lineSequence().dropWhile { !it.startsWith("BOT_PROFILE_JSON") }.drop(1).first())
 
+    @Test fun privateNotePromptPreservesStoredSnapshotDate() = fixture { dir, store, state ->
+        val profile = requireNotNull(store.get("bot-kora"))
+        val noted = store.saveWorkingContext(profile.agentId, profile.agentId,
+            "Notiz zum unveröffentlichten Entwurf.", profile.profileVersion)
+        val objectId = ContinuumObjectId(requireNotNull(noted.contextObjectId))
+        val stored = requireNotNull(FileContinuumObjectStore(
+            File(dir, "profiles/working-context/${profile.memoryNamespace}")).get(objectId))
+        val reopened = ChiefBotProfileStore(File(dir, "profiles"))
+        val conversation = ChiefBotConversation(reopened).also { it.select(profile.agentId) }
+        val turn = conversation.prepare(profile.agentId, "Wann wurde der Notizstand gespeichert?", state, model, "dated")
+        try {
+            val notes = JSONObject(turn.prompt.lineSequence()
+                .dropWhile { !it.startsWith("PRIVATE_WORKING_NOTES_JSON") }.drop(1).first())
+            assertEquals(stored.metadata.createdAtMillis, notes.getLong("snapshotCreatedAtMillis"))
+            assertEquals("FIRST_STORED_CONTENT_OBJECT", notes.getString("snapshotDateMeaning"))
+            assertFalse(turn.prompt.contains("OWNER_PRIVATE_MEMORY"))
+        } finally { conversation.cancel(turn) }
+    }
+
+    @Test fun retainedConversationPromptDatesWholeSnapshotAndNeverIndividualTurns() = fixture { dir, store, state ->
+        val conversation = ChiefBotConversation(store).also { it.select("bot-kora") }
+        val first = conversation.prepare("bot-kora", "Bitte keine Datei ändern.", state, model, "dated")
+        assertTrue(conversation.complete(first, "Ich bespreche nur den Entwurf.", model, "dated"))
+        val profile = requireNotNull(store.get("bot-kora"))
+        val stored = requireNotNull(FileContinuumObjectStore(
+            File(dir, "profiles/conversations/${profile.memoryNamespace}"))
+            .get(ContinuumObjectId(requireNotNull(profile.conversationObjectId))))
+        val reopened = ChiefBotConversation(ChiefBotProfileStore(File(dir, "profiles")))
+            .also { it.select(profile.agentId) }
+        val turn = reopened.prepare(profile.agentId, "Wiederhole meine Einschränkung.", state, model, "reopened")
+        try {
+            val history = JSONObject(turn.prompt.lineSequence()
+                .dropWhile { !it.startsWith("PRIVATE_CONVERSATION_JSON") }.drop(1).first())
+            assertEquals(stored.metadata.createdAtMillis, history.getLong("snapshotCreatedAtMillis"))
+            assertEquals("FIRST_STORED_CONTENT_OBJECT", history.getString("snapshotDateMeaning"))
+            val previous = history.getJSONArray("turns").getJSONObject(0)
+            assertEquals(setOf("user", "assistant"), previous.keys().asSequence().toSet())
+            assertTrue(turn.prompt.contains("keine Datei ändern"))
+            assertFalse(turn.prompt.contains("OWNER_PRIVATE_MEMORY"))
+        } finally { reopened.cancel(turn) }
+    }
+
     @Test fun enablingAndClearingTeamLeavesExistingOwnerAndPrivateBotFilesByteIdentical() = fixture { dir, store, state ->
         val profile = requireNotNull(store.get("bot-kora"))
         store.saveWorkingContext(profile.agentId, profile.agentId, "PRIVATE_UPGRADE_NOTE", profile.profileVersion)

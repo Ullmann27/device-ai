@@ -57,6 +57,37 @@ class ContinuumTaskEffectsCallerUiTest {
         .single {it.name==n && it.parameterCount==args.size}.apply {isAccessible=true}.invoke(a,*args)
     private fun field(o:Any,n:String)=o.javaClass.getDeclaredField(n).apply {isAccessible=true}.get(o)
     private fun pulses(h:ContinuumHologramView)=field(field(h,"taskEffects")!!,"pulses") as List<*>
+    private fun queuedBarriers(): Set<Int> {
+        val queue = Looper.getMainLooper().queue
+        val head = android.os.MessageQueue::class.java.getDeclaredField("mMessages").apply { isAccessible = true }
+        val next = android.os.Message::class.java.getDeclaredField("next").apply { isAccessible = true }
+        return synchronized(queue) {
+            val tokens = linkedSetOf<Int>()
+            var message = head.get(queue) as? android.os.Message
+            repeat(256) {
+                val current = message ?: return@synchronized tokens
+                if (current.target == null) tokens.add(current.arg1)
+                message = next.get(current) as? android.os.Message
+            }
+            error("Unexpected main queue size")
+        }
+    }
+    private fun effectState(a: AgentActivity, h: ContinuumHologramView): String {
+        val context = get(a, "currentTaskEffectContext")
+        val effects = field(h, "taskEffects")!!
+        val motion = h.sampleMotion()
+        return "uptime=${android.os.SystemClock.uptimeMillis()}, barriers=${queuedBarriers()}, " +
+            "contextSession=${context?.let { field(it, "session") }}, session=${get(a, "sessionId")}, " +
+            "contextScope=${context?.let { field(it, "scope") }}, effectScope=${field(effects, "scope")}, " +
+            "foreground=${get(a, "foregroundLearningActive")}, finishing=${a.isFinishing}, destroyed=${a.isDestroyed}, " +
+            "attached=${h.isAttachedToWindow}, shown=${h.isShown}, window=${h.windowVisibility}, " +
+            "focus=${h.hasWindowFocus()}, notBefore=${field(h, "taskEffectsNotBeforeMs")}, " +
+            "callbacks=${motion.callbackCount}, draws=${motion.drawCount}, phase=${motion.phase}, " +
+            "lastNow=${field(effects, "lastNow")}, seen=${field(effects, "seen")}, " +
+            "pulses=${pulses(h).map { pulse ->
+                listOf("id", "type", "kind", "at", "duration").associateWith { field(pulse!!, it) }
+            }}"
+    }
     private fun idle() {
         shadowOf(Looper.getMainLooper()).idle()
         framePump?.drawRequestedFrame()
@@ -87,15 +118,21 @@ class ContinuumTaskEffectsCallerUiTest {
             h = ContinuumHologramView(a).apply { setNativeHeadEnabled(false) }
             set(a,"hologramView",h);set(a,"foregroundLearningActive",true)
             set(a,"chatContainer",android.widget.LinearLayout(a))
-            host!!.get().setContentView(h,ViewGroup.LayoutParams(412,307));advance()
+            host!!.get().setContentView(h,ViewGroup.LayoutParams(412,307))
+            framePump = CockpitHostFramePump { host.get().window.decorView }
+            advance()
             assertEquals(412,h.width);assertEquals(307,h.height)
         }
         set(a,"receiptStore",FileToolExecutionReceiptStore(java.io.File(a.filesDir,"effects-"+UUID.randomUUID())))
         assertTrue("Caller fixture must be attached to its real host window",h.isAttachedToWindow)
         assertTrue("Caller fixture must be shown",h.isShown)
         assertTrue("Caller surface must be measured", h.width > 0 && h.height > 0)
-        h.setForegroundActive(true);advance()
-        assertTrue("Caller events require a live foreground clock",h.motionDiagnostics().contains("LIVE"))
+        val before = h.sampleMotion()
+        h.setForegroundActive(true);advanceFrames(200)
+        val active = h.sampleMotion()
+        assertTrue("Caller events require actual frame callbacks",active.callbackCount > before.callbackCount)
+        assertTrue("Caller events require actual phase progress",active.phase > before.phase)
+        assertTrue("Caller events require an actual host Canvas draw",active.drawCount > before.drawCount)
         assertEquals("Positive control: the actual host window must be visible",View.VISIBLE,h.windowVisibility)
         try {block(a,h)} finally {
             (get(a,"chiefStatusPool") as? at.heinz.deviceai.chief.ChiefWorkerPool)?.shutdown()
@@ -137,11 +174,37 @@ class ContinuumTaskEffectsCallerUiTest {
         assertFalse(dispatched);assertTrue(pulses(h).isEmpty())
     }
     @Test fun actualChiefStatusWorkerProducesAWorkerArrival() = withFixture {a,h ->
+        val before = effectState(a, h)
         call(a,"showChiefWorkerStatus")
+        val submitted = effectState(a, h)
+        val pendingTraversal = queuedBarriers()
         val pool=get(a,"chiefStatusPool") as at.heinz.deviceai.chief.ChiefWorkerPool
-        assertTrue(pool.awaitIdle(2000));idle()
-        assertTrue("Actual WorkerJob.run has no worker arrival",pulses(h).any {
-            field(it!!,"type")==0 && field(it,"kind")==ContinuumTaskEffects.Kind.WORKER
+        assertTrue("Actual status worker did not finish", pool.awaitIdle(2000))
+        val delivered = effectState(a, h)
+        idle()
+        val beforeVsync = effectState(a, h)
+        val queuedReport = get(a, "lastChiefWorkerReport") as? at.heinz.deviceai.chief.WorkerReport
+        val uptimeBefore = android.os.SystemClock.uptimeMillis()
+        val motionBefore = h.sampleMotion()
+        advanceFrames(16)
+        val completed = effectState(a, h)
+        val report = get(a, "lastChiefWorkerReport") as? at.heinz.deviceai.chief.WorkerReport
+        val trace = "before=[$before]; submitted=[$submitted]; delivered=[$delivered]; " +
+            "beforeVsync=[$beforeVsync]; queuedReport=${queuedReport?.id}/${queuedReport?.status}; " +
+            "completed=[$completed]; report=${report?.id}/${report?.status}"
+        assertTrue("Scope invalidation did not schedule a traversal: $trace", pendingTraversal.isNotEmpty())
+        assertTrue("Next Vsync did not advance virtual uptime: $trace",
+            android.os.SystemClock.uptimeMillis() > uptimeBefore)
+        assertTrue("Original traversal barriers remain queued: $trace",
+            pendingTraversal.none { it in queuedBarriers() })
+        assertTrue("Visible host did not draw after traversal: $trace",
+            h.sampleMotion().drawCount > motionBefore.drawCount)
+        assertNotNull("Actual WorkerReport missing: $trace", report)
+        assertEquals("Actual WorkerJob did not succeed: $trace",
+            at.heinz.deviceai.chief.WorkerStatus.DONE, report!!.status)
+        assertTrue("Actual WorkerJob.run has no worker arrival: $trace",pulses(h).any {
+            field(it!!,"type")==0 && field(it,"kind")==ContinuumTaskEffects.Kind.WORKER &&
+                field(it,"id")==report.id
         })
     }
     @Test fun actualActionButtonUsesBoundedFeedbackAndPendingSpeechMutesIt() = withFixture {a,_ ->

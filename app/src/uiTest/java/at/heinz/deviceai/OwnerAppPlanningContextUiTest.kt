@@ -177,7 +177,8 @@ class OwnerAppPlanningContextUiTest {
         finally { ScreenObservationBus.disconnect(service); controller.destroy() }
     }
 
-    private fun withTeam(activity: AgentActivity, body: (at.heinz.deviceai.chief.ChiefBotTeam) -> Unit) {
+    private fun withTeam(activity: AgentActivity, reviewResponse: String = TEAM_REVIEW,
+                         body: (at.heinz.deviceai.chief.ChiefBotTeam) -> Unit) {
         val profiles = (field(activity, "botProfiles" + '$' + "delegate") as Lazy<*>).value
             as at.heinz.deviceai.chief.ChiefBotProfileStore
         val calls = java.util.concurrent.atomic.AtomicInteger()
@@ -186,12 +187,12 @@ class OwnerAppPlanningContextUiTest {
             override fun generate(prompt: String, cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation,
                                   deadlineMillis: Long): String {
                 cancellation.throwIfCancelled()
-                return if (calls.incrementAndGet() == 1) "Die Annahme benötigt einen Test." else TEAM_REVIEW
+                return if (calls.incrementAndGet() == 1) "Die Annahme benötigt einen Test." else reviewResponse
             }
         }
         val refresh = AgentActivity::class.java.getDeclaredMethod("refreshBotTeam").apply { isAccessible = true }
         val team = at.heinz.deviceai.chief.ChiefBotTeam(profiles, model,
-            changed = { activity.runOnUiThread { refresh.invoke(activity) } })
+            changed = { activity.runOnUiThread { refresh.invoke(activity) } }, ownerSession = { session(activity) })
         team.initialize()
         team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), team.snapshot().revision)
         AgentActivity::class.java.getDeclaredField("botTeam").apply { isAccessible = true }.set(activity, team)
@@ -200,9 +201,63 @@ class OwnerAppPlanningContextUiTest {
 
     private fun submitTeam(activity: AgentActivity, team: at.heinz.deviceai.chief.ChiefBotTeam) {
         val accepted = AgentActivity::class.java.getDeclaredMethod("submitBotTeam", String::class.java,
-            String::class.java, Long::class.javaPrimitiveType).apply { isAccessible = true }.invoke(activity,
-            "team-" + java.util.UUID.randomUUID(), TEAM_REQUEST, team.snapshot().revision)
+            String::class.java, Long::class.javaPrimitiveType,
+            at.heinz.deviceai.learning.SharedOwnerKnowledgeGrant::class.java,
+            at.heinz.deviceai.chief.ChiefFollowupReview::class.java).apply { isAccessible = true }.invoke(activity,
+            "team-" + java.util.UUID.randomUUID(), TEAM_REQUEST, team.snapshot().revision, null, null)
         assertEquals(true, accepted)
+    }
+
+    private fun withFollowupDraft(activity: AgentActivity,
+                                  body: (android.app.AlertDialog, Button, at.heinz.deviceai.chief.ChiefBotTeam) -> Unit) {
+        val response = org.json.JSONObject().put("schema", at.heinz.deviceai.cognitive.AgentFollowupEnvelope.SCHEMA)
+            .put("answer", "Ungeprüfte Gegenprüfung.").put("next", org.json.JSONObject()
+                .put("goal", "Prüfe anschließend den zweiten Text: Kotlin hat nullable Typen.")
+                .put("capability", "text.analyze").put("tools", org.json.JSONArray())
+                .put("reason", "Ein weiterer Satz ist offen.")).toString()
+        withTeam(activity, response) { team ->
+            submitTeam(activity, team)
+            until("Source task ended") {
+                team.snapshot().tasks.lastOrNull()?.status == at.heinz.deviceai.chief.ChiefTeamStatus.RESPONSES_RECORDED &&
+                    !(field(activity, "busy") as Boolean)
+            }
+            AgentActivity::class.java.getDeclaredMethod("showBotRoster").apply { isAccessible = true }.invoke(activity)
+            fun views(root: View): List<View> = listOf(root) + if (root is android.view.ViewGroup)
+                (0 until root.childCount).flatMap { views(root.getChildAt(it)) } else emptyList()
+            fun dialog() = requireNotNull(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+            fun button(label: String): Button? = views(dialog().window!!.decorView).filterIsInstance<Button>()
+                .singleOrNull { it.text.toString() == label }
+            until("Team overview available") { button("Teamaufträge und Ergebnisse") != null }
+            assertTrue(requireNotNull(button("Teamaufträge und Ergebnisse")).performClick())
+            until("Bound proposal visible") { button("Folgevorschlag prüfen") != null }
+            assertTrue(requireNotNull(button("Folgevorschlag prüfen")).performClick())
+            until("New consent visible") { button("An Chefbot übergeben") != null }
+            val draft = dialog()
+            views(draft.window!!.decorView).filterIsInstance<android.widget.CheckBox>().single().isChecked = true
+            body(draft, requireNotNull(button("An Chefbot übergeben")), team)
+        }
+    }
+
+    @Test fun activityStopDiscardsUnsubmittedFollowupAndRejectsRetainedButton() = withActivity { activity, _ ->
+        withFollowupDraft(activity) { draft, submit, team ->
+            AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest").apply { isAccessible = true }.invoke(activity)
+            assertFalse(draft.isShowing)
+            submit.performClick(); advance()
+            assertEquals(1, team.snapshot().tasks.size)
+            assertFalse(team.active())
+        }
+    }
+
+    @Test fun actualNewConversationDiscardsTheOldFollowupDraft() = withActivity { activity, _ ->
+        withFollowupDraft(activity) { draft, submit, team ->
+            val before = session(activity)
+            AgentActivity::class.java.getDeclaredMethod("newSession").apply { isAccessible = true }.invoke(activity)
+            assertFalse(draft.isShowing)
+            until("New owner conversation") { session(activity) != before }
+            submit.performClick(); advance()
+            assertEquals(1, team.snapshot().tasks.size)
+            assertFalse(team.active())
+        }
     }
 
     @Test fun centralTeamReviewReturnsOnceFromPersistedCompletion() = withActivity { activity, _ ->

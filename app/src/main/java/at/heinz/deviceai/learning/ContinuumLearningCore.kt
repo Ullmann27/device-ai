@@ -750,6 +750,10 @@ class ContinuumLearningCore private constructor(
         }
     }
 
+    fun reviewSharedKnowledge(scope: SharedOwnerKnowledgeScope): SharedOwnerKnowledgeReview = synchronized(CORE_LOCK) {
+        SharedOwnerKnowledgeReview(this, directory, scope, ContinuumMemoryLayers(this).profile())
+    }
+
     /** One consistent, read-only view for the EWM brain: the active SWB1 bytes (for the unchanged
      * B0 ranking) and exactly the facts of [activeOwnerFacts]. Revoked or rejected facts are never
      * part of it; nothing is written and no source observation becomes an owner fact. */
@@ -779,6 +783,8 @@ class ContinuumLearningCore private constructor(
         }
 
     fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) { signedOwnerMutation {
+        SharedOwnerKnowledgeGrant.revokeForOwnerMutation(directory, content)
+        ContinuumThinkingMemory.revokeForOwnerMutation(directory)
         dialogue.clear()
         store.updateMatching(
             LearningExperienceType.USER_FACT,content.trim(),
@@ -787,6 +793,8 @@ class ContinuumLearningCore private constructor(
     } }
 
     fun revokeAllOwnerFacts():Int=synchronized(CORE_LOCK) { signedOwnerMutation {
+        SharedOwnerKnowledgeGrant.revokeForOwnerMutation(directory, null)
+        ContinuumThinkingMemory.revokeForOwnerMutation(directory)
         dialogue.clear()
         store.updateMatching(
             LearningExperienceType.USER_FACT,null,
@@ -1235,7 +1243,7 @@ class ContinuumLearningCore private constructor(
         /** (hits, misses) of the ledger-view cache, process-wide. */
         internal fun ledgerViewCacheStats():Pair<Long,Long> = viewCacheHits.get() to viewCacheMisses.get()
 
-        private val CORE_LOCK=Any()
+        internal val CORE_LOCK=Any()
 
         private data class StatusHoldouts(
             val checkpoint:ByteArray?,

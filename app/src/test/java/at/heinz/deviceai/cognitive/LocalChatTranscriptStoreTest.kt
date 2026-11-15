@@ -2,10 +2,13 @@ package at.heinz.deviceai.cognitive
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.IOException
+import java.nio.file.Files
 import java.util.UUID
 
 /** #568: the central chat survives an app exit and process death; a new chat keeps older ones. */
@@ -80,5 +83,35 @@ class LocalChatTranscriptStoreTest {
         val untouched = id()
         store.appendContextReset(untouched, 5)
         assertFalse(dir.resolve("$untouched.jsonl").exists())
+    }
+
+    @Test fun contextResetRejectsInvalidExistingTargetsWithoutFalseSuccess() {
+        val dir = tmp.newFolder("invalid-chat-history")
+        val conversation = id()
+        val target = dir.resolve("$conversation.jsonl")
+        assertTrue(target.mkdir())
+        assertThrows(IOException::class.java) { LocalChatTranscriptStore(dir).appendContextReset(conversation, 1) }
+        assertTrue(target.isDirectory)
+        val invalidDirectory = tmp.newFile("chat-directory-is-a-file")
+        assertThrows(IOException::class.java) {
+            LocalChatTranscriptStore(invalidDirectory).appendContextReset(conversation, 2)
+        }
+        val missing = tmp.root.resolve("missing-chat-history")
+        LocalChatTranscriptStore(missing).appendContextReset(conversation, 3)
+        assertFalse(missing.exists())
+    }
+
+    @Test fun contextResetRejectsSymlinksWithoutChangingTheirTargets() {
+        val dir = tmp.newFolder("linked-chat-history")
+        val conversation = id()
+        val elsewhere = tmp.newFile("other-chat.jsonl").apply { writeText("Preserve these bytes.\n") }
+        Files.createSymbolicLink(dir.resolve("$conversation.jsonl").toPath(), elsewhere.toPath())
+        assertThrows(IOException::class.java) { LocalChatTranscriptStore(dir).appendContextReset(conversation, 1) }
+        assertEquals("Preserve these bytes.\n", elsewhere.readText())
+        val linkedDirectory = tmp.root.resolve("linked-directory")
+        Files.createSymbolicLink(linkedDirectory.toPath(), dir.toPath())
+        assertThrows(IOException::class.java) {
+            LocalChatTranscriptStore(linkedDirectory).appendContextReset(id(), 2)
+        }
     }
 }

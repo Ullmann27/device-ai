@@ -100,9 +100,15 @@ test('cognitive runtime owns the single chat path, privacy boundaries and backgr
    /createToolGate\(ownerTurn\s*=\s*text,\s*consentRevisionAtTurnStart\s*=\s*internetRevisionAtTurnStart/.test(codeOnly(local)) &&
    /memories\s*=\s*\{\s*if\(codingPlanning\s*==\s*null\s*&&\s*botTask\s*==\s*null\)\s*memoryStore\.all\(\)\s*\+\s*ownerFactMemories\(\)\s*else\s*emptyList\(\)\s*\}/.test(codeOnly(local)) &&
    /limits\s*=\s*if\(codingPlanning\s*!=\s*null\)\s*at\.heinz\.deviceai\.cognitive\.AgentLimits\(maxToolCalls\s*=\s*0,maxRetries\s*=\s*0\)/.test(codeOnly(local)));
+ const remember=codeOnly(bodyOf(activity,'private fun rememberOwnerFact('));
  ensure('only explicit confirmed fact can retry unanswered turn',
-   bodyOf(activity,'private fun rememberOwnerFact(')?.includes('core.confirmOwnerFact(fact)') &&
-   bodyOf(activity,'private fun rememberOwnerFact(')?.includes('if(resolved?.grounded==true)'));
+   /core\.confirmOwnerFact\(fact\)/.test(remember) &&
+   /if\s*\(resolved\?\.grounded\s*==\s*true\)\s*rememberedAnswer\s*=\s*resolved\.answer/.test(remember));
+ ensure('remembered answer keeps its original owner revision and pending-deletion boundary',
+   /val\s+replyRevision\s*=\s*ownerReplyRevision/.test(remember) &&
+   remember.search(/val\s+replyRevision\b/)<remember.indexOf('onLearningIo(') &&
+   /val\s+current\s*=\s*replyRevision\s*==\s*ownerReplyRevision\s*&&\s*!ownerFactDeletionPending\.get\(\)/.test(remember) &&
+   /val\s+reply\s*=\s*if\s*\(current\s*&&\s*result\.isSuccess\)\s*rememberedAnswer\s*else\s*null/.test(remember));
  ensure('local failure and success both recorded without model text',
    activity.includes('.recordLocalOutcome(successful)') && activity.includes('.recordLocalOutcome(false)'));
  ensure('local on-device status available from chat',activity.includes('showContinuumSelfCheck()'));
@@ -266,13 +272,41 @@ test('learning-core and research store I/O stays off the UI thread in dialogs an
   ensure(name+' has no file or learning-core I/O',!heavy.test(withoutIo(body)));
  }
  for(const name of ['showBootstrapTraining','showContinuumLearningDashboard','showModelVersions','showWebLearningInbox',
-  'rememberOwnerFact','reviseOwnerFact','forgetOwnerFacts','confirmBootstrapTraining']){
+  'rememberOwnerFact','reviseOwnerFact','confirmBootstrapTraining']){
   const body=bodyOf(activity,'private fun '+name+'(');
   assert.ok(body,name+' not found');
   const io=body.indexOf('onLearningIo(');
   const first=body.search(heavy);
   ensure(name+' does its I/O inside onLearningIo',first<0||(io>=0&&io<first));
  }
+ const forget=bodyOf(activity,'private fun forgetOwnerFacts('),forgetCode=codeOnly(forget);
+ const submit=/\blearningIoExecutor\.execute\s*\{/.exec(forgetCode);
+ assert.ok(submit,'revocation must use the learning I/O executor');
+ const workerOpen=submit.index+submit[0].lastIndexOf('{');
+ const worker=bracedBody(forget,workerOpen),workerCode=codeOnly(worker);
+ const outside=codeOnly(forget.slice(0,workerOpen)+forget.slice(workerOpen+worker.length));
+ ensure('revocation and bootstrap clearing stay inside the executor',
+   !heavy.test(outside) && !/\.(?:revokeAllOwnerFacts|clearFacts)\(/.test(outside) &&
+   /ContinuumLearningCore\(filesDir\)\.revokeAllOwnerFacts\(\)/.test(workerCode) &&
+   /bootstrapMemory\.clearFacts\(\)/.test(workerCode));
+ const callbacks=[...workerCode.matchAll(/\brunOnUiThread\s*\{/g)];
+ assert.equal(callbacks.length,1,'one revocation completion returns to the UI thread');
+ const callback=callbacks[0];
+ const completion=codeOnly(bracedBody(worker,callback.index+callback[0].lastIndexOf('{')));
+ assert.match(completion,/^\{\s*finish\(result\)\s*\}$/);
+ ensure('revocation finishes only after both background operations',
+   workerCode.indexOf('.revokeAllOwnerFacts()')<callback.index &&
+   workerCode.indexOf('.clearFacts()')<callback.index);
+ const beforeSubmit=forgetCode.slice(0,submit.index);
+ ensure('revocation blocks new owner work before queuing I/O',
+   /if\s*\(!ownerFactDeletionPending\.compareAndSet\(false,\s*true\)\)\s*return/.test(beforeSubmit) &&
+   /ownerReplyRevision\+\+/.test(beforeSubmit));
+ const finish=codeOnly(bodyOf(forget,'finish'));
+ const release=finish.search(/ownerFactDeletionPending\.set\(\s*false\s*\)/);
+ const closed=finish.search(/if\s*\(isFinishing\s*\|\|\s*isDestroyed\)\s*return/);
+ ensure('pending revocation releases before a closed activity can discard UI output',
+   release>=0 && closed>release && !heavy.test(finish));
+ assert.match(forgetCode,/catch\s*\(error:\s*java\.util\.concurrent\.RejectedExecutionException\)\s*\{\s*finish\(Result\.failure\(error\)\)\s*\}/);
  assert.match(bodyOf(activity,'private fun addUserMessage('),/addUserMessage\(value, keepCockpit = false\)/);
  const inputStart=codeOnly(activity).indexOf('private fun addUserMessage(value: String, keepCockpit: Boolean)');
  assert.ok(inputStart>=0,'chat input implementation not found');

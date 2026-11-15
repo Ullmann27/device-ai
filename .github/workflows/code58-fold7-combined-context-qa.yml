@@ -55,12 +55,19 @@ jobs:
           assert not any(c.find(t) is not None for c in cases for t in ('failure', 'error', 'skipped'))
           names = {(c.get('classname'), c.get('name')) for c in cases}
           required = {
+              ('at.heinz.deviceai.OwnerFactRevocationUiTest', 'confirmedDeletionPersistsResetAfterFailedRestoreWithEmptyRam'),
+              ('at.heinz.deviceai.OwnerFactRevocationUiTest', 'confirmedDeletionResetKeepsItsSessionAndPrecedesLaterContextWrites'),
+              ('at.heinz.deviceai.OwnerFactRevocationUiTest', 'failedContextResetReportsIncompleteDeletionAndCanBeRetried'),
+              ('at.heinz.deviceai.cognitive.LocalChatTranscriptStoreTest', 'contextResetRejectsInvalidExistingTargetsWithoutFalseSuccess'),
+              ('at.heinz.deviceai.cognitive.LocalChatTranscriptStoreTest', 'contextResetRejectsSymlinksWithoutChangingTheirTargets'),
+              ('at.heinz.deviceai.localmodel.LocalModelHostMemoryUiTest', 'loadedTextOnlyRechecksLowMemoryBeforeNativeDelegation'),
               ('at.heinz.deviceai.cognitive.OwnerDialogueOutputTest', 'completeOwnerResponsePassesTheSameQualityGateWithoutLosingItsEnd'),
               ('at.heinz.deviceai.cognitive.OwnerDialogueOutputTest', 'ownerFactoryRejectsUncapturedOverflowInsteadOfClipping'),
               ('at.heinz.deviceai.LocalContextBudgetUiTest', 'optionalMemoriesCannotDisplaceCompleteOwnerTurns'),
               ('at.heinz.deviceai.LocalContextBudgetUiTest', 'longNonModelReportLeavesRoomForTheActualFollowUp'),
               ('at.heinz.deviceai.LocalContextBudgetUiTest', 'longCurrentRequestKeepsItsFinalNegationWithinNativeBudget'),
               ('at.heinz.deviceai.OwnerAppActionWorkSceneUiTest', 'missingComputerSearchTermReachesExistingApprovalOnce'),
+              ('at.heinz.deviceai.OwnerAppActionWorkSceneUiTest', 'routineCommandInvalidatesPendingComputerSearch'),
               ('at.heinz.deviceai.cognitive.LocalLongAnswerFlowTest', 'longStreamKeepsItsEndingAfterRestart'),
               ('at.heinz.deviceai.cognitive.LocalLongAnswerFlowTest', 'nativeTokenLimitCannotBecomeACompleteAnswer'),
               ('at.heinz.deviceai.localmodel.LocalModelResponseBoundaryTest', 'overrunKeepsEveryRemainingCharacterBeforeOutputLimit'),

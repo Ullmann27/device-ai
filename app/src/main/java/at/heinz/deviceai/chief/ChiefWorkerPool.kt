@@ -37,7 +37,8 @@ private fun immutableToolScope(tools: Set<String>): Set<String> =
     Collections.unmodifiableSet(LinkedHashSet(tools))
 
 enum class WorkerStatus { DONE, BLOCKED, FAILED, TIMED_OUT, CANCELLED }
-data class WorkerReport(val id: String, val status: WorkerStatus, val summary: String, val durationMillis: Long)
+data class WorkerReport(val id: String, val status: WorkerStatus, val summary: String, val durationMillis: Long,
+                        val followup: at.heinz.deviceai.cognitive.AgentFollowupProposal? = null)
 
 /** The work itself; typically wraps BoundedAgentOrchestrator.run(brief.goal). Throw ToolBackendFailure/any error to fail. */
 fun interface WorkerJob {
@@ -45,6 +46,8 @@ fun interface WorkerJob {
 
     /** Cooperative stop for agent generation and ToolGate; interrupting a Future alone is insufficient. */
     fun cancel() {}
+
+    fun followupProposal(): at.heinz.deviceai.cognitive.AgentFollowupProposal? = null
 }
 
 /**
@@ -185,9 +188,11 @@ class ChiefWorkerPool(
         val ms = if (slot.startedNanos == 0L) 0L
             else TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - slot.startedNanos)
         val message = if (terminal != status) "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen." else summary
+        val followup = if (terminal == WorkerStatus.DONE) runCatching { slot.job?.followupProposal() }.getOrNull() else null
         slots.remove(slot.brief.id, slot)
         try {
-            runCatching { slot.onReport(WorkerReport(slot.brief.id, terminal, at.heinz.deviceai.ToolOutputCap.cap(message), ms)) }
+            runCatching { slot.onReport(WorkerReport(slot.brief.id, terminal, at.heinz.deviceai.ToolOutputCap.cap(message), ms,
+                followup)) }
         } finally {
             unfinishedAssignments.decrementAndGet()
         }

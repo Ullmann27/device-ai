@@ -71,8 +71,14 @@ class ContinuumTaskEffectsUiTest {
         assertTrue("Work effects require a shown real View",v.isShown)
         assertEquals(View.VISIBLE,v.windowVisibility)
         assertEquals(w,v.width);assertEquals(h,v.height)
+        val before = v.sampleMotion()
         v.setForegroundActive(true)
-        assertTrue("Work effects require a live foreground clock",v.motionDiagnostics().contains("LIVE"))
+        advanceFrames(200)
+        val active = v.sampleMotion()
+        assertTrue("Work effects require actual frame callbacks",active.callbackCount > before.callbackCount)
+        assertTrue("Work effects require actual phase progress",active.phase > before.phase)
+        frame(v,w,h).recycle()
+        assertTrue("Work effects require an actual Canvas draw",v.sampleMotion().drawCount > active.drawCount)
         scope(v)
     }
     @Test fun actualOverlayDrawsAboveAnOpaqueChildWithoutASecondClock() {

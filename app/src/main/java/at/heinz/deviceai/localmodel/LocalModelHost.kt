@@ -1,5 +1,6 @@
 package at.heinz.deviceai.localmodel
 
+import android.app.ActivityManager
 import android.content.Context
 import android.os.Build
 import android.os.PowerManager
@@ -13,6 +14,9 @@ import java.io.File
  * is really finishing.
  */
 object LocalModelHost {
+    const val PAUSED_MEMORY = "LOCAL_MODEL_PAUSED_MEMORY"
+    const val MEMORY_NO_MEASUREMENT = "LOCAL_MODEL_MEMORY_NO_MEASUREMENT"
+
     class Host(val catalog: LocalModelCatalog, val runtime: LocalModelRuntime) {
         // Activity executors may be interrupted on rotation/folding; a multi-GB
         // import belongs to the same process lifetime as this catalog/runtime.
@@ -41,11 +45,39 @@ object LocalModelHost {
      */
     private fun thermallyGuarded(app: Context, native: LocalModelRuntime, power: PowerManager?): LocalModelRuntime {
         val status: () -> Int? = { thermalStatus(power) }
-        val runtime = LocalModelThermalGuard.wrap(native, status)
+        val memoryGuarded = object : LocalModelRuntime by native {
+            private fun start(callback: LocalInferenceCallback, action: (LocalInferenceCallback) -> Unit) {
+                val refusal = generationMemoryRefusal(app)
+                if (refusal != null) callback.onEvent(LocalInferenceEvent.Failed(refusal))
+                else action(callback)
+            }
+            override fun stream(prompt: String, callback: LocalInferenceCallback) =
+                start(callback) { native.stream(prompt, it) }
+            override fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) =
+                start(callback) { native.streamTextOnly(prompt, it) }
+            override fun streamThinking(prompt: String, callback: LocalInferenceCallback) =
+                start(callback) { native.streamThinking(prompt, it) }
+            override fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) =
+                start(callback) { native.respondToTools(responses, it) }
+        }
+        val runtime = LocalModelThermalGuard.wrap(memoryGuarded, status)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) runCatching {
             power?.addThermalStatusListener(app.mainExecutor) { level -> LocalModelThermalGuard.onThermalStatus(runtime, level) }
         }
         return runtime
+    }
+
+    private fun generationMemoryRefusal(app: Context): String? {
+        val lowMemory: Boolean? = runCatching {
+            val manager = app.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+                ?: return@runCatching null
+            ActivityManager.MemoryInfo().also(manager::getMemoryInfo).lowMemory
+        }.getOrNull()
+        return when (lowMemory) {
+            false -> null
+            true -> PAUSED_MEMORY
+            null -> MEMORY_NO_MEASUREMENT
+        }
     }
 
     private fun thermalStatus(power: PowerManager?): Int? =

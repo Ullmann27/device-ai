@@ -3,7 +3,17 @@ package at.heinz.deviceai.cognitive
 import at.heinz.deviceai.localmodel.LocalModelGenerationPolicy
 import org.json.JSONObject
 import java.io.File
+import java.io.IOException
 import java.io.RandomAccessFile
+import java.nio.ByteBuffer
+import java.nio.CharBuffer
+import java.nio.channels.FileChannel
+import java.nio.charset.CodingErrorAction
+import java.nio.file.Files
+import java.nio.file.LinkOption.NOFOLLOW_LINKS
+import java.nio.file.StandardOpenOption.CREATE
+import java.nio.file.StandardOpenOption.READ
+import java.nio.file.StandardOpenOption.WRITE
 
 /**
  * Persistent, app-private transcript of the central chat (Fold7 report #568: the chat was lost after leaving the
@@ -38,6 +48,82 @@ class LocalChatTranscriptStore(private val dir: File) {
             if (it < text.length && text[it - 1].isHighSurrogate()) it - 1 else it
         }
         appendLine(id, JSONObject().put("u", user).put("t", text.substring(0, end)).put("at", atMillis).toString())
+    }
+
+    internal data class PreparedAppend(val conversationId: String, val offset: Long, val text: String)
+
+    // The caller serializes all writers.
+    @Synchronized internal fun prepareAssistantAppend(id: String, text: String, atMillis: Long): PreparedAppend {
+        require(text.isNotBlank() && text.length <= MAX_TEXT && atMillis >= 0)
+        val line = JSONObject().put("u", false).put("t", text).put("at", atMillis).toString() + "\n"
+        strictUtf8(line)
+        val file = appendTarget(id, create = true)
+        val prepared = FileChannel.open(file.toPath(), CREATE, READ, WRITE, NOFOLLOW_LINKS).use { channel ->
+            val size = channel.size()
+            val last = ByteBuffer.allocate(1)
+            val needsBreak = size > 0 && channel.read(last, size - 1) == 1 && last[0].toInt() != '\n'.code
+            channel.force(true)
+            PreparedAppend(id, size, (if (needsBreak) "\n" else "") + line)
+        }
+        forceDirectory()
+        return prepared
+    }
+
+    // Recovery proves the exact bytes.
+    @Synchronized internal fun appendPrepared(prepared: PreparedAppend): Boolean {
+        require(prepared.offset >= 0 && prepared.text.endsWith("\n"))
+        val line = prepared.text.removePrefix("\n").removeSuffix("\n")
+        require('\n' !in line && '\r' !in line)
+        val record = at.heinz.deviceai.learning.StrictJson.parseObject(line)
+        require(record.keys == setOf("u", "t", "at") && record["u"] == false)
+        val text = record["t"] as? String ?: error("Assistant text required.")
+        val at = record["at"] as? Long ?: error("Assistant timestamp required.")
+        require(text.isNotBlank() && text.length <= MAX_TEXT && at >= 0)
+        val expected = strictUtf8(prepared.text)
+        require(expected.size <= MAX_TEXT * 6 + 256 && prepared.offset <= Long.MAX_VALUE - expected.size)
+        val file = appendTarget(prepared.conversationId, create = false)
+        val appended = FileChannel.open(file.toPath(), READ, WRITE, NOFOLLOW_LINKS).use { channel ->
+            val length = channel.size()
+            if (length < prepared.offset) throw IOException("Chat shortened before delivery.")
+            val available = minOf(length - prepared.offset, expected.size.toLong()).toInt()
+            val actual = ByteBuffer.allocate(available)
+            channel.position(prepared.offset)
+            while (actual.hasRemaining()) {
+                if (channel.read(actual) <= 0) throw IOException("Chat changed during delivery.")
+            }
+            if (!actual.array().contentEquals(expected.copyOf(available)))
+                throw IOException("Chat delivery bytes conflict.")
+            if (available < expected.size) {
+                val remaining = ByteBuffer.wrap(expected, available, expected.size - available)
+                while (remaining.hasRemaining()) channel.write(remaining)
+            }
+            channel.force(true)
+            available < expected.size
+        }
+        forceDirectory()
+        return appended
+    }
+
+    private fun appendTarget(id: String, create: Boolean): File {
+        require(ID.matches(id)) { "Conversation id" }
+        val path = dir.absoluteFile.toPath().normalize()
+        require(path == dir.canonicalFile.toPath()) { "Unsafe chat directory." }
+        if (create) Files.createDirectories(path)
+        if (!Files.isDirectory(path, NOFOLLOW_LINKS)) throw IOException("Chat directory missing.")
+        val file = File(dir, "$id$SUFFIX")
+        val target = file.toPath()
+        if (Files.isSymbolicLink(target) || Files.exists(target, NOFOLLOW_LINKS) &&
+            !Files.isRegularFile(target, NOFOLLOW_LINKS)) throw IOException("Unsafe chat file.")
+        if (!create && !Files.exists(target, NOFOLLOW_LINKS)) throw IOException("Chat was deleted.")
+        return file
+    }
+
+    private fun forceDirectory() = FileChannel.open(dir.toPath(), READ).use { it.force(true) }
+
+    private fun strictUtf8(text: String): ByteArray {
+        val encoded = Charsets.UTF_8.newEncoder().onMalformedInput(CodingErrorAction.REPORT)
+            .onUnmappableCharacter(CodingErrorAction.REPORT).encode(CharBuffer.wrap(text))
+        return ByteArray(encoded.remaining()).also(encoded::get)
     }
 
     private fun appendLine(id: String, line: String) {
@@ -97,8 +183,22 @@ class LocalChatTranscriptStore(private val dir: File) {
      */
     @Synchronized fun appendContextReset(id: String, atMillis: Long) {
         require(ID.matches(id)) { "Conversation id" }
-        if (!File(dir, "$id$SUFFIX").isFile) return
-        appendLine(id, JSONObject().put("k", CONTEXT_RESET).put("at", atMillis).toString())
+        val directory = dir.absoluteFile.toPath().normalize()
+        if (directory != dir.canonicalFile.toPath() || Files.exists(directory, NOFOLLOW_LINKS) &&
+            !Files.isDirectory(directory, NOFOLLOW_LINKS)) throw IOException("Unsafe chat directory.")
+        if (Files.notExists(File(dir, "$id$SUFFIX").toPath(), NOFOLLOW_LINKS)) return
+        val file = appendTarget(id, create = false)
+        val line = JSONObject().put("k", CONTEXT_RESET).put("at", atMillis).toString() + "\n"
+        FileChannel.open(file.toPath(), READ, WRITE, NOFOLLOW_LINKS).use { channel ->
+            val size = channel.size()
+            val last = ByteBuffer.allocate(1)
+            val needsBreak = size > 0 && channel.read(last, size - 1) == 1 && last[0].toInt() != '\n'.code
+            val bytes = ByteBuffer.wrap(strictUtf8((if (needsBreak) "\n" else "") + line))
+            channel.position(size)
+            while (bytes.hasRemaining()) channel.write(bytes)
+            channel.force(true)
+        }
+        forceDirectory()
     }
 
     /** The last [limit] context turns after the last reset marker, in order (the model context keeps at most four). */
@@ -166,32 +266,40 @@ class LocalChatTranscriptStore(private val dir: File) {
 
     /** The last [limit] readable entries in order; a torn last line (process death mid-write) is skipped. */
     @Synchronized fun load(id: String, limit: Int = 200): List<Entry> {
-        if (limit <= 0) return emptyList()
-        return lines(id).mapNotNull { line ->
+        return snapshot(id, limit).entries
+    }
+
+    internal data class Snapshot(val entries: List<Entry>, val endOffset: Long)
+
+    @Synchronized internal fun snapshot(id: String, limit: Int = 200): Snapshot {
+        if (limit <= 0) return Snapshot(emptyList(), 0)
+        val tail = tail(id)
+        val entries = tail.lines.mapNotNull { line ->
             runCatching {
                 val o = JSONObject(line)
                 if (o.has("k")) null else Entry(o.getBoolean("u"), o.getString("t"), o.optLong("at"))
             }.getOrNull()
         }.toList().takeLast(limit)
+        return Snapshot(entries, tail.endOffset)
     }
 
-    private fun lines(id: String): Sequence<String> = tail(id).lines
-
-    private class Tail(val lines: Sequence<String>, val truncated: Boolean)
+    private class Tail(val lines: Sequence<String>, val truncated: Boolean, val endOffset: Long = 0)
 
     private fun tail(id: String): Tail {
         if (!ID.matches(id)) return Tail(emptySequence(), false)
         val file = File(dir, "$id$SUFFIX")
         if (!file.isFile) return Tail(emptySequence(), false)
         var truncated = false
+        var endOffset = 0L
         val text = RandomAccessFile(file, "r").use { raf ->
-            val start = maxOf(0L, raf.length() - MAX_READ_BYTES)
+            endOffset = raf.length()
+            val start = maxOf(0L, endOffset - MAX_READ_BYTES)
             truncated = start > 0
             raf.seek(start)
-            ByteArray((raf.length() - start).toInt()).also { raf.readFully(it) }.toString(Charsets.UTF_8)
+            ByteArray((endOffset - start).toInt()).also { raf.readFully(it) }.toString(Charsets.UTF_8)
                 .let { if (start > 0) it.substringAfter('\n') else it }
         }
-        return Tail(text.lineSequence(), truncated)
+        return Tail(text.lineSequence(), truncated, endOffset)
     }
 
     @Synchronized fun conversations(): List<String> =

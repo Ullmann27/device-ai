@@ -184,6 +184,23 @@ class ShizukuBridgeLifecycleTest {
         bridge.stop()
     }
 
+    @Test fun grantedOnlyBridgeNeverOpensPermissionDialogAfterRevocation() {
+        Server.granted = false
+        val bridge = bridge(mutableListOf())
+        try {
+            bridge.startGrantedOnly(); bridge.refresh(); bridge.requestAccess()
+            assertEquals(0, Server.permissionRequests)
+            assertTrue(Server.connections.isEmpty())
+            Server.granted = true; bridge.refresh()
+            connect(Server.connections.single())
+            assertTrue(bridge.isReady())
+            Server.granted = false; bridge.refresh(); bridge.requestAccess()
+            assertFalse(bridge.isReady())
+            assertEquals(0, Server.permissionRequests)
+            assertEquals(1, Server.connections.size)
+        } finally { bridge.stop() }
+    }
+
 
     @Test fun permissionRequestTimeoutDoesNotLockOutFutureOwnerRetry() {
         Server.granted = false

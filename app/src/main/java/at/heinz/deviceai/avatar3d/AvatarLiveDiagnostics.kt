@@ -14,6 +14,7 @@ import kotlin.math.sin
 class AvatarFrameReceipt internal constructor() {
     var frameNumber: Long = 0L
     var frameNanos: Long = 0L
+    internal var surfaceGeneration: Long = 0L
     var stateOrdinal: Int = 0
     var stageFlags: Int = 0
     var jawOpen: Float = 0f
@@ -50,7 +51,27 @@ class AvatarFrameReceipt internal constructor() {
         const val MORPH_UPLOADED = 1 shl 6
         const val JOINTS_UPLOADED = 1 shl 7
         const val FILAMENT_BEGIN = 1 shl 8
-        const val FILAMENT_RENDERED = 1 shl 9
+        const val FILAMENT_SUBMITTED = 1 shl 9
+        const val CONSUMER_TIMESTAMP_ADVANCED = 1 shl 10
+    }
+}
+
+data class AvatarConsumerSample(
+    val generation: Long,
+    val updateCount: Long,
+    val timestampNanos: Long?
+) {
+    fun progressSince(start: AvatarConsumerSample): String {
+        if (generation != start.generation) return "3D-Surface im Messfenster geändert; kein vergleichbarer Consumer-Nachweis."
+        val updates = (updateCount - start.updateCount).coerceAtLeast(0L)
+        val before = start.timestampNanos
+        val after = timestampNanos
+        return when {
+            updates == 0L -> "Keine neue TextureView-Aktualisierung im Messfenster."
+            before == null || after == null -> "TextureView-Aktualisierungen: $updates; Zeitstempelfortschritt nicht messbar."
+            after <= before -> "TextureView-Aktualisierungen: $updates; kein Zeitstempelfortschritt beobachtet ($before → $after ns)."
+            else -> "TextureView-Aktualisierungen: $updates; Consumer-Zeitstempel fortgeschritten ($before → $after ns)."
+        }
     }
 }
 
@@ -59,17 +80,54 @@ internal class AvatarTraceRingBuffer(private val capacity: Int = 120) {
 
     private val frames = Array(capacity) { AvatarFrameReceipt() }
     private val cursor = AtomicLong(0L)
+    private var consumerSurface: Any? = null
+    private var surfaceGeneration = 0L
+    private var consumerUpdates = 0L
+    private var consumerTimestamp: Long? = null
+
+    fun bindSurface(surface: Any, timestampNanos: Long?) {
+        consumerSurface = surface
+        surfaceGeneration++
+        consumerUpdates = 0L
+        consumerTimestamp = timestampNanos
+    }
+
+    fun clearSurface(surface: Any? = null) {
+        if (consumerSurface == null || (surface != null && consumerSurface !== surface)) return
+        consumerSurface = null
+        surfaceGeneration++
+        consumerUpdates = 0L
+        consumerTimestamp = null
+    }
+
+    fun surfaceUpdated(surface: Any, timestampNanos: Long?) {
+        if (consumerSurface !== surface) return
+        val previous = consumerTimestamp
+        consumerUpdates++
+        consumerTimestamp = timestampNanos
+        if (previous == null || timestampNanos == null || timestampNanos <= previous) return
+        val current = cursor.get()
+        val receipt = frames[(current % capacity).toInt()]
+        if (current > 0L && receipt.frameNumber == current && receipt.surfaceGeneration == surfaceGeneration) {
+            receipt.stageFlags = receipt.stageFlags or AvatarFrameReceipt.CONSUMER_TIMESTAMP_ADVANCED
+        }
+    }
+
+    fun consumerSample() = AvatarConsumerSample(surfaceGeneration, consumerUpdates, consumerTimestamp)
 
     fun beginFrame(frameNanos: Long): AvatarFrameReceipt {
         val frame = cursor.incrementAndGet()
-        return frames[(frame % capacity).toInt()].also { it.reset(frame, frameNanos) }
+        return frames[(frame % capacity).toInt()].also {
+            it.reset(frame, frameNanos)
+            it.surfaceGeneration = surfaceGeneration
+        }
     }
 
     fun frameNumber(): Long = cursor.get()
 
     fun diagnose(sampleLimit: Int = 60): String = diagnoseSince(0L, sampleLimit)
 
-    /** Only receipts created after [afterFrameExclusive] may prove this run live. */
+    /** Current surface, current trace window. */
     fun diagnoseSince(afterFrameExclusive: Long, sampleLimit: Int = 60): String {
         require(afterFrameExclusive >= 0L)
         val current = cursor.get()
@@ -85,11 +143,12 @@ internal class AvatarTraceRingBuffer(private val capacity: Int = 120) {
         var pose = 0
         var morph = 0
         var begin = 0
-        var rendered = 0
+        var submitted = 0
+        var consumed: AvatarFrameReceipt? = null
         var newest: AvatarFrameReceipt? = null
         for (i in 0 until count) {
             val r = frames[((current - i) % capacity).toInt()]
-            if (r.frameNumber <= afterFrameExclusive) continue
+            if (r.frameNumber <= afterFrameExclusive || r.surfaceGeneration != surfaceGeneration) continue
             if (newest == null) newest = r
             if (r.stageFlags and AvatarFrameReceipt.HEAD_3D_SELECTED != 0) selected++
             if (r.stageFlags and AvatarFrameReceipt.SURFACE_VALID != 0) surface++
@@ -97,7 +156,8 @@ internal class AvatarTraceRingBuffer(private val capacity: Int = 120) {
             if (r.stageFlags and AvatarFrameReceipt.POSE_SAMPLED != 0) pose++
             if (r.stageFlags and AvatarFrameReceipt.MORPH_UPLOADED != 0) morph++
             if (r.stageFlags and AvatarFrameReceipt.FILAMENT_BEGIN != 0) begin++
-            if (r.stageFlags and AvatarFrameReceipt.FILAMENT_RENDERED != 0) rendered++
+            if (r.stageFlags and AvatarFrameReceipt.FILAMENT_SUBMITTED != 0) submitted++
+            if (consumed == null && r.stageFlags and AvatarFrameReceipt.CONSUMER_TIMESTAMP_ADVANCED != 0) consumed = r
         }
         return when {
             newest == null -> "BROKEN_AT_ROOT: kein neuer sichtbarer Avatar-Frame"
@@ -107,15 +167,18 @@ internal class AvatarTraceRingBuffer(private val capacity: Int = 120) {
             pose == 0 -> "BROKEN_AT_POSE: Renderer erhält keine Pose"
             morph == 0 -> "BROKEN_AT_MAPPER: Pose da, Morph-Upload fehlt"
             begin == 0 -> "BROKEN_AT_FILAMENT_BEGIN: beginFrame liefert keinen Frame"
-            rendered == 0 -> "BROKEN_AT_FILAMENT_RENDER: Renderpass wird nicht abgeschlossen"
-            else -> "AVATAR_PIPELINE_LIVE: " + newest.compact()
+            submitted == 0 -> "BROKEN_AT_FILAMENT_SUBMIT: keine abgeschlossene Frame-Einreichung"
+            consumed == null -> "RENDER_SUBMITTED: $submitted Einreichungen; TextureView-Updates $consumerUpdates, " +
+                "Zeitstempel ${consumerTimestamp ?: "unbekannt"}; kein Consumer-Fortschritt im Tracefenster belegt. " + newest.compact()
+            else -> "CONSUMER_FRAME_OBSERVED: TextureView-Update mit Zeitstempelfortschritt im Tracefenster; " +
+                "Pixelinhalt ungeprüft. " + consumed.compact()
         }
     }
 }
 
 internal object AvatarProofCompletion {
     data class Summary(val callbackDelta: Long, val drawDelta: Long, val verdict: String) {
-        val live: Boolean get() = verdict.startsWith("AVATAR_PIPELINE_LIVE")
+        val consumerObserved: Boolean get() = verdict.startsWith("CONSUMER_FRAME_OBSERVED")
     }
 
     fun summarize(callbackDelta: Long, drawDelta: Long, trace: String): Summary {
