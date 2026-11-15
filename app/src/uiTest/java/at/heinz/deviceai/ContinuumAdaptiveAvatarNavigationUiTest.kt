@@ -10,6 +10,7 @@ import at.heinz.deviceai.ui.ContinuumHomeView
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -77,8 +78,10 @@ class ContinuumAdaptiveAvatarNavigationUiTest {
                     set(activity, "conversationActive", true)
                     refresh.invoke(activity)
                     measure(pane, width, height)
-                    assertSame(chat, head.parent)
-                    assertEquals(ContinuumHologramRenderer.Geometry.PHONE, renderer.geometry)
+                    assertSame("The workstation keeps the original surface mounted during chat", home, head.parent)
+                    assertTrue(home.isConversationPresence)
+                    assertTrue(head.isShown)
+                    assertEquals(expectedHomeGeometry, renderer.geometry)
 
                     set(activity, "conversationActive", false)
                     refresh.invoke(activity)

@@ -444,7 +444,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
 
     internal fun cockpitWorkEvent(event: CockpitWorkEvent) {
         when (event.stage) {
-            CockpitWorkEvent.Stage.ACCEPTED -> if (cockpitStage != null) cameraFlight.start(System.nanoTime())
+            CockpitWorkEvent.Stage.ACCEPTED -> if (cockpitStage != null)
+                cameraFlight.start(System.nanoTime(), cockpitFrame?.cameraFlightEnabled != false)
             CockpitWorkEvent.Stage.STOPPED, CockpitWorkEvent.Stage.ERROR -> cameraFlight.cancel()
             else -> Unit
         }
@@ -463,7 +464,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         val unit = frame.worldScale
         val d = (frame.distance * unit).toDouble()
         val near = frame.near
-        val flight = if (motion) cameraFlight.progress(System.nanoTime()) else { cameraFlight.cancel(); null }
+        val flight = cameraFlight.progress(System.nanoTime(), motion && frame.cameraFlightEnabled)
         val pose = flight?.let {
             val monitor = frame.monitorTransform()
             CockpitCameraFlight.pose(it, monitor[12].toDouble(), monitor[13].toDouble(),

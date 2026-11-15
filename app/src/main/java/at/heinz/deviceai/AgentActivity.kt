@@ -1136,7 +1136,7 @@ class AgentActivity : Activity() {
 
         syncPhoneNavigation = {
             val homeOwnsNavigation = homeView?.jarvisShellStage == true &&
-                dashboardSection?.visibility == View.VISIBLE
+                homeView?.isConversationPresence != true && dashboardSection?.visibility == View.VISIBLE
             val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(wide, keyboardCompact) && !homeOwnsNavigation
             bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
             val navigationPane = phonePane
@@ -1418,7 +1418,7 @@ class AgentActivity : Activity() {
         }
         details.addView(activityText, matchWidth())
         dashboard.addView(details, matchWidth())
-        val dashboardScroll = ScrollView(this).apply {
+        val dashboardScroll = ConversationDashboardScroll(this).apply {
             isFillViewport = true
             clipToPadding = false
             isVerticalScrollBarEnabled = true
@@ -1502,8 +1502,38 @@ class AgentActivity : Activity() {
         pane.addView(column, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
         // One existing editor for both presentations. It remains reachable while the tall phone scene scrolls.
         pane.addView(composer, matchWidth())
+        pane.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            if (homeView === home && home.isConversationPresence) updateConversationPresenceViewport(true)
+        }
         refreshConversationLayout()
         return pane
+    }
+
+    /** The mounted visual presence cannot scroll or expose focus targets below its clipped viewport. */
+    private class ConversationDashboardScroll(context: android.content.Context) : ScrollView(context) {
+        private val ordinaryFocusPolicy = descendantFocusability
+        var presenceLocked = false
+            set(value) {
+                if (field == value) return
+                field = value
+                isVerticalScrollBarEnabled = !value
+                importantForAccessibility = if (value) View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+                    else View.IMPORTANT_FOR_ACCESSIBILITY_AUTO
+                descendantFocusability = if (value) android.view.ViewGroup.FOCUS_BLOCK_DESCENDANTS else ordinaryFocusPolicy
+                if (value) { findFocus()?.clearFocus(); super.scrollTo(0, 0) }
+            }
+        override fun scrollTo(x: Int, y: Int) = super.scrollTo(if (presenceLocked) 0 else x, if (presenceLocked) 0 else y)
+        override fun onOverScrolled(x: Int, y: Int, clampedX: Boolean, clampedY: Boolean) =
+            super.onOverScrolled(if (presenceLocked) 0 else x, if (presenceLocked) 0 else y, clampedX, clampedY)
+        override fun onInterceptTouchEvent(event: android.view.MotionEvent): Boolean =
+            !presenceLocked && super.onInterceptTouchEvent(event)
+        override fun onTouchEvent(event: android.view.MotionEvent): Boolean =
+            !presenceLocked && super.onTouchEvent(event)
+        override fun requestChildRectangleOnScreen(child: View, rectangle: android.graphics.Rect,
+                                                    immediate: Boolean): Boolean =
+            !presenceLocked && super.requestChildRectangleOnScreen(child, rectangle, immediate)
+        override fun performAccessibilityAction(action: Int, arguments: android.os.Bundle?): Boolean =
+            !presenceLocked && super.performAccessibilityAction(action, arguments)
     }
 
     /** Width of the Fold/tablet navigation rail in px, rounded once; the dashboard offset is derived from it. */
@@ -3608,6 +3638,7 @@ class AgentActivity : Activity() {
     private fun refreshConversationLayout() {
         compactConversationChrome = needsCompactConversation()
         val dashboardWasVisible = dashboardSection?.visibility == View.VISIBLE
+        val wasConversationPresence = homeView?.isConversationPresence == true
         val chat = !currentToolScene() && at.heinz.deviceai.cognitive.CockpitConversationPresentation.showChat(
             explicitChatSelected = activeWorkArea == ContinuumWorkArea.CHAT,
             conversationActive = conversationActive,
@@ -3617,7 +3648,8 @@ class AgentActivity : Activity() {
         )
         if (chat) workWindowHost.close(immediate = true)
         conversationRail?.visibility = if (chat) View.VISIBLE else View.GONE
-        dashboardSection?.visibility = if (chat) View.GONE else View.VISIBLE
+        val mountedPresence = chat && homeView?.jarvisShellStage == true
+        dashboardSection?.visibility = if (!chat || mountedPresence) View.VISIBLE else View.GONE
         chatColumn?.visibility = if (chat) View.VISIBLE else View.GONE
         syncConversationAvatar(chat)
         modeSection?.visibility = if (chat && !compactConversationChrome) View.VISIBLE else View.GONE
@@ -3633,8 +3665,53 @@ class AgentActivity : Activity() {
             if ((chat || training) && !compactConversationChrome) View.VISIBLE else View.GONE
         if (::neuralProgress.isInitialized) neuralProgress.visibility =
             if (training && !compactConversationChrome) View.VISIBLE else View.GONE
+        updateConversationPresenceViewport(mountedPresence)
         syncPhoneNavigation?.invoke()
-        if (!chat && !dashboardWasVisible) refreshDashboard()
+        if (!chat && (!dashboardWasVisible || wasConversationPresence)) refreshDashboard()
+    }
+
+    /** Reuses the Home-mounted surface while giving the actual messages and editor the remaining height. */
+    private fun updateConversationPresenceViewport(present: Boolean) {
+        val home = homeView ?: return
+        val scroll = dashboardSection as? ConversationDashboardScroll ?: return
+        val density = resources.displayMetrics.density
+        val height = if (!present) null else {
+            val pane = scroll.parent as? View
+            val windowHeight = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()
+            val available = minOf(windowHeight,
+                pane?.height?.takeIf { it > 0 }?.div(density) ?: windowHeight).coerceAtLeast(24f)
+            val short = keyboardCompact || compactConversationChrome || available < 520f
+            val desired = if (short) 144f else if (home.wide) 260f else 220f
+            val editorShell = if (::input.isInitialized) (input.parent as? View)?.parent as? View else null
+            val composer = editorShell?.measuredHeight?.takeIf { it > 0 }?.div(density)
+                ?: if (compactConversationChrome) 64f else 144f
+            val column = chatColumn
+            val chromePixels = column?.let { parent ->
+                parent.paddingTop + parent.paddingBottom + (0 until parent.childCount).sumOf { index ->
+                    val child = parent.getChildAt(index)
+                    if ((::chatScroll.isInitialized && child === chatScroll) || child.visibility == View.GONE) 0 else {
+                        val margins = child.layoutParams as? android.view.ViewGroup.MarginLayoutParams
+                        child.measuredHeight + (margins?.topMargin ?: 0) + (margins?.bottomMargin ?: 0)
+                    }
+                }
+            } ?: 0
+            val chrome = if (chromePixels > 0) chromePixels / density else if (compactConversationChrome) 56f else 124f
+            val messageRoom = 48f * resources.configuration.fontScale.coerceIn(1f, 2f)
+            val budgetAfterComposer = (available - composer).coerceAtLeast(24f)
+            val minimum = if (available >= 300f && budgetAfterComposer >= 96f) 96f else 24f
+            minOf(budgetAfterComposer, minOf(desired, available * (if (short) .30f else .36f),
+                available - composer - chrome - messageRoom).coerceIn(minimum, desired))
+        }
+        home.setConversationPresence(height)
+        scroll.presenceLocked = present
+        val params = scroll.layoutParams as? LinearLayout.LayoutParams ?: return
+        val targetHeight = height?.let { kotlin.math.ceil(it * density).toInt() } ?: 0
+        val targetWeight = if (present) 0f else 1f
+        if (params.height != targetHeight || params.weight != targetWeight) {
+            params.height = targetHeight
+            params.weight = targetWeight
+            scroll.layoutParams = params
+        }
     }
 
     private fun needsCompactConversation(): Boolean = ComposerUiPolicy.compactConversation(
@@ -3647,7 +3724,8 @@ class AgentActivity : Activity() {
         val head = hologramView ?: return
         val home = homeView ?: return
         val column = chatColumn ?: return
-        val target: android.view.ViewGroup = if (chat) column else home
+        // The workstation stays mounted during text chat too. Native 3D's existing reparent veto remains intact.
+        val target: android.view.ViewGroup = if (chat && !home.jarvisShellStage) column else home
         val height = dp(if (keyboardCompact) 88 else if (resources.configuration.screenHeightDp < 520) 120
             else if (home.wide) 200 else 160)
         if (head.parent !== target &&
@@ -6245,8 +6323,8 @@ class AgentActivity : Activity() {
         val shell = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             background = roundedGradient(
-                Color.rgb(14, 31, 68), Color.rgb(10, 18, 46),
-                23, Color.rgb(76, 119, 232)
+                Color.rgb(8, 18, 28), Color.rgb(4, 10, 17),
+                8, Color.rgb(40, 88, 110)
             )
             setPadding(dp(7), dp(8), dp(7), dp(8))
             elevation = dp(7).toFloat()
@@ -6276,13 +6354,14 @@ class AgentActivity : Activity() {
             setHintTextColor(Color.rgb(147, 164, 201))
             setTextColor(TEXT)
             textSize = 14f
+            typeface = at.heinz.deviceai.ui.ContinuumControls.typeface(this@AgentActivity, 400)
             minLines = 1
             maxLines = if (stackedComposer) 2 else 7
             gravity = Gravity.TOP or Gravity.START
             setHorizontallyScrolling(false)
             isVerticalScrollBarEnabled = true
-            background = roundedGradient(Color.rgb(21, 35, 70),
-                Color.rgb(14, 24, 55), 18, Color.rgb(54, 86, 151))
+            background = roundedGradient(Color.rgb(9, 22, 32),
+                Color.rgb(5, 13, 22), 6, Color.rgb(43, 104, 126))
             imeOptions = android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI
             inputType = InputType.TYPE_CLASS_TEXT or
                 InputType.TYPE_TEXT_FLAG_MULTI_LINE or
@@ -15606,7 +15685,7 @@ class AgentActivity : Activity() {
     private fun verticalCard(): LinearLayout =
         LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            background = at.heinz.deviceai.ui.ContinuumControls.surface(this@AgentActivity, 21f)
+            background = at.heinz.deviceai.ui.ContinuumControls.surface(this@AgentActivity, 8f)
             elevation = dp(2).toFloat()
         }
 
@@ -15620,7 +15699,7 @@ class AgentActivity : Activity() {
             text = value
             textSize = size
             setTextColor(color)
-            if (bold) setTypeface(typeface, Typeface.BOLD)
+            typeface = at.heinz.deviceai.ui.ContinuumControls.typeface(this@AgentActivity, if (bold) 600 else 400)
             setLineSpacing(dp(1).toFloat(), 1.03f)
         }
 

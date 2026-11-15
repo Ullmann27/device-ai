@@ -76,6 +76,18 @@ class JarvisShellView(context: Context) : View(context) {
     private var layoutInset = Float.NaN
     private var layoutViewport = Float.NaN
     private var layoutCompact = false
+    private var layoutConversationPresenceHeight: Float? = null
+    /** Transient chat viewport; never changes the owner's compact/3D preferences. */
+    var conversationPresenceHeightDp: Float? = null
+        set(value) {
+            require(value == null || (value.isFinite() && value in
+                CinematicWorkstationLayout.MIN_CONVERSATION_PRESENCE_DP..CinematicWorkstationLayout.MAX_CONVERSATION_PRESENCE_DP))
+            if (field == value) return
+            field = value
+            shell = null
+            requestLayout()
+            invalidate()
+        }
     var compactPresentation = false
         set(value) {
             if (field == value) return
@@ -222,10 +234,12 @@ class JarvisShellView(context: Context) : View(context) {
         if (w < 240f || h < 160f) return null
         val font = resources.configuration.fontScale
         val viewport = viewportHeightDp.takeIf { it >= 160f } ?: h
-        return shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp && layoutCompact == compactPresentation }
-            ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp,
-                compactPresentation = compactPresentation, workstation = true).also {
+        return shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp && layoutCompact == compactPresentation && layoutConversationPresenceHeight == conversationPresenceHeightDp }
+            ?: (conversationPresenceHeightDp?.let { CinematicWorkstationLayout.conversationPresence(w, it, font) }
+                ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp,
+                    compactPresentation = compactPresentation, workstation = true)).also {
                 shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp; layoutViewport = viewport; layoutCompact = compactPresentation
+                layoutConversationPresenceHeight = conversationPresenceHeightDp
             }
     }
 

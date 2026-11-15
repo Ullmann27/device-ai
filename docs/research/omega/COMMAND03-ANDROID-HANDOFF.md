@@ -1,6 +1,6 @@
 # Kommando 03 – native Android integration
 
-Status: WIP / UNVERIFIED
+Status: IMPLEMENTED CANDIDATE / native verification in progress / no owner release
 
 ## Source and responsibility
 
@@ -31,5 +31,11 @@ The older Filament side-panel preset has fixed positions that do not match the r
 The first local compile of `7d1a0a49290aa8e7aab41ed76405bd96857a3635` stopped with an unexpectedly terminated Gradle daemon during Kotlin compilation; no Kotlin source diagnostic was emitted. Resource/manifest processing completed, but this is **not** a successful compile. The cause is under investigation; memory pressure is plausible and unconfirmed. JVM/UI tests and the source-bound ARM64 build are **NOT_RUN** at this checkpoint. No device, frame-rate, signing or installation result is claimed.
 
 A separate review found and fixed the first-measure side-panel guard: the workstation must reject the old panel preset before the shell's drawing cache exists. Its regression now uses a real accepted computer-state fixture before first measure, rather than a null computer state. Added QA also includes stored-context isolation, stale queued selection rejection, actual-task-end waiting, PDF picker permissions, and the single fixed composer. The existing native Canvas capture fixture covers 392×852 and 904×768 dp and the real computer-tool route; it is not GPU/Filament evidence.
+
+The second local compile **passed** on `c66cf77bef76130f17f9964316515ce6d98b2eca` (Gradle success, unchanged clean source). Existing byte-identical historical APK/ZIP copies were hardlinked without removing their paths or changing their contents, freeing 417,693,696 bytes of tmpfs. The measured run used one worker, a 2048 MiB heap and 512 MiB metaspace. This is a native Kotlin/Java compile result, not a test-suite or device result.
+
+The final presentation correction keeps the same Home-mounted avatar surface visible above the real chat. A transient presence layout removes the inner rail and tool hit targets, keeps the existing valid monitor frame below the clipped strip, and locks the strip at scroll zero. Its height gives the real composer priority, including the existing 126 dp / large-text regression case. The original renderer is never reparented. The existing monitor camera flight is presentation-disabled while this strip is active: a current flight returns to rest, no hidden flight starts, and returning home does not replay an old event. Native editor, messages and buttons now use the same bundled Manrope typography as the scene.
+
+The latest exact source and verification outcomes are maintained in PR #851. These paragraphs record checkpoints and do not inherit earlier APK, GPU, device or signing approvals.
 
 The available local JDK 21/Gradle 8.11.1/SDK 36 toolchain has been verified. Its isolated runner targets this checkout and rejects stale evidence or source changes during a run. A local Android emulator and `/dev/kvm` are unavailable; JVM rendering cannot establish Filament/Fold7 hardware performance.

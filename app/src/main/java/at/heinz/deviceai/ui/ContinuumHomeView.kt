@@ -25,6 +25,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private var offset = 0f
     private val presentationPrefs = context.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
     private var compactPresentation = presentationPrefs.getBoolean("compact", false)
+    private var conversationPresenceHeightDp: Float? = null
+    internal val isConversationPresence: Boolean get() = conversationPresenceHeightDp != null
     private var configuredWidth = 0f
     private var configuredHeight = 0f
     private var externalBottomBarHeightDp = 0f
@@ -360,7 +362,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val frame = at.heinz.deviceai.avatar3d.CockpitStageFrame(width.toFloat(), height.toFloat(),
             (display.left - stage.left) * density, (display.top - stage.top) * density,
             minOf(width.toFloat(), (display.right - stage.left) * density),
-            minOf(height.toFloat(), (display.bottom - stage.top) * density))
+            minOf(height.toFloat(), (display.bottom - stage.top) * density),
+            cameraFlightEnabled = !isConversationPresence)
         computerFrame = frame
         updateCockpitPanels()
         presentComputerFrame()
@@ -490,15 +493,29 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         requestLayout()
     }
 
+    /** A transient viewport of this same mounted scene; it never changes appearance preferences or ownership. */
+    internal fun setConversationPresence(heightDp: Float?) {
+        require(heightDp == null || heightDp.isFinite() && heightDp in 24f..320f)
+        if (conversationPresenceHeightDp == heightDp) return
+        conversationPresenceHeightDp = heightDp
+        jarvisShell.conversationPresenceHeightDp = heightDp
+        if (heightDp != null) {
+            clearShellPress()
+            liveTabs.collapseImmediately()
+        }
+        applyShellStage()
+        requestLayout()
+    }
+
     private fun applyShellStage() {
         jarvisShell.visibility = if (jarvisShellStage) View.VISIBLE else View.GONE
         shellForeground.visibility = jarvisShell.visibility
         virtualMonitor.visibility = jarvisShell.visibility
         views.values.forEach { it.visibility = if (jarvisShellStage) View.GONE else View.VISIBLE }
-        shellActions.values.forEach { it.visibility = if (jarvisShellStage) View.VISIBLE else View.GONE }
+        shellActions.values.forEach { it.visibility = if (jarvisShellStage && !isConversationPresence) View.VISIBLE else View.GONE }
         if (jarvisShellStage) applyDeckToActions()
         shellRailScroll.visibility = View.GONE
-        liveTabs.visibility = if (jarvisShellStage && !deckCleared) View.VISIBLE else View.GONE
+        liveTabs.visibility = if (jarvisShellStage && !deckCleared && !isConversationPresence) View.VISIBLE else View.GONE
         applyAvatarSlot()
     }
 
@@ -796,7 +813,11 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             else -> maxOf(160f, contentHeight / density)
         } - externalBottomBarHeightDp
         jarvisShell.viewportHeightDp = viewport.coerceAtLeast(160f)
-        val h = if (jarvisShellStage && width / density >= 240f)
+        val presenceHeight = conversationPresenceHeightDp
+        val h = if (jarvisShellStage && width / density >= 240f && presenceHeight != null)
+            (CinematicWorkstationLayout.conversationPresence(width / density, presenceHeight,
+                resources.configuration.fontScale).height * density).toInt()
+            else if (jarvisShellStage && width / density >= 240f)
             (JarvisShellLayout.forContent(width / density, jarvisShell.viewportHeightDp,
                 resources.configuration.fontScale, jarvisShell.foldRail, offset,
                 compactPresentation = compactPresentation, workstation = true).height * density).toInt()
@@ -883,6 +904,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private fun shellGeometry(widthPx: Int, heightPx: Int): JarvisShellLayout.Shell? {
         val w = widthPx / density
+        conversationPresenceHeightDp?.let { visibleHeight ->
+            return if (w >= 240f) CinematicWorkstationLayout.conversationPresence(w, visibleHeight,
+                resources.configuration.fontScale) else null
+        }
         val viewport = jarvisShell.viewportHeightDp.takeIf { it >= 160f } ?: (heightPx / density)
         if (w < 240f || viewport < 160f) return null
         return JarvisShellLayout.forContent(w, viewport, resources.configuration.fontScale, jarvisShell.foldRail,
@@ -895,6 +920,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     /** One real focusable View per visible action; the painter is never the input dispatcher. */
     private fun measureShellActions(shell: JarvisShellLayout.Shell) {
+        if (isConversationPresence) {
+            shellActionBounds = emptyMap()
+            shellRailBounds = null
+            shellActions.values.forEach { it.visibility = View.GONE }
+            shellRailScroll.visibility = View.GONE
+            liveTabs.visibility = View.GONE
+            return
+        }
         val actions = ArrayList<ShellActionSpec>()
         fun add(key: String, target: String, label: String, box: JarvisShellLayout.Box?) {
             if (box != null && box.width > 0f && box.height > 0f) actions += ShellActionSpec(key, target, label, box)
@@ -1019,7 +1052,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         workspaceFootprint = footprint
         val active = footprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
         if (active) liveTabs.collapseImmediately()
-        liveTabs.visibility = if (jarvisShellStage && !active) View.VISIBLE else View.GONE
+        liveTabs.visibility = if (jarvisShellStage && !active && !isConversationPresence) View.VISIBLE else View.GONE
         jarvisShell.setWorkspaceFootprint(footprint)
         applyDeckToActions()
     }
@@ -1041,7 +1074,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private fun applyDeckToActions() {
         shellActions.forEach { (key, view) ->
-            view.visibility = if (deckHides(key)) View.INVISIBLE else View.VISIBLE
+            view.visibility = if (isConversationPresence) View.GONE else if (deckHides(key)) View.INVISIBLE else View.VISIBLE
         }
     }
 

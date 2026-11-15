@@ -3,6 +3,7 @@ package at.heinz.deviceai.ui
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
@@ -20,6 +21,18 @@ object ContinuumControls {
     const val TEXT = 0xFFF1F5FF.toInt()
     const val MUTED = 0xFFB1BFDC.toInt()
 
+    private val textFaces = HashMap<String, Typeface>()
+
+    /** The native editor, conversation and buttons use the same bundled type as the scene. */
+    fun typeface(context: Context, weight: Int = 400): Typeface {
+        val path = ContinuumFonts.assetPath(FontFamily.TEXT, weight)
+        return synchronized(textFaces) {
+            textFaces.getOrPut(path) {
+                runCatching { Typeface.createFromAsset(context.assets, path) }.getOrDefault(Typeface.DEFAULT)
+            }
+        }
+    }
+
     private fun dp(ctx: Context, n: Float) = n * ctx.resources.displayMetrics.density
 
     private fun shape(ctx: Context, radius: Float, top: Int, bottom: Int, edge: Int, stroke: Float = 1f) =
@@ -28,32 +41,33 @@ object ContinuumControls {
             setStroke(dp(ctx, stroke).toInt().coerceAtLeast(1), edge)
         }
 
-    fun surface(ctx: Context, radius: Float = 18f): Drawable =
+    fun surface(ctx: Context, radius: Float = 8f): Drawable =
         shape(ctx, radius, 0xFF132B48.toInt(), 0xFF081326.toInt(), 0xFF365A82.toInt())
 
     fun buttonBackground(ctx: Context, accent: Int = CYAN, primary: Boolean = false): Drawable {
         val states = StateListDrawable().apply {
-            addState(intArrayOf(-android.R.attr.state_enabled), shape(ctx, 15f,
+            addState(intArrayOf(-android.R.attr.state_enabled), shape(ctx, 7f,
                 0xFF182235.toInt(), 0xFF111A2B.toInt(), 0xFF384256.toInt()))
-            addState(intArrayOf(android.R.attr.state_pressed), shape(ctx, 15f,
+            addState(intArrayOf(android.R.attr.state_pressed), shape(ctx, 7f,
                 0xFF254B6D.toInt(), 0xFF142B4A.toInt(), accent, 2f))
-            addState(intArrayOf(android.R.attr.state_focused), shape(ctx, 15f,
+            addState(intArrayOf(android.R.attr.state_focused), shape(ctx, 7f,
                 0xFF203F62.toInt(), 0xFF12243E.toInt(), accent, 2f))
-            addState(intArrayOf(android.R.attr.state_selected), shape(ctx, 15f,
+            addState(intArrayOf(android.R.attr.state_selected), shape(ctx, 7f,
                 0xFF184469.toInt(), 0xFF142D50.toInt(), accent, 2f))
-            addState(intArrayOf(android.R.attr.state_hovered), shape(ctx, 15f,
+            addState(intArrayOf(android.R.attr.state_hovered), shape(ctx, 7f,
                 0xFF203B59.toInt(), 0xFF11233B.toInt(), accent))
-            addState(intArrayOf(), shape(ctx, 15f,
+            addState(intArrayOf(), shape(ctx, 7f,
                 if (primary) 0xFF17517A.toInt() else 0xFF182E4B.toInt(),
                 if (primary) 0xFF162D56.toInt() else 0xFF0E1D34.toInt(),
                 if (primary) accent else 0xFF52698F.toInt(), if (primary) 1.5f else 1f))
         }
         return RippleDrawable(ColorStateList.valueOf(Argb.withAlpha(accent, .22f)), states,
-            shape(ctx, 15f, Color.WHITE, Color.WHITE, Color.WHITE))
+            shape(ctx, 7f, Color.WHITE, Color.WHITE, Color.WHITE))
     }
 
     fun button(view: TextView, primary: Boolean = false, critical: Boolean = false) {
         val accent = if (critical) WARNING else if (primary) CYAN else VIOLET
+        view.typeface = typeface(view.context, 600)
         view.background = buttonBackground(view.context, accent, primary)
         view.setTextColor(ColorStateList(arrayOf(intArrayOf(-android.R.attr.state_enabled), intArrayOf()),
             intArrayOf(0xFF91A0B6.toInt(), TEXT)))
@@ -70,7 +84,7 @@ object ContinuumControls {
     }
 
     /** Foreground feedback leaves the measured/custom-drawn card, its content and its hit testing intact. */
-    fun feedback(view: View, radius: Float = 18f) {
+    fun feedback(view: View, radius: Float = 8f) {
         // A foreground is drawn ABOVE selectable/editable text and stays fixed
         // while the editor scrolls. Native cursor, selection and IME own EditText.
         if (view is EditText) {

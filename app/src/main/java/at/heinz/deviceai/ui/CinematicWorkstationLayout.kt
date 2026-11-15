@@ -8,6 +8,9 @@ object CinematicWorkstationLayout {
     const val AVATAR_OPACITY = 1f
     const val AVATAR_SCALE = .90f
     const val MONITOR_YAW_DEGREES = -3f
+    // The real composer takes priority in exceptionally short IME windows; ordinary chat uses 96–260 dp.
+    const val MIN_CONVERSATION_PRESENCE_DP = 24f
+    const val MAX_CONVERSATION_PRESENCE_DP = 320f
 
     /** Shared by the Home scene and the existing conversation's native chat list. */
     fun chatRailWidth(width: Float, fontScale: Float = 1f): Float {
@@ -15,6 +18,40 @@ object CinematicWorkstationLayout {
         if (width < 600f) return 0f
         val font = if (fontScale.isFinite()) fontScale.coerceIn(1f, 2f) else 1f
         return 160f + (font - 1f) * 20f
+    }
+
+    /**
+     * A temporary viewport onto the same mounted Filament scene while the real conversation is visible.
+     * The complete original head and rest rings fit the upper strip. The existing monitor keeps a valid
+     * frame below that strip, so changing presentation does not detach the stage or discard its feed.
+     * HomeView owns clipping and suppresses offscreen native controls in this presentation.
+     */
+    fun conversationPresence(width: Float, visibleHeight: Float,
+                             fontScale: Float = 1f): JarvisShellLayout.Shell {
+        require(width.isFinite() && width >= 240f)
+        require(visibleHeight.isFinite() &&
+            visibleHeight in MIN_CONVERSATION_PRESENCE_DP..MAX_CONVERSATION_PRESENCE_DP)
+        val room = width - 24f
+        val center = width * .5f
+        val headH = minOf(visibleHeight * .62f, room * .78f)
+        val headW = minOf(room * .98f, headH * 1.36f)
+        val headTop = visibleHeight * .26f
+        val head = Box(center - headW * .5f, headTop, center + headW * .5f, headTop + headH)
+        val orbSize = minOf(room * .59f, headH * .90f)
+        val orbCenterY = headTop + headH * .36f
+        val orb = Box(center - orbSize * .5f, orbCenterY - orbSize * .5f,
+            center + orbSize * .5f, orbCenterY + orbSize * .5f)
+        val monitorTop = visibleHeight + 12f
+        val monitor = Box(12f + room * .08f, monitorTop, width - 12f - room * .08f,
+            monitorTop + maxOf(144f, visibleHeight * .70f))
+        val scene = Box(0f, 0f, width, monitor.bottom + 12f)
+        return JarvisShellLayout.Shell(JarvisShellLayout.formFactor(width, visibleHeight),
+            width, scene.height, linkedMapOf(Slot.AVATAR to scene, Slot.WORK_PROCESS to monitor), 0, 0,
+            overlays = setOf(Slot.AVATAR to Slot.WORK_PROCESS), viewportHeight = visibleHeight,
+            profile = JarvisWindowProfile.resolve(width, visibleHeight, fontScale),
+            headBounds = head, orbBounds = orb, headStage = head, workstation = true,
+            protectedFaceBounds = Box(center - headH * .37f, head.top,
+                center + headH * .37f, head.top + headH * .82f))
     }
 
     fun create(width: Float, viewport: Float, fontScale: Float = 1f,

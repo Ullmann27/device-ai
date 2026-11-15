@@ -13,6 +13,61 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class CinematicWorkstationLayoutTest {
+    @Test fun conversationStripContainsOriginalPosedFaceAndCompleteRestRings() {
+        val vertices = GlbOrbGeometry().vertices(.4f)
+        for (width in listOf(240f, 320f, 392f, 600f, 904f, 1280f)) {
+            for (visibleHeight in listOf(24f, 128f, 260f)) {
+                val shell = CinematicWorkstationLayout.conversationPresence(width, visibleHeight)
+                val scene = shell[Slot.AVATAR]!!
+                val head = shell.headBounds!!
+                val orb = shell.orbBounds!!
+                val frame = frame(shell)
+                assertTrue(frame.valid())
+                assertEquals(width * .5f, head.centerX, .001f)
+                assertEquals(head.centerX, orb.centerX, .001f)
+                val points = facePoints(shell, frame, window(shell))
+                assertTrue("Original posed face remains in chat strip $width/$visibleHeight",
+                    points.all { it.first >= 0f && it.first <= scene.width &&
+                        it.second >= 0f && it.second <= visibleHeight })
+                val matrix = CockpitWorldTransforms.orb(frame, orb.left, orb.top, orb.right, orb.bottom)
+                    .map(Float::toDouble).toDoubleArray()
+                val projected = vertices.map { vertex ->
+                    val p = GlbOrbGeometry.transform(matrix, vertex.point)
+                    frame.project(p[0].toFloat(), p[1].toFloat(), p[2].toFloat())
+                }
+                val top = projected.minOf { it.second }
+                val bottom = projected.maxOf { it.second }
+                assertTrue("Original rest rings fit chat strip $width/$visibleHeight: $top..$bottom",
+                    projected.all { it.first >= 0f && it.first <= scene.width } &&
+                        top >= 0f && bottom <= visibleHeight)
+            }
+        }
+    }
+
+    @Test fun conversationPresenceRetainsAValidMonitorFrameWithoutGhostControls() {
+        for (width in profiles.map { it.first }) for (font in listOf(1f, 1.3f, 2f)) {
+            for (height in listOf(24f, 96f, 128f, 220f, 260f, 320f)) {
+                val shell = CinematicWorkstationLayout.conversationPresence(width, height, font)
+                assertEquals(setOf(Slot.AVATAR, Slot.WORK_PROCESS), shell.boxes.keys)
+                assertTrue(shell.workstation)
+                assertNull(shell.grid)
+                assertNull(shell.rail)
+                assertTrue(shell.tileBoxes().isEmpty())
+                assertTrue(shell.headerActionBoxes().isEmpty())
+                assertTrue(shell.dialogControlBoxes().isEmpty())
+                assertNull(shell.inputConversationBox())
+                assertNull(JarvisShellContent.hitTarget(shell, JarvisTiles.reference,
+                    width * .5f, height * .5f))
+                val monitor = shell[Slot.WORK_PROCESS]!!
+                assertTrue("Monitor stays below visible chat presence", monitor.top > height)
+                assertTrue("Full native scene remains valid", frame(shell).valid())
+                assertTrue(monitor.bottom <= shell.height)
+                assertTrue(shell.headBounds!!.bottom <= height)
+                assertEquals(height, shell.viewportHeight, 0f)
+            }
+        }
+    }
+
     @Test fun originalSphereSurroundsTheSolidPosedHead() {
         val geometry = GlbOrbGeometry()
         // Command03 deliberately presents the unchanged authored orb in its fixed rest pose.
@@ -233,8 +288,8 @@ class CinematicWorkstationLayoutTest {
 
     private fun window(shell: JarvisShellLayout.Shell): AvatarFraming.Window {
         val head = shell.headBounds!!
-        val dialog = shell[Slot.DIALOG]!!
-        val keepOut = if (dialog.right <= head.left || dialog.left >= head.right ||
+        val dialog = shell[Slot.DIALOG]
+        val keepOut = if (dialog == null || dialog.right <= head.left || dialog.left >= head.right ||
             dialog.bottom <= head.top || dialog.top >= head.bottom) null
         else AvatarFraming.KeepOut(((dialog.right + 6f - head.left) / head.width).toDouble(),
             ((dialog.top - 6f - head.top) / head.height).toDouble())

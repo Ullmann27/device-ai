@@ -120,10 +120,13 @@ internal object CockpitCameraFlight {
     /** One flight at a time; restarting replaces it, stop/cleanup ends it at once (camera returns to rest). */
     class Clock {
         private var startedAt = Long.MIN_VALUE
-        fun start(nowNanos: Long) { startedAt = nowNanos }
+        fun start(nowNanos: Long, enabled: Boolean = true) {
+            startedAt = if (enabled) nowNanos else Long.MIN_VALUE
+        }
         fun cancel() { startedAt = Long.MIN_VALUE }
         /** Progress in [0,1), or null when no flight runs (rest camera). */
-        fun progress(nowNanos: Long): Double? {
+        fun progress(nowNanos: Long, enabled: Boolean = true): Double? {
+            if (!enabled) { cancel(); return null }
             if (startedAt == Long.MIN_VALUE) return null
             val elapsed = nowNanos - startedAt
             if (elapsed < 0 || elapsed >= DURATION_NANOS) { if (elapsed >= DURATION_NANOS) cancel(); return null }

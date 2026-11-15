@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import at.heinz.deviceai.cognitive.DeliberationCancellation
 import at.heinz.deviceai.cognitive.LocalChatTranscriptStore
@@ -115,7 +116,7 @@ class ContinuumCommandNavigationUiTest {
 
     @Test fun realRailSelectionRestoresOnlyTheSelectedContextAndKeepsTheSameAvatar() = withActivity { _, a ->
         val home = field(a, "homeView") as ContinuumHomeView
-        val avatar = field(a, "hologramView")
+        val avatar = field(a, "hologramView") as ContinuumHologramView
         await("Stored conversation has a real native row") {
             home.findViewWithTag<View>("continuum-chat:$second") != null
         }
@@ -127,6 +128,8 @@ class ContinuumCommandNavigationUiTest {
         assertEquals(listOf("Mein Ball ist rot."), context(a).priorUserTurns(second))
         assertTrue(context(a).priorUserTurns(first).isEmpty())
         assertSame(avatar, field(a, "hologramView"))
+        assertSame(home, avatar.parent)
+        assertTrue("The original presence remains visible in a resumed chat", avatar.isShown)
         assertEquals(1, store.loadContextHistory(first).size)
     }
 
@@ -241,5 +244,75 @@ class ContinuumCommandNavigationUiTest {
         val nativeVisible = ContinuumHomeView::class.java.getDeclaredField("nativePanelsVisible")
             .apply { isAccessible = true }
         assertFalse(nativeVisible.getBoolean(home))
+    }
+
+    @Test fun conversationKeepsOneMountedPresenceAndBoundFeedWithoutHiddenTargets() = withActivity { _, a ->
+        val home = field(a, "homeView") as ContinuumHomeView
+        val head = field(a, "hologramView") as ContinuumHologramView
+        val editor = field(a, "input") as EditText
+        val director = field(a, "avatarDirector")
+        var detachCount = 0
+        head.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(view: View) = Unit
+            override fun onViewDetachedFromWindow(view: View) { detachCount++ }
+        })
+        val binding = at.heinz.deviceai.cognitive.LiveFrameBinding("presence-test", 7L,
+            "com.example.target", "at.heinz.deviceai", at.heinz.deviceai.cognitive.LiveFrameOrigin.PROJECTION_SINGLE_APP)
+        val feed = at.heinz.deviceai.cognitive.LatestLiveFrameHolder<AndroidLiveFrame>({}).apply { bind(binding) }
+        home.setLiveComputerFeed(feed)
+        call(a, "focusChatComposer")
+        val dashboard = field(a, "dashboardSection") as ScrollView
+        await("A visible presence strip is measured above the chat") {
+            home.isConversationPresence && dashboard.height > 0 && head.isShown
+        }
+        assertSame(home, head.parent)
+        assertSame(editor, field(a, "input"))
+        assertSame(director, field(a, "avatarDirector"))
+        val shell = requireNotNull(home.jarvisShell.currentShell())
+        assertEquals(setOf(at.heinz.deviceai.ui.JarvisShellLayout.Slot.AVATAR,
+            at.heinz.deviceai.ui.JarvisShellLayout.Slot.WORK_PROCESS), shell.boxes.keys)
+        assertTrue(requireNotNull(shell.headStage).bottom <= shell.viewportHeight)
+        assertTrue(requireNotNull(shell[at.heinz.deviceai.ui.JarvisShellLayout.Slot.WORK_PROCESS]).top > shell.viewportHeight)
+        dashboard.scrollTo(0, 1000)
+        assertEquals("The presence cannot scroll to the retained offscreen monitor", 0, dashboard.scrollY)
+        assertFalse(dashboard.performAccessibilityAction(
+            android.view.accessibility.AccessibilityNodeInfo.ACTION_SCROLL_FORWARD, null))
+        assertEquals(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS, dashboard.importantForAccessibility)
+        assertFalse(home.findViewWithTag<View>("jarvis-live-tabs").isShown)
+        assertFalse(all(home).any { it.isShown && it.tag?.toString()?.startsWith("jarvis-bottom:") == true })
+        val retainedFeed = ContinuumHologramView::class.java.getDeclaredField("cockpitLiveFeed")
+            .apply { isAccessible = true }
+        assertSame("Presentation does not detach the existing feed", feed, retainedFeed.get(head))
+        call(a, "showHomeDashboard")
+        await("Normal workstation is restored") { !home.isConversationPresence }
+        assertSame(home, head.parent)
+        assertSame(feed, retainedFeed.get(head))
+        assertEquals("No view detach or second live surface during the round trip", 0, detachCount)
+        assertEquals(1, all(a.window.decorView).count { it is ContinuumHologramView })
+        assertEquals(first, session(a))
+    }
+
+    @Test @Config(qualifiers = "w392dp-h430dp-port-mdpi", fontScale = 2f)
+    fun largeTextAndKeyboardKeepPresenceAndTheSingleEditorReachable() = withActivity { _, a ->
+        set(a, "keyboardCompact", true)
+        set(a, "renderedWindowHeightDp", 430f)
+        val editor = field(a, "input") as EditText
+        val head = field(a, "hologramView") as ContinuumHologramView
+        val home = field(a, "homeView") as ContinuumHomeView
+        editor.setText("Mein Entwurf bleibt hier")
+        call(a, "focusChatComposer")
+        await("Compact presence is visible") { home.isConversationPresence && head.isShown && editor.isShown }
+        val dashboard = field(a, "dashboardSection") as ScrollView
+        val density = a.resources.displayMetrics.density
+        await("The IME-height strip settles") { dashboard.height / density in 96f..144f }
+        val editorBounds = android.graphics.Rect()
+        assertTrue(editor.getGlobalVisibleRect(editorBounds))
+        assertEquals("The actual editor is not clipped", editor.height, editorBounds.height())
+        assertTrue(editorBounds.height() >= 44f * density)
+        assertSame(home, head.parent)
+        assertSame(editor, field(a, "input"))
+        assertEquals("Mein Entwurf bleibt hier", editor.text.toString())
+        assertEquals(1, all(a.window.decorView).filterIsInstance<EditText>().count { it === editor })
+        assertFalse(all(home).any { it.isShown && it.tag?.toString()?.startsWith("continuum-chat:") == true })
     }
 }
