@@ -110,13 +110,15 @@ object CinematicWorkstationLayout {
         } else {
             // A uniform model transform uses this portrait window. Width never stretches the GLB.
             val headH = if (flanking) (room * .43f).coerceIn(260f, 330f)
-                else minOf(286f, room * .78f)
+                else minOf(286f, room * .77f)
             val headW = minOf(room * .98f, headH * 1.36f)
             val headTop = sceneTop + 28f + headH * .26f
             head = Box(center - headW * .5f, headTop, center + headW * .5f, headTop + headH)
             // The authored orb's outer rings extend beyond its nominal sphere bounds.
             // Reserve real material thickness above the crown and beside the shoulders.
-            val orbSize = minOf(room * .59f, headH * .86f)
+            // Keep the actual containment shell around the complete posed face on narrow screens,
+            // while its authored outer rings retain a visible margin inside the scene.
+            val orbSize = minOf(room * .635f, headH * .86f)
             val orbCenterY = headTop + headH * .38f
             orb = Box(center - orbSize * .5f, orbCenterY - orbSize * .5f,
                 center + orbSize * .5f, orbCenterY + orbSize * .5f)
@@ -139,13 +141,17 @@ object CinematicWorkstationLayout {
                 val draftTop = if (paired) instrumentsTop else documentBottom + gap
                 val instrumentsBottom = draftTop + 208f * font
                 boxes[Slot.WORK_DRAFT] = Box(right - instrumentW, draftTop, right, instrumentsBottom)
-                monitorLeft = left + 8f
-                monitorRight = right - 8f
+                // The focus flight moves the original monitor towards the camera. A proportional
+                // inset also contains that projected width on a small unfolded display.
+                val monitorInset = maxOf(8f, room * .025f)
+                monitorLeft = left + monitorInset
+                monitorRight = right - monitorInset
                 monitorTop = instrumentsBottom + 20f
             }
             // The existing Android composer is a fixed sibling of the scrollable stage.
             val afterScene = statusH + 2f * gap
-            val monitorH = maxOf(220f * font, viewport - monitorTop - 20f - afterScene)
+            val projectionBottomInset = 32f
+            val monitorH = maxOf(220f * font, viewport - monitorTop - projectionBottomInset - afterScene)
             val monitor = Box(monitorLeft, monitorTop, monitorRight, monitorTop + monitorH)
             boxes[Slot.WORK_PROCESS] = monitor
             if (flanking) {
@@ -154,7 +160,7 @@ object CinematicWorkstationLayout {
                 boxes[Slot.WORK_DOCUMENT] = Box(left, instrumentsTop, left + sideW, instrumentsBottom)
                 boxes[Slot.WORK_DRAFT] = Box(right - sideW, instrumentsTop, right, instrumentsBottom)
             }
-            val sceneBottom = maxOf(monitor.bottom, boxes[Slot.WORK_DOCUMENT]?.bottom ?: 0f) + 20f
+            val sceneBottom = maxOf(monitor.bottom, boxes[Slot.WORK_DOCUMENT]?.bottom ?: 0f) + projectionBottomInset
             scene = Box(left, sceneTop, right, sceneBottom)
             boxes[Slot.AVATAR] = scene
         }

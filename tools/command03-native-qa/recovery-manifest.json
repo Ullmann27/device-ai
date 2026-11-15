@@ -32,6 +32,12 @@
       "filter_type": "ModuleComponentIdentifier",
       "scope": "Prefetch external modules only; Android project artifacts and assertions unchanged",
       "runtime_verification": "NOT_YET_RUN_AFTER_CORRECTION"
+    },
+    "fresh_test_execution_correction": {
+      "scope": "Only explicitly selected testDebugUnitTest task; compilation remains incremental",
+      "implementation": "outputs.upToDateWhen { false }, matching existing tools/capture/force_capture.gradle",
+      "fresh_junit_gate": "Unchanged; no stale result accepted",
+      "runtime_verification": "NOT_YET_RUN_AFTER_CORRECTION"
     }
   },
   "files": [
@@ -82,8 +88,8 @@
     },
     {
       "path": "test-selection.init.gradle",
-      "bytes": 1185,
-      "sha256": "f5a3d91ea17531bf5a8d622abe120421783134d7cb7abd023db2dfa44e1d8231"
+      "bytes": 1384,
+      "sha256": "18f3d5e4f243cd16618901f7a861c8d6d667a9d388c12f17e9ee6ccf178a416b"
     },
     {
       "path": "toolchain.example.json",

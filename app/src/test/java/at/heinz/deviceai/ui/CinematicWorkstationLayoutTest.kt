@@ -72,8 +72,8 @@ class CinematicWorkstationLayoutTest {
         val geometry = GlbOrbGeometry()
         // Command03 deliberately presents the unchanged authored orb in its fixed rest pose.
         val phases = listOf(.4f).associateWith { geometry.vertices(it) }
-        for ((w, h) in profiles) {
-            val shell = CinematicWorkstationLayout.create(w, h)
+        for ((w, h) in profiles) for (font in listOf(1f, 1.3f, 2f)) {
+            val shell = CinematicWorkstationLayout.create(w, h, font)
             val head = requireNotNull(shell.headBounds)
             val orb = requireNotNull(shell.orbBounds)
             val stage = shell[Slot.AVATAR]!!
@@ -93,15 +93,17 @@ class CinematicWorkstationLayoutTest {
                     vertex.mesh to frame.project(p[0].toFloat(), p[1].toFloat(), p[2].toFloat())
                 }
                 val sphere = projected.filter { it.first == "orb-containment-shell" }.map { it.second.first }
-                assertTrue("Actual sphere surrounds posed skin at $w", sphere.min() < center - headReach * 1.25 &&
+                assertTrue("Actual sphere surrounds posed skin at $w/$h/$font: " +
+                    "${sphere.min()}..${sphere.max()}, center=$center, required reach=${headReach * 1.25}",
+                    sphere.min() < center - headReach * 1.25 &&
                     sphere.max() > center + headReach * 1.25)
                 val left = projected.minOf { it.second.first }
                 val right = projected.maxOf { it.second.first }
-                assertTrue("Actual orb AABB remains in scene at $w/$phase: $left..$right",
+                assertTrue("Actual orb AABB remains in scene at $w/$h/$font/$phase: $left..$right of ${stage.width}",
                     left >= 0f && right <= stage.width)
                 val top = projected.minOf { it.second.second }
                 val bottom = projected.maxOf { it.second.second }
-                assertTrue("Complete rest rings remain visible at $w: $top..$bottom",
+                assertTrue("Complete rest rings remain visible at $w/$h/$font: $top..$bottom of ${stage.height}",
                     top >= 0f && bottom <= stage.height)
             }
             assertTrue("Crown has room above", head.top > stage.top)
@@ -125,7 +127,9 @@ class CinematicWorkstationLayoutTest {
                 val top = listOf(corners[1], corners[3]).min()
                 val lower = listOf(corners[5], corners[7]).max()
                 assertTrue("Posed chin clearance $w/$font/$step: $top > $bottom", top >= bottom + 6.5)
-                assertTrue("Monitor stays in scene", left >= 0f && right <= scene.width)
+                assertTrue("Monitor stays in scene at $w/$h/$font/$step: " +
+                    "$left..$right / $top..$lower of ${scene.width} x ${scene.height}",
+                    left >= 0f && right <= scene.width && top >= 0f && lower <= scene.height)
                 shell[Slot.WORK_DOCUMENT]?.let {
                     assertTrue("Left instrument clears the entire flight at $w/$font/$step",
                         left > it.right - scene.left || top >= it.bottom - scene.top + 6.5f ||

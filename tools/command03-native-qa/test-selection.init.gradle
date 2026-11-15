@@ -17,6 +17,9 @@ gradle.projectsEvaluated {
     def app = gradle.rootProject.findProject(':app')
     if (app == null) throw new GradleException('Missing Android app')
     app.tasks.withType(Test).matching { it.name == 'testDebugUnitTest' }.configureEach {
+        // Each explicitly requested selection must produce fresh JUnit evidence.
+        // Compilation dependencies retain their normal incremental behavior.
+        outputs.upToDateWhen { false }
         filter {
             selected.each { includeTestsMatching(it) }
             failOnNoMatchingTests = true
