@@ -330,7 +330,8 @@ def verify(directory, report, source_sha, source_tree):
     size = (int(windows['web-result']['screenshot_width']), int(windows['web-result']['screenshot_height']))
     assert sum(n.get('text') == result_body(dossier) and bool(visible(n, size)) for n in result) == 1, 'Honest partial result absent or duplicated'
     editors = [n for n in result if n.get('class') == 'android.widget.EditText' and visible(n, size)]
-    assert len(editors) == 1 and editors[0].get('enabled') == 'true' and editors[0].get('text', '') in ('', 'Schreibe eine Nachricht …')
+    assert len(editors) == 1 and editors[0].get('enabled') == 'true' and editors[0].get('text', '') in (
+        '', 'Schreibe eine Nachricht …', 'Was soll ich auf deinem Gerät tun?'), 'Owner composer is not empty and enabled'
     assert sum(n.get('content-desc') == 'Nachricht senden' and n.get('enabled') == 'true'
                and n.get('clickable') == 'true' and bool(visible(n, size)) for n in result) == 1
     assert all(n.get('content-desc') != 'Device AI arbeitet' for n in result)

@@ -259,6 +259,22 @@ class OfflineWebEvidenceTest(unittest.TestCase):
         self.mutate_ui('web-result', lambda nodes: nodes[2].set('content-desc', 'Device AI arbeitet'))
         self.reject()
 
+    def test_actual_owner_composer_hint_is_accepted(self):
+        hint = 'Was soll ich auf deinem Gerät tun?'
+        source = Path(__file__).resolve().parents[2] / 'app/src/main/java/at/heinz/deviceai/AgentActivity.kt'
+        self.assertIn('input.hint = "' + hint + '"', source.read_text())
+        self.mutate_ui('web-result', lambda nodes: nodes[1].set('text', hint))
+        self.assertEqual('PASS', self.verify()['composer_idle'])
+
+    def test_pending_owner_text_is_not_an_empty_composer(self):
+        self.mutate_ui('web-result', lambda nodes: nodes[1].set('text', 'Diesen Auftrag behalten'))
+        self.reject()
+
+    def test_disabled_owner_composer_with_valid_hint_is_rejected(self):
+        self.mutate_ui('web-result', lambda nodes: nodes[1].attrib.update(
+            {'text': 'Was soll ich auf deinem Gerät tun?', 'enabled': 'false'}))
+        self.reject()
+
     def test_final_off_must_be_saved_after_ui_action(self):
         self.private('web-mode-final', proof.PREFS_PATH, b'<map><string name="mode">ASK</string></map>')
         self.reject()

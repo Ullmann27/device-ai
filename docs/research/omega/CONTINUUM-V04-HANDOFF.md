@@ -1,5 +1,39 @@
 # Device AI Continuum – Bunker V04
 
+## Nachgewiesener nativer Fortschritt und letzter Web-Prüferbefund
+
+Stand `b0fd4492db12526eff239b93b609a979eca9a038`, Lauf `43676184729`:
+Die unveränderte reale 3D-Abnahme besteht bei 540 × 1200 Pixeln / 210 dpi.
+SurfaceTexture-Zeitstempel schreiten fort, PixelCopy und TextureView enthalten
+sichtbare Pixel, alle vier Größenwechsel bestehen. Die tatsächliche Aufnahme
+wurde geöffnet: Originalavatar, Bunker, Monitor und Arbeitsbereich sind sichtbar.
+Der Routinenlauf besteht ebenfalls, einschließlich natürlichem Android-
+Schedulerstart nach 976.638 ms realer Wartezeit, erneuter Zustellung in denselben
+Chat, Prozessneustart und Entfernung des periodischen Jobs nach Besitzerstopp.
+Keine Geräteabnahme auf einem physischen Fold7 wird daraus abgeleitet.
+
+Die restliche App-Abnahme stoppte am letzten Offline-Web-Validator: Er erkannte
+den tatsächlichen leeren Eingabefeld-Hinweis `Was soll ich auf deinem Gerät tun?`
+nicht. Die identischen aufgezeichneten Eingaben, Zustimmungen, Netzwerkzustände,
+Quittungen und Ergebnisse bestehen mit der korrigierten Prüfung vollständig.
+Der Hinweis ist am vorhandenen `AgentActivity.input.hint` gebunden; 33 Webfälle
+bestehen einschließlich neuer Ablehnungen für vorhandenen Auftragstext und ein
+deaktiviertes Eingabefeld. Die Korrektur ändert ausschließlich die Prüfung.
+Allgemeine App-Rotation/Navigation nach diesem Webschritt wurde im alten Lauf
+noch nicht erreicht und muss im neuen echten Lauf bestätigt werden. Der alte
+Gesamtlauf bleibt fehlgeschlagen; die unabhängige Nachprüfung ändert seine
+ursprünglichen Belege nicht.
+
+Die APK von b0 wurde lokal und unabhängig in GitHub bytegleich erzeugt:
+104.422.309 Bytes, SHA-256
+`9ab603aa017b3b6703465b8badfefef639e4d5850102cf3105285fccbcf657bf`.
+Sie ist in Drive gespeichert und vollständig zurückgelesen/geprüft, weiterhin
+unsigniert. Renderer: 32/32, kritisches Node-Profil: 137/137, Node-Vollprofil:
+2.474 bestanden und 37 erklärte Auslassungen, Backend: 64/64. Die vollständige
+Android-Suite war bei Erstellung dieses kleinen Prüfpatches noch aktiv. Avatar,
+Assets und alle produktiven APK-Einträge sind gegenüber b80 identisch; nur die
+eingebettete Git-Revision unterscheidet sich. Originalsignierung bleibt offen.
+
 ## Native Nachprüfung des gebauten Code59, 15.11.2026
 
 PR #849 ist in `fix/code59-context-complete-20261114` integriert. Der gemeinsame
