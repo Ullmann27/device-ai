@@ -59,6 +59,33 @@ class ContinuumRoutinesTest {
         assertEquals(1, box.pending("b"))
         assertFalse(box.send(AgentMessage("2", "a", "b", AgentPriority.INFO, "")))
     }
+
+    @Test fun acceptedInfoNotifiesDeliveryWithoutUrgentWakeOrDuplicateArrival() {
+        val accepted = mutableListOf<AgentMessage>()
+        val woken = mutableListOf<AgentMessage>()
+        lateinit var box: AgentMailbox
+        box = AgentMailbox(maxPerAgent = 1, onAccepted = {
+            assertFalse(Thread.holdsLock(box))
+            assertEquals(listOf(it), box.peek("chief"))
+            accepted += it
+        }, wake = { woken += it })
+        val message = AgentMessage("info", "worker", "chief", AgentPriority.INFO, "Fertig")
+        assertTrue(box.send(message))
+        assertFalse(box.send(message))
+        assertFalse(box.send(message.copy(id = "full")))
+        assertEquals(listOf(message), accepted)
+        assertTrue(woken.isEmpty())
+        assertEquals(listOf(message), box.drain("chief"))
+    }
+
+    @Test fun failedArrivalObserverPreservesUrgentWakeAndQueuedReport() {
+        val woken = mutableListOf<AgentMessage>()
+        val box = AgentMailbox(onAccepted = { error("observer failed") }, wake = { woken += it })
+        val message = AgentMessage("urgent", "worker", "chief", AgentPriority.URGENT, "Freigabe nötig")
+        assertTrue(box.send(message))
+        assertEquals(listOf(message), woken)
+        assertEquals(listOf(message), box.peek("chief"))
+    }
     @Test fun pollingAgainDoesNotDuplicateAnInFlightScheduledRun() {
         val book = RoutineBook()
         assertTrue(book.add(Routine("safe", "Akku lesen", RoutineTrigger.Every(900_000, 0))))

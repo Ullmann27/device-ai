@@ -285,6 +285,7 @@ class AgentMailbox(
     private val maxRecipients: Int = 32,
     private val maxQueuedMessages: Int = 512,
     private val maxQueuedBytes: Int = 262_144,
+    private val onAccepted: (AgentMessage) -> Unit = {},
     private val wake: (AgentMessage) -> Unit = {}
 ) {
     init {
@@ -325,7 +326,8 @@ class AgentMailbox(
     }
 
     internal fun notifyAccepted(message: AgentMessage) {
-        // Outside the lock; the message remains in the queue even if the wake callback fails.
+        // Callbacks preserve queued messages.
+        runCatching { onAccepted(message) }
         if (message.priority == AgentPriority.URGENT) runCatching { wake(message) }
     }
 

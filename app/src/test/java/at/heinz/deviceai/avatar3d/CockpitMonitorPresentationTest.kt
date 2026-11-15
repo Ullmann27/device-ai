@@ -93,7 +93,11 @@ class CockpitMonitorPresentationTest {
         assertTrue(renderer.contains("monitorTurnDegrees = (pose?.monitorYawDegrees ?: 0.0).toFloat()"))
         assertTrue(stage.contains("val monitorMatrix = frame.monitorTransform(monitorTurnDegrees)"))
         assertTrue(stage.contains("setTransform(monitorTransform, monitorMatrix)"))
-        assertTrue(stage.contains("setTransform(monitorRearTransform, monitorMatrix)"))
+        assertTrue(stage.replace(Regex("\\s+"), " ").contains(
+            "setTransform(monitorRearTransform, if (bunker != null) hiddenTransform else monitorMatrix)"))
+        assertTrue(stage.contains("setTransform(engineeringTransform, monitorMatrix)"))
+        assertTrue(stage.contains("CockpitBunkerTransforms.room(frame, transform)"))
+        assertTrue(stage.contains("CockpitBunkerTransforms.desk(frame, transform)"))
         assertTrue(stage.contains("updateGlow(monitorMatrix, now)"))
         assertTrue(stage.contains("CockpitWorldTransforms.room(frame, transform)"))
         assertTrue(stage.contains("CockpitWorldTransforms.orb(frame,"))

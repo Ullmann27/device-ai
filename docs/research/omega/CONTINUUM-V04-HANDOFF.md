@@ -1,5 +1,53 @@
 # Device AI Continuum – Bunker V04
 
+## Fortsetzung: gemeinsamer Code59-APK-Bau, 15.11.2026
+
+Integrationsziel bleibt `fix/code59-context-complete-20261114` über PR #849.
+Der veröffentlichte Integrationscommit
+`e006e10681c472269485f6f7f406edabf3dc9460` enthält V04, den aktuellen
+Kontext-/Laufzeitstand `b391409efd3a3080d70de5a798fc01a514ea6a8c`
+und die native Startkorrektur `43e67f671fcb3becac8288453faa769f9860732f`.
+Sein Baum `1d4f8fcfe89747caedcedd1666e861f47c3c7ef7` wurde exakt mit dem
+lokalen Merge verglichen. Alle 29 Xvfb-Fälle beider Eltern bleiben erhalten.
+
+Der vollständige lokale ARM64-Releasebau hat erstmals erfolgreich kompiliert,
+gedext und eine APK gepackt: `:app:assembleRelease`, 46 Tasks, Exit 0.
+Ein erneuter vollständiger Bau einschließlich der Routinenkorrektur bestand
+ebenfalls. Beide verwenden Code59 / 0.3.58 und das ursprüngliche Paket
+`at.heinz.deviceai.continuumlocal`, im ausdrücklich unsignierten Transportmodus.
+Das ist kein signiertes Besitzerupdate. Der abschließende veröffentlichte
+Quellstand muss anschließend erneut gebaut und separat geprüft werden.
+
+Die Zustellung normaler Routinenberichte war reproduzierbar defekt: Ein
+gespeicherter INFO-Bericht weckte den passiven UI-Empfänger nicht, weil dieser
+am nur für URGENT ausgeführten Mailbox-Hook hing. Ein separater Aufnahme-Hook
+benachrichtigt nun den vorhandenen UI-Empfänger auf dem Hauptthread. Priorität,
+Warteschlangengrenzen, Duplikatsperre, Zustimmung, Sitzungsbindung und die
+laufende Besitzerantwort bleiben unverändert. Der Vorher-Test lief mit zwei
+Fällen und einem Fehler; danach bestehen alle 55 ausgewählten JVM-/Robolectric-
+Fälle gegen die vollständig kompilierten Releaseklassen. Enthalten sind die
+neue passive Zustellung, die tatsächliche Activity-Zustellung während einer
+laufenden Antwort, Dashboard-Sichtbarkeit, native Monitorpixel/-Lebenszyklus,
+Bunker-Integrität und Monitortransformationen. SDK28 / Robolectric ersetzt
+keinen Test auf einem Fold7. Die bisherige Quellvertragsprüfung der alten
+Monitorrückseite berücksichtigt jetzt sowohl den V04-Pfad als auch den
+unveränderten Rückfall auf die alte Rückseite.
+
+Der Offline-Web-Probe wartet zuerst auf den wirklichen Paneltitel und sucht
+die Internetfreigabe danach mit höchstens sechs nachgewiesenen Scrollschritten.
+Eindeutiger Container, sichtbares Ziel, echte Geometrieänderung, konstante
+Fenster-/Prozessidentität und aufgezeichnete Eingabebefehle bleiben zwingend.
+168 native Host-Helfertests bestehen; darin 26 Webfälle einschließlich neun
+neuer Navigationsfälle. Dies bestätigt keine erfolgreiche native Webrecherche.
+
+Die zuvor heruntergeladene native Basis-QA meldete weiterhin einen fehlenden
+ersten konsumierten Filament-Frame. Einreichungszähler allein reichen nicht.
+Dieser Befund bleibt bis zum echten Lauf des gemeinsamen Kandidaten offen;
+es wurde kein GPU-PASS erfunden und keine Prüfung abgeschwächt.
+Originalavatar, Orb, Monitor-Material, GLBs und die fünf bereits in Drive
+geprüften Cycles-Bilder sind unverändert. Die nachfolgenden Abschnitte halten
+den historischen Stand der ersten V04-Übergabe fest.
+
 ## Grundlage
 
 Der vorgegebene Workflow Continuum_Cinematic_Home_Blender_Workflow.md wurde
