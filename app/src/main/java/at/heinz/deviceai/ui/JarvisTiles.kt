@@ -302,16 +302,17 @@ object JarvisTiles {
         else (JarvisShellLayout.TOOL_DOCK_HEIGHT_DP + (rows - 1) * DOCK_EXTRA_ROW_DP) * font
     }
 
-    /** Equal-width cells matching [ContinuumHomeView] hit targets and [JarvisShellContent.hitTarget]. */
+    /** Equal-width cells per row; a partial final row uses the full dock width for drawing and native hits. */
     fun bottomNavItemBoxes(b: Box, items: List<NavItem> = bottomNav): List<Box> {
         if (items.isEmpty() || b.width <= 0f) return emptyList()
         val columns = bottomNavColumns(b.width, items.size)
         val rows = (items.size + columns - 1) / columns
-        val cellW = b.width / columns
         val cellH = b.height / rows
         return items.indices.map { i ->
             val col = i % columns
             val row = i / columns
+            val rowItems = minOf(columns, items.size - row * columns)
+            val cellW = b.width / rowItems
             Box(b.left + col * cellW, b.top + row * cellH,
                 b.left + (col + 1) * cellW, b.top + (row + 1) * cellH)
         }

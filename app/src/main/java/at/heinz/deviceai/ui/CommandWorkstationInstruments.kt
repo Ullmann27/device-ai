@@ -20,15 +20,16 @@ object CommandWorkstationInstruments {
                 String.format(Locale.GERMAN, "%.1f GiB frei", free.toDouble() / 1_073_741_824.0))
     }
 
-    /** Shared with native hit targets. Short panels keep their complete original content. */
+    /** Shared with native hit targets. Leading instruments remain visible before the long panel is scrolled. */
     fun telemetryBox(box: Box, fontScale: Float = 1f): Box? {
         val font = if (fontScale.isFinite()) fontScale.coerceIn(1f, 2f) else 1f
         return if (box.height >= 208f * font && box.width >= 96f)
-            Box(box.left, box.bottom - 116f * font, box.right, box.bottom) else null
+            Box(box.left, box.top, box.right, box.top + 116f * font) else null
     }
 
+    /** Retain the original project/work content below telemetry; short panels retain the entire content box. */
     fun contentBox(box: Box, fontScale: Float = 1f): Box = telemetryBox(box, fontScale)?.let {
-        Box(box.left, box.top, box.right, it.top - 8f)
+        Box(box.left, it.bottom + 8f, box.right, box.bottom)
     } ?: box
 
     fun drawCpu(p: ContinuumPainter, box: Box, system: ContinuumDashboardState.SystemStatus) {

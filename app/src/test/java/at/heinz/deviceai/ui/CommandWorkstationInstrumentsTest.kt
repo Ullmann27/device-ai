@@ -29,11 +29,18 @@ class CommandWorkstationInstrumentsTest {
 
     @Test fun contentAndTelemetryHaveDistinctReachableRegions() {
         val box = JarvisShellLayout.Box(40f, 50f, 220f, 330f)
-        val meter = requireNotNull(CommandWorkstationInstruments.telemetryBox(box))
-        val content = CommandWorkstationInstruments.contentBox(box)
-        assertTrue(box.contains(meter)); assertTrue(box.contains(content))
-        assertTrue(content.bottom < meter.top)
-        assertTrue(meter.height >= 48f)
+        for (bottom in listOf(330f, 650f, 1050f)) {
+            val panel = box.copy(bottom = bottom)
+            val meter = requireNotNull(CommandWorkstationInstruments.telemetryBox(panel))
+            val content = CommandWorkstationInstruments.contentBox(panel)
+            assertTrue(panel.contains(meter)); assertTrue(panel.contains(content))
+            assertEquals("A longer panel must not move telemetry below the visible start", panel.top, meter.top, 0f)
+            assertEquals(116f, meter.height, .001f)
+            assertEquals(meter.bottom + 8f, content.top, .001f)
+            assertEquals("Project/work content retains the remaining panel", panel.bottom, content.bottom, 0f)
+            assertTrue(meter.bottom < content.top)
+            assertTrue(meter.height >= 48f && content.height >= 48f)
+        }
         val small = box.copy(bottom = 200f)
         assertNull(CommandWorkstationInstruments.telemetryBox(small))
         assertEquals(small, CommandWorkstationInstruments.contentBox(small))
@@ -63,7 +70,8 @@ class CommandWorkstationInstrumentsTest {
         val box = JarvisShellLayout.Box(10f, 20f, 280f, 436f)
         val meter = requireNotNull(CommandWorkstationInstruments.telemetryBox(box, 2f))
         val content = CommandWorkstationInstruments.contentBox(box, 2f)
-        assertTrue(content.bottom < meter.top)
+        assertEquals(box.top, meter.top, 0f)
+        assertTrue(meter.bottom < content.top)
         assertTrue(content.height >= 48f)
         val lines = mutableListOf<List<Float>>()
         val painter = JarvisTextScalePainter(recorder(lines)).apply { fontScale = 2f }

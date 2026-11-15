@@ -21,6 +21,47 @@ import kotlin.math.ceil
 @Config(sdk = [28], qualifiers = "mdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class JarvisRailLabelReadabilityUiTest {
+    @Test fun phoneToolDockKeepsSevenCompleteLabelsAtTheOriginalTextSize() {
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
+        val assets = controller.get().assets
+        try {
+            for (width in listOf(392f, 412f)) {
+                val shell = CinematicWorkstationLayout.create(width, 852f)
+                val dock = requireNotNull(shell[JarvisShellLayout.Slot.BOTTOM_NAV])
+                val cells = JarvisTiles.bottomNavItemBoxes(dock)
+                val labels = mutableListOf<String>()
+                val bitmap = Bitmap.createBitmap(ceil(width).toInt(), ceil(dock.bottom).toInt(), Bitmap.Config.ARGB_8888)
+                try {
+                    val native = AndroidContinuumPainter(assets).apply { begin(Canvas(bitmap)) }
+                    val measured = object : ContinuumPainter by native {
+                        override fun drawText(text: String, x: Float, y: Float, style: TextStyle,
+                                              fill: Fill, align: TextAlign, alpha: Float) {
+                            val index = cells.indexOfFirst { x >= it.left && x < it.right && y >= it.top && y < it.bottom }
+                            assertTrue("$width has an unbound dock label '$text'", index >= 0)
+                            val cell = cells[index]
+                            assertEquals("The German destination is drawn in full", JarvisTiles.bottomNav[index].label, text)
+                            assertEquals("Use the original label size", CockpitGlassButtons.LABEL_DP, style.size, .001f)
+                            val textWidth = native.measureText(text, style)
+                            assertTrue("$width '$text' remains inside the glass body's content area",
+                                x - textWidth * .5f >= cell.left + 7f && x + textWidth * .5f <= cell.right - 7f)
+                            labels += text
+                            native.drawText(text, x, y, style, fill, align, alpha)
+                        }
+                    }
+                    JarvisTiles.drawBottomNav(measured, dock)
+                    assertEquals(JarvisTiles.bottomNav.map { it.label }, labels)
+                    assertEquals("Two rows retain their original height", 2, cells.map { it.top }.distinct().size)
+                    assertEquals(JarvisShellLayout.TOOL_DOCK_HEIGHT_DP + JarvisTiles.DOCK_EXTRA_ROW_DP, dock.height, .001f)
+                    cells.forEachIndexed { index, cell ->
+                        assertTrue("Every destination keeps a 48dp target", cell.width >= 48f && cell.height >= 48f)
+                        assertEquals(JarvisTiles.bottomNav[index].target,
+                            JarvisShellContent.hitTarget(shell, JarvisTiles.reference, cell.centerX, cell.centerY))
+                    }
+                } finally { bitmap.recycle() }
+            }
+        } finally { controller.pause().stop().destroy() }
+    }
+
     @Test fun actualConversationRailFitsItsRowsAndKeepsFullAccessibleNames() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val assets = controller.get().assets
