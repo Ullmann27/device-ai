@@ -1,5 +1,69 @@
 # Device AI Continuum – Bunker V04
 
+## Installation failure and Code59 signing preparation — 2026-11-15
+
+The owner reported “App not installed”. The Code59 files saved to Drive are
+**unsigned QA artifacts, not installable APKs**. Downloading them again cannot
+repair the missing signature. No original signing key was read, exported or used.
+The existing application must remain installed to retain its data.
+
+Integration owner: current Continuum V04 implementation. Canonical branch remains
+`fix/code59-context-complete-20261114`; no main merge or alternate application ID.
+
+The registered `continuum-code50-sign-release.yml` now prepares Code59 in addition
+to the unchanged Code51/55 routes. Code59 requires the full green source-bound run
+and the separate green context run. It checks all five full jobs and the context
+job, six artifact identities, latest attempts, ZIP digests, actual JUnit and lint,
+Node XML and source inputs, real native lifecycle/frames/routines/offline evidence,
+and the ARM64 APK's contents, original assets and 16 KiB alignment. The original
+Code55 archive validator is retained byte for byte; Code59 supplies a temporary
+asset projection with face models independently verified against the source lock.
+
+Original-signing approval is **not recorded for this source**. The workflow still
+requires explicit `owner_approved_sha`, the `Ullmann27` required reviewer and an
+exact single branch policy in `continuum-original-signing`. No environment policy
+was changed. Approval includes signing and publication as latest release, followed
+by draft and public download verification. No workflow was dispatched to sign.
+
+The original Code55 predecessor was downloaded and verified independently:
+`continuum-local-code55-889e06d47fffd2230fa5b062dd1f31b65992e728`,
+103,803,882 bytes, APK SHA-256
+`2ba5cbf91f151833e204d54a6ac6435d9cf4081051de1cb25d5fd89a203a07b9`.
+It has the original package and certificate
+`6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`.
+
+Parent `95dbfa85ec7174ef2668a74adf0a9e1dcd789c4d`, full run `43682795173`:
+unsigned build, Node/backend and renderer jobs passed. Context run `43682795141`
+passed all 400 tests. Native artifact `14148798551` has a passing real application
+probe, including the repaired landscape composer, restart, offline flow and live
+hologram frames/resizes. Its routines probe **failed** before sending a command:
+ADB requested `Routinen`, while actual XML recorded `Rioutnen`. This is not a
+confirmed production input fix and is not a passing routine result.
+
+The routine probe now records and injects individual characters sequentially with
+50 ms between characters. It still requires the exact observed command before
+Send and never repairs, retries or submits altered text. This changes only test
+input delivery; the production routine, scheduler interval, constraints, clock,
+approval and text editor remain unchanged from the parent. The new exact source
+must complete its own native test before any signing.
+
+Local verification: 20 new signing-evidence/preflight tests passed, including
+rejection of false approval, missing reviewer, foreign source, failed native job,
+stale/tampered archives and green metadata without real evidence. The 26 existing
+Code51/55 contract/preflight tests passed. Routine evidence/input tests: 43 passed.
+The preserved validator's inherited gates passed. The new APK verifier separately
+rechecked the actual parent APK and the actual context/renderer evidence. These
+checks do not constitute a green final Code59 release run or a physical device test.
+
+Status: `PORTIERT` for signing preparation and routine test input; local tests
+`VERIFIZIERT`; complete exact-source CI pending; original signing and installation
+`NOT_RUN`; Fold7/smartphone/tablet `GERÄTEBESTÄTIGT = NO`.
+
+Next: finish the parent's remaining Android job without cancelling its evidence;
+publish this tested preparation on the common branch, inspect the new complete
+source-bound runs, then obtain the protected exact-SHA owner approval. Never label
+an unsigned artifact as the finished installation APK.
+
 ## Querformat-Eingabe und vollständige Vorläufer-QA, 15.11.2026
 
 Der abgeschlossene Lauf 43678716957 auf

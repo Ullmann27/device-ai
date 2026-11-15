@@ -543,6 +543,17 @@ class Probe:
             self.tap(['Konversation öffnen', 'JARVIS: Konversation öffnen', 'Gespräch öffnen', 'Gespräch', 'Chat'])
             self.take(label)
 
+    def type_text(self, label, text):
+        assert 0 < len(text) <= 160 and all(32 <= ord(c) < 127 and c != '%' for c in text)
+        self.api['save'](label + '-input-plan.json', json.dumps({
+            'method': 'SEQUENTIAL_ADB_KEY_INPUT', 'text': text, 'between_characters_ms': 50}))
+        for index, character in enumerate(text):
+            result = self.api['captured_device'](f'{label}-type-{index:03d}',
+                'shell', 'input', 'text', shlex.quote(character.replace(' ', '%s')))
+            assert result.returncode == 0 and not result.stderr, 'Character injection failed'
+            if index + 1 < len(text):
+                time.sleep(.05)
+
     def send(self, label, text):
         editors = [node for node in self.nodes if node.get('class') == 'android.widget.EditText'
                    and self.api['visible_bounds'](node, self.display)]
@@ -552,15 +563,14 @@ class Probe:
             self.take(label + '-focus')
             editors = [node for node in self.nodes if node.get('class') == 'android.widget.EditText']
             assert len(editors) == 1 and editors[0].get('focused') == 'true'
-        result = self.api['captured_device'](label + '-type', 'shell', 'input', 'text', shlex.quote(text.replace(' ', '%s')))
-        assert result.returncode == 0
+        self.type_text(label, text)
         keyboard = self.api['shell']('dumpsys', 'input_method')
         self.api['save'](label + '-input-method.txt', keyboard)
         if self.api['keyboard_visible'](keyboard):
             self.api['shell']('input', 'keyevent', 'KEYCODE_BACK')
         self.take(label + '-input', await_text=text)
         editors = [node for node in self.nodes if node.get('class') == 'android.widget.EditText']
-        assert len(editors) == 1 and editors[0].get('text') == text
+        assert len(editors) == 1 and editors[0].get('text') == text, 'Typed routine command differs; nothing sent'
         self.tap(['Nachricht senden', 'Routinenbefehl senden'])
 
     def private(self, label, path, limit=8 * 1024 * 1024 + 128, timeout=10):

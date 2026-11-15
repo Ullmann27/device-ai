@@ -77,7 +77,7 @@ test('Signier-Workflow: nur manuell, Preflight ohne Geheimnisse, Geheimnisse nur
   assert.doesNotMatch(sign, /render/i);
   // Eingaben nur als env-Zuordnung (kein Skript-Injection-Pfad), nie direkt im run-Text.
   for (const line of sign.split('\n').filter(l => l.includes('${{ inputs.'))) {
-    assert.match(line, /^\s+(SOURCE_SHA|QA_RUN_ID|APK_RUN_ID|OWNER_APPROVED_SHA): \$\{\{ inputs\.[a-z_]+ \}\}$/, line);
+    assert.match(line, /^\s+(SOURCE_SHA|QA_RUN_ID|APK_RUN_ID|CONTEXT_RUN_ID|OWNER_APPROVED_SHA): \$\{\{ inputs\.[a-z_]+ \}\}$/, line);
   }
 });
 
@@ -172,4 +172,22 @@ test('Code55 verifies artifact bytes, complete JUnit, native runtime receipts an
   assert.ok(script.includes('BASELINE_CERTIFICATE_MISMATCH'));
   assert.ok(script.includes('"$tools/zipalign" -P 16 -f 4'));
   assert.ok(script.includes('"$tools/zipalign" -c -P 16 -v 4'));
+});
+
+test('Code59 requires full native and context proof before protected original signing', () => {
+  assert.match(sign, /      context_run_id:\n        description: [^\n]+\n        required: false\n        type: string/);
+  for (const job of ['preflight', 'release-original-signed']) {
+    const block = jobBlock(sign, job);
+    assert.ok(block.includes("github.ref == 'refs/heads/fix/code59-context-complete-20261114'"));
+    assert.match(block, /CONTEXT_RUN_ID: \$\{\{ inputs.context_run_id \}\}/);
+    assert.match(block, /fetch-depth: 0/);
+  }
+  for (const text of ['code="59"', 'name_version="0.3.58"', 'CONTEXT_RUN_FORMAT',
+    'UNEXPECTED_CONTEXT_RUN', 'code59_signing_evidence.py', 'code59-node-proof.mjs',
+    '["unsigned-arm64","renderer-preflight","full-android","node-backend","native-runtime"]',
+    '["android-context-regression"]', 'fold7-long-context-junit', 'CODE55_BASELINE_CHANGED',
+    'PINNED_CODE55_BASELINE_VERIFIED']) assert.ok(script.includes(text), text);
+  assert.ok(script.indexOf('\n  verify_code59_evidence\n') < script.indexOf('ORIGINAL_SECRETS_MISSING'));
+  assert.ok(script.includes('baseline_digest="2ba5cbf91f151833e204d54a6ac6435d9cf4081051de1cb25d5fd89a203a07b9"'));
+  assert.ok(script.includes('[[ "$code" == 55 || "$code" == 59 ]]'));
 });
