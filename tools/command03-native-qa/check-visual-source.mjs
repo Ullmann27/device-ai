@@ -35,6 +35,8 @@ const activity = readFileSync(resolve(root,'app/src/main/java/at/heinz/deviceai/
 assert.ok(activity.includes('attachCommand03MainStage(root)'),'HTML not mounted as main Activity surface');
 assert.ok(activity.includes('sendButton.performClick()'),'Native owner-gated command dispatch missing');
 assert.ok(activity.includes('ALTE ANSICHT ÖFFNEN'),'No owner-visible fallback');
+assert.ok(activity.includes('switchCommand03MainDesign(true)'),'Fallback cannot restore original view');
+assert.ok(!activity.includes('showKommando03OriginalStage'),'Separate duplicate WebGL dialog still exists');
 assert.ok(activity.includes('ambientMotionEnabled = false'),'Hidden native HUD still animating');
 assert.ok(activity.includes('.put("workRows", workRows)'),'Real computer result rows not wired');
 const bridge = readFileSync(resolve(root,lock.html_root,'native-bridge.js'),'utf8');

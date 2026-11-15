@@ -32,3 +32,7 @@ Reproduzierbare Quellprüfung: `node tools/command03-native-qa/check-visual-sour
 ## Frühzeitige Demo-Blockierung
 
 Die lokale Android-Startdatei `index.android.html` ist die exakte HTML-Originaldatei plus **zwei** zusätzliche Asset-Links: `native-layer.css` im Kopf und `native-bridge.js` vor den originalen Seiten-Skripten. Die Original-`index.html` selbst bleibt byteidentisch. Dadurch sind die Navigations- und Formular-Interceptoren bereits registriert, bevor die Beispiel-Eventhandler der unveränderten Webdemo laufen. Die vorherige späte `onPageFinished`-Einfügung wird nicht mehr verwendet. Der Node-Quelltest verlangt, dass nach Entfernen genau dieser beiden Include-Zeilen die bytegenaue Originaldatei zurückbleibt. Das ist ein Quellvertrag, noch kein Geräte-Nachweis.
+
+## Kein zweiter 3D-Dialog
+
+Der alte separate HTML-Designtest-Dialog wurde entfernt. Die Ansicht wird in der vorhandenen Activity an genau einer Stelle montiert. Im Originaldesign zeigt die Android-Zurück-Taste den Rückfall zur klassischen Oberfläche; von dort schaltet **Mehr → KOMMANDO 03 · ORIGINALDESIGN ALS STARTSEITE** wieder in die HTML-Hauptoberfläche. Dabei bleiben sichtbare Chatzeilen und der aktuelle Eingabeentwurf beim Activity-Neuaufbau erhalten. Ein Geräte- oder Langzeittest dieses Wechsels ist offen.

@@ -966,7 +966,6 @@ class AgentActivity : Activity() {
 
     override fun onDestroy() {
         closeCommand03HtmlStage()
-        command03OriginalDialog?.dismiss()
         cancelPendingConversationSelection()
         conversationIndexRevision++
         conversationListDialog?.dismiss()
@@ -2100,7 +2099,6 @@ class AgentActivity : Activity() {
      * Exact HTML design inspection stays separate from the native cockpit until screen,
      * work-window and interaction parity is demonstrated on the device.
      */
-    private var command03OriginalDialog: AlertDialog? = null
 
     private var command03MainStage: at.heinz.deviceai.ui.ContinuumCommand03OriginalStage? = null
     private var command03HtmlSession: String? = null
@@ -2180,6 +2178,34 @@ class AgentActivity : Activity() {
         command03MainStage = null
     }
 
+    /** Reversible single-window switch; no second WebGL surface or transcript store. */
+    private fun switchCommand03MainDesign(enabled: Boolean) {
+        if (isFinishing || isDestroyed) return
+        val draft = if (::input.isInitialized) input.text.toString() else ""
+        val selectionStart = if (::input.isInitialized) input.selectionStart else 0
+        val selectionEnd = if (::input.isInitialized) input.selectionEnd else 0
+        val visibleRows = mutableListOf<View>()
+        if (::chatContainer.isInitialized) {
+            while (chatContainer.childCount > 0) {
+                val row = chatContainer.getChildAt(0)
+                chatContainer.removeViewAt(0)
+                visibleRows.add(row)
+            }
+        }
+        getSharedPreferences("continuum-command03", MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", enabled).apply()
+        setContentView(buildUi())
+        visibleRows.forEach { chatContainer.addView(it) }
+        if (::input.isInitialized) {
+            input.setText(draft)
+            input.setSelection(selectionStart.coerceIn(0, input.text.length),
+                selectionEnd.coerceIn(0, input.text.length))
+        }
+        refreshConversationLayout()
+        refreshWorkAreaSelection()
+        refreshHologramState()
+    }
+
     private fun routeCommand03HtmlAction(route: String, value: String?) {
         if (isFinishing || isDestroyed) return
         when (route) {
@@ -2225,57 +2251,13 @@ class AgentActivity : Activity() {
     }
 
 
-    private fun showKommando03OriginalStage() {
-        if (isFinishing || isDestroyed) return
-        command03OriginalDialog?.dismiss()
-        lateinit var dialog: AlertDialog
-        val web = at.heinz.deviceai.ui.ContinuumCommand03OriginalStage(this, onNativeAction = { route, content ->
-            runOnUiThread {
-                if (!dialog.isShowing || isFinishing || isDestroyed) return@runOnUiThread
-                dialog.dismiss()
-                when (route) {
-                    "home" -> showHomeDashboard()
-                    "chat" -> focusChatComposer()
-                    "command" -> {
-                        if (busy || content.isNullOrBlank()) {
-                            Toast.makeText(this, "Ein Auftrag läuft noch oder die Eingabe ist leer.",
-                                Toast.LENGTH_SHORT).show()
-                        } else {
-                            focusChatComposer()
-                            input.setText(content)
-                            // Real existing owner-gated send listener, not the HTML example handler.
-                            sendButton.performClick()
-                        }
-                    }
-                    else -> navigateDashboardTarget(route)
-                }
-            }
-        })
-        dialog = AlertDialog.Builder(this)
-            .setTitle("KOMMANDO 03 · ORIGINALDESIGN / ANDROID-VISUALTEST")
-            .setView(web)
-            .setNegativeButton("ZUR APP", null)
-            .create()
-        dialog.setOnDismissListener {
-            web.stopLoading()
-            web.destroy()
-            if (command03OriginalDialog === dialog) command03OriginalDialog = null
-        }
-        command03OriginalDialog = dialog
-        dialog.show()
-        dialog.window?.setLayout(
-            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-            (resources.displayMetrics.heightPixels * .92f).toInt()
-        )
-    }
-
     private fun showMoreWorkAreas() {
         val entries = ContinuumWorkAreaNavigationSpec.moreEntries
-        val titles = listOf("KOMMANDO 03 · HTML-ORIGINAL (DESIGNTEST)") + entries.map { it.title }
+        val titles = listOf("KOMMANDO 03 · ORIGINALDESIGN ALS STARTSEITE") + entries.map { it.title }
         AlertDialog.Builder(this)
             .setTitle("Mehr")
             .setItems(titles.toTypedArray()) { _, selection ->
-                if (selection == 0) showKommando03OriginalStage()
+                if (selection == 0) switchCommand03MainDesign(true)
                 else navigateDashboardTarget(entries[selection - 1].target)
             }
             .setNegativeButton("Schließen", null)
@@ -4380,25 +4362,10 @@ class AgentActivity : Activity() {
         } else if (command03MainStage != null) {
             AlertDialog.Builder(this)
                 .setTitle("Continuum · Ansicht wählen")
-                .setMessage("Das Originaldesign bleibt standardmäßig aktiv. Für eine technische Rückkehr kann die ältere native Oberfläche eingeschaltet werden. Dein gespeicherter Chat wird nicht gelöscht.")
+                .setMessage("Das Originaldesign bleibt standardmäßig aktiv. Du kannst vorübergehend die frühere native Darstellung öffnen; gespeicherte Chats bleiben erhalten.")
                 .setNegativeButton("ORIGINALDESIGN BEHALTEN", null)
                 .setPositiveButton("ALTE ANSICHT ÖFFNEN") { _, _ ->
-                    val draft = if (::input.isInitialized) input.text.toString() else ""
-                    val visibleRows = mutableListOf<View>()
-                    if (::chatContainer.isInitialized) {
-                        while (chatContainer.childCount > 0) {
-                            val row = chatContainer.getChildAt(0)
-                            chatContainer.removeViewAt(0)
-                            visibleRows.add(row)
-                        }
-                    }
-                    getSharedPreferences("continuum-command03", MODE_PRIVATE).edit()
-                        .putBoolean("original_html_main", false).apply()
-                    setContentView(buildUi())
-                    visibleRows.forEach { chatContainer.addView(it) }
-                    if (::input.isInitialized) input.setText(draft)
-                    refreshConversationLayout()
-                    refreshWorkAreaSelection()
+                    switchCommand03MainDesign(false)
                 }.show()
         } else super.onBackPressed()
     }
