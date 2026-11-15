@@ -161,7 +161,7 @@ class JarvisReferenceHitTargetsUiTest {
         assertTrue("Camera settings remain in the existing More navigation",
             ContinuumWorkAreaNavigationSpec.moreEntries.any { it.target == "camera-settings" })
         assertTrue("The real Activity composer has no duplicate Home hit targets", descendants(home).none {
-            it.tag.toString() in setOf("jarvis-dialog:voice-input", "jarvis-dialog:send", "jarvis-input:conversation")
+            it.tag?.toString() in setOf("jarvis-dialog:voice-input", "jarvis-dialog:send", "jarvis-input:conversation")
         })
         val foreground = control(home, "foreground")
         assertFalse(foreground.isClickable)
@@ -273,7 +273,7 @@ class JarvisReferenceHitTargetsUiTest {
                 assertNull("Workstation contains no surrogate input bar",
                     requireNotNull(home.jarvisShell.currentShell())[JarvisShellLayout.Slot.INPUT])
                 assertTrue("Home does not duplicate native composer controls", descendants(home).none {
-                    it.tag.toString() in setOf("jarvis-dialog:voice-input", "jarvis-dialog:send", "jarvis-input:conversation")
+                    it.tag?.toString() in setOf("jarvis-dialog:voice-input", "jarvis-dialog:send", "jarvis-input:conversation")
                 })
 
                 val speechBeforeEditor = field(a, "speechScopeGeneration") as Long
@@ -429,7 +429,7 @@ class JarvisReferenceHitTargetsUiTest {
             assertTrue("A disabled action cannot fall through to conversation", calls.isEmpty())
         }
         assertTrue("Unavailable Home must not recreate microphone or capture surrogates", descendants(home).none {
-            it.tag.toString() in setOf("jarvis-dialog:voice-input", "jarvis-dialog:send", "jarvis-input:conversation",
+            it.tag?.toString() in setOf("jarvis-dialog:voice-input", "jarvis-dialog:send", "jarvis-input:conversation",
                 "jarvis-camera:settings", "jarvis-header:mode")
         })
         val chat = JarvisHomeTestRoutes.destination(home, "chat")
