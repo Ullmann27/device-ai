@@ -211,13 +211,31 @@ class ContinuumCommandNavigationUiTest {
         assertTrue(input.isShown)
     }
 
-    @Test fun responsiveInstrumentsKeepTheirCanvasPresentationAfterStateAndRendererCallbacks() = withActivity { _, a ->
-        val home = field(a, "homeView") as ContinuumHomeView
-        await("Workstation geometry is available") { home.jarvisShell.shell?.workstation == true }
-        home.state = home.state.copy()
-        val hologram = field(a, "hologramView") as ContinuumHologramView
+    @Test fun responsiveInstrumentsStayOnCanvasBeforeFirstMeasureAndAfterRendererCallbacks() = withActivity { _, a ->
+        val hologram = ContinuumHologramView(a)
+        val home = ContinuumHomeView(a, hologram) { _, _, _ -> }.apply {
+            configure(884f, true, windowHeightDp = 760f)
+            setJarvisShellStage(true)
+        }
+        assertNull("The first state arrives before currentShell creates its cache", home.jarvisShell.shell)
+        val reducer = at.heinz.deviceai.cognitive.CockpitWorkReducer().apply { bind("canvas-test", 7L) }
+        assertTrue(reducer.apply(at.heinz.deviceai.cognitive.CockpitWorkEvent(
+            "canvas-test", 7L, 1L, 1_000_000L, 1L,
+            at.heinz.deviceai.cognitive.CockpitWorkEvent.Stage.ACCEPTED), 1_000_000L))
+        val computer = requireNotNull(at.heinz.deviceai.ui.ComputerPanelState.from(
+            "canvas-test", 7L,
+            at.heinz.deviceai.cognitive.OwnerComputerIntent(
+                at.heinz.deviceai.cognitive.ComputerApp.WHATSAPP,
+                at.heinz.deviceai.cognitive.ComputerGoal.SEARCH, "Testkontakt"),
+            reducer.snapshot(1_000_000L)))
+        home.state = home.state.copy(computer = computer)
+        assertNotNull("The fixture would produce a legacy Filament panel without the workstation guard",
+            at.heinz.deviceai.avatar3d.CockpitPanelContent.from(home.state, 1f, 1f))
         val content = ContinuumHologramView::class.java.getDeclaredField("cockpitPanelContent")
             .apply { isAccessible = true }
+        assertNull("State updates before the first measure must not bind legacy panels", content.get(hologram))
+        home.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
         assertNull("Fixed legacy Filament side panels must not cover responsive native instruments", content.get(hologram))
         hologram.onCockpitStatus?.invoke("Bereit", true)
         val nativeVisible = ContinuumHomeView::class.java.getDeclaredField("nativePanelsVisible")

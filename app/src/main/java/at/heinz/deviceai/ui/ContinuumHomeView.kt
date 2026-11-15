@@ -214,7 +214,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private var nativePanelsVisible = false
     private val usesCanvasWorkstationPanels: Boolean
-        get() = jarvisShellStage && jarvisShell.shell?.workstation == true
+        get() = jarvisShellStage
 
     private fun updateCockpitPanels() {
         // The responsive workstation owns these instruments and their native hit boxes. The
