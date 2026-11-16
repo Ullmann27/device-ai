@@ -2,7 +2,7 @@
 body[data-design="command03"] .native-history-glyph {
  color:#60d2ef;font-size:16px;padding:0 8px 0 2px;
 }
-body[data-design="command03"] #workspace.native-work-active:not(.native-document-active)>:not(#native-live-panel) {display:none!important;}
+body[data-design="command03"] #workspace.native-work-active:not(.native-document-active):not(.native-computer-active)>:not(#native-live-panel) {display:none!important;}
 body[data-design="command03"] .native-live-panel {width:100%;min-height:230px;display:flex;flex-direction:column;}
 body[data-design="command03"] .native-transcript {
  min-height:145px;max-height:360px;overflow:auto;padding:12px 3px;
@@ -67,7 +67,7 @@ body[data-design="command03"] .command-field textarea:focus-visible {
 }
 
 /* The actual owner-selected PDF uses the same projected room and stays read-only. */
-body[data-design="command03"] #workspace.native-document-active>:not(#native-document-panel) {display:none!important;}
+body[data-design="command03"] #workspace.native-document-active:not(.native-computer-active)>:not(#native-document-panel) {display:none!important;}
 body[data-design="command03"] #workspace.native-document-active #native-document-panel {
  display:flex;flex-direction:column;gap:12px;min-height:260px;width:100%;
 }
@@ -111,4 +111,18 @@ body[data-design="command03"] .native-document-excerpt {
  body[data-design="command03"] .native-document-facts {grid-template-columns:1fr;}
  body[data-design="command03"] .native-document-image {max-height:340px;}
  body[data-design="command03"] .native-document-excerpt {max-height:300px;}
+}
+
+/* Real Android pixels occupy the existing projected browser; it owns the flight. */
+body[data-design="command03"] #workspace.native-computer-active>:not(#native-computer-panel) {display:none!important;}
+body[data-design="command03"] #workspace:not(.native-computer-active)>#native-computer-panel {display:none!important;}
+body[data-design="command03"] .native-computer-panel {width:100%;min-width:0;}
+body[data-design="command03"] .native-computer-panel .op-browser-chrome {padding:12px;}
+body[data-design="command03"] .native-computer-viewport {
+ display:flex;align-items:center;justify-content:center;padding:8px;min-height:180px;
+}
+body[data-design="command03"] .native-computer-viewport .op-waiting {min-height:180px;}
+body[data-design="command03"] .native-computer-viewport .op-waiting[hidden] {display:none!important;}
+body[data-design="command03"] .native-computer-image {
+ display:block;max-width:100%;width:auto;height:auto;max-height:min(55vh,470px);object-fit:contain;
 }

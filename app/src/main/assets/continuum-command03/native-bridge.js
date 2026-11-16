@@ -27,6 +27,13 @@
   let snapshot = null, session = '', lines = [], rendering = false, currentDocument = null;
   let pendingCommand = null, requestNumber = 0, dirtyDraft = false, lastDraft = '';
   let telemetryAt = null, lastScene = null, feedRevision = 0, latestDraftRevision = -1;
+  const computerStates = new Set(['NO_SOURCE','WAITING','LIVE','PAUSED','COVERED','ENDED']);
+  const visemes = new Set(['SIL','PP','FF','TH','DD','KK','CH','SS','NN','RR','AA','E','I','O','U']);
+  const speechSources = new Set(['PCM_ENVELOPE','WORD_RANGE_FALLBACK','TEXT_PACE_FALLBACK']);
+  const computerGate = {generation:0,sequence:-1,ended:false,binding:null};
+  const speechGate = {generation:0,sequence:-1,ended:false,utteranceId:null};
+  let currentComputer = null, computerVisible = false, displayedFrame = null, pendingFrame = null;
+  let visibilityCheck = 0, speechExpiry = 0, currentSpeech = null;
   const readings = [], nativeMeters = new Map();
   const feedVersions = new WeakMap();
   function send(kind,value,extra = {}) {
@@ -230,13 +237,233 @@
       panel.querySelector('.ct-plot')?.setAttribute('aria-label',label+' · echte Messwerte; Lücken bleiben leer');
     }
   }
+  function newerLivePacket(data, gate) {
+    return data && data.sessionId===session && chatId.test(session) && typeof data.active==='boolean' &&
+      Number.isSafeInteger(data.generation) && data.generation>0 &&
+      Number.isSafeInteger(data.sequence) && data.sequence>=0 &&
+      (data.generation>gate.generation || data.generation===gate.generation &&
+        !gate.ended && data.sequence>gate.sequence);
+  }
+  function acceptLivePacket(data, gate) {
+    gate.generation=data.generation;gate.sequence=data.sequence;gate.ended=!data.active;
+  }
+  function computerOpen() {return computerVisible && currentComputer?.active===true;}
+  function invalidateFrame(frame) {
+    if(!frame || frame.hiddenNotified)return;
+    frame.hiddenNotified=true;
+    const data=frame.data;
+    send('frame-hidden','',{sessionId:data.sessionId,generation:String(data.generation),sequence:String(data.sequence)});
+  }
+  function disposeFrame(frame) {
+    if(!frame)return;
+    clearTimeout(frame.expiry);
+    for(const id of frame.paints)cancelAnimationFrame(id);
+    frame.paints=[];frame.image.onload=null;frame.image.onerror=null;
+    frame.image.removeAttribute('src');frame.image.remove();
+  }
+  function clearComputerFrames() {
+    for(const frame of new Set([displayedFrame,pendingFrame])) {
+      invalidateFrame(frame);disposeFrame(frame);
+    }
+    displayedFrame=null;pendingFrame=null;
+  }
+  function renderComputer() {
+    const workspace=$('#workspace');
+    if(!workspace)return;
+    workspace.classList.toggle('native-computer-active',!!computerOpen());
+    if(!currentComputer) {workspace.querySelector('#native-computer-panel')?.remove();return;}
+    let panel=workspace.querySelector('#native-computer-panel');
+    if(!panel) {
+      panel=document.createElement('section');panel.id='native-computer-panel';
+      panel.className='projected-computer native-computer-panel';
+      panel.setAttribute('aria-label','Projizierter Computer mit aktuellem Android-Gerätebild');
+      // The existing projected window and its original CSS own all framing and motion.
+      panel.innerHTML='<div class="projection-lens" aria-hidden="true"></div><div class="op-console-head"><div><span class="op-kicker">PROJIZIERTER COMPUTER</span><h2>Dein Gerätebild.</h2></div><span class="op-mode-label real"></span></div><div class="op-controls"><button type="button" class="secondary-button" data-action="stop-computer">Computer stoppen</button></div><div class="op-browser-frame"><div class="op-browser-chrome"><span class="op-window-id">CONTINUUM · ANDROID</span></div><div class="op-browser-body native-computer-viewport"><div class="op-waiting"><h3>Warte auf ein aktuelles Bild.</h3><p class="native-computer-waiting"></p></div></div><div class="op-browser-status"><span class="status-dot"></span><span class="native-computer-status" role="status"></span></div></div>';
+      workspace.appendChild(panel);
+    }
+    const fresh=displayedFrame && performance.now()<displayedFrame.expiresAt;
+    panel.querySelector('.op-mode-label').textContent=fresh?'GERÄTEBILD':'WARTET';
+    const reason=currentComputer.reason || 'Noch kein aktuelles Gerätebild verfügbar.';
+    panel.querySelector('.native-computer-status').textContent=reason;
+    panel.querySelector('.native-computer-waiting').textContent=reason;
+    panel.querySelector('.op-waiting').hidden=!!fresh;
+    if(computerOpen()) {
+      workspace.classList.remove('native-document-active','native-work-active');
+      if(fresh && displayedFrame.image.parentElement!==panel.querySelector('.native-computer-viewport'))
+        panel.querySelector('.native-computer-viewport').appendChild(displayedFrame.image);
+    }
+    nativeLabels();
+  }
+  function retireComputer() {
+    computerGate.ended=true;clearComputerFrames();currentComputer=null;computerVisible=false;
+    renderComputer();renderDocument();renderFeed();
+  }
+  function coverComputer() {
+    computerVisible=false;clearComputerFrames();renderComputer();
+  }
+  function currentDecodedFrame(frame) {
+    return frame===displayedFrame && currentComputer?.active===true &&
+      frame.data.sessionId===session && frame.data.generation===computerGate.generation &&
+      frame.data.sequence===computerGate.sequence && !computerGate.ended && performance.now()<frame.expiresAt;
+  }
+  function visibleFrame(frame) {
+    const image=frame.image;
+    if(!computerOpen() || document.visibilityState!=='visible' || !image.isConnected || !image.complete ||
+       image.naturalWidth!==frame.data.width || image.naturalHeight!==frame.data.height)return false;
+    for(let node=image;node instanceof Element;node=node.parentElement) {
+      const style=window.getComputedStyle(node);
+      if(node.hidden || node.inert || style.display==='none' || style.visibility==='hidden' ||
+        style.visibility==='collapse' || style.opacity!=='' && Number(style.opacity)<=.01)return false;
+    }
+    const rect=image.getBoundingClientRect();
+    const left=Math.max(0,rect.left),top=Math.max(0,rect.top);
+    const right=Math.min(window.innerWidth,rect.right),bottom=Math.min(window.innerHeight,rect.bottom);
+    if(right<=left || bottom<=top)return false;
+    if(typeof document.elementFromPoint==='function') {
+      const topmost=document.elementFromPoint((left+right)/2,(top+bottom)/2);
+      if(topmost!==image && !image.contains(topmost))return false;
+    }
+    return true;
+  }
+  function queueFrameAcknowledgement(frame) {
+    if(frame.acknowledged || frame.paintQueued || !currentDecodedFrame(frame))return;
+    frame.paintQueued=true;
+    const afterMotion=()=>{
+      if(!currentDecodedFrame(frame))return;
+      frame.paints.push(requestAnimationFrame(()=>{
+        if(!currentDecodedFrame(frame))return;
+        frame.paints.push(requestAnimationFrame(()=>{
+          frame.paintQueued=false;
+          if(!currentDecodedFrame(frame))return;
+          if(!visibleFrame(frame)) {invalidateFrame(frame);return;}
+          frame.acknowledged=true;frame.hiddenNotified=false;
+          const data=frame.data;
+          // This reports decoded, visible pixels only. Android still requires its
+          // own visual-state callback and subsequent onDraw before authorizing work.
+          send('frame-presented','',{sessionId:data.sessionId,generation:String(data.generation),sequence:String(data.sequence)});
+        }));
+      }));
+    };
+    const motion=window.ContinuumWorkspaceMotion;
+    if(motion?.isAnimating())motion.whenSettled().then(afterMotion);
+    else afterMotion();
+  }
+  function checkComputerVisibility() {
+    visibilityCheck=0;
+    if(!displayedFrame)return;
+    if(!visibleFrame(displayedFrame)) {
+      if(displayedFrame.acknowledged || !window.ContinuumWorkspaceMotion?.isAnimating())invalidateFrame(displayedFrame);
+    } else queueFrameAcknowledgement(displayedFrame);
+  }
+  function scheduleVisibilityCheck() {
+    if(!visibilityCheck)visibilityCheck=requestAnimationFrame(checkComputerVisibility);
+  }
+  function validComputerFrame(data) {
+    return data.status==='LIVE' && typeof data.taskId==='string' && data.taskId.length>0 && data.taskId.length<=200 &&
+      typeof data.captureSession==='string' && data.captureSession.length>0 && data.captureSession.length<=200 &&
+      Number.isSafeInteger(data.sourceEpoch) && data.sourceEpoch>=0 &&
+      Number.isInteger(data.width) && data.width>0 && data.width<=640 &&
+      Number.isInteger(data.height) && data.height>0 && data.height<=640 &&
+      Number.isFinite(data.ageMs) && data.ageMs>=0 && Number.isFinite(data.staleAfterMs) &&
+      data.staleAfterMs>0 && data.staleAfterMs<=1500 && data.ageMs<data.staleAfterMs &&
+      typeof data.frameDataUri==='string' && data.frameDataUri.length<=174787 &&
+      /^data:image\/jpeg;base64,\/9j\/[A-Za-z0-9+/]*={0,2}$/.test(data.frameDataUri);
+  }
+  function computer(data) {
+    if(!newerLivePacket(data,computerGate) || !computerStates.has(data.status))return;
+    const hasFrame=data.frameDataUri!==undefined && data.frameDataUri!==null;
+    if(data.active && hasFrame && !validComputerFrame(data))return;
+    if(data.active && document.visibilityState!=='visible')return;
+    const nextGeneration=data.generation!==computerGate.generation;
+    const binding=hasFrame?JSON.stringify([data.taskId,data.captureSession,data.sourceEpoch]):null;
+    if(data.active && hasFrame && !nextGeneration && computerGate.binding!==null && computerGate.binding!==binding)return;
+    if(nextGeneration)computerGate.binding=null;
+    if(data.active && hasFrame)computerGate.binding=binding;
+    acceptLivePacket(data,computerGate);
+    if(!data.active) {retireComputer();return;}
+    if(nextGeneration) {clearComputerFrames();computerVisible=true;}
+    currentComputer={sessionId:data.sessionId,generation:data.generation,sequence:data.sequence,
+      active:true,status:data.status,reason:typeof data.reason==='string'?data.reason.slice(0,240):''};
+    const update=()=>renderComputer();
+    if(nextGeneration && typeof window.ContinuumWorkspaceMotion?.transition==='function')
+      window.ContinuumWorkspaceMotion.transition(update,{kind:'open',duration:950});
+    else update();
+    if(data.status!=='LIVE') {clearComputerFrames();renderComputer();return;}
+    if(!hasFrame)return; // Status-only packets never renew the previous image's lease.
+    disposeFrame(pendingFrame);
+    const image=document.createElement('img');image.className='native-computer-image';
+    image.alt='Aktuelles Bild der freigegebenen Android-Quelle';image.width=data.width;image.height=data.height;
+    image.dataset.generation=String(data.generation);image.dataset.sequence=String(data.sequence);
+    const frame={data,image,expiresAt:performance.now()+data.staleAfterMs-data.ageMs,
+      paints:[],expiry:0,paintQueued:false,acknowledged:false,hiddenNotified:false};
+    pendingFrame=frame;
+    const failed=reason=>{
+      if(pendingFrame!==frame && displayedFrame!==frame)return;
+      if(pendingFrame===frame) {
+        invalidateFrame(displayedFrame);disposeFrame(displayedFrame);displayedFrame=null;
+      }
+      invalidateFrame(frame);disposeFrame(frame);
+      if(pendingFrame===frame)pendingFrame=null;
+      if(displayedFrame===frame)displayedFrame=null;
+      if(currentComputer?.generation===data.generation && computerGate.sequence===data.sequence) {
+        currentComputer.reason=reason;
+      }
+      renderComputer();
+    };
+    frame.expiry=setTimeout(()=>failed('Bild nicht mehr aktuell. Warte auf ein neues Gerätebild.'),
+      data.staleAfterMs-data.ageMs);
+    const decoded=()=>{
+      if(pendingFrame!==frame || data.generation!==computerGate.generation || data.sequence!==computerGate.sequence ||
+        data.sessionId!==session || computerGate.ended || performance.now()>=frame.expiresAt)return;
+      if(image.naturalWidth!==data.width || image.naturalHeight!==data.height) {
+        failed('Das Gerätebild konnte nicht dargestellt werden.');return;
+      }
+      if(!computerOpen() || document.visibilityState!=='visible') {
+        failed('Gerätebild ist nicht sichtbar.');return;
+      }
+      invalidateFrame(displayedFrame);disposeFrame(displayedFrame);
+      displayedFrame=frame;pendingFrame=null;
+      image.onload=null;image.onerror=null;renderComputer();queueFrameAcknowledgement(frame);
+    };
+    image.onerror=()=>failed('Das Gerätebild konnte nicht dargestellt werden.');
+    if(typeof image.decode!=='function')image.onload=decoded;
+    image.src=data.frameDataUri;
+    if(typeof image.decode==='function')image.decode().then(decoded,()=>failed('Das Gerätebild konnte nicht dargestellt werden.'));
+  }
+  function clearNativeSpeech(retire=false) {
+    clearTimeout(speechExpiry);speechExpiry=0;currentSpeech=null;
+    if(retire)speechGate.ended=true;
+    window.ContinuumAvatar?.clearSpeech();
+    const avatar=$('.avatar-crop');
+    if(avatar) {avatar.dataset.speechActive='false';delete avatar.dataset.speechSource;}
+  }
+  function speech(data) {
+    if(!newerLivePacket(data,speechGate))return;
+    if(data.active && (!visemes.has(data.viseme) || !Number.isFinite(data.weight) || data.weight<0 || data.weight>1 ||
+      !Number.isFinite(data.jawOpen) || data.jawOpen<0 || data.jawOpen>1 || !Number.isFinite(data.durationMs) ||
+      data.durationMs<20 || data.durationMs>500 || data.source!=null && !speechSources.has(data.source) ||
+      typeof data.utteranceId!=='string' || !data.utteranceId.length || data.utteranceId.length>200))return;
+    if(data.active && data.generation===speechGate.generation && speechGate.utteranceId!==null &&
+      data.utteranceId!==speechGate.utteranceId)return;
+    if(data.active && document.visibilityState!=='visible')return;
+    const nextGeneration=data.generation!==speechGate.generation;
+    if(nextGeneration)speechGate.utteranceId=data.active?data.utteranceId:null;
+    acceptLivePacket(data,speechGate);
+    if(!data.active || document.visibilityState!=='visible') {clearNativeSpeech(true);return;}
+    if(nextGeneration)clearNativeSpeech();
+    currentSpeech=data;clearTimeout(speechExpiry);
+    window.ContinuumAvatar?.setSpeechFrame({viseme:data.viseme,weight:data.weight,jawOpen:data.jawOpen,durationMs:data.durationMs});
+    const avatar=$('.avatar-crop');
+    if(avatar) {avatar.dataset.speechActive='true';avatar.dataset.speechSource=data.source||'UNKNOWN';}
+    speechExpiry=setTimeout(()=>{if(currentSpeech===data)clearNativeSpeech();},data.durationMs);
+  }
   function renderFeed() {
     if (!snapshot) return;
     const workspace=$('#workspace');
     if (!workspace) return;
     const show=lines.length>0 || snapshot.busy===true ||
       (Array.isArray(snapshot.workRows) && snapshot.workRows.length>0);
-    workspace.classList.toggle('native-work-active',show && !currentDocument);
+    workspace.classList.toggle('native-work-active',show && !currentDocument && !computerOpen());
     if (!show) {workspace.querySelector('#native-live-panel')?.remove();return;}
     let panel=workspace.querySelector('#native-live-panel');
     if (!panel) {
@@ -274,7 +501,7 @@
       'AUFTRAG WIRD BEARBEITET · STATUS VON ANDROID':
       (snapshot.status||'BEREIT · LOKALER GESPRÄCHSVERLAUF');
     const caption=$('#workspace-footnote');
-    if(caption && !currentDocument)caption.textContent='Dein Gespräch und deine Arbeitsschritte';
+    if(caption && !currentDocument && !computerOpen())caption.textContent='Dein Gespräch und deine Arbeitsschritte';
   }
 
   /**
@@ -285,6 +512,7 @@
   function renderDocument() {
     const workspace=$('#workspace');
     if (!workspace || !currentDocument || currentDocument.sessionId !== session) return;
+    if(computerOpen()) {workspace.classList.remove('native-document-active');return;}
     let panel=workspace.querySelector('#native-document-panel');
     if (!panel) {
       panel=document.createElement('section');
@@ -349,13 +577,14 @@
     const workspace=$('#workspace');
     workspace?.querySelector('#native-document-panel')?.remove();
     workspace?.classList.remove('native-document-active');
-    renderFeed();
+    renderFeed();renderComputer();
   }
   function documentOpened(document) {
     if(!snapshot || !document || document.sessionId!==session) return;
     if(typeof document.name!=='string' || document.name.length>120 ||
        !Number.isInteger(document.pageCount) || document.pageCount < 0) return;
     const set = () => {
+      coverComputer();
       currentDocument=document;
       renderDocument();
     };
@@ -377,8 +606,9 @@
     const set=(selector,text)=>{const node=$(selector);if(node && node.textContent!==text)node.textContent=text;};
     labelWithIcons($('.preview-badge'),'ANDROID · LOKAL');set('.sidebar-note small','Gespeicherte Gespräche auf deinem Gerät.');
     set('.project-button small','Deine Gespräche');set('.input-hint','LOKAL');
-    set('#workspace-meta',currentDocument?'PDF':snapshot.busy?'AUFTRAG AKTIV':'LOKAL');
-    set('#workspace-footnote',currentDocument?'PDF · '+currentDocument.name:
+    set('#workspace-meta',computerOpen()?'COMPUTER':currentDocument?'PDF':snapshot.busy?'AUFTRAG AKTIV':'LOKAL');
+    set('#workspace-footnote',computerOpen()?(currentComputer.reason||'Gerätebild · Android'):
+      currentDocument?'PDF · '+currentDocument.name:
       lines.length?'Dein Gespräch und deine Arbeitsschritte':'Bereit für deinen Auftrag');
     $('#command-input')?.setAttribute('aria-label','Dein Auftrag');
     $('#command-input')?.setAttribute('placeholder','Schreibe deinen Auftrag …');
@@ -389,6 +619,7 @@
   if(workspace)new MutationObserver(()=>{
     if(snapshot && (lines.length || snapshot.busy || snapshot.workRows?.length) && !workspace.querySelector('#native-live-panel'))renderFeed();
     if(currentDocument && !workspace.querySelector('#native-document-panel'))renderDocument();
+    if(currentComputer && !workspace.querySelector('#native-computer-panel'))renderComputer();
     nativeLabels();
   }).observe(workspace,{childList:true});
   function receive(state) {
@@ -398,6 +629,7 @@
       const changed=session!==state.sessionId;
       const initial=!session;
       if(changed) {
+        retireComputer();clearNativeSpeech(true);
         lines=[];feedRevision++;currentDocument=null;pendingCommand=null;lastDraft='';
         latestDraftRevision=-1;
         $('#workspace')?.classList.remove('native-document-active');
@@ -468,6 +700,12 @@
   }
   function section(name) {
     if(!routes.has(name))return;
+    if(name==='stop') {retireComputer();clearNativeSpeech(true);}
+    else if(name==='device' && currentComputer) {
+      computerVisible=true;renderComputer();scheduleVisibilityCheck();
+    } else if(computerOpen()) {
+      coverComputer();renderDocument();renderFeed();
+    }
     closePanels();
     document.body.dataset.nativeSection=name;
     const original=name==='home'||name==='chat'?'conversation':name==='device'?'computer':name;
@@ -478,7 +716,12 @@
       });
     if(name==='chat')$('#command-input')?.focus({preventScroll:true});
   }
-  window.ContinuumNative=Object.freeze({receive,transcript,message,section,document:documentOpened,clearDocument,commandResult});
+  function closeProjection() {
+    if(computerOpen()) {retireComputer();send('route','stop');}
+    else clearDocument();
+  }
+  window.ContinuumNative=Object.freeze({receive,transcript,message,section,document:documentOpened,
+    clearDocument,commandResult,computer,speech});
   document.addEventListener('click',e=>{
     const pdf=e.target.closest('[data-native-pdf]');
     if(pdf){
@@ -514,7 +757,7 @@
       return;
     }
     if(action && action.dataset.action==='close') {
-      e.preventDefault();e.stopImmediatePropagation();clearDocument();return;
+      e.preventDefault();e.stopImmediatePropagation();closeProjection();return;
     }
     if((action && !layoutActions.has(action.dataset.action)) ||
       e.target.closest('[data-scene],[data-phase],[data-source],[data-op-action],[data-op-view],[data-op-source],[data-op-step],[data-op-paragraph]')) {
@@ -526,7 +769,7 @@
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape' && !document.body.classList.contains('chats-open') &&
       !document.body.classList.contains('instruments-open')) {
-      e.preventDefault();e.stopImmediatePropagation();clearDocument();
+      e.preventDefault();e.stopImmediatePropagation();closeProjection();
     }
   },true);
   $('#command-form')?.addEventListener('submit',e=>{
@@ -545,6 +788,15 @@
   for(const event of ['select','keyup','click','blur'])input?.addEventListener(event,syncDraft);
   window.addEventListener('load',stopDemoTelemetry,{once:true});
   window.addEventListener('resize',fitComposer);
+  window.addEventListener('resize',scheduleVisibilityCheck);
+  document.addEventListener('scroll',scheduleVisibilityCheck,true);
+  window.addEventListener('scroll',scheduleVisibilityCheck);
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState!=='visible') {retireComputer();clearNativeSpeech(true);}
+    else scheduleVisibilityCheck();
+  });
+  window.addEventListener('pagehide',()=>{retireComputer();clearNativeSpeech(true);});
+  new MutationObserver(scheduleVisibilityCheck).observe(document.body,{attributes:true,attributeFilter:['class','style']});
   const badge=$('.preview-badge');
   labelWithIcons(badge,'ANDROID · LOKAL');
   const note=$('#workspace-footnote');

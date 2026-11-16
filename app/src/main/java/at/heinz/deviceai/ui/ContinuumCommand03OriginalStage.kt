@@ -2,6 +2,7 @@ package at.heinz.deviceai.ui
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Canvas
 import android.net.Uri
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -30,7 +31,10 @@ internal class ContinuumCommand03OriginalStage(
     private val onNativeAction: (route: String, value: String?) -> Unit,
     private val onNativeCommand: (Command03Command, (Boolean, String?) -> Unit) -> Unit,
     private val onNativeDraft: (Command03Draft) -> Unit,
-    private val onReady: () -> Unit = {}
+    private val onReady: () -> Unit = {},
+    private val onComputerFrameDrawn: (Command03FrameAck) -> Unit = {},
+    private val onComputerFrameHidden: (Command03FrameAck) -> Unit = {},
+    private val onPresentationLost: () -> Unit = {}
 ) : WebView(context) {
     companion object {
         const val LOCAL_HOST = "appassets.androidplatform.net"
@@ -69,6 +73,110 @@ internal class ContinuumCommand03OriginalStage(
     private data class CommandReceipt(val request: Command03Command, var result: JSONObject? = null)
     private val commands = linkedMapOf<String, CommandReceipt>()
     private val queuedResults = linkedMapOf<String, JSONObject>()
+    private var queuedComputer: Pair<Command03ComputerPacket, Long>? = null
+    private var queuedSpeech: Command03SpeechPacket? = null
+    private var livePresentationActive = false
+    private var computerFrame: Command03FrameAck? = null
+    private var computerFrameDeadline = 0L
+    private var computerDrawn: Command03FrameAck? = null
+    private var visualFence = 0L
+    private var visualRequest = 0L
+    private var drawSerial = 0L
+    private var drawAfter = Long.MAX_VALUE
+    private var readyToDraw: Command03FrameAck? = null
+
+    val mediaReady: Boolean get() = pageReady && !disposed
+
+    fun setLivePresentationActive(active: Boolean) {
+        livePresentationActive = active
+        if (!active) invalidateComputerPresentation()
+    }
+
+    fun invalidateComputerPresentation() {
+        visualFence++
+        computerFrame = null
+        computerDrawn = null
+        readyToDraw = null
+        drawAfter = Long.MAX_VALUE
+        queuedComputer = null
+    }
+
+    fun presentComputer(packet: Command03ComputerPacket) {
+        if (disposed || !Command03BridgeContract.validSession(packet.sessionId)) return
+        if (!pageReady) { queuedComputer = packet to System.nanoTime(); return }
+        invalidateComputerPresentation()
+        val image = packet.frame?.takeIf { it.valid() }
+        val remaining = packet.staleAfterMs?.minus(packet.ageMs ?: Long.MAX_VALUE) ?: 0L
+        val live = packet.active && packet.status == "LIVE" && image != null && remaining in 1..1_500
+        val data = JSONObject().put("sessionId", packet.sessionId).put("generation", packet.generation)
+            .put("sequence", packet.sequence).put("active", packet.active)
+            .put("status", if (packet.frame != null && !live) "PAUSED" else packet.status)
+            .put("reason", packet.reason)
+        packet.binding?.let { data.put("taskId", it.taskId).put("captureSession", it.captureSession.toString()) }
+        packet.sourceEpoch?.let { data.put("sourceEpoch", it) }
+        if (live) {
+            val encoded = requireNotNull(image)
+            data.put("frameDataUri", "data:image/jpeg;base64," +
+                android.util.Base64.encodeToString(encoded.jpeg, android.util.Base64.NO_WRAP))
+                .put("width", encoded.width).put("height", encoded.height)
+                .put("ageMs", packet.ageMs).put("staleAfterMs", packet.staleAfterMs)
+            computerFrame = packet.acknowledgement
+            computerFrameDeadline = System.nanoTime() + remaining * 1_000_000
+        }
+        evaluateJavascript("window.ContinuumNative?.computer($data);", null)
+    }
+
+    fun presentSpeech(packet: Command03SpeechPacket) {
+        if (disposed || !Command03BridgeContract.validSession(packet.sessionId)) return
+        // Speech frames are ephemeral: never replay a queued mouth pose after page load.
+        if (!pageReady) { queuedSpeech = packet.takeUnless { it.active }; return }
+        val data = JSONObject().put("sessionId", packet.sessionId).put("generation", packet.generation)
+            .put("sequence", packet.sequence).put("active", packet.active)
+            .put("utteranceId", packet.utteranceId ?: JSONObject.NULL)
+            .put("viseme", packet.viseme).put("weight", packet.weight).put("jawOpen", packet.jawOpen)
+            .put("durationMs", packet.durationMs).put("source", packet.source?.name ?: JSONObject.NULL)
+        evaluateJavascript("window.ContinuumNative?.speech($data);", null)
+    }
+
+    private fun canDrawComputer(ack: Command03FrameAck): Boolean = !disposed && pageReady &&
+        livePresentationActive && isAttachedToWindow && isShown && windowVisibility == VISIBLE &&
+        width > 0 && height > 0 && getGlobalVisibleRect(android.graphics.Rect()) &&
+        ack == computerFrame && System.nanoTime() < computerFrameDeadline
+
+    private fun decodedComputerFrame(ack: Command03FrameAck) {
+        if (ack == computerDrawn || !canDrawComputer(ack)) return
+        val fence = visualFence
+        val request = ++visualRequest
+        postVisualStateCallback(request, object : WebView.VisualStateCallback() {
+            override fun onComplete(requestId: Long) {
+                if (requestId != request || request != visualRequest || fence != visualFence || !canDrawComputer(ack)) return
+                readyToDraw = ack
+                drawAfter = drawSerial + 1
+                invalidate()
+            }
+        })
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        drawSerial++
+        super.onDraw(canvas)
+        val ack = readyToDraw ?: return
+        if (!canvas.isHardwareAccelerated || drawSerial < drawAfter || !canDrawComputer(ack)) return
+        readyToDraw = null
+        computerDrawn = ack
+        onComputerFrameDrawn(ack)
+    }
+
+    override fun onDetachedFromWindow() {
+        invalidateComputerPresentation()
+        onPresentationLost()
+        super.onDetachedFromWindow()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (visibility != VISIBLE) { invalidateComputerPresentation(); onPresentationLost() }
+    }
 
     /** Native -> local page only. Never grant JavaScript direct Android capabilities. */
     fun present(state: JSONObject) {
@@ -85,6 +193,8 @@ internal class ContinuumCommand03OriginalStage(
      */
     fun presentDocument(document: JSONObject) {
         if (disposed) return
+        invalidateComputerPresentation()
+        onPresentationLost()
         val data = document.toString()
         if (!pageReady) queuedDocument = data
         else evaluateJavascript("window.ContinuumNative?.document($data);", null)
@@ -197,6 +307,8 @@ internal class ContinuumCommand03OriginalStage(
         queuedMessages.clear()
         commands.clear()
         queuedResults.clear()
+        invalidateComputerPresentation()
+        queuedSpeech = null
         super.destroy()
     }
 
@@ -229,6 +341,16 @@ internal class ContinuumCommand03OriginalStage(
                         onNativeAction("select-chat", value)
                     } else if (command == "command") {
                         submitCommand(uri)
+                    } else if (command == "frame-presented" || command == "frame-hidden") {
+                        val session = uri.getQueryParameter("sessionId").orEmpty()
+                        val generation = uri.getQueryParameter("generation")?.toLongOrNull()
+                        val sequence = uri.getQueryParameter("sequence")?.toLongOrNull()
+                        if (Command03BridgeContract.validSession(session) && generation != null && generation > 0 &&
+                            sequence != null && sequence > 0) {
+                            val ack = Command03FrameAck(session, generation, sequence)
+                            if (command == "frame-presented") decodedComputerFrame(ack)
+                            else onComputerFrameHidden(ack)
+                        }
                     } else if (command == "draft") {
                         val session = uri.getQueryParameter("sessionId").orEmpty()
                         val start = uri.getQueryParameter("selectionStart")?.toIntOrNull()
@@ -287,6 +409,12 @@ internal class ContinuumCommand03OriginalStage(
                     view.evaluateJavascript("window.ContinuumNative?.commandResult($result);", null)
                 }
                 queuedResults.clear()
+                queuedComputer?.let { (packet, queuedAt) ->
+                    queuedComputer = null
+                    val elapsed = (System.nanoTime() - queuedAt).coerceAtLeast(0L) / 1_000_000
+                    presentComputer(packet.copy(ageMs = packet.ageMs?.let { it + elapsed }))
+                }
+                queuedSpeech?.let { packet -> queuedSpeech = null; presentSpeech(packet) }
                 onReady()
             }
 

@@ -505,7 +505,7 @@ test('invalid computer payloads and callbacks from an old conversation never bec
     f.state();
     for (const bad of [{width: 641}, {height: 0}, {ageMs: 1501}, {staleAfterMs: 1501},
       {frameDataUri: 'https://example.invalid/frame.jpg'}, {frameDataUri: frameDataUri + 'A'.repeat(174787)},
-      {sequence: NaN}, {sessionId: anotherSession}, {sourceEpoch: -1}]) {
+      {sequence: NaN}, {sessionId: anotherSession}, {sourceEpoch: -1}, {captureSession: 42}]) {
       f.window.ContinuumNative.computer(computerFrame(bad));
     }
     assert.equal(f.decodings.length, 0);
@@ -591,3 +591,65 @@ test('the byte-locked bundled avatar accepts the native visemes through its publ
     assert.ok(f.speechClears > 0);
   } finally {f.close();}
 });
+
+test('covering a decoded image with a newer pending frame withdraws both exact receipts', async () => {
+  const f = await fixture();
+  try {
+    f.state();f.window.ContinuumNative.computer(computerFrame());await f.decode();
+    f.advance(950);await f.paint();await f.paint();await f.paint();
+    assert.equal(acknowledgements(f).length, 1);
+    f.window.ContinuumNative.computer(computerFrame({sequence: 2}));
+    assert.equal(f.document.querySelector('.native-computer-image').dataset.sequence, '1',
+      'Decoded old pixels remain until their replacement is decoded, without relabelling their receipt');
+    f.window.ContinuumNative.document({sessionId, name: 'Vordergrund.pdf', pageCount: 1,
+      textState: 'EXTRACTED', text: 'Die aktuelle Arbeitsfläche ist diese PDF.'});
+    assert.deepEqual(invalidations(f).map(url => url.searchParams.get('sequence')), ['1','2']);
+    await f.decode(1);await f.paint();await f.paint();
+    assert.equal(acknowledgements(f).length, 1);
+    assert.equal(f.document.querySelector('.native-computer-image'), null);
+    assert.equal(f.document.querySelector('#workspace').classList.contains('native-document-active'), true);
+  } finally {f.close();}
+});
+
+test('an expired pose cannot transfer its generation to another utterance or return after page hiding', async () => {
+  const f = await fixture();
+  try {
+    f.state({speaking: true});f.window.ContinuumNative.speech(speechFrame());
+    await f.timers(101);
+    f.window.ContinuumNative.speech(speechFrame({sequence: 2, utteranceId: 'different-utterance'}));
+    assert.equal(f.speechFrames.length, 1);
+    f.window.ContinuumNative.speech(speechFrame({sequence: 2, source: 'TEXT_PACE_FALLBACK'}));
+    assert.equal(f.speechFrames.length, 2, 'A fresh pose from the same utterance can resume after a pose gap');
+    assert.equal(f.document.querySelector('.avatar-crop').dataset.speechSource, 'TEXT_PACE_FALLBACK');
+    Object.defineProperty(f.document, 'visibilityState', {value: 'hidden', configurable: true});
+    f.document.dispatchEvent(new f.window.Event('visibilitychange'));
+    Object.defineProperty(f.document, 'visibilityState', {value: 'visible', configurable: true});
+    f.document.dispatchEvent(new f.window.Event('visibilitychange'));
+    f.window.ContinuumNative.speech(speechFrame({sequence: 3}));
+    assert.equal(f.speechFrames.length, 2);
+    f.window.ContinuumNative.speech(speechFrame({generation: 2, utteranceId: 'resumed-utterance'}));
+    assert.equal(f.speechFrames.length, 3);
+  } finally {f.close();}
+});
+
+// The final integration gate requires fresh JSON captured from the actual Kotlin
+// Stage evaluateJavascript output. Its image decoder remains the explicit seam above.
+if (process.env.COMMAND03_REQUIRE_NATIVE_PACKET === '1' || process.env.COMMAND03_NATIVE_COMPUTER_PACKET) {
+  test('the actual Kotlin Stage computer JSON reaches the original window and its exact render acknowledgement', async () => {
+    assert.ok(process.env.COMMAND03_NATIVE_COMPUTER_PACKET,
+      'Final gate requires COMMAND03_NATIVE_COMPUTER_PACKET from the fresh Stage UI-test sentinel');
+    const packet=JSON.parse(readFileSync(process.env.COMMAND03_NATIVE_COMPUTER_PACKET,'utf8'));
+    assert.equal(typeof packet.captureSession,'string','The actual Kotlin Long must preserve its string wire type');
+    const f = await fixture();
+    try {
+      f.state({sessionId:packet.sessionId});f.window.ContinuumNative.computer(packet);
+      assert.equal(f.decodings.length,1,'The unchanged producer payload must pass the adapter contract');
+      await f.decode();assert.equal(f.document.querySelector('.native-computer-image').src,packet.frameDataUri);
+      f.advance(950);await f.paint();await f.paint();await f.paint();
+      const ack=acknowledgements(f).at(-1);assert.ok(ack);
+      assert.equal(ack.searchParams.get('sessionId'),packet.sessionId);
+      assert.equal(ack.searchParams.get('generation'),String(packet.generation));
+      assert.equal(ack.searchParams.get('sequence'),String(packet.sequence));
+    } finally {f.close();}
+  });
+}

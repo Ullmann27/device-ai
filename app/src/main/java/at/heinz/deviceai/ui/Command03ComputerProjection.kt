@@ -51,6 +51,7 @@ internal class Command03ComputerProjection<F : Any>(
     private var generation = 0L
     private var sequence = 0L
     private var active = false
+    private var hidden = false
     private var binding: LiveFrameBinding? = null
     private var sourceEpoch = -1L
     private var lastState: Pair<LiveMonitorState, String>? = null
@@ -59,12 +60,14 @@ internal class Command03ComputerProjection<F : Any>(
     private var lastSourceSequence = -1L
     private var lastFrameAck: Command03FrameAck? = null
     private var pending: Pending<F>? = null
+    private var rendered: Pending<F>? = null
 
     fun bind(sessionId: String, next: LiveMonitorFeed<F>?) {
         if (session == sessionId && feed === next) return
         suspend()
         session = sessionId
         feed = next
+        hidden = false
     }
 
     /** Synchronous fence for pause, native overlays, reparent, session change, Stop and destruction. */
@@ -77,6 +80,7 @@ internal class Command03ComputerProjection<F : Any>(
             LiveMonitorState.ENDED.name, "Live-Bild angehalten"))
         active = false
         pending = null
+        rendered = null
         lastFrameAck = null
         binding = null
         sourceEpoch = -1
@@ -87,7 +91,7 @@ internal class Command03ComputerProjection<F : Any>(
 
     fun tick(visible: Boolean) {
         val source = feed
-        if (!visible || source == null || !Command03BridgeContract.validSession(session)) {
+        if (!visible || hidden || source == null || !Command03BridgeContract.validSession(session)) {
             suspend()
             return
         }
@@ -109,6 +113,7 @@ internal class Command03ComputerProjection<F : Any>(
         if (status.state != LiveMonitorState.LIVE) {
             source.monitorSubmission.invalidate()
             pending = null
+            rendered = null
             lastFrameAck = null
             invalidateView()
             publishStatus(status)
@@ -117,6 +122,7 @@ internal class Command03ComputerProjection<F : Any>(
         if (pending != null && !source.monitorSubmission.usable(pending?.imported, status, now)) {
             source.monitorSubmission.invalidate()
             pending = null
+            rendered = null
             lastFrameAck = null
             invalidateView()
         }
@@ -146,12 +152,14 @@ internal class Command03ComputerProjection<F : Any>(
                     val current = source.status(deliveredAt)
                     if (encoded == null || !source.monitorSubmission.usable(imported, current, deliveredAt)) {
                         source.monitorSubmission.invalidate()
+                        rendered = null
                         invalidateView()
                         lastState = null
                         publishStatus(current, "PAUSED", "Bild nicht verfügbar oder nicht mehr frisch")
                         return@ui
                     }
                     val age = requireNotNull(sampled.ageMillis) + (deliveredAt - sampledAt) / 1_000_000
+                    if (age >= requireNotNull(sampled.binding).staleAfterMillis.coerceAtMost(1_500)) return@ui
                     val packet = Command03ComputerPacket(session, generation, ++sequence, true,
                         LiveMonitorState.LIVE.name, sampled.label, sampled.binding, sampled.sourceEpoch,
                         age, requireNotNull(sampled.binding).staleAfterMillis.coerceAtMost(1_500), encoded)
@@ -165,6 +173,9 @@ internal class Command03ComputerProjection<F : Any>(
         } catch (_: java.util.concurrent.RejectedExecutionException) {
             lease.close()
             encoderBusy = false
+            source.monitorSubmission.invalidate()
+            rendered = null
+            invalidateView()
             publishStatus(status, "PAUSED", "Bildübertragung derzeit nicht verfügbar")
         }
     }
@@ -184,11 +195,25 @@ internal class Command03ComputerProjection<F : Any>(
             feed !== frame.feed) return false
         val now = clock()
         val accepted = frame.feed.monitorSubmission.submitted(frame.imported, frame.feed.status(now), now)
-        if (accepted) pending = null
+        if (accepted) { rendered = frame; pending = null }
         return accepted
     }
 
-    fun hidden(ack: Command03FrameAck) {
-        if (active && ack == lastFrameAck) suspend()
+    /** Returns true only for loss of the current surface, not replacement of an older displayed image. */
+    fun hidden(ack: Command03FrameAck): Boolean {
+        if (!active || ack.sessionId != session || ack.generation != generation) return false
+        val shown = rendered
+        if (shown?.ack == ack) {
+            shown.feed.monitorSubmission.withdraw(shown.imported)
+            rendered = null
+            if (pending != null && pending?.ack != ack) return false
+        } else if (ack != lastFrameAck) return false
+        hide()
+        return true
+    }
+
+    fun hide() {
+        hidden = true
+        suspend()
     }
 }

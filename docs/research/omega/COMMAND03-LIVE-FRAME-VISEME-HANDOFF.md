@@ -34,7 +34,14 @@ Vor Neuerstellung werden vorhandene Aufrufketten und öffentliche Szenen-APIs ge
 
 ## Nachweisgrenzen
 
-PORTIERT: noch offen. VERIFIZIERT: noch offen. GERÄTEBESTÄTIGT: NOT_RUN.
+Zwischenstand vor dem ersten Android-Compile: Native Produzenten und HTML-Verbraucher sind im Arbeitszweig angeschlossen; die Kotlin-Kompilierung und Android-Ausführung sind noch **NOT_RUN**.
+
+- Ausgangslauf: 16 bestehende DOM-Tests bestanden, 9 neue Fälle scheiterten konkret an den fehlenden Computer-/Speech-Einstiegspunkten.
+- Nach Adapteränderung: 27/27 DOM-Tests bestanden, keine Skips. Enthalten ist die öffentliche API der unveränderten `avatar3d.js` im PNG-Fallback; Bilddecoder und Layout bleiben Test-Seams.
+- Originalvertrag: 35 Assets / 15.864.219 Bytes unverändert; Syntax und Diff-Prüfung bestanden.
+- Der finale zusätzliche Interop-Test muss mit `COMMAND03_REQUIRE_NATIVE_PACKET=1` das tatsächlich von der frischen Stage-UI-Prüfung erzeugte synthetische JSON-Paket lesen. Ohne Paket scheitert dieser Gate ausdrücklich. Allein handgeschriebene JS-Fixtures belegen keinen Kotlin-Wirevertrag.
+
+PORTIERT: Quellanschlüsse im Arbeitszweig. VERIFIZIERT: bisher nur obige DOM-/Quellprüfungen. GERÄTEBESTÄTIGT: NOT_RUN. Dieser Zwischenstand ist kein fertiger Android-Nachweis.
 
 Der vorherige Stand und seine 82 lokalen Fokusprüfungen sind in `COMMAND03-HTML-VALIDATION-HANDOFF.md` dokumentiert. Sie ersetzen keinen frischen Nachweis dieser neuen Datenpfade. Android-WebView/GPU, echte Sprachlatenz, Berechtigungsdialoge und Faltverhalten auf Hardware sind gesonderte Geräteprüfungen.
 

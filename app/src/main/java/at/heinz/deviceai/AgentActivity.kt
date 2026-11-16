@@ -322,6 +322,8 @@ class AgentActivity : Activity() {
                 utteranceId?.let { voiceSignal.prePhonatoryLevel(it, now) } ?: 0f else 0f
             utteranceId?.let { avatarDirector.audioLevel(it, maxOf(level, earlyJaw),
                 measuredPcmAvailable = measured != null) }
+            command03SpeechProjection.sample(sessionId, utteranceId, now,
+                command03MainStage?.let { it.mediaReady && it.isShown && it.isAttachedToWindow } == true)
             mainHandler.postDelayed(this, 33L)
         }
     }
@@ -329,7 +331,8 @@ class AgentActivity : Activity() {
     // M3 avatar preparation: rendering-free event contract (docs/CONTINUUM_AVATAR_CONTRACT.md).
     // Glance and work TTLs use the same monotonic elapsedRealtime as observed-gaze ages.
     private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(
-        at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut { android.os.Handler(android.os.Looper.getMainLooper()).post(it) },
+        command03AvatarSink(at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut {
+            android.os.Handler(android.os.Looper.getMainLooper()).post(it) }),
         android.os.SystemClock::elapsedRealtime)
     @Volatile private var voiceAvatarText: String = ""
     // Avatar-only flags (no behaviour change): a tool approval dialog is open / the last turn was refused or blocked.
@@ -853,6 +856,7 @@ class AgentActivity : Activity() {
         }
         computerViewVisible = true
         computerController?.resumed()
+        scheduleCommand03Computer()
         pendingReturnedDocument?.let { returned ->
             pendingReturnedDocument = null
             readSelectedDocument(returned)
@@ -870,7 +874,12 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
-        command03MainStage?.onPause()
+        // A visible split-screen task retains its already approved feed while the owner taps the target app.
+        // Speech still ends below; only that existing visible computer session keeps the WebView drawing.
+        if (!computerFeedbackActive()) {
+            command03MainStage?.onPause()
+            pauseCommand03Media()
+        }
         mainHandler.removeCallbacks(command03HtmlStateTick)
         command03HtmlStateScheduled = false
         cancelPendingConversationSelection()
@@ -966,6 +975,8 @@ class AgentActivity : Activity() {
 
     override fun onStop() {
         computerViewVisible = false
+        command03MainStage?.onPause()
+        pauseCommand03Media()
         if (computerController?.awaitingConsent != true) computerController?.stopForVisibilityLoss()
         super.onStop()
     }
@@ -1317,7 +1328,7 @@ class AgentActivity : Activity() {
         val liveHologram = (hologramView ?: ContinuumHologramView(this)).also {
             (it.parent as? android.view.ViewGroup)?.removeView(it)
             hologramView = it
-            avatarDirector.attach(it)
+            avatarDirector.attach(command03AvatarSink(it))
             it.setForegroundActive(nativeStagePresentationActive())
         }
         val home = at.heinz.deviceai.ui.ContinuumHomeView(this, liveHologram) { slot, x, y ->
@@ -1341,6 +1352,7 @@ class AgentActivity : Activity() {
         home.jarvisShell.ambientMotionEnabled = !usesCommand03HtmlDesign()
         homeView = home
         home.onComputerPresentationChanged = { computerController?.refreshGaze() }
+        home.setLiveComputerFeed(command03ComputerFeed.takeUnless { usesCommand03HtmlDesign() })
         computerController?.restoreFeed()
         // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar(home.hologram))
@@ -2109,6 +2121,73 @@ class AgentActivity : Activity() {
 
     /** One local page shares the existing Android input, history and owner-gated tools. */
     private var command03MainStage: at.heinz.deviceai.ui.ContinuumCommand03OriginalStage? = null
+    private var command03ComputerFeed: at.heinz.deviceai.cognitive.LiveMonitorFeed<AndroidLiveFrame>? = null
+    private val command03SpeechProjection = at.heinz.deviceai.ui.Command03SpeechProjection { packet ->
+        command03MainStage?.presentSpeech(packet)
+    }
+    private val command03ComputerProjection by lazy {
+        at.heinz.deviceai.ui.Command03ComputerProjection<AndroidLiveFrame>(
+            work = { action -> backlogExecutor.execute(action) },
+            ui = { action -> mainHandler.post(action) },
+            encode = at.heinz.deviceai.ui.Command03FrameEncoder::encode,
+            emit = { packet -> command03MainStage?.presentComputer(packet) },
+            invalidateView = { command03MainStage?.invalidateComputerPresentation() })
+    }
+    private val command03ComputerTick = object : Runnable {
+        override fun run() {
+            val stage = command03MainStage ?: return
+            val visible = command03ComputerVisible()
+            stage.setLivePresentationActive(visible)
+            command03ComputerProjection.bind(sessionId, command03ComputerFeed)
+            command03ComputerProjection.tick(visible && stage.mediaReady)
+            if (command03ComputerFeed != null && visible) mainHandler.postDelayed(this, 100L)
+        }
+    }
+
+    private fun command03ComputerVisible(): Boolean = command03MainStage?.let { stage ->
+        !isFinishing && !isDestroyed && computerSessionVisible() && stage.isShown &&
+            stage.isAttachedToWindow && stage.windowVisibility == View.VISIBLE
+    } == true
+
+    private fun scheduleCommand03Computer() {
+        mainHandler.removeCallbacks(command03ComputerTick)
+        if (command03MainStage != null && command03ComputerFeed != null) mainHandler.post(command03ComputerTick)
+    }
+
+    private fun setComputerFeed(feed: at.heinz.deviceai.cognitive.LiveMonitorFeed<AndroidLiveFrame>?) {
+        command03ComputerFeed = feed
+        // There is one acquire/Submission owner. The covered native monitor must not lease or invalidate HTML frames.
+        homeView?.setLiveComputerFeed(feed.takeUnless { usesCommand03HtmlDesign() })
+        command03ComputerProjection.bind(sessionId, feed.takeIf { usesCommand03HtmlDesign() })
+        scheduleCommand03Computer()
+    }
+
+    private fun pauseCommand03Media() {
+        mainHandler.removeCallbacks(command03ComputerTick)
+        command03ComputerProjection.suspend()
+        command03SpeechProjection.clear()
+        command03MainStage?.setLivePresentationActive(false)
+    }
+
+    private fun hideCommand03Computer() {
+        if (command03MainStage == null) return
+        command03ComputerProjection.hide()
+        computerController?.stop()
+    }
+
+    private fun command03AvatarSink(sink: at.heinz.deviceai.avatar.AvatarSink) =
+        at.heinz.deviceai.avatar.AvatarSink { event ->
+            runCatching { sink.onAvatarEvent(event) }
+            val ownerSession = sessionId
+            val ownerUtterance = voiceUtteranceId
+            val deliver = Runnable {
+                if (sessionId == ownerSession && voiceUtteranceId == ownerUtterance &&
+                    !isDestroyed && usesCommand03HtmlDesign() && command03MainStage != null)
+                    command03SpeechProjection.accept(ownerSession, ownerUtterance, event)
+            }
+            if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) deliver.run()
+            else mainHandler.post(deliver)
+        }
     private var command03HtmlSession: String? = null
     private var command03HtmlHistoryRevision = 0L
     private var command03HtmlMessageRevision = 0L
@@ -2313,6 +2392,8 @@ class AgentActivity : Activity() {
     }
 
     private fun closeCommand03HtmlStage() {
+        pauseCommand03Media()
+        command03ComputerProjection.bind(sessionId, null)
         command03HtmlHistoryRevision++
         command03HtmlSession = null
         mainHandler.removeCallbacks(command03HtmlStateTick)
@@ -2354,6 +2435,7 @@ class AgentActivity : Activity() {
 
     private fun routeCommand03HtmlAction(route: String, value: String?) {
         if (isFinishing || isDestroyed) return
+        if (route !in setOf("home", "voice-input", "stop")) hideCommand03Computer()
         when (route) {
             "home" -> { showHomeDashboard(); command03MainStage?.showSection("home") }
             "chat" -> {
@@ -2378,6 +2460,7 @@ class AgentActivity : Activity() {
         }
         // A Fold/width reflow replaces the native layout, not the local page. Keep its document,
         // scroll state and request receipts; only the explicit native-view switch destroys it.
+        pauseCommand03Media()
         val web = command03MainStage ?: at.heinz.deviceai.ui.ContinuumCommand03OriginalStage(this,
             onNativeAction = ::routeCommand03HtmlAction,
             onNativeCommand = ::submitCommand03Input,
@@ -2386,7 +2469,15 @@ class AgentActivity : Activity() {
                 command03HtmlSession = null
                 command03HtmlHistoryRevision++
                 syncCommand03HtmlState()
-            })
+                command03SpeechProjection.clear()
+                hologramView?.let { avatarDirector.attach(command03AvatarSink(it)) }
+                scheduleCommand03Computer()
+            },
+            onComputerFrameDrawn = { ack -> command03ComputerProjection.drawn(ack, command03ComputerVisible()) },
+            onComputerFrameHidden = { ack ->
+                if (command03ComputerProjection.hidden(ack)) computerController?.stop()
+            },
+            onPresentationLost = { command03ComputerProjection.suspend() })
         command03MainStage = web
         web.tag = "continuum-command03-main-stage"
         (web.parent as? android.view.ViewGroup)?.removeView(web)
@@ -2400,6 +2491,8 @@ class AgentActivity : Activity() {
         homeView?.setForegroundActive(false)
         homeView?.jarvisShell?.ambientMotionEnabled = false
         airbusCockpitOrchestrator?.setForeground(false)
+        hologramView?.let { avatarDirector.attach(command03AvatarSink(it)) }
+        scheduleCommand03Computer()
     }
 
 
@@ -3236,6 +3329,7 @@ class AgentActivity : Activity() {
      */
     private fun projectCommand03Document(doc: PdfDocumentIntake.Document) {
         val stage = command03MainStage ?: return
+        hideCommand03Computer()
         val session = sessionId
         val readRevision = documentReadGeneration
         val data = org.json.JSONObject()
@@ -4118,7 +4212,7 @@ class AgentActivity : Activity() {
             // The home restores its own drawing order: above the opaque shell, never behind it.
             else home.adoptHologram()
             // A deliberate non-3D reparent may detach transient speech geometry; restore Director state.
-            avatarDirector.attach(head)
+            avatarDirector.attach(command03AvatarSink(head))
         }
         val mountedInChat = head.parent === column
         head.visibility = if (mountedInChat && compactConversationChrome) View.GONE else View.VISIBLE
@@ -7130,7 +7224,7 @@ class AgentActivity : Activity() {
         if (pending.session != sessionId || pending.generation != appLookupGeneration || isFinishing || isDestroyed) return
         val controller = computerController ?: OwnerComputerSessionController(this, cockpitBus, avatarDirector,
             localAgentExecutor,
-            setFeed = { feed -> homeView?.setLiveComputerFeed(feed) },
+            setFeed = ::setComputerFeed,
             setBusy = { value -> activeLocalRequest = value; setBusy(value) },
             visible = ::computerSessionVisible,
             playClick = { playUiFeedback(at.heinz.deviceai.ui.ContinuumUiFeedback.Cue.BUTTON) },

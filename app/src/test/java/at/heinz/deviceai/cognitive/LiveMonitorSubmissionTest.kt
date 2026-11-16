@@ -139,6 +139,73 @@ class LiveMonitorSubmissionTest {
         assertFalse(other.isReady(holder.status(now), now))
     }
 
+    @Test fun withdrawingOldUnsubmittedOrForeignFrameKeepsTheCurrentRenderedReceipt() {
+        offer()
+        val old = imported()
+        assertTrue(submit(old))
+        now += 100_000_000L
+        offer()
+        val current = imported()
+        assertTrue(submit(current))
+        val notRendered = imported()
+        val foreign = requireNotNull(LiveMonitorSubmission().imported(holder.status(now), now))
+
+        for (unrelated in listOf(old, notRendered, foreign)) {
+            holder.monitorSubmission.withdraw(unrelated)
+            assertTrue(ready())
+            assertEquals(current.status.sequence,
+                holder.monitorSubmission.submittedFrame(holder.status(now), now)?.sequence)
+        }
+    }
+
+    @Test fun withdrawingReplacedImageDoesNotSubmitOrInvalidateItsPendingSuccessor() {
+        offer()
+        val displayed = imported()
+        assertTrue(submit(displayed))
+        now += 100_000_000L
+        offer()
+        val pending = imported()
+        assertTrue(ready())
+        assertEquals(displayed.status.sequence,
+            holder.monitorSubmission.submittedFrame(holder.status(now), now)?.sequence)
+
+        holder.monitorSubmission.withdraw(displayed)
+
+        assertFalse(ready())
+        assertNull(holder.monitorSubmission.submittedFrame(holder.status(now), now))
+        assertTrue(holder.monitorSubmission.usable(pending, holder.status(now), now))
+        assertFalse("A usable decoded/imported successor is not a rendered receipt", ready())
+        assertTrue(submit(pending))
+        assertTrue(ready())
+        assertEquals(pending.status.sequence,
+            holder.monitorSubmission.submittedFrame(holder.status(now), now)?.sequence)
+    }
+
+    @Test fun globalInvalidationRejectsDisplayedAndPendingTokensDespiteLateWithdrawals() {
+        offer()
+        val displayed = imported()
+        assertTrue(submit(displayed))
+        now += 100_000_000L
+        offer()
+        val pending = imported()
+
+        holder.monitorSubmission.invalidate()
+        holder.monitorSubmission.withdraw(displayed)
+        assertFalse(ready())
+        assertFalse(submit(displayed))
+        assertFalse(submit(pending))
+
+        val fresh = imported()
+        assertTrue(submit(fresh))
+        holder.monitorSubmission.withdraw(displayed)
+        holder.monitorSubmission.withdraw(pending)
+        assertTrue(ready())
+        assertFalse(holder.monitorSubmission.usable(displayed, holder.status(now), now))
+        assertFalse(holder.monitorSubmission.usable(pending, holder.status(now), now))
+        assertEquals(fresh.status.sequence,
+            holder.monitorSubmission.submittedFrame(holder.status(now), now)?.sequence)
+    }
+
     @Test fun clockRegressionCannotAuthorizeSubmission() {
         offer()
         val frame = imported()

@@ -30,6 +30,12 @@ internal class LiveMonitorSubmission {
         return true
     }
 
+    /** A displayed image was replaced while its successor is still decoding. Withdraw only that image's receipt. */
+    @Synchronized
+    fun withdraw(frame: ImportedFrame) {
+        if (frame.owner === this && receipt?.frame === frame) receipt = null
+    }
+
     @Synchronized
     fun isReady(current: LiveMonitorStatus, nowNanos: Long): Boolean = readyReceipt(current, nowNanos) != null
 
