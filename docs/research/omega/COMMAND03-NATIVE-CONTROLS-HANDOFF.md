@@ -39,6 +39,14 @@ Stage und separater HTML-Adapter sind gemeinsam umgestellt. Alle Transportaktion
 
 Die sieben zuvor roten neuen HTML-Kontrollfälle bestehen im gezielten Entwicklungslauf jetzt **7/7**; die JavaScript-Syntaxprüfung besteht. Der unveränderte Rotlauf mitsamt damaligen Test-/Adapterhashes ist separat erhalten. Die bisherige DOM-Regressionsauswahl wird erst anschließend auf den strengeren Transportvertrag umgestellt. **Kein Gesamtgrün und kein Android-Kompiliernachweis**: Activity und native Testfixtures sind noch in Arbeit. Das nächste Abnahmekriterium ist weiterhin der gemeinsame saubere Quellfreeze mit vollständig ausgeführten gezielten Regressionen.
 
+### Entwicklungscheckpoint: native Produktionsanbindung
+
+Die Activity-Anbindung ist jetzt als zusammenhängender Patch geschrieben: echte Ansichtsinstanzen für Haupt-/Helferchat, exakt gebundene Entwürfe und Verlaufsladungen, native Mikrofon- und Fokuspfade, opake Quellen- und Dokumentkennungen sowie ein Produzenten-Guard für verspätete Cloudantworten und deren Werkzeugfortsetzung. Bei einer durch den angenommenen Auftrag selbst ausgelösten Botwahl darf nur dessen ausdrücklich zugeordneter neuerer Entwurf kontrolliert übernommen werden. Ein begrenzter Übergangshinweis erlaubt dem HTML, noch unbestätigte lokale Eingaben separat zur manuellen Wiederherstellung anzubieten; diese HTML-Ergänzung ist noch in Arbeit.
+
+Beim erfolgreichen PDF-Entwurf schließt nur der Abschluss zum exakt aktuellen Dokument die HTML-PDF und zeigt das Gesprächsergebnis. Alte Dokumentantworten dürfen eine inzwischen andere PDF nicht schließen. Fehlermeldungen bleiben dem auslösenden Dokument zugeordnet. Automatische Ansichtswechsel vergeben keinen neuen Eingabefokus; dafür ist ein ausdrücklicher Fokusauftrag erforderlich.
+
+Dieser veröffentlichte Zwischenstand dient einer **diagnostischen Hauptkompilation**, während native Testfixtures und letzte HTML-Negativfälle vervollständigt werden. Noch **kein Compilererfolg**, keine frische Android-Testwertung und keine neue APK bestätigt. Der finale saubere Quellfreeze und seine tatsächlichen Prüfbelege folgen gesondert.
+
 ## Arbeitsumgebung
 
 Während der lesenden Bestandsprüfung wurde die lokale Umgebung vorübergehend unavailable. Nach Wiederanbindung sind Quelle, Toolchain, aktuelle Compilerzustände, b56-APK und das dauerhaft gesicherte Prüfpaket vorhanden. Frühere RAM-Auslagerungen fehlen nach dem Neustart. Diese werden ausdrücklich als fehlende historische Zwischenstände dokumentiert; keine alten Testergebnisse oder Dateien werden fingiert. Eine neue externe Orchestrierung wird auf den tatsächlich vorhandenen b56-Nachweis gebunden und erhält die bisherigen Quell-, Lock-, Platz- und Ergebnisgrenzen.

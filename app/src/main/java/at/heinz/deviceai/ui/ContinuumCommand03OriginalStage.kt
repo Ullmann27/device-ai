@@ -298,7 +298,7 @@ internal class ContinuumCommand03OriginalStage(
         if (disposed || !current(sources)) return
         if (!pageReady) {
             queuedSources[sources.optString("sourceSetId")] = sources
-            while (queuedSources.size > 8) queuedSources.remove(queuedSources.keys.first())
+            while (queuedSources.size > 60) queuedSources.remove(queuedSources.keys.first())
         } else evaluateJavascript("window.ContinuumNative?.sources($sources);", null)
     }
 
@@ -308,7 +308,7 @@ internal class ContinuumCommand03OriginalStage(
         val scope = binding ?: return
         if (disposed || section !in ROUTES) return
         cancelComposerFocus()
-        val data = envelope(scope).put("name", section)
+        val data = envelope(scope).put("name", section).put("focusComposer", keyboard)
         if (!pageReady) { queuedSection = data to keyboard; return }
         val revision = focusRevision
         if (keyboard && canFocusComposer()) requestFocus()
