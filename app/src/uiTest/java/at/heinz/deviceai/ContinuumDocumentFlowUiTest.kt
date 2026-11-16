@@ -52,6 +52,13 @@ import java.util.concurrent.atomic.AtomicReference
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumDocumentFlowUiTest {
+    /** Retained native cockpit regression; the owner-facing HTML remains the product default. */
+    @org.junit.Before fun selectNativeCockpitForLegacyUiAssertions() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     private class Runtime : LocalModelRuntime {
         @Volatile override var state = LocalModelState.READY
         override val loadedModel = ImportedLocalModel("flow-test-model", "v1", "a".repeat(64), 1,

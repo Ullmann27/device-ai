@@ -43,6 +43,13 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class JarvisDeterministicCaptureUiTest {
+    /** Retained native cockpit regression; the owner-facing HTML remains the product default. */
+    @org.junit.Before fun selectNativeCockpitForLegacyUiAssertions() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     private fun field(activity: AgentActivity, name: String): Any? = AgentActivity::class.java
         .getDeclaredField(name).apply { isAccessible = true }.get(activity)
 

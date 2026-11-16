@@ -44,6 +44,13 @@ import java.util.concurrent.atomic.AtomicReference
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class OwnerObjectStateConversationUiTest {
+    /** Retained native cockpit regression; the owner-facing HTML remains the product default. */
+    @org.junit.Before fun selectNativeCockpitForLegacyUiAssertions() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     private class Runtime(ready: Boolean = true, modelPresent: Boolean = ready) : LocalModelRuntime {
         @Volatile override var state = if (ready) LocalModelState.READY else LocalModelState.EMPTY
         override val loadedModel = if (!modelPresent) null else ImportedLocalModel(

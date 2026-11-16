@@ -38,6 +38,13 @@ import java.time.Duration
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class FullStageMemoryReviewUiTest {
+    /** Retained native cockpit regression; the owner-facing HTML remains the product default. */
+    @org.junit.Before fun selectNativeCockpitForLegacyUiAssertions() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     private data class Fixture(val activity: AgentActivity, val root: View, val home: ContinuumHomeView,
                                val live: ContinuumHologramView, val bus: CockpitAnimationBus) {
         val sequence get() = (home.avatarRenderer as JarvisHoloAvatar).sequence!!

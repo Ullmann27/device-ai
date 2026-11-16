@@ -48,6 +48,13 @@ import java.util.concurrent.TimeUnit
 @LooperMode(LooperMode.Mode.PAUSED)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ContinuumVisualEvidenceUiTest {
+    /** Retained native cockpit regression; the owner-facing HTML remains the product default. */
+    @org.junit.Before fun selectNativeCockpitForLegacyUiAssertions() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     private var framePump: CockpitHostFramePump? = null
     @Before fun configureVirtualVsyncClock() {
         ShadowChoreographer.setPaused(true)

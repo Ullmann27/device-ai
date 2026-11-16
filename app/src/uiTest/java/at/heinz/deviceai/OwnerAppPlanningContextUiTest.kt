@@ -45,6 +45,13 @@ import java.util.concurrent.atomic.AtomicReference
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class OwnerAppPlanningContextUiTest {
+    /** Retained native cockpit regression; the owner-facing HTML remains the product default. */
+    @org.junit.Before fun selectNativeCockpitForLegacyUiAssertions() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     @org.robolectric.annotation.Implements(android.media.projection.MediaProjectionManager::class)
     class ProjectionConsentShadow {
         @org.robolectric.annotation.Implementation(minSdk = 34)
