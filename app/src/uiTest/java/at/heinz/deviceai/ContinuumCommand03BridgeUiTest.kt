@@ -236,6 +236,7 @@ class ContinuumCommand03BridgeUiTest {
         assertTrue(action(a, "route", "device"))
         val dialog = field(a, "centerDialog") as AlertDialog
         assertTrue(dialog.isShowing)
+        measure(dialog.window!!.decorView, 392, 852)
         val labels = all(dialog.window!!.decorView).filterIsInstance<TextView>().map { it.text.toString() }
         assertTrue(labels.contains("Android-Computer"))
         assertTrue(labels.contains("COMPUTER-AUFTRAG SCHREIBEN"))
