@@ -89,10 +89,12 @@ internal object JarvisHomeTestRoutes {
         assertTrue("The actual More dialog opens", dialog.isShowing)
         val entries = ContinuumWorkAreaNavigationSpec.moreEntries
         val list = dialog.listView
-        assertEquals(entries.map { it.title }, (0 until list.adapter.count).map { list.adapter.getItem(it).toString() })
+        assertEquals(listOf("KOMMANDO 03 · ORIGINALDESIGN ALS STARTSEITE") + entries.map { it.title },
+            (0 until list.adapter.count).map { list.adapter.getItem(it).toString() })
         val index = entries.indexOfFirst { it.target == target }
         assertTrue(index >= 0)
-        assertTrue("The actual menu dispatches $target", list.performItemClick(null, index, list.adapter.getItemId(index)))
+        val row = index + 1
+        assertTrue("The actual menu dispatches $target", list.performItemClick(null, row, list.adapter.getItemId(row)))
     }
 
     /** Eight dock destinations, legacy cards. */
