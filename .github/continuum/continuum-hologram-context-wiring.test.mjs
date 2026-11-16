@@ -59,7 +59,7 @@ test('foreground lifecycle explicitly pauses, cancels, and resumes hologram whil
  assert.match(loss,/val interrupted = workflow != null\s*stop\(\)\s*if \(!interrupted\) return\s*previous\.reply/);
  assert.match(loss,/OwnerComputerWorkflow\.Status\.CANCELLED/);
  assert.match(loss,/\), null, false\)/, 'Visibility notice must remain silent');
- assert.ok(resumed.includes('hologramView?.setForegroundActive(true)'));
+ assert.match(resumed,/val nativeStageVisible = nativeStagePresentationActive\(\)[\s\S]*hologramView\?\.setForegroundActive\(nativeStageVisible\)/);
  assert.ok(activity.includes('it.setForegroundActive(nativeStagePresentationActive())'),
    'Fold/home rebuild must inherit current foreground status');
  assert.ok(orb.includes('foregroundActive && motionAllowed && isAttachedToWindow'));

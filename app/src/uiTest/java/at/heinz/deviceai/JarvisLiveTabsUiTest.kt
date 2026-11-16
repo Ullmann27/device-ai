@@ -195,7 +195,8 @@ class JarvisLiveTabsUiTest {
         assertEquals(JarvisHomeTestRoutes.expectedDirectTargets(f.home),
             JarvisHomeTestRoutes.controls(f.home).map { it.tag.toString().substringAfter(':') })
         val shell = requireNotNull(f.shell.currentShell())
-        if (shell.workstation) assertNotNull(shell[JarvisShellLayout.Slot.NAV_RAIL])
+        if (shell.workstation) assertEquals("Responsive workstation rail",
+            shell.width >= 600f, shell[JarvisShellLayout.Slot.NAV_RAIL] != null)
         else assertNull(shell[JarvisShellLayout.Slot.NAV_RAIL])
         val tabs = descendants(f.home).filter { it.tag?.toString()?.startsWith("jarvis-live-tab:") == true }
         assertEquals(listOf("system", "memory", "agents"), tabs.map { it.tag.toString().substringAfter(':') })

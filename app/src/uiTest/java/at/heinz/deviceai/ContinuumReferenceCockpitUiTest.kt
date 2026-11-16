@@ -333,7 +333,8 @@ class ContinuumReferenceCockpitUiTest {
     private fun assertHomeHasNoFixedRail(home: ContinuumHomeView) {
         if (!home.jarvisShellStage) return
         val shell = requireNotNull(home.jarvisShell.currentShell())
-        if (shell.workstation) assertNotNull("Workstation owns exactly one rail", shell[JarvisShellLayout.Slot.NAV_RAIL])
+        if (shell.workstation) assertEquals("Workstation rail follows the 600dp cutoff",
+            shell.width >= 600f, shell[JarvisShellLayout.Slot.NAV_RAIL] != null)
         else assertNull("Compact shell retains full hero width", shell[JarvisShellLayout.Slot.NAV_RAIL])
         assertTrue("No invisible rail duplicates remain", descendants(home).none {
             it.tag?.toString()?.startsWith("jarvis-rail:") == true
@@ -378,7 +379,8 @@ class ContinuumReferenceCockpitUiTest {
         assertEquals("Every direct destination has exactly one native control", JarvisHomeTestRoutes.expectedDirectTargets(home),
             navigation.map { it.tag.toString().substringAfter(':') })
         val shell = requireNotNull(home.jarvisShell.currentShell())
-        val required = mutableListOf("jarvis-dialog:conversation", "jarvis-header:notifications", "jarvis-header:settings")
+        val required = mutableListOf("jarvis-dialog:conversation")
+        required += shell.headerActionBoxes().keys.map { "jarvis-header:$it" }
         if (!shell.workstation) required += listOf("jarvis-dialog:voice-input", "jarvis-dialog:send", "jarvis-input:conversation")
         else {
             val editor = field(activity, "input") as EditText
@@ -557,7 +559,7 @@ class ContinuumReferenceCockpitUiTest {
     private fun appearanceDialog(activity: AgentActivity): AlertDialog {
         val home = currentHome(activity)
         val root = activity.window.decorView
-        if (requireNotNull(home.jarvisShell.currentShell()).ref5Grid) {
+        if (requireNotNull(home.jarvisShell.currentShell()).headerActionBoxes().containsKey("mode")) {
             tap(root, shellControl(activity, "jarvis-header:mode"))
         } else {
             val tab = shellControl(activity, "jarvis-live-tab:system")
