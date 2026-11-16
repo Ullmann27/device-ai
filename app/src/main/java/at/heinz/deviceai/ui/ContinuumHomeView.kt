@@ -791,7 +791,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val l = hero.left + 12f - railOffset
         val r = hero.right - 12f - railOffset
         val scroll = generateSequence(parent as? View) { it.parent as? View }
-            .filterIsInstance<ScrollView>().firstOrNull()
+            .filterIsInstance<android.widget.ScrollView>().firstOrNull()
         val visibleBottom = scroll?.let { (it.scrollY + it.height - it.paddingBottom) / density }
             ?: heightPx / density
         val cardBottom = minOf(hero.bottom - 8f, visibleBottom - 8f)
