@@ -38,6 +38,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowChoreographer
 import org.robolectric.shadows.ShadowDisplayManager
@@ -506,6 +507,8 @@ class ContinuumCommand03BridgeUiTest {
 
     @Test
     @Config(shadows = [Command03HostWebView::class])
+    // Use the same real host-window visibility contract as the existing native monitor fixtures.
+    @GraphicsMode(GraphicsMode.Mode.NATIVE)
     fun visibleSplitScreenKeepsHtmlComputerDrawingWhileFullStopEndsTheExistingSession() = withActivity { lifecycle, a ->
         CockpitHostFramePump { a.window.decorView }.use { pump ->
             resizeWindow(a, 392, 852)

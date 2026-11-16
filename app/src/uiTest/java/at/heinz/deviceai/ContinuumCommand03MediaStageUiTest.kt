@@ -21,6 +21,7 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
 import org.robolectric.annotation.LooperMode
@@ -33,6 +34,8 @@ import java.util.concurrent.TimeUnit
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28], qualifiers = "w392dp-h852dp-port-mdpi",
     shadows = [ContinuumCommand03MediaStageUiTest.VisualWebView::class])
+// Robolectric 4.14.1 WindowSessionDelegate grants APP_VISIBLE by default only for native graphics.
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumCommand03MediaStageUiTest {
     @Implements(WebView::class)
