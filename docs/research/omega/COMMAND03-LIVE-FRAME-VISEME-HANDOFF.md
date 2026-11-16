@@ -45,6 +45,20 @@ PORTIERT: Quellanschlüsse im Arbeitszweig. VERIFIZIERT: bisher nur obige DOM-/Q
 
 Der vorherige Stand und seine 82 lokalen Fokusprüfungen sind in `COMMAND03-HTML-VALIDATION-HANDOFF.md` dokumentiert. Sie ersetzen keinen frischen Nachweis dieser neuen Datenpfade. Android-WebView/GPU, echte Sprachlatenz, Berechtigungsdialoge und Faltverhalten auf Hardware sind gesonderte Geräteprüfungen.
 
+## Android-Zwischenstand am 16.11.2026
+
+Geprüfter Quellstand: `32f6d04e88a9e7373147a83499ca8a984d10756c`. Produktionsunterbaum `app/src/main`: `f46c45771386422fa65776ff66a1609ab7f4c260`.
+
+- Regulärer `:app:compileDebugKotlin`: **PASS_LOCAL**, 30,881 Sekunden. Tatsächliche Produktionsquellen, ursprüngliche Buildpfade, Gradle-Heap 768 MiB und Metaspace 256 MiB; keine Compilerfehler.
+- Erster fokussierter Android-UI-Lauf: Kotlin-Testkompilierung abgeschlossen, anschließend Gradle-Daemon verschwunden. **Keine frischen abgeschlossenen JUnit-Ergebnisse.** Eine Speicherursache ist nicht nachgewiesen; dieser Lauf zählt nicht als Testnachweis.
+- Zweiter Lauf mit denselben Quellen und regulär bereits kompilierten Klassen: **22 Tests, 19 bestanden, 3 fehlgeschlagen, keine Skips**. Offen sind das Präsentationsaktivitätsflag im sichtbaren Split-Screen sowie zwei Fälle, die noch keinen WebView-Visual-Callback einreihen. Die Ursache wird durch positive Vorbedingungen und konkrete Sichtbarkeits-/Fristdiagnosen geprüft; Produktionsgates und Assertions bleiben erhalten.
+- Frisch aus dem zweiten Android-Lauf serialisiertes synthetisches Stage-Paket: SHA-256 `190f34b54949bc1707b35f1957cf8532567d3be1b7af449c08408ed135ce7657`. Damit besteht der verpflichtend aktivierte DOM-Interop-Lauf **28/28, ohne Skips**. Dies beweist den Kotlin-JSON-/JS-Vertrag, keine physische Geräteaufnahme.
+- Die 35 Originalassets / 15.864.219 Bytes bleiben unverändert. Noch kein neuer APK-Bau für diese Medienanbindung und kein Gerätetest.
+
+Der folgende Diagnose-Checkpoint ergänzt einen ausdrücklich als **Kompilierung ohne Testausführung** ausgewiesenen Modus `ui-compile`. Er führt die echte `compileDebugUnitTestKotlin`-Aufgabe mit denselben fokussierten physischen Testquellen und SHA-Prüfungen aus. Erst ein separater `ui-tests`-Lauf darf frische JUnit-Ergebnisse ausweisen. So müssen Compiler und Robolectric nicht im selben Gradle-Prozess resident bleiben. Die lokale QA-Allowlist erhält ausschließlich diese Compile-Aufgabe; APK-/Signaturgates bleiben unberührt.
+
+PORTIERT: die beiden Produktionsanschlüsse. VERIFIZIERT: Produktionskompilierung, 28 DOM-/Interop-Fälle und 19 der 22 neuen Android-UI-Fälle. **Abnahme offen**, bis die drei Befunde behoben, Unit-/Klassikregressionen grün und der reguläre APK-Bau geprüft sind. GERÄTEBESTÄTIGT: **NOT_RUN**.
+
 ## Wiedereinstieg und Rückfall
 
 Zuerst Arbeitsbranch, kanonischen Integrations-HEAD und diese Übergabe abgleichen. Dann native Produzenten und Adaptervertrag prüfen, frische Tests durchführen und Ergebnisse mit genauen SHAs ergänzen. Der vorhandene bestätigte Rückweg zur klassischen Oberfläche bleibt nutzbar. Keine Main-Integration, Originalsignierung, Installation oder produktive Veröffentlichung gehört zu diesem Entwicklungsschritt.

@@ -112,7 +112,7 @@ require(!continuumLocalStandaloneQa ||
     (gradle.startParameter.taskNames.isNotEmpty() &&
         gradle.startParameter.taskNames.all { requested ->
             requested.substringAfterLast(':') in
-                setOf("testDebugUnitTest", "lintDebug", "compileDebugKotlin")
+                setOf("testDebugUnitTest", "lintDebug", "compileDebugKotlin", "compileDebugUnitTestKotlin")
         })) {
     "Disposable Continuum Lokal QA allows only debug unit tests, lint and compilation."
 }

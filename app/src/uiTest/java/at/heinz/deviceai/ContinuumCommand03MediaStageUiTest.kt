@@ -3,6 +3,7 @@ package at.heinz.deviceai
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.net.Uri
 import android.view.View
 import android.webkit.WebResourceRequest
@@ -80,6 +81,20 @@ class ContinuumCommand03MediaStageUiTest {
     }
     private fun acknowledge(stage: ContinuumCommand03OriginalStage, ack: Command03FrameAck, main: Boolean = true) =
         stage.webViewClient.shouldOverrideUrlLoading(stage, request(ack, main))
+    private fun assertReadyForComputerAck(stage: ContinuumCommand03OriginalStage, ack: Command03FrameAck) {
+        fun field(name: String): Any? = ContinuumCommand03OriginalStage::class.java.getDeclaredField(name)
+            .apply { isAccessible = true }.get(stage)
+        val rect = Rect()
+        val globallyVisible = stage.getGlobalVisibleRect(rect)
+        val state = "attached=${stage.isAttachedToWindow}, shown=${stage.isShown}, window=${stage.windowVisibility}, " +
+            "size=${stage.width}x${stage.height}, globalVisible=$globallyVisible, rect=$rect, " +
+            "active=${field("livePresentationActive")}, pageReady=${field("pageReady")}, disposed=${field("disposed")}, " +
+            "ack=$ack, frame=${field("computerFrame")}, " +
+            "remainingNs=${(field("computerFrameDeadline") as Long) - System.nanoTime()}"
+        val ready = ContinuumCommand03OriginalStage::class.java.getDeclaredMethod("canDrawComputer", Command03FrameAck::class.java)
+            .apply { isAccessible = true }.invoke(stage, ack) as Boolean
+        assertTrue("The positive host must satisfy the actual draw gate before the ACK: $state", ready)
+    }
     private fun draw(stage: ContinuumCommand03OriginalStage, hardwareFlag: Boolean) {
         // Only the flag is controlled. This checks policy ordering, not hardware renderer output.
         val canvas = object : Canvas() { override fun isHardwareAccelerated() = hardwareFlag }
@@ -105,6 +120,7 @@ class ContinuumCommand03MediaStageUiTest {
     @Test fun decodeAckAndVisualCallbackNeedASubsequentHardwareDraw() = withStage { stage, shadow, drawn ->
         val packet = packet()
         stage.presentComputer(packet)
+        assertReadyForComputerAck(stage, packet.acknowledgement)
         acknowledge(stage, packet.acknowledgement)
         assertTrue(drawn.isEmpty())
         assertEquals(1, shadow.callbacks.size)
@@ -123,6 +139,7 @@ class ContinuumCommand03MediaStageUiTest {
     @Test fun oldSessionGenerationAndSubframeAcknowledgementsCannotArmADraw() = withStage { stage, shadow, drawn ->
         val packet = packet()
         stage.presentComputer(packet)
+        assertReadyForComputerAck(stage, packet.acknowledgement)
         acknowledge(stage, packet.acknowledgement.copy(sessionId = "22222222-2222-4222-8222-222222222222"))
         acknowledge(stage, packet.acknowledgement.copy(generation = 2))
         acknowledge(stage, packet.acknowledgement, main = false)
@@ -135,7 +152,9 @@ class ContinuumCommand03MediaStageUiTest {
         for (boundary in listOf("pdf", "pause", "reparent")) withStage { stage, shadow, drawn ->
             val packet = packet()
             stage.presentComputer(packet)
+            assertReadyForComputerAck(stage, packet.acknowledgement)
             acknowledge(stage, packet.acknowledgement)
+            assertEquals("The $boundary fixture must first enqueue a real provider callback", 1, shadow.callbacks.size)
             when (boundary) {
                 "pdf" -> stage.presentDocument(JSONObject().put("sessionId", session).put("name", "Synthetisch.pdf"))
                 "pause" -> stage.setLivePresentationActive(false)

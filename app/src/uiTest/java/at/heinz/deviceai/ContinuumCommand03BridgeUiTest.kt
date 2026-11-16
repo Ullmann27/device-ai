@@ -106,6 +106,18 @@ class ContinuumCommand03BridgeUiTest {
         .filterIsInstance<TextView>().map { it.text.toString() }
     private fun ready(a: AgentActivity) = stage(a).webViewClient.onPageFinished(stage(a),
         ContinuumCommand03OriginalStage.INDEX)
+    private fun computerPresentationState(a: AgentActivity): String {
+        val web = stage(a)
+        val rect = android.graphics.Rect()
+        val globallyVisible = web.getGlobalVisibleRect(rect)
+        return "foreground=${field(a, "foregroundLearningActive")}, viewVisible=${field(a, "computerViewVisible")}, " +
+            "multiWindow=${a.isInMultiWindowMode}, sessionVisible=${call(a, "computerSessionVisible")}, " +
+            "presentationVisible=${call(a, "command03ComputerVisible")}, attached=${web.isAttachedToWindow}, " +
+            "shown=${web.isShown}, window=${web.windowVisibility}, size=${web.width}x${web.height}, " +
+            "globalVisible=$globallyVisible, rect=$rect, active=${stageField(web, "livePresentationActive")}, " +
+            "pageReady=${stageField(web, "pageReady")}, disposed=${stageField(web, "disposed")}, " +
+            "frame=${stageField(web, "computerFrame")}, deadline=${stageField(web, "computerFrameDeadline") }"
+    }
     private fun acknowledgement(a: AgentActivity): JSONObject {
         val script = shadowOf(stage(a)).lastEvaluatedJavascript
         val prefix = "window.ContinuumNative?.commandResult("
@@ -515,11 +527,15 @@ class ContinuumCommand03BridgeUiTest {
         }
         call(a, "setComputerFeed", LiveMonitorFeed::class.java to feed)
         shadowOf(a).setInMultiWindowMode(true)
+        println("COMMAND03_SPLIT_BEFORE_TICK:${computerPresentationState(a)}")
         (field(a, "command03ComputerTick") as Runnable).run()
         lifecycle.pause()
+        val pausedState = computerPresentationState(a)
+        println("COMMAND03_SPLIT_AFTER_PAUSE:$pausedState")
         assertTrue(native.active)
         assertFalse("Only a still-visible approved split-screen session keeps WebView drawing", shadowOf(stage(a)).wasOnPauseCalled())
-        assertTrue(stageField(stage(a), "livePresentationActive") as Boolean)
+        assertTrue("The approved visible session must retain its presentation: $pausedState",
+            stageField(stage(a), "livePresentationActive") as Boolean)
         assertFalse(field(a, "foregroundLearningActive") as Boolean)
         lifecycle.stop()
         assertFalse(native.active)

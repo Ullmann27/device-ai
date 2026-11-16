@@ -25,7 +25,7 @@ HERE = Path(__file__).resolve().parent
 MEMORY_HARNESS = 'docs/evidence/omega-apk54-20261111/harness/test-memory.gradle'
 ORIGINAL_AVATAR_SHA256 = 'c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a'
 TASKS = {'compile': ':app:compileDebugKotlin', 'unit-tests': ':app:testDebugUnitTest',
-         'ui-tests': ':app:testDebugUnitTest', 'lint': ':app:lintDebug',
+         'ui-compile': ':app:compileDebugUnitTestKotlin', 'ui-tests': ':app:testDebugUnitTest', 'lint': ':app:lintDebug',
          'unsigned': ':app:assembleRelease'}
 CAPTURE_CLASS = 'at.heinz.deviceai.JarvisDeterministicCaptureUiTest'
 CAPTURE_CASES = frozenset(('compact390', 'compact412', 'mediumShortLandscape',
@@ -267,10 +267,13 @@ def main():
     parser.add_argument('--capture-dir', type=Path)
     parser.add_argument('--plan', action='store_true')
     args = parser.parse_args()
+    compile_only = args.mode == 'ui-compile'
+    is_ui = args.mode in ('ui-compile', 'ui-tests')
     if args.selection:
         selections = json.loads((HERE / 'selections.json').read_text())
         group = selections.get(args.selection)
-        if not group or group['mode'] != args.mode or args.test or args.test_helper or args.full_suite:
+        selection_mode = 'ui-tests' if compile_only else args.mode
+        if not group or group['mode'] != selection_mode or args.test or args.test_helper or args.full_suite:
             parser.error('Named selection must match the mode and cannot be combined with other tests/helpers')
         args.test = group['tests']
         args.test_helper = group['helpers']
@@ -286,18 +289,21 @@ def main():
     if not 2 <= args.resource_sample_seconds <= 30:
         parser.error('Resource sampling interval must be 2–30 seconds')
     is_test = args.mode in ('unit-tests', 'ui-tests')
-    if is_test and not args.test and not args.full_suite:
+    has_test_sources = is_test or compile_only
+    if has_test_sources and not args.test and not args.full_suite:
         parser.error('Choose focused tests or explicitly --full-suite')
-    if not is_test and (args.test or args.full_suite):
-        parser.error('Test selections apply only to test modes')
+    if not has_test_sources and (args.test or args.full_suite):
+        parser.error('Test selections apply only to test execution or UI test compilation')
     if args.test and args.full_suite:
         parser.error('Choose focused execution or full suite')
     if len(args.test) > 30 or any(not re.fullmatch(r'[A-Za-z0-9_.*$]+', test) for test in args.test):
         parser.error('Invalid test filter')
-    if args.focus_test_sources and (not is_test or not args.test or args.full_suite):
+    if args.focus_test_sources and (not has_test_sources or not args.test or args.full_suite):
         parser.error('Focused source compilation requires selected tests')
     if args.test_helper and not args.focus_test_sources:
         parser.error('Helpers require --focus-test-sources')
+    if compile_only and not args.focus_test_sources:
+        parser.error('UI compilation requires focused physical sources and an explicit UI test selection')
     overrides = {key: getattr(args, key) for key in ('repo', 'output_dir', 'java_home', 'android_sdk', 'android_user_home', 'gradle_home', 'gradle_user_home', 'build_dir')}
     settings = resolve_settings(args.config, overrides)
     for name in ('repo', 'output_dir', 'java_home', 'android_sdk', 'gradle_home', 'gradle_user_home'):
@@ -334,7 +340,7 @@ def main():
         if not args.resolve_dependencies:
             raise
         pins = {'status': 'NOT_YET_CACHED', 'detail': str(error)}
-    focus = focused_sources(repo, args.test, args.test_helper, args.mode == 'ui-tests', before['commit']) if args.focus_test_sources else None
+    focus = focused_sources(repo, args.test, args.test_helper, is_ui, before['commit']) if args.focus_test_sources else None
     environment = os.environ.copy()
     for name in list(environment):
         if (name.startswith('CONTINUUM_') and 'SIGNING' in name) or name in ('ORIGINAL_P12', 'ORIGINAL_PASSWORD'):
@@ -359,7 +365,7 @@ def main():
         '-PcontinuumLocalRenderUnsigned=true' if args.mode == 'unsigned' else '-PcontinuumLocalStandaloneQa=true',
         '-I', str(HERE / 'build-location.init.gradle')]
     harness = None
-    if args.mode == 'ui-tests':
+    if is_ui:
         path = repo / MEMORY_HARNESS
         harness = path.read_bytes() if path.is_file() else git(repo, 'show', 'HEAD:' + MEMORY_HARNESS)
         command += ['-PcontinuumUiWidgetTests=true', '-I', str(output_dir / 'original-test-memory.init.gradle')]
@@ -368,7 +374,7 @@ def main():
     if args.capture_dir:
         command += ['-I', str(repo / 'tools/capture/force_capture.gradle'), '-PcontinuumUiEvidenceDir=' + str(args.capture_dir)]
         environment['CONTINUUM_CAPTURE_SOURCE_COMMIT'] = before['commit']
-    if args.test:
+    if args.test and is_test:
         command += ['-Dcontinuum.native.testSelection=' + str(selection), '-I', str(HERE / 'test-selection.init.gradle')]
     if focus:
         command += ['-Dcontinuum.native.testSources=' + str(sources_file),
@@ -387,9 +393,12 @@ def main():
             'java_memory_limits_mib': {'heap': args.heap_mib, 'metaspace': args.metaspace_mib},
             'resource_sample_seconds': args.resource_sample_seconds, 'workspace_safety_buffer_bytes': 128 * 1024**2,
             'selected_tests': args.test, 'focused_test_sources': focus,
-            'verification_scope': 'FOCUSED_HOST_TESTS_ONLY' if focus else 'LOCAL_BUILD_OR_SELECTED_TEST_EXECUTION',
+            'verification_scope': ('FOCUSED_HOST_TEST_COMPILATION_ONLY' if compile_only else
+                                   'FOCUSED_HOST_TESTS_ONLY' if focus else 'LOCAL_BUILD_OR_SELECTED_TEST_EXECUTION'),
             'memory_harness_sha256': hashlib.sha256(harness).hexdigest() if harness else None,
             'free_bytes': {'build_volume': shutil.disk_usage(build_parent).free, 'workspace': shutil.disk_usage(HERE).free}}
+    if compile_only:
+        plan['test_execution'] = 'NOT_RUN_COMPILE_ONLY'
     if args.capture_dir:
         plan['capture'] = {'directory': str(args.capture_dir), 'fidelity': 'android_activity_host_native_canvas_api28_explicit_2d_head',
                            'filament_verified': False, 'physical_device_verified': False,
@@ -499,7 +508,10 @@ def main():
             not report['junit']['selected_filters_without_fresh_result'])
         good = process.returncode == 0 and before == after and not validation_error and test_evidence_ok and report.get('focused_source_hashes_unchanged', True)
         report['status'] = 'PASS_LOCAL' if good else 'FAILED_OR_SOURCE_CHANGED'
-        if good and not before['clean']:
+        if good and compile_only:
+            report['status'] = ('PASS_LOCAL_TEST_COMPILATION_ONLY' if before['clean'] else
+                                'PASS_LOCAL_DIRTY_TEST_COMPILATION_ONLY')
+        elif good and not before['clean']:
             report['status'] = 'PASS_LOCAL_DIRTY_DIAGNOSTIC_ONLY'
         if process.returncode == 0 and is_test and not test_evidence_ok:
             report['status'] = 'NO_COMPLETE_FRESH_TEST_EVIDENCE'

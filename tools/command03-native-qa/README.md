@@ -92,6 +92,31 @@ Only fresh JUnit XML from this invocation is counted. Missing selected results,
 no executed tests, failures, source drift, or a changed test-source hash cannot
 produce a successful test receipt.
 
+### Separate UI compilation and execution
+
+When retaining the Kotlin compiler beside Robolectric strains the host, run
+`--mode ui-compile` first and then `--mode ui-tests` in a fresh invocation, with
+the same clean `--expected-sha`, selection, toolchain, and original source/build
+paths. Use distinct labels. The compile mode requires either a named UI selection
+or explicit `--test` filters with `--focus-test-sources`; it retains the physical
+source/hash checks and existing helpers. It runs the real
+`:app:compileDebugUnitTestKotlin` task, explicitly allowed by the local QA gate.
+The existing test-execution filter and its task-only gate remain unchanged.
+
+```sh
+python tools/command03-native-qa/run.py --config /absolute/path/native-qa-config.json \
+  --mode ui-compile --selection command03-ui --version-code 60 \
+  --label command03-ui-compile-01 --expected-sha "$CONTINUUM_SOURCE_SHA" \
+  --heap-mib 768 --metaspace-mib 256 --resource-sample-seconds 2
+```
+
+Its successful status is `PASS_LOCAL_TEST_COMPILATION_ONLY`, with
+`test_execution: NOT_RUN_COMPILE_ONLY` and no JUnit result. It proves no test
+passed. The subsequent `ui-tests` run still requires fresh JUnit results for every
+selected filter; normal Gradle history may reuse the genuinely compiled classes.
+Neither phase changes application sources, assertions, SDK dependencies, signing,
+or the prohibition on assembling an APK in the local QA mode.
+
 ## Original HTML bridge behavior
 
 `native-bridge-behavior.test.mjs` executes the original Android HTML and the
