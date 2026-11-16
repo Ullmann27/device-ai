@@ -105,6 +105,8 @@ class ContinuumTaskEffectsCallerUiTest {
         val host = if (realUi) null else Robolectric.buildActivity(Activity::class.java).setup().visible()
         val h: ContinuumHologramView
         if (realUi) {
+            a.getSharedPreferences("continuum-command03", Context.MODE_PRIVATE).edit()
+                .putBoolean("original_html_main", false).commit()
             a.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
                 .putBoolean("voice_enabled", false).commit()
             a.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()

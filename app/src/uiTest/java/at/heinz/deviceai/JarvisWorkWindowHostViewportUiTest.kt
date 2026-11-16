@@ -156,7 +156,8 @@ class JarvisWorkWindowHostViewportUiTest {
             sameBounds(origin, requireNotNull(f.launch))
             val destination = requireNotNull(window.shownBounds())
             assertTrue("Window stays within ancestor clipping", f.viewport.contains(destination))
-            assertTrue("Scroll retains a usable work area", destination.height() >= f.viewport.height() * .75f)
+            assertTrue("Scroll retains a usable work area: ${destination.height()} / ${f.viewport.height()}",
+                destination.height() >= f.viewport.height() * .75f)
             assertEquals("Native dock stays available", View.VISIBLE, f.card().visibility)
             f.host.close(immediate = true)
             assertEquals(initial, f.scroll.scrollY)
@@ -168,7 +169,9 @@ class JarvisWorkWindowHostViewportUiTest {
 
     @Test fun partiallyVisibleDockStartsFromItsVisiblePartAndLaterScrollClosesTheWindow() {
         Fixture().use { f ->
-            f.scroll.scrollTo(0, (f.card().top - f.viewport.height() + 60f).toInt())
+            val currentCard = f.bounds(f.card())
+            f.scroll.scrollTo(0, f.scroll.scrollY +
+                (currentCard.bottom - f.viewport.top - 60f).toInt())
             val initial = f.scroll.scrollY
             val origin = f.tapCard()
             assertEquals(60f, origin.height(), .01f)

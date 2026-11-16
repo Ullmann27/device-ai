@@ -83,7 +83,8 @@ internal object JarvisHomeTestRoutes {
     fun navigate(root: View, target: String) {
         if (target !in moreTargets) { touch(root, destination(root, target)); return }
         val more = descendants(home(root)).single { it.tag == "jarvis-header:more" }
-        touch(root, more)
+        assertTrue("More is an actionable visible accessibility control", more.isShown && more.isEnabled && more.isClickable)
+        assertTrue("More dispatches its native click", more.performClick())
         shadowOf(Looper.getMainLooper()).idle()
         val dialog = requireNotNull(ShadowAlertDialog.getLatestAlertDialog())
         assertTrue("The actual More dialog opens", dialog.isShowing)
