@@ -166,7 +166,7 @@ class ContinuumCommand03BridgeUiTest {
         assertTrue("Expected $method on the real WebView, got $script", script.startsWith(prefix))
         return JSONObject(script.removePrefix(prefix).removeSuffix(");"))
     }
-    private fun profile(a: AgentActivity) = (field(a, "botProfiles") as at.heinz.deviceai.chief.ChiefBotProfileStore)
+    private fun profile(a: AgentActivity) = (call(a, "getBotProfiles") as at.heinz.deviceai.chief.ChiefBotProfileStore)
         .seedDefaults(20).single { it.agentId == "bot-atlas" }
     private fun enter(a: AgentActivity) = call(a, "enterBotConversation",
         at.heinz.deviceai.chief.ChiefBotProfile::class.java to profile(a))
@@ -606,7 +606,12 @@ class ContinuumCommand03BridgeUiTest {
         assertEquals("chat", section.getString("name"))
         assertEquals(binding(a).viewId, section.getString("viewId"))
         assertTrue(section.getBoolean("focusComposer"))
-        assertTrue("The visible WebView owns focus", stage(a).hasFocus())
+        val web = stage(a)
+        val focusState = "focusable=${web.isFocusable}, touchFocusable=${web.isFocusableInTouchMode}, " +
+            "touchMode=${web.isInTouchMode}, enabled=${web.isEnabled}, attached=${web.isAttachedToWindow}, " +
+            "shown=${web.isShown}, window=${web.windowVisibility}, size=${web.width}x${web.height}, " +
+            "rootFocus=${a.window.decorView.findFocus()?.javaClass?.simpleName}, pageFocus=${web.hasFocus()}"
+        assertTrue("The visible WebView owns focus: $focusState", web.hasFocus())
         assertFalse("The hidden native editor must not receive the IME request", (field(a, "input") as EditText).hasFocus())
         val token = stageField(stage(a), "focusRevision") as Long
         lifecycle.pause()
@@ -717,7 +722,7 @@ class ContinuumCommand03BridgeUiTest {
             action(a, "document-draft", second.getString("documentId"))
             val busy = packet(a, "document")
             assertFalse(busy.getBoolean("canDraft"))
-            assertTrue(busy.getString("draftStatus").contains("anderem Auftrag"))
+            assertEquals("Entwurf nicht gestartet – JARVIS arbeitet an einem anderen Auftrag.", busy.getString("draftStatus"))
             assertNull(field(a, "documentDraftTurn"))
         } finally { call(a, "setBusy", Boolean::class.javaPrimitiveType!! to false) }
     }

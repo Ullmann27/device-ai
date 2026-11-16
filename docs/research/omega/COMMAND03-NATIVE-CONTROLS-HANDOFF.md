@@ -1,6 +1,6 @@
 # Command03: native Bedienung im Original-HTML vervollständigen
 
-Status: **PORTIERT / gemeinsamer Prüfkandidat eingefroren / native Verhaltensprüfung und unsigned APK noch offen**.
+Status: **PORTIERT / erster nativer Lauf mit fünf Testbefunden / korrigierter Prüfkandidat eingefroren / erneute Verhaltensprüfung und unsigned APK noch offen**.
 
 ## Quelle und Integration
 
@@ -23,7 +23,7 @@ Die Befunde wurden im tatsächlichen Activity-/Stage-/JS-Aufrufpfad geprüft. Al
 
 Die35 Originalassets und der vorhandene Renderer bleiben bytegleich. Native Capture-, ToolGate-, Composer-, Sprach-, Bot- und Dokumentpfade werden weiterverwendet. Gezielte negative Prüfungen müssen alte Dialog-/Seitenkennungen, neue lokale Eingaben während nativer Verarbeitung, späte Rückmeldungen und tatsächliche Verdeckung abdecken.
 
-Noch offen: Implementierung, neue Rot-/Grün-Belege, kompilierter eingefrorener Quellstand, gezielte Android-/Web-Regressionen und aktualisierte unsigned Prüf-APK.
+Die Implementierung und Entwicklungs-Rot-/Grün-Belege liegen vor. Offen bleiben die vollständig bestandenen gezielten Android-/Web-Regressionen auf einem gemeinsamen veröffentlichten Quellstand und die aktualisierte unsigned Prüf-APK.
 
 ### Entwicklungscheckpoint 16.11.2026, 06:10 UTC
 
@@ -60,6 +60,16 @@ Der letzte vollständige Entwicklungslauf des HTML-Adapters besteht mit **44/44*
 Die statische Quellenprüfung besteht weiterhin für **35 Originalassets / 15.864.219 Bytes**. Ihr veralteter wortwörtlicher Session-Guard wurde an den neuen vollständigen Seiten-/Ansichts-/Sitzungsguard angepasst; Asset-Pins, Blob-Hashes und der Vertrag der exakt zwei separaten Android-Includes bleiben unverändert. Die Verhaltenssicherheit wird zusätzlich von den echten negativen DOM-/Androidfällen geprüft, nicht aus dieser Zeichenfolgenprüfung abgeleitet.
 
 Nächste tatsächliche Schritte: saubere veröffentlichte Quelle kompilieren, vorbereitete native Auswahl ausführen, frisches Kotlin-Paket exportieren und den vollständigen DOM-Lauf damit durchführen, bestehende Releaseverträge prüfen, unsigned APK regulär bauen und unabhängig auf Quellen-/Assetgleichheit prüfen. Bei Fehlern wird der konkrete Befund repariert und ein neuer vollständiger Prüfstand veröffentlicht. **GERÄTEBESTÄTIGT: NOT_RUN.**
+
+### Erster gemeinsamer Androidlauf und gezielte Fixture-Reparatur
+
+Auf `68a0eba67dfda45e20c6abcdf3d0bfbe80006654` bestanden die Hauptkompilation und die separate Testkompilation. Der erste tatsächliche HTML-/Bridge-/Medienlauf ergab **34 Fälle: 29 bestanden, fünf fehlgeschlagen, null Fehler und null übersprungen**. Die frischen XML-Dateien und Laufbelege bleiben unverändert erhalten; dies war ausdrücklich kein Gesamtgrün.
+
+Drei Fehler entstanden im Testzugriff auf den lazy erzeugten Bot-Profilspeicher: Der private Getter `getBotProfiles()` ersetzt die Reflection auf ein nicht vorhandenes Feld. Ein PDF-Test erwartete fälschlich „anderem Auftrag“; er prüft jetzt die bereits vorhandene vollständige Meldung „Entwurf nicht gestartet – JARVIS arbeitet an einem anderen Auftrag.“ Die Produktionsmeldung bleibt unverändert.
+
+Der fünfte Befund betrifft die lokale Robolectric-Implementierung: Der tatsächlich installierte `ShadowWebView` 4.14.1 verwendet für `ViewDelegate.requestFocus(int, Rect)` einen Proxy, dessen `nullish`-Behandlung immer `false` liefert. Dies wurde im lokalen Android-28-/Robolectric-Bytecode geprüft. Der bestehende Hostadapter leitet deshalb zusätzlich zum vorhandenen Layoutaufruf ausschließlich die Fokusanfrage an die echte `View.requestFocus`-Implementierung weiter. Reale Focusability-, Touch-Mode-, Eltern- und `hasFocus()`-Prüfungen bleiben wirksam; weder Sichtbarkeit noch Fokus werden als Ergebnis vorgegeben. Die positive Fokusassertion und die Prüfung des verdeckten Editors bleiben erhalten. Die zwei korrigierten Testdateien verändern keine Produktionsquelle.
+
+Separat bestanden auf dem ersten Freeze **44 Python- und 40 Node-Releasevertragstests**, beide Syntaxprüfungen und der Originalasset-Quellenvertrag. Diese Komponentenbelege ersetzen weder den fehlgeschlagenen Androidlauf noch die noch ausstehende APK. Der korrigierte Kandidat muss erneut vollständig ausgewertet werden.
 
 ## Arbeitsumgebung
 
