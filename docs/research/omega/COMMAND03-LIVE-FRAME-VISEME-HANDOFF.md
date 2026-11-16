@@ -61,4 +61,10 @@ PORTIERT: die beiden Produktionsanschlüsse. VERIFIZIERT: Produktionskompilierun
 
 ## Wiedereinstieg und Rückfall
 
+### Präzisierter Testhost-Befund
+
+Der Diagnose-Lauf auf `49f5d50f69e2afb6a340d91bd742aa6d9cc30202` ergab 22 Tests, 18 bestanden und 4 fehlgeschlagen. Die zusätzliche positive Kontrolle entlarvte dabei einen zuvor scheinbar grünen Negativfall: vor jeder Bildbestätigung war das Host-WebView-Fenster `GONE`, mit Größe 0×0 und ohne global sichtbare Fläche. Sitzung, Bildtoken, Seitenbereitschaft und Restfrist waren gültig. Der Split-Screen-Controller blieb aktiv; seine WebView wurde nicht pausiert.
+
+Die Prüfung des tatsächlich verwendeten Robolectric-4.14.1-JARs zeigt, dass dessen `ShadowWebView`-Provider für `ViewDelegate.setFrame` nur `false` liefert. Der neue ausschließlich in `uiTest` liegende `Command03HostWebView` stellt deshalb den realen Android-`View.setFrame`-Aufruf wieder her. Die Fixtures führen außerdem die realen Fenster-/Layout-/Looper-Schritte aus. Größen-, Sichtbarkeits- und Draw-Getter werden nicht erfunden; die positiven Gate-Assertions bleiben erhalten. `CockpitHostFramePump` konsumiert nur vorhandene Invalidierungen mit Software-Canvas und ist kein GPU-Nachweis. Dieser Fixture-Fix wird erst durch den nächsten exakten Compile-/UI-Lauf verifiziert.
+
 Zuerst Arbeitsbranch, kanonischen Integrations-HEAD und diese Übergabe abgleichen. Dann native Produzenten und Adaptervertrag prüfen, frische Tests durchführen und Ergebnisse mit genauen SHAs ergänzen. Der vorhandene bestätigte Rückweg zur klassischen Oberfläche bleibt nutzbar. Keine Main-Integration, Originalsignierung, Installation oder produktive Veröffentlichung gehört zu diesem Entwicklungsschritt.

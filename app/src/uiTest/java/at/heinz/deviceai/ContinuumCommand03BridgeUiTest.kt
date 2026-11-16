@@ -504,7 +504,14 @@ class ContinuumCommand03BridgeUiTest {
         feed.end()
     }
 
-    @Test fun visibleSplitScreenKeepsHtmlComputerDrawingWhileFullStopEndsTheExistingSession() = withActivity { lifecycle, a ->
+    @Test
+    @Config(shadows = [Command03HostWebView::class])
+    fun visibleSplitScreenKeepsHtmlComputerDrawingWhileFullStopEndsTheExistingSession() = withActivity { lifecycle, a ->
+        CockpitHostFramePump { a.window.decorView }.use { pump ->
+            resizeWindow(a, 392, 852)
+            repeat(3) { advance(); pump.drawRequestedFrame() }
+            lifecycle.windowFocusChanged(true)
+        }
         ready(a)
         val native = OwnerComputerSessionController(a,
             field(a, "cockpitBus") as at.heinz.deviceai.cockpit.CockpitAnimationBus,
@@ -527,11 +534,14 @@ class ContinuumCommand03BridgeUiTest {
         }
         call(a, "setComputerFeed", LiveMonitorFeed::class.java to feed)
         shadowOf(a).setInMultiWindowMode(true)
-        println("COMMAND03_SPLIT_BEFORE_TICK:${computerPresentationState(a)}")
+        val visibleState = computerPresentationState(a)
+        assertTrue("The host must be actually visible before pausing: $visibleState",
+            call(a, "command03ComputerVisible") as Boolean)
+        assertTrue("The host must have a laid-out visible surface: $visibleState",
+            stage(a).width > 0 && stage(a).height > 0 && stage(a).getGlobalVisibleRect(android.graphics.Rect()))
         (field(a, "command03ComputerTick") as Runnable).run()
         lifecycle.pause()
         val pausedState = computerPresentationState(a)
-        println("COMMAND03_SPLIT_AFTER_PAUSE:$pausedState")
         assertTrue(native.active)
         assertFalse("Only a still-visible approved split-screen session keeps WebView drawing", shadowOf(stage(a)).wasOnPauseCalled())
         assertTrue("The approved visible session must retain its presentation: $pausedState",

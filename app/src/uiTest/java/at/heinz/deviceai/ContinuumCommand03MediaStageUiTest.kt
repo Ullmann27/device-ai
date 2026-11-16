@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.net.Uri
+import android.os.Looper
 import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -13,6 +14,7 @@ import at.heinz.deviceai.cognitive.LiveFrameOrigin
 import at.heinz.deviceai.ui.*
 import org.json.JSONObject
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -22,22 +24,30 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
 import org.robolectric.annotation.LooperMode
-import org.robolectric.shadows.ShadowWebView
+import org.robolectric.shadows.ShadowChoreographer
 import java.io.ByteArrayOutputStream
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 /** Tests the actual Stage boundary with controlled provider callbacks; no Android GPU/pixel claim. */
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [28], shadows = [ContinuumCommand03MediaStageUiTest.VisualWebView::class])
+@Config(sdk = [28], qualifiers = "w392dp-h852dp-port-mdpi",
+    shadows = [ContinuumCommand03MediaStageUiTest.VisualWebView::class])
 @LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumCommand03MediaStageUiTest {
     @Implements(WebView::class)
-    class VisualWebView : ShadowWebView() {
+    class VisualWebView : Command03HostWebView() {
         val callbacks = ArrayDeque<Pair<Long, WebView.VisualStateCallback>>()
         @Implementation(minSdk = 23)
         protected fun postVisualStateCallback(id: Long, callback: WebView.VisualStateCallback) {
             callbacks.addLast(id to callback)
         }
         fun visualReady() { val (id, callback) = callbacks.removeFirst(); callback.onComplete(id) }
+    }
+
+    @Before fun prepareHostFrames() {
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
     }
 
     private val session = "11111111-1111-4111-8111-111111111111"
@@ -68,16 +78,20 @@ class ContinuumCommand03MediaStageUiTest {
             onComputerFrameDrawn = { drawn += it })
         controller.get().setContentView(stage)
         val decor = controller.get().window.decorView
-        decor.measure(View.MeasureSpec.makeMeasureSpec(392, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(852, View.MeasureSpec.EXACTLY))
-        decor.layout(0, 0, 392, 852)
-        stage.measure(View.MeasureSpec.makeMeasureSpec(392, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(852, View.MeasureSpec.EXACTLY))
-        stage.layout(0, 0, 392, 852)
+        val pump = CockpitHostFramePump { decor }
+        controller.get().window.setLayout(392, 852)
+        repeat(3) {
+            decor.measure(View.MeasureSpec.makeMeasureSpec(392, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(852, View.MeasureSpec.EXACTLY))
+            decor.layout(0, 0, 392, 852)
+            shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
+            pump.drawRequestedFrame()
+        }
+        controller.windowFocusChanged(true)
         stage.webViewClient.onPageFinished(stage, ContinuumCommand03OriginalStage.INDEX)
         stage.setLivePresentationActive(true)
         try { body(stage, shadowOf(stage) as VisualWebView, drawn) }
-        finally { stage.destroy(); controller.pause().stop().destroy() }
+        finally { pump.close(); stage.destroy(); controller.pause().stop().destroy() }
     }
     private fun acknowledge(stage: ContinuumCommand03OriginalStage, ack: Command03FrameAck, main: Boolean = true) =
         stage.webViewClient.shouldOverrideUrlLoading(stage, request(ack, main))
