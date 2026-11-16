@@ -182,7 +182,8 @@ class ContinuumCommand03StageUiTest {
         stage.webViewClient.shouldOverrideUrlLoading(stage, request("Alte Ansicht", binding = old))
         assertEquals(1, calls.size)
         scope = next
-        stage.webViewClient.shouldOverrideUrlLoading(stage, request("Neuer Chat"))
+        // The helper defaults to the old session; use the new one here.
+        stage.webViewClient.shouldOverrideUrlLoading(stage, request("Neuer Chat", sessionId = otherSession))
         assertEquals(2, calls.size)
         assertEquals(otherSession, payload(stage, "commandResult").getString("sessionId"))
     }
