@@ -6,6 +6,10 @@ on:
       - fix/command03-native-controls-20261116
     paths:
       - .github/workflows/code60-command03-deep-qa.yml
+      - app/src/main/**
+      - app/src/uiTest/**
+      - app/src/test/**
+      - tools/command03-native-qa/**
 
 permissions:
   contents: read
@@ -58,12 +62,47 @@ jobs:
         run: |
           set -euo pipefail
           python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
+      - name: Preserve failure inventory even when unfiltered tests fail
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p app/build/reports
+          python3 - <<'PY'
+          import collections, os, pathlib, xml.etree.ElementTree as ET
+          root=pathlib.Path('app/build/test-results/testDebugUnitTest')
+          groups=collections.Counter()
+          failures=[]
+          total=0
+          skipped=0
+          for path in sorted(root.glob('TEST-*.xml')):
+              suite=ET.parse(path).getroot()
+              for case in suite.findall('testcase'):
+                  total+=1
+                  skipped+=case.find('skipped') is not None
+                  issue=case.find('failure')
+                  if issue is None:
+                      issue=case.find('error')
+                  if issue is None:
+                      continue
+                  name=case.get('classname','').split('.')[-1]
+                  groups[name]+=1
+                  failures.append((name,case.get('name',''),issue.get('message','')))
+          lines=['source_sha=' + os.environ.get('GITHUB_SHA',''),
+              'cases=' + str(total),'failed=' + str(len(failures)),'skipped=' + str(skipped)]
+          lines.extend(str(count) + ' ' + name for name,count in groups.most_common())
+          lines.extend(name + '.' + case + ': ' + message for name,case,message in failures)
+          output=pathlib.Path('app/build/reports/code60-failure-summary.txt')
+          output.write_text('\n'.join(lines)+'\n')
+          print('\n'.join(lines[:45]))
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: Code60-Command03-FULL-Android-JUnit-and-Lint
           path: |
             app/build/test-results/testDebugUnitTest/
+            app/build/reports/code60-failure-summary.txt
             app/build/reports/lint-results-debug.*
           if-no-files-found: ignore
           retention-days: 7
