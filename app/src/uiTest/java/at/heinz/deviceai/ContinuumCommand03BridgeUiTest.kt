@@ -507,6 +507,59 @@ class ContinuumCommand03BridgeUiTest {
 
     @Test
     @Config(shadows = [Command03HostWebView::class])
+    @GraphicsMode(GraphicsMode.Mode.NATIVE)
+    fun selectingActiveComputerKeepsItsSessionButChatStillStopsIt() = withActivity { lifecycle, a ->
+        CockpitHostFramePump { a.window.decorView }.use { pump ->
+            resizeWindow(a, 392, 852)
+            repeat(3) { advance(); pump.drawRequestedFrame() }
+            lifecycle.windowFocusChanged(true)
+        }
+        ready(a)
+        val native = OwnerComputerSessionController(a,
+            field(a, "cockpitBus") as at.heinz.deviceai.cockpit.CockpitAnimationBus,
+            field(a, "avatarDirector") as at.heinz.deviceai.avatar.AvatarDirector,
+            java.util.concurrent.Executor { error("This route fixture starts no capture or worker") },
+            setFeed = { call(a, "setComputerFeed", LiveMonitorFeed::class.java to it) },
+            setBusy = { set(a, "activeLocalRequest", it); call(a, "setBusy", Boolean::class.javaPrimitiveType!! to it) },
+            visible = { call(a, "computerSessionVisible") as Boolean }, playClick = {}, stopClick = {})
+        // Model only an existing approved session. Routing must not start a capture or grant a tool.
+        val planType = OwnerComputerSessionController::class.java.declaredClasses.single { it.simpleName == "Plan" }
+        val reply: (OwnerComputerWorkflow.Result, Long?, Boolean) -> Unit = { _, _, _ -> }
+        val plan = planType.declaredConstructors.single { it.parameterCount == 5 }.apply { isAccessible = true }
+            .newInstance("computer-route-fixture", "com.whatsapp", OwnerComputerIntent(ComputerApp.WHATSAPP, ComputerGoal.OPEN),
+                android.os.SystemClock.elapsedRealtime(), reply)
+        OwnerComputerSessionController::class.java.getDeclaredField("plan").apply { isAccessible = true }.set(native, plan)
+        set(a, "computerController", native)
+        val feed = LatestLiveFrameHolder<AndroidLiveFrame>({ it.close() }).apply {
+            bind(LiveFrameBinding("computer-route-fixture", 1, "com.whatsapp", a.packageName,
+                LiveFrameOrigin.ACCESSIBILITY_WINDOW))
+        }
+        call(a, "setComputerFeed", LiveMonitorFeed::class.java to feed)
+        val web = stage(a)
+        assertTrue(native.active)
+        assertTrue("The route starts from an actually visible HTML host", call(a, "command03ComputerVisible") as Boolean)
+        assertNull(field(a, "centerDialog"))
+        repeat(2) {
+            assertTrue(action(a, "route", "device"))
+            assertTrue("Selecting Computer must preserve its active session", native.active)
+            assertSame(feed, field(a, "command03ComputerFeed"))
+            assertSame(web, stage(a))
+            assertNull("No native dialog may cover the active computer", field(a, "centerDialog"))
+            assertEquals("window.ContinuumNative?.section(\"device\");", shadowOf(web).lastEvaluatedJavascript)
+        }
+        assertTrue(action(a, "route", "chat"))
+        assertFalse("A covering route must still stop the existing session", native.active)
+        assertNull(field(a, "command03ComputerFeed"))
+        assertTrue(action(a, "route", "device"))
+        assertFalse("Opening Computer must not restart the stopped session", native.active)
+        assertNull(field(a, "command03ComputerFeed"))
+        val center = field(a, "centerDialog") as AlertDialog
+        assertTrue(center.isShowing)
+        center.dismiss()
+    }
+
+    @Test
+    @Config(shadows = [Command03HostWebView::class])
     // Use the same real host-window visibility contract as the existing native monitor fixtures.
     @GraphicsMode(GraphicsMode.Mode.NATIVE)
     fun visibleSplitScreenKeepsHtmlComputerDrawingWhileFullStopEndsTheExistingSession() = withActivity { lifecycle, a ->

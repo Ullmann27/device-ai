@@ -1,6 +1,6 @@
 # Command03: native Bedienung im Original-HTML vervollständigen
 
-Status: **WIP / neue Korrekturen noch nicht implementiert oder geprüft**.
+Status: **WIP / erste Korrektur und Wire-v2-Vertrag angelegt; noch kein kompilierter oder verifizierter Gesamtstand**.
 
 ## Quelle und Integration
 
@@ -24,6 +24,14 @@ Die Befunde wurden im tatsächlichen Activity-/Stage-/JS-Aufrufpfad geprüft. Al
 Die35 Originalassets und der vorhandene Renderer bleiben bytegleich. Native Capture-, ToolGate-, Composer-, Sprach-, Bot- und Dokumentpfade werden weiterverwendet. Gezielte negative Prüfungen müssen alte Dialog-/Seitenkennungen, neue lokale Eingaben während nativer Verarbeitung, späte Rückmeldungen und tatsächliche Verdeckung abdecken.
 
 Noch offen: Implementierung, neue Rot-/Grün-Belege, kompilierter eingefrorener Quellstand, gezielte Android-/Web-Regressionen und aktualisierte unsigned Prüf-APK.
+
+### Entwicklungscheckpoint 16.11.2026, 06:10 UTC
+
+Der erste kleine Patch erhält eine bereits aktive Computersitzung beim erneuten Auswählen von Computer. Der neue native Regressionstest führt die tatsächliche Stage-Route zweimal aus und prüft zusätzlich, dass Chat die Sitzung weiterhin beendet und ein anschließender inaktiver Computereinstieg nur das Center öffnet. **NOT_RUN**: Dieser neue Androidfall wurde noch nicht kompiliert oder ausgeführt.
+
+Der begonnene Wire-v2-Vertrag ergänzt native Seiten- und Ansichtsinstanzen sowie eine geordnete Editbestätigung. Der reine DraftLedger vergleicht Revision, vollständigen Text und Auswahl zusammen. Activity, Stage und HTML werden im nächsten Schritt gemeinsam umgestellt; dieser Zwischenstand ist ausdrücklich **nicht als kompilierbar bestätigt**.
+
+Ein gesonderter DOM-Rotlauf gegen den noch unveränderten bisherigen Adapter reproduziert sieben Fehler bei 34 Fällen (27 bestanden, 7 fehlgeschlagen, keine übersprungen). Das ist ein Fehlernachweis des alten Adapters und kein bestandener Test dieses Zwischenstands. Die endgültige grüne Prüfung muss von der später veröffentlichten vollständigen Quelle stammen.
 
 ## Arbeitsumgebung
 

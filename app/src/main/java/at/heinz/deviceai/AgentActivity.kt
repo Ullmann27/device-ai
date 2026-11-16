@@ -2437,6 +2437,12 @@ class AgentActivity : Activity() {
 
     private fun routeCommand03HtmlAction(route: String, value: String?) {
         if (isFinishing || isDestroyed) return
+        val stage = command03MainStage
+        if (route == "device" && stage != null && computerController?.active == true) {
+            // Selecting the existing computer must not end its already approved session.
+            stage.showSection("device")
+            return
+        }
         if (route !in setOf("home", "voice-input", "stop")) hideCommand03Computer()
         when (route) {
             "home" -> { showHomeDashboard(); command03MainStage?.showSection("home") }
