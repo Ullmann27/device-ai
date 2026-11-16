@@ -1,0 +1,43 @@
+{
+  "checked_at_utc": "2026-11-16T06:17:37.132070+00:00",
+  "scope": "READ_ONLY_HASH_AND_LOG_REVIEW_NOT_TEST_EXECUTION",
+  "baseline_source": "d3cec2c04b094040473e3ad0889aa3513b6a0da1",
+  "baseline_adapter_matches_git_bytes": true,
+  "red_counts": {
+    "tests": 34,
+    "pass": 27,
+    "fail": 7,
+    "skip": 0
+  },
+  "focused_green_counts": {
+    "tests": 7,
+    "pass": 7,
+    "fail": 0,
+    "skip": 0
+  },
+  "identical_case_titles": [
+    "native control PDF draft action identifies only the currently displayed document and honours native availability",
+    "native control acknowledgements admit real dictation and consumption without replacing newer local edits",
+    "native control focus reaches the visible composer only for the current explicitly selected view",
+    "native control microphone long press uses the existing native action once and cancellation suppresses it",
+    "native control selection acknowledgements preserve a newer caret and never echo a restored draft",
+    "native control source cards use native identifiers and cannot survive a view switch",
+    "native control view instances replace bot histories and reject old snapshots messages and command acknowledgements"
+  ],
+  "preserved_evidence": {
+    "native-bridge.before.js": {
+      "bytes": 44454,
+      "sha256": "a4e575b8e188ac80f3876b309f3372fb7032d93dd168571cc66d7f1af5039f8f"
+    },
+    "native-bridge-behavior.red.test.mjs": {
+      "bytes": 48845,
+      "sha256": "e23a638cffd5f2df6ea221f28ff76a05659aa8aabbbd96ff5db2164a37c379b9"
+    },
+    "dom-red.txt": {
+      "bytes": 9261,
+      "sha256": "1a2e61f9ff40830e0fc57b04579e60382f8c5bc62f8b178cc3a91e8393ad50e9"
+    }
+  },
+  "focused_green_log_sha256": "a7f753438c779611416ee618b846e9058ee7d90f9ee2c08423a774714012ce01",
+  "counted_as_final_source_qa": false
+}

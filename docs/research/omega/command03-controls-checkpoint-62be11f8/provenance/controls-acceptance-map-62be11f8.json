@@ -1,0 +1,439 @@
+{
+  "schema": 1,
+  "reviewed_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+  "purpose": "Quellenbasiertes Abnahmemapping der sieben Bedienanschlüsse; keine neue Testausführung und keine endgültige Geräteabnahme.",
+  "execution_status": {
+    "dom_adapter": {
+      "status": "44_PASS_RECORDED",
+      "passed": 44,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "/workspace/scratch/8f95e7fd540d/command03-controls-dom-green-04.txt",
+      "qualification": "Bereits ausgeführter Lauf der seitdem unveränderten drei Webdateien; für dieses Mapping nicht wiederholt."
+    },
+    "android_controls": {
+      "status": "MERGED_37_CASE_RUN_PENDING",
+      "previous_run": {
+        "total": 34,
+        "passed": 29,
+        "fixture_failures": 5
+      },
+      "qualification": "Aktuelle Auswahl auf 62be11f8: 37 Android-HTML-Fälle (Bridge26/Stage7/Media4); QA läuft unter release_audit. Der frühere 34er-Lauf mit29Pass/5Fixture-Fail ist ausschließlich historische Evidenz, kein Ergebnis dieses Merge-Stands."
+    },
+    "native_wire_interop": {
+      "status": "PENDING_FRESH_V2_PACKET",
+      "expected_total_dom_with_required_interop": 45,
+      "native_test": "ContinuumCommand03MediaStageUiTest.actualSerializedComputerPayloadUsesTheStrictBrowserWireTypes",
+      "dom_test": "the actual Kotlin Stage computer JSON reaches the original window and its exact render acknowledgement",
+      "qualification": "Pflichtlauf benötigt unverändertes JSON aus der frischen aktuellen Stage-Serialisierung; kein altes Paket als v2-Nachweis."
+    },
+    "original_assets": {
+      "status": "SOURCE_LOCK_PASS_REPORTED_BY_ROOT",
+      "assets": 35,
+      "bytes": 15864219,
+      "android_index_delta": "Genau die zwei separaten Adapter-Includes.",
+      "qualification": "Statische Byte-/Quellenprüfung; kein Layout-, Geräte- oder GPU-Nachweis."
+    },
+    "physical_device_acceptance": "NOT_PERFORMED_BY_THIS_MAPPING"
+  },
+  "sources": {
+    "activity": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "stage": "app/src/main/java/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.kt",
+    "bridge_contract": "app/src/main/java/at/heinz/deviceai/ui/Command03BridgeContract.kt",
+    "adapter": "app/src/main/assets/continuum-command03/native-bridge.js",
+    "adapter_css": "app/src/main/assets/continuum-command03/native-layer.css",
+    "bridge_ui": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03BridgeUiTest.kt",
+    "stage_ui": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03StageUiTest.kt",
+    "media_ui": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03MediaStageUiTest.kt",
+    "draft_unit": "app/src/test/java/at/heinz/deviceai/ui/Command03DraftLedgerTest.kt",
+    "dom": "tools/command03-native-qa/native-bridge-behavior.test.mjs",
+    "source_lock": "tools/command03-native-qa/check-visual-source.mjs"
+  },
+  "shared_boundaries": [
+    "Native UI-Prüfungen laufen unter Robolectric mit tatsächlichem Activity-/Stage-Code und benannten Host-Shadows. Ein GraphicsMode.NATIVE-Hostlauf belegt keine physische Android-WebView-/GPU-Ausgabe.",
+    "Die DOM-Fixture führt den Adapter sowie Original-DOM, App-, Telemetrie- und Bewegungsdateien aus. Navigation, Uhr, Bilddecoder und sichtbare Bildgeometrie sind kontrollierte Seams.",
+    "Der gesonderte Originalavatar-API-Test verwendet die unveränderte gebündelte API im Fallbackmodus; er belegt keine sichtbare 3D-Mundform oder Audio-Synchronität auf einem Gerät.",
+    "Echte Phone-/Fold-Bedienbarkeit, IME-Verhalten, TalkBack, Touch-Langdruck, WebView-Pixel und physische Audioein-/ausgabe benötigen weiterhin Gerätebestätigung."
+  ],
+  "areas": [
+    {
+      "id": "computer_navigation",
+      "label": "Computer-Navigation und Stop",
+      "user_behavior": "Erneutes Öffnen von Computer erhält eine bereits aktive freigegebene Sitzung und dieselbe HTML-Seite. Chat und verdeckende Routen beenden die Sitzung; ein späterer Computer-Klick startet sie nicht eigenmächtig neu. Stop bleibt auch mit einem nicht transportierbaren Entwurf verfügbar. Ohne aktive Sitzung öffnet Computer die bestehenden Android-Computer-Bedienelemente, ohne Capture, Worker oder neue Berechtigungen zu starten.",
+      "native_tests": [
+        {
+          "source": "bridge_ui",
+          "name": "selectingActiveComputerKeepsItsSessionButChatStillStopsIt"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "htmlOwnsTheOnlyFrameFeedAndTheClassicalSwitchRestoresTheNativeConsumer"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "visibleSplitScreenKeepsHtmlComputerDrawingWhileFullStopEndsTheExistingSession"
+        },
+        {
+          "source": "stage_ui",
+          "name": "rejectedDraftCannotTriggerANativeRouteButScopedStopStaysAvailable"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "computerNavigationKeepsTheActiveSessionInTheOriginalHtmlStage"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "idleComputerNavigationKeepsTheExistingControlsWithoutStartingASession"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "leavingComputerOrPressingStopStillEndsTheActiveSession"
+        },
+        {
+          "source": "media_ui",
+          "name": "actualSerializedComputerPayloadUsesTheStrictBrowserWireTypes",
+          "role": "bestehende Medien-/Bridge-Regression"
+        },
+        {
+          "source": "media_ui",
+          "name": "decodeAckAndVisualCallbackNeedASubsequentHardwareDraw",
+          "role": "bestehende Medien-/Bridge-Regression"
+        },
+        {
+          "source": "media_ui",
+          "name": "oldSessionGenerationAndSubframeAcknowledgementsCannotArmADraw",
+          "role": "bestehende Medien-/Bridge-Regression"
+        },
+        {
+          "source": "media_ui",
+          "name": "pdfPauseAndReparentFencesRejectLateProviderCallbacks",
+          "role": "bestehende Medien-/Bridge-Regression"
+        }
+      ],
+      "dom_tests": [
+        "native control routes chat selection sources and PDF actions carry the exact current edit atomically",
+        "native control a scoped stop remains available for an oversized draft without inventing an empty edit",
+        "late decode and frame replay cannot reopen a stopped or rebound computer source",
+        "PDF and chat remain intact while a covered computer invalidates its previous render receipt"
+      ],
+      "negative_cases": [
+        "Aktive Computerwahl erzeugt keinen verdeckenden nativen Dialog und ersetzt weder Feed noch WebView.",
+        "Nach Stop kein automatischer Neustart; veraltete Scope-Stopaktion bleibt wirkungslos.",
+        "Überlanger Entwurf sperrt gewöhnliche Navigation, wird für Stop aber weder abgeschnitten noch als leerer Text übergeben.",
+        "Verspätetes Bilddecode darf gestoppte oder überdeckte Darstellung nicht wieder öffnen.",
+        "Zusätzliche positive Navigationsprüfung erhält Controller, Feed, WebView, busy und activeLocalRequest sowie alle vier Scopekomponenten des section-Pakets.",
+        "Idle-Prüfung zeigt Android-Computer, COMPUTER-AUFTRAG SCHREIBEN und SYSTEMSTATUS UND FREIGABEN, ohne Controller/Feed anzulegen.",
+        "Zusätzliche Chat-/Stop-Prüfung beendet Controller und Feed und räumt busy/activeLocalRequest auf.",
+        "Medienregression: Decode-ACK und Provider-Callback allein genügen nicht; vorheriger Draw, Software-Draw, Subframe sowie alte Session/Generation dürfen keine Renderfreigabe auslösen."
+      ],
+      "real_boundary": "Der Routenfall modelliert eine bereits genehmigte native Sitzung und startet ausdrücklich keinen Capture-/Workerauftrag. Sichtbare Gerätebilder, echte Split-Screen-Komposition und tatsächliches Hardware-Draw bleiben Geräteprüfungen. Der Hardware-Canvas-Schalter und die Provider-Callback-Reihenfolge werden im Host kontrolliert; das ist keine tatsächliche GPU-Präsentation."
+    },
+    {
+      "id": "draft_acknowledgement",
+      "label": "Entwurfsabgleich und Auftragsergebnis",
+      "user_behavior": "Bestätigte native Diktate und Leerungen erscheinen im HTML-Feld. Jüngere lokale Texte oder Cursorpositionen bleiben erhalten. Mehrzeilige Eingaben werden vollständig übertragen; Ablehnung löscht den Entwurf nicht. Jede Bedienaktion kann den aktuellen Entwurf atomar mitgeben.",
+      "native_tests": [
+        {
+          "source": "draft_unit",
+          "name": "laterAtomicTextAndSelectionAreAcceptedButOlderEditsNeverRollThemBack"
+        },
+        {
+          "source": "draft_unit",
+          "name": "equalRevisionIsAnExactAtomicReplayIncludingBothSelectionEnds"
+        },
+        {
+          "source": "draft_unit",
+          "name": "nativeDictationOrClearDoesNotRequireOrForgeAnotherClientRevision"
+        },
+        {
+          "source": "draft_unit",
+          "name": "malformedUnsafeAndOversizeEditsCannotAdvanceTheAcknowledgement"
+        },
+        {
+          "source": "stage_ui",
+          "name": "multilineSubmissionIsAcknowledgedAndRepeatedIdentityExecutesOnlyOnce"
+        },
+        {
+          "source": "stage_ui",
+          "name": "oversizedMalformedAndSubframeSubmissionsNeverReachTheNativeHandler"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "asynchronousBotLookupAcknowledgesConsumptionAndPreservesNewerTyping"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "htmlDraftSurvivesTheActualSwitchBackToTheNativeComposer"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "staleAndSubframeDraftsCannotReplaceTheCurrentConversationDraft"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "realClockCommandConsumesTheComposerAndAcknowledgesOnlyOneSubmission"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "busyRejectionPreservesTheActualNativeDraftAndDoesNotSubmit"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "busyChiefStatusReachesTheRealDiagnosticWithoutCancellingOrStartingModelWork"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "busyOwnerCorrectionUsesTheExistingStopAndAcknowledgesOneClarification"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "busyResearchReplyConsumesOnlyTheExistingDialogTicketWithoutExecutingIt"
+        },
+        {
+          "source": "stage_ui",
+          "name": "aPendingAcknowledgementIsDeliveredWhenTheLocalPageBecomesReady"
+        }
+      ],
+      "dom_tests": [
+        "native control acknowledgements admit real dictation and consumption without replacing newer local edits",
+        "native control selection acknowledgements preserve a newer caret and never echo a restored draft",
+        "native control snapshot admission observes a caret change before its delayed select event",
+        "native control snapshots cannot erase an oversized local draft that could not be acknowledged",
+        "the original composer slot supports exact multiline paste, submit and native restore",
+        "native control routes chat selection sources and PDF actions carry the exact current edit atomically",
+        "a late acceptance does not delete a new draft or a different conversation"
+      ],
+      "negative_cases": [
+        "Ältere Editrevision, veränderte Auswahl bei gleicher Revision und nach Diktat zurückgespiegelter alter Text werden abgewiesen.",
+        "Verspätetes Auswahlereignis und nicht übertragbarer großer Entwurf werden vor Snapshotübernahme als lokale Änderung erkannt.",
+        "Gleiche Auftrags-ID mit geändertem Inhalt löst keinen zweiten Auftrag aus; Subframe und ungültiger Scope gelangen nicht zum Handler.",
+        "Native Wiederherstellung löst keine Draft-Echoschleife aus; atomare Klickdaten benötigen keine vorangegangene Draft-URI.",
+        "Normale Busy-Ablehnung lässt laufende Arbeit und Entwurf unverändert; vorhandene Chief-Statusabfrage, Besitzerkorrektur und Antwort auf eine bestehende Recherchefreigabe bleiben über ihre realen Handler erreichbar.",
+        "Doppelte Korrektur-/Freigabe-ID erzeugt keine zweite Bestätigung; Chief-Status startet keinen Modell-/Toollauf. Die Recherchefixture zeichnet ausschließlich die bestehende Einwilligung auf und startet keinen Netzwerkworker.",
+        "Ein vor Page-Ready erzeugtes Auftragsergebnis wird nach Bereitschaft zugestellt; die echte Geräteuhr-Route erzeugt bei ID-Wiederholung nur eine Nutzernachricht."
+      ],
+      "real_boundary": "Host und DOM prüfen Text, UTF-16-/UTF-8-Grenzen, Auswahl, Revisionsordnung und Handlerverbrauch. Reale IME-Komposition, Plattform-Zwischenablage und physischer Diktattransport sind hier nicht ausgeführt."
+    },
+    {
+      "id": "view_isolation_and_recovery",
+      "label": "Hauptchat/Bot-Trennung und Entwurfswiederherstellung",
+      "user_behavior": "Jeder tatsächliche Dialogwechsel erhält eine eigene Ansichtsinstanz. Alte Antworten, Verläufe, Quellen, Dokumente, Kommandorückmeldungen und Medien gelangen nicht in den neuen Dialog. Bei einem durch den eigenen Auftrag ausgelösten Bot-Wechsel bleiben noch unbestätigte neue Texte ausdrücklich wiederherstellbar, ohne automatisch in den Zielchat übertragen zu werden.",
+      "native_tests": [
+        {
+          "source": "bridge_ui",
+          "name": "botAndCentralViewsFenceOldDraftsAndAnAlreadyQueuedCentralHistoryRead"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "acceptedAddressedBotCommandCarriesOnlyItsConfirmedNewerDraftAcrossItsOwnViewChange"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "delayedCloudProducerCannotRelabelItsAnswerOrContinueToolsInAnotherView"
+        },
+        {
+          "source": "stage_ui",
+          "name": "staleViewMessagesDocumentsSourcesAndCommandsCannotReenterAfterReturningToTheSameSession"
+        },
+        {
+          "source": "stage_ui",
+          "name": "pageReloadRevokesOldActionsAndQueuedPresentationBeforeTheNewPageIsBound"
+        },
+        {
+          "source": "draft_unit",
+          "name": "everyPageAndViewComponentFencesOldActionsEvenInTheSameSession"
+        },
+        {
+          "source": "draft_unit",
+          "name": "aNewViewStartsAtZeroAndReturningToTheOldBotDoesNotReviveItsReceipts"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "actualPhoneFoldPhoneReflowKeepsTheSameReadyPageAndDraftSelection"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "hiddenNativeStageStaysPausedAcrossConversationLayoutAndResume"
+        },
+        {
+          "source": "stage_ui",
+          "name": "transcriptQueuedBeforeReadinessAndLongLiveResponseKeepTheirCompleteText"
+        }
+      ],
+      "dom_tests": [
+        "native control view instances replace bot histories and reject old snapshots messages and command acknowledgements",
+        "native control page and view admission reject malformed scopes and retired instances",
+        "native control automatic command transitions retain an unacknowledged draft for explicit recovery only",
+        "native control recovery requires the exact command cause and a genuinely unacknowledged edit",
+        "native control successive automatic transitions keep each unresolved recovery without persisting it",
+        "native control changing only the view fences pending image decoding and speech before accepting current media"
+      ],
+      "negative_cases": [
+        "A→B→A verwendet eine neue A-Instanz; ein hoher Draftzähler aus der alten A-Instanz ist keine Rückkehrberechtigung.",
+        "Fremde Page-ID, ungültige Viewrevision und wiederverwendete View-ID mit widersprüchlicher Revision werden zurückgewiesen.",
+        "Falsche Auftragsursache, fremde Herkunftsansicht und bereits bestätigte Eingabe erzeugen keine Wiederherstellung.",
+        "Zur Eingabe hinzufügen ergänzt einen inzwischen neuen Entwurf; mehrere offene Hinweise bleiben separat erhalten. Verwerfen sendet nichts.",
+        "Nur der kurze Wiederherstellungstitel steht in aria-live; der gesamte Text wird nicht automatisch vorgelesen.",
+        "Verdeckte native Avatar-/Home-Schleifen bleiben bei Layout/Resume pausiert; lange vor Bereitschaft geladene Verläufe und Live-Antworten behalten ihren vollständigen begrenzten Text."
+      ],
+      "real_boundary": "Der Phone/Fold-Hostfall ersetzt reale Activity-Roots bei 392×852, 904×768 und erneut 392×852 und prüft dieselbe WebView. Er belegt weder reales Falten noch Screenshotparität. Recovery lebt ausschließlich im aktuellen DOM; vollständiger Reload beendet diese Lebenszeit. Mobiles Padding berücksichtigt den festen Composer, seine sichtbare Gerätewirkung ist noch zu bestätigen."
+    },
+    {
+      "id": "composer_focus",
+      "label": "Fokusübergabe und Tastatur",
+      "user_behavior": "Eine ausdrückliche Eingabeanforderung richtet den Fokus auf die sichtbare HTML-Texteingabe. Automatische Antworten und Statusänderungen zeigen ihren Inhalt ohne ungefragten Tastaturfokus.",
+      "native_tests": [
+        {
+          "source": "bridge_ui",
+          "name": "nativeComposerFocusTargetsTheVisiblePageAndPauseRevokesTheQueuedKeyboardRequest"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "successfulPdfCompletionRevealsChatWithoutClosingAReplacedDocumentOrRequestingFocus"
+        },
+        {
+          "source": "stage_ui",
+          "name": "pageReloadRevokesOldActionsAndQueuedPresentationBeforeTheNewPageIsBound"
+        }
+      ],
+      "dom_tests": [
+        "native control focus reaches the visible composer only for the current explicitly selected view"
+      ],
+      "negative_cases": [
+        "Fehlendes oder falsches focusComposer-Flag, fremder Scope und periodischer Snapshot fokussieren nicht.",
+        "Pause hebt ausstehende native Tastaturanfragen auf; der verdeckte klassische Editor bekommt keinen Fokus.",
+        "Automatischer PDF-Abschluss verwendet section(chat) ohne focusComposer."
+      ],
+      "real_boundary": "DOM activeElement und nativer WebView-Fokus werden geprüft. Das tatsächliche Einblenden einer Android-Tastatur, Fensterinsets, Tastaturlayout und TalkBack-Fokus benötigen ein Gerät."
+    },
+    {
+      "id": "microphone_long_press",
+      "label": "Mikrofon-Langdruck",
+      "user_behavior": "Kurzer Druck bleibt beim bestehenden Gesprächsmodus. Langer Druck verwendet den vorhandenen stillen Diktatpfad beziehungsweise beendet einen bereits aktiven Gesprächsmodus; ein nachfolgender Klick löst keine zweite Aktion aus.",
+      "native_tests": [
+        {
+          "source": "bridge_ui",
+          "name": "microphoneLongPressUsesSilentDictationAndItsNativeEditCannotBeRolledBack"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "installedTtsPcmAndWordRangeReachHtmlAndStopRejectsLateCallbacks",
+          "role": "bestehende Sprachausgabe-Regression, keine Mikrofonmessung"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "realSpeechSurvivesReparentWithANewGenerationAndPauseNeutralizesIt",
+          "role": "bestehende Sprachausgabe-Regression, keine Mikrofonmessung"
+        }
+      ],
+      "dom_tests": [
+        "native control microphone long press uses the existing native action once and cancellation suppresses it",
+        "native control acknowledgements admit real dictation and consumption without replacing newer local edits"
+      ],
+      "negative_cases": [
+        "PointerCancel, Fenster-Blur, Ansichtswechsel und PageHide verhindern verspäteten Langdruck und Folgeklick.",
+        "Stilles Diktat erzeugt keine Chatnachricht oder Modellanfrage; ein altes Draft-Replay überschreibt das Diktatergebnis nicht.",
+        "Nach abgebrochener Geste funktioniert ein neuer kurzer Druck wieder im aktuellen Scope.",
+        "Zusätzliche TTS-Regression: bestehende PCM-/Wortrange-Callbacks erreichen die HTML-Pose; Stop verwirft späte Callbacks, Reparent verwendet eine neue Generation und Pause neutralisiert Sprache."
+      ],
+      "real_boundary": "Zeit und Pointerereignisse sind im DOM kontrolliert; der native Test liefert einen synthetischen Erkennungstext an die bestehende Delivery-Methode. Mikrofonberechtigung, tatsächliche Aufnahme/Spracherkennung und OEM-Touchzeiten sind nicht belegt. Die ergänzenden TTS-Fälle führen synthetische PCM-/Wortereignisse in den installierten Listener ein; sie bestätigen keine hörbare Ausgabe oder echte Lippen-/Audiosynchronität."
+    },
+    {
+      "id": "source_cards",
+      "label": "Quellenkarten",
+      "user_behavior": "Quellen der aktuellen Antwort erscheinen im bestehenden Verlauf. Titel und URL werden als Text dargestellt; Öffnen übergibt ausschließlich eine native Quellen-ID und den aktuellen Entwurf, anschließend verwendet Android die zugeordnete freigegebene URL.",
+      "native_tests": [
+        {
+          "source": "bridge_ui",
+          "name": "actualCloudSourcesUseOpaqueViewBoundIdsAndOnlyNativeApprovedUrlsOpen"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "delayedCloudProducerCannotRelabelItsAnswerOrContinueToolsInAnotherView"
+        },
+        {
+          "source": "stage_ui",
+          "name": "staleViewMessagesDocumentsSourcesAndCommandsCannotReenterAfterReturningToTheSameSession"
+        }
+      ],
+      "dom_tests": [
+        "native control source cards use native identifiers and cannot survive a view switch",
+        "native control source cards reject unsafe displayed URLs and forged identifiers",
+        "native control routes chat selection sources and PDF actions carry the exact current edit atomically"
+      ],
+      "negative_cases": [
+        "Unbekannte ID sowie alte ID mit altem oder aktuellem neuen Scope öffnen nichts.",
+        "JavaScript-, Data-, File- und URLs mit Zugangsdaten werden im Adapter verworfen.",
+        "HTML-ähnlicher Titel wird nicht als Markup ausgeführt; die Aktion enthält weder URL noch beliebigen Toolnamen.",
+        "Verzögerte Antwort samt Quellen/Tools darf nach Viewwechsel weder den neuen Verlauf noch dessen Arbeitszustand verändern."
+      ],
+      "real_boundary": "Die Backendantwort ist synthetisch und das ACTION_VIEW-Intent wird vom Host aufgezeichnet. Tatsächlicher Browserstart, Netzabruf und Qualität/Aktualität der externen Quelle sind keine Ergebnisse dieses Tests."
+    },
+    {
+      "id": "pdf_draft",
+      "label": "Entwurf aus der aktuellen PDF",
+      "user_behavior": "Entwurf erstellen verwendet ausschließlich das aktuell geöffnete native Dokument und den bestehenden Dokumenthandler. Fehlendes Modell oder laufende Arbeit erscheinen als tatsächlicher Status. Eine aktuelle Fertigstellung zeigt den Chat ohne Tastaturanforderung; ein inzwischen ersetztes Dokument bleibt erhalten.",
+      "native_tests": [
+        {
+          "source": "bridge_ui",
+          "name": "projectedPdfDraftUsesTheExistingNoModelAndBusyHandlersAndRejectsReplacedIds"
+        },
+        {
+          "source": "bridge_ui",
+          "name": "successfulPdfCompletionRevealsChatWithoutClosingAReplacedDocumentOrRequestingFocus"
+        },
+        {
+          "source": "stage_ui",
+          "name": "staleViewMessagesDocumentsSourcesAndCommandsCannotReenterAfterReturningToTheSameSession"
+        }
+      ],
+      "dom_tests": [
+        "native control PDF draft action identifies only the currently displayed document and honours native availability",
+        "native control routes chat selection sources and PDF actions carry the exact current edit atomically",
+        "a projected real PDF remains visible through periodic state and transcript updates",
+        "late message and document callbacks cannot cross conversation boundaries"
+      ],
+      "negative_cases": [
+        "Ersetzte Dokument-ID, fremdes clearDocument und alte View-Pakete verändern nicht die aktuelle PDF.",
+        "Busy/kein Modell startet keinen Dokumentauftrag; Ablehnung hinterlässt im Adapter keine dauerhafte optimistische Sperre.",
+        "Alter Erfolg oder alter Fehler verändert weder Ersatzdokument noch dessen Status, Aktionsschalter oder Journalbindung.",
+        "Periodische Metriken und Verlaufseinträge verdecken die aktuelle PDF nicht; Text wird mit textContent dargestellt."
+      ],
+      "real_boundary": "Die Kontrolltests verwenden synthetische PdfDocumentIntake.Document-Objekte und synthetische Modellabschlüsse. Ein realer Picker, PDF-Decoder/OCR, geladener Modelllauf oder die Qualität eines erzeugten Entwurfs ist dadurch nicht abgenommen."
+    }
+  ],
+  "review_findings": {
+    "additional_verified_production_gap": null,
+    "qualification": "Beim begrenzten Quellenmapping des gemeinsamen Merge-Stands kein zusätzlicher belegter Produktionsdefekt festgestellt. Die37-Fälle-Auswahl, der obligatorische frische45er-DOM/Interoplauf und die Geräteprüfung sind hier weiterhin offen."
+  },
+  "previous_mapping": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/controls-acceptance-map.json",
+  "main_commit_at_merge": "5f215bf5a60f3f570b7329c424e89d4a080e372f",
+  "change_from_previous_mapping": {
+    "production": "Gegenüber 05c7 ergänzt AgentActivity nach der aktiven Device-Auswahl den vorhandenen scheduleCommand03Computer()-Aufruf.",
+    "tests": "Drei vorhandene zusätzliche Navigationstests im gemeinsamen Merge erhalten; Bridge-UI jetzt 26 statt 23 Fälle.",
+    "web_files": "native-bridge.js, native-layer.css und DOM-Tests gegenüber der vorherigen Abnahme unverändert.",
+    "execution": "Keine Test-/Gradle-Ausführung für dieses Quellenmapping."
+  },
+  "android_html_selection": {
+    "total_cases": 37,
+    "classes": [
+      {
+        "class": "ContinuumCommand03BridgeUiTest",
+        "source": "bridge_ui",
+        "case_count": 26
+      },
+      {
+        "class": "ContinuumCommand03StageUiTest",
+        "source": "stage_ui",
+        "case_count": 7
+      },
+      {
+        "class": "ContinuumCommand03MediaStageUiTest",
+        "source": "media_ui",
+        "case_count": 4
+      }
+    ],
+    "coverage": "Alle37 tatsächlich vorhandenen @Test-Methoden der drei Android-HTML-Klassen sind mindestens einem der sieben Bereiche zugeordnet; zusätzliche Draft-Unit-Methoden zählen nicht zu37.",
+    "execution_status": "PENDING_RELEASE_AUDIT_NO_NEW_RUN_BY_MAPPING_AUTHOR"
+  }
+}

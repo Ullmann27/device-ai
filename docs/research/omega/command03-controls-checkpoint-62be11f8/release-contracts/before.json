@@ -1,0 +1,21 @@
+{
+  "source_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+  "source_tree": "4b67a51e26dbccf4d6b5fbb3f3b05e9ad48c8b85",
+  "source_clean": true,
+  "started_at_utc": "2026-11-16T06:51:28.116612+00:00",
+  "inputs": {
+    "docs/release/CODE60-COMMAND03-RELEASE.md": "14577e5ba0051decad29d70b543c0621bb8758dc40292ffa9b5f3ab8a60797fb",
+    "scripts/continuum-code50-github-signer.sh": "68332d7d79abf5085bfbeec8e47213952994a6ae179821ad8e8282520c1453a7",
+    ".github/workflows/continuum-code57-voice-full-qa.yml": "ed5233bbd689932838788baf64aafaa4059bc212d5cd826c31e3165ce1384695",
+    ".github/workflows/code58-fold7-combined-context-qa.yml": "a573b52fce6361be46708bfd63dc7beb871fd636328209fc76a698a2b7225a7d",
+    ".github/workflows/continuum-code50-sign-release.yml": "4aed85728d27bab77c66cae10627061364437715d0ad8f07448cccbf7a049acc",
+    ".github/continuum/code50-github-release-contract.test.mjs": "bd414d5988e15af87c8bf47ba32d8dd48971350c75b2b16ec039df6de34df170",
+    ".github/continuum/code50-github-signer-preflight.test.mjs": "6efe54017923f290145aa8b5937573afeab91b3fc1750bf90795ca9a5ddb78f0",
+    ".github/continuum/code59-signing-node-proof.test.mjs": "11e8ffe4d09d996585d679bd16724f91e0f40080055dbaaed8564af954d3fc93",
+    ".github/continuum/code60-release-contract.test.mjs": "27c072fafcfef75f6168fc641b8c3b3f7af51c462c40a46aaf218eaec9d27672",
+    "tools/code55-apk/code59-node-proof.mjs": "a242f2d03e8f801a034d619c571b1c10c6c860d3fb0b9d6e85069d854c8e8104",
+    "tools/code55-apk/test_code59_signing_code60.py": "00426467366f77abc63e30b9e26c473931dd9214ae6185186be8922cd7779c37",
+    "tools/code55-apk/test_code59_signing_evidence.py": "6a0b30fae49ec0f5b8f8ac91abf126508a62a325efefe3402a4809c93652a4ec",
+    "tools/code55-apk/test_code59_signing_preflight.py": "61616656e077fab452b6b07bad376e20930e935a257aa46f3cd82943745ed491"
+  }
+}

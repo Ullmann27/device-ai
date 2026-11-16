@@ -1,6 +1,37 @@
 # Command03: native Bedienung im Original-HTML vervollständigen
 
-Status: **PORTIERT / erster nativer Lauf mit fünf Testbefunden / korrigierter Prüfkandidat eingefroren / erneute Verhaltensprüfung und unsigned APK noch offen**.
+Status: **PORTIERT / 84 frische Releasevertragstests bestanden / native Abnahme BLOCKED_SHARED_RESOURCE_PRESSURE / keine neue APK**.
+
+## Aktueller Fortsetzungsstand: 16.11.2026
+
+Produkt- und Testquelle: **`62be11f898586eb3546f79a0f2b38ee53acc4d84`**, PR854. Der Merge erhält sowohl diese Fortsetzung als auch den zwischenzeitlich erweiterten kanonischen Stand `3d5efd9e` aus PR851. Vollständiger `app`-Baum: `fca7fd5e1f5f87c784f43340e19451aadcf11a1c`; Produktionsbaum: `5f215bf5a60f3f570b7329c424e89d4a080e372f`. Ein nachfolgender Dokumentationscommit verändert diese Anwendung nicht.
+
+| Prüfung | Tatsächliches Ergebnis |
+|---|---|
+| Releaseverträge auf `62be11f8` | **44 Python + 40 Node PASS**, keine Skips |
+| Drei Workflowdateien / 32 eingebettete Shellabschnitte | Syntax PASS |
+| Originalasset-Vertrag / Bridge-Syntax | PASS; **35 Originalassets / 15.864.219 Bytes bytegleich** |
+| Identischer Webadapter im letzten Entwicklungslauf | **44/44 DOM PASS**; aktueller Pflicht-Interopfall noch offen |
+| Erster Android-HTML-Lauf auf `68a0eba6` | **29 PASS / 5 FAIL** bei 34 Fällen; beide Kompilationen bestanden |
+| Gezielt korrigierte Testfixtures und kanonische Zusatztests | Implementiert; erneute Ausführung noch nicht bestätigt |
+| Hauptkompilation auf `62be11f8` | Abbruch nach **36,927 s** durch Daemonverlust; keine Kotlin-Compilerdiagnose |
+| Aktuelle native Auswahl | **37 HTML + 77 Unit + 32 Klassik + 6 Dokument: NOT_RUN** |
+| Aktueller DOM-Lauf mit frischem grünem Kotlin-Paket | **NOT_RUN**; 45 Fälle vorgesehen |
+| Neue unsigned APK / unabhängiger Audit | **NOT_RUN** |
+
+Die sieben Bedienbereiche sind im Code angeschlossen: aktive Computer-Navigation, bestätigter Entwurfs-/Diktatabgleich, getrennte Dialogansichten mit ausdrücklich auswählbarer Textwiederherstellung, sichtbarer Fokus, Mikrofon-Langdruck, native Quellenkarten und aktueller PDF-Entwurf. Bestehende Capture-, Bot-, Sprach- und Dokumentpfade werden weiterverwendet.
+
+### Konkreter Blocker und Nachweisgrenze
+
+Nach dem Daemonverlust wurden keine weiteren Tests oder Builds gestartet. Sieben Messungen über 180,034 Sekunden zeigten nur 1.522.340 bis 2.193.960 KiB verfügbaren Arbeitsspeicher. Der globale `oom_kill`-Zähler stieg währenddessen von 61 auf 64, obwohl keine eigene JVM lief. Damit ist fortbestehender geteilter Speicherdruck belegt; ein konkreter OOM-Kill unseres Compiler-PID ist mangels zugänglicher Kernel-/cgroup-Belege **nicht** nachgewiesen. Der Abschlussstand des freien Workspaceplatzes lag außerdem 110.247.936 Bytes unter dem unveränderten 700-MiB-Gate für den APK-Bau.
+
+Alle eigenen Worker sind beendet. Der ursprüngliche Checkout ist sauber auf `e92001ad6c28cdfd75e3fc29bb6efb65e832afa0` restauriert, beide ursprünglichen Locks sind freigegeben. Frühere fehlende RAM-Verweise bleiben als `RESET_MISSING` dokumentiert; keine Compilerhistorie wurde erfunden, ersetzt oder gelöscht. Die erhaltene APK mit SHA `00def8e9…` gehört ausschließlich zum früheren b56-Medienstand.
+
+Die [versionierten Zwischenbelege](command03-controls-checkpoint-62be11f8/README.md) verbinden frische Releasevertragstests, den Web-Entwicklungsstand, die ursprünglichen fünf nativen Testbefunde, den Daemonverlust und die abgeschlossene Ressourcenbeobachtung. **Diese Belege sind kein vollständig grüner Android- oder APK-Abschluss.** Die Fortsetzung bleibt deshalb in PR854; es erfolgt noch kein Fast-forward dieser Änderungen nach PR851.
+
+### Exakter nächster Schritt
+
+Auf derselben Produktquelle nach stabiler Ressourcenprüfung die normale Haupt- und Testkompilation ausführen. Anschließend die vorbereiteten 152 nativen Fälle tatsächlich ausführen. Erst nach vollständig grünem HTML-Lauf das frische synthetische Kotlin-Paket exportieren und den verpflichtenden 45er-DOM-Lauf durchführen. Danach regulär unsigned bauen und die neue APK unabhängig prüfen. Die vorhandenen Gates, Testassertions und Quellenbindungen bleiben erhalten. Erst diese Belege erlauben die kanonische Integration der neuen Controls. **GERÄTEBESTÄTIGT: NOT_RUN.**
 
 ## Quelle und Integration
 

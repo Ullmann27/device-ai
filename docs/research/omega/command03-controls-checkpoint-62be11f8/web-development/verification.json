@@ -1,0 +1,23 @@
+{
+  "scope": "PREVIOUS_DEVELOPMENT_RUN_OF_IDENTICAL_FROZEN_WEB_INPUTS_NOT_FINAL_NATIVE_INTEROP",
+  "reviewed_at_utc": "2026-11-16T07:07:09.424114+00:00",
+  "current_product_source": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+  "counts": {
+    "tests": 44,
+    "pass": 44,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "log": "/workspace/scratch/8f95e7fd540d/command03-controls-dom-green-04.txt",
+  "log_sha256": "baa6ff8e746a8a7bd2d94c15950a68b2ff95b1080b41380fedec506ee43d5297",
+  "frozen_web_input_sha256": {
+    "app/src/main/assets/continuum-command03/native-bridge.js": "fc6e2ce1f36b1b687056d6885924419ff64cc31590ab7994c71e6cc55b18c60b",
+    "app/src/main/assets/continuum-command03/native-layer.css": "88ff1401d4503157ab2491610403f3d84ecbfd71a5bbe920efa4de58726b4414",
+    "tools/command03-native-qa/native-bridge-behavior.test.mjs": "5f04c05e63341ac259d2911cd7b8b4b4d23e73191a54880e1432ba4e9b15a0ef"
+  },
+  "current_source_inputs_identical_to_developer_handoff": true,
+  "final_45_case_source_bound_native_interop": "NOT_RUN",
+  "fresh_native_packet_from_green_final_ui_suite": "NOT_AVAILABLE"
+}

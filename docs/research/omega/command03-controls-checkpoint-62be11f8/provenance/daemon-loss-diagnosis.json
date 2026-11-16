@@ -1,0 +1,124 @@
+{
+  "status": "READ_ONLY_DAEMON_LOSS_DIAGNOSIS",
+  "source_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+  "started_epoch": 1794812047.5912335,
+  "finished_epoch": 1794812084.4219654,
+  "time_utc": "2026-11-16T06:56:50Z",
+  "sampled_java_peak_rss_kib": 717700,
+  "lowest_sampled_mem_available_kib": 1252216,
+  "cgroup_samples": [
+    {},
+    {}
+  ],
+  "proc_self_cgroup": "0::/\n",
+  "cgroup_mounts": [],
+  "cgroup_files": {
+    "/sys/fs/cgroup/memory.events": {
+      "available": false,
+      "error": "[Errno 2] No such file or directory: '/sys/fs/cgroup/memory.events'"
+    },
+    "/sys/fs/cgroup/memory.current": {
+      "available": false,
+      "error": "[Errno 2] No such file or directory: '/sys/fs/cgroup/memory.current'"
+    },
+    "/sys/fs/cgroup/memory.max": {
+      "available": false,
+      "error": "[Errno 2] No such file or directory: '/sys/fs/cgroup/memory.max'"
+    },
+    "/sys/fs/cgroup/memory.peak": {
+      "available": false,
+      "error": "[Errno 2] No such file or directory: '/sys/fs/cgroup/memory.peak'"
+    },
+    "/sys/fs/cgroup/memory.events.local": {
+      "available": false,
+      "error": "[Errno 2] No such file or directory: '/sys/fs/cgroup/memory.events.local'"
+    }
+  },
+  "vmstat_after": {
+    "pswpin": 0,
+    "pswpout": 0,
+    "oom_kill": 61
+  },
+  "dmesg": {
+    "exit": 1,
+    "stderr": "dmesg: read kernel buffer failed: Operation not permitted",
+    "relevant_lines": []
+  },
+  "daemon_log": {
+    "source": "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-cache/daemon/8.11.1/daemon-188.out.log",
+    "archived": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/evidence/controls-compile-03/daemon-188.out.log",
+    "sha256": "c06a7e8889cf211df2b751cf141036702a314040ecec0016d1c882c66464ae05",
+    "bytes": 194588,
+    "mtime": 1794812061.5104485,
+    "diagnostic_lines": [
+      "2026-11-16T07:54:09.384+0100 [DEBUG] [org.gradle.launcher.daemon.bootstrap.DaemonMain] Assuming the daemon was started with following jvm opts: [-XX:MaxMetaspaceSize=256m, -XX:ReservedCodeCacheSize=128m, -XX:+UseSerialGC, -XX:ActiveProcessorCount=2, -XX:+ExitOnOutOfMemoryError, -Xmx768m, -Dfile.encoding=UTF-8, -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts, -Duser.country, -Duser.language=en, -Duser.variant]",
+      "2026-11-16T07:54:09.467+0100 [INFO] [org.gradle.launcher.daemon.server.Daemon] start() called on daemon - DefaultDaemonContext[uid=cc9676b9-378a-4bc9-a1c7-8f7a3eb96cac,javaHome=/workspace/scratch/5d87eafb90be/native-toolchain/jdk17,javaVersion=17,javaVendor=Eclipse Adoptium,daemonRegistryDir=/workspace/scratch/5d87eafb90be/native-toolchain/gradle-cache/daemon,pid=188,idleTimeout=120000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=256m,-XX:ReservedCodeCacheSize=128m,-XX:+UseSerialGC,-XX:ActiveProcessorCount=2,-XX:+ExitOnOutOfMemoryError,-Xmx768m,-Dfile.encoding=UTF-8,-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts,-Duser.country,-Duser.language=en,-Duser.variant]",
+      "2026-11-16T07:54:09.508+0100 [DEBUG] [org.gradle.launcher.daemon.server.DaemonRegistryUpdater] Advertised daemon context: DefaultDaemonContext[uid=cc9676b9-378a-4bc9-a1c7-8f7a3eb96cac,javaHome=/workspace/scratch/5d87eafb90be/native-toolchain/jdk17,javaVersion=17,javaVendor=Eclipse Adoptium,daemonRegistryDir=/workspace/scratch/5d87eafb90be/native-toolchain/gradle-cache/daemon,pid=188,idleTimeout=120000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=256m,-XX:ReservedCodeCacheSize=128m,-XX:+UseSerialGC,-XX:ActiveProcessorCount=2,-XX:+ExitOnOutOfMemoryError,-Xmx768m,-Dfile.encoding=UTF-8,-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts,-Duser.country,-Duser.language=en,-Duser.variant]",
+      "2026-11-16T07:54:09.511+0100 [DEBUG] [org.gradle.launcher.daemon.registry.PersistentDaemonRegistry] Storing daemon address: [c59e2951-4622-496d-8a18-0e8edacb2fb0 port:36019, addresses:[localhost/127.0.0.1]], context: DefaultDaemonContext[uid=cc9676b9-378a-4bc9-a1c7-8f7a3eb96cac,javaHome=/workspace/scratch/5d87eafb90be/native-toolchain/jdk17,javaVersion=17,javaVendor=Eclipse Adoptium,daemonRegistryDir=/workspace/scratch/5d87eafb90be/native-toolchain/gradle-cache/daemon,pid=188,idleTimeout=120000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=256m,-XX:ReservedCodeCacheSize=128m,-XX:+UseSerialGC,-XX:ActiveProcessorCount=2,-XX:+ExitOnOutOfMemoryError,-Xmx768m,-Dfile.encoding=UTF-8,-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts,-Duser.country,-Duser.language=en,-Duser.variant]",
+      "2026-11-16T07:54:09.612+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] Executing build with daemon context: DefaultDaemonContext[uid=cc9676b9-378a-4bc9-a1c7-8f7a3eb96cac,javaHome=/workspace/scratch/5d87eafb90be/native-toolchain/jdk17,javaVersion=17,javaVendor=Eclipse Adoptium,daemonRegistryDir=/workspace/scratch/5d87eafb90be/native-toolchain/gradle-cache/daemon,pid=188,idleTimeout=120000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=256m,-XX:ReservedCodeCacheSize=128m,-XX:+UseSerialGC,-XX:ActiveProcessorCount=2,-XX:+ExitOnOutOfMemoryError,-Xmx768m,-Dfile.encoding=UTF-8,-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts,-Duser.country,-Duser.language=en,-Duser.variant]"
+    ]
+  },
+  "hs_err_candidates": [],
+  "class_state_before": {
+    "debug/at/heinz/deviceai/AgentActivity.class": {
+      "exists": true,
+      "sha256": "4c326049a02cf265721fab985e2acb0af233bbc06dc2ee61b2535b62faf16ece",
+      "mtime": 1794810858.6696098
+    },
+    "debug/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": true,
+      "sha256": "127e6298e248b02a2d33bad69a42a352281081fd98ecfe1cba6392ca21e60f0e",
+      "mtime": 1794810858.6778758
+    },
+    "debug/at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": true,
+      "sha256": "c6d1e83bf88ab1e411268eb3d80cea5aa24f824f76d83e433b6bf9d8620f05cf",
+      "mtime": 1794810304.470232
+    },
+    "release/at/heinz/deviceai/AgentActivity.class": {
+      "exists": true,
+      "sha256": "593ffc19542f7538f9d7a4d1e4533830e530794487782b62f316193cf98bbe6b",
+      "mtime": 1794806546.734361
+    },
+    "release/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": true,
+      "sha256": "e8acc693a9b2a2a71034f247ba67ad26089e06a9ac0d81a0e9b96d1680424295",
+      "mtime": 1794806546.7513127
+    },
+    "release/at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": true,
+      "sha256": "f13c0628446dd28f156278e393cd8259f5da286126b6f7a78209e8dc56509368",
+      "mtime": 1794806546.7497907
+    }
+  },
+  "class_state_after": {
+    "at/heinz/deviceai/AgentActivity.class": {
+      "exists": false,
+      "sha256": null,
+      "mtime": null
+    },
+    "at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": true,
+      "sha256": "127e6298e248b02a2d33bad69a42a352281081fd98ecfe1cba6392ca21e60f0e",
+      "mtime": 1794810858.6778758
+    },
+    "at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": true,
+      "sha256": "c6d1e83bf88ab1e411268eb3d80cea5aa24f824f76d83e433b6bf9d8620f05cf",
+      "mtime": 1794810304.470232
+    }
+  },
+  "interpretation": "Daemon disappearance is proven. No PID-attributed OOM or JVM crash cause established from available counters/logs. Global oom_kill value is after-only; no pre-run baseline was captured.",
+  "current_resources": {
+    "free_bytes": {
+      "/workspace": 717287424,
+      "/tmp": 1987747840,
+      "/dev/shm": 2322501632
+    },
+    "memory": {
+      "MemAvailable": "2305348 kB",
+      "SwapFree": "0 kB",
+      "Shmem": "6005360 kB"
+    }
+  }
+}
