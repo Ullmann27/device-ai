@@ -129,18 +129,14 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
                         try {
                             writeNode(xml, root, 0);
                         } catch (NullPointerException stale) {
-                            boolean platformPrefetch = operation.startsWith("child_");
+                            boolean platformPrefetch = false;
                             for (StackTraceElement frame : stale.getStackTrace()) {
                                 if ("android.view.accessibility.AccessibilityInteractionClient".equals(frame.getClassName())) {
-                                    platformPrefetch &= true;
-                                    break;
-                                }
-                                if (frame.getClassName().startsWith("at.heinz.deviceai.")) {
-                                    platformPrefetch = false;
+                                    platformPrefetch = true;
                                     break;
                                 }
                             }
-                            if (!platformPrefetch) throw stale;
+                            if (!operation.startsWith("child_") || !platformPrefetch) throw stale;
                             setPhase("hierarchy_retry");
                             SystemClock.sleep(150L);
                             continue;
