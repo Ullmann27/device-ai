@@ -14,6 +14,16 @@ const root = resolve(fileURLToPath(new URL('../../', import.meta.url)));
 const assetRoot = resolve(root, 'app/src/main/assets/continuum-command03');
 const sessionId = '12345678-1234-1234-1234-123456789abc';
 const anotherSession = 'abcdefab-1234-1234-1234-123456789abc';
+const pageId = '11111111-1111-4111-8111-111111111111';
+const viewId = '22222222-2222-4222-8222-222222222222';
+const anotherView = '33333333-3333-4333-8333-333333333333';
+const sourceSetId = '55555555-5555-4555-8555-555555555555';
+const sourceId = '66666666-6666-4666-8666-666666666666';
+const documentId = '77777777-7777-4777-8777-777777777777';
+const anotherDocument = '88888888-8888-4888-8888-888888888888';
+const binding = {sessionId, pageId, viewId, viewRevision: 1};
+const controlState = (f, extra = {}) => f.state({...binding, draftRevision: 1,
+  ackEditRevision: 0, viewKind: 'CENTRAL', viewLabel: 'JARVIS', ...extra});
 // Four-by-three synthetic JPEG, generated locally; no owner or device image is stored.
 const frameDataUri = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAADAAQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDiKKKK9g8s/9k=';
 const computerFrame = (extra = {}) => ({sessionId, generation: 1, sequence: 1, active: true,
@@ -629,6 +639,159 @@ test('an expired pose cannot transfer its generation to another utterance or ret
     assert.equal(f.speechFrames.length, 2);
     f.window.ContinuumNative.speech(speechFrame({generation: 2, utteranceId: 'resumed-utterance'}));
     assert.equal(f.speechFrames.length, 3);
+  } finally {f.close();}
+});
+
+test('native control acknowledgements admit real dictation and consumption without replacing newer local edits', async () => {
+  const f = await fixture();
+  try {
+    controlState(f, {draft: {text: '', selectionStart: 0, selectionEnd: 0}});
+    const field = f.input('Mein Entwurf');
+    controlState(f, {draftRevision: 2, ackEditRevision: 1,
+      draft: {text: 'Mein Entwurf mit Diktat', selectionStart: 22, selectionEnd: 22}});
+    assert.equal(field.value, 'Mein Entwurf mit Diktat', 'A confirmed native dictation is a real newer edit');
+    f.input('Meine jüngere Änderung');
+    controlState(f, {draftRevision: 3, ackEditRevision: 1,
+      draft: {text: '', selectionStart: 0, selectionEnd: 0}});
+    assert.equal(field.value, 'Meine jüngere Änderung', 'An older acknowledgement cannot erase a newer local edit');
+    controlState(f, {draftRevision: 4, ackEditRevision: 2,
+      draft: {text: '', selectionStart: 0, selectionEnd: 0}});
+    assert.equal(field.value, '', 'Actual native consumption clears the confirmed visible draft');
+    const edits = f.navigations.filter(url => url.pathname === '/draft');
+    assert.deepEqual(edits.map(url => url.searchParams.get('clientEditRevision')), ['1', '2']);
+    for (const edit of edits) {
+      assert.equal(edit.searchParams.get('pageId'), pageId);
+      assert.equal(edit.searchParams.get('viewId'), viewId);
+    }
+  } finally {f.close();}
+});
+
+test('native control selection acknowledgements preserve a newer caret and never echo a restored draft', async () => {
+  const f = await fixture();
+  try {
+    controlState(f, {draft: {text: 'Ein Text', selectionStart: 1, selectionEnd: 3}});
+    const field = f.document.querySelector('#command-input');
+    field.setSelectionRange(4, 7);field.dispatchEvent(new f.window.Event('select', {bubbles: true}));
+    const edit = f.navigations.findLast(url => url.pathname === '/draft');
+    assert.equal(edit.searchParams.get('clientEditRevision'), '1');
+    controlState(f, {draftRevision: 2, ackEditRevision: 0,
+      draft: {text: 'Ein Text', selectionStart: 1, selectionEnd: 3}});
+    assert.equal(field.selectionStart, 4);assert.equal(field.selectionEnd, 7);
+    controlState(f, {draftRevision: 3, ackEditRevision: 1,
+      draft: {text: 'Ein neuer Text', selectionStart: 5, selectionEnd: 5}});
+    assert.equal(field.value, 'Ein neuer Text');assert.equal(field.selectionStart, 5);
+    field.dispatchEvent(new f.window.Event('select', {bubbles: true}));
+    assert.equal(f.navigations.filter(url => url.pathname === '/draft').length, 1,
+      'Applying native text/selection must not start an echo loop');
+  } finally {f.close();}
+});
+
+test('native control view instances replace bot histories and reject old snapshots messages and command acknowledgements', async () => {
+  const f = await fixture();
+  try {
+    controlState(f);
+    f.window.ContinuumNative.transcript({...binding, entries: [{user: false, text: 'Zentraler Verlauf'}]});
+    f.input('Alter Auftrag');f.submit();
+    const command = f.navigations.findLast(url => url.pathname === '/command');
+    const bot = {...binding, viewId: anotherView, viewRevision: 2};
+    controlState(f, {...bot, viewKind: 'BOT', viewLabel: 'Atlas', draftRevision: 2,
+      draft: {text: 'Bot-Entwurf', selectionStart: 11, selectionEnd: 11}});
+    f.window.ContinuumNative.transcript({...bot, entries: [{user: false, text: 'Privater Bot-Verlauf'}]});
+    assert.doesNotMatch(f.document.querySelector('#workspace').textContent, /Zentraler Verlauf/);
+    f.window.ContinuumNative.message({...binding, user: false, text: 'Verspätete zentrale Nachricht'});
+    f.window.ContinuumNative.commandResult({...binding, id: command.searchParams.get('id'), accepted: true});
+    controlState(f, {draftRevision: 99, draft: {text: 'Veralteter Snapshot', selectionStart: 0, selectionEnd: 0}});
+    assert.equal(f.document.querySelector('#command-input').value, 'Bot-Entwurf');
+    assert.match(f.document.querySelector('#workspace').textContent, /Privater Bot-Verlauf/);
+    assert.doesNotMatch(f.document.querySelector('#workspace').textContent, /Verspätete zentrale Nachricht/);
+    assert.match(f.document.querySelector('#command-input').getAttribute('aria-label'), /Atlas/);
+    controlState(f, {viewId: '44444444-4444-4444-8444-444444444444', viewRevision: 3,
+      draftRevision: 3, draft: {text: '', selectionStart: 0, selectionEnd: 0}});
+    f.window.ContinuumNative.message({...bot, user: false, text: 'Verspätete Bot-Nachricht'});
+    assert.doesNotMatch(f.document.querySelector('#workspace').textContent, /Privater Bot-Verlauf|Verspätete Bot-Nachricht/);
+  } finally {f.close();}
+});
+
+test('native control focus reaches the visible composer only for the current explicitly selected view', async () => {
+  const f = await fixture();
+  try {
+    controlState(f);
+    const field = f.document.querySelector('#command-input');
+    assert.notEqual(f.document.activeElement, field);
+    f.window.ContinuumNative.section({...binding, name: 'chat'});
+    assert.equal(f.document.activeElement, field);
+    field.blur();
+    f.window.ContinuumNative.section({...binding, pageId: anotherSession, name: 'chat'});
+    assert.notEqual(f.document.activeElement, field);
+    controlState(f, {cpu: 22, draftRevision: 2});
+    assert.notEqual(f.document.activeElement, field, 'Periodic status must never steal focus');
+  } finally {f.close();}
+});
+
+test('native control microphone long press uses the existing native action once and cancellation suppresses it', async () => {
+  const f = await fixture();
+  try {
+    controlState(f, {voiceMode: {active: true, paused: false}, longPressTimeoutMs: 500});
+    const mic = f.document.querySelector('#listen-button');
+    const pointer = type => {
+      const event = new f.window.MouseEvent(type, {bubbles: true, cancelable: true, button: 0});
+      Object.defineProperty(event, 'pointerId', {value: 1});mic.dispatchEvent(event);
+    };
+    pointer('pointerdown');await f.timers(501);pointer('pointerup');f.click(mic);
+    const actions = f.navigations.filter(url => url.pathname === '/route');
+    assert.equal(actions.length, 1);
+    assert.equal(actions[0].searchParams.get('value'), 'voice-input-long-press');
+    assert.equal(actions[0].searchParams.get('pageId'), pageId);
+    pointer('pointerdown');pointer('pointercancel');await f.timers(501);
+    assert.equal(f.navigations.filter(url => url.pathname === '/route').length, 1);
+    pointer('pointerdown');f.window.dispatchEvent(new f.window.Event('blur'));await f.timers(501);
+    assert.equal(f.navigations.filter(url => url.pathname === '/route').length, 1);
+    assert.match(mic.getAttribute('aria-label'), /Gesprächsmodus/);
+  } finally {f.close();}
+});
+
+test('native control source cards use native identifiers and cannot survive a view switch', async () => {
+  const f = await fixture();
+  try {
+    controlState(f);
+    f.window.ContinuumNative.message({...binding, user: false, text: 'Antwort mit Quelle'});
+    f.window.ContinuumNative.sources({...binding, sourceSetId, items: [
+      {id: sourceId, title: '<script>Quelle</script>', url: 'https://example.org/beleg'}]});
+    const button = f.document.querySelector('[data-native-source]');assert.ok(button);
+    assert.equal(button.textContent.includes('<script>Quelle</script>'), true);
+    assert.equal(button.querySelector('script'), null);
+    f.click(button);
+    const action = f.navigations.at(-1);
+    assert.equal(action.pathname, '/open-source');assert.equal(action.searchParams.get('value'), sourceId);
+    assert.equal(action.searchParams.has('url'), false);
+    assert.equal(action.searchParams.get('viewId'), viewId);
+    controlState(f, {viewId: anotherView, viewRevision: 2});
+    f.window.ContinuumNative.sources({...binding, sourceSetId: anotherSession, items: [
+      {id: sourceId, title: 'Alte Quelle', url: 'https://example.org/alt'}]});
+    assert.equal(f.document.querySelector('[data-native-source]'), null);
+  } finally {f.close();}
+});
+
+test('native control PDF draft action identifies only the currently displayed document and honours native availability', async () => {
+  const f = await fixture();
+  try {
+    controlState(f);
+    const doc = {...binding, documentId, name: 'Echt.pdf', pageCount: 1,
+      textState: 'EXTRACTED', text: 'Echter Dokumenttext', canDraft: true, draftStatus: 'Entwurf möglich'};
+    f.window.ContinuumNative.document(doc);
+    let draft = f.document.querySelector('[data-native-pdf="draft"]');assert.ok(draft);
+    f.click(draft);
+    assert.equal(f.navigations.at(-1).pathname, '/document-draft');
+    assert.equal(f.navigations.at(-1).searchParams.get('value'), documentId);
+    assert.equal(f.navigations.at(-1).searchParams.get('pageId'), pageId);
+    f.window.ContinuumNative.document({...doc, documentId: anotherDocument, canDraft: false,
+      draftStatus: 'Lokales Modell nicht geladen'});
+    await f.timers(1000);await f.paint();
+    draft = f.document.querySelector('[data-native-pdf="draft"]');
+    assert.ok(!draft || draft.disabled);
+    const count = f.navigations.length;if (draft) f.click(draft);
+    assert.equal(f.navigations.length, count);
+    assert.match(f.document.querySelector('#native-document-panel').textContent, /Lokales Modell nicht geladen/);
   } finally {f.close();}
 });
 

@@ -20,6 +20,20 @@ body[data-design="command03"] .native-chat-line p {
  font:400 13px/1.55 Manrope,system-ui,sans-serif;white-space:pre-wrap;
  overflow-wrap:anywhere;margin:5px 0 0;
 }
+body[data-design="command03"] .native-source-card {
+ display:flex;flex-direction:column;gap:7px;margin-top:10px;min-width:0;
+ padding-top:8px;border-top:1px solid rgba(101,210,249,.22);
+}
+body[data-design="command03"] .native-source-card>small {
+ color:#78dff0;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.14em;
+}
+body[data-design="command03"] .native-source-link {
+ display:flex;flex-direction:column;gap:4px;min-height:44px;width:100%;
+ padding:9px 10px;text-align:left;white-space:normal;overflow-wrap:anywhere;
+ border:1px solid rgba(101,210,249,.22);border-radius:5px;background:rgba(3,14,27,.67);
+ color:#e2f5f8;font:400 12px/1.5 Manrope,system-ui,sans-serif;
+}
+body[data-design="command03"] .native-source-link span {color:#8db8c9;font-size:11px;}
 body[data-design="command03"] .native-lane-state {
  padding:10px;color:#a6d1dc;border-top:1px solid rgba(101,210,249,.2);
  font:600 11px Manrope,system-ui,sans-serif;letter-spacing:.03em;
@@ -101,6 +115,11 @@ body[data-design="command03"] .native-document-text small {
 body[data-design="command03"] .native-document-text p {
  color:#bedce7;font:400 12px/1.5 Manrope,system-ui,sans-serif;margin:0;
 }
+body[data-design="command03"] .native-document-draft-status {
+ color:#bedce7;font:400 12px/1.5 Manrope,system-ui,sans-serif;margin:0;
+}
+body[data-design="command03"] .native-document-draft-status:empty {display:none;}
+body[data-design="command03"] [data-native-pdf="draft"]:disabled {opacity:.55;cursor:default;}
 body[data-design="command03"] .native-document-excerpt {
  white-space:pre-wrap;overflow-wrap:anywhere;max-height:370px;overflow:auto;
  margin:0;padding:12px;border:1px solid rgba(79,170,209,.23);

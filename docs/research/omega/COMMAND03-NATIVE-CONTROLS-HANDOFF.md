@@ -33,6 +33,12 @@ Der begonnene Wire-v2-Vertrag ergänzt native Seiten- und Ansichtsinstanzen sowi
 
 Ein gesonderter DOM-Rotlauf gegen den noch unveränderten bisherigen Adapter reproduziert sieben Fehler bei 34 Fällen (27 bestanden, 7 fehlgeschlagen, keine übersprungen). Das ist ein Fehlernachweis des alten Adapters und kein bestandener Test dieses Zwischenstands. Die endgültige grüne Prüfung muss von der später veröffentlichten vollständigen Quelle stammen.
 
+### Entwicklungscheckpoint: Stage und HTML auf Wire v2
+
+Stage und separater HTML-Adapter sind gemeinsam umgestellt. Alle Transportaktionen und Rückmeldungen tragen die native Seitenkennung, eine eigene Ansichtsinstanz mit monotoner Revision und die Gesprächskennung. Text und Auswahl werden als eine Editrevision übergeben. Die Stage verwirft alte Queues beim Seiten-/Ansichtswechsel; echte Stop-Aktionen bleiben auch bei einem nicht übertragbaren Entwurf möglich. Der HTML-Adapter ergänzt die vorhandenen Quellen- und PDF-Aktionen, den Mikrofon-Langdruck und gebundene Fokuswünsche.
+
+Die sieben zuvor roten neuen HTML-Kontrollfälle bestehen im gezielten Entwicklungslauf jetzt **7/7**; die JavaScript-Syntaxprüfung besteht. Der unveränderte Rotlauf mitsamt damaligen Test-/Adapterhashes ist separat erhalten. Die bisherige DOM-Regressionsauswahl wird erst anschließend auf den strengeren Transportvertrag umgestellt. **Kein Gesamtgrün und kein Android-Kompiliernachweis**: Activity und native Testfixtures sind noch in Arbeit. Das nächste Abnahmekriterium ist weiterhin der gemeinsame saubere Quellfreeze mit vollständig ausgeführten gezielten Regressionen.
+
 ## Arbeitsumgebung
 
 Während der lesenden Bestandsprüfung wurde die lokale Umgebung vorübergehend unavailable. Nach Wiederanbindung sind Quelle, Toolchain, aktuelle Compilerzustände, b56-APK und das dauerhaft gesicherte Prüfpaket vorhanden. Frühere RAM-Auslagerungen fehlen nach dem Neustart. Diese werden ausdrücklich als fehlende historische Zwischenstände dokumentiert; keine alten Testergebnisse oder Dateien werden fingiert. Eine neue externe Orchestrierung wird auf den tatsächlich vorhandenen b56-Nachweis gebunden und erhält die bisherigen Quell-, Lock-, Platz- und Ergebnisgrenzen.
