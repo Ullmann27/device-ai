@@ -470,7 +470,7 @@ class Probe:
         self.press('web-home-final', 'Zur Startseite mit allen KI-Bereichen')
         self.take('web-home-final')
         self.settings_off('final')
-        self.press('web-return-chat', 'Konversation öffnen')
+        self.press('web-return-chat', 'Gespräch')
         self.take('web-chat-restored')
         self.api['report']['offline_web'] = verify(self.api['out'], self.api['report'], self.api['source'],
                                                    self.api['report']['source_tree'])

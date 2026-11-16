@@ -531,10 +531,15 @@ public final class ContinuumNativeHologramProbe {
 
     private static Object copyStage(Object frame, float scale, boolean poseOnly) throws Exception {
         String[] names = {"width", "height", "monitorLeft", "monitorTop", "monitorRight", "monitorBottom",
-                "yawDegrees", "pitchDegrees", "depthOffset"};
+                "yawDegrees", "pitchDegrees", "depthOffset", "cameraFlightEnabled"};
         Object[] values = new Object[names.length];
         Class<?>[] types = new Class<?>[names.length];
         for (int i = 0; i < names.length; i++) {
+            if (i == 9) {
+                values[i] = field(frame, names[i]);
+                types[i] = boolean.class;
+                continue;
+            }
             float value = ((Number) field(frame, names[i])).floatValue();
             if (i < 6 || i == 8) value *= scale;
             if (i == 6 && poseOnly) value += value > 0 ? -.5f : .5f;

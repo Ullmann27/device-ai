@@ -126,7 +126,25 @@ public final class ContinuumWindowSnapshotInstrumentation extends Instrumentatio
                         xml.attribute("", "rotation", Integer.toString(rotation));
                         nodes = 0;
                         setPhase("hierarchy");
-                        writeNode(xml, root, 0);
+                        try {
+                            writeNode(xml, root, 0);
+                        } catch (NullPointerException stale) {
+                            boolean platformPrefetch = operation.startsWith("child_");
+                            for (StackTraceElement frame : stale.getStackTrace()) {
+                                if ("android.view.accessibility.AccessibilityInteractionClient".equals(frame.getClassName())) {
+                                    platformPrefetch &= true;
+                                    break;
+                                }
+                                if (frame.getClassName().startsWith("at.heinz.deviceai.")) {
+                                    platformPrefetch = false;
+                                    break;
+                                }
+                            }
+                            if (!platformPrefetch) throw stale;
+                            setPhase("hierarchy_retry");
+                            SystemClock.sleep(150L);
+                            continue;
+                        }
                         xml.endTag("", "hierarchy");
                         xml.endDocument();
                         byte[] bytes = writer.toString().getBytes(StandardCharsets.UTF_8);

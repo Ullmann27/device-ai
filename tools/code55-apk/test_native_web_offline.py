@@ -88,7 +88,7 @@ class OfflineWebEvidenceTest(unittest.TestCase):
             'web-more-final': [control('Web und Quellen')],
             'web-center-final': [text('INTERNETFREIGABE')],
             'web-settings-final': [text('Continuum · Internetzugang'), text(proof.OFF)],
-            'web-off-final': [control('Konversation öffnen')],
+            'web-off-final': [control('Gespräch')],
             'web-chat-restored': [editor, control('Nachricht senden')]}
         for label, items in scenes.items():
             self.ui(label, items)
@@ -107,7 +107,7 @@ class OfflineWebEvidenceTest(unittest.TestCase):
             ('web-open-center-final', 'Web und Quellen', 'web-more-final'),
             ('web-open-settings-final', 'INTERNETFREIGABE', 'web-center-final'),
             ('web-select-off-final', proof.OFF, 'web-settings-final'),
-            ('web-return-chat', 'Konversation öffnen', 'web-off-final')]
+            ('web-return-chat', 'Gespräch', 'web-off-final')]
         observation = {'source_sha': self.report['source_sha'], 'source_tree': self.report['source_tree'],
                        'url': proof.URL, 'test_basis': 'OFF_SET_THROUGH_UI', 'original_mode': 'ALWAYS_ON',
                        'captures': list(scenes), 'actions': []}
