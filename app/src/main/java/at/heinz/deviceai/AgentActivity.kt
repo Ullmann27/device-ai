@@ -2437,6 +2437,11 @@ class AgentActivity : Activity() {
 
     private fun routeCommand03HtmlAction(route: String, value: String?) {
         if (isFinishing || isDestroyed) return
+        if (route == "device" && computerController?.active == true) {
+            command03MainStage?.showSection("device")
+            scheduleCommand03Computer()
+            return
+        }
         if (route !in setOf("home", "voice-input", "stop")) hideCommand03Computer()
         when (route) {
             "home" -> { showHomeDashboard(); command03MainStage?.showSection("home") }
