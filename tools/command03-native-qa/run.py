@@ -259,6 +259,8 @@ def main():
     parser.add_argument('--full-suite', action='store_true')
     parser.add_argument('--focus-test-sources', action='store_true')
     parser.add_argument('--test-helper', action='append', default=[])
+    parser.add_argument('--isolate-test-classes', action='store_true',
+                        help='Run selected UI test classes in separate sequential JVMs with unchanged memory limits')
     parser.add_argument('--expected-sha')
     parser.add_argument('--heap-mib', type=int, default=2048)
     parser.add_argument('--metaspace-mib', type=int, default=512)
@@ -304,6 +306,8 @@ def main():
         parser.error('Helpers require --focus-test-sources')
     if compile_only and not args.focus_test_sources:
         parser.error('UI compilation requires focused physical sources and an explicit UI test selection')
+    if args.isolate_test_classes and (args.mode != 'ui-tests' or not args.test):
+        parser.error('Test-class isolation requires selected UI tests')
     overrides = {key: getattr(args, key) for key in ('repo', 'output_dir', 'java_home', 'android_sdk', 'android_user_home', 'gradle_home', 'gradle_user_home', 'build_dir')}
     settings = resolve_settings(args.config, overrides)
     for name in ('repo', 'output_dir', 'java_home', 'android_sdk', 'gradle_home', 'gradle_user_home'):
@@ -376,6 +380,8 @@ def main():
         environment['CONTINUUM_CAPTURE_SOURCE_COMMIT'] = before['commit']
     if args.test and is_test:
         command += ['-Dcontinuum.native.testSelection=' + str(selection), '-I', str(HERE / 'test-selection.init.gradle')]
+        if args.isolate_test_classes:
+            command += ['-Dcontinuum.native.isolateTestClasses=true']
     if focus:
         command += ['-Dcontinuum.native.testSources=' + str(sources_file),
                     '-Dcontinuum.native.compiledTestSources=' + str(actual_sources),
@@ -399,6 +405,9 @@ def main():
             'free_bytes': {'build_volume': shutil.disk_usage(build_parent).free, 'workspace': shutil.disk_usage(HERE).free}}
     if compile_only:
         plan['test_execution'] = 'NOT_RUN_COMPILE_ONLY'
+    if args.isolate_test_classes:
+        plan['test_worker_policy'] = {'fork_every': 1, 'max_parallel_forks': 1,
+                                     'memory_limits': 'UNCHANGED_ORIGINAL_UI_HARNESS'}
     if args.capture_dir:
         plan['capture'] = {'directory': str(args.capture_dir), 'fidelity': 'android_activity_host_native_canvas_api28_explicit_2d_head',
                            'filament_verified': False, 'physical_device_verified': False,

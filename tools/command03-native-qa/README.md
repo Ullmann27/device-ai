@@ -117,6 +117,13 @@ selected filter; normal Gradle history may reuse the genuinely compiled classes.
 Neither phase changes application sources, assertions, SDK dependencies, signing,
 or the prohibition on assembling an APK in the local QA mode.
 
+For selected `ui-tests` only, `--isolate-test-classes` explicitly sets Gradle
+`Test.forkEvery = 1` and `maxParallelForks = 1`. Each test class runs in a fresh,
+sequential worker JVM. This keeps the complete selected tests and their assertions,
+the original 1024 MiB worker heap, and the existing task/source/JUnit gates.
+The receipt records this worker policy. It is unavailable for compile-only,
+unit-test, or unsigned modes; it does not make a worker exit into a successful run.
+
 ## Original HTML bridge behavior
 
 `native-bridge-behavior.test.mjs` executes the original Android HTML and the

@@ -69,6 +69,8 @@ Die unveränderte klassische UI-Auswahl deckte danach eine reale Bindungsregress
 
 Der betreffende Klassiklauf endete außerdem separat mit Testworker-Exit 137 nach unvollständiger Ausführung; es entstanden keine frischen JUnit-XML-Dateien. Eine OOM-Ursache ist nicht nachgewiesen. Er zählt weder als vollständiger 32er-Lauf noch als APK-Nachweis. Nach diesem Produktionsfix werden Compile, Medien-/Unit-/Klassiktests und Paketbau erneut an einen neuen exakten SHA gebunden.
 
+Für genau diese Ressourcenprüfung ergänzt der Runner das ausdrückliche Opt-in `--isolate-test-classes` ausschließlich für ausgewählte `ui-tests`. Gradles vorhandenes `Test.forkEvery=1` startet jede ausgewählte Klasse in einer frischen JVM; `maxParallelForks=1` erhält die serielle Ausführung. Die vollständigen sieben klassischen Filter, alle neun physischen Test-/Helperquellen, sämtliche Assertions, der ursprüngliche 1024-MiB-Workerheap und die Aufgaben-/Quell-/JUnit-Gates bleiben erhalten. Der Receipt weist diese Prozessstrategie ausdrücklich aus. Die Anwendung erhält dadurch keine Änderung und ein weiterer Worker-Abbruch könnte weiterhin keinen erfolgreichen Testnachweis erzeugen.
+
 ### Präzisierter Testhost-Befund
 
 Der Diagnose-Lauf auf `49f5d50f69e2afb6a340d91bd742aa6d9cc30202` ergab 22 Tests, 18 bestanden und 4 fehlgeschlagen. Die zusätzliche positive Kontrolle entlarvte dabei einen zuvor scheinbar grünen Negativfall: vor jeder Bildbestätigung war das Host-WebView-Fenster `GONE`, mit Größe 0×0 und ohne global sichtbare Fläche. Sitzung, Bildtoken, Seitenbereitschaft und Restfrist waren gültig. Der Split-Screen-Controller blieb aktiv; seine WebView wurde nicht pausiert.
