@@ -1,0 +1,83 @@
+{
+  "scope": "FOCUSED_HOST_TESTS_ONLY",
+  "source_commit": "7e783f3ee8bc3e75f800b8249f5cef283187752d",
+  "files": [
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt",
+      "bytes": 1285,
+      "sha256": "8fd846639c0ed9b207f9e5f6599ee448c9e58fadb2eb7f818d4362d83c8acf18",
+      "role": "existing_helper",
+      "filters": []
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumAdaptiveAvatarNavigationUiTest.kt",
+      "bytes": 6664,
+      "sha256": "1bd42747a4dbbe5955735117a84ca26799397d6bd2597620ed91cc709c8afec1",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest"
+      ]
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommandNavigationUiTest.kt",
+      "bytes": 19585,
+      "sha256": "51b194620437d75f5d4d61167fcdc252a3804b7cc9143518084eaafd0de7c31a",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.ContinuumCommandNavigationUiTest"
+      ]
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCompactComposerUiTest.kt",
+      "bytes": 7505,
+      "sha256": "eb90a58171e4951883422c34b536c768b017c4ecd8f641a7548ab2b320bd226c",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.ContinuumCompactComposerUiTest"
+      ]
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+      "bytes": 71511,
+      "sha256": "6841db3f26442f16dcd578a4c0b2cc7e3d3a64d43668fd58861043b74b0bbfb4",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.ContinuumReferenceCockpitUiTest.composerDraftSurvivesActualWindowReflowAndActivityRecreation"
+      ]
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumVisibleAvatarUiTest.kt",
+      "bytes": 3568,
+      "sha256": "6b45df216d58956dfd83760b82ce91a9ae9a42f700b460459305907561a4669e",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.ContinuumVisibleAvatarUiTest.repeatedKeyboardChangesResizeWithoutDuplicatingAvatar"
+      ]
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisHomeTestRoutes.kt",
+      "bytes": 10175,
+      "sha256": "eca720ab0147ccef13bffce20cb331b6251702e0ed971c8e69ee68b542335397",
+      "role": "existing_helper",
+      "filters": []
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisReferenceHitTargetsUiTest.kt",
+      "bytes": 26858,
+      "sha256": "4fec041199d4de4975f047d1486fa912afffc3a6f6a1accbb4adfc04a450fa1e",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.JarvisReferenceHitTargetsUiTest"
+      ]
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisRailLabelReadabilityUiTest.kt",
+      "bytes": 7513,
+      "sha256": "1395c4a7c884b3703d09edae1b7a7cb123e9df5a93a43b78ee7d8bf5751fb2b1",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.ui.JarvisRailLabelReadabilityUiTest"
+      ]
+    }
+  ]
+}

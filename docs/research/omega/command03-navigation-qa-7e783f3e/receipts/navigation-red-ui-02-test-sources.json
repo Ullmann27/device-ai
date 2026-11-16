@@ -1,0 +1,29 @@
+{
+  "scope": "FOCUSED_HOST_TESTS_ONLY",
+  "source_commit": "3cf133527a86bb1c227a3d732888574e4f0d0996",
+  "files": [
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt",
+      "bytes": 1285,
+      "sha256": "8fd846639c0ed9b207f9e5f6599ee448c9e58fadb2eb7f818d4362d83c8acf18",
+      "role": "existing_helper",
+      "filters": []
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/Command03HostWebView.kt",
+      "bytes": 1323,
+      "sha256": "3bb9631914c768d8d642c541d18aabed484a48b5716c3ed37278e108d3dae682",
+      "role": "existing_helper",
+      "filters": []
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03BridgeUiTest.kt",
+      "bytes": 36243,
+      "sha256": "c322cbcd1bdbf7c3176e9627a95a0c38151ae0390647efa6b7f77f1b0de90ae8",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.ContinuumCommand03BridgeUiTest"
+      ]
+    }
+  ]
+}

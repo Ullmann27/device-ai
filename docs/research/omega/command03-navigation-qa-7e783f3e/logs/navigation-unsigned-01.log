@@ -1,0 +1,215 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:mergeReleaseJniLibFolders
+> Task :app:mergeReleaseNativeLibs
+
+> Task :app:stripReleaseDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libc++_shared.so, libfilament-jni.so, libgltfio-jni.so, liblitertlm_jni.so, libopencv_java4.so. Run with --info option to learn more.
+
+> Task :app:extractReleaseNativeSymbolTables
+> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:buildKotlinToolingMetadata
+> Task :app:compileReleaseAidl
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateReleaseBuildConfig
+> Task :app:checkReleaseAarMetadata
+> Task :app:generateReleaseResValues
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:generateReleaseResources
+> Task :app:mergeReleaseResources
+> Task :app:packageReleaseResources
+> Task :app:parseReleaseLocalResources
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :app:processReleaseManifestForPackage
+> Task :app:processReleaseResources
+> Task :app:compileReleaseKotlin
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:689:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:690:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:692:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1278:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1751:67 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4667:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5436:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6064:40 Condition is always 'true'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6064:56 Condition is always 'true'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:8589:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:8604:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:8633:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:11492:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:12167:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:12167:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:12635:25 Condition is always 'true'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:12635:44 Condition is always 'true'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:12698:58 Condition is always 'true'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:12701:53 Unnecessary safe call on a non-null receiver of type 'LocalGroundedRecall'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:13646:74 Unnecessary safe call on a non-null receiver of type '(ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:13692:70 Unnecessary safe call on a non-null receiver of type '(ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt:448:24 'when' expression over a subject of type 'Any?' is not exhaustive. Add a 'null' or 'else' branch.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt:26:47 The corresponding parameter in the supertype 'DeviceAppActionPort' is named 'cancelled'. This may cause problems when calling this function with named arguments.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt:226:80 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt:227:26 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt:230:22 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AndroidLiveNodePort.kt:176:107 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ActionNode'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/AndroidNativeClick.kt:94:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AccessibilityNodeInfo'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumBotTaskDialog.kt:318:57 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt:46:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt:47:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt:31:24 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArrayList<String!>'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt:55:57 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt:80:45 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt:81:46 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:28:28 'fun <T : Parcelable!> getParcelableExtra(p0: String!): T?' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:45:45 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:47:35 'field versionCode: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:50:33 'field signatures: Array<(out) Signature!>?' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt:65:32 This class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:80:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:81:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:276:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:278:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:371:51 'field scaledDensity: Float' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:151:31 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:152:37 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:166:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/DeviceToolExecutorRunner.kt:32:17 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Result<String>?' does not have a consistent identity.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/DeviceToolExecutorRunner.kt:32:45 This call may have inconsistent results because the type of this argument, 'Result<String>', does not have a consistent identity.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/MainActivity.kt:68:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/MainActivity.kt:69:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt:206:42 Unnecessary safe call on a non-null receiver of type 'CockpitWorkEvent'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/avatar3d/CockpitPanelContent.kt:80:43 Unnecessary safe call on a non-null receiver of type 'CockpitPanelContent'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:346:38 Unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:354:38 Unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:361:42 Unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:365:42 Unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:426:56 'fun toneMapping(p0: ColorGrading.ToneMapping!): ColorGrading.Builder!' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:426:81 'enum class ToneMapping : Enum<ColorGrading.ToneMapping!>' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/chief/ChiefBotPractice.kt:44:37 Non-public primary constructor is exposed via the generated 'copy()' method of the 'data' class.
+
+The generated 'copy()' will change its visibility in future releases.
+
+To suppress the warning do one of the following:
+- Annotate the data class with the '@ConsistentCopyVisibility' annotation.
+- Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
+- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+  (Discouraged, but can be used to keep binary compatibility).
+
+To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
+
+This will become an error in language version 2.5. See https://youtrack.jetbrains.com/issue/KT-11914.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cockpit/RetrievalCalculationSource.kt:18:24 This class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:382:58 Unnecessary safe call on a non-null receiver of type 'AgentThinkingMemory'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:395:29 Unnecessary safe call on a non-null receiver of type 'AgentThinkingMemory'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:418:51 Unnecessary safe call on a non-null receiver of type 'AgentThinkingMemory'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:429:55 Unnecessary safe call on a non-null receiver of type 'AgentThinkingMemory'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:439:59 Unnecessary safe call on a non-null receiver of type 'AgentThinkingMemory'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:495:41 Unnecessary safe call on a non-null receiver of type 'AgentThinkingMemory'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:552:51 Unnecessary safe call on a non-null receiver of type 'AgentThinkingMemory'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:561:29 Unnecessary safe call on a non-null receiver of type 'AgentThinkingMemory'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:648:46 Unnecessary safe call on a non-null receiver of type 'AgentModelOutput'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cognitive/Cdx1EvidenceSlotBinder.kt:23:23 Non-public primary constructor is exposed via the generated 'copy()' method of the 'data' class.
+
+The generated 'copy()' will change its visibility in future releases.
+
+To suppress the warning do one of the following:
+- Annotate the data class with the '@ConsistentCopyVisibility' annotation.
+- Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
+- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+  (Discouraged, but can be used to keep binary compatibility).
+
+To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
+
+This will become an error in language version 2.5. See https://youtrack.jetbrains.com/issue/KT-11914.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/cognitive/LegalRisDiscoveryProvider.kt:63:42 'when' expression over a subject of type 'Any?' is not exhaustive. Add a 'null' or 'else' branch.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:294:33 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:356:81 'field versionCode: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:363:33 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:369:21 'field signatures: Array<(out) Signature!>?' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt:125:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt:125:32 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumDeviceTeamleaderScheduler.kt:41:61 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:301:31 Unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:411:37 Unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryEvents.kt:34:24 This class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt:86:25 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt:248:37 No cast needed.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:349:55 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:349:69 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:350:45 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:351:42 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/ContinuumThinkingMemory.kt:115:9 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/NeuralPracticeScheduler.kt:70:22 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/OwnerMemoryRecovery.kt:16:31 Non-public primary constructor is exposed via the generated 'copy()' method of the 'data' class.
+
+The generated 'copy()' will change its visibility in future releases.
+
+To suppress the warning do one of the following:
+- Annotate the data class with the '@ConsistentCopyVisibility' annotation.
+- Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
+- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+  (Discouraged, but can be used to keep binary compatibility).
+
+To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
+
+This will become an error in language version 2.5. See https://youtrack.jetbrains.com/issue/KT-11914.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt:263:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt:263:35 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/routines/OwnerRoutineScheduler.kt:22:102 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/systemintelligence/DiagnosisEvaluation.kt:96:61 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Int'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/systemintelligence/DiagnosisEvaluation.kt:101:116 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Double'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt:537:86 No cast needed.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt:1337:22 'var isChecked: Boolean' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ui/JarvisLiveTabs.kt:261:18 'var isChecked: Boolean' is deprecated. Deprecated in Java.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt:209:13 'when' is exhaustive so 'else' is redundant here.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ui/JarvisShellContent.kt:110:39 This extension is shadowed by a member: 'fun contains(x: Float, y: Float): Boolean' defined in 'at.heinz.deviceai.ui.JarvisShellLayout.Box'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt:140:35 Unnecessary safe call on a non-null receiver of type 'JarvisShellRenderer.GlassBackend'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt:319:35 Unnecessary safe call on a non-null receiver of type 'JarvisShellRenderer.GlassBackend'.
+w: file:///tmp/continuum-command03-navigation-2f1f2f3ed7e2/app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt:27:53 'field scaledDensity: Float' is deprecated. Deprecated in Java.
+
+> Task :app:javaPreCompileRelease
+> Task :app:compileReleaseJavaWithJavac
+> Task :app:dexBuilderRelease
+> Task :app:desugarReleaseFileDependencies
+> Task :app:mergeReleaseStartupProfile
+> Task :app:mergeExtDexRelease
+> Task :app:mergeDexRelease
+> Task :app:mergeReleaseArtProfile
+> Task :app:mergeReleaseGlobalSynthetics
+> Task :app:compileReleaseArtProfile
+> Task :app:mergeReleaseShaders
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:compressReleaseAssets
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:processReleaseJavaRes
+> Task :app:mergeReleaseJavaResource
+> Task :app:optimizeReleaseResources
+> Task :app:collectReleaseDependencies
+> Task :app:sdkReleaseDependencyData
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease
+[Incubating] Problems report is available at: file:///tmp/continuum-command03-navigation-build-2f1f2f3ed7e2/root-build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 2m 27s
+46 actionable tasks: 45 executed, 1 up-to-date
