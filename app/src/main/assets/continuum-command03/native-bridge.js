@@ -762,11 +762,14 @@
     // The first native snapshot binds this document. A real WebView reload has
     // a fresh JS context; an old page can never adopt a different page token.
     if(page && state.pageId!==page)return;
-    if(state.viewRevision<viewRevision || state.viewRevision===viewRevision &&
-      (state.viewId!==view || state.sessionId!==session))return;
+    // Match Android Stage.bind: any new revision requires a new view identity.
+    // An equal revision can only replay the same view and session.
     const initial=!page;
-    const changed=initial || state.viewId!==view || state.sessionId!==session;
-    if(!changed && state.viewRevision!==viewRevision)return;
+    const same=!initial && state.viewId===view && state.viewRevision===viewRevision &&
+      state.sessionId===session;
+    if(!initial && !same &&
+      (state.viewRevision<=viewRevision || state.viewId===view))return;
+    const changed=!same;
     // Selection events may be queued after a snapshot. Observe the actual editor
     // first, including an oversized edit that cannot be sent, before trusting its ACK.
     if(!initial)editorDraft();

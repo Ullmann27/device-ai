@@ -98,8 +98,10 @@ internal class ContinuumCommand03OriginalStage(
         if (disposed || next.pageId != pageId || !Command03BridgeContract.validBinding(next)) return false
         val previous = binding
         if (previous == next) return true
-        if (previous != null && (next.viewRevision < previous.viewRevision ||
-                (next.viewRevision == previous.viewRevision && next.viewId != previous.viewId))) return false
+        // Keep the exact same binding admission rule as the original HTML
+        // adapter: a change requires a higher revision AND a new view ID.
+        if (previous != null && (next.viewRevision <= previous.viewRevision ||
+                next.viewId == previous.viewId)) return false
         cancelComposerFocus()
         invalidateComputerPresentation()
         if (previous != null) onPresentationLost()
@@ -348,7 +350,7 @@ internal class ContinuumCommand03OriginalStage(
             return
         }
         if (request.text != request.draft.text.trim() || !onNativeDraft(draft)) {
-            commandResult(request, false, "stale-draft"); return
+            commandResult(request, false, "stale-edit"); return
         }
         while (commands.size >= 64) {
             val completed = commands.entries.firstOrNull { it.value.result != null } ?: break

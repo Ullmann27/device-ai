@@ -2239,11 +2239,14 @@ class AgentActivity : Activity() {
         val carried = deferredCommand03Draft?.takeIf { edit ->
             ownTransition && edit.binding == previous
         }
-        if (command03View.session.isNotEmpty()) hideCommand03Computer()
+        // Computer.stop may synchronously call setBusy and query the current
+        // owner. Publish this view first so a nested read cannot replace it.
+        val previousView = command03View
+        command03View = Command03View(UUID.randomUUID().toString(), previousView.revision + 1,
+            sessionId, selectedBot?.agentId)
+        if (previousView.session.isNotEmpty()) hideCommand03Computer()
         command03MainStage?.cancelComposerFocus()
         command03SpeechProjection.clear()
-        command03View = Command03View(UUID.randomUUID().toString(), command03View.revision + 1,
-            sessionId, selectedBot?.agentId)
         command03HtmlBoundView = null
         command03HtmlSession = null
         command03HtmlHistoryRevision++
@@ -2265,8 +2268,10 @@ class AgentActivity : Activity() {
         return command03View
     }
 
+    // Checking an old callback must never replace the current view.
     private fun command03ViewCurrent(owner: Command03View): Boolean =
-        !isFinishing && !isDestroyed && owner == command03ViewOwner()
+        !isFinishing && !isDestroyed && owner == command03View &&
+            owner.session == sessionId && owner.bot == selectedBot?.agentId
 
     private fun command03Binding(): Command03Binding? {
         val stage = command03MainStage ?: return null
