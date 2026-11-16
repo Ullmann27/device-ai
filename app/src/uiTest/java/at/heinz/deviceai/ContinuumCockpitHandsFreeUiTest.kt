@@ -256,7 +256,8 @@ class ContinuumCockpitHandsFreeUiTest {
         // Explicitly chosen text chat remains independent of the hands-free cockpit.
         AgentActivity::class.java.getDeclaredMethod("focusChatComposer").apply { isAccessible = true }.invoke(a)
         assertEquals(ContinuumWorkArea.CHAT, field(a, "activeWorkArea"))
-        assertEquals(View.GONE, (field(a, "dashboardSection") as View).visibility)
+        assertEquals("CHAT retains the compact workstation", View.VISIBLE,
+            (field(a, "dashboardSection") as View).visibility)
         mode.stop()
     }
 }

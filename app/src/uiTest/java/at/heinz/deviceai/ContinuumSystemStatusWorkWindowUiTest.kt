@@ -113,6 +113,16 @@ class ContinuumSystemStatusWorkWindowUiTest {
         return bounds
     }
 
+    private fun tapHomeTarget(root: View, target: String): Rect {
+        if (target !in JarvisHomeTestRoutes.moreTargets) {
+            return tap(root, JarvisHomeTestRoutes.destination(root, target))
+        }
+        val more = descendants(root).single { it.tag == "jarvis-header:more" && it.isShown }
+        val bounds = JarvisHomeTestRoutes.visibleBounds(more)
+        JarvisHomeTestRoutes.navigate(root, target)
+        return bounds
+    }
+
     @Test fun workWindowMovesTheOriginalHeadProjectionAndReturns() {
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
@@ -347,8 +357,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             val expected = mapOf("memory" to "Gedächtniszentrum", "web" to "Web und Quellen",
                 "learning" to "Lernzentrum", "device" to "Systemstatus")
             for ((target, title) in expected) {
-                val control = JarvisHomeTestRoutes.destination(root, target)
-                val controlBox = tap(root, control)
+                val controlBox = tapHomeTarget(root, target)
                 advance(640L); measure(root); draw(root)
                 val work = shown(root, "jarvis-work-window")
                 val labels = descendants(work).filterIsInstance<TextView>().map { it.text.toString() }
@@ -528,7 +537,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             assertTrue(descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
             assertEquals("the deck returns after the window folded back", before, deck())
             assertEquals("TalkBack offers them again", a11yBefore, a11yChildren())
-            tap(root, JarvisHomeTestRoutes.destination(root, "web"))
+            tapHomeTarget(root, "web")
             advance(640L); measure(root); draw(root)
             val reopened = descendants(shown(root, "jarvis-work-window")).filterIsInstance<TextView>().map { it.text.toString() }
             assertTrue("navigation remains clickable after restoring the deck: $reopened", reopened.any { it.equals("Web und Quellen", true) })
@@ -727,7 +736,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 assertEquals("TalkBack offers the whole deck after $qualifiers", shownDeck, a11y())
             }
             assertEquals("unfolded again: the complete inner deck", inner, deck())
-            tap(root, JarvisHomeTestRoutes.destination(root, "web"))
+            tapHomeTarget(root, "web")
             advance(640L); measure(root, width, height); draw(root)
             val reopened = descendants(shown(root, "jarvis-work-window")).filterIsInstance<TextView>().map { it.text.toString() }
             assertTrue("navigation opens its centre after the round trip: $reopened", reopened.any { it.equals("Web und Quellen", true) })

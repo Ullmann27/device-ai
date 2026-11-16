@@ -272,7 +272,15 @@ class ContinuumReferenceCockpitUiTest {
         }
     }
 
-    private fun shellControl(activity: AgentActivity, tag: String): View = tagged(currentHome(activity), tag)
+    private fun shellControl(activity: AgentActivity, tag: String): View {
+        val home = currentHome(activity)
+        if (tag == "jarvis-input:conversation" && descendants(home).none { it.tag == tag }) {
+            return (field(activity, "input") as EditText).also {
+                assertTrue("The shared composer is attached", it.isAttachedToWindow)
+            }
+        }
+        return tagged(home, tag)
+    }
 
     private fun destination(activity: AgentActivity, target: String): View =
         JarvisHomeTestRoutes.destination(currentHome(activity), target).also {
@@ -324,8 +332,9 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun assertHomeHasNoFixedRail(home: ContinuumHomeView) {
         if (!home.jarvisShellStage) return
-        assertNull("The hero uses the complete Home width",
-            requireNotNull(home.jarvisShell.currentShell())[JarvisShellLayout.Slot.NAV_RAIL])
+        val shell = requireNotNull(home.jarvisShell.currentShell())
+        if (shell.workstation) assertNotNull("Workstation owns exactly one rail", shell[JarvisShellLayout.Slot.NAV_RAIL])
+        else assertNull("Compact shell retains full hero width", shell[JarvisShellLayout.Slot.NAV_RAIL])
         assertTrue("No invisible rail duplicates remain", descendants(home).none {
             it.tag?.toString()?.startsWith("jarvis-rail:") == true
         })
@@ -368,9 +377,13 @@ class ContinuumReferenceCockpitUiTest {
         val navigation = JarvisHomeTestRoutes.controls(home)
         assertEquals("Every direct destination has exactly one native control", JarvisHomeTestRoutes.expectedDirectTargets(home),
             navigation.map { it.tag.toString().substringAfter(':') })
-        val required = mutableListOf("jarvis-dialog:conversation", "jarvis-dialog:voice-input", "jarvis-dialog:send",
-            "jarvis-input:conversation", "jarvis-header:notifications", "jarvis-header:settings")
         val shell = requireNotNull(home.jarvisShell.currentShell())
+        val required = mutableListOf("jarvis-dialog:conversation", "jarvis-header:notifications", "jarvis-header:settings")
+        if (!shell.workstation) required += listOf("jarvis-dialog:voice-input", "jarvis-dialog:send", "jarvis-input:conversation")
+        else {
+            val editor = field(activity, "input") as EditText
+            assertTrue("The mounted workstation retains the actual text editor", editor.isAttachedToWindow && editor.isShown)
+        }
         if (shell[JarvisShellLayout.Slot.CAMERA_STATUS] != null) required += "jarvis-camera:settings"
         else assertTrue("Phone keeps camera settings in More",
             ContinuumWorkAreaNavigationSpec.moreEntries.any { it.target == "camera-settings" })

@@ -148,8 +148,8 @@ test('phone and Fold share the original live surface and preserve its lifecycle 
  assert.match(pane,/val liveHologram = \(hologramView \?: ContinuumHologramView\(this\)\)\.also/);
  assert.match(pane,/\(it\.parent as\? android\.view\.ViewGroup\)\?\.removeView\(it\)/);
  assert.match(pane,/avatarDirector\.attach\(command03AvatarSink\(it\)\)/);
- assert.match(pane,/it\.setForegroundActive\(foregroundLearningActive \|\| computerFeedbackActive\(\)\)/);
- assert.match(pane,/home\.setForegroundActive\(foregroundLearningActive \|\| computerFeedbackActive\(\)\)/);
+ assert.match(pane,/it\.setForegroundActive\(nativeStagePresentationActive\(\)\)/);
+ assert.match(pane,/home\.setForegroundActive\(nativeStagePresentationActive\(\)\)/);
  assert.match(activityMember('private fun computerFeedbackActive(): Boolean'),/computerViewVisible && isInMultiWindowMode &&\s*computerController\?\.active == true && computerController\?\.awaitingConsent != true/);
  assert.doesNotMatch(pane,/it\.setForegroundActive\(true\)|home\.setForegroundActive\(true\)/);
  assert.match(pane,/ContinuumHomeView\(this, liveHologram\)/);

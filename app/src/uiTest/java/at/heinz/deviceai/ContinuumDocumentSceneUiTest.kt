@@ -193,7 +193,7 @@ class ContinuumDocumentSceneUiTest {
         AgentActivity::class.java.getDeclaredMethod("focusChatComposer")
             .apply { isAccessible = true }.invoke(activity)
         measure(root); advance(32L)
-        assertFalse((field(activity, "homeView") as ContinuumHomeView).isShown)
+        assertTrue((field(activity, "homeView") as ContinuumHomeView).isShown)
         (field(activity, "input") as EditText).setText("Öffne bitte die PDF.")
         AgentActivity::class.java.getDeclaredMethod("sendCurrentInput", Boolean::class.javaPrimitiveType)
             .apply { isAccessible = true }.invoke(activity, false)
@@ -220,8 +220,8 @@ class ContinuumDocumentSceneUiTest {
 
     @Test fun restoredChatOpensPdfBeforeTheCockpitsFirstLayout() = withCockpit(startInChat = true) { activity, root ->
         val home = field(activity, "homeView") as ContinuumHomeView
-        assertFalse(home.isShown)
-        assertEquals("The restored CHAT has never laid out its cockpit", 0, home.jarvisShell.width)
+        assertTrue("CHAT retains the shared workstation stage", home.isShown)
+        assertTrue("Mounted presence has current geometry", home.jarvisShell.width > 0)
         val page = examplePage(200, 280)
         val doc = PdfDocumentIntake.Document("Wiederaufnahme.pdf", 4096L, 1, page,
             "Synthetischer PDF-Inhalt.", PdfDocumentIntake.TextState.EXTRACTED, 1)

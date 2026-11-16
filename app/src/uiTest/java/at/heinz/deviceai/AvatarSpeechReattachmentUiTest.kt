@@ -221,7 +221,7 @@ class AvatarSpeechReattachmentUiTest {
         set(f.activity, "conversationActive", true)
         invoke(f.activity, "refreshConversationLayout")
         measure(f.activity.window.decorView)
-        assertSame(field(f.activity, "chatColumn"), f.live.parent)
+        assertSame("Mounted conversation keeps the one live surface", f.home, f.live.parent)
         assertSame(f.live, field(f.activity, "hologramView"))
         assertTrue(f.live.isShown)
         assertEquals(1, descendants(f.activity.window.decorView).count { it is ContinuumHologramView })

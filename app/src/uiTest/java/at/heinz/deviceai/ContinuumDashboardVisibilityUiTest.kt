@@ -64,6 +64,7 @@ class ContinuumDashboardVisibilityUiTest {
         set(activity, "voiceEnabled", false)
         val pane = call(activity, "buildConversationPane", false) as View
         val home = get(activity, "homeView") as ContinuumHomeView
+        home.setJarvisShellStage(false)
         val head = get(activity, "hologramView") as ContinuumHologramView
         head.setNativeHeadEnabled(false)
         head.setAnimationsEnabled(false)

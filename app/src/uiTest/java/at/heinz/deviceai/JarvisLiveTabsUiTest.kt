@@ -194,7 +194,9 @@ class JarvisLiveTabsUiTest {
         val density = f.home.resources.displayMetrics.density
         assertEquals(JarvisHomeTestRoutes.expectedDirectTargets(f.home),
             JarvisHomeTestRoutes.controls(f.home).map { it.tag.toString().substringAfter(':') })
-        assertNull(requireNotNull(f.shell.currentShell())[JarvisShellLayout.Slot.NAV_RAIL])
+        val shell = requireNotNull(f.shell.currentShell())
+        if (shell.workstation) assertNotNull(shell[JarvisShellLayout.Slot.NAV_RAIL])
+        else assertNull(shell[JarvisShellLayout.Slot.NAV_RAIL])
         val tabs = descendants(f.home).filter { it.tag?.toString()?.startsWith("jarvis-live-tab:") == true }
         assertEquals(listOf("system", "memory", "agents"), tabs.map { it.tag.toString().substringAfter(':') })
         for (tab in tabs) {

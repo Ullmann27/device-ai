@@ -52,7 +52,7 @@ test('foreground lifecycle explicitly pauses, cancels, and resumes hologram whil
  assert.match(paused,/if \(!isInMultiWindowMode\) computerViewVisible = false/);
  assert.match(paused,/if \(!isInMultiWindowMode && computerController\?\.awaitingConsent != true\) computerController\?\.stopForVisibilityLoss\(\)/);
  const stopped=segment(activity,'override fun onStop() {','override fun onDestroy()');
- assert.match(stopped,/computerViewVisible = false\s*if \(computerController\?\.awaitingConsent != true\) computerController\?\.stopForVisibilityLoss\(\)/);
+ assert.match(stopped,/computerViewVisible = false\s*command03MainStage\?\.onPause\(\)\s*pauseCommand03Media\(\)\s*if \(computerController\?\.awaitingConsent != true\) computerController\?\.stopForVisibilityLoss\(\)/);
  const controller=readFileSync(root+'OwnerComputerSessionController.kt','utf8');
  const loss=segment(controller,'fun stopForVisibilityLoss() {','fun stop() {');
  assert.match(loss,/if \(awaitingConsent\) return/);

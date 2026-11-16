@@ -4205,6 +4205,7 @@ class AgentActivity : Activity() {
         val column = chatColumn ?: return
         // The workstation stays mounted during text chat too. Native 3D's existing reparent veto remains intact.
         val target: android.view.ViewGroup = if (chat && !home.jarvisShellStage) column else home
+        if (chat && home.jarvisShellStage) head.clearMemoryScene()
         val height = dp(if (keyboardCompact) 88 else if (resources.configuration.screenHeightDp < 520) 120
             else if (home.wide) 200 else 160)
         if (head.parent !== target &&

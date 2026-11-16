@@ -221,7 +221,7 @@ class FullStageMemoryReviewUiTest {
         val oldSequence = f.sequence
         call(f.activity, "focusChatComposer")
         assertFalse("Moving the live head to CHAT cancels the scene", f.live.memoryScene.isActive)
-        assertFalse(f.live.parent === f.home)
+        assertSame("CHAT keeps the shared head mounted in its own stage", f.home, f.live.parent)
         oldSequence.render(document())
         shadowOf(Looper.getMainLooper()).idle()
         call(f.activity, "showHomeDashboard")
