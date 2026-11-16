@@ -1,4 +1,4 @@
-name: "Continuum Code50 — Originalsignierung und GitHub-Release"
+name: "Continuum — Originalsignierung und GitHub-Release"
 
 # Besitzerentscheidung C (08.11.2026, nur Code 50): Signierung und Veröffentlichung über GitHub.
 # Nur manueller Start. Die Kanalwahl ersetzt NICHT die ausdrückliche SHA-Freigabe des Besitzers:
@@ -14,11 +14,19 @@ on:
         required: true
         type: string
       qa_run_id:
-        description: "ID des vollständig grünen continuum-code50-github-qa-Laufs auf genau diesem Commit"
+        description: "Exakter grüner Voll-QA-Lauf für Code51, Code55, Code59 oder das manuelle Code60-Profil"
         required: true
         type: string
+      apk_run_id:
+        description: "Code55: grüner owner-apk-Lauf desselben SHA; sonst leer lassen"
+        required: false
+        type: string
+      context_run_id:
+        description: "Code59/60: grüner Kontext-QA-Lauf desselben SHA; sonst leer lassen"
+        required: false
+        type: string
       owner_approved_sha:
-        description: "Ausdrückliche Besitzerfreigabe: derselbe 40-stellige Commit-SHA zur Originalsignierung"
+        description: "Besitzerfreigabe dieses exakten SHA: Originalsignierung UND Veröffentlichung als neuester GitHub-Release"
         required: true
         type: string
 
@@ -86,3 +94,4 @@ jobs:
         run: |
           set -euo pipefail
           bash scripts/continuum-code50-github-signer.sh sign
+
