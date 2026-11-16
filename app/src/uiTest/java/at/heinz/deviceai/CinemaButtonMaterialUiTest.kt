@@ -32,6 +32,12 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class CinemaButtonMaterialUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private fun field(value: Any, name: String): Any? {
         value.javaClass.declaredFields.firstOrNull { it.name == name }?.let {
             return it.apply { isAccessible = true }.get(value)

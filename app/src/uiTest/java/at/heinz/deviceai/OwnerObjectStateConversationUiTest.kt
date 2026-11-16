@@ -44,6 +44,12 @@ import java.util.concurrent.atomic.AtomicReference
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class OwnerObjectStateConversationUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private class Runtime(ready: Boolean = true, modelPresent: Boolean = ready) : LocalModelRuntime {
         @Volatile override var state = if (ready) LocalModelState.READY else LocalModelState.EMPTY
         override val loadedModel = if (!modelPresent) null else ImportedLocalModel(

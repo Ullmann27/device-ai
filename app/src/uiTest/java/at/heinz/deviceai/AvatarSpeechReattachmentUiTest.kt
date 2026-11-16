@@ -48,6 +48,12 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.LEGACY)
 @LooperMode(LooperMode.Mode.PAUSED)
 class AvatarSpeechReattachmentUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private data class SpeechFixture(
         val activity: AgentActivity,
         val home: ContinuumHomeView,

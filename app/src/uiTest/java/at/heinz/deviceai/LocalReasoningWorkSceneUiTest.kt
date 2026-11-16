@@ -27,6 +27,12 @@ import java.util.concurrent.TimeUnit
 @LooperMode(LooperMode.Mode.PAUSED)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class LocalReasoningWorkSceneUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     @Before fun configureClock() {
         ShadowChoreographer.setPaused(true)
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))

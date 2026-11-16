@@ -19,7 +19,7 @@ Failed real QA: https://github.com/Ullmann27/device-ai/actions/runs/43864138460 
 
 Preserve the original HTML default, approved asset bytes, package, signing certificate, owner gates and full QA requirements. Select the classic mode explicitly in classic fixtures; retain separate real-default HTML coverage. Correct stale source assertions against the actual call path. Extend native QA to exercise the real HTML stage and preserve classic regression coverage, without counting mocked DOM/host checks as device proof.
 
-No failures have been repaired yet. Full/context QA and original signing remain blocked. A code change requires a new source SHA and fresh real runs; the failed run ID is not a signing input.
+First repair checkpoint: 27 classic Activity test classes now explicitly select the existing classic presentation. Three stale source assertions follow the current More-menu offset, bounded conversation presence and authored orb rest phase. The two Node contract files pass all 11 cases locally; Android execution is UNVERIFIED at this checkpoint. No application/default/asset change. Full/context QA and original signing remain blocked. A code change requires a new source SHA and fresh real runs; the failed run ID is not a signing input.
 
 ## Evidence available
 
