@@ -148,17 +148,19 @@ speech synchronization, or Fold7 behavior. The separate source lock verifies
 the original 35 asset bytes and the two-include Android entry point.
 
 The actual Android Activity/WebView routing checks are in
-`at.heinz.deviceai.ContinuumCommand03BridgeUiTest` (ten cases) and
-`at.heinz.deviceai.ContinuumCommand03StageUiTest` (four cases). They cover
+`at.heinz.deviceai.ContinuumCommand03BridgeUiTest` (fourteen cases),
+`at.heinz.deviceai.ContinuumCommand03StageUiTest` (four cases), and
+`at.heinz.deviceai.ContinuumCommand03MediaStageUiTest` (four cases). They cover
 request acknowledgements, pending bot lookup, existing controls during busy
 work, draft restoration and preservation of the same WebView across actual
-native root replacement. Run both physical test classes with the existing
+native root replacement. Run all three physical test classes with the existing
 harness on a clean, pinned source, for example:
 
 ```sh
 python tools/command03-native-qa/run.py --config /absolute/path/native-qa-config.json \
   --mode ui-tests --test at.heinz.deviceai.ContinuumCommand03BridgeUiTest \
   --test at.heinz.deviceai.ContinuumCommand03StageUiTest \
+  --test at.heinz.deviceai.ContinuumCommand03MediaStageUiTest \
   --focus-test-sources --version-code 60 --label command03-html-ui-01 \
   --expected-sha "$CONTINUUM_SOURCE_SHA"
 ```
@@ -174,6 +176,25 @@ Successful runs and the independently checked unsigned APK for source
 JUnit XML files. The normal Gradle incremental history at the original source
 and build output paths was reused. Relocating copied caches triggered a full
 compile in this constrained workspace; those failed attempts are documented.
+
+## Live-frame and native-speech verification
+
+The later clean source `b56a614b290977684b50910fac3cc8d14e4294c0` has
+125 fresh focused Gradle test results (22 HTML/media, 71 unit, 32 classic UI)
+and 28 fresh DOM/interop cases. It also has a normal unsigned release build and
+an independent APK source/structure audit. The exact evidence, compiler-state
+recovery scope, failed attempts, and hardware limitations are recorded in
+`docs/research/omega/COMMAND03-LIVE-FRAME-VISEME-HANDOFF.md` and
+`docs/research/omega/command03-live-qa-b56a614b/README.md`.
+These are targeted local results, not a complete release or physical-device gate.
+
+The strict cross-language DOM case consumes the actual Stage serialization of a
+synthetic 2x2 JPEG. Extract the `COMMAND03_COMPUTER_WIRE:` line from the fresh
+`ContinuumCommand03MediaStageUiTest` JUnit output, then pass its JSON file as
+`COMMAND03_NATIVE_COMPUTER_PACKET` and set `COMMAND03_REQUIRE_NATIVE_PACKET=1`.
+The latter flag makes a missing native packet a failure instead of an optional skip.
+The source-bound archived packet documents this run; reuse does not establish a
+new Android execution. Use `--test-reporter=tap` for an explicit Node TAP report.
 
 ## Actual Activity captures
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-16T05:17:05" hostname="731a0110a54f" time="5.025">
+  <properties/>
+  <testcase name="largeTypePortraitRestoresCockpitGeometry" classname="at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest" time="4.411"/>
+  <testcase name="referencePortraitRetainsItsReviewedGeometry" classname="at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest" time="0.147"/>
+  <testcase name="largeTypeLandscapeRestoresCockpitGeometry" classname="at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest" time="0.171"/>
+  <testcase name="largeTypePhoneRestoresCockpitGeometry" classname="at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest" time="0.128"/>
+  <testcase name="narrowPhoneRestoresCockpitGeometryAtNormalFont" classname="at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest" time="0.166"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

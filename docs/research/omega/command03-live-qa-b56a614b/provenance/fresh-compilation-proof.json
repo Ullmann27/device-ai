@@ -1,0 +1,67 @@
+{
+  "source": {
+    "commit": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "tree": "092827dcd6ea9cdf92129e80d55c868577075c2c",
+    "clean": true,
+    "status": "",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_metadata": []
+  },
+  "actual_task_executed": true,
+  "normal_input_reassessment": true,
+  "incremental_rebuild": true,
+  "compiler_finished": true,
+  "all_seven_changed_or_new_primary_classes_fresh": [
+    {
+      "class": "at/heinz/deviceai/AgentActivity.class",
+      "new_sha256": "2e2da58811db6c10b1c9c90a285b2f93e64c327dd027c2b6d396da5502911b35",
+      "baseline_sha256": "a75a9b00b9084ceba2c0362ff98bb6a0dad9d671f346540ad3fea14a63402fef",
+      "fresh_mtime": 1794805981.6741052,
+      "changed_or_new": true
+    },
+    {
+      "class": "at/heinz/deviceai/cognitive/LiveMonitorSubmission.class",
+      "new_sha256": "77624abf09116de98f358e69c40d4caa135ae424dbf6753f1e1ccf7090fb8464",
+      "baseline_sha256": "18d499ebc022c104920e1aa47b7eaba62e0d23f82554a220329560dd1995578d",
+      "fresh_mtime": 1794805981.6799154,
+      "changed_or_new": true
+    },
+    {
+      "class": "at/heinz/deviceai/ui/Command03BridgeContract.class",
+      "new_sha256": "2c0c940e065f30d4ee0ad04454b9c25dc9ea8676f817249c03d75c8c950c03c0",
+      "baseline_sha256": null,
+      "fresh_mtime": 1794805981.6801226,
+      "changed_or_new": true
+    },
+    {
+      "class": "at/heinz/deviceai/ui/Command03ComputerProjection.class",
+      "new_sha256": "80694e7b75d180192308bc89a711b9450c4386ce80e3fc527949b10e929d9d18",
+      "baseline_sha256": null,
+      "fresh_mtime": 1794805981.6806989,
+      "changed_or_new": true
+    },
+    {
+      "class": "at/heinz/deviceai/ui/Command03FrameEncoder.class",
+      "new_sha256": "3853ca0c059a45d4507d2e0e5fd654ef660914d817330343a158889fae6b67ce",
+      "baseline_sha256": null,
+      "fresh_mtime": 1794805981.6808624,
+      "changed_or_new": true
+    },
+    {
+      "class": "at/heinz/deviceai/ui/Command03SpeechProjection.class",
+      "new_sha256": "0f6ad30ecf890ef91ab7bc1a9367d78dacbf2ce10c99da009a09354488195d03",
+      "baseline_sha256": null,
+      "fresh_mtime": 1794805981.6810775,
+      "changed_or_new": true
+    },
+    {
+      "class": "at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class",
+      "new_sha256": "114cfc2e75f36d7016652dc54dc598797e7c87bb88c93d9eaefbf65249d12c56",
+      "baseline_sha256": null,
+      "fresh_mtime": 1794805981.681271,
+      "changed_or_new": true
+    }
+  ],
+  "source_restored": "RESTORED_WITHOUT_FORCE_OR_RESET",
+  "historical_release_unchanged": true
+}
