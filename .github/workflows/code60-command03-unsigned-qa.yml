@@ -84,18 +84,20 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          # The app deliberately allows only exact Gradle task names in local QA.
+          # Use its existing fail-closed selection init script, not --tests flags.
+          printf '%s\n' '["at.heinz.deviceai.ContinuumCommand03BridgeUiTest","at.heinz.deviceai.ContinuumCommand03StageUiTest","at.heinz.deviceai.ContinuumCommand03MediaStageUiTest","at.heinz.deviceai.ui.Command03DraftLedgerTest"]' \
+            > "$RUNNER_TEMP/command03-test-selection.json"
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Dcontinuum.native.testSelection="$RUNNER_TEMP/command03-test-selection.json" \
             -Pkotlin.compiler.execution.strategy=in-process \
             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
             -PcontinuumStandaloneVersionCode=60 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
-            :app:testDebugUnitTest \
-            --tests at.heinz.deviceai.ContinuumCommand03BridgeUiTest \
-            --tests at.heinz.deviceai.ContinuumCommand03StageUiTest \
-            --tests at.heinz.deviceai.ContinuumCommand03MediaStageUiTest \
-            --tests at.heinz.deviceai.ui.Command03DraftLedgerTest
+            -I tools/command03-native-qa/test-selection.init.gradle \
+            :app:testDebugUnitTest
       - name: Upload native JUnit evidence
         if: always()
         uses: actions/upload-artifact@v4
