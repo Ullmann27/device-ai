@@ -318,6 +318,44 @@ class ContinuumCommand03BridgeUiTest {
         }
     }
 
+
+    @Test fun computerStopDuringBotChangeDoesNotReenterOrLoseDraftRecoveryCause() = withActivity { _, a ->
+        ready(a)
+        project(a, document("Wechsel.pdf"))
+        val (controller, _) = activeComputer(a)
+        val scope = binding(a)
+        val oldOwner = requireNotNull(field(a, "command03View"))
+        val oldRevision = (objectField(oldOwner, "revision") as Number).toLong()
+        val text = "Atlas: Prüfe die Datei"
+        val command = at.heinz.deviceai.ui.Command03Command("bot-switch-proof", text,
+            Command03Draft(scope, text, text.length, text.length, 1L))
+        val pendingType = AgentActivity::class.java.declaredClasses
+            .single { it.simpleName == "PendingCommand03Input" }
+        val completion: (Boolean, String?) -> Unit = { _, _ -> }
+        val pending = pendingType.declaredConstructors.single { it.parameterCount == 5 }
+            .apply { isAccessible = true }
+            .newInstance(command, android.os.SystemClock.elapsedRealtime() + 10_000L,
+                completion, null, false)
+        val newerText = "Ungesendeter zweiter Entwurf"
+        set(a, "pendingCommand03Input", pending)
+        set(a, "deferredCommand03Draft", Command03Draft(scope, newerText, 4, 9, 2L))
+        set(a, "selectedBot", profile(a))
+        assertFalse(call(a, "command03ViewCurrent", oldOwner.javaClass to oldOwner) as Boolean)
+        assertSame("A stale callback must not change its view", oldOwner, field(a, "command03View"))
+        call(a, "replaceCommand03View", pendingType to pending)
+        val current = requireNotNull(field(a, "command03View"))
+        assertEquals("Stopping Computer must not recursively replace the view",
+            oldRevision + 1L, (objectField(current, "revision") as Number).toLong())
+        assertFalse(controller.active)
+        assertNull(field(a, "command03Document"))
+        val cause = field(a, "command03TransitionCause") as JSONObject
+        assertEquals("bot-switch-proof", cause.getString("commandId"))
+        assertEquals(scope.viewId, cause.getString("fromViewId"))
+        val carried = field(a, "deferredCommand03Draft") as Command03Draft
+        assertEquals(newerText, carried.text)
+        assertEquals(binding(a), carried.binding)
+    }
+
     @Test fun htmlDraftSurvivesTheActualSwitchBackToTheNativeComposer() = withActivity { _, a ->
         val draft = "Erste Zeile\nZweite Zeile mit ä und 😀\tEnde"
         assertTrue(stage(a).isAttachedToWindow)

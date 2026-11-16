@@ -162,6 +162,48 @@ class ContinuumCommand03StageUiTest {
         assertEquals(1, calls.size)
     }
 
+
+    @Test fun sameViewBindingContradictionsCannotDisableNativeCommands() = withStage { stage, calls ->
+        pageReady(stage)
+        val old = scope
+        val otherSession = "44444444-4444-4444-8444-444444444444"
+        assertFalse(stage.bind(old.copy(viewRevision = 2)))
+        assertFalse(stage.bind(old.copy(sessionId = otherSession)))
+        assertFalse(stage.bind(old.copy(viewRevision = 2, sessionId = otherSession)))
+        assertFalse(stage.bind(old.copy(viewId = "33333333-3333-4333-8333-333333333333")))
+        assertEquals(old, stage.binding)
+        stage.webViewClient.shouldOverrideUrlLoading(stage, request("Alter Chat bleibt bedienbar"))
+        assertEquals("Alter Chat bleibt bedienbar", calls.single().text)
+        assertTrue(payload(stage, "commandResult").getBoolean("accepted"))
+        val next = old.copy(viewId = "33333333-3333-4333-8333-333333333333",
+            viewRevision = 2, sessionId = otherSession)
+        assertTrue(stage.bind(next))
+        assertEquals(next, stage.binding)
+        stage.webViewClient.shouldOverrideUrlLoading(stage, request("Alte Ansicht", binding = old))
+        assertEquals(1, calls.size)
+        scope = next
+        stage.webViewClient.shouldOverrideUrlLoading(stage, request("Neuer Chat"))
+        assertEquals(2, calls.size)
+        assertEquals(otherSession, payload(stage, "commandResult").getString("sessionId"))
+    }
+
+    @Test fun rejectedDraftReturnsTheLocalizedStaleEditReason() {
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
+        val calls = mutableListOf<Command03Command>()
+        val stage = ContinuumCommand03OriginalStage(controller.get(),
+            onNativeAction = { _, _ -> },
+            onNativeCommand = { command, _ -> calls.add(command) },
+            onNativeDraft = { false })
+        try {
+            scope = Command03Binding(stage.pageId, "22222222-2222-4222-8222-222222222222", 1L, session)
+            assertTrue(stage.bind(scope))
+            pageReady(stage)
+            stage.webViewClient.shouldOverrideUrlLoading(stage, request("Neue Frage"))
+            assertEquals("stale-edit", payload(stage, "commandResult").getString("reason"))
+            assertTrue(calls.isEmpty())
+        } finally {stage.destroy(); controller.pause().stop().destroy()}
+    }
+
     @Test fun rejectedDraftCannotTriggerANativeRouteButScopedStopStaysAvailable() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val routes = mutableListOf<String>()

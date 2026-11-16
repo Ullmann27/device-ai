@@ -1065,6 +1065,41 @@ test('native control changing only the view fences pending image decoding and sp
   } finally {f.close();}
 });
 
+
+test('same-view binding contradictions cannot disable native actions or overwrite a draft', async () => {
+  const f=await fixture();
+  try {
+    f.state();
+    const field=f.input('Aktueller Auftrag');
+    for(const invalid of [
+      {...binding,viewRevision:2},
+      {...binding,sessionId:anotherSession},
+      {...binding,viewRevision:2,sessionId:anotherSession},
+      {...binding,viewId:anotherView}
+    ]) {
+      f.window.ContinuumNative.receive({...invalid,draftRevision:99,
+        draft:{text:'Unerlaubter Entwurf',selectionStart:0,selectionEnd:0}});
+      assert.equal(field.value,'Aktueller Auftrag');
+    }
+    f.submit();
+    const previous=f.navigations.findLast(url=>url.pathname==='/command');
+    assert.ok(previous);
+    assert.equal(previous.searchParams.get('viewId'),viewId);
+    assert.equal(previous.searchParams.get('viewRevision'),'1');
+    assert.equal(previous.searchParams.get('sessionId'),sessionId);
+    acknowledge(f,{id:previous.searchParams.get('id'),accepted:false,reason:'stale-edit'});
+    assert.match(f.document.querySelector('#toast').textContent,/Entwurf wurde inzwischen geändert/);
+    assert.equal(field.value,'Aktueller Auftrag');
+    f.state({viewId:anotherView,viewRevision:2,viewKind:'BOT',viewLabel:'Atlas',
+      draft:{text:'Bot-Entwurf',selectionStart:11,selectionEnd:11}});
+    assert.equal(field.value,'Bot-Entwurf');
+    f.submit();
+    const next=f.navigations.findLast(url=>url.pathname==='/command');
+    assert.equal(next.searchParams.get('viewId'),anotherView);
+    assert.equal(next.searchParams.get('viewRevision'),'2');
+  } finally {f.close();}
+});
+
 // The final integration gate requires fresh JSON captured from the actual Kotlin
 // Stage evaluateJavascript output. Its image decoder remains the explicit seam above.
 if (process.env.COMMAND03_REQUIRE_NATIVE_PACKET === '1' || process.env.COMMAND03_NATIVE_COMPUTER_PACKET) {
