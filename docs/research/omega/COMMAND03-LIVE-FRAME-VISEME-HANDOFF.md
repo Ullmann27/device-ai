@@ -24,6 +24,14 @@ Vor Neuerstellung werden vorhandene Aufrufketten und öffentliche Szenen-APIs ge
 - Regulärer Kotlin-Build und gezielte Android-/DOM-Prüfungen auf einem exakt gesicherten SHA, anschließend normaler unsigned APK-Bau, soweit lokale Ressourcen ausreichen.
 - Erfolgreiche Änderungen werden auf die genannte gemeinsame Integrationslinie zurückgeführt; keine isolierte Forschungsinsel.
 
+## Nach Quellenprüfung festgelegte Anschlüsse
+
+- Computer: `OwnerComputerSessionController.setFeed` → derselbe `AndroidLiveComputer.feed` → begrenzter HTML-Präsentationsadapter. Die vorhandene `LiveMonitorSubmission` und der bestehende Dispatch-Guard bleiben maßgeblich; das reine Versenden oder Decodieren eines Bildes erlaubt keine Aktion.
+- Darstellung: exakte Sitzungs-/Generations-/Bildbestätigung aus der lokalen Seite, danach Android-`WebView.postVisualStateCallback` und erst das folgende sichtbare `onDraw`. Android dokumentiert den Callback als Zeichnungsbereitschaft; er ist selbst noch kein Draw: [offizieller WebView-Vertrag](https://developer.android.com/reference/android/webkit/WebView#postVisualStateCallback(long,%20android.webkit.WebView.VisualStateCallback)). Quellbindung und ursprüngliches Bildalter werden danach nochmals geprüft.
+- Sprache: vorhandener `AvatarDirector` / `AvatarPoseReducer` → öffentliches `ContinuumAvatar.setSpeechFrame` und `clearSpeech`. Die originalen 15 Mundformen sind bereits kompatibel. Gemessene PCM-Hüllkurven, TTS-Wortbereiche und der bereits vorhandene Texttakt-Fallback bleiben unterscheidbar; Wortformen sind keine phonemgenaue Audioanalyse.
+- Lifecycle: Der bereits erlaubte sichtbare Computerbetrieb im geteilten Bildschirm bleibt auch beim Fokuswechsel zur Ziel-App erhalten. Tatsächlich verborgene Fenster, `onStop`, Gesprächswechsel, Stopp und Schließen müssen Bilder/Renderbestätigungen entwerten. Sprachausgabe behält ihren eigenen Abbruchpfad.
+- Betroffene Architekturverträge: EXP-07 (unabhängige Negativ-/Verifikationsprüfung), EXP-11 (bestehender Controller und bestehende Autorisierung). Kein neuer Experimentstatus und kein EXP-00-Gerätenachweis werden behauptet.
+
 ## Nachweisgrenzen
 
 PORTIERT: noch offen. VERIFIZIERT: noch offen. GERÄTEBESTÄTIGT: NOT_RUN.
