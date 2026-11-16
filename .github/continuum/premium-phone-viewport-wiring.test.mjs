@@ -27,7 +27,8 @@ test('home dashboard remains in a scrolling viewport, not hidden behind the navi
   assert.match(buildPane, /dashboardSection = dashboardScroll/);
   assert.match(activity, /val mountedPresence = chat && homeView\?\.jarvisShellStage == true/);
   assert.match(activity, /dashboardSection\?\.visibility = if \(!chat \|\| mountedPresence\) View\.VISIBLE else View\.GONE/);
-  assert.match(homeView, /val h = if \(jarvisShellStage && width \/ density >= 240f\)/);
+  assert.match(homeView, /val h = if \(jarvisShellStage && width \/ density >= 240f && presenceHeight != null\)/);
+  assert.match(homeView, /else if \(jarvisShellStage && width \/ density >= 240f\)/);
   assert.match(homeView, /JarvisShellLayout\.forContent\(width \/ density, jarvisShell\.viewportHeightDp,/);
   assert.match(homeView, /else maxOf\(contentHeight, suggestedMinimumHeight\)/);
   assert.match(homeView, /setMeasuredDimension\(width, h\)/);
