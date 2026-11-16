@@ -1,0 +1,181 @@
+{
+  "mode": "ui-compile",
+  "label": "controls-html-ui-compile-01",
+  "checkout": "/workspace/scratch/5d87eafb90be/device-ai-android",
+  "build_output": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+  "command": [
+    "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=1",
+    "--console=plain",
+    "--project-cache-dir",
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build/project-cache",
+    "-Dorg.gradle.jvmargs=-Xmx768m -XX:MaxMetaspaceSize=256m -XX:ReservedCodeCacheSize=128m -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -XX:+ExitOnOutOfMemoryError -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts",
+    "-Dcontinuum.native.buildRoot=/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerArm64=true",
+    "-PcontinuumStandaloneVersionCode=60",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-I",
+    "/workspace/scratch/5d87eafb90be/device-ai-android/tools/command03-native-qa/build-location.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    "-I",
+    "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/original-test-memory.init.gradle",
+    "-Dcontinuum.native.testSources=/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-html-ui-compile-01-test-sources.json",
+    "-Dcontinuum.native.compiledTestSources=/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-html-ui-compile-01-compiled-test-sources.json",
+    "-I",
+    "/workspace/scratch/5d87eafb90be/device-ai-android/tools/command03-native-qa/focused-test-sources.init.gradle",
+    ":app:compileDebugUnitTestKotlin"
+  ],
+  "source": {
+    "commit": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+    "tree": "62eccf11011f44cd613e0223f712fa0373be1f88",
+    "clean": true,
+    "status": "",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_metadata": []
+  },
+  "offline": true,
+  "dependency_resolution": "CACHE_ONLY",
+  "original_signing_used": false,
+  "device_tests": "NOT_RUN",
+  "cached_model_pins_verified": {
+    "status": "VERIFIED",
+    "models": [
+      {
+        "id": "yunet",
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "bytes": 232589
+      },
+      {
+        "id": "sface",
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "bytes": 38696353
+      }
+    ]
+  },
+  "toolchain": {
+    "repo": "/workspace/scratch/5d87eafb90be/device-ai-android",
+    "output_dir": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output",
+    "build_dir": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+    "java_home": "/workspace/scratch/5d87eafb90be/native-toolchain/jdk17",
+    "android_sdk": "/workspace/scratch/5d87eafb90be/native-toolchain/android-sdk",
+    "android_user_home": "/workspace/scratch/5d87eafb90be/native-toolchain/android-user",
+    "gradle_home": "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-8.11.1",
+    "gradle_user_home": "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-cache",
+    "build_tools_version": "35.0.0",
+    "config_path": "/workspace/scratch/5d87eafb90be/native-qa-config.json"
+  },
+  "java_memory_limits_mib": {
+    "heap": 768,
+    "metaspace": 256
+  },
+  "resource_sample_seconds": 2,
+  "workspace_safety_buffer_bytes": 134217728,
+  "selected_tests": [
+    "at.heinz.deviceai.ContinuumCommand03BridgeUiTest",
+    "at.heinz.deviceai.ContinuumCommand03StageUiTest",
+    "at.heinz.deviceai.ContinuumCommand03MediaStageUiTest"
+  ],
+  "focused_test_sources": {
+    "scope": "FOCUSED_HOST_TESTS_ONLY",
+    "source_commit": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+    "files": [
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt",
+        "bytes": 1285,
+        "sha256": "8fd846639c0ed9b207f9e5f6599ee448c9e58fadb2eb7f818d4362d83c8acf18",
+        "role": "existing_helper",
+        "filters": []
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/Command03HostWebView.kt",
+        "bytes": 1323,
+        "sha256": "3bb9631914c768d8d642c541d18aabed484a48b5716c3ed37278e108d3dae682",
+        "role": "existing_helper",
+        "filters": []
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03BridgeUiTest.kt",
+        "bytes": 54179,
+        "sha256": "589dc38e22a0a98c5ccd3560959e485f5eeb23f35d6bed99e669450b91967a53",
+        "role": "selected_test",
+        "filters": [
+          "at.heinz.deviceai.ContinuumCommand03BridgeUiTest"
+        ]
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03MediaStageUiTest.kt",
+        "bytes": 10967,
+        "sha256": "769ca446a327a4fa6f5854194c67a1d23d603db2a16650ebef6255263e0d9052",
+        "role": "selected_test",
+        "filters": [
+          "at.heinz.deviceai.ContinuumCommand03MediaStageUiTest"
+        ]
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03StageUiTest.kt",
+        "bytes": 10798,
+        "sha256": "c9f9f32ae8693d30d590fea5ac47845a900ae148da73fb9c18dd3feac3f67936",
+        "role": "selected_test",
+        "filters": [
+          "at.heinz.deviceai.ContinuumCommand03StageUiTest"
+        ]
+      }
+    ]
+  },
+  "verification_scope": "FOCUSED_HOST_TEST_COMPILATION_ONLY",
+  "memory_harness_sha256": "9541dfeedd3520e03317d8ef37461062a00432d4d1e7d9c064eebde1795d90c5",
+  "free_bytes": {
+    "build_volume": 572538880,
+    "workspace": 572538880
+  },
+  "test_execution": "NOT_RUN_COMPILE_ONLY",
+  "elapsed_seconds": 19.031,
+  "gradle_exit": 0,
+  "interrupted": false,
+  "source_after": {
+    "commit": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+    "tree": "62eccf11011f44cd613e0223f712fa0373be1f88",
+    "clean": true,
+    "status": "",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_metadata": []
+  },
+  "source_unchanged": true,
+  "log": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-html-ui-compile-01.log",
+  "free_bytes_after": {
+    "build_volume": 565256192,
+    "workspace": 565256192
+  },
+  "resource_monitor": {
+    "path": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-html-ui-compile-01-resources.jsonl",
+    "interval_seconds": 2,
+    "sampled_java_peak_rss_kib": 990020,
+    "lowest_sampled_mem_available_kib": 4110188,
+    "scope": "visible process namespace; sampling alone does not establish a kill cause"
+  },
+  "gradle_daemon_disappeared": false,
+  "kotlin_compiler_errors": [],
+  "compiled_test_source_receipt": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-html-ui-compile-01-compiled-test-sources.json",
+  "focused_source_hashes_unchanged": true,
+  "cached_model_pins_after": {
+    "status": "VERIFIED",
+    "models": [
+      {
+        "id": "yunet",
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "bytes": 232589
+      },
+      {
+        "id": "sface",
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "bytes": 38696353
+      }
+    ]
+  },
+  "status": "PASS_LOCAL_TEST_COMPILATION_ONLY"
+}

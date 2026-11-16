@@ -5,6 +5,7 @@ import at.heinz.deviceai.localmodel.LocalModelGenerationPolicy
 
 /** Bounds for the local presentation transport; none of them grants a model or tool action. */
 internal object Command03BridgeContract {
+    const val MAX_SAFE_REVISION = 9_007_199_254_740_991L
     const val MAX_COMMAND_CHARACTERS = LocalDialogueContextLimits.MAX_OWNER_CHARACTERS
     const val MAX_COMMAND_BYTES = LocalDialogueContextLimits.MAX_OWNER_CHARACTERS
     const val MAX_DRAFT_CHARACTERS = 262_144
@@ -15,6 +16,9 @@ internal object Command03BridgeContract {
 
     fun validSession(value: String) = SESSION.matches(value)
     fun validRequest(value: String) = REQUEST.matches(value)
+    fun validRevision(value: Long) = value in 0..MAX_SAFE_REVISION
+    fun validBinding(value: Command03Binding) = validSession(value.pageId) && validSession(value.viewId) &&
+        validSession(value.sessionId) && validRevision(value.viewRevision)
 
     fun commandFailure(text: String): String? = when {
         text.isBlank() -> "invalid-input"
@@ -32,11 +36,47 @@ internal object Command03BridgeContract {
         LocalModelGenerationPolicy.responsePrefix(text, MAX_MESSAGE_CHARACTERS)
 }
 
-internal data class Command03Command(val id: String, val sessionId: String, val text: String)
+internal data class Command03Binding(
+    val pageId: String,
+    val viewId: String,
+    val viewRevision: Long,
+    val sessionId: String
+)
+
+internal data class Command03Command(val id: String, val text: String, val draft: Command03Draft) {
+    val binding: Command03Binding get() = draft.binding
+    val sessionId: String get() = binding.sessionId
+}
 
 internal data class Command03Draft(
-    val sessionId: String,
+    val binding: Command03Binding,
     val text: String,
     val selectionStart: Int,
-    val selectionEnd: Int
-)
+    val selectionEnd: Int,
+    val clientEditRevision: Long
+) {
+    val sessionId: String get() = binding.sessionId
+}
+
+/** An edit acknowledgement never grants a command. Native authored text keeps the last admitted edit revision. */
+internal class Command03DraftLedger {
+    var binding: Command03Binding? = null; private set
+    var acknowledged: Long = 0; private set
+
+    fun bind(next: Command03Binding) {
+        if (binding == next) return
+        binding = next
+        acknowledged = 0
+    }
+
+    fun accept(edit: Command03Draft, currentText: String, currentStart: Int, currentEnd: Int): Boolean {
+        if (edit.binding != binding || !Command03BridgeContract.validBinding(edit.binding) ||
+            !Command03BridgeContract.validRevision(edit.clientEditRevision) ||
+            !Command03BridgeContract.validDraft(edit.text) || edit.selectionStart !in 0..edit.text.length ||
+            edit.selectionEnd !in edit.selectionStart..edit.text.length || edit.clientEditRevision < acknowledged) return false
+        if (edit.clientEditRevision == acknowledged && (edit.text != currentText ||
+                edit.selectionStart != currentStart || edit.selectionEnd != currentEnd)) return false
+        acknowledged = edit.clientEditRevision
+        return true
+    }
+}

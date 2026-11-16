@@ -44,6 +44,13 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class JarvisLiveTabsUiTest {
+    /** Legacy native UI regression; the new original HTML remains the app default. */
+    @org.junit.Before fun selectNativePresentationForThisFixture() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     @Before fun pauseVsync() {
         ShadowChoreographer.setPaused(true)
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
@@ -194,7 +201,10 @@ class JarvisLiveTabsUiTest {
         val density = f.home.resources.displayMetrics.density
         assertEquals(JarvisHomeTestRoutes.expectedDirectTargets(f.home),
             JarvisHomeTestRoutes.controls(f.home).map { it.tag.toString().substringAfter(':') })
-        assertNull(requireNotNull(f.shell.currentShell())[JarvisShellLayout.Slot.NAV_RAIL])
+        val shell = requireNotNull(f.shell.currentShell())
+        if (shell.workstation) assertEquals("Responsive workstation rail",
+            shell.width >= 600f, shell[JarvisShellLayout.Slot.NAV_RAIL] != null)
+        else assertNull(shell[JarvisShellLayout.Slot.NAV_RAIL])
         val tabs = descendants(f.home).filter { it.tag?.toString()?.startsWith("jarvis-live-tab:") == true }
         assertEquals(listOf("system", "memory", "agents"), tabs.map { it.tag.toString().substringAfter(':') })
         for (tab in tabs) {

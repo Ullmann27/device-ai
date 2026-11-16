@@ -17,6 +17,7 @@ import subprocess
 import sys
 import time
 import xml.etree.ElementTree as ET
+import zlib
 
 probe_started_ns = time.monotonic_ns()
 serial, destination = sys.argv[1:3]
@@ -170,6 +171,57 @@ def read_hierarchy(label, await_avatar_diagnostic=False, await_text=None):
                    for n in hierarchy.iter('node')), f'{label}: expected UI text missing'
     return hierarchy
 
+def assert_html_pixels(png, label):
+    """Require visible, non-monochrome decoded pixels from the actual screenshot."""
+    assert png.startswith(b'\x89PNG\r\n\x1a\n') and len(png) > 25000, f'{label}: blank display capture'
+    pos, image_info, image_bytes = 8, None, []
+    while pos + 12 <= len(png):
+        size = struct.unpack('>I', png[pos:pos + 4])[0]
+        kind = png[pos + 4:pos + 8]
+        data = png[pos + 8:pos + 8 + size]
+        assert pos + size + 12 <= len(png), f'{label}: truncated PNG'
+        if kind == b'IHDR':
+            image_info = struct.unpack('>IIBBBBB', data)
+        elif kind == b'IDAT':
+            image_bytes.append(data)
+        elif kind == b'IEND':
+            break
+        pos += size + 12
+    assert image_info is not None and image_bytes, f'{label}: missing PNG data'
+    width, height, depth, color, compress, filtering, interlace = image_info
+    assert depth == 8 and color in (2, 6) and (compress, filtering, interlace) == (0, 0, 0), f'{label}: unsupported screenshot PNG'
+    assert 200 <= width <= 4096 and 200 <= height <= 4096
+    bpp = 4 if color == 6 else 3
+    stride = width * bpp
+    pixels = zlib.decompress(b''.join(image_bytes))
+    assert len(pixels) == height * (stride + 1), f'{label}: incomplete decoded screenshot'
+    previous = bytearray(stride)
+    seen = set()
+    for y in range(height):
+        offset = y * (stride + 1)
+        mode = pixels[offset]
+        assert mode in range(5), f'{label}: invalid scanline filter'
+        row = bytearray(pixels[offset + 1:offset + stride + 1])
+        for index in range(stride):
+            a = row[index - bpp] if index >= bpp else 0
+            b = previous[index]
+            c = previous[index - bpp] if index >= bpp else 0
+            if mode == 0: predictor = 0
+            elif mode == 1: predictor = a
+            elif mode == 2: predictor = b
+            elif mode == 3: predictor = (a + b) // 2
+            else:
+                p = a + b - c
+                errors = [abs(p - a), abs(p - b), abs(p - c)]
+                predictor = [a, b, c][errors.index(min(errors))]
+            row[index] = (row[index] + predictor) & 255
+        if height // 6 <= y < height * 5 // 6 and y % 17 == 0:
+            for x in range(width // 6, width * 5 // 6, 11):
+                seen.add(bytes(row[x * bpp:x * bpp + 3]))
+        previous = row
+    assert len(seen) >= 48, f'{label}: flat or blank HTML render ({len(seen)} distinct colors)'
+    return len(seen)
+
 def snapshot(label, rotation=None, record=True, await_avatar_diagnostic=False, await_text=None):
     if routine_mode:
         report['capture_count'] = report.get('capture_count', 0) + 1
@@ -197,7 +249,16 @@ def snapshot(label, rotation=None, record=True, await_avatar_diagnostic=False, a
             x1, y1, x2, y2 = map(int, bounds.groups())
             if x2 > x1 and y2 > y1:
                 nodes.append(node)
-    assert any(n.get('text') or n.get('content-desc') for n in nodes), f'{label}: empty app UI'
+    labelled = any(n.get('text') or n.get('content-desc') for n in nodes)
+    original_html = any(n.get('class') == 'android.webkit.WebView' and
+                        n.get('package') == package for n in nodes)
+    if original_html and not labelled:
+        diversity = assert_html_pixels(png, label)
+        report.setdefault('html_stage_evidence', []).append({
+            'label': label, 'webview': True, 'decoded_distinct_colors': diversity,
+            'capture': label + '.png', 'source_sha': source})
+    else:
+        assert labelled, f'{label}: empty app UI'
     if record:
         report['checks'].append({'name': label, 'status': 'PASS', 'pid': pid,
                                  'bounded_app_nodes': len(nodes), 'display': [width, height]})
@@ -444,6 +505,20 @@ try:
         nodes, _, _ = snapshot('setup-dismissed', await_text='Darf ich dich beim Gespräch anschauen?')
     if tap(nodes, ['NEIN']):
         nodes, _, _ = snapshot('camera-declined')
+    if any(n.get('class') == 'android.webkit.WebView' and n.get('package') == package for n in nodes):
+        # Show the actual original design, then use its existing owner-operated switch.
+        evidence = 'camera-declined.png' if (out / 'camera-declined.png').is_file() else 'fresh-empty-no-permissions.png'
+        assert_html_pixels((out / evidence).read_bytes(), 'HTML default')
+        shell('input', 'keyevent', 'KEYCODE_BACK')
+        choice, current_pid, _ = snapshot('html-presentation-choice', record=False)
+        assert current_pid == first_pid, 'Presentation choice restarted app'
+        assert tap(choice, ['ALTE ANSICHT ÖFFNEN']), 'Owner classic-switch control missing'
+        nodes, current_pid, _ = snapshot('classic-after-owner-switch')
+        assert current_pid == first_pid, 'Presentation change restarted app'
+        assert any(n.get('text') or n.get('content-desc') for n in nodes), 'Classic control hierarchy missing'
+        report['presentation_roundtrip'] = {
+            'from': 'ORIGINAL_HTML_DEFAULT', 'to': 'CLASSIC_VIA_OWNER_BUTTON',
+            'original_evidence': evidence, 'classic_evidence': 'classic-after-owner-switch.xml'}
     if routine_mode:
         import importlib.util
         sys.dont_write_bytecode = True

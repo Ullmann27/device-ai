@@ -30,11 +30,12 @@ internal class ContinuumCommand03OriginalStage(
     context: Context,
     private val onNativeAction: (route: String, value: String?) -> Unit,
     private val onNativeCommand: (Command03Command, (Boolean, String?) -> Unit) -> Unit,
-    private val onNativeDraft: (Command03Draft) -> Unit,
+    private val onNativeDraft: (Command03Draft) -> Boolean,
     private val onReady: () -> Unit = {},
     private val onComputerFrameDrawn: (Command03FrameAck) -> Unit = {},
     private val onComputerFrameHidden: (Command03FrameAck) -> Unit = {},
-    private val onPresentationLost: () -> Unit = {}
+    private val onPresentationLost: () -> Unit = {},
+    private val canFocusComposer: () -> Boolean = { true }
 ) : WebView(context) {
     companion object {
         const val LOCAL_HOST = "appassets.androidplatform.net"
@@ -42,7 +43,7 @@ internal class ContinuumCommand03OriginalStage(
         const val INDEX = "https://" + LOCAL_HOST + ASSET_PATH + "index.android.html"
         private val SAFE_PATH = Regex("[A-Za-z0-9_./-]{1,200}")
         private val ROUTES = setOf("home", "chat", "chats", "new-chat", "files",
-            "research", "agents", "memory", "device", "settings", "voice-input", "stop")
+            "research", "agents", "memory", "device", "settings", "voice-input", "voice-input-long-press", "stop")
         private fun denied(): WebResourceResponse = WebResourceResponse(
             "text/plain", "UTF-8", 403, "Forbidden", emptyMap(),
             ByteArrayInputStream(ByteArray(0))
@@ -65,16 +66,22 @@ internal class ContinuumCommand03OriginalStage(
     }
 
     private var pageReady = false
+    private var pageStarted = false
+    var pageId: String = java.util.UUID.randomUUID().toString(); private set
+    var binding: Command03Binding? = null; private set
     private var disposed = false
     private var queuedState: String? = null
     private var queuedDocument: String? = null
-    private var queuedTranscript: Pair<String, JSONArray>? = null
+    private var queuedTranscript: Pair<Command03Binding, JSONArray>? = null
     private val queuedMessages = ArrayDeque<JSONObject>()
     private data class CommandReceipt(val request: Command03Command, var result: JSONObject? = null)
     private val commands = linkedMapOf<String, CommandReceipt>()
     private val queuedResults = linkedMapOf<String, JSONObject>()
-    private var queuedComputer: Pair<Command03ComputerPacket, Long>? = null
-    private var queuedSpeech: Command03SpeechPacket? = null
+    private var queuedComputer: Triple<Command03Binding, Command03ComputerPacket, Long>? = null
+    private var queuedSpeech: Pair<Command03Binding, Command03SpeechPacket>? = null
+    private val queuedSources = linkedMapOf<String, JSONObject>()
+    private var queuedSection: Pair<JSONObject, Boolean>? = null
+    private var focusRevision = 0L
     private var livePresentationActive = false
     private var computerFrame: Command03FrameAck? = null
     private var computerFrameDeadline = 0L
@@ -86,6 +93,38 @@ internal class ContinuumCommand03OriginalStage(
     private var readyToDraw: Command03FrameAck? = null
 
     val mediaReady: Boolean get() = pageReady && !disposed
+
+    fun bind(next: Command03Binding): Boolean {
+        if (disposed || next.pageId != pageId || !Command03BridgeContract.validBinding(next)) return false
+        val previous = binding
+        if (previous == next) return true
+        // Keep the exact same binding admission rule as the original HTML
+        // adapter: a change requires a higher revision AND a new view ID.
+        if (previous != null && (next.viewRevision <= previous.viewRevision ||
+                next.viewId == previous.viewId)) return false
+        cancelComposerFocus()
+        invalidateComputerPresentation()
+        if (previous != null) onPresentationLost()
+        binding = next
+        queuedState = null; queuedDocument = null; queuedTranscript = null
+        queuedMessages.clear(); queuedResults.clear(); queuedSources.clear(); queuedSpeech = null
+        return true
+    }
+
+    private fun envelope(scope: Command03Binding): JSONObject = JSONObject()
+        .put("pageId", scope.pageId).put("viewId", scope.viewId)
+        .put("viewRevision", scope.viewRevision).put("sessionId", scope.sessionId)
+
+    private fun readBinding(data: JSONObject): Command03Binding? = Command03Binding(
+        data.optString("pageId"), data.optString("viewId"), data.optLong("viewRevision", -1), data.optString("sessionId")
+    ).takeIf(Command03BridgeContract::validBinding)
+
+    private fun readBinding(uri: Uri): Command03Binding? = Command03Binding(
+        uri.getQueryParameter("pageId").orEmpty(), uri.getQueryParameter("viewId").orEmpty(),
+        uri.getQueryParameter("viewRevision")?.toLongOrNull() ?: -1, uri.getQueryParameter("sessionId").orEmpty()
+    ).takeIf(Command03BridgeContract::validBinding)
+
+    private fun current(data: JSONObject): Boolean = readBinding(data)?.let { it == binding && it.pageId == pageId } == true
 
     fun setLivePresentationActive(active: Boolean) {
         livePresentationActive = active
@@ -102,13 +141,14 @@ internal class ContinuumCommand03OriginalStage(
     }
 
     fun presentComputer(packet: Command03ComputerPacket) {
-        if (disposed || !Command03BridgeContract.validSession(packet.sessionId)) return
-        if (!pageReady) { queuedComputer = packet to System.nanoTime(); return }
+        val scope = binding ?: return
+        if (disposed || packet.sessionId != scope.sessionId) return
+        if (!pageReady) { queuedComputer = Triple(scope, packet, System.nanoTime()); return }
         invalidateComputerPresentation()
         val image = packet.frame?.takeIf { it.valid() }
         val remaining = packet.staleAfterMs?.minus(packet.ageMs ?: Long.MAX_VALUE) ?: 0L
         val live = packet.active && packet.status == "LIVE" && image != null && remaining in 1..1_500
-        val data = JSONObject().put("sessionId", packet.sessionId).put("generation", packet.generation)
+        val data = envelope(scope).put("generation", packet.generation)
             .put("sequence", packet.sequence).put("active", packet.active)
             .put("status", if (packet.frame != null && !live) "PAUSED" else packet.status)
             .put("reason", packet.reason)
@@ -127,10 +167,11 @@ internal class ContinuumCommand03OriginalStage(
     }
 
     fun presentSpeech(packet: Command03SpeechPacket) {
-        if (disposed || !Command03BridgeContract.validSession(packet.sessionId)) return
+        val scope = binding ?: return
+        if (disposed || packet.sessionId != scope.sessionId) return
         // Speech frames are ephemeral: never replay a queued mouth pose after page load.
-        if (!pageReady) { queuedSpeech = packet.takeUnless { it.active }; return }
-        val data = JSONObject().put("sessionId", packet.sessionId).put("generation", packet.generation)
+        if (!pageReady) { queuedSpeech = packet.takeUnless { it.active }?.let { scope to it }; return }
+        val data = envelope(scope).put("generation", packet.generation)
             .put("sequence", packet.sequence).put("active", packet.active)
             .put("utteranceId", packet.utteranceId ?: JSONObject.NULL)
             .put("viseme", packet.viseme).put("weight", packet.weight).put("jawOpen", packet.jawOpen)
@@ -168,6 +209,7 @@ internal class ContinuumCommand03OriginalStage(
     }
 
     override fun onDetachedFromWindow() {
+        cancelComposerFocus()
         invalidateComputerPresentation()
         onPresentationLost()
         super.onDetachedFromWindow()
@@ -175,12 +217,13 @@ internal class ContinuumCommand03OriginalStage(
 
     override fun onWindowVisibilityChanged(visibility: Int) {
         super.onWindowVisibilityChanged(visibility)
-        if (visibility != VISIBLE) { invalidateComputerPresentation(); onPresentationLost() }
+        if (visibility != VISIBLE) { cancelComposerFocus(); invalidateComputerPresentation(); onPresentationLost() }
     }
 
     /** Native -> local page only. Never grant JavaScript direct Android capabilities. */
     fun present(state: JSONObject) {
-        if (disposed) return
+        val scope = readBinding(state) ?: return
+        if (!bind(scope)) return
         val data = state.toString()
         if (!pageReady) queuedState = data
         else evaluateJavascript("window.ContinuumNative?.receive($data);", null)
@@ -192,7 +235,8 @@ internal class ContinuumCommand03OriginalStage(
      * becomes available to JavaScript, and nothing is sent to the network.
      */
     fun presentDocument(document: JSONObject) {
-        if (disposed) return
+        if (disposed || !current(document)) return
+        cancelComposerFocus()
         invalidateComputerPresentation()
         onPresentationLost()
         val data = document.toString()
@@ -201,16 +245,17 @@ internal class ContinuumCommand03OriginalStage(
     }
 
     fun clearDocument() {
+        val scope = binding ?: return
         if (disposed) return
         queuedDocument = null
-        if (pageReady) evaluateJavascript("window.ContinuumNative?.clearDocument();", null)
+        if (pageReady) evaluateJavascript("window.ContinuumNative?.clearDocument(${envelope(scope)});", null)
     }
 
-    fun presentTranscript(sessionId: String, entries: JSONArray) {
-        if (disposed || !Command03BridgeContract.validSession(sessionId)) return
+    fun presentTranscript(scope: Command03Binding, entries: JSONArray) {
+        if (disposed || scope != binding) return
         if (!pageReady) {
-            queuedTranscript = sessionId to entries
-            queuedMessages.removeAll { it.optString("sessionId") == sessionId }
+            queuedTranscript = scope to entries
+            queuedMessages.clear()
             return
         }
         // Full stored messages can exceed the former 6,000-character preview.
@@ -219,7 +264,7 @@ internal class ContinuumCommand03OriginalStage(
         var characters = 0
         var append = false
         fun flush() {
-            val data = JSONObject().put("sessionId", sessionId).put("entries", batch)
+            val data = envelope(scope).put("entries", batch)
                 .put("append", append).toString()
             evaluateJavascript("window.ContinuumNative?.transcript($data);", null)
             append = true
@@ -238,9 +283,9 @@ internal class ContinuumCommand03OriginalStage(
         if (batch.length() > 0 || !append) flush()
     }
 
-    fun presentMessage(sessionId: String, user: Boolean, text: String) {
-        if (disposed || text.isBlank() || !Command03BridgeContract.validSession(sessionId)) return
-        val message = JSONObject().put("sessionId", sessionId).put("user", user)
+    fun presentMessage(scope: Command03Binding, user: Boolean, text: String) {
+        if (disposed || text.isBlank() || scope != binding) return
+        val message = envelope(scope).put("user", user)
             .put("text", Command03BridgeContract.messageText(text))
         if (!pageReady) {
             queuedMessages.addLast(message)
@@ -251,38 +296,61 @@ internal class ContinuumCommand03OriginalStage(
         evaluateJavascript("window.ContinuumNative?.message($data);", null)
     }
 
-    fun showSection(section: String) {
-        if (disposed || !pageReady || section !in ROUTES) return
-        evaluateJavascript("window.ContinuumNative?.section(" + JSONObject.quote(section) + ");", null)
+    fun presentSources(sources: JSONObject) {
+        if (disposed || !current(sources)) return
+        if (!pageReady) {
+            queuedSources[sources.optString("sourceSetId")] = sources
+            while (queuedSources.size > 60) queuedSources.remove(queuedSources.keys.first())
+        } else evaluateJavascript("window.ContinuumNative?.sources($sources);", null)
+    }
+
+    fun cancelComposerFocus() { focusRevision++; queuedSection = null }
+
+    fun showSection(section: String, keyboard: Boolean = false) {
+        val scope = binding ?: return
+        if (disposed || section !in ROUTES) return
+        cancelComposerFocus()
+        val focus = keyboard && canFocusComposer() && isAttachedToWindow && isShown && windowVisibility == VISIBLE
+        val data = envelope(scope).put("name", section).put("focusComposer", focus)
+        if (!pageReady) { queuedSection = data to focus; return }
+        val revision = focusRevision
+        if (focus) requestFocus()
+        evaluateJavascript("window.ContinuumNative?.section($data);") {
+            if (focus && revision == focusRevision && current(data) && !disposed && pageReady &&
+                canFocusComposer() && isAttachedToWindow && isShown && windowVisibility == VISIBLE) {
+                (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager)
+                    ?.showSoftInput(this, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
     }
 
     private fun commandResult(request: Command03Command, accepted: Boolean, reason: String?) {
-        if (disposed) return
-        val result = JSONObject().put("id", request.id).put("sessionId", request.sessionId)
+        if (disposed || request.binding != binding) return
+        val result = envelope(request.binding).put("id", request.id)
+            .put("clientEditRevision", request.draft.clientEditRevision)
             .put("accepted", accepted).put("reason", reason ?: JSONObject.NULL)
         if (!pageReady) queuedResults[request.id] = result
         else evaluateJavascript("window.ContinuumNative?.commandResult($result);", null)
     }
 
     private fun submitCommand(uri: Uri) {
-        val request = Command03Command(uri.getQueryParameter("id").orEmpty(),
-            uri.getQueryParameter("sessionId").orEmpty(), uri.getQueryParameter("value").orEmpty())
-        if (!Command03BridgeContract.validRequest(request.id) ||
-            !Command03BridgeContract.validSession(request.sessionId)) {
-            commandResult(request, false, "invalid-input")
-            return
-        }
+        val draft = readDraft(uri, "draftText") ?: return
+        val request = Command03Command(uri.getQueryParameter("id").orEmpty(), uri.getQueryParameter("value").orEmpty(), draft)
+        if (request.binding != binding || !Command03BridgeContract.validRequest(request.id)) return
         Command03BridgeContract.commandFailure(request.text)?.let {
             commandResult(request, false, it)
             return
         }
-        val key = request.sessionId + ":" + request.id
+        val key = request.binding.pageId + ":" + request.binding.viewId + ":" + request.id
         commands[key]?.let { previous ->
             if (previous.request != request) commandResult(request, false, "invalid-input")
             else previous.result?.let { result ->
                 commandResult(request, result.optBoolean("accepted"), result.optString("reason").takeUnless { it == "null" })
             }
             return
+        }
+        if (request.text != request.draft.text.trim() || !onNativeDraft(draft)) {
+            commandResult(request, false, "stale-edit"); return
         }
         while (commands.size >= 64) {
             val completed = commands.entries.firstOrNull { it.value.result != null } ?: break
@@ -298,6 +366,17 @@ internal class ContinuumCommand03OriginalStage(
         }
     }
 
+    private fun readDraft(uri: Uri, textKey: String): Command03Draft? {
+        val scope = readBinding(uri)?.takeIf { it == binding } ?: return null
+        val text = uri.getQueryParameter(textKey) ?: return null
+        val start = uri.getQueryParameter("selectionStart")?.toIntOrNull() ?: return null
+        val end = uri.getQueryParameter("selectionEnd")?.toIntOrNull() ?: return null
+        val revision = uri.getQueryParameter("clientEditRevision")?.toLongOrNull() ?: return null
+        if (!Command03BridgeContract.validRevision(revision) || !Command03BridgeContract.validDraft(text) ||
+            start !in 0..text.length || end !in start..text.length) return null
+        return Command03Draft(scope, text, start, end, revision)
+    }
+
     override fun destroy() {
         disposed = true
         pageReady = false
@@ -307,6 +386,8 @@ internal class ContinuumCommand03OriginalStage(
         queuedMessages.clear()
         commands.clear()
         queuedResults.clear()
+        queuedSources.clear()
+        cancelComposerFocus()
         invalidateComputerPresentation()
         queuedSpeech = null
         super.destroy()
@@ -328,17 +409,39 @@ internal class ContinuumCommand03OriginalStage(
             blockNetworkLoads = true
         }
         webViewClient = object : WebViewClient() {
+            override fun onPageStarted(view: WebView, url: String, favicon: android.graphics.Bitmap?) {
+                if (disposed || url != INDEX) return
+                val reload = pageStarted || pageReady
+                pageStarted = true
+                pageReady = false
+                if (reload) {
+                    cancelComposerFocus()
+                    invalidateComputerPresentation()
+                    onPresentationLost()
+                    pageId = java.util.UUID.randomUUID().toString()
+                    binding = null
+                    queuedState = null; queuedDocument = null; queuedTranscript = null
+                    queuedMessages.clear(); queuedResults.clear(); queuedSources.clear(); queuedSpeech = null
+                }
+            }
+
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                 if (disposed) return true
                 val uri = request.url
                 if (request.isForMainFrame && uri.scheme == "continuum-native" &&
                     uri.host == "action" && uri.port == -1 && uri.userInfo == null && request.method == "GET") {
+                    if (readBinding(uri) != binding || binding == null) return true
                     val command = uri.pathSegments.singleOrNull().orEmpty()
                     val value = uri.getQueryParameter("value").orEmpty()
                     if (command == "route" && value in ROUTES) {
-                        onNativeAction(value, null)
+                        val draft = readDraft(uri, "draftText")
+                        val admitted = draft != null && onNativeDraft(draft)
+                        // An owner stop stays available even when an oversized/stale draft cannot be transported.
+                        if (admitted || value == "stop") onNativeAction(value, null)
                     } else if (command == "select-chat" && Command03BridgeContract.validSession(value)) {
-                        onNativeAction("select-chat", value)
+                        readDraft(uri, "draftText")?.takeIf(onNativeDraft)?.let { onNativeAction("select-chat", value) }
+                    } else if (command in setOf("open-source", "document-draft") && Command03BridgeContract.validSession(value)) {
+                        readDraft(uri, "draftText")?.takeIf(onNativeDraft)?.let { onNativeAction(command, value) }
                     } else if (command == "command") {
                         submitCommand(uri)
                     } else if (command == "frame-presented" || command == "frame-hidden") {
@@ -352,13 +455,7 @@ internal class ContinuumCommand03OriginalStage(
                             else onComputerFrameHidden(ack)
                         }
                     } else if (command == "draft") {
-                        val session = uri.getQueryParameter("sessionId").orEmpty()
-                        val start = uri.getQueryParameter("selectionStart")?.toIntOrNull()
-                        val end = uri.getQueryParameter("selectionEnd")?.toIntOrNull()
-                        if (Command03BridgeContract.validSession(session) && Command03BridgeContract.validDraft(value) &&
-                            start != null && end != null && start in 0..value.length && end in start..value.length) {
-                            onNativeDraft(Command03Draft(session, value, start, end))
-                        }
+                        readDraft(uri, "value")?.let(onNativeDraft)
                     }
                     return true
                 }
@@ -393,14 +490,18 @@ internal class ContinuumCommand03OriginalStage(
                     view.evaluateJavascript("window.ContinuumNative?.receive($json);", null)
                     queuedState = null
                 }
-                queuedTranscript?.let { (session, entries) ->
+                queuedTranscript?.let { (scope, entries) ->
                     queuedTranscript = null
-                    presentTranscript(session, entries)
+                    presentTranscript(scope, entries)
                 }
                 queuedMessages.toList().forEach { message ->
                     view.evaluateJavascript("window.ContinuumNative?.message($message);", null)
                 }
                 queuedMessages.clear()
+                queuedSources.values.toList().forEach { sources ->
+                    if (current(sources)) view.evaluateJavascript("window.ContinuumNative?.sources($sources);", null)
+                }
+                queuedSources.clear()
                 queuedDocument?.let { json ->
                     view.evaluateJavascript("window.ContinuumNative?.document($json);", null)
                     queuedDocument = null
@@ -409,13 +510,17 @@ internal class ContinuumCommand03OriginalStage(
                     view.evaluateJavascript("window.ContinuumNative?.commandResult($result);", null)
                 }
                 queuedResults.clear()
-                queuedComputer?.let { (packet, queuedAt) ->
+                queuedComputer?.let { (scope, packet, queuedAt) ->
                     queuedComputer = null
                     val elapsed = (System.nanoTime() - queuedAt).coerceAtLeast(0L) / 1_000_000
-                    presentComputer(packet.copy(ageMs = packet.ageMs?.let { it + elapsed }))
+                    if (scope == binding) presentComputer(packet.copy(ageMs = packet.ageMs?.let { it + elapsed }))
                 }
-                queuedSpeech?.let { packet -> queuedSpeech = null; presentSpeech(packet) }
+                queuedSpeech?.let { (scope, packet) -> queuedSpeech = null; if (scope == binding) presentSpeech(packet) }
                 onReady()
+                queuedSection?.let { (section, keyboard) ->
+                    queuedSection = null
+                    if (current(section)) showSection(section.optString("name"), keyboard)
+                }
             }
 
         }

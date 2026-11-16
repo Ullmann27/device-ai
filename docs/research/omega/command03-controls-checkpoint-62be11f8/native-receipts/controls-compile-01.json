@@ -1,0 +1,121 @@
+{
+  "mode": "compile",
+  "label": "controls-compile-01",
+  "checkout": "/workspace/scratch/5d87eafb90be/device-ai-android",
+  "build_output": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+  "command": [
+    "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=1",
+    "--console=plain",
+    "--project-cache-dir",
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build/project-cache",
+    "-Dorg.gradle.jvmargs=-Xmx768m -XX:MaxMetaspaceSize=256m -XX:ReservedCodeCacheSize=128m -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -XX:+ExitOnOutOfMemoryError -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts",
+    "-Dcontinuum.native.buildRoot=/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerArm64=true",
+    "-PcontinuumStandaloneVersionCode=60",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-I",
+    "/workspace/scratch/5d87eafb90be/device-ai-android/tools/command03-native-qa/build-location.init.gradle",
+    ":app:compileDebugKotlin"
+  ],
+  "source": {
+    "commit": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+    "tree": "62eccf11011f44cd613e0223f712fa0373be1f88",
+    "clean": true,
+    "status": "",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_metadata": []
+  },
+  "offline": true,
+  "dependency_resolution": "CACHE_ONLY",
+  "original_signing_used": false,
+  "device_tests": "NOT_RUN",
+  "cached_model_pins_verified": {
+    "status": "VERIFIED",
+    "models": [
+      {
+        "id": "yunet",
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "bytes": 232589
+      },
+      {
+        "id": "sface",
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "bytes": 38696353
+      }
+    ]
+  },
+  "toolchain": {
+    "repo": "/workspace/scratch/5d87eafb90be/device-ai-android",
+    "output_dir": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output",
+    "build_dir": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+    "java_home": "/workspace/scratch/5d87eafb90be/native-toolchain/jdk17",
+    "android_sdk": "/workspace/scratch/5d87eafb90be/native-toolchain/android-sdk",
+    "android_user_home": "/workspace/scratch/5d87eafb90be/native-toolchain/android-user",
+    "gradle_home": "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-8.11.1",
+    "gradle_user_home": "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-cache",
+    "build_tools_version": "35.0.0",
+    "config_path": "/workspace/scratch/5d87eafb90be/native-qa-config.json"
+  },
+  "java_memory_limits_mib": {
+    "heap": 768,
+    "metaspace": 256
+  },
+  "resource_sample_seconds": 2,
+  "workspace_safety_buffer_bytes": 134217728,
+  "selected_tests": [],
+  "focused_test_sources": null,
+  "verification_scope": "LOCAL_BUILD_OR_SELECTED_TEST_EXECUTION",
+  "memory_harness_sha256": null,
+  "free_bytes": {
+    "build_volume": 572870656,
+    "workspace": 572870656
+  },
+  "elapsed_seconds": 35.424,
+  "gradle_exit": 0,
+  "interrupted": false,
+  "source_after": {
+    "commit": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+    "tree": "62eccf11011f44cd613e0223f712fa0373be1f88",
+    "clean": true,
+    "status": "",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_metadata": []
+  },
+  "source_unchanged": true,
+  "log": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-compile-01.log",
+  "free_bytes_after": {
+    "build_volume": 572567552,
+    "workspace": 572567552
+  },
+  "resource_monitor": {
+    "path": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-compile-01-resources.jsonl",
+    "interval_seconds": 2,
+    "sampled_java_peak_rss_kib": 1201316,
+    "lowest_sampled_mem_available_kib": 3690800,
+    "scope": "visible process namespace; sampling alone does not establish a kill cause"
+  },
+  "gradle_daemon_disappeared": false,
+  "kotlin_compiler_errors": [],
+  "cached_model_pins_after": {
+    "status": "VERIFIED",
+    "models": [
+      {
+        "id": "yunet",
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "bytes": 232589
+      },
+      {
+        "id": "sface",
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "bytes": 38696353
+      }
+    ]
+  },
+  "status": "PASS_LOCAL"
+}

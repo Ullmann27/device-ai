@@ -9,6 +9,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const read = name => fs.readFileSync(path.join(root, name), 'utf8');
 const branch = 'integrate/continuum-command03-android-20261115';
 const ref = 'refs/heads/' + branch;
+const repairRef = 'refs/heads/fix/code60-full-qa-html-mode-20261116';
 const full = read('.github/workflows/continuum-code57-voice-full-qa.yml');
 const context = read('.github/workflows/code58-fold7-combined-context-qa.yml');
 const workflow = read('.github/workflows/continuum-code50-sign-release.yml');
@@ -22,12 +23,15 @@ test('only the two exact release branches select fixed Node evidence profiles', 
     assert.throws(() => releaseProfile(value), /Unsupported release branch/);
 });
 
-test('existing push lists remain exact and contain no Code60 trigger', () => {
+test('manual-only owner release and isolated repair push remain separate', () => {
   const push = text => text.match(/^  push:\n([\s\S]*?)(?=^  [a-z_]+:|^[a-z]+:)/m)?.[1];
   assert.equal(push(full), '    branches:\n      - release/code59-complete-qa-20261114\n' +
-    '      - fix/code59-context-complete-20261114\n      - diagnostic/code59-native-lint-20261114\n');
+    '      - fix/code59-context-complete-20261114\n      - diagnostic/code59-native-lint-20261114\n' +
+    '      - fix/code60-full-qa-html-mode-20261116\n');
   assert.equal(push(context), '    paths: [app/**, .github/continuum/**, .github/workflows/code58-fold7-combined-context-qa.yml]\n' +
-    '    branches:\n      - fix/code59-context-complete-20261114\n');
+    '    branches:\n      - fix/code59-context-complete-20261114\n' +
+    '      - fix/code60-full-qa-html-mode-20261116\n');
+  assert.doesNotMatch(push(full) + push(context), /- integrate\/continuum-command03-android-20261115/);
   assert.doesNotMatch(workflow, /^  (?:push|pull_request|workflow_run|schedule):/m);
 });
 
@@ -40,9 +44,11 @@ test('Code60 retains all five full jobs and gates every checkout by manual event
     assert.equal((text.match(/\[\[ "\$EXPECTED_SOURCE_SHA" =~ \^\[0-9a-f\]\{40\}\$ \]\]/g) || []).length, count);
     assert.equal(text.split(`test "$GITHUB_REF" = '${ref}'`).length - 1, count);
     assert.ok(text.includes(`github.event_name == 'workflow_dispatch' && github.ref == '${ref}'`));
-    assert.ok(text.includes(`github.ref == '${ref}' && '60' || '59'`));
-    assert.ok(text.includes(`github.ref == '${ref}' && '0.3.59' || '0.3.58'`));
-    assert.match(text, /EXPECTED_SOURCE_SHA: \$\{\{ inputs\.expected_sha \|\| '' \}\}/);
+    assert.ok(text.includes(`github.ref == '${ref}' || github.ref == '${repairRef}'`));
+    assert.ok(text.includes(`&& '60' || '59'`));
+    assert.ok(text.includes(`&& '0.3.59' || '0.3.58'`));
+    assert.match(text, /EXPECTED_SOURCE_SHA: \$\{\{ inputs\.expected_sha \|\| \(github\.ref == 'refs\/heads\/fix\/code60-full-qa-html-mode-20261116' && github\.sha\) \|\| '' \}\}/);
+    assert.match(text, /github.event_name == 'push' && github.ref == 'refs\/heads\/fix\/code60-full-qa-html-mode-20261116'/);
     assert.doesNotMatch(text, /run:[\s\S]*\$\{\{\s*inputs\.expected_sha\s*\}\}/);
   }
 });

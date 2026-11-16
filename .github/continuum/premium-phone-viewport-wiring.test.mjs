@@ -25,8 +25,10 @@ test('home dashboard remains in a scrolling viewport, not hidden behind the navi
   assert.ok(buildPane, 'buildConversationPane must exist');
   assert.match(buildPane, /dashboard\.addView\(home, matchWidth\(\)\)/);
   assert.match(buildPane, /dashboardSection = dashboardScroll/);
-  assert.match(activity, /dashboardSection\?\.visibility = if \(chat\) View\.GONE else View\.VISIBLE/);
-  assert.match(homeView, /val h = if \(jarvisShellStage && width \/ density >= 240f\)/);
+  assert.match(activity, /val mountedPresence = chat && homeView\?\.jarvisShellStage == true/);
+  assert.match(activity, /dashboardSection\?\.visibility = if \(!chat \|\| mountedPresence\) View\.VISIBLE else View\.GONE/);
+  assert.match(homeView, /val h = if \(jarvisShellStage && width \/ density >= 240f && presenceHeight != null\)/);
+  assert.match(homeView, /else if \(jarvisShellStage && width \/ density >= 240f\)/);
   assert.match(homeView, /JarvisShellLayout\.forContent\(width \/ density, jarvisShell\.viewportHeightDp,/);
   assert.match(homeView, /else maxOf\(contentHeight, suggestedMinimumHeight\)/);
   assert.match(homeView, /setMeasuredDimension\(width, h\)/);
@@ -40,7 +42,7 @@ test('home dashboard remains in a scrolling viewport, not hidden behind the navi
 });
 
 test('keyboard hides phone navigation and frees the same reserved space', () => {
-  assert.match(buildUi, /val showNavigation = ContinuumWorkAreaNavigationSpec\.showBottomBar/);
+  assert.match(buildUi, /val showNavigation = !usesCommand03HtmlDesign\(\) &&\s*ContinuumWorkAreaNavigationSpec\.showBottomBar/);
   // Open Fold uses its labelled rail in both orientations; only the phone reserves this bottom bar.
   assert.match(buildUi, /val navigationPane = phonePane/);
   assert.match(buildUi, /val requiredMargin = if \(showNavigation\) phoneNavHeight else 0/);

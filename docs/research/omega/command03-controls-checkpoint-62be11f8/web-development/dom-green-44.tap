@@ -1,0 +1,274 @@
+TAP version 13
+# Subtest: a projected real PDF remains visible through periodic state and transcript updates
+ok 1 - a projected real PDF remains visible through periodic state and transcript updates
+  ---
+  duration_ms: 281.936934
+  type: 'test'
+  ...
+# Subtest: native file and source controls never start the original demonstration
+ok 2 - native file and source controls never start the original demonstration
+  ---
+  duration_ms: 148.462269
+  type: 'test'
+  ...
+# Subtest: real telemetry stops the hidden simulation and keeps unknown readings unknown
+ok 3 - real telemetry stops the hidden simulation and keeps unknown readings unknown
+  ---
+  duration_ms: 74.614294
+  type: 'test'
+  ...
+# Subtest: a command draft survives native rejection and clears only after its matching acceptance
+ok 4 - a command draft survives native rejection and clears only after its matching acceptance
+  ---
+  duration_ms: 72.444165
+  type: 'test'
+  ...
+# Subtest: a late acceptance does not delete a new draft or a different conversation
+ok 5 - a late acceptance does not delete a new draft or a different conversation
+  ---
+  duration_ms: 78.542196
+  type: 'test'
+  ...
+# Subtest: long real commands and input selections use the native session and UTF-8 budget
+ok 6 - long real commands and input selections use the native session and UTF-8 budget
+  ---
+  duration_ms: 79.866352
+  type: 'test'
+  ...
+# Subtest: actual busy, listening and speaking transitions drive the original scene without demo timers
+ok 7 - actual busy, listening and speaking transitions drive the original scene without demo timers
+  ---
+  duration_ms: 245.248495
+  type: 'test'
+  ...
+# Subtest: telemetry history advances only for new actual measurements and preserves unavailable gaps
+ok 8 - telemetry history advances only for new actual measurements and preserves unavailable gaps
+  ---
+  duration_ms: 176.566884
+  type: 'test'
+  ...
+# Subtest: empty native history and native-ready captions replace demo content while retaining button icons
+ok 9 - empty native history and native-ready captions replace demo content while retaining button icons
+  ---
+  duration_ms: 76.576532
+  type: 'test'
+  ...
+# Subtest: late message and document callbacks cannot cross conversation boundaries
+ok 10 - late message and document callbacks cannot cross conversation boundaries
+  ---
+  duration_ms: 74.240377
+  type: 'test'
+  ...
+# Subtest: chunked transcripts preserve long model responses and user scroll nodes on status refresh
+ok 11 - chunked transcripts preserve long model responses and user scroll nodes on status refresh
+  ---
+  duration_ms: 62.938371
+  type: 'test'
+  ...
+# Subtest: native restore does not overwrite a local draft and oversize commands keep their synchronized draft
+ok 12 - native restore does not overwrite a local draft and oversize commands keep their synchronized draft
+  ---
+  duration_ms: 83.312378
+  type: 'test'
+  ...
+# Subtest: selecting a stored conversation closes the existing mobile drawer without replacing its controls
+ok 13 - selecting a stored conversation closes the existing mobile drawer without replacing its controls
+  ---
+  duration_ms: 60.684547
+  type: 'test'
+  ...
+# Subtest: the original composer slot supports exact multiline paste, submit and native restore
+ok 14 - the original composer slot supports exact multiline paste, submit and native restore
+  ---
+  duration_ms: 63.181133
+  type: 'test'
+  ...
+# Subtest: typing before Android is ready is synchronized as soon as the first native session arrives
+ok 15 - typing before Android is ready is synchronized as soon as the first native session arrives
+  ---
+  duration_ms: 45.060627
+  type: 'test'
+  ...
+# Subtest: native draft revisions cannot restore consumed text or reset a newer local selection
+ok 16 - native draft revisions cannot restore consumed text or reset a newer local selection
+  ---
+  duration_ms: 75.937218
+  type: 'test'
+  ...
+# Subtest: computer frames use the original window and acknowledge only decoded visible frames after its one flight
+ok 17 - computer frames use the original window and acknowledge only decoded visible frames after its one flight
+  ---
+  duration_ms: 73.261907
+  type: 'test'
+  ...
+# Subtest: late decode and frame replay cannot reopen a stopped or rebound computer source
+ok 18 - late decode and frame replay cannot reopen a stopped or rebound computer source
+  ---
+  duration_ms: 69.39827
+  type: 'test'
+  ...
+# Subtest: a computer image expires without new frames and unavailable status removes pixels immediately
+ok 19 - a computer image expires without new frames and unavailable status removes pixels immediately
+  ---
+  duration_ms: 75.121021
+  type: 'test'
+  ...
+# Subtest: PDF and chat remain intact while a covered computer invalidates its previous render receipt
+ok 20 - PDF and chat remain intact while a covered computer invalidates its previous render receipt
+  ---
+  duration_ms: 88.19473
+  type: 'test'
+  ...
+# Subtest: invalid computer payloads and callbacks from an old conversation never become visible frames
+ok 21 - invalid computer payloads and callbacks from an old conversation never become visible frames
+  ---
+  duration_ms: 74.011304
+  type: 'test'
+  ...
+# Subtest: occlusion, page hiding and failed decoding never produce a computer render acknowledgement
+ok 22 - occlusion, page hiding and failed decoding never produce a computer render acknowledgement
+  ---
+  duration_ms: 70.303081
+  type: 'test'
+  ...
+# Subtest: native speech frames reach the original viseme API with their actual source and expire to silence
+ok 23 - native speech frames reach the original viseme API with their actual source and expire to silence
+  ---
+  duration_ms: 43.634294
+  type: 'test'
+  ...
+# Subtest: speech rejects invalid morphs, late utterances, stopped generations and different sessions
+ok 24 - speech rejects invalid morphs, late utterances, stopped generations and different sessions
+  ---
+  duration_ms: 59.732477
+  type: 'test'
+  ...
+# Subtest: the byte-locked bundled avatar accepts the native visemes through its public fallback-mode API
+ok 25 - the byte-locked bundled avatar accepts the native visemes through its public fallback-mode API
+  ---
+  duration_ms: 63.091959
+  type: 'test'
+  ...
+# Subtest: covering a decoded image with a newer pending frame withdraws both exact receipts
+ok 26 - covering a decoded image with a newer pending frame withdraws both exact receipts
+  ---
+  duration_ms: 86.399431
+  type: 'test'
+  ...
+# Subtest: an expired pose cannot transfer its generation to another utterance or return after page hiding
+ok 27 - an expired pose cannot transfer its generation to another utterance or return after page hiding
+  ---
+  duration_ms: 43.828003
+  type: 'test'
+  ...
+# Subtest: native control acknowledgements admit real dictation and consumption without replacing newer local edits
+ok 28 - native control acknowledgements admit real dictation and consumption without replacing newer local edits
+  ---
+  duration_ms: 68.692857
+  type: 'test'
+  ...
+# Subtest: native control selection acknowledgements preserve a newer caret and never echo a restored draft
+ok 29 - native control selection acknowledgements preserve a newer caret and never echo a restored draft
+  ---
+  duration_ms: 50.03783
+  type: 'test'
+  ...
+# Subtest: native control snapshot admission observes a caret change before its delayed select event
+ok 30 - native control snapshot admission observes a caret change before its delayed select event
+  ---
+  duration_ms: 51.757396
+  type: 'test'
+  ...
+# Subtest: native control snapshots cannot erase an oversized local draft that could not be acknowledged
+ok 31 - native control snapshots cannot erase an oversized local draft that could not be acknowledged
+  ---
+  duration_ms: 50.414592
+  type: 'test'
+  ...
+# Subtest: native control view instances replace bot histories and reject old snapshots messages and command acknowledgements
+ok 32 - native control view instances replace bot histories and reject old snapshots messages and command acknowledgements
+  ---
+  duration_ms: 81.328904
+  type: 'test'
+  ...
+# Subtest: native control focus reaches the visible composer only for the current explicitly selected view
+ok 33 - native control focus reaches the visible composer only for the current explicitly selected view
+  ---
+  duration_ms: 60.51233
+  type: 'test'
+  ...
+# Subtest: native control automatic command transitions retain an unacknowledged draft for explicit recovery only
+ok 34 - native control automatic command transitions retain an unacknowledged draft for explicit recovery only
+  ---
+  duration_ms: 71.550192
+  type: 'test'
+  ...
+# Subtest: native control recovery requires the exact command cause and a genuinely unacknowledged edit
+ok 35 - native control recovery requires the exact command cause and a genuinely unacknowledged edit
+  ---
+  duration_ms: 236.078656
+  type: 'test'
+  ...
+# Subtest: native control successive automatic transitions keep each unresolved recovery without persisting it
+ok 36 - native control successive automatic transitions keep each unresolved recovery without persisting it
+  ---
+  duration_ms: 78.724147
+  type: 'test'
+  ...
+# Subtest: native control routes chat selection sources and PDF actions carry the exact current edit atomically
+ok 37 - native control routes chat selection sources and PDF actions carry the exact current edit atomically
+  ---
+  duration_ms: 53.76108
+  type: 'test'
+  ...
+# Subtest: native control a scoped stop remains available for an oversized draft without inventing an empty edit
+ok 38 - native control a scoped stop remains available for an oversized draft without inventing an empty edit
+  ---
+  duration_ms: 45.531505
+  type: 'test'
+  ...
+# Subtest: native control page and view admission reject malformed scopes and retired instances
+ok 39 - native control page and view admission reject malformed scopes and retired instances
+  ---
+  duration_ms: 64.995691
+  type: 'test'
+  ...
+# Subtest: native control microphone long press uses the existing native action once and cancellation suppresses it
+ok 40 - native control microphone long press uses the existing native action once and cancellation suppresses it
+  ---
+  duration_ms: 63.21273
+  type: 'test'
+  ...
+# Subtest: native control source cards use native identifiers and cannot survive a view switch
+ok 41 - native control source cards use native identifiers and cannot survive a view switch
+  ---
+  duration_ms: 59.761725
+  type: 'test'
+  ...
+# Subtest: native control source cards reject unsafe displayed URLs and forged identifiers
+ok 42 - native control source cards reject unsafe displayed URLs and forged identifiers
+  ---
+  duration_ms: 50.428583
+  type: 'test'
+  ...
+# Subtest: native control PDF draft action identifies only the currently displayed document and honours native availability
+ok 43 - native control PDF draft action identifies only the currently displayed document and honours native availability
+  ---
+  duration_ms: 63.132401
+  type: 'test'
+  ...
+# Subtest: native control changing only the view fences pending image decoding and speech before accepting current media
+ok 44 - native control changing only the view fences pending image decoding and speech before accepting current media
+  ---
+  duration_ms: 82.325932
+  type: 'test'
+  ...
+1..44
+# tests 44
+# suites 0
+# pass 44
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4001.060844

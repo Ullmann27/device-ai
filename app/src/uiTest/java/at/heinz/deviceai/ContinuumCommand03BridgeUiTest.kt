@@ -27,6 +27,9 @@ import at.heinz.deviceai.cognitive.ComputerApp
 import at.heinz.deviceai.cognitive.ComputerGoal
 import at.heinz.deviceai.cognitive.OwnerComputerWorkflow
 import at.heinz.deviceai.localmodel.LocalModelRuntime
+import at.heinz.deviceai.ui.Command03Binding
+import at.heinz.deviceai.ui.Command03Draft
+import at.heinz.deviceai.ui.Command03DraftLedger
 import at.heinz.deviceai.ui.ContinuumCommand03OriginalStage
 import org.json.JSONObject
 import org.junit.Assert.*
@@ -39,6 +42,8 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.Implementation
+import org.robolectric.annotation.Implements
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowChoreographer
 import org.robolectric.shadows.ShadowDisplayManager
@@ -53,7 +58,17 @@ import java.util.concurrent.TimeUnit
 @Config(sdk = [28], qualifiers = "w392dp-h852dp-port-mdpi")
 @LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumCommand03BridgeUiTest {
+    /** Controlled backend completion only; Activity callback, citations and route handlers are real. */
+    @Implements(value = AgentBackendClient::class, isInAndroidSdk = false)
+    class DeferredBackend {
+        companion object { val replies = ArrayDeque<(Result<AgentReply>) -> Unit>() }
+        @Implementation
+        protected fun send(sessionId: String, message: String?, toolOutputs: List<ToolOutput>,
+            callback: (Result<AgentReply>) -> Unit) { replies.addLast(callback) }
+    }
+
     @Before fun prepare() {
+        DeferredBackend.replies.clear()
         ShadowChoreographer.setPaused(true)
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
         LocalDialogueRetention.context.forgetForExit()
@@ -72,6 +87,8 @@ class ContinuumCommand03BridgeUiTest {
 
     private fun field(a: AgentActivity, name: String): Any? =
         AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }.get(a)
+    private fun objectField(value: Any, name: String): Any? = value.javaClass.getDeclaredField(name)
+        .apply { isAccessible = true }.get(value)
     private fun set(a: AgentActivity, name: String, value: Any?) =
         AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }.set(a, value)
     private fun stageField(stage: WebView, name: String): Any? =
@@ -80,6 +97,7 @@ class ContinuumCommand03BridgeUiTest {
         AgentActivity::class.java.getDeclaredMethod(name, *args.map { it.first }.toTypedArray())
             .apply { isAccessible = true }.invoke(a, *args.map { it.second }.toTypedArray())
     private fun stage(a: AgentActivity) = field(a, "command03MainStage") as WebView
+    private fun binding(a: AgentActivity) = requireNotNull((stage(a) as ContinuumCommand03OriginalStage).binding)
     private fun request(uri: Uri, mainFrame: Boolean = true): WebResourceRequest = object : WebResourceRequest {
         override fun getUrl() = uri
         override fun isForMainFrame() = mainFrame
@@ -88,16 +106,33 @@ class ContinuumCommand03BridgeUiTest {
         override fun getMethod() = "GET"
         override fun getRequestHeaders() = emptyMap<String, String>()
     }
+    private val commandUris = mutableMapOf<String, Uri>()
     private fun action(a: AgentActivity, kind: String, value: String, session: String? = null,
         id: String = "request-1", mainFrame: Boolean = true,
-        selectionStart: Int = value.length, selectionEnd: Int = value.length): Boolean {
+        selectionStart: Int? = null, selectionEnd: Int? = null,
+        binding: Command03Binding = requireNotNull((stage(a) as ContinuumCommand03OriginalStage).binding),
+        revision: Long? = null, draftText: String? = null): Boolean {
+        val editor = field(a, "input") as EditText
+        val deferred = field(a, "deferredCommand03Draft") as? Command03Draft
+        val text = draftText ?: if (kind == "draft" || kind == "command") value
+            else deferred?.text ?: editor.text.toString()
+        val start = selectionStart ?: if (kind == "draft" || kind == "command") text.length
+            else deferred?.selectionStart ?: editor.selectionStart.coerceIn(0, text.length)
+        val end = selectionEnd ?: if (kind == "draft" || kind == "command") text.length
+            else deferred?.selectionEnd ?: editor.selectionEnd.coerceIn(start, text.length)
+        val next = revision ?: (field(a, "command03DraftLedger") as Command03DraftLedger).acknowledged + 1
         val uri = Uri.Builder().scheme("continuum-native").authority("action").appendPath(kind)
-            .appendQueryParameter("value", value)
+            .appendQueryParameter("value", value).appendQueryParameter("draftText", text)
             .appendQueryParameter("sessionId", session ?: field(a, "sessionId") as String)
+            .appendQueryParameter("pageId", binding.pageId).appendQueryParameter("viewId", binding.viewId)
+            .appendQueryParameter("viewRevision", binding.viewRevision.toString())
+            .appendQueryParameter("clientEditRevision", next.toString())
             .appendQueryParameter("id", id)
-            .appendQueryParameter("selectionStart", selectionStart.toString())
-            .appendQueryParameter("selectionEnd", selectionEnd.toString()).build()
-        return stage(a).webViewClient.shouldOverrideUrlLoading(stage(a), request(uri, mainFrame))
+            .appendQueryParameter("selectionStart", start.toString())
+            .appendQueryParameter("selectionEnd", end.toString()).build()
+        val key = "${binding.pageId}:${binding.viewId}:$id:$value"
+        val sent = if (kind == "command" && revision == null) commandUris.getOrPut(key) { uri } else uri
+        return stage(a).webViewClient.shouldOverrideUrlLoading(stage(a), request(sent, mainFrame))
     }
     private fun active(view: Any): Boolean = view.javaClass.getDeclaredField("foregroundActive")
         .apply { isAccessible = true }.getBoolean(view)
@@ -125,6 +160,16 @@ class ContinuumCommand03BridgeUiTest {
         assertTrue("Native result must be acknowledged through the actual WebView: $script", script.startsWith(prefix))
         return JSONObject(script.removePrefix(prefix).removeSuffix(");"))
     }
+    private fun packet(a: AgentActivity, method: String): JSONObject {
+        val script = shadowOf(stage(a)).lastEvaluatedJavascript
+        val prefix = "window.ContinuumNative?.$method("
+        assertTrue("Expected $method on the real WebView, got $script", script.startsWith(prefix))
+        return JSONObject(script.removePrefix(prefix).removeSuffix(");"))
+    }
+    private fun profile(a: AgentActivity) = (call(a, "getBotProfiles") as at.heinz.deviceai.chief.ChiefBotProfileStore)
+        .seedDefaults(20).single { it.agentId == "bot-atlas" }
+    private fun enter(a: AgentActivity) = call(a, "enterBotConversation",
+        at.heinz.deviceai.chief.ChiefBotProfile::class.java to profile(a))
     private fun speechPacket(a: AgentActivity): JSONObject {
         val script = shadowOf(stage(a)).lastEvaluatedJavascript
         val prefix = "window.ContinuumNative?.speech("
@@ -153,7 +198,7 @@ class ContinuumCommand03BridgeUiTest {
     }
     private fun receipt(a: AgentActivity, id: String): JSONObject? {
         val receipts = stageField(stage(a), "commands") as Map<*, *>
-        val record = receipts["${field(a, "sessionId")}:$id"] ?: return null
+        val record = receipts.entries.firstOrNull { it.key.toString().endsWith(":$id") }?.value ?: return null
         return record.javaClass.getDeclaredField("result").apply { isAccessible = true }.get(record) as? JSONObject
     }
     private fun advance() = shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
@@ -214,10 +259,20 @@ class ContinuumCommand03BridgeUiTest {
         return native to feed
     }
 
-    @Test fun computerNavigationKeepsTheActiveSessionInTheOriginalHtmlStage() = withActivity { _, a ->
+    @Test
+    @Config(shadows = [Command03HostWebView::class])
+    @GraphicsMode(GraphicsMode.Mode.NATIVE)
+    fun computerNavigationKeepsTheActiveSessionInTheOriginalHtmlStage() = withActivity { lifecycle, a ->
+        CockpitHostFramePump { a.window.decorView }.use { pump ->
+            resizeWindow(a, 392, 852)
+            repeat(3) { advance(); pump.drawRequestedFrame() }
+            lifecycle.windowFocusChanged(true)
+        }
         ready(a)
         val web = stage(a)
         val (native, feed) = activeComputer(a)
+        assertTrue("The positive route fixture must satisfy the real HTML visibility gate",
+            call(a, "command03ComputerVisible") as Boolean)
         repeat(2) { index ->
             assertTrue(action(a, "route", "device", id = "computer-route-$index"))
             assertTrue("Opening Computer must preserve the active session", native.active)
@@ -227,7 +282,12 @@ class ContinuumCommand03BridgeUiTest {
             assertTrue(field(a, "activeLocalRequest") as Boolean)
             assertTrue(field(a, "busy") as Boolean)
             assertNull("Native controls must not cover the live HTML computer", field(a, "centerDialog"))
-            assertEquals("window.ContinuumNative?.section(\"device\");", shadowOf(web).lastEvaluatedJavascript)
+            val section = packet(a, "section")
+            assertEquals("device", section.getString("name"))
+            assertEquals(binding(a).pageId, section.getString("pageId"))
+            assertEquals(binding(a).viewId, section.getString("viewId"))
+            assertEquals(binding(a).viewRevision, section.getLong("viewRevision"))
+            assertEquals(binding(a).sessionId, section.getString("sessionId"))
         }
     }
 
@@ -256,6 +316,44 @@ class ContinuumCommand03BridgeUiTest {
             assertFalse(field(a, "activeLocalRequest") as Boolean)
             assertFalse(field(a, "busy") as Boolean)
         }
+    }
+
+
+    @Test fun computerStopDuringBotChangeDoesNotReenterOrLoseDraftRecoveryCause() = withActivity { _, a ->
+        ready(a)
+        project(a, document("Wechsel.pdf"))
+        val (controller, _) = activeComputer(a)
+        val scope = binding(a)
+        val oldOwner = requireNotNull(field(a, "command03View"))
+        val oldRevision = (objectField(oldOwner, "revision") as Number).toLong()
+        val text = "Atlas: Prüfe die Datei"
+        val command = at.heinz.deviceai.ui.Command03Command("bot-switch-proof", text,
+            Command03Draft(scope, text, text.length, text.length, 1L))
+        val pendingType = AgentActivity::class.java.declaredClasses
+            .single { it.simpleName == "PendingCommand03Input" }
+        val completion: (Boolean, String?) -> Unit = { _, _ -> }
+        val pending = pendingType.declaredConstructors.single { it.parameterCount == 5 }
+            .apply { isAccessible = true }
+            .newInstance(command, android.os.SystemClock.elapsedRealtime() + 10_000L,
+                completion, null, false)
+        val newerText = "Ungesendeter zweiter Entwurf"
+        set(a, "pendingCommand03Input", pending)
+        set(a, "deferredCommand03Draft", Command03Draft(scope, newerText, 4, 9, 2L))
+        set(a, "selectedBot", profile(a))
+        assertFalse(call(a, "command03ViewCurrent", oldOwner.javaClass to oldOwner) as Boolean)
+        assertSame("A stale callback must not change its view", oldOwner, field(a, "command03View"))
+        call(a, "replaceCommand03View", pendingType to pending)
+        val current = requireNotNull(field(a, "command03View"))
+        assertEquals("Stopping Computer must not recursively replace the view",
+            oldRevision + 1L, (objectField(current, "revision") as Number).toLong())
+        assertFalse(controller.active)
+        assertNull(field(a, "command03Document"))
+        val cause = field(a, "command03TransitionCause") as JSONObject
+        assertEquals("bot-switch-proof", cause.getString("commandId"))
+        assertEquals(scope.viewId, cause.getString("fromViewId"))
+        val carried = field(a, "deferredCommand03Draft") as Command03Draft
+        assertEquals(newerText, carried.text)
+        assertEquals(binding(a), carried.binding)
     }
 
     @Test fun htmlDraftSurvivesTheActualSwitchBackToTheNativeComposer() = withActivity { _, a ->
@@ -519,6 +617,268 @@ class ContinuumCommand03BridgeUiTest {
         assertFalse(field(a, "activeLocalRequest") as Boolean)
     }
 
+    @Test fun acceptedAddressedBotCommandCarriesOnlyItsConfirmedNewerDraftAcrossItsOwnViewChange() = withActivity { _, a ->
+        ready(a)
+        val original = binding(a)
+        val executor = field(a, "backlogExecutor") as ExecutorService
+        val entered = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        executor.execute { entered.countDown(); release.await(8, TimeUnit.SECONDS) }
+        assertTrue(entered.await(2, TimeUnit.SECONDS))
+        val submitted = "Atlas: Prüfe diesen synthetischen Text."
+        val next = "Späterer Entwurf\nbleibt ungesendet."
+        var lastEdit = -1L
+        try {
+            action(a, "command", submitted, id = "addressed-1")
+            assertNotNull(field(a, "pendingCommand03Input"))
+            action(a, "draft", next, selectionStart = 2, selectionEnd = 9)
+            lastEdit = (field(a, "command03DraftLedger") as Command03DraftLedger).acknowledged
+        } finally { release.countDown() }
+        await("The existing addressed-bot router consumes this command") {
+            receipt(a, "addressed-1") != null && field(a, "pendingCommand03Input") == null
+        }
+        assertTrue(requireNotNull(receipt(a, "addressed-1")).getBoolean("accepted"))
+        assertNotEquals(original.viewId, binding(a).viewId)
+        assertEquals(original.sessionId, binding(a).sessionId)
+        assertEquals("bot-atlas", (field(a, "selectedBot") as at.heinz.deviceai.chief.ChiefBotProfile).agentId)
+        val editor = field(a, "input") as EditText
+        assertEquals(next, editor.text.toString())
+        assertEquals(2, editor.selectionStart)
+        assertEquals(9, editor.selectionEnd)
+        assertNull(field(a, "deferredCommand03Draft"))
+        assertEquals(0L, (field(a, "command03DraftLedger") as Command03DraftLedger).acknowledged)
+        val cause = field(a, "command03TransitionCause") as JSONObject
+        assertEquals("addressed-1", cause.getString("commandId"))
+        assertEquals(original.pageId, cause.getString("fromPageId"))
+        assertEquals(original.viewId, cause.getString("fromViewId"))
+        assertEquals(lastEdit, cause.getLong("ackEditRevision"))
+        assertFalse(messages(a).contains(next))
+        assertFalse(field(a, "activeLocalRequest") as Boolean)
+    }
+
+    @Test fun botAndCentralViewsFenceOldDraftsAndAnAlreadyQueuedCentralHistoryRead() = withActivity { _, a ->
+        ready(a)
+        AgentActivity.chatTranscriptIo.submit {}.get(8, TimeUnit.SECONDS)
+        advance()
+        val old = binding(a)
+        val held = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        AgentActivity.chatTranscriptIo.execute { held.countDown(); release.await(8, TimeUnit.SECONDS) }
+        assertTrue(held.await(2, TimeUnit.SECONDS))
+        try {
+            set(a, "command03HtmlSession", null)
+            call(a, "syncCommand03HtmlState")
+            enter(a)
+            assertNotEquals(old.viewId, binding(a).viewId)
+            assertTrue(binding(a).viewRevision > old.viewRevision)
+            (field(a, "input") as EditText).setText("Aktueller Botentwurf")
+            action(a, "draft", "Alter zentraler Entwurf", binding = old, revision = 100)
+            assertEquals("Aktueller Botentwurf", (field(a, "input") as EditText).text.toString())
+        } finally { release.countDown() }
+        AgentActivity.chatTranscriptIo.submit {}.get(8, TimeUnit.SECONDS)
+        repeat(3) { advance() }
+        @Suppress("UNCHECKED_CAST")
+        val botRows = field(a, "command03VisibleMessages") as ArrayDeque<Pair<Boolean, String>>
+        assertTrue(botRows.isNotEmpty())
+        assertTrue(botRows.first().second.startsWith("Atlas ·"))
+        call(a, "returnToJarvis")
+        assertNotEquals(old.viewId, binding(a).viewId)
+        assertEquals(old.sessionId, binding(a).sessionId)
+        assertNull(field(a, "command03TransitionCause"))
+        val current = (field(a, "input") as EditText).text.toString()
+        action(a, "draft", "Veraltete Rückkehr", binding = old, revision = 101)
+        assertEquals(current, (field(a, "input") as EditText).text.toString())
+    }
+
+    @Test fun microphoneLongPressUsesSilentDictationAndItsNativeEditCannotBeRolledBack() = withActivity { _, a ->
+        ready(a)
+        val editor = field(a, "input") as EditText
+        val mode = field(a, "continuousConversation") as at.heinz.deviceai.cognitive.ContinuousConversationMode
+        val before = messages(a)
+        action(a, "draft", "Hallo Welt", selectionStart = 6, selectionEnd = 10)
+        action(a, "route", "voice-input-long-press")
+        assertFalse(mode.active)
+        assertEquals(2207, field(a, "activeLocalSpeechRequest"))
+        assertEquals(before, messages(a))
+        val revision = (field(a, "command03DraftLedger") as Command03DraftLedger).acknowledged
+        // Synthetic recognition result enters the existing delivery method; no microphone/audio claim.
+        call(a, "applyLocalSpeechText", Int::class.javaPrimitiveType!! to 2207, String::class.java to "Team")
+        assertEquals("Hallo Team", editor.text.toString())
+        call(a, "syncCommand03HtmlState")
+        val state = packet(a, "receive")
+        assertEquals(revision, state.getLong("ackEditRevision"))
+        assertEquals("Hallo Team", state.getJSONObject("draft").getString("text"))
+        action(a, "draft", "Hallo Welt", revision = revision, selectionStart = 6, selectionEnd = 10)
+        assertEquals("Hallo Team", editor.text.toString())
+        assertTrue(mode.start(field(a, "sessionId") as String))
+        action(a, "route", "voice-input-long-press", revision = revision)
+        assertFalse("The same long press ends the existing hands-free mode", mode.active)
+        assertEquals("Hallo Team", editor.text.toString())
+        assertEquals(before, messages(a))
+        assertFalse(field(a, "activeLocalRequest") as Boolean)
+    }
+
+    @Test
+    @Config(shadows = [Command03HostWebView::class])
+    @GraphicsMode(GraphicsMode.Mode.NATIVE)
+    fun nativeComposerFocusTargetsTheVisiblePageAndPauseRevokesTheQueuedKeyboardRequest() = withActivity { lifecycle, a ->
+        resizeWindow(a, 392, 852)
+        ready(a)
+        call(a, "focusChatComposer")
+        val section = packet(a, "section")
+        assertEquals("chat", section.getString("name"))
+        assertEquals(binding(a).viewId, section.getString("viewId"))
+        assertTrue(section.getBoolean("focusComposer"))
+        val web = stage(a)
+        val focusState = "focusable=${web.isFocusable}, touchFocusable=${web.isFocusableInTouchMode}, " +
+            "touchMode=${web.isInTouchMode}, enabled=${web.isEnabled}, attached=${web.isAttachedToWindow}, " +
+            "shown=${web.isShown}, window=${web.windowVisibility}, size=${web.width}x${web.height}, " +
+            "rootFocus=${a.window.decorView.findFocus()?.javaClass?.simpleName}, pageFocus=${web.hasFocus()}"
+        assertTrue("The visible WebView owns focus: $focusState", web.hasFocus())
+        assertFalse("The hidden native editor must not receive the IME request", (field(a, "input") as EditText).hasFocus())
+        val token = stageField(stage(a), "focusRevision") as Long
+        lifecycle.pause()
+        assertTrue((stageField(stage(a), "focusRevision") as Long) > token)
+        assertNull(stageField(stage(a), "queuedSection"))
+        lifecycle.resume()
+        (stage(a) as ContinuumCommand03OriginalStage).showSection("chat")
+        assertFalse(packet(a, "section").getBoolean("focusComposer"))
+    }
+
+    @Test
+    @Config(shadows = [DeferredBackend::class])
+    fun actualCloudSourcesUseOpaqueViewBoundIdsAndOnlyNativeApprovedUrlsOpen() = withActivity { _, a ->
+        ready(a)
+        val scope = binding(a)
+        call(a, "runCloud", String::class.java to "Synthetische Quellenfrage", List::class.java to emptyList<ToolOutput>())
+        assertEquals(1, DeferredBackend.replies.size)
+        DeferredBackend.replies.removeFirst().invoke(Result.success(AgentReply("fixture", "Synthetische Antwort",
+            emptyList(), listOf(AgentCitation("Primärquelle", "https://example.org/evidence")), "complete")))
+        assertTrue(messages(a).contains("Synthetische Antwort"))
+        val sourcePacket = packet(a, "sources")
+        assertEquals(scope.viewId, sourcePacket.getString("viewId"))
+        val item = sourcePacket.getJSONArray("items").getJSONObject(0)
+        val id = item.getString("id")
+        assertTrue(at.heinz.deviceai.ui.Command03BridgeContract.validSession(id))
+        assertEquals("Primärquelle", item.getString("title"))
+        assertEquals("https://example.org/evidence", item.getString("url"))
+        while (shadowOf(a).nextStartedActivity != null) { /* Drain startup intents, never dispatch them. */ }
+        action(a, "open-source", "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa")
+        assertNull(shadowOf(a).nextStartedActivity)
+        action(a, "open-source", id)
+        val opened = requireNotNull(shadowOf(a).nextStartedActivity)
+        assertEquals(android.content.Intent.ACTION_VIEW, opened.action)
+        assertEquals("https://example.org/evidence", opened.dataString)
+        enter(a)
+        action(a, "open-source", id, binding = scope)
+        action(a, "open-source", id)
+        assertNull("The old source cannot be reopened in a new bot view, even with a current envelope", shadowOf(a).nextStartedActivity)
+        assertTrue((field(a, "command03Sources") as ArrayDeque<*>).isEmpty())
+    }
+
+    @Test
+    @Config(shadows = [DeferredBackend::class])
+    fun delayedCloudProducerCannotRelabelItsAnswerOrContinueToolsInAnotherView() = withActivity { _, a ->
+        ready(a)
+        call(a, "runCloud", String::class.java to "Alte Anfrage", List::class.java to emptyList<ToolOutput>())
+        val late = DeferredBackend.replies.removeFirst()
+        enter(a)
+        val currentMessages = messages(a)
+        set(a, "activeLocalRequest", true)
+        call(a, "setBusy", Boolean::class.javaPrimitiveType!! to true)
+        try {
+            late(Result.success(AgentReply("old", "Diese alte Antwort darf nicht erscheinen",
+                listOf(ToolCallRequest("old-tool", "device_info", emptyMap())),
+                listOf(AgentCitation("Alt", "https://example.org/old")), "complete")))
+            late(Result.failure(IllegalStateException("Alte fehlgeschlagene Antwort")))
+            assertEquals(currentMessages, messages(a))
+            assertTrue((field(a, "command03Sources") as ArrayDeque<*>).isEmpty())
+            assertTrue(field(a, "busy") as Boolean)
+            assertTrue(field(a, "activeLocalRequest") as Boolean)
+            assertTrue(DeferredBackend.replies.isEmpty())
+        } finally {
+            set(a, "activeLocalRequest", false)
+            call(a, "setBusy", Boolean::class.javaPrimitiveType!! to false)
+        }
+        call(a, "returnToJarvis")
+        call(a, "switchCommand03MainDesign", Boolean::class.javaPrimitiveType!! to false)
+        call(a, "runCloud", String::class.java to "Klassische Anfrage", List::class.java to emptyList<ToolOutput>())
+        DeferredBackend.replies.removeFirst().invoke(Result.success(AgentReply("native", "Klassische Antwort bleibt erreichbar",
+            emptyList(), emptyList(), "complete")))
+        assertTrue(messages(a).contains("Klassische Antwort bleibt erreichbar"))
+        assertFalse(field(a, "busy") as Boolean)
+    }
+
+    private fun document(name: String, text: String = "Synthetischer ausgelesener Dokumenttext.") =
+        PdfDocumentIntake.Document(name, null, 1, null, text, PdfDocumentIntake.TextState.EXTRACTED, 1, listOf(text))
+
+    private fun project(a: AgentActivity, document: PdfDocumentIntake.Document): JSONObject {
+        call(a, "projectCommand03Document", PdfDocumentIntake.Document::class.java to document)
+        return packet(a, "document")
+    }
+
+    private fun documentTurn(a: AgentActivity, document: PdfDocumentIntake.Document): Any {
+        val prompt = requireNotNull(at.heinz.deviceai.cognitive.DocumentDraftPrompt.build(document.name, document.text))
+        val owner = requireNotNull(field(a, "command03Document"))
+        val type = AgentActivity::class.java.declaredClasses.single { it.simpleName == "DocumentDraftTurn" }
+        return type.declaredConstructors.single { it.parameterCount == 7 }.apply { isAccessible = true }
+            .newInstance(prompt, document.name, null, null, field(a, "sessionId"), false, owner)
+    }
+
+    @Test fun projectedPdfDraftUsesTheExistingNoModelAndBusyHandlersAndRejectsReplacedIds() = withActivity { _, a ->
+        ready(a)
+        val first = project(a, document("Erstes.pdf"))
+        assertTrue(first.getBoolean("canDraft"))
+        action(a, "document-draft", first.getString("documentId"))
+        val missing = packet(a, "document")
+        assertTrue(missing.getString("draftStatus").contains("Lokales Modell nicht geladen"))
+        assertNull(field(a, "documentDraftTurn"))
+        assertFalse(field(a, "activeLocalRequest") as Boolean)
+        val second = project(a, document("Zweites.pdf"))
+        assertNotEquals(first.getString("documentId"), second.getString("documentId"))
+        val before = messages(a)
+        action(a, "document-draft", first.getString("documentId"))
+        assertEquals(before, messages(a))
+        assertEquals(second.getString("documentId"), objectField(field(a, "command03Document")!!, "id"))
+        call(a, "setBusy", Boolean::class.javaPrimitiveType!! to true)
+        try {
+            action(a, "document-draft", second.getString("documentId"))
+            val busy = packet(a, "document")
+            assertFalse(busy.getBoolean("canDraft"))
+            assertEquals("Entwurf nicht gestartet – JARVIS arbeitet an einem anderen Auftrag.", busy.getString("draftStatus"))
+            assertNull(field(a, "documentDraftTurn"))
+        } finally { call(a, "setBusy", Boolean::class.javaPrimitiveType!! to false) }
+    }
+
+    @Test fun successfulPdfCompletionRevealsChatWithoutClosingAReplacedDocumentOrRequestingFocus() = withActivity { _, a ->
+        ready(a)
+        val first = document("Erstes.pdf")
+        project(a, first)
+        val oldTurn = documentTurn(a, first)
+        val second = document("Zweites.pdf")
+        val secondPacket = project(a, second)
+        set(a, "workEpisodeId", "current-pdf-episode")
+        val currentAction = View(a).apply { isEnabled = false }
+        set(a, "documentDraftAction", currentAction)
+        call(a, "onDocumentDraftReply", oldTurn.javaClass to oldTurn, String::class.java to "Synthetischer alter Entwurf")
+        assertEquals(secondPacket.getString("documentId"), objectField(field(a, "command03Document")!!, "id"))
+        assertEquals("An old result must not replace the new document's journal binding", "current-pdf-episode", field(a, "workEpisodeId"))
+        assertFalse(currentAction.isEnabled)
+        val beforeFailure = shadowOf(stage(a)).lastEvaluatedJavascript
+        call(a, "onDocumentDraftFailed", oldTurn.javaClass to oldTurn, String::class.java to "Synthetischer alter Fehler")
+        assertEquals("current-pdf-episode", field(a, "workEpisodeId"))
+        assertEquals(secondPacket.getString("documentId"), objectField(field(a, "command03Document")!!, "id"))
+        assertEquals("Old failure must not alter the new PDF's status or action", beforeFailure, shadowOf(stage(a)).lastEvaluatedJavascript)
+        assertFalse(currentAction.isEnabled)
+        val currentTurn = documentTurn(a, second)
+        call(a, "onDocumentDraftReply", currentTurn.javaClass to currentTurn, String::class.java to "Synthetischer aktueller Entwurf")
+        assertNull(field(a, "command03Document"))
+        val shown = packet(a, "section")
+        assertEquals("chat", shown.getString("name"))
+        assertFalse("Automatic results must not take the keyboard", shown.getBoolean("focusComposer"))
+        assertEquals(binding(a).viewId, shown.getString("viewId"))
+    }
+
     @Test fun installedTtsPcmAndWordRangeReachHtmlAndStopRejectsLateCallbacks() = withActivity { _, a ->
         ready(a)
         val listener = startHtmlSpeech(a, "html-real-listener")
@@ -573,6 +933,62 @@ class ContinuumCommand03BridgeUiTest {
         assertSame(feed, nativeHome.javaClass.getDeclaredField("liveComputerFeed").apply { isAccessible = true }.get(nativeHome))
         assertNull(field(a, "command03MainStage"))
         feed.end()
+    }
+
+    @Test
+    @Config(shadows = [Command03HostWebView::class])
+    @GraphicsMode(GraphicsMode.Mode.NATIVE)
+    fun selectingActiveComputerKeepsItsSessionButChatStillStopsIt() = withActivity { lifecycle, a ->
+        CockpitHostFramePump { a.window.decorView }.use { pump ->
+            resizeWindow(a, 392, 852)
+            repeat(3) { advance(); pump.drawRequestedFrame() }
+            lifecycle.windowFocusChanged(true)
+        }
+        ready(a)
+        val native = OwnerComputerSessionController(a,
+            field(a, "cockpitBus") as at.heinz.deviceai.cockpit.CockpitAnimationBus,
+            field(a, "avatarDirector") as at.heinz.deviceai.avatar.AvatarDirector,
+            java.util.concurrent.Executor { error("This route fixture starts no capture or worker") },
+            setFeed = { call(a, "setComputerFeed", LiveMonitorFeed::class.java to it) },
+            setBusy = { set(a, "activeLocalRequest", it); call(a, "setBusy", Boolean::class.javaPrimitiveType!! to it) },
+            visible = { call(a, "computerSessionVisible") as Boolean }, playClick = {}, stopClick = {})
+        // Model only an existing approved session. Routing must not start a capture or grant a tool.
+        val planType = OwnerComputerSessionController::class.java.declaredClasses.single { it.simpleName == "Plan" }
+        val reply: (OwnerComputerWorkflow.Result, Long?, Boolean) -> Unit = { _, _, _ -> }
+        val plan = planType.declaredConstructors.single { it.parameterCount == 5 }.apply { isAccessible = true }
+            .newInstance("computer-route-fixture", "com.whatsapp", OwnerComputerIntent(ComputerApp.WHATSAPP, ComputerGoal.OPEN),
+                android.os.SystemClock.elapsedRealtime(), reply)
+        OwnerComputerSessionController::class.java.getDeclaredField("plan").apply { isAccessible = true }.set(native, plan)
+        set(a, "computerController", native)
+        val feed = LatestLiveFrameHolder<AndroidLiveFrame>({ it.close() }).apply {
+            bind(LiveFrameBinding("computer-route-fixture", 1, "com.whatsapp", a.packageName,
+                LiveFrameOrigin.ACCESSIBILITY_WINDOW))
+        }
+        call(a, "setComputerFeed", LiveMonitorFeed::class.java to feed)
+        val web = stage(a)
+        assertTrue(native.active)
+        assertTrue("The route starts from an actually visible HTML host", call(a, "command03ComputerVisible") as Boolean)
+        assertNull(field(a, "centerDialog"))
+        repeat(2) {
+            assertTrue(action(a, "route", "device"))
+            assertTrue("Selecting Computer must preserve its active session", native.active)
+            assertSame(feed, field(a, "command03ComputerFeed"))
+            assertSame(web, stage(a))
+            assertNull("No native dialog may cover the active computer", field(a, "centerDialog"))
+            val section = JSONObject(shadowOf(web).lastEvaluatedJavascript
+                .removePrefix("window.ContinuumNative?.section(").removeSuffix(");"))
+            assertEquals("device", section.getString("name"))
+            assertEquals((web as ContinuumCommand03OriginalStage).binding!!.viewId, section.getString("viewId"))
+        }
+        assertTrue(action(a, "route", "chat"))
+        assertFalse("A covering route must still stop the existing session", native.active)
+        assertNull(field(a, "command03ComputerFeed"))
+        assertTrue(action(a, "route", "device"))
+        assertFalse("Opening Computer must not restart the stopped session", native.active)
+        assertNull(field(a, "command03ComputerFeed"))
+        val center = field(a, "centerDialog") as AlertDialog
+        assertTrue(center.isShowing)
+        center.dismiss()
     }
 
     @Test

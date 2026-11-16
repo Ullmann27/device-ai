@@ -83,16 +83,19 @@ internal object JarvisHomeTestRoutes {
     fun navigate(root: View, target: String) {
         if (target !in moreTargets) { touch(root, destination(root, target)); return }
         val more = descendants(home(root)).single { it.tag == "jarvis-header:more" }
-        touch(root, more)
+        assertTrue("More is an actionable visible accessibility control", more.isShown && more.isEnabled && more.isClickable)
+        assertTrue("More dispatches its native click", more.performClick())
         shadowOf(Looper.getMainLooper()).idle()
         val dialog = requireNotNull(ShadowAlertDialog.getLatestAlertDialog())
         assertTrue("The actual More dialog opens", dialog.isShowing)
         val entries = ContinuumWorkAreaNavigationSpec.moreEntries
         val list = dialog.listView
-        assertEquals(entries.map { it.title }, (0 until list.adapter.count).map { list.adapter.getItem(it).toString() })
+        assertEquals(listOf("KOMMANDO 03 · ORIGINALDESIGN ALS STARTSEITE") + entries.map { it.title },
+            (0 until list.adapter.count).map { list.adapter.getItem(it).toString() })
         val index = entries.indexOfFirst { it.target == target }
         assertTrue(index >= 0)
-        assertTrue("The actual menu dispatches $target", list.performItemClick(null, index, list.adapter.getItemId(index)))
+        val row = index + 1
+        assertTrue("The actual menu dispatches $target", list.performItemClick(null, row, list.adapter.getItemId(row)))
     }
 
     /** Eight dock destinations, legacy cards. */

@@ -1,0 +1,30 @@
+{
+  "scope": "LOCAL_INSTALLED_BYTECODE_DIAGNOSIS_NOT_DEVICE_FOCUS_PROOF",
+  "cause": "Android28 WebView delegates requestFocus to ViewDelegate; installed Robolectric4.14.1 proxy returns a default false Boolean. The test helper forwards to actual View logic without overriding focus/visibility results.",
+  "files": [
+    {
+      "name": "android_webkit_WebView.javap.txt",
+      "sha256": "5ac2b50054c3dd21eacda3ea213e51a60e675eab82881dbcd190c3e4b6abd387",
+      "bytes": 164108,
+      "excerpts": [
+        "private final boolean $$robo$$android_webkit_WebView$requestFocus(int, android.graphics.Rect);\n    Code:\n       0: aload_0\n       1: getfield      #181                // Field mProvider:Landroid/webkit/WebViewProvider;\n       4: invokeinterface #918,  1          // InterfaceMethod android/webkit/WebViewProvider.getViewDelegate:()Landroid/webkit/WebViewProvider$ViewDelegate;\n       9: iload_1\n      10: aload_2\n      11: invokeinterface #1200,  3         // InterfaceMethod android/webkit/WebViewProvider$ViewDelegate.requestFocus:(ILandroid/graphics/Rect;)Z\n      16: ireturn"
+      ]
+    },
+    {
+      "name": "org_robolectric_shadows_ShadowWebView$1$1.javap.txt",
+      "sha256": "7bf17f5dfc8f0f0faf36328d05560b42abbf2239424fa6b685060be0b45627a4",
+      "bytes": 1165,
+      "excerpts": [
+        "public java.lang.Object invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[]) throws java.lang.Throwable;\n    Code:\n       0: aload_0\n       1: getfield      #1                  // Field this$1:Lorg/robolectric/shadows/ShadowWebView$1;\n       4: getfield      #13                 // Field org/robolectric/shadows/ShadowWebView$1.this$0:Lorg/robolectric/shadows/ShadowWebView;\n       7: aload_2\n       8: invokestatic  #19                 // Method org/robolectric/shadows/ShadowWebView.access$100:(Lorg/robolectric/shadows/ShadowWebView;Ljava/lang/reflect/Method;)Ljava/lang/Object;\n      11: areturn\n}"
+      ]
+    },
+    {
+      "name": "ShadowWebView.javap.txt",
+      "sha256": "d7d516f2ad51096f7214a6dbf0db5b43e202baafa3ddcae481a91c3db97b09f7",
+      "bytes": 45515,
+      "excerpts": [
+        "private java.lang.Object nullish(java.lang.reflect.Method);\n    Code:\n       0: aload_1\n       1: invokevirtual #189                // Method java/lang/reflect/Method.getReturnType:()Ljava/lang/Class;\n       4: astore_2\n       5: aload_2\n       6: getstatic     #194                // Field java/lang/Long.TYPE:Ljava/lang/Class;\n       9: invokevirtual #200                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z\n      12: ifne          65\n      15: aload_2\n      16: getstatic     #204                // Field java/lang/Double.TYPE:Ljava/lang/Class;\n      19: invokevirtual #200                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z\n      22: ifne          65\n      25: aload_2\n      26: getstatic     #207                // Field java/lang/Integer.TYPE:Ljava/lang/Class;\n      29: invokevirtual #200                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z\n      32: ifne          65\n      35: aload_2\n      36: getstatic     #210                // Field java/lang/Float.TYPE:Ljava/lang/Class;\n      39: invokevirtual #200                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z\n      42: ifne          65\n      45: aload_2\n      46: getstatic     #213                // Field java/lang/Short.TYPE:Ljava/lang/Class;\n      49: invokevirtual #200                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z\n      52: ifne          65\n      55: aload_2\n      56: getstatic     #216                // Field java/lang/Byte.TYPE:Ljava/lang/Class;\n      59: invokevirtual #200                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z\n      62: ifeq          70\n      65: iconst_0\n      66: invokestatic  #219                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;\n      69: areturn\n      70: aload_2\n      71: getstatic     #223                // Field java/lang/Character.TYPE:Ljava/lang/Class;\n      74: invokevirtual #200                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z\n      77: ifeq          85\n      80: iconst_0\n      81: invokestatic  #226                // Method java/lang/Character.valueOf:(C)Ljava/lang/Character;\n      84: areturn\n      85: aload_2\n      86: getstatic     #229                // Field java/lang/Boolean.TYPE:Ljava/lang/Class;\n      89: invokevirtual #200                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z\n      92: ifeq          100\n      95: iconst_0\n      96: invokestatic  #232                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;\n      99: areturn\n     100: aconst_null\n     101: areturn"
+      ]
+    }
+  ]
+}

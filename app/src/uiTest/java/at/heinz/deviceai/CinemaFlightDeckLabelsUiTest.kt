@@ -42,6 +42,12 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class CinemaFlightDeckLabelsUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private val width = 884
     private val height = 760
 
@@ -148,6 +154,10 @@ class CinemaFlightDeckLabelsUiTest {
     private fun light(c: Int) = Color.alpha(c) > 60 && Color.blue(c) > 150 && Color.red(c) < 120
 
     @Test fun flightContactNeverLightsTheKpiTilesWhileTheWindowFlies() = scene { scene ->
+        // Scroll KPI into the actually visible viewport.
+        val statusControl = requireNotNull(scene.home.findViewWithTag<View>("jarvis-panel:STATUS"))
+        JarvisHomeTestRoutes.scrollIntoView(statusControl)
+        scene.advance(48L)
         start(scene.activity, "cinema-b2-kpi")
         val window = requireNotNull(find<JarvisWorkWindow>(content(scene.activity)) { it.tag == "jarvis-work-window" })
         val panel = requireNotNull(window.findViewWithTag<View>("jarvis-work-window:panel"))

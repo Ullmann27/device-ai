@@ -47,6 +47,8 @@ import at.heinz.deviceai.ui.ToolWorkSceneLease
 import at.heinz.deviceai.ui.Command03BridgeContract
 import at.heinz.deviceai.ui.Command03Command
 import at.heinz.deviceai.ui.Command03Draft
+import at.heinz.deviceai.ui.Command03Binding
+import at.heinz.deviceai.ui.Command03DraftLedger
 import android.content.Intent
 import android.content.ActivityNotFoundException
 import android.graphics.Color
@@ -873,6 +875,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        command03MainStage?.cancelComposerFocus()
         // A visible split-screen task retains its already approved feed while the owner taps the target app.
         // Speech still ends below; only that existing visible computer session keeps the WebView drawing.
         if (!computerFeedbackActive()) {
@@ -2180,10 +2183,11 @@ class AgentActivity : Activity() {
         return at.heinz.deviceai.avatar.AvatarSink { event ->
             runCatching { sink.onAvatarEvent(event) }
             val ownerSession = sessionId
+            val ownerView = command03View
             val ownerUtterance = voiceUtteranceId
             val deliver = Runnable {
                 if (sessionId == ownerSession && voiceUtteranceId == ownerUtterance &&
-                    !isDestroyed && usesCommand03HtmlDesign() && command03MainStage != null)
+                    command03ViewCurrent(ownerView) && usesCommand03HtmlDesign() && command03MainStage != null)
                     command03SpeechProjection.accept(ownerSession, ownerUtterance, event)
             }
             if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) deliver.run()
@@ -2191,6 +2195,20 @@ class AgentActivity : Activity() {
         }
     }
     private var command03HtmlSession: String? = null
+    private data class Command03View(val id: String, val revision: Long, val session: String, val bot: String?)
+    private var command03View = Command03View(UUID.randomUUID().toString(), 0L, "", null)
+    private var command03HtmlBoundView: Command03Binding? = null
+    private var command03TransitionCause: org.json.JSONObject? = null
+    private val command03DraftLedger = Command03DraftLedger()
+    private val command03VisibleMessages = ArrayDeque<Pair<Boolean, String>>()
+    private data class Command03SourceSet(val view: Command03View, val id: String,
+        val items: List<Pair<String, AgentCitation>>)
+    private val command03Sources = ArrayDeque<Command03SourceSet>()
+    private data class Command03Document(val view: Command03View, val id: String,
+        val document: PdfDocumentIntake.Document, var preview: String? = null, var status: String = "",
+        var actionEnabled: Boolean = true)
+    private var command03Document: Command03Document? = null
+    private var command03SpeechSelection: Command03Binding? = null
     private var command03HtmlHistoryRevision = 0L
     private var command03HtmlMessageRevision = 0L
     private var command03DraftRevision = 0L
@@ -2198,7 +2216,8 @@ class AgentActivity : Activity() {
         val request: Command03Command,
         val deadline: Long,
         val complete: (Boolean, String?) -> Unit,
-        var lookupRevision: Long? = null
+        var lookupRevision: Long? = null,
+        var consumed: Boolean = false
     )
     private var pendingCommand03Input: PendingCommand03Input? = null
     private var deferredCommand03Draft: Command03Draft? = null
@@ -2208,6 +2227,70 @@ class AgentActivity : Activity() {
         command03HtmlStateScheduled = false
         syncCommand03HtmlState()
     }
+
+    /** A presentation instance is distinct even when the owner returns to the same bot/session. */
+    private fun replaceCommand03View(cause: PendingCommand03Input? = null) {
+        val previous = command03MainStage?.binding
+        val ownTransition = cause != null && pendingCommand03Input === cause && cause.request.binding == previous
+        command03TransitionCause = if (ownTransition && previous != null) org.json.JSONObject()
+            .put("commandId", cause!!.request.id).put("fromPageId", previous.pageId)
+            .put("fromViewId", previous.viewId).put("fromViewRevision", previous.viewRevision)
+            .put("fromSessionId", previous.sessionId).put("ackEditRevision", command03DraftLedger.acknowledged) else null
+        val carried = deferredCommand03Draft?.takeIf { edit ->
+            ownTransition && edit.binding == previous
+        }
+        // Computer.stop may synchronously call setBusy and query the current
+        // owner. Publish this view first so a nested read cannot replace it.
+        val previousView = command03View
+        command03View = Command03View(UUID.randomUUID().toString(), previousView.revision + 1,
+            sessionId, selectedBot?.agentId)
+        if (previousView.session.isNotEmpty()) hideCommand03Computer()
+        command03MainStage?.cancelComposerFocus()
+        command03SpeechProjection.clear()
+        command03HtmlBoundView = null
+        command03HtmlSession = null
+        command03HtmlHistoryRevision++
+        command03VisibleMessages.clear()
+        command03Sources.clear()
+        command03Document = null
+        command03SpeechSelection = null
+        deferredCommand03Draft = null
+        if (carried != null) {
+            // This admitted command itself selected the bot. Preserve its newer draft as native text;
+            // the new page/view has not acknowledged any of the previous view's client revisions.
+            command03Binding()?.let { next -> deferredCommand03Draft = carried.copy(binding = next, clientEditRevision = 0L) }
+        }
+        scheduleCommand03HtmlState()
+    }
+
+    private fun command03ViewOwner(): Command03View {
+        if (command03View.session != sessionId || command03View.bot != selectedBot?.agentId) replaceCommand03View()
+        return command03View
+    }
+
+    // Checking an old callback must never replace the current view.
+    private fun command03ViewCurrent(owner: Command03View): Boolean =
+        !isFinishing && !isDestroyed && owner == command03View &&
+            owner.session == sessionId && owner.bot == selectedBot?.agentId
+
+    private fun command03Binding(): Command03Binding? {
+        val stage = command03MainStage ?: return null
+        val owner = command03ViewOwner()
+        val binding = Command03Binding(stage.pageId, owner.id, owner.revision, owner.session)
+        if (!stage.bind(binding)) return null
+        val previous = command03DraftLedger.binding
+        if (previous != null && previous != binding && previous.viewId == binding.viewId && previous.sessionId == binding.sessionId) {
+            deferredCommand03Draft?.takeIf { it.binding == previous }?.let {
+                deferredCommand03Draft = it.copy(binding = binding, clientEditRevision = 0L)
+            }
+        }
+        command03DraftLedger.bind(binding)
+        return binding
+    }
+
+    private fun command03Envelope(scope: Command03Binding): org.json.JSONObject = org.json.JSONObject()
+        .put("pageId", scope.pageId).put("viewId", scope.viewId).put("viewRevision", scope.viewRevision)
+        .put("sessionId", scope.sessionId)
 
     private fun scheduleCommand03HtmlState() {
         if (foregroundLearningActive && command03MainStage != null && !command03HtmlStateScheduled) {
@@ -2219,6 +2302,7 @@ class AgentActivity : Activity() {
     private fun syncCommand03HtmlState() {
         val stage = command03MainStage ?: return
         if (!foregroundLearningActive || isFinishing || isDestroyed) return
+        val scope = command03Binding() ?: return
         val system = capabilityDashboard?.system
         val workRows = org.json.JSONArray()
         homeView?.state?.computer?.let { computer ->
@@ -2233,14 +2317,19 @@ class AgentActivity : Activity() {
             chats.put(org.json.JSONObject().put("id", item.id)
                 .put("title", item.title.take(96)))
         }
-        val data = org.json.JSONObject()
-            .put("sessionId", sessionId)
+        val data = command03Envelope(scope)
+            .put("viewKind", if (selectedBot == null) "CENTRAL" else "BOT")
+            .put("viewLabel", selectedBot?.displayName ?: "JARVIS")
+            .put("transitionCause", command03TransitionCause ?: org.json.JSONObject.NULL)
             .put("chats", chats)
             .put("workRows", workRows)
             .put("busy", busy)
             .put("commandPending", pendingCommand03Input != null)
             .put("listening", voiceListening)
             .put("speaking", voiceSpeaking)
+            .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)
+                .put("paused", continuousConversation.state == at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED))
+            .put("longPressTimeoutMs", android.view.ViewConfiguration.getLongPressTimeout())
             .put("telemetryAtElapsedMs", capabilityDashboardAtElapsedMs ?: org.json.JSONObject.NULL)
             .put("cpu", system?.appCpuPercent?.takeIf { it in 0..100 } ?: org.json.JSONObject.NULL)
             .put("ram", system?.memoryPercent?.takeIf { it in 0..100 } ?: org.json.JSONObject.NULL)
@@ -2250,15 +2339,28 @@ class AgentActivity : Activity() {
             .put("maxDraftBytes", Command03BridgeContract.MAX_DRAFT_BYTES)
             .put("maxMessageChars", Command03BridgeContract.MAX_MESSAGE_CHARACTERS)
             .put("draftRevision", command03DraftRevision)
+            .put("ackEditRevision", command03DraftLedger.acknowledged)
             .put("status", workStatusView?.text?.toString()?.take(280) ?: "Bereit")
-        val draft = deferredCommand03Draft?.takeIf { it.sessionId == sessionId }
+        val draft = deferredCommand03Draft?.takeIf { it.binding == scope }
         if (draft != null) data.put("draft", org.json.JSONObject().put("text", draft.text)
             .put("selectionStart", draft.selectionStart).put("selectionEnd", draft.selectionEnd))
+        else if (pendingCommand03Input?.request?.binding?.let { it != scope } == true)
+            data.put("draft", org.json.JSONObject().put("text", "").put("selectionStart", 0).put("selectionEnd", 0))
         else if (::input.isInitialized) data.put("draft", org.json.JSONObject()
             .put("text", input.text.toString()).put("selectionStart", input.selectionStart.coerceAtLeast(0))
             .put("selectionEnd", input.selectionEnd.coerceAtLeast(0)))
         stage.present(data)
-        if (command03HtmlSession != sessionId) {
+        if (command03HtmlBoundView != scope) {
+            command03HtmlBoundView = scope
+            val entries = org.json.JSONArray()
+            command03VisibleMessages.forEach { (user, text) ->
+                entries.put(org.json.JSONObject().put("user", user).put("text", text))
+            }
+            stage.presentTranscript(scope, entries)
+            command03Sources.forEach { presentCommand03Sources(it, scope) }
+            presentCommand03Document()
+        }
+        if (selectedBot == null && command03HtmlSession != sessionId) {
             command03HtmlSession = sessionId
             val id = sessionId
             val revision = ++command03HtmlHistoryRevision
@@ -2267,7 +2369,8 @@ class AgentActivity : Activity() {
                 val history = runCatching { chatTranscripts.load(id, 60) }
                 runOnUiThread {
                     if (isFinishing || isDestroyed || command03HtmlHistoryRevision != revision ||
-                        sessionId != id || command03MainStage !== stage) return@runOnUiThread
+                        sessionId != id || selectedBot != null || command03Binding() != scope ||
+                        command03MainStage !== stage) return@runOnUiThread
                     // An append queued after this read must not be replaced by the older snapshot.
                     if (messageRevision != command03HtmlMessageRevision) {
                         command03HtmlSession = null
@@ -2280,7 +2383,7 @@ class AgentActivity : Activity() {
                             entries.put(org.json.JSONObject().put("user", entry.user)
                                 .put("text", Command03BridgeContract.messageText(entry.text)))
                         }
-                        stage.presentTranscript(id, entries)
+                        stage.presentTranscript(scope, entries)
                     }
                 }
             }
@@ -2294,23 +2397,40 @@ class AgentActivity : Activity() {
     private fun nativeStagePresentationActive(): Boolean = !usesCommand03HtmlDesign() &&
         (foregroundLearningActive || computerFeedbackActive())
 
-    private fun receiveCommand03Draft(draft: Command03Draft) {
-        if (isFinishing || isDestroyed || draft.sessionId != sessionId || !::input.isInitialized) return
+    private fun receiveCommand03Draft(draft: Command03Draft): Boolean {
+        if (isFinishing || isDestroyed || !foregroundLearningActive || !::input.isInitialized ||
+            draft.binding != command03Binding()) return false
+        val current = deferredCommand03Draft?.takeIf { it.binding == draft.binding }
+        val text = current?.text ?: if (pendingCommand03Input?.request?.binding?.let { it != draft.binding } == true) ""
+            else input.text.toString()
+        val start = current?.selectionStart ?: input.selectionStart.coerceIn(0, text.length)
+        val end = current?.selectionEnd ?: input.selectionEnd.coerceIn(start, text.length)
+        if (!command03DraftLedger.accept(draft, text, start, end)) {
+            scheduleCommand03HtmlState()
+            return false
+        }
         if (pendingCommand03Input != null) {
             // The existing asynchronous bot router reads the submitted native text until it consumes it.
             // Preserve newer edits without changing that in-flight input or starting another request.
             deferredCommand03Draft = draft
             command03DraftRevision++
-            return
+            scheduleCommand03HtmlState()
+            return true
         }
         applyCommand03Draft(draft)
+        return true
     }
 
     private fun applyCommand03Draft(draft: Command03Draft) {
         if (draft.sessionId != sessionId || !::input.isInitialized) return
-        if (input.text.toString() != draft.text) input.setText(draft.text)
-        input.setSelection(draft.selectionStart.coerceIn(0, input.text.length),
-            draft.selectionEnd.coerceIn(0, input.text.length))
+        applyCommand03NativeDraft(draft.text, draft.selectionStart, draft.selectionEnd)
+    }
+
+    private fun applyCommand03NativeDraft(text: String, selectionStart: Int, selectionEnd: Int) {
+        if (!::input.isInitialized) return
+        if (input.text.toString() != text) input.setText(text)
+        input.setSelection(selectionStart.coerceIn(0, input.text.length),
+            selectionEnd.coerceIn(0, input.text.length))
         command03DraftRevision++
         scheduleCommand03HtmlState()
     }
@@ -2320,7 +2440,7 @@ class AgentActivity : Activity() {
             !::sendButton.isInitialized || !sendButton.isEnabled) {
             complete(false, "unavailable"); return
         }
-        if (request.sessionId != sessionId) { complete(false, "stale-session"); return }
+        if (request.binding != command03Binding()) { complete(false, "stale-session"); return }
         if (botLookupPending || pendingConversationSelection != null || pendingCommand03Input != null ||
             (busy && !isCommand03BusyControl(request.text))) {
             complete(false, "busy"); return
@@ -2355,7 +2475,7 @@ class AgentActivity : Activity() {
         val pending = pendingCommand03Input ?: return
         if (isFinishing || isDestroyed || pending.request.sessionId != sessionId) {
             finishCommand03Input(pending, false, "stale-session", restoreDraft = false)
-        } else if (::input.isInitialized && input.text.isEmpty()) {
+        } else if (pending.consumed || (::input.isInitialized && input.text.isEmpty())) {
             finishCommand03Input(pending, true, null)
         } else if (foregroundLearningActive && botLookupPending &&
             android.os.SystemClock.uptimeMillis() < pending.deadline) {
@@ -2375,19 +2495,21 @@ class AgentActivity : Activity() {
     private fun finishCommand03Input(pending: PendingCommand03Input, accepted: Boolean,
         reason: String?, restoreDraft: Boolean = true) {
         if (pendingCommand03Input !== pending) return
-        val edited = deferredCommand03Draft
+        val edited = deferredCommand03Draft?.takeIf { it.binding == command03Binding() }
         pendingCommand03Input = null
         deferredCommand03Draft = null
         mainHandler.removeCallbacks(command03InputTick)
-        if (restoreDraft && pending.request.sessionId == sessionId) {
+        val sameView = pending.request.binding == command03Binding()
+        if (restoreDraft && pending.request.sessionId == sessionId &&
+            (sameView || (accepted && edited != null && ::input.isInitialized && input.text.isEmpty()))) {
             val text = when {
-                edited != null && (!accepted || edited.text != pending.request.text) -> edited.text
+                edited != null && (!accepted || edited.text != pending.request.draft.text) -> edited.text
                 accepted -> ""
-                else -> pending.request.text
+                else -> pending.request.draft.text
             }
-            applyCommand03Draft(Command03Draft(sessionId, text,
+            applyCommand03NativeDraft(text,
                 edited?.selectionStart?.coerceAtMost(text.length) ?: text.length,
-                edited?.selectionEnd?.coerceAtMost(text.length) ?: text.length))
+                edited?.selectionEnd?.coerceAtMost(text.length) ?: text.length)
         }
         pending.complete(accepted, reason)
         scheduleCommand03HtmlState()
@@ -2398,6 +2520,7 @@ class AgentActivity : Activity() {
         command03ComputerProjection.bind(sessionId, null)
         command03HtmlHistoryRevision++
         command03HtmlSession = null
+        command03HtmlBoundView = null
         mainHandler.removeCallbacks(command03HtmlStateTick)
         command03HtmlStateScheduled = false
         command03MainStage?.let { stage ->
@@ -2437,12 +2560,19 @@ class AgentActivity : Activity() {
 
     private fun routeCommand03HtmlAction(route: String, value: String?) {
         if (isFinishing || isDestroyed) return
-        if (route == "device" && computerController?.active == true) {
-            command03MainStage?.showSection("device")
+        val stage = command03MainStage
+        stage?.cancelComposerFocus()
+        if (route == "device" && stage != null && command03ComputerVisible() && computerController?.active == true) {
+            // Selecting the existing computer must not end its already approved session.
+            stage.showSection("device")
             scheduleCommand03Computer()
             return
         }
-        if (route !in setOf("home", "voice-input", "stop")) hideCommand03Computer()
+        if (route !in setOf("home", "voice-input", "voice-input-long-press", "stop")) hideCommand03Computer()
+        if (route !in setOf("home", "voice-input", "voice-input-long-press", "stop", "document-draft")) {
+            command03Document = null
+            stage?.clearDocument()
+        }
         when (route) {
             "home" -> { showHomeDashboard(); command03MainStage?.showSection("home") }
             "chat" -> {
@@ -2455,7 +2585,10 @@ class AgentActivity : Activity() {
             "select-chat" -> value?.let(::selectStoredConversation)
             "new-chat" -> newCentralConversation()
             "stop" -> cancelLocalRequest()
-            "voice-input" -> onChatMicrophoneTap()
+            "voice-input" -> { command03SpeechSelection = command03Binding(); onChatMicrophoneTap() }
+            "voice-input-long-press" -> { command03SpeechSelection = command03Binding(); onChatMicrophoneLongPress() }
+            "open-source" -> value?.let(::openCommand03Source)
+            "document-draft" -> value?.let(::startCommand03DocumentDraft)
             else -> navigateDashboardTarget(route)
         }
     }
@@ -2484,8 +2617,10 @@ class AgentActivity : Activity() {
             onComputerFrameHidden = { ack ->
                 if (command03ComputerProjection.hidden(ack)) computerController?.stop()
             },
-            onPresentationLost = { command03ComputerProjection.suspend() })
+            onPresentationLost = { command03ComputerProjection.suspend() },
+            canFocusComposer = { foregroundLearningActive && !isFinishing && !isDestroyed })
         command03MainStage = web
+        command03Binding()
         web.tag = "continuum-command03-main-stage"
         (web.parent as? android.view.ViewGroup)?.removeView(web)
         // Covered siblings still report isShown=true. INVISIBLE stops their presentation and input while
@@ -2960,20 +3095,29 @@ class AgentActivity : Activity() {
                                     /** The document's own first page, carried into the result as its source card. */
                                     val page: android.graphics.Bitmap? = null,
                                     val sessionId: String? = null,
-                                    val allowMaya: Boolean = true)
+                                    val allowMaya: Boolean = true,
+                                    val command03Owner: Command03Document? = null)
     /** Journal episode of the document task currently on screen. */
     private var workEpisodeId: String? = null
     /** The draft line of the open document window: always the state really reached, never „läuft“ after a failure. */
     private var documentDraftStatus: TextView? = null
 
-    private fun showDocumentDraftStatus(text: String) {
+    private fun showDocumentDraftStatus(text: String) = showDocumentDraftStatus(text, command03Document)
+
+    private fun showDocumentDraftStatus(text: String, owner: Command03Document?) {
         documentDraftStatus?.apply { this.text = text; visibility = View.VISIBLE }
+        if (owner != null && command03Document === owner && command03ViewCurrent(owner.view)) {
+            owner.status = text
+            presentCommand03Document()
+        }
     }
     /** ENTWURF ERSTELLEN of the open document window: off while its draft runs, on again after a failure or STOP. */
     private var documentDraftAction: View? = null
 
     private fun showDocumentDraftAction(enabled: Boolean) {
         documentDraftAction?.apply { isEnabled = enabled; alpha = if (enabled) 1f else .45f }
+        command03Document?.takeIf { command03ViewCurrent(it.view) }?.actionEnabled = enabled
+        presentCommand03Document()
     }
     private var documentDraftTurn: DocumentDraftTurn? = null
     /** Save target frozen before picker. */
@@ -3015,7 +3159,7 @@ class AgentActivity : Activity() {
                 recordWork(workEpisodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING) }
                 showDocumentDraftStatus("Entwurf wird lokal erstellt …")
                 documentDraftTurn = DocumentDraftTurn(prompt, doc.name, workEpisodeId, doc.firstPage, sessionId,
-                    ownerReplyAllowsMaya)
+                    ownerReplyAllowsMaya, command03Document?.takeIf { it.document === doc && command03ViewCurrent(it.view) })
                 runLocal(prompt.request, resolvedQuestion = prompt.question)
                 // While the model really works on the document, JARVIS reads it in its window (ends with the work).
                 if (documentDraftTurn != null) {
@@ -3101,11 +3245,20 @@ class AgentActivity : Activity() {
 
     /** The local model's reply to a document draft: journal state, then the result surface (null without a draft). */
     private fun onDocumentDraftReply(turn: DocumentDraftTurn, response: String): at.heinz.deviceai.ui.JarvisWorkWindow? {
+        if (!command03DocumentTurnCurrent(turn)) {
+            recordWork(turn.episodeId) {
+                if (response.isBlank()) it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED)
+                else it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTED,
+                    draft = response.trim(), coveredChars = turn.prompt.coveredChars)
+            }
+            return null
+        }
         workWindowHost.workEnded()
         if (response.isBlank()) {
             recordWork(turn.episodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED) }
             // The window may never keep saying „wird erstellt“ for a run that failed.
-            showDocumentDraftStatus("Entwurf fehlgeschlagen – das lokale Modell hat keinen Entwurf geliefert. Nichts gespeichert.")
+            showDocumentDraftStatus("Entwurf fehlgeschlagen – das lokale Modell hat keinen Entwurf geliefert. Nichts gespeichert.",
+                turn.command03Owner)
             turn.episodeId?.let { episodeId ->
                 val documentTurnId = "document-$episodeId"
                 cockpitTriggers.documentPipelineStep(
@@ -3124,6 +3277,12 @@ class AgentActivity : Activity() {
         recordWork(turn.episodeId) {
             it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTED, draft = response.trim(),
                 coveredChars = turn.prompt.coveredChars)
+        }
+        turn.command03Owner?.takeIf { it === command03Document && command03ViewCurrent(it.view) }?.let { projected ->
+            projected.status = "Entwurf erstellt · Ergebnis im Gespräch."
+            command03MainStage?.clearDocument()
+            command03Document = null
+            command03MainStage?.showSection("chat")
         }
         workEpisodeId = turn.episodeId
         val window = presentDraftScene(turn, response)
@@ -3159,14 +3318,15 @@ class AgentActivity : Activity() {
     /** The model run of [turn] failed (error, heat stop, context): journal FAILED, the window says so, reading ends. */
     private fun onDocumentDraftFailed(turn: DocumentDraftTurn, reason: String?) {
         if (documentDraftTurn === turn) documentDraftTurn = null
-        workWindowHost.workEnded()
         recordWork(turn.episodeId) {
             if (it.state == at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING)
                 it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED) else it
         }
+        if (!command03DocumentTurnCurrent(turn)) return
+        workWindowHost.workEnded()
         val why = if (at.heinz.deviceai.localmodel.LocalModelThermalGuard.isThermal(reason)) "wegen Gerätewärme gestoppt"
             else "das lokale Modell meldete einen Fehler"
-        showDocumentDraftStatus("Entwurf fehlgeschlagen – $why. Nichts gespeichert.")
+        showDocumentDraftStatus("Entwurf fehlgeschlagen – $why. Nichts gespeichert.", turn.command03Owner)
         showDocumentDraftAction(enabled = true)
         turn.episodeId?.let { episodeId ->
             val documentTurnId = "document-$episodeId"
@@ -3182,6 +3342,9 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.cockpit.StepState.FAILED)
         }
     }
+
+    private fun command03DocumentTurnCurrent(turn: DocumentDraftTurn): Boolean =
+        turn.command03Owner?.let { it === command03Document && command03ViewCurrent(it.view) } ?: true
 
     private fun editDraft(target: TextView) {
         val editor = EditText(this).apply {
@@ -3337,24 +3500,20 @@ class AgentActivity : Activity() {
     private fun projectCommand03Document(doc: PdfDocumentIntake.Document) {
         val stage = command03MainStage ?: return
         hideCommand03Computer()
-        val session = sessionId
+        val scope = command03Binding() ?: return
+        val projected = Command03Document(command03ViewOwner(), UUID.randomUUID().toString(), doc)
+        command03Document = projected
         val readRevision = documentReadGeneration
-        val data = org.json.JSONObject()
-            .put("sessionId", session)
-            .put("name", doc.name.take(120))
-            .put("pageCount", doc.pageCount)
-            .put("textState", doc.textState.name)
-            .put("text", doc.text.take(PdfDocumentIntake.MAX_TEXT_CHARS))
+        syncCommand03HtmlState()
+        presentCommand03Document()
         val page = runCatching {
             doc.firstPage?.copy(android.graphics.Bitmap.Config.ARGB_8888, false)
         }.getOrNull()
         if (page == null) {
-            stage.presentDocument(data)
             return
         }
         if (documentIoExecutor.isShutdown) {
             page.recycle()
-            stage.presentDocument(data)
             return
         }
         try {
@@ -3370,16 +3529,38 @@ class AgentActivity : Activity() {
                 }.getOrNull()
                 page.recycle()
                 runOnUiThread {
-                    if (isFinishing || isDestroyed || sessionId != session ||
-                        documentReadGeneration != readRevision || command03MainStage !== stage) return@runOnUiThread
-                    data.put("previewDataUri", thumbnail ?: org.json.JSONObject.NULL)
-                    stage.presentDocument(data)
+                    if (!command03ViewCurrent(projected.view) || command03Document !== projected ||
+                        command03Binding() != scope || documentReadGeneration != readRevision ||
+                        command03MainStage !== stage) return@runOnUiThread
+                    projected.preview = thumbnail
+                    presentCommand03Document()
                 }
             }
         } catch (_: java.util.concurrent.RejectedExecutionException) {
             page.recycle()
-            stage.presentDocument(data)
         }
+    }
+
+    private fun presentCommand03Document() {
+        val projected = command03Document ?: return
+        if (!command03ViewCurrent(projected.view)) return
+        val scope = command03Binding() ?: return
+        val doc = projected.document
+        command03MainStage?.presentDocument(command03Envelope(scope)
+            .put("documentId", projected.id).put("name", doc.name.take(120))
+            .put("pageCount", doc.pageCount).put("textState", doc.textState.name)
+            .put("text", doc.text.take(PdfDocumentIntake.MAX_TEXT_CHARS))
+            .put("previewDataUri", projected.preview ?: org.json.JSONObject.NULL)
+            .put("canDraft", projected.actionEnabled && !busy && documentDraftTurn == null &&
+                doc.textState == PdfDocumentIntake.TextState.EXTRACTED && doc.text.isNotBlank())
+            .put("draftStatus", projected.status))
+    }
+
+    private fun startCommand03DocumentDraft(id: String) {
+        val projected = command03Document?.takeIf { it.id == id && command03ViewCurrent(it.view) } ?: return
+        startDocumentDraft(projected.document)
+        // Rejected/no-model/busy attempts expose the existing handler's actual status as well.
+        presentCommand03Document()
     }
 
     /**
@@ -3886,7 +4067,9 @@ class AgentActivity : Activity() {
     }
 
     /** Selection and history I/O never import bot text into owner memory or public learning. */
-    private fun selectBot(agentId: String) {
+    private fun selectBot(agentId: String) = selectBot(agentId, null)
+
+    private fun selectBot(agentId: String, command03Cause: PendingCommand03Input?) {
         if (busy || botLookupPending || backlogExecutor.isShutdown) {
             Toast.makeText(this, "Bitte den laufenden Dialogschritt abwarten.", Toast.LENGTH_SHORT).show()
             return
@@ -3904,20 +4087,24 @@ class AgentActivity : Activity() {
                 if (revision != botLookupRevision || isFinishing || isDestroyed) return@runOnUiThread
                 if (busy) return@runOnUiThread
                 loaded.fold({ (profile, history) ->
-                    enterBotConversation(profile)
+                    enterBotConversation(profile, command03Cause)
                     showBotHistory(profile, history)
                 }, { Toast.makeText(this, "Bot-Kontext nicht sicher lesbar; keine Daten ersetzt.", Toast.LENGTH_LONG).show() })
             }
         } } catch (_: java.util.concurrent.RejectedExecutionException) { botLookupPending = false }
     }
 
-    private fun enterBotConversation(profile: at.heinz.deviceai.chief.ChiefBotProfile) {
+    private fun enterBotConversation(profile: at.heinz.deviceai.chief.ChiefBotProfile) = enterBotConversation(profile, null)
+
+    private fun enterBotConversation(profile: at.heinz.deviceai.chief.ChiefBotProfile,
+        command03Cause: PendingCommand03Input?) {
         appNameClarification.clear()
         computerClarification.clear()
         cancelSpeechInputScope()
         voiceEngine?.stop(); stopVoiceAnimation()
         botConversation.select(profile.agentId)
         selectedBot = profile
+        replaceCommand03View(command03Cause)
         conversationActive = true
         activeWorkArea = ContinuumWorkArea.CHAT
         refreshWorkAreaSelection(); refreshConversationLayout()
@@ -3939,13 +4126,16 @@ class AgentActivity : Activity() {
         if (history.discardedTurns > 0) addBubble("Ältere Dialogteile wurden aus dem begrenzten Arbeitskontext entfernt.", false)
     }
 
-    private fun returnToJarvis() {
+    private fun returnToJarvis() = returnToJarvis(null)
+
+    private fun returnToJarvis(command03Cause: PendingCommand03Input?) {
         appNameClarification.clear()
         computerClarification.clear()
         cancelSpeechInputScope()
         voiceEngine?.stop(); stopVoiceAnimation()
         botConversation.select(null)
         selectedBot = null
+        replaceCommand03View(command03Cause)
         chatContainer.removeAllViews()
         input.hint = "Was soll ich auf deinem Gerät tun?"
         addBubble("JARVIS · Zentraler Dialog", false, persist = false)
@@ -3957,8 +4147,9 @@ class AgentActivity : Activity() {
     /** Addressing is metadata selection, never an action grant. Runs before owner-only routers. */
     private fun routeBotInput(request: String): Boolean {
         val address = at.heinz.deviceai.chief.ChiefBotAddressRouter.parse(request)
+        val command03Cause = pendingCommand03Input?.takeIf { it.request.text == request }
         if (address is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Jarvis) {
-            returnToJarvis()
+            returnToJarvis(command03Cause)
             input.setText(address.text.orEmpty())
             if (address.text != null) sendCurrentInput(botRoutingChecked = true)
             return true
@@ -4005,11 +4196,11 @@ class AgentActivity : Activity() {
                 }
                 input.text.clear()
                 if (address is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Select) {
-                    selectBot(profile.agentId)
+                    selectBot(profile.agentId, command03Cause)
                     return@runOnUiThread
                 }
                 if (selectedBot?.agentId != profile.agentId) {
-                    enterBotConversation(profile)
+                    enterBotConversation(profile, command03Cause)
                     history?.let { showBotHistory(profile, it) }
                 }
                 else selectedBot = profile
@@ -4205,6 +4396,7 @@ class AgentActivity : Activity() {
         val column = chatColumn ?: return
         // The workstation stays mounted during text chat too. Native 3D's existing reparent veto remains intact.
         val target: android.view.ViewGroup = if (chat && !home.jarvisShellStage) column else home
+        if (chat && home.jarvisShellStage) head.clearMemoryScene()
         val height = dp(if (keyboardCompact) 88 else if (resources.configuration.screenHeightDp < 520) 120
             else if (home.wide) 200 else 160)
         if (head.parent !== target &&
@@ -4234,6 +4426,7 @@ class AgentActivity : Activity() {
     }
 
     private fun showHomeDashboard() {
+        if (conversationActive) hologramView?.clearMemoryScene()
         activeWorkArea = ContinuumWorkArea.START
         // Returning to START does not invalidate an already active spoken turn.
         keepCockpitDuringHandsFree = continuousConversation.active
@@ -4258,6 +4451,12 @@ class AgentActivity : Activity() {
         conversationActive = true
         refreshConversationLayout()
         (dashboardSection as? ScrollView)?.scrollTo(0, 0)
+        command03MainStage?.let { stage ->
+            hideCommand03Computer()
+            syncCommand03HtmlState()
+            stage.showSection("chat", keyboard = true)
+            return
+        }
         input.requestFocus()
         input.post {
             if (!isFinishing && !isDestroyed) {
@@ -6865,6 +7064,7 @@ class AgentActivity : Activity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
             override fun afterTextChanged(s: android.text.Editable?) {
+                if (s?.isEmpty() == true) pendingCommand03Input?.consumed = true
                 refreshSendButtonPresentation()
                 command03DraftRevision++
                 scheduleCommand03HtmlState()
@@ -11604,7 +11804,10 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun runCloud(message: String?, outputs: List<ToolOutput>) {
+    private fun runCloud(message: String?, outputs: List<ToolOutput>) = runCloud(message, outputs, command03ViewOwner())
+
+    private fun runCloud(message: String?, outputs: List<ToolOutput>, owner: Command03View) {
+        if (!command03ViewCurrent(owner)) return
         if (agentLoops >= 12) {
             setBusy(false)
             addAssistantMessage("Ich habe die Sicherheitsgrenze von 12 Agent-Schleifen erreicht und stoppe hier.")
@@ -11615,17 +11818,19 @@ class AgentActivity : Activity() {
         addToolActivity(if (outputs.isEmpty()) "Cloud-KI plant …" else "Cloud-KI verarbeitet Tool-Ergebnisse …")
 
         backend.send(
-            sessionId = sessionId,
+            sessionId = owner.session,
             message = message,
             toolOutputs = outputs
         ) { result ->
+            // The producer owns this view instance, including an A -> B -> A transition in the same chat.
+            if (!command03ViewCurrent(owner)) return@send
             result.onFailure { error ->
                 setBusy(false)
                 addAssistantMessage("Cloud-Fehler: ${error.message ?: error.javaClass.simpleName}")
             }.onSuccess { reply ->
                 reply.message?.takeIf(String::isNotBlank)?.let(::addAssistantMessage)
                 if (reply.citations.isNotEmpty()) {
-                    addCitations(reply.citations)
+                    addCitations(reply.citations, owner)
                 }
 
                 if (reply.toolCalls.isEmpty()) {
@@ -11634,7 +11839,7 @@ class AgentActivity : Activity() {
                     setBusy(false)
                 } else {
                     renderCloudPlan(reply.toolCalls)
-                    executeCloudCalls(reply.toolCalls, 0, mutableListOf())
+                    executeCloudCalls(reply.toolCalls, 0, mutableListOf(), owner)
                 }
             }
         }
@@ -11643,23 +11848,25 @@ class AgentActivity : Activity() {
     private fun executeCloudCalls(
         calls: List<ToolCallRequest>,
         index: Int,
-        outputs: MutableList<ToolOutput>
+        outputs: MutableList<ToolOutput>,
+        owner: Command03View
     ) {
+        if (!command03ViewCurrent(owner)) return
         if (index >= calls.size) {
-            runCloud(null, outputs)
+            runCloud(null, outputs, owner)
             return
         }
 
         val call = calls[index]
         if (!SystemIntelligenceCommands.cloudMayDispatch(call.name)) {
             outputs += ToolOutput(call.callId, "LOCAL_ONLY_TOOL: im lokalen Gerätebereich ausführen; keine Freigabe zur Systemdatenübertragung.")
-            executeCloudCalls(calls, index + 1, outputs)
+            executeCloudCalls(calls, index + 1, outputs, owner)
             return
         }
         val validationError = ToolRegistry.validate(call)
         if (validationError != null) {
             outputs += ToolOutput(call.callId, "TOOL_VALIDATION_ERROR: $validationError")
-            executeCloudCalls(calls, index + 1, outputs)
+            executeCloudCalls(calls, index + 1, outputs, owner)
             return
         }
 
@@ -11667,36 +11874,38 @@ class AgentActivity : Activity() {
             createToolGate().recordProposal(ToolInvocation(call.callId, call))
         }.getOrElse {
             outputs += ToolOutput(call.callId, "TOOL_REJECTED: durable receipt could not be verified.")
-            executeCloudCalls(calls, index + 1, outputs)
+            executeCloudCalls(calls, index + 1, outputs, owner)
             return
         }
         val risk = ToolRegistry.risk(call.name)
-        val executeNow = {
+        val executeNow = executeNow@{
+            if (!command03ViewCurrent(owner)) return@executeNow
             executeTool(call, true, risk == Risk.DESTRUCTIVE) { result ->
                 outputs += ToolOutput(call.callId, result)
-                executeCloudCalls(calls, index + 1, outputs)
+                executeCloudCalls(calls, index + 1, outputs, owner)
             }
         }
 
         when (risk) {
             Risk.READ_ONLY -> executeTool(call, false, false) { result ->
                 outputs += ToolOutput(call.callId, result)
-                executeCloudCalls(calls, index + 1, outputs)
+                executeCloudCalls(calls, index + 1, outputs, owner)
             }
             Risk.CONFIRM -> {
                 if (preparedReceipt != null &&
                     preparedReceipt.state !in setOf(ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED)) {
                     executeTool(call, false, false) { result ->
                         outputs += ToolOutput(call.callId, result)
-                        executeCloudCalls(calls, index + 1, outputs)
+                        executeCloudCalls(calls, index + 1, outputs, owner)
                     }
                 } else showToolConfirmation(call, destructive = false) { allowed ->
+                    if (!command03ViewCurrent(owner)) return@showToolConfirmation
                     if (allowed) {
                         executeNow()
                     } else {
                         executeTool(call, false, false) { result ->
                             outputs += ToolOutput(call.callId, result)
-                            executeCloudCalls(calls, index + 1, outputs)
+                            executeCloudCalls(calls, index + 1, outputs, owner)
                         }
                     }
                 }
@@ -11706,15 +11915,16 @@ class AgentActivity : Activity() {
                     preparedReceipt.state !in setOf(ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED)) {
                     executeTool(call, false, false) { result ->
                         outputs += ToolOutput(call.callId, result)
-                        executeCloudCalls(calls, index + 1, outputs)
+                        executeCloudCalls(calls, index + 1, outputs, owner)
                     }
                 } else showToolConfirmation(call, destructive = true) { allowed ->
+                    if (!command03ViewCurrent(owner)) return@showToolConfirmation
                     if (allowed) {
                         executeNow()
                     } else {
                         executeTool(call, false, false) { result ->
                             outputs += ToolOutput(call.callId, result)
-                            executeCloudCalls(calls, index + 1, outputs)
+                            executeCloudCalls(calls, index + 1, outputs, owner)
                         }
                     }
                 }
@@ -14868,6 +15078,7 @@ class AgentActivity : Activity() {
                     botConversation.select(null)
                     selectedBot = null
                     sessionId = restored.id
+                    replaceCommand03View()
                     ownerReplyRevision++
                     ownerReplyAllowsMaya = true
                     scopedLocalPromptSession = null
@@ -14908,6 +15119,9 @@ class AgentActivity : Activity() {
         workEpisodeId = null
         documentDraftStatus = null
         documentDraftAction = null
+        command03Document = null
+        command03Sources.clear()
+        command03MainStage?.clearDocument()
         decisionFocus = null
         workOutcome = null; workTool = null; workToolCall = null
         workStarted = null; workElapsed = 0L
@@ -14957,6 +15171,7 @@ class AgentActivity : Activity() {
                 return@onLearningIo
             }
             sessionId = UUID.randomUUID().toString()
+            replaceCommand03View()
             ownerReplyAllowsMaya = true
             // The previous conversation stays stored; only the active pointer moves (#568).
             val newConversation = sessionId
@@ -15144,6 +15359,7 @@ class AgentActivity : Activity() {
     }
 
     private fun addBubble(value: String, user: Boolean, persist: Boolean = true) {
+        command03ViewOwner()
         command03HtmlMessageRevision++
         // Central chat only; bot dialogues have their own ChiefBotProfileStore history.
         if (persist && selectedBot == null) {
@@ -15193,11 +15409,15 @@ class AgentActivity : Activity() {
             row,
             matchWidth(top = 8)
         )
-        command03MainStage?.presentMessage(sessionId, user, value)
+        syncCommand03HtmlState()
+        command03VisibleMessages.addLast(user to Command03BridgeContract.messageText(value))
+        while (command03VisibleMessages.size > 60) command03VisibleMessages.removeFirst()
+        command03Binding()?.let { scope -> command03MainStage?.presentMessage(scope, user, value) }
         scrollToBottom()
     }
 
-    private fun addCitations(citations: List<AgentCitation>) {
+    private fun addCitations(citations: List<AgentCitation>, owner: Command03View = command03ViewOwner()) {
+        if (!command03ViewCurrent(owner)) return
         val card = verticalCard().apply {
             setPadding(dp(13), dp(11), dp(13), dp(11))
         }
@@ -15222,7 +15442,28 @@ class AgentActivity : Activity() {
         }
 
         chatContainer.addView(card, matchWidth(top = 8))
+        val projected = Command03SourceSet(owner, UUID.randomUUID().toString(), citations.take(8)
+            .map { UUID.randomUUID().toString() to it })
+        command03Sources.addLast(projected)
+        while (command03Sources.size > 60) command03Sources.removeFirst()
+        command03Binding()?.let { presentCommand03Sources(projected, it) }
         scrollToBottom()
+    }
+
+    private fun presentCommand03Sources(sources: Command03SourceSet, scope: Command03Binding) {
+        if (!command03ViewCurrent(sources.view) || command03Binding() != scope) return
+        val entries = org.json.JSONArray()
+        sources.items.forEach { (id, citation) -> entries.put(org.json.JSONObject().put("id", id)
+            .put("title", citation.title.take(500)).put("url", citation.url.take(2_048))) }
+        command03MainStage?.presentSources(command03Envelope(scope).put("sourceSetId", sources.id).put("items", entries))
+    }
+
+    private fun openCommand03Source(id: String) {
+        val source = command03Sources.asSequence().filter { command03ViewCurrent(it.view) }
+            .flatMap { it.items.asSequence() }.firstOrNull { it.first == id }?.second ?: return
+        val uri = runCatching { Uri.parse(source.url) }.getOrNull() ?: return
+        if (uri.scheme !in setOf("https", "http") || uri.host.isNullOrBlank()) return
+        runCatching { startActivity(Intent(Intent.ACTION_VIEW, uri)) }
     }
 
     private fun addToolActivity(value: String) {
@@ -15242,6 +15483,7 @@ class AgentActivity : Activity() {
             workTool = null
         }
         busy = value
+        presentCommand03Document()
         scheduleCommand03HtmlState()
         botRosterDialog?.refreshRuntimeStatus()
         if(!value) learningVisualActive = false
@@ -15391,6 +15633,7 @@ class AgentActivity : Activity() {
     }
 
     private fun refreshConversationMicPresentation() {
+        scheduleCommand03HtmlState()
         val mic = chatMicButton ?: return
         val active = continuousConversation.active
         val paused = continuousConversation.state == at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED
@@ -15483,7 +15726,7 @@ class AgentActivity : Activity() {
         when (continuousConversation.recognized(turnToken, sessionId, spoken)) {
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.SEND -> {
                 if (consumeOwnerWorkInterruption(spoken.trim())) return
-                val focused = input.hasFocus()
+                val focused = input.hasFocus() || command03SpeechSelection == command03Binding() && command03SpeechSelection != null
                 val merged = at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.mergeDictation(
                     input.text.toString(), if (focused) input.selectionStart else -1,
                     if (focused) input.selectionEnd else -1, spoken)
@@ -15700,7 +15943,7 @@ class AgentActivity : Activity() {
         }else {
             // Keep a typed/restored draft: dictation continues at the owner's cursor instead of
             // replacing it. Without composer focus the cursor is not the owner's, so append.
-            val focused=input.hasFocus()
+            val focused=input.hasFocus() || command03SpeechSelection == command03Binding() && command03SpeechSelection != null
             val merged=at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.mergeDictation(
                 input.text.toString(),if(focused)input.selectionStart else -1,
                 if(focused)input.selectionEnd else -1,spoken)

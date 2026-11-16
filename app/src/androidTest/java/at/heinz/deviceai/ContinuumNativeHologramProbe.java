@@ -61,6 +61,8 @@ public final class ContinuumNativeHologramProbe {
     private Activity activity;
     private View hologram;
     private boolean cameraDeclined;
+    private boolean classicRequested;
+    private boolean classicSelected;
 
     private ContinuumNativeHologramProbe(Instrumentation instrumentation) {
         this.instrumentation = instrumentation;
@@ -105,6 +107,7 @@ public final class ContinuumNativeHologramProbe {
                     require(!activity.isFinishing() && !activity.isDestroyed(), "Activity closed");
                     if (closeExistingDialog()) return false;
                     if (!cameraDeclined) return false;
+                    if (!classicSelected && switchToClassicIfHtml()) return false;
                     Object existing = field(activity, "hologramView");
                     if (!(existing instanceof View)) return false;
                     View view = (View) existing;
@@ -210,6 +213,32 @@ public final class ContinuumNativeHologramProbe {
         result.putInt("pid", Process.myPid());
         result.putString("stream", "Existing home-stage diagnostic only; no UI-flow or visible-avatar pass.\n");
         return result;
+    }
+
+    private boolean switchToClassicIfHtml() throws Exception {
+        Object stage = field(activity, "command03MainStage");
+        if (!(stage instanceof View) || !((View) stage).isShown()) return false;
+        report.put("original_html_stage_observed", true);
+        if (!classicRequested) {
+            activity.onBackPressed();
+            classicRequested = true;
+            actions.put(new JSONObject().put("button", "ANDROID_BACK_FROM_HTML")
+                    .put("elapsed_nanos", SystemClock.elapsedRealtimeNanos()));
+            return true;
+        }
+        for (View root : WindowInspector.getGlobalWindowViews()) {
+            if (!root.isShown() || !root.hasWindowFocus()) continue;
+            Button button = findButton(root, "ALTE ANSICHT ÖFFNEN");
+            if (button == null) continue;
+            require(button.isShown() && button.isEnabled() && button.isClickable(),
+                    "Owner's classic switch control is not actionable");
+            require(button.performClick(), "Owner's classic switch action rejected");
+            classicSelected = true;
+            actions.put(new JSONObject().put("button", "ALTE ANSICHT ÖFFNEN")
+                    .put("elapsed_nanos", SystemClock.elapsedRealtimeNanos()));
+            return true;
+        }
+        return true;
     }
 
     private boolean closeExistingDialog() throws Exception {
@@ -503,8 +532,8 @@ public final class ContinuumNativeHologramProbe {
     private static Object copyStage(Object frame, float scale, boolean poseOnly) throws Exception {
         String[] names = {"width", "height", "monitorLeft", "monitorTop", "monitorRight", "monitorBottom",
                 "yawDegrees", "pitchDegrees", "depthOffset"};
-        Object[] values = new Object[names.length];
-        Class<?>[] types = new Class<?>[names.length];
+        Object[] values = new Object[names.length + 1];
+        Class<?>[] types = new Class<?>[names.length + 1];
         for (int i = 0; i < names.length; i++) {
             float value = ((Number) field(frame, names[i])).floatValue();
             if (i < 6 || i == 8) value *= scale;
@@ -512,6 +541,8 @@ public final class ContinuumNativeHologramProbe {
             values[i] = value;
             types[i] = float.class;
         }
+        values[names.length] = field(frame, "cameraFlightEnabled");
+        types[names.length] = boolean.class;
         Object copy = frame.getClass().getDeclaredMethod("copy", types).invoke(frame, values);
         require(Boolean.TRUE.equals(invoke(copy, "valid")), "Resized stage must remain valid");
         return copy;

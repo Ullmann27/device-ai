@@ -1,8 +1,12 @@
+> **Delivery checkpoint 2026-11-16:** PR854 controls and PR857 QA repairs are now combined on the canonical PR851 line, retaining the existing simple owner-APK workflow from `e7178c48`. Fresh local DOM 45/45, offline-web evidence 24/24, original assets 35/35. Combined Android build/QA remains pending. The earlier full-QA run has eleven unresolved Android failures. Original signing is blocked by the existing environment branch policy. See the [current delivery handoff](../research/omega/CODE60-DELIVERY-HANDOFF-20261116.md). The formal full-release contract below is retained; the simple workflow produces an owner test prerelease, not full-device acceptance.
+
 # Code60 – native Kommando 03 release preparation
 
-Status: **SOURCE_PREPARED / LOCAL_CONTRACT_TESTS_PASS / NATIVE_QA_PENDING**.
+Status: **SOURCE_PREPARED / LOCAL_CONTRACT_TESTS_PASS / CURRENT_CONTROLS_NATIVE_QA_BLOCKED_SHARED_RESOURCE_PRESSURE**.
 
 Canonical work branch: `integrate/continuum-command03-android-20261115`, [PR #851](https://github.com/Ullmann27/device-ai/pull/851), based on published Code59 `79c16e57aeb7e0cf4a851e921d7441f7f6384fdf`. The exact final commit and real execution evidence are recorded in that PR. Earlier successful runs must not be substituted for the final commit's evidence.
+
+Current controls work is in [PR #854](https://github.com/Ullmann27/device-ai/pull/854), source `62be11f898586eb3546f79a0f2b38ee53acc4d84`. It preserves the concurrently advanced canonical navigation history through a two-parent merge. All 44 Python and 40 Node release contracts were freshly executed on that source and passed, together with three workflow YAML files and 32 embedded Bash syntax checks. The merged Android main compile lost its daemon before the new 37/77/32/6 native groups could run. A bounded observation confirmed continuing shared OOM pressure, without proving a PID-attributed kill. No new controls APK exists; the feature remains unintegrated pending native/browser/artifact evidence. [Exact handoff and evidence](../research/omega/COMMAND03-NATIVE-CONTROLS-HANDOFF.md).
 
 ## Fixed release profile
 

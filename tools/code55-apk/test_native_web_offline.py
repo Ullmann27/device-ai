@@ -69,7 +69,8 @@ class OfflineWebEvidenceTest(unittest.TestCase):
         control = lambda value: {'content-desc': value}
         editor = {'class': 'android.widget.EditText', 'text': '', 'focused': 'false'}
         scenes = {
-            'web-home-initial': [control('Internet')],
+            'web-home-initial': [control('Mehr')],
+            'web-more-initial': [control('Web und Quellen')],
             'web-center-initial': [text('INTERNETFREIGABE')],
             'web-settings-initial': [text('Continuum · Internetzugang'), text(proof.OFF)],
             'web-off-initial': [control('Konversation öffnen')],
@@ -83,15 +84,17 @@ class OfflineWebEvidenceTest(unittest.TestCase):
                 text('EINMAL ERLAUBEN')],
             'web-result': [text(proof.result_body(self.dossier)), editor, control('Nachricht senden'),
                            control('Zur Startseite mit allen KI-Bereichen')],
-            'web-home-final': [control('Internet')],
+            'web-home-final': [control('Mehr')],
+            'web-more-final': [control('Web und Quellen')],
             'web-center-final': [text('INTERNETFREIGABE')],
             'web-settings-final': [text('Continuum · Internetzugang'), text(proof.OFF)],
-            'web-off-final': [control('Konversation öffnen')],
+            'web-off-final': [control('Gespräch')],
             'web-chat-restored': [editor, control('Nachricht senden')]}
         for label, items in scenes.items():
             self.ui(label, items)
         actions = [
-            ('web-open-center-initial', 'Internet', 'web-home-initial'),
+            ('web-open-more-initial', 'Mehr', 'web-home-initial'),
+            ('web-open-center-initial', 'Web und Quellen', 'web-more-initial'),
             ('web-open-settings-initial', 'INTERNETFREIGABE', 'web-center-initial'),
             ('web-select-off-initial', proof.OFF, 'web-settings-initial'),
             ('web-open', 'Recherche nur nach Freigabe', 'web-chat-before'),
@@ -100,10 +103,11 @@ class OfflineWebEvidenceTest(unittest.TestCase):
             ('web-search', 'JETZT SUCHEN', 'web-topic-input'),
             ('web-allow-once', 'Einmal erlauben', 'web-approval'),
             ('web-home-final', 'Zur Startseite mit allen KI-Bereichen', 'web-result'),
-            ('web-open-center-final', 'Internet', 'web-home-final'),
+            ('web-open-more-final', 'Mehr', 'web-home-final'),
+            ('web-open-center-final', 'Web und Quellen', 'web-more-final'),
             ('web-open-settings-final', 'INTERNETFREIGABE', 'web-center-final'),
             ('web-select-off-final', proof.OFF, 'web-settings-final'),
-            ('web-return-chat', 'Konversation öffnen', 'web-off-final')]
+            ('web-return-chat', 'Gespräch', 'web-off-final')]
         observation = {'source_sha': self.report['source_sha'], 'source_tree': self.report['source_tree'],
                        'url': proof.URL, 'test_basis': 'OFF_SET_THROUGH_UI', 'original_mode': 'ALWAYS_ON',
                        'captures': list(scenes), 'actions': []}

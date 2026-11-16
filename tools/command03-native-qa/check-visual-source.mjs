@@ -52,14 +52,18 @@ assert.ok(bridge.includes("ContinuumWorkspaceMotion.transition(set,{kind:'open',
 assert.ok(bridge.includes('native-document-panel'),'Projected PDF work surface absent');
 assert.ok(bridge.includes('textContent=actual?doc.text.slice(0,12000)'),
   'PDF data must be rendered as text, not injected into HTML');
-assert.ok(bridge.includes('currentDocument.sessionId !== session'),
-  'Document must be scoped to its owning conversation');
+assert.ok(bridge.includes('!currentScope(currentDocument)') &&
+  ['data.sessionId===session','data.pageId===page','data.viewId===view','data.viewRevision===viewRevision']
+    .every(guard=>bridge.includes(guard)),
+  'Document must be scoped to its owning page, view instance and conversation');
 assert.ok(bridge.includes('doc.previewDataUri.length <= 400000'),
   'Oversize document image must be rejected by the view');
 assert.ok(bridge.includes('clearDocument()'),'Document cannot be dismissed');
 assert.ok(activity.includes('projectCommand03Document(doc)'),'Native PDF read not projected');
 assert.ok(activity.includes('doc.firstPage?.copy('),'Preview must own the image copy');
-assert.ok(activity.includes('sessionId != session'),'Old session PDF must be rejected');
+assert.ok(activity.includes('!command03ViewCurrent(projected.view)') &&
+  activity.includes('command03Document !== projected') && activity.includes('command03Binding() != scope'),
+  'Old view, page or replaced PDF preview must be rejected');
 assert.ok(activity.includes('documentReadGeneration != readRevision'),
   'Superseded document content must be rejected');
 assert.ok(activity.includes('output.size() > 280_000'),

@@ -31,6 +31,12 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class SystemIntelligenceUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     @Test fun cloudEnvelopeContainsNoAutomaticDeviceMetadata() {
         val payload = cloudConversationPayload("fixture", "Hallo", emptyList())
         assertEquals(setOf("session_id", "message"), payload.keys().asSequence().toSet())

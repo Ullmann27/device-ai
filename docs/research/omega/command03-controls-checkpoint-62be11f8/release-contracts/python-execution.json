@@ -1,0 +1,21 @@
+{
+  "name": "python",
+  "argv": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/code55-apk",
+    "-p",
+    "test_code59_signing*.py",
+    "-v"
+  ],
+  "source_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+  "started_at_utc": "2026-11-16T06:51:28.329117+00:00",
+  "finished_at_utc": "2026-11-16T06:51:41.969541+00:00",
+  "elapsed_seconds": 13.640439608003362,
+  "exit_code": 0,
+  "log": "python.txt"
+}

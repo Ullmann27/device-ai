@@ -27,7 +27,7 @@ test('owner and historical mentor signing credentials are prohibited for QA',()=
 });
 test('QA rejects assembly/bundle or release tasks before Gradle runs them',()=>{
   assert.match(gradle,/gradle\.startParameter\.taskNames\.all/);
-  assert.match(gradle,/setOf\("testDebugUnitTest", "lintDebug", "compileDebugKotlin"\)/);
+  assert.match(gradle,/setOf\("testDebugUnitTest", "lintDebug", "compileDebugKotlin", "compileDebugUnitTestKotlin"\)/);
   assert.doesNotMatch(gradle,/setOf\("testDebugUnitTest", "lintDebug", "compileDebugKotlin",\s*"assembleRelease"/);
 });
 test('full regression targets QA source with correct package and no owner signer',()=>{
