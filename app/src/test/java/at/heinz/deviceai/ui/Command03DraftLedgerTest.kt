@@ -31,7 +31,8 @@ class Command03DraftLedgerTest {
         val ledger = ledger()
         assertTrue(ledger.accept(edit(7, "Vorher"), "", 0, 0))
         assertFalse(ledger.accept(edit(7, "Vorher"), "Vorher diktiert", 14, 14))
-        assertTrue(ledger.accept(edit(7, "Vorher diktiert"), "Vorher diktiert", 14, 14))
+        // The native dictation already placed the cursor at 14/14.
+        assertTrue(ledger.accept(edit(7, "Vorher diktiert", 14, 14), "Vorher diktiert", 14, 14))
         assertTrue(ledger.accept(edit(7, ""), "", 0, 0))
         assertEquals(7, ledger.acknowledged)
     }
