@@ -790,7 +790,13 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val h = 84f
         val l = hero.left + 12f - railOffset
         val r = hero.right - 12f - railOffset
-        return ContinuumHomeLayout.Box(l, hero.bottom - h - 8f, r, hero.bottom - 8f)
+        val scroll = generateSequence(parent as? View) { it.parent as? View }
+            .filterIsInstance<ScrollView>().firstOrNull()
+        val visibleBottom = scroll?.let { (it.scrollY + it.height - it.paddingBottom) / density }
+            ?: heightPx / density
+        val cardBottom = minOf(hero.bottom - 8f, visibleBottom - 8f)
+        val top = maxOf(hero.top + 8f, cardBottom - h)
+        return ContinuumHomeLayout.Box(l, top, r, top + h)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

@@ -4235,6 +4235,7 @@ class AgentActivity : Activity() {
     }
 
     private fun showHomeDashboard() {
+        if (conversationActive) hologramView?.clearMemoryScene()
         activeWorkArea = ContinuumWorkArea.START
         // Returning to START does not invalidate an already active spoken turn.
         keepCockpitDuringHandsFree = continuousConversation.active
