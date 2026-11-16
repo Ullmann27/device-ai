@@ -4,6 +4,9 @@ import android.app.AlertDialog
 import android.content.Context
 import android.net.Uri
 import android.os.Looper
+import android.media.AudioFormat
+import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
@@ -15,6 +18,14 @@ import at.heinz.deviceai.cognitive.ApprovedWebResearchSession
 import at.heinz.deviceai.cognitive.DeliberationCancellation
 import at.heinz.deviceai.cognitive.LocalDialogueRetention
 import at.heinz.deviceai.cognitive.WebToolRequest
+import at.heinz.deviceai.cognitive.LatestLiveFrameHolder
+import at.heinz.deviceai.cognitive.LiveFrameBinding
+import at.heinz.deviceai.cognitive.LiveFrameOrigin
+import at.heinz.deviceai.cognitive.LiveMonitorFeed
+import at.heinz.deviceai.cognitive.OwnerComputerIntent
+import at.heinz.deviceai.cognitive.ComputerApp
+import at.heinz.deviceai.cognitive.ComputerGoal
+import at.heinz.deviceai.cognitive.OwnerComputerWorkflow
 import at.heinz.deviceai.localmodel.LocalModelRuntime
 import at.heinz.deviceai.ui.ContinuumCommand03OriginalStage
 import org.json.JSONObject
@@ -100,6 +111,32 @@ class ContinuumCommand03BridgeUiTest {
         val prefix = "window.ContinuumNative?.commandResult("
         assertTrue("Native result must be acknowledged through the actual WebView: $script", script.startsWith(prefix))
         return JSONObject(script.removePrefix(prefix).removeSuffix(");"))
+    }
+    private fun speechPacket(a: AgentActivity): JSONObject {
+        val script = shadowOf(stage(a)).lastEvaluatedJavascript
+        val prefix = "window.ContinuumNative?.speech("
+        assertTrue("The real Activity speech path must deliver a native pose: $script", script.startsWith(prefix))
+        return JSONObject(script.removePrefix(prefix).removeSuffix(");"))
+    }
+    private fun startHtmlSpeech(a: AgentActivity, id: String): UtteranceProgressListener {
+        call(a, "installVoiceProgressListener")
+        val engine = field(a, "voiceEngine") as TextToSpeech
+        val listener = requireNotNull(shadowOf(engine).utteranceProgressListener)
+        // The accepted-request binding is fixture state; all PCM/range/progress work uses the installed listener.
+        set(a, "voiceUtteranceId", id)
+        set(a, "voiceAvatarText", "A")
+        (field(a, "voiceSignal") as TtsHologramSignal).activate(id)
+        listener.onBeginSynthesis(id, 8_000, AudioFormat.ENCODING_PCM_16BIT, 1)
+        listener.onAudioAvailable(id, ByteArray(16_000) { if (it % 2 == 0) 0 else 0x40 })
+        listener.onStart(id)
+        listener.onRangeStart(id, 0, 1, 0)
+        repeat(11) { advance() }
+        return listener
+    }
+    private fun speechFrame(a: AgentActivity) {
+        val frame = field(a, "voiceFrame") as Runnable
+        (field(a, "mainHandler") as android.os.Handler).removeCallbacks(frame)
+        frame.run()
     }
     private fun receipt(a: AgentActivity, id: String): JSONObject? {
         val receipts = stageField(stage(a), "commands") as Map<*, *>
@@ -397,5 +434,98 @@ class ContinuumCommand03BridgeUiTest {
         assertNull(field(a, "deferredCommand03Draft"))
         assertFalse(field(a, "busy") as Boolean)
         assertFalse(field(a, "activeLocalRequest") as Boolean)
+    }
+
+    @Test fun installedTtsPcmAndWordRangeReachHtmlAndStopRejectsLateCallbacks() = withActivity { _, a ->
+        ready(a)
+        val listener = startHtmlSpeech(a, "html-real-listener")
+        speechFrame(a)
+        val pose = speechPacket(a)
+        assertTrue(pose.getBoolean("active"))
+        assertEquals("html-real-listener", pose.getString("utteranceId"))
+        assertEquals("PCM_ENVELOPE", pose.getString("source"))
+        assertEquals("AA", pose.getString("viseme"))
+        assertTrue(pose.getDouble("jawOpen") > 0)
+        assertFalse("The covered native render loop stays paused", active(field(a, "hologramView")!!))
+        listener.onStop("html-real-listener", true)
+        assertFalse(speechPacket(a).getBoolean("active"))
+        val stopped = shadowOf(stage(a)).lastEvaluatedJavascript
+        listener.onStart("html-real-listener")
+        listener.onRangeStart("html-real-listener", 0, 1, 0)
+        assertEquals(stopped, shadowOf(stage(a)).lastEvaluatedJavascript)
+        assertFalse(field(a, "voiceSpeaking") as Boolean)
+    }
+
+    @Test fun realSpeechSurvivesReparentWithANewGenerationAndPauseNeutralizesIt() = withActivity { controller, a ->
+        resizeWindow(a, 392, 852)
+        ready(a)
+        startHtmlSpeech(a, "html-reparent-speech")
+        speechFrame(a)
+        val generation = speechPacket(a).getLong("generation")
+        val web = stage(a)
+        resizeWindow(a, 904, 768)
+        speechFrame(a)
+        assertSame(web, stage(a))
+        val after = speechPacket(a)
+        assertTrue(after.getBoolean("active"))
+        assertTrue(after.getLong("generation") > generation)
+        assertEquals("html-reparent-speech", after.getString("utteranceId"))
+        controller.pause()
+        assertFalse(speechPacket(a).getBoolean("active"))
+        assertFalse(field(a, "voiceSpeaking") as Boolean)
+        controller.resume()
+    }
+
+    @Test fun htmlOwnsTheOnlyFrameFeedAndTheClassicalSwitchRestoresTheNativeConsumer() = withActivity { _, a ->
+        ready(a)
+        val feed = LatestLiveFrameHolder<AndroidLiveFrame>({ it.close() }).apply {
+            bind(LiveFrameBinding("computer-feed-fixture", 1, "com.example.target", a.packageName,
+                LiveFrameOrigin.ACCESSIBILITY_WINDOW))
+        }
+        call(a, "setComputerFeed", LiveMonitorFeed::class.java to feed)
+        val hiddenHome = field(a, "homeView")!!
+        assertNull(hiddenHome.javaClass.getDeclaredField("liveComputerFeed").apply { isAccessible = true }.get(hiddenHome))
+        call(a, "switchCommand03MainDesign", Boolean::class.javaPrimitiveType!! to false)
+        val nativeHome = field(a, "homeView")!!
+        assertSame(feed, nativeHome.javaClass.getDeclaredField("liveComputerFeed").apply { isAccessible = true }.get(nativeHome))
+        assertNull(field(a, "command03MainStage"))
+        feed.end()
+    }
+
+    @Test fun visibleSplitScreenKeepsHtmlComputerDrawingWhileFullStopEndsTheExistingSession() = withActivity { lifecycle, a ->
+        ready(a)
+        val native = OwnerComputerSessionController(a,
+            field(a, "cockpitBus") as at.heinz.deviceai.cockpit.CockpitAnimationBus,
+            field(a, "avatarDirector") as at.heinz.deviceai.avatar.AvatarDirector,
+            java.util.concurrent.Executor { error("This lifecycle fixture starts no capture or worker") },
+            setFeed = { call(a, "setComputerFeed", LiveMonitorFeed::class.java to it) },
+            setBusy = { set(a, "activeLocalRequest", it); call(a, "setBusy", Boolean::class.javaPrimitiveType!! to it) },
+            visible = { call(a, "computerSessionVisible") as Boolean }, playClick = {}, stopClick = {})
+        // Model only the already-authorized active session. Android capture/permissions are not exercised by this test.
+        val planType = OwnerComputerSessionController::class.java.declaredClasses.single { it.simpleName == "Plan" }
+        val reply: (OwnerComputerWorkflow.Result, Long?, Boolean) -> Unit = { _, _, _ -> }
+        val plan = planType.declaredConstructors.single { it.parameterCount == 5 }.apply { isAccessible = true }
+            .newInstance("computer-split-fixture", "com.whatsapp", OwnerComputerIntent(ComputerApp.WHATSAPP, ComputerGoal.OPEN),
+                android.os.SystemClock.elapsedRealtime(), reply)
+        OwnerComputerSessionController::class.java.getDeclaredField("plan").apply { isAccessible = true }.set(native, plan)
+        set(a, "computerController", native)
+        val feed = LatestLiveFrameHolder<AndroidLiveFrame>({ it.close() }).apply {
+            bind(LiveFrameBinding("computer-split-fixture", 1, "com.whatsapp", a.packageName,
+                LiveFrameOrigin.ACCESSIBILITY_WINDOW))
+        }
+        call(a, "setComputerFeed", LiveMonitorFeed::class.java to feed)
+        shadowOf(a).setInMultiWindowMode(true)
+        (field(a, "command03ComputerTick") as Runnable).run()
+        lifecycle.pause()
+        assertTrue(native.active)
+        assertFalse("Only a still-visible approved split-screen session keeps WebView drawing", shadowOf(stage(a)).wasOnPauseCalled())
+        assertTrue(stageField(stage(a), "livePresentationActive") as Boolean)
+        assertFalse(field(a, "foregroundLearningActive") as Boolean)
+        lifecycle.stop()
+        assertFalse(native.active)
+        assertTrue(shadowOf(stage(a)).wasOnPauseCalled())
+        assertFalse(stageField(stage(a), "livePresentationActive") as Boolean)
+        assertNull(field(a, "command03ComputerFeed"))
+        lifecycle.start().resume()
     }
 }

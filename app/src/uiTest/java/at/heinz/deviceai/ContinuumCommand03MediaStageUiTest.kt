@@ -66,6 +66,10 @@ class ContinuumCommand03MediaStageUiTest {
         val stage = ContinuumCommand03OriginalStage(controller.get(), { _, _ -> }, { _, _ -> }, {},
             onComputerFrameDrawn = { drawn += it })
         controller.get().setContentView(stage)
+        val decor = controller.get().window.decorView
+        decor.measure(View.MeasureSpec.makeMeasureSpec(392, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(852, View.MeasureSpec.EXACTLY))
+        decor.layout(0, 0, 392, 852)
         stage.measure(View.MeasureSpec.makeMeasureSpec(392, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.makeMeasureSpec(852, View.MeasureSpec.EXACTLY))
         stage.layout(0, 0, 392, 852)
