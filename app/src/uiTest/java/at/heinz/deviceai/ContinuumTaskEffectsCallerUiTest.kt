@@ -135,6 +135,11 @@ class ContinuumTaskEffectsCallerUiTest {
         assertTrue("Caller surface must be measured", h.width > 0 && h.height > 0)
         val before = h.sampleMotion()
         h.setForegroundActive(true);advanceFrames(200)
+        val surface = if (realUi) a.window.decorView else host!!.get().window.decorView
+        val rendered = android.graphics.Bitmap.createBitmap(surface.width, surface.height,
+            android.graphics.Bitmap.Config.ARGB_8888)
+        try { surface.draw(android.graphics.Canvas(rendered)) }
+        finally { rendered.recycle() }
         val active = h.sampleMotion()
         assertTrue("Caller events require actual frame callbacks",active.callbackCount > before.callbackCount)
         assertTrue("Caller events require actual phase progress",active.phase > before.phase)

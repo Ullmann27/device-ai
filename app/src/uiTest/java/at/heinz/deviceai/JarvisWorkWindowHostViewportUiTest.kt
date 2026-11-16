@@ -60,7 +60,7 @@ class JarvisWorkWindowHostViewportUiTest {
             isFillViewport = true
             isSmoothScrollingEnabled = false
             clipToPadding = true
-            setPadding(8, 12, 8, 16)
+            setPadding(8, 12, 8, 160)
             addView(home, ViewGroup.LayoutParams(-1, -2))
         }
         val clipped = FrameLayout(activity).apply {

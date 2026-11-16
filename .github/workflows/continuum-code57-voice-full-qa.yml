@@ -25,7 +25,7 @@ permissions:
 
 concurrency:
   group: code59-complete-qa-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref == 'refs/heads/fix/code59-context-complete-20261114' }}
+  cancel-in-progress: ${{ github.ref == 'refs/heads/fix/code59-context-complete-20261114' || github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116' }}
 
 jobs:
   unsigned-arm64:

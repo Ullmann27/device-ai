@@ -154,6 +154,10 @@ class CinemaFlightDeckLabelsUiTest {
     private fun light(c: Int) = Color.alpha(c) > 60 && Color.blue(c) > 150 && Color.red(c) < 120
 
     @Test fun flightContactNeverLightsTheKpiTilesWhileTheWindowFlies() = scene { scene ->
+        // Scroll KPI into the actually visible viewport.
+        val statusControl = requireNotNull(scene.home.findViewWithTag<View>("jarvis-panel:STATUS"))
+        JarvisHomeTestRoutes.scrollIntoView(statusControl)
+        scene.advance(48L)
         start(scene.activity, "cinema-b2-kpi")
         val window = requireNotNull(find<JarvisWorkWindow>(content(scene.activity)) { it.tag == "jarvis-work-window" })
         val panel = requireNotNull(window.findViewWithTag<View>("jarvis-work-window:panel"))

@@ -248,6 +248,9 @@ class ContinuumDocumentSceneUiTest {
     }
 
     @Test fun stopBeforeFirstCockpitLayoutDiscardsThePendingDocument() = withCockpit(startInChat = true) { activity, root ->
+        // Exercise pending layout, not the already-mounted CHAT geometry.
+        val home = field(activity, "homeView") as ContinuumHomeView
+        home.jarvisShell.layout(0, 0, 0, 0)
         val page = examplePage(200, 280)
         val doc = PdfDocumentIntake.Document("Verworfene-PDF.pdf", 4096L, 1, page,
             "Synthetischer PDF-Inhalt.", PdfDocumentIntake.TextState.EXTRACTED, 1)

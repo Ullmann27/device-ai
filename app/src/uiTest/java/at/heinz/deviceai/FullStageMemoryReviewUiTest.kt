@@ -279,12 +279,19 @@ class FullStageMemoryReviewUiTest {
         advance(80L)
         assertTrue("The real entrance is still moving", card.translationX > 0f)
         assertTrue("The real entrance is fading in", card.alpha > 0f && card.alpha < 1f)
+        val visible = Rect()
+        var presented = card.getGlobalVisibleRect(visible)
+        repeat(32) {
+            if (!presented) {
+                advance(16L)
+                presented = card.getGlobalVisibleRect(visible)
+            }
+        }
+        assertTrue("The animated notice must enter the visible viewport", presented)
         val animated = frame(f.root)
         card.visibility = View.INVISIBLE
         val withoutCard = frame(f.root)
         card.visibility = View.VISIBLE
-        val visible = Rect()
-        assertTrue(card.getGlobalVisibleRect(visible))
         val rootPosition = IntArray(2).also(f.root::getLocationOnScreen)
         visible.offset(-rootPosition[0], -rootPosition[1])
         assertTrue(visible.intersect(0, 0, animated.width, animated.height))
