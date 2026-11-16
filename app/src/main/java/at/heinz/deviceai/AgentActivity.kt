@@ -331,8 +331,7 @@ class AgentActivity : Activity() {
     // M3 avatar preparation: rendering-free event contract (docs/CONTINUUM_AVATAR_CONTRACT.md).
     // Glance and work TTLs use the same monotonic elapsedRealtime as observed-gaze ages.
     private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(
-        command03AvatarSink(at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut {
-            android.os.Handler(android.os.Looper.getMainLooper()).post(it) }),
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut { android.os.Handler(android.os.Looper.getMainLooper()).post(it) },
         android.os.SystemClock::elapsedRealtime)
     @Volatile private var voiceAvatarText: String = ""
     // Avatar-only flags (no behaviour change): a tool approval dialog is open / the last turn was refused or blocked.
@@ -2175,8 +2174,10 @@ class AgentActivity : Activity() {
         computerController?.stop()
     }
 
-    private fun command03AvatarSink(sink: at.heinz.deviceai.avatar.AvatarSink) =
-        at.heinz.deviceai.avatar.AvatarSink { event ->
+    private fun command03AvatarSink(sink: at.heinz.deviceai.avatar.AvatarSink): at.heinz.deviceai.avatar.AvatarSink {
+        // UI binding happens after Context attachment; classic mode keeps its original direct sink.
+        if (!usesCommand03HtmlDesign()) return sink
+        return at.heinz.deviceai.avatar.AvatarSink { event ->
             runCatching { sink.onAvatarEvent(event) }
             val ownerSession = sessionId
             val ownerUtterance = voiceUtteranceId
@@ -2188,6 +2189,7 @@ class AgentActivity : Activity() {
             if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) deliver.run()
             else mainHandler.post(deliver)
         }
+    }
     private var command03HtmlSession: String? = null
     private var command03HtmlHistoryRevision = 0L
     private var command03HtmlMessageRevision = 0L

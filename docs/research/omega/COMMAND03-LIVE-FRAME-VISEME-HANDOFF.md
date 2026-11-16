@@ -61,6 +61,14 @@ PORTIERT: die beiden Produktionsanschlüsse. VERIFIZIERT: Produktionskompilierun
 
 ## Wiedereinstieg und Rückfall
 
+### Tatsächlich erkannte Klassikregression
+
+Auf `406997761ac42ec8e5f42a4097d7e2e5555b4333` bestanden anschließend alle **22 Medien-/Stage-UI-Tests**, **71 Unit-Tests** und **28 DOM-/Interop-Tests** mit frischem synthetischem Kotlin-Paket (SHA-256 `86aca35b3e7955ed9b8adb5f1b6fe7c656b06a5258b3c5854236d68fdda36f60`).
+
+Die unveränderte klassische UI-Auswahl deckte danach eine reale Bindungsregression auf: Fünf `ContinuumAdaptiveAvatarNavigationUiTest`-Fälle erreichten ihre bisherigen Geometrie-/Montageprüfungen, scheiterten jedoch am erwarteten direkten `AvatarDirector.sink`. Der neue HTML-Fanout war auch im klassischen Design eingesetzt worden. Der minimale Produktionsfix erhält im klassischen Modus wieder den ursprünglichen direkten Sink und verwendet den zusätzlichen Sprachverteiler allein im HTML-Modus. Der initiale Director bekommt wie zuvor den ursprünglichen `JarvisAvatarSlot.fanOut`; die Designabfrage erfolgt erst an den vier echten UI-Attach-Stellen nach Context-Anbindung. Sämtliche fünf Identitätsassertionen bleiben unverändert.
+
+Der betreffende Klassiklauf endete außerdem separat mit Testworker-Exit 137 nach unvollständiger Ausführung; es entstanden keine frischen JUnit-XML-Dateien. Eine OOM-Ursache ist nicht nachgewiesen. Er zählt weder als vollständiger 32er-Lauf noch als APK-Nachweis. Nach diesem Produktionsfix werden Compile, Medien-/Unit-/Klassiktests und Paketbau erneut an einen neuen exakten SHA gebunden.
+
 ### Präzisierter Testhost-Befund
 
 Der Diagnose-Lauf auf `49f5d50f69e2afb6a340d91bd742aa6d9cc30202` ergab 22 Tests, 18 bestanden und 4 fehlgeschlagen. Die zusätzliche positive Kontrolle entlarvte dabei einen zuvor scheinbar grünen Negativfall: vor jeder Bildbestätigung war das Host-WebView-Fenster `GONE`, mit Größe 0×0 und ohne global sichtbare Fläche. Sitzung, Bildtoken, Seitenbereitschaft und Restfrist waren gültig. Der Split-Screen-Controller blieb aktiv; seine WebView wurde nicht pausiert.
