@@ -41,6 +41,13 @@ import java.util.concurrent.atomic.AtomicInteger
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class OwnerAppActionWorkSceneUiTest {
+    /** Legacy native UI regression; the new original HTML remains the app default. */
+    @org.junit.Before fun selectNativePresentationForThisFixture() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     private class Port(val packageName: String) : DeviceAppActionPort {
         val entered = CountDownLatch(1)
         val release = CountDownLatch(1)

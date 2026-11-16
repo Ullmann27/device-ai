@@ -58,6 +58,13 @@ import java.util.concurrent.atomic.AtomicReference
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class OwnerPdfDialogueFollowUpUiTest {
+    /** Legacy native UI regression; the new original HTML remains the app default. */
+    @org.junit.Before fun selectNativePresentationForThisFixture() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     private class Runtime : LocalModelRuntime {
         @Volatile override var state = LocalModelState.READY
         override val loadedModel = ImportedLocalModel("pdf-dialog-model", "v1", "b".repeat(64), 1,

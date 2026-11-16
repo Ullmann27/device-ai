@@ -27,6 +27,13 @@ import org.robolectric.annotation.GraphicsMode
 @org.robolectric.annotation.LooperMode(org.robolectric.annotation.LooperMode.Mode.PAUSED)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ContinuumCockpitHandsFreeUiTest {
+    /** Legacy native UI regression; the new original HTML remains the app default. */
+    @org.junit.Before fun selectNativePresentationForThisFixture() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     @Before fun configureVirtualVsyncClock() {
         // Same as ContinuumReferenceCockpitUiTest: Activity setup starts the real avatar frame loop;
         // without a paused virtual vsync the PAUSED main looper never becomes idle (22 min hang).

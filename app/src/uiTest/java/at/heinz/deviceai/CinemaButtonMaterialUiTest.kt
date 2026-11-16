@@ -32,6 +32,13 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class CinemaButtonMaterialUiTest {
+    /** Legacy native UI regression; the new original HTML remains the app default. */
+    @org.junit.Before fun selectNativePresentationForThisFixture() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     private fun field(value: Any, name: String): Any? {
         value.javaClass.declaredFields.firstOrNull { it.name == name }?.let {
             return it.apply { isAccessible = true }.get(value)

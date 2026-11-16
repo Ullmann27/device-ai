@@ -24,6 +24,13 @@ import java.util.concurrent.TimeUnit
 @Config(sdk = [28], qualifiers = "w412dp-h915dp-mdpi")
 @LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumDashboardVisibilityUiTest {
+    /** Legacy native UI regression; the new original HTML remains the app default. */
+    @org.junit.Before fun selectNativePresentationForThisFixture() {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        check(app.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("original_html_main", false).commit())
+    }
+
     private class QueuedIo : AbstractExecutorService() {
         val pending = ArrayDeque<Runnable>()
         private var stopped = false
