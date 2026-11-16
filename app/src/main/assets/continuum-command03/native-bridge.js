@@ -40,7 +40,8 @@
   const readings = [], nativeMeters = new Map();
   const feedVersions = new WeakMap();
   function validScope(data) {
-    return data && chatId.test(data.sessionId) && chatId.test(data.pageId) && chatId.test(data.viewId) &&
+    return data && typeof data.sessionId==='string' && typeof data.pageId==='string' &&
+      typeof data.viewId==='string' && chatId.test(data.sessionId) && chatId.test(data.pageId) && chatId.test(data.viewId) &&
       Number.isSafeInteger(data.viewRevision) && data.viewRevision>=0;
   }
   function scope() {return {sessionId:session,pageId:page,viewId:view,viewRevision};}
@@ -53,15 +54,15 @@
     const field=$('#command-input');
     if(!field)return null;
     const value=field.value;
-    if(value.length>MAX_DRAFT || new TextEncoder().encode(value).length>MAX_DRAFT) {
-      notice('Der Entwurf ist zu groß für die Übergabe. Bitte kürze ihn vor dem Ansichtswechsel.');
-      return null;
-    }
     const start=field.selectionStart ?? value.length, end=field.selectionEnd ?? start;
     const key=draftKey(value,start,end);
     if(key!==lastDraft) {
       if(clientEditRevision>=Number.MAX_SAFE_INTEGER)return null;
       clientEditRevision++;lastDraft=key;dirtyDraft=true;
+    }
+    if(value.length>MAX_DRAFT || new TextEncoder().encode(value).length>MAX_DRAFT) {
+      notice('Der Entwurf ist zu groß für die Übergabe. Bitte kürze ihn vor dem Ansichtswechsel.');
+      return null;
     }
     return {draftText:value,selectionStart:start,selectionEnd:end,clientEditRevision};
   }
@@ -89,6 +90,45 @@
     const target = $('#toast');
     if (target) {target.textContent=text;target.classList.add('show');}
   }
+  function retainTransitionDraft(cause) {
+    const request=pendingCommand, field=$('#command-input');
+    if(!request || !field || !cause || cause.commandId!==request.id ||
+      cause.fromPageId!==request.pageId || cause.fromViewId!==request.viewId ||
+      cause.fromViewRevision!==request.viewRevision || cause.fromSessionId!==request.sessionId ||
+      !Number.isSafeInteger(cause.ackEditRevision) || cause.ackEditRevision<request.clientEditRevision ||
+      clientEditRevision<=cause.ackEditRevision || !field.value || field.value===request.draft)return;
+    const text=field.value, start=field.selectionStart, end=field.selectionEnd;
+    // This is a visible, ephemeral DOM recovery, never an edit for the destination
+    // view. Keeping each unresolved note also preserves successive transition races.
+    const note=document.createElement('aside');note.className='native-draft-recovery';
+    const title=document.createElement('p');
+    title.setAttribute('role','status');title.setAttribute('aria-live','polite');title.setAttribute('aria-atomic','true');
+    title.textContent='Nicht gesendeter Entwurf · '+String(snapshot?.viewLabel||'Vorheriger Dialog').slice(0,100);
+    const details=document.createElement('details'), summary=document.createElement('summary');
+    summary.textContent='Entwurf ansehen';
+    const content=document.createElement('pre');content.textContent=text;details.append(summary,content);
+    const buttons=document.createElement('div');buttons.className='action-row';
+    const dismiss=()=>{
+      note.remove();document.body.classList.toggle('native-has-draft-recovery',!!$('.native-draft-recovery'));
+    };
+    for(const [action,label] of [['restore','Zur Eingabe hinzufügen'],['discard','Verwerfen']]) {
+      const button=document.createElement('button');button.type='button';button.className='secondary-button';
+      button.dataset.nativeRecovery=action;button.textContent=label;
+      button.addEventListener('click',()=>{
+        if(action==='discard'){dismiss();return;}
+        if(!validScope(scope()) || document.visibilityState!=='visible')return;
+        const current=$('#command-input');if(!current)return;
+        const prefix=current.value && current.value!==text?current.value+'\n\n':'';
+        current.value=prefix+text;
+        current.setSelectionRange(prefix.length+start,prefix.length+end);
+        dirtyDraft=true;fitComposer();syncDraft();dismiss();
+        current.focus({preventScroll:true});
+      });
+      buttons.appendChild(button);
+    }
+    note.append(title,details,buttons);$('#command-form')?.before(note);
+    document.body.classList.add('native-has-draft-recovery');
+  }
   function labelWithIcons(node,label) {
     if(!node)return;
     const texts=[...node.childNodes].filter(child=>child.nodeType===3 && child.textContent.trim());
@@ -104,6 +144,8 @@
     const min=parseFloat(style.minHeight)||29, max=parseFloat(style.maxHeight)||116;
     field.style.height='0px';
     field.style.height=Math.max(min,Math.min(max,field.scrollHeight))+'px';
+    const height=$('#command-form')?.getBoundingClientRect().height;
+    if(height>0)document.body.style.setProperty('--native-composer-height',height+'px');
   }
   function commandLimits() {
     return {
@@ -725,7 +767,11 @@
     const initial=!page;
     const changed=initial || state.viewId!==view || state.sessionId!==session;
     if(!changed && state.viewRevision!==viewRevision)return;
+    // Selection events may be queued after a snapshot. Observe the actual editor
+    // first, including an oversized edit that cannot be sent, before trusting its ACK.
+    if(!initial)editorDraft();
     if(changed) {
+      if(!initial)retainTransitionDraft(state.transitionCause);
       cancelMicPress();retireComputer();clearNativeSpeech(true);
       Object.assign(computerGate,{generation:0,sequence:-1,ended:false,binding:null});
       Object.assign(speechGate,{generation:0,sequence:-1,ended:false,utteranceId:null});
@@ -799,7 +845,7 @@
     document.querySelectorAll('[data-action="toggle-chats"],[data-action="toggle-instruments"]')
       .forEach(button=>button.setAttribute('aria-expanded','false'));
   }
-  function section(name) {
+  function section(name,focusComposer=false) {
     if(!routes.has(name))return;
     if(name==='stop') {retireComputer();clearNativeSpeech(true);}
     else if(name==='device' && currentComputer) {
@@ -815,7 +861,8 @@
         const selected=button.dataset.section===original;
         button.classList.toggle('active',selected);button.setAttribute('aria-current',selected?'page':'false');
       });
-    if(name==='chat')$('#command-input')?.focus({preventScroll:true});
+    if(name==='chat' && focusComposer && document.visibilityState==='visible')
+      $('#command-input')?.focus({preventScroll:true});
   }
   function closeProjection() {
     if(computerOpen()) {retireComputer();send('route','stop');}
@@ -858,7 +905,7 @@
   });
   window.addEventListener('blur',()=>cancelMicPress());
   window.ContinuumNative=Object.freeze({receive,transcript,message,
-    section:data=>{if(currentScope(data))section(data.name);},document:documentOpened,
+    section:data=>{if(currentScope(data))section(data.name,data.focusComposer===true);},document:documentOpened,
     clearDocument:data=>{if(currentScope(data))clearDocument();},commandResult,computer,speech,sources});
   document.addEventListener('click',e=>{
     if(e.target.closest('#listen-button') && suppressMicClick) {
@@ -899,13 +946,13 @@
       e.preventDefault();e.stopImmediatePropagation();
       const value=nav.dataset.section==='conversation'?'chat':
         nav.dataset.section==='computer'?'device':nav.dataset.section;
-      if(routes.has(value) && send('route',value))section(value);return;
+      if(routes.has(value) && send('route',value))section(value,true);return;
     }
     const action=e.target.closest('[data-action]');
     const value=action&&actions[action.dataset.action];
     if(value) {
       e.preventDefault();e.stopImmediatePropagation();
-      if(send('route',value))section(value);
+      if(send('route',value))section(value,true);
       return;
     }
     if(action && action.dataset.action==='close') {

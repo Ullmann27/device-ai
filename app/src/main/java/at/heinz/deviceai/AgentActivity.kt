@@ -3239,6 +3239,14 @@ class AgentActivity : Activity() {
 
     /** The local model's reply to a document draft: journal state, then the result surface (null without a draft). */
     private fun onDocumentDraftReply(turn: DocumentDraftTurn, response: String): at.heinz.deviceai.ui.JarvisWorkWindow? {
+        if (!command03DocumentTurnCurrent(turn)) {
+            recordWork(turn.episodeId) {
+                if (response.isBlank()) it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED)
+                else it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTED,
+                    draft = response.trim(), coveredChars = turn.prompt.coveredChars)
+            }
+            return null
+        }
         workWindowHost.workEnded()
         if (response.isBlank()) {
             recordWork(turn.episodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED) }
@@ -3304,11 +3312,12 @@ class AgentActivity : Activity() {
     /** The model run of [turn] failed (error, heat stop, context): journal FAILED, the window says so, reading ends. */
     private fun onDocumentDraftFailed(turn: DocumentDraftTurn, reason: String?) {
         if (documentDraftTurn === turn) documentDraftTurn = null
-        workWindowHost.workEnded()
         recordWork(turn.episodeId) {
             if (it.state == at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING)
                 it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED) else it
         }
+        if (!command03DocumentTurnCurrent(turn)) return
+        workWindowHost.workEnded()
         val why = if (at.heinz.deviceai.localmodel.LocalModelThermalGuard.isThermal(reason)) "wegen Gerätewärme gestoppt"
             else "das lokale Modell meldete einen Fehler"
         showDocumentDraftStatus("Entwurf fehlgeschlagen – $why. Nichts gespeichert.", turn.command03Owner)
@@ -3327,6 +3336,9 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.cockpit.StepState.FAILED)
         }
     }
+
+    private fun command03DocumentTurnCurrent(turn: DocumentDraftTurn): Boolean =
+        turn.command03Owner?.let { it === command03Document && command03ViewCurrent(it.view) } ?: true
 
     private fun editDraft(target: TextView) {
         val editor = EditText(this).apply {
@@ -4049,7 +4061,9 @@ class AgentActivity : Activity() {
     }
 
     /** Selection and history I/O never import bot text into owner memory or public learning. */
-    private fun selectBot(agentId: String) {
+    private fun selectBot(agentId: String) = selectBot(agentId, null)
+
+    private fun selectBot(agentId: String, command03Cause: PendingCommand03Input?) {
         if (busy || botLookupPending || backlogExecutor.isShutdown) {
             Toast.makeText(this, "Bitte den laufenden Dialogschritt abwarten.", Toast.LENGTH_SHORT).show()
             return
@@ -4067,7 +4081,7 @@ class AgentActivity : Activity() {
                 if (revision != botLookupRevision || isFinishing || isDestroyed) return@runOnUiThread
                 if (busy) return@runOnUiThread
                 loaded.fold({ (profile, history) ->
-                    enterBotConversation(profile)
+                    enterBotConversation(profile, command03Cause)
                     showBotHistory(profile, history)
                 }, { Toast.makeText(this, "Bot-Kontext nicht sicher lesbar; keine Daten ersetzt.", Toast.LENGTH_LONG).show() })
             }
@@ -4176,7 +4190,7 @@ class AgentActivity : Activity() {
                 }
                 input.text.clear()
                 if (address is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Select) {
-                    selectBot(profile.agentId)
+                    selectBot(profile.agentId, command03Cause)
                     return@runOnUiThread
                 }
                 if (selectedBot?.agentId != profile.agentId) {

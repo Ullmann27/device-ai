@@ -120,6 +120,23 @@ body[data-design="command03"] .native-document-draft-status {
 }
 body[data-design="command03"] .native-document-draft-status:empty {display:none;}
 body[data-design="command03"] [data-native-pdf="draft"]:disabled {opacity:.55;cursor:default;}
+body[data-design="command03"] .native-draft-recovery {
+ margin:10px 0;padding:12px;border:1px solid rgba(107,213,255,.3);border-radius:8px;
+ background:rgba(7,24,39,.8);color:#bedce7;font:400 12px/1.5 Manrope,system-ui,sans-serif;
+ scroll-margin-bottom:calc(var(--native-composer-height,160px) + 42px);
+}
+body[data-design="command03"] .native-draft-recovery p {margin:0 0 6px;}
+body[data-design="command03"] .native-draft-recovery summary {cursor:pointer;}
+body[data-design="command03"] .native-draft-recovery pre {
+ white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto;font:inherit;
+}
+body[data-design="command03"] .native-draft-recovery .action-row {margin-top:8px;flex-wrap:wrap;}
+body[data-design="command03"] .native-draft-recovery button {min-height:44px;}
+@media(max-width:760px) {
+ body[data-design="command03"].native-has-draft-recovery .app-shell {
+  padding-bottom:max(122px,calc(var(--native-composer-height,160px) + 42px));
+ }
+}
 body[data-design="command03"] .native-document-excerpt {
  white-space:pre-wrap;overflow-wrap:anywhere;max-height:370px;overflow:auto;
  margin:0;padding:12px;border:1px solid rgba(79,170,209,.23);

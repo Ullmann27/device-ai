@@ -308,12 +308,13 @@ internal class ContinuumCommand03OriginalStage(
         val scope = binding ?: return
         if (disposed || section !in ROUTES) return
         cancelComposerFocus()
-        val data = envelope(scope).put("name", section).put("focusComposer", keyboard)
-        if (!pageReady) { queuedSection = data to keyboard; return }
+        val focus = keyboard && canFocusComposer() && isAttachedToWindow && isShown && windowVisibility == VISIBLE
+        val data = envelope(scope).put("name", section).put("focusComposer", focus)
+        if (!pageReady) { queuedSection = data to focus; return }
         val revision = focusRevision
-        if (keyboard && canFocusComposer()) requestFocus()
+        if (focus) requestFocus()
         evaluateJavascript("window.ContinuumNative?.section($data);") {
-            if (keyboard && revision == focusRevision && current(data) && !disposed && pageReady &&
+            if (focus && revision == focusRevision && current(data) && !disposed && pageReady &&
                 canFocusComposer() && isAttachedToWindow && isShown && windowVisibility == VISIBLE) {
                 (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager)
                     ?.showSoftInput(this, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)

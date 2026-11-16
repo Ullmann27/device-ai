@@ -1,6 +1,6 @@
 # Command03: native Bedienung im Original-HTML vervollständigen
 
-Status: **WIP / erste Korrektur und Wire-v2-Vertrag angelegt; noch kein kompilierter oder verifizierter Gesamtstand**.
+Status: **PORTIERT / gemeinsamer Prüfkandidat eingefroren / native Verhaltensprüfung und unsigned APK noch offen**.
 
 ## Quelle und Integration
 
@@ -46,6 +46,20 @@ Die Activity-Anbindung ist jetzt als zusammenhängender Patch geschrieben: echte
 Beim erfolgreichen PDF-Entwurf schließt nur der Abschluss zum exakt aktuellen Dokument die HTML-PDF und zeigt das Gesprächsergebnis. Alte Dokumentantworten dürfen eine inzwischen andere PDF nicht schließen. Fehlermeldungen bleiben dem auslösenden Dokument zugeordnet. Automatische Ansichtswechsel vergeben keinen neuen Eingabefokus; dafür ist ein ausdrücklicher Fokusauftrag erforderlich.
 
 Dieser veröffentlichte Zwischenstand dient einer **diagnostischen Hauptkompilation**, während native Testfixtures und letzte HTML-Negativfälle vervollständigt werden. Noch **kein Compilererfolg**, keine frische Android-Testwertung und keine neue APK bestätigt. Der finale saubere Quellfreeze und seine tatsächlichen Prüfbelege folgen gesondert.
+
+## Gemeinsamer Prüfkandidat
+
+Die diagnostische Hauptkompilation auf `5e7b9eddb5252d570e7a99eaaa845afb53e38485` bestand am 16.11.2026 in 34,275 Sekunden. Der reguläre Task `:app:compileDebugKotlin` lief tatsächlich, ohne Kotlin-Compilerfehler; der ursprüngliche Checkout wurde unverändert restauriert. Diese Diagnose ist kein Testergebnis der später ergänzten Quelle.
+
+Der nun vollständige Kandidat ergänzt noch den Cause-Token im zweiten asynchronen Bot-Auswahlschritt, den effektiven nativen Fokusfilter und die Zurückweisung alter PDF-Abschlüsse vor Änderungen an der aktuell geöffneten Arbeit. Ein alter PDF-Erfolg oder -Fehler darf nur seinen eigenen Journaleintrag aktualisieren, nicht den heutigen Dokumentbezug, die Ansicht oder den Aktionszustand.
+
+Vorbereitete gezielte Auswahl: 34 native HTML-/Bridge-/Medienfälle, 77 Unitfälle einschließlich sechs neuer DraftLedger-Fälle, 32 bisherige Klassikfälle und sechs bereits vorhandene Dokumentregressionen. Die Dokumentfixture wählt dafür jetzt ausdrücklich den klassischen Modus; ihre Assertions bleiben bestehen. Die tatsächlichen Ergebniszahlen werden erst aus frischen Laufbelegen übernommen.
+
+Der letzte vollständige Entwicklungslauf des HTML-Adapters besteht mit **44/44** Fällen, ohne übersprungene Tests. Die finale Prüfung muss zusätzlich das frisch von der aktuellen Kotlin-Stage erzeugte JSON verwenden; dafür ist `COMMAND03_REQUIRE_NATIVE_PACKET=1` gesetzt. Die ersten Rotläufe, fokussierte Zwischenprüfungen und die Diagnosequelle werden getrennt vom finalen Nachweis aufbewahrt.
+
+Die statische Quellenprüfung besteht weiterhin für **35 Originalassets / 15.864.219 Bytes**. Ihr veralteter wortwörtlicher Session-Guard wurde an den neuen vollständigen Seiten-/Ansichts-/Sitzungsguard angepasst; Asset-Pins, Blob-Hashes und der Vertrag der exakt zwei separaten Android-Includes bleiben unverändert. Die Verhaltenssicherheit wird zusätzlich von den echten negativen DOM-/Androidfällen geprüft, nicht aus dieser Zeichenfolgenprüfung abgeleitet.
+
+Nächste tatsächliche Schritte: saubere veröffentlichte Quelle kompilieren, vorbereitete native Auswahl ausführen, frisches Kotlin-Paket exportieren und den vollständigen DOM-Lauf damit durchführen, bestehende Releaseverträge prüfen, unsigned APK regulär bauen und unabhängig auf Quellen-/Assetgleichheit prüfen. Bei Fehlern wird der konkrete Befund repariert und ein neuer vollständiger Prüfstand veröffentlicht. **GERÄTEBESTÄTIGT: NOT_RUN.**
 
 ## Arbeitsumgebung
 

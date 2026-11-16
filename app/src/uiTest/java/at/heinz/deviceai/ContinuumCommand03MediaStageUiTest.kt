@@ -54,6 +54,7 @@ class ContinuumCommand03MediaStageUiTest {
     }
 
     private val session = "11111111-1111-4111-8111-111111111111"
+    private lateinit var scope: Command03Binding
     private val binding = LiveFrameBinding("computer-synthetic-wire", 7, "com.example.target", "at.heinz.deviceai",
         LiveFrameOrigin.ACCESSIBILITY_WINDOW)
     private fun packet(generation: Long = 1, sequence: Long = 1): Command03ComputerPacket {
@@ -67,6 +68,8 @@ class ContinuumCommand03MediaStageUiTest {
         object : WebResourceRequest {
             override fun getUrl() = Uri.Builder().scheme("continuum-native").authority("action").appendPath(kind)
                 .appendQueryParameter("sessionId", ack.sessionId).appendQueryParameter("generation", ack.generation.toString())
+                .appendQueryParameter("pageId", scope.pageId).appendQueryParameter("viewId", scope.viewId)
+                .appendQueryParameter("viewRevision", scope.viewRevision.toString())
                 .appendQueryParameter("sequence", ack.sequence.toString()).build()
             override fun isForMainFrame() = main
             override fun isRedirect() = false
@@ -77,8 +80,10 @@ class ContinuumCommand03MediaStageUiTest {
     private fun withStage(body: (ContinuumCommand03OriginalStage, VisualWebView, MutableList<Command03FrameAck>) -> Unit) {
         val controller = Robolectric.buildActivity(Activity::class.java).setup().visible()
         val drawn = mutableListOf<Command03FrameAck>()
-        val stage = ContinuumCommand03OriginalStage(controller.get(), { _, _ -> }, { _, _ -> }, {},
+        val stage = ContinuumCommand03OriginalStage(controller.get(), { _, _ -> }, { _, _ -> }, { true },
             onComputerFrameDrawn = { drawn += it })
+        scope = Command03Binding(stage.pageId, "22222222-2222-4222-8222-222222222222", 1L, session)
+        assertTrue(stage.bind(scope))
         controller.get().setContentView(stage)
         val decor = controller.get().window.decorView
         val pump = CockpitHostFramePump { decor }
@@ -124,6 +129,9 @@ class ContinuumCommand03MediaStageUiTest {
         val script = shadowOf(stage).lastEvaluatedJavascript
         val json = JSONObject(script.removePrefix("window.ContinuumNative?.computer(").removeSuffix(");"))
         assertEquals("LIVE", json.getString("status"))
+        assertEquals(scope.pageId, json.getString("pageId"))
+        assertEquals(scope.viewId, json.getString("viewId"))
+        assertEquals(scope.viewRevision, json.getLong("viewRevision"))
         assertTrue(json.get("captureSession") is String)
         assertEquals("7", json.getString("captureSession"))
         assertEquals(0L, json.getLong("ageMs"))
@@ -173,7 +181,8 @@ class ContinuumCommand03MediaStageUiTest {
             acknowledge(stage, packet.acknowledgement)
             assertEquals("The $boundary fixture must first enqueue a real provider callback", 1, shadow.callbacks.size)
             when (boundary) {
-                "pdf" -> stage.presentDocument(JSONObject().put("sessionId", session).put("name", "Synthetisch.pdf"))
+                "pdf" -> stage.presentDocument(JSONObject().put("sessionId", session).put("name", "Synthetisch.pdf")
+                    .put("pageId", scope.pageId).put("viewId", scope.viewId).put("viewRevision", scope.viewRevision))
                 "pause" -> stage.setLivePresentationActive(false)
                 else -> {
                     val parent = stage.parent as android.view.ViewGroup
