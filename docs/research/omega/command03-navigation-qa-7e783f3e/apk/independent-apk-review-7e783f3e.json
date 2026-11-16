@@ -1,0 +1,302 @@
+{
+  "checked_at_utc": "2026-11-16T06:10:53.634436+00:00",
+  "source_commit": "7e783f3ee8bc3e75f800b8249f5cef283187752d",
+  "source_main_tree": "847f78017e009872a87f0345d8a49eebb972f6ab",
+  "apk_file": "/tmp/continuum-command03-navigation-build-2f1f2f3ed7e2/app-build/outputs/apk/release/app-release-unsigned.apk",
+  "bytes": 111421502,
+  "sha256": "0cc23f3e340295b4d6567ed643e9e315cba35f1ce24becc4d9afbac613f8ffd6",
+  "physical_device_verified": false,
+  "verification_scope": "INDEPENDENT_LOCAL_UNSIGNED_APK_STRUCTURE_AND_SOURCE_ASSETS",
+  "html_assets": [
+    {
+      "path": "assets/continuum-command03/app.js",
+      "bytes": 41955,
+      "sha256": "01ad3ab36f321c041af8a3319adafb53dc6d3677f83f3e5fbff49d6573b6a26a"
+    },
+    {
+      "path": "assets/continuum-command03/assets/LICENSE.ASSETS.md",
+      "bytes": 6962,
+      "sha256": "f6089cba01cb570a24712b41ab8a586ccd3cc5ef53dc266ca50b95c288956d2c"
+    },
+    {
+      "path": "assets/continuum-command03/assets/continuum-avatar-NOTICE.json",
+      "bytes": 4254,
+      "sha256": "f32229b321c3be99752686e7730f5dcbb570d22d1800aa9125a5b113a0c6ed9d"
+    },
+    {
+      "path": "assets/continuum-command03/assets/continuum-avatar-original.png",
+      "bytes": 1283790,
+      "sha256": "af71726f13cbbd0514f4ccea6b2e5c2c32217125400b2b93543f6cd2cf22a471"
+    },
+    {
+      "path": "assets/continuum-command03/assets/continuum-avatar.glb",
+      "bytes": 12038416,
+      "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+    },
+    {
+      "path": "assets/continuum-command03/assets/continuum-orb-original.png",
+      "bytes": 955980,
+      "sha256": "d057d39300e4b588328c3d825ad97f19006e0d38d3a3dc23ba5a9cf00beaa6ac"
+    },
+    {
+      "path": "assets/continuum-command03/assets/fonts/manrope-0.ttf",
+      "bytes": 96200,
+      "sha256": "ed335894f8d954263675f7e457bf657374d8b7be629be4dc43aef97c309ad3ae"
+    },
+    {
+      "path": "assets/continuum-command03/assets/fonts/manrope-1.ttf",
+      "bytes": 96300,
+      "sha256": "437dc9f921739a6893128fa4dfc299424951148475815a9a213a46457878c42b"
+    },
+    {
+      "path": "assets/continuum-command03/assets/fonts/manrope-2.ttf",
+      "bytes": 96348,
+      "sha256": "68ed4be49ec7d32f07b42f9232dc01ca1df7a77be1d9b0731aac74db58235f34"
+    },
+    {
+      "path": "assets/continuum-command03/assets/fonts/manrope-3.ttf",
+      "bytes": 96188,
+      "sha256": "ea1f264039fed13fd36e6d6f49fcae4fe7007def02cf2972b5c7f6d6f1349d06"
+    },
+    {
+      "path": "assets/continuum-command03/assets/fonts/space-grotesk-4.ttf",
+      "bytes": 69360,
+      "sha256": "ec926d5065eaca49a48f96e312bbae0bbc5733c24215cf5dfabbdccee926fef7"
+    },
+    {
+      "path": "assets/continuum-command03/assets/fonts/space-grotesk-5.ttf",
+      "bytes": 69416,
+      "sha256": "3e699ead1876244fa392243054ddefe7cf631b488438828a8a100731a22ab995"
+    },
+    {
+      "path": "assets/continuum-command03/assets/fonts/space-grotesk-6.ttf",
+      "bytes": 69308,
+      "sha256": "3e756954468ff1cb302dae0414262e72f76a67d87bef3fa1f3226cd0fb9b2d85"
+    },
+    {
+      "path": "assets/continuum-command03/assets/licenses/Manrope_NOTICE.txt",
+      "bytes": 120,
+      "sha256": "db4655ca31e41546fe3596eabf75a39d6d1a37a02724ce3bff0d67a16b86c754"
+    },
+    {
+      "path": "assets/continuum-command03/assets/licenses/Manrope_OFL.txt",
+      "bytes": 4387,
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "path": "assets/continuum-command03/assets/licenses/Space_Grotesk_NOTICE.txt",
+      "bytes": 135,
+      "sha256": "8e5c4fa25381f0b9772f6ac29eb38d15cf88b623414d4fb6bfba5caa2db6d5cb"
+    },
+    {
+      "path": "assets/continuum-command03/assets/licenses/Space_Grotesk_OFL.txt",
+      "bytes": 4402,
+      "sha256": "c6dec685825f73b18c20926fddc65e8315642e12986f15db0699170940a09efc"
+    },
+    {
+      "path": "assets/continuum-command03/assets/licenses/Three_MIT.txt",
+      "bytes": 1081,
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+    },
+    {
+      "path": "assets/continuum-command03/ausprobieren.html",
+      "bytes": 3135,
+      "sha256": "436c98f25b0d19797d899d2857f611c0d50a04699f2b648890648b3118758d6b"
+    },
+    {
+      "path": "assets/continuum-command03/avatar3d.js",
+      "bytes": 634422,
+      "sha256": "d971058633a5a1fa10bbbb1da97583b920ab7895b7fb1199a27a78f01f62bb5b"
+    },
+    {
+      "path": "assets/continuum-command03/command-layout.css",
+      "bytes": 10866,
+      "sha256": "1c0d3ac7c386497b41f8812b29b0b453fe4d8bedee8cba3666b2f6d2aede76d7"
+    },
+    {
+      "path": "assets/continuum-command03/index.android.html",
+      "bytes": 11870,
+      "sha256": "905cedad03386d14be25385b28f2f1c6db4a5d37fbc1241d1fb60f08ff91f045"
+    },
+    {
+      "path": "assets/continuum-command03/index.html",
+      "bytes": 11777,
+      "sha256": "98141c7fa9b324567d38c0a955241c1461e367653ad4afc727c1dc79e4eca2c1"
+    },
+    {
+      "path": "assets/continuum-command03/native-bridge.js",
+      "bytes": 44454,
+      "sha256": "a4e575b8e188ac80f3876b309f3372fb7032d93dd168571cc66d7f1af5039f8f"
+    },
+    {
+      "path": "assets/continuum-command03/native-layer.css",
+      "bytes": 6947,
+      "sha256": "a728427a07f04ac07b1f4809dd7386d51c873e0edfb2c3584b222e78e66b9ddf"
+    },
+    {
+      "path": "assets/continuum-command03/operations.css",
+      "bytes": 14784,
+      "sha256": "0cb564808fe92abee89a19ccea9f4ee32636f09a70fef5f3674e36a7dc818964"
+    },
+    {
+      "path": "assets/continuum-command03/operations.js",
+      "bytes": 24554,
+      "sha256": "005381f1a7eaf68c08a04df552e7c9b65f3cadb94ffc54f85fe711ff9a53a9b9"
+    },
+    {
+      "path": "assets/continuum-command03/orb-original.js",
+      "bytes": 31032,
+      "sha256": "f9ee074ce59ac23ec9b3c9a6975381bd987dbd2bea4944d927b1f8b43ce262b4"
+    },
+    {
+      "path": "assets/continuum-command03/presence-instruments.css",
+      "bytes": 15246,
+      "sha256": "2ae9918bdbee95ee8fb055ed428804f1cdb16629d5ffb906bc45653ad19209ef"
+    },
+    {
+      "path": "assets/continuum-command03/presence-instruments.js",
+      "bytes": 12196,
+      "sha256": "dafefe13775e19a65236417aebb2b5d89f0173defbd068d2444fffe142ebc622"
+    },
+    {
+      "path": "assets/continuum-command03/presence-layout.css",
+      "bytes": 7439,
+      "sha256": "fc29d4837493061c861b611cdc3e463c84af079d508421c50cabada866075be6"
+    },
+    {
+      "path": "assets/continuum-command03/projekt.html",
+      "bytes": 9039,
+      "sha256": "5cd8d67a1e2d65eafa0b7b879d247757946a92c9c7c3057ed43d31cebe0a779b"
+    },
+    {
+      "path": "assets/continuum-command03/scene.js",
+      "bytes": 43393,
+      "sha256": "91ca6dc5fdea2d5449cded440585e5f1cad46d6a5fe8a3ceefd34143a3a5835b"
+    },
+    {
+      "path": "assets/continuum-command03/style.css",
+      "bytes": 66811,
+      "sha256": "df251199ccf49be377b8cb1790d60cf25230b0f6cd63d6d5d52e77a1e1b3dc95"
+    },
+    {
+      "path": "assets/continuum-command03/telemetry.css",
+      "bytes": 4893,
+      "sha256": "8ca22d80d566df947e614ed73d0a8d8059bf0b0dfc99119d46eb1cd088bb2d1c"
+    },
+    {
+      "path": "assets/continuum-command03/telemetry.js",
+      "bytes": 16738,
+      "sha256": "d8883eaa93776ad87b5c4ff902ce212437d8eb5801591f344dfa8a8b015c544c"
+    },
+    {
+      "path": "assets/continuum-command03/workspace-motion.css",
+      "bytes": 4937,
+      "sha256": "791e9f226d2de5a671c9cc7d6f21b725e83d56b629ead84bd7eb314aa2f4f66d"
+    },
+    {
+      "path": "assets/continuum-command03/workspace-motion.js",
+      "bytes": 18355,
+      "sha256": "43e2628c6d9203a82b691c594cb171173614c002e9febb69d427bba87d1143a0"
+    }
+  ],
+  "jar_signatures": [],
+  "native_libraries": [
+    {
+      "path": "lib/arm64-v8a/libc++_shared.so",
+      "load_alignments": [
+        16384,
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libfilament-jni.so",
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libgltfio-jni.so",
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/liblitertlm_jni.so",
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libopencv_java4.so",
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ]
+    }
+  ],
+  "dex_files": [
+    "classes.dex",
+    "classes2.dex"
+  ],
+  "apk_signing_block": "ABSENT",
+  "badging": [
+    "package: name='at.heinz.deviceai.continuumlocal' versionCode='60' versionName='0.3.59' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'",
+    "sdkVersion:'26'",
+    "targetSdkVersion:'36'",
+    "native-code: 'arm64-v8a'"
+  ],
+  "zip_crc": "PASS",
+  "zip_unique_safe_paths": "PASS",
+  "source_assets": "38_BYTE_IDENTICAL",
+  "zipalign_16k": "PASS",
+  "signing_status": "UNSIGNED_NOT_INSTALLABLE",
+  "apksigner_exit": 1,
+  "commands": [
+    {
+      "command": [
+        "/workspace/scratch/5d87eafb90be/native-toolchain/android-sdk/build-tools/35.0.0/aapt",
+        "dump",
+        "badging",
+        "/tmp/continuum-command03-navigation-build-2f1f2f3ed7e2/app-build/outputs/apk/release/app-release-unsigned.apk"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/continuum-command03-navigation-qa-2f1f2f3ed7e2/independent-apk-review-7e783f3e-aapt.txt",
+      "log_sha256": "cb2eb9e87a48c847d4b634299c23af76e425abe0dbf81052d7cd26e809c90b64"
+    },
+    {
+      "command": [
+        "/workspace/scratch/5d87eafb90be/native-toolchain/android-sdk/build-tools/35.0.0/zipalign",
+        "-c",
+        "-P",
+        "16",
+        "-v",
+        "4",
+        "/tmp/continuum-command03-navigation-build-2f1f2f3ed7e2/app-build/outputs/apk/release/app-release-unsigned.apk"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/continuum-command03-navigation-qa-2f1f2f3ed7e2/independent-apk-review-7e783f3e-zipalign.txt",
+      "log_sha256": "64a17794627cfdcc8fbfafd53655555282e4e47c23c930a3d726e79a554088cf"
+    },
+    {
+      "command": [
+        "/workspace/scratch/5d87eafb90be/native-toolchain/android-sdk/build-tools/35.0.0/apksigner",
+        "verify",
+        "--verbose",
+        "/tmp/continuum-command03-navigation-build-2f1f2f3ed7e2/app-build/outputs/apk/release/app-release-unsigned.apk"
+      ],
+      "exit_code": 1,
+      "log": "/tmp/continuum-command03-navigation-qa-2f1f2f3ed7e2/independent-apk-review-7e783f3e-apksigner.txt",
+      "log_sha256": "1413af210d1627fde4f14e31934eb5d9d031684e4f7a5c3371a74b3bdeb8764c"
+    }
+  ],
+  "status": "PASS_INDEPENDENT_LOCAL_ARTIFACT_REVIEW"
+}

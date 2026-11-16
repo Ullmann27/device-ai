@@ -1,0 +1,9 @@
+[
+  "at.heinz.deviceai.ContinuumCommandNavigationUiTest",
+  "at.heinz.deviceai.ContinuumReferenceCockpitUiTest.composerDraftSurvivesActualWindowReflowAndActivityRecreation",
+  "at.heinz.deviceai.ContinuumVisibleAvatarUiTest.repeatedKeyboardChangesResizeWithoutDuplicatingAvatar",
+  "at.heinz.deviceai.ui.JarvisRailLabelReadabilityUiTest",
+  "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest",
+  "at.heinz.deviceai.ContinuumCompactComposerUiTest",
+  "at.heinz.deviceai.JarvisReferenceHitTargetsUiTest"
+]

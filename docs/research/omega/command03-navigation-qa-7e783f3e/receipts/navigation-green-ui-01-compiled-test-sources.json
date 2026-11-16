@@ -1,0 +1,53 @@
+{
+    "scope": "FOCUSED_HOST_TESTS_ONLY",
+    "source_commit": "7e783f3ee8bc3e75f800b8249f5cef283187752d",
+    "physical_sources_verified": true,
+    "files": [
+        {
+            "path": "app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt",
+            "bytes": 1285,
+            "sha256": "8fd846639c0ed9b207f9e5f6599ee448c9e58fadb2eb7f818d4362d83c8acf18",
+            "role": "existing_helper",
+            "filters": [
+                
+            ]
+        },
+        {
+            "path": "app/src/uiTest/java/at/heinz/deviceai/Command03HostWebView.kt",
+            "bytes": 1323,
+            "sha256": "3bb9631914c768d8d642c541d18aabed484a48b5716c3ed37278e108d3dae682",
+            "role": "existing_helper",
+            "filters": [
+                
+            ]
+        },
+        {
+            "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03BridgeUiTest.kt",
+            "bytes": 36243,
+            "sha256": "c322cbcd1bdbf7c3176e9627a95a0c38151ae0390647efa6b7f77f1b0de90ae8",
+            "role": "selected_test",
+            "filters": [
+                "at.heinz.deviceai.ContinuumCommand03BridgeUiTest"
+            ]
+        },
+        {
+            "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03MediaStageUiTest.kt",
+            "bytes": 10272,
+            "sha256": "339373d5c8a1296d5a805cfd4ff34d07a6f91fc9f4f008a6abec1aec49dfb3ed",
+            "role": "selected_test",
+            "filters": [
+                "at.heinz.deviceai.ContinuumCommand03MediaStageUiTest"
+            ]
+        },
+        {
+            "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03StageUiTest.kt",
+            "bytes": 5885,
+            "sha256": "dfdd4ac6ca1fa5eb35562e18084fb26e34d667896ff30fee9ca7a82c2cea24f4",
+            "role": "selected_test",
+            "filters": [
+                "at.heinz.deviceai.ContinuumCommand03StageUiTest"
+            ]
+        }
+    ],
+    "main_compilation": "unchanged real Android main/SDK dependencies"
+}

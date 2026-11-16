@@ -71,6 +71,14 @@ Der fünfte Befund betrifft die lokale Robolectric-Implementierung: Der tatsäch
 
 Separat bestanden auf dem ersten Freeze **44 Python- und 40 Node-Releasevertragstests**, beide Syntaxprüfungen und der Originalasset-Quellenvertrag. Diese Komponentenbelege ersetzen weder den fehlgeschlagenen Androidlauf noch die noch ausstehende APK. Der korrigierte Kandidat muss erneut vollständig ausgewertet werden.
 
+### Zusammenführung der zwischenzeitlich erweiterten kanonischen Linie
+
+Vor dem erneuten Androidlauf zeigte die frische GitHub-Abfrage einen inzwischen erweiterten PR851: `3d5efd9ec4b1a8a5c9c12bb39835be8aef9a9b64`, aufbauend auf dem Navigationsfix `7e783f3e` und dessen drei zusätzlichen Regressionstests. Diese Arbeit wird durch einen echten Merge mit beiden Eltern erhalten. Der dortige aktive Computerpfad entspricht fachlich dem bereits in dieser Fortsetzung korrigierten Einstieg; seine zusätzliche Einplanung der bestehenden Bildaktualisierung wird übernommen. Die vollständige v2-Bindung und der zusätzliche Guard für eine vorhandene sichtbare HTML-Stage bleiben erhalten.
+
+Die drei kanonischen Tests für aktiven Computereinstieg, unveränderte Leerlaufkontrollen und weiterhin wirksames Verlassen/Stoppen bleiben mit allen Assertions erhalten. Lediglich die Prüfung des inzwischen strukturierten, an die Ansicht gebundenen `section`-Pakets wird auf v2 umgestellt. Die vorbereitete native HTML-Auswahl wächst damit auf **37 Fälle**; Unit77, Klassik32 und Dokument6 bleiben unverändert. Die älteren156 kanonischen Navigationsergebnisse werden als historische Belege übernommen und nicht zur neuen Abnahme addiert.
+
+Der vorher vorbereitete `05c7f432`-Lauf begann nicht: Seine äußere Speichervorprüfung brach vor Checkoutwechsel und JVM-Start ab. Die spätere Kapazitätsprüfung erlaubte die Kompilation wieder. Der damalige freie Wert wurde nicht vollständig gesichert; aus dem Abbruch wird weder ein Compilerfehler noch ein Testergebnis abgeleitet. Die neue Prüfung beginnt erst auf dem veröffentlichten gemeinsamen Mergecommit.
+
 ## Arbeitsumgebung
 
 Während der lesenden Bestandsprüfung wurde die lokale Umgebung vorübergehend unavailable. Nach Wiederanbindung sind Quelle, Toolchain, aktuelle Compilerzustände, b56-APK und das dauerhaft gesicherte Prüfpaket vorhanden. Frühere RAM-Auslagerungen fehlen nach dem Neustart. Diese werden ausdrücklich als fehlende historische Zwischenstände dokumentiert; keine alten Testergebnisse oder Dateien werden fingiert. Eine neue externe Orchestrierung wird auf den tatsächlich vorhandenen b56-Nachweis gebunden und erhält die bisherigen Quell-, Lock-, Platz- und Ergebnisgrenzen.

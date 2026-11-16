@@ -2560,6 +2560,7 @@ class AgentActivity : Activity() {
         if (route == "device" && stage != null && command03ComputerVisible() && computerController?.active == true) {
             // Selecting the existing computer must not end its already approved session.
             stage.showSection("device")
+            scheduleCommand03Computer()
             return
         }
         if (route !in setOf("home", "voice-input", "voice-input-long-press", "stop")) hideCommand03Computer()

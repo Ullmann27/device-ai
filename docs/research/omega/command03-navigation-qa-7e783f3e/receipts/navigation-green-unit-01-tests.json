@@ -1,0 +1,10 @@
+[
+  "at.heinz.deviceai.ui.Command03ComputerProjectionTest",
+  "at.heinz.deviceai.ui.Command03SpeechProjectionTest",
+  "at.heinz.deviceai.ui.Command03BridgeContractTest",
+  "at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest",
+  "at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest",
+  "at.heinz.deviceai.cognitive.LiveComputerFramesTest",
+  "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest",
+  "at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest"
+]

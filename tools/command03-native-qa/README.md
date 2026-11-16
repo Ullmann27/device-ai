@@ -148,7 +148,7 @@ speech synchronization, or Fold7 behavior. The separate source lock verifies
 the original 35 asset bytes and the two-include Android entry point.
 
 The actual Android Activity/WebView routing checks are in
-`at.heinz.deviceai.ContinuumCommand03BridgeUiTest` (fourteen cases),
+`at.heinz.deviceai.ContinuumCommand03BridgeUiTest` (seventeen cases),
 `at.heinz.deviceai.ContinuumCommand03StageUiTest` (four cases), and
 `at.heinz.deviceai.ContinuumCommand03MediaStageUiTest` (four cases). They cover
 request acknowledgements, pending bot lookup, existing controls during busy
@@ -195,6 +195,17 @@ synthetic 2x2 JPEG. Extract the `COMMAND03_COMPUTER_WIRE:` line from the fresh
 The latter flag makes a missing native packet a failure instead of an optional skip.
 The source-bound archived packet documents this run; reuse does not establish a
 new Android execution. Use `--test-reporter=tap` for an explicit Node TAP report.
+
+## Active computer navigation
+
+The follow-up source `7e783f3ee8bc3e75f800b8249f5cef283187752d` preserves an
+already active computer session when opening its original HTML section. Three
+new Activity regressions cover repeated navigation, idle controls, and leaving/Stop.
+Fresh results: 25 HTML/media UI, 71 unit, 32 classic UI, and 28 DOM/native-packet
+cases; 156 total with no failures or skips. The separate build directory began
+empty, reused existing offline dependencies, and produced the normal unsigned
+release APK. Details and the independent APK audit are in
+`docs/research/omega/COMMAND03-COMPUTER-NAVIGATION-HANDOFF.md`.
 
 ## Actual Activity captures
 

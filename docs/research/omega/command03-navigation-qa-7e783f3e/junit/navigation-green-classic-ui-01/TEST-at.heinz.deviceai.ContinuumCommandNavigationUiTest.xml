@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCommandNavigationUiTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-16T06:06:17" hostname="731a0110a54f" time="5.978">
+  <properties/>
+  <testcase name="pauseInvalidatesQueuedSelectionWithoutChangingTheStoredActiveChat" classname="at.heinz.deviceai.ContinuumCommandNavigationUiTest" time="3.992"/>
+  <testcase name="responsiveInstrumentsStayOnCanvasBeforeFirstMeasureAndAfterRendererCallbacks" classname="at.heinz.deviceai.ContinuumCommandNavigationUiTest" time="0.201"/>
+  <testcase name="newChatRetainsThePreviousSavedContextAndCanReopenIt" classname="at.heinz.deviceai.ContinuumCommandNavigationUiTest" time="0.267"/>
+  <testcase name="largeTextAndKeyboardKeepPresenceAndTheSingleEditorReachable" classname="at.heinz.deviceai.ContinuumCommandNavigationUiTest" time="0.179"/>
+  <testcase name="theSingleRealComposerLivesOutsideBothScrollablePresentations" classname="at.heinz.deviceai.ContinuumCommandNavigationUiTest" time="0.137"/>
+  <testcase name="runningLocalRequestIsCancelledButTheChatWaitsForItsActualEnd" classname="at.heinz.deviceai.ContinuumCommandNavigationUiTest" time="0.224"/>
+  <testcase name="conversationKeepsOneMountedPresenceAndBoundFeedWithoutHiddenTargets" classname="at.heinz.deviceai.ContinuumCommandNavigationUiTest" time="0.192"/>
+  <testcase name="missingConversationLeavesVisibleChatContextAndSelectionIntact" classname="at.heinz.deviceai.ContinuumCommandNavigationUiTest" time="0.207"/>
+  <testcase name="sevenRealToolsAndFilePickerKeepAndroidReadOnlyPermission" classname="at.heinz.deviceai.ContinuumCommandNavigationUiTest" time="0.171"/>
+  <testcase name="rapidSelectionsRejectAnOlderQueuedReadAndItsPersistentPointer" classname="at.heinz.deviceai.ContinuumCommandNavigationUiTest" time="0.236"/>
+  <testcase name="realRailSelectionRestoresOnlyTheSelectedContextAndKeepsTheSameAvatar" classname="at.heinz.deviceai.ContinuumCommandNavigationUiTest" time="0.171"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

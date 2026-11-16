@@ -1,0 +1,78 @@
+{
+  "scope": "FOCUSED_HOST_TESTS_ONLY",
+  "source_commit": "7e783f3ee8bc3e75f800b8249f5cef283187752d",
+  "files": [
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechAdmissionTest.kt",
+      "bytes": 3436,
+      "sha256": "3a52cc42c073309510d22add76324d61d9cbf6b43838178e613cc690b3babf32",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt",
+      "bytes": 7937,
+      "sha256": "dac03e4877ecc83ee84055eea9828881ca95494c14c6f604b1327a3e00ca90cc",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerDispatchGuardTest.kt",
+      "bytes": 4011,
+      "sha256": "3c9eab144c09b904f76275f6f46ea66fd21b527256c2f74b54376d3c43d938bf",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerFramesTest.kt",
+      "bytes": 10405,
+      "sha256": "d0afed0302bca9ac71517b1477dcbfd41e3ae09e97e22e078fe8210f4a9538c9",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.cognitive.LiveComputerFramesTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LiveMonitorSubmissionTest.kt",
+      "bytes": 8047,
+      "sha256": "2e8698b8ee6e3205819b6346d0a35057ebce280fdeb19e19194594bbc467e6ac",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/Command03BridgeContractTest.kt",
+      "bytes": 2741,
+      "sha256": "ed402689eb3a456619d30a72d786fb3f0cb4aeae34e5498b317c89a1c364995a",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.ui.Command03BridgeContractTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/Command03ComputerProjectionTest.kt",
+      "bytes": 7021,
+      "sha256": "eb0baa55c89b1db8c978a10f4e0a0425867e1c34a9830aa103263ce66f710981",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.ui.Command03ComputerProjectionTest"
+      ]
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/Command03SpeechProjectionTest.kt",
+      "bytes": 3933,
+      "sha256": "1d5d0ce523bb4dac944687a372017a5510624d131b9e48a4870970cc4d7e84e7",
+      "role": "selected_test",
+      "filters": [
+        "at.heinz.deviceai.ui.Command03SpeechProjectionTest"
+      ]
+    }
+  ]
+}
