@@ -9,11 +9,13 @@ on:
       - fix/command03-responsive-layout-20261117
       - feat/command03-hologram-settings-20261117
       - feat/continuum-cinema63-20261117
+      - ccr-7597adbd-8ko252
     paths:
       - .github/workflows/code60-command03-unsigned-qa.yml
       - app/**
       - tools/command03-native-qa/**
       - docs/research/omega/COMMAND03-REVIEW-FIX-HANDOFF-20261116.md
+      - docs/evaluation/**
   workflow_dispatch:
 
 permissions:
@@ -25,7 +27,7 @@ concurrency:
 
 jobs:
   browser-contract:
-    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/fix/command03-responsive-layout-20261117","refs/heads/feat/command03-hologram-settings-20261117","refs/heads/feat/continuum-cinema63-20261117"]'), github.ref)
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/fix/command03-responsive-layout-20261117","refs/heads/feat/command03-hologram-settings-20261117","refs/heads/feat/continuum-cinema63-20261117","refs/heads/ccr-7597adbd-8ko252"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -52,7 +54,7 @@ jobs:
             node --test --test-reporter=tap tools/command03-native-qa/native-bridge-behavior.test.mjs \
             | tee command03-dom.tap
       - name: Check rendered phone and fold layouts
-        if: contains(fromJSON('["refs/heads/fix/command03-responsive-layout-20261117","refs/heads/feat/command03-hologram-settings-20261117","refs/heads/feat/continuum-cinema63-20261117"]'), github.ref)
+        if: contains(fromJSON('["refs/heads/fix/command03-responsive-layout-20261117","refs/heads/feat/command03-hologram-settings-20261117","refs/heads/feat/continuum-cinema63-20261117","refs/heads/ccr-7597adbd-8ko252"]'), github.ref)
         shell: bash
         run: |
           set -euo pipefail
@@ -76,7 +78,7 @@ jobs:
           retention-days: 7
 
   focused-android:
-    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/feat/command03-hologram-settings-20261117","refs/heads/feat/continuum-cinema63-20261117"]'), github.ref)
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/feat/command03-hologram-settings-20261117","refs/heads/feat/continuum-cinema63-20261117","refs/heads/ccr-7597adbd-8ko252"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 65
     steps:
@@ -107,9 +109,9 @@ jobs:
           # Use its existing fail-closed selection init script, not --tests flags.
           focused_args=()
           qa_version=60
-          if [[ "$GITHUB_REF" == 'refs/heads/feat/command03-hologram-settings-20261117' || "$GITHUB_REF" == 'refs/heads/feat/continuum-cinema63-20261117' ]]; then
+          if [[ "$GITHUB_REF" == 'refs/heads/feat/command03-hologram-settings-20261117' || "$GITHUB_REF" == 'refs/heads/feat/continuum-cinema63-20261117' || "$GITHUB_REF" == 'refs/heads/ccr-7597adbd-8ko252' ]]; then
             qa_version=62
-            if [ "$GITHUB_REF" = 'refs/heads/feat/continuum-cinema63-20261117' ]; then qa_version=63; fi
+            if [[ "$GITHUB_REF" == 'refs/heads/feat/continuum-cinema63-20261117' || "$GITHUB_REF" == 'refs/heads/ccr-7597adbd-8ko252' ]]; then qa_version=63; fi
             python3 - <<'PY'
           import hashlib, json, os
           from pathlib import Path
@@ -118,6 +120,12 @@ jobs:
                    'Command03HostWebView.kt', 'CockpitHostFramePump.kt']
           paths = [Path('app/src/uiTest/java/at/heinz/deviceai') / name for name in names]
           paths.append(Path('app/src/test/java/at/heinz/deviceai/ui/Airbus2100CockpitOrchestratorTest.kt'))
+          # Code63 brain, voice and stage cases (plain JVM tests of the changed production classes).
+          code63 = ['cognitive/OwnerContrastRoutingTest.kt', 'cognitive/OwnerObjectEllipticalCorrectionTest.kt',
+                    'cognitive/ContinuousConversationSilenceWindowTest.kt', 'cognitive/LocalDialogueOlderStatementsTest.kt',
+                    'cognitive/LocalPartialAnswerPresentationTest.kt', 'cognitive/EvalProbe.kt',
+                    'evaluation/ContinuumEvalDatasetTest.kt', 'ui/Command03StageSignalsTest.kt']
+          paths += [Path('app/src/test/java/at/heinz/deviceai') / name for name in code63]
           manifest = {'scope':'FOCUSED_HOST_TESTS_ONLY','source_commit':os.environ['GITHUB_SHA'],
                       'files':[{'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths]}
           Path('command03-test-sources.json').write_text(json.dumps(manifest,indent=2)+'\n')
@@ -125,7 +133,14 @@ jobs:
                       'at.heinz.deviceai.ContinuumCommand03MediaStageUiTest',
                       'at.heinz.deviceai.ContinuumCommand03StageUiTest',
                       'at.heinz.deviceai.ContinuumSettingsHubUiTest',
-                      'at.heinz.deviceai.ui.Airbus2100CockpitOrchestratorTest']
+                      'at.heinz.deviceai.ui.Airbus2100CockpitOrchestratorTest',
+                      'at.heinz.deviceai.cognitive.OwnerContrastRoutingTest',
+                      'at.heinz.deviceai.cognitive.OwnerObjectEllipticalCorrectionTest',
+                      'at.heinz.deviceai.cognitive.ContinuousConversationSilenceWindowTest',
+                      'at.heinz.deviceai.cognitive.LocalDialogueOlderStatementsTest',
+                      'at.heinz.deviceai.cognitive.LocalPartialAnswerPresentationTest',
+                      'at.heinz.deviceai.evaluation.ContinuumEvalDatasetTest',
+                      'at.heinz.deviceai.ui.Command03StageSignalsTest']
           Path(os.environ['RUNNER_TEMP'],'command03-test-selection.json').write_text(json.dumps(selected))
           PY
             focused_args=(-Dcontinuum.native.testSources="$GITHUB_WORKSPACE/command03-test-sources.json"
@@ -159,10 +174,10 @@ jobs:
           retention-days: 7
 
   unsigned-arm64:
-    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/feat/continuum-cinema63-20261117"]'), github.ref)
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/feat/continuum-cinema63-20261117","refs/heads/ccr-7597adbd-8ko252"]'), github.ref)
     env:
-      APK_CODE: ${{ github.ref == 'refs/heads/feat/continuum-cinema63-20261117' && '63' || '60' }}
-      APK_VERSION: ${{ github.ref == 'refs/heads/feat/continuum-cinema63-20261117' && '0.3.62' || '0.3.59' }}
+      APK_CODE: ${{ (github.ref == 'refs/heads/feat/continuum-cinema63-20261117' || github.ref == 'refs/heads/ccr-7597adbd-8ko252') && '63' || '60' }}
+      APK_VERSION: ${{ (github.ref == 'refs/heads/feat/continuum-cinema63-20261117' || github.ref == 'refs/heads/ccr-7597adbd-8ko252') && '0.3.62' || '0.3.59' }}
     runs-on: ubuntu-latest
     timeout-minutes: 65
     steps:

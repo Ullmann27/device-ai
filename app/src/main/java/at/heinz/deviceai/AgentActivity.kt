@@ -13056,8 +13056,11 @@ class AgentActivity : Activity() {
                         if(audit.isFailure)addToolActivity("CONTINUUM · Laufprotokoll nicht gespeichert")
                     }
                     if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
+                    val keepsPartialForContinuation = hasPartialResponse &&
+                        !ephemeralScreenRun.get() && sessionId == localSessionId && documentDraftTurn == null
                     val visibleAnswer = when {
-                        hasPartialResponse -> (run.blocker ?: "Antwort unvollständig.") + "\n\n" + run.response
+                        hasPartialResponse -> at.heinz.deviceai.cognitive.LocalPartialAnswerPresentation.present(
+                            run.response, run.blocker, continuationAvailable = keepsPartialForContinuation)
                         !run.responseComplete -> run.blocker ?: "Keine vollständige Antwort erhalten."
                         !successful && groundedRecall != null -> groundedRecall.failureAnswer()
                         else -> run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." }
