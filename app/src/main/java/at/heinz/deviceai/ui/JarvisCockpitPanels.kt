@@ -30,11 +30,16 @@ object JarvisCockpitPanels {
         // before ellipsis, so "Dokument" / "Verarbeitung" stay whole instead of "Dokume…".
         val narrow = b.width < NARROW_TITLE_DP
         val room = b.width - if (narrow) 36f else 52f
-        val style = JarvisShellRenderer.shrinkToFit(p, text, Type.heading, room, minScale = if (narrow) .64f else .74f)
-        p.drawText(fit(p, text, style, room), b.left + 30f, y, style, Fill.Solid(Colors.text))
+        val variants = if (narrow) listOfNotNull(text, NARROW_TITLES[text]) else listOf(text)
+        val (shown, style) = JarvisCockpitGridContent.firstFitting(p, variants, Type.heading, room,
+            minScale = if (narrow) .64f else .74f)
+        p.drawText(shown, b.left + 30f, y, style, Fill.Solid(Colors.text))
         if (!narrow) ContinuumIcons.draw(p, Icon.CHEVRON_RIGHT, b.right - 12f, y - cap / 2f, 9f, Fill.Solid(Colors.cyan), 1.4f)
         return y
     }
+
+    /** Whole short titles for the narrowest columns (Fold7 cover), used only when the long one cannot fit. */
+    val NARROW_TITLES = mapOf("Verarbeitung" to "Ablauf", "Aktueller Ablauf" to "Ablauf")
 
     /** Below this window width the title row has no room for the chevron. */
     const val NARROW_TITLE_DP = 170f
