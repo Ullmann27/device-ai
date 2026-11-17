@@ -1,0 +1,89 @@
+name: "Continuum Code52 — Originalsignierung als unveröffentlichter Entwurf"
+
+# Code52 registration requires explicit owner review and protected branch activation.
+# Manual owner-only signing of a separately SHA-verified Code52 QA artifact:
+# This action NEVER publishes the release; a later separate owner decision is required.
+# - owner_approved_sha muss exakt dem Quell-Commit entsprechen (bewusste Eingabe des Besitzers),
+# - das Environment continuum-original-signing muss Pflicht-Reviewer (Besitzer) und genau die Branch-Regel
+#   des Staging-Zweigs haben; sonst bricht der Preflight ab, bevor ein Geheimnis freigegeben wird.
+# Der Workflow liest, druckt und kopiert P12/Passwort nie.
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: "Exakter 40-stelliger Quell-Commit (muss dem HEAD des Branches entsprechen)"
+        required: true
+        type: string
+      qa_run_id:
+        description: "ID des erfolgreichen Code52-QA-Laufs auf exakt diesem Commit"
+        required: true
+        type: string
+      owner_approved_sha:
+        description: "Ausdrückliche Besitzerfreigabe: derselbe 40-stellige Commit-SHA zur Originalsignierung"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-original-sign-only
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-owner-signing-20261109'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Preflight without secrets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          QA_RUN_ID: ${{ inputs.qa_run_id }}
+          OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}
+        run: |
+          set -euo pipefail
+          bash scripts/continuum-code52-github-signer.sh preflight
+
+  sign-draft-original:
+    needs: preflight
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-owner-signing-20261109'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    environment: continuum-original-signing
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Prepare official Android 35 signing tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"
+      - name: Verify exact-source QA, sign with original key and create unpublished verified draft
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          QA_RUN_ID: ${{ inputs.qa_run_id }}
+          OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}
+          ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
+          ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}
+        run: |
+          set -euo pipefail
+          bash scripts/continuum-code52-github-signer.sh sign

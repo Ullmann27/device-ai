@@ -1,0 +1,30 @@
+name: "Continuum Code52 signer preflight contracts (no secrets)"
+on:
+  push:
+    branches:
+      - chatgpt/code52-owner-signing-20261109
+    paths:
+      - '.github/workflows/continuum-code52-owner-signing-check.yml'
+      - '.github/workflows/continuum-code52-sign-release.yml'
+      - 'scripts/continuum-code52-github-signer.sh'
+      - '.github/continuum/code52-owner-signing-contract.test.mjs'
+permissions:
+  contents: read
+jobs:
+  signer-static-safety:
+    if: github.repository == 'Ullmann27/device-ai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - name: Source-bound signer and workflow contract
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          bash -n scripts/continuum-code52-github-signer.sh
+          node --test .github/continuum/code52-owner-signing-contract.test.mjs

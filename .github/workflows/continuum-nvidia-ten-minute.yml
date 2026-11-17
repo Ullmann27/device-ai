@@ -1,0 +1,80 @@
+name: Continuum JARVIS - NVIDIA 10-minute research scheduler
+on:
+  schedule:
+    - cron: '7,17,27,37,47,57 * * * *'
+  workflow_dispatch:
+
+# Contents write is required ONLY for the versioned reservation ledger branch.
+permissions:
+  contents: write
+
+concurrency:
+  group: continuum-nvidia-research-scheduler
+  cancel-in-progress: false
+
+jobs:
+  check-and-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - name: Checkout immutable reviewed research sources
+        uses: actions/checkout@v4
+        with:
+          ref: fd2e5de1acf678ae4d6222bb433762ea8bb3d57f
+          persist-credentials: false
+      - name: Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Offline tests must pass before scheduling NVIDIA
+        run: |
+          node --test scripts/continuum-nvidia-scheduled.test.mjs \
+            scripts/continuum-neuro-agent.test.mjs \
+            scripts/continuum-nvidia-ultra-review.test.mjs
+          node scripts/continuum-neuro-agent.mjs --check
+      - name: Check protected NVIDIA secret exists
+        id: credential
+        shell: bash
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+        run: |
+          if [[ -z "$NVIDIA_API_KEY" ]]; then
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "NVIDIA_SECRET_NOT_SET; no reservation or API call."
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            echo "NVIDIA_SECRET_PRESENT; value never printed."
+          fi
+      - name: Reserve bounded provider call on durable research ledger
+        if: steps.credential.outputs.present == 'true'
+        id: reserve
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: node scripts/continuum-nvidia-scheduled.mjs --reserve
+      - name: One NVIDIA Ultra 550B technical research request
+        if: steps.reserve.outputs.allowed == 'true'
+        shell: bash
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          CONTINUUM_RESERVED_SEQUENCE: ${{ steps.reserve.outputs.sequence }}
+          CONTINUUM_RESEARCH_OUTPUT_DIR: ${{ runner.temp }}/continuum-ultra-review
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -m 700 -p "$CONTINUUM_RESEARCH_OUTPUT_DIR"
+          node scripts/continuum-nvidia-scheduled.mjs --execute
+      - name: Save untrusted research proposal for owner review
+        if: steps.reserve.outputs.allowed == 'true' && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: continuum-ultra-research-${{ github.run_id }}
+          path: ${{ runner.temp }}/continuum-ultra-review/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Non-promotion confirmation
+        if: always()
+        run: |
+          echo "The schedule runs every 10 min best-effort, but GPU usage is capped at 3/day, 100 lifetime and 4h minimum interval."
+          echo "No source changes, APK signing, main merge or generated-code execution are performed."

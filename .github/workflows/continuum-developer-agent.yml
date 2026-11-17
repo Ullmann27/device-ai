@@ -11,8 +11,7 @@ on:
     paths:
       - ".github/continuum/**"
       - ".github/workflows/continuum-developer-agent.yml"
-  schedule:
-    - cron: "23 * * * *"
+  # schedule bewusst entfernt (Integration 2026-11-17): ein Merge nach main darf keine neue Automatik aktivieren.
   workflow_dispatch:
     inputs:
       kotlin_benchmark:
