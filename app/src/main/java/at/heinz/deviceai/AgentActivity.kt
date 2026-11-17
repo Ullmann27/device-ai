@@ -4514,7 +4514,12 @@ class AgentActivity : Activity() {
 
     private fun showNexusPersonalization() {
         AlertDialog.Builder(this)
-            .setTitle("Deine KI personalisieren")
+            // setMessage would hide the list; keep the privacy promise visible in the header.
+            .setCustomTitle(choiceDialogHeader(
+                "Deine KI personalisieren",
+                "Du bestimmst, was deine KI sich merken und wie sie lernen darf. " +
+                    "Eigene Dokumente werden nicht automatisch trainiert oder ins Internet übertragen."
+            ))
             .setItems(arrayOf(
                 "Gemerkte Fakten ansehen oder löschen",
                 "Lernzentrum öffnen",
