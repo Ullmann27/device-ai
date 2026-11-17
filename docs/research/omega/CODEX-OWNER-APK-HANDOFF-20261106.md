@@ -1,8 +1,14 @@
 # Continuum owner APK integration — 2026-11-06
 
-Status: targeted preflight and original-package APK/AAB assembly GREEN. Original publisher full QA,
-original signing and HTTPS release readback remain pending. Final candidate: code46 /0.3.45.
-This is not a release receipt.
+Status: **DELIVERED — original-signed Code46 /0.3.45 is live and independently verified.**
+Release source: `577f0931e7937ffcac02dc855a540f093facdb3b`. Publisher QA, signing, HTTPS
+readback and actual APK certificate/package/version/hash verification passed. Final verification:
+**2026-11-06T19:03:21.720300Z**. The release receipt is `code46-release-verified.json` below.
+
+[Download the verified APK](https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/Continuum-Lokal-0930614bbcc8e53d75283dfe47a53a73e758430a99af3698f31b88446babc759.apk)
+
+The existing in-app “Updates prüfen und laden” button reads the live catalog containing this APK.
+No device installation or real-model/audio acceptance is implied by this delivery.
 
 ## Sources and preserved history
 
@@ -39,8 +45,8 @@ Existing publisher: `srv-dbf1tr2vcj2c73ehpfog`, host
 `research/continuum-m8-render-signed-release-20261031`, auto-deploy disabled.
 Original certificate SHA-256:
 `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`.
-Signing credentials stay on that service. Release must use a version greater than the live catalog;
-the final local candidate is code46 / version0.3.45. Re-read live metadata before deployment.
+Signing credentials stay on that service. The delivered live release is code46 / version0.3.45.
+Any future release must re-read the live catalog and use a greater version code.
 
 ## Completed implementation work
 
@@ -78,16 +84,18 @@ Relevant interfaces: `WorkDecisionRecall`, `WorkRecall`, `LocalConversationFollo
 
 | Check | Result and exact scope |
 |---|---|
+| Complete final-source Android/JVM regression | **3539 PASS, 0 FAIL, 20 SKIP /3559**, **626 suites**; exact GitHub source `577f0931e7937ffcac02dc855a540f093facdb3b`; all JUnit XML fresh; complete XML and log archived |
+| Final-source compilation and lint | PASS; existing **NewApi-only** lint, zero reported issues; complete Gradle invocation exit0 |
 | Final focused Android/JVM regression | **83 PASS, 0 FAIL, 0 SKIP**, real SDK/Gradle + Robolectric; clean local source `d57a8ce093efe4c37491116bb954abe0a0bfa434` |
 | Android debug compilation | PASS on that source |
 | Android lint | PASS, existing **NewApi-only** configuration; not an all-rules lint claim |
 | Final conversation pure-JVM package | **41/41 PASS**, six real production classes; three final regression REDs reproduced before the one-line fix; no model response execution |
-| Full Node integration regression | **2396 PASS, 0 FAIL, 31 SKIP /2427**, unchanged local source `80b7443da40da447c667a8ac402b9026dbcd2f8d`; later review repairs require the final publisher rerun |
+| Full final-source Node integration regression | **2396 PASS, 0 FAIL, 31 SKIP /2427**, exact unchanged GitHub source `577f0931e7937ffcac02dc855a540f093facdb3b`; real Kotlin compiler cases included; no placeholders |
 | Backend | npm ci/check/test PASS, **64/64**, unchanged backend tree `f4bc00c1ba8afb0f115b26450757fd322843fd0c` |
-| Quality-lab bound integration | **44/44 PASS**, source verified and unchanged at final GitHub source `756bc68d0fb7f8522da8900fd889fd2eae2e8caf` |
+| Quality-lab bound integration | **44/44 PASS**, source verified and unchanged at final GitHub source `577f0931e7937ffcac02dc855a540f093facdb3b` |
 | Local full Android intermediate run | **CANCELLED**, exit130, because later review fixes superseded its source; no complete JUnit success claimed |
 | Original-package APK/AAB | PASS, code46 /0.3.45, ARM64, original package; APK/AAB archive integrity verified; unsigned and not published locally |
-| Final publisher full gates/signing/readback | PENDING |
+| Final publisher full gates/signing/readback | **PASS** on exact source `577f0931e7937ffcac02dc855a540f093facdb3b`; live deployment, downloaded bytes and original certificate independently verified |
 | Actual model responses, real audio, Fold7/GPU | NOT_RUN |
 
 The31 Node skips concern Docker/kernel isolation or additional host test prerequisites. They are
@@ -117,7 +125,7 @@ now explicitly marks its LOCAL_UNCOMMITTED results as unbound; its original JSON
   remain. The guards above repair overlays; they do not claim completion of the outstanding
   AppCrystal light-path expansion or a new camera-return choreography.
 
-After final publisher verification and delivery: accept that exact APK on Fold7, then tackle the
+Next: accept this exact delivered APK on Fold7, then tackle the
 next confirmed gap using one RED→fix→GREEN milestone. Prioritize remaining AppCrystal/work-step
 coupling and camera return; tool journal evidence; decision digest into the existing model prompt;
 actual offline voice/lip synchronization measurements. Preserve OFF/ASK/ALWAYS_ON tool policies.
@@ -128,7 +136,10 @@ the actual work window before the original head follows naturally; the original 
 real work and memory events. No replacement avatar, static substitute, invented tool action or
 palette change. Host screenshots are layout evidence, not a Fold7 or Filament GPU acceptance.
 
-## Final Code46 preflight
+## Historical preflight and release checkpoints
+
+The following checkpoints preserve the progression and failed attempts. Their then-pending
+release steps are superseded by the final verified delivery section at the end of this document.
 
 The final three review cases were reproduced as 3 FAIL /38 PASS, then passed as 41/41
 pure-JVM cases. The integrated SDK run passed 83/83 on the clean local source
@@ -193,20 +204,95 @@ The prior running deploy `dep-dbn0gj5s25qs73a1vrv0` is superseded and lacks this
 No second trigger was issued for the already queued corrected candidate.
 
 Source-bound quality-lab rerun on 577f0931e7937ffcac02dc855a540f093facdb3b: 44/44 PASS,
-source verified and unchanged. A complete local SDK/Robolectric/lint run was started on an
-isolated clean checkout of that exact GitHub commit. Its final result remains pending here.
+source verified and unchanged. The complete local SDK/Robolectric/lint run on an isolated clean
+checkout of that exact GitHub commit subsequently passed; the final evidence is recorded below.
 
 ## Corrected-source host preflight checkpoint
 
 On `577f0931e7937ffcac02dc855a540f093facdb3b`, the full Node run completed with
 **2390 PASS, 0 FAIL, 37 SKIP /2427**, unchanged source and confirmed process termination.
-Six extra skips compared with the earlier 31 are real-Kotlin compiler checks: `kotlinc` was
-not on this invocation’s PATH. The compiler is already installed; those checks remain to be
-completed after Android, without concurrent compiler workloads.
+Six extra skips compared with the earlier 31 were real-Kotlin compiler checks: `kotlinc` was
+not on that invocation’s PATH. Those six checks subsequently passed in the final full Node
+run below, after Android completed and without concurrent compiler workloads.
 
 The first additional complete local Android attempt ended with exit 1 because its Gradle daemon
 disappeared. No complete JUnit result or concrete assertion failure was emitted. No JVM crash
 file or OutOfMemoryError was found; kernel memory counters were inaccessible. This is
 `INFRA_ABORT_CAUSE_UNDETERMINED`, never a PASS and not a proved OOM. The same unchanged
-source is now running sequentially with the existing 1-GiB test worker, one Gradle worker and
-a 1600-MiB Gradle heap. No product or publisher gate was changed.
+source subsequently passed sequentially with the existing 1-GiB test worker, one Gradle worker
+and a 1600-MiB Gradle heap. No product or publisher gate was changed.
+
+## Complete corrected-source Android GREEN
+
+The complete unfiltered invocation on `577f0931e7937ffcac02dc855a540f093facdb3b` finished
+successfully in 35m21s: **3539 passed, 0 failed, 20 skipped /3559**, across **626 JUnit suites**.
+All XML files were written after the saved run start, and the checkout remained clean.
+Compilation and the existing NewApi-only lint configuration passed; lint reported zero issues.
+The exact counts, toolchain, command properties, skipped names and hashes are in
+`docs/evidence/codex-owner-apk-20261106/android-full-code46-green.json`. The accompanying
+`android-full-code46-junit.zip` preserves all 626 XML files, lint XML and the complete Gradle log.
+
+The skips are explicit: twelve unfinished Chief E2E acceptance cases; two disabled-by-default
+Chief/Node/Docker host integrations; three unconfigured Node-to-Kotlin parity-data checks;
+one optional visual host export; and two LiteRT lifecycle tests requiring JDK21, while this
+Android build uses JDK17. Several historical Chief dependency comments are stale: these twelve
+skips prove missing E2E acceptance, not twelve entirely absent product components. Detailed
+classification: `docs/evidence/codex-owner-apk-20261106/android-full-code46-skips.md`.
+
+The earlier Code46 publisher `dep-dbn0gj5s25qs73a1vrv0` failed on the same five plain-JUnit
+RectF cases at 2026-11-06T18:12:20.408165Z. The first corrected-source queue entry
+`dep-dbn0u78gs6ms73a7m54g` then stopped at the source-specific release-freeze guard, before QA,
+at 18:12:43.485742Z. Both existing source-authorization variables were bound to the owner's
+authorized exact candidate, preserving signing credentials and all QA gates. The resulting
+corrected run is `dep-dbn1htjncjis73c9vlng`, started at **18:14:14.342126Z**. Its backend gate
+passed at **18:17:53.384462019Z**; signing and live-download verification remain pending here.
+
+## Complete corrected-source Node GREEN
+
+The final full Node run on the same frozen source started at **18:32:37.773Z** and completed
+at **18:35:58.032Z**: **2396 passed, 0 failed, 31 skipped /2427**, zero placeholders,
+exit0, confirmed process termination, and unchanged source. `kotlinc-jvm 2.4.0` and JDK17
+were available on PATH. All six earlier compiler-related skips now executed and passed:
+real generated Kotlin RED/GREEN compilation, independent output oracles, rejection of wrong
+expected outputs and an unrelated RED baseline, and creation/rejection of owner Kotlin previews.
+
+The remaining 31 skips require additional Docker/kernel isolation, SDK/JVM dependency or
+fixture configuration. Their exact original messages are preserved in `node-full-code46-green.json`.
+`node-full-code46-evidence.zip` contains the complete source-bound report, JUnit and runner log.
+The report generator's historical `generatedBy` label is metadata, not a claim that another
+agent ran this session. Android, signing and device evidence remain separate scopes.
+
+## Final verified delivery
+
+Original publisher deploy **`dep-dbn1htjncjis73c9vlng`** reached **live** at
+**2026-11-06T19:00:55.5398Z**. Its exact-source presign QA gate passed at **18:58:52.360489958Z**;
+the signed catalog/staging checks passed at **19:00:52.811001149Z**. All signing credentials,
+the original host and package identity were preserved.
+
+The published APK was downloaded over pinned HTTPS. Two catalog reads agreed; actual file size
+and SHA256 matched the catalog and BUILD-INFO. Independent Android SDK `apksigner` and `aapt2`
+both exited zero and verified the APK bytes, not only metadata.
+
+| Item | Verified value |
+|---|---|
+| Release source | `577f0931e7937ffcac02dc855a540f093facdb3b` |
+| Version | `0.3.45`, versionCode `46` |
+| Package | `at.heinz.deviceai.continuumlocal` |
+| ABI | `arm64-v8a` only |
+| Downloaded size | `101876503` bytes |
+| APK SHA256 | `0930614bbcc8e53d75283dfe47a53a73e758430a99af3698f31b88446babc759` |
+| Original certificate SHA256 | `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23` |
+| Signature | APK Signature Scheme v2 verified, one signer |
+| Catalog SHA256 | `6b238e9ae2b326ae9d24ff9c10d9a49c71c62c2cfc997fc8612716cb69dd694c` |
+| Original head inside the actual APK | `assets/avatar3d/continuum-avatar.glb`, SHA256 `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`; matches preserved Fable/Opus asset |
+
+Complete evidence lives in `docs/evidence/codex-owner-apk-20261106/`:
+`code46-release-verified.json`, `publisher-code46-live.json`, live catalog, BUILD-INFO,
+HTTPS readback and actual apksigner/aapt2 outputs, plus the complete Android/Node archives.
+The evidence checkpoint preceding this final record is
+`761f2f0d88c757d8b0f88abedcc1d9034fbf8f9c`; the release source stays frozen separately.
+The final documentation commit is reported in PR #575 and the delivery message.
+
+Delivery covers the repaired current code baseline. The explicitly skipped host tests, actual
+Fold7/model/audio acceptance and the remaining visual/autonomous milestones listed above stay
+open. No main merge, replacement key, package/publisher change or extra paid service was used.

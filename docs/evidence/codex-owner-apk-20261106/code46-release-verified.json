@@ -1,0 +1,96 @@
+{
+  "status": "DELIVERED_ORIGINAL_SIGNED_APK_LIVE_AND_INDEPENDENTLY_VERIFIED",
+  "verifiedAtUtc": "2026-11-06T19:03:21.720300+00:00",
+  "sourceCommit": "577f0931e7937ffcac02dc855a540f093facdb3b",
+  "sourceBranch": "research/continuum-m8-render-signed-release-20261031",
+  "packageName": "at.heinz.deviceai.continuumlocal",
+  "versionCode": 46,
+  "versionName": "0.3.45",
+  "abis": [
+    "arm64-v8a"
+  ],
+  "apkUrl": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/Continuum-Lokal-0930614bbcc8e53d75283dfe47a53a73e758430a99af3698f31b88446babc759.apk",
+  "apkBytes": 101876503,
+  "apkSha256": "0930614bbcc8e53d75283dfe47a53a73e758430a99af3698f31b88446babc759",
+  "manifestUrl": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/latest.json",
+  "manifestSha256": "6b238e9ae2b326ae9d24ff9c10d9a49c71c62c2cfc997fc8612716cb69dd694c",
+  "publisherDeployId": "dep-dbn1htjncjis73c9vlng",
+  "publisherStatus": "live",
+  "publisherLiveAtUtc": "2026-11-06T19:00:55.5398Z",
+  "publisherPresignQa": "PASS",
+  "originalSignature": {
+    "apksignerExitCode": 0,
+    "v2Verified": true,
+    "signerCount": 1,
+    "certificateSha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+    "originalCertificateMatch": true
+  },
+  "binaryIdentity": {
+    "aapt2ExitCode": 0,
+    "originalPackageMatch": true,
+    "expectedVersionMatch": true,
+    "arm64Only": true
+  },
+  "httpsReadback": {
+    "actualApkBytesDownloaded": true,
+    "redirectsFollowed": false,
+    "catalogReadTwiceConsistent": true,
+    "sizeMatches": true,
+    "sha256Matches": true,
+    "buildInfoMatches": true
+  },
+  "originalAvatarAsset": {
+    "apkPath": "assets/avatar3d/continuum-avatar.glb",
+    "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+    "matchesPreservedFableAndOpusAsset": true
+  },
+  "evidenceFiles": [
+    "publisher-code46-live.json",
+    "code46-live-catalog.json",
+    "code46-build-info.txt",
+    "code46-https-readback.json",
+    "code46-apksigner.txt",
+    "code46-aapt-badging.txt",
+    "android-full-code46-green.json",
+    "android-full-code46-junit.zip",
+    "android-full-code46-skips.md",
+    "node-full-code46-green.json",
+    "node-full-code46-evidence.zip",
+    "quality-lab-corrected-code46-source.json"
+  ],
+  "exactSourceLocalTests": {
+    "android": {
+      "passed": 3539,
+      "failed": 0,
+      "skipped": 20,
+      "total": 3559,
+      "suites": 626
+    },
+    "node": {
+      "passed": 2396,
+      "failed": 0,
+      "skipped": 31,
+      "total": 2427,
+      "placeholders": 0
+    },
+    "qualityLab": {
+      "passed": 44,
+      "failed": 0
+    },
+    "compileDebugKotlin": "PASS",
+    "lintDebug": {
+      "status": "PASS",
+      "configuredChecks": [
+        "NewApi"
+      ],
+      "issues": 0
+    }
+  },
+  "notRun": [
+    "Physical Fold7 installation and acceptance",
+    "Actual local-model conversational answer quality",
+    "Real German female speech listening and lip synchronization",
+    "Native Filament GPU/performance acceptance"
+  ],
+  "scope": "Current repaired code baseline delivered; skipped tests and unfinished future milestones remain explicit. No claim of universal defect freedom or complete cinematic/autonomous feature roadmap."
+}
