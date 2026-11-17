@@ -30,7 +30,7 @@ object JarvisCockpitPanels {
         // before ellipsis, so "Dokument" / "Verarbeitung" stay whole instead of "Dokume…".
         val narrow = b.width < NARROW_TITLE_DP
         val room = b.width - if (narrow) 36f else 52f
-        val style = JarvisShellRenderer.shrinkToFit(p, text, Type.heading, room, minScale = .74f)
+        val style = JarvisShellRenderer.shrinkToFit(p, text, Type.heading, room, minScale = if (narrow) .64f else .74f)
         p.drawText(fit(p, text, style, room), b.left + 30f, y, style, Fill.Solid(Colors.text))
         if (!narrow) ContinuumIcons.draw(p, Icon.CHEVRON_RIGHT, b.right - 12f, y - cap / 2f, 9f, Fill.Solid(Colors.cyan), 1.4f)
         return y
