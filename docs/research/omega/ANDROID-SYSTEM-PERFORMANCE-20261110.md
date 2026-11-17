@@ -1,5 +1,11 @@
 # System performance — controlled comparisons
 
+Final integration note: incorporated in PR #735; complete Android source compilation
+and 155 selected integrated tests pass on published `02120f079ce1bdb1d3311f16f88d1a51bb7fbe09`.
+The scoped results below are historical checkpoints; final scope/provenance is in
+[the integration handoff](ANDROID-SYSTEM-INTELLIGENCE-HANDOFF-20261110.md).
+Physical device validation remains NOT_RUN.
+
 Target: root's Android System Intelligence PR #735, then Cinema #715. EXP-08/EXP-11.
 No device engine, scheduler, permission authority, memory change or optimization is added here.
 
