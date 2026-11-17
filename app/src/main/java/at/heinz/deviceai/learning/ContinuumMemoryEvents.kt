@@ -48,14 +48,10 @@ internal class ContinuumMemoryEventHub private constructor(private val appDirect
 
     override fun addListener(listener: ContinuumMemoryEventListener): AutoCloseable {
         synchronized(lock) { listeners += listener; ensureWorker() }
-        // Last close(): drop queue, detach worker, join it (max CLOSE_JOIN_MS, never from the worker itself).
         return AutoCloseable {
-            val ending: Thread?
             synchronized(lock) {
-                if (!(listeners.remove(listener) && listeners.isEmpty())) return@AutoCloseable
-                queue.clear(); ending = worker; worker = null; lock.notifyAll()
+                if (listeners.remove(listener) && listeners.isEmpty()) { queue.clear(); lock.notifyAll() }
             }
-            if (ending != null && ending !== Thread.currentThread()) ending.join(CLOSE_JOIN_MS)
         }
     }
 
@@ -73,7 +69,7 @@ internal class ContinuumMemoryEventHub private constructor(private val appDirect
         }
     }
 
-    /** Caller holds [lock]. A detached worker (last close()) has [worker] != itself and exits without dispatching. */
+    /** Caller holds [lock]. A worker that saw "no listeners" has already cleared [worker] under the same lock. */
     private fun ensureWorker() {
         if (worker != null) return
         worker = Thread({ runWorker() }, threadName).apply { isDaemon = true; start() }
@@ -83,8 +79,8 @@ internal class ContinuumMemoryEventHub private constructor(private val appDirect
         while (true) {
             val event: ContinuumMemoryEvent
             synchronized(lock) {
-                while (queue.isEmpty() && worker === Thread.currentThread()) lock.wait()
-                if (worker !== Thread.currentThread()) { lock.notifyAll(); return }
+                while (queue.isEmpty() && listeners.isNotEmpty()) lock.wait()
+                if (listeners.isEmpty()) { worker = null; queue.clear(); lock.notifyAll(); return }
                 event = queue.removeFirst(); inFlight = true
             }
             try {
@@ -137,7 +133,6 @@ internal class ContinuumMemoryEventHub private constructor(private val appDirect
         }
 
         const val DEFAULT_QUEUE_CAPACITY = 256
-        const val CLOSE_JOIN_MS = 1_000L
 
         /** Diagnostics without touching the public contract. */
         internal fun droppedEventCount(appDirectory: File): Long = forApp(appDirectory).droppedEvents
