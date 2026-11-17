@@ -380,8 +380,12 @@ class BoundedAgentOrchestrator(
                 val memoryStep = thinking?.begin(ThinkingPhase.PLAN)
                 val provided = memories()
                 val recalled = memoryStep?.let { thinking?.recall(it, provided) }.orEmpty()
-                val retrieved = HybridMemoryRetriever.retrieve(task, provided + recalled,
-                    limit = 8, nowMillis = clock()).map { it.memory }
+                // Brain round 17.11.2026: same ranking, plus relational second query, consolidation of repeated
+                // statements and the current successor/conflict partner of every selected record, so the context
+                // compiler can mark outdated and contradicting memories instead of never seeing their counterpart.
+                val retrieved = MemoryContextPlanner.plan(task, provided + recalled, limit = 8,
+                    nowMillis = clock(), allowedPrivacy = PrivacyClass.values().toSet())
+                    .groups.flatMap { group -> group.entries.map { it.memory } }
                 retrieved.forEach {
                     if (usedMemoryIds.add(it.id)) turnTrace?.reference(TraceStage.MEMORY_REF, it.id)
                 }

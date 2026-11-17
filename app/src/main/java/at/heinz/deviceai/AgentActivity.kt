@@ -12972,6 +12972,10 @@ class AgentActivity : Activity() {
                                 " · conflicts " + assessment.conflicts
                         )
                     }
+                    // SHADOW (M8/M12 port): audit the finished answer against the retrieval it was given in this
+                    // turn. Only a metadata trace stage; answer, prompt, memories and tools stay unchanged.
+                    if (successful && groundedRecall != null)
+                        turnTrace.event(at.heinz.deviceai.cognitive.LocalModelClaimAudit.stage(run.response, groundedRecall))
                     publishCognitiveTrace(turnTrace,if(successful)TraceOutcome.MODEL_INTERPRETATION else TraceOutcome.FAILED)
                     if (botTask != null) {
                         val calls = run.taskEvidence?.calls.orEmpty()
