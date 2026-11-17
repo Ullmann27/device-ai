@@ -2327,6 +2327,7 @@ class AgentActivity : Activity() {
             .put("commandPending", pendingCommand03Input != null)
             .put("listening", voiceListening)
             .put("speaking", voiceSpeaking)
+            .put("appearance", at.heinz.deviceai.ui.Command03AppearanceSettings.snapshot(this))
             .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)
                 .put("paused", continuousConversation.state == at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED))
             .put("longPressTimeoutMs", android.view.ViewConfiguration.getLongPressTimeout())
@@ -3751,7 +3752,11 @@ class AgentActivity : Activity() {
             "camera-settings" -> toggleConversationCamera()
             "avatar-appearance" -> hologramView?.showAppearanceChooser()
             "notifications" -> showDiagnosticsCenter()
-            "settings" -> showNexusPersonalization()
+            "settings" -> showContinuumSettings()
+            "settings-voice" -> showVoicePicker()
+            "settings-model" -> showModelCenter()
+            "settings-internet" -> showInternetSettings()
+            "settings-appearance" -> showCommand03AppearanceSettings()
             "more" -> showMoreWorkAreas()
             "model-management" -> showModelCenter()
             "privacy" -> showResearchModeDialog()
@@ -4468,13 +4473,48 @@ class AgentActivity : Activity() {
         }
     }
 
+    private fun showContinuumSettings() {
+        centerDialog?.dismiss()
+        val dialog = at.heinz.deviceai.ui.ContinuumSettingsHub.show(this) { entry ->
+            when (entry) {
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.HOLOGRAM -> showCommand03AppearanceSettings()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.VOICE -> showVoicePicker()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.VOICE_SETUP -> showReadinessGuide()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.FACE -> showOwnerFaceControls()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.MODEL -> showModelCenter()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.MEMORY -> showMemoryCenter()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.LEARNING -> showLearningCenter()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.PERSONAL -> showNexusPersonalization()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.INTERNET -> showInternetSettings()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.RESEARCH -> showResearchModeDialog()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.CLOUD -> showCloudSettings()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.OPENROUTER -> showOpenRouterApiKeyDialog()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.SYSTEM -> showSystemCenter()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.AUTONOMY -> showAutonomyControl()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.SHIZUKU -> showShizukuConnectionDialog()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.DIAGNOSTICS -> showDiagnosticsCenter()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.UPDATES ->
+                    startActivity(Intent(this, ContinuumOwnerUpdateActivity::class.java))
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.CINEMA -> showCinemaExperimentDetails()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.AVATAR -> hologramView?.showAppearanceChooser()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.CLASSIC -> switchCommand03MainDesign(false)
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.WORK_AREAS -> showMoreWorkAreas()
+            }
+        }
+        centerDialog = dialog
+        dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
+    }
+
+    private fun showCommand03AppearanceSettings() {
+        centerDialog?.dismiss()
+        val dialog = at.heinz.deviceai.ui.Command03AppearanceSettings.show(this, ::scheduleCommand03HtmlState)
+        centerDialog = dialog
+        dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
+    }
+
     private fun showNexusPersonalization() {
         AlertDialog.Builder(this)
             .setTitle("Deine KI personalisieren")
-            .setMessage(
-                "Du bestimmst, was deine KI sich merken und wie sie lernen darf. " +
-                    "Eigene Dokumente werden nicht automatisch trainiert oder ins Internet übertragen."
-            )
             .setItems(arrayOf(
                 "Gemerkte Fakten ansehen oder löschen",
                 "Lernzentrum öffnen",
@@ -4488,6 +4528,13 @@ class AgentActivity : Activity() {
             }
             .setNegativeButton("Schließen", null)
             .show()
+    }
+
+    private fun choiceDialogHeader(title: String, explanation: String): View = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        setPadding(dp(20), dp(16), dp(20), dp(8))
+        addView(textView(title, 18f, TEXT, bold = true))
+        addView(textView(explanation, 13f, MUTED), matchWidth(top = 8))
     }
 
     private fun violetTint(): Int = Color.rgb(139, 96, 255)
@@ -6011,10 +6058,11 @@ class AgentActivity : Activity() {
         val selected = experiments.map { prefs.getBoolean("exp52." + it.name, true) }.toBooleanArray()
         AlertDialog.Builder(this)
             .setTitle("Cinema 2030 · angeschlossene Effekte")
-            .setMessage("Alle ${experiments.size} Cinema-Effekte sind im Code verdrahtet und " +
+            .setCustomTitle(choiceDialogHeader("Cinema 2030 · angeschlossene Effekte",
+                "Alle ${experiments.size} Cinema-Effekte sind im Code verdrahtet und " +
                 "beim ersten Start von Cinema 52 aktiviert. Individuelle Änderungen sind nur " +
                 "eine bewusste Benutzereinstellung, keine versteckte Release-Voreinstellung. " +
-                "Die tatsächliche Fold7-Geräteabnahme bleibt erforderlich.")
+                "Die tatsächliche Fold7-Geräteabnahme bleibt erforderlich."))
             .setMultiChoiceItems(labels, selected) { _, index, enabled ->
                 config.setExperiment(this, experiments[index], enabled)
                 homeView?.jarvisShell?.refreshMotionPolicy()
@@ -6802,10 +6850,11 @@ class AgentActivity : Activity() {
             }
         AlertDialog.Builder(this)
             .setTitle("CONTINUUM MASTER · TRAININGSSTUDIO")
-            .setMessage("${categories.length()} Rubriken mit einzeln kopierbaren Übungen und mehrteiligen Gesprächsfolgen. " +
+            .setCustomTitle(choiceDialogHeader("CONTINUUM MASTER · TRAININGSSTUDIO",
+                "${categories.length()} Rubriken mit einzeln kopierbaren Übungen und mehrteiligen Gesprächsfolgen. " +
                 "Jede Vorlage ist lediglich Text. Nur das normale Bestätigungsverfahren kann " +
                 "später Erinnerungen speichern oder Modellgewichte verändern. " +
-                "Dialogtests allein trainieren noch kein freies Sprachmodell.")
+                "Dialogtests allein trainieren noch kein freies Sprachmodell."))
             .setItems(labels) { _, position ->
                 if (position == 0) {
                     showContextTrainingLastStep(root)
@@ -6835,9 +6884,9 @@ class AgentActivity : Activity() {
         }
         AlertDialog.Builder(this)
             .setTitle(category.getString("title"))
-            .setMessage(category.getString("goal") + "\n\n" +
+            .setCustomTitle(choiceDialogHeader(category.getString("title"), category.getString("goal") + "\n\n" +
                 "Modus: " + category.getString("mode") +
-                ". Übungen als separate Schritte abarbeiten. Noch keine Bewertung oder Gewichtsänderung.")
+                ". Übungen als separate Schritte abarbeiten. Noch keine Bewertung oder Gewichtsänderung."))
             .setItems(titles) { _, lessonIndex ->
                 showContextTrainingStep(root, categoryIndex, lessonIndex, 0)
             }
@@ -11325,10 +11374,10 @@ class AgentActivity : Activity() {
         )
         android.app.AlertDialog.Builder(this)
             .setTitle("CONTINUUM · AUTONOMIEKONTROLLE")
-            .setMessage(control.explain(current) +
+            .setCustomTitle(choiceDialogHeader("CONTINUUM · AUTONOMIEKONTROLLE", control.explain(current) +
                 "\n\nRechenlast, Fehler und Temperatur begrenzen weiterhin jeden Zyklus. " +
                 "Internetquellen dürfen keine Berechtigungen ausweiten, Code ausführen oder eigenständig Agenten installieren. " +
-                "Für produktive Patches, Installationen und zusätzliche Rechte bleibt deine ausdrückliche Freigabe notwendig.")
+                "Für produktive Patches, Installationen und zusätzliche Rechte bleibt deine ausdrückliche Freigabe notwendig."))
             .setSingleChoiceItems(labels, levels.indexOf(current)) { dialog, index ->
                 dialog.dismiss()
                 val chosen = levels[index]

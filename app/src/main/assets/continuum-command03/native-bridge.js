@@ -3,8 +3,11 @@
   'use strict';
   if (window.ContinuumNative) return;
   const routes = new Set(['home','chat','chats','new-chat','files','research',
-    'agents','memory','device','settings','voice-input','voice-input-long-press','stop']);
+    'agents','memory','device','settings','settings-voice','settings-model',
+    'settings-internet','settings-appearance','voice-input','voice-input-long-press','stop']);
   const actions = Object.freeze({home:'home',settings:'settings',agents:'agents',
+    'settings-voice':'settings-voice','settings-model':'settings-model',
+    'settings-internet':'settings-internet','settings-appearance':'settings-appearance',
     'new-chat':'new-chat','quick-files':'files','quick-memory':'memory',
     'research-demo':'research','open-demo':'files',document:'files',
     'local-file':'files','quick-source':'research','run-agents':'agents',
@@ -136,6 +139,46 @@
       if(texts[0].textContent.trim()!==label)texts[0].textContent=' '+label+' ';
       texts.slice(1).forEach(child=>{child.textContent='';});
     } else node.appendChild(document.createTextNode(' '+label));
+  }
+  function mountSettingsControls() {
+    document.body.classList.add('native-hologram');
+    const settings=$('.header-tools>[data-action="settings"]');
+    if(settings) {
+      settings.classList.add('native-settings-entry');
+      settings.setAttribute('aria-label','Alle Einstellungen öffnen');
+      settings.setAttribute('title','Alle Einstellungen öffnen');
+      labelWithIcons(settings,'Einstellungen');
+    }
+    const nav=$('#main-nav'), entry=nav?.querySelector('[data-section="settings"]');
+    if(entry && nav.children[1]!==entry)nav.insertBefore(entry,nav.children[1]||null);
+    if(!$('.native-settings-shortcuts')) {
+      const row=document.createElement('nav');
+      row.className='native-settings-shortcuts';row.setAttribute('aria-label','Schnelleinstellungen');
+      const icons={voice:'<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/>',
+        model:'<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 1v5m6-5v5M9 18v5m6-5v5M1 9h5m-5 6h5m12-6h5m-5 6h5"/>',
+        internet:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
+        appearance:'<path d="m12 3 9 5v8l-9 5-9-5V8zm0 0v18M3 8l9 5 9-5"/>'};
+      for(const [kind,label] of [['voice','Stimme'],['model','KI-Modell'],['internet','Internet'],['appearance','Hologramm']]) {
+        const button=document.createElement('button');button.type='button';
+        button.className='native-setting-shortcut';button.dataset.action='settings-'+kind;
+        button.setAttribute('aria-label',label+' einstellen');
+        button.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+icons[kind]+'</svg><span>'+label+'</span>';
+        row.appendChild(button);
+      }
+      $('.mobile-side-controls')?.after(row);
+    }
+    if(!$('.native-holo-field')) {
+      const field=document.createElement('div');field.className='native-holo-field';
+      field.setAttribute('aria-hidden','true');$('.presence-core')?.prepend(field);
+    }
+  }
+  function renderAppearance(value) {
+    const neon=Number.isFinite(value?.neon)?Math.max(0,Math.min(100,value.neon)):70;
+    const level=String(neon/100);
+    if(document.body.style.getPropertyValue('--native-neon')!==level)
+      document.body.style.setProperty('--native-neon',level);
+    const motion=value?.lightMotion===false?'off':'on';
+    if(document.body.dataset.nativeLightMotion!==motion)document.body.dataset.nativeLightMotion=motion;
   }
   function fitComposer() {
     const field=$('#command-input');
@@ -806,7 +849,7 @@
       lastDraft=draftKey(field.value,field.selectionStart,field.selectionEnd);sentEditRevision=clientEditRevision;
     }
     window.ContinuumOperations?.detach();
-    renderChats();renderMeters();renderFeed();renderDocument();nativeLabels();
+    renderChats();renderMeters();renderFeed();renderDocument();nativeLabels();renderAppearance(state.appearance);
     const scene=state.speaking===true?'speaking':state.listening===true?'listening':state.busy===true?'working':'idle';
     if(scene!==lastScene) {
       lastScene=scene;document.body.dataset.state=scene;
@@ -991,17 +1034,20 @@
   input?.addEventListener('input',()=>{dirtyDraft=true;fitComposer();syncDraft();});
   for(const event of ['select','keyup','click','blur','change'])input?.addEventListener(event,syncDraft);
   window.addEventListener('load',stopDemoTelemetry,{once:true});
+  window.addEventListener('load',mountSettingsControls,{once:true});
   window.addEventListener('resize',fitComposer);
   window.addEventListener('resize',scheduleVisibilityCheck);
   document.addEventListener('scroll',scheduleVisibilityCheck,true);
   window.addEventListener('scroll',scheduleVisibilityCheck);
   document.addEventListener('visibilitychange',()=>{
+    document.body.classList.toggle('native-light-paused',document.visibilityState!=='visible');
     if(document.visibilityState!=='visible') {cancelMicPress();retireComputer();clearNativeSpeech(true);}
     else scheduleVisibilityCheck();
   });
   window.addEventListener('pagehide',()=>{cancelMicPress();retireComputer();clearNativeSpeech(true);});
   new MutationObserver(scheduleVisibilityCheck).observe(document.body,{attributes:true,attributeFilter:['class','style']});
   const badge=$('.preview-badge');
+  mountSettingsControls();
   labelWithIcons(badge,'ANDROID · LOKAL');
   const note=$('#workspace-footnote');
   if(note)note.textContent='Verbindung wird hergestellt …';
