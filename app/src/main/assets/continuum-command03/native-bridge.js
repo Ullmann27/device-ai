@@ -171,6 +171,84 @@
       const field=document.createElement('div');field.className='native-holo-field';
       field.setAttribute('aria-hidden','true');$('.presence-core')?.prepend(field);
     }
+    if(!$('.native-projection-base')) {
+      const base=document.createElement('div');base.className='native-projection-base';
+      base.setAttribute('aria-hidden','true');
+      base.innerHTML='<i></i><i></i><i></i><span></span>';
+      $('.presence-core')?.prepend(base);
+    }
+    if(!$('.native-stop-button')) {
+      const stop=document.createElement('button');stop.type='button';stop.className='native-stop-button';
+      stop.dataset.action='cancel';stop.setAttribute('aria-label','Auftrag stoppen');
+      stop.title='Auftrag stoppen';stop.textContent='■';stop.hidden=true;
+      $('.send-button')?.before(stop);
+    }
+    renderNativeInstruments();
+  }
+  function renderNativeInstruments() {
+    window.ContinuumPresenceInstruments?.dispose();
+    const mode=snapshot?.speaking===true?'speaking':snapshot?.listening===true?'listening':
+      snapshot?.busy===true?'working':'idle';
+    const labels={idle:'Bereit',listening:'Ich höre zu',working:'In Bearbeitung',speaking:'Ich spreche'};
+    const details={idle:'Dein nächster Auftrag beginnt hier.',listening:'Deine Sprache wird aufgenommen.',
+      working:'Der aktuelle Auftrag wird verarbeitet.',speaking:'Die Sprachausgabe ist aktiv.'};
+    const panel=(selector,kind,title)=>{
+      const host=$(selector);if(!host)return null;
+      let section=host.querySelector('.native-instrument');
+      if(!section) {
+        section=document.createElement('section');section.className='native-instrument native-'+kind;
+        const head=document.createElement('h3');head.textContent=title;
+        const art=document.createElement('div');art.className='native-instrument-art';art.setAttribute('aria-hidden','true');
+        art.innerHTML='<svg viewBox="0 0 200 90"><path d="M10 45h35l20-25h70l20 25h35M10 45h35l20 25h70l20-25"/><circle cx="100" cy="45" r="28"/><circle cx="100" cy="45" r="18"/><path d="M85 45h30M100 30v30"/></svg>';
+        const value=document.createElement('strong'), copy=document.createElement('p'), links=document.createElement('div');
+        links.className='native-instrument-links';section.append(head,art,value,copy,links);
+        host.replaceChildren(section);
+      }
+      return section;
+    };
+    const setText=(node,text)=>{if(node && node.textContent!==text)node.textContent=text;};
+    const left=panel('[data-presence-left]','activity','AKTIVITÄT');
+    if(left) {
+      left.dataset.mode=mode;
+      setText(left.querySelector('strong'),snapshot?labels[mode]:'Verbindung startet');
+      setText(left.querySelector('p'),snapshot?String(snapshot.status||details[mode]).slice(0,180):'Warte auf den Android-Status.');
+    }
+    const items=[...new Map([...sourceSets.values()].flatMap(set=>set.items).map(item=>[item.id,item])).values()];
+    const right=panel('[data-presence-right]','evidence','QUELLEN');
+    if(right) {
+      setText(right.querySelector('strong'),items.length?items.length+' verknüpft':'Noch keine Quellen');
+      setText(right.querySelector('p'),items.length?'Quellen der aktuellen Unterhaltung.':'Quellen erscheinen nach einer Recherche.');
+      const links=right.querySelector('.native-instrument-links');
+      const key=JSON.stringify(items.slice(-3));
+      if(feedVersions.get(links)!==key) {
+        links.replaceChildren(...items.slice(-3).map(item=>{
+          const button=document.createElement('button');button.type='button';
+          button.className='native-source-link';button.dataset.nativeSource=item.id;
+          button.textContent=item.title;button.title=item.url;return button;
+        }));
+        feedVersions.set(links,key);
+      }
+    }
+    const rail=$('#instrument-content');
+    if(rail) {
+      const signature=JSON.stringify([mode,snapshot?.status,items]);
+      if(feedVersions.get(rail)!==signature || !rail.querySelector('.native-instrument-summary')) {
+        const summary=document.createElement('p');summary.className='native-instrument-summary';
+        summary.textContent=snapshot?labels[mode]+' · '+String(snapshot.status||details[mode]).slice(0,180):'Warte auf Android.';
+        const note=document.createElement('p');note.textContent=items.length?'Quellen dieser Unterhaltung':'Noch keine Quellen in dieser Unterhaltung.';
+        rail.replaceChildren(summary,note,...(items.length?[sourceCard({items:items.slice(-8)})]:[]));
+        feedVersions.set(rail,signature);
+      }
+    }
+    setText($('.presence-edition'),'CONTINUUM / LIVE');
+    setText($('#state-eyebrow'),'DEIN PERSÖNLICHER KI-RAUM');
+    setText($('.instrument-count'),String(items.length));
+    setText($('#scene-number'),'');
+    setText($('.command-field label'),'DEIN AUFTRAG');
+    const running=snapshot?.busy===true || snapshot?.commandPending===true;
+    const stop=$('.native-stop-button'), submit=$('.send-button');
+    if(stop)stop.hidden=!running;
+    if(submit)submit.hidden=running;
   }
   function renderAppearance(value) {
     const neon=Number.isFinite(value?.neon)?Math.max(0,Math.min(100,value.neon)):70;
@@ -586,7 +664,7 @@
     const show=lines.length>0 || sourceSets.size>0 || snapshot.busy===true ||
       (Array.isArray(snapshot.workRows) && snapshot.workRows.length>0);
     workspace.classList.toggle('native-work-active',show && !currentDocument && !computerOpen());
-    if (!show) {workspace.querySelector('#native-live-panel')?.remove();return;}
+    if (!show) {workspace.querySelector('#native-live-panel')?.remove();renderNativeInstruments();return;}
     let panel=workspace.querySelector('#native-live-panel');
     if (!panel) {
       panel=document.createElement('section');
@@ -629,6 +707,7 @@
       (snapshot.status||'BEREIT · LOKALER GESPRÄCHSVERLAUF');
     const caption=$('#workspace-footnote');
     if(caption && !currentDocument && !computerOpen())caption.textContent='Dein Gespräch und deine Arbeitsschritte';
+    renderNativeInstruments();
   }
 
   function sourceCard(set) {
@@ -1044,7 +1123,13 @@
     if(document.visibilityState!=='visible') {cancelMicPress();retireComputer();clearNativeSpeech(true);}
     else scheduleVisibilityCheck();
   });
-  window.addEventListener('pagehide',()=>{cancelMicPress();retireComputer();clearNativeSpeech(true);});
+  window.addEventListener('pagehide',()=>{
+    document.body.classList.add('native-light-paused');
+    cancelMicPress();retireComputer();clearNativeSpeech(true);
+  });
+  window.addEventListener('pageshow',()=>{
+    document.body.classList.toggle('native-light-paused',document.visibilityState!=='visible');
+  });
   new MutationObserver(scheduleVisibilityCheck).observe(document.body,{attributes:true,attributeFilter:['class','style']});
   const badge=$('.preview-badge');
   mountSettingsControls();
@@ -1052,3 +1137,4 @@
   const note=$('#workspace-footnote');
   if(note)note.textContent='Verbindung wird hergestellt …';
 })();
+

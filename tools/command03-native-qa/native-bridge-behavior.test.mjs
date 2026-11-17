@@ -1189,3 +1189,56 @@ if (process.env.COMMAND03_REQUIRE_NATIVE_PACKET === '1' || process.env.COMMAND03
     } finally {f.close();}
   });
 }
+
+test('cinematic instruments replace demonstration metrics and follow native state', async () => {
+ const f=await fixture();
+ try {
+  controlState(f);
+  const text=()=>f.document.querySelector('.presence-system').textContent;
+  assert.doesNotMatch(text(),/Argon4|Demonstration|Entwurfswerte|480/);
+  assert.match(text(),/Noch keine Quellen/);
+  assert.equal(f.window.ContinuumPresenceInstruments.getStatus().disposed,true);
+  for(const [values,label] of [[{listening:true},'Ich höre zu'],[{busy:true},'In Bearbeitung'],
+    [{speaking:true},'Ich spreche'],[{},'Bereit']]) {
+   f.state(values);
+   assert.equal(f.document.querySelector('.native-activity>strong').textContent,label);
+  }
+  assert.equal(f.document.querySelectorAll('.native-projection-base').length,1);
+ } finally {f.close();}
+});
+test('cinematic source panels use scoped links and clear on chat switch', async () => {
+ const f=await fixture();
+ try {
+  controlState(f);
+  const item={id:sourceId,title:'<img src=x onerror=alert(1)>',url:'https://example.org/evidence'};
+  f.window.ContinuumNative.sources({...binding,sourceSetId,items:[item]});
+  const panel=f.document.querySelector('.native-evidence');
+  assert.equal(panel.querySelector('strong').textContent,'1 verknüpft');
+  assert.equal(panel.querySelector('img'),null);
+  f.click(panel.querySelector('[data-native-source]'));
+  assert.equal(f.navigations.at(-1).pathname,'/open-source');
+  assert.equal(f.navigations.at(-1).searchParams.get('value'),sourceId);
+  f.state({sessionId:anotherSession});
+  assert.equal(panel.querySelector('strong').textContent,'Noch keine Quellen');
+  f.window.ContinuumNative.sources({...binding,sourceSetId,items:[item]});
+  assert.equal(panel.querySelector('[data-native-source]'),null);
+  assert.doesNotMatch(f.document.querySelector('#instrument-content').textContent,/img src/);
+ } finally {f.close();}
+});
+test('busy composer exposes native Stop without losing a newer draft', async () => {
+ const f=await fixture();
+ try {
+  controlState(f,{busy:true});f.input('Nächster Auftrag');
+  const stop=f.document.querySelector('.native-stop-button');
+  assert.equal(stop.hidden,false);
+  assert.equal(f.document.querySelector('.send-button').hidden,true);
+  f.click(stop);
+  const route=f.navigations.at(-1);
+  assert.equal(route.pathname,'/route');assert.equal(route.searchParams.get('value'),'stop');
+  assert.equal(route.searchParams.get('draftText'),'Nächster Auftrag');
+  f.state({busy:false});
+  assert.equal(stop.hidden,true);
+  assert.equal(f.document.querySelector('.send-button').hidden,false);
+  assert.equal(f.document.querySelector('#command-input').value,'Nächster Auftrag');
+ } finally {f.close();}
+});

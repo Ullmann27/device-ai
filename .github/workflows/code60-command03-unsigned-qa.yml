@@ -8,6 +8,7 @@ on:
       - fix/command03-native-controls-20261116
       - fix/command03-responsive-layout-20261117
       - feat/command03-hologram-settings-20261117
+      - feat/continuum-cinema63-20261117
     paths:
       - .github/workflows/code60-command03-unsigned-qa.yml
       - app/**
@@ -24,7 +25,7 @@ concurrency:
 
 jobs:
   browser-contract:
-    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/fix/command03-responsive-layout-20261117","refs/heads/feat/command03-hologram-settings-20261117"]'), github.ref)
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/fix/command03-responsive-layout-20261117","refs/heads/feat/command03-hologram-settings-20261117","refs/heads/feat/continuum-cinema63-20261117"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -51,7 +52,7 @@ jobs:
             node --test --test-reporter=tap tools/command03-native-qa/native-bridge-behavior.test.mjs \
             | tee command03-dom.tap
       - name: Check rendered phone and fold layouts
-        if: contains(fromJSON('["refs/heads/fix/command03-responsive-layout-20261117","refs/heads/feat/command03-hologram-settings-20261117"]'), github.ref)
+        if: contains(fromJSON('["refs/heads/fix/command03-responsive-layout-20261117","refs/heads/feat/command03-hologram-settings-20261117","refs/heads/feat/continuum-cinema63-20261117"]'), github.ref)
         shell: bash
         run: |
           set -euo pipefail
@@ -75,7 +76,7 @@ jobs:
           retention-days: 7
 
   focused-android:
-    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/feat/command03-hologram-settings-20261117"]'), github.ref)
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/feat/command03-hologram-settings-20261117","refs/heads/feat/continuum-cinema63-20261117"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 65
     steps:
@@ -106,20 +107,25 @@ jobs:
           # Use its existing fail-closed selection init script, not --tests flags.
           focused_args=()
           qa_version=60
-          if [ "$GITHUB_REF" = 'refs/heads/feat/command03-hologram-settings-20261117' ]; then
+          if [[ "$GITHUB_REF" == 'refs/heads/feat/command03-hologram-settings-20261117' || "$GITHUB_REF" == 'refs/heads/feat/continuum-cinema63-20261117' ]]; then
             qa_version=62
+            if [ "$GITHUB_REF" = 'refs/heads/feat/continuum-cinema63-20261117' ]; then qa_version=63; fi
             python3 - <<'PY'
           import hashlib, json, os
           from pathlib import Path
           names = ['ContinuumCommand03BridgeUiTest.kt', 'ContinuumCommand03StageUiTest.kt',
-                   'ContinuumSettingsHubUiTest.kt', 'Command03HostWebView.kt', 'CockpitHostFramePump.kt']
+                   'ContinuumSettingsHubUiTest.kt', 'ContinuumCommand03MediaStageUiTest.kt',
+                   'Command03HostWebView.kt', 'CockpitHostFramePump.kt']
           paths = [Path('app/src/uiTest/java/at/heinz/deviceai') / name for name in names]
+          paths.append(Path('app/src/test/java/at/heinz/deviceai/ui/Airbus2100CockpitOrchestratorTest.kt'))
           manifest = {'scope':'FOCUSED_HOST_TESTS_ONLY','source_commit':os.environ['GITHUB_SHA'],
                       'files':[{'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths]}
           Path('command03-test-sources.json').write_text(json.dumps(manifest,indent=2)+'\n')
-          selected = ['at.heinz.deviceai.ContinuumCommand03BridgeUiTest.settings*',
+          selected = ['at.heinz.deviceai.ContinuumCommand03BridgeUiTest',
+                      'at.heinz.deviceai.ContinuumCommand03MediaStageUiTest',
                       'at.heinz.deviceai.ContinuumCommand03StageUiTest',
-                      'at.heinz.deviceai.ContinuumSettingsHubUiTest']
+                      'at.heinz.deviceai.ContinuumSettingsHubUiTest',
+                      'at.heinz.deviceai.ui.Airbus2100CockpitOrchestratorTest']
           Path(os.environ['RUNNER_TEMP'],'command03-test-selection.json').write_text(json.dumps(selected))
           PY
             focused_args=(-Dcontinuum.native.testSources="$GITHUB_WORKSPACE/command03-test-sources.json"
@@ -153,7 +159,10 @@ jobs:
           retention-days: 7
 
   unsigned-arm64:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/fix/command03-native-controls-20261116'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/feat/continuum-cinema63-20261117"]'), github.ref)
+    env:
+      APK_CODE: ${{ github.ref == 'refs/heads/feat/continuum-cinema63-20261117' && '63' || '60' }}
+      APK_VERSION: ${{ github.ref == 'refs/heads/feat/continuum-cinema63-20261117' && '0.3.62' || '0.3.59' }}
     runs-on: ubuntu-latest
     timeout-minutes: 65
     steps:
@@ -177,7 +186,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           git diff --exit-code HEAD --
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
-      - name: Assemble original-package Code60 unsigned for ARM64
+      - name: Assemble original-package unsigned ARM64 APK
         shell: bash
         run: |
           set -euo pipefail
@@ -185,7 +194,7 @@ jobs:
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process \
             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
-            -PcontinuumStandaloneVersionCode=60 \
+            -PcontinuumStandaloneVersionCode="$APK_CODE" \
             -PcontinuumLocalRenderUnsigned=true :app:assembleRelease
       - name: Independently audit unsigned package and original artwork
         shell: bash
@@ -195,7 +204,7 @@ jobs:
           test -s "$apk"
           tools="${ANDROID_HOME:-${ANDROID_SDK_ROOT}}/build-tools/35.0.0"
           "$tools/aapt2" dump badging "$apk" | tee /tmp/code60-badging.txt
-          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='60' versionName='0.3.59'" /tmp/code60-badging.txt
+          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='$APK_CODE' versionName='$APK_VERSION'" /tmp/code60-badging.txt
           "$tools/zipalign" -c -P 16 -v 4 "$apk"
           if "$tools/apksigner" verify --verbose "$apk" >/dev/null 2>&1; then
             echo 'Unexpected signing: not a permitted unsigned diagnostic build' >&2
@@ -209,16 +218,17 @@ jobs:
               assert len(z.namelist()) == len(set(z.namelist()))
               assert any(p.endswith('continuum-command03/native-bridge.js') for p in z.namelist())
           PY
-          printf 'source_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=60\nversionName=0.3.59\nstatus=UNSIGNED_NOT_INSTALLABLE\n' "$GITHUB_SHA" > BUILD-INFO.txt
+          printf 'source_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=%s\nversionName=%s\nstatus=UNSIGNED_NOT_INSTALLABLE\n' "$GITHUB_SHA" "$APK_CODE" "$APK_VERSION" > BUILD-INFO.txt
           sha256sum "$apk" > SHA256SUMS.txt
           cat SHA256SUMS.txt
       - name: Upload the actual unsigned APK and source-bound evidence
         uses: actions/upload-artifact@v4
         with:
-          name: Code60-Command03-UNSIGNED-NOT-INSTALLABLE
+          name: Code${{ env.APK_CODE }}-Command03-UNSIGNED-NOT-INSTALLABLE
           path: |
             app/build/outputs/apk/release/app-release-unsigned.apk
             BUILD-INFO.txt
             SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 7
+
