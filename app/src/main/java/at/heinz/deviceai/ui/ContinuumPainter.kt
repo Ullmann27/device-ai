@@ -9,6 +9,9 @@ package at.heinz.deviceai.ui
  *
  * Coordinates are in the caller's current transform; colours are ARGB integers; [alpha] multiplies the paint.
  */
+/** Decoded decorative rasters a painter may cache (4 reference + orb, background and 9 Blender tile scenes). */
+const val MAX_RASTERS = 20
+
 interface ContinuumPainter {
     /** Packaged decorative RGBA asset only. False allows vector fallback in unsupported test painters. */
     fun drawRaster(assetPath: String, left: Float, top: Float, right: Float, bottom: Float, alpha: Float = 1f): Boolean = false

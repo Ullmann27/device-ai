@@ -7,7 +7,10 @@ package at.heinz.deviceai.ui
  */
 object JarvisSceneFills {
     private val unitHalos = HashMap<Int, Fill>()
-    private val keyed = HashMap<Any, Fill>()
+    /** LRU, bounded: evicts only the least recently used material, never the ones the current frame just used. */
+    private val keyed = object : LinkedHashMap<Any, Fill>(64, .75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Any, Fill>?) = size > 256
+    }
 
     /** Same look as [JarvisNeon.halo] with [strength] as paint alpha; no new Fill or shader per frame. */
     fun halo(p: ContinuumPainter, cx: Float, cy: Float, radius: Float, color: Int, strength: Float) {
@@ -30,7 +33,6 @@ object JarvisSceneFills {
     /** Fill cached under [key]; [build] runs only for a new key. The cache is bounded. */
     fun cached(key: Any, build: () -> Fill): Fill {
         keyed[key]?.let { return it }
-        if (keyed.size > 256) keyed.clear()
         return build().also { keyed[key] = it }
     }
 }

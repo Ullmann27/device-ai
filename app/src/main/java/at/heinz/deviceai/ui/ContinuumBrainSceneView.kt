@@ -66,6 +66,7 @@ class ContinuumBrainSceneView(context: Context) : View(context), CockpitAnimatio
         JarvisReferenceHud.frame(painter, w, h)
         val r = ContinuumBrainOrbRenderer.radiusFor(w - 24f, h - 50f).coerceAtLeast(1f)
         val cy = (h - 2.44f * r) / 2f + r
+        brain.rasterDensity = density
         brain.draw(painter, w / 2f, cy, r, ContinuumBrainOrbRenderer.Signals(
             pulse = effects.orbPulseLevel(now), recall = effects.recallBrightness(now),
             hypothesis = effects.hypothesisVisible(now), phase = phase, processing = processing,
