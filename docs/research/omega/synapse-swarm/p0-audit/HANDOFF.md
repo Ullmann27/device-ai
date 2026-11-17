@@ -1,6 +1,6 @@
 # Synapse P0 independent integration audit
 
-**Scoped source compatibility accepted; MΩ-1 remains BLOCKED_LOCAL_MODEL_UNAVAILABLE / FOLD7_NOT_RUN.**
+**Scoped source compatibility accepted on the frozen713949a source; its model gate is BLOCKED_LOCAL_MODEL_UNAVAILABLE and device FOLD7_NOT_RUN. Newer remote genuine-runtime admission exists: see STATUS-REFRESH.md.**
 Frozen source `713949a86e10fb4fe4cc22d03f1af1afdcdf51e8`, compared with Chief `efe622dda00e620952483dedad19257efb3284e6`.
 Acceptance froze in `404b008fb95c013e8f6c12ca6b5eebbdce35f9e8` before this audit. Review-only branch `codex/synapse-p0-audit-20261103`, draft [PR421](https://github.com/Ullmann27/device-ai/pull/421). No production source edits.
 
@@ -43,8 +43,8 @@ Actual Git comparison confirms the three reviewed Android production files and f
 
 ## Environment and remaining P0 gates
 
-Current workspace contains no `*.gguf`, `*.litertlm`, `*.safetensors`, `llama-cli` or `llama-server` files found by the recorded search. PATH has Node, Docker, bwrap, prlimit and gcc; no adb or llama CLI/server. No model downloads, new services, credential reads or purchases were attempted. Native fixed-output fixture success is expressly not a model proof.
+Correction: `MODEL-ADMISSION.md` already records owner approval for the exact Qwen1.5B model and llama.cpp source at713949a. The earlier audit confused absent local artifacts with absent approval; approval is present, and must not be requested again. Current workspace contains no `*.gguf`, `*.litertlm`, `*.safetensors`, `llama-cli` or `llama-server` files found by the recorded search. PATH has Node, Docker, bwrap, prlimit and gcc; no adb or llama CLI/server. No model downloads, new services, credential reads or purchases were attempted. Native fixed-output fixture success is expressly not a model proof.
 
-The current production observation producer deliberately emits HOST_INTEGRATION and never immutable `verifiedModelExecution:true`. Even supplying a compatible model file alone does not complete MΩ: a separately reviewed genuine inference observation producer and unknown-task RED→GREEN/independent verification/experience continuity are still required. No hidden external model supplied a benchmark solution here. Device version, memory, thermals and energy remain unavailable.
+The frozen713949a production observation producer deliberately emits HOST_INTEGRATION and never immutable `verifiedModelExecution:true`. Even supplying a compatible model file alone does not complete MΩ: a separately reviewed genuine inference observation producer and unknown-task RED→GREEN/independent verification/experience continuity are still required. No hidden external model supplied a benchmark solution here. Device version, memory, thermals and energy remain unavailable.
 
-Next: root merges accepted source into isolated Synapse branch, preserves graphical parent, reruns exact-source gates; provision only explicitly supported/authorized runtime and weights; complete actual local unknown-task loop before claiming S2 model autonomy or S3 learning. Registry persistence can proceed independently but cannot substitute for MΩ evidence. Quota NOT_VISIBLE; checkpoints retained remotely. Rollback omits this review-only branch; never restore owner data or revoke tombstones backwards.
+Next: root merges accepted source into isolated Synapse branch, preserves graphical parent, reruns exact-source gates; first inspect the newer reviewed genuine-runtime source and existing other-session work described in STATUS-REFRESH.md to avoid duplicate downloads/builds; complete actual local unknown-task loop before claiming S2 model autonomy or S3 learning. Registry persistence can proceed independently but cannot substitute for MΩ evidence. Quota NOT_VISIBLE; checkpoints retained remotely. Rollback omits this review-only branch; never restore owner data or revoke tombstones backwards.
