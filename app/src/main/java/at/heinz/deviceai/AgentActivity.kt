@@ -3991,7 +3991,11 @@ class AgentActivity : Activity() {
         val taskSession = sessionId
         val revision = ++botLookupRevision
         botLookupPending = true
-        input.setText(request.text)
+        // #493: an owner draft already in the composer is never replaced by a bot task. The task text is
+        // only placed there when the field is free; otherwise the draft stays untouched for the whole hand-off.
+        val ownerDraft = input.text.toString().takeIf { it.isNotBlank() && it != request.text }
+        val composerText = ownerDraft ?: request.text
+        if (ownerDraft == null) input.setText(request.text)
         try {
             backlogExecutor.execute {
                 val prepared = runCatching { ChiefBotTaskIntake(botProfiles).prepare(request, taskSession) }
@@ -4001,7 +4005,7 @@ class AgentActivity : Activity() {
                         prepared.getOrNull()?.cancel()
                         return@runOnUiThread
                     }
-                    if (busy || input.text.toString() != request.text) {
+                    if (busy || input.text.toString() != composerText) {
                         prepared.getOrNull()?.cancel()
                         rememberBotTaskStatus(request.agentId, "Entwurf geändert oder Ausführung belegt · nicht gestartet")
                         return@runOnUiThread
@@ -4011,7 +4015,9 @@ class AgentActivity : Activity() {
                             localRuntime.loadedModel == null || localRuntime.state != LocalModelState.READY ||
                             (request.mode == ChiefBotTaskMode.PRIVATE_REPLY && continuumState == null))) {
                         prepared.getOrNull()?.cancel()
-                        rememberBotTaskStatus(request.agentId, "Lokales Modell nicht bereit · Auftrag bleibt im Eingabefeld")
+                        rememberBotTaskStatus(request.agentId, if (ownerDraft == null)
+                            "Lokales Modell nicht bereit · Auftrag bleibt im Eingabefeld"
+                            else "Lokales Modell nicht bereit · Auftrag nicht gestartet, dein Entwurf bleibt erhalten")
                         return@runOnUiThread
                     }
                     prepared.fold({ task ->
@@ -4020,7 +4026,7 @@ class AgentActivity : Activity() {
                             ChiefBotTaskMode.PRIVATE_REPLY -> {
                                 task.finish()
                                 enterBotConversation(task.profile)
-                                input.text.clear()
+                                if (ownerDraft == null) input.text.clear()
                                 rememberBotTaskStatus(request.agentId, "Private Antwort angefordert")
                                 runBotDialogue(task.profile, request.text)
                             }
@@ -4028,7 +4034,7 @@ class AgentActivity : Activity() {
                                 // Only this explicit assignment enters the existing owner execution lane.
                                 // Private bot history and notes are not copied to it.
                                 returnToJarvis()
-                                input.text.clear()
+                                if (ownerDraft == null) input.text.clear()
                                 activeBotTask = task
                                 addUserMessage(request.text)
                                 rememberBotTaskStatus(request.agentId, "Auftrag angenommen · ${task.taskId.takeLast(8)}")
@@ -4048,14 +4054,16 @@ class AgentActivity : Activity() {
                                     id = "job-" + UUID.randomUUID(), goal = request.text,
                                     kind = if (practice) ContinuumCodingTask.Kind.BUGFIX else null,
                                     chain = if (practice) ContinuumCodingTask.Chain.ANDROID else null))
-                                input.text.clear()
+                                if (ownerDraft == null) input.text.clear()
                                 task.finish()
                                 rememberBotTaskStatus(request.agentId, "Coding-Entwurf geöffnet · nichts ausgeführt")
                             }
                         }
                     }, {
                         rememberBotTaskStatus(request.agentId, "Profil geändert oder nicht lesbar · Auftrag nicht gestartet")
-                        Toast.makeText(this, "Bot bitte erneut auswählen. Der vollständige Auftrag steht weiterhin im Eingabefeld.",
+                        Toast.makeText(this, if (ownerDraft == null)
+                            "Bot bitte erneut auswählen. Der vollständige Auftrag steht weiterhin im Eingabefeld."
+                            else "Bot bitte erneut auswählen. Der Auftrag wurde nicht gestartet; dein eigener Entwurf bleibt im Eingabefeld.",
                             Toast.LENGTH_LONG).show()
                     })
                 }
