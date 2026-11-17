@@ -42,13 +42,14 @@ function acknowledge(f,result) {
   f.window.ContinuumNative.commandResult({...packet,...result});
 }
 
-async function fixture({realAvatar = false} = {}) {
+async function fixture({realAvatar = false, realScene = false} = {}) {
   const dom = new JSDOM(readFileSync(resolve(assetRoot, 'index.android.html'), 'utf8'), {
     url: 'https://appassets.androidplatform.net/assets/continuum-command03/index.android.html',
     pretendToBeVisual: true, runScripts: 'outside-only'
   });
   const window = dom.window, navigations = [], scheduled = new Map(), scenes = [], decodings = [];
   const speechFrames = [], speechResults = [];
+  const intensities = [], sceneQualities = [], audioLevels = [], gazes = [], sceneEvents = [];
   let serial = 0, now = 100, speechClears = 0, occluded = false;
   const schedule = (fn, delay = 0, type = 'timer', repeat = false) => {
     scheduled.set(++serial, {fn, at: now + Math.max(0, delay), type, repeat, delay});return serial;
@@ -68,7 +69,14 @@ async function fixture({realAvatar = false} = {}) {
     }
   });
   window.matchMedia = () => ({matches: false, addEventListener() {}, removeEventListener() {}});
-  window.ContinuumScene = {setState(value) {scenes.push(value);}, setIntensity() {}, setQuality() {}, resize() {}};
+  // The scene double only records calls. `realScene` runs the byte-locked scene.js
+  // instead (without a canvas context it keeps its state and event logic only).
+  if (!realScene) window.ContinuumScene = {setState(value) {scenes.push(value);},
+    setIntensity(value) {intensities.push(value);}, setQuality(value) {sceneQualities.push(value);},
+    setAudioLevel(value) {audioLevels.push(value);}, resize() {}};
+  // Details are copied into this realm; the event objects belong to the page context.
+  window.addEventListener('continuum:gaze', event => gazes.push({target: event.target, detail: {...event.detail}}));
+  window.addEventListener('continuum:scenechange', event => sceneEvents.push({...event.detail}));
   // The decoder and viewport are explicit browser seams. Tests never claim decoded GPU pixels.
   window.HTMLImageElement.prototype.decode = function() {
     return new Promise((resolve, reject) => decodings.push({image: this, resolve, reject}));
@@ -81,7 +89,7 @@ async function fixture({realAvatar = false} = {}) {
   };
   window.document.elementFromPoint = () => occluded ? window.document.body :
     window.document.querySelector('.native-computer-image');
-  if (realAvatar) window.HTMLCanvasElement.prototype.getContext = () => null;
+  if (realAvatar || realScene) window.HTMLCanvasElement.prototype.getContext = () => null;
   const context = vm.createContext({
     window: proxy, document: window.document, console, URL, URLSearchParams, TextEncoder,
     CustomEvent: window.CustomEvent, MouseEvent: window.MouseEvent, Event: window.Event,
@@ -91,7 +99,8 @@ async function fixture({realAvatar = false} = {}) {
     HTMLElement: window.HTMLElement, Element: window.Element, navigator: window.navigator,
     Blob: window.Blob, File: window.File, FileReader: window.FileReader
   });
-  for (const name of ['native-bridge.js', ...(realAvatar ? ['avatar3d.js'] : []), 'workspace-motion.js', 'app.js',
+  for (const name of ['native-bridge.js', ...(realScene ? ['scene.js'] : []),
+    ...(realAvatar ? ['avatar3d.js'] : []), 'workspace-motion.js', 'app.js',
     'presence-instruments.js', 'telemetry.js', 'operations.js']) {
     vm.runInContext(readFileSync(resolve(assetRoot, name), 'utf8'), context, {filename: name});
   }
@@ -132,6 +141,7 @@ async function fixture({realAvatar = false} = {}) {
   const flush = () => new Promise(resolve => setImmediate(resolve));
   return {dom, window, document: window.document, navigations, scenes, state, click, submit, input,
     speechFrames, speechResults, get speechClears() {return speechClears;}, decodings,
+    intensities, sceneQualities, audioLevels, gazes, sceneEvents, flush,
     advance(ms) {now += ms;},
     async decode(index = decodings.length - 1, succeeds = true) {
       const pending = decodings[index];assert.ok(pending, 'The production adapter requested image decoding');
@@ -1241,4 +1251,363 @@ test('busy composer exposes native Stop without losing a newer draft', async () 
   assert.equal(f.document.querySelector('.send-button').hidden,false);
   assert.equal(f.document.querySelector('#command-input').value,'Nächster Auftrag');
  } finally {f.close();}
+});
+
+// Optional presence, quality and activity fields of the Android snapshot. Every case
+// below sends only what a real snapshot may carry; nothing is derived inside the page.
+const activityPacket = (extra = {}) => ({revision: 1, kind: 'RESEARCH', title: 'Dateisuche',
+  detail: 'Durchsuche freigegebene Dokumente.', active: true,
+  steps: [{label: 'Gedächtnis durchsucht', state: 'DONE'}, {label: 'Websuche', state: 'ACTIVE'}], ...extra});
+const activityCard = f => f.document.querySelector('.native-activity');
+const stepRows = f => [...f.document.querySelectorAll('.native-activity-steps li')].map(item => ({
+  state: item.dataset.state, label: item.querySelector('.native-step-label').textContent,
+  text: item.querySelector('.native-step-state').textContent}));
+
+test('native presence selects the original scene, the orb mode and a truthful status text', async () => {
+  const f = await fixture();
+  try {
+    const seen = () => ({scene: f.scenes.at(-1), state: f.document.body.dataset.state,
+      presence: f.document.body.dataset.presence, text: f.document.querySelector('#orb-status').textContent,
+      orb: f.sceneEvents.at(-1)?.state});
+    // The scene double emits nothing, so every recorded event is the bridge's own orb announcement.
+    f.state({presence: 'IDLE'});
+    assert.deepEqual(seen(), {scene: 'idle', state: 'idle', presence: 'idle', text: 'BEREIT', orb: undefined});
+    f.state({presence: 'LISTENING'});
+    assert.deepEqual(seen(), {scene: 'listening', state: 'listening', presence: 'listening', text: 'HÖRT ZU', orb: undefined});
+    f.state({presence: 'THINKING', busy: true});
+    assert.deepEqual(seen(), {scene: 'working', state: 'working', presence: 'thinking', text: 'DENKT', orb: undefined});
+    f.state({presence: 'RESEARCHING', busy: true});
+    assert.deepEqual(seen(), {scene: 'working', state: 'working', presence: 'researching', text: 'RECHERCHIERT', orb: 'research'});
+    assert.deepEqual(f.sceneEvents.at(-1), {state: 'research'}, 'Only the state name is announced, never a light or audio value');
+    f.state({presence: 'LEARNING', busy: true});
+    assert.deepEqual(seen(), {scene: 'working', state: 'working', presence: 'learning', text: 'LERNT', orb: 'learning'});
+    const announced = f.sceneEvents.length;
+    f.state({presence: 'LEARNING', busy: true, cpu: 55});
+    assert.equal(f.sceneEvents.length, announced, 'An unchanged presence is not announced again');
+    f.state({presence: 'THINKING', busy: true});
+    assert.deepEqual(seen(), {scene: 'working', state: 'working', presence: 'thinking', text: 'DENKT', orb: 'working'});
+    f.state({presence: 'SPEAKING', busy: true});
+    assert.deepEqual(seen(), {scene: 'speaking', state: 'speaking', presence: 'speaking', text: 'SPRICHT', orb: 'working'});
+    f.state({presence: 'WAITING_FOR_APPROVAL', busy: true});
+    assert.deepEqual(seen(), {scene: 'idle', state: 'idle', presence: 'waiting-for-approval',
+      text: 'WARTET AUF FREIGABE', orb: 'working'});
+    f.state({presence: 'BLOCKED', busy: true});
+    assert.deepEqual(seen(), {scene: 'idle', state: 'idle', presence: 'blocked', text: 'BLOCKIERT', orb: 'working'});
+    assert.equal(f.scenes.includes('research') || f.scenes.includes('learning'), false,
+      'The scene and avatar only ever receive names from their own state list');
+    assert.equal(f.window.ContinuumOperations.getState(), null);
+  } finally {f.close();}
+});
+
+test('snapshots without presence render as before and an invalid presence is ignored', async () => {
+  const f = await fixture();
+  try {
+    const status = f.document.querySelector('#orb-status');
+    for (const [values, scene, text, label] of [[{busy: true}, 'working', 'ARBEITET', 'In Bearbeitung'],
+      [{listening: true}, 'listening', 'HÖRT ZU', 'Ich höre zu'], [{speaking: true}, 'speaking', 'SPRICHT', 'Ich spreche'],
+      [{}, 'idle', 'BEREIT', 'Bereit']]) {
+      f.state(values);
+      assert.equal(f.scenes.at(-1), scene);assert.equal(status.textContent, text);
+      assert.equal(activityCard(f).querySelector('strong').textContent, label);
+      assert.equal('presence' in f.document.body.dataset, false);
+    }
+    for (const presence of ['DREAMING', 'thinking', 'constructor', '__proto__', '', 42, null, {}, ['BLOCKED']]) {
+      f.state({busy: true, presence});
+      assert.equal(f.scenes.at(-1), 'working');assert.equal(status.textContent, 'ARBEITET');
+      assert.equal('presence' in f.document.body.dataset, false);
+      assert.equal(activityCard(f).querySelector('strong').textContent, 'In Bearbeitung');
+    }
+    assert.equal(f.sceneEvents.length, 0);assert.equal(f.gazes.length, 0);
+    f.state({busy: true, presence: 'RESEARCHING'});
+    assert.equal(f.document.body.dataset.presence, 'researching');
+    f.state({busy: true});
+    assert.equal('presence' in f.document.body.dataset, false, 'A later snapshot without presence returns to the booleans');
+    assert.equal(status.textContent, 'ARBEITET');assert.equal(f.sceneEvents.at(-1).state, 'working');
+  } finally {f.close();}
+});
+
+test('waiting for approval and blocked are calm: no work animation, the avatar faces the owner, Stop stays', async () => {
+  const f = await fixture();
+  try {
+    f.state({busy: true, presence: 'THINKING'});
+    assert.equal(activityCard(f).dataset.mode, 'working');
+    f.state({busy: true, presence: 'WAITING_FOR_APPROVAL', status: ''});
+    assert.equal(activityCard(f).dataset.mode, 'idle');
+    assert.equal(activityCard(f).querySelector('strong').textContent, 'Rückfrage');
+    assert.equal(activityCard(f).querySelector('p').textContent, 'Der Auftrag wartet auf deine Freigabe.');
+    assert.equal(f.document.querySelector('.native-stop-button').hidden, false);
+    assert.equal(f.gazes.length, 1);
+    assert.equal(f.gazes[0].target, f.window);
+    assert.deepEqual(f.gazes[0].detail, {x: 0, y: 0, durationMs: 2200});
+    f.state({busy: true, presence: 'WAITING_FOR_APPROVAL', cpu: 44});
+    assert.equal(f.gazes.length, 1, 'The neutral gaze is sent once per change, not per snapshot');
+    // Real content arriving while the owner is asked must not pull the eyes away.
+    f.window.ContinuumNative.document({...binding, documentId, name: 'Beispiel.pdf', pageCount: 1});
+    f.window.ContinuumNative.sources({...binding, sourceSetId, items: [{id: sourceId, title: 'Quelle', url: 'https://example.org/a'}]});
+    assert.equal(f.gazes.length, 1);
+    f.state({busy: true, presence: 'BLOCKED', status: 'Speicherzugriff fehlt'});
+    assert.equal(activityCard(f).querySelector('strong').textContent, 'Blockiert');
+    assert.equal(activityCard(f).querySelector('p').textContent, 'Speicherzugriff fehlt');
+    assert.equal(f.gazes.length, 2);assert.deepEqual(f.gazes[1].detail, {x: 0, y: 0, durationMs: 2200});
+    const pill = f.document.querySelector('.core-status');
+    assert.equal(pill.getAttribute('role'), 'status');assert.equal(pill.getAttribute('aria-live'), 'polite');
+    const node = f.document.querySelector('#orb-status').firstChild;
+    f.state({busy: true, presence: 'BLOCKED', status: 'Speicherzugriff fehlt', cpu: 9});
+    assert.equal(f.document.querySelector('#orb-status').firstChild, node, 'An unchanged status is not announced again');
+  } finally {f.close();}
+});
+
+test('the byte-locked scene and avatar keep valid states while the orb mode survives light and audio events', async () => {
+  const f = await fixture({realScene: true, realAvatar: true});
+  try {
+    const scene = f.window.ContinuumScene;
+    f.state({busy: true, presence: 'RESEARCHING'});
+    assert.equal(scene.getState(), 'working');
+    assert.equal(f.window.ContinuumAvatar.getStatus().state, 'working');
+    assert.equal(f.sceneEvents.at(-2).state, 'working', 'The original scene announces its own state first');
+    assert.deepEqual(f.sceneEvents.at(-1), {state: 'research'});
+    // The scene repeats its coarser state with every light, detail or audio change.
+    f.state({busy: true, presence: 'RESEARCHING', appearance: {neon: 100, lightMotion: true}, quality: 'BALANCED'});
+    await f.flush();
+    assert.equal(scene.getStatus().intensity, 1);assert.equal(scene.getStatus().quality, .8);
+    assert.deepEqual(f.sceneEvents.at(-1), {state: 'research'});
+    f.advance(40);scene.setAudioLevel(.5); // beyond the scene's own 33 ms event throttle
+    assert.equal(f.sceneEvents.at(-1).state, 'working');
+    assert.equal(f.sceneEvents.at(-1).audioLevel, .5);
+    await f.flush();
+    assert.deepEqual(f.sceneEvents.at(-1), {state: 'research'});
+    assert.equal(f.window.ContinuumAvatar.getStatus().state, 'working');
+    f.state({busy: true, presence: 'LEARNING', appearance: {neon: 100, lightMotion: true}, quality: 'BALANCED'});
+    assert.deepEqual(f.sceneEvents.at(-1), {state: 'learning'});
+    f.state({busy: true, presence: 'THINKING', appearance: {neon: 100, lightMotion: true}, quality: 'BALANCED'});
+    assert.deepEqual(f.sceneEvents.at(-1), {state: 'working'}, 'Leaving research is announced although the scene state is unchanged');
+    const settled = f.sceneEvents.length;
+    scene.setAudioLevel(null);await f.flush();
+    assert.equal(f.sceneEvents.length, settled + 1, 'Without a refined mode the bridge adds no event of its own');
+  } finally {f.close();}
+});
+
+test('the real speech level reaches the scene and returns to no signal when speech ends', async () => {
+  const f = await fixture();
+  try {
+    f.state({speaking: true});
+    assert.deepEqual(f.audioLevels, [], 'No level is invented before Android sends a pose');
+    for (const bad of [{viseme: 'UNKNOWN'}, {jawOpen: 1.4}, {jawOpen: NaN}, {sessionId: anotherSession}])
+      f.window.ContinuumNative.speech(speechFrame(bad));
+    assert.deepEqual(f.audioLevels, []);
+    f.window.ContinuumNative.speech(speechFrame());
+    assert.deepEqual(f.audioLevels, [.45]);
+    f.window.ContinuumNative.speech(speechFrame({sequence: 2, viseme: 'PP', jawOpen: 0}));
+    f.window.ContinuumNative.speech(speechFrame({sequence: 3, viseme: 'AA', jawOpen: 1}));
+    assert.deepEqual(f.audioLevels, [.45, 0, 1]);
+    await f.timers(101);
+    assert.deepEqual(f.audioLevels, [.45, 0, 1, null], 'An expired pose means no signal, not a held level');
+    f.window.ContinuumNative.speech(speechFrame({sequence: 4, jawOpen: .2}));
+    f.window.ContinuumNative.speech({...binding, generation: 1, sequence: 5, active: false});
+    assert.deepEqual(f.audioLevels, [.45, 0, 1, null, .2, null]);
+    f.state({sessionId: anotherSession});
+    assert.deepEqual(f.audioLevels, [.45, 0, 1, null, .2, null], 'Silence is reported once');
+  } finally {f.close();}
+});
+
+test('real documents, sources and device frames turn the avatar to the element that shows them', async () => {
+  const f = await fixture();
+  try {
+    f.state();
+    const item = {id: sourceId, title: 'Quelle', url: 'https://example.org/evidence'};
+    f.window.ContinuumNative.sources({...binding, sourceSetId, items: [item]});
+    assert.equal(f.gazes.length, 1);
+    const card = f.document.querySelector('#native-live-panel .native-source-card');
+    assert.ok(card);assert.equal(f.gazes[0].target, card);
+    assert.deepEqual(Object.keys(f.gazes[0].detail), ['target'], 'Same event shape as the original operations script');
+    assert.equal(f.gazes[0].detail.target, card);
+    f.window.ContinuumNative.sources({...binding, sourceSetId, items: []});
+    f.window.ContinuumNative.sources({...binding, sessionId: anotherSession, sourceSetId, items: [item]});
+    assert.equal(f.gazes.length, 1, 'Withdrawn or foreign sources are no reason to look');
+    f.window.ContinuumNative.document({...binding, documentId, name: 'Beispiel.pdf', pageCount: 2});
+    assert.equal(f.gazes.length, 2);
+    assert.equal(f.gazes[1].target, f.document.querySelector('#native-document-panel'));
+    assert.equal(f.gazes[1].detail.target, f.gazes[1].target);
+    f.window.ContinuumNative.document({...binding, documentId, name: 'Beispiel.pdf', pageCount: 2, draftStatus: 'Entwurf bereit'});
+    f.window.ContinuumNative.document({...binding, viewId: anotherView, documentId: anotherDocument, name: 'Alt.pdf', pageCount: 1});
+    assert.equal(f.gazes.length, 2, 'A refresh of the shown document or a stale document does not look again');
+    // While the PDF covers the work panel, the visible source display is the QUELLEN instrument.
+    f.window.ContinuumNative.sources({...binding, sourceSetId, items: [item]});
+    assert.equal(f.gazes.length, 3);
+    assert.equal(f.gazes[2].target, f.document.querySelector('[data-presence-right] .native-evidence'));
+    f.window.ContinuumNative.clearDocument(binding);
+    f.window.ContinuumNative.computer(computerFrame());
+    assert.equal(f.gazes.length, 3, 'An undecoded frame shows nothing yet');
+    await f.decode();
+    assert.equal(f.gazes.length, 4);
+    assert.equal(f.gazes[3].target, f.document.querySelector('#native-computer-panel'));
+    assert.ok(f.gazes[3].target.querySelector('.native-computer-image'));
+    f.window.ContinuumNative.computer(computerFrame({sequence: 2}));await f.decode();
+    assert.equal(f.gazes.length, 4, 'A continuous stream does not hold the gaze');
+    f.window.ContinuumNative.computer(computerFrame({sequence: 3, frameDataUri: 'data:text/html;base64,AAAA'}));
+    assert.equal(f.gazes.length, 4);
+  } finally {f.close();}
+});
+
+test('the hologram light level reaches the original scene only when it changes', async () => {
+  const f = await fixture();
+  try {
+    const before = f.intensities.length;
+    f.state();f.state({cpu: 31});
+    assert.equal(f.intensities.length, before, 'Without an Android level the preview default stays untouched');
+    f.state({appearance: {neon: 70, lightMotion: true}});
+    assert.deepEqual(f.intensities.slice(before), [.78], 'The Android default keeps the present scene light');
+    f.state({appearance: {neon: 70, lightMotion: false}});f.state({appearance: {neon: 70, lightMotion: true}, cpu: 8});
+    assert.deepEqual(f.intensities.slice(before), [.78]);
+    f.state({appearance: {neon: 100, lightMotion: true}});f.state({appearance: {neon: 0, lightMotion: true}});
+    f.state({appearance: {neon: 35, lightMotion: true}});f.state({appearance: {neon: 999, lightMotion: true}});
+    f.state({appearance: {neon: -5, lightMotion: true}});
+    assert.deepEqual(f.intensities.slice(before), [.78, 1, .35, .565, 1, .35]);
+    for (const value of f.intensities.slice(before)) assert.ok(value >= .35 && value <= 1.6, 'Inside the scene range');
+    f.state({appearance: {neon: 'bright', lightMotion: true}});
+    assert.equal(f.intensities.at(-1), .78, 'An unusable level follows the same default as the page light');
+    assert.equal(f.document.body.style.getPropertyValue('--native-neon'), '0.7');
+    f.window.ContinuumNative.receive({...binding, pageId: anotherView, appearance: {neon: 100, lightMotion: true}});
+    assert.equal(f.intensities.at(-1), .78, 'A stale page cannot change the light');
+  } finally {f.close();}
+});
+
+test('the Android quality tier is exposed for styling and mapped to the scene detail only on change', async () => {
+  const f = await fixture();
+  try {
+    const before = f.sceneQualities.length, body = f.document.body;
+    f.state();
+    assert.equal('nativeQuality' in body.dataset, false);assert.equal(f.sceneQualities.length, before);
+    for (const invalid of ['ULTRA', 'reduced', 'constructor', 2, null, {}]) {
+      f.state({quality: invalid});
+      assert.equal('nativeQuality' in body.dataset, false);assert.equal(f.sceneQualities.length, before);
+    }
+    f.state({quality: 'FULL'});assert.equal(body.dataset.nativeQuality, 'full');
+    f.state({quality: 'FULL', cpu: 70});
+    f.state({quality: 'BALANCED'});assert.equal(body.dataset.nativeQuality, 'balanced');
+    f.state({quality: 'REDUCED'});assert.equal(body.dataset.nativeQuality, 'reduced');
+    f.state({quality: 'REDUCED', busy: true});
+    assert.deepEqual(f.sceneQualities.slice(before), ['high', 'medium', 'low']);
+    // Nothing is hidden by a tier: content, controls, avatar and orb stay in the document flow.
+    for (const selector of ['.avatar-crop', '.orb-zone', '#command-form', '.native-activity', '.native-evidence',
+      '.native-holo-field', '.native-stop-button', '.native-settings-shortcuts'])
+      assert.notEqual(f.window.getComputedStyle(f.document.querySelector(selector)).display, 'none', selector);
+    f.state({quality: 'MELTING'});
+    assert.equal('nativeQuality' in body.dataset, false, 'An invalid tier is not kept as a stale attribute');
+    assert.deepEqual(f.sceneQualities.slice(before), ['high', 'medium', 'low', 'high']);
+  } finally {f.close();}
+});
+
+test('a real Android activity fills the activity card with its title, detail and text-only steps', async () => {
+  const f = await fixture();
+  try {
+    f.state({busy: true, presence: 'RESEARCHING', status: 'Recherche läuft', activity: activityPacket()});
+    const card = activityCard(f);
+    assert.equal(card.querySelector('h3').textContent, 'AKTIVITÄT · RECHERCHE');
+    assert.equal(card.querySelector('strong').textContent, 'Dateisuche');
+    assert.equal(card.querySelector('p').textContent, 'Durchsuche freigegebene Dokumente.');
+    assert.equal(card.dataset.activityKind, 'research');assert.equal(card.dataset.activityActive, 'true');
+    assert.equal(card.dataset.mode, 'working');
+    assert.deepEqual(stepRows(f), [{state: 'done', label: 'Gedächtnis durchsucht', text: 'erledigt'},
+      {state: 'active', label: 'Websuche', text: 'läuft'}]);
+    const list = card.querySelector('.native-activity-steps');
+    assert.equal(list.tagName, 'OL');assert.equal(list.getAttribute('aria-label'), 'Arbeitsschritte');
+    assert.match(f.document.querySelector('.native-instrument-summary').textContent, /^Dateisuche · Durchsuche/);
+    const markup = '<img src=x onerror=alert(1)><b>Titel</b>';
+    f.state({busy: true, activity: activityPacket({revision: 2, kind: 'TOOL', title: markup, detail: '<script>x</script>',
+      steps: [{label: '<i>Schritt</i>', state: 'FAILED'}, {label: 'Freigabe', state: 'WAITING'},
+        {label: 'Sperre', state: 'BLOCKED'}, {label: 'Prüfung', state: 'UNVERIFIED'}]})});
+    assert.equal(card.querySelector('strong').textContent, markup);
+    assert.equal(card.querySelector('p').textContent, '<script>x</script>');
+    assert.equal(card.querySelector('img,b,i,script'), null, 'Android strings never become elements');
+    assert.equal(card.querySelector('h3').textContent, 'AKTIVITÄT · WERKZEUG');
+    assert.deepEqual(stepRows(f), [{state: 'failed', label: '<i>Schritt</i>', text: 'fehlgeschlagen'},
+      {state: 'waiting', label: 'Freigabe', text: 'wartet'}, {state: 'blocked', label: 'Sperre', text: 'blockiert'},
+      {state: 'unverified', label: 'Prüfung', text: 'ungeprüft'}]);
+    // The finished turn keeps its last real result, settled.
+    f.state({activity: activityPacket({revision: 3, kind: 'MEMORY', title: 'Erinnerung gefunden', detail: '',
+      active: false, steps: []}), status: 'Bereit'});
+    assert.equal(card.dataset.activityActive, 'false');assert.equal(card.dataset.mode, 'idle');
+    assert.equal(card.querySelector('strong').textContent, 'Erinnerung gefunden');
+    assert.equal(card.querySelector('p').textContent, 'Bereit', 'An empty detail falls back to the real Android status');
+    assert.equal(card.querySelector('.native-activity-steps'), null);
+    assert.equal(card.querySelector('h3').textContent, 'AKTIVITÄT · GEDÄCHTNIS');
+  } finally {f.close();}
+});
+
+test('an activity is rendered once per revision and null restores the default card', async () => {
+  const f = await fixture();
+  try {
+    f.state({busy: true, activity: activityPacket()});
+    const card = activityCard(f), first = card.querySelector('.native-activity-steps li');
+    f.state({busy: true, cpu: 60, activity: activityPacket()});
+    assert.equal(card.querySelector('.native-activity-steps li'), first, 'Periodic snapshots keep the rendered nodes');
+    f.state({busy: true, activity: activityPacket({title: 'Anderer Titel', detail: 'Anderer Text',
+      steps: [{label: 'Anderer Schritt', state: 'FAILED'}]})});
+    assert.equal(card.querySelector('strong').textContent, 'Dateisuche', 'An unchanged revision changes nothing');
+    assert.equal(card.querySelector('p').textContent, 'Durchsuche freigegebene Dokumente.');
+    assert.equal(card.querySelector('.native-activity-steps li'), first);
+    f.state({busy: true, activity: activityPacket({revision: 2, title: 'Anderer Titel',
+      steps: [{label: 'Anderer Schritt', state: 'FAILED'}]})});
+    assert.equal(card.querySelector('strong').textContent, 'Anderer Titel');
+    assert.deepEqual(stepRows(f), [{state: 'failed', label: 'Anderer Schritt', text: 'fehlgeschlagen'}]);
+    f.state({busy: true, activity: null});
+    assert.equal(card.querySelector('h3').textContent, 'AKTIVITÄT');
+    assert.equal(card.querySelector('strong').textContent, 'In Bearbeitung');
+    assert.equal(card.querySelector('p').textContent, 'Bereit');
+    assert.equal(card.querySelector('.native-activity-steps'), null);
+    assert.equal('activityKind' in card.dataset, false);assert.equal('activityActive' in card.dataset, false);
+    f.state({activity: null});
+    assert.equal(card.querySelector('strong').textContent, 'Bereit');
+    f.state({status: '', activity: undefined});
+    assert.equal(card.querySelector('p').textContent, 'Dein nächster Auftrag beginnt hier.');
+    f.state({busy: true, activity: activityPacket({revision: 2, title: 'Wieder da'})});
+    assert.equal(card.querySelector('strong').textContent, 'Wieder da', 'After null the same revision is real again');
+    f.state({sessionId: anotherSession, busy: true});
+    assert.equal(card.querySelector('strong').textContent, 'In Bearbeitung', 'Another conversation never inherits an activity');
+    assert.equal(card.querySelector('.native-activity-steps'), null);
+  } finally {f.close();}
+});
+
+test('activity bounds: over-long strings, more than six steps and malformed parts never widen the card contract', async () => {
+  const f = await fixture();
+  try {
+    const card = activityCard(f);
+    f.state({busy: true, activity: activityPacket({title: 'T'.repeat(200), detail: 'D'.repeat(400),
+      steps: Array.from({length: 9}, (_, index) => ({label: 'S' + index + 'x'.repeat(200), state: 'DONE'}))})});
+    assert.equal(card.querySelector('strong').textContent, 'T'.repeat(80));
+    assert.equal(card.querySelector('p').textContent, 'D'.repeat(160));
+    assert.equal(stepRows(f).length, 6);
+    assert.deepEqual(stepRows(f).map(row => row.label.slice(0, 2)), ['S0', 'S1', 'S2', 'S3', 'S4', 'S5']);
+    assert.ok(stepRows(f).every(row => row.label.length === 80));
+    f.state({busy: true, activity: activityPacket({revision: 2, title: 'a'.repeat(79) + '😀'})});
+    assert.equal(card.querySelector('strong').textContent, 'a'.repeat(79), 'A cut never leaves half a character');
+    let revision = 2;
+    for (const steps of ['ACTIVE', 7, null, undefined, {length: 2, 0: {label: 'x', state: 'DONE'}}]) {
+      f.state({busy: true, activity: activityPacket({revision: ++revision, title: 'Ohne Liste ' + revision, steps})});
+      assert.equal(card.querySelector('strong').textContent, 'Ohne Liste ' + revision);
+      assert.equal(card.querySelector('.native-activity-steps'), null, 'Steps that are no array are no steps');
+    }
+    f.state({busy: true, activity: activityPacket({revision: ++revision, steps: [null, 'Websuche', {label: 'x'},
+      {label: 'x', state: 'RUNNING'}, {label: '   ', state: 'DONE'}, {label: 7, state: 'DONE'},
+      {label: 'Echt', state: 'DONE'}, {label: 'Zu spät', state: 'DONE'}]})});
+    assert.deepEqual(stepRows(f), [], 'Only the first six entries are considered and malformed ones are dropped');
+    f.state({busy: true, activity: activityPacket({revision: ++revision, steps: [{label: 'x', state: 'constructor'},
+      {label: ' Echt ', state: 'DONE'}]})});
+    assert.deepEqual(stepRows(f), [{state: 'done', label: 'Echt', text: 'erledigt'}]);
+    for (const broken of [{revision: -1}, {revision: 1.5}, {revision: '9'}, {revision: Number.MAX_SAFE_INTEGER + 1},
+      {kind: 'DANCE'}, {kind: 'toString'}, {title: null}, {title: 5}, {detail: undefined}, {active: 'true'}, {active: undefined}]) {
+      f.state({busy: true, activity: activityPacket({revision: ++revision, title: 'Kaputt', ...broken})});
+      assert.equal(card.querySelector('strong').textContent, 'In Bearbeitung', JSON.stringify(broken));
+      assert.equal(card.querySelector('h3').textContent, 'AKTIVITÄT');
+      assert.equal(card.querySelector('.native-activity-steps'), null);
+    }
+    for (const broken of ['Dateisuche', 3, true, []]) {
+      f.state({busy: true, activity: broken});
+      assert.equal(card.querySelector('strong').textContent, 'In Bearbeitung');
+    }
+    f.state({busy: true, activity: activityPacket({revision: ++revision, title: '   ', detail: ''})});
+    assert.equal(card.querySelector('strong').textContent, 'In Bearbeitung', 'A blank title never becomes an empty heading');
+    assert.equal(card.querySelector('h3').textContent, 'AKTIVITÄT · RECHERCHE');
+  } finally {f.close();}
 });

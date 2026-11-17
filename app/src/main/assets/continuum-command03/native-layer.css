@@ -521,3 +521,73 @@ body[data-design="command03"] .native-stop-button[hidden],
 body[data-design="command03"] .send-button[hidden] {display:none!important;}
 body[data-design="command03"] .center-stage .presence .native-instrument>p {display:block;}
 body[data-design="command03"].native-hologram .timeline-strip {display:none;}
+
+/* Android presence: a question or a blocker is calm amber, never the work pulse. */
+body[data-design="command03"][data-presence="waiting-for-approval"] {--cinema-key:255,200,128;--cinema-fill:232,172,101;}
+body[data-design="command03"][data-presence="blocked"] {--cinema-key:255,160,124;--cinema-fill:208,124,132;}
+
+/* Real activity from Android inside the existing activity card. */
+body[data-design="command03"] .native-activity-steps {
+ list-style:none;margin:10px 0 0;padding:9px 0 0;display:grid;gap:6px;min-width:0;
+ border-top:1px solid #8ccfe626;container-type:inline-size;
+}
+body[data-design="command03"] .native-activity-steps li {
+ display:grid;grid-template-columns:7px minmax(0,1fr) auto;align-items:baseline;column-gap:8px;min-width:0;
+ font:400 12px/1.45 Manrope,sans-serif;color:#a9c8d8;
+}
+body[data-design="command03"] .native-activity-steps li::before {
+ content:"";width:7px;height:7px;border-radius:50%;align-self:center;box-sizing:border-box;
+ background:#6f93a8;
+}
+body[data-design="command03"] .native-step-label {min-width:0;overflow-wrap:anywhere;hyphens:auto;}
+body[data-design="command03"] .native-step-state {
+ font:600 10px/1.45 'Space Grotesk',sans-serif;letter-spacing:.08em;text-transform:uppercase;
+ white-space:nowrap;color:#8fb3c6;
+}
+body[data-design="command03"] .native-activity-steps li[data-state="active"] {color:#ecfaff;}
+body[data-design="command03"] .native-activity-steps li[data-state="active"]::before {background:rgb(var(--cinema-key));}
+body[data-design="command03"] .native-activity-steps li[data-state="active"] .native-step-state {color:rgb(var(--cinema-key));}
+body[data-design="command03"] .native-activity-steps li[data-state="done"]::before {background:#7fe3b8;}
+body[data-design="command03"] .native-activity-steps li[data-state="done"] .native-step-state {color:#9fe8c8;}
+body[data-design="command03"] .native-activity-steps li[data-state="waiting"]::before {background:#ffc880;}
+body[data-design="command03"] .native-activity-steps li[data-state="waiting"] .native-step-state {color:#ffd49c;}
+body[data-design="command03"] .native-activity-steps li[data-state="blocked"]::before,
+body[data-design="command03"] .native-activity-steps li[data-state="failed"]::before {background:#ff9d8c;}
+body[data-design="command03"] .native-activity-steps li[data-state="blocked"] .native-step-state,
+body[data-design="command03"] .native-activity-steps li[data-state="failed"] .native-step-state {color:#ffb5a6;}
+body[data-design="command03"] .native-activity-steps li[data-state="unverified"]::before {
+ background:transparent;border:1px solid #9db9c8;
+}
+/* Narrow wing columns: the state sits under its step instead of squeezing it. */
+@container (max-width:239px) {
+ body[data-design="command03"] .native-activity-steps li {grid-template-columns:7px minmax(0,1fr);}
+ body[data-design="command03"] .native-activity-steps li::before {align-self:start;margin-top:5px;}
+ body[data-design="command03"] .native-step-state {grid-column:2;}
+}
+/* A finished turn keeps its last real result without the work pulse. */
+body[data-design="command03"] .native-activity[data-activity-active="false"] .native-instrument-art {
+ animation:none;opacity:.72;
+}
+
+/* Android thermal tier: only secondary light is eased. Content, controls, avatar and orb stay. */
+body[data-design="command03"][data-native-quality="balanced"] .native-holo-field::after,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::before,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::after,
+body[data-design="command03"][data-native-quality="reduced"] .avatar-aura,
+body[data-design="command03"][data-native-quality="reduced"] .workspace-motion-front::after {animation:none;}
+body[data-design="command03"][data-native-quality="balanced"] .native-holo-field::before,
+body[data-design="command03"][data-native-quality="balanced"] .native-holo-field::after,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::before,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::after {box-shadow:none;}
+body[data-design="command03"][data-native-quality="reduced"] .native-instrument,
+body[data-design="command03"][data-native-quality="reduced"] .native-telemetry-panel {
+ box-shadow:inset 0 1px #d4faff38,inset 0 -1px #7178ba38,0 5px 0 #020712aa,0 6px 0 #5e87a32b;
+}
+body[data-design="command03"][data-native-quality="reduced"] .workspace-shell {
+ box-shadow:inset 0 1px #d8f6ff44,0 10px 24px #0008;
+}
+body[data-design="command03"][data-native-quality="reduced"].native-hologram .workspace {
+ box-shadow:inset 0 1px rgba(202,252,255,.25),0 8px 20px rgba(0,4,19,.5);
+}
+body[data-design="command03"][data-native-quality="reduced"] .presence-system::before {box-shadow:inset 0 1px #beeaff10;}
+body[data-design="command03"][data-native-quality="reduced"] .center-stage .presence-copy h1 {text-shadow:none;}

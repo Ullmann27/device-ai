@@ -42,6 +42,102 @@
   let visibilityCheck = 0, speechExpiry = 0, currentSpeech = null;
   const readings = [], nativeMeters = new Map();
   const feedVersions = new WeakMap();
+  // Optional Android presence. Every entry maps to a state the original scene and
+  // avatar accept; `orb` is the additional mode name of the original orb only.
+  const presences = Object.freeze({
+    IDLE:{scene:'idle',status:'BEREIT',label:'Bereit',detail:'Dein nächster Auftrag beginnt hier.'},
+    LISTENING:{scene:'listening',status:'HÖRT ZU',label:'Ich höre zu',detail:'Deine Sprache wird aufgenommen.'},
+    THINKING:{scene:'working',status:'DENKT',label:'In Bearbeitung',detail:'Der aktuelle Auftrag wird verarbeitet.'},
+    RESEARCHING:{scene:'working',orb:'research',status:'RECHERCHIERT',label:'Recherche läuft',detail:'Die Recherche läuft.'},
+    LEARNING:{scene:'working',orb:'learning',status:'LERNT',label:'Lernen läuft',detail:'Der Lernvorgang läuft.'},
+    WAITING_FOR_APPROVAL:{scene:'idle',calm:true,status:'WARTET AUF FREIGABE',label:'Rückfrage',
+      detail:'Der Auftrag wartet auf deine Freigabe.'},
+    SPEAKING:{scene:'speaking',status:'SPRICHT',label:'Ich spreche',detail:'Die Sprachausgabe ist aktiv.'},
+    BLOCKED:{scene:'idle',calm:true,status:'BLOCKIERT',label:'Blockiert',detail:'Der Auftrag ist blockiert.'}});
+  const qualities = Object.freeze({FULL:'high',BALANCED:'medium',REDUCED:'low'});
+  const activityKinds = Object.freeze({THINK:'DENKEN',RESEARCH:'RECHERCHE',LEARN:'LERNEN',DEVELOP:'ENTWICKLUNG',
+    EXECUTE:'AUSFÜHRUNG',VERIFY:'PRÜFUNG',TOOL:'WERKZEUG',WORKER:'HELFER',MEMORY:'GEDÄCHTNIS',
+    DOCUMENT:'DOKUMENT',CALCULATION:'BERECHNUNG'});
+  const stepStates = Object.freeze({ACTIVE:'läuft',WAITING:'wartet',DONE:'erledigt',BLOCKED:'blockiert',
+    FAILED:'fehlgeschlagen',UNVERIFIED:'ungeprüft'});
+  const own = (map,key) => typeof key==='string' && Object.prototype.hasOwnProperty.call(map,key);
+  let currentActivity = null, orbMode = 'idle', orbRefined = false, orbStale = false, orbRepair = false;
+  let orbEmitting = false, lastPresence = null, lastIntensity = null, lastQuality = null, audioSent = false;
+  function presenceOf(state) {return own(presences,state?.presence)?presences[state.presence]:null;}
+  function sceneOf(state) {
+    return presenceOf(state)?.scene ?? (state?.speaking===true?'speaking':state?.listening===true?'listening':
+      state?.busy===true?'working':'idle');
+  }
+  function bounded(value,max) {
+    const text=value.slice(0,max);
+    return /[\uD800-\uDBFF]$/.test(text)?text.slice(0,-1):text;
+  }
+  /** Android's optional activity. Anything malformed renders as no activity at all. */
+  function activityOf(value) {
+    if(!value || typeof value!=='object' || !Number.isSafeInteger(value.revision) || value.revision<0 ||
+      !own(activityKinds,value.kind) || typeof value.title!=='string' || typeof value.detail!=='string' ||
+      typeof value.active!=='boolean')return null;
+    const steps=[];
+    for(const step of Array.isArray(value.steps)?value.steps.slice(0,6):[]) {
+      if(!step || typeof step.label!=='string' || !step.label.trim() || !own(stepStates,step.state))continue;
+      steps.push({label:bounded(step.label.trim(),80),state:step.state});
+    }
+    return {revision:value.revision,kind:value.kind,title:bounded(value.title.trim(),80),
+      detail:bounded(value.detail.trim(),160),active:value.active,steps};
+  }
+  // The original orb also knows RESEARCH and LEARNING, which the scene's own state
+  // list cannot name. Announce them with the scene's own event after the scene has
+  // settled; the avatar ignores names outside its list and keeps its valid state.
+  function emitOrb() {
+    orbStale=false;orbEmitting=true;
+    try {window.dispatchEvent(new CustomEvent('continuum:scenechange',{detail:{state:orbMode}}));}
+    finally {orbEmitting=false;}
+  }
+  function syncOrb(name,scene) {
+    const refined=name!==scene, was=orbRefined;
+    if(name===orbMode && refined===was && !orbStale)return;
+    orbMode=name;orbRefined=refined;
+    if(refined || was)emitOrb();
+  }
+  window.addEventListener('continuum:scenechange',event=>{
+    // Light, detail and audio changes make the scene repeat its own coarser state.
+    if(orbEmitting || !orbRefined || event.detail?.state===orbMode)return;
+    orbStale=true;
+    if(orbRepair)return;
+    orbRepair=true;
+    Promise.resolve().then(()=>{orbRepair=false;if(orbStale && orbRefined)emitOrb();});
+  });
+  function sceneAudio(level) {
+    if(level===null && !audioSent)return;
+    audioSent=level!==null;
+    window.ContinuumScene?.setAudioLevel?.(level);
+  }
+  /** Turns the avatar to the element that really shows new content, as operations.js does. */
+  function lookAt(target) {
+    if(!target?.isConnected || document.visibilityState!=='visible' || presenceOf(snapshot)?.calm)return;
+    target.dispatchEvent(new CustomEvent('continuum:gaze',{bubbles:true,detail:{target}}));
+  }
+  function renderPresence(state) {
+    const key=own(presences,state.presence)?state.presence:null;
+    const name=key?key.toLowerCase().replace(/_/g,'-'):null;
+    if(name===null)delete document.body.dataset.presence;
+    else if(document.body.dataset.presence!==name)document.body.dataset.presence=name;
+    if(key!==lastPresence) {
+      lastPresence=key;
+      // A question or a blocker concerns the owner: end any work gaze and face forward.
+      if(key && presences[key].calm && document.visibilityState==='visible')
+        window.dispatchEvent(new CustomEvent('continuum:gaze',{detail:{x:0,y:0,durationMs:2200}}));
+    }
+    const quality=own(qualities,state.quality)?state.quality:null;
+    if(quality===null)delete document.body.dataset.nativeQuality;
+    else if(document.body.dataset.nativeQuality!==quality.toLowerCase())
+      document.body.dataset.nativeQuality=quality.toLowerCase();
+    if(quality!==lastQuality) {
+      lastQuality=quality;
+      // Without a tier the original preview setting ("hoch") stays in force.
+      window.ContinuumScene?.setQuality?.(quality===null?'high':qualities[quality]);
+    }
+  }
   function validScope(data) {
     return data && typeof data.sessionId==='string' && typeof data.pageId==='string' &&
       typeof data.viewId==='string' && chatId.test(data.sessionId) && chatId.test(data.pageId) && chatId.test(data.viewId) &&
@@ -177,6 +273,10 @@
       base.innerHTML='<i></i><i></i><i></i><span></span>';
       $('.presence-core')?.prepend(base);
     }
+    const pill=$('.core-status');
+    if(pill && !pill.hasAttribute('role')) {
+      pill.setAttribute('role','status');pill.setAttribute('aria-live','polite');pill.setAttribute('aria-atomic','true');
+    }
     if(!$('.native-stop-button')) {
       const stop=document.createElement('button');stop.type='button';stop.className='native-stop-button';
       stop.dataset.action='cancel';stop.setAttribute('aria-label','Auftrag stoppen');
@@ -187,11 +287,12 @@
   }
   function renderNativeInstruments() {
     window.ContinuumPresenceInstruments?.dispose();
-    const mode=snapshot?.speaking===true?'speaking':snapshot?.listening===true?'listening':
-      snapshot?.busy===true?'working':'idle';
+    const presence=presenceOf(snapshot), mode=sceneOf(snapshot), activity=snapshot?currentActivity:null;
     const labels={idle:'Bereit',listening:'Ich höre zu',working:'In Bearbeitung',speaking:'Ich spreche'};
     const details={idle:'Dein nächster Auftrag beginnt hier.',listening:'Deine Sprache wird aufgenommen.',
       working:'Der aktuelle Auftrag wird verarbeitet.',speaking:'Die Sprachausgabe ist aktiv.'};
+    const label=activity?.title || presence?.label || labels[mode];
+    const copy=String(activity?.detail || snapshot?.status || presence?.detail || details[mode]).slice(0,180);
     const panel=(selector,kind,title)=>{
       const host=$(selector);if(!host)return null;
       let section=host.querySelector('.native-instrument');
@@ -210,8 +311,35 @@
     const left=panel('[data-presence-left]','activity','AKTIVITÄT');
     if(left) {
       left.dataset.mode=mode;
-      setText(left.querySelector('strong'),snapshot?labels[mode]:'Verbindung startet');
-      setText(left.querySelector('p'),snapshot?String(snapshot.status||details[mode]).slice(0,180):'Warte auf den Android-Status.');
+      setText(left.querySelector('h3'),activity?'AKTIVITÄT · '+activityKinds[activity.kind]:'AKTIVITÄT');
+      setText(left.querySelector('strong'),snapshot?label:'Verbindung startet');
+      setText(left.querySelector('p'),snapshot?copy:'Warte auf den Android-Status.');
+      let steps=left.querySelector('.native-activity-steps');
+      if(!activity) {
+        delete left.dataset.activityKind;delete left.dataset.activityActive;steps?.remove();
+      } else {
+        left.dataset.activityKind=activity.kind.toLowerCase();
+        left.dataset.activityActive=String(activity.active);
+        if(!activity.steps.length)steps?.remove();
+        else {
+          if(!steps) {
+            steps=document.createElement('ol');steps.className='native-activity-steps';
+            steps.setAttribute('aria-label','Arbeitsschritte');left.querySelector('p').after(steps);
+          }
+          // One real revision is rendered once; periodic snapshots keep its nodes.
+          if(feedVersions.get(steps)!==activity.revision) {
+            steps.replaceChildren(...activity.steps.map(step=>{
+              const item=document.createElement('li');item.dataset.state=step.state.toLowerCase();
+              const name=document.createElement('span');name.className='native-step-label';
+              name.textContent=step.label;
+              const state=document.createElement('span');state.className='native-step-state';
+              state.textContent=stepStates[step.state];
+              item.append(name,state);return item;
+            }));
+            feedVersions.set(steps,activity.revision);
+          }
+        }
+      }
     }
     const items=[...new Map([...sourceSets.values()].flatMap(set=>set.items).map(item=>[item.id,item])).values()];
     const right=panel('[data-presence-right]','evidence','QUELLEN');
@@ -231,10 +359,10 @@
     }
     const rail=$('#instrument-content');
     if(rail) {
-      const signature=JSON.stringify([mode,snapshot?.status,items]);
+      const signature=JSON.stringify([mode,snapshot?.status,items,presence?.label,activity?.revision]);
       if(feedVersions.get(rail)!==signature || !rail.querySelector('.native-instrument-summary')) {
         const summary=document.createElement('p');summary.className='native-instrument-summary';
-        summary.textContent=snapshot?labels[mode]+' · '+String(snapshot.status||details[mode]).slice(0,180):'Warte auf Android.';
+        summary.textContent=snapshot?label+' · '+copy:'Warte auf Android.';
         const note=document.createElement('p');note.textContent=items.length?'Quellen dieser Unterhaltung':'Noch keine Quellen in dieser Unterhaltung.';
         rail.replaceChildren(summary,note,...(items.length?[sourceCard({items:items.slice(-8)})]:[]));
         feedVersions.set(rail,signature);
@@ -255,6 +383,12 @@
     const level=String(neon/100);
     if(document.body.style.getPropertyValue('--native-neon')!==level)
       document.body.style.setProperty('--native-neon',level);
+    // The original scene keeps its preview default (.78) until Android names a level.
+    // 0 → the scene's floor, 70 (Android default) → that same .78, 100 → the full 1.
+    if(Number.isFinite(value?.neon) || lastIntensity!==null) {
+      const intensity=Math.round((neon<=70?.35+neon/70*.43:.78+(neon-70)/30*.22)*1000)/1000;
+      if(intensity!==lastIntensity) {lastIntensity=intensity;window.ContinuumScene?.setIntensity?.(intensity);}
+    }
     const motion=value?.lightMotion===false?'off':'on';
     if(document.body.dataset.nativeLightMotion!==motion)document.body.dataset.nativeLightMotion=motion;
   }
@@ -621,9 +755,12 @@
       if(!computerOpen() || document.visibilityState!=='visible') {
         failed('Gerätebild ist nicht sichtbar.');return;
       }
+      const appeared=!displayedFrame;
       invalidateFrame(displayedFrame);disposeFrame(displayedFrame);
       displayedFrame=frame;pendingFrame=null;
       image.onload=null;image.onerror=null;renderComputer();queueFrameAcknowledgement(frame);
+      // Once per appearing image; a continuous stream does not hold the avatar's eyes.
+      if(appeared)lookAt($('#native-computer-panel'));
     };
     image.onerror=()=>failed('Das Gerätebild konnte nicht dargestellt werden.');
     if(typeof image.decode!=='function')image.onload=decoded;
@@ -634,6 +771,7 @@
     clearTimeout(speechExpiry);speechExpiry=0;currentSpeech=null;
     if(retire)speechGate.ended=true;
     window.ContinuumAvatar?.clearSpeech();
+    sceneAudio(null);
     const avatar=$('.avatar-crop');
     if(avatar) {avatar.dataset.speechActive='false';delete avatar.dataset.speechSource;}
   }
@@ -653,6 +791,8 @@
     if(nextGeneration)clearNativeSpeech();
     currentSpeech=data;clearTimeout(speechExpiry);
     window.ContinuumAvatar?.setSpeechFrame({viseme:data.viseme,weight:data.weight,jawOpen:data.jawOpen,durationMs:data.durationMs});
+    // The same measured mouth opening drives the orb; null afterwards means no signal.
+    sceneAudio(Math.max(0,Math.min(1,data.jawOpen)));
     const avatar=$('.avatar-crop');
     if(avatar) {avatar.dataset.speechActive='true';avatar.dataset.speechSource=data.source||'UNKNOWN';}
     speechExpiry=setTimeout(()=>{if(currentSpeech===data)clearNativeSpeech();},data.durationMs);
@@ -739,6 +879,12 @@
     else sourceSets.delete(data.sourceSetId);
     while(sourceSets.size>60)sourceSets.delete(sourceSets.keys().next().value);
     feedRevision++;renderFeed();
+    if(items.length) {
+      const workspace=$('#workspace');
+      const card=workspace?.classList.contains('native-work-active')?
+        workspace.querySelector('#native-live-panel [data-native-source="'+items[0].id+'"]')?.closest('.native-source-card'):null;
+      lookAt(card || $('[data-presence-right] .native-evidence'));
+    }
   }
   function pruneSources() {
     for(const [id,set] of sourceSets)if(set.anchor!==null && !lines.includes(set.anchor))sourceSets.delete(id);
@@ -837,6 +983,7 @@
       coverComputer();
       currentDocument=document;
       renderDocument();
+      lookAt($('#native-document-panel'));
     };
     // Reuse the ORIGINAL 950ms interruptible flight/FLIP controller from PR #850.
     // No second CSS animation or stale timer can overwrite a newer native document.
@@ -902,6 +1049,7 @@
       Object.assign(speechGate,{generation:0,sequence:-1,ended:false,utteranceId:null});
       lines=[];sourceSets.clear();feedRevision++;clearDocument();pendingCommand=null;
       lastDraft='';latestDraftRevision=-1;clientEditRevision=0;sentEditRevision=-1;lastScene=null;
+      currentActivity=null;lastPresence=null;
       if(!initial) {
         dirtyDraft=false;
         const field=$('#command-input');if(field) {field.value='';fitComposer();}
@@ -909,6 +1057,9 @@
       closePanels();
     }
     page=state.pageId;view=state.viewId;viewRevision=state.viewRevision;session=state.sessionId;snapshot=state;
+    const activity=activityOf(state.activity);
+    // An unchanged revision keeps what is already shown, whatever else it carries.
+    if(!activity || activity.revision!==currentActivity?.revision)currentActivity=activity;
     const revision=Number.isSafeInteger(state.draftRevision) && state.draftRevision>=0?state.draftRevision:null;
     const newerDraft=revision!==null && revision>latestDraftRevision;
     // Observing a pending revision prevents its consumed text from returning
@@ -929,7 +1080,8 @@
     }
     window.ContinuumOperations?.detach();
     renderChats();renderMeters();renderFeed();renderDocument();nativeLabels();renderAppearance(state.appearance);
-    const scene=state.speaking===true?'speaking':state.listening===true?'listening':state.busy===true?'working':'idle';
+    renderPresence(state);
+    const presence=presenceOf(state), scene=sceneOf(state);
     if(scene!==lastScene) {
       lastScene=scene;document.body.dataset.state=scene;
       window.ContinuumScene?.setState(scene);
@@ -939,8 +1091,10 @@
         button.setAttribute('aria-disabled','true');
       });
     }
+    syncOrb(presence?.orb || scene,scene);
     const orb=$('#orb-status');
-    if(orb)orb.textContent=state.speaking?'SPRICHT':state.listening?'HÖRT ZU':state.busy?'ARBEITET':'BEREIT';
+    const orbText=presence?presence.status:state.speaking?'SPRICHT':state.listening?'HÖRT ZU':state.busy?'ARBEITET':'BEREIT';
+    if(orb && orb.textContent!==orbText)orb.textContent=orbText;
     const caption=$('#scene-caption');
     if(caption)caption.textContent=state.status||'Bereit';
     // Typing can precede the first Android snapshot. Bind that existing edit now

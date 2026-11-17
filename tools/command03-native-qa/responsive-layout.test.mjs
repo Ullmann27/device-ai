@@ -161,6 +161,115 @@ try {
   await page.emulateMedia({reducedMotion:'reduce'});
   assert.equal(await page.locator('.native-activity .native-instrument-art').evaluate(el=>getComputedStyle(el).animationName),'none');
   report.cinema={stateLighting:'PASS',demoInstrumentsRemoved:'PASS',stopTouchTarget:'PASS',motionPreference:'PASS'};
+  // Optional Android activity: the longest permitted title, detail and six steps.
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  const receive=value=>page.evaluate(packet=>window.ContinuumNative.receive(packet),{...state,...value});
+  const activity={revision:1,kind:'RESEARCH',active:true,
+    title:'Quellenrecherche zu Wärmepumpen-Förderprogrammen in Oberösterreich und Salzburg',
+    detail:'Durchsuche freigegebene Dokumente und offene Webquellen nach aktuellen Fördersätzen, Fristen und '+
+      'Voraussetzungen für private Haushalte im Bestand und prüfe sie.',
+    steps:[['Gedächtnis nach früheren Förderfragen und gespeicherten Bescheiden durchsucht','DONE'],
+      ['Dateisuche in „Dokumente/Heizung“ mit vierzehn Treffern vollzählig abgeschlossen','DONE'],
+      ['Websuche: Landesförderung Oberösterreich Wärmepumpe Sanierung Bestandsgebäude','ACTIVE'],
+      ['Quelle land-oberoesterreich.gv.at/foerderungen konnte nicht geladen werden','FAILED'],
+      ['Freigabe für die kostenpflichtige Abfrage der Förderdatenbank des Bundes','WAITING'],
+      ['Ergebnis gegen eine zweite unabhängige Quelle prüfen und Abweichungen nennen','UNVERIFIED']]
+      .map(([label,state])=>({label,state}))};
+  // The fixture stays inside Android's bounds and close to them, so nothing is cut by the page.
+  assert.ok(activity.title.length>=76 && activity.title.length<=80 && activity.detail.length>=152 &&
+    activity.detail.length<=160 && activity.steps.length===6 &&
+    activity.steps.every(step=>step.label.length>=70 && step.label.length<=80),'Activity fixture bounds');
+  for(const [width,height,label] of [[320,740,'activity-320'],[834,1112,'activity-fold']]) {
+    await page.setViewportSize({width,height});
+    await receive({busy:true,presence:'RESEARCHING',status:'Recherche läuft',activity});
+    await page.evaluate(()=>document.querySelector('.native-activity').scrollIntoView({block:'center'}));
+    const item=await inspect(label);
+    const card=await page.evaluate(()=>{
+      const node=document.querySelector('.native-activity');
+      const box=el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom,width:r.width,height:r.height};};
+      const style=getComputedStyle(node);
+      return {card:box(node),wing:box(document.querySelector('.presence-wing-left')),
+        below:box(document.querySelector('[data-telemetry-left]')),viewport:document.documentElement.clientWidth,
+        scroll:node.scrollWidth,client:node.clientWidth,
+        inner:node.getBoundingClientRect().bottom-parseFloat(style.borderBottomWidth)-parseFloat(style.paddingBottom),
+        title:node.querySelector('strong').textContent,detail:node.querySelector('p').textContent,
+        parts:[...node.querySelectorAll('h3,strong,p,.native-activity-steps,.native-activity-steps li,.native-step-label,.native-step-state')]
+          .map(el=>({name:el.className||el.tagName,...box(el)})),
+        steps:[...node.querySelectorAll('.native-activity-steps li')].map(el=>el.dataset.state+':'+el.textContent)};
+    });
+    assert.equal(card.title,activity.title);assert.equal(card.detail,activity.detail);
+    assert.deepEqual(card.steps,activity.steps.map(step=>step.state.toLowerCase()+':'+step.label+
+      {DONE:'erledigt',ACTIVE:'läuft',FAILED:'fehlgeschlagen',WAITING:'wartet',UNVERIFIED:'ungeprüft'}[step.state]));
+    if(card.scroll>card.client+1)item.failures.push('activity card scrolls horizontally');
+    if(card.card.x<card.wing.x-1 || card.card.right>card.wing.right+1 || card.card.x<0 ||
+      card.card.right>card.viewport+1)item.failures.push('activity card outside its wing or the viewport');
+    if(card.below.y<card.card.bottom-1 && card.below.x<card.card.right && card.below.right>card.card.x)
+      item.failures.push('activity card overlaps the telemetry card');
+    for(const part of card.parts) {
+      if(part.width<=0 || part.height<=0)item.failures.push(part.name+': activity text collapsed');
+      if(part.x<card.card.x-1 || part.right>card.card.right+1)item.failures.push(part.name+': activity text outside card');
+      if(part.bottom>card.inner+1)item.failures.push(part.name+': activity text below card');
+    }
+    // Evidence only: the whole card above the fixed composer, in a taller window of the same width.
+    await page.setViewportSize({width,height:Math.max(height,Math.ceil(card.card.height)+260)});
+    await page.evaluate(()=>document.querySelector('.native-activity').scrollIntoView({block:'start'}));
+    await page.screenshot({path:resolve(output,label+'.png')});
+    await page.setViewportSize({width,height});
+    report.checks.push(item);
+  }
+  // Presence, light, tier, speech level and gaze against the byte-locked scene, orb and avatar.
+  const live=()=>page.evaluate(()=>({orb:window.ContinuumOriginalOrb.getStatus().state,
+    scene:window.ContinuumScene.getStatus(),avatar:window.ContinuumAvatar.getStatus().state,
+    presence:document.body.dataset.presence,quality:document.body.dataset.nativeQuality,
+    text:document.querySelector('#orb-status').textContent,
+    pill:getComputedStyle(document.querySelector('.core-status')).color,
+    drift:getComputedStyle(document.querySelector('.native-holo-field'),'::before').animationName,
+    cross:getComputedStyle(document.querySelector('.native-holo-field'),'::after').animationName,
+    pulse:getComputedStyle(document.querySelector('.native-activity .native-instrument-art')).animationName,
+    shown:['.avatar-crop','.orb-zone','#command-form','.native-activity','.native-evidence','.native-holo-field',
+      '.native-stop-button','.native-settings-shortcuts'].filter(selector=>{
+        const el=document.querySelector(selector), style=getComputedStyle(el), r=el.getBoundingClientRect();
+        return style.display!=='none' && style.visibility==='visible' && Number(style.opacity)>0 && r.width>0 && r.height>0;
+      }).length}));
+  let now=await live();
+  assert.deepEqual([now.orb,now.scene.state,now.avatar,now.text,now.pulse],
+    ['research','working','working','RECHERCHIERT','native-status-breathe']);
+  assert.equal(now.scene.intensity,.78,'Default Android light keeps the present scene light');
+  await receive({busy:true,presence:'RESEARCHING',appearance:{neon:100,lightMotion:true},quality:'REDUCED',activity});
+  now=await live();
+  assert.deepEqual([now.orb,now.scene.state,now.avatar,now.scene.intensity,now.scene.quality,now.quality],
+    ['research','working','working',1,.6,'reduced'],'Light and tier changes keep the orb in its research mode');
+  assert.deepEqual([now.drift,now.cross,now.shown],['none','none',8],'Reduced eases only secondary light');
+  await receive({busy:true,presence:'LEARNING',appearance:{neon:70,lightMotion:true},quality:'BALANCED',activity});
+  now=await live();
+  assert.deepEqual([now.orb,now.scene.state,now.avatar,now.text,now.scene.intensity,now.scene.quality,now.quality],
+    ['learning','working','working','LERNT',.78,.8,'balanced']);
+  assert.deepEqual([now.drift,now.cross,now.shown],['native-holo-drift','none',8]);
+  await receive({busy:true,presence:'WAITING_FOR_APPROVAL',activity:{...activity,revision:2,active:false}});
+  now=await live();
+  assert.deepEqual([now.orb,now.scene.state,now.avatar,now.text,now.presence,now.pill,now.pulse,now.quality,now.scene.quality],
+    ['idle','idle','idle','WARTET AUF FREIGABE','waiting-for-approval','rgb(255, 200, 128)','none',undefined,1]);
+  assert.deepEqual([now.drift,now.cross,now.shown],['native-holo-drift','native-holo-cross',8]);
+  await receive({speaking:true});
+  const speech={...scope,generation:1,sequence:1,active:true,utteranceId:'layout-utterance',viseme:'AA',
+    weight:.7,jawOpen:.45,durationMs:400,source:'PCM_ENVELOPE'};
+  await page.evaluate(packet=>window.ContinuumNative.speech(packet),speech);
+  assert.equal((await live()).scene.audioLevel,.45,'The original scene receives the real speech level');
+  await page.evaluate(packet=>window.ContinuumNative.speech(packet),{...scope,generation:1,sequence:2,active:false});
+  assert.equal((await live()).scene.audioLevel,null);
+  now=await live();
+  assert.deepEqual([now.orb,now.text,now.presence],['speaking','SPRICHT',undefined]);
+  const gaze=await page.evaluate(packet=>new Promise(done=>{
+    window.addEventListener('continuum:gaze',event=>{
+      const r=event.target.getBoundingClientRect();
+      done({name:event.target.className,same:event.detail.target===event.target,width:r.width,height:r.height});
+    },{once:true});
+    window.ContinuumNative.sources(packet);
+  }),{...scope,sourceSetId:'55555555-5555-4555-8555-555555555555',
+    items:[{id:'66666666-6666-4666-8666-666666666666',title:'Quelle',url:'https://example.org/evidence'}]});
+  assert.ok(gaze.name.includes('native-source-card') && gaze.same && gaze.width>0 && gaze.height>0,
+    'The avatar is pointed at a source card that has a real box');
+  report.native={activityLayout:'PASS',presenceOrbModes:'PASS',qualityTiers:'PASS',speechLevel:'PASS',gazeTarget:'PASS'};
   assert.deepEqual(errors, [], 'Unexpected page errors');
   const failures=report.checks.flatMap(check=>check.failures.map(f=>check.label+': '+f));
   console.log(JSON.stringify({baseline:report.baseline?.failures,checks:report.checks.length,failures},null,2));
