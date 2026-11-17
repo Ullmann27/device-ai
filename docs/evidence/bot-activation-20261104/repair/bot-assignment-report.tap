@@ -1,0 +1,25 @@
+✔ existing profile port selects distinct immutable identities without changing task budget (7.595878ms)
+✔ copied JSON and unregistered identities cannot acquire assignment origin (1.16557ms)
+✔ same builder/verifier and unsupported stage are rejected (0.889416ms)
+✔ prepared task fingerprint and canonical task cannot be exchanged (1.020983ms)
+✔ rename retains identity; removal and workspace change invalidate current association (1.674635ms)
+✔ replacing the external store method cannot substitute the admitted reader (0.710797ms)
+✔ profile model cap restricts task and a later budget reduction revokes the association (1.097989ms)
+✔ bot execution requires actual admitted isolation before reading journals or invoking provider (1.396247ms)
+✔ Echo executes deterministic canonical report without extra model call, journal mutation or owner text (2699.963772ms)
+✔ reporter must still exist; rename preserves stable identity (28.825153ms)
+✔ current prepared grant fingerprint cannot be replaced (1.403208ms)
+✔ changed source is blocked before a success report (7.797291ms)
+✔ tampered canonical journal MAC cannot be summarized (9.3777ms)
+✔ owner abort cannot be promoted to confirmed success (14.633598ms)
+✔ missing or modified execution receipt invalidates confirmed result (26.914107ms)
+✔ modified report artifact is rejected rather than silently overwritten (48.487885ms)
+✔ assignment expiry blocks reporter with no additional inference (1.233763ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3140.724593
