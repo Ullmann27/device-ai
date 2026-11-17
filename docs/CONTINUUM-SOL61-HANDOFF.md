@@ -1,5 +1,7 @@
 # SOL 6.1 – Sicherung für Astra, 2026-10-19
 
+Aktueller APK-Download: [53.548.879 Bytes, Code 54b93d2](https://github.com/Ullmann27/device-ai/raw/7a16fbb2099effd1706cc2915315a0079e83915d/release-artifacts/DeviceAI-Continuum-Preview.apk). SHA256: `fe2f8259586b917d6af35d6bc16db917a9cf53bc08a05d9d7c097178a2e27a9f`. Von GitHub vollständig zurückgeladen und bytegleich geprüft. Der unten dokumentierte Hash `110c41f9…` ist der ältere Sicherungsstand. Privates Repository: Anmeldung erforderlich. Release-Assetupload weiterhin HTTP 401; GitHub-Hosted Actions wegen Kontolimit gesperrt.
+
 Basis: PR #28 / `continuum/argon-safety-review-20261017` bei `ab2365a`; letzter Produktcode `ad82f3d`. Alle bisherigen Code-, Test- und Grafikänderungen sind im Sicherungsbranch enthalten. Keine weitere Entwicklung, kein Merge nach main.
 
 - ALWAYS_ON dauerhaft/explizit/widerrufbar; ToolGate und HTTPS/SSRF bleiben aktiv; maximal zwei Modell-Webaufrufe. Abbruch verwirft Ergebnisse, Fallback respektiert Cancellation.
