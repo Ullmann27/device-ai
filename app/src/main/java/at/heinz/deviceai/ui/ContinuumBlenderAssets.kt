@@ -39,7 +39,7 @@ object ContinuumBlenderAssets {
     /** Raster opacity over the AGSL/vector background: keeps panel text contrast and some animated haze. */
     const val BACKGROUND_ALPHA = .86f
     /** Tile scene opacity under the glass gloss, icon and label. */
-    const val TILE_ALPHA = .58f
+    const val TILE_ALPHA = .50f
 
     /** Image whose pixels best match an orb of radius [radiusDp] at [density] (no needless 1024 decode on phones). */
     fun orbAsset(radiusDp: Float, density: Float): Asset {

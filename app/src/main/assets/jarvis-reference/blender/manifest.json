@@ -13,8 +13,8 @@
         1024,
         1024
       ],
-      "bytes": 217734,
-      "sha256": "f66827e6e6932529056d5be13b55186fe5e36dbb05c7fbf97602a2bf6cdd216f",
+      "bytes": 227754,
+      "sha256": "8d3d4b3a5ecaa67abcd382348a8db528b0e05714a400088771afbb63b5d01e36",
       "metrics": {
         "centerX": 0.5,
         "centerY": 0.457,
@@ -28,8 +28,8 @@
         512,
         512
       ],
-      "bytes": 86788,
-      "sha256": "d90c4422730d60aaf851415a14d7756ca82d47e7e221a487246e3002b8afb91f",
+      "bytes": 89088,
+      "sha256": "7f8b944c2ce511d4432542a15177e92863ee4d1fe21612303ba9da5742003ef3",
       "metrics": {
         "centerX": 0.5,
         "centerY": 0.457,
@@ -43,8 +43,8 @@
         1600,
         1200
       ],
-      "bytes": 31382,
-      "sha256": "8f5c8ea8771eb3ed6a339e11288b5b3ad46d19fefe10a75957772b982135ff66"
+      "bytes": 37492,
+      "sha256": "bee1ae7c668df9a2148b5a0787d39ac90218e7057fedd96a7b295cf190491279"
     },
     {
       "asset": "jarvis-reference/blender/bg-tall-900x1800.webp",
@@ -53,8 +53,8 @@
         900,
         1800
       ],
-      "bytes": 28492,
-      "sha256": "73e55d4e8d550027be85cc1af8a8c68b908bad8bd2c30cd6674ad27b414c7e4b"
+      "bytes": 33986,
+      "sha256": "28f7b47aab8be515b222fec127f23f45df7445f41e1a8c70c7b894bd18b0ceb1"
     },
     {
       "asset": "jarvis-reference/blender/tile-agents.webp",
@@ -63,8 +63,8 @@
         320,
         240
       ],
-      "bytes": 6200,
-      "sha256": "72b9ccb202ce9dd67df3e8d7a50f5f3e3247cc597156b316b24d60cd83efd1c2"
+      "bytes": 3282,
+      "sha256": "af9439c998d9f7faefb0d923f39d098ee3209ffe1c458132c03412645fc8cedb"
     },
     {
       "asset": "jarvis-reference/blender/tile-chat.webp",
@@ -73,8 +73,8 @@
         320,
         240
       ],
-      "bytes": 6188,
-      "sha256": "51b1cf4f05140fd58c0ac1fe350323c9500fc247ef9e0e10c8ea2a5b523d19fa"
+      "bytes": 3406,
+      "sha256": "e9a7af4b06b41896bcb56ab577198db3040a69b14ebac11b26ea809bdce9a4cb"
     },
     {
       "asset": "jarvis-reference/blender/tile-device.webp",
@@ -83,8 +83,8 @@
         320,
         240
       ],
-      "bytes": 3198,
-      "sha256": "3898e3762f4defee62894f5d6affebe3565ff8724bcd9bed9a55f7dd55ca5d3c"
+      "bytes": 2056,
+      "sha256": "4338c84c0423a6f0479a42d5eee3b3aa72ed3b6445855600598f488f23da985b"
     },
     {
       "asset": "jarvis-reference/blender/tile-files.webp",
@@ -93,8 +93,8 @@
         320,
         240
       ],
-      "bytes": 4812,
-      "sha256": "4251abbbd340ea81420f87979cb4ed142a28d45d0dd029ddab018a9f84795e99"
+      "bytes": 2966,
+      "sha256": "069a011fb4eb9bd226156fc3ad6eaf9e1891da13a07eabb60409505a12de00ee"
     },
     {
       "asset": "jarvis-reference/blender/tile-home.webp",
@@ -103,8 +103,8 @@
         320,
         240
       ],
-      "bytes": 4272,
-      "sha256": "e9b4b52b936118fae9e73945ec76b6173bc8110978b1b4220041318afd14b98f"
+      "bytes": 2700,
+      "sha256": "dc2be774d26fc13b96ca713dc53cc72600df7f0d499d36bdd4ca1f3ccef4fd6a"
     },
     {
       "asset": "jarvis-reference/blender/tile-memory.webp",
@@ -113,8 +113,8 @@
         320,
         240
       ],
-      "bytes": 6050,
-      "sha256": "3c11a0896dd6765b5864b979b4d2d548cbdf4cb1a1f9b6608b3d1d0267658a2a"
+      "bytes": 3338,
+      "sha256": "843c28bf94d9493441b4fd5d3dcce28a406581f0b0e23e4615fcbb7656e2a6bd"
     },
     {
       "asset": "jarvis-reference/blender/tile-research.webp",
@@ -123,8 +123,8 @@
         320,
         240
       ],
-      "bytes": 8318,
-      "sha256": "801a911821fab11aaebfefceb39ac81d7a421349c3fd5e016e45f2e2b5fa963a"
+      "bytes": 3698,
+      "sha256": "6a8f113e35f53ee053dac73cce0a828ef795aa7d8c4a51949ced47f79ebff7bf"
     },
     {
       "asset": "jarvis-reference/blender/tile-settings.webp",
@@ -133,8 +133,8 @@
         320,
         240
       ],
-      "bytes": 6388,
-      "sha256": "29a6926696d0092b6626e6f06ca7409a8e235a208f7937297a27dd2d8d15e794"
+      "bytes": 3558,
+      "sha256": "19f36720bc7d72622dfb9962bb9c482fe8dc19d28f0fcf266c3c2e0d2400dfe9"
     },
     {
       "asset": "jarvis-reference/blender/tile-web.webp",
@@ -143,8 +143,8 @@
         320,
         240
       ],
-      "bytes": 9072,
-      "sha256": "acef2e6a2a726b5d6010f1d445b0711b0e08ed09ea0fb66bf4e35b86083f5957"
+      "bytes": 4096,
+      "sha256": "6fc98e37c2c1685e211b775714a16f9bd0ca7312429ecb1668225c6f89ace9d0"
     }
   ]
 }
