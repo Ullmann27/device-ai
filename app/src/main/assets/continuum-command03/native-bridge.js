@@ -57,7 +57,7 @@
   const qualities = Object.freeze({FULL:'high',BALANCED:'medium',REDUCED:'low'});
   const activityKinds = Object.freeze({THINK:'DENKEN',RESEARCH:'RECHERCHE',LEARN:'LERNEN',DEVELOP:'ENTWICKLUNG',
     EXECUTE:'AUSFÜHRUNG',VERIFY:'PRÜFUNG',TOOL:'WERKZEUG',WORKER:'HELFER',MEMORY:'GEDÄCHTNIS',
-    DOCUMENT:'DOKUMENT',CALCULATION:'BERECHNUNG'});
+    DOCUMENT:'DOKUMENT',CALCULATION:'BERECHNUNG',NOTIFICATION:'BENACHRICHTIGUNG'});
   const stepStates = Object.freeze({ACTIVE:'läuft',WAITING:'wartet',DONE:'erledigt',BLOCKED:'blockiert',
     FAILED:'fehlgeschlagen',UNVERIFIED:'ungeprüft'});
   const own = (map,key) => typeof key==='string' && Object.prototype.hasOwnProperty.call(map,key);

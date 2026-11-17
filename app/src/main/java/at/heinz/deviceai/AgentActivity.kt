@@ -170,6 +170,7 @@ class AgentActivity : Activity() {
         private const val CONVERSATION_RESUME_DELAY_MS = 450L
         private const val CONVERSATION_RETRY_DELAY_MS = 300L
         private const val CONVERSATION_IDLE_CHECK_MS = 900L
+        private const val NOTIFICATION_RETRY_MS = 3_000L
         private const val LOCAL_SPEECH_PERMISSION_REQUEST = 2241
         private const val READINESS_CAMERA_PERMISSION_REQUEST = 2242
         private const val READINESS_MIC_PERMISSION_REQUEST = 2243
@@ -372,6 +373,43 @@ class AgentActivity : Activity() {
     private val conversationResume = Runnable { resumeConversationAfterReply() }
     private val conversationForegroundRecovery = Runnable { recoverForegroundConversation() }
     private val conversationIdleCheck = Runnable { checkConversationReplyIdle() }
+    /** Tone of the owner's current turn: selects speech rate, pauses and the wording of delay cues only. */
+    private var spokenReplyRegister = at.heinz.deviceai.cognitive.ConversationRegister.CASUAL
+    private var spokenPieceCounter = 0
+    private val latencyCues = at.heinz.deviceai.cognitive.ConversationalLatencyCue()
+    private var latencyCueIndex = 0
+    private var latencyCueTurn = 0L
+    private val conversationLatencyCue = Runnable { speakConversationLatencyCue() }
+    /**
+     * Interrupting a spoken reply by voice. Opt-in and off by default: the thresholds are heuristics that
+     * have not been calibrated on a device. Only the per-frame level leaves the monitor, never audio.
+     */
+    private val bargeInMonitor by lazy { AndroidBargeInMonitor(this) { onVoiceBargeIn() } }
+    private fun voiceBargeInEnabled(): Boolean =
+        getSharedPreferences("continuum-voice", MODE_PRIVATE).getBoolean("voice_barge_in", false)
+
+    /** Drive mode: voice-first use while driving. A policy object; every effect is applied explicitly here. */
+    private val driveMode = at.heinz.deviceai.cognitive.DriveMode()
+    private val notificationPolicy = at.heinz.deviceai.notifications.NotificationAnnouncementPolicy()
+    private val notificationQueue = at.heinz.deviceai.notifications.AnnouncementQueue()
+    private var announcementUtteranceId: String? = null
+    /** Bounded retry for announcements that waited while something else held the voice channel. */
+    private val notificationRetry = object : Runnable {
+        override fun run() {
+            if (isFinishing || isDestroyed || notificationQueue.size == 0) return
+            if (!speakQueuedNotifications() && notificationQueue.size > 0)
+                mainHandler.postDelayed(this, NOTIFICATION_RETRY_MS)
+        }
+    }
+    private val notificationSubscriber = object : at.heinz.deviceai.notifications.ContinuumNotificationBus.Subscriber {
+        override fun onNotificationPosted(notification: at.heinz.deviceai.notifications.IncomingNotification) {
+            runOnUiThread { onIncomingNotification(notification) }
+        }
+        // A removed notification may come again with the same text (next message in the same chat).
+        override fun onNotificationRemoved(key: String) {
+            runOnUiThread { notificationQueue.remove(key); notificationPolicy.forget(key) }
+        }
+    }
     private var voiceReady = false
     private var voiceInitialized = false
     private var voiceEnabled = false
@@ -813,6 +851,11 @@ class AgentActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        at.heinz.deviceai.notifications.ContinuumNotificationBus.subscribe(notificationSubscriber)
+        at.heinz.deviceai.notifications.DriveBackgroundAnnouncer.foregroundPresenterActive = true
+        // Drive mode belongs to this app session: a flag left over from an ended process is cleared.
+        if (!driveMode.active && at.heinz.deviceai.notifications.DriveBackgroundAnnouncer.driveModeActive(this))
+            at.heinz.deviceai.notifications.DriveBackgroundAnnouncer.markDriveMode(this, false)
         if (::bridge.isInitialized) bridge.refresh()
         if (::cloudBadge.isInitialized) updateCloudBadge()
         if (::modelCatalog.isInitialized) reloadInstalledModels()
@@ -875,6 +918,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        at.heinz.deviceai.notifications.ContinuumNotificationBus.unsubscribe(notificationSubscriber)
+        at.heinz.deviceai.notifications.DriveBackgroundAnnouncer.foregroundPresenterActive = false
         command03MainStage?.cancelComposerFocus()
         // A visible split-screen task retains its already approved feed while the owner taps the target app.
         // Speech still ends below; only that existing visible computer session keeps the WebView drawing.
@@ -6638,12 +6683,11 @@ class AgentActivity : Activity() {
             .setItems(arrayOf(
                 (if (mayaSelected()) "● " else "") + MayaSpeech.VOICE_NAME + " · ElevenLabs",
                 "Android · Offline-Stimme",
-                "Gesprächspause · " + at.heinz.deviceai.cognitive.ContinuousConversationMode
-                    .silenceWindowLabel(conversationSilenceWindowSeconds())
+                "Gespräch, Fahrmodus und Ansagen"
             )) { _, choice ->
                 when (choice) {
                     0 -> showMayaVoiceSettings()
-                    2 -> showConversationSilenceWindowPicker()
+                    2 -> showConversationSettings()
                     else -> {
                         interruptReplySpeech()
                         getSharedPreferences("continuum-voice", MODE_PRIVATE).edit()
@@ -6659,6 +6703,127 @@ class AgentActivity : Activity() {
         at.heinz.deviceai.cognitive.ContinuousConversationMode.silenceWindowSeconds(
             getSharedPreferences("continuum-voice", MODE_PRIVATE).getInt("conversation_silence_window_s",
                 at.heinz.deviceai.cognitive.ContinuousConversationMode.DEFAULT_SILENCE_WINDOW_S))
+
+    /** Everything about talking hands-free: listening window, interrupting by voice, drive mode, announcements. */
+    private fun showConversationSettings() {
+        val voicePrefs = getSharedPreferences("continuum-voice", MODE_PRIVATE)
+        val announcements = at.heinz.deviceai.notifications.NotificationAnnouncementSettings.load(this)
+        val access = at.heinz.deviceai.notifications.NotificationAnnouncementSettings.isAccessGranted(this)
+        AlertDialog.Builder(this).setTitle("Gespräch, Fahrmodus und Ansagen")
+            .setItems(arrayOf(
+                "Gesprächspause · " + at.heinz.deviceai.cognitive.ContinuousConversationMode
+                    .silenceWindowLabel(conversationSilenceWindowSeconds()),
+                "Unterbrechen per Stimme · " + (if (voiceBargeInEnabled()) "an" else "aus") +
+                    " (experimentell, am Gerät noch nicht abgestimmt)",
+                "Fahrmodus · " + if (driveMode.active) "an" else "aus",
+                "Benachrichtigungen ansagen · " + when {
+                    !access -> "Android-Zugriff fehlt"
+                    !announcements.enabled -> "aus"
+                    else -> announcements.apps.count {
+                        it.value.mode != at.heinz.deviceai.notifications.AnnouncementMode.OFF
+                    }.let { count -> if (count == 1) "an · 1 App" else "an · $count Apps" }
+                }
+            )) { _, choice ->
+                when (choice) {
+                    0 -> showConversationSilenceWindowPicker()
+                    1 -> {
+                        val enable = !voiceBargeInEnabled()
+                        if (!enable) bargeInMonitor.stop()
+                        voicePrefs.edit().putBoolean("voice_barge_in", enable).apply()
+                        Toast.makeText(this, if (enable)
+                            "Unterbrechen per Stimme ist an. Sprich im Gesprächsmodus einfach dazwischen. " +
+                                "Löst es falsch aus, schalte es hier wieder ab."
+                            else "Unterbrechen per Stimme ist aus. Antippen des Mikrofons unterbricht weiterhin.",
+                            Toast.LENGTH_LONG).show()
+                    }
+                    2 -> setDriveMode(!driveMode.active, announce = true)
+                    3 -> showNotificationAnnouncementSettings()
+                }
+            }.setNegativeButton("Schließen", null).show()
+    }
+
+    private fun showNotificationAnnouncementSettings() {
+        val store = at.heinz.deviceai.notifications.NotificationAnnouncementSettings
+        val settings = store.load(this)
+        val access = store.isAccessGranted(this)
+        AlertDialog.Builder(this).setTitle("Benachrichtigungen ansagen")
+            .setItems(arrayOf(
+                "Android-Zugriff · " + if (access) "erteilt" else "fehlt – jetzt in Android erlauben",
+                "Ansagen · " + if (settings.enabled) "an" else "aus",
+                "Apps und Ansageart wählen …",
+                "Installierte Messenger übernehmen (App und Absender)",
+                "Außerhalb von Gespräch und Fahrmodus · " +
+                    if (settings.quietWhenNotInConversation) "still" else "auch ansagen"
+            )) { _, choice ->
+                when (choice) {
+                    0 -> runCatching { startActivity(store.accessSettingsIntent()) }.onFailure {
+                        Toast.makeText(this, "Die Android-Einstellung konnte nicht geöffnet werden.", Toast.LENGTH_LONG).show()
+                    }
+                    1 -> {
+                        val enabled = !settings.enabled
+                        store.setEnabled(this, enabled)
+                        if (!enabled) { notificationQueue.clear(); notificationPolicy.reset() }
+                        Toast.makeText(this, if (!enabled) "Ansagen sind aus. Es wird nichts mehr gelesen."
+                            else if (access) "Ansagen sind an – nur für Apps, die du auswählst. Sicherheitscodes werden nie vorgelesen."
+                            else "Ansagen sind an, aber der Android-Zugriff fehlt noch.", Toast.LENGTH_LONG).show()
+                    }
+                    2 -> showNotificationAppChooser()
+                    3 -> Thread {
+                        val installed = runCatching {
+                            packageManager.getInstalledApplications(0).map { it.packageName }.toSet()
+                        }.getOrDefault(emptySet())
+                        val suggested = store.messengerSuggestions(installed)
+                        runOnUiThread {
+                            if (isFinishing || isDestroyed) return@runOnUiThread
+                            store.update(this) { current -> current.copy(apps = current.apps + suggested) }
+                            Toast.makeText(this, if (suggested.isEmpty()) "Kein bekannter Messenger installiert."
+                                else "${suggested.size} Messenger übernommen: App und Absender werden genannt, der Text nicht.",
+                                Toast.LENGTH_LONG).show()
+                        }
+                    }.start()
+                    4 -> store.update(this) {
+                        it.copy(quietWhenNotInConversation = !it.quietWhenNotInConversation)
+                    }
+                }
+            }.setNegativeButton("Schließen", null).show()
+    }
+
+    /** Installed apps with a launcher entry; the owner decides per app what, if anything, is spoken. */
+    private fun showNotificationAppChooser() {
+        val store = at.heinz.deviceai.notifications.NotificationAnnouncementSettings
+        Thread {
+            val apps = runCatching {
+                packageManager.getInstalledApplications(0)
+                    .filter { it.packageName != packageName && packageManager.getLaunchIntentForPackage(it.packageName) != null }
+                    .map { it.packageName to it.loadLabel(packageManager).toString().take(40) }
+                    .sortedBy { it.second.lowercase(Locale.GERMAN) }
+            }.getOrDefault(emptyList())
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                if (apps.isEmpty()) {
+                    Toast.makeText(this, "Die App-Liste konnte nicht gelesen werden.", Toast.LENGTH_LONG).show()
+                    return@runOnUiThread
+                }
+                val current = store.load(this).apps
+                val labels = apps.map { (pkg, label) ->
+                    label + " · " + store.modeLabel(current[pkg]?.mode ?: at.heinz.deviceai.notifications.AnnouncementMode.OFF)
+                }
+                AlertDialog.Builder(this).setTitle("App wählen")
+                    .setItems(labels.toTypedArray()) { _, index ->
+                        val (pkg, label) = apps[index]
+                        val modes = at.heinz.deviceai.notifications.AnnouncementMode.entries
+                        AlertDialog.Builder(this).setTitle(label)
+                            .setSingleChoiceItems(modes.map { store.modeLabel(it) }.toTypedArray(),
+                                modes.indexOf(current[pkg]?.mode ?: at.heinz.deviceai.notifications.AnnouncementMode.OFF)
+                            ) { dialog, which ->
+                                store.setAppMode(this, pkg, modes[which])
+                                dialog.dismiss()
+                                Toast.makeText(this, "$label: ${store.modeLabel(modes[which])}", Toast.LENGTH_SHORT).show()
+                            }.setNegativeButton("Abbrechen", null).show()
+                    }.setNegativeButton("Schließen", null).show()
+            }
+        }.start()
+    }
 
     private fun showConversationSilenceWindowPicker() {
         val choices = at.heinz.deviceai.cognitive.ContinuousConversationMode.SILENCE_WINDOW_CHOICES_S
@@ -7483,6 +7648,12 @@ class AgentActivity : Activity() {
             ?: at.heinz.deviceai.cognitive.OwnerComputerIntentParser.parse(addressed)
         return when (parsed) {
             is at.heinz.deviceai.cognitive.OwnerComputerIntentParser.Result.Ready -> {
+                driveMode.deferVisualApproval(request)?.let { deferral ->
+                    input.text.clear()
+                    addUserMessage(request, keepCockpit = true)
+                    addAssistantMessage(deferral.spokenSentence, preserveLocalContext = true, keepCockpit = true)
+                    return true
+                }
                 input.text.clear()
                 showHomeDashboard()
                 addUserMessage(request, keepCockpit = true)
@@ -11042,6 +11213,8 @@ class AgentActivity : Activity() {
     private fun stopVoiceAnimation() = stopVoiceAnimation(true)
 
     private fun stopVoiceAnimation(interrupted: Boolean) {
+        // The microphone must be free before any recognizer start; stop() returns with it released.
+        if (voiceBargeInEnabled() || bargeInMonitor.running) bargeInMonitor.stop()
         mayaSpeech?.stop()
         speechUsesMaya = false
         speechInternetRevision = -1L
@@ -11075,6 +11248,9 @@ class AgentActivity : Activity() {
                     refreshHologramState()
                     mainHandler.removeCallbacks(voiceFrame)
                     mainHandler.post(voiceFrame)
+                    // Listen for the owner's voice over the reply only inside an explicit hands-free session.
+                    if (voiceBargeInEnabled() && continuousConversation.active && !bargeInMonitor.running)
+                        bargeInMonitor.start { voiceSignal.level(android.os.SystemClock.elapsedRealtime()) }
                 }
             }
             override fun onBeginSynthesis(utteranceId: String?, sampleRateInHz: Int, audioFormat: Int, channelCount: Int) {
@@ -11111,6 +11287,10 @@ class AgentActivity : Activity() {
                     // Hands-free mode listens again only after its bound reply ends; a failed but
                     // visible reply also continues, an owner interruption pauses the mode.
                     if (id != null) onConversationSpeechFinished(id, interrupted)
+                    if (id != null && id == announcementUtteranceId) {
+                        announcementUtteranceId = null
+                        afterNotificationAnnouncement()
+                    }
                 }
             }
         }
@@ -11143,6 +11323,13 @@ class AgentActivity : Activity() {
         }
         speechChunks.markLastChunkSubmitted(turn)
         speechTurnId = turn
+        mainHandler.removeCallbacks(conversationLatencyCue)
+        // Outside the hands-free conversation no spoken turn set a tone: use the neutral one.
+        if (!continuousConversation.active)
+            spokenReplyRegister = at.heinz.deviceai.cognitive.ConversationRegister.CASUAL
+        // Slightly faster when joking, slightly slower on serious matters; one recognisable speaker throughout.
+        voiceEngine?.setSpeechRate(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speechRate *
+            at.heinz.deviceai.cognitive.HumanSpeechTiming.rateFactor(spokenReplyRegister))
         if (!speakNextChunk(turn, TextToSpeech.QUEUE_FLUSH)) stopVoiceAnimation()
     }
 
@@ -11202,8 +11389,27 @@ class AgentActivity : Activity() {
         if (speechChunks.onChunkFinished(turn, chunk) !=
             at.heinz.deviceai.cognitive.ApprovedSpeechChunkQueue.Completion.MORE_CHUNKS) return false
         // End the finished piece in the avatar now; a STOP before the next onStart then leaves no stale utterance.
-        voiceUtteranceId?.let { avatarDirector.speechEnded(it, interrupted = false) }
-        return speakNextChunk(turn, TextToSpeech.QUEUE_ADD)
+        val finishedId = voiceUtteranceId
+        finishedId?.let { avatarDirector.speechEnded(it, interrupted = false) }
+        // People pause between sentences, and never by the same length twice. The next piece follows after a
+        // pause from the measured medium band.
+        val pause = at.heinz.deviceai.cognitive.HumanSpeechTiming.pauseBetweenMs(
+            voiceAvatarText, "next", spokenReplyRegister, ++spokenPieceCounter)
+        // During the pause no utterance is current: a late or repeated engine callback for the finished piece
+        // must neither end the reply nor reopen the microphone. The hands-free session stays bound to the
+        // reply through a placeholder id until the next piece takes over.
+        val pauseId = "device-ai-pause-" + UUID.randomUUID()
+        voiceUtteranceId = null
+        speechChunkId = null
+        continuousConversation.assistantSpeechQueued(pauseId)
+        mainHandler.postDelayed({
+            if (speechTurnId != turn || isFinishing || isDestroyed) return@postDelayed
+            if (!speakNextChunk(turn, TextToSpeech.QUEUE_ADD)) {
+                stopVoiceAnimation(false)
+                onConversationSpeechFinished(pauseId, false)
+            }
+        }, pause)
+        return true
     }
 
     private fun showWebLearningInbox() {
@@ -12636,11 +12842,18 @@ class AgentActivity : Activity() {
                         if (textOnlyTurn) localRuntime.toolFreePromptUtf8Bytes
                         else localRuntime.tokenAwarePromptUtf8Bytes
                     } else null)
-                val briefInstruction = if (requestedPromptCap ==
+                // Form only: how to talk in this turn. Bots keep their own voice; a written work order keeps the
+                // detailed instruction above. Part of the required tail, so the prompt budget accounts for it.
+                val conversationStyle = if (botTask != null) "" else
+                    at.heinz.deviceai.cognitive.ConversationStyle.promptBlock(
+                        at.heinz.deviceai.cognitive.ConversationStyle.detect(text),
+                        spoken = continuousConversation.active || driveMode.active,
+                        maxSentences = driveMode.effects?.maxSpokenSentences)
+                val briefInstruction = (if (requestedPromptCap ==
                     at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS)
                     "\nKurze Einstiegsfrage: Antworte möglichst direkt in höchstens drei kurzen Sätzen. " +
                         "Keine zusätzlichen internen Denkschritte behaupten."
-                else ""
+                else "") + conversationStyle
                 // Required owner request and selected evidence are atomic. Do not
                 // cut a negation to fit optional history or advisory text.
                 val promptEnd = promptTail + briefInstruction + "\n" +
@@ -15748,6 +15961,7 @@ class AgentActivity : Activity() {
         mainHandler.removeCallbacks(conversationListen)
         mainHandler.removeCallbacks(conversationResume)
         mainHandler.removeCallbacks(conversationIdleCheck)
+        mainHandler.removeCallbacks(conversationLatencyCue)
         mainHandler.removeCallbacks(conversationForegroundRecovery)
         if (continuousConversation.active) continuousConversation.stop()
         refreshConversationMicPresentation()
@@ -15849,6 +16063,16 @@ class AgentActivity : Activity() {
             android.os.SystemClock.elapsedRealtime())) {
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.SEND -> {
                 if (consumeOwnerWorkInterruption(spoken.trim())) return
+                driveMode.commandFor(spoken)?.let { command ->
+                    addUserMessage(spoken.trim(), keepCockpit = true)
+                    val enter = command == at.heinz.deviceai.cognitive.DriveMode.Command.ENTER
+                    if (enter == driveMode.active) addAssistantMessage(
+                        if (enter) "Der Fahrmodus ist schon an." else "Der Fahrmodus ist schon aus.",
+                        preserveLocalContext = true, keepCockpit = true)
+                    else setDriveMode(enter, announce = true)
+                    scheduleConversationIdleCheck()
+                    return
+                }
                 val focused = input.hasFocus() || command03SpeechSelection == command03Binding() && command03SpeechSelection != null
                 val merged = at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.mergeDictation(
                     input.text.toString(), if (focused) input.selectionStart else -1,
@@ -15863,7 +16087,10 @@ class AgentActivity : Activity() {
                         continuousConversation.sendRejected()
                         pauseContinuousConversationNotice("Die Nachricht wurde nicht gesendet und bleibt als Entwurf.")
                     }
-                    else -> scheduleConversationIdleCheck()
+                    else -> {
+                        scheduleConversationIdleCheck()
+                        scheduleConversationLatencyCue(spoken)
+                    }
                 }
             }
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.STOP ->
@@ -15889,6 +16116,9 @@ class AgentActivity : Activity() {
             android.os.SystemClock.elapsedRealtime())) {
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.RETRY_LISTEN -> {
                 mainHandler.removeCallbacks(conversationListen)
+                // The owner was silent in this round: the natural moment for a waiting announcement.
+                // Listening re-arms after it has been spoken.
+                if (silence && speakQueuedNotifications(recognizerRoundEnded = true)) return
                 mainHandler.postDelayed(conversationListen,
                     if (silence) CONVERSATION_RETRY_DELAY_MS else continuousConversation.retryDelayMs(failure))
             }
@@ -15907,6 +16137,62 @@ class AgentActivity : Activity() {
     }
 
     /** Covers replies without audible speech (voice output off) and long model runs. */
+    /**
+     * A spoken turn was accepted. Silence of 600 ms and more is heard as hesitation
+     * ([at.heinz.deviceai.cognitive.HumanSpeechTiming]); while the local model really is still working, one
+     * short spoken sign of life fills that gap, and one more after several seconds. A deterministic reply that
+     * arrives earlier cancels the cue by leaving the THINKING state.
+     */
+    private fun scheduleConversationLatencyCue(ownerTurn: String) {
+        spokenReplyRegister = at.heinz.deviceai.cognitive.ConversationStyle.detect(ownerTurn)
+        latencyCueIndex = 0
+        latencyCueTurn = continuousConversation.turn
+        mainHandler.removeCallbacks(conversationLatencyCue)
+        at.heinz.deviceai.cognitive.HumanSpeechTiming.cueDelayMs(0)?.let {
+            mainHandler.postDelayed(conversationLatencyCue, it)
+        }
+    }
+
+    private fun speakConversationLatencyCue() {
+        if (isFinishing || isDestroyed || !foregroundLearningActive) return
+        // Only while this very turn is still being answered by a running model turn; never over real speech.
+        if (continuousConversation.state != at.heinz.deviceai.cognitive.ContinuousConversationMode.State.THINKING ||
+            continuousConversation.turn != latencyCueTurn || !busy || voiceListening || voiceSpeaking ||
+            voiceUtteranceId != null || centerDialog?.isShowing == true) return
+        // Maya is a paid network voice with its own latency; a delay cue must be instant and free. With Maya
+        // selected the stage shows the thinking state only.
+        if (!voiceEnabled || !replyVoiceReady() || (ownerReplyAllowsMaya && mayaAvailable()) ||
+            !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(
+                voiceEngine?.voice?.isNetworkConnectionRequired)) return
+        val text = latencyCues.next(latencyCueIndex, spokenReplyRegister,
+            (android.os.SystemClock.elapsedRealtime() / 1_000L).toInt()) ?: return
+        val id = "device-ai-cue-" + UUID.randomUUID()
+        voiceUtteranceId = id
+        voiceSignal.activate(id)
+        voiceAvatarText = text
+        // Not bound to the conversation mode: the microphone stays closed until the real reply has finished.
+        if (voiceEngine?.speak(text, TextToSpeech.QUEUE_FLUSH, null, id) != TextToSpeech.SUCCESS) {
+            stopVoiceAnimation(false)
+            return
+        }
+        latencyCueIndex++
+        val first = at.heinz.deviceai.cognitive.HumanSpeechTiming.cueDelayMs(0) ?: 0L
+        at.heinz.deviceai.cognitive.HumanSpeechTiming.cueDelayMs(latencyCueIndex)?.let { due ->
+            mainHandler.postDelayed(conversationLatencyCue, (due - first).coerceAtLeast(1_000L))
+        }
+    }
+
+    /**
+     * The owner spoke over the running reply („Stopp, erklär nur den zweiten“). Same path as a microphone tap:
+     * speech and mouth stop, the session context stays, and the microphone opens for the new instruction.
+     */
+    private fun onVoiceBargeIn() {
+        if (isFinishing || isDestroyed || !foregroundLearningActive) return
+        if (!continuousConversation.active || !(voiceSpeaking || voiceUtteranceId != null)) return
+        addToolActivity("Gespräch · Antwort per Stimme unterbrochen")
+        onChatMicrophoneTap()
+    }
+
     private fun checkConversationReplyIdle() {
         if (continuousConversation.state != at.heinz.deviceai.cognitive.ContinuousConversationMode.State.THINKING) return
         if (busy || botLookupPending || voiceSpeaking || voiceUtteranceId != null) {
@@ -15921,6 +16207,8 @@ class AgentActivity : Activity() {
         when (continuousConversation.assistantSpeechFinished(utteranceId, interrupted)) {
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.LISTEN -> {
                 mainHandler.removeCallbacks(conversationResume)
+                // A waiting announcement is spoken first; the microphone reopens after it.
+                if (speakQueuedNotifications()) return
                 // Short gap so the microphone does not capture the end of our own voice.
                 mainHandler.postDelayed(conversationResume, CONVERSATION_RESUME_DELAY_MS)
             }
@@ -15928,6 +16216,125 @@ class AgentActivity : Activity() {
                 pauseContinuousConversationNotice("Die Antwort wurde unterbrochen.")
             else -> Unit
         }
+    }
+
+    // ------------------------------------------------------------------
+    // Notification announcements and drive mode.
+    // Notification text is untrusted third-party content: it is spoken and shown, never routed as a
+    // command, never sent to a network voice and never placed in a model prompt.
+    // ------------------------------------------------------------------
+    private fun announcementState(speaking: Boolean, listening: Boolean) =
+        at.heinz.deviceai.notifications.AnnouncementState(
+            conversationActive = continuousConversation.active, driveModeActive = driveMode.active,
+            assistantSpeaking = speaking, listening = listening,
+            nowMs = android.os.SystemClock.elapsedRealtime())
+
+    private fun onIncomingNotification(notification: at.heinz.deviceai.notifications.IncomingNotification) {
+        if (isFinishing || isDestroyed || !foregroundLearningActive) return
+        val settings = at.heinz.deviceai.notifications.NotificationAnnouncementSettings.load(this)
+        val state = announcementState(
+            speaking = voiceSpeaking || voiceUtteranceId != null || busy, listening = voiceListening)
+        when (val decision = notificationPolicy.decide(notification, settings, state)) {
+            is at.heinz.deviceai.notifications.AnnouncementDecision.Announce ->
+                if (!presentNotificationAnnouncement(decision)) queueNotification(notification, state.nowMs)
+            is at.heinz.deviceai.notifications.AnnouncementDecision.Defer -> queueNotification(notification, state.nowMs)
+            is at.heinz.deviceai.notifications.AnnouncementDecision.Suppress -> Unit
+        }
+    }
+
+    /** The queue drops entries after two minutes, so the retry ends by itself. */
+    private fun queueNotification(notification: at.heinz.deviceai.notifications.IncomingNotification, nowMs: Long) {
+        notificationQueue.offer(notification, nowMs)
+        mainHandler.removeCallbacks(notificationRetry)
+        mainHandler.postDelayed(notificationRetry, NOTIFICATION_RETRY_MS)
+    }
+
+    /** Shows the announcement on the stage and speaks it with the offline voice. False when it could not be spoken now. */
+    private fun presentNotificationAnnouncement(
+        announcement: at.heinz.deviceai.notifications.AnnouncementDecision.Announce,
+        recognizerRoundEnded: Boolean = false): Boolean {
+        if ((voiceListening && !recognizerRoundEnded) || voiceSpeaking || voiceUtteranceId != null) return false
+        command03Activity.notification(announcement.displayTitle, announcement.displayDetail)
+        pushCockpitState()
+        // The log names the app only; the content is not written anywhere.
+        addToolActivity("Benachrichtigung · " + announcement.displayTitle)
+        // Voice output off: the announcement is visible only, and counts as delivered.
+        if (!voiceEnabled || !replyVoiceReady()) return true
+        // Offline voice only: private notification content never goes to a network voice.
+        if (!at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(
+                voiceEngine?.voice?.isNetworkConnectionRequired)) return true
+        val id = "device-ai-note-" + UUID.randomUUID()
+        announcementUtteranceId = id
+        voiceUtteranceId = id
+        voiceSignal.activate(id)
+        voiceAvatarText = announcement.spokenText
+        voiceEngine?.setSpeechRate(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speechRate)
+        if (voiceEngine?.speak(announcement.spokenText, TextToSpeech.QUEUE_FLUSH, null, id) != TextToSpeech.SUCCESS) {
+            announcementUtteranceId = null
+            stopVoiceAnimation(false)
+        }
+        return true
+    }
+
+    /** Speaks what waited while the owner or the assistant was talking. True when an announcement started. */
+    private fun speakQueuedNotifications(recognizerRoundEnded: Boolean = false): Boolean {
+        if (isFinishing || isDestroyed || !foregroundLearningActive || notificationQueue.size == 0) return false
+        // A model turn in progress keeps the channel: its reply comes first.
+        if ((voiceListening && !recognizerRoundEnded) || voiceSpeaking || voiceUtteranceId != null || busy) return false
+        val state = announcementState(speaking = false, listening = false)
+        val waiting = notificationQueue.drain(state.nowMs)
+        if (waiting.isEmpty()) return false
+        val settings = at.heinz.deviceai.notifications.NotificationAnnouncementSettings.load(this)
+        val announcements = notificationPolicy.decideAll(waiting, settings, state)
+            .filterIsInstance<at.heinz.deviceai.notifications.AnnouncementDecision.Announce>()
+        if (announcements.isEmpty()) return false
+        val last = announcements.last()
+        val combined = at.heinz.deviceai.notifications.AnnouncementDecision.Announce(
+            spokenText = announcements.joinToString(" ") { it.spokenText },
+            displayTitle = last.displayTitle, displayDetail = last.displayDetail)
+        return presentNotificationAnnouncement(combined, recognizerRoundEnded) && announcementUtteranceId != null
+    }
+
+    /** After an announcement the hands-free session continues exactly where it was. */
+    private fun afterNotificationAnnouncement() {
+        if (isFinishing || isDestroyed) return
+        if (speakQueuedNotifications()) return
+        if (!continuousConversation.active) return
+        when (continuousConversation.state) {
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.State.RESUMING -> {
+                mainHandler.removeCallbacks(conversationResume)
+                mainHandler.postDelayed(conversationResume, CONVERSATION_RESUME_DELAY_MS)
+            }
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.State.LISTENING -> {
+                mainHandler.removeCallbacks(conversationListen)
+                mainHandler.postDelayed(conversationListen, CONVERSATION_RESUME_DELAY_MS)
+            }
+            else -> Unit
+        }
+    }
+
+    private fun setDriveMode(active: Boolean, announce: Boolean) {
+        val now = android.os.SystemClock.elapsedRealtime()
+        if (active) {
+            if (!driveMode.enter(now)) return
+            driveMode.effects?.let { continuousConversation.silenceWindowMs = it.silenceWindowMs }
+            window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            if (announce) addAssistantMessage("Fahrmodus ist an. Ich halte mich kurz, sage freigegebene " +
+                "Benachrichtigungen an und merke mir alles, was einen Blick aufs Display braucht.",
+                preserveLocalContext = true, keepCockpit = true)
+        } else {
+            if (!driveMode.exit()) return
+            continuousConversation.silenceWindowMs = conversationSilenceWindowSeconds() * 1_000L
+            window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            val noted = driveMode.takeDeferredRequests()
+            if (announce) addAssistantMessage(if (noted.isEmpty()) "Fahrmodus ist aus."
+                else "Fahrmodus ist aus. Während der Fahrt offen geblieben: " + noted.joinToString("; ") +
+                    ". Sag mir, was ich davon jetzt angehen soll.",
+                preserveLocalContext = true, keepCockpit = true)
+        }
+        // The listener service reads this flag to announce while another app is in front.
+        at.heinz.deviceai.notifications.DriveBackgroundAnnouncer.markDriveMode(this, active)
+        addToolActivity(if (active) "Fahrmodus · an" else "Fahrmodus · aus")
     }
 
     /** Recover only explicit foreground consent. */

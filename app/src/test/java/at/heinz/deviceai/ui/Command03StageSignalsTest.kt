@@ -145,6 +145,21 @@ class Command03StageSignalsTest {
         assertTrue(labels.contains("Schritt 10"))
     }
 
+    @Test fun anAnnouncedNotificationIsShownWithoutEndingARunningTurn() {
+        val projection = Command03ActivityProjection()
+        projection.render(CockpitAnimationEvent.ActionStarted("t1", 1L, CockpitAction.THINK, "Antwort wird erstellt"))
+        val before = projection.snapshot()!!.getLong("revision")
+        projection.notification("WhatsApp", "Nachricht von Anna.")
+        val shown = projection.snapshot()!!
+        assertEquals("NOTIFICATION", shown.getString("kind"))
+        assertEquals("WhatsApp", shown.getString("title"))
+        assertEquals("Nachricht von Anna.", shown.getString("detail"))
+        assertTrue(shown.getBoolean("active"))
+        assertTrue(shown.getLong("revision") > before)
+        projection.render(CockpitAnimationEvent.TurnEnded("t1", 2L, delivered = true))
+        assertFalse(projection.snapshot()!!.getBoolean("active"))
+    }
+
     @Test fun clearRemovesTheActivityAndAdvancesTheRevision() {
         val projection = Command03ActivityProjection()
         projection.render(CockpitAnimationEvent.CalculationShown("t1", 1L, "2 + 2", emptyList(), 4.0, null,

@@ -124,6 +124,18 @@ class Command03ActivityProjection : CockpitAnimationRenderer {
             .put("active", active).put("steps", list)
     }
 
+    /**
+     * A notification the owner allowed to be announced. Title and detail are exactly what was spoken
+     * (already bounded and stripped of codes and links by the announcement policy); a running turn keeps
+     * its steps and its running state.
+     */
+    @Synchronized fun notification(title: String, detail: String) {
+        kind = "NOTIFICATION"
+        this.title = title
+        this.detail = detail.replace(Regex("\\s+"), " ").trim()
+        revision++
+    }
+
     @Synchronized fun clear() {
         if (kind == null) return
         turnId = null; kind = null; title = ""; detail = ""; active = false; steps = emptyList(); revision++
