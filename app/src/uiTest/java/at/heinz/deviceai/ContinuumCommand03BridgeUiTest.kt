@@ -82,7 +82,8 @@ class ContinuumCommand03BridgeUiTest {
         app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
             .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
         app.getSharedPreferences("continuum-command03", Context.MODE_PRIVATE).edit()
-            .putBoolean("original_html_main", true).commit()
+            .putBoolean("original_html_main", true).putInt("neon_light", 70)
+            .putBoolean("neon_motion", true).commit()
     }
 
     private fun field(a: AgentActivity, name: String): Any? =
@@ -230,6 +231,85 @@ class ContinuumCommand03BridgeUiTest {
         } finally {
             runCatching { controller.pause().stop().destroy() }
             AgentActivity.chatTranscriptIo.submit {}.get(8, TimeUnit.SECONDS)
+        }
+    }
+
+    @Test fun settingsRouteExposesEveryGroupAndOpensTheExistingVoicePicker() = withActivity { _, a ->
+        ready(a)
+        assertTrue(action(a, "route", "settings"))
+        val dialog = field(a, "centerDialog") as AlertDialog
+        measure(dialog.window!!.decorView, 392, 780)
+        val buttons = all(dialog.window!!.decorView).filter { it.tag?.toString()?.startsWith("continuum-setting:") == true }
+        assertEquals(at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.entries.size, buttons.size)
+        val search = all(dialog.window!!.decorView).single { it.tag == "continuum-settings-search" } as EditText
+        search.setText("Maya")
+        measure(dialog.window!!.decorView, 392, 780)
+        val voice = all(dialog.window!!.decorView).single { it.tag == "continuum-setting:VOICE" }
+        assertTrue(voice.performClick())
+        val picker = ShadowAlertDialog.getLatestAlertDialog()
+        assertFalse(dialog.isShowing)
+        assertEquals("Continuum · Stimme", shadowOf(picker).title.toString())
+        assertEquals(2, picker.listView.adapter.count)
+        assertFalse(a.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).getBoolean("voice_enabled", true))
+        picker.dismiss()
+    }
+
+    @Test fun settingsShortcutsOpenRealControlsAndPublishAppearanceWithoutGrantingInternet() = withActivity { _, a ->
+        ready(a)
+        assertTrue(action(a, "route", "settings-appearance"))
+        val appearance = field(a, "centerDialog") as AlertDialog
+        measure(appearance.window!!.decorView, 392, 780)
+        val motion = all(appearance.window!!.decorView).single { it.tag == "command03-neon-motion" } as android.widget.Switch
+        assertTrue(motion.isChecked)
+        motion.performClick()
+        call(a, "syncCommand03HtmlState")
+        assertFalse(packet(a, "receive").getJSONObject("appearance").getBoolean("lightMotion"))
+        appearance.dismiss()
+        assertTrue(action(a, "route", "settings-internet"))
+        val internet = ShadowAlertDialog.getLatestAlertDialog()
+        assertEquals("Continuum · Internetzugang", shadowOf(internet).title.toString())
+        assertEquals(3, internet.listView.adapter.count)
+        assertEquals("OFF", a.getSharedPreferences("continuum-internet", Context.MODE_PRIVATE).getString("mode", null))
+        internet.dismiss()
+        assertTrue(action(a, "route", "settings-model"))
+        val model = field(a, "modelCenterDialog") as AlertDialog
+        assertTrue(model.isShowing)
+        assertTrue(all(model.window!!.decorView).filterIsInstance<TextView>().any { it.text.toString() == "KI-Sprachmodell" })
+        model.dismiss()
+        assertTrue(action(a, "route", "settings-voice"))
+        val voice = ShadowAlertDialog.getLatestAlertDialog()
+        assertEquals("Continuum · Stimme", shadowOf(voice).title.toString())
+        voice.dismiss()
+        advance()
+        assertNull(field(a, "centerDialog"))
+        assertTrue(action(a, "route", "settings-export-secret"))
+        assertSame(voice, ShadowAlertDialog.getLatestAlertDialog())
+        assertFalse(voice.isShowing)
+        assertNull(field(a, "centerDialog"))
+    }
+
+    @Test fun settingsPersonalizationShowsItsPreviouslyHiddenChoices() = withActivity { _, a ->
+        ready(a)
+        action(a, "route", "settings")
+        val hub = field(a, "centerDialog") as AlertDialog
+        measure(hub.window!!.decorView, 392, 780)
+        all(hub.window!!.decorView).single { it.tag == "continuum-setting:PERSONAL" }.performClick()
+        val personal = ShadowAlertDialog.getLatestAlertDialog()
+        measure(personal.window!!.decorView, 392, 780)
+        assertEquals("Deine KI personalisieren", shadowOf(personal).title.toString())
+        assertEquals(3, personal.listView.adapter.count)
+        assertTrue("All personalisation choices must be visible", personal.listView.isShown)
+        personal.dismiss()
+        for (entry in listOf("CINEMA", "AUTONOMY")) {
+            action(a, "route", "settings")
+            val menu = field(a, "centerDialog") as AlertDialog
+            measure(menu.window!!.decorView, 392, 780)
+            all(menu.window!!.decorView).single { it.tag == "continuum-setting:$entry" }.performClick()
+            val options = ShadowAlertDialog.getLatestAlertDialog()
+            measure(options.window!!.decorView, 392, 780)
+            assertTrue("$entry must expose its controls", options.listView.adapter.count > 0)
+            assertTrue("$entry choices must be visible", options.listView.isShown)
+            options.dismiss()
         }
     }
 

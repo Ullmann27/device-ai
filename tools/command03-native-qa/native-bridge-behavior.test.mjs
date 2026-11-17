@@ -1100,6 +1100,70 @@ test('same-view binding contradictions cannot disable native actions or overwrit
   } finally {f.close();}
 });
 
+test('settings have a named header button and four unique shortcuts', async () => {
+  const f=await fixture();
+  try {
+    f.state();f.window.dispatchEvent(new f.window.Event('load'));
+    const header=f.document.querySelector('.header-tools>[data-action="settings"]');
+    assert.match(header.textContent,/Einstellungen/);
+    assert.equal(header.getAttribute('aria-label'),'Alle Einstellungen öffnen');
+    assert.equal(f.document.querySelector('#main-nav').children[1].dataset.section,'settings');
+    assert.equal(f.document.querySelectorAll('.native-settings-shortcuts').length,1);
+    assert.deepEqual([...f.document.querySelectorAll('.native-setting-shortcut')].map(b=>b.dataset.action),
+      ['settings-voice','settings-model','settings-internet','settings-appearance']);
+    assert.equal(f.document.querySelectorAll('.native-holo-field').length,1);
+  } finally {f.close();}
+});
+
+test('settings shortcuts carry the exact draft and scope without starting a command', async () => {
+  const f=await fixture();
+  try {
+    f.state();const input=f.input('Mein ungesendeter\nAuftrag');input.setSelectionRange(5,12);
+    for(const button of f.document.querySelectorAll('.native-setting-shortcut')) {
+      f.click(button);const route=f.navigations.at(-1);
+      assert.equal(route.pathname,'/route');
+      assert.equal(route.searchParams.get('value'),button.dataset.action);
+      assert.equal(route.searchParams.get('draftText'),input.value);
+      assert.equal(route.searchParams.get('selectionStart'),'5');
+      assert.equal(route.searchParams.get('selectionEnd'),'12');
+      assert.equal(route.searchParams.get('viewId'),viewId);
+      assert.equal(route.searchParams.get('pageId'),pageId);
+    }
+    assert.equal(f.navigations.some(url=>url.pathname==='/command'),false);
+  } finally {f.close();}
+});
+
+test('unbound settings never navigate and native appearance rejects stale pages', async () => {
+  const f=await fixture();
+  try {
+    f.click(f.document.querySelector('[data-action="settings-voice"]'));
+    assert.equal(f.navigations.length,0);
+    f.state({appearance:{neon:35,lightMotion:false}});
+    assert.equal(f.document.body.style.getPropertyValue('--native-neon'),'0.35');
+    assert.equal(f.document.body.dataset.nativeLightMotion,'off');
+    f.window.ContinuumNative.receive({...binding,pageId:anotherView,appearance:{neon:100,lightMotion:true}});
+    assert.equal(f.document.body.style.getPropertyValue('--native-neon'),'0.35');
+    assert.equal(f.document.body.dataset.nativeLightMotion,'off');
+    f.state({appearance:{neon:999,lightMotion:true}});
+    assert.equal(f.document.body.style.getPropertyValue('--native-neon'),'1');
+    f.state({appearance:{neon:-50,lightMotion:true}});
+    assert.equal(f.document.body.style.getPropertyValue('--native-neon'),'0');
+  } finally {f.close();}
+});
+
+test('additional light motion pauses with the hidden page', async () => {
+  const f=await fixture();
+  try {
+    f.state();
+    Object.defineProperty(f.document,'visibilityState',{configurable:true,value:'hidden'});
+    f.document.dispatchEvent(new f.window.Event('visibilitychange'));
+    assert.equal(f.document.body.classList.contains('native-light-paused'),true);
+    Object.defineProperty(f.document,'visibilityState',{configurable:true,value:'visible'});
+    f.document.dispatchEvent(new f.window.Event('visibilitychange'));
+    assert.equal(f.document.body.classList.contains('native-light-paused'),false);
+  } finally {f.close();}
+});
+
 // The final integration gate requires fresh JSON captured from the actual Kotlin
 // Stage evaluateJavascript output. Its image decoder remains the explicit seam above.
 if (process.env.COMMAND03_REQUIRE_NATIVE_PACKET === '1' || process.env.COMMAND03_NATIVE_COMPUTER_PACKET) {

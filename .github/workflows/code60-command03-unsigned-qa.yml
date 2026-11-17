@@ -1,4 +1,4 @@
-name: "Code60 Command03 – scoped unsigned APK and regression QA"
+name: "Command03 – Bedienung und Layout prüfen"
 
 # Deliberately isolated from protected original signing, releases and main.
 # This workflow can only run for the approved work-in-progress PR branch.
@@ -7,6 +7,7 @@ on:
     branches:
       - fix/command03-native-controls-20261116
       - fix/command03-responsive-layout-20261117
+      - feat/command03-hologram-settings-20261117
     paths:
       - .github/workflows/code60-command03-unsigned-qa.yml
       - app/**
@@ -23,7 +24,7 @@ concurrency:
 
 jobs:
   browser-contract:
-    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/fix/command03-responsive-layout-20261117"]'), github.ref)
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/fix/command03-responsive-layout-20261117","refs/heads/feat/command03-hologram-settings-20261117"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -50,21 +51,23 @@ jobs:
             node --test --test-reporter=tap tools/command03-native-qa/native-bridge-behavior.test.mjs \
             | tee command03-dom.tap
       - name: Check rendered phone and fold layouts
-        if: github.ref == 'refs/heads/fix/command03-responsive-layout-20261117'
+        if: contains(fromJSON('["refs/heads/fix/command03-responsive-layout-20261117","refs/heads/feat/command03-hologram-settings-20261117"]'), github.ref)
         shell: bash
         run: |
           set -euo pipefail
           npm install --prefix "$RUNNER_TEMP/command03-browser" --ignore-scripts --no-audit --no-fund --no-save playwright@1.62.1
           node "$RUNNER_TEMP/command03-browser/node_modules/playwright/cli.js" install --with-deps chromium
-          git fetch --depth=1 origin 920a9f72f42490e3b496a0687406d999a39c7bf6
-          git show FETCH_HEAD:app/src/main/assets/continuum-command03/native-layer.css > "$RUNNER_TEMP/command03-before.css"
+          if [ "$GITHUB_REF" = 'refs/heads/fix/command03-responsive-layout-20261117' ]; then
+            git fetch --depth=1 origin 920a9f72f42490e3b496a0687406d999a39c7bf6
+            git show FETCH_HEAD:app/src/main/assets/continuum-command03/native-layer.css > "$RUNNER_TEMP/command03-before.css"
+            export COMMAND03_BASELINE_CSS="$RUNNER_TEMP/command03-before.css"
+          fi
           COMMAND03_PLAYWRIGHT_MODULE="$RUNNER_TEMP/command03-browser/node_modules/playwright" \
-          COMMAND03_BASELINE_CSS="$RUNNER_TEMP/command03-before.css" \
             node tools/command03-native-qa/responsive-layout.test.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Code60-Command03-DOM-evidence
+          name: Command03-DOM-evidence
           path: |
             command03-dom.tap
             command03-layout-evidence/
@@ -72,7 +75,7 @@ jobs:
           retention-days: 7
 
   focused-android:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/fix/command03-native-controls-20261116'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/feat/command03-hologram-settings-20261117"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 65
     steps:
@@ -101,24 +104,51 @@ jobs:
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           # The app deliberately allows only exact Gradle task names in local QA.
           # Use its existing fail-closed selection init script, not --tests flags.
-          printf '%s\n' '["at.heinz.deviceai.ContinuumCommand03BridgeUiTest","at.heinz.deviceai.ContinuumCommand03StageUiTest","at.heinz.deviceai.ContinuumCommand03MediaStageUiTest","at.heinz.deviceai.ui.Command03DraftLedgerTest"]' \
-            > "$RUNNER_TEMP/command03-test-selection.json"
+          focused_args=()
+          qa_version=60
+          if [ "$GITHUB_REF" = 'refs/heads/feat/command03-hologram-settings-20261117' ]; then
+            qa_version=62
+            python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          names = ['ContinuumCommand03BridgeUiTest.kt', 'ContinuumCommand03StageUiTest.kt',
+                   'ContinuumSettingsHubUiTest.kt', 'Command03HostWebView.kt', 'CockpitHostFramePump.kt']
+          paths = [Path('app/src/uiTest/java/at/heinz/deviceai') / name for name in names]
+          manifest = {'scope':'FOCUSED_HOST_TESTS_ONLY','source_commit':os.environ['GITHUB_SHA'],
+                      'files':[{'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths]}
+          Path('command03-test-sources.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          selected = ['at.heinz.deviceai.ContinuumCommand03BridgeUiTest.settings*',
+                      'at.heinz.deviceai.ContinuumCommand03StageUiTest',
+                      'at.heinz.deviceai.ContinuumSettingsHubUiTest']
+          Path(os.environ['RUNNER_TEMP'],'command03-test-selection.json').write_text(json.dumps(selected))
+          PY
+            focused_args=(-Dcontinuum.native.testSources="$GITHUB_WORKSPACE/command03-test-sources.json"
+              -Dcontinuum.native.compiledTestSources="$GITHUB_WORKSPACE/command03-compiled-test-sources.json"
+              -I tools/command03-native-qa/focused-test-sources.init.gradle)
+          else
+            printf '%s\n' '["at.heinz.deviceai.ContinuumCommand03BridgeUiTest","at.heinz.deviceai.ContinuumCommand03StageUiTest","at.heinz.deviceai.ContinuumCommand03MediaStageUiTest","at.heinz.deviceai.ui.Command03DraftLedgerTest"]' \
+              > "$RUNNER_TEMP/command03-test-selection.json"
+          fi
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Dcontinuum.native.testSelection="$RUNNER_TEMP/command03-test-selection.json" \
             -Pkotlin.compiler.execution.strategy=in-process \
             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
-            -PcontinuumStandaloneVersionCode=60 \
+            -PcontinuumStandaloneVersionCode="$qa_version" \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
             -I tools/command03-native-qa/test-selection.init.gradle \
+            "${focused_args[@]}" \
             :app:testDebugUnitTest
       - name: Upload native JUnit evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Code60-Command03-native-JUnit
-          path: app/build/test-results/testDebugUnitTest/
+          name: Command03-native-JUnit
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            command03-test-sources.json
+            command03-compiled-test-sources.json
           if-no-files-found: ignore
           retention-days: 7
 

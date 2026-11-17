@@ -208,3 +208,120 @@ body[data-design="command03"] .mobile-side-controls>.secondary-button {
 @media(max-width:479px) {
  body[data-design="command03"] .preview-badge {display:none;}
 }
+
+/* Cyan glass, violet projection light. */
+body[data-design="command03"].native-hologram {
+ --native-neon:.7;
+ --native-cyan:#83edff;
+ --native-violet:#be91ff;
+}
+body[data-design="command03"] .masthead {gap:10px;}
+body[data-design="command03"] .header-tools {flex:0 0 auto;min-width:0;}
+body[data-design="command03"] .header-tools>.native-settings-entry {
+ width:auto;height:44px;padding:0 10px;gap:7px;white-space:nowrap;
+ font:600 12px Manrope,system-ui,sans-serif;letter-spacing:.01em;
+ color:#defaff;border-color:rgba(111,231,255,.6);
+ background:linear-gradient(125deg,rgba(20,79,104,.65),rgba(39,30,77,.65));
+ box-shadow:inset 0 1px rgba(197,246,255,.2),0 0 18px rgba(65,211,255,.13);
+}
+body[data-design="command03"] .native-settings-entry svg {width:18px;height:18px;flex:none;}
+body[data-design="command03"] .native-settings-shortcuts {
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;
+ width:100%;min-width:0;margin:0 0 14px;
+}
+body[data-design="command03"] .native-setting-shortcut {
+ display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;
+ min-height:48px;padding:8px;border-radius:8px;border:1px solid rgba(119,208,247,.36);
+ color:#dff7ff;background:linear-gradient(135deg,rgba(16,54,76,.82),rgba(23,21,50,.86));
+ box-shadow:inset 0 1px rgba(210,251,255,.11),0 5px 18px rgba(0,4,18,.25);
+ font:500 12px Manrope,system-ui,sans-serif;cursor:pointer;
+ transition:transform .16s ease,border-color .16s ease;
+}
+body[data-design="command03"] .native-setting-shortcut svg {
+ width:19px;height:19px;flex:none;fill:none;stroke:var(--native-cyan);
+ stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;
+}
+body[data-design="command03"] .native-setting-shortcut:last-child svg {stroke:var(--native-violet);}
+body[data-design="command03"] .native-setting-shortcut:hover {
+ border-color:#87e8ff;transform:translateY(-1px);
+}
+body[data-design="command03"] .native-setting-shortcut:active {transform:translateY(1px);}
+body[data-design="command03"] .native-setting-shortcut:focus-visible,
+body[data-design="command03"] .native-settings-entry:focus-visible {
+ outline:2px solid #ddfaff;outline-offset:3px;
+}
+body[data-design="command03"].native-hologram .floating-dock,
+body[data-design="command03"].native-hologram .command-bar {
+ border-color:rgba(105,227,255,.55);
+ background:linear-gradient(112deg,rgba(9,40,60,.95),rgba(13,19,39,.95) 58%,rgba(39,23,63,.92));
+ box-shadow:inset 0 1px 0 rgba(201,251,255,.3),0 0 24px rgba(73,201,255,calc(.17 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .floating-dock .nav-button.active {
+ color:#eaffff;border-color:#91f1ff;
+ background:linear-gradient(135deg,rgba(43,136,169,.4),rgba(46,55,114,.38));
+ box-shadow:inset 0 -2px #89edff,0 0 19px rgba(90,220,255,calc(.24 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .presence-instrument .pi-shell,
+body[data-design="command03"].native-hologram .native-telemetry-panel {
+ border-color:rgba(120,225,255,.44);
+ background:radial-gradient(ellipse at 0 0,rgba(50,129,167,.2),transparent 70%),
+  linear-gradient(135deg,rgba(9,31,48,.95),rgba(14,20,42,.92));
+ box-shadow:inset 0 1px 0 rgba(195,246,255,.25),inset 0 -1px rgba(133,107,245,.28),
+  0 8px 24px rgba(0,3,16,.4),0 0 19px rgba(61,201,255,calc(.14 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .presence-wing-right .pi-shell {
+ border-color:rgba(177,146,255,.5);
+ box-shadow:inset 0 1px rgba(219,204,255,.3),0 8px 24px rgba(0,3,16,.4),
+  0 0 22px rgba(158,98,255,calc(.2 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .workspace {
+ border-color:rgba(128,221,255,.5);
+ box-shadow:inset 0 1px rgba(202,252,255,.25),0 16px 46px rgba(0,4,19,.55),
+  0 0 26px rgba(94,126,255,calc(.16 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .avatar-linkbar .icon-button {
+ border-color:rgba(115,228,255,.5);
+ background:linear-gradient(145deg,rgba(31,87,111,.7),rgba(26,26,57,.75));
+ box-shadow:inset 0 1px rgba(190,246,255,.22),0 0 15px rgba(80,205,255,calc(.15 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .presence-core {position:relative;min-width:0;}
+body[data-design="command03"] .native-holo-field {
+ position:absolute;inset:5% 0 8%;z-index:0;pointer-events:none;overflow:hidden;
+ border-radius:48%;opacity:var(--native-neon);
+ background:radial-gradient(ellipse at 35% 40%,rgba(36,174,255,.16),transparent 64%),
+  radial-gradient(ellipse at 75% 65%,rgba(156,76,246,.17),transparent 60%);
+}
+body[data-design="command03"] .native-holo-field::before,
+body[data-design="command03"] .native-holo-field::after {
+ content:"";position:absolute;inset:16% 8% 19%;border-radius:50%;
+ border:1px solid rgba(121,236,255,.48);
+ box-shadow:0 0 16px rgba(61,212,255,.3),inset 0 0 18px rgba(61,212,255,.16);
+ animation:native-holo-drift 12s ease-in-out infinite alternate;
+}
+body[data-design="command03"] .native-holo-field::after {
+ inset:29% 1% 15%;border-color:rgba(199,143,255,.5);
+ box-shadow:0 0 18px rgba(164,87,255,.32),inset 0 0 16px rgba(164,87,255,.14);
+ animation:native-holo-cross 17s ease-in-out infinite alternate;
+}
+@keyframes native-holo-drift {
+ from {transform:translateY(0) rotate(-18deg) scaleY(.78);opacity:.55;}
+ to {transform:translateY(-6px) rotate(-12deg) scaleY(.8);opacity:.9;}
+}
+@keyframes native-holo-cross {
+ from {transform:translateY(2px) rotate(23deg) scaleY(.48);opacity:.8;}
+ to {transform:translateY(-4px) rotate(28deg) scaleY(.5);opacity:.5;}
+}
+body[data-design="command03"][data-native-light-motion="off"] .native-holo-field::before,
+body[data-design="command03"][data-native-light-motion="off"] .native-holo-field::after,
+body[data-design="command03"].native-light-paused .native-holo-field::before,
+body[data-design="command03"].native-light-paused .native-holo-field::after {animation-play-state:paused;}
+@media(max-width:479px) {
+ body[data-design="command03"] .native-setting-shortcut {
+  flex-direction:column;gap:4px;min-height:58px;padding:7px 3px;font-size:11px;
+ }
+}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-holo-field::before,
+ body[data-design="command03"] .native-holo-field::after {animation:none;}
+ body[data-design="command03"] .native-setting-shortcut {transition:none;}
+}

@@ -43,7 +43,8 @@ internal class ContinuumCommand03OriginalStage(
         const val INDEX = "https://" + LOCAL_HOST + ASSET_PATH + "index.android.html"
         private val SAFE_PATH = Regex("[A-Za-z0-9_./-]{1,200}")
         private val ROUTES = setOf("home", "chat", "chats", "new-chat", "files",
-            "research", "agents", "memory", "device", "settings", "voice-input", "voice-input-long-press", "stop")
+            "research", "agents", "memory", "device", "settings", "settings-voice", "settings-model",
+            "settings-internet", "settings-appearance", "voice-input", "voice-input-long-press", "stop")
         private fun denied(): WebResourceResponse = WebResourceResponse(
             "text/plain", "UTF-8", 403, "Forbidden", emptyMap(),
             ByteArrayInputStream(ByteArray(0))

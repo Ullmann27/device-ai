@@ -58,6 +58,8 @@ try {
       return {width:innerWidth,height:innerHeight,scroll:document.documentElement.scrollWidth,
         scrollX, viewport:document.documentElement.clientWidth,
         composer:rect('#command-form'),settings:rect('.header-tools>[data-action="settings"]'),
+        shortcuts:['voice','model','internet','appearance'].map(kind=>
+          ({kind,...rect('.native-setting-shortcut[data-action="settings-'+kind+'"]')})),
         cards:['[data-presence-left]','[data-presence-right]','[data-telemetry-left]',
           '[data-telemetry-right]'].map(selector => ({selector,...rect(selector)})),
         wings:['.presence-wing-left','.presence-wing-right'].map(rect)};
@@ -71,6 +73,10 @@ try {
       if(card.x<0 || card.right>value.viewport+1)failures.push(`${card.selector}: outside viewport`);
     }
     if(value.settings.width<44 || value.settings.right>value.viewport+1)failures.push('settings unreachable');
+    for(const shortcut of value.shortcuts) {
+      if(shortcut.width<44 || shortcut.height<44 || shortcut.x<0 || shortcut.right>value.viewport+1)
+        failures.push(shortcut.kind+': settings shortcut outside viewport');
+    }
     if(value.viewport<=760 && (value.composer.y<0 || value.composer.bottom>value.height+1 ||
       value.composer.x<0 || value.composer.right>value.viewport+1))failures.push('composer outside viewport');
     await page.evaluate(() => window.scrollTo(200,window.scrollY));
@@ -107,6 +113,25 @@ try {
   assert.ok(drawer && drawer.x>=0 && drawer.x+drawer.width<=412,'Instrument drawer must fit');
   await page.locator('.instrument-sidebar [data-action="close-panels"]').click();
   report.checks.push(await inspect('drawer-closed'));
+  await page.evaluate(value=>window.ContinuumNative.receive(value),
+    {...state,appearance:{neon:30,lightMotion:false}});
+  const quiet=await page.locator('.native-holo-field').evaluate(el=>({
+    level:getComputedStyle(el).opacity,motion:getComputedStyle(el,'::before').animationPlayState}));
+  assert.equal(quiet.level,'0.3');
+  assert.equal(quiet.motion,'paused');
+  await page.evaluate(value=>window.ContinuumNative.receive(value),
+    {...state,appearance:{neon:70,lightMotion:true}});
+  await page.emulateMedia({reducedMotion:'reduce'});
+  assert.equal(await page.locator('.native-holo-field').evaluate(el=>getComputedStyle(el,'::before').animationName),'none');
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.evaluate(()=>window.scrollTo(0,0));
+  const blocked=await page.locator('.native-setting-shortcut,.native-settings-entry').evaluateAll(buttons=>
+    buttons.filter(button=>{
+      const r=button.getBoundingClientRect();
+      return document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.closest('button')!==button;
+    }).map(button=>button.textContent.trim()));
+  assert.deepEqual(blocked,[],'Light layers must not block settings');
+  report.appearance={nativePreference:'PASS',reducedMotion:'PASS',settingsHitTargets:'PASS'};
   assert.deepEqual(errors, [], 'Unexpected page errors');
   const failures=report.checks.flatMap(check=>check.failures.map(f=>check.label+': '+f));
   console.log(JSON.stringify({baseline:report.baseline?.failures,checks:report.checks.length,failures},null,2));
