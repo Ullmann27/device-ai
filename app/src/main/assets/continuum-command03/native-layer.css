@@ -317,7 +317,7 @@ body[data-design="command03"].native-light-paused .native-holo-field::before,
 body[data-design="command03"].native-light-paused .native-holo-field::after {animation-play-state:paused;}
 @media(max-width:479px) {
  body[data-design="command03"] .native-setting-shortcut {
-  flex-direction:column;gap:4px;min-height:58px;padding:7px 3px;font-size:10px;
+  flex-direction:column;gap:4px;min-height:58px;padding:7px 3px;font-size:11px;
  }
 }
 @media(prefers-reduced-motion:reduce) {

@@ -280,7 +280,10 @@ class ContinuumCommand03BridgeUiTest {
         val voice = ShadowAlertDialog.getLatestAlertDialog()
         assertEquals("Continuum · Stimme", shadowOf(voice).title.toString())
         voice.dismiss()
+        advance()
+        assertNull(field(a, "centerDialog"))
         assertTrue(action(a, "route", "settings-export-secret"))
+        assertSame(voice, ShadowAlertDialog.getLatestAlertDialog())
         assertFalse(voice.isShowing)
         assertNull(field(a, "centerDialog"))
     }
