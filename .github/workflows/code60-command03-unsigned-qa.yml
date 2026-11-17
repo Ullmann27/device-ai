@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - fix/command03-native-controls-20261116
+      - fix/command03-responsive-layout-20261117
     paths:
       - .github/workflows/code60-command03-unsigned-qa.yml
       - app/**
@@ -22,7 +23,7 @@ concurrency:
 
 jobs:
   browser-contract:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/fix/command03-native-controls-20261116'
+    if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/fix/command03-responsive-layout-20261117"]'), github.ref)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -48,11 +49,25 @@ jobs:
           COMMAND03_DOM_MODULE="$RUNNER_TEMP/command03-dom/node_modules/jsdom/lib/api.js" \
             node --test --test-reporter=tap tools/command03-native-qa/native-bridge-behavior.test.mjs \
             | tee command03-dom.tap
+      - name: Check rendered phone and fold layouts
+        if: github.ref == 'refs/heads/fix/command03-responsive-layout-20261117'
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix "$RUNNER_TEMP/command03-browser" --ignore-scripts --no-audit --no-fund --no-save playwright@1.62.1
+          node "$RUNNER_TEMP/command03-browser/node_modules/playwright/cli.js" install --with-deps chromium
+          git fetch --depth=1 origin 920a9f72f42490e3b496a0687406d999a39c7bf6
+          git show FETCH_HEAD:app/src/main/assets/continuum-command03/native-layer.css > "$RUNNER_TEMP/command03-before.css"
+          COMMAND03_PLAYWRIGHT_MODULE="$RUNNER_TEMP/command03-browser/node_modules/playwright" \
+          COMMAND03_BASELINE_CSS="$RUNNER_TEMP/command03-before.css" \
+            node tools/command03-native-qa/responsive-layout.test.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: Code60-Command03-DOM-evidence
-          path: command03-dom.tap
+          path: |
+            command03-dom.tap
+            command03-layout-evidence/
           if-no-files-found: ignore
           retention-days: 7
 
