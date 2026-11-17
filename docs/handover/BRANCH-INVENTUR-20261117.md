@@ -19,11 +19,11 @@ Erstellt von Grok Chef HAUPTBOT (Release-/Integrationsingenieur) am 17.11.2026, 
 ## Zählung
 
 - A: 552
-- B: 51
-- C: 87
+- B: 53
+- C: 89
 - D: 279
-- LAUFEND: 1
-- Gesamt Remote-Branches: 970
+- LAUFEND: 0
+- Gesamt Remote-Branches: 973
 
 Hinweis: `code52/grok-brain-architect-20261117`, `code52/grok-design-lead-20261117`, `code52/grok-3d-blender-20261117` existierten zum Inventurzeitpunkt noch nicht auf dem Remote; sie gelten als LAUFEND und wurden nicht angefasst.
 
@@ -31,12 +31,14 @@ Hinweis: `code52/grok-brain-architect-20261117`, `code52/grok-design-lead-202611
 
 | Kat | Branch | Kopf-SHA | letzter Commit | Autor | vor/hinter main | vor/hinter Code62 | eigene Commits | PR | Grund |
 |---|---|---|---|---|---|---|---|---|---|
-| LAUFEND | `grok/nullpunkt-20261117` | `8f0d169b5f` | 2026-11-17 12:23 | Grok Chef HAUPTBOT | 6308/13 | 2/0 | 2 | #860 OPEN Draft | paralleler Bot, nicht angefasst |
 | B | `chatgpt/code50-local-qa-20261108` | `becebaeab7` | 2026-11-08 08:26 | Ullmann27 | 5238/13 | 1/1069 | 1 | #629 OPEN Draft | sauberer Merge, nur Dokumentation |
 | B | `claude/code54-evidence-20261111` | `50757990bb` | 2026-11-12 02:02 | Claude | 5862/13 | 11/455 | 11 | #786 OPEN Draft | sauberer Merge, nur Dokumentation |
 | B | `claude/code55-agent-c-live-computer-20261112` | `b082072a05` | 2026-11-12 21:49 | Claude | 5884/13 | 1/423 | 1 | – | sauberer Merge, nur Dokumentation |
 | B | `claude/code55-agent-e-3d-cockpit-20261112` | `166f097547` | 2026-11-12 21:50 | Claude | 5885/13 | 1/422 | 1 | – | sauberer Merge, nur Dokumentation |
+| B | `code52/grok-3d-blender-20261117` | `622ebdc6df` | 2026-11-17 13:15 | Grok-Bot | 0/0 | 0/0 | 0 | – | gemergt @622ebdc6 (Draft-PR #862). Eigener Run 44079682353 rot nur am Basis-Gate „personalisation…“ (vor Nullpunkt-Fix); Bewertung über Integrations-QA |
 | B | `code52/grok-bot01-legacy-integration-20261110` | `2822d77be1` | 2026-11-10 14:21 | Ullmann27 | 5617/13 | 4/693 | 2 | #709 OPEN Draft | sauberer Merge, nur Dokumentation |
+| B | `code52/grok-brain-architect-20261117` | `985d340a28` | 2026-11-17 13:15 | Grok-Bot | 0/0 | 0/0 | 0 | – | gemergt @985d340a2: MemoryTimeline, MemoryQuestionResolver, JustifiedRelationStore, LocalModelClaimAudit, MemoryContextPlanner. Eigener Run 44078016697 rot am selben Basis-Gate; Bewertung über Integrations-QA |
+| B | `code52/grok-design-lead-20261117` | `c6dc842be9` | 2026-11-17 13:15 | Grok-Bot | 0/0 | 0/0 | 0 | – | gemergt @c6dc842be. Eigener Run 44079843527 rot am selben Basis-Gate; Bewertung über Integrations-QA |
 | B | `coderabbit/get-device-ai-project-status/de3d7eb3` | `f1973ce794` | 2026-11-02 09:28 | Ullmann27 | 3311/38 | 1/3021 | 1 | #352 OPEN Draft | sauberer Merge, nur Dokumentation |
 | B | `codex/code50-gate-fixes-20261108` | `171bef4b71` | 2026-11-08 04:06 | Ullmann27 | 5079/13 | 1/1228 | 1 | #605 CLOSED Draft | sauberer Merge, nur Dokumentation |
 | B | `codex/continuum-bot-activation-20261104` | `2a364005b5` | 2026-11-04 19:51 | Ullmann27 | 4585/38 | 2/1748 | 2 | #510 OPEN Draft | sauberer Merge, nur Dokumentation |
@@ -49,7 +51,6 @@ Hinweis: `code52/grok-brain-architect-20261117`, `code52/grok-design-lead-202611
 | B | `codex/independence-native-closure-20261103` | `a4b7b30f0c` | 2026-11-03 22:32 | Heinz Ulmann | 4182/38 | 1/2150 | 1 | #472 OPEN Draft | sauberer Merge, nur Dokumentation |
 | B | `codex/independence-native-failure-review-20261103` | `8a9ab1f4b2` | 2026-11-03 22:32 | Heinz Ulmann | 4183/38 | 2/2150 | 2 | #473 OPEN Draft | sauberer Merge, nur Dokumentation |
 | B | `codex/synapse-p0-audit-20261103` | `a50b8e15ba` | 2026-11-03 20:17 | Heinz Ulmann | 3845/38 | 1/2487 | 1 | #421 OPEN Draft | sauberer Merge, nur Dokumentation |
-| B | `continuum/m2-calc-events` | `7c5facb2a6` | 2026-11-04 10:12 | Ullmann27 | 4516/38 | 6/1821 | 5 | #484 OPEN Draft | sauberer Merge, App-Code/Tests |
 | B | `design/continuum-avatar-user-ui-20261103` | `a0b1910035` | 2026-11-03 18:49 | Ullmann27 | 3633/38 | 1/2699 | 1 | #391 OPEN Draft | sauberer Merge, nur Dokumentation |
 | B | `docs/code52-handover-chatgpt-20261110` | `1258a2888d` | 2026-11-10 09:11 | Ullmann27 | 5566/13 | 2/742 | 2 | – | sauberer Merge, nur Dokumentation |
 | B | `docs/grok-handover-chatgpt-sol-20261110` | `7871ebdaad` | 2026-11-10 14:32 | Grok Bot 15 | 5637/13 | 5/674 | 5 | #712 OPEN Draft | sauberer Merge, nur Dokumentation |
@@ -58,6 +59,7 @@ Hinweis: `code52/grok-brain-architect-20261117`, `code52/grok-design-lead-202611
 | B | `fix/continuum-cdx1-collapse-diagnostics-20261101` | `81fcc9e9ad` | 2026-11-01 03:19 | Ullmann27 | 3146/38 | 3/3188 | 3 | #313 OPEN Draft | sauberer Merge, App-Code/Tests |
 | B | `grok/bot01-no-orphans-20261110` | `61f503bfad` | 2026-11-10 13:25 | Ullmann27 | 5623/13 | 1/684 | 1 | #705 OPEN Draft | sauberer Merge, nur Dokumentation |
 | B | `grok/jarvis-closeout-20261104` | `2375aea3d5` | 2026-11-04 10:02 | Ullmann27 | 4/13 | 4/6306 | 4 | #488 OPEN Draft | sauberer Merge, nur Dokumentation |
+| B | `grok/nullpunkt-20261117` | `8f0d169b5f` | 2026-11-17 12:23 | Grok Chef HAUPTBOT | 6308/13 | 2/0 | 2 | #860 OPEN Draft | gemergt (dff6c32c9): RecallHits-Fix dc18451f5, Personalisierungs-Fix 55a3fe015 (behebt den roten critical-Gate-Test „personalisation is a real choice…“ aus Run 44080075935), Handover |
 | B | `handoff/sol61-continuum-20261019` | `752bee2c0a` | 2026-10-19 05:31 | Heinz Ulmann | 975/38 | 1/5357 | 1 | #36 OPEN Draft | sauberer Merge, nur Dokumentation |
 | B | `integrate/continuum-command03-android-20261115` | `0b8600d1f3` | 2026-11-17 08:20 | Ullmann27 | 6308/13 | 2/0 | 2 | #851 OPEN Draft | sauberer Merge, App-Code/Tests |
 | B | `integration/continuum-g1-r5-avatar-accept-20261104` | `9094032b05` | 2026-11-04 21:04 | Ullmann27 | 4596/38 | 2/1737 | 2 | #520 OPEN Draft | sauberer Merge, App-Code/Tests |
@@ -76,7 +78,6 @@ Hinweis: `code52/grok-brain-architect-20261117`, `code52/grok-design-lead-202611
 | B | `research/jarvis-international-adaptation-20261025` | `6b06bbf29b` | 2026-10-25 15:05 | Ullmann27 | 2241/38 | 1/4091 | 1 | #138 OPEN Draft | sauberer Merge, nur Dokumentation |
 | B | `research/omega-architecture-audit-20261110` | `26bb4a4494` | 2026-11-10 21:41 | Ullmann27 | 5674/13 | 2/634 | 2 | – | sauberer Merge, nur Dokumentation |
 | B | `research/omega-literature-20261110` | `258f990bb8` | 2026-11-10 21:25 | Ullmann27 | 5673/13 | 1/634 | 1 | – | sauberer Merge, nur Dokumentation |
-| B | `review/continuum-memory-attribute-guard-20261029` | `a16e45c8bb` | 2026-10-29 09:02 | Ullmann27 | 2845/38 | 2/3488 | 2 | #229 OPEN Draft | sauberer Merge, App-Code/Tests |
 | B | `sol/cdx-generation-repair-20261026` | `e53c91404f` | 2026-10-26 02:59 | Heinz Ulmann | 2312/38 | 8/4027 | 8 | #152 OPEN Draft | sauberer Merge, nur Dokumentation |
 | B | `sol/continuum-fast-repair-20261026` | `df4b395ff6` | 2026-10-26 03:09 | Heinz Ulmann | 2308/38 | 1/4024 | 1 | #156 OPEN Draft | sauberer Merge, nur Dokumentation |
 | B | `sol/continuum-runtime-reliability-20261029` | `de8f759b1b` | 2026-10-29 09:43 | Heinz Ulmann | 2832/38 | 1/3500 | 1 | #223 OPEN Draft | sauberer Merge, nur Dokumentation |
@@ -102,6 +103,7 @@ Hinweis: `code52/grok-brain-architect-20261117`, `code52/grok-design-lead-202611
 | C | `codex/breakthrough-neural-20261103` | `8123e6df2b` | 2026-11-03 18:38 | Heinz Ulmann | 3692/38 | 7/2646 | 7 | #402 OPEN Draft | sauber mergebar, aber Skripte/Tools ohne klare Fertig-Markierung – manuelle Prüfung |
 | C | `codex/jarvis-reference-ui-20261103` | `60be37f98e` | 2026-11-03 22:13 | Heinz Ulmann | 3904/38 | 1/2428 | 1 | #432 MERGED Draft | sauber mergebar, aber Skripte/Tools ohne klare Fertig-Markierung – manuelle Prüfung |
 | C | `codex/synapse-runtime-audit-20261103` | `0ff9df3cd8` | 2026-11-03 20:27 | Heinz Ulmann | 3863/38 | 4/2472 | 4 | #431 OPEN Draft | sauber mergebar, aber Skripte/Tools ohne klare Fertig-Markierung – manuelle Prüfung |
+| C | `continuum/m2-calc-events` | `7c5facb2a6` | 2026-11-04 10:12 | Ullmann27 | 4516/38 | 6/1821 | 5 | #484 OPEN Draft | gemergt und wieder revertiert (4de599c44): Prämisse „niemand sendet MemoryStored“ auf Code62 überholt (ContinuumLearningExperience.kt:389 sendet MemoryStored), Tests erwarteten englische Labels → JarvisMemoryActivityPanelTest rot. Thread-Fix in RetrievalCalculationSource ggf. separat nachziehen |
 | C | `design/continuum-fui-web-20261115` | `0876aa0acc` | 2026-11-15 14:15 | Ullmann27 | 5890/13 | 6/422 | 6 | #850 OPEN Draft | 98 Dateien Web-Design-Prototyp (design/continuum-web), nicht an App angeschlossen – Übergabe an Design-Lead |
 | C | `experiment/code55-answer-quality-20261112` | `3dd18edeaa` | 2026-11-12 09:42 | Ullmann27 | 5881/13 | 1/426 | 1 | #794 OPEN Draft | Experiment (Shadow-Audit) + eigener Workflow; Übergabe an Gehirn-Architekt |
 | C | `experiment/continuum-synapse-zero-20261022` | `2b58ed1786` | 2026-10-22 15:18 | Ullmann27 | 1622/38 | 6/4715 | 6 | #71 OPEN Draft | Forschungsprototyp Synapse-Zero, nicht angeschlossen; Übergabe an Gehirn-Architekt |
@@ -158,6 +160,7 @@ Hinweis: `code52/grok-brain-architect-20261117`, `code52/grok-design-lead-202611
 | C | `research/omega-work-contract-20261110` | `340bfb0972` | 2026-11-10 21:49 | Ullmann27 | 5679/13 | 7/634 | 7 | #721 OPEN Draft | Konflikt in 1 Datei(en) (app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt); Konfliktdateien auf Code62-Linie seit Merge-Base in 9 Commits geändert, zuletzt 46e935987 2026-11-14 |
 | C | `research/omega-working-context-20261110` | `1dd59c8542` | 2026-11-10 21:41 | Ullmann27 | 5674/13 | 2/634 | 2 | – | Konflikt in 1 Datei(en) (app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt); Konfliktdateien auf Code62-Linie seit Merge-Base in 9 Commits geändert, zuletzt 46e935987 2026-11-14 |
 | C | `review/cinema-perf-measurement-20261110` | `912ddfa6bc` | 2026-11-10 22:00 | Ullmann27 | 5669/13 | 2/639 | 2 | – | Konflikt in 1 Datei(en) (tools/fold7_quality_lab/fold7.py); Konfliktdateien auf Code62-Linie seit Merge-Base in 2 Commits geändert, zuletzt 1467734e5 2026-11-10 |
+| C | `review/continuum-memory-attribute-guard-20261029` | `a16e45c8bb` | 2026-10-29 09:02 | Ullmann27 | 2845/38 | 2/3488 | 2 | #229 OPEN Draft | gemergt und wieder revertiert (0b1113552): ContinuumMemoryDialogueTest.birthdayQuestionMustNotCiteUnrelatedResidenceFact rot („existing supported residence question must still work“) auf Code62-Dialoglogik |
 | C | `review/render-first-portable-build-20261022` | `3ee306eaab` | 2026-10-22 05:04 | Ullmann27 | 1597/38 | 3/4737 | 3 | #56 OPEN Draft | sauber mergebar, aber Skripte/Tools ohne klare Fertig-Markierung – manuelle Prüfung |
 | C | `support/continuum-reference-binding-s5-20261105` | `bea7ccf1ee` | 2026-11-05 09:39 | Ullmann27 | 4644/38 | 2/1689 | 2 | #557 OPEN Draft | sauber mergebar, aber Skripte/Tools ohne klare Fertig-Markierung – manuelle Prüfung |
 | C | `support/h4-avatar-stop-next-turn-regression-20261105` | `f472883bf4` | 2026-11-05 09:45 | Ullmann27 | 4654/38 | 2/1679 | 2 | #556 OPEN Draft | Regressionstest selbst als „(unverified)“ markiert |
@@ -1004,9 +1007,22 @@ Hinweis: `code52/grok-brain-architect-20261117`, `code52/grok-design-lead-202611
 
 ## Integrationsprotokoll
 
-- Basis `184f2cd0754a471766c8c046e45bf2a13c2666bb` (Code62-Quelle 00b3c8b8 + main 44bdd0a6).
-- 51 B-Branches mit normalen Merge-Commits (`--no-ff`) nacheinander gemergt (8 App-Branches zuerst, dann Doku-Branches nach Datum). Jeder Merge war textuell konfliktfrei.
-- `fix/thermal-background-20261111` wurde zunächst als B gemergt; lokales `:app:compileDebugKotlin` scheiterte an doppelter Deklaration `StatusHoldouts`/`cachedStatusHoldouts` (ContinuumLearningCore.kt:1248/1258), weil der Inhalt bereits mit 1ba7b9458 übernommen war. Der lokale, nie gepushte Integrationsstand wurde ohne diesen Branch neu aufgebaut; Branch → D.
-- Lokal (JDK 21, Gradle 8.11.1, QA-Flags der cinematic QA): `:app:compileDebugKotlin :app:compileDebugUnitTestKotlin` BUILD SUCCESSFUL.
-- Volle QA: Workflow `continuum-code52-cinematic-qa.yml` auf dem gepushten Kopf-SHA (Run-ID im PR).
-- Kein Branch gelöscht, kein Force-Push, nichts signiert, nichts veröffentlicht, Paketname/Signierschlüssel unverändert.
+- Basis `184f2cd0754a471766c8c046e45bf2a13c2666bb` = Code62-Quelle `00b3c8b8` (installierte Linie 0.3.61) + main `44bdd0a6`. main enthielt `00b3c8b8` vorher nicht (6306 Commits zurück).
+- 51 B-Branches per `--no-ff` gemergt; danach zwei davon revertiert (m2-calc-events → 4de599c44, memory-attribute-guard → 0b1113552), weil lokale Unit-Tests rot waren (Gründe in der Tabelle).
+- `fix/thermal-background-20261111`: Inhalt war schon über 1ba7b9458 enthalten; der Merge erzeugte doppelte Deklarationen (`StatusHoldouts`) → Kompilierfehler. Branch → D, nie gepusht.
+- Zusätzlich gemergt: `grok/nullpunkt-20261117` (#860), `code52/grok-3d-blender-20261117` (#862), `code52/grok-brain-architect-20261117`, `code52/grok-design-lead-20261117`.
+- QA-Run 44080075935 auf 7a4aab04 war rot im Gate „personalisation is a real choice…“. Dieser Fehler kam aus der Basis und wird durch 55a3fe015 (Nullpunkt) behoben.
+
+## Offen (nicht in dieser Integration)
+
+- Layout-Fixes `fbe35a7de` (fix(fold7): move compact live conversation above its reference-B position) und `3ba8fc4f6` sind keine Vorfahren. Sie liegen auf Branches mit Konflikt (Kategorie C/D) und müssen einzeln portiert werden.
+- #802 `work/astra55-support-pipeline-20261112` (Live-Scroll und Eingabe): 25 Konfliktdateien gegen Code62, darunter AgentActivity.kt und cockpit-workstation.glb → C.
+- #487 `jarvis-luecke/video3-alarm-warp-ganzkoerper`: Die video3-Dateien sind bereits im Baum unter app/src/main/java/at/heinz/deviceai/ui/video3/. Restliche Branch-Commits laut Tabelle.
+- Presence/Initiative und SelfInspection: im Baum nicht als Kotlin-Klassen vorhanden, nur die Assets presence-*.css/js. Nicht portiert.
+- Native-Runtime-Rotfehler aus Lauf 44073545347 (native_hologram_evidence.py:246, native_routines.py:642 Timeout, Landscape-Navigation nach Scroll) wurden in dieser Runde nicht repariert.
+
+## Code 63 (vorbereitet, NICHT umgesetzt – Entscheidung Heinz)
+
+- Workflow `continuum-einfach-apk.yml` setzt `-PcontinuumStandaloneVersionCode=62` und prüft `versionCode='62' versionName='0.3.61'`. Für Code 63 sind dort `62`→`63` und `0.3.61`→`0.3.62` nötig.
+- Der Workflow startet nur bei einem Push auf `integrate/continuum-command03-android-20261115` und fordert die Signatur automatisch an. Deshalb wurde dort nicht gepusht.
+- Signier-Inputs: `source_sha` ist der Kopf-SHA dieses Branches nach grüner QA, `qa_run_id` die grüne Run-ID von `continuum-code52-cinematic-qa.yml` auf genau diesem SHA. Beide stehen im Bericht.
