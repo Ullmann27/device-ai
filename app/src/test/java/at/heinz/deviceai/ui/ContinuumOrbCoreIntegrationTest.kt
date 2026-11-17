@@ -49,4 +49,17 @@ class ContinuumOrbCoreIntegrationTest {
         assertTrue(zero in 0f..1f)
         assertTrue(later in 0f..1f)
     }
+
+    @Test fun idleCoreBreathesButStaysBelowRealActivity() {
+        val active = coreAlpha(ContinuumBrainOrbRenderer.Signals(
+            phase = 0f, pulse = 1f, processing = true
+        ))
+        val idle = listOf(0f, .7f, 1.4f, 3f).map { phase ->
+            coreAlpha(ContinuumBrainOrbRenderer.Signals(phase = phase))
+        }
+        assertTrue("idle light must breathe", idle.max() - idle.min() > .02f)
+        idle.forEach { alpha ->
+            assertTrue("idle $alpha must stay below work $active", alpha < active - .15f)
+        }
+    }
 }
