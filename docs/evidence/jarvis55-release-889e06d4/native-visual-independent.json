@@ -1,0 +1,59 @@
+{
+  "reviewedAt": "2026-11-13T06:01:16.441895+00:00",
+  "status": "PASS_NATIVE_OUTPUT_CAPTURE",
+  "applicationSource": "889e06d47fffd2230fa5b062dd1f31b65992e728",
+  "harnessSource": "2654fe65d53de4d13e3acf11ddbf6316686e6b8e",
+  "workflowRun": 43374473925,
+  "artifactId": 14014490862,
+  "archiveBytes": 11982229,
+  "archiveSha256": "958e9681970e127321570a82be5ac33f70d5d4b168acc085076b682bf975a11c",
+  "capturedFrames": 24,
+  "distinctImageHashes": 24,
+  "dimensions": [
+    852,
+    480
+  ],
+  "renderer": "Android API35 ANGLE/SwiftShader Filament",
+  "content": "Synthetic WAITING_FOR_APPROVAL with ASK_OWNER; no capture source/action/inference/audio",
+  "clock": "12 FPS offline frame sequence; NOT actual device FPS",
+  "observed": [
+    "Original avatar, orb/rings, 3D room and monitor geometry are visible in native output.",
+    "Two context monitor textures are visible and labelled as synthetic waiting state.",
+    "Central monitor is black because no live source is bound.",
+    "Frame exports and clip differ over time; still pose is provided directly by the test."
+  ],
+  "limits": [
+    "No physical Fold7 or Android17 run.",
+    "No MediaProjection/Accessibility closed-loop action or speech was exercised.",
+    "No full Activity UI or high font-scale/native responsive acceptance.",
+    "No frame-time, GPU load, battery or thermal benchmark.",
+    "Native output does not establish final cinematic quality."
+  ],
+  "files": [
+    {
+      "path": "frames/frame-000.png",
+      "bytes": 494683,
+      "sha256": "be9a7cd18aae9fd2c2a9313e0438c7e578fd552328427d645d578d5f77947aa3"
+    },
+    {
+      "path": "frames/frame-012.png",
+      "bytes": 494725,
+      "sha256": "046c3a65dc1aaa22c7995a653bb5d177df34d7d6f3adde8589432dda290d4694"
+    },
+    {
+      "path": "frames/frame-023.png",
+      "bytes": 494194,
+      "sha256": "5db3e58dabed03e0d0ea45da7f46502a21cd2e1c91add4603a93c098c40fdf68"
+    },
+    {
+      "path": "native-fold-synthetic-waiting.mp4",
+      "bytes": 85138,
+      "sha256": "653b83bc7df7a990975fde701df40d6ae4c76f5a75de282f229c21bc083cf41c"
+    },
+    {
+      "path": "frames/frames.tsv",
+      "bytes": 2778,
+      "sha256": "a2c9644800bd533d9ff6b61641072eb73c06e932147f34b7967ff7285ce74d75"
+    }
+  ]
+}

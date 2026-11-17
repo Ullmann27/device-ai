@@ -1,0 +1,13 @@
+{
+  "source": "889e06d47fffd2230fa5b062dd1f31b65992e728",
+  "artifactId": 14013433161,
+  "bytes": 63474,
+  "sha256": "d5130692bf2fa3e8f3ae8931b672f82867d869c985d1020d978e5fa535f00b0c",
+  "status": "PASS",
+  "suiteFiles": 65,
+  "tests": 488,
+  "passed": 488,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0
+}
