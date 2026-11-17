@@ -43,6 +43,12 @@
             <meta-data android:name="android.accessibilityservice" android:resource="@xml/continuum_screen_observation" />
         </service>
 
+        <!-- Explicit Android notification-access opt-in; announces only apps the owner enabled. -->
+        <service android:name=".notifications.ContinuumNotificationListener"
+            android:exported="true" android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter><action android:name="android.service.notification.NotificationListenerService" /></intent-filter>
+        </service>
+
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
             android:authorities="${applicationId}.shizuku"
